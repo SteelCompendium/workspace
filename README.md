@@ -19,6 +19,7 @@ just clone-all
 steelCompendium/
   justfile              # Workspace recipes
   devbox.json           # Devbox environment (Python, Node, just, jq, yq, etc.)
+  reference/            # Draw Steel condensed reference docs for AI agents
   compendium/           # Obsidian vault (v1)
   v2/                   # MkDocs Material site (v2)
   data-gen/             # ETL pipeline: PDF -> Markdown -> YAML/JSON
