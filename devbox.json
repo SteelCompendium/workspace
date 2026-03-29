@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.11.0/.schema/devbox.schema.json",
+  "packages": [
+    "bash@latest",
+    "python@latest",
+    "just@latest",
+    "jq@latest",
+    "yq-go@latest",
+    "perl",
+    "figlet@latest",
+    "nodejs@latest"
+  ],
+  "env": {
+    "DEVBOX_COREPACK_ENABLED": "true"
+  },
+  "shell": {
+    "init_hook": [
+      "if [ \"$(type -t \"source\")\" = \"builtin\" ]; then clear -x; source bin/furc; fi",
+      ". $VENV_DIR/bin/activate",
+      "pip install PyYAML python-frontmatter"
+    ],
+    "scripts": {
+      "gemini": "gemini"
+    }
+  }
+}
