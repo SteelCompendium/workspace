@@ -32,7 +32,7 @@ The steel-etl tool currently generates JSON/YAML output that **does not conform*
 
 - [x] **Phase 1** -- SDK transform in steel-etl (completed 2026-04-14)
 - [x] **Phase 2** -- Conformance tests using legacy data (completed 2026-04-14)
-- [ ] **Phase 3** -- New type schemas
+- [x] **Phase 3** -- New type schemas (completed 2026-04-14)
 - [ ] **Phase 4** -- SDK updates (separate repo, separate timeline)
 
 ---
@@ -122,48 +122,59 @@ These differences from the legacy data are expected and acceptable:
 
 ## Phase 3: Schema Definitions for New Types
 
-**Status: NOT STARTED**
+**Status: COMPLETE**
 
 **Goal:** Define JSON schemas for types not covered by data-sdk-npm.
 
-### Files to create
+### Files created
 
 - `steel-etl/schemas/class.schema.json`
 - `steel-etl/schemas/kit.schema.json`
 - `steel-etl/schemas/perk.schema.json`
 - `steel-etl/schemas/career.schema.json`
 - `steel-etl/schemas/ancestry.schema.json`
+- `steel-etl/schemas/culture.schema.json`
 - `steel-etl/schemas/title.schema.json`
 - `steel-etl/schemas/treasure.schema.json`
 - `steel-etl/schemas/condition.schema.json`
 - `steel-etl/schemas/complication.schema.json`
+- `steel-etl/internal/output/schema_validation_test.go` -- 88 test cases
 
 ### Design Guidelines
 
-- Every schema requires `type` (matching the content type) and `name`
+- Every schema requires `type` (const matching the content type) and `name`
+- All schemas have `additionalProperties: false` (matches feature.schema.json pattern)
 - All schemas include optional `metadata` object (for SCC, source, etc.)
 - All schemas include optional `content` string (raw markdown body)
 - Schemas are designed for extensibility (homebrew can add custom fields via `metadata`)
 - Field names use snake_case consistently
 - These schemas should eventually be contributed back to data-sdk-npm (or a new data-sdk-go)
 
-### Example: Kit Schema
+### Schema summary
 
-```json
-{
-  "type": "object",
-  "required": ["type", "name"],
-  "properties": {
-    "type": { "const": "kit" },
-    "name": { "type": "string" },
-    "kit_type": { "type": "string" },
-    "stat_bonuses": { "type": "object" },
-    "equipment": { "type": "array", "items": { "type": "string" } },
-    "content": { "type": "string" },
-    "metadata": { "type": "object", "additionalProperties": true }
-  }
-}
-```
+| Type | Type-specific fields |
+|---|---|
+| class | `heroic_resource` |
+| kit | `kit_type`, `stat_bonuses` (object), `equipment` (string array) |
+| perk | `prerequisites` |
+| career | `skill`, `language`, `renown`, `wealth`, `project_points`, `perk` |
+| ancestry | `signature_trait` |
+| culture | `environment`, `organization`, `upbringing`, `skill`, `language` |
+| title | `echelon`, `benefits` (string array) |
+| treasure | `treasure_type`, `level`, `rarity` |
+| condition | _(none -- body content only)_ |
+| complication | _(none -- body content only)_ |
+
+### Test coverage
+
+- **Required field validation** (10 tests): All types have `name` and correct `type` const
+- **No additional properties** (10 tests): All types only emit fields defined in their schema
+- **Type const validation** (10 tests): `type` field matches the schema's `const` value
+- **Field type validation** (5 tests): Kit, title, treasure, career, culture field types match schema
+- **JSON roundtrip** (10 tests): All types survive marshal/unmarshal
+- **Empty body** (10 tests): No `content` field when body is empty
+- **No feature fields on passthrough** (10 tests): Passthrough types don't get `feature_type`, `effects`, etc.
+- **Allowlist enforcement**: Schema property allowlists defined in test code match the JSON schema files
 
 ---
 
