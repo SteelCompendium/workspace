@@ -129,30 +129,37 @@ Each parser gets unit tests using small markdown fixtures in `testdata/`.
 - Emit per-section `.yaml` files
 - Same SDK transform layer as JSON output
 
-**2.3: Implement linked variant generator**
-- Scan markdown content for `scc:` protocol links
-- Resolve them to relative file paths using the SCC registry
-- Write linked variant to `md-linked/` directory
+**2.3: Implement linked variant generator** *DONE*
+- `scc/resolver.go`: `ResolveLinks()` scans for `scc:` protocol links, resolves to relative paths via registry
+- `output/linked.go`: `LinkedGenerator` writes per-section `.md` files with resolved links to `md-linked/`
+- 5 tests (resolve, aliases, unknown links left as-is)
 
-**2.4: Implement DSE variant generator**
-- Apply Obsidian DSE formatting transformations
-- Write to `md-dse/` directory
+**2.4: Implement DSE variant generator** *DONE*
+- `output/dse.go`: `DSEGenerator` writes Obsidian DSE format with `ds-feature` YAML codeblocks for abilities/traits
+- DSE frontmatter enrichment: `item_id`, `item_name`, `feature_type`, `action_type`, `cost_amount/resource`, `source`
+- Plain markdown body for non-feature types (conditions, classes, etc.)
+- 4 tests (ability, trait, condition, parseCost)
 
-**2.5: Implement DSE-linked variant**
-- Combine linking + DSE formatting
+**2.5: Implement DSE-linked variant** *DONE*
+- `output/dse_linked.go`: `DSELinkedGenerator` combines link resolution + DSE formatting
+- 3 tests (ability with links, condition, nil/empty guards)
 
-**2.6: Implement stripped markdown output**
-- Remove all `<!-- @... -->` annotations from the input
-- Remove document frontmatter
-- Write clean markdown suitable for distribution
+**2.6: Implement stripped markdown output** *DONE*
+- `output/stripped.go`: `StrippedGenerator` removes annotations + frontmatter from raw input
+- `StripAnnotations()` exported for CLI `strip` command
+- Handles single-line, multi-line annotations, frontmatter, blank line collapsing
+- CLI `strip` command wired up in `cli/strip.go`
+- 8 tests
 
-**2.7: Implement aggregation**
-- Combine per-section files into full-book markdown
-- Generate index files (tables of contents, type indexes)
-- Write to unified output directory
+**2.7: Implement aggregation** *DONE*
+- `output/aggregate.go`: `AggregateGenerator` writes per-section files + per-type indexes + master index
+- `Finalize()` generates `_index/{type}.md` and `_index/README.md`
+- 3 tests (full flow, nil/empty guards, empty finalize)
 
-**2.8: Implement SCC-to-path mapping**
-- Generate `scc-to-path.json` for website URL resolution
+**2.8: Implement SCC-to-path mapping** *DONE*
+- `output/sccmap.go`: `SCCMapGenerator` collects SCC→path entries, writes sorted JSON on `Finalize()`
+- Output format: `[{scc, path, name, type}, ...]`
+- 3 tests (full flow, empty, nil guards)
 
 **2.9: Implement remaining content parsers** *DONE*
 - KitParser, AncestryParser, CareerParser, CultureParser, PerkParser
@@ -160,16 +167,19 @@ Each parser gets unit tests using small markdown fixtures in `testdata/`.
 - JSON schemas defined for all new types in `steel-etl/schemas/` (draft 2019-09, `unevaluatedProperties: false`)
 - 88 schema validation tests in `schema_validation_test.go`
 
-**2.10: Wire up pipeline config**
-- Read `pipeline.yaml`, configure output generators, run full pipeline
-- Support `--format`, `--book`, `--all` flags
+**2.10: Wire up pipeline config** *DONE*
+- `pipeline/config.go`: `Config` struct with all output options (formats, variants, stripped, aggregate, scc_map)
+- `pipeline/pipeline.go`: `buildGenerators()` creates all 9 generator types from config
+- `cli/gen.go`: CLI `gen` command loads config, applies overrides (`--format`, `--locale`), runs `RunWithConfig()`
+- `pipeline.yaml` enables all formats, variants, stripped, aggregate, and scc_map
+- 14 tests (config loading, generator building, full pipeline runs)
 
 ### Exit Criteria
 - [x] All output formats (md, json, yaml) are generated correctly
-- [ ] All variants (linked, dse, dse-linked) are generated correctly
-- [ ] Stripped markdown output is clean and renderable
-- [ ] Aggregated output matches the current data-md structure
-- [ ] `scc-to-path.json` covers all content
+- [x] All variants (linked, dse, dse-linked) are generated correctly
+- [x] Stripped markdown output is clean and renderable
+- [x] Aggregated output matches the current data-md structure
+- [x] `scc-to-path.json` covers all content
 - [ ] Current data-gen ETL can be fully replaced by `steel-etl`
 - [x] JSON/YAML output conforms to data-sdk-npm feature schema (see `plans/sdk-schema-alignment/`)
 - [x] JSON schemas defined for all new content types (class, kit, perk, career, ancestry, culture, title, treasure, condition, complication)

@@ -2,7 +2,7 @@
 
 ## Context
 
-The steel-etl tool currently generates JSON/YAML output that **does not conform** to the data-sdk-npm schema. Existing users (draw-steel-elements, homebrew community projects) consume data in the SDK-compatible format. The goal is to make steel-etl produce schema-compliant output for types the SDK already defines, define schemas for new types the SDK doesn't cover, and set up conformance testing using existing generated data as ground truth.
+The steel-etl tool now generates JSON/YAML output that **conforms** to the data-sdk-npm schema for feature types (abilities + traits), with conformance tests validating against legacy data. New schemas have been defined for all content types not covered by the SDK. The remaining work is updating the SDK itself (Phase 4).
 
 ### Gap Summary
 
