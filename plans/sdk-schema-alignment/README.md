@@ -2,7 +2,7 @@
 
 ## Context
 
-The steel-etl tool now generates JSON/YAML output that **conforms** to the data-sdk-npm schema for feature types (abilities + traits), with conformance tests validating against legacy data. New schemas have been defined for all content types not covered by the SDK. The remaining work is updating the SDK itself (Phase 4).
+The steel-etl tool generates JSON/YAML output that **conforms** to the data-sdk-npm schema for feature types (abilities + traits), with conformance tests validating against legacy data. All 10 new content type schemas are defined. The data-sdk-npm TypeScript SDK has been updated to v3.0.0 with all schemas, models, DTOs, and IO support for the new types.
 
 ### Gap Summary
 
@@ -33,7 +33,7 @@ The steel-etl tool now generates JSON/YAML output that **conforms** to the data-
 - [x] **Phase 1** -- SDK transform in steel-etl (completed 2026-04-14)
 - [x] **Phase 2** -- Conformance tests using legacy data (completed 2026-04-14)
 - [x] **Phase 3** -- New type schemas (completed 2026-04-14)
-- [ ] **Phase 4** -- SDK updates (separate repo, separate timeline)
+- [x] **Phase 4** -- SDK updates (completed 2026-04-14)
 
 ---
 
@@ -213,35 +213,72 @@ Adjustments made in response to open GitHub issues before proceeding to Phase 4.
 
 ---
 
-## Phase 4: data-sdk-npm / data-sdk-go Updates (Future)
+## Phase 4: Update data-sdk-npm
 
-**Status: NOT STARTED**
+**Status: COMPLETE**
 
-This phase is about planning the SDK evolution, not immediate implementation.
+Implemented **Option A** (update data-sdk-npm) — the TypeScript SDK now supports all content types.
 
-### Option A: Update data-sdk-npm
+### Changes made (2026-04-14)
 
-- Upgrade `feature.schema.json` and `statblock.schema.json` to draft 2019-09 with `unevaluatedProperties: false` (per #13)
-- Make `name` required in feature schema; make `usage` optional (per #94)
-- Add new model types: `Kit`, `Perk`, `Career`, `Ancestry`, `Culture`, `Title`, `Treasure`, `Condition`, `Complication`
-- Add corresponding DTOs, schemas, readers/writers
-- Bump to v3.0.0 with the new types
-- Update draw-steel-elements dependency
+**Schema upgrades:**
 
-### Option B: Create data-sdk-go
+- `feature.schema.json`: draft-07 → draft 2019-09, `additionalProperties` → `unevaluatedProperties`, `$id` bumped to `3.0.0`
+- `statblock.schema.json`: draft-07 → draft 2019-09, `additionalProperties` → `unevaluatedProperties`, `$id` bumped to `3.0.0`, `level` added to `required`, `metadata` added to properties
 
-- Go-native SDK matching the same schemas
-- Used by steel-etl directly for validation
-- Generates TypeScript types via code-gen for NPM compatibility
-- Better fit for the Go-based ETL pipeline
+**`name` in feature schema (deviation from original plan):**
 
-### Recommendation
+The plan called for making `name` required per data-gen#94. However, testing revealed that statblock sub-features (inline abilities within villain action effects) are legitimately anonymous — they don't have names in the source data. Making `name` required would break the existing statblock data pattern. `name` remains optional in the schema; the steel-etl producer guarantees `name` is always emitted for top-level abilities/traits (validated by 21 conformance tests).
 
-Start with **Option A** (update data-sdk-npm) because:
-- Existing consumers already depend on it
-- draw-steel-elements is TypeScript/Obsidian
-- The homebrew community likely uses JS/TS tooling
-- A Go SDK can come later if needed for steel-etl internal use
+**New schemas added (10):**
+
+All copied from `steel-etl/schemas/` (draft 2019-09, `unevaluatedProperties: false`):
+
+| Schema | Type-specific fields |
+|---|---|
+| `ancestry.schema.json` | `signature_trait` |
+| `career.schema.json` | `skill`, `language`, `renown`, `wealth`, `project_points`, `perk` |
+| `class.schema.json` | `heroic_resource` |
+| `complication.schema.json` | _(content only)_ |
+| `condition.schema.json` | _(content only)_ |
+| `culture.schema.json` | `environment`, `organization`, `upbringing`, `skill`, `language` |
+| `kit.schema.json` | `kit_type`, `stat_bonuses`, `equipment` |
+| `perk.schema.json` | `prerequisites` |
+| `title.schema.json` | `echelon`, `benefits` |
+| `treasure.schema.json` | `treasure_type`, `level`, `rarity` |
+
+**TypeScript models and DTOs (10 pairs):**
+
+Each type follows the established pattern: Model extends `SteelCompendiumModel<DTO>`, DTO extends `SteelCompendiumDTO<Model>`, with `fromDTO`/`toDTO`/`partialFromModel` methods.
+
+| Model | DTO |
+|---|---|
+| `Ancestry.ts` | `AncestryDTO.ts` |
+| `Career.ts` | `CareerDTO.ts` |
+| `Class.ts` | `ClassDTO.ts` |
+| `Complication.ts` | `ComplicationDTO.ts` |
+| `Condition.ts` | `ConditionDTO.ts` |
+| `Culture.ts` | `CultureDTO.ts` |
+| `Kit.ts` | `KitDTO.ts` |
+| `Perk.ts` | `PerkDTO.ts` |
+| `Title.ts` | `TitleDTO.ts` |
+| `Treasure.ts` | `TreasureDTO.ts` |
+
+**IO updates:**
+
+- `SteelCompendiumIdentifier`: Added `CONTENT_TYPE_MAP` for all 10 new types; updated `parse()`, `identify()`, and `identifyModelType()` to recognize them. JSON and YAML readers work via existing generic `JsonReader`/`YamlReader` with model adapters.
+- `schema/index.ts`: All 12 schemas exported
+- `validation/validator.ts`: All 12 schemas registered; upgraded to `ajv/dist/2019` for draft 2019-09 support
+- `model/index.ts` and `dto/index.ts`: All new types exported
+
+**Version bump:**
+
+- `package.json`: 2.2.0 → 3.0.0
+
+**Remaining (future):**
+
+- Update `draw-steel-elements` dependency to v3.0.0
+- Option B (data-sdk-go) can be pursued later if needed for steel-etl internal validation
 
 ---
 
@@ -260,15 +297,20 @@ Start with **Option A** (update data-sdk-npm) because:
 | `steel-etl/internal/content/feature.go` | Feature/trait parser |
 | `steel-etl/internal/content/parser.go` | `ParsedContent` struct definition |
 | `steel-etl/schemas/*.schema.json` | New type schemas (10 files, draft 2019-09) |
-| `data-sdk-npm/src/schema/feature.schema.json` | Feature JSON schema (source of truth) |
-| `data-sdk-npm/src/schema/statblock.schema.json` | Statblock JSON schema |
+| `data-sdk-npm/src/schema/*.schema.json` | All 12 JSON schemas (feature, statblock, + 10 new types) |
+| `data-sdk-npm/src/model/*.ts` | All model classes |
+| `data-sdk-npm/src/dto/*.ts` | All DTO classes |
+| `data-sdk-npm/src/io/SteelCompendiumIdentifier.ts` | Format/type auto-detection |
+| `data-sdk-npm/src/validation/validator.ts` | Schema validation (ajv 2019-09) |
 | `data/data-rules-json/Abilities/` | Legacy ability JSON (conformance baseline) |
 | `data/data-rules-json/Features/` | Legacy trait JSON (conformance baseline) |
 
 ## Verification
 
-1. `go test -race ./...` -- all existing tests pass
-2. New conformance tests pass against legacy data baseline
-3. JSON output for abilities validates against `feature.schema.json`
-4. Run `steel-etl gen` and spot-check: Brutal Slam, Growing Ferocity, Gouge
-5. Compare structure of output files against legacy `data-rules-json` repo
+1. `go test -race ./...` -- all steel-etl tests pass
+2. `npm test` in data-sdk-npm -- all 373 tests pass
+3. `npm run build` in data-sdk-npm -- tsc compiles clean
+4. New conformance tests pass against legacy data baseline
+5. JSON output for abilities validates against `feature.schema.json`
+6. Run `steel-etl gen` and spot-check: Brutal Slam, Growing Ferocity, Gouge
+7. Compare structure of output files against legacy `data-rules-json` repo

@@ -1,7 +1,7 @@
 # Steel Compendium Architecture Redesign
 
 **Date:** 2026-04-12
-**Status:** Phases 1-2 complete. All output formats, variants, and pipeline wiring implemented. SDK schema alignment (phases 1-3) complete. Phase 3 (translation + website) next.
+**Status:** Phases 1-2 complete (validated 2026-04-14). Phase 3: 3.1-3.5 done, 3.6 deferred (awaiting translated content). SDK schema alignment complete (all 4 phases, 2026-04-14).
 
 ## Overview
 
