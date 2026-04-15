@@ -12,6 +12,9 @@ org := "git@github.com:SteelCompendium"
 # Public Recipes
 ##################################################
 
+default:
+	just --list
+
 # Clone all SteelCompendium repos. data-* repos (except data-sdk-npm) go into data/.
 clone-all:
     #!/usr/bin/env bash
