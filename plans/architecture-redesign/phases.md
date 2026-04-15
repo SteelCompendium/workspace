@@ -119,11 +119,15 @@ Each parser gets unit tests using small markdown fixtures in `testdata/`.
 
 ### Steps
 
-**2.1: Implement JSON output generator**
+**2.1: Implement JSON output generator** *DONE*
 - Emit per-section `.json` files conforming to the SDK's JSON schemas (`feature.schema.json`, `statblock.schema.json`)
+- Uses `TransformToSDKFormat()` to convert abilities/traits to feature.schema.json-compliant output
+- Other types (class, kit, perk, etc.) pass through with `content` field
+- See `plans/sdk-schema-alignment/` for full transform mappings
 
-**2.2: Implement YAML output generator**
+**2.2: Implement YAML output generator** *DONE*
 - Emit per-section `.yaml` files
+- Same SDK transform layer as JSON output
 
 **2.3: Implement linked variant generator**
 - Scan markdown content for `scc:` protocol links
@@ -150,21 +154,27 @@ Each parser gets unit tests using small markdown fixtures in `testdata/`.
 **2.8: Implement SCC-to-path mapping**
 - Generate `scc-to-path.json` for website URL resolution
 
-**2.9: Implement remaining content parsers**
+**2.9: Implement remaining content parsers** *DONE*
 - KitParser, AncestryParser, CareerParser, CultureParser, PerkParser
 - TitleParser, TreasureParser, ConditionParser, ComplicationParser, SkillParser
+- JSON schemas defined for all new types in `steel-etl/schemas/` (draft 2019-09, `unevaluatedProperties: false`)
+- 88 schema validation tests in `schema_validation_test.go`
 
 **2.10: Wire up pipeline config**
 - Read `pipeline.yaml`, configure output generators, run full pipeline
 - Support `--format`, `--book`, `--all` flags
 
 ### Exit Criteria
-- [ ] All output formats (md, json, yaml) are generated correctly
+- [x] All output formats (md, json, yaml) are generated correctly
 - [ ] All variants (linked, dse, dse-linked) are generated correctly
 - [ ] Stripped markdown output is clean and renderable
 - [ ] Aggregated output matches the current data-md structure
 - [ ] `scc-to-path.json` covers all content
 - [ ] Current data-gen ETL can be fully replaced by `steel-etl`
+- [x] JSON/YAML output conforms to data-sdk-npm feature schema (see `plans/sdk-schema-alignment/`)
+- [x] JSON schemas defined for all new content types (class, kit, perk, career, ancestry, culture, title, treasure, condition, complication)
+- [x] Conformance tests validate output against legacy data-rules-json baseline
+- [x] All content parsers implemented (KitParser, AncestryParser, CareerParser, CultureParser, PerkParser, TitleParser, TreasureParser, ConditionParser, ComplicationParser)
 
 ---
 

@@ -117,6 +117,21 @@ See [annotation-spec.md](annotation-spec.md) for the full specification.
 
 ---
 
+## Decision 8: JSON Schema Version -- Draft 2019-09 with unevaluatedProperties
+
+**Decision:** All new schemas use JSON Schema draft 2019-09 with `unevaluatedProperties: false` instead of draft-07 with `additionalProperties: false`.
+
+**Date:** 2026-04-14
+
+**Rationale:**
+- `additionalProperties: false` prevents schema composition via `allOf` (see data-sdk-npm#13) -- when DSE adds rendering fields via `allOf` with a common-component-fields schema, validation fails
+- `unevaluatedProperties: false` (draft 2019-09) achieves the same strictness but allows properties introduced by `allOf`-referenced schemas
+- The existing `feature.schema.json` and `statblock.schema.json` in data-sdk-npm should be upgraded the same way
+
+**Applies to:** All 10 new schemas in `steel-etl/schemas/` (class, kit, perk, career, ancestry, culture, title, treasure, condition, complication). Existing data-sdk-npm schemas to be upgraded in Phase 4.
+
+---
+
 ## Decision 6: Content Parser Architecture
 
 **Decision:** Annotations mark what a section IS (`@type: ability`), and registered content parsers automatically extract structured data from the section body. Explicit field annotations are supported but only used for edge cases.

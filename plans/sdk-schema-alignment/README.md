@@ -88,13 +88,15 @@ The steel-etl tool currently generates JSON/YAML output that **does not conform*
 
 ### Files created
 
-- `steel-etl/internal/output/conformance_test.go` -- 28 tests total
+- `steel-etl/internal/output/conformance_test.go` -- 30+ tests total
 
 ### Test coverage
 
 - **Field-level legacy comparison** (4 tests): Brutal Slam, Hit and Run, To the Death!, Growing Ferocity -- compares name, type, feature_type, usage, distance, target, flavor, keywords, effects (roll/tiers), metadata fields against `data-rules-json` legacy files
 - **Schema structure validation** (21 tests): All 15 Fury 1st-level abilities + 6 traits validated for required fields, effect anyOf constraints, and no forbidden top-level fields
-- **additionalProperties check** (1 test): Verifies no fields outside the schema's allowed properties list appear at top level
+- **unevaluatedProperties check** (1 test): Verifies no fields outside the schema's allowed properties list appear at top level (renamed from additionalProperties per data-sdk-npm#13)
+- **Usage optionality** (6 tests): Verifies traits correctly omit `usage` field (per data-gen#94)
+- **Name always present** (21 tests): Verifies all abilities and traits always have `name` set (per data-gen#94)
 - **Effect constraint validation**: Each effect checked against the 4 `anyOf` options (effect field, roll+tier1/2/3, roll+t1/2/3, roll+labeled tiers)
 - Tests gracefully skip if legacy data or Heroes input file is not present
 
@@ -143,7 +145,7 @@ These differences from the legacy data are expected and acceptable:
 ### Design Guidelines
 
 - Every schema requires `type` (const matching the content type) and `name`
-- All schemas have `additionalProperties: false` (matches feature.schema.json pattern)
+- All schemas use **draft 2019-09** with `unevaluatedProperties: false` (not draft-07 `additionalProperties: false`) to allow composition via `allOf` -- see data-sdk-npm#13
 - All schemas include optional `metadata` object (for SCC, source, etc.)
 - All schemas include optional `content` string (raw markdown body)
 - Schemas are designed for extensibility (homebrew can add custom fields via `metadata`)
@@ -168,13 +170,46 @@ These differences from the legacy data are expected and acceptable:
 ### Test coverage
 
 - **Required field validation** (10 tests): All types have `name` and correct `type` const
-- **No additional properties** (10 tests): All types only emit fields defined in their schema
+- **No unevaluated properties** (10 tests): All types only emit fields defined in their schema
 - **Type const validation** (10 tests): `type` field matches the schema's `const` value
 - **Field type validation** (5 tests): Kit, title, treasure, career, culture field types match schema
 - **JSON roundtrip** (10 tests): All types survive marshal/unmarshal
 - **Empty body** (10 tests): No `content` field when body is empty
 - **No feature fields on passthrough** (10 tests): Passthrough types don't get `feature_type`, `effects`, etc.
 - **Allowlist enforcement**: Schema property allowlists defined in test code match the JSON schema files
+
+---
+
+## Issue-Driven Adjustments (completed 2026-04-14)
+
+Adjustments made in response to open GitHub issues before proceeding to Phase 4.
+
+### data-sdk-npm#13: Schema composability
+
+**Problem:** `additionalProperties: false` in base schemas prevents composition via `allOf` (e.g., DSE adding rendering fields alongside feature fields).
+
+**Fix applied:**
+- All 10 new steel-etl schemas upgraded from **draft-07** to **draft 2019-09**
+- `additionalProperties: false` replaced with `unevaluatedProperties: false`
+- Conformance test renamed from `TestConformance_NoAdditionalProperties` to `TestConformance_NoUnevaluatedProperties`
+- Commented on data-sdk-npm#13 recommending same change for `feature.schema.json` and `statblock.schema.json`
+
+**Remaining for data-sdk-npm:** Apply the same draft upgrade + `unevaluatedProperties` change to `feature.schema.json` and `statblock.schema.json`.
+
+### data-gen#94: Feature schema corrections (Seamus' bug report)
+
+**Findings addressed:**
+
+| Finding | steel-etl status | data-sdk-npm action needed |
+|---|---|---|
+| `name` should be required | Already always emitted; added `TestConformance_NameAlwaysPresent` (21 tests) | Move `name` into `required` array |
+| `usage` should be optional | Already optional; added `TestConformance_UsageIsOptional` (6 tests) | Remove from `required` if present; fix docs |
+| `icon` should be required | Not currently extracted by steel-etl | Future work: extract from source or annotation |
+| Villain Action in `ability_type` | Statblock concern, not heroes data | Fix in data-gen statblock handling |
+| `level` required in statblock | Statblock concern | Move `level` into statblock `required` array |
+| Roles vs organization in statblock | Statblock concern | Split into separate fields |
+| Ancestry vs keywords in statblock | Statblock concern | Rename field |
+| Malice "+" prefix | data-gen parsing bug | Fix in data-gen |
 
 ---
 
@@ -186,7 +221,9 @@ This phase is about planning the SDK evolution, not immediate implementation.
 
 ### Option A: Update data-sdk-npm
 
-- Add new model types: `Kit`, `Perk`, `Career`, `Ancestry`, `Title`, `Treasure`, `Condition`, `Complication`
+- Upgrade `feature.schema.json` and `statblock.schema.json` to draft 2019-09 with `unevaluatedProperties: false` (per #13)
+- Make `name` required in feature schema; make `usage` optional (per #94)
+- Add new model types: `Kit`, `Perk`, `Career`, `Ancestry`, `Culture`, `Title`, `Treasure`, `Condition`, `Complication`
 - Add corresponding DTOs, schemas, readers/writers
 - Bump to v3.0.0 with the new types
 - Update draw-steel-elements dependency
@@ -212,13 +249,17 @@ Start with **Option A** (update data-sdk-npm) because:
 
 | File | Purpose |
 |---|---|
-| `steel-etl/internal/output/sdk_transform.go` | SDK format transform (new) |
+| `steel-etl/internal/output/sdk_transform.go` | SDK format transform |
+| `steel-etl/internal/output/sdk_transform_test.go` | SDK transform unit tests (13 tests) |
+| `steel-etl/internal/output/conformance_test.go` | Legacy data conformance tests (30+ tests) |
+| `steel-etl/internal/output/schema_validation_test.go` | New type schema validation tests (88 tests) |
 | `steel-etl/internal/output/json.go` | JSON output generator |
 | `steel-etl/internal/output/yaml.go` | YAML output generator |
 | `steel-etl/internal/output/generator.go` | Markdown output + `BuildMarkdownFile` |
 | `steel-etl/internal/content/ability.go` | Ability parser (extracts fields) |
 | `steel-etl/internal/content/feature.go` | Feature/trait parser |
 | `steel-etl/internal/content/parser.go` | `ParsedContent` struct definition |
+| `steel-etl/schemas/*.schema.json` | New type schemas (10 files, draft 2019-09) |
 | `data-sdk-npm/src/schema/feature.schema.json` | Feature JSON schema (source of truth) |
 | `data-sdk-npm/src/schema/statblock.schema.json` | Statblock JSON schema |
 | `data/data-rules-json/Abilities/` | Legacy ability JSON (conformance baseline) |

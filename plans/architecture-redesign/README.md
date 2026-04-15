@@ -1,7 +1,7 @@
 # Steel Compendium Architecture Redesign
 
 **Date:** 2026-04-12
-**Status:** Planning complete, ready for Phase 0 execution
+**Status:** Phase 1 complete, Phase 2 in progress (JSON/YAML output + content parsers done, variants remaining)
 
 ## Overview
 
@@ -22,6 +22,7 @@ This plan redesigns the Steel Compendium data pipeline from a fragile justfile/b
 | [pipeline-config.md](pipeline-config.md) | Pipeline configuration file spec |
 | [phases.md](phases.md) | Phased implementation plan with all steps |
 | [risks.md](risks.md) | Risks, mitigations, and success criteria |
+| [../sdk-schema-alignment/](../sdk-schema-alignment/) | SDK schema alignment plan (JSON/YAML output conformance) |
 
 ## Motivation
 
