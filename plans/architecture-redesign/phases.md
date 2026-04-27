@@ -231,6 +231,7 @@ Each parser gets unit tests using small markdown fixtures in `testdata/`.
 - Search exclusion via Go code instead of bash `find ... | sed`
 - Static content overrides via config
 - v2 build becomes: `steel-etl gen` → `steel-etl site --config site.yaml` → `mkdocs build`
+- v2 `justfile` updated (2026-04-26) to run `steel-etl gen` + `steel-etl site` directly instead of cloning `data-md-linked`
 
 **3.6: Add MkDocs i18n support** *DEFERRED — awaiting translated content (expected ~May 2026)*
 - Configure MkDocs Material i18n for locale switching
@@ -244,6 +245,40 @@ Each parser gets unit tests using small markdown fixtures in `testdata/`.
 - [x] v2 website uses SCC-based URLs (via `steel-etl site` command)
 - [x] v2 build no longer uses sed/perl for link manipulation
 - [ ] At least one translated language is live on the website (or build is verified and awaiting translated content) — *DEFERRED*
+
+---
+
+## Cross-Phase: CLI + SCC Freeze (2026-04-26)
+
+**Goal:** Complete the `validate` and `classify` CLI commands, freeze the SCC taxonomy.
+
+### Steps
+
+**Implement `validate` command** *DONE*
+- `steel-etl validate [file] --config pipeline.yaml`
+- Reports annotation coverage (total/annotated/unannotated, coverage %)
+- Detects unknown `@type` values (no registered parser)
+- Detects annotations missing `@type` field
+- `--scc-stable` flag: runs pipeline and validates all frozen SCC codes still exist
+- New `internal/pipeline/collect.go`: `CollectSCCCodes()` for lightweight SCC collection without writing output
+
+**Implement `classify` command** *DONE*
+- `steel-etl classify [file] --config pipeline.yaml`
+- Displays all SCC codes grouped by type component
+- `--diff`: compares current codes against existing registry (added/removed)
+- `--export-map <file>`: exports SCC-to-type JSON mapping
+
+**Wire v2 website to steel-etl** *DONE*
+- `v2/justfile` rewritten: `steel-etl gen` → `steel-etl site` → `transform_indexes.py` → git push
+- Replaced 150-line bash recipe (git clone data-md-linked + sed/perl/python)
+- `v2/CLAUDE.md` updated to reference steel-etl as content source
+
+**SCC taxonomy freeze** *DONE*
+- Reviewed all 1,432 codes: 0 duplicates, consistent naming (lowercase, hyphens, no invalid chars)
+- `classification.json`: `frozen: true`
+- `pipeline.yaml`: `freeze: true`
+- Pipeline preserves frozen flag when saving registry
+- Pipeline validates frozen codes are not removed when `freeze: true`
 
 ---
 

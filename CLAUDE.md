@@ -8,11 +8,28 @@ reference for the Draw Steel TTRPG by MCDM Productions.
 This repo contains workspace-level config (justfile, devbox) and reference documents.
 All other code lives in sub-repos cloned via `just clone-all`.
 
+## Dev environment (devbox)
+
+This workspace uses **devbox** for toolchain management (Go, Node, Python, just, etc.). Go and other tools are NOT on the system PATH -- you must activate devbox first.
+
+```bash
+# Activate devbox (run this before any Go/just/node commands):
+eval "$(devbox shellenv --config /home/vexa/code/steel_compendium/workspace/devbox.json 2>/dev/null)"
+
+# Verify:
+go version    # go1.26.1
+just --version
+node --version
+```
+
+For scripts and subagents, prefix commands with the eval line above. The `devbox.json` packages: bash, python, just, jq, yq-go, perl, figlet, nodejs, go.
+
 ## Layout
 
 - `justfile` -- Workspace recipes (`clone-all`, `switch_repos_to`)
-- `devbox.json` / `devbox.lock` -- Dev environment
+- `devbox.json` / `devbox.lock` -- Dev environment (Go, Node, Python, just, etc.)
 - `reference/` -- Draw Steel condensed reference docs (see below)
+- `steel-etl/` -- Go CLI tool: the primary ETL pipeline (has its own CLAUDE.md)
 - Sub-repos at top level: `compendium/`, `v2/`, `data-gen/`, `data-sdk-npm/`, `draw-steel-elements/`, `statblock-adapter-gl-pages/`, `steelCompendium.github.io/`
 - Sub-repos in `data/`: all `data-*` content repos (markdown, JSON, YAML variants)
 

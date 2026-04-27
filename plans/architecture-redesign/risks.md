@@ -110,28 +110,35 @@
 
 ## Success Criteria
 
-### Phase 0 Complete
-- [ ] Annotation spec is documented with examples
-- [ ] SCC classification scheme is redesigned and verified with sample URLs
-- [ ] `Draw Steel Heroes.md` is fully annotated
-- [ ] `pipeline.yaml` config file exists
+### Phase 0 Complete ✓
+- [x] Annotation spec is documented with examples
+- [x] SCC classification scheme is redesigned and verified with sample URLs
+- [x] `Draw Steel Heroes.md` is fully annotated
+- [x] `pipeline.yaml` config file exists
 
-### Phase 1 Complete
-- [ ] `steel-etl gen` produces per-section markdown files with correct frontmatter
-- [ ] Output diffs cleanly against current `data-rules-md` (expected differences are intentional improvements)
-- [ ] SCC codes are stable across repeated runs
-- [ ] 80%+ test coverage on core modules
-- [ ] The tool runs in <30 seconds for the full Heroes book
+### Phase 1 Complete ✓
+- [x] `steel-etl gen` produces per-section markdown files with correct frontmatter
+- [x] Output diffs cleanly against current `data-rules-md` (expected differences are intentional improvements)
+- [x] SCC codes are stable across repeated runs
+- [x] 80%+ test coverage on core modules
+- [x] The tool runs in <30 seconds for the full Heroes book
 
-### Phase 2 Complete
-- [ ] All output formats (md, json, yaml) and variants (linked, dse) are generated
-- [ ] The current `data-gen` ETL is fully replaceable by `steel-etl`
-- [ ] `scc-to-path.json` covers all content items
+### Phase 2 Complete ✓
+- [x] All output formats (md, json, yaml) and variants (linked, dse) are generated
+- [x] The current `data-gen` ETL is fully replaceable by `steel-etl`
+- [x] `scc-to-path.json` covers all content items
 
-### Phase 3 Complete
-- [ ] At least one translated language is live (or build is verified, awaiting content)
-- [ ] v2 website uses SCC-based permanent URLs
-- [ ] v2 build pipeline has no sed/perl/regex link manipulation
+### Phase 3 Complete (3.6 deferred)
+- [ ] At least one translated language is live (or build is verified, awaiting content) — *DEFERRED*
+- [x] v2 website uses SCC-based permanent URLs
+- [x] v2 build pipeline has no sed/perl/regex link manipulation
+- [x] v2 justfile wired to steel-etl gen + site (2026-04-26)
+
+### SCC Freeze Complete ✓ (2026-04-26)
+- [x] `validate` and `classify` CLI commands implemented
+- [x] 1,432 SCC codes reviewed — no duplicates, consistent naming
+- [x] Classification registry frozen (`frozen: true`)
+- [x] Pipeline enforces freeze (fails if frozen codes removed)
 
 ### Phase 4 Complete
 - [ ] Data repos consolidated from 15 to ~3
