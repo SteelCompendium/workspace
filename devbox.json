@@ -23,13 +23,15 @@
     "scripts": {
       "gemini": "gemini",
       "etl-build": "cd steel-etl && just build",
+      "etl-gen": "cd steel-etl && just build && just run gen",
       "etl-test": "cd steel-etl && just test",
       "etl-cover": "cd steel-etl && just cover",
       "etl-vet": "cd steel-etl && just vet",
       "etl-fmt": "cd steel-etl && just fmt",
       "etl-clean": "cd steel-etl && just clean",
       "etl-install": "cd steel-etl && just install",
-      "etl-run": "cd steel-etl && just run"
+      "etl-run": "cd steel-etl && just run",
+      "site-update": "cd v2 && just update push=false"
     }
   }
 }
