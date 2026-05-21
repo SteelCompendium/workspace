@@ -288,19 +288,26 @@ Each parser gets unit tests using small markdown fixtures in `testdata/`.
 
 ### Steps
 
-**4.1: Set up consolidated data repos**
-- Create `data-rules`, `data-bestiary`, `data-unified` repos
-- Directory structure: `{locale}/{format}/...`
-- Pipeline writes to consolidated repos
-- Dual-publish to old repos during migration
+**4.1: Set up consolidated data repos** *DONE*
+- `data-rules`, `data-bestiary`, `data-unified` repos created on GitHub (2026-05-21)
+- `data-rules`: 11 commits, `en/` with full content; `data-unified`: 1,444 tracked files in `en/md/`; `data-bestiary`: empty (ready for Phase 5)
+- Pipeline already writes to consolidated repos (`pipeline.yaml` paths confirmed)
+- Workspace `justfile` updated to clone all three into `data/`
+- Dual-publish to old repos deferred (old repos still exist but pipeline no longer targets them)
 
-**4.2: Formalize SCC specification**
-- Write the full SCC specification document (grammar, allocation rules, versioning, resolution)
-- Publish as part of the Steel Compendium documentation
+**4.2: Formalize SCC specification** *DONE*
+- `reference/scc-specification.md`: Full spec covering format grammar, type taxonomy, URL mapping, allocation rules, versioning, registry schema, freeze rules, resolution, and design principles
+- Published in `reference/` alongside Draw Steel reference docs (2026-05-21)
 
-**4.3: Build SCC resolution for website**
-- Static JSON API on GitHub Pages: resolve SCC code to canonical URL and basic metadata
-- Enable external tools to look up content by SCC code
+**4.3: Build SCC resolution for website** *DONE*
+- `steel-etl/internal/output/scc_api.go`: `SCCAPIGenerator` produces static JSON API (index.json, scc.json, types.json, 1,432 per-entry resolve files)
+- API output written to `steelCompendium.github.io/docs/api/v1/` via pipeline config
+- URL resolution uses `site.yaml` section mapping (Browse/Read) to produce correct website URLs
+- Alias resolution supported (alias resolve files point to canonical entries)
+- 7 unit tests (2026-05-21)
+- SCC Lookup page added to org site (`steelCompendium.github.io/docs/api/index.md`): autocomplete search by name/type/SCC code, multi-term filtering, keyboard navigation, MkDocs Material themed
+- API documentation with endpoint descriptions and usage examples on the same page
+- Workspace `deploy-api` and `deploy-v2` recipes added; `deploy` runs both sequentially (2026-05-21)
 
 **4.4: Design homebrew content spec**
 - Publisher registration process
@@ -315,10 +322,11 @@ Each parser gets unit tests using small markdown fixtures in `testdata/`.
 - Timeline for archiving old repos (6+ months)
 
 ### Exit Criteria
-- [ ] Consolidated repos exist and receive pipeline output
-- [ ] Old repos receive dual-published output
-- [ ] SCC specification is published
-- [ ] SCC resolution API is available
+- [x] Consolidated repos exist and receive pipeline output
+- [ ] Old repos receive dual-published output (deferred)
+- [x] SCC specification is published
+- [x] SCC resolution API is available (static JSON + SCC Lookup search page)
+- [x] Workspace deploy recipes: `deploy-api`, `deploy-v2`, `deploy` (both)
 - [ ] Homebrew content spec is documented
 - [ ] Consumer migration is planned and communicated
 

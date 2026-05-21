@@ -1,7 +1,7 @@
 # Steel Compendium Architecture Redesign
 
 **Date:** 2026-04-12
-**Status:** Phases 1-3 complete (3.6 deferred, awaiting translated content). SDK schema alignment complete (all 4 phases, 2026-04-14). SCC taxonomy frozen (2026-04-26, 1,432 codes). `validate` and `classify` CLI commands implemented. v2 website wired to steel-etl output.
+**Status:** Phases 1-3 complete (3.6 deferred, awaiting translated content). SDK schema alignment complete (all 4 phases, 2026-04-14). SCC taxonomy frozen (2026-04-26, 1,432 codes). `validate` and `classify` CLI commands implemented. v2 website wired to steel-etl output. Phase 4.1-4.3 complete (consolidated repos, SCC spec, SCC resolution API + Lookup page, deploy recipes — 2026-05-21). Phase 4.4-4.5 and Phase 5 remaining.
 
 ## Overview
 

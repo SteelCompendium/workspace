@@ -2,35 +2,40 @@
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.11.0/.schema/devbox.schema.json",
   "packages": [
     "bash@latest",
-    "python@latest",
+    "python3@latest",
     "just@latest",
     "jq@latest",
     "yq-go@latest",
     "perl",
     "figlet@latest",
     "nodejs@latest",
-    "go@latest"
+    "go@latest",
+    "zlib@latest",
+    "openssl@latest"
   ],
   "env": {
     "DEVBOX_COREPACK_ENABLED": "true"
   },
   "shell": {
     "init_hook": [
-      "if [ \"$(type -t \"source\")\" = \"builtin\" ]; then clear -x; source bin/furc; fi",
+      "if [ ! -d .venv ]; then python3 -m venv .venv; fi",
       ". $VENV_DIR/bin/activate",
-      "pip install PyYAML python-frontmatter"
+      "pip install -q PyYAML python-frontmatter mkdocs mkdocs-material mkdocs-roamlinks-plugin mkdocs-awesome-nav"
     ],
     "scripts": {
-      "gemini": "gemini",
-      "etl-build": "cd steel-etl && just build",
-      "etl-gen": "cd steel-etl && just build && just run gen",
-      "etl-test": "cd steel-etl && just test",
-      "etl-cover": "cd steel-etl && just cover",
-      "etl-vet": "cd steel-etl && just vet",
-      "etl-fmt": "cd steel-etl && just fmt",
-      "etl-clean": "cd steel-etl && just clean",
+      "--":          "$@",
+      "run":         "$@",
+      "deploy":      "just deploy",
+      "deploy-api":  "just deploy-api",
+      "deploy-v2":   "just deploy-v2",
+      "etl-build":   "cd steel-etl && just build",
+      "etl-test":    "cd steel-etl && just test",
+      "etl-cover":   "cd steel-etl && just cover",
+      "etl-vet":     "cd steel-etl && just vet",
+      "etl-fmt":     "cd steel-etl && just fmt",
+      "etl-clean":   "cd steel-etl && just clean",
       "etl-install": "cd steel-etl && just install",
-      "etl-run": "cd steel-etl && just run",
+      "etl-run":     "cd steel-etl && just run",
       "site-update": "cd v2 && just update push=false"
     }
   }
