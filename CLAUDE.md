@@ -14,13 +14,15 @@ This workspace uses **devbox** for toolchain management (Go, Node, Python, just,
 
 ```bash
 # Activate devbox (run this before any Go/just/node commands):
-eval "$(devbox shellenv --config /home/vexa/code/steel_compendium/workspace/devbox.json 2>/dev/null)"
+devbox run --
 
 # Verify:
 go version    # go1.26.1
 just --version
 node --version
 ```
+
+For example, `devbox run -- go build ./...`
 
 For scripts and subagents, prefix commands with the eval line above. The `devbox.json` packages: bash, python, just, jq, yq-go, perl, figlet, nodejs, go.
 
