@@ -1,6 +1,6 @@
-# Cross-Linking Implementation Plan
+# Cross-Linking Implementation Plan — COMPLETE
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **Status:** All 9 tasks completed and verified (2026-05-26). Integration test passed with all three link modes (`all`, `first`, `none`). See the [content linking plan](2026-05-26-content-linking.md) for the next phase.
 
 **Goal:** Add link density filtering (`all`/`first`/`none`) to the SCC resolver, update all callers, wire it into the CLI, and migrate the source document's legacy links.
 
@@ -35,7 +35,7 @@
 - Modify: `internal/scc/resolver.go`
 - Test: `internal/scc/resolver_test.go`
 
-- [ ] **Step 1: Write failing tests for LinkAll mode (existing behavior)**
+- [x] **Step 1: Write failing tests for LinkAll mode (existing behavior)**
 
 Update all existing test calls to pass `LinkAll` explicitly. This verifies the signature change compiles correctly and existing behavior is preserved.
 
@@ -57,7 +57,7 @@ And in `TestResolverWithAliases`:
 got := resolver.ResolveLinks(input, "", scc.LinkAll)
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test ./internal/scc/ -v -run TestResolver
@@ -65,7 +65,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test
 
 Expected: compilation error — `ResolveLinks` doesn't accept 3 arguments yet.
 
-- [ ] **Step 3: Add LinkMode type and update ResolveLinks**
+- [x] **Step 3: Add LinkMode type and update ResolveLinks**
 
 In `internal/scc/resolver.go`, add the `LinkMode` type after the imports and before the `Resolver` struct:
 
@@ -125,7 +125,7 @@ func (r *Resolver) ResolveLinks(content string, relativeTo string, mode LinkMode
 
 Add `"fmt"` and `"os"` to the imports.
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test ./internal/scc/ -v -run TestResolver
@@ -133,7 +133,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test
 
 Expected: all existing tests pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && git add internal/scc/resolver.go internal/scc/resolver_test.go && git commit -m "feat: add LinkMode to ResolveLinks (all mode preserves existing behavior)"
@@ -146,7 +146,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && git add internal/scc/
 **Files:**
 - Test: `internal/scc/resolver_test.go`
 
-- [ ] **Step 1: Write failing tests for LinkNone**
+- [x] **Step 1: Write failing tests for LinkNone**
 
 Append to `internal/scc/resolver_test.go`:
 
@@ -191,7 +191,7 @@ func TestResolverLinkNone(t *testing.T) {
 }
 ```
 
-- [ ] **Step 2: Write failing tests for LinkFirst**
+- [x] **Step 2: Write failing tests for LinkFirst**
 
 Append to `internal/scc/resolver_test.go`:
 
@@ -236,7 +236,7 @@ func TestResolverLinkFirst(t *testing.T) {
 }
 ```
 
-- [ ] **Step 3: Run tests to verify they pass**
+- [x] **Step 3: Run tests to verify they pass**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test ./internal/scc/ -v -run "TestResolverLink(None|First)"
@@ -244,7 +244,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test
 
 Expected: all new tests pass (implementation was done in Task 1).
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && git add internal/scc/resolver_test.go && git commit -m "test: add LinkFirst and LinkNone resolver tests"
@@ -257,7 +257,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && git add internal/scc/
 **Files:**
 - Modify: `internal/scc/resolver_test.go`
 
-- [ ] **Step 1: Write test for unresolved links**
+- [x] **Step 1: Write test for unresolved links**
 
 The existing test `"unknown scc left as-is"` uses a bare `scc:` reference (not wrapped in a markdown link). Update it and add a new test for the markdown-link case, which should strip to display text per the design spec.
 
@@ -303,7 +303,7 @@ func TestResolverUnresolvedLinks(t *testing.T) {
 }
 ```
 
-- [ ] **Step 2: Run tests**
+- [x] **Step 2: Run tests**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test ./internal/scc/ -v -run TestResolverUnresolved
@@ -311,7 +311,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test
 
 Expected: PASS — the updated `ResolveLinks` already strips unresolved markdown links to display text and logs a warning.
 
-- [ ] **Step 3: Update the old "unknown scc left as-is" test**
+- [x] **Step 3: Update the old "unknown scc left as-is" test**
 
 The existing `TestResolverResolveLinks` has a test case `"unknown scc left as-is"` that uses a bare `scc:` reference without markdown link syntax. Since the new resolver only matches `[text](scc:...)` markdown links, bare `scc:` references will be left as-is (they don't match `mdLinkRe`). This is correct behavior — bare `scc:` references without link syntax aren't valid links.
 
@@ -340,7 +340,7 @@ Also update the `"inline scc link"` and `"multiple links"` test cases. These use
 },
 ```
 
-- [ ] **Step 4: Run full resolver test suite**
+- [x] **Step 4: Run full resolver test suite**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test ./internal/scc/ -v
@@ -348,7 +348,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test
 
 Expected: all tests pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && git add internal/scc/resolver_test.go && git commit -m "test: add unresolved link stripping tests, update bare-reference tests"
@@ -362,7 +362,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && git add internal/scc/
 - Modify: `internal/output/linked.go`
 - Modify: `internal/output/linked_test.go`
 
-- [ ] **Step 1: Update test to pass LinkMode**
+- [x] **Step 1: Update test to pass LinkMode**
 
 In `internal/output/linked_test.go`, update the `LinkedGenerator` struct initialization in `TestLinkedGenerator_WriteSection` to include a `LinkMode` field, and update the `ResolveLinks` call expectation.
 
@@ -391,7 +391,7 @@ gen := &LinkedGenerator{
 
 Do this for `TestLinkedGenerator_WriteSection`, `TestLinkedGenerator_NilAndEmpty`, and `TestLinkedGenerator_UnresolvedLinks`.
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test ./internal/output/ -v -run TestLinkedGenerator
@@ -399,7 +399,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test
 
 Expected: compilation error — `LinkedGenerator` doesn't have a `LinkMode` field yet.
 
-- [ ] **Step 3: Add LinkMode field to LinkedGenerator**
+- [x] **Step 3: Add LinkMode field to LinkedGenerator**
 
 In `internal/output/linked.go`, update the struct and `WriteSection` method:
 
@@ -422,7 +422,7 @@ resolved := &content.ParsedContent{
 }
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test ./internal/output/ -v -run TestLinkedGenerator
@@ -430,7 +430,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test
 
 Expected: all pass.
 
-- [ ] **Step 5: Update the UnresolvedLinks test expectation**
+- [x] **Step 5: Update the UnresolvedLinks test expectation**
 
 The existing `TestLinkedGenerator_UnresolvedLinks` test expects unresolved `scc:` links to remain as-is in the output. With the new behavior, unresolved markdown-syntax links are stripped to display text. Update the assertion:
 
@@ -455,7 +455,7 @@ if !strings.Contains(string(data), "See Unknown link.") {
 }
 ```
 
-- [ ] **Step 6: Run tests and verify**
+- [x] **Step 6: Run tests and verify**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test ./internal/output/ -v -run TestLinkedGenerator
@@ -463,7 +463,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test
 
 Expected: all pass.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && git add internal/output/linked.go internal/output/linked_test.go && git commit -m "feat: pass LinkMode through LinkedGenerator"
@@ -477,7 +477,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && git add internal/outp
 - Modify: `internal/output/dse_linked.go`
 - Modify: `internal/output/dse_linked_test.go`
 
-- [ ] **Step 1: Add LinkMode field to DSELinkedGenerator**
+- [x] **Step 1: Add LinkMode field to DSELinkedGenerator**
 
 In `internal/output/dse_linked.go`, update the struct:
 
@@ -495,7 +495,7 @@ Update the `WriteSection` call:
 Body:        g.Resolver.ResolveLinks(parsed.Body, sccCode, g.LinkMode),
 ```
 
-- [ ] **Step 2: Update tests**
+- [x] **Step 2: Update tests**
 
 In `internal/output/dse_linked_test.go`, update all `DSELinkedGenerator` initializations to include `LinkMode: scc.LinkAll`:
 
@@ -509,7 +509,7 @@ gen := &DSELinkedGenerator{
 
 Do this in `TestDSELinkedGenerator_WriteSection_Ability`, `TestDSELinkedGenerator_WriteSection_Condition`, and `TestDSELinkedGenerator_NilAndEmpty`.
 
-- [ ] **Step 3: Run tests**
+- [x] **Step 3: Run tests**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test ./internal/output/ -v -run TestDSELinkedGenerator
@@ -517,7 +517,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test
 
 Expected: all pass.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && git add internal/output/dse_linked.go internal/output/dse_linked_test.go && git commit -m "feat: pass LinkMode through DSELinkedGenerator"
@@ -531,11 +531,11 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && git add internal/outp
 - Modify: `internal/pipeline/config.go`
 - Modify: `internal/pipeline/pipeline.go`
 
-- [ ] **Step 1: Check the current config structure**
+- [x] **Step 1: Check the current config structure**
 
 Read `internal/pipeline/config.go` to find the `VariantsConfig` struct where `Linked` is defined.
 
-- [ ] **Step 2: Add LinkMode to the pipeline config**
+- [x] **Step 2: Add LinkMode to the pipeline config**
 
 In `internal/pipeline/config.go`, add a `LinkMode` field to the `OutputConfig` struct:
 
@@ -566,7 +566,7 @@ func (o *OutputConfig) ParseLinkMode() scc.LinkMode {
 
 Add `"strings"` and the `scc` package to the imports.
 
-- [ ] **Step 3: Update buildGenerators to pass LinkMode**
+- [x] **Step 3: Update buildGenerators to pass LinkMode**
 
 In `internal/pipeline/pipeline.go`, in the `buildGenerators` function, update the linked generator construction:
 
@@ -592,7 +592,7 @@ if cfg.Output.Variants.DSELinked {
 }
 ```
 
-- [ ] **Step 4: Build to verify compilation**
+- [x] **Step 4: Build to verify compilation**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go build ./...
@@ -600,7 +600,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go buil
 
 Expected: compiles successfully.
 
-- [ ] **Step 5: Run full test suite**
+- [x] **Step 5: Run full test suite**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test ./... -race
@@ -608,7 +608,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test
 
 Expected: all tests pass.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && git add internal/pipeline/config.go internal/pipeline/pipeline.go && git commit -m "feat: wire LinkMode from pipeline config to generators"
@@ -621,7 +621,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && git add internal/pipe
 **Files:**
 - Modify: `internal/cli/gen.go`
 
-- [ ] **Step 1: Add the flag**
+- [x] **Step 1: Add the flag**
 
 In `internal/cli/gen.go`, add to the `init()` function:
 
@@ -629,7 +629,7 @@ In `internal/cli/gen.go`, add to the `init()` function:
 genCmd.Flags().String("link-mode", "", "link density mode: all, first, none (default: all)")
 ```
 
-- [ ] **Step 2: Apply the flag override in runGen**
+- [x] **Step 2: Apply the flag override in runGen**
 
 In `runGen`, after the existing CLI overrides, add:
 
@@ -639,7 +639,7 @@ if linkMode, _ := cmd.Flags().GetString("link-mode"); linkMode != "" {
 }
 ```
 
-- [ ] **Step 3: Add the flag display in the output**
+- [x] **Step 3: Add the flag display in the output**
 
 After the existing variant print lines, add:
 
@@ -649,7 +649,7 @@ if cfg.Output.LinkMode != "" {
 }
 ```
 
-- [ ] **Step 4: Build and test**
+- [x] **Step 4: Build and test**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go build ./... && devbox run -- go test ./... -race
@@ -657,7 +657,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go buil
 
 Expected: compiles, all tests pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && git add internal/cli/gen.go && git commit -m "feat: add --link-mode CLI flag to gen command"
@@ -670,7 +670,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && git add internal/cli/
 **Files:**
 - Modify: `input/heroes/Draw Steel Heroes.md` (line 98)
 
-- [ ] **Step 1: Replace the 2 legacy colon-format links**
+- [x] **Step 1: Replace the 2 legacy colon-format links**
 
 On line 98 of `input/heroes/Draw Steel Heroes.md`, replace:
 
@@ -696,7 +696,7 @@ with:
 [Classes](scc:mcdm.heroes.v1/chapter/classes)
 ```
 
-- [ ] **Step 2: Verify no other legacy links remain**
+- [x] **Step 2: Verify no other legacy links remain**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && grep -n "scc:[a-zA-Z0-9._-]*:" input/heroes/Draw\ Steel\ Heroes.md
@@ -704,7 +704,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && grep -n "scc:[a-zA-Z0
 
 Expected: no output (no remaining colon-separated scc links).
 
-- [ ] **Step 3: Verify the new links match registry codes**
+- [x] **Step 3: Verify the new links match registry codes**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && grep -o "scc:[a-zA-Z0-9._/-]*" input/heroes/Draw\ Steel\ Heroes.md
@@ -725,7 +725,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && jq '.codes[]' classif
 
 Expected: both codes found.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && git add "input/heroes/Draw Steel Heroes.md" && git commit -m "fix: migrate legacy scc: links to slash format"
@@ -735,7 +735,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && git add "input/heroes
 
 ### Task 9: Integration test — run the full pipeline
 
-- [ ] **Step 1: Run the pipeline with default mode (all)**
+- [x] **Step 1: Run the pipeline with default mode (all)**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go run ./cmd/steel-etl gen --config pipeline.yaml
@@ -747,7 +747,7 @@ Expected: pipeline completes without errors. Check that the linked output has re
 grep -r "\[.*\](.*\.md)" ../data/data-rules/en/md-linked/ | head -5
 ```
 
-- [ ] **Step 2: Run the pipeline with --link-mode=first**
+- [x] **Step 2: Run the pipeline with --link-mode=first**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go run ./cmd/steel-etl gen --config pipeline.yaml --link-mode=first
@@ -755,7 +755,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go run 
 
 Expected: pipeline completes. Spot-check a file that would have duplicate links to verify only the first is linked.
 
-- [ ] **Step 3: Run the pipeline with --link-mode=none**
+- [x] **Step 3: Run the pipeline with --link-mode=none**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go run ./cmd/steel-etl gen --config pipeline.yaml --link-mode=none
@@ -769,7 +769,7 @@ grep -r "scc:" ../data/data-rules/en/md-linked/ | head -5
 
 Expected: no output (all scc: links stripped).
 
-- [ ] **Step 4: Reset to default mode**
+- [x] **Step 4: Reset to default mode**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go run ./cmd/steel-etl gen --config pipeline.yaml
@@ -777,7 +777,7 @@ cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go run 
 
 Re-run with default to restore normal output.
 
-- [ ] **Step 5: Run full test suite one final time**
+- [x] **Step 5: Run full test suite one final time**
 
 ```bash
 cd /home/vexa/code/steel_compendium/workspace/steel-etl && devbox run -- go test ./... -race -cover

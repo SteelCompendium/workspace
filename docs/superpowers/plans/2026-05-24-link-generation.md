@@ -1,6 +1,6 @@
-# Link Generation Implementation Plan
+# Link Generation Implementation Plan — COMPLETE
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **Status:** All tasks completed (2026-05-26). Reference table, linking guide, and Introduction pilot are done. See the [content linking plan](2026-05-26-content-linking.md) for the remaining chapters.
 
 **Goal:** Create the reusable artifacts (reference table + linking guide) and validate the linking workflow on the first chapter, so the remaining 20 chapters can be linked following the established process.
 
