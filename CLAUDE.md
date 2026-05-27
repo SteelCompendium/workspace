@@ -37,7 +37,7 @@ For scripts and subagents, prefix commands with the eval line above. The `devbox
 - `steel-etl/` -- Go CLI tool: the primary ETL pipeline and site builder (has its own CLAUDE.md)
 - `v2/` -- MkDocs Material site; `v2/site.yaml` configures the steel-etl site builder. See `v2/.repo-docs/` for detailed architecture docs including the SCC permalink system.
 - Sub-repos at top level: `compendium/`, `data-gen/`, `data-sdk-npm/`, `draw-steel-elements/`, `statblock-adapter-gl-pages/`, `steelCompendium.github.io/`
-- Sub-repos in `data/`: all `data-*` content repos (markdown, JSON, YAML variants)
+- Sub-repos in `data/`: all `data-*` content repos (markdown, JSON, YAML variants) are primarily output repos
 
 ## Draw Steel TTRPG Reference
 
