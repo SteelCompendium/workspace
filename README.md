@@ -20,29 +20,31 @@ steelCompendium/
   justfile              # Workspace recipes
   devbox.json           # Devbox environment (Python, Node, just, jq, yq, etc.)
   reference/            # Draw Steel condensed reference docs for AI agents
-  compendium/           # Obsidian vault (v1)
+  compendium/           # MkDocs Material site (v1, deprecated)
   v2/                   # MkDocs Material site (v2)
-  data-gen/             # ETL pipeline: PDF -> Markdown -> YAML/JSON
+  data-gen/             # Legacy ETL pipeline: PDF -> Markdown -> YAML/JSON (deprecated)
   data-sdk-npm/         # TypeScript SDK for consuming data repos
   draw-steel-elements/  # Web components for Draw Steel content
   statblock-adapter-gl-pages/  # Statblock rendering adapter
-  steelCompendium.github.io/   # GitHub Pages site
+  steelCompendium.github.io/   # Root GitHub Pages site
   data/
-    data-md/            # Core Markdown (heroes)
-    data-md-dse/        # DSE-formatted Markdown
-    data-md-linked/     # Markdown with scc: links resolved
-    data-md-dse-linked/ # DSE Markdown with links resolved
-    data-rules-md/      # Rules Markdown
-    data-rules-md-dse/  # Rules DSE Markdown
-    data-rules-md-linked/      # Rules Markdown with links
-    data-rules-md-dse-linked/  # Rules DSE Markdown with links
-    data-rules-json/    # Rules as JSON
-    data-rules-yaml/    # Rules as YAML
-    data-bestiary-md/   # Bestiary Markdown
-    data-bestiary-md-dse/  # Bestiary DSE Markdown
-    data-bestiary-json/ # Bestiary as JSON
-    data-bestiary-yaml/ # Bestiary as YAML
-    data-adventures-md/ # Adventures Markdown
+    data-md/            # Core Markdown (heroes) (deprecated)
+    data-md-dse/        # DSE-formatted Markdown (deprecated)
+    data-md-linked/     # Markdown with scc: links resolved (deprecated)
+    data-md-dse-linked/ # DSE Markdown with links resolved (deprecated)
+    data-rules/         # Rules in various formats and languages
+    data-rules-md/      # Rules Markdown (deprecated)
+    data-rules-md-dse/  # Rules DSE Markdown (deprecated)
+    data-rules-md-linked/      # Rules Markdown with link (deprecated)s
+    data-rules-md-dse-linked/  # Rules DSE Markdown with links (deprecated)
+    data-rules-json/    # Rules as JSON (deprecated)
+    data-rules-yaml/    # Rules as YAML (deprecated)
+    data-bestiary-md/   # Bestiary Markdown (deprecated)
+    data-bestiary-md-dse/  # Bestiary DSE Markdown (deprecated)
+    data-bestiary-json/ # Bestiary as JSON (deprecated)
+    data-bestiary-yaml/ # Bestiary as YAML (deprecated)
+    data-adventures-md/ # Adventures Markdown (deprecated)
+    data-unified/         # All current data repos merged together in various formats and languages
 ```
 
 ## Recipes
