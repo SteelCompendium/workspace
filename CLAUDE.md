@@ -70,6 +70,8 @@ Read the overview first. Use the condensed reference for moderate detail. Use th
 Hierarchical classification system used across all data repos: `source/type/item` (e.g. `mcdm.heroes.v1/feature.ability.fury.level-1/gouge`).
 SCC codes are identifiers used as website permalinks (`/scc/{code}/`), API keys, and cross-reference links. See `reference/scc-specification.md` for the full spec.
 
+**Registry:** 1,581 codes across 15 types. The source document has 2,818 SCC cross-reference links including conditions, skills, movement types, negotiation motivations, and culture benefits. See `steel-etl/docs/linking-guide.md` for linking rules and `steel-etl/docs/linking-reference.md` for all 416 linkable terms.
+
 ## Sub-repo CLAUDE.md files
 
 Each sub-repo has its own CLAUDE.md with repo-specific context. When working in a sub-repo, read its CLAUDE.md first.

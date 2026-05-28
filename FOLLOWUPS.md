@@ -16,4 +16,10 @@ Each entry should include:
 
 ---
 
-_No open follow-ups._
+### Regenerate legacy conformance baselines
+
+- **Identified:** 2026-05-28, SCC link audit
+- **What:** The legacy JSON files in `data/data-rules-json/` don't include the new SCC links added during the link audit. The conformance test in `internal/output/conformance_test.go` now strips SCC links before comparing, which is correct but means the test no longer validates that link text is preserved exactly.
+- **Why:** When the legacy baselines are regenerated (or the legacy format is retired), the `stripSCCLinks` workaround in the conformance test can be removed and exact matching restored.
+- **Context:** `steel-etl/internal/output/conformance_test.go` — `assertEffectFieldMatch` uses `stripSCCLinks()` to normalize before comparison. Legacy baselines are in `data/data-rules-json/`.
+- **Effort:** XS — regenerate baselines with current pipeline output, then revert the strip function
