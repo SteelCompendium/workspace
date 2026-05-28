@@ -1,8 +1,10 @@
 # Content Linking Implementation Plan
 
+> **Update 2026-05-28:** The SCC registry was expanded with 104 new codes (conditions, skills, movement, negotiation, culture). 22 flat duplicate codes were cleaned up. The linking reference table now has 416 terms across 14 categories. See the [SCC Link Audit plan](../../../.claude/plans/peppy-hopping-koala.md) for details and linking progress (7/18 chapters done for new types, 100 new links added). New types require **AI-driven disambiguation** — scripted regex is not appropriate.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add `scc:` cross-reference links to all 20 remaining chapters of `input/heroes/Draw Steel Heroes.md`, covering all 312 linkable terms across 9 categories.
+**Goal:** Add `scc:` cross-reference links to all 20 remaining chapters of `input/heroes/Draw Steel Heroes.md`, covering all 416 linkable terms across 14 categories (expanded from 312/9 on 2026-05-28).
 
 **Architecture:** Each task processes one chapter (or a group of tiny chapters). The worker reads the chapter text, consults the reference table (`docs/linking-reference.md`), and wraps every game mechanic reference in `[Display Text](scc:CODE)` markdown links. Link density filtering happens at build time — the source document gets the maximal link set. The Classes chapter (13,541 lines) is split into 10 sub-tasks (intro + 9 class sections).
 
@@ -35,7 +37,17 @@ Before starting any task, the worker MUST read these files:
 | Titles | 61 | Low — mostly in Titles chapter | knight, noble, demigod, etc. |
 | Treasures | 19 | Low — mostly in Treasures chapter | Leveled treasure categories |
 
-**NOT linkable** (not in the SCC registry): conditions (dazed, frightened, etc.), individual abilities/features (these are section-internal).
+**Now also linkable** (added to registry 2026-05-28 — see `peppy-hopping-koala.md` plan):
+
+| Type | Count | High-frequency? | Notes |
+|------|-------|-----------------|-------|
+| Conditions | 9 | **Very high** — ~663 mentions | bleeding, dazed, frightened, grabbed, prone, restrained, slowed, taunted, weakened. **Disambiguation required:** mundane English vs. game condition. |
+| Skills | 57 | High — in careers, cultures, class features | All 5 skill groups. **Disambiguation required:** "the Climb skill" (link) vs. "climb the wall" (don't). |
+| Movement | 13 | High — combat + ability descriptions | forced-movement, shifting, difficult-terrain, fly, teleport, etc. |
+| Negotiation | 12 | Low — mostly in Negotiation chapter | benevolence, discovery, freedom, etc. **Highly ambiguous** in ordinary language. |
+| Culture | 13 | Low — mostly in Cultures chapter | nomadic, rural, urban, bureaucratic, academic, etc. |
+
+**Still NOT linkable:** individual abilities/features (these are section-internal).
 
 ## Linking Rules (Summary)
 
