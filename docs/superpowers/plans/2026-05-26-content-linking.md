@@ -1,4 +1,6 @@
-# Content Linking Implementation Plan
+# Content Linking Implementation Plan — COMPLETE
+
+> **Followed by (2026-05-29):** the [truncated-link fix](../../../steel-etl/docs/superpowers/plans/2026-05-29-truncated-link-fix.md), which corrected links this pass left truncated/mis-typed and grew the registry to 1,754 codes / 17 types / 441 linkable terms. The historical figures below (416 terms / 14 categories / 312) are preserved as a record of this plan's state and are now superseded.
 
 > **Update 2026-05-28:** The SCC registry was expanded with 104 new codes (conditions, skills, movement, negotiation, culture). 22 flat duplicate codes were cleaned up. The linking reference table now has 416 terms across 14 categories. See the [SCC Link Audit plan](../../../.claude/plans/peppy-hopping-koala.md) for details and linking progress (7/18 chapters done for new types, 100 new links added). New types require **AI-driven disambiguation** — scripted regex is not appropriate.
 

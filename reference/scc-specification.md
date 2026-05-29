@@ -97,6 +97,8 @@ monster.ogres
 | `treasure` | Reward treasures | `mcdm.heroes.v1/treasure/healing-potion` |
 | `movement` | Movement rules | `mcdm.heroes.v1/movement/forced-movement` |
 | `negotiation` | Negotiation rules | `mcdm.heroes.v1/negotiation/interest` |
+| `project` | Downtime projects | `mcdm.heroes.v1/project/build-airship` |
+| `god` | Deities | `mcdm.heroes.v1/god/cavall` |
 | `monster` | Monster entries (no category) | `mcdm.monsters.v1/monster/chimera` |
 | `monster.{category}` | Monsters by category | `mcdm.monsters.v1/monster.ogres/ogre-warrior` |
 | `dynamic-terrain` | Dynamic terrain features | `mcdm.monsters.v1/dynamic-terrain/lava-pool` |
