@@ -16,6 +16,39 @@ Each entry should include:
 
 ---
 
+### SCC permalink rewrite breaks Material's search + sitemap fetch on direct page loads (404s)
+
+- **Identified:** 2026-05-30, while reviewing console logs after the v2 Read-page performance work (this bug is **unrelated** to that work — the perf commit only touched `extra.css`, `ability-cards.js`, and removed two `extra_javascript` entries in `mkdocs.yml`).
+- **What:** On any page that has an SCC permalink (the Browse pages with `<meta name="scc-permalink">`), when loaded via a **full page load** (initial nav, hard refresh, or direct SCC stub hit), the browser console shows:
+  - `GET /v2/scc/sitemap.xml 404 (Not Found)`
+  - `GET /v2/scc/search/search_index.json 404 (Not Found)` → followed by `Uncaught Error at XMLHttpRequest (index.ts:80)`
+
+  Both resources actually live at the **site root**: `/v2/sitemap.xml` and `/v2/search/search_index.json`. The requests are going one directory too deep, under `/v2/scc/`.
+- **Why it matters:** The `search_index.json` 404 means **in-page search is broken** on directly-loaded SCC-permalinked pages (the search overlay has no index to query). The `sitemap.xml` 404 is harmless in practice (crawlers fetch `/v2/sitemap.xml` directly), but it's noise and a symptom of the same root cause. Normal links, CSS, and JS still work because of the injected `<base>` tag — it's specifically Material's *runtime-computed* fetch URLs that escape the `<base>` fix.
+- **Root cause (directory-depth mismatch from the URL rewrite):**
+  1. Load `/v2/Browse/class/censor/` directly. MkDocs emits `__config.base = "../../.."` in the page — correct for the **friendly** path (3 segments `Browse/class/censor` → resolves to `/v2/`).
+  2. The inline early-rewrite script in `v2/overrides/main.html` (the `{% if page.meta.scc %}` block in `extrahead`) calls `history.replaceState` to put the **SCC permalink** in the address bar: `/v2/scc/mcdm.heroes.v1/class/censor/` — which is **4 segments deep** — and injects `<base href="/v2/Browse/class/censor/">` so relative URLs still resolve.
+  3. The `<base>` tag correctly fixes resolution for static relative URLs (CSS/JS/`<a>`). **But Material for MkDocs computes its search-index and sitemap URLs at runtime by resolving `config.base` against `location.href` (the address bar), NOT against `document.baseURI`/`<base>`.** So `"../../.."` resolved from the now-4-deep `location.pathname` (`/v2/scc/mcdm.heroes.v1/class/censor/`) yields `/v2/scc/` instead of `/v2/`:
+     ```
+     /v2/scc/mcdm.heroes.v1/class/censor/  --(../../..)-->  /v2/scc/   ✗  (search/sitemap 404 here)
+     /v2/Browse/class/censor/              --(../../..)-->  /v2/       ✓  (what we want)
+     ```
+  - The SCC permalink targets are 4 path segments (`scc/<source>/<type>/<item>`) while the friendly Browse targets are 3 (`Browse/<type>/<item>`). The rewrite swaps a 3-deep URL for a 4-deep one *without* updating `config.base`, so anything that recomputes relative to the live URL (rather than `<base>`) lands one level too deep. **Note the depth delta is not constant across all SCC types** — verify the actual friendly-vs-SCC segment counts per type (some Browse paths like `feature/ability/<class>/level-N/<ability>` are deeper) before assuming a fixed offset.
+  - The code authors already hit this exact "path-depth mismatch" class of bug for **instant navigation** and documented/worked around it (see the long header comment in `scc-permalink.js`, "This avoids a path-depth mismatch…"). The **initial full-page-load** path was not covered because the `<base>` tag was assumed sufficient — it is not for Material's runtime fetches.
+- **Key files:**
+  - `v2/overrides/main.html` — the inline early-rewrite `<script>` in the `extrahead` block (does the `replaceState` + `<base>` injection on full load). This is where the address bar gets the deeper SCC path.
+  - `v2/docs/javascripts/scc-permalink.js` — deferred handler (`detectBasePath`, `onPageReady`, popstate). Read its header comment first; it explains the instant-nav vs full-load split and the existing `<base>` strategy.
+  - `v2/docs/javascripts/scc-manifest.js` — generated map `friendly path -> scc path` (`window.__SCC_PERMALINK_MAP__`); shows the depth difference between the two path forms.
+  - `v2/mkdocs.yml` — `navigation.instant` + `navigation.instant.preview` are enabled (line ~32-33); `site_url: https://steelcompendium.io/v2`.
+  - Built evidence: `v2/site/Browse/class/censor/index.html` has `"base": "../../.."` and the scc-permalink meta; `v2/site/scc/.../index.html` files are 534-byte `meta http-equiv="refresh"` redirect stubs (they do NOT load the Material bundle, so the 404s come from the *real* Browse page after rewrite, not the stub).
+- **Reproduce locally:** build (`steel-etl site --config ../v2/site.yaml` then `mkdocs build`), serve `v2/site/` (`python3 -m http.server`), open a Browse page with an SCC permalink (e.g. `/Browse/class/censor/`) with DevTools console open, and watch for the two 404s + the search XHR error. (Headless Chromium is at `~/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome`; drive it over CDP with **node ≥20** for global `WebSocket` — devbox node is v24, system node is v18 which lacks it. The Playwright MCP tool could not find a browser channel in this environment.)
+- **Candidate fixes (need evaluation — each has risk to the permalink feature; do NOT pick blindly):**
+  1. **Don't rewrite to a different-depth URL on full load.** Keep the friendly URL in the address bar and rewrite to the SCC permalink only at copy-time (e.g. intercept copy / provide a "copy permalink" affordance). Eliminates the depth mismatch entirely but changes the "address bar always shows the permalink" behavior the feature was built for.
+  2. **Make `config.base` absolute** (`/v2/`) so relative resolution is depth-independent. Could be done via the `site_url`/`use_directory_urls` config or by post-processing; verify it doesn't break Material's other relative-URL assumptions.
+  3. **Override Material's search-index base** so it fetches from the true root regardless of `location.href` (e.g. set the search worker's base explicitly, or override the search template/partial). Most targeted but requires understanding Material 9.7.6's search bootstrap (`index.ts` / `bundle.ts` in the theme).
+  4. Rewrite the address bar to an SCC permalink whose **depth matches the friendly path** (pad/normalize), so `config.base` still resolves correctly — likely too hacky and breaks the clean permalink form.
+- **Effort:** S–M (investigation + careful fix + cross-browser verify that search works on a directly-loaded Browse page and instant-nav still works).
+
 ### `trimAbilityFromBody` is now near-vestigial in the SDK transform
 
 - **Identified:** 2026-05-29, book-faithful-pages refactor (final review)
