@@ -30,7 +30,7 @@ All content flows through a single pipeline: annotated source markdown is proces
                           data/data-rules/en/md-linked
                                   │
                                   ├── section mapping (Browse, Read)
-                                  ├── composite pages (class + traits + abilities)
+                                  ├── book-faithful subtree render (RenderSubtree → PageBody)
                                   ├── index generation
                                   ├── SCC permalink stubs
                                   └── scc-manifest.js
@@ -83,7 +83,7 @@ Transforms the `md-linked` output into the MkDocs directory structure that the v
 
 Key operations:
 - **Section mapping** -- copies content into `Browse/` and `Read/` tab directories
-- **Composite pages** -- merges class + traits + abilities into single pages; merges ancestry + traits
+- **Book-faithful pages** -- each `md-linked` page is a full book-order render of its source section's subtree (own body + all nested descendants inline, headings normalized, ability statblocks un-blockquoted). Produced by `RenderSubtree` → `ParsedContent.PageBody`, consumed by the `md-linked` generator. The site builder maps these directly into `Browse/` and `Read/` — no composite reassembly. The `md`/`json`/`yaml`/`dse` outputs remain per-section structured outputs.
 - **Group remapping** -- nests kit abilities under `Kits/` subdirectory
 - **Index generation** -- creates navigable index pages with natural sort
 - **SCC permalink stubs** -- generates `scc/{code}/index.html` redirect files
