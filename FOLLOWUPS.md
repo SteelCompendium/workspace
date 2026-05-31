@@ -49,14 +49,6 @@ Each entry should include:
   4. Rewrite the address bar to an SCC permalink whose **depth matches the friendly path** (pad/normalize), so `config.base` still resolves correctly — likely too hacky and breaks the clean permalink form.
 - **Effort:** S–M (investigation + careful fix + cross-browser verify that search works on a directly-loaded Browse page and instant-nav still works).
 
-### `trimAbilityFromBody` is now near-vestigial in the SDK transform
-
-- **Identified:** 2026-05-29, book-faithful-pages refactor (final review)
-- **What:** In `steel-etl/internal/output/sdk_transform.go` (`transformTrait`, ~line 92; `trimAbilityFromBody`, ~line 311), a single-ability trait's effect body is trimmed at the first heading to avoid duplicating the embedded `ability` field. Since `feature.go` now sets a trait's `Body` to `FullBodySource()` (which already excludes the annotated ability child), the trim is a no-op for current data. But `trimAbilityFromBody` truncates at the first heading of ANY kind, so if a single-ability trait ever has an unannotated sub-heading in its own body, that content would be silently dropped from the SDK `effect`.
-- **Why:** Remove latent data-loss risk; the function's contract no longer matches its new input.
-- **Context:** Either drop the `trimAbilityFromBody` call (Body no longer contains the embedded ability) or tighten it to only strip the embedded-ability heading, and add a guard test. No active bug found in current source.
-- **Effort:** XS
-
 ### In-page anchor links on class/chapter/ancestry pages
 
 - **Identified:** 2026-05-29, book-faithful-pages refactor
