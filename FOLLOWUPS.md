@@ -18,6 +18,15 @@ Each entry should include:
 
 ### v2 site is slow to load and navigate (heavy pages + 2.3 MB search index)
 
+- **UPDATE 2026-05-31 — primary symptom RESOLVED.** The dominant cost was **not** page
+  weight or custom JS. Profiling the classes page (served from cache in 5ms, yet ~31s to
+  render) pinned ~all the time to mkdocs-material's **link-preview pass**
+  (`material.extensions.preview` + `navigation.instant.preview`): a render-time walk over
+  every anchor (8,494 on the classes page) doing `new URL()`+`resolve` per link plus
+  tooltip `getElements`/`extract`. Disabling previews (keeping `navigation.instant` and all
+  custom JS) dropped render from ~31s to ~1–2s. See v2 ADR
+  `2026-05-31-disable-link-previews-perf.md`. The items below remain as **lower-priority,
+  separate** optimizations (not the cause of the click-to-render slowness).
 - **Identified:** 2026-05-31, while verifying the SCC address-bar-rewrite retirement (the slowness is **architectural and pre-existing** — that change removed weight rather than adding it; see note below).
 - **What:** Pages are slow to load and especially slow click-to-click. Measured causes, ranked by impact:
   1. **Enormous per-page HTML.** Each page is a full book-order subtree render, so a class page inlines *every* ability → ~1 MB typical, up to **2.3 MB** (`v2/site/Read/chapter/classes/index.html`). Browse class pages (fury/conduit/elementalist) are ~1 MB each. 3,631 HTML pages total.
