@@ -57,14 +57,6 @@ Each entry should include:
 - **Context:** Requires threading heading ID generation through `RenderSubtree` and updating `scc-manifest.js` to emit anchor-qualified paths for sub-section codes. Cross-repo: `steel-etl/internal/content/render_subtree.go`, `internal/site/`, `v2/docs/javascripts/scc-manifest.js`.
 - **Effort:** M
 
-### Pre-existing test failure `TestBuild_GeneratesIndexPages` in `steel-etl/internal/site/`
-
-- **Identified:** 2026-05-29, book-faithful-pages refactor
-- **What:** `TestBuild_GeneratesIndexPages` fails with a missing ability/trait subdir link in the feature index. This predates the book-faithful-pages work and remains unaddressed.
-- **Why:** Restore a green test suite baseline; the failure may indicate a real gap in index generation for nested feature types.
-- **Context:** Test lives in `steel-etl/internal/site/`. Failure is pre-existing — not introduced by the book-faithful-pages refactor. Investigate separately to avoid conflating root cause.
-- **Effort:** XS–S
-
 ### Sync or retire `annotate_heroes.py` (diverged from canonical source)
 
 - **Identified:** 2026-05-29, truncated-link fix
