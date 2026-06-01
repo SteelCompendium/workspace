@@ -16,6 +16,38 @@ Each entry should include:
 
 ---
 
+### Re-point cross-class / cross-level "canonical" links in advancement tables
+
+- **Identified:** 2026-05-31, while linking the Features column of class advancement tables.
+- **What:** Several generic features in the advancement tables were *already* linked (before this pass) to a single canonical code in a **different class or level**, even though a class-and-level-specific code exists. Re-point each to its own `feature.trait.{class}.level-{N}/...` code so links resolve to the contextually-correct page. Known instances:
+  - **`Characteristic Increase`** → always linked to `feature.trait.censor.level-10/characteristic-increase`, in every class's level-4/7/10 rows. Per-class/level codes exist (e.g. `fury.level-4/characteristic-increase`, `tactician.level-10/characteristic-increase`).
+  - **`Deity and Domains`** (Conduit 1st) → linked to `censor.level-1/deity-and-domains`; `conduit.level-1/deity-and-domains` exists.
+  - **`Growing Ferocity Improvement`** (Fury 4th/7th) → linked to `fury.level-10/...`; `fury.level-4/` and `fury.level-7/` codes exist.
+  - **`Discipline Mastery Improvement`** (Null 4th/7th) → linked to `null.level-10/...`; `null.level-4/` and `null.level-7/` codes exist.
+  - **`Careful Observation Improvement`** (Shadow 7th) → linked to `shadow.level-10/...`; level-specific code may exist.
+- **Why:** Consistency — the Features-column linking pass (this session) maps every *newly* linked item to its own class+level code; these pre-existing links are the remaining exceptions. (Note: Talent's `Psi Boost` → `null.level-7/psi-boost` is a *legitimate* cross-class share, not a mistake — leave it.)
+- **Context:** All in `steel-etl/input/heroes/Draw Steel Heroes.md` advancement tables (lines ~4696, 6153, 9507, 11097, 12390, etc.). This was deferred from the Features-column pass to avoid touching already-linked items. Decide first whether the "one canonical definition" approach was intentional for identical boilerplate (Characteristic Increase content is the same across classes) before re-pointing.
+- **Effort:** S
+
+### Link the Abilities / subclass-Ability columns of advancement tables
+
+- **Identified:** 2026-05-31, Features-column linking pass (explicitly scoped out).
+- **What:** Only the **Features** column of each class advancement table was linked this pass. The **Abilities** column (`Signature, 3, 5, ...`) and the per-class **subclass-Abilities** column (`Order/Domain/Aspect/Tradition/College/Doctrine/Class Act Abilities`, e.g. `5, 9, 11`) are still plain text. These are cost-tier references, not named features, so they need a different mapping (tier → ability-group code) than the Features column.
+- **Why:** Completeness of in-table navigation.
+- **Context:** Same tables in `Draw Steel Heroes.md`. Tier numbers map to per-level/cost ability groups (e.g. the `feature.ability.*.level-N` cost groupings); needs its own mapping rules.
+- **Effort:** M
+
+### SCC registry drift + malformed codes (validate --scc-stable landmines)
+
+- **Identified:** 2026-05-31, verifying the advancement-table linking pass (pre-existing — reproduced with the linking change stashed, so **not** caused by it).
+- **What:** `steel-etl validate --scc-stable` fails and emits warnings independent of the linking work:
+  1. **Malformed code from an embedded link in a heading:** the Shadow "Black Ash Teleport" ability heading contains an inline `scc:` link, so the generated code is `feature.ability.shadow.level-1/black-ash-teleport-scc-mcdm-heroes-v1-movement-teleport` instead of `.../black-ash-teleport`. Clean the heading (move the link into body text) so the code is correct. (Reinforces the truncated-link-fix rule: don't put links in headings.)
+  2. **Frozen-registry drift:** `--scc-stable` reports many `feature.trait.common/*-traits` and `feature.trait/*-traits` (ancestry traits) plus `feature.ability.shadow.level-1/black-ash-teleport` as "missing from new registry" — the local (gitignored) `classification.json` baseline is stale relative to the current doc. Regenerate/refreeze the baseline, or investigate whether real ancestry-trait code churn happened.
+  3. **Unresolved title links:** `WARN: unresolved scc link "mcdm.heroes.v1/title/stronghold"` and `.../title/monarch` — referenced in the doc but absent from the registry. Either add the `title/` codes or fix the references.
+- **Why:** `--scc-stable` should pass cleanly so it can guard real regressions; malformed codes break permalinks/cross-refs.
+- **Context:** `steel-etl/input/heroes/Draw Steel Heroes.md`; registry at `steel-etl/classification.json` (generated, gitignored). Run `go run ./cmd/steel-etl validate --scc-stable` to reproduce.
+- **Effort:** S (items 1 & 3); S–M for item 2 depending on whether it's stale baseline vs. real churn.
+
 ### v2 site is slow to load and navigate (heavy pages + 2.3 MB search index)
 
 - **UPDATE 2026-05-31 — primary symptom RESOLVED.** The dominant cost was **not** page
