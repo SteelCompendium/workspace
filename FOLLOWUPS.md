@@ -16,19 +16,6 @@ Each entry should include:
 
 ---
 
-### Re-point cross-class / cross-level "canonical" links in advancement tables
-
-- **Identified:** 2026-05-31, while linking the Features column of class advancement tables.
-- **What:** Several generic features in the advancement tables were *already* linked (before this pass) to a single canonical code in a **different class or level**, even though a class-and-level-specific code exists. Re-point each to its own `feature.trait.{class}.level-{N}/...` code so links resolve to the contextually-correct page. Known instances:
-  - **`Characteristic Increase`** → always linked to `feature.trait.censor.level-10/characteristic-increase`, in every class's level-4/7/10 rows. Per-class/level codes exist (e.g. `fury.level-4/characteristic-increase`, `tactician.level-10/characteristic-increase`).
-  - **`Deity and Domains`** (Conduit 1st) → linked to `censor.level-1/deity-and-domains`; `conduit.level-1/deity-and-domains` exists.
-  - **`Growing Ferocity Improvement`** (Fury 4th/7th) → linked to `fury.level-10/...`; `fury.level-4/` and `fury.level-7/` codes exist.
-  - **`Discipline Mastery Improvement`** (Null 4th/7th) → linked to `null.level-10/...`; `null.level-4/` and `null.level-7/` codes exist.
-  - **`Careful Observation Improvement`** (Shadow 7th) → linked to `shadow.level-10/...`; level-specific code may exist.
-- **Why:** Consistency — the Features-column linking pass (this session) maps every *newly* linked item to its own class+level code; these pre-existing links are the remaining exceptions. (Note: Talent's `Psi Boost` → `null.level-7/psi-boost` is a *legitimate* cross-class share, not a mistake — leave it.)
-- **Context:** All in `steel-etl/input/heroes/Draw Steel Heroes.md` advancement tables (lines ~4696, 6153, 9507, 11097, 12390, etc.). This was deferred from the Features-column pass to avoid touching already-linked items. Decide first whether the "one canonical definition" approach was intentional for identical boilerplate (Characteristic Increase content is the same across classes) before re-pointing.
-- **Effort:** S
-
 ### Link the Abilities / subclass-Ability columns of advancement tables
 
 - **Identified:** 2026-05-31, Features-column linking pass (explicitly scoped out).
