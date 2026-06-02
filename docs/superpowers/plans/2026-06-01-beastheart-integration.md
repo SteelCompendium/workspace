@@ -28,10 +28,20 @@ SteelCompendium org. Build green, all Go tests pass. `gen --book mcdm.beastheart
 - **1st-level Wild Nature subclass kit**: 4 maneuvers + 4 triggered actions.
 - **2nd-Level Wild Nature features** (Stormheart, Supersniffer, This One's Yours, Watchdog) + **2nd-Level Wild Nature abilities** (8, PDF-verified power rolls).
 - **Beastheart Abilities** container (H2 feature, `@level: 1`) + the **4 signature abilities** (Bodyswap, Come On!, Covering Fire, Stormrage) — PDF-verified (book p.23 / PDF p.27), at-will (`@subtype: signature`, no `@cost`), path `feature.ability.beastheart.level-1/`. Deployed live 2026-06-02.
+- **All 20 Beastheart HEROIC abilities** (`@cost: N Ferocity`) — PDF-verified, deployed live 2026-06-02. Level-gated to match the book's tier-unlock structure (NOT all level-1 — the book places higher tiers under higher level-feature sections; confirmed by the level progression table):
+  - 3-Ferocity (4) + 5-Ferocity (4) → `level-1` (PDF p.28)
+  - 7-Ferocity (4: Death and Violence [triggered], Head to Head, Jaws of Death, Shieldbreaker) → `level-3` (PDF p.32)
+  - 9-Ferocity (4: Deadshot, Dogpile, One Two Three Heave, Rip Them Apart!) → `level-5` (PDF p.34)
+  - 11-Ferocity (4: Life-Drinking Wound, On the Razor's Edge, Ride or Die, Turn the World To Ash) → `level-8` (PDF p.38)
+  - Structure: `### Heroic Abilities` → `#### N-Ferocity Ability` chooser → `##### / #### <ability>`.
 
-**Remaining (Phase 6):** main Beastheart heroic abilities (3/5/7/9/11
-Ferocity, ~20 statblocks — HEAVILY marker-mangled, need PDF reconstruction);
-6th/9th-level Wild Nature subclass abilities; 5th/8th-level Wild Nature passive
+**Remaining (Phase 6):** **6th-Level Wild Nature subclass abilities** (8 @ 9 Ferocity:
+Sic 'Em!, Stare Down, Soft Underbelly, Wraith Heart, Lead the Pack, Rolling Thunder,
+Elements Unleashed, Killing Frost — PDF p.35-36, use `@subclass`) and **9th-Level Wild
+Nature subclass abilities** (8 @ 11 Ferocity: Banshee Howl, Relentless, Behold the Face
+of Chaos, Let's Take This Outside, Battle Frenzy, Juggernaut, For the Pack!, Wild Hunt —
+PDF p.39, use `@subclass`) — these are subclass abilities (mirror the 2nd-level Wild
+Nature abilities pattern), NOT heroic abilities; 5th/8th-level Wild Nature passive
 features; per-level feature lists (3rd–10th); Companion intro feature; Kit ref;
 stray image/page-number cleanup. **Phase 7:** SCC cross-ref links, scc_api/aggregate
 for beastheart (currently disabled for secondary books via `EffectiveBookConfig`),
