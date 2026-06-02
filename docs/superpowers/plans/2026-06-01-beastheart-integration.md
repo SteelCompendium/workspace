@@ -10,7 +10,40 @@
 
 **Design spec:** `docs/superpowers/specs/2026-06-01-beastheart-integration-design.md`
 
-**Ground-truth PDF:** `/home/vexa/Downloads/Draw_Steel_Beastheart_v1.0.pdf` — read-only reference for cleanup. **NEVER commit this PDF to any git repo.**
+**Ground-truth PDF:** `/home/vexa/Downloads/Draw_Steel_Beastheart_v1.0.pdf` — read-only reference for cleanup. **NEVER commit this PDF to any git repo.** PDF file-page = book-page + 4.
+
+---
+
+## Status / Handoff (as of 2026-06-01)
+
+**Phases 1–5: DONE & deployed.** Phase 6: ~75% done & deployed. Phase 7: not started.
+All three repos (workspace, steel-etl, v2) are on `main`, clean, synced to the
+SteelCompendium org. Build green, all Go tests pass. `gen --book mcdm.beastheart.v1`
+→ **139 classified**. Live on the v2 site.
+
+**Done (Phase 6):**
+- All **14 companion species** (stat blocks, signature abilities, traits, level-3/6/10 advancements) — PDF-verified.
+- Class **re-leveled to H1**; features: Basics, Wild Nature, Ferocity, Rampage, Heart of the Beast (+ Heart of the Beast & Feral Strike abilities).
+- All **14 trinkets/leveled treasures** + **8 perks**.
+- **1st-level Wild Nature subclass kit**: 4 maneuvers + 4 triggered actions.
+- **2nd-Level Wild Nature features** (Stormheart, Supersniffer, This One's Yours, Watchdog) + **2nd-Level Wild Nature abilities** (8, PDF-verified power rolls).
+
+**Remaining (Phase 6):** main Beastheart heroic abilities (signature/3/5/7/9/11
+Ferocity, ~24 statblocks — HEAVILY marker-mangled, need PDF reconstruction);
+6th/9th-level Wild Nature subclass abilities; 5th/8th-level Wild Nature passive
+features; per-level feature lists (3rd–10th); Companion intro feature; Kit ref;
+stray image/page-number cleanup. **Phase 7:** SCC cross-ref links, scc_api/aggregate
+for beastheart (currently disabled for secondary books via `EffectiveBookConfig`),
+`validate --scc-stable`. Full detail in project memory
+`project_beastheart_integration.md` and in `docs/handoffs/HANDOFF.md`.
+
+**Key facts for whoever continues:**
+- Annotation pattern for abilities: `<!-- @type: ability | @id: X | @level: L | @cost: N Ferocity [| @subclass: Y] -->`, strip `(N Ferocity)` from the heading, then a 2-row table `| **keywords** | **action** |` / `| **📏 distance** | **🎯 target** |`, then `**Effect:**`/`**Spend N Ferocity:**`, power roll `**Power Roll + Stat:**` then `- **≤11:** …` / `- **12-16:** …` / `- **17+:** …`.
+- Potency notation: `M < WEAK` / `M < AVERAGE` / `M < STRONG` (also `A <`, `P <`). Marker misreads Intuition "I" as "1" — fix every `+ 1 damage` that should be `+ I damage`.
+- Power-roll tiers DO parse (verified): check YAML output's `tier1/2/3`, NOT JSON `metadata.tier1` (JSON nests them differently).
+- `@subclass` is captured in source but NOT surfaced by the AbilityParser to frontmatter/path. Subclass→2nd-level-feature map (PDF p.26): Guardian→Watchdog, Prowler→Supersniffer, Punisher→This One's Yours, Spark→Stormheart.
+- `git commit` combined with other commands in one Bash call is blocked by a hook — run commits as their own command.
+- Deploy: `devbox run -- just deploy-v2` (a hook auto-commits/pushes the v2 generated docs; the recipe's own commit step then says "nothing to commit"). After deploy, bump the workspace gitlinks (`git add steel-etl v2 && git commit && git push`).
 
 ---
 

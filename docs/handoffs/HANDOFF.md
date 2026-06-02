@@ -1,78 +1,93 @@
-# Handoff — 2026-05-31
+# Handoff — 2026-06-01
 
 ## Active efforts
 
-- **Retire the SCC address-bar rewrite** — ✅ COMPLETE & MERGED to `main` in all
-  three repos (workspace, steel-etl, v2). No in-flight work. Design recorded in
-  v2 ADR `v2/.repo-docs/decisions/2026-05-31-retire-scc-address-bar-rewrite.md`
-  (supersedes `2026-05-23-scc-permalink-system.md`).
+- **Beastheart integration** — IN FOCUS. Resume at
+  `docs/superpowers/plans/2026-06-01-beastheart-integration.md` → `## Status / Handoff`.
+  Spec: `docs/superpowers/specs/2026-06-01-beastheart-integration-design.md`.
+  Deep project state in agent memory `project_beastheart_integration.md`.
+  Phases 1–5 done; Phase 6 ~75% (companions, subclass 1st/2nd-level, rewards,
+  perks all live); Phase 7 not started.
+- **SCC address-bar rewrite retirement** — ✅ complete & merged (prior session,
+  2026-05-31). No in-flight work. (Was the previous content of this file; archived in git.)
 - **Other `plans/` efforts** (`architecture-redesign`, `schema-enrichment`,
-  `sdk-schema-alignment`, `content-linking`) — NOT touched this session. See each
-  plan's own doc under `plans/` for status; this handoff makes no claim about them.
+  `sdk-schema-alignment`, `content-linking`) — not touched; see each plan's own doc.
 
 ## You are here
 
-**Nothing is in flight.** The SCC search-404 bug is fixed and merged.
+**Continue Phase 6: annotate the main Beastheart heroic abilities.** Single next
+action: start with the **signature abilities** (Bodyswap, Come On!, Covering Fire,
+Stormrage) — grep for `#### **Beastheart Abilities**` / `SIGNATURE ABILITY` (don't
+trust line numbers; the file is ~3091 lines and shifts every edit) in
+`steel-etl/input/beastheart/Draw Steel Beastheart.md`. Read the matching PDF page
+(book p.26 → PDF p.30/31) first, **restructure then annotate**, then `gen` + verify
++ commit + `deploy-v2`. Work in committed chunks (per subclass / per Ferocity tier),
+as the rest of Phase 6 was done.
 
-If you are continuing: the only thing not empirically captured this session is a
-**live-browser screenshot** of (a) in-page search working on a directly-loaded
-former-SCC page and (b) the "🔗 Copy permalink" button. Both were verified
-*deterministically* instead (see Gotchas). A nice-to-have next action is a manual
-eyeball on the running site — not required for correctness.
+⚠️ The remaining ability statblocks have systematic OCR damage (Intuition "I" →
+"1", jumbled field order, broken power-roll tier prefixes). **Each needs the PDF to
+be accurate** — do not annotate them from the marker text alone.
 
-## What landed (one line each)
+⚠️ The signature-ability region is also structurally mangled — you must **clean
+headings, not just prepend annotations**: a stray `## Come` heading split from
+`#### Come On!`, `## **Covering Fire**` at the wrong heading level, a leaked image
+line, and a corrupted Stormrage block. **Signature abilities are used at will (no
+Ferocity cost)** — annotate them `@type: ability | @subtype: signature` with NO
+`@cost`; the Ferocity-cost pattern (`@cost: N Ferocity`) applies to the 3/5/7/9/11
+heroic abilities, not signatures.
 
-- **steel-etl** `317e6e6` — dropped `scc-manifest.js` generation (`internal/site/permalinks.go`); redirect-stub generation unchanged.
-- **v2** `7949b4a` — deleted `scc-permalink.js` + `scc-manifest.js` and the inline `replaceState`/`<base>` rewrite; self-canonical on the friendly page; new `docs/javascripts/scc-permalink-copy.js` (Copy-permalink button); `.repo-docs` updated.
-- **workspace** `bbdd7c7` — removed the resolved `FOLLOWUPS.md` entry; bumped the steel-etl gitlink to `317e6e6`.
+## Verified state (as of 2026-06-01)
 
-## Verified state (as of 2026-05-31)
+- **Branches:** workspace, steel-etl, v2 all on `main`, in sync with `origin/main`
+  (the SteelCompendium org). Working trees clean **once this handoff commit lands**
+  (the commit that adds this file + the plan's `## Status` section is the only
+  expected diff; commit & push it).
+  - Work HEADs (stable): steel-etl `7e56a2a`, v2 `93549979c8`. Workspace HEAD was
+    `d05a90d` and advances by one with the handoff commit.
+- **Build:** `devbox run -- bash -c 'cd steel-etl && go build ./...'` → OK.
+- **Tests:** `devbox run -- bash -c 'cd steel-etl && go test ./...'` → all packages **ok** (no failures).
+- **Gen:** `devbox run -- bash -c 'cd steel-etl && go run ./cmd/steel-etl gen --config pipeline.yaml --book mcdm.beastheart.v1'`
+  → `Classified: 139, Written: 834 files`. 14 companion species present.
+- **Deployed:** v2 site pushed to org; GitHub Pages serves the live beastheart content.
+- No long-running processes. devbox provides Go/just/node (not on system PATH).
 
-- **Branches:** all three repos on `main`, clean (ignoring gitignored `site/` build output), in sync with `origin/main`. Feature branch `retire-scc-address-bar-rewrite` also exists at the same SHAs in each repo.
-- **Gitlink consistency:** workspace gitlink for `steel-etl` = `317e6e6` = steel-etl `main` HEAD. ✅
-- **steel-etl build/tests:** `go build ./...` clean; `go test ./internal/site/...` → `ok` (includes `TestGenerateSCCStubs_DoesNotWriteManifest`, the regression guard).
-- **v2 build:** `mkdocs build` was green earlier this session; built `site/Browse/class/censor/index.html` confirmed: self-canonical (friendly), `scc-permalink` meta kept, no `replaceState`, neither retired script referenced, `scc-permalink-copy.js` wired, SCC stub still redirects. (Re-run the command below to re-confirm.)
-- **Running process:** a `mkdocs serve` was running on `127.0.0.1:8123` (serves under the **`/v2/`** path prefix — i.e. `http://127.0.0.1:8123/v2/Browse/...`, not `/Browse/...`). May or may not still be up.
+## Gotchas & lessons (cross-cutting)
 
-## Gotchas & lessons (cross-cutting / environment)
-
-- **Root cause of the original bug (durable — full writeup in the 2026-05-31 ADR):**
-  mkdocs-material resolves runtime fetch URLs as `new URL(config.base, location.href)`
-  — against the **address bar**, NOT `document.baseURI`/`<base>`. Any client code
-  that makes `location` disagree with the built path will break search/sitemap
-  fetches. Don't reintroduce address-bar rewriting.
-- **Browser automation is painful in this env** (only relevant if doing live UI checks):
-  - Playwright MCP → "chrome executable not found".
-  - Chromium binary exists at `~/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome`.
-  - `node` here is **v18** (no global `WebSocket`), and there's no `ws` package → CDP-over-WebSocket is out. (A prior note claimed devbox node v24; not true in this shell.)
-  - `chrome --headless --dump-dom --virtual-time-budget` **hangs** on the heavy ~1 MB content pages (analytics/network never settles); it only completed on the small 404 page. Concurrent chrome instances also collide on the user-data-dir.
-  - What worked instead: (1) executed the real `scc-permalink-copy.js` against a hand-rolled DOM stub in node to verify button inject/aria/label/click-copies/idempotency; (2) reproduced Material's `new URL(config.base, location.href)` resolution in node to show the friendly location → `/v2/search/search_index.json` (root) vs the old rewritten location → `/v2/scc/search/...` (the 404).
-- **Merge/gitlink ordering:** the workspace gitlink points at a steel-etl commit
-  SHA. It is **empirically verified equal** to steel-etl `main` HEAD right now
-  (`317e6e6` = `317e6e6`; see Verified state + verification command #2) — so they
-  ARE consistent as of this handoff, *regardless* of how the merge was done. The
-  caveat is **only for future re-merges**: if steel-etl is squash- or
-  rebase-merged later, its `main` SHA will change and you must re-point the
-  workspace gitlink (`git add steel-etl` from a workspace where steel-etl is on
-  the new `main`) and commit.
+- **PDF is ground truth and must NEVER be committed** to any repo:
+  `/home/vexa/Downloads/Draw_Steel_Beastheart_v1.0.pdf`. Read it via the Read tool
+  (PDF pages). **File-page = book-page + 4.**
+- **Marker OCR damage** on ability statblocks: Intuition "I" → "1"; potency badges
+  became `m<v`/`m<s` → rewrite as `M < AVERAGE` / `M < STRONG`; fields jumbled;
+  power-roll tier prefixes (`≤11`) sometimes dropped. Verify every value vs PDF.
+- **Power-roll tiers parse fine** — confirm via the **YAML** output (`tier1/2/3`),
+  not JSON `metadata.tier1` (JSON nests them under a different key).
+- **`@subclass`** annotation is captured in source but the AbilityParser does NOT
+  surface it to frontmatter or the SCC path. Subclass grouping would need a small
+  parser change mirroring `@companion`. Subclass→2nd-level-feature map (PDF p.26):
+  Guardian→Watchdog, Prowler→Supersniffer, Punisher→This One's Yours, Spark→Stormheart.
+- **`gen` only processes the primary book by default** — use `--book mcdm.beastheart.v1`
+  (or `--all`). The `books:` array was inert before this effort; fixed via
+  `EffectiveBookConfig` (secondary books disable aggregate/scc_api/scc_map/stripped).
+- **A hook blocks `git commit` when combined with other commands** in one Bash call.
+  Run each `git commit` as its own command.
+- **`deploy-v2`**: a hook auto-commits & pushes the v2 generated docs, so the recipe's
+  own commit step reports "nothing to commit" / "Everything up-to-date" — that's
+  expected, not a failure. After deploying, bump the workspace gitlinks:
+  `git add steel-etl v2 && git commit -m '…' && git push`.
+- **Document structure:** beastheart class is H1; species are H3 feature-groups with
+  `@companion`; abilities H4; advancement features H5. Class context lives at level 1
+  so H2 sub-sections can be annotated without clobbering it.
 
 ## Verification commands
 
 ```bash
-# from workspace root
 cd /home/vexa/code/steel_compendium/workspace
-
-# 1. all three repos clean on main, synced with origin (ignore gitignored site/)
-for r in . steel-etl v2; do echo "== $r =="; git -C "$r" status -sb | grep -vE '/site/'; done
-
-# 2. gitlink matches steel-etl main HEAD
-git ls-files --stage steel-etl | awk '{print $2}'; git -C steel-etl rev-parse HEAD
-
-# 3. steel-etl builds + the no-manifest regression test passes
-devbox run -- bash -c 'cd steel-etl && go build ./... && go test ./internal/site/...'
-
-# 4. (slower) v2 site builds; spot-check the censor page
-devbox run -- bash -c 'cd /home/vexa/code/steel_compendium/workspace/v2 && mkdocs build'
-grep -E 'rel="canonical"|scc-permalink-copy\.js|replaceState' v2/site/Browse/class/censor/index.html
-# expect: canonical -> .../Browse/class/censor/ ; copy.js present ; replaceState absent
+# git state (expect: all main, clean, in sync)
+for r in . steel-etl v2; do echo "$r:"; git -C $r status -sb | head -1; done
+# build + tests (expect: BUILD OK, all ok)
+devbox run -- bash -c 'cd steel-etl && go build ./... && echo BUILD OK && go test ./... 2>&1 | grep -E "FAIL|^ok"'
+# gen beastheart (expect: Classified: 139)
+devbox run -- bash -c 'cd steel-etl && go run ./cmd/steel-etl gen --config pipeline.yaml --book mcdm.beastheart.v1 2>&1 | tail -1'
+# companion species (expect: 14)
+find data/data-beastheart/en/json/feature-group/companion -name '*.json' | wc -l
 ```
