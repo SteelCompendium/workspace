@@ -34,16 +34,17 @@ SteelCompendium org. Build green, all Go tests pass. `gen --book mcdm.beastheart
   - 9-Ferocity (4: Deadshot, Dogpile, One Two Three Heave, Rip Them Apart!) → `level-5` (PDF p.34)
   - 11-Ferocity (4: Life-Drinking Wound, On the Razor's Edge, Ride or Die, Turn the World To Ash) → `level-8` (PDF p.38)
   - Structure: `### Heroic Abilities` → `#### N-Ferocity Ability` chooser → `##### / #### <ability>`.
+- **All 16 Wild Nature subclass abilities** (`@subclass` + `@cost: N Ferocity`) — PDF-verified, deployed live 2026-06-02. Mirror the 2nd-level Wild Nature ability pattern (group headers `#### Nth-Level <Subclass> Abilities`):
+  - **6th-Level** (8 @ 9 Ferocity) → `level-6`: Sic 'Em!, Stare Down (guardian); Soft Underbelly, Wraith Heart (prowler); Lead the Pack, Rolling Thunder (punisher); Elements Unleashed, Killing Frost (spark) — PDF p.35-36.
+  - **9th-Level** (8 @ 11 Ferocity) → `level-9`: Banshee Howl, Relentless (guardian); Behold the Face of Chaos, Let's Take This Outside (prowler); Battle Frenzy, Juggernaut (punisher); For the Pack! (free triggered), Wild Hunt (spark) — PDF p.39-40.
+  - NOTE: `@subclass` is captured in source but the AbilityParser does NOT surface it to frontmatter/path (known limitation — would need a parser change mirroring `@companion`). Subclass grouping is documented in source only.
 
-**Remaining (Phase 6):** **6th-Level Wild Nature subclass abilities** (8 @ 9 Ferocity:
-Sic 'Em!, Stare Down, Soft Underbelly, Wraith Heart, Lead the Pack, Rolling Thunder,
-Elements Unleashed, Killing Frost — PDF p.35-36, use `@subclass`) and **9th-Level Wild
-Nature subclass abilities** (8 @ 11 Ferocity: Banshee Howl, Relentless, Behold the Face
-of Chaos, Let's Take This Outside, Battle Frenzy, Juggernaut, For the Pack!, Wild Hunt —
-PDF p.39, use `@subclass`) — these are subclass abilities (mirror the 2nd-level Wild
-Nature abilities pattern), NOT heroic abilities; 5th/8th-level Wild Nature passive
-features; per-level feature lists (3rd–10th); Companion intro feature; Kit ref;
-stray image/page-number cleanup. **Phase 7:** SCC cross-ref links, scc_api/aggregate
+**Remaining (Phase 6):** 5th/8th-level Wild Nature passive
+features; per-level feature lists (3rd–10th: Characteristic Increase, Perk, Skill,
+Rampage Improvement, Companion Advancement, Feral Heart, Unleash the Beast, Become the
+Beast, Avatar of the Green, 10th-level features, etc.); Companion intro feature (H2
+parent of the 14 species — annotating absorbs species into its body via FullBodySource,
+decide handling); Kit ref; stray image/page-number cleanup. **Phase 7:** SCC cross-ref links, scc_api/aggregate
 for beastheart (currently disabled for secondary books via `EffectiveBookConfig`),
 `validate --scc-stable`. Full detail in project memory
 `project_beastheart_integration.md` and in `docs/handoffs/HANDOFF.md`.
