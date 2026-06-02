@@ -16,33 +16,34 @@
 
 ## You are here
 
-**ALL Beastheart class content DONE — Phases 1–6 complete (2026-06-02, deployed live).**
-steel-etl `e76354d`, workspace `33b5b70`, v2 `07f3151f6b`. **216 classified.** Latest
-chunk: Companion area + treasure rules (see plan `## Status` for the restructure details)
-and a merge-artifact fix.
+**ALL Beastheart class content DONE (Phases 1–6) + subclass surfaced in output
+(2026-06-02, deployed live).** steel-etl `70491be`, workspace `9e3b760`, v2 `3a0ccc0699`.
+**216 classified.**
 
-**Only two things remain on the beastheart effort:**
+**Subclass handling — DONE (this session).** Decision (user's call): subclass is
+**reference metadata, NOT part of the SCC path** — the SCC code stays a stable fetch-by-id
+reference. Rationale: path-segment breaks for un-subclassed features (most of Heroes) and
+multi-subclass features, and would force duplication. Implementation: `@subclass` read in
+AbilityParser + FeatureParser (`parseSubclass`: single→string, comma-sep→`[]string`);
+carried into JSON/YAML/md-linked **metadata** via `sdk_transform.go` (both
+`buildAbilityMetadata` and `buildTraitMetadata`). All 12 Wild Nature passive features
+(2nd/5th/8th) tagged with `@subclass`; the 32 WN abilities already had it. Paths unchanged
+(still 216). Tests: `TestAbility/FeatureSubclassFrontmatter`, `TestAbilityMultiSubclass`,
+`TestAbilityNoSubclass`, `TestTransform*SubclassInMetadata`.
+  - **Pattern for future books (incl. backfilling Heroes subclasses):** add `@subclass: X`
+    to any ability/feature annotation → it appears in output metadata automatically. No
+    path/SCC-code change. Multi-subclass = `@subclass: a, b`.
 
-1. **(User-requested, SEPARATE TASK) Surface `@subclass` in the output data.** The
-   `@subclass: guardian|prowler|punisher|spark` annotation is captured on all Wild Nature
-   abilities (1st/2nd/6th/9th-level) but the AbilityParser does NOT surface it to
-   frontmatter or the SCC path. Needs a parser change mirroring how `@companion` is
-   spliced (`internal/content/ability.go` ~line 90; also `feature.go` for the WN passive
-   features at 2nd/5th/8th level which don't even carry `@subclass` yet). Decide whether
-   subclass becomes a path segment (`feature.ability.beastheart.guardian.level-6/...`) or
-   just a frontmatter field. If path-segment, it changes SCC codes — coordinate with the
-   freeze/registry. **This is the next thing the user will likely want.**
+**Only remaining beastheart work — Phase 7 (polish):** SCC cross-reference links in the
+beastheart text (per `docs/linking-guide.md`); enable scc_api/aggregate for beastheart
+(currently disabled for secondary books via `EffectiveBookConfig` in the pipeline) so it
+joins the SCC API / data-unified; `validate --scc-stable`.
 
-2. **Phase 7 (polish):** SCC cross-reference links in the beastheart text (per
-   `docs/linking-guide.md`); enable scc_api/aggregate for beastheart (currently disabled
-   for secondary books via `EffectiveBookConfig` in the pipeline) so it joins the SCC API
-   / data-unified; `validate --scc-stable`.
-
-⚠️ **Lesson from this session:** an external merge to the input doc (the user's
+⚠️ **Lesson from a prior session:** an external merge to the input doc (the user's
 `beastheart-input-cleanup` branch) silently re-introduced raw duplicate power-roll tier
 blocks (Rolling Thunder, Juggernaut). **Always re-gen + spot-check ability tiers after any
 merge that touches `input/beastheart/Draw Steel Beastheart.md`.** If reconstructing any
-remaining raw statblock: OCR damage = Intuition "I"→"1", potency `m<v`/`P<WEAK`→`P < WEAK`,
+raw statblock: OCR damage = Intuition "I"→"1", potency `m<v`/`P<WEAK`→`P < WEAK`,
 jumbled fields, dropped tier prefixes. Verify against PDF (file-page = book-page + 4).
 
 ## Verified state (as of 2026-06-02)
@@ -50,7 +51,7 @@ jumbled fields, dropped tier prefixes. Verify against PDF (file-page = book-page
 - **Branches:** workspace, steel-etl, v2 all on `main`, in sync with `origin/main`
   (the SteelCompendium org). Working trees clean except this handoff/plan doc edit
   (commit & push it).
-  - Work HEADs: steel-etl `e76354d`, v2 `07f3151f6b`, workspace `33b5b70`.
+  - Work HEADs: steel-etl `70491be`, v2 `3a0ccc0699`, workspace `9e3b760`.
 - **Build:** `devbox run -- bash -c 'cd steel-etl && go build ./...'` → OK.
 - **Tests:** `devbox run -- bash -c 'cd steel-etl && go test ./...'` → all packages **ok** (no failures).
 - **Gen:** `devbox run -- bash -c 'cd steel-etl && go run ./cmd/steel-etl gen --config pipeline.yaml --book mcdm.beastheart.v1'`
