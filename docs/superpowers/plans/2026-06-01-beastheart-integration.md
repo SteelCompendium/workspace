@@ -37,14 +37,16 @@ SteelCompendium org. Build green, all Go tests pass. `gen --book mcdm.beastheart
 - **All 16 Wild Nature subclass abilities** (`@subclass` + `@cost: N Ferocity`) — PDF-verified, deployed live 2026-06-02. Mirror the 2nd-level Wild Nature ability pattern (group headers `#### Nth-Level <Subclass> Abilities`):
   - **6th-Level** (8 @ 9 Ferocity) → `level-6`: Sic 'Em!, Stare Down (guardian); Soft Underbelly, Wraith Heart (prowler); Lead the Pack, Rolling Thunder (punisher); Elements Unleashed, Killing Frost (spark) — PDF p.35-36.
   - **9th-Level** (8 @ 11 Ferocity) → `level-9`: Banshee Howl, Relentless (guardian); Behold the Face of Chaos, Let's Take This Outside (prowler); Battle Frenzy, Juggernaut (punisher); For the Pack! (free triggered), Wild Hunt (spark) — PDF p.39-40.
-  - NOTE: `@subclass` is captured in source but the AbilityParser does NOT surface it to frontmatter/path (known limitation — would need a parser change mirroring `@companion`). Subclass grouping is documented in source only.
+  - NOTE: `@subclass` is captured in source but the AbilityParser does NOT surface it to frontmatter/path (known limitation — would need a parser change mirroring `@companion`). Subclass grouping is documented in source only. **User has requested subclass info in the output — tracked as a separate task (needs the AbilityParser/FeatureParser change).**
+- **All per-level class features (levels 2–10) + Kit** (`@type: feature | @id | @level: N`) — deployed live 2026-06-02. 32 features at `feature.trait.beastheart.level-N/`: 2nd (perk, everyones-best-friend); 3rd (companion-advancement-feature); 4th (characteristic-increase, perk, rampage-improvement, skill, unleash-the-beast); 5th (i-can-take-it, melt-away, there-for-each-other, wildfire-pyre — the WN passives); 6th (perk, become-the-beast); 7th (characteristic-increase, feral-heart, rampage-improvement, skill); 8th (born-to-run, built-for-violence, nature-will-not-harm-us, reflexes-perfected, perk); 9th (avatar-of-the-green); 10th (characteristic-increase, companion-advancement-feature, final-evolution, perk, ferox, rampage-improvement, skill); + Kit (level-1). Repeated generic features (perk/skill/characteristic-increase/rampage-improvement/companion-advancement-feature) are distinguished by their level segment. Normalized H2/H3 feature headings → H4, stripped span/bold/page-image artifacts. **212 classified.**
 
-**Remaining (Phase 6):** 5th/8th-level Wild Nature passive
-features; per-level feature lists (3rd–10th: Characteristic Increase, Perk, Skill,
-Rampage Improvement, Companion Advancement, Feral Heart, Unleash the Beast, Become the
-Beast, Avatar of the Green, 10th-level features, etc.); Companion intro feature (H2
-parent of the 14 species — annotating absorbs species into its body via FullBodySource,
-decide handling); Kit ref; stray image/page-number cleanup. **Phase 7:** SCC cross-ref links, scc_api/aggregate
+**Remaining (Phase 6):** **Companion intro feature** — the `## **Companion**` rules
+section is the H2 parent of the 14 species (H3); annotating it absorbs all species into
+its body via FullBodySource, so it needs a restructure (e.g. move species out, or split
+the rules prose into its own sibling) before it can be a feature. Currently UNannotated.
+Plus the **"Beastheart & Magic Treasure" rules block** (Consumables / Trinkets / Leveled
+Items — 1st-level treasure-usage rules, currently prose); a final pass for any stray
+`![](_page_N...)` images / `<span id=...>` / page-number artifacts. **Phase 7:** SCC cross-ref links, scc_api/aggregate
 for beastheart (currently disabled for secondary books via `EffectiveBookConfig`),
 `validate --scc-stable`. Full detail in project memory
 `project_beastheart_integration.md` and in `docs/handoffs/HANDOFF.md`.
