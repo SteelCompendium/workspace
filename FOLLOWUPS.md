@@ -16,6 +16,14 @@ Each entry should include:
 
 ---
 
+### Beastheart source says "Animal Handling"; the skill is "Handle Animals"
+
+- **Identified:** 2026-06-02, beastheart linking pass.
+- **What:** The beastheart class skill grant (`Draw Steel Beastheart.md`, Basics, ~L294) reads "You gain the **Animal Handling** skill" and lists "Animal Handling" in the Quick Build. The actual Draw Steel skill is **Handle Animals** (`mcdm.heroes.v1/skill/handle-animals`). Left UNLINKED to avoid a display-text/term mismatch; "Navigate" and "Track" on the same line were linked.
+- **Why:** Either the source has a naming inconsistency to correct (rename to "Handle Animals"), or it's an intentional alt-name that should be linked to `skill/handle-animals` with alt display text. Resolve, then link.
+- **Context:** Single occurrence pair on one line. Confirm against the Beastheart PDF (book Basics page) before renaming source content. If renamed, also link it to `skill/handle-animals`.
+- **Effort:** XS
+
 ### Reuse the mkdocs heading-anchor (¶) icon for SCC permalinks in the v2 site
 
 - **Identified:** 2026-06-01, follow-up idea while reviewing advancement-table links.
@@ -34,6 +42,7 @@ Each entry should include:
 - **What:** Only the **Features** column of each class advancement table was linked this pass. The **Abilities** column (`Signature, 3, 5, ...`) and the per-class **subclass-Abilities** column (`Order/Domain/Aspect/Tradition/College/Doctrine/Class Act Abilities`, e.g. `5, 9, 11`) are still plain text. These are cost-tier references, not named features, so they need a different mapping (tier → ability-group code) than the Features column.
 - **Why:** Completeness of in-table navigation.
 - **Context:** Same tables in `Draw Steel Heroes.md`. Tier numbers map to per-level/cost ability groups (e.g. the `feature.ability.*.level-N` cost groupings); needs its own mapping rules.
+- **UPDATE 2026-06-02 — beastheart same call.** The beastheart linking pass linked the **Features** column of the Beastheart Advancement table (level-specific, so repeated generics like Perk/Skill resolve per level) and the Wild Nature Maneuver/Triggered-Action/5th/8th feature tables, but left the **Abilities** (`Signature, 3, 5, 7, 9, 11`) and **Wild Nature Abilities** (`5, 9, 11`) cost-tier columns plain — there is no landing SCC code for "the N-Ferocity ability group at level L" (beastheart abilities are `feature.ability.beastheart.level-N/<name>` with cost only in frontmatter; no per-cost-tier index page). Resolving this needs the same tier→ability-group mapping as heroes; do both together.
 - **Effort:** M
 
 ### v2 site is slow to load and navigate (heavy pages + 2.3 MB search index)
