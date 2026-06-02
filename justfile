@@ -72,7 +72,7 @@ deploy-api:
     root="{{justfile_directory()}}"
     cd "$root/steel-etl"
     echo >&2 "[INFO] Running steel-etl gen..."
-    go run ./cmd/steel-etl gen --config pipeline.yaml
+    go run ./cmd/steel-etl gen --config pipeline.yaml --all
     cd "$root/steelCompendium.github.io"
     echo >&2 "[INFO] Committing API update..."
     git add docs/api/
@@ -88,7 +88,7 @@ deploy-v2:
     # 1. Run steel-etl pipeline
     cd "$root/steel-etl"
     echo >&2 "[INFO] Running steel-etl gen..."
-    go run ./cmd/steel-etl gen --config pipeline.yaml
+    go run ./cmd/steel-etl gen --config pipeline.yaml --all
     etl_sha="$(git rev-parse --short HEAD)"
     etl_date="$(date +%Y-%m-%d)"
 
