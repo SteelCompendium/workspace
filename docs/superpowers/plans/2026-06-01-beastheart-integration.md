@@ -43,7 +43,15 @@ SteelCompendium org. Build green, all Go tests pass. `gen --book mcdm.beastheart
 - **Phase 6 leftovers DONE** (deployed live 2026-06-02). **Companion area restructured to avoid FullBodySource species-absorption:** `## Companion` is now the feature (`@id: companion`, body = intro + Customizing Your Companion); inserted an unannotated `## Companion Stat Blocks` H2 so the feature body stops there and the 14 species (H3) stay grouped under it; the trailing combat rules promoted to H2 features `## Companion Rules` (`@id: companion-rules`) and `## Adding and Subtracting Actions` (`@id: adding-and-subtracting-actions`). **Beasthearts and Magic Treasure** is now a feature (`@id: beasthearts-and-magic-treasure`) with Consumables/Trinkets/Leveled Items folded into its body (demoted to H5). Final artifact sweep done (stray `_page_24` image removed; user's own cleanup pass already removed most `®`/`£`/spans). **216 classified.**
   - ⚠️ **Merge-artifact fix:** the user's `beastheart-input-cleanup` branch (merged as `e944af2`) re-introduced raw duplicate power-roll tier blocks into Rolling Thunder (level-6) and Juggernaut (level-9) — removed in `e76354d`. Lesson: re-gen + spot-check after any external merge to the input doc.
 
-**Remaining — Phase 7 only:** SCC cross-ref links, scc_api/aggregate
+- **Phase 7 DONE (2026-06-02):**
+  - **Cross-book shared outputs** — `gen --all` now regenerates aggregate/scc_api/scc_map over the union of all books via `pipeline.RunSharedOutputs` (orchestrated in `gen.go`), so beastheart (and monsters) join the SCC API + data-unified. Single-book runs unchanged. Verified heroes API byte-preserved (2223 resolve files unchanged; total codes 1727→1943, +216 beastheart).
+  - **SCC cross-reference links** — 147 condition links (`scc:mcdm.heroes.v1/condition/*`, content body only, fiction excluded) + 5 skill links (Read Person/Hide/Endurance/Magic/Nature). Resolve to relative paths into the merged Browse tree; deployed live.
+  - **`validate --scc-stable`** — made multi-book aware (unions all books' codes); registry reset to prune 4 dead no-level codes (ferocity/rampage/companion-rules/adding-and-subtracting-actions from pre-`@level` eras). Passes. Remember: **gen-twice after a registry reset** (single-pass leaves links resolved against an incompletely-seeded registry — second pass fixes it).
+  - ⚠️ **`deploy-api` is the USER's to run** — it publishes the SCC API (steelCompendium.github.io) + data-unified. Those repos currently hold the correct beastheart additions UNCOMMITTED, ready for `deploy-api`.
+
+**Beastheart integration COMPLETE.** Only follow-up: run `deploy-api` to publish beastheart to the live SCC API / data-unified.
+
+_(historical remaining note, now resolved:)_ SCC cross-ref links, scc_api/aggregate
 for beastheart (currently disabled for secondary books via `EffectiveBookConfig`),
 `validate --scc-stable`. Full detail in project memory
 `project_beastheart_integration.md` and in `docs/handoffs/HANDOFF.md`.

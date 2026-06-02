@@ -6,9 +6,9 @@
   `docs/superpowers/plans/2026-06-01-beastheart-integration.md` → `## Status / Handoff`.
   Spec: `docs/superpowers/specs/2026-06-01-beastheart-integration-design.md`.
   Deep project state in agent memory `project_beastheart_integration.md`.
-  Phases 1–6 DONE (all class content: companions, all abilities, all per-level features,
-  Companion/Companion Rules/Adding & Subtracting Actions/Beastheart Treasure features,
-  rewards, perks — all live). Phase 7 (cross-ref links + scc_api) not started.
+  **Phases 1–7 DONE.** All class content live; subclass surfaced in metadata; Phase 7
+  complete (cross-book shared outputs, SCC cross-ref links, multi-book scc-stable).
+  Only follow-up: USER runs `deploy-api` to publish beastheart to the live SCC API.
 - **SCC address-bar rewrite retirement** — ✅ complete & merged (prior session,
   2026-05-31). No in-flight work. (Was the previous content of this file; archived in git.)
 - **Other `plans/` efforts** (`architecture-redesign`, `schema-enrichment`,
@@ -16,11 +16,30 @@
 
 ## You are here
 
-**ALL Beastheart class content DONE (Phases 1–6) + subclass surfaced in output
-(2026-06-02, deployed live).** steel-etl `70491be`, workspace `9e3b760`, v2 `3a0ccc0699`.
-**216 classified.**
+**BEASTHEART INTEGRATION COMPLETE (Phases 1–7, 2026-06-02, deployed live).**
+steel-etl `d587bde`, workspace `6df3347`, v2 `61a78cfd8a`. **216 beastheart codes;
+1943 total across all books.**
 
-**Subclass handling — DONE (this session).** Decision (user's call): subclass is
+**The only remaining action is the USER's:** run `devbox run -- just deploy-api` to
+publish beastheart to the live SCC API (steelCompendium.github.io) + data-unified.
+Those repos currently hold the correct, verified beastheart additions UNCOMMITTED
+(API: new `resolve/mcdm.beastheart.v1/` = 216 files + updated index/scc/types;
+data-unified: beastheart md + updated `_index`). Heroes entries are byte-unchanged.
+
+**Phase 7 — DONE (this session):**
+- **Cross-book shared outputs:** `gen --all` regenerates aggregate/scc_api/scc_map over
+  ALL books via `pipeline.RunSharedOutputs` (orchestrated in `gen.go`). Single-book runs
+  unchanged. `Result.Classified` carries per-book items to the post-pass. Verified heroes
+  API byte-preserved (2223 resolve files unchanged; 1727→1943 total).
+- **SCC cross-ref links:** 147 conditions + 5 skills in the beastheart text (content body
+  only — fiction excluded; conditions linked via single-pass combined regex).
+- **`validate --scc-stable`:** now multi-book aware (unions all books). Registry was reset
+  to prune 4 dead no-level codes. ⚠️ **Always gen-twice after a registry reset** (memory
+  [[project_scc_link_resolution]]) — first pass resolves links against an incompletely
+  seeded registry; the second pass fixes it (saw transient data-rules collateral, cleared
+  on 2nd pass).
+
+**Subclass handling — DONE (prior in session).** Decision (user's call): subclass is
 **reference metadata, NOT part of the SCC path** — the SCC code stays a stable fetch-by-id
 reference. Rationale: path-segment breaks for un-subclassed features (most of Heroes) and
 multi-subclass features, and would force duplication. Implementation: `@subclass` read in
@@ -51,7 +70,10 @@ jumbled fields, dropped tier prefixes. Verify against PDF (file-page = book-page
 - **Branches:** workspace, steel-etl, v2 all on `main`, in sync with `origin/main`
   (the SteelCompendium org). Working trees clean except this handoff/plan doc edit
   (commit & push it).
-  - Work HEADs: steel-etl `70491be`, v2 `3a0ccc0699`, workspace `9e3b760`.
+  - Work HEADs: steel-etl `d587bde`, v2 `61a78cfd8a`, workspace `6df3347`.
+  - ⚠️ `gen --all` runs the cross-book shared post-pass, which writes to the API repo
+    (`steelCompendium.github.io/docs/api`) + `data/data-unified`. Those carry uncommitted
+    beastheart additions until the user runs `deploy-api`.
 - **Build:** `devbox run -- bash -c 'cd steel-etl && go build ./...'` → OK.
 - **Tests:** `devbox run -- bash -c 'cd steel-etl && go test ./...'` → all packages **ok** (no failures).
 - **Gen:** `devbox run -- bash -c 'cd steel-etl && go run ./cmd/steel-etl gen --config pipeline.yaml --book mcdm.beastheart.v1'`
