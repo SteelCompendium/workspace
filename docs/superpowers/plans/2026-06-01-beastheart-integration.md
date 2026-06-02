@@ -27,9 +27,10 @@ SteelCompendium org. Build green, all Go tests pass. `gen --book mcdm.beastheart
 - All **14 trinkets/leveled treasures** + **8 perks**.
 - **1st-level Wild Nature subclass kit**: 4 maneuvers + 4 triggered actions.
 - **2nd-Level Wild Nature features** (Stormheart, Supersniffer, This One's Yours, Watchdog) + **2nd-Level Wild Nature abilities** (8, PDF-verified power rolls).
+- **Beastheart Abilities** container (H2 feature, `@level: 1`) + the **4 signature abilities** (Bodyswap, Come On!, Covering Fire, Stormrage) — PDF-verified (book p.23 / PDF p.27), at-will (`@subtype: signature`, no `@cost`), path `feature.ability.beastheart.level-1/`. Deployed live 2026-06-02.
 
-**Remaining (Phase 6):** main Beastheart heroic abilities (signature/3/5/7/9/11
-Ferocity, ~24 statblocks — HEAVILY marker-mangled, need PDF reconstruction);
+**Remaining (Phase 6):** main Beastheart heroic abilities (3/5/7/9/11
+Ferocity, ~20 statblocks — HEAVILY marker-mangled, need PDF reconstruction);
 6th/9th-level Wild Nature subclass abilities; 5th/8th-level Wild Nature passive
 features; per-level feature lists (3rd–10th); Companion intro feature; Kit ref;
 stray image/page-number cleanup. **Phase 7:** SCC cross-ref links, scc_api/aggregate
