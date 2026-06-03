@@ -45,7 +45,9 @@ just deploy-v2    # Pipeline + v2 site only
 - `justfile` -- Workspace recipes (`clone-all`, `deploy`, `deploy-api`, `deploy-v2`)
 - `devbox.json` / `devbox.lock` -- Dev environment (Go, Node, Python, just, etc.)
 - `ARCHITECTURE.md` -- Pipeline architecture, data flow, editable vs. generated files. You MUST read this.
-- `FOLLOWUPS.md` -- Deferred tasks identified during other work
+- `FOLLOWUPS.md` -- In-scope tangents found mid-task, to clear before starting a new feature (numbered `## N.` sections)
+- `ROADMAP.md` -- New features and larger planned / in-flight efforts (numbered `## N.` sections)
+- `docs/handoffs/` -- Per-session "you are here" handoffs (`HANDOFF.md`); see `creating-handoffs` skill
 - `reference/` -- Draw Steel condensed reference docs and SCC specification (see below)
 - `templates/` -- Repo documentation templates (`repo-docs/`) and `TEMPLATE-GUIDE.md`
 - `plans/` -- Architecture and design plans (architecture-redesign, schema-enrichment, sdk-schema-alignment)
@@ -71,6 +73,18 @@ Hierarchical classification system used across all data repos: `source/type/item
 SCC codes are identifiers used as website permalinks (`/scc/{code}/`), API keys, and cross-reference links. See `reference/scc-specification.md` for the full spec.
 
 **Registry:** 1,754 codes across 17 types (the `project` and `god` types were added 2026-05-29 during the truncated-link fix; see `steel-etl/docs/superpowers/plans/2026-05-29-truncated-link-fix.md`). The source document has ~4,055 SCC cross-reference links including conditions, skills, movement types, negotiation motivations, and culture benefits. See `steel-etl/docs/linking-guide.md` for linking rules and `steel-etl/docs/linking-reference.md` for all 441 linkable terms.
+
+## Keeping docs in sync
+
+Updating docs is part of "done." Route new knowledge by lifespan into its canonical home:
+
+- **Change the pipeline / deploy flow, add an output target, or change the data flow** → update `ARCHITECTURE.md` (and its diagram).
+- **Hit a small in-scope tangent** (a bug/gap you're deferring to finish the task at hand) → add a numbered `## N.` section to `FOLLOWUPS.md`; clear these before starting a new feature.
+- **Plan a new feature or larger effort** → add a numbered `## N.` section to `ROADMAP.md`.
+- **Find non-obvious "funky logic"** (workaround, footgun, magic number) → capture it where it lives: an inline code comment if local, `ARCHITECTURE.md` or the relevant sub-repo doc if cross-cutting (e.g. the `gen --all` multi-book gotcha lives in `ARCHITECTURE.md` step 1 and `steel-etl/CLAUDE.md`).
+- **Pause mid-task / hand off** → write `docs/handoffs/HANDOFF.md` (the `creating-handoffs` skill owns this).
+
+This repo has **no `CHANGELOG.md`**: it is an orchestration workspace with no release tags — shipped history is the git log (`chore: bump steel-etl ...` commits and v2 deploy commits), not a hand-maintained changelog.
 
 ## Sub-repo CLAUDE.md files
 

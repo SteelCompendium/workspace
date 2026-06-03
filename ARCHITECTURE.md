@@ -32,8 +32,7 @@ All content flows through a single pipeline: annotated source markdown is proces
                                   ├── section mapping (Browse; Read grouped by book, source-ordered)
                                   ├── book-faithful subtree render (RenderSubtree → PageBody)
                                   ├── index generation
-                                  ├── SCC permalink stubs
-                                  └── scc-manifest.js
+                                  └── SCC permalink stubs
                                   │
                                   ▼
                               v2/docs/
@@ -49,11 +48,13 @@ The `deploy` recipe runs `deploy-api` then `deploy-v2`. The full sequence:
 
 ### 1. `steel-etl gen` (pipeline)
 
-Reads the annotated source markdown, parses sections using 14 content-type parsers, assigns SCC codes via the classifier, and writes structured output to multiple targets.
+Reads the annotated source markdown, parses sections using the content-type parsers registered in `steel-etl/internal/content/registry.go`, assigns SCC codes via the classifier, and writes structured output to multiple targets.
 
 **Input:** `steel-etl/input/heroes/Draw Steel Heroes.md` -- hand-annotated markdown with `<!-- @type: ... -->` comment tags that identify content sections (classes, abilities, kits, ancestries, etc.)
 
 **Config:** `steel-etl/pipeline.yaml`
+
+> **Gotcha — multi-book gen.** `pipeline.yaml` defines a primary book (`mcdm.heroes.v1`) plus secondary books in its `books:` list (`mcdm.beastheart.v1`, `mcdm.monsters.v1`). A bare `steel-etl gen --config pipeline.yaml` regenerates **only the primary book** — the secondary `data/data-*` output stays stale. To regenerate everything use `--all` (every book) or `--book <id>`. The `just deploy*` recipes already pass `--all`; only manual `gen` runs hit this. Symptom: edits to `input/beastheart/...` appear ignored because you're reading stale output, and the primary-book "Sections: N parsed" line is heroes-only. (`selectBookConfigs` in `internal/cli/gen.go`.)
 
 **Outputs (all generated, cleaned on each run):**
 
@@ -86,8 +87,7 @@ Key operations:
 - **Book-faithful pages** -- each `md-linked` page is a full book-order render of its source section's subtree (own body + all nested descendants inline, headings normalized, ability statblocks un-blockquoted). Produced by `RenderSubtree` → `ParsedContent.PageBody`, consumed by the `md-linked` generator. The site builder maps these directly into `Browse/` and `Read/` — no composite reassembly. The `md`/`json`/`yaml`/`dse` outputs remain per-section structured outputs.
 - **Group remapping** -- nests kit abilities under `Kits/` subdirectory
 - **Index generation** -- creates navigable index pages with natural sort
-- **SCC permalink stubs** -- generates `scc/{code}/index.html` redirect files
-- **SCC manifest** -- writes `javascripts/scc-manifest.js` for client-side URL rewriting
+- **SCC permalink stubs** -- generates `scc/{code}/index.html` redirect files. The SCC URL is a stable, shareable redirect entry point; the friendly Browse page is the canonical, indexable location. (The former client-side `scc-manifest.js` address-bar rewrite was **retired 2026-05-31** — see `v2/.repo-docs/decisions/2026-05-31-retire-scc-address-bar-rewrite.md`.)
 - **Static overrides** -- copies `v2/static_content/docs/` last (hand-authored pages override generated ones)
 
 ### 3. Index transforms (Python)
@@ -126,7 +126,7 @@ Annotated source (hand-edited)
 | `steel-etl/internal/` | Go source | Yes |
 | `v2/site.yaml` | Site builder config | Yes |
 | `v2/docs/stylesheets/` | Hand-authored CSS | Yes |
-| `v2/docs/javascripts/` | Hand-authored JS (except `scc-manifest.js`) | Yes |
+| `v2/docs/javascripts/` | Hand-authored JS | Yes |
 | `v2/static_content/` | Static overrides for generated pages | Yes |
 | `v2/overrides/` | MkDocs theme overrides | Yes |
 | `v2/mkdocs.yml` | MkDocs config | Yes |
