@@ -87,3 +87,18 @@ Each entry should include:
 - **Why:** Completeness of deity/project content if surfaced on the site; richer structured output (e.g. project goal/prerequisites, god domain/associated ancestry). Also: ancestry purchased traits carry a "(N Point)" cost that is currently only in heading text, not structured metadata.
 - **Context:** 9 individual gods + 16 projects annotated this session; groupings adjudicated as containers and skipped. Parsers produce flat `god/<id>` / `project/<id>` codes.
 - **Effort:** S–M
+
+### Beastheart companion stat blocks not published to Browse (broken `feature-group/companion/*` links)
+
+- **Identified:** 2026-06-02, Read-tab-by-book work
+- **What:** Companion stat blocks are emitted as `feature-group/companion/<name>.md` in `md-linked`, but `feature-group/` is **not** in `v2/site.yaml`'s Browse `include:` list, so companion pages are never published. Every `scc:.../feature-group.companion/<name>` cross-reference (≈7 distinct companions, ~26 link instances across the Beastheart class page and the new `Read/beastheart/the-beastheart-class.md` chapter) therefore dangles. Pre-existing on `main` (the Beastheart class page on the live site had the same broken links); the Read-tab work duplicated the links into the Read chapter but did not cause the root gap.
+- **Why it matters:** Companion stat blocks are core Beastheart content; the links are clickable-but-404. Adding `feature-group/` to the Browse `include:` would publish them and resolve the links — but first confirm companions are *meant* to be standalone Browse pages vs. embedded-only in the class page (they already render inline in the class subtree). If standalone, also decide their index/title treatment.
+- **Context:** `v2/site.yaml` Browse `include:`; companion sources in `data/data-beastheart/en/md-linked/feature-group/companion/`. `matchesSection` uses prefix matching, so `feature/` does **not** match `feature-group/`.
+- **Effort:** S (one-line include + verify) once the design intent is confirmed.
+
+### Stale top-level nav entry `Full Book`
+
+- **Identified:** 2026-06-02, Read-tab-by-book work
+- **What:** `v2/docs/.nav.yml` (committed, protected from the site builder's clean) lists a `Full Book` nav item that matches no file/dir, producing an `awesome-nav` warning on every build. Pre-existing (present on `main`, commit "Adjusting nav").
+- **Why it matters:** Minor — a persistent build warning and a dead tab slot. Remove the line or point it at real content.
+- **Effort:** XS
