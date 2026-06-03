@@ -29,7 +29,7 @@ All content flows through a single pipeline: annotated source markdown is proces
                                   ▼
                           data/data-rules/en/md-linked
                                   │
-                                  ├── section mapping (Browse, Read)
+                                  ├── section mapping (Browse; Read grouped by book, source-ordered)
                                   ├── book-faithful subtree render (RenderSubtree → PageBody)
                                   ├── index generation
                                   ├── SCC permalink stubs
@@ -82,7 +82,7 @@ Transforms the `md-linked` output into the MkDocs directory structure that the v
 **Output:** `v2/docs/` (cleaned before each run, preserving `stylesheets/`, `javascripts/`, `Media/`)
 
 Key operations:
-- **Section mapping** -- copies content into `Browse/` and `Read/` tab directories
+- **Section mapping** -- copies content into `Browse/` and `Read/` tab directories. The `Read/` tab is grouped per book (`Read/<book>/`, configured via `books:` in `v2/site.yaml`) and chapters are ordered by their position in the source document (`order:` frontmatter), not alphabetically.
 - **Book-faithful pages** -- each `md-linked` page is a full book-order render of its source section's subtree (own body + all nested descendants inline, headings normalized, ability statblocks un-blockquoted). Produced by `RenderSubtree` → `ParsedContent.PageBody`, consumed by the `md-linked` generator. The site builder maps these directly into `Browse/` and `Read/` — no composite reassembly. The `md`/`json`/`yaml`/`dse` outputs remain per-section structured outputs.
 - **Group remapping** -- nests kit abilities under `Kits/` subdirectory
 - **Index generation** -- creates navigable index pages with natural sort
