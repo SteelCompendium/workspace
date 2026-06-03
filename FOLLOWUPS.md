@@ -41,9 +41,10 @@ cleanup pass.
 
 ## 3. Stale top-level nav entry `Full Book`
 
-**Status:** open
+**Status:** done
 
 - **Identified:** 2026-06-02, Read-tab-by-book work
 - **What:** `v2/docs/.nav.yml` (committed, protected from the site builder's clean) lists a `Full Book` nav item that matches no file/dir, producing an `awesome-nav` warning on every build. Pre-existing (present on `main`, commit "Adjusting nav").
 - **Why it matters:** Minor — a persistent build warning and a dead tab slot. Remove the line or point it at real content.
 - **Effort:** XS
+- **Resolution:** 2026-06-03 — Removed the `Full Book` line from `v2/docs/.nav.yml` (it was unsupported and the full-book page loaded too slowly). Also dropped the now-stale `Full Book` mention from the `reading-progress.js` header comment. Verified via `mkdocs build`: the `awesome-nav` warning for `Full Book` no longer appears.
