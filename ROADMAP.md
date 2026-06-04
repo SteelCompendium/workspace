@@ -75,7 +75,7 @@ What it is, why it matters, where the work lives. Code blocks, commands, links w
 
 ## 5. Reuse the mkdocs heading-anchor (¶) icon for SCC permalinks in the v2 site
 
-**Status:** open
+**Status:** done — 2026-06-04. Shipped: `RenderSubtree` emits `{data-scc="<code>"}` (attr_list) on coded subheadings; `scc-headerlinks.js` reuses the native `.headerlink` ¶ to copy the stable `/scc/<code>/` link (SCC-backed) or a friendly `#anchor` link (structural), copy + jump, with `.headerlink--scc` accent styling; the page-title button (`scc-permalink-copy.js`) was removed. The "gated on roadmap item 3" caveat below proved **unnecessary** — every SCC code already has a page-level redirect stub to that item's canonical page, so aggregate-heading SCC links resolve correctly without anchor-qualified targets. See `v2/.repo-docs/decisions/2026-06-04-scc-heading-permalinks.md`.
 
 - **Identified:** 2026-06-01, follow-up idea while reviewing advancement-table links.
 - **What:** mkdocs Material renders a permalink anchor icon (¶) next to every heading via `toc: permalink: true` (`v2/mkdocs.yml:63-64`). Reuse that same icon/affordance to surface the **SCC permalink** — ideally a per-heading SCC anchor that matches the native heading-anchor look, instead of (or alongside) today's single page-title "copy permalink" button.
