@@ -48,3 +48,13 @@ cleanup pass.
 - **Why it matters:** Minor — a persistent build warning and a dead tab slot. Remove the line or point it at real content.
 - **Effort:** XS
 - **Resolution:** 2026-06-03 — Removed the `Full Book` line from `v2/docs/.nav.yml` (it was unsupported and the full-book page loaded too slowly). Also dropped the now-stale `Full Book` mention from the `reading-progress.js` header comment. Verified via `mkdocs build`: the `awesome-nav` warning for `Full Book` no longer appears.
+
+## 4. `transform_indexes.py` is dead code for the current card index pages
+
+**Status:** open
+
+- **Identified:** 2026-06-04, card markdown-rendering / `.md`-link fix
+- **What:** `v2/scripts/transform_indexes.py` (run as step 4 of the `just deploy-v2` / `update` recipe) only matches files named `_Index.md` or `Index.md` (capitalized) via `rglob`, and only rewrites markdown **tables** into `browse-index` lists. The current `steel-etl site` builder emits lowercase `index.md` pages rendered as raw-HTML `sc-card` grids (see `internal/site/cards.go`), which the script never matches and which contain no tables. So the step is effectively a **no-op** — it transforms nothing on a normal build.
+- **Why it matters:** Dead pipeline step is misleading (it looks like index pages are post-processed when they aren't — this cost real debugging time tracing how card links resolve). Either remove the step from the justfile + delete the script, or confirm whether any remaining table-style `Index.md` pages still depend on it before deleting.
+- **Context:** `v2/justfile` step 4 (`scripts/transform_indexes.py docs/Browse`); the script's `main()` globs `_Index.md` / `Index.md` only. Card pages are generated lowercase `index.md` by `buildCardsContent` in `steel-etl/internal/site/cards.go`. Confirm with `find v2/docs/Browse -name 'Index.md' -o -name '_Index.md'` (expected: none) before removing.
+- **Effort:** XS (verify no matches, then drop the step + script)
