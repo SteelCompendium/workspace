@@ -44,7 +44,7 @@ All content flows through a single pipeline: annotated source markdown is proces
 
 ## Step-by-step: `just deploy`
 
-The `deploy` recipe runs `deploy-api` then `deploy-v2`. The full sequence:
+The `deploy` recipe runs `gen --all` **once**, commits the SCC API to the org repo, then builds and commits the v2 site. (The standalone `deploy-api` / `deploy-v2` recipes each self-`gen`; `deploy` inlines a single shared `gen` so the `time.Now()` "generated" stamp in `docs/api/*.json` is committed once — a second `gen` would re-stamp those files and leave the org repo dirty with an uncommitted timestamp-only diff.) The full sequence:
 
 ### 1. `steel-etl gen` (pipeline)
 
