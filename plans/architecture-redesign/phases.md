@@ -360,11 +360,13 @@ Each parser gets unit tests using small markdown fixtures in `testdata/`.
 - Verify cross-references between books work (hero ability references a monster, etc.)
 
 ### Exit Criteria
-- [ ] Monsters pipeline produces correct output
-- [ ] Multi-book aggregation works
-- [ ] Website serves both Heroes and Monsters content
-- [ ] Cross-book SCC references resolve correctly
-- [ ] Pipeline can be extended to new books by adding annotations + config
+- [x] Monsters pipeline produces correct output *(2026-06-05; validated vs legacy data-bestiary: 437 statblocks, 64 featureblocks, 35 terrain — exact match on names + file counts)*
+- [x] Multi-book aggregation works *(heroes 1,808 + beastheart 228 + monsters 591 = 2,627 codes, no cross-book collisions)*
+- [x] Website serves both Heroes and Monsters content *(Bestiary tab: modular monster pages; Read tab: book-faithful monster chapters)*
+- [x] Cross-book SCC references resolve correctly *(shared registry, `gen --all` clean)*
+- [x] Pipeline can be extended to new books by adding annotations + config *(monster/statblock/featureblock/dynamic-terrain/monster-group parsers + `scripts/annotate_monsters.pl`)*
+
+See `steel-etl/docs/superpowers/plans/2026-06-05-monsters-book.md`.
 
 ---
 

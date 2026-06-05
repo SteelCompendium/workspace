@@ -44,7 +44,7 @@ All content flows through a single pipeline: annotated source markdown is proces
 
 ## Step-by-step: `just deploy`
 
-The `deploy` recipe runs `deploy-api` then `deploy-v2`. The full sequence:
+The `deploy` recipe runs `gen --all` **once**, commits the SCC API to the org repo, then builds and commits the v2 site. (The standalone `deploy-api` / `deploy-v2` recipes each self-`gen`; `deploy` inlines a single shared `gen` so the `time.Now()` "generated" stamp in `docs/api/*.json` is committed once — a second `gen` would re-stamp those files and leave the org repo dirty with an uncommitted timestamp-only diff.) The full sequence:
 
 ### 1. `steel-etl gen` (pipeline)
 
@@ -83,7 +83,7 @@ Transforms the `md-linked` output into the MkDocs directory structure that the v
 **Output:** `v2/docs/` (cleaned before each run, preserving `stylesheets/`, `javascripts/`, `Media/`)
 
 Key operations:
-- **Section mapping** -- copies content into `Browse/` and `Read/` tab directories. The `Read/` tab is grouped per book (`Read/<book>/`, configured via `books:` in `v2/site.yaml`) and chapters are ordered by their position in the source document (`order:` frontmatter), not alphabetically.
+- **Section mapping** -- copies content into `Browse/`, `Bestiary/`, and `Read/` tab directories. The `Read/` tab is grouped per book (`Read/<book>/`, configured via `books:` in `v2/site.yaml`) and chapters are ordered by their position in the source document (`order:` frontmatter), not alphabetically. The `Bestiary/` tab holds the modular Monsters-book pages (`monster/<category>/…`, `dynamic-terrain/…`, `retainer/…`); monster **group** pages there are lore-only, while the book-faithful everything-inline monster view lives on the `Read/` tab's `chapter/monsters` page. Monsters generate to `data/data-bestiary/` (see the multi-book gotcha above; `just deploy*` passes `--all`).
 - **Book-faithful pages** -- each `md-linked` page is a full book-order render of its source section's subtree (own body + all nested descendants inline, headings normalized, ability statblocks un-blockquoted). Produced by `RenderSubtree` → `ParsedContent.PageBody`, consumed by the `md-linked` generator. The site builder maps these directly into `Browse/` and `Read/` — no composite reassembly. The `md`/`json`/`yaml`/`dse` outputs remain per-section structured outputs.
   - **Per-heading SCC markers:** `RenderSubtree` stamps `{data-scc="<code>"}` (attr_list) onto every descendant heading whose section has an SCC code, so the v2 client (`scc-headerlinks.js`) can offer a stable `/scc/<code>/` permalink on that heading's ¶ icon; structural headings stay unmarked. Because a parent page is visited before its children are classified, `PageBody` rendering + generator writes are **deferred to a post-walk pass** in `internal/pipeline/pipeline.go` so the section→SCC map is complete first. See `v2/.repo-docs/decisions/2026-06-04-scc-heading-permalinks.md`.
 - **Group remapping** -- nests kit abilities under `Kits/` subdirectory

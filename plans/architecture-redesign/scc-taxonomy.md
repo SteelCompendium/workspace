@@ -71,15 +71,18 @@ The type component classifies what the content IS. Uses `.` for sub-types within
 | `movement` | Movement rules | `mcdm.heroes.v1/movement/forced-movement` |
 | `negotiation` | Negotiation rules | `mcdm.heroes.v1/negotiation/interest` |
 
-### Monsters Book Types
+### Monsters Book Types — *as implemented 2026-06-05*
 
 | SCC Type | Description | Example SCC |
 |---|---|---|
-| `chapter` | Top-level book chapters | `mcdm.monsters.v1/chapter/introduction` |
-| `monster` | Monster entries | `mcdm.monsters.v1/monster/chimera` |
-| `monster.{category}` | Monsters by category | `mcdm.monsters.v1/monster.ogres/ogre-warrior` |
-| `dynamic-terrain` | Dynamic terrain features | `mcdm.monsters.v1/dynamic-terrain/lava-pool` |
-| `retainer` | Retainer NPCs | `mcdm.monsters.v1/retainer/squire` |
+| `chapter` | Top-level book chapters | `mcdm.monsters.v1/chapter/monsters` |
+| `monster.{category}` | Monster **group** lore landing page | `mcdm.monsters.v1/monster.goblins/goblins` |
+| `monster.{category}[.{subcategory}].statblock` | Individual creature stat block | `mcdm.monsters.v1/monster.goblins.statblock/goblin-warrior` |
+| `monster.{category}[.{subcategory}]` | Malice/tactical featureblock (sibling of `statblock/`) | `mcdm.monsters.v1/monster.goblins/goblin-malice` |
+| `dynamic-terrain.{category}` | Dynamic terrain object | `mcdm.monsters.v1/dynamic-terrain.environmental-hazards/lava` |
+| `retainer.statblock` | Retainer creature stat block | `mcdm.monsters.v1/retainer.statblock/goblin-guide` |
+
+`{subcategory}` is an echelon (`1st-echelon`…`4th-echelon`) for groups whose statblock names repeat per echelon (Rivals, Demons, Undead, War Dogs). This nested shape (paths `monster/<category>/statblock/<item>.md`, etc.) mirrors the treasure hierarchy and is produced via the non-code `monster-group` container plus context provided by the `monster` group page. See `steel-etl/docs/superpowers/plans/2026-06-05-monsters-book.md`.
 
 ## Classification Rules
 
@@ -106,11 +109,12 @@ The type path is built from context: `feature` types incorporate class, level, a
 | `complication` | (any) | `complication` | `@id` or slugified heading |
 | `title` | (any) | `title` | `@id` or slugified heading |
 | `treasure` | (any) | `treasure` | `@id` or slugified heading |
-| `monster` | category = X | `monster.{X}` | `@id` or slugified heading |
-| `monster` | (no category) | `monster` | `@id` or slugified heading |
-| `statblock` | (any) | *(not classified)* | part of parent monster |
-| `dynamic-terrain` | (any) | `dynamic-terrain` | `@id` or slugified heading |
-| `retainer` | (any) | `retainer` | `@id` or slugified heading |
+| `monster` | category = X (group) | `monster.{X}` | category slug (lore page) |
+| `statblock` | category = X [, subcategory = S] | `monster.{X}[.{S}].statblock` | slugified heading |
+| `featureblock` | category = X [, subcategory = S] | `monster.{X}[.{S}]` | slugified heading (keeps `(Level N+)` tier) |
+| `dynamic-terrain` | domain = dynamic-terrain, category = X | `dynamic-terrain.{X}` | slugified heading |
+| `statblock` | domain = retainer | `retainer.statblock` | slugified heading |
+| `monster-group` | (any) | *(not classified — container)* | seeds domain/category/subcategory context |
 | `movement` | (any) | `movement` | `@id` or slugified heading |
 | `negotiation` | (any) | `negotiation` | `@id` or slugified heading |
 | `feature-group` | (any) | *(not classified)* | container only, provides level context to children |
