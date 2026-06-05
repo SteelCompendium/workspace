@@ -17,35 +17,28 @@ just clone-all
 
 ```
 steelCompendium/
-  justfile              # Workspace recipes
-  devbox.json           # Devbox environment (Python, Node, just, jq, yq, etc.)
+  justfile              # Workspace recipes (clone-all, deploy, deploy-api, deploy-v2)
+  devbox.json           # Devbox environment (Go, Node, Python, just, jq, yq, etc.)
   reference/            # Draw Steel condensed reference docs for AI agents
+  steel-etl/            # Go ETL pipeline + site builder — THE source of truth for content
+                        #   input/{heroes,beastheart,monsters}/*.md = annotated sources
+  v2/                   # MkDocs Material site (v2) — built by `steel-etl site`
   compendium/           # MkDocs Material site (v1, deprecated)
-  v2/                   # MkDocs Material site (v2)
-  data-gen/             # Legacy ETL pipeline: PDF -> Markdown -> YAML/JSON (deprecated)
+  data-gen/             # Legacy ETL pipeline: PDF -> Markdown (deprecated; reference only)
   data-sdk-npm/         # TypeScript SDK for consuming data repos
   draw-steel-elements/  # Web components for Draw Steel content
   statblock-adapter-gl-pages/  # Statblock rendering adapter
-  steelCompendium.github.io/   # Root GitHub Pages site
-  data/
-    data-md/            # Core Markdown (heroes) (deprecated)
-    data-md-dse/        # DSE-formatted Markdown (deprecated)
-    data-md-linked/     # Markdown with scc: links resolved (deprecated)
-    data-md-dse-linked/ # DSE Markdown with links resolved (deprecated)
-    data-rules/         # Rules in various formats and languages
-    data-rules-md/      # Rules Markdown (deprecated)
-    data-rules-md-dse/  # Rules DSE Markdown (deprecated)
-    data-rules-md-linked/      # Rules Markdown with link (deprecated)s
-    data-rules-md-dse-linked/  # Rules DSE Markdown with links (deprecated)
-    data-rules-json/    # Rules as JSON (deprecated)
-    data-rules-yaml/    # Rules as YAML (deprecated)
-    data-bestiary-md/   # Bestiary Markdown (deprecated)
-    data-bestiary-md-dse/  # Bestiary DSE Markdown (deprecated)
-    data-bestiary-json/ # Bestiary as JSON (deprecated)
-    data-bestiary-yaml/ # Bestiary as YAML (deprecated)
-    data-adventures-md/ # Adventures Markdown (deprecated)
-    data-unified/         # All current data repos merged together in various formats and languages
+  steelCompendium.github.io/   # Root GitHub Pages site (also hosts the SCC API)
+  data/                 # Generated output (gitignored build artifacts; do not edit)
+    data-rules/         # Heroes book — md/json/yaml/linked/dse, by locale
+    data-bestiary/      # Monsters book — statblocks, featureblocks, terrain, retainers
+    data-beastheart/    # Beastheart book
+    data-unified/       # All books merged together
+    data-rules-clean/   # Stripped markdown (annotations removed) for distribution
+    data-bestiary-*     # Legacy bestiary output (data-gen era; kept as validation reference)
 ```
+
+Content flows: annotated `steel-etl/input/*` → `steel-etl gen` → `data/*` → `steel-etl site` → `v2/docs/` → MkDocs build. See `ARCHITECTURE.md` and `steel-etl/README.md`.
 
 ## Recipes
 
@@ -53,3 +46,6 @@ steelCompendium/
 |--------|-------------|
 | `just clone-all` | Clone all sub-repos into the workspace |
 | `just switch_repos_to <branch>` | Switch all data repos to a given branch |
+| `just deploy` | Full pipeline: gen + SCC API + v2 site |
+| `just deploy-api` | Pipeline + SCC resolution API only |
+| `just deploy-v2` | Pipeline + v2 site only |

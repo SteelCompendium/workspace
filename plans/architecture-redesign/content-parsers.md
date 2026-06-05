@@ -98,45 +98,34 @@ type ParsedContent struct {
 
 ---
 
-### StatblockParser (`@type: statblock`)
+### StatblockParser (`@type: statblock`) — *as implemented 2026-06-05*
 
-**Expected markdown structure:**
+Individual creature stat block (an H7 heading in the Monsters book). The parser reads the 4-row markdown stat grid into frontmatter and leaves the body (grid + ability/trait blockquotes) intact; the SDK transform (`transformStatblock` + `ParseStatblockFeatures`) parses the blockquotes into a `features[]` array conforming to `statblock.schema.json`.
+
+**Expected markdown structure** (raw, e.g. Goblin Cursespitter):
 
 ```markdown
-#### Monster Name
+####### Goblin Cursespitter
 
-**Level N Role (Keywords)**
+| Goblin, Humanoid | - | Level 1 | Horde Hexer | EV 3 |
+|:--:|:--:|:--:|:--:|:--:|
+| **1S**<br>Size | **5**<br>Speed | **10**<br>Stamina | **0**<br>Stability | **1**<br>Free Strike |
+| **-**<br>Immunity | **Climb**<br>Movement | - | **-**<br>With Captain | **-**<br>Weakness |
+| **-2**<br>Might | **+1**<br>Agility | **0**<br>Reason | **+2**<br>Intuition | **0**<br>Presence |
 
-| EV N | Stamina N | Speed N | Size N |
-| --- | --- | --- | --- |
+> 🏹 **Eye of Surlach (Signature Ability)**
+> | **Magic, Ranged, Strike** | **Main action** |
+> | **📏 Ranged 15** | **🎯 One creature** |
+> **Power Roll + 2:**
+> - **≤11:** ...  - **12-16:** ...  - **17+:** ...
 
-| Might +N | Agility +N | Reason +N | Intuition +N | Presence +N |
-| --- | --- | --- | --- | --- |
-
-**Free Strike:** Damage description
-
-**Feature Name:** Feature description.
-
-**Ability Name (Cost)** ◆
-*Keywords*
-Description and power roll...
+> ⭐️ **Crafty**
+> The cursespitter doesn't provoke opportunity attacks by moving.
 ```
 
-**Auto-extracted fields:**
+**Auto-extracted fields** (`parseStatGrid`): `level`, `role` + `organization` (the role cell `Horde Hexer` splits via known vocabularies), `keywords`, `ev`, `stamina`, `speed`, `movement`, `size`, `stability`, `free_strike`, the five characteristic modifiers, plus `immunities`/`weaknesses`/`with_captain` when present.
 
-| Field | Source |
-|-------|--------|
-| `level` | From "Level N Role" line |
-| `role` | From "Level N Role" line |
-| `ev` | From stat table |
-| `stamina` | From stat table |
-| `speed` | From stat table |
-| `size` | From stat table |
-| `characteristics` | From characteristics table (Might, Agility, etc.) |
-| `immunities` | From "Immunities:" line if present |
-| `free_strike` | From "Free Strike:" paragraph |
-| `features` | All non-ability sub-sections |
-| `abilities` | All ability-formatted sub-sections |
+**SCC:** `monster.<category>[.<subcategory>].statblock/<id>` — `category` and optional `subcategory` (echelon) come from the enclosing `monster` group / `monster-group` container via the context stack; `domain` defaults to `monster` (retainers set `domain: retainer` → `retainer.statblock/<id>`).
 
 ---
 
@@ -314,38 +303,40 @@ Non-ability class features (traits) (e.g., "Growing Ferocity", "Fury Subclass").
 
 ---
 
-### MonsterParser (`@type: monster`)
+### MonsterParser (`@type: monster`) — *as implemented*
 
-Container for a monster entry (lore + statblock). The statblock itself is a child `@type: statblock` section.
-
-**Auto-extracted fields:**
+A monster **group** (e.g. `## Goblins`). Produces a lore landing page at `monster.<category>/<category>` AND seeds `category` context for its descendant statblocks/featureblocks. Requires `@category` (the slug), since the pipeline pushes the annotation into the context stack for descendants to read. Body is the group lore only — annotated statblock/featureblock children are excluded (and the pipeline skips `RenderSubtree` for this type, so the Browse page stays lore-only; the book-faithful view lives on the Read chapter page).
 
 | Field | Source |
 |-------|--------|
-| `monster_name` | Heading text |
-| `lore` | Introductory/descriptive text |
+| `name` | Heading text |
+| `category` | `@category` (or slugified heading) |
 
 ---
 
-### DynamicTerrainParser (`@type: dynamic-terrain`)
+### FeatureblockParser (`@type: featureblock`) — *as implemented*
 
-**Auto-extracted fields:**
-
-| Field | Source |
-|-------|--------|
-| `terrain_name` | Heading text |
-| `description` | Effect description |
+A named block of malice/tactical features attached to a group (H9, e.g. "Goblin Malice"). Classifies as `monster.<category>[.<subcategory>]/<id>` — a sibling of the `statblock/` folder. The id keeps a `(Level N+ …)` qualifier (so tiered malice stays distinct) but drops a bare descriptor like `(Malice Features)` / `(Ajax Feature)`. Body retains the feature blockquotes.
 
 ---
 
-### RetainerParser (`@type: retainer`)
+### DynamicTerrainParser (`@type: dynamic-terrain`) — *as implemented*
 
-**Auto-extracted fields:**
+A terrain object (H9: hazard, fieldwork, mechanism, fixture). Classifies as `dynamic-terrain.<category>/<id>` (`domain` + `category` from the enclosing `monster-group` container).
 
 | Field | Source |
 |-------|--------|
-| `retainer_name` | Heading text |
-| Similar to statblock but simpler | |
+| `name` | Heading text (trailing `(Level N …)` classifier stripped) |
+| `level` | From the heading's `(Level N …)` classifier |
+| `ev`, `stamina`, `size`, … | `- **EV:** N` list fields in the body |
+
+---
+
+### MonsterGroupParser (`@type: monster-group`) — *as implemented*
+
+Non-code container (like `feature-group` / `treasure-group`) that produces **no file**; it only seeds `domain` / `category` / `subcategory` context for descendants. Used for dynamic-terrain categories (`@domain: dynamic-terrain | @category: …`), the retainer statblock group (`@domain: retainer`), and echelon sub-groups (`@subcategory: 1st-echelon`).
+
+> **Retainers** are not a separate parser — they are `statblock`s under a `monster-group` with `@domain: retainer`, classifying as `retainer.statblock/<id>`.
 
 ---
 
