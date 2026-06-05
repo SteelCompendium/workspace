@@ -86,3 +86,20 @@ What it is, why it matters, where the work lives. Code blocks, commands, links w
   - Existing JS to extend rather than duplicate: `v2/docs/javascripts/scc-permalink-copy.js`. Background: `v2/.repo-docs/decisions/2026-05-23-scc-permalink-system.md` and `2026-05-31-retire-scc-address-bar-rewrite.md`.
   - Gotcha: link-dense pages were the cause of the ~31s render (link previews, since disabled — see roadmap item 1). Adding an anchor + handler per heading is far lighter than per-link previews, but still verify it doesn't re-introduce per-navigation DOM-walk cost.
 - **Effort:** S (page-title icon reuse only) / M (true per-heading SCC anchors, gated on roadmap item 3).
+
+## 6. v2 CI deploy build-time performance (~14 min → ~5 min)
+
+**Status:** open — investigated, measured, and a fix verified locally on 2026-06-05; **not applied** (deferred at user request).
+
+**Distinct from item 1.** Item 1 is *client-side page-load/render* time. This is *CI build/deploy wall-clock* time. Same site, different problem and fix — don't conflate.
+
+- **Identified:** 2026-06-05, investigating why `ci.yml` deploys take ~13–14 min.
+- **What:** Every push to `main` runs `mkdocs gh-deploy --force` (`v2/.github/workflows/ci.yml`) and takes ~14 min. Measured breakdown: **checkout ~248s** (`fetch-depth: 0` pulls the full ~800 MB git history) + **`mkdocs gh-deploy` ~557s** (the build; push is small). The build is single-threaded CPU-bound (~614s locally for 3,097 pages).
+- **Why it matters:** Paid on nearly every content change — most `main` pushes are `chore: update v2 site content` commits from `steel-etl`.
+- **Root causes (cProfile):**
+  1. **Nav rendering (~half the build).** Material re-renders the entire 3,097-item nav tree on *every* page → O(pages × nav-size), 9.5M `nav-item.html` macro calls.
+  2. **`roamlinks` plugin (~15%).** v0.3.2 does a full `os.walk` of all 5,740 files (no early `break`) for each of 3,094 **bare-filename** links `[x](file.md)`; the 10,412 path-style links `[x](../a/b.md)` are free (regex skips `/`).
+- **Verified fix:** adding **`navigation.prune`** (one line under `theme.features`) took a local build **614s → 222s (−64%)**, no new warnings; compatible with the features in use (incompatible only with unused `navigation.expand`). Trade-off: sidebar shows only the active branch (eyeball the UX; `navigation.tabs` keeps top nav).
+- **Recommended changes (priority; none applied):** (1) add `navigation.prune` to `mkdocs.yml` (−~6.5 min); (2) `fetch-depth: 1` in `ci.yml` — `ghp-import` force-pushes `gh-pages` independently and needs no `main` history (−~3.5 min); (3) optional: fix `roamlinks` (vendor an index-based plugin, or have `steel-etl` emit full-path links) (−~60–90s); (4) cleanup: drop the no-op `.cache` step (only Material `social`/`optimize` use it; neither enabled); (5) housekeeping: squash/orphan the bloated `gh-pages` history (~8 MB `search_index.json` per deploy, never pruned → ~800 MB `.git`). Items 1+2 alone ≈ 14 min → ~5 min, both low-risk.
+- **Full detail / numbers:** `v2/.repo-docs/decisions/2026-06-05-ci-deploy-build-time-perf.md`.
+- **Effort:** S (items 1+2) / M (item 3).
