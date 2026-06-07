@@ -99,3 +99,13 @@ cleanup pass.
 - **Fix options:** (a) clean the `resolve/` tree before writing each run (like the `data/data-rules` format dirs are cleaned), or (b) diff against the registry and delete orphaned `*.json`. Option (a) is simplest but makes the org-repo diff noisier on every deploy; (b) is surgical. Either belongs in the API generator in `steel-etl/internal/output/` (the SCC API writer), invoked by `gen`.
 - **One-time cleanup:** the existing stale fury entries can be removed by hand (`git rm docs/api/v1/resolve/mcdm.heroes.v1/feature.trait.fury/{stormwight-kits,primordial-storm,kit-features,kit-bonuses,equipment,growing-ferocity,aspect-benefits-and-animal-form}.json` and `…/feature.ability.fury/aspect-of-the-wild.json`) in the org repo, but they'll keep reappearing for *future* renames until the generator prunes.
 - **Effort:** S (generator change) + XS (one-time cleanup)
+
+## 8. Settings panel: card-style toggle still triggers a full page reload
+
+**Status:** open
+
+- **Identified:** 2026-06-07, while building the live settings drawer (`v2/.repo-docs/plans/2026-06-07-live-settings-panel.md`).
+- **What:** The "Ability card style" control in the new live settings drawer (`v2/docs/javascripts/settings-panel.js`) calls `location.reload()` on change, carried over from the old preferences page. Every other control in the drawer applies instantly via a `<html>` attribute / CSS variable with no reload.
+- **Why it matters:** It conflicts with the drawer's "change settings without navigating away / see it live" goal for that one control — the reload closes the drawer and flashes the page.
+- **Fix options:** Investigate whether classic↔modern can be a pure CSS/attribute swap (it already toggles `data-card-style` on `<html>`). If some ability-card markup is build-time only (the classic glyph badges vs. modern colored borders may be emitted by `steel-etl`, not pure CSS), document why the reload is required, or do a lighter in-place re-render of just the affected cards instead of a full reload.
+- **Effort:** S (investigate + likely small JS/CSS change)
