@@ -28,6 +28,8 @@
       "deploy":      "just deploy",
       "deploy-api":  "just deploy-api",
       "deploy-v2":   "just deploy-v2",
+      "local-deploy": "cd v2 && echo '127.0.0.1:8123' && mkdocs serve -a 127.0.0.1:8123",
+      "local-kill":  "cd v2 && pkill -f mkdocs serve",
       "etl-build":   "cd steel-etl && just build",
       "etl-test":    "cd steel-etl && just test",
       "etl-cover":   "cd steel-etl && just cover",
