@@ -68,3 +68,18 @@ cleanup pass.
 - **Why it matters:** Clickable-but-404 links to kit ability pages, plus persistent build warnings. The flatten is a site-builder transform, so source link text can't easily anticipate the rewritten path — the fix likely belongs in the flatten step (rewrite inbound links and/or emit a redirect stub at the old path), not in the source markdown.
 - **Context:** Flatten logic: `groups[].flatten` in `steel-etl/internal/site/config.go` + `build.go`; the `Kits` group is defined in `v2/site.yaml` Browse section. Note the other 9 build warnings (`Read/beastheart/the-beastheart-class.md` → `feature-group/companion/*`) are a **separate** root cause already tracked in item #2 above, not this one.
 - **Effort:** S
+
+## 6. Combat-mechanic + ability cross-reference links: large under-linked categories remain
+
+**Status:** open (high-confidence subset done 2026-06-06)
+
+- **Identified:** 2026-06-06, comprehensive link-audit pass (kits/maneuvers/gods/truncation fixes).
+- **What:** A link audit (`steel-etl/scripts/link_audit.py`) found that entire **combat-mechanic** categories — the `feature.trait.common.*` / `feature.ability.common.*` move actions, maneuvers, and free strikes — were **never in `docs/linking-reference.md` and never linked**. The 2026-06-06 pass linked the *unambiguous* ones only: the three **move actions** (Advance, Disengage, Ride — guarded on a following "move action"), the **distinctive maneuvers** (Catch Breath, Escape Grab, Aid Attack, Search for Hidden Creatures, Use Consumable, Stand Up-before-"maneuver"), plus kits (Rapid-Fire hyphen miss + Sniper cross-refs), distinctive gods (Cavall, Salorna, Adûn, Nebular, Thellasko — own-section excluded), `I'm No Threat`, and the Templar `Domain Piety and Effects` truncation.
+- **What remains:**
+  - **Free Strike** (~137 occ): always the mechanic, but spans several codes (`feature.trait.common.main-actions/free-strike` generic vs. `Melee/Ranged Weapon Free Strike` specific abilities) — needs code-selection judgment + longest-match.
+  - **Common-verb maneuvers/actions** (~300 occ): Hide, Charge, Grab, Knockback, Heal, Defend — roughly *half are mundane* ("grab two dice", "in charge of", "stand up for the innocent"), so they need the same per-instance mundane-vs-mechanic pass that conditions/skills got (the linking-guide forbids scripted replacement here).
+  - **Full distinctive-ability cross-reference sweep**: many multi-word ability names (e.g. Doomsight, Mortal Coil, Judgment's Hammer, Strike Now) are referenced unlinked outside their own sections; each needs the right level/class code + own-section exclusion.
+  - **Reference-table sync**: add the combat-mechanic terms to `docs/linking-reference.md` (they're absent), and note gods were only partially present.
+- **Why it matters:** The project policy is "link all instances of game mechanics" (`docs/linking-guide.md`); these categories are a large genuine gap. Doing them safely is judgment-heavy, not a one-shot script.
+- **Tooling:** `steel-etl/scripts/link_audit.py` (full unlinked + truncation report from `classification.json` + generated md frontmatter), `link_audit_category.py <code-substr…>` (per-category report), `link_apply.py '<regex w/ group 1>' '<code>' [start-end excl…] [--apply]` (safe single-rule linker: skips headings incl. `>` blockquote headings, existing links, comments; dry-run by default).
+- **Effort:** L (mirrors the original multi-chapter conditions/skills linking effort)
