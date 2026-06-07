@@ -83,3 +83,14 @@ cleanup pass.
 - **Why it matters:** The project policy is "link all instances of game mechanics" (`docs/linking-guide.md`); the remaining items are a real but lower-yield, judgment-heavy tail — not a one-shot script.
 - **Tooling:** `steel-etl/scripts/link_audit.py` (full unlinked + truncation report from `classification.json` + generated md frontmatter), `link_audit_category.py <code-substr…>` (per-category report), `link_apply.py '<regex w/ group 1>' '<code>' [start-end excl…] [--apply]` (safe single-rule linker: skips headings incl. `>` blockquote headings, existing links, comments; dry-run by default).
 - **Effort:** L (mirrors the original multi-chapter conditions/skills linking effort)
+
+## 7. `gen` doesn't prune the SCC API `resolve/` dir — stale entries linger for renamed/removed codes
+
+**Status:** open
+
+- **Identified:** 2026-06-06, during the full deploy after the fury "Stormwight Kits" regrouping renamed several codes.
+- **What:** The SCC resolution API writer (`steelCompendium.github.io/docs/api/v1/resolve/<source>/<type>/<id>.json`) only **adds/overwrites** per-code JSON files; it never deletes files for codes that no longer exist. After the fury regroup, both the new `…/feature.trait.fury.stormwight-kits/*.json` **and** the stale old `…/feature.trait.fury/{stormwight-kits,primordial-storm,kit-features,…}.json` (and `feature.ability.fury/aspect-of-the-wild.json`) are present in the committed org repo. The per-type `index.json`/`scc.json`/`types.json` are regenerated fresh, but the individual `resolve/.../*.json` files are not pruned.
+- **Why it matters:** Stale entries resolve removed/renamed codes to dead Browse paths (404). Currently harmless — nothing links to the old fury codes (all inbound links were redirected) — but it accumulates cruft and could mask a genuinely-removed code. Same risk applies to any future code rename/removal (treasure reorg, etc.).
+- **Fix options:** (a) clean the `resolve/` tree before writing each run (like the `data/data-rules` format dirs are cleaned), or (b) diff against the registry and delete orphaned `*.json`. Option (a) is simplest but makes the org-repo diff noisier on every deploy; (b) is surgical. Either belongs in the API generator in `steel-etl/internal/output/` (the SCC API writer), invoked by `gen`.
+- **One-time cleanup:** the existing stale fury entries can be removed by hand (`git rm docs/api/v1/resolve/mcdm.heroes.v1/feature.trait.fury/{stormwight-kits,primordial-storm,kit-features,kit-bonuses,equipment,growing-ferocity,aspect-benefits-and-animal-form}.json` and `…/feature.ability.fury/aspect-of-the-wild.json`) in the org repo, but they'll keep reappearing for *future* renames until the generator prunes.
+- **Effort:** S (generator change) + XS (one-time cleanup)
