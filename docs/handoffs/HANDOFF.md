@@ -1,123 +1,101 @@
-# Handoff — 2026-06-01
+# Handoff — 2026-06-06 09:29
 
 ## Active efforts
 
-- **Beastheart integration** — IN FOCUS. Resume at
-  `docs/superpowers/plans/2026-06-01-beastheart-integration.md` → `## Status / Handoff`.
-  Spec: `docs/superpowers/specs/2026-06-01-beastheart-integration-design.md`.
-  Deep project state in agent memory `project_beastheart_integration.md`.
-  **Phases 1–7 DONE.** All class content live; subclass surfaced in metadata; Phase 7
-  complete (cross-book shared outputs, SCC cross-ref links, multi-book scc-stable).
-  Only follow-up: USER runs `deploy-api` to publish beastheart to the live SCC API.
-- **SCC address-bar rewrite retirement** — ✅ complete & merged (prior session,
-  2026-05-31). No in-flight work. (Was the previous content of this file; archived in git.)
+- **Trait / Feature cards (`.sc-trait` codex niche)** — IN FOCUS, essentially
+  COMPLETE. Build-time rendering of `type: trait` pages into the recessed
+  `.sc-trait` niche (recursive nested abilities + sub-traits, tables, lists,
+  lead-ins, drop-caps). Code committed in both sub-repos; only the **workspace
+  submodule-pointer commit** (+ optional live deploy) remains. No plan doc — this
+  was driven by a pasted README handoff; durable behavior is folded into
+  `steel-etl/CLAUDE.md` (Key files → `internal/site/trait_cards.go`).
+- **Beastheart integration** — paused/likely-done. Phases 1–7 complete & deployed
+  (prior handoff, archived in git log). Resume at
+  `docs/superpowers/plans/2026-06-01-beastheart-integration.md` → `## Status`.
+  Last-noted open item there: USER runs `just deploy-api` to publish beastheart to
+  the live SCC API — **not verified this session**; confirm before acting.
 - **Other `plans/` efforts** (`architecture-redesign`, `schema-enrichment`,
-  `sdk-schema-alignment`, `content-linking`) — not touched; see each plan's own doc.
+  `sdk-schema-alignment`, `content-linking`) — untouched; see each plan's own doc.
 
 ## You are here
 
-**BEASTHEART INTEGRATION COMPLETE (Phases 1–7, 2026-06-02, deployed live).**
-steel-etl `d587bde`, workspace `6df3347`, v2 `61a78cfd8a`. **216 beastheart codes;
-1943 total across all books.**
+**The single next action: commit the workspace submodule-pointer bump.** The
+workspace tree shows `M steel-etl` (gitlink `0d3fa34 → 2f4b9dd`); the trait work
+itself is already committed inside `steel-etl` and `v2`. Run:
 
-**The only remaining action is the USER's:** run `devbox run -- just deploy-api` to
-publish beastheart to the live SCC API (steelCompendium.github.io) + data-unified.
-Those repos currently hold the correct, verified beastheart additions UNCOMMITTED
-(API: new `resolve/mcdm.beastheart.v1/` = 216 files + updated index/scc/types;
-data-unified: beastheart md + updated `_index`). Heroes entries are byte-unchanged.
+```
+git -C /home/vexa/code/steel_compendium/workspace add steel-etl docs/handoffs/HANDOFF.md
+git -C /home/vexa/code/steel_compendium/workspace commit -m "chore: bump steel-etl (trait codex-niche cards) + handoff"
+```
 
-**Phase 7 — DONE (this session):**
-- **Cross-book shared outputs:** `gen --all` regenerates aggregate/scc_api/scc_map over
-  ALL books via `pipeline.RunSharedOutputs` (orchestrated in `gen.go`). Single-book runs
-  unchanged. `Result.Classified` carries per-book items to the post-pass. Verified heroes
-  API byte-preserved (2223 resolve files unchanged; 1727→1943 total).
-- **SCC cross-ref links:** 147 conditions + 5 skills in the beastheart text (content body
-  only — fiction excluded; conditions linked via single-pass combined regex).
-- **`validate --scc-stable`:** now multi-book aware (unions all books). Registry was reset
-  to prune 4 dead no-level codes. ⚠️ **Always gen-twice after a registry reset** (memory
-  [[project_scc_link_resolution]]) — first pass resolves links against an incompletely
-  seeded registry; the second pass fixes it (saw transient data-rules collateral, cleared
-  on 2nd pass).
+Then (optional, ask the user first) publish the trait UI live with `just deploy-v2`
+(v2 content commit `8eb95e8efb` already exists; deploy rebuilds + pushes).
 
-**Subclass handling — DONE (prior in session).** Decision (user's call): subclass is
-**reference metadata, NOT part of the SCC path** — the SCC code stays a stable fetch-by-id
-reference. Rationale: path-segment breaks for un-subclassed features (most of Heroes) and
-multi-subclass features, and would force duplication. Implementation: `@subclass` read in
-AbilityParser + FeatureParser (`parseSubclass`: single→string, comma-sep→`[]string`);
-carried into JSON/YAML/md-linked **metadata** via `sdk_transform.go` (both
-`buildAbilityMetadata` and `buildTraitMetadata`). All 12 Wild Nature passive features
-(2nd/5th/8th) tagged with `@subclass`; the 32 WN abilities already had it. Paths unchanged
-(still 216). Tests: `TestAbility/FeatureSubclassFrontmatter`, `TestAbilityMultiSubclass`,
-`TestAbilityNoSubclass`, `TestTransform*SubclassInMetadata`.
-  - **Pattern for future books (incl. backfilling Heroes subclasses):** add `@subclass: X`
-    to any ability/feature annotation → it appears in output metadata automatically. No
-    path/SCC-code change. Multi-subclass = `@subclass: a, b`.
+## What was built (this effort)
 
-**Only remaining beastheart work — Phase 7 (polish):** SCC cross-reference links in the
-beastheart text (per `docs/linking-guide.md`); enable scc_api/aggregate for beastheart
-(currently disabled for secondary books via `EffectiveBookConfig` in the pipeline) so it
-joins the SCC API / data-unified; `validate --scc-stable`.
+- `steel-etl/internal/site/trait_cards.go` — `renderTraitCard` emits the
+  `.sc-trait` niche; `parseTraitTree` rebuilds the book-faithful subtree's H2–H6
+  heading tree by level, typed via `{data-scc}` (`feature.ability.*` → nested
+  `.sc-ability` plate through `renderAbilityCard`; else → recursive sub-trait
+  niche). Handles prose, lists, **markdown tables** (`renderTraitTable`), benefit/
+  drawback segments, lead-ins, flavor, drop-cap, and `traitInline` (adds `*italic*`
+  which the ability card's `richInline` deliberately omits). Level pill from
+  frontmatter `level`, falling back to a `level-N` SCC segment.
+- `steel-etl/internal/site/ability_cards.go` — `buildAbilityCardPage` now
+  dispatches `ability` → plate, `trait` → niche (was: both → plate).
+- `steel-etl/internal/site/trait_cards_test.go` — 8 cases (prose, grants-ability,
+  deep nesting, segments, table, scc level fallback, tree-parse).
+- `v2/docs/stylesheets/steel-traits.css` — two fixes after first render:
+  `.md-typeset .sc-trait__name` prefix (beats Material's `h3` margin); `.sc-trait__leadin`
+  switched off `display:flex` (it broke rich/link text into columns) to a block
+  with an inline-block diamond.
+- mkdocs.yml wiring (`steel-traits.css`/`.js`) + `steel-traits.js` runtime island
+  renderer were already in place before this session.
 
-⚠️ **Lesson from a prior session:** an external merge to the input doc (the user's
-`beastheart-input-cleanup` branch) silently re-introduced raw duplicate power-roll tier
-blocks (Rolling Thunder, Juggernaut). **Always re-gen + spot-check ability tiers after any
-merge that touches `input/beastheart/Draw Steel Beastheart.md`.** If reconstructing any
-raw statblock: OCR damage = Intuition "I"→"1", potency `m<v`/`P<WEAK`→`P < WEAK`,
-jumbled fields, dropped tier prefixes. Verify against PDF (file-page = book-page + 4).
+## Verified state (as of 2026-06-06 09:29)
 
-## Verified state (as of 2026-06-02)
-
-- **Branches:** workspace, steel-etl, v2 all on `main`, in sync with `origin/main`
-  (the SteelCompendium org). Working trees clean except this handoff/plan doc edit
-  (commit & push it).
-  - Work HEADs: steel-etl `d587bde`, v2 `61a78cfd8a`, workspace `6df3347`.
-  - ⚠️ `gen --all` runs the cross-book shared post-pass, which writes to the API repo
-    (`steelCompendium.github.io/docs/api`) + `data/data-unified`. Those carry uncommitted
-    beastheart additions until the user runs `deploy-api`.
-- **Build:** `devbox run -- bash -c 'cd steel-etl && go build ./...'` → OK.
-- **Tests:** `devbox run -- bash -c 'cd steel-etl && go test ./...'` → all packages **ok** (no failures).
-- **Gen:** `devbox run -- bash -c 'cd steel-etl && go run ./cmd/steel-etl gen --config pipeline.yaml --book mcdm.beastheart.v1'`
-  → `Classified: 216, Written: 1296 files`. 14 companion species present.
-- **Deployed:** v2 site pushed to org; GitHub Pages serves the live beastheart content.
-- No long-running processes. devbox provides Go/just/node (not on system PATH).
+- **Workspace branch:** `main`. Uncommitted: `M steel-etl` (submodule pointer bump)
+  and `M docs/handoffs/HANDOFF.md` (this file). Both should land in the next commit.
+- **steel-etl:** committed `2f4b9dd` *Trait cleanup for tables* (also `7f6981d`
+  *Wiring up traits redesign*). Working tree clean.
+- **v2:** committed `8eb95e8efb` *chore: update v2 site content (steel-etl 2f4b9dd)*.
+  Working tree clean. (v2 is a standalone repo, NOT a workspace submodule.)
+- **steel-etl tests:** `go test ./internal/site/` → `ok` (all green, incl. trait tests).
+- **steel-etl build:** `go build ./...` → BUILD_OK.
+- **mkdocs build:** succeeds in ~223s; 2 pre-existing link warnings
+  (`swashbuckler/fancy-footwork.md` from Read/heroes rewards+treasures) — unrelated
+  to traits, do not block.
+- Audit: all **876** generated trait pages render as `.sc-trait` (0 missing/empty);
+  **65/65** table-containing pages now emit `<table>`; ability pages unchanged.
 
 ## Gotchas & lessons (cross-cutting)
 
-- **PDF is ground truth and must NEVER be committed** to any repo:
-  `/home/vexa/Downloads/Draw_Steel_Beastheart_v1.0.pdf`. Read it via the Read tool
-  (PDF pages). **File-page = book-page + 4.**
-- **Marker OCR damage** on ability statblocks: Intuition "I" → "1"; potency badges
-  became `m<v`/`m<s` → rewrite as `M < AVERAGE` / `M < STRONG`; fields jumbled;
-  power-roll tier prefixes (`≤11`) sometimes dropped. Verify every value vs PDF.
-- **Power-roll tiers parse fine** — confirm via the **YAML** output (`tier1/2/3`),
-  not JSON `metadata.tier1` (JSON nests them under a different key).
-- **`@subclass`** annotation is captured in source but the AbilityParser does NOT
-  surface it to frontmatter or the SCC path. Subclass grouping would need a small
-  parser change mirroring `@companion`. Subclass→2nd-level-feature map (PDF p.26):
-  Guardian→Watchdog, Prowler→Supersniffer, Punisher→This One's Yours, Spark→Stormheart.
-- **`gen` only processes the primary book by default** — use `--book mcdm.beastheart.v1`
-  (or `--all`). The `books:` array was inert before this effort; fixed via
-  `EffectiveBookConfig` (secondary books disable aggregate/scc_api/scc_map/stripped).
-- **A hook blocks `git commit` when combined with other commands** in one Bash call.
-  Run each `git commit` as its own command.
-- **`deploy-v2`**: a hook auto-commits & pushes the v2 generated docs, so the recipe's
-  own commit step reports "nothing to commit" / "Everything up-to-date" — that's
-  expected, not a failure. After deploying, bump the workspace gitlinks:
-  `git add steel-etl v2 && git commit -m '…' && git push`.
-- **Document structure:** beastheart class is H1; species are H3 feature-groups with
-  `@companion`; abilities H4; advancement features H5. Class context lives at level 1
-  so H2 sub-sections can be annotated without clobbering it.
+- **Go tooling needs devbox.** Prefix everything: `devbox run -- bash -c 'cd steel-etl && go test ./...'`.
+  Go/just/node are NOT on the system PATH.
+- **mkdocs is slow (~3–4 min).** Don't poll with chained sleeps (harness blocks
+  it); use a background build + Monitor with an `until grep "Documentation built"`
+  loop, or just wait for the bg-task completion notification.
+- **No Chrome for the Playwright MCP** ("chrome executable not found"). Screenshot
+  via the installed chromium directly:
+  `~/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome --headless --no-sandbox --screenshot=out.png --window-size=1100,1500 <url>`,
+  serving the built site with `python3 -m http.server` from `v2/site/`. To preview
+  a CSS-only tweak without a full rebuild, copy the edited file into
+  `v2/site/stylesheets/` and re-shoot.
+- **Trait pages are book-faithful subtree renders**, so a single page can contain a
+  deep H2→H6 tree of sub-traits/abilities (e.g. `dragon-knight-traits`). The level
+  stack in `parseTraitTree` is what untangles them — don't assume flat content.
+- **`gen --all` gotcha** (unchanged): a bare `gen` only builds the primary book;
+  `just deploy*` pass `--all`. Regenerating site uses existing `data/*/md-linked`.
 
 ## Verification commands
 
-```bash
-cd /home/vexa/code/steel_compendium/workspace
-# git state (expect: all main, clean, in sync)
-for r in . steel-etl v2; do echo "$r:"; git -C $r status -sb | head -1; done
-# build + tests (expect: BUILD OK, all ok)
-devbox run -- bash -c 'cd steel-etl && go build ./... && echo BUILD OK && go test ./... 2>&1 | grep -E "FAIL|^ok"'
-# gen beastheart (expect: Classified: 216)
-devbox run -- bash -c 'cd steel-etl && go run ./cmd/steel-etl gen --config pipeline.yaml --book mcdm.beastheart.v1 2>&1 | tail -1'
-# companion species (expect: 14)
-find data/data-beastheart/en/json/feature-group/companion -name '*.json' | wc -l
+```
+# from workspace root
+git status --short                       # expect: M steel-etl + M docs/handoffs/HANDOFF.md (until committed)
+git -C steel-etl log --oneline -1        # expect: 2f4b9dd Trait cleanup for tables
+git -C v2 log --oneline -1               # expect: 8eb95e8efb chore: update v2 site content
+devbox run -- bash -c 'cd steel-etl && go test ./internal/site/'   # expect: ok
+devbox run -- bash -c 'cd steel-etl && go build ./...'             # expect: clean
+# spot-check a rendered table page:
+grep -c '<table>' v2/docs/Browse/feature/trait/censor/level-7/7th-level-domain-feature.md  # expect: >=1
 ```
