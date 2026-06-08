@@ -109,3 +109,12 @@ cleanup pass.
 - **Why it matters:** It conflicts with the drawer's "change settings without navigating away / see it live" goal for that one control — the reload closes the drawer and flashes the page.
 - **Fix options:** Investigate whether classic↔modern can be a pure CSS/attribute swap (it already toggles `data-card-style` on `<html>`). If some ability-card markup is build-time only (the classic glyph badges vs. modern colored borders may be emitted by `steel-etl`, not pure CSS), document why the reload is required, or do a lighter in-place re-render of just the affected cards instead of a full reload.
 - **Effort:** S (investigate + likely small JS/CSS change)
+## 9. `rule.*` in-prose sweep: link rules terms throughout the document body
+
+**Status:** open (infrastructure + glossary done 2026-06-07)
+
+- **Identified:** 2026-06-07, rule/glossary SCC linking effort (see `steel-etl/docs/superpowers/plans/2026-06-07-rule-glossary-scc-linking.md`, Phase 6).
+- **What:** The new `rule.<group>/<term>` type (108 codes) and the Introduction **glossary** are done — every glossary headword links to its code. The remaining work is the **full per-instance sweep of the document body**: linking in-prose occurrences of rule terms (flanking, cover, winded, edge, bane, surge, size, recoveries, characteristics, distance, strike, damage, …) across all ~28k lines, the same magnitude as the original conditions/skills multi-chapter linking effort.
+- **Why it matters:** The project policy is "link all instances of game mechanics." Glossary-only linking makes terms discoverable from the glossary but not from where they're used (class features, abilities, treasures, etc.) — which is where readers actually hit them.
+- **Context:** `steel-etl/docs/rule-term-mapping.md` is the term→code source of truth (Variants column lists surface forms). Use `scripts/link_apply.py '<regex w/ group 1>' '<code>' [excl…]` (dry-run by default) per term. **Heavy disambiguation:** most rule terms are common English words (edge, bane, cover, size, distance, strike, line, wall, creature, hero, level) — link ONLY the game-mechanic use, per-instance, never ordinary prose; see the disambiguation note in `steel-etl/docs/linking-reference.md` (`## Rules`). Exclude each term's own definition section (own-section). Some terms map to `reuse` codes (movement/conditions/chapters) — link those to the existing code, not a `rule.*` one.
+- **Effort:** L (multi-session; mirrors the conditions/skills linking project)
