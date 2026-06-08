@@ -19,18 +19,11 @@
 
 ## You are here
 
-Batches 1 + 2 of Phase 6 are done (see FOLLOWUPS #9). **Two things remain:**
+Batches 1 + 2 + the conservative `damage` pass are done (see FOLLOWUPS #9). The entire
+suggested common-word tail (edge/bane/size/distance/strike/damage) is complete.
+**One thing remains:**
 
-**Next action A — `damage` (bare word), CONSERVATIVE only** (Scott's call, memory
-`comprehensive-linking-density.md`): link ONLY genuine rules-concept prose ("when a
-creature takes damage, it loses Stamina"); **never** numeric rolls ("5 fire damage") or
-ability effect lines. This is a **per-location curation, not a blanket regex** —
-`link_apply` processes blockquote statblock lines too, so a bare "damage" pattern would
-violate the rule. Do it by reading the rules-prose sections (Basics health overview ~600–1900;
-Combat damage/health rules prose ~21300–22600) and linking the conceptual noun, skipping
-every `>` blockquote effect line and the verb "to damage".
-
-**Next action B — the long tail of other `rule.*` terms** not yet swept in-prose: potency,
+**Next action — the long tail of other `rule.*` terms** not yet swept in-prose: potency,
 speed, stability, power-roll, natural-roll, double-edge/bane, tier outcomes, combat-round,
 turn, main/maneuver/move actions, triggered-action, opportunity-attack, line-of-effect,
 critical-hit, area shapes (line/cube/wall/burst/aura), test/group-test/montage-test, and the
@@ -43,14 +36,14 @@ gen 0-WARN + broad malformed grep → commit per term-batch in steel-etl. Re-fin
 
 ## Verified state (as of 2026-06-08)
 
-- **steel-etl** `1a7fafe` — Phase 6 batch 1 (6 commits) + batch 2 (characteristics,
-  edge/bane/size/distance, damage sub-terms, strike). **Pushed.** Heroes doc ~**8,935**
-  SCC links (4,280 `rule.*`).
-- **workspace** — submodule pointer bumped to `1a7fafe`; this doc + FOLLOWUPS committed.
-- **Deployed live 2026-06-08:** batch 1 + the feature.trait taxonomy shipped — **v2**
-  `4e89c7051d`, **API** `1ee1d62`, **data-rules** `5b0898b1`, **data-unified** `5efa91f`
-  (data-bestiary unchanged). **Batch 2 is pushed to steel-etl but NOT yet deployed** —
-  the live site/data still serve batch-1 link state until the next `just deploy` + data-repo regen.
+- **steel-etl** `5509f78` — Phase 6 batch 1 (6 commits) + batch 2 (characteristics,
+  edge/bane/size/distance, damage sub-terms, strike) + conservative `damage` pass. Heroes
+  doc ~**8,944** SCC links.
+- **workspace** — submodule pointer bumped; this doc + FOLLOWUPS committed.
+- **Deployed live 2026-06-08:** batches 1 + 2 + feature.trait taxonomy — **v2**
+  `c3d337249d`, **API** `b42c498`, **data-rules** `5643a5e9`, **data-unified** `cc1ae49`
+  (data-bestiary unchanged). **The conservative `damage` commit (`5509f78`, 8 links) is
+  the only thing pushed-but-not-yet-deployed** at last checkpoint — trivial; rides the next deploy.
 - `go test ./...` → **PASS**. `gen --config pipeline.yaml` → **clean (0 WARN), 1915
   classified**. Malformed-link grep → clean.
 
