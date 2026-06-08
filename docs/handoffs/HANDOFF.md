@@ -40,12 +40,13 @@ was an unminted Phase-3 gap (now fixed). Watch the literal `[Term]` notation foo
 
 ## Verified state (as of 2026-06-08)
 
-- **steel-etl** `f727e2f` — Phase 6 fully swept + `test-difficulty` code (**109 rule codes**).
-  Heroes doc **~17,040** SCC links (12,386 `rule.*`).
-- **Deployed live 2026-06-08:** batches 1–4 + feature.trait taxonomy — **v2** `2d92c8c18a`,
-  **API** `4fc2623`, **data-rules** `d79e6197`, **data-unified** `4ff4a47` (data-bestiary
-  unchanged). **Only the final conservative `creature/ability/target/ally/enemy` commit
-  (`f727e2f`, 5 links) is pushed-but-not-deployed** — trivial; rides any future deploy.
+- **steel-etl** `bfd9d15` — Phase 6 fully swept + `test-difficulty` code (**109 rule codes**),
+  rebased on top of the concurrent **card-data field-parity** effort (`2e554e2` + its 7
+  parents). Heroes doc **~17,040** SCC links (12,386 `rule.*`).
+- **Deployed live 2026-06-08 (everything):** Phase 6 (all batches + conservative
+  creature/ability/target/ally/enemy + damage) + feature.trait taxonomy + card-data parity —
+  **v2** `a15154b222`, **API** `6d7da7b`, **data-rules** `e28964ce`, **data-unified** `5cd2e78`
+  (data-bestiary unchanged). All repos in sync; nothing pending.
 - `go test ./...` → **PASS**. `gen --config pipeline.yaml` → **clean (0 WARN), 1915
   classified**. Malformed-link grep → clean.
 
