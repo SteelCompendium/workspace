@@ -19,17 +19,20 @@
 
 ## You are here
 
-Batches 1–3 are done (see FOLLOWUPS #9) — ~80 of the 109 `rule.*` codes are now swept
-in-prose (heroes doc at **14,020** SCC links, 9,365 `rule.*`). **Only the ultra-common
-words remain**, each needing HEAVY per-instance mundane-vs-mechanic review (do one at a
-time, full-context, like `cover`/`strike` were):
+Batches 1–4 are done (see FOLLOWUPS #9) — nearly all linkable terms are swept in-prose
+(heroes doc at **17,036** SCC links, 12,381 `rule.*`). **Only 9 words remain in the
+in-prose tail** (every code is already linked at least via the glossary):
 
-**Next action — the remaining ultra-common terms:** combat `target`/`ally`/`enemy`/`adjacent`/
-`side`/`condition`/`line`/`wall`/`melee`/`ranged`/`turn`/`combat-round`; general `ability`/
-`creature`/`ground`/`supernatural`; dice `bonuses-and-penalties`; treasure `enhancement`/
-`implement`; downtime `guide`; world `Capital`/`Saint`. Plus the **negotiation** group
-(interest/patience/motivation/pitfall — match only in negotiation context). The mapping flags
-most of these "link very sparingly".
+**Next action A — the 5 ubiquitous words, CONSERVATIVE (like `damage`):**
+`creature`/`ability`/`target`/`ally`/`enemy`. They sit in nearly every statblock effect
+line, so DON'T blanket-link — hand-curate only the rules-concept prose (their
+def-section-adjacent explanations + the Basics/Combat overview), skipping effect lines.
+Per-location curation, not a `link_apply` regex.
+
+**Next action B — `side`/`line`/`wall`/`ground` (low yield, optional):** mundane-dominated
+("outside", "other side of the room", "line of effect" is its own code, physical walls,
+"the ground"). Only the rare clear mechanic uses are worth it; safe to leave like the #6
+generic terms.
 
 Per-term loop (established): audit (`scripts/link_audit_sectioned.py "<term>"`) → dry-run
 `link_apply.py "<regex grp1>" "<code>" <excl-ranges>` → review for mundane → `--apply` →
@@ -41,16 +44,16 @@ was an unminted Phase-3 gap (now fixed). Watch the literal `[Term]` notation foo
 
 ## Verified state (as of 2026-06-08)
 
-- **steel-etl** `d4501cd` — Phase 6 batches 1–3 (high-yield + characteristics + common-word
-  tail + dice/combat/test/character/resource/downtime/treasure/world/general groups) + the
-  minted `test-difficulty` code (**109 rule codes** now). Pushed. Heroes doc **14,020** SCC
-  links (9,365 `rule.*`).
-- **workspace** `a27d780` — submodule pointer bumped; this doc + FOLLOWUPS committed.
-- **Deployed live 2026-06-08:** batches 1 + 2 + feature.trait taxonomy — **v2**
-  `c3d337249d`, **API** `b42c498`, **data-rules** `5643a5e9`, **data-unified** `cc1ae49`
-  (data-bestiary unchanged). **The conservative `damage` pass + all of batch 3
-  (`5509f78`..`d4501cd`) are pushed but NOT yet deployed** — the live site/data still serve
-  the batch-2 link state until the next `just deploy` + data-repo regen.
+- **steel-etl** `76ba800` — Phase 6 batches 1–4 (essentially the whole sweep) + the minted
+  `test-difficulty` code (**109 rule codes**). Pushed. Heroes doc **17,036** SCC links
+  (12,381 `rule.*`).
+- **workspace** `2eaf1c5` — submodule pointer bumped; this doc + FOLLOWUPS + CLAUDE.md committed.
+- **Deployed live 2026-06-08:** batches 1–3 + feature.trait taxonomy — **v2** `c7b29638da`,
+  **API** `a66b05d`, **data-rules** `57fa130c`, **data-unified** `af69306` (data-bestiary
+  unchanged). **Batch 4 (`80b3f91`..`76ba800` — negotiation/adjacent/melee/ranged/combat-round/
+  turn/condition/bonus/enhancement/implement/guide/supernatural/Capital/Saint) is pushed but
+  NOT yet deployed** — live site/data serve the batch-3 link state until the next `just deploy`
+  + data-repo regen.
 - `go test ./...` → **PASS**. `gen --config pipeline.yaml` → **clean (0 WARN), 1915
   classified**. Malformed-link grep → clean.
 
