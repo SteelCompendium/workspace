@@ -3,8 +3,8 @@
 ## Active efforts
 
 - **Rule/glossary SCC linking — Phase 6 in-prose sweep** — IN FOCUS, IN PROGRESS.
-  Infra + glossary done & deployed (2026-06-07). First in-prose batch done this
-  session (2026-06-08), **local/unpushed**. Resume at
+  Infra + glossary done & deployed (2026-06-07). First in-prose batch done +
+  **pushed & deployed live** this session (2026-06-08). Resume at
   `steel-etl/docs/superpowers/plans/2026-06-07-rule-glossary-scc-linking.md`
   → `## Execution status` (Phase 6 progress note) and Phase 6 task. Tracked as
   workspace `FOLLOWUPS.md` **#9**. Term→code source of truth:
@@ -34,14 +34,12 @@ commit per term-batch in steel-etl.
 
 ## Verified state (as of 2026-06-08)
 
-- **steel-etl** `284b704` — Phase 6 first batch (6 link commits `6fc89ba`..`7f5fe07`)
-  + this progress-doc commit. **AHEAD of origin (unpushed); workspace pointer NOT yet
-  bumped to it** — `git status` shows `M steel-etl`. Push + bump pointer is the next
-  housekeeping step (or at deploy time).
-- **workspace** `9b2663d` + uncommitted doc edits (FOLLOWUPS #9, this handoff).
-- **v2** `417cff17c8`, **API** `311c6ad`, **data-rules** `98a9de9`, **data-unified**
-  `3e48018` — all at pre-taxonomy/pre-Phase-6 state; **a deploy is pending** (will pick
-  up BOTH the feature.trait taxonomy AND the Phase 6 links). Deploy is Scott's call.
+- **steel-etl** `284b704` — Phase 6 first batch (6 link commits) + progress doc. **Pushed.**
+- **workspace** `2f7d907` (submodule pointer bumped to `284b704`) + this doc commit.
+- **Deployed live 2026-06-08** (shipped BOTH the feature.trait taxonomy AND the Phase 6
+  links): **v2** `4e89c7051d`, **API** `1ee1d62`, **data-rules** `5b0898b1`,
+  **data-unified** `5efa91f`. **data-bestiary** unchanged (heroes-only + monster codes
+  untouched).
 - `go test ./...` → **PASS**. `gen --config pipeline.yaml` → **clean (0 WARN), 1915
   classified**. Malformed-link grep → clean.
 
