@@ -7,6 +7,15 @@
   `steel-etl/docs/superpowers/plans/2026-06-07-rule-glossary-scc-linking.md`
   → `## Execution status` (top) and Phase 6; tracked as workspace
   `FOLLOWUPS.md` **#9**. Term→code source of truth: `steel-etl/docs/rule-term-mapping.md`.
+- **Feature/ability/trait taxonomy refactor** — code **DONE & on `main`** (steel-etl
+  + workspace), breaking SCC change. `trait` narrowed to ancestry+monster; class/
+  domain/college/kit/companion non-ability features are now plain `feature`
+  (`feature.<entity>`, hub-and-spoke); `feature_type ∈ {ability,trait,feature}`.
+  Spec + plan: `steel-etl/docs/superpowers/{specs,plans}/2026-06-07-feature-taxonomy-*.md`.
+  **Two follow-throughs remain:** (1) `data-sdk-npm` schema commit is on branch
+  `fork/feature-type-taxonomy` (PR-ready), **not merged**; (2) **no deploy run** —
+  live site/data repos still serve old `feature.trait.<class>` codes until
+  `just deploy` is run.
 - **Trait `.sc-trait` cards** — DONE & shipped (prior handoff, now in git log). Not active.
 - **Beastheart integration** — paused/likely-done; `docs/superpowers/plans/2026-06-01-beastheart-integration.md` → `## Status`.
 - **Other `plans/` efforts** (`architecture-redesign`, `schema-enrichment`, `sdk-schema-alignment`, `content-linking`) — untouched.
