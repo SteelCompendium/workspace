@@ -91,7 +91,11 @@ cleanup pass.
 
 ## 7. `gen` doesn't prune the SCC API `resolve/` dir — stale entries linger for renamed/removed codes
 
-**Status:** open
+**Status:** done — 2026-06-07. `SCCAPIGenerator.Finalize()` now `os.RemoveAll`s the
+`resolve/` tree before rewriting it (fix option a), so renamed/removed codes no longer
+linger (`steel-etl/internal/output/scc_api.go`; test
+`TestSCCAPIGenerator_PrunesStaleResolveFiles`). The one-time cleanup of the stale fury
++ taxonomy-rename entries was also done in the org repo (commit `4a2a313`).
 
 - **Identified:** 2026-06-06, during the full deploy after the fury "Stormwight Kits" regrouping renamed several codes.
 - **What:** The SCC resolution API writer (`steelCompendium.github.io/docs/api/v1/resolve/<source>/<type>/<id>.json`) only **adds/overwrites** per-code JSON files; it never deletes files for codes that no longer exist. After the fury regroup, both the new `…/feature.trait.fury.stormwight-kits/*.json` **and** the stale old `…/feature.trait.fury/{stormwight-kits,primordial-storm,kit-features,…}.json` (and `feature.ability.fury/aspect-of-the-wild.json`) are present in the committed org repo. The per-type `index.json`/`scc.json`/`types.json` are regenerated fresh, but the individual `resolve/.../*.json` files are not pruned.
