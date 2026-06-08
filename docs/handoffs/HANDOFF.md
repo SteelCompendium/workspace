@@ -19,31 +19,38 @@
 
 ## You are here
 
-Batches 1 + 2 + the conservative `damage` pass are done (see FOLLOWUPS #9). The entire
-suggested common-word tail (edge/bane/size/distance/strike/damage) is complete.
-**One thing remains:**
+Batches 1–3 are done (see FOLLOWUPS #9) — ~80 of the 109 `rule.*` codes are now swept
+in-prose (heroes doc at **14,020** SCC links, 9,365 `rule.*`). **Only the ultra-common
+words remain**, each needing HEAVY per-instance mundane-vs-mechanic review (do one at a
+time, full-context, like `cover`/`strike` were):
 
-**Next action — the long tail of other `rule.*` terms** not yet swept in-prose: potency,
-speed, stability, power-roll, natural-roll, double-edge/bane, tier outcomes, combat-round,
-turn, main/maneuver/move actions, triggered-action, opportunity-attack, line-of-effect,
-critical-hit, area shapes (line/cube/wall/burst/aura), test/group-test/montage-test, and the
-downtime/negotiation/treasure/world/general groups (see `rule-term-mapping.md` `new-rule` rows).
+**Next action — the remaining ultra-common terms:** combat `target`/`ally`/`enemy`/`adjacent`/
+`side`/`condition`/`line`/`wall`/`melee`/`ranged`/`turn`/`combat-round`; general `ability`/
+`creature`/`ground`/`supernatural`; dice `bonuses-and-penalties`; treasure `enhancement`/
+`implement`; downtime `guide`; world `Capital`/`Saint`. Plus the **negotiation** group
+(interest/patience/motivation/pitfall — match only in negotiation context). The mapping flags
+most of these "link very sparingly".
 
 Per-term loop (established): audit (`scripts/link_audit_sectioned.py "<term>"`) → dry-run
 `link_apply.py "<regex grp1>" "<code>" <excl-ranges>` → review for mundane → `--apply` →
 gen 0-WARN + broad malformed grep → commit per term-batch in steel-etl. Re-find anchors
-(`grep -nE '^#{3,6} <Heading>$'`) — plan line numbers are stale.
+(`grep -nE '^#{3,6} <Heading>$'`) — plan line numbers are stale. **VERIFY the target code
+exists** (`jq -r '.codes[]' classification.json | grep <code>`) before linking — `test-difficulty`
+was an unminted Phase-3 gap (now fixed). Watch the literal `[Term]` notation footgun
+(`[potency value]`, `[damage type]`) — bare-word linking nests it into `[[…]]`.
 
 ## Verified state (as of 2026-06-08)
 
-- **steel-etl** `5509f78` — Phase 6 batch 1 (6 commits) + batch 2 (characteristics,
-  edge/bane/size/distance, damage sub-terms, strike) + conservative `damage` pass. Heroes
-  doc ~**8,944** SCC links.
-- **workspace** — submodule pointer bumped; this doc + FOLLOWUPS committed.
+- **steel-etl** `d4501cd` — Phase 6 batches 1–3 (high-yield + characteristics + common-word
+  tail + dice/combat/test/character/resource/downtime/treasure/world/general groups) + the
+  minted `test-difficulty` code (**109 rule codes** now). Pushed. Heroes doc **14,020** SCC
+  links (9,365 `rule.*`).
+- **workspace** `a27d780` — submodule pointer bumped; this doc + FOLLOWUPS committed.
 - **Deployed live 2026-06-08:** batches 1 + 2 + feature.trait taxonomy — **v2**
   `c3d337249d`, **API** `b42c498`, **data-rules** `5643a5e9`, **data-unified** `cc1ae49`
-  (data-bestiary unchanged). **The conservative `damage` commit (`5509f78`, 8 links) is
-  the only thing pushed-but-not-yet-deployed** at last checkpoint — trivial; rides the next deploy.
+  (data-bestiary unchanged). **The conservative `damage` pass + all of batch 3
+  (`5509f78`..`d4501cd`) are pushed but NOT yet deployed** — the live site/data still serve
+  the batch-2 link state until the next `just deploy` + data-repo regen.
 - `go test ./...` → **PASS**. `gen --config pipeline.yaml` → **clean (0 WARN), 1915
   classified**. Malformed-link grep → clean.
 
