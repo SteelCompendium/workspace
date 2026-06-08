@@ -1,101 +1,77 @@
-# Handoff — 2026-06-06 09:29
+# Handoff — 2026-06-07
 
 ## Active efforts
 
-- **Trait / Feature cards (`.sc-trait` codex niche)** — IN FOCUS, essentially
-  COMPLETE. Build-time rendering of `type: trait` pages into the recessed
-  `.sc-trait` niche (recursive nested abilities + sub-traits, tables, lists,
-  lead-ins, drop-caps). Code committed in both sub-repos; only the **workspace
-  submodule-pointer commit** (+ optional live deploy) remains. No plan doc — this
-  was driven by a pasted README handoff; durable behavior is folded into
-  `steel-etl/CLAUDE.md` (Key files → `internal/site/trait_cards.go`).
-- **Beastheart integration** — paused/likely-done. Phases 1–7 complete & deployed
-  (prior handoff, archived in git log). Resume at
-  `docs/superpowers/plans/2026-06-01-beastheart-integration.md` → `## Status`.
-  Last-noted open item there: USER runs `just deploy-api` to publish beastheart to
-  the live SCC API — **not verified this session**; confirm before acting.
-- **Other `plans/` efforts** (`architecture-redesign`, `schema-enrichment`,
-  `sdk-schema-alignment`, `content-linking`) — untouched; see each plan's own doc.
+- **Rule/glossary SCC linking** — IN FOCUS. Phases 0–5 + deploy **DONE & LIVE**;
+  **Phase 6 (full in-prose sweep) is the remaining work.** Resume at
+  `steel-etl/docs/superpowers/plans/2026-06-07-rule-glossary-scc-linking.md`
+  → `## Execution status` (top) and Phase 6; tracked as workspace
+  `FOLLOWUPS.md` **#9**. Term→code source of truth: `steel-etl/docs/rule-term-mapping.md`.
+- **Trait `.sc-trait` cards** — DONE & shipped (prior handoff, now in git log). Not active.
+- **Beastheart integration** — paused/likely-done; `docs/superpowers/plans/2026-06-01-beastheart-integration.md` → `## Status`.
+- **Other `plans/` efforts** (`architecture-redesign`, `schema-enrichment`, `sdk-schema-alignment`, `content-linking`) — untouched.
+- **Smaller deferred items** — workspace `FOLLOWUPS.md` #1–#8 (e.g. #8 settings-panel reload; #7 SCC API `resolve/` not pruned; #2/#5 mkdocs link warnings).
 
 ## You are here
 
-**The single next action: commit the workspace submodule-pointer bump.** The
-workspace tree shows `M steel-etl` (gitlink `0d3fa34 → 2f4b9dd`); the trait work
-itself is already committed inside `steel-etl` and `v2`. Run:
+**Single next action:** begin **Phase 6 — the in-prose `rule.*` sweep** (FOLLOWUPS #9):
+link in-document-body occurrences of rule terms, one term/term-batch at a time,
+per-instance mundane-vs-mechanic judgment. Start with the highest-yield, least-
+ambiguous terms (winded, dying, suffocating, flanking, cover, concealment, surge,
+recoveries, stamina), then characteristics, then the common-word tail (edge, bane,
+size, distance, strike, damage — link only the game-mechanic use). Use
+`steel-etl/scripts/link_apply.py '<regex w/ group 1>' '<code>' [excl…]` (dry-run by
+default), the mapping's Variants/Code columns, and exclude each term's own
+definition section. **Re-run gen 0-WARN + the malformed-link grep after each batch.**
 
-```
-git -C /home/vexa/code/steel_compendium/workspace add steel-etl docs/handoffs/HANDOFF.md
-git -C /home/vexa/code/steel_compendium/workspace commit -m "chore: bump steel-etl (trait codex-niche cards) + handoff"
-```
+This is multi-session — commit per term-batch.
 
-Then (optional, ask the user first) publish the trait UI live with `just deploy-v2`
-(v2 content commit `8eb95e8efb` already exists; deploy rebuilds + pushes).
+## Verified state (as of 2026-06-07)
 
-## What was built (this effort)
-
-- `steel-etl/internal/site/trait_cards.go` — `renderTraitCard` emits the
-  `.sc-trait` niche; `parseTraitTree` rebuilds the book-faithful subtree's H2–H6
-  heading tree by level, typed via `{data-scc}` (`feature.ability.*` → nested
-  `.sc-ability` plate through `renderAbilityCard`; else → recursive sub-trait
-  niche). Handles prose, lists, **markdown tables** (`renderTraitTable`), benefit/
-  drawback segments, lead-ins, flavor, drop-cap, and `traitInline` (adds `*italic*`
-  which the ability card's `richInline` deliberately omits). Level pill from
-  frontmatter `level`, falling back to a `level-N` SCC segment.
-- `steel-etl/internal/site/ability_cards.go` — `buildAbilityCardPage` now
-  dispatches `ability` → plate, `trait` → niche (was: both → plate).
-- `steel-etl/internal/site/trait_cards_test.go` — 8 cases (prose, grants-ability,
-  deep nesting, segments, table, scc level fallback, tree-parse).
-- `v2/docs/stylesheets/steel-traits.css` — two fixes after first render:
-  `.md-typeset .sc-trait__name` prefix (beats Material's `h3` margin); `.sc-trait__leadin`
-  switched off `display:flex` (it broke rich/link text into columns) to a block
-  with an inline-block diamond.
-- mkdocs.yml wiring (`steel-traits.css`/`.js`) + `steel-traits.js` runtime island
-  renderer were already in place before this session.
-
-## Verified state (as of 2026-06-06 09:29)
-
-- **Workspace branch:** `main`. Uncommitted: `M steel-etl` (submodule pointer bump)
-  and `M docs/handoffs/HANDOFF.md` (this file). Both should land in the next commit.
-- **steel-etl:** committed `2f4b9dd` *Trait cleanup for tables* (also `7f6981d`
-  *Wiring up traits redesign*). Working tree clean.
-- **v2:** committed `8eb95e8efb` *chore: update v2 site content (steel-etl 2f4b9dd)*.
-  Working tree clean. (v2 is a standalone repo, NOT a workspace submodule.)
-- **steel-etl tests:** `go test ./internal/site/` → `ok` (all green, incl. trait tests).
-- **steel-etl build:** `go build ./...` → BUILD_OK.
-- **mkdocs build:** succeeds in ~223s; 2 pre-existing link warnings
-  (`swashbuckler/fancy-footwork.md` from Read/heroes rewards+treasures) — unrelated
-  to traits, do not block.
-- Audit: all **876** generated trait pages render as `.sc-trait` (0 missing/empty);
-  **65/65** table-containing pages now emit `<table>`; ability pages unchanged.
+All six repos on `main`, all pushed, nothing ahead/behind:
+- **steel-etl** `a61bacd` (source: rule type + 108 codes + glossary links + docs). Working tree clean.
+- **workspace** `a992622` (submodule pointer → `a61bacd`; CLAUDE.md + FOLLOWUPS.md). Clean.
+- **v2** `d590570` — deployed site (all `rule/*` Browse pages + scc stubs).
+- **steelCompendium.github.io** (SCC API) `6d0244d` — deployed (108 rule resolve entries).
+- **data-rules** `98a9de9`, **data-unified** `3e48018` — regenerated + pushed. **data-bestiary** unchanged (heroes-only change).
+- `go test ./...` → **PASS**. `gen --config pipeline.yaml` → **0 WARN, 1915 classified**.
+- heroes doc: **108 rule codes**, **~4,789 SCC links**, Introduction glossary fully linked (167 headwords). Reference table = **577 terms**.
 
 ## Gotchas & lessons (cross-cutting)
 
-- **Go tooling needs devbox.** Prefix everything: `devbox run -- bash -c 'cd steel-etl && go test ./...'`.
-  Go/just/node are NOT on the system PATH.
-- **mkdocs is slow (~3–4 min).** Don't poll with chained sleeps (harness blocks
-  it); use a background build + Monitor with an `until grep "Documentation built"`
-  loop, or just wait for the bg-task completion notification.
-- **No Chrome for the Playwright MCP** ("chrome executable not found"). Screenshot
-  via the installed chromium directly:
-  `~/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome --headless --no-sandbox --screenshot=out.png --window-size=1100,1500 <url>`,
-  serving the built site with `python3 -m http.server` from `v2/site/`. To preview
-  a CSS-only tweak without a full rebuild, copy the edited file into
-  `v2/site/stylesheets/` and re-shoot.
-- **Trait pages are book-faithful subtree renders**, so a single page can contain a
-  deep H2→H6 tree of sub-traits/abilities (e.g. `dragon-knight-traits`). The level
-  stack in `parseTraitTree` is what untangles them — don't assume flat content.
-- **`gen --all` gotcha** (unchanged): a bare `gen` only builds the primary book;
-  `just deploy*` pass `--all`. Regenerating site uses existing `data/*/md-linked`.
+- **Go/just/node need devbox**, and bare `devbox run -- go …` fails — use
+  `devbox run -- bash -c 'cd steel-etl && go …'`.
+- **One heading mints exactly one SCC code.** Don't stack `@type: rule` above an
+  already-annotated heading (e.g. a non-code `@type: feature-group` container) — the
+  rule code silently won't mint. After any annotation, assert `#@type: rule` count ==
+  minted `rule.*` code count. (This bit Phase 3b; fixed by anchoring `Turn` on
+  `### Taking a Turn` and reusing `rule.combat/turn` for Main/Maneuver/Move Action.)
+- **Mapping decisions matter:** terms already typed (conditions, movement incl.
+  pushed/pulled/slide→`movement/forced-movement`, skills, classes, chapters) are
+  `reuse` → existing code, NOT a new `rule.*`. Link those to the existing code.
+- **Repo topology:** `steel-etl` is the workspace **submodule** (bump its pointer after
+  steel-etl commits). `v2`, `steelCompendium.github.io`, and `data/data-*` are
+  **standalone** sibling repos (each pushed to its own origin). Deploy = `just deploy`
+  (gen once → API commit/push to org repo → v2 build/commit/push); it does **not**
+  commit the `data/data-*` repos — do those by hand after deploy (same gen output).
+- **`gen --all` vs bare `gen`:** bare builds only the primary (heroes) book; `just
+  deploy*` pass `--all`. The deploy runs gen ONCE (the API JSON carries a `time.Now()`
+  stamp; a second gen re-stamps and dirties the org repo).
+- FOLLOWUPS **#7**: the SCC API `resolve/` dir isn't pruned, so renamed/removed codes
+  leave stale JSON. Not triggered here (only additions), but watch it on future renames.
 
 ## Verification commands
 
 ```
 # from workspace root
-git status --short                       # expect: M steel-etl + M docs/handoffs/HANDOFF.md (until committed)
-git -C steel-etl log --oneline -1        # expect: 2f4b9dd Trait cleanup for tables
-git -C v2 log --oneline -1               # expect: 8eb95e8efb chore: update v2 site content
-devbox run -- bash -c 'cd steel-etl && go test ./internal/site/'   # expect: ok
-devbox run -- bash -c 'cd steel-etl && go build ./...'             # expect: clean
-# spot-check a rendered table page:
-grep -c '<table>' v2/docs/Browse/feature/trait/censor/level-7/7th-level-domain-feature.md  # expect: >=1
+git -C steel-etl  log --oneline -1   # a61bacd
+git              log --oneline -1    # a992622 (workspace)
+git -C v2        log --oneline -1    # d590570
+git -C steelCompendium.github.io log --oneline -1   # 6d0244d
+for d in steel-etl v2 steelCompendium.github.io data/data-rules data/data-unified; do (cd $d && echo "$d ahead=$(git rev-list --count @{u}..HEAD) behind=$(git rev-list --count HEAD..@{u})"); done  # all 0/0
+devbox run -- bash -c 'cd steel-etl && go test ./...'                              # PASS
+devbox run -- bash -c 'cd steel-etl && go run ./cmd/steel-etl gen --config pipeline.yaml' 2>&1 | grep -iE "WARN|classified"  # 0 WARN, 1915
+grep -c '@type: rule' "steel-etl/input/heroes/Draw Steel Heroes.md"                 # 108 (== minted rule codes)
+# malformed-link guard (expect no output):
+grep -nE '\]\(scc:[^)]*\)\]\(scc:|\[\[|\]\(\)' "steel-etl/input/heroes/Draw Steel Heroes.md"
 ```
