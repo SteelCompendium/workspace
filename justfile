@@ -90,7 +90,12 @@ deploy:
     # 3. Embed version info in mkdocs.yml
     cd "$root/v2"
     data_version="steel-etl <a href=\"https://github.com/SteelCompendium/steel-etl/commit/${etl_sha}\">${etl_sha}</a> (${etl_date})"
-    sed -i "s|DATA_VERSION|${data_version}|g" mkdocs.yml
+    # Idempotent: rewrite the existing version block in place (matching whatever
+    # SHA/date is there now) rather than a one-shot DATA_VERSION token, which a
+    # prior deploy consumed permanently. mkdocs.yml is committed below so CI's
+    # `mkdocs gh-deploy` (which builds the committed tree, not this working copy)
+    # actually sees the stamp.
+    sed -i "s#steel-etl <a href=\"[^\"]*\">[^<]*</a> ([0-9-]*)#${data_version}#" mkdocs.yml
 
     # 4. Build MkDocs docs directory from steel-etl output
     echo >&2 "[INFO] Running steel-etl site..."
@@ -106,7 +111,7 @@ deploy:
 
     # 6. Commit and push v2 site
     echo >&2 "[INFO] Committing v2 site update..."
-    git add docs/*
+    git add docs/* mkdocs.yml
     git commit -m "chore: update v2 site content (steel-etl $etl_sha)" || echo >&2 "[INFO] No v2 changes to commit"
     git push
 
@@ -140,7 +145,12 @@ deploy-v2:
     # 2. Embed version info in mkdocs.yml
     cd "$root/v2"
     data_version="steel-etl <a href=\"https://github.com/SteelCompendium/steel-etl/commit/${etl_sha}\">${etl_sha}</a> (${etl_date})"
-    sed -i "s|DATA_VERSION|${data_version}|g" mkdocs.yml
+    # Idempotent: rewrite the existing version block in place (matching whatever
+    # SHA/date is there now) rather than a one-shot DATA_VERSION token, which a
+    # prior deploy consumed permanently. mkdocs.yml is committed below so CI's
+    # `mkdocs gh-deploy` (which builds the committed tree, not this working copy)
+    # actually sees the stamp.
+    sed -i "s#steel-etl <a href=\"[^\"]*\">[^<]*</a> ([0-9-]*)#${data_version}#" mkdocs.yml
 
     # 3. Build MkDocs docs directory from steel-etl output
     echo >&2 "[INFO] Running steel-etl site..."
@@ -156,6 +166,6 @@ deploy-v2:
 
     # 5. Commit and push
     echo >&2 "[INFO] Committing v2 site update..."
-    git add docs/*
+    git add docs/* mkdocs.yml
     git commit -m "chore: update v2 site content (steel-etl $etl_sha)" || echo >&2 "[INFO] No v2 changes to commit"
     git push
