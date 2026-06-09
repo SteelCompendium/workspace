@@ -6,9 +6,9 @@ at hand. Add a numbered `## N.` section below instead of chasing them now, and
 `ROADMAP.md`, not here.
 
 Each item keeps the detail fields (**Identified / What / Why / Context / Effort**) that
-save the next person a grep. Mark a finished item with a `**Status:** done` line rather
-than deleting it; completed items are pruned and the rest renumbered on a periodic
-cleanup pass.
+save the next person a grep. Mark a finished item with a `**Status:** done` line; on a
+periodic cleanup pass, completed items are moved to `docs/followups-archive/` and the
+rest renumbered. Most recent archive: [`docs/followups-archive/2026-06-08-completed.md`](docs/followups-archive/2026-06-08-completed.md).
 
 <!-- Template — copy for each item, numbering sequentially:
 ## N. Short title
@@ -39,17 +39,7 @@ cleanup pass.
 - **Context:** `v2/site.yaml` Browse `include:`; companion sources in `data/data-beastheart/en/md-linked/feature-group/companion/`. `matchesSection` uses prefix matching, so `feature/` does **not** match `feature-group/`.
 - **Effort:** S (one-line include + verify) once the design intent is confirmed.
 
-## 3. Stale top-level nav entry `Full Book`
-
-**Status:** done
-
-- **Identified:** 2026-06-02, Read-tab-by-book work
-- **What:** `v2/docs/.nav.yml` (committed, protected from the site builder's clean) lists a `Full Book` nav item that matches no file/dir, producing an `awesome-nav` warning on every build. Pre-existing (present on `main`, commit "Adjusting nav").
-- **Why it matters:** Minor — a persistent build warning and a dead tab slot. Remove the line or point it at real content.
-- **Effort:** XS
-- **Resolution:** 2026-06-03 — Removed the `Full Book` line from `v2/docs/.nav.yml` (it was unsupported and the full-book page loaded too slowly). Also dropped the now-stale `Full Book` mention from the `reading-progress.js` header comment. Verified via `mkdocs build`: the `awesome-nav` warning for `Full Book` no longer appears.
-
-## 4. `transform_indexes.py` is dead code for the current card index pages
+## 3. `transform_indexes.py` is dead code for the current card index pages
 
 **Status:** open
 
@@ -59,7 +49,7 @@ cleanup pass.
 - **Context:** `v2/justfile` step 4 (`scripts/transform_indexes.py docs/Browse`); the script's `main()` globs `_Index.md` / `Index.md` only. Card pages are generated lowercase `index.md` by `buildCardsContent` in `steel-etl/internal/site/cards.go`. Confirm with `find v2/docs/Browse -name 'Index.md' -o -name '_Index.md'` (expected: none) before removing.
 - **Effort:** XS (verify no matches, then drop the step + script)
 
-## 5. Kit-flatten breaks cross-reference links to kit ability pages (mkdocs build warnings)
+## 4. Kit-flatten breaks cross-reference links to kit ability pages (mkdocs build warnings)
 
 **Status:** open
 
@@ -69,42 +59,7 @@ cleanup pass.
 - **Context:** Flatten logic: `groups[].flatten` in `steel-etl/internal/site/config.go` + `build.go`; the `Kits` group is defined in `v2/site.yaml` Browse section. Note the other 9 build warnings (`Read/beastheart/the-beastheart-class.md` → `feature-group/companion/*`) are a **separate** root cause already tracked in item #2 above, not this one.
 - **Effort:** S
 
-## 6. Combat-mechanic + ability cross-reference links: large under-linked categories remain
-
-**Status:** done (2026-06-07). The genuinely-linkable remainder was cleared; what's left is deliberately unlinked with documented rationale (see "Resolution" below).
-
-- **Identified:** 2026-06-06, comprehensive link-audit pass (kits/maneuvers/gods/truncation fixes).
-- **What:** A link audit (`steel-etl/scripts/link_audit.py`) found that entire **combat-mechanic** categories — the `feature.trait.common.*` / `feature.ability.common.*` move actions, maneuvers, and free strikes — were **never in `docs/linking-reference.md` and never linked**. The 2026-06-06 pass linked the *unambiguous* ones only: the three **move actions** (Advance, Disengage, Ride — guarded on a following "move action"), the **distinctive maneuvers** (Catch Breath, Escape Grab, Aid Attack, Search for Hidden Creatures, Use Consumable, Stand Up-before-"maneuver"), plus kits (Rapid-Fire hyphen miss + Sniper cross-refs), distinctive gods (Cavall, Salorna, Adûn, Nebular, Thellasko — own-section excluded), `I'm No Threat`, and the Templar `Domain Piety and Effects` truncation.
-- **Round 2 (2026-06-06, same day):** Linked **Free Strike** (~138: generic `free strike` → `feature.trait.common.main-actions/free-strike`, excluding the `Weapon Free Strike` ability names; + the `Ranged Weapon Free Strike` prose ref) and the **common-verb maneuvers/actions** via high-precision guards (Hide/Charge/Grab/Knockback/Heal/Defend followed by "maneuver"/"main action", the Grab↔Knockback pairings, the Advance↔Disengage pairing, and the glossary `**X Maneuver:**`/`**X Main Action:**` entries). Also linked the `Strike Now` cross-references.
-- **What remains:**
-  - **Common-verb maneuvers in non-guarded phrasings** (~lowercase/descriptive): e.g. "tests made to hide", "a creature can grab only…", "search for hidden creatures as a free maneuver". Roughly half of the leftover Hide/Grab/Charge/etc. occurrences are genuinely **mundane** ("grab two dice", "in charge of"); the mechanic-but-unusually-phrased remainder needs the per-instance mundane-vs-mechanic pass that conditions/skills got (the linking-guide forbids scripted replacement here).
-  - **Full distinctive-ability cross-reference sweep**: many ability/feature names are referenced outside their own sections, but the audit showed this is **high-effort, low-yield, ambiguity-heavy** — generic per-class terms (`Triggered Action` ×159, `Signature Ability` ×69 map to one class's code but every class has its own), **cross-class domain features with identical names** (e.g. `Invocation of the Heart` exists for both censor *and* conduit), lowercase keyword/stat uses (`corruption immunity N`), and many 1-occ self-section mentions. Needs **section-aware own-section exclusion + per-class disambiguation** tooling, not the flat regex linker.
-  - **Reference-table sync**: add the now-linked combat-mechanic terms to `docs/linking-reference.md` (they're absent), and note gods were only partially present.
-- **Why it matters:** The project policy is "link all instances of game mechanics" (`docs/linking-guide.md`); the remaining items are a real but lower-yield, judgment-heavy tail — not a one-shot script.
-- **Tooling:** `steel-etl/scripts/link_audit.py` (full unlinked + truncation report from `classification.json` + generated md frontmatter), `link_audit_category.py <code-substr…>` (per-category report), `link_apply.py '<regex w/ group 1>' '<code>' [start-end excl…] [--apply]` (safe single-rule linker: skips headings incl. `>` blockquote headings, existing links, comments; dry-run by default), and `link_audit_sectioned.py '<term>'…` (added 2026-06-07: buckets each unlinked occurrence by enclosing **class section** — built for the part-C own-section/cross-section split below).
-- **Effort:** L (mirrors the original multi-chapter conditions/skills linking effort)
-
-- **Resolution (2026-06-07, full A+B+C pass):** +27 links; heroes-doc SCC refs ~4,595 → ~4,622. `gen` 0 WARN (1807 classified), no malformed links.
-  - **A — reference-table sync:** the Combat Actions & Maneuvers + Gods sections were *already* in `docs/linking-reference.md` (added 2026-06-06; the "they're absent" note above was stale). Verified all 25 universal `common.*` codes are present. Added a new **Heroic Resources (9 terms)** section and a **"Generic per-class mechanics — deliberately NOT linkable"** note; total 460 → 469.
-  - **B — common-verb maneuver per-instance pass:** read every remaining unlinked occurrence of Hide (59), Charge (42), Grab (30), Stand Up (29), Disengage (21), Advance (19), Defend (17), Heal (15), Ride (14), Knockback (3). Only **7** were genuine mechanic refs (the rest are mundane "in charge of"/"grab two dice", the Hide/Ride **skills**, the "Disengage Bonus" kit stat label, ability **names**, keyword stat-block rows, or each maneuver's own-section definition). Linked: Knockback ×2 (beside already-linked Grab/in "the Knockback or Grab maneuver"), Grab ×2 (the Escape Grab/Grab/Knockback perk list; "(see Grab below)"), Charge ×2 + Defend ×1 (the "charge into battle, defend yourself, or make a free strike" basic-main-actions sentence; the "Furious Charge" title's "the Charge action").
-  - **C — heroic-resource / distinctive-ability sweep:** section-aware audit (`link_audit_sectioned.py`) confirmed each resource (Wrath/Piety/Essence/Ferocity/Discipline/Insight/Focus/Clarity/Drama) sits **overwhelmingly inside its own class section** (≈80–95%), and that the prior passes had linked each resource exactly once (in its class progression table). Linked the **20** genuine cross-references only: the 9 Introduction-glossary definition lines, the 9 "Heroic Resources" overview-list items, plus 2 explicit other-chapter mechanic refs ("spend 1 piety"; "gain 1 additional drama"). **Deliberately left unlinked** (documented in `linking-reference.md`): generic per-class terms (`Triggered Action` ×159, `Signature Ability` ×69, `Skill`, `Perk`) — each maps only to one arbitrary class's code though every class has its own, so there is no canonical target; `Steel` (≈always the game name "*Draw Steel*"); and all within-class / mundane-flavor resource uses.
-
-## 7. `gen` doesn't prune the SCC API `resolve/` dir — stale entries linger for renamed/removed codes
-
-**Status:** done — 2026-06-07. `SCCAPIGenerator.Finalize()` now `os.RemoveAll`s the
-`resolve/` tree before rewriting it (fix option a), so renamed/removed codes no longer
-linger (`steel-etl/internal/output/scc_api.go`; test
-`TestSCCAPIGenerator_PrunesStaleResolveFiles`). The one-time cleanup of the stale fury
-+ taxonomy-rename entries was also done in the org repo (commit `4a2a313`).
-
-- **Identified:** 2026-06-06, during the full deploy after the fury "Stormwight Kits" regrouping renamed several codes.
-- **What:** The SCC resolution API writer (`steelCompendium.github.io/docs/api/v1/resolve/<source>/<type>/<id>.json`) only **adds/overwrites** per-code JSON files; it never deletes files for codes that no longer exist. After the fury regroup, both the new `…/feature.trait.fury.stormwight-kits/*.json` **and** the stale old `…/feature.trait.fury/{stormwight-kits,primordial-storm,kit-features,…}.json` (and `feature.ability.fury/aspect-of-the-wild.json`) are present in the committed org repo. The per-type `index.json`/`scc.json`/`types.json` are regenerated fresh, but the individual `resolve/.../*.json` files are not pruned.
-- **Why it matters:** Stale entries resolve removed/renamed codes to dead Browse paths (404). Currently harmless — nothing links to the old fury codes (all inbound links were redirected) — but it accumulates cruft and could mask a genuinely-removed code. Same risk applies to any future code rename/removal (treasure reorg, etc.).
-- **Fix options:** (a) clean the `resolve/` tree before writing each run (like the `data/data-rules` format dirs are cleaned), or (b) diff against the registry and delete orphaned `*.json`. Option (a) is simplest but makes the org-repo diff noisier on every deploy; (b) is surgical. Either belongs in the API generator in `steel-etl/internal/output/` (the SCC API writer), invoked by `gen`.
-- **One-time cleanup:** the existing stale fury entries can be removed by hand (`git rm docs/api/v1/resolve/mcdm.heroes.v1/feature.trait.fury/{stormwight-kits,primordial-storm,kit-features,kit-bonuses,equipment,growing-ferocity,aspect-benefits-and-animal-form}.json` and `…/feature.ability.fury/aspect-of-the-wild.json`) in the org repo, but they'll keep reappearing for *future* renames until the generator prunes.
-- **Effort:** S (generator change) + XS (one-time cleanup)
-
-## 8. Settings panel: card-style toggle still triggers a full page reload
+## 5. Settings panel: card-style toggle still triggers a full page reload
 
 **Status:** open
 
@@ -113,19 +68,3 @@ linger (`steel-etl/internal/output/scc_api.go`; test
 - **Why it matters:** It conflicts with the drawer's "change settings without navigating away / see it live" goal for that one control — the reload closes the drawer and flashes the page.
 - **Fix options:** Investigate whether classic↔modern can be a pure CSS/attribute swap (it already toggles `data-card-style` on `<html>`). If some ability-card markup is build-time only (the classic glyph badges vs. modern colored borders may be emitted by `steel-etl`, not pure CSS), document why the reload is required, or do a lighter in-place re-render of just the affected cards instead of a full reload.
 - **Effort:** S (investigate + likely small JS/CSS change)
-## 9. `rule.*` in-prose sweep: link rules terms throughout the document body
-
-**Status:** DONE 2026-06-08 (infrastructure + glossary 2026-06-07; full in-prose sweep 2026-06-08 — `side`/`line`/`wall`/`ground` deliberately left as low-yield mundane-dominated words)
-
-- **Progress 2026-06-08:** First high-yield batch swept (steel-etl `6fc89ba`..`7f5fe07`, **pushed + deployed live 2026-06-08** alongside the feature.trait taxonomy): **winded, dying, flanking, concealment** (all mechanic), **cover** (mechanic-only — 22 of 43 lines, skipped "cover the squares"/"cover your eyes"/flavor), and the ultra-high-frequency core terms **stamina, temporary-stamina, recoveries/recovery-value, surge, hero-token, heroic-resource** linked **comprehensively** (per Scott — every mechanic instance, not first-per-section). `suffocating` was already fully linked. Footgun hit: bare-word linking inside literal `[Heroic Resource]` ability-notation placeholders made `[[…]]` (fixed at L4575); the broad malformed grep `…|\]\(scc:[^)]*\)\]` (filter out `)\]\(scc:`) catches that shape. **Multi-word terms must be linked before their single-word components** (temporary-stamina before stamina; recovery-value before recovery).
-- **Progress 2026-06-08 (batch 2, steel-etl `d60d7bf`..`1a7fafe`, local/unpushed):** swept the **characteristics** (umbrella `characteristic` + `Might`/`Agility`/`Reason`/`Intuition`/`Presence` — case-sensitive on the capitalized proper-noun forms; lowercase modal "might"/common "reason"/"presence" auto-excluded), the dice mechanics **edge** (used a `(?! of)` lookahead to drop "edge of the cliff"; skipped "an edge in her voice") + **bane** (skipped "a bane to their allies"), **size** (`(?! of)` lookahead drops area-measurement "size of the burst/area"; skipped flavor "all shapes and sizes"/"matched his size"), **distance** (skipped narrative "from a distance"/"in the distance"), the **damage sub-terms** damage-type / damage-immunity / damage-weakness (multi-word; another `[damage type]` notation footgun fixed at L22026), and **strike** (keyword tags via `(?<=, )Strike`, qualified/determiner nouns; **skipped the narrative verb** — fixed one "that strikes terror" verb false-positive from the `that` determiner). Heroes doc now ~**8,935** SCC links (4,280 `rule.*`).
-- **`damage` (conservative) — DONE 2026-06-08** (steel-etl `5509f78`): per Scott's CONSERVATIVE call (memory `comprehensive-linking-density.md`), linked only the genuine rules-concept prose where damage is *explained* — 8 instances across 6 lines (power-roll overview L696, hero-token rules L800/803, Recoveries L887, and the Stamina section L22046/22048 that defines how damage reduces Stamina). Did NOT touch numeric rolls ("5 fire damage"), ability effect lines ("whenever you take damage…"), the verb "to damage", or the Damage own-def section (self-ref). This was done by hand-curated Edits, not `link_apply` (which can't tell prose from statblock effect lines).
-- **Progress 2026-06-08 (batch 3, steel-etl `003c6e8`..`d4501cd`):** swept the bulk of the tail — **dice** (power-roll/opposed-power-roll/ability-roll/tier-outcome/natural-19-20), **combat multi-word** (opportunity-attack/line-of-effect/critical-hit/free-maneuver/area-of-effect/mounted-combat), **character/resource** (potency/stability/victories/renown/wealth[cap.]/speed/respite/experience[XP forms]), **test group** (test[comprehensive ~1012]/group/montage/reactive test + **minted the missing `test-difficulty` code** — Phase-3 annotation gap, now 109 rule codes), **downtime** (crafting/research project, project roll/points/source/event, item-prerequisite), **treasure** (leveled-treasure/trinket/consumable), **world** (Orden/Vasloria, case-sensitive), and more **combat/general/damage** (surprised/objective/triggered-action/signature-ability/saving-throw/echelon/retainer/subclass/unattended-object/heroic-ability/rolled-damage/npc/follower/cube/aura/burst/end-of-turn). Used `(?! of)` lookaheads for edge/size/aura/burst flavor; case-sensitive for proper-noun/stat forms (Wealth/Orden/Vasloria). Hit the `[potency value]`/`[characteristic]`/`[damage type]` notation footgun 3× (all fixed). Heroes doc now **14,020** SCC links (9,365 `rule.*`).
-- **Progress 2026-06-08 (batch 4, steel-etl `029fd6a`..`76ba800`):** swept most of the ultra-common words too — **negotiation** group (interest/patience/motivation/pitfall, scoped to the Negotiation chapter 22214–22780), combat keywords **adjacent/melee/ranged**, **combat-round** + **turn** (mundane "turn to/into"/"in turn" excluded via lookahead), **condition** (excl. "weather conditions"), **bonuses-and-penalties** (bonus/penalty), treasure **enhancement/implement** (excl. "Implement of Wrath" name), downtime **guide** (excl. verb), general **supernatural**, world **Capital** (cap.) + **Saint** (excl. "Saint <Name>" via `(?! [A-Z])` lookahead). Heroes doc now **17,036** SCC links (12,381 `rule.*`).
-- **`creature`/`ability`/`target`/`ally`/`enemy` (conservative) — DONE 2026-06-08** (steel-etl `f727e2f`): per the `damage` precedent, linked each ONCE at its canonical defining sentence (`### Abilities`, `### Creatures and Objects`, `#### Target`, `##### Enemy`, `##### Ally`) — glossary-headword-style anchors — rather than blanket-linking every statblock effect line.
-- **Status: effectively COMPLETE.** Only `side`/`line`/`wall`/`ground` deliberately left unlinked in-prose: mundane-dominated ("outside"/"other side of the room", "line of effect" is already its own code, physical walls, "the ground"); the rare clear mechanic uses (your-side initiative, a Wall/Line area ability, the Ground-and-Ceiling rule) are low-yield / high-mislink-risk — treated like the deliberately-unlinked generic terms in #6. All 109 `rule.*` codes are linked from the glossary and the in-prose body sweep covers the document.
-- **Identified:** 2026-06-07, rule/glossary SCC linking effort (see `steel-etl/docs/superpowers/plans/2026-06-07-rule-glossary-scc-linking.md`, Phase 6).
-- **What:** The new `rule.<group>/<term>` type (108 codes) and the Introduction **glossary** are done — every glossary headword links to its code. The remaining work is the **full per-instance sweep of the document body**: linking in-prose occurrences of rule terms (flanking, cover, winded, edge, bane, surge, size, recoveries, characteristics, distance, strike, damage, …) across all ~28k lines, the same magnitude as the original conditions/skills multi-chapter linking effort.
-- **Why it matters:** The project policy is "link all instances of game mechanics." Glossary-only linking makes terms discoverable from the glossary but not from where they're used (class features, abilities, treasures, etc.) — which is where readers actually hit them.
-- **Context:** `steel-etl/docs/rule-term-mapping.md` is the term→code source of truth (Variants column lists surface forms). Use `scripts/link_apply.py '<regex w/ group 1>' '<code>' [excl…]` (dry-run by default) per term. **Heavy disambiguation:** most rule terms are common English words (edge, bane, cover, size, distance, strike, line, wall, creature, hero, level) — link ONLY the game-mechanic use, per-instance, never ordinary prose; see the disambiguation note in `steel-etl/docs/linking-reference.md` (`## Rules`). Exclude each term's own definition section (own-section). Some terms map to `reuse` codes (movement/conditions/chapters) — link those to the existing code, not a `rule.*` one.
-- **Effort:** L (multi-session; mirrors the conditions/skills linking project)
