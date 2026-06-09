@@ -144,7 +144,7 @@ Annotated source (hand-edited)
 
 The JSON schemas for the output format exist in **two places** and are **not** linked by any build dependency:
 
-- `data-sdk-npm/src/schema/*.schema.json` — the published SDK contract consumed by third-party tools.
+- `data-sdk-npm/src/schema/*.schema.json` — the published SDK contract consumed by third-party tools. **⚠️ The canonical mainline of `data-sdk-npm` is the `v3` branch, not `main`** (the GitHub default still points at `main`). Edit/branch from `v3`; a change landed on `main` will be on the stale line.
 - `steel-etl/schemas/*.schema.json` — steel-etl's own copy (steel-etl is Go and cannot import the npm package).
 
 steel-etl does **not** depend on the SDK: it emits SDK-shaped JSON by convention, and its conformance test (`internal/output/schema_validation_test.go`) checks against hand-maintained property allowlists, **not** the schema files at runtime. Nothing programmatically enforces that the two copies agree.
