@@ -108,3 +108,13 @@ rest renumbered. Most recent archive: [`docs/followups-archive/2026-06-08-comple
 - **Why it matters:** The whole motivation for the scheme version is forward-safety for external consumers; if it's only in an internal gitignored file, consumers can't act on it.
 - **Fix options:** Add a `scheme_version` field (from `Registry.SchemeVersion()`) to `apiIndex` and `apiRegistry` in `steel-etl/internal/output/scc_api.go` (next to the existing `version`), thread it via a `SchemeVersion int` on `SCCAPIGenerator` set in `internal/pipeline/pipeline.go`, update `internal/output/scc_api_test.go`, then `just deploy-api`. **Design decision:** top-level only, or also embed in every per-entry `resolve/*.json` so a single-code fetch is self-describing? (Recommend: both the two index files and per-entry resolve files, so any single fetch carries it.)
 - **Effort:** S (additive field + test + deploy-api)
+
+## 10. Link the bestiary pages into the SCC cross-reference sweep
+
+**Status:** open
+
+- **Identified:** 2026-06-10, the bestiary restructure (Plan A: moved monster / dynamic-terrain / retainer trees from the Bestiary tab into Browse, `steel-etl/docs/superpowers/plans/2026-06-10-bestiary-restructure.md`).
+- **What:** The Monsters-book pages (statblocks, malice/Tactical Stance featureblocks, dynamic terrain, retainers) are now first-class Browse pages with their own SCC codes, but they are **not yet wired into the in-prose `scc:` cross-reference sweep** the heroes doc uses. Two directions are missing: (1) links *out of* the Monsters source — statblock keywords, inflicted conditions, abilities, movement types, etc. should link to their SCC pages; (2) links *into* monster pages — other books should be able to reference a monster/terrain/retainer by SCC.
+- **Why:** Comprehensive linking is part of "done" for this project (see memory `comprehensive-linking-density`); the bestiary is currently an island.
+- **Context:** Source is `steel-etl/input/monsters/Draw Steel Monsters.md` (hand-maintained; H7=statblock, H9=featureblock/terrain — see `steel-etl/CLAUDE.md` "Monsters book"). Follow `steel-etl/docs/linking-guide.md` + `docs/linking-reference.md`. Conditions/skills/movement terms are already linkable targets. Mind the one-heading-one-code gotcha (memory `rule-scc-type`). This is a sizable sweep, akin to the heroes-doc passes.
+- **Effort:** L (multi-day sweep across the whole Monsters source)
