@@ -50,11 +50,13 @@ The `deploy` recipe runs `gen --all` **once**, commits the SCC API to the org re
 
 Reads the annotated source markdown, parses sections using the content-type parsers registered in `steel-etl/internal/content/registry.go`, assigns SCC codes via the classifier, and writes structured output to multiple targets.
 
-**Input:** `steel-etl/input/heroes/Draw Steel Heroes.md` -- hand-annotated markdown with `<!-- @type: ... -->` comment tags that identify content sections (classes, abilities, kits, ancestries, etc.)
+**Input:** `steel-etl/input/heroes/Draw Steel Heroes.md` -- hand-annotated markdown with `<!-- @type: ... -->` comment tags that identify content sections (classes, abilities, kits, ancestries, etc.). Each book has its own `input/<book>/Draw Steel <Book>.md`.
+
+> **Onboarding a new book from PDF.** Supplement PDFs are converted via the fidelity-gated tool `steel-etl/tools/pdf-extract/` (replaces marker-pdf). It extracts the publisher's text **deterministically and font-aware** (so custom icon glyphs can't masquerade as prose) — that text is the sole source of words; AI only structures + annotates it, never retypes a word; and `fidelity_check.py` proves the annotated markdown contains exactly the publisher's word-multiset (zero dropped/changed/added). The Summoner book was the first onboarded this way — see `tools/pdf-extract/README.md` and `docs/superpowers/plans/2026-06-09-summoner-ai-pdf-conversion.md`.
 
 **Config:** `steel-etl/pipeline.yaml`
 
-> **Gotcha — multi-book gen.** `pipeline.yaml` defines a primary book (`mcdm.heroes.v1`) plus secondary books in its `books:` list (`mcdm.beastheart.v1`, `mcdm.monsters.v1`). A bare `steel-etl gen --config pipeline.yaml` regenerates **only the primary book** — the secondary `data/data-*` output stays stale. To regenerate everything use `--all` (every book) or `--book <id>`. The `just deploy*` recipes already pass `--all`; only manual `gen` runs hit this. Symptom: edits to `input/beastheart/...` appear ignored because you're reading stale output, and the primary-book "Sections: N parsed" line is heroes-only. (`selectBookConfigs` in `internal/cli/gen.go`.)
+> **Gotcha — multi-book gen.** `pipeline.yaml` defines a primary book (`mcdm.heroes.v1`) plus secondary books in its `books:` list (`mcdm.beastheart.v1`, `mcdm.monsters.v1`, `mcdm.summoner.v1`). A bare `steel-etl gen --config pipeline.yaml` regenerates **only the primary book** — the secondary `data/data-*` output stays stale. To regenerate everything use `--all` (every book) or `--book <id>`. The `just deploy*` recipes already pass `--all`; only manual `gen` runs hit this. Symptom: edits to `input/beastheart/...` appear ignored because you're reading stale output, and the primary-book "Sections: N parsed" line is heroes-only. (`selectBookConfigs` in `internal/cli/gen.go`.)
 
 **Outputs (all generated, cleaned on each run):**
 
