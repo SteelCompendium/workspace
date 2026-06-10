@@ -89,7 +89,37 @@ rest renumbered. Most recent archive: [`docs/followups-archive/2026-06-08-comple
 - **Fix options:** Repoint each `skill/<item>` → `skill.<group>/<item>` using the authoritative skill-id→group map in `steel-etl/docs/superpowers/plans/2026-06-08-skill-groups-nesting.md` (e.g. `skill/track` → `skill.intrigue/track`, `skill/nature` → `skill.lore/nature`, `skill/endurance` → `skill.exploration/endurance`). All 12 ids are in that map. Then re-gen and confirm zero `skill/<item>` warnings.
 - **Effort:** S (mechanical per-id replace in one file + regen)
 
-## 8. Summoner book: site-rendering refinement pass (formatting, not fidelity)
+## 8. Restamp bare `scc:` links to explicit `scc.v1:` across all inputs
+
+**Status:** open (deferred deliberately)
+
+- **Identified:** 2026-06-09, during the SCC scheme-versioning design (`steel-etl/docs/superpowers/specs/2026-06-09-scc-scheme-versioning-and-format-design.md`).
+- **What:** The SCC scheme now carries an explicit scheme-version prefix (`scc.v1`), with bare `scc:` defined as a permanent implicit-v1 alias. The canonical form is explicit, but the ~17,527 existing in-prose `scc:…` links and the registry were left bare to avoid a high-churn sweep. This follow-up restamps bare `scc:` → `scc.v1:` across all source inputs (heroes, beastheart, monsters, and the in-flight new sourcebook) and emits explicit going forward.
+- **Why it matters:** Cosmetic/consistency only — bare and explicit are equivalent by definition, so nothing is broken meanwhile. Worth doing in one pass once the new sourcebook lands, rather than piecemeal.
+- **Fix options:** Mechanical `scc:` → `scc.v1:` replace across `steel-etl/input/**/*.md` (guard against already-prefixed `scc.vN:` and against non-link `scc` text); update the registry to record `scheme_version`; confirm the resolver normalizes both forms. Coordinate timing with the new-sourcebook agent so it's a single sweep over all inputs.
+- **Effort:** M (broad but mechanical; one sweep across all input docs + registry + regen)
+
+## 9. Surface `scheme_version` in the published SCC resolution API
+
+**Status:** done (2026-06-09) — `scheme_version` added top-level to `index/scc/types.json` and to each per-entry `resolve/*.json` (self-describing) via `apiResolveEntry`, threaded from `Registry.SchemeVersion()`. `entries[]` arrays kept lean. Deployed via `just deploy`.
+
+- **Identified:** 2026-06-09, verifying the scheme-versioning deploy.
+- **What:** The registry now records `scheme_version` (`steel-etl/classification.json`), but that file is **gitignored** — external tools consume the published API at `steelCompendium.github.io/docs/api/v1/` (`index.json`, `scc.json`, per-entry `resolve/*.json`), which does **not** include `scheme_version`. So the scheme version a code was minted under doesn't actually reach API consumers, partially undercutting the point of versioning (a 3rd-party tool can't tell which grammar a code uses).
+- **Why it matters:** The whole motivation for the scheme version is forward-safety for external consumers; if it's only in an internal gitignored file, consumers can't act on it.
+- **Fix options:** Add a `scheme_version` field (from `Registry.SchemeVersion()`) to `apiIndex` and `apiRegistry` in `steel-etl/internal/output/scc_api.go` (next to the existing `version`), thread it via a `SchemeVersion int` on `SCCAPIGenerator` set in `internal/pipeline/pipeline.go`, update `internal/output/scc_api_test.go`, then `just deploy-api`. **Design decision:** top-level only, or also embed in every per-entry `resolve/*.json` so a single-code fetch is self-describing? (Recommend: both the two index files and per-entry resolve files, so any single fetch carries it.)
+- **Effort:** S (additive field + test + deploy-api)
+
+## 10. Link the bestiary pages into the SCC cross-reference sweep
+
+**Status:** open
+
+- **Identified:** 2026-06-10, the bestiary restructure (Plan A: moved monster / dynamic-terrain / retainer trees from the Bestiary tab into Browse, `steel-etl/docs/superpowers/plans/2026-06-10-bestiary-restructure.md`).
+- **What:** The Monsters-book pages (statblocks, malice/Tactical Stance featureblocks, dynamic terrain, retainers) are now first-class Browse pages with their own SCC codes, but they are **not yet wired into the in-prose `scc:` cross-reference sweep** the heroes doc uses. Two directions are missing: (1) links *out of* the Monsters source — statblock keywords, inflicted conditions, abilities, movement types, etc. should link to their SCC pages; (2) links *into* monster pages — other books should be able to reference a monster/terrain/retainer by SCC.
+- **Why:** Comprehensive linking is part of "done" for this project (see memory `comprehensive-linking-density`); the bestiary is currently an island.
+- **Context:** Source is `steel-etl/input/monsters/Draw Steel Monsters.md` (hand-maintained; H7=statblock, H9=featureblock/terrain — see `steel-etl/CLAUDE.md` "Monsters book"). Follow `steel-etl/docs/linking-guide.md` + `docs/linking-reference.md`. Conditions/skills/movement terms are already linkable targets. Mind the one-heading-one-code gotcha (memory `rule-scc-type`). This is a sizable sweep, akin to the heroes-doc passes.
+- **Effort:** L (multi-day sweep across the whole Monsters source)
+
+## 11. Summoner book: site-rendering refinement pass (formatting, not fidelity)
 
 **Status:** done — 2026-06-10. Investigated against the generated output (plan: [`docs/superpowers/plans/2026-06-10-summoner-render-refinements.md`](docs/superpowers/plans/2026-06-10-summoner-render-refinements.md)). Two of the four diagnosed items were **non-issues**; the two real defects are fixed. Kept on the `summoner-conversion` branches (not merged/deployed).
 
@@ -99,10 +129,10 @@ rest renumbered. Most recent archive: [`docs/followups-archive/2026-06-08-comple
   2. **Power-roll panels empty on *class* abilities → NOT a bug (selector misdiagnosis).** The diagnosis searched for CSS class `sc-power-roll`; the real class is `sc-ability__pr`. All 10 standalone class power-roll abilities render fully-populated tier panels. The renderer already handles the `**Power Roll + Reason:**` + `- **≤11:**` form. No change. **The genuinely broken power rolls are on *statblocks*** (see fix below).
   3. **Headers showing `##` → the H8 `########` leak (FIXED).** Retainer/rival statblocks carry H8 `######## Level N Retainer Advancement Ability` sub-labels, which are intentionally *not* collected as sections (they fold into the statblock body) and so leaked as literal hashes through `RenderSubtree`. `nodeBody` now demotes any 7+-hash heading to `**bold**` (`demoteOverflowHeadings`, `render_subtree.go`). Cross-book win — also clears the **183** Monsters-book instances. (steel-etl `7529e1e`.)
   4. **Statblock power rolls render as plain paragraphs (FIXED).** Statblock signature abilities encode the roll in the title (`🏹 **… 2d10 + R (Signature Ability)**`) + **three bare digit-led tier paragraphs** (verified across all 26 instances; 13 lack the WEAK/AVERAGE/STRONG keyword, so positional detection is required). New `ability-cards-core.js` (pure, UMD, `node:test`) + `transformStatblockPowerRolls()` in `ability-cards.js` badge them low/mid/high, reusing the existing `.power-roll-tiers` CSS. (v2 `2322b4d8b0`.)
-- **Deferred (new item #9):** the statblock *data* layer (dice stuck in `name`, tiers in `prose`) — JSON/YAML only, not the site.
+- **Deferred (new item #12):** the statblock *data* layer (dice stuck in `name`, tiers in `prose`) — JSON/YAML only, not the site.
 - **Remaining for the user:** the input doc itself was "not quite finished" — a final content pass is the user's, not a render-code task. A broad artifact sweep of 264 summoner pages found no other leaks (no unresolved `scc:` links, leaked `{data-scc}`, `⟦glyph⟧`, `[[ ]]`, or broken tables).
 
-## 9. Statblock parser drops the dice-in-title power roll into prose (data-layer, not site)
+## 12. Statblock parser drops the dice-in-title power roll into prose (data-layer, not site)
 
 **Status:** done — 2026-06-10 (steel-etl `a863c9e`). `parseStatblockFeature` now detects a `Name Nd10 + <char>` title (`sbDiceRe`), lifts the dice to `effects.roll`, cleans `name`, and maps the three bare digit-led tier lines (`sbBareTierRe`) to `tier1/2/3` by position. Reuses the existing `effects` fields (no schema change). Verified on regenerated data: **23/24** signature abilities now carry roll+tiers across all variants (`+ R`, `+ 2/3/4/5`, `+ highest characteristic`); the 24th (rival "Strike for Me") genuinely has no power roll and is correctly left as an effect. Monster labeled-form (`**Power Roll +**` + `**≤11:**`) is unaffected (dice path only triggers when the title carries dice). Test: `TestParseStatblockFeatureDiceInTitle`. **Known minor (pre-existing, separate):** the prose/effect path keeps the literal `**Effect:**` prefix in `effects[].effect`, and an `Effect:` line that follows a power roll is still dropped — true for the monster form too; out of scope here.
 
@@ -112,7 +142,7 @@ rest renumbered. Most recent archive: [`docs/followups-archive/2026-06-08-comple
 - **Context:** `internal/content/statblock_parse.go` effects loop (~L191‑230); `sbTitleRe`/`sbParenRe`/`sbPowerRollRe`/`sbTierRe` (~L80). The Monsters book uses the labeled form (0 dice-in-title), so this is summoner-only today — but the parser should handle **both**. Add detection: if the title carries `\d+d\d+\s*\+`, strip it to `roll` and treat the following digit-led prose lines as `tier1/2/3` by position. Mirror the verified rule from `docs/superpowers/plans/2026-06-10-summoner-render-refinements.md`. Update `statblock_parse_test.go` + (if a new field) both schema copies per the card-data-parity checklist.
 - **Effort:** S–M
 
-## 10. `settings-core.test.js` fails — max-width drift (test says 500, code says 300)
+## 13. `settings-core.test.js` fails — max-width drift (test says 500, code says 300)
 
 **Status:** open
 
@@ -122,7 +152,7 @@ rest renumbered. Most recent archive: [`docs/followups-archive/2026-06-08-comple
 - **Fix options:** Decide the intended max content width. If 300 is correct, update the test's expectations (`clampEm(600) → 300`, the `[44, 500]` name, and the `widthToControls` case). If 500 is correct, bump `WIDTH_MAX_EM` back to 500 in `settings-core.js` (and check the slider's `max` in `settings-panel.js`/`steel-settings.css`). `settings-core.js:19` (`WIDTH_MAX_EM`), `settings-core.js:52` (`clampEm`), `tests/settings-core.test.js:38-49`.
 - **Effort:** XS
 
-## 11. Heroes skill-group links 404 — resolve to old `skill/group/<member>.md` path
+## 14. Heroes skill-group links 404 — resolve to old `skill/group/<member>.md` path
 
 **Status:** open
 
