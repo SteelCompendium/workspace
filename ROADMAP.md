@@ -103,3 +103,14 @@ What it is, why it matters, where the work lives. Code blocks, commands, links w
 - **Recommended changes (priority; none applied):** (1) add `navigation.prune` to `mkdocs.yml` (−~6.5 min); (2) `fetch-depth: 1` in `ci.yml` — `ghp-import` force-pushes `gh-pages` independently and needs no `main` history (−~3.5 min); (3) optional: fix `roamlinks` (vendor an index-based plugin, or have `steel-etl` emit full-path links) (−~60–90s); (4) cleanup: drop the no-op `.cache` step (only Material `social`/`optimize` use it; neither enabled); (5) housekeeping: squash/orphan the bloated `gh-pages` history (~8 MB `search_index.json` per deploy, never pruned → ~800 MB `.git`). Items 1+2 alone ≈ 14 min → ~5 min, both low-risk.
 - **Full detail / numbers:** `v2/.repo-docs/decisions/2026-06-05-ci-deploy-build-time-perf.md`.
 - **Effort:** S (items 1+2) / M (item 3).
+
+## 7. Bestiary Search & Filter utility (Plan B)
+
+**Status:** designed + planned (2026-06-10); **not yet implemented.** Part A (restructure into Browse) shipped 2026-06-10.
+
+- **What:** Repurpose the **Bestiary** tab from a flat browser into a faceted **Search & Filter** finder over every statblock / dynamic-terrain / retainer, so Directors can answer queries like "undead minions in the EV 3–6 range." Reuses the existing `SCBrowse` `.sc-browse-mount` pattern via a sibling `window.SCBestiary` component + a build-time JSON data island; client-side facets (Type/Role/Organization/Size/Keyword), numeric Level/EV range filters, and a dense sortable results table. No backend, no SCC re-mint, no data-repo change.
+- **Why it matters:** The new tab purpose Scott set — a Director utility to find adversaries by criteria across current and future sourcebooks, distinct from the hierarchical Browse tab.
+- **Where the work lives:** Design `steel-etl/docs/superpowers/specs/2026-06-10-bestiary-restructure-and-search-design.md` (Part B); ready-to-execute plan `steel-etl/docs/superpowers/plans/2026-06-10-bestiary-search-utility.md` (7 tasks). Until it ships, the tab is a static "coming soon" placeholder.
+- **Blocked sub-feature:** Advanced "inflicts *poisoned*"-style condition queries need a data source the frontmatter lacks (a community-aggregated spreadsheet). The plan reserves a clean left-join seam (§B5) but ships v1 without it — revisit when/if that data is secured.
+- **Follow-up:** Wiring the bestiary pages into the in-prose SCC link sweep is tracked separately (`FOLLOWUPS.md` #10).
+- **Effort:** M (the plan is fully specified; mostly a Go emitter + one JS component + CSS).
