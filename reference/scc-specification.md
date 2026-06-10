@@ -1,8 +1,8 @@
 # Steel Compendium Classification (SCC) Specification
 
-**Version:** 1.0
-**Date:** 2026-05-21
-**Status:** Frozen (1,432 codes as of 2026-04-26)
+**Version:** 1.1
+**Date:** 2026-06-09
+**Status:** Frozen code-set; scheme additively extended (scheme version + format negotiation)
 
 ## 1. Introduction
 
@@ -30,6 +30,37 @@ An SCC code has three components separated by `/`:
 | **item** | Unique identifier within type | `a-z`, `0-9`, `-` |
 
 All components are lowercase. No spaces, underscores, or uppercase characters.
+
+### 2.0 Scheme Version
+
+An SCC code MAY carry an explicit **scheme version** prefix identifying the grammar it was
+minted under. The prefix swaps in wherever the `scc` namespace token already appears:
+
+```
+Link / URN / DSL:   scc.v1:mcdm.heroes.v1/class/fury
+Website URL:        steelcompendium.io/scc.v1/mcdm.heroes.v1/class/fury
+Bare (implicit v1): scc:mcdm.heroes.v1/class/fury        ≡  scc.v1:…
+```
+
+The canonical form is explicit (`scc.v1`). The **bare `scc:` form is a permanent implicit-v1
+alias** — `scc:X` ≡ `scc.v1:X` — so every existing code, link, URL, and bookmark remains valid.
+
+A scheme-version bump (`scc.v2`, …) is reserved for **breaking grammar changes only** — a
+delimiter's meaning changing, incompatible type-nesting rules, a change to the `source` format, or
+a wholesale re-mint. Additive taxonomy work (new types, new nesting) stays within the current scheme
+version under the existing freeze + alias rules and does **not** bump it. When a new scheme version
+appears, the prior version's code-set is untouched and continues to resolve; the two coexist.
+
+**Three distinct "versions" — do not conflate:**
+
+| Name | Token | Versions | Bumps when |
+|---|---|---|---|
+| Book edition | `v1` inside `mcdm.heroes.v1` | the *content* edition | publisher reprints with changes |
+| Registry-file schema | `version` in `classification.json` | the registry file's JSON shape | the registry file format changes |
+| SCC scheme version | `scc.v1` prefix | the *grammar* for building codes | a breaking grammar change / re-mint |
+
+The scheme prefix (`scc.v1`) and the book edition (`…heroes.v1`) never collide: one is the leading
+prefix, the other lives inside the `source` component.
 
 ### 2.1 Source Component
 
@@ -236,6 +267,7 @@ The classification registry (`classification.json`) is the authoritative list of
 ```json
 {
   "version": 1,
+  "scheme_version": 1,
   "frozen": true,
   "codes": [
     "mcdm.heroes.v1/ancestry/devil",
@@ -254,6 +286,7 @@ The classification registry (`classification.json`) is the authoritative list of
 | Field | Type | Description |
 |-------|------|-------------|
 | `version` | integer | Schema version (currently `1`) |
+| `scheme_version` | integer | The SCC scheme (grammar) version these codes were minted under. Absent ⇒ `1`. |
 | `frozen` | boolean | When `true`, existing codes cannot be removed or changed |
 | `codes` | string[] | Sorted array of all canonical SCC codes |
 | `aliases` | object | Map of alias SCC to canonical SCC (for redirects/lookups) |
@@ -311,3 +344,32 @@ Class features encode their context (class name, level, optionally kit) in the t
 ### 7.5 Immutability
 
 Once frozen, SCC codes are permanent contracts with the outside world. The scheme was designed, reviewed, and frozen before any external consumer depended on it. The tooling enforces immutability at build time.
+
+## 8. Format Negotiation
+
+An entity exists in multiple representations (`markdown`, `json`, `yaml`, `dse-markdown`). **Format
+is never part of an SCC's identity** — every representation denotes the same entity. Format is
+selected at fetch time, and an SCC used as a cache key is keyed on the bare identity, with
+representations stored as `(identity, format)` variants under that one key.
+
+### 8.1 Over HTTP
+
+The canonical mechanism is the **`Accept` header** (`Accept: application/json`). A **`?format=json`
+query parameter** is a convenience for browser/curl users; it lives in the URL query, never in the
+path. There is **no file-extension form** (`…/fury.json` is not valid) — it reads as a filename and
+would pollute identity.
+
+### 8.2 Reserved reference qualifier (`#format`) — not yet implemented
+
+For non-HTTP contexts (human dialogue, rule-logic DSLs, an SDK that inlines fetched content), a
+reference MAY optionally carry a format qualifier using a `#` fragment:
+
+```
+scc.v1:mcdm.heroes.v1/class/fury#json
+```
+
+The `#…` is a URI-fragment-style view selector. **It is reserved, not yet implemented.** Tooling
+that encounters it MUST normalize it away — strip from `#` onward to recover the canonical identity —
+so `…/fury#json`, `…/fury#yaml`, and `…/fury` are the same cache key. The `/`, `.`, and `:`
+delimiters are claimed by path / scheme-prefix / URN-separator respectively; `#` is the one
+punctuation the grammar promises never to claim for identity.
