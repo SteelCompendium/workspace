@@ -106,7 +106,7 @@ What it is, why it matters, where the work lives. Code blocks, commands, links w
 
 ## 7. Bestiary Search & Filter utility (Plan B)
 
-**Status:** designed + planned (2026-06-10); **not yet implemented.** Part A (restructure into Browse) shipped 2026-06-10.
+**Status:** done — 2026-06-10. Shipped v1 per the plan: `internal/site/bestiary_search.go` emits the `.sc-bestiary-mount` JSON data island over the Browse monster/terrain/retainer frontmatter; `v2/docs/javascripts/steel-bestiary-browser.js` (`window.SCBestiary`) + `steel-bestiary.css` provide the search box, Type/Role/Organization/Size/Keyword facets, Level/EV range filters, and a sortable results table. The static "coming soon" placeholder was retired. Advanced condition-query facets (§B5 seam) remain deferred (see Blocked sub-feature). Part A (restructure into Browse) shipped 2026-06-10.
 
 - **What:** Repurpose the **Bestiary** tab from a flat browser into a faceted **Search & Filter** finder over every statblock / dynamic-terrain / retainer, so Directors can answer queries like "undead minions in the EV 3–6 range." Reuses the existing `SCBrowse` `.sc-browse-mount` pattern via a sibling `window.SCBestiary` component + a build-time JSON data island; client-side facets (Type/Role/Organization/Size/Keyword), numeric Level/EV range filters, and a dense sortable results table. No backend, no SCC re-mint, no data-repo change.
 - **Why it matters:** The new tab purpose Scott set — a Director utility to find adversaries by criteria across current and future sourcebooks, distinct from the hierarchical Browse tab.
