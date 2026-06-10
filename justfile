@@ -87,15 +87,12 @@ deploy:
     git commit -m "chore: update SCC resolution API" || echo >&2 "[INFO] No API changes to commit"
     git push
 
-    # 3. Embed version info in mkdocs.yml
+    # 3. Stamp the steel-etl pipeline version into mkdocs.yml extra.* fields.
+    # mkdocs.yml is committed below so CI's `mkdocs gh-deploy` (which builds the
+    # committed tree, not this working copy) sees the etl stamp; CI fills
+    # extra.site_* from $GITHUB_SHA just before deploy.
     cd "$root/v2"
-    data_version="steel-etl <a href=\"https://github.com/SteelCompendium/steel-etl/commit/${etl_sha}\">${etl_sha}</a> (${etl_date})"
-    # Idempotent: rewrite the existing version block in place (matching whatever
-    # SHA/date is there now) rather than a one-shot DATA_VERSION token, which a
-    # prior deploy consumed permanently. mkdocs.yml is committed below so CI's
-    # `mkdocs gh-deploy` (which builds the committed tree, not this working copy)
-    # actually sees the stamp.
-    sed -i "s#steel-etl <a href=\"[^\"]*\">[^<]*</a> ([0-9-]*)#${data_version}#" mkdocs.yml
+    yq -i ".extra.etl_sha = \"${etl_sha}\" | .extra.etl_date = \"${etl_date}\"" mkdocs.yml
 
     # 4. Build MkDocs docs directory from steel-etl output
     echo >&2 "[INFO] Running steel-etl site..."
@@ -142,15 +139,12 @@ deploy-v2:
     etl_sha="$(git rev-parse --short HEAD)"
     etl_date="$(date +%Y-%m-%d)"
 
-    # 2. Embed version info in mkdocs.yml
+    # 2. Stamp the steel-etl pipeline version into mkdocs.yml extra.* fields.
+    # mkdocs.yml is committed below so CI's `mkdocs gh-deploy` (which builds the
+    # committed tree, not this working copy) sees the etl stamp; CI fills
+    # extra.site_* from $GITHUB_SHA just before deploy.
     cd "$root/v2"
-    data_version="steel-etl <a href=\"https://github.com/SteelCompendium/steel-etl/commit/${etl_sha}\">${etl_sha}</a> (${etl_date})"
-    # Idempotent: rewrite the existing version block in place (matching whatever
-    # SHA/date is there now) rather than a one-shot DATA_VERSION token, which a
-    # prior deploy consumed permanently. mkdocs.yml is committed below so CI's
-    # `mkdocs gh-deploy` (which builds the committed tree, not this working copy)
-    # actually sees the stamp.
-    sed -i "s#steel-etl <a href=\"[^\"]*\">[^<]*</a> ([0-9-]*)#${data_version}#" mkdocs.yml
+    yq -i ".extra.etl_sha = \"${etl_sha}\" | .extra.etl_date = \"${etl_date}\"" mkdocs.yml
 
     # 3. Build MkDocs docs directory from steel-etl output
     echo >&2 "[INFO] Running steel-etl site..."
