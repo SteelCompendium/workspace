@@ -111,3 +111,23 @@ rest renumbered. Most recent archive: [`docs/followups-archive/2026-06-08-comple
 - **Why it matters:** This is the **data** contract (JSON/YAML in `data/data-summoner`, consumed by the SDK / data repos), separate from the site (the site renders the md-linked blockquote and is already fixed in #8 via runtime JS). The minion/fixture/champion/retainer/rival statblock JSON currently has malformed `name` and no structured `effects` tiers.
 - **Context:** `internal/content/statblock_parse.go` effects loop (~L191‑230); `sbTitleRe`/`sbParenRe`/`sbPowerRollRe`/`sbTierRe` (~L80). The Monsters book uses the labeled form (0 dice-in-title), so this is summoner-only today — but the parser should handle **both**. Add detection: if the title carries `\d+d\d+\s*\+`, strip it to `roll` and treat the following digit-led prose lines as `tier1/2/3` by position. Mirror the verified rule from `docs/superpowers/plans/2026-06-10-summoner-render-refinements.md`. Update `statblock_parse_test.go` + (if a new field) both schema copies per the card-data-parity checklist.
 - **Effort:** S–M
+
+## 10. `settings-core.test.js` fails — max-width drift (test says 500, code says 300)
+
+**Status:** open
+
+- **Identified:** 2026-06-10, running the v2 `node:test` suite while adding `ability-cards-core.test.js` for #8.
+- **What:** `v2/tests/settings-core.test.js` has **2 failing tests** (`node --test tests/` → 9 pass / 2 fail), both pre-existing and unrelated to the #8 work: (a) `"clampEm clamps to [44, 500] and snaps to step"` asserts `clampEm(600) === 500`, but `settings-core.js` defines `WIDTH_MAX_EM = 300`, so it returns `300`; (b) `"widthToControls maps stored width to slider state"` fails the same way (it routes through `clampEm` for an out-of-range stored width). The content-max-width cap was lowered 500→300 (the v2 footer/header / live-settings rework) without updating the test.
+- **Why it matters:** A red test suite hides real regressions and erodes the "tests pass" signal. It's a one-sided drift — pick the source of truth and align the other side.
+- **Fix options:** Decide the intended max content width. If 300 is correct, update the test's expectations (`clampEm(600) → 300`, the `[44, 500]` name, and the `widthToControls` case). If 500 is correct, bump `WIDTH_MAX_EM` back to 500 in `settings-core.js` (and check the slider's `max` in `settings-panel.js`/`steel-settings.css`). `settings-core.js:19` (`WIDTH_MAX_EM`), `settings-core.js:52` (`clampEm`), `tests/settings-core.test.js:38-49`.
+- **Effort:** XS
+
+## 11. Heroes skill-group links 404 — resolve to old `skill/group/<member>.md` path
+
+**Status:** open
+
+- **Identified:** 2026-06-10, `mkdocs build` during the #8 verification (24 link warnings).
+- **What:** In-prose links to a skill-group landing render as `Browse/skill/group/<member>.md`, but the **2026-06-09 group-landing migration relocated** that page to `Browse/skill/<member>/index.md` (and there is no `skill/group/` folder). So every such link 404s. **24** `not found among documentation files` warnings on a clean build, all on `Read/heroes/{perks,rewards}.md` (groups: crafting, exploration, intrigue, interpersonal, lore). The md-linked heroes source still carries the old relative form, e.g. `data/data-rules/en/md-linked/chapter/perks.md` → `[crafting skill group](../skill/group/crafting.md)`. (The `swashbuckler/fancy-footwork` warning in the same build is the separate Kits-flatten issue #4, not this.)
+- **Why it matters:** Clickable-but-404 links to skill-group landing pages on live heroes content, plus persistent build warnings. The 2026-06-09 migration repointed the **site landing** but the **link target** still resolves to the pre-relocation path.
+- **Fix options:** Make the `scc:…/skill.group/<member>` link resolver emit `skill/<member>/` (the relocated index) instead of `skill/group/<member>.md` — likely in the md-linked link-resolution / `groupLandingIndexDest` mapping (`steel-etl/internal/site/build.go`), mirroring how the page itself was relocated. Confirm against `docs/superpowers/plans/2026-06-09-group-landing-scc-migration.md`. Then re-gen heroes (`gen --book mcdm.heroes.v1`) + `steel-etl site` + `mkdocs build` and confirm zero `skill/group/` warnings. Cross-check the same pattern doesn't affect `monster.group/<category>` links.
+- **Effort:** S
