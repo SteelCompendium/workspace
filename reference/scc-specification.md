@@ -468,6 +468,7 @@ they rarely bump. Separately, downstream tools needed a way to request alternate
 | Non-current scheme version refused against current registry | **Implemented** |
 | `#format` qualifier stripped to canonical identity | **Implemented** |
 | `scheme_version` recorded in the registry | **Implemented** |
+| `scheme_version` surfaced in the published API (`index`/`scc`/`types.json` top-level + per-entry `resolve/*.json`) | **Implemented** |
 | Per-format content emission via `#format` / `Accept` / `?format=` | **Reserved** |
 | Explicit `/scc.v1/` website URL alias | **Reserved** |
 | Bare→explicit `scc.v1:` restamp of existing links | **Deferred** (FOLLOWUPS §8) |

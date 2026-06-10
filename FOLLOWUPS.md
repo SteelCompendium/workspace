@@ -101,7 +101,7 @@ rest renumbered. Most recent archive: [`docs/followups-archive/2026-06-08-comple
 
 ## 9. Surface `scheme_version` in the published SCC resolution API
 
-**Status:** open
+**Status:** done (2026-06-09) — `scheme_version` added top-level to `index/scc/types.json` and to each per-entry `resolve/*.json` (self-describing) via `apiResolveEntry`, threaded from `Registry.SchemeVersion()`. `entries[]` arrays kept lean. Deployed via `just deploy`.
 
 - **Identified:** 2026-06-09, verifying the scheme-versioning deploy.
 - **What:** The registry now records `scheme_version` (`steel-etl/classification.json`), but that file is **gitignored** — external tools consume the published API at `steelCompendium.github.io/docs/api/v1/` (`index.json`, `scc.json`, per-entry `resolve/*.json`), which does **not** include `scheme_version`. So the scheme version a code was minted under doesn't actually reach API consumers, partially undercutting the point of versioning (a 3rd-party tool can't tell which grammar a code uses).
