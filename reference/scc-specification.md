@@ -15,13 +15,28 @@ The Steel Compendium Classification (SCC) is a permanent, immutable identifier s
 
 Once assigned and frozen, an SCC code never changes. External tools, bookmarks, and integrations can rely on SCC codes as stable references.
 
+An SCC code is also **future-proofed on two independent axes** so it can serve as a durable primary key for third-party caches:
+
+- A code may carry an explicit **scheme version** (`scc.v1:…`) recording the grammar it was minted under, so the classification scheme itself can evolve without old and new codes silently colliding (§2.0).
+- The same entity can be fetched in multiple **formats** (markdown, JSON, YAML, dse-markdown) without that choice ever becoming part of the code's identity (§8).
+
+Both axes are optional and default cleanly, so the simplest form — a bare `{source}/{type}/{item}` — remains the canonical identity. See §9 for how this specification has evolved.
+
 ## 2. Format
 
-An SCC code has three components separated by `/`:
+An SCC code has three required components separated by `/`:
 
 ```
 {source}/{type}/{item}
 ```
+
+This bare three-part string is the **canonical identity**: the frozen, immutable form stored in the registry and used as a cache key. The full grammar also permits two **optional affixes** that wrap it — a leading scheme-version prefix and a trailing format qualifier:
+
+```
+[scc.vN:]{source}/{type}/{item}[#format]
+```
+
+Neither affix changes which entity the code identifies. The scheme-version prefix is covered in §2.0 (and, as the `scc:` protocol marker, in §3.2); the `#format` qualifier in §8. The three required components are detailed below.
 
 | Component | Description | Character Set |
 |-----------|-------------|---------------|
@@ -31,7 +46,7 @@ An SCC code has three components separated by `/`:
 
 All components are lowercase. No spaces, underscores, or uppercase characters.
 
-### 2.0 Scheme Version
+### 2.0 Scheme Version Prefix (optional)
 
 An SCC code MAY carry an explicit **scheme version** prefix identifying the grammar it was
 minted under. The prefix swaps in wherever the `scc` namespace token already appears:
@@ -181,6 +196,18 @@ The `/` separators in SCC codes are preserved as URL path separators. The `.` wi
 | `mcdm.heroes.v1/class/fury` | `steelcompendium.io/mcdm.heroes.v1/class/fury` |
 | `mcdm.heroes.v1/feature.ability.fury.level-1/gouge` | `steelcompendium.io/mcdm.heroes.v1/feature.ability.fury.level-1/gouge` |
 
+The mapping above is the conceptual identity→URL relationship. The **live, shareable entry point** for a code is a stable redirect stub at `steelcompendium.io/scc/{code}/`, which 302-redirects to the friendly, indexable Browse page for that entity. (The friendly Browse page — organized for human navigation — is the canonical, search-indexed location; the `/scc/{code}/` redirect is the permanent address external tools and links should cite.)
+
+Two optional refinements wrap this without changing which entity is addressed:
+
+| Form | URL | Status |
+|---|---|---|
+| Bare (implicit scheme v1) | `steelcompendium.io/scc/mcdm.heroes.v1/class/fury/` | Live |
+| Explicit scheme version | `steelcompendium.io/scc.v1/mcdm.heroes.v1/class/fury/` | Reserved (§9) |
+| Format-negotiated | `…/scc/mcdm.heroes.v1/class/fury/?format=json` or `Accept:` header | Reserved (§8) |
+
+The bare and explicit-scheme forms resolve to the same entity; format selection (§8) returns a different *representation* of that one entity, never a different identity.
+
 ### 3.1 Locale-Prefixed URLs
 
 Translated content adds a locale prefix. English (the default) has no prefix:
@@ -202,6 +229,17 @@ See [Gouge](scc:mcdm.heroes.v1/feature.ability.fury.level-1/gouge) for details.
 ```
 
 The `steel-etl` linked output variant resolves `scc:` links to relative file paths. The website resolves them to full URLs.
+
+A link MAY use the explicit scheme-version prefix and/or a `#format` qualifier; the resolver normalizes both:
+
+```markdown
+[Gouge](scc.v1:mcdm.heroes.v1/feature.ability.fury.level-1/gouge#json)
+```
+
+- **Scheme version.** Bare `scc:` is treated as `scc.v1:`. The resolver resolves only links whose scheme version matches the active registry's `scheme_version`. A link tagged with a *different* version (e.g. a future `scc.v2:`) is **not** resolved against the current registry — it is reported as unresolvable-in-this-build and left as plain display text, so a future-version reference can never silently bind to current content.
+- **Format qualifier.** The `#format` fragment is stripped before lookup (reserved for future per-format fetch; see §8.2). `…/gouge`, `…/gouge#json`, and `…/gouge#yaml` all resolve to the same entity.
+
+*(The prefix-normalization and `#format`-stripping behavior is implemented in `steel-etl` as of scheme v1.1; see §9.)*
 
 ## 4. Allocation Rules
 
@@ -255,10 +293,17 @@ Publisher IDs are assigned through a registration process. Third-party content f
 | New edition | New source version | New SCCs: `mcdm.heroes.v2/...`. Old `v1` codes remain. |
 | New book | New source | New SCCs: `mcdm.{book}.v1/...` |
 | Homebrew | Publisher source | New SCCs: `community.{pub}.{book}/...` |
+| Scheme change | New scheme-version prefix | New grammar under `scc.v2:...`. Old `scc.v1:` codes remain and resolve. |
 
 Errata updates are the most common case. The SCC stays the same; only the content behind it changes. This means bookmarks, links, and API references continue to work.
 
 New editions create entirely new SCC codes. The old version's codes remain valid and continue to resolve. This allows both editions to coexist.
+
+### 5.1 Scheme Versioning vs. Edition Versioning
+
+The first four rows above version **content**: the `version` field *inside* the source (e.g. `heroes.v1` → `heroes.v2`) when a publisher revises a book. The last row versions the **classification grammar itself**: the `scc.vN` prefix that wraps the whole code (§2.0).
+
+These are independent axes. A content-edition bump does not bump the scheme version, and a scheme-version bump does not re-edition any content — `mcdm.heroes.v1` content could in principle be re-expressed under an `scc.v2:` grammar. A scheme bump is reserved for breaking grammar changes only and is expected to be rare-to-never; see §2.0 for the full model and the three-versions disambiguation.
 
 ## 6. Registry
 
@@ -359,6 +404,11 @@ query parameter** is a convenience for browser/curl users; it lives in the URL q
 path. There is **no file-extension form** (`…/fury.json` is not valid) — it reads as a filename and
 would pollute identity.
 
+*Status (scheme v1.1): reserved/planned.* The pipeline today produces each representation as a
+**separate build artifact** (e.g. `data/data-rules/en/md`, `…/md-linked`, plus JSON/YAML outputs),
+not via live HTTP content negotiation. The `Accept` / `?format=` contract above defines the intended
+interface for when a unified content endpoint is built; see §9.
+
 ### 8.2 Reserved reference qualifier (`#format`) — not yet implemented
 
 For non-HTTP contexts (human dialogue, rule-logic DSLs, an SDK that inlines fetched content), a
@@ -373,3 +423,51 @@ that encounters it MUST normalize it away — strip from `#` onward to recover t
 so `…/fury#json`, `…/fury#yaml`, and `…/fury` are the same cache key. The `/`, `.`, and `:`
 delimiters are claimed by path / scheme-prefix / URN-separator respectively; `#` is the one
 punctuation the grammar promises never to claim for identity.
+
+## 9. Revision History
+
+This section records how the **specification** has evolved and why. The *code-set* is frozen and never
+changes (§7.5); this history tracks the grammar, rules, and surrounding model — not the codes themselves.
+Every change to the scheme is additive and backward-compatible: prior forms keep resolving.
+
+| Version | Date | Summary | Rationale |
+|---|---|---|---|
+| **1.0** | 2026-05-21 | Initial frozen specification (1,432 codes). `{source}/{type}/{item}` grammar, URL mapping, allocation rules, registry, design principles. | Establish a permanent, immutable identifier scheme — designed, reviewed, and frozen *before* any external consumer depended on it. |
+| **1.1** | 2026-06-09 | Added the optional **scheme-version prefix** (`scc.vN:`, bare = implicit v1; §2.0), **format negotiation** as a non-identity axis (§8), and the registry `scheme_version` field (§6.1). No existing code changed. | Insure the *grammar* against a future breaking change or re-mint without old/new code strings colliding, and let tools request representations without polluting the identity / cache key. |
+
+### 9.1 Detail — v1.1 (2026-06-09)
+
+**What changed**
+
+- New optional `scc.vN:` scheme-version prefix; bare `scc:` is a permanent implicit-v1 alias (`scc:X` ≡ `scc.v1:X`).
+- New `#format` reference qualifier (reserved) and the HTTP `Accept` / `?format=` model — format is explicitly *not* part of identity.
+- New `scheme_version` integer in the registry (`classification.json`), defaulting to `1`.
+- The `steel-etl` resolver now recognizes and normalizes the prefix and the `#format` qualifier, and **refuses to resolve a non-current scheme version** against the current registry.
+
+**Why**
+
+The scheme was frozen at v1.0 on the assumption it would never need to change. But a frozen grammar with
+*no version marker* is a latent trap: if a breaking change ever proved necessary — a misjudged structure,
+or a wholesale re-mint — a v1 code string and a v2 code string would be **indistinguishable**, silently
+corrupting any tool that had cached them. Embedding an optional, defaulted scheme version converts that
+latent risk into an explicit, forward-safe axis, exactly as long-lived data formats reserve a version field
+they rarely bump. Separately, downstream tools needed a way to request alternate representations
+(JSON / YAML / dse-markdown) without the format leaking into the identity and fragmenting their caches.
+
+**Design & implementation record**
+
+- Design spec: `steel-etl/docs/superpowers/specs/2026-06-09-scc-scheme-versioning-and-format-design.md`
+- Implementation plan: `steel-etl/docs/superpowers/plans/2026-06-09-scc-scheme-versioning.md`
+- Deferred follow-ups (bare→explicit `scc.v1:` restamp, `/scc.v1/` website alias, HTTP format entry point): workspace `FOLLOWUPS.md` §8.
+
+**Implementation status**
+
+| Capability | Status |
+|---|---|
+| `scc.vN:` prefix recognized + normalized in links (bare ≡ v1) | **Implemented** |
+| Non-current scheme version refused against current registry | **Implemented** |
+| `#format` qualifier stripped to canonical identity | **Implemented** |
+| `scheme_version` recorded in the registry | **Implemented** |
+| Per-format content emission via `#format` / `Accept` / `?format=` | **Reserved** |
+| Explicit `/scc.v1/` website URL alias | **Reserved** |
+| Bare→explicit `scc.v1:` restamp of existing links | **Deferred** (FOLLOWUPS §8) |

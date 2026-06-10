@@ -72,6 +72,8 @@ Reads the annotated source markdown, parses sections using the content-type pars
 | `steel-etl/output/scc-to-path.json` | SCC-to-filepath mapping | Internal tooling |
 | `steel-etl/classification.json` | SCC registry (gitignored) | Generated from parsed content |
 
+The registry records a `scheme_version` (the SCC *grammar* version, default `1`; spec **v1.1**, 2026-06-09) alongside the registry-file `version`. When resolving `scc:` links in the `*-linked` outputs, the resolver tolerates an optional `scc.vN:` prefix (bare `scc:` ≡ `scc.v1`) and a reserved `#format` qualifier — it strips the qualifier to the canonical identity and resolves only links whose scheme version matches the registry (a future `scc.v2:` link is left unresolved, never bound to v1 content). Format is never part of SCC identity; see `reference/scc-specification.md` §2.0/§8/§9.
+
 ### 2. `steel-etl site` (site builder)
 
 Transforms the `md-linked` output into the MkDocs directory structure that the v2 site serves.
