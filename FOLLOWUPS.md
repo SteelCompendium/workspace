@@ -31,7 +31,7 @@ rest renumbered. Most recent archive: [`docs/followups-archive/2026-06-08-comple
 
 ## 2. Beastheart companion stat blocks not published to Browse (broken `feature-group/companion/*` links)
 
-**Status:** open
+**Status:** done — 2026-06-11. Added `feature-group/` to the Browse `include:` in `v2/site.yaml` (the root holds only `companion/`). Each companion already carries its own scc code (`mcdm.beastheart.v1/feature-group.companion/<name>`, `type: feature-group`) and permalink stub, so they're now first-class standalone Browse pages and the ~7 inbound links from `Browse/class/beastheart.md` resolve. Cleared the 7 `feature-group/companion/*` mkdocs warnings.
 
 - **Identified:** 2026-06-02, Read-tab-by-book work
 - **What:** Companion stat blocks are emitted as `feature-group/companion/<name>.md` in `md-linked`, but `feature-group/` is **not** in `v2/site.yaml`'s Browse `include:` list, so companion pages are never published. Every `scc:.../feature-group.companion/<name>` cross-reference (≈7 distinct companions, ~26 link instances across the Beastheart class page and the new `Read/beastheart/the-beastheart-class.md` chapter) therefore dangles. Pre-existing on `main` (the Beastheart class page on the live site had the same broken links); the Read-tab work duplicated the links into the Read chapter but did not cause the root gap.
@@ -51,7 +51,7 @@ rest renumbered. Most recent archive: [`docs/followups-archive/2026-06-08-comple
 
 ## 4. Kit-flatten breaks cross-reference links to kit ability pages (mkdocs build warnings)
 
-**Status:** open
+**Status:** done — 2026-06-11. Root cause generalized: `rewriteSectionLinks` (`steel-etl/internal/site/build.go`) rewrote cross-section relative links but did **not** mirror the destination-path relocations `buildSection` applies to every page — so any link whose *target* page was relocated (kit flatten, skill-group landing, statblock hoist) 404'd. Fixed by applying the same transforms to the link target: `groupLandingIndexDest` → else `applyGroups` (the kit flatten, gated on `<sourceDir>/kit/<kit>.md` existing — `cfg.SourceDirList()` is now threaded in) → `hoistStatblockPath`, mirroring the if/else-if/else + hoist at lines ~196-211. Cleared all 9 kit-ability warnings (sniper/swashbuckler/shining-armor/martial-artist). Tests: `TestRewriteSectionLinks_KitFlattenTarget` + new cases in `TestRewriteSectionLinks`. Same change resolved #14.
 
 - **Identified:** 2026-06-05, surfaced while verifying the `navigation.indexes` (section-index-pages) change with `mkdocs build`.
 - **What:** The Browse `kit` group in `v2/site.yaml` uses `flatten: true`, relocating each kit ability page from `feature/ability/{kit}/{ability}.md` → `feature/ability/Kits/{kit}-{ability}.md`. But SCC cross-reference links in the source docs still point at the **un-flattened** path, so they 404. 6 such `not found among documentation files` warnings on a clean build: `Read/heroes/classes.md` (×3), `Read/heroes/rewards.md` (×1), `Read/heroes/treasures.md` (×1), and `Browse/treasure/leveled/weapon/blade-of-the-luxurious-fop.md` (×1) — e.g. link `Browse/feature/ability/sniper/patient-shot.md` vs actual page `Browse/feature/ability/Kits/sniper-patient-shot.md`. Affected kits seen: sniper, shining-armor, martial-artist, swashbuckler.
@@ -154,7 +154,7 @@ rest renumbered. Most recent archive: [`docs/followups-archive/2026-06-08-comple
 
 ## 14. Heroes skill-group links 404 — resolve to old `skill/group/<member>.md` path
 
-**Status:** open
+**Status:** done — 2026-06-11. Fixed together with #4 (shared root cause): `rewriteSectionLinks` now applies `groupLandingIndexDest` to link targets, so `skill/group/<member>.md` inbound links resolve to the relocated `skill/<member>/index.md` landing. Cleared all 64 `skill/group/*` warnings across class/career/ancestry pages. Also published the previously-unincluded `god/` and `project/` page trees (added to the Browse `include:` like `feature-group/` in #2 — both are substantive, scc-coded, cross-referenced content), clearing the remaining 3 god + 4 project warnings. **Net: 76 → 0 mkdocs build warnings.** See `steel-etl/internal/site/build.go` `rewriteSectionLinks` + `v2/site.yaml` Browse include.
 
 - **Identified:** 2026-06-10, `mkdocs build` during the #8 verification (24 link warnings).
 - **What:** In-prose links to a skill-group landing render as `Browse/skill/group/<member>.md`, but the **2026-06-09 group-landing migration relocated** that page to `Browse/skill/<member>/index.md` (and there is no `skill/group/` folder). So every such link 404s. **24** `not found among documentation files` warnings on a clean build, all on `Read/heroes/{perks,rewards}.md` (groups: crafting, exploration, intrigue, interpersonal, lore). The md-linked heroes source still carries the old relative form, e.g. `data/data-rules/en/md-linked/chapter/perks.md` → `[crafting skill group](../skill/group/crafting.md)`. (The `swashbuckler/fancy-footwork` warning in the same build is the separate Kits-flatten issue #4, not this.)
