@@ -71,7 +71,7 @@ rest renumbered. Most recent archive: [`docs/followups-archive/2026-06-11-comple
 
 ## 6. `settings-core.test.js` fails — max-width drift (test says 500, code says 300)
 
-**Status:** open
+**Status:** done — 2026-06-11 (v2 `fef309cf42`). **300 is the source of truth** — git history shows the cap was deliberately lowered 500→300 (`94eb30bd` "Setting the max manually-set width to 300em for finer control", after the earlier `83d22310` that raised it to 500), and the runtime derives the slider `max` from the single `WIDTH_MAX_EM` constant (`settings-panel.js:484` → `String(C.WIDTH_MAX_EM)`), so the whole system was already consistent at 300; only the test was stale. Updated the three stale `500` references in `tests/settings-core.test.js` (the `[44, 500]` test name, `clampEm(600)→300`, and `widthToControls("600em")→{em:300}`). Suite now 11/11 green. Test-only change (not part of the published site), so no deploy.
 
 - **Identified:** 2026-06-10, running the v2 `node:test` suite while adding `ability-cards-core.test.js` for the statblock power-roll site fix.
 - **What:** `v2/tests/settings-core.test.js` has **2 failing tests** (`node --test tests/` → 9 pass / 2 fail), both pre-existing and unrelated to the statblock work: (a) `"clampEm clamps to [44, 500] and snaps to step"` asserts `clampEm(600) === 500`, but `settings-core.js` defines `WIDTH_MAX_EM = 300`, so it returns `300`; (b) `"widthToControls maps stored width to slider state"` fails the same way (it routes through `clampEm` for an out-of-range stored width). The content-max-width cap was lowered 500→300 (the v2 footer/header / live-settings rework) without updating the test.
