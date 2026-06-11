@@ -21,7 +21,7 @@ rest renumbered. Most recent archive: [`docs/followups-archive/2026-06-08-comple
 
 ## 1. Beastheart source says "Animal Handling"; the skill is "Handle Animals"
 
-**Status:** open
+**Status:** done — 2026-06-11. "Animal Handling" is a typo in the MCDM Beastheart PDF (bug report submitted to MCDM); the actual skill is **Handle Animals**. Both occurrences (beastheart source L297 — the Skills grant + Quick Build) are **already linked** to `scc:mcdm.heroes.v1/skill.interpersonal/handle-animals` with "Animal Handling" kept as display text (faithful to the book's wording, correct link target). A full-tree sweep (`grep -rniE 'animal handling' steel-etl/input/`) found no other instances. Nothing left to link.
 
 - **Identified:** 2026-06-02, beastheart linking pass.
 - **What:** The beastheart class skill grant (`Draw Steel Beastheart.md`, Basics, ~L294) reads "You gain the **Animal Handling** skill" and lists "Animal Handling" in the Quick Build. The actual Draw Steel skill is **Handle Animals** (`mcdm.heroes.v1/skill.interpersonal/handle-animals`). Left UNLINKED to avoid a display-text/term mismatch; "Navigate" and "Track" on the same line were linked.
