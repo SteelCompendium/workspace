@@ -171,3 +171,16 @@ rest renumbered. Most recent archive: [`docs/followups-archive/2026-06-08-comple
 - **Why it matters:** Fixture statblock JSON in `data/data-summoner` has malformed/empty stat fields, so the SDK / data consumers and any stat-driven card get nothing for fixtures. The trait/ability blockquotes parse fine; only the stat grid is affected.
 - **Fix options:** Teach `parseStatGrid` (or a fixture-specific path) to recognize the `**Label:** value` 2-column inline form and map `Stamina`/`Size` (and any others) into the structured fields, keeping the `+ your level` expression as the value. Add a `statblock_parse_test.go` case from The Boil. Mind the card-data-parity checklist if a new field is surfaced.
 - **Effort:** S
+- **Note (2026-06-11):** The new statblock island renderer (`steel-etl/internal/site/statblock_page.go`) reads `size`/`speed`/`stamina` from frontmatter, so fixture cards/blocks inherit this gap (those defenses show `—` until this is fixed). Not introduced by the island work.
+
+## 16. Statblock island: shared family Malice band not embedded; retainer/fixture "With Captain" label
+
+**Status:** open
+
+- **Identified:** 2026-06-11, building the High-Fantasy Steel statblock client renderer (design handoff `redesign/statblocks/`).
+- **What:** Two deferred pieces of the statblock island (`steel-etl/internal/site/statblock_page.go` → `v2/docs/javascripts/steel-statblock.js`):
+  1. **Malice band** — the design embeds the family's shared Malice featureblock into each statblock as a collapsible band (`renderStatblock` `data.malice`). The island currently omits it (the README marks it a non-blocking nice-to-have, and the family's `…-malice.md` featureblock still renders as its own Browse page). To wire it, associate each statblock with its group's malice featureblock at site-build time (the malice `.md` is a sibling in the group dir, e.g. `monster/devils/devil-malice.md`), parse its features the same way, and emit `island.malice = {name, sourceName, intro, features[]}`.
+  2. **2×2 "With Captain" cell** — the island always labels the 4th meta cell "With Captain". Minions use it (captain bonus), but retainers/fixtures/solos have no captain; the design notes summoner statblocks replace it with "Free Strike Damage Type". Make the label/value context-driven (skip or relabel when there's no captain line in the body).
+- **Why:** Full fidelity to the approved design (malice is a prominent part of monster statblocks) and correct secondary-stat labeling across creature types.
+- **Context:** Island shape + parser in `statblock_page.go` (`buildStatblockIsland`, `sbMeta.Captain`); renderer band logic already present in `steel-statblock.js` (`band()` + `data.malice`) and CSS (`.sb__band--malice`), so this is a Go/data-association task, not a front-end one. Group-dir sibling lookup precedent: `bestiary_cards.go` (`splitByType` finds the featureblock vs. statblock split).
+- **Effort:** M (malice association) + XS (captain label)
