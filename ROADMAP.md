@@ -114,3 +114,12 @@ What it is, why it matters, where the work lives. Code blocks, commands, links w
 - **Blocked sub-feature:** Advanced "inflicts *poisoned*"-style condition queries need a data source the frontmatter lacks (a community-aggregated spreadsheet). The plan reserves a clean left-join seam (§B5) but ships v1 without it — revisit when/if that data is secured.
 - **Follow-up:** Wiring the bestiary pages into the in-prose SCC link sweep is tracked separately (`FOLLOWUPS.md` #10).
 - **Effort:** M (the plan is fully specified; mostly a Go emitter + one JS component + CSS).
+
+## 8. Printing provenance stamp + SCC code lifecycle (tombstones)
+
+**Status:** direction settled 2026-06-11; implementation deferred. Design: `steel-etl/docs/superpowers/specs/2026-06-11-printing-provenance-and-code-lifecycle-design.md` — **read it before touching this; it captures the whole discussion.**
+
+- **What:** (a) Wire the heroes source's `printing: "1.01b"` frontmatter (added 2026-06-11, currently inert) through the pipeline as a non-identity build stamp — registry → SCC API JSON → rendered pages — plus per-printing git tags, so any code/page answers "which source printing generated this data?"; (b) a code-lifecycle (tombstone) model for when MCDM removes/replaces an entity: new code for the replacement, `status: removed` / `removed_in` / `superseded_by` for the old one, never reuse or 404.
+- **Why it matters:** Debugging provenance (typo reports → source printing) without ever re-minting identities. The naive alternative — putting the printing in the SCC source segment (`mcdm.heroes.v1_01b`) — was tried 2026-06-11 and instantly dangled ~19k links; the design doc records why that and the snapshot-all-versions model are rejected.
+- **Decision triggers:** implement (a) whenever convenient; (b) is blocked on MCDM actually shipping a removal/replacement or announcing a true new edition — the tombstone-content question (Option A: annotated retention in source doc — leaning; Option B: registry-only) is deliberately undecided until then.
+- **Effort:** S–M for (a); (b) unknown until a trigger fires.
