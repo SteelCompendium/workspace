@@ -1,0 +1,159 @@
+/* ============================================================
+   Steel Compendium — REDESIGN exploration stylesheet
+   Layers on colors_and_type.css. No imagery — all depth comes
+   from CSS texture, bevels, embossing, typography & iconography.
+   Namespaces: .fa- Forged Plate · .he- Heroic Editorial · .tg- Tactical Grid
+   ============================================================ */
+
+:root {
+  /* brushed-steel & grain (no raster art) */
+  --rd-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --rd-brushed: repeating-linear-gradient(95deg, rgba(255,255,255,.022) 0 2px, rgba(0,0,0,.02) 2px 4px);
+  --rd-bevel-top: inset 0 1px 0 rgba(255,255,255,.07);
+  --rd-bevel-bot: inset 0 -1px 0 rgba(0,0,0,.5);
+  --rd-emboss: 0 1px 0 rgba(0,0,0,.55), 0 -1px 0 rgba(255,255,255,.04);
+  --rd-teal-glow: 0 0 0 1px rgba(77,184,199,.5), 0 6px 26px rgba(77,184,199,.16);
+}
+
+/* page frame used by every artboard */
+.rd-page, .rd-page *, .fx-page, .fx-page * { box-sizing: border-box; }
+.rd-page { background: var(--bg); color: var(--fg); font-family: var(--font-body);
+  position: relative; min-height: 100%; }
+.rd-page::before { /* fine grain over everything */
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: var(--rd-grain); background-size: 180px; opacity: .035;
+  mix-blend-mode: overlay; }
+.rd-page > * { position: relative; z-index: 1; }
+
+.rd-eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--fg-lighter); }
+.rd-teal { color: var(--accent); }
+
+/* shared masthead band (brushed steel) */
+.rd-masthead { background:
+    linear-gradient(180deg, #20262a, #161a1d);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  box-shadow: var(--rd-bevel-top), 0 1px 0 rgba(0,0,0,.6);
+  position: relative; }
+.rd-masthead::after { content: ""; position: absolute; inset: 0; background: var(--rd-brushed); pointer-events: none; }
+
+/* ============================================================
+   DIRECTION A — FORGED PLATE  (forged, tactile, heavy)
+   ============================================================ */
+.fa-wrap { padding: 0 0 40px; }
+.fa-head { padding: 34px 44px 30px; display: flex; align-items: center; gap: 20px; }
+.fa-head img { width: 52px; height: 52px; filter: drop-shadow(0 0 10px rgba(113,121,126,.5)); }
+.fa-kicker { font-family: var(--font-mono); font-size: 12px; letter-spacing: .24em; text-transform: uppercase; color: var(--accent); }
+.fa-title { font-family: var(--font-display); text-transform: uppercase; font-size: 50px; line-height: .9;
+  color: var(--sc-steel-lighter); text-shadow: var(--rd-emboss); margin: 2px 0 0; }
+.fa-sub { color: var(--fg-light); font-size: 15px; max-width: 60ch; margin-top: 6px; }
+
+.fa-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; padding: 4px 44px 0; }
+.fa-plate { position: relative; border-radius: 8px; padding: 20px 22px;
+  background: linear-gradient(155deg, #242a2e 0%, #191d20 70%);
+  border: 1px solid rgba(255,255,255,.05);
+  box-shadow: var(--rd-bevel-top), var(--rd-bevel-bot), 0 8px 22px rgba(0,0,0,.35);
+  overflow: hidden; transition: box-shadow .2s, transform .2s; cursor: pointer; }
+.fa-plate::before { content: ""; position: absolute; inset: 0; background: var(--rd-brushed); pointer-events: none; }
+.fa-plate::after { /* rivet accent line */ content: ""; position: absolute; left: 0; top: 18px; bottom: 18px; width: 3px;
+  background: linear-gradient(var(--accent), rgba(77,184,199,.2)); border-radius: 3px; }
+.fa-plate:hover { transform: translateY(-3px); box-shadow: var(--rd-bevel-top), var(--rd-bevel-bot), 0 14px 30px rgba(0,0,0,.45), var(--rd-teal-glow); }
+.fa-plate-h { display: flex; align-items: center; gap: 14px; }
+.fa-stamp { width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center;
+  color: var(--sc-steel-lighter); background: radial-gradient(circle at 35% 30%, #2c3338, #14181b);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.1), inset 0 -2px 3px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.4); }
+.fa-plate:hover .fa-stamp { color: var(--accent); }
+.fa-plate-name { font-family: var(--font-display); text-transform: uppercase; font-size: 27px; line-height: 1;
+  color: var(--fg); text-shadow: var(--rd-emboss); }
+.fa-count { margin-left: auto; font-family: var(--font-glyph); font-size: 15px; color: var(--accent);
+  background: var(--accent-transparent); border: 1px solid rgba(77,184,199,.25); border-radius: 6px;
+  padding: 4px 9px; min-width: 30px; text-align: center; }
+.fa-count .num { font-family: var(--font-mono); font-weight: 700; font-size: 14px; }
+.fa-blurb { color: var(--fg-light); font-size: 13.5px; margin: 12px 0 14px; line-height: 1.55; }
+.fa-links { display: flex; flex-wrap: wrap; gap: 6px; }
+.fa-chip { font-size: 12px; color: var(--fg-light); border: 1px solid var(--fg-lightest); border-radius: 5px;
+  padding: 3px 9px; background: rgba(255,255,255,.02); }
+.fa-chip:hover { color: var(--accent); border-color: var(--accent); }
+.fa-enter { margin-left: auto; align-self: center; color: var(--accent); display: flex; align-items: center; gap: 4px; font-size: 12px; }
+
+/* ============================================================
+   DIRECTION B — HEROIC EDITORIAL  (type-led, confident, airy)
+   ============================================================ */
+.he-wrap { padding: 0 0 48px; }
+.he-hero { padding: 46px 52px 30px; border-bottom: 1px solid var(--fg-lightest); }
+.he-hero .rd-eyebrow { margin-bottom: 14px; }
+.he-h1 { font-family: var(--font-display); text-transform: uppercase; font-size: 76px; line-height: .86;
+  color: var(--sc-steel-lighter); margin: 0; letter-spacing: .005em; }
+.he-h1 em { color: var(--accent); font-style: normal; }
+.he-lead { color: var(--fg-light); font-size: 17px; max-width: 56ch; margin: 20px 0 0; }
+.he-list { padding: 10px 52px 0; }
+.he-row { display: grid; grid-template-columns: 56px 1fr auto; align-items: center; gap: 22px;
+  padding: 22px 6px; border-bottom: 1px solid var(--fg-lightest); cursor: pointer; position: relative; }
+.he-row::after { content: ""; position: absolute; left: 6px; bottom: -1px; height: 2px; width: 0;
+  background: var(--accent); transition: width .25s ease; }
+.he-row:hover::after { width: 120px; }
+.he-num { font-family: var(--font-mono); font-size: 13px; color: var(--fg-lighter); }
+.he-ic { color: var(--fg-lighter); transition: color .2s; }
+.he-row:hover .he-ic { color: var(--accent); }
+.he-name { font-family: var(--font-display); text-transform: uppercase; font-size: 36px; line-height: 1;
+  color: var(--fg); display: flex; align-items: baseline; gap: 16px; }
+.he-name .he-count { font-family: var(--font-mono); font-size: 14px; color: var(--accent); -webkit-text-fill-color: var(--accent); }
+.he-blurb { font-size: 14px; color: var(--fg-light); margin-top: 7px; }
+.he-go { color: var(--fg-lighter); display: flex; align-items: center; }
+.he-row:hover .he-go { color: var(--accent); }
+
+/* ============================================================
+   DIRECTION C — TACTICAL GRID  (dense, tool-like, data-first)
+   ============================================================ */
+.tg-bar { display: flex; align-items: center; gap: 12px; padding: 16px 28px;
+  background: linear-gradient(180deg,#1d2226,#15191c); border-bottom: 1px solid rgba(255,255,255,.06);
+  box-shadow: var(--rd-bevel-top); position: relative; }
+.tg-search { flex: 1; display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,.35);
+  border: 1px solid var(--fg-lightest); border-radius: 7px; padding: 9px 13px; color: var(--fg-lighter); font-size: 14px; }
+.tg-search.on { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-transparent); color: var(--fg); }
+.tg-facets { display: flex; gap: 7px; }
+.tg-facet { font-family: var(--font-mono); font-size: 12px; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--fg-light); border: 1px solid var(--fg-lightest); border-radius: 6px; padding: 7px 12px; cursor: pointer; }
+.tg-facet:hover { border-color: var(--accent); color: var(--accent); }
+.tg-facet.active { background: var(--accent-transparent); border-color: var(--accent); color: var(--accent); }
+.tg-meta { padding: 14px 28px 6px; display: flex; align-items: baseline; gap: 10px; }
+.tg-meta h2 { font-family: var(--font-display); text-transform: uppercase; font-size: 30px; margin: 0; color: var(--sc-steel-lighter); }
+.tg-meta .c { font-family: var(--font-mono); font-size: 13px; color: var(--fg-lighter); }
+.tg-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 8px 28px 32px; }
+
+/* ── shared rich kit-card internals (used by all three index directions) ── */
+.kc { position: relative; border-radius: 9px; background: linear-gradient(160deg,#22272b,#181c1f);
+  border: 1px solid rgba(255,255,255,.05); box-shadow: var(--rd-bevel-top), 0 6px 18px rgba(0,0,0,.3);
+  padding: 16px 18px; overflow: hidden; transition: transform .18s, box-shadow .18s; cursor: pointer; }
+.kc:hover { transform: translateY(-2px); box-shadow: var(--rd-bevel-top), 0 12px 26px rgba(0,0,0,.42), var(--rd-teal-glow); }
+.kc::before { content: ""; position: absolute; inset: 0; background: var(--rd-brushed); pointer-events: none; }
+.kc-top { display: flex; align-items: flex-start; gap: 12px; }
+.kc-type { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 5px; border: 1px solid; }
+.kc-type.martial { color: #e0a96d; border-color: rgba(224,169,109,.4); background: rgba(224,169,109,.08); }
+.kc-type.caster  { color: #9fd3df; border-color: rgba(159,211,223,.4); background: rgba(159,211,223,.08); }
+.kc-icon { margin-left: auto; color: var(--fg-lighter); }
+.kc-name { font-family: var(--font-display); text-transform: uppercase; font-size: 26px; line-height: 1;
+  color: var(--fg); text-shadow: var(--rd-emboss); margin: 10px 0 2px; }
+.kc-equip { font-size: 12.5px; color: var(--fg-lighter); }
+.kc-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 14px 0 12px; }
+.kc-stat { background: rgba(0,0,0,.28); border: 1px solid var(--fg-lightest); border-radius: 6px;
+  padding: 7px 4px; text-align: center; box-shadow: inset 0 1px 0 rgba(255,255,255,.03); }
+.kc-stat .v { font-family: var(--font-mono); font-weight: 700; font-size: 15px; color: var(--sc-steel-lighter); }
+.kc-stat .l { font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: var(--fg-lighter); margin-top: 3px; }
+.kc-stat.dmg .v { color: var(--accent); }
+.kc-sig { display: flex; align-items: center; gap: 9px; padding-top: 11px; border-top: 1px solid var(--fg-lightest); }
+.kc-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.kc-sig-label { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--fg-lighter); }
+.kc-sig-name { font-family: var(--font-subhead); font-size: 16px; color: var(--fg); }
+.kc-kw { margin-left: auto; font-size: 11px; color: var(--fg-lighter); }
+.kc-ops { position: absolute; top: 12px; right: 12px; display: flex; gap: 4px; opacity: 0; transition: opacity .15s; }
+.kc:hover .kc-ops { opacity: 1; }
+.kc-op { width: 26px; height: 26px; border-radius: 6px; display: grid; place-items: center; color: var(--fg-light);
+  background: rgba(0,0,0,.4); border: 1px solid var(--fg-lightest); }
+.kc-op:hover { color: var(--accent); border-color: var(--accent); }
+
+/* dot colors by ability type */
+.dot-strike{background:var(--ability-strike)} .dot-ranged{background:var(--ability-ranged)}
+.dot-area{background:var(--ability-area)} .dot-passive{background:var(--ability-passive)}
+.dot-maneuver{background:var(--ability-maneuver)} .dot-triggered{background:var(--ability-triggered)}

@@ -1,0 +1,32 @@
+<!-- @dsCard group="Brand" -->
+<!DOCTYPE html>
+<html data-md-color-scheme="slate">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body { margin:0; }
+  body { background: var(--bg); padding: 0; display:flex; }
+  .half { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap: 14px; padding: 26px 0; }
+  .dark { background: #1a1e21; }
+  .light { background: #f6f8f8; }
+  img { width: 72px; height: 72px; }
+  .wordmark { display:flex; align-items:center; gap: 10px; }
+  .wordmark span { font-family: var(--font-display); text-transform:uppercase; font-size: 20px; line-height:1; }
+  .lab { font-family: var(--font-mono); font-size: 10px; color: var(--fg-lighter); }
+  .light .lab { color: #828890; }
+</style>
+</head>
+<body>
+  <div class="half dark">
+    <img src="../assets/steel_compendium_glow_white.svg" alt="Steel Compendium tome">
+    <div class="wordmark"><img src="../assets/steel_compendium_glow_white.svg" style="width:30px;height:30px"><span style="color:#dce0e2">Steel Compendium</span></div>
+    <div class="lab">on charcoal — white</div>
+  </div>
+  <div class="half light">
+    <img src="../assets/steel_compendium_glow.svg" alt="Steel Compendium tome">
+    <div class="wordmark"><img src="../assets/steel_compendium_glow.svg" style="width:30px;height:30px"><span style="color:#2c3338">Steel Compendium</span></div>
+    <div class="lab">on parchment — steel #71797E</div>
+  </div>
+</body>
+</html>

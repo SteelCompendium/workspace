@@ -1,0 +1,60 @@
+<!-- @dsCard group="Colors" -->
+<!DOCTYPE html>
+<html data-md-color-scheme="slate">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body { margin:0; }
+  body { background: var(--bg); padding: 20px 26px; font-family: var(--font-mono); }
+  .grid { display:grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .item {
+    display:flex; align-items:center; gap: 13px;
+    background: linear-gradient(160deg,#22272b,#181c1f);
+    border: 1px solid var(--fg-lightest);
+    border-left: 3px solid var(--c);
+    border-radius: 0 7px 7px 0;
+    padding: 11px 13px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 3px 10px rgba(0,0,0,.28);
+  }
+  .badge {
+    flex-shrink:0; width: 42px; height: 42px; border-radius: 8px;
+    display:grid; place-items:center;
+    background: radial-gradient(circle at 38% 30%, #2c3338, #14181b);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.08), inset 0 -2px 4px rgba(0,0,0,.5), 0 0 0 1px rgba(0,0,0,.4);
+  }
+  .glyph {
+    font-family: var(--font-glyph); font-size: 26px; line-height:1; color: var(--c);
+    -webkit-font-smoothing: antialiased;
+  }
+  .meta { min-width:0; }
+  .name { font-family: var(--font-subhead); font-size: 16px; color: var(--fg); line-height:1.1; text-transform: capitalize; }
+  .hex { font-size: 11px; color: var(--fg-lighter); letter-spacing: .04em; margin-top: 3px; }
+</style>
+</head>
+<body>
+  <div class="grid" id="grid"></div>
+<script>
+  // True DrawSteelGlyphs codepoints (not emoji) — the glyph shape carries
+  // the meaning, which keeps these legible independent of color.
+  const types = [
+    ["strike",    "#e74c3c", "l"],  // crossed swords
+    ["ranged",    "#5dade2", "x"],  // target reticle
+    ["maneuver",  "#bb8fce", "f"],  // figure
+    ["triggered", "#f0b429", ")"],  // alert
+    ["area",      "#48c9a4", "c"],  // burst rings
+    ["passive",   "#b0b7bb", "*"],  // star
+    ["villain",   "#e57373", "d"],  // skull
+    ["special",   "#ce93d8", "b"]   // swirl
+  ];
+  document.getElementById("grid").innerHTML = types.map(([name, hex, g]) => {
+    const safe = g === "<" ? "&lt;" : g === ">" ? "&gt;" : g === "&" ? "&amp;" : g;
+    return '<div class="item" style="--c:'+hex+'">' +
+             '<div class="badge"><span class="glyph">'+safe+'</span></div>' +
+             '<div class="meta"><div class="name">'+name+'</div>' +
+             '<div class="hex">'+hex+'</div></div>' +
+           '</div>';
+  }).join("");
+</script>
+</body>
+</html>

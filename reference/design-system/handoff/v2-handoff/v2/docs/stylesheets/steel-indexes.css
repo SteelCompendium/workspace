@@ -1,0 +1,294 @@
+/* ============================================================
+   Steel Compendium — steel-indexes.css
+   DROP-IN for the v2 MkDocs site. Add to mkdocs.yml `extra_css`
+   AFTER steel-traits.css (it reuses the --fx-* ornament tokens
+   from steel-redesign.css and the --sc-act-* action palette from
+   steel-ability-cards.css).
+
+   Covers the index pages BETWEEN the Browse landing and the leaf
+   item cards — the nested tree of features & treasures:
+
+     1. FOLDER cards   (.sc-folders / .sc-folder)
+        index-of-indexes nodes — e.g. feature/, feature/trait/,
+        feature/trait/censor/, treasure/, treasure/leveled/.
+        A folder leads DEEPER into the codex; never a leaf.
+
+     2. PREVIEW cards  (.sc-prevs / .sc-prev[ --trait | --ability ])
+        parent-of-leaf nodes — e.g. feature/trait/censor/level-1/.
+        A condensed look at one long trait / ability card, linking
+        to the full page. Trait = recessed-niche register; ability
+        = raised-plate register (mirrors steel-traits / -ability).
+
+     3. BROWSE bar     (.sc-browse …)
+        the search / sort / filter chrome that turns the whole
+        feature tree into one filterable surface (steel-feature-
+        browser.js renders .sc-prev cards into .sc-browse__results).
+   ============================================================ */
+
+/* Source-facet chip colours (class / ancestry / kit / other). The only colour
+   tokens this sheet defines — used to colour-code the Search & Filter "Source"
+   chips, whose values aren't all classes. Tuned to read on both themes. */
+:root {
+  --sc-src-class: #5aa9e6;
+  --sc-src-ancestry: #e0a458;
+  --sc-src-kit: #6ec07a;
+  --sc-src-other: var(--fx-metal);
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   1 · FOLDER CARDS — index-of-indexes navigation
+   ════════════════════════════════════════════════════════════ */
+.md-typeset .sc-folders {
+  list-style: none; padding: 0; margin: 1rem 0 0;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(15.5rem, 1fr)); gap: .75rem;
+}
+/* two/three big nodes (feature -> Trait | Ability) get roomier plates */
+.md-typeset .sc-folders--lg { grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr)); gap: 1rem; }
+
+.md-typeset .sc-folder {
+  position: relative; display: grid; grid-template-columns: auto 1fr auto;
+  align-items: center; gap: .85rem; text-decoration: none; color: inherit;
+  padding: .85rem 1rem .85rem .9rem;
+  border: 1px solid var(--fx-metal-faint);
+  border-radius: .5rem;
+  /* recessed, like a niche — folders are containers, not raised objects */
+  background: linear-gradient(168deg, rgba(255,255,255,.022), rgba(0,0,0,.10));
+  box-shadow: var(--fx-bevel), inset 0 0 36px rgba(0,0,0,.16);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+[data-md-color-scheme="default"] .md-typeset .sc-folder {
+  border-color: var(--md-default-fg-color--lightest);
+  background: linear-gradient(168deg, rgba(255,255,255,.6), rgba(0,0,0,.025));
+  box-shadow: var(--fx-bevel), inset 0 0 36px rgba(0,0,0,.03);
+}
+/* "contains more" affordance — a faint stacked-page edge on the right */
+.md-typeset .sc-folder::after {
+  content: ""; position: absolute; top: 12px; bottom: 12px; right: 6px; width: 3px;
+  border-right: 1px solid var(--fx-metal-faint);
+  box-shadow: 3px 0 0 -1px var(--fx-metal-faint);
+  opacity: .8; pointer-events: none;
+}
+.md-typeset .sc-folder:hover {
+  transform: translateY(-2px); border-color: var(--fx-metal-line);
+  box-shadow: var(--fx-bevel), 0 10px 22px rgba(0,0,0,.4), inset 0 0 36px rgba(0,0,0,.16);
+}
+[data-md-color-scheme="default"] .md-typeset .sc-folder:hover { box-shadow: var(--fx-bevel), 0 8px 18px rgba(0,0,0,.1); }
+
+.sc-folder__crest { width: 34px; height: 38px; }            /* extends .sc-crest */
+.sc-folders--lg .sc-folder__crest { width: 42px; height: 47px; }
+.sc-folder__main { min-width: 0; }
+/* .md-typeset prefix so these h3 names beat Material's `.md-typeset h3`,
+   whose large top-margin + line-height would otherwise be inherited and
+   shift the name (the recurring crest/heading nudge). */
+.md-typeset .sc-folder__name {
+  font-family: var(--md-large-header-font); text-transform: uppercase;
+  font-size: 1.18rem; line-height: 1.05; color: var(--sc-steel-lighter);
+  text-shadow: var(--fx-emboss); margin: 0;
+  overflow-wrap: anywhere;
+}
+.md-typeset .sc-folders--lg .sc-folder__name { font-size: 1.5rem; }
+.sc-folder__sub {
+  font-family: var(--md-small-header-font); font-variant: small-caps; letter-spacing: .04em;
+  font-size: .82rem; color: var(--md-default-fg-color--light); line-height: 1.35;
+  margin-top: .18rem;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+/* trailing meta column: count pill above, chevron below */
+.sc-folder__meta { display: flex; flex-direction: column; align-items: flex-end; gap: .4rem; }
+.sc-folder__count {
+  font-family: var(--md-code-font, monospace); font-weight: 700; font-size: .82rem;
+  color: var(--fx-metal-bright); white-space: nowrap;
+  padding: .1rem .5rem; border-radius: 6px;
+  border: 1px solid var(--fx-metal-faint); background: rgba(0,0,0,.22);
+}
+[data-md-color-scheme="default"] .sc-folder__count { background: rgba(0,0,0,.04); }
+.sc-folder__count .u {
+  font-family: var(--md-small-header-font); font-weight: 400; font-variant: small-caps;
+  letter-spacing: .04em; font-size: .74rem; color: var(--fx-metal); margin-left: .2rem;
+}
+.sc-folder__chev { color: var(--fx-metal); display: grid; place-items: center;
+  transition: transform .2s ease, color .2s ease; }
+.sc-folder__chev svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+.sc-folder:hover .sc-folder__chev { transform: translateX(3px); color: var(--md-accent-fg-color); }
+
+
+/* ════════════════════════════════════════════════════════════
+   2 · PREVIEW CARDS — condensed leaf-item previews
+   ════════════════════════════════════════════════════════════ */
+.md-typeset .sc-prevs {
+  list-style: none; padding: 0; margin: 1rem 0 0;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); gap: 1rem;
+  align-items: start;
+}
+
+.md-typeset .sc-prev {
+  --act: var(--sc-act-trait);
+  position: relative; display: flex; flex-direction: column;
+  text-decoration: none; color: inherit; overflow: hidden;
+  padding: .9rem 1rem 1rem; border-radius: .55rem;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.sc-prev[data-action="main"]      { --act: var(--sc-act-main); }
+.sc-prev[data-action="maneuver"]  { --act: var(--sc-act-maneuver); }
+.sc-prev[data-action="triggered"] { --act: var(--sc-act-triggered); }
+.sc-prev[data-action="move"]      { --act: var(--sc-act-move); }
+.sc-prev[data-action="none"]      { --act: var(--sc-act-none); }
+.sc-prev[data-action="trait"]     { --act: var(--sc-act-trait); }
+
+/* — trait preview: recessed niche register, colored left spine — */
+.md-typeset .sc-prev--trait {
+  border: 1px solid var(--fx-metal-faint);
+  border-left: 3px solid color-mix(in srgb, var(--act) 62%, var(--fx-metal));
+  background: linear-gradient(168deg, rgba(255,255,255,.022), rgba(0,0,0,.10));
+  box-shadow: var(--fx-bevel), inset 0 0 38px rgba(0,0,0,.16);
+}
+[data-md-color-scheme="default"] .md-typeset .sc-prev--trait {
+  border-color: var(--md-default-fg-color--lightest);
+  border-left-color: color-mix(in srgb, var(--act) 62%, var(--fx-metal));
+  background: linear-gradient(168deg, rgba(255,255,255,.55), rgba(0,0,0,.025));
+  box-shadow: var(--fx-bevel), inset 0 0 38px rgba(0,0,0,.03);
+}
+.md-typeset .sc-prev--trait:hover {
+  transform: translateY(-2px); box-shadow: var(--fx-bevel), 0 12px 26px rgba(0,0,0,.42), inset 0 0 38px rgba(0,0,0,.16); }
+
+/* — ability preview: raised plate register — */
+.md-typeset .sc-prev--ability {
+  border: 1px solid rgba(255,255,255,.06);
+  background: var(--fx-card-bg);
+  box-shadow: var(--fx-bevel), 0 7px 18px rgba(0,0,0,.32);
+}
+[data-md-color-scheme="default"] .md-typeset .sc-prev--ability {
+  border-color: var(--md-default-fg-color--lightest); box-shadow: var(--fx-bevel), 0 4px 12px rgba(0,0,0,.08); }
+.md-typeset .sc-prev--ability:hover {
+  transform: translateY(-2px); box-shadow: var(--fx-bevel), 0 14px 28px rgba(0,0,0,.44), 0 0 0 1px var(--fx-metal-line); }
+
+/* head — crest · eyebrow+name · tag/cost (both registers carry a crest now) */
+.sc-prev__head { display: grid; grid-template-columns: 1fr auto; align-items: start; gap: .7rem; }
+.sc-prev--ability .sc-prev__head,
+.sc-prev--trait .sc-prev__head { grid-template-columns: auto 1fr auto; }
+.sc-prev__crest { width: 2.5rem; height: 2.85rem; align-self: start; }   /* extends .sc-crest */
+.sc-prev__crest > .sc-prev__glyph { transform: translateY(-2px); }
+.sc-prev__glyph { font-family: "DrawSteelGlyphs", sans-serif; font-size: 1.2rem; line-height: 1; color: var(--act); }
+.sc-prev__titles { min-width: 0; }
+.sc-prev__eyebrow { display: flex; align-items: center; gap: .45rem;
+  font-family: var(--md-small-header-font); font-variant: small-caps; text-transform: lowercase;
+  letter-spacing: .09em; font-size: .8rem; color: var(--act); }
+.sc-prev__dia { width: 6px; height: 6px; transform: rotate(45deg); background: var(--act); flex: 0 0 auto; }
+/* .md-typeset prefix — same reason as .sc-folder__name above (beats `.md-typeset h3`). */
+.md-typeset .sc-prev__name { font-family: var(--md-large-header-font); text-transform: uppercase;
+  font-size: 1.3rem; line-height: 1.02; color: var(--sc-steel-lighter); text-shadow: var(--fx-emboss);
+  margin: .18rem 0 0; }
+.sc-prev__tag { justify-self: end; white-space: nowrap;
+  font-family: var(--md-small-header-font); font-variant: small-caps; text-transform: lowercase;
+  letter-spacing: .03em; font-size: .8rem; color: var(--fx-metal-bright);
+  padding: .15rem .55rem; border-radius: 6px; border: 1px solid var(--fx-metal-line);
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.12)); }
+[data-md-color-scheme="default"] .sc-prev__tag { background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(0,0,0,.03)); }
+.sc-prev__tag .num { font-family: var(--md-code-font, monospace); font-weight: 700; font-size: .76rem; color: var(--md-default-fg-color); }
+
+/* flavor / summary — clamped so a long card never bloats the preview */
+.sc-prev__flavor { font-family: var(--md-small-header-font); font-style: italic;
+  color: var(--md-default-fg-color--light); font-size: .9rem; line-height: 1.45;
+  margin: .6rem 0 0; text-wrap: pretty;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* keyword chips (abilities) */
+.sc-prev__kw { display: flex; flex-wrap: wrap; gap: .35rem; margin: .6rem 0 0; }
+.sc-prev__chip { font-family: var(--md-small-header-font); font-variant: small-caps; text-transform: lowercase;
+  letter-spacing: .03em; font-size: .8rem; color: var(--md-default-fg-color--light);
+  padding: .02rem .5rem; border-radius: 5px; border: 1px solid var(--fx-metal-faint); background: rgba(255,255,255,.02); }
+[data-md-color-scheme="default"] .sc-prev__chip { background: rgba(0,0,0,.02); }
+
+/* foot — a thin meta line (distance/targets for abilities; "grants" for traits) */
+.sc-prev__foot { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .9rem; margin-top: auto;
+  padding-top: .65rem; }
+.sc-prev__head + .sc-prev__foot, .sc-prev__flavor + .sc-prev__foot { margin-top: .7rem; }
+.sc-prev__meta { display: inline-flex; align-items: baseline; gap: .32rem; font-size: .82rem; }
+.sc-prev__meta .l { font-family: var(--md-small-header-font); font-variant: small-caps; text-transform: lowercase;
+  letter-spacing: .06em; font-size: .74rem; color: var(--fx-metal); }
+.sc-prev__meta .v { font-family: var(--md-small-header-font); color: var(--md-default-fg-color); }
+.sc-prev__meta .v b { color: var(--sc-steel-lighter); font-weight: inherit; }
+/* a small marker that the trait grants a nested ability */
+.sc-prev__grant { display: inline-flex; align-items: center; gap: .35rem; font-size: .8rem;
+  font-family: var(--md-small-header-font); font-variant: small-caps; letter-spacing: .04em; color: var(--md-default-fg-color--light); }
+.sc-prev__grant .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--act); flex: 0 0 auto; }
+
+
+/* ════════════════════════════════════════════════════════════
+   3 · BROWSE BAR — search / sort / filter the whole tree
+   ════════════════════════════════════════════════════════════ */
+.md-typeset .sc-browse { margin: 1.1rem 0 0; }
+
+.sc-browse__bar { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem; margin-bottom: 1rem; }
+.sc-browse__search { position: relative; flex: 1 1 16rem; min-width: 12rem; }
+.sc-browse__search svg { position: absolute; left: .85rem; top: 50%; transform: translateY(-50%);
+  width: 16px; height: 16px; stroke: var(--fx-metal); fill: none; stroke-width: 1.8; pointer-events: none; }
+.sc-browse__search input {
+  width: 100%; font-family: var(--md-text-font); font-size: .92rem; color: var(--md-default-fg-color);
+  padding: .68rem .95rem .68rem 2.5rem; border-radius: 8px;
+  border: 1px solid var(--fx-metal-faint); background: rgba(0,0,0,.22); outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease; }
+[data-md-color-scheme="default"] .sc-browse__search input { background: rgba(0,0,0,.03); }
+.sc-browse__search input::placeholder { color: var(--md-default-fg-color--lighter); }
+.sc-browse__search input:focus { border-color: var(--md-accent-fg-color);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--md-accent-fg-color) 26%, transparent); }
+.sc-browse__sort { display: flex; align-items: center; gap: .45rem; }
+.sc-browse__sort label { font-family: var(--md-small-header-font); font-variant: small-caps; letter-spacing: .05em;
+  font-size: .82rem; color: var(--fx-metal); }
+.sc-browse__sort select {
+  font-family: var(--md-small-header-font); font-size: .88rem; color: var(--md-default-fg-color);
+  padding: .5rem 1.9rem .5rem .7rem; border-radius: 8px; border: 1px solid var(--fx-metal-faint);
+  background: rgba(0,0,0,.22) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%238e959a' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M3 4.5 6 8l3-3.5'/%3E%3C/svg%3E") no-repeat right .65rem center;
+  cursor: pointer; outline: none; -webkit-appearance: none; appearance: none; }
+[data-md-color-scheme="default"] .sc-browse__sort select { background-color: rgba(0,0,0,.03); }
+
+/* facet rows — label column + a wrapping chips column. The chips live in their
+   own grid column so a long row wraps UNDER the first chip, never under the
+   label (which read as confusing overflow). Each row is TOP-aligned and divided
+   from the next by a faint hairline (the same --fx-metal-faint rule the results
+   head uses below) so a category's label clearly heads its whole chip block —
+   even when the chips wrap to several lines — instead of floating mid-stack. */
+.sc-browse__facets { margin-top: 1rem; display: flex; flex-direction: column; }
+.sc-browse__facet { display: grid; grid-template-columns: 5.5rem 1fr; align-items: start; gap: .35rem .6rem;
+  padding: .55rem 0; border-top: 1px solid var(--fx-metal-faint); }
+.sc-browse__facet:first-child { border-top: none; padding-top: .15rem; }
+.sc-browse__facet:last-child { padding-bottom: .15rem; }
+/* nudge the label down so its small-caps text aligns with the first chip's text
+   (chips carry top padding + a border), keeping it visually level with row 1. */
+.sc-browse__facet > .lbl { font-family: var(--md-small-header-font); font-variant: small-caps; letter-spacing: .07em;
+  font-size: .78rem; color: var(--fx-metal); align-self: start; padding-top: .22rem; }
+.sc-browse__chips { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; }
+.sc-chip {
+  display: inline-flex; align-items: center;
+  font-family: var(--md-small-header-font); font-variant: small-caps; text-transform: lowercase; letter-spacing: .03em;
+  font-size: .84rem; color: var(--md-default-fg-color--light); cursor: pointer; user-select: none;
+  padding: .14rem .65rem; border-radius: 6px; border: 1px solid var(--fx-metal-faint); background: rgba(255,255,255,.02);
+  transition: color .15s ease, border-color .15s ease, background .15s ease; }
+[data-md-color-scheme="default"] .sc-chip { background: rgba(0,0,0,.02); }
+.sc-chip:hover { color: var(--md-default-fg-color); border-color: var(--fx-metal-line); }
+.sc-chip.is-on {
+  color: #06232a; background: var(--md-accent-fg-color); border-color: var(--md-accent-fg-color); font-weight: 600; }
+[data-md-color-scheme="default"] .sc-chip.is-on { color: #f3f8f8; }
+.sc-chip__dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: .3rem;
+  vertical-align: middle; background: currentColor; opacity: .85; }
+
+/* result header + grid + empty state */
+.sc-browse__head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: .5rem;
+  margin: 1rem 0 0; padding-top: .8rem; border-top: 1px solid var(--fx-metal-faint); }
+.sc-browse__count { font-family: var(--md-small-header-font); font-variant: small-caps; letter-spacing: .05em;
+  font-size: .9rem; color: var(--md-default-fg-color--light); }
+.sc-browse__count b { color: var(--sc-steel-lighter); font-weight: 700; }
+.sc-browse__clear { font-family: var(--md-small-header-font); font-variant: small-caps; letter-spacing: .04em;
+  font-size: .82rem; color: var(--md-accent-fg-color); cursor: pointer; background: none; border: none; padding: 0; }
+.sc-browse__clear:hover { text-decoration: underline; }
+.sc-browse__clear[hidden] { display: none; }
+.sc-browse__results { margin-top: .5rem; }
+.sc-browse__empty { padding: 2.5rem 1rem; text-align: center; color: var(--md-default-fg-color--lighter);
+  font-family: var(--md-small-header-font); font-style: italic; font-size: 1rem; }
+
+@media screen and (max-width: 44.98em) {
+  .md-typeset .sc-folders, .md-typeset .sc-folders--lg, .md-typeset .sc-prevs { grid-template-columns: 1fr; }
+  /* stack the label above its chips on narrow screens */
+  .sc-browse__facet { grid-template-columns: 1fr; align-items: start; }
+}

@@ -1,0 +1,30 @@
+<!-- @dsCard group="Components" -->
+<!DOCTYPE html>
+<html data-md-color-scheme="slate">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body { margin:0; }
+  body { background: var(--bg); padding: 22px 26px; font-family: var(--font-body); color: var(--fg); }
+  table { width:100%; border-collapse:separate; border-spacing:0; border-radius: var(--radius-md); overflow:hidden; border:1px solid var(--fg-lightest); font-size: 13px; }
+  th, td { padding: 7px 12px; border-bottom: 1px solid var(--fg-lightest); text-align:left; }
+  th { font-family: var(--font-subhead); color: var(--fg); font-weight: bold; background: var(--bg-light); position:relative; }
+  th::after { content:"⇅"; position:absolute; right:8px; opacity:.3; font-size:.8em; }
+  tr:last-child td { border-bottom: none; }
+  td:first-child { color: var(--accent); }
+  caption { font-family: var(--font-mono); font-size: 11px; color: var(--fg-lighter); margin-bottom: 8px; text-align:left; }
+</style>
+</head>
+<body>
+  <table>
+    <caption>Conduit Advancement — sortable statblock table</caption>
+    <thead><tr><th>Level</th><th>Features</th><th>Abilities</th></tr></thead>
+    <tbody>
+      <tr><td>1st</td><td>Deity and Domains, Piety, Healing Grace</td><td>Two signature, 3, 5</td></tr>
+      <tr><td>2nd</td><td>The Lists of Heaven, Perk, Domain Feature</td><td>Two signature, 3, 5</td></tr>
+      <tr><td>3rd</td><td>Minor Miracle, 7-Piety Ability</td><td>Two signature, 3, 5, 7</td></tr>
+    </tbody>
+  </table>
+</body>
+</html>

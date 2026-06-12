@@ -1,0 +1,281 @@
+/* ============================================================
+   steel-settings.css — live Settings drawer + header gear.
+   Loads AFTER steel-redesign.css so it can use --fx-* tokens.
+   Open state: <html data-sc-settings="open"> (set by settings-panel.js).
+   ============================================================ */
+
+/* ── Header gear button (sits among Material header buttons) ── */
+.sc-settings-toggle {
+  cursor: pointer;
+}
+.sc-settings-toggle svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  fill: currentColor;
+}
+
+/* ── Scrim ── */
+.sc-settings-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0s linear 0.25s;
+  z-index: 1000;
+}
+[data-sc-settings="open"] .sc-settings-scrim {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.25s ease;
+}
+
+/* ── Drawer (desktop: right slab) ── */
+.sc-settings-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: min(24rem, 92vw);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  background: var(--fx-card-bg, var(--md-default-bg-color));
+  border-left: 1px solid var(--fx-metal-line, var(--md-default-fg-color--lightest));
+  box-shadow: var(--fx-bevel), -10px 0 30px rgba(0, 0, 0, 0.4);
+  transform: translateX(100%);
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  overflow: hidden;
+}
+[data-sc-settings="open"] .sc-settings-drawer {
+  transform: translateX(0);
+}
+
+/* Filigree top accent */
+.sc-settings-drawer::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--fx-metal-grad);
+  opacity: 0.9;
+}
+
+/* ── Drawer header ── */
+.sc-settings-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.1rem 0.75rem;
+  border-bottom: 1px solid var(--fx-metal-faint, var(--md-default-fg-color--lightest));
+}
+.sc-settings-head h2 {
+  margin: 0;
+  flex: 1;
+  font-family: var(--md-large-header-font);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 1.15rem;
+  line-height: 1;
+  color: var(--sc-steel-lighter, var(--md-default-fg-color));
+  text-shadow: var(--fx-emboss);
+}
+.sc-settings-close {
+  appearance: none;
+  border: 1px solid var(--fx-metal-line, var(--md-default-fg-color--lightest));
+  background: var(--md-code-bg-color);
+  color: var(--md-default-fg-color);
+  border-radius: 0.3rem;
+  width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.sc-settings-close:hover {
+  border-color: var(--md-accent-fg-color);
+  color: var(--md-accent-fg-color);
+}
+
+/* ── Scrollable body ── */
+.sc-settings-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.75rem 1.1rem 1.1rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Control groups ── */
+.sc-set__group {
+  margin: 0 0 1.1rem;
+}
+.sc-set__group > h3,
+.sc-set__group > summary {
+  margin: 0 0 0.5rem;
+  font-family: var(--md-small-header-font);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--md-default-fg-color--light);
+}
+.sc-set__group--fonts > summary {
+  cursor: pointer;
+  list-style: none;
+}
+.sc-set__group--fonts > summary::-webkit-details-marker { display: none; }
+.sc-set__group--fonts > summary::after {
+  content: " \25B8";
+  color: var(--fx-metal, var(--md-default-fg-color--lighter));
+}
+.sc-set__group--fonts[open] > summary::after { content: " \25BE"; }
+
+.sc-set__row {
+  margin: 0 0 0.85rem;
+}
+.sc-set__row:last-child { margin-bottom: 0; }
+.sc-set__row label.sc-set__label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin-bottom: 0.35rem;
+  color: var(--md-default-fg-color);
+}
+.sc-set__hint {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.72rem;
+  color: var(--md-default-fg-color--lighter);
+}
+
+/* Selects */
+.sc-set__select {
+  width: 100%;
+  padding: 0.5rem 0.55rem;
+  border: 1px solid var(--fx-metal-line, var(--md-default-fg-color--lightest));
+  border-radius: 0.3rem;
+  background: var(--md-code-bg-color);
+  color: var(--md-default-fg-color);
+  font-size: 0.85rem;
+  font-family: inherit;
+}
+.sc-set__select:focus {
+  outline: 2px solid var(--md-accent-fg-color);
+  outline-offset: -1px;
+}
+[data-md-color-scheme="slate"] .sc-set__select { color-scheme: dark; }
+[data-md-color-scheme="slate"] .sc-set__select option {
+  background: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
+}
+
+/* Toggle row (checkbox + text) */
+.sc-set__toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+}
+.sc-set__toggle input { width: 1.05rem; height: 1.05rem; flex: 0 0 auto; }
+.sc-set__toggle span { font-size: 0.82rem; }
+
+/* Slider row */
+.sc-set__sliderwrap {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.sc-set__range {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 3px;
+  background: var(--fx-metal-grad, var(--md-default-fg-color--lighter));
+  outline: none;
+}
+.sc-set__range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 50%;
+  background: var(--fx-metal-bright, #fff);
+  border: 1px solid var(--fx-metal, #888);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+.sc-set__range::-moz-range-thumb {
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 50%;
+  background: var(--fx-metal-bright, #fff);
+  border: 1px solid var(--fx-metal, #888);
+  cursor: pointer;
+}
+.sc-set__range:disabled { opacity: 0.4; }
+.sc-set__value {
+  min-width: 3.2rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.82rem;
+  color: var(--md-default-fg-color--light);
+}
+
+/* ── Footer ── */
+.sc-settings-foot {
+  padding: 0.75rem 1.1rem;
+  border-top: 1px solid var(--fx-metal-faint, var(--md-default-fg-color--lightest));
+}
+.sc-settings-reset {
+  width: 100%;
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--fx-metal-line, var(--md-default-fg-color--lightest));
+  border-radius: 0.3rem;
+  background: var(--md-code-bg-color);
+  color: var(--md-default-fg-color);
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.sc-settings-reset:hover {
+  background: var(--md-accent-fg-color--transparent);
+  border-color: var(--md-accent-fg-color);
+}
+
+/* ── Mobile: bottom sheet ── */
+@media screen and (max-width: 76.25em) {
+  .sc-settings-drawer {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: auto;
+    max-height: 82vh;
+    border-left: none;
+    border-top: 1px solid var(--fx-metal-line, var(--md-default-fg-color--lightest));
+    border-radius: 0.9rem 0.9rem 0 0;
+    box-shadow: var(--fx-bevel), 0 -10px 30px rgba(0, 0, 0, 0.45);
+    transform: translateY(100%);
+  }
+  [data-sc-settings="open"] .sc-settings-drawer {
+    transform: translateY(0);
+  }
+  /* Grab handle */
+  .sc-settings-head::before {
+    content: "";
+    position: absolute;
+    top: 0.4rem; left: 50%;
+    transform: translateX(-50%);
+    width: 2.4rem; height: 0.25rem;
+    border-radius: 3px;
+    background: var(--fx-metal, var(--md-default-fg-color--lighter));
+    opacity: 0.6;
+  }
+  .sc-settings-head { position: relative; padding-top: 1.25rem; }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .sc-settings-drawer,
+  .sc-settings-scrim { transition: none; }
+}

@@ -1,0 +1,36 @@
+<!-- @dsCard group="Components" -->
+<!DOCTYPE html>
+<html data-md-color-scheme="slate">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body { margin:0; }
+  body { background: var(--bg); padding: 22px 26px; }
+  .cards { display:grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .card { border:1px solid var(--fg-lightest); border-radius: var(--radius-md); padding: 18px 20px; background: var(--bg); transition: box-shadow .2s, transform .2s; }
+  .card:hover { box-shadow: var(--shadow-card); transform: translateY(-2px); }
+  .head { display:flex; align-items:center; gap: 12px; }
+  .head h3 { font-family: var(--font-subhead); font-size: 26px; color: var(--fg); margin: 0; }
+  .count { font-family: var(--font-mono); font-weight:700; font-size: 13px; color: var(--accent); background: var(--accent-transparent); border-radius: 1em; padding: 2px 10px; }
+  .card p { font-family: var(--font-body); color: var(--fg-light); font-size: 14px; margin: 12px 0; }
+  .link { font-family: var(--font-body); color: var(--link); font-size: 14px; }
+</style>
+</head>
+<body>
+  <div class="cards">
+    <div class="card">
+      <div class="head"><h3>Classes</h3><span class="count">21</span></div>
+      <hr class="sc-rule">
+      <p>Censor, Conduit, Elementalist, Fury, Null, Shadow, Tactician…</p>
+      <span class="link">→ View Classes</span>
+    </div>
+    <div class="card">
+      <div class="head"><h3>Kits</h3><span class="count">21</span></div>
+      <hr class="sc-rule">
+      <p>Arcane Archer, Battlemind, Cloak and Dagger, Mountain, Panther…</p>
+      <span class="link">→ View Kits</span>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+/* ============================================================
+   Content hierarchy system — 8 header levels + nesting rails.
+   Goal: instantly tell siblings from children, and show when an
+   ability is a CHILD of a trait/feature parent. Power roll is
+   left EXACTLY as the live site renders it.
+   ============================================================ */
+
+.hx { padding: 40px 48px; max-width: 860px; }
+
+/* ── 8-level header scale ──
+   L1 class · L2 major section · L3 subsection · L4 feature group
+   L5 feature · L6 sub-feature · L7 ability label · L8 inline run-in */
+.hx-l1 { font-family: var(--font-display); text-transform: uppercase; font-size: 64px; line-height: .88;
+  color: var(--sc-steel-lighter); text-shadow: var(--rd-emboss); margin: 0 0 6px; }
+.hx-l2 { font-family: var(--font-display); text-transform: uppercase; font-size: 34px; color: var(--fg);
+  margin: 36px 0 4px; padding-bottom: 8px; position: relative; }
+.hx-l2::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+  background: linear-gradient(90deg, var(--accent) 0 70px, var(--fg-lightest) 70px); }
+.hx-l3 { font-family: var(--font-subhead); font-size: 26px; color: var(--fg); margin: 26px 0 4px; }
+.hx-l4 { font-family: var(--font-subhead); font-weight: bold; font-size: 21px; color: var(--fg); margin: 20px 0 2px; }
+.hx-l5 { font-family: var(--font-subhead); font-size: 18px; color: var(--fg); margin: 14px 0 2px; }
+.hx-l6 { font-family: var(--font-subhead); font-size: 16px; font-weight: bold; color: var(--fg-light); margin: 12px 0 2px; }
+.hx-l7 { font-family: var(--font-mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--accent); margin: 10px 0 2px; }
+.hx-l8 { font-family: var(--font-body); font-weight: bold; font-size: 15px; color: var(--fg);
+  display: inline; } /* run-in: followed by body text on same line */
+.hx p { font-size: 15.5px; color: var(--fg-light); line-height: 1.7; margin: 6px 0; max-width: 64ch; }
+.hx em { color: var(--fg-light); }
+
+/* ── Nesting rails: a child block sits inside an indented bracket whose
+   left rail makes parentage unmistakable. Depth = rail color + indent. ── */
+.hx-children { margin: 8px 0 8px 4px; padding-left: 20px; border-left: 2px solid var(--fg-lightest);
+  position: relative; }
+.hx-children::before { /* corner tick joining parent to child rail */
+  content: ""; position: absolute; left: -2px; top: -6px; width: 14px; height: 12px;
+  border-left: 2px solid var(--fg-lightest); border-bottom: 2px solid var(--fg-lightest);
+  border-bottom-left-radius: 6px; }
+/* depth tints — teal at the parent, cooling to steel deeper down */
+.hx-children.d1 { border-color: rgba(77,184,199,.45); } .hx-children.d1::before { border-color: rgba(77,184,199,.45); }
+.hx-children.d2 { border-color: rgba(77,184,199,.26); } .hx-children.d2::before { border-color: rgba(77,184,199,.26); }
+.hx-children.d3 { border-color: var(--fg-lightest); }
+
+/* parent feature card — the trait that owns child abilities */
+.hx-parent { background: linear-gradient(160deg, rgba(255,255,255,.025), rgba(0,0,0,.12));
+  border: 1px solid var(--fg-lightest); border-left: 3px solid var(--accent); border-radius: 8px;
+  padding: 14px 18px; margin: 14px 0 4px; }
+.hx-parent .hx-ptag { font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--accent); display: flex; align-items: center; gap: 6px; }
+.hx-parent .hx-pname { font-family: var(--font-subhead); font-size: 22px; color: var(--fg); margin: 2px 0 0; }
+
+/* an ability block (child of a trait) — keeps the site's ability-card look */
+.hx-ability { border: 1px solid var(--fg-lighter); border-left: 3px solid var(--ability-strike); border-radius: 8px;
+  padding: 14px 16px; margin: 10px 0; background: var(--bg); }
+.hx-ability.ranged { border-left-color: var(--ability-ranged); }
+.hx-ability .a-name { font-family: var(--font-subhead); font-size: 19px; color: var(--fg); margin: 0; }
+.hx-ability .a-flavor { font-style: italic; color: var(--fg-light); font-size: 13.5px; margin: 2px 0 10px; }
+.hx-ability table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid var(--fg-lightest);
+  border-radius: 6px; overflow: hidden; font-size: 13px; margin: 6px 0; }
+.hx-ability td { padding: 5px 11px; border-bottom: 1px solid var(--fg-lightest); }
+.hx-ability tr:last-child td { border-bottom: none; }
+.hx-ability td:last-child { text-align: right; }
+
+/* POWER ROLL — unchanged from live site (DrawSteelGlyphs tier badges) */
+.power-roll-header { font-weight: bold; font-size: 14.5px; margin: 10px 0 4px; }
+.power-roll-tiers { display: flex; flex-direction: column; gap: .25em; margin: .3em 0 .5em; }
+.power-roll-row { display: flex; align-items: center; gap: .5em; }
+.power-roll-badge { font-family: var(--font-glyph); font-size: 1.5em; line-height: 1; flex-shrink: 0; }
+.power-roll-badge.low  { color: var(--tier-low); }
+.power-roll-badge.mid  { color: var(--tier-mid); }
+.power-roll-badge.high { color: var(--tier-high); }
+.power-roll-effect { flex: 1; line-height: 1.5; font-size: 14.5px; color: var(--fg); }
+.hx-ability .a-effect { font-size: 14px; margin-top: 8px; color: var(--fg-light); }
+
+/* tiny sibling/child legend */
+.hx-legend { display: flex; gap: 22px; margin: 4px 0 22px; font-family: var(--font-mono); font-size: 11px; color: var(--fg-lighter); }
+.hx-legend span { display: flex; align-items: center; gap: 7px; }
+.hx-swatch { width: 22px; height: 12px; border-radius: 3px; }

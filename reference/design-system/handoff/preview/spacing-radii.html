@@ -1,0 +1,23 @@
+<!-- @dsCard group="Spacing" -->
+<!DOCTYPE html>
+<html data-md-color-scheme="slate">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body { margin:0; }
+  body { background: var(--bg); padding: 24px 28px; font-family: var(--font-mono); }
+  .row { display:flex; gap: 16px; align-items:flex-end; }
+  .box { background: var(--bg-light); border:1px solid var(--fg-lightest); width: 90px; height: 70px; display:flex; align-items:center; justify-content:center; color: var(--fg-light); font-size: 11px; }
+  .lab { margin-top: 8px; font-size: 10px; color: var(--fg-lighter); text-align:center; }
+</style>
+</head>
+<body>
+  <div class="row">
+    <div><div class="box" style="border-radius:0.3em">0.3em</div><div class="lab">radius-sm · inputs, code</div></div>
+    <div><div class="box" style="border-radius:0.4em">0.4em</div><div class="lab">radius-md · cards, tables</div></div>
+    <div><div class="box" style="border-radius:0.5em">0.5em</div><div class="lab">radius-lg · callouts</div></div>
+    <div><div class="box" style="border-radius:1em;width:70px">1em</div><div class="lab">pill · badges</div></div>
+  </div>
+</body>
+</html>

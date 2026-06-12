@@ -1,0 +1,394 @@
+/* ============================================================
+   Steel Compendium — steel-redesign.css
+   DROP-IN for the v2 MkDocs site. Add AFTER the existing
+   stylesheets in mkdocs.yml `extra_css` (so it can override).
+   Uses the site's own Material vars (--md-*, --sc-*, font vars)
+   and adds a small steel-ornament token set.
+
+   Scope: Browse LANDING (.grid.cards) + category INDEX cards
+   (.sc-cards / .sc-card emitted by steel-etl buildIndexContent).
+   Power roll, ability cards, statblocks: untouched here.
+   ============================================================ */
+
+/* ── Steel ornament tokens (polished silver-steel; NOT gold) ── */
+[data-md-color-scheme="slate"] {
+  --fx-metal:        #a9b0b5;
+  --fx-metal-bright: #d9dee1;
+  --fx-metal-grad:   linear-gradient(180deg, #e3e7e9 0%, #a9b0b5 48%, #686f74 100%);
+  --fx-metal-line:   rgba(176,183,187,.5);
+  --fx-metal-faint:  rgba(176,183,187,.16);
+  --fx-card-bg:      linear-gradient(160deg, #232a2e, #181c1f);
+  --fx-bevel:        inset 0 1px 0 rgba(255,255,255,.07);
+  --fx-emboss:       0 1px 0 rgba(0,0,0,.55), 0 -1px 0 rgba(255,255,255,.04);
+}
+[data-md-color-scheme="default"] {
+  --fx-metal:        #5f676c;
+  --fx-metal-bright: #2c3338;
+  --fx-metal-grad:   linear-gradient(180deg, #9aa1a6 0%, #6a7176 48%, #474d51 100%);
+  --fx-metal-line:   rgba(95,103,108,.45);
+  --fx-metal-faint:  rgba(95,103,108,.14);
+  --fx-card-bg:      linear-gradient(160deg, #ffffff, #eef1f1);
+  --fx-bevel:        inset 0 1px 0 rgba(255,255,255,.8);
+  --fx-emboss:       none;
+}
+.ds-etch { /* faint damascus watermark, opt-in on mastheads */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='30'%3E%3Cpath d='M0 15 Q22 2 45 15 T90 15' fill='none' stroke='%23b0b7bb' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 90px 30px;
+}
+
+/* ── Reusable heraldic crest (wraps a Material icon / .twemoji) ── */
+.sc-crest { position: relative; display: inline-grid; place-items: center;
+  width: 38px; height: 43px; flex: 0 0 auto;
+  --shield: polygon(6% 0, 94% 0, 94% 58%, 50% 100%, 6% 58%);
+  clip-path: var(--shield); background: var(--fx-metal-grad); }
+.sc-crest::before { content: ""; position: absolute; inset: 1.5px; clip-path: var(--shield);
+  background: radial-gradient(circle at 42% 30%, #2b3137, #14181b); }
+.sc-crest > * { position: relative; z-index: 1; display: grid; place-items: center;
+  /* optical centering — nudge the glyph UP so it sits in the shield's visual center */
+  transform: translateY(-2px); }
+.sc-crest .twemoji, .sc-crest svg { width: 19px; height: 19px; color: var(--fx-metal-bright); fill: currentColor; }
+[data-md-color-scheme="default"] .sc-crest::before { background: radial-gradient(circle at 42% 30%, #f6f8f8, #dfe4e5); }
+[data-md-color-scheme="default"] .sc-crest .twemoji, [data-md-color-scheme="default"] .sc-crest svg { color: #2c3338; }
+.sc-crest.lg { width: 50px; height: 56px; }
+.sc-crest.lg .twemoji, .sc-crest.lg svg { width: 24px; height: 24px; }
+
+/* ── Filigree corners (added by a tiny inline-CSS pseudo, no markup needed) ── */
+.sc-fil { position: relative; }
+.sc-fil::before, .sc-fil::after { content: ""; position: absolute; width: 13px; height: 13px;
+  border: 0 solid var(--fx-metal-line); opacity: 0; transition: opacity .2s; pointer-events: none; }
+.sc-fil::before { top: 7px; left: 7px; border-top-width: 1px; border-left-width: 1px; }
+.sc-fil::after  { bottom: 7px; right: 7px; border-bottom-width: 1px; border-right-width: 1px; }
+.sc-fil:hover::before, .sc-fil:hover::after { opacity: .85; }
+
+/* ============================================================
+   BROWSE LANDING — restyle Material .grid.cards into steel plates
+   (markup: each card starts with a crest icon; .grid.cards in
+   Browse/index.md — see handoff README)
+   ============================================================ */
+.md-typeset .grid.cards > ul {
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: 1rem; align-items: stretch;
+}
+.md-typeset .grid.cards > ul > li {
+  position: relative; display: flex; flex-direction: column;
+  border: 1px solid rgba(255,255,255,.05); border-radius: .5rem; padding: 1.1rem 1.2rem;
+  background: var(--fx-card-bg); box-shadow: var(--fx-bevel), 0 6px 18px rgba(0,0,0,.3);
+  transition: box-shadow .2s ease, transform .2s ease;
+}
+[data-md-color-scheme="default"] .md-typeset .grid.cards > ul > li {
+  border-color: var(--md-default-fg-color--lightest); box-shadow: var(--fx-bevel), 0 4px 12px rgba(0,0,0,.08);
+}
+.md-typeset .grid.cards > ul > li:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--fx-bevel), 0 14px 28px rgba(0,0,0,.42), 0 0 0 1px var(--fx-metal-line);
+}
+.md-typeset .grid.cards > ul > li:hover::before,
+.md-typeset .grid.cards > ul > li:hover::after { opacity: .85; }
+.md-typeset .grid.cards > ul > li::before, .md-typeset .grid.cards > ul > li::after {
+  content: ""; position: absolute; width: 13px; height: 13px; border: 0 solid var(--fx-metal-line);
+  opacity: 0; transition: opacity .2s; pointer-events: none;
+}
+.md-typeset .grid.cards > ul > li::before { top: 8px; left: 8px; border-top-width: 1px; border-left-width: 1px; }
+.md-typeset .grid.cards > ul > li::after  { bottom: 8px; right: 8px; border-bottom-width: 1px; border-right-width: 1px; }
+
+/* leading crest + title on one row. Markup is a single Material heading whose
+   first inline is an icon carrying .sc-crest:
+       ### :material-shield-sword:{ .sc-crest } Classes
+   → <h3><span class="twemoji sc-crest"><svg/></span> Classes</h3>
+   The h3 itself is the flex row; the count badge (appended by
+   browse-enhancements.js) is pushed to the right. */
+.md-typeset .grid.cards > ul > li > h3 {
+  display: flex; align-items: center; gap: .7rem; margin: 0 0 .1rem;
+  font-family: var(--md-large-header-font); text-transform: uppercase;
+  font-size: 1.5rem; line-height: 1;
+  color: var(--sc-steel-lighter); text-shadow: var(--fx-emboss);
+}
+/* count badge injected by browse-enhancements.js — hidden on the landing cards.
+   (Long titles like “Complications” pushed it off the plate, and the raw count
+   adds little to the hub.) Remove this rule to bring the steel badge back. */
+.md-typeset .browse-card-count { display: none; }
+.md-typeset .grid.cards > ul > li > hr { margin: .7rem 0; }
+.md-typeset .grid.cards > ul > li > p { color: var(--md-default-fg-color--light); font-size: .82rem; }
+.md-typeset .grid.cards > ul > li > p:last-child { margin-top: auto; color: var(--fx-metal); }
+
+/* Whole-card click target. The trailing "→ …" link paragraph is stretched to
+   cover the entire plate and its now-redundant arrow label is hidden (kept in
+   the DOM as the link's accessible name). Scoped to a single-link paragraph via
+   :has(> a:only-child), so cards that end in a *list* of links — e.g. the Data
+   Formats cards on the home page — are deliberately left as-is. */
+.md-typeset .grid.cards > ul > li > p:last-child:has(> a:only-child) {
+  position: absolute; inset: 0; margin: 0;
+  font-size: 0;                 /* hides the em-sized arrow icon + label text */
+}
+.md-typeset .grid.cards > ul > li > p:last-child:has(> a:only-child) > a {
+  display: block; width: 100%; height: 100%;
+}
+
+/* ============================================================
+   CATEGORY INDEX — rich "stat-at-a-glance" cards
+   Emitted by steel-etl as: <div class="sc-cards"> of <a class="sc-card">
+   ============================================================ */
+.md-typeset .sc-cards {
+  list-style: none; padding: 0; margin: 1rem 0 0;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr)); gap: 1rem;
+}
+.md-typeset .sc-card {
+  position: relative; display: block; text-decoration: none; color: inherit;
+  border: 1px solid rgba(255,255,255,.05); border-radius: .55rem; padding: 1rem 1.1rem;
+  background: var(--fx-card-bg); box-shadow: var(--fx-bevel), 0 6px 18px rgba(0,0,0,.3);
+  transition: box-shadow .2s ease, transform .2s ease; overflow: hidden;
+}
+[data-md-color-scheme="default"] .md-typeset .sc-card { border-color: var(--md-default-fg-color--lightest); box-shadow: var(--fx-bevel), 0 4px 12px rgba(0,0,0,.08); }
+.md-typeset .sc-card:hover { transform: translateY(-2px); box-shadow: var(--fx-bevel), 0 12px 26px rgba(0,0,0,.42), 0 0 0 1px var(--fx-metal-line); }
+.md-typeset .sc-card:hover.sc-fil::before, .md-typeset .sc-card:hover.sc-fil::after { opacity: .85; }
+
+/* Stretched-link: the card is a <div>; this overlay <a> is the whole-card click
+   target (the card links to its page). Real links inside the card (rendered from
+   markdown by steel-etl's inlineMD) sit above the overlay via z-index, so they stay
+   independently clickable. This is the standard fix for "clickable links inside a
+   clickable card" — a card-wrapping <a> would make those inner links invalid
+   <a>-in-<a> that browsers split apart. */
+.md-typeset .sc-card__link { position: absolute; inset: 0; z-index: 0; border-radius: inherit; }
+.md-typeset .sc-card__line a, .md-typeset .sc-card__body a, .md-typeset .sc-card__intro a {
+  position: relative; z-index: 1;
+  color: var(--fx-metal-bright); text-decoration: none;
+}
+.md-typeset .sc-card__line a:hover, .md-typeset .sc-card__body a:hover,
+.md-typeset .sc-card__intro a:hover { text-decoration: underline; }
+
+.sc-card__head { display: flex; align-items: center; gap: .7rem; }
+.sc-card__type { font-family: var(--md-small-header-font); font-variant: small-caps; letter-spacing: .08em;
+  font-size: .8rem; color: var(--fx-metal); }
+.sc-card__name { font-family: var(--md-large-header-font); text-transform: uppercase; font-size: 1.45rem;
+  line-height: 1; color: var(--sc-steel-lighter); text-shadow: var(--fx-emboss); margin: .15rem 0 .1rem; }
+.sc-card__equip { font-family: var(--md-small-header-font); font-variant: small-caps; letter-spacing: .03em;
+  font-size: .8rem; color: var(--md-default-fg-color--lighter); margin-top: .2rem; }
+
+.sc-card__stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: .35rem; margin: .8rem 0 0; }
+/* a second stat row (kits: offense under defense) tucks tight under the first */
+.sc-card__stats + .sc-card__stats { margin-top: .35rem; }
+.sc-card__stat { background: rgba(0,0,0,.25); border: 1px solid var(--fx-metal-faint); border-radius: 6px;
+  padding: .4rem .25rem; text-align: center; }
+[data-md-color-scheme="default"] .sc-card__stat { background: rgba(0,0,0,.04); }
+/* Fixed-height, centered value box so the label below sits at the same y across
+   the stat row regardless of the value's font-size. Long values (e.g. +1/+1/+1)
+   get a smaller inline font-size; without a constant box height that shrank the
+   cell and "raised" the Melee/Ranged Dmg labels above their dashed siblings. */
+.sc-card__stat .v { font-family: var(--md-code-font, monospace); font-weight: 700; font-size: .92rem;
+  color: var(--sc-steel-lighter); display: flex; align-items: center; justify-content: center;
+  min-height: 1.15rem; line-height: 1.1; }
+.sc-card__stat .l { font-family: var(--md-small-header-font); font-variant: small-caps; font-size: .68rem;
+  letter-spacing: .05em; color: var(--md-default-fg-color--lighter); margin-top: .1rem; line-height: 1.05; }
+.sc-card__stat.is-dmg .v { color: var(--fx-metal-bright); }
+/* A stat value carrying a tooltip (e.g. an abbreviated treasure Project Goal,
+   "45*") must rise above the card's stretched-link overlay so its native title
+   tooltip is reachable on hover. */
+.sc-card__stat .v.has-tip { position: relative; z-index: 1; cursor: help; }
+
+/* extra card pieces for the other index types. The field name (b) and its
+   value read as two distinct registers — like the ancestry "Signature Trait"
+   line: the label is the small-caps metal field-name font, the value is plain
+   body text — so the label never blends into the content. */
+.sc-card__line { font-size: .82rem; color: var(--md-default-fg-color--light); line-height: 1.5; margin-top: .55rem; }
+.sc-card__line b { font-family: var(--md-small-header-font); color: var(--fx-metal); font-variant: small-caps;
+  letter-spacing: .06em; font-weight: 400; margin-right: .3rem; }
+.sc-card__line .hl { color: var(--fx-metal-bright); }
+.sc-card__tags { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .6rem; }
+.sc-tag { font-family: var(--md-small-header-font); font-variant: small-caps; letter-spacing: .03em; font-size: .74rem;
+  color: var(--md-default-fg-color--light); border: 1px solid var(--fx-metal-faint); border-radius: 5px; padding: .08rem .5rem; }
+.sc-card__bd { margin-top: .6rem; display: flex; flex-direction: column; gap: .3rem; }
+.sc-card__bd > div { font-size: .8rem; line-height: 1.45; color: var(--md-default-fg-color--light); }
+.sc-card__bd b { font-variant: small-caps; letter-spacing: .04em; font-weight: 700; margin-right: .35rem; }
+.sc-card__bd .is-benefit b  { color: var(--sc-tier-high); }
+.sc-card__bd .is-drawback b { color: var(--sc-tier-low); }
+.sc-card__blurb { font-size: .82rem; color: var(--md-default-fg-color--light); line-height: 1.5; margin-top: .5rem; }
+.sc-card__flavor { font-size: .84rem; color: var(--md-default-fg-color--light); line-height: 1.5; margin-top: .55rem; text-wrap: pretty; }
+/* Treasure cards reserve a fixed 3-line flavor height (1.5 line-height × 3) so a
+   1-line and a 3-line descriptor produce the same overall card height. Overflow
+   is not hidden — a rare 4+ line descriptor simply grows past the reserve. */
+.sc-card__flavor--clamp { min-height: 4.5em; }
+/* class intro — the full first section (everything before "Basics"), rendered
+   with its paragraph/blockquote structure intact */
+.sc-card__intro { font-size: .82rem; color: var(--md-default-fg-color--light); line-height: 1.5; margin-top: .6rem;
+  text-wrap: pretty; }
+.sc-card__intro > :first-child { margin-top: 0; }
+.sc-card__intro p { margin: .5rem 0 0; }
+/* Card flavor quote — a COMPACT filigree well echoing the page blockquote's
+   corner-bracket + ◆ language, but recessed (darker fill) rather than a raised
+   plate: the card already IS the raised card gradient, so a matching plate would
+   vanish. Scaled down (smaller padding + 10px bracket inset) to suit the card.
+   Not caught by `.md-typeset > blockquote` (it's nested, not a direct child).
+   `.md-typeset` prefix is required so the shorthand padding outranks Material's
+   `[dir=ltr] .md-typeset blockquote { padding-left }` (specificity 0,2,1). */
+.md-typeset .sc-card__intro blockquote { position: relative; margin: .6rem 0 .2rem; padding: .85rem 1.05rem;
+  color: var(--md-default-fg-color--light); font-style: italic;
+  background: rgba(0,0,0,.18); border: 1px solid var(--fx-metal-faint); border-radius: .4rem; }
+[data-md-color-scheme="default"] .sc-card__intro blockquote { background: rgba(0,0,0,.045); }
+.sc-card__intro blockquote > :first-child { margin-top: 0; }
+.sc-card__intro blockquote > :last-child { margin-bottom: 0; }
+.sc-card__intro blockquote p { margin: .2rem 0 0; }
+/* compact corner L-brackets (inset 10px, 9px arms) */
+.sc-card__intro blockquote::before {
+  content: ""; position: absolute; inset: 10px; pointer-events: none;
+  --c: var(--fx-metal-line); --n: 9px;
+  background:
+    linear-gradient(var(--c), var(--c)) top left,
+    linear-gradient(var(--c), var(--c)) top left,
+    linear-gradient(var(--c), var(--c)) top right,
+    linear-gradient(var(--c), var(--c)) top right,
+    linear-gradient(var(--c), var(--c)) bottom left,
+    linear-gradient(var(--c), var(--c)) bottom left,
+    linear-gradient(var(--c), var(--c)) bottom right,
+    linear-gradient(var(--c), var(--c)) bottom right;
+  background-repeat: no-repeat;
+  background-size: var(--n) 1px, 1px var(--n), var(--n) 1px, 1px var(--n),
+                   var(--n) 1px, 1px var(--n), var(--n) 1px, 1px var(--n);
+}
+/* compact corner diamonds seated on the bracket elbows (inset 7px → center at 10px) */
+.sc-card__intro blockquote::after {
+  content: ""; position: absolute; inset: 7px; pointer-events: none;
+  --d: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Crect x='1.6' y='1.6' width='2.8' height='2.8' transform='rotate(45 3 3)' fill='%23fff'/%3E%3C/svg%3E");
+  background: var(--fx-metal);
+  -webkit-mask: var(--d) top left, var(--d) top right, var(--d) bottom left, var(--d) bottom right;
+          mask: var(--d) top left, var(--d) top right, var(--d) bottom left, var(--d) bottom right;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+}
+.sc-card__intro blockquote > * { position: relative; z-index: 1; }
+.sc-card__intro ul, .sc-card__intro ol { margin: .35rem 0 0; padding-left: 1.1rem; }
+
+.sc-card__sig { display: flex; align-items: center; gap: .55rem; margin-top: .8rem;
+  padding-top: .7rem; border-top: 1px solid var(--fx-metal-faint); }
+.sc-card__dot { width: 9px; height: 9px; border-radius: 50%; flex: 0 0 auto; background: var(--md-accent-fg-color); }
+.sc-card__dot[data-type="strike"]    { background: var(--sc-ability-strike); }
+.sc-card__dot[data-type="ranged"]    { background: var(--sc-ability-ranged); }
+.sc-card__dot[data-type="area"]      { background: var(--sc-ability-area); }
+.sc-card__dot[data-type="passive"]   { background: var(--sc-ability-passive); }
+.sc-card__dot[data-type="maneuver"]  { background: var(--sc-ability-maneuver); }
+.sc-card__dot[data-type="triggered"] { background: var(--sc-ability-triggered); }
+.sc-card__sig-label { font-family: var(--md-small-header-font); font-variant: small-caps; letter-spacing: .06em;
+  font-size: .72rem; color: var(--fx-metal); }
+.sc-card__sig-name { font-family: var(--md-small-header-font); font-size: .95rem; color: var(--md-default-fg-color); }
+
+/* ============================================================
+   WIDE EDITORIAL CARDS — high-count, text-led types (complication, perk)
+   Emitted as <div class="sc-cards sc-cards--wide"> of <a class="sc-card sc-card--wide">
+   crest · name column · body column — full width, room for a longer line of text.
+   ============================================================ */
+.md-typeset .sc-cards--wide { grid-template-columns: 1fr; gap: .7rem; }
+.md-typeset .sc-card--wide {
+  display: grid; grid-template-columns: auto 13rem minmax(0, 1fr); align-items: center;
+  gap: 1.25rem; padding: .85rem 1.3rem;
+}
+.sc-card--wide .sc-card__namecol { min-width: 0; }
+.sc-card--wide .sc-card__name { font-size: 1.5rem; margin: .1rem 0 0; }
+.sc-card--wide .sc-card__type { font-size: .76rem; }
+.sc-card--wide .sc-card__body { min-width: 0; }
+.sc-card--wide .sc-card__body > :first-child { margin-top: 0; }
+.sc-card--wide .sc-card__flavor { margin-top: 0; }
+.sc-card--wide .sc-card__line { margin-top: 0; }
+.sc-card--wide .sc-card__line + .sc-card__flavor { margin-top: .35rem; }
+
+@media screen and (max-width: 50em) {
+  .md-typeset .sc-card--wide { grid-template-columns: auto minmax(0, 1fr); }
+  .md-typeset .sc-card--wide .sc-card__body { grid-column: 1 / -1; }
+}
+
+@media screen and (max-width: 44.98em) {
+  .md-typeset .grid.cards > ul, .md-typeset .sc-cards { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   HORIZONTAL RULE — polished-steel ◆ divider with flanking dots.
+   Replaces the dull-grey hr from custom_font.css (loaded earlier in
+   mkdocs.yml, same specificity → this wins on order) with the
+   redesign's center-out steel line, two seed dots, and a haloed
+   diamond. Targets the bare <hr> Markdown emits — no markup change.
+   ============================================================ */
+.md-typeset hr {
+  border: none; height: 1px; position: relative; padding: 0; overflow: visible;
+  background:
+    linear-gradient(to right, transparent, var(--fx-metal-line)) no-repeat left center,
+    linear-gradient(to left,  transparent, var(--fx-metal-line)) no-repeat right center;
+  background-size: calc(50% - 30px) 1px, calc(50% - 30px) 1px;
+}
+/* the two small seed dots flanking the diamond */
+.md-typeset hr::before {
+  content: ""; position: absolute; top: 50%; left: 50%; width: 48px; height: 4px;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(circle, var(--fx-metal) 1.4px, transparent 1.9px) no-repeat left center,
+    radial-gradient(circle, var(--fx-metal) 1.4px, transparent 1.9px) no-repeat right center;
+  background-size: 4px 4px, 4px 4px;
+}
+.md-typeset hr::after {
+  content: ""; position: absolute; top: 50%; left: 50%; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px;
+  /* border:none clears the 2px bottom/right borders the custom_font.css diamond
+     declares — this rule re-declares background/box-shadow but not those borders,
+     so without this reset they'd leak through and snag the new diamond's edges. */
+  border: none;
+  background: var(--fx-metal); transform: rotate(45deg);
+  box-shadow: 0 0 0 4px var(--md-default-bg-color), 0 0 0 5px var(--fx-metal-faint);
+}
+/* tighter, dot-free divider inside the small landing cards */
+.md-typeset .grid.cards > ul > li > hr { margin: .8rem 0; background-size: calc(50% - 12px) 1px, calc(50% - 12px) 1px; }
+.md-typeset .grid.cards > ul > li > hr::before { display: none; }
+.md-typeset .grid.cards > ul > li > hr::after { width: 8px; height: 8px; margin: -4px 0 0 -4px; }
+
+/* ============================================================
+   BLOCKQUOTE — filigree frame.
+   A raised steel plate (card gradient) with four corner L-brackets +
+   corner diamonds seated on the bracket elbows. Overrides Material's
+   thick left-bar blockquote.
+
+   Scoped to TOP-LEVEL prose blockquotes only (flavor asides, notes,
+   the license disclaimer):
+     • child combinator `> blockquote` — matches the blockquotes that
+       are direct children of the content article, so the *nested*
+       `.sc-card__intro blockquote` (index-card class primers) is left
+       with its own compact styling, not wrapped in a heavy frame.
+     • `:not([data-ability-type])` — ability cards render as decorated
+       blockquotes (ability-cards.js + extra.css's colored left border);
+       the filigree frame must skip them.
+   ============================================================ */
+.md-typeset > blockquote:not([data-ability-type]) {
+  position: relative; margin: 1.7rem 0; padding: 1.45rem 1.7rem;
+  color: var(--md-default-fg-color--light); font-style: normal;
+  background: var(--fx-card-bg);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: .6rem;
+  box-shadow: var(--fx-bevel), 0 6px 18px rgba(0,0,0,.22);
+}
+[data-md-color-scheme="default"] .md-typeset > blockquote:not([data-ability-type]) {
+  border-color: var(--md-default-fg-color--lightest);
+  box-shadow: var(--fx-bevel), 0 4px 12px rgba(0,0,0,.07);
+}
+.md-typeset > blockquote:not([data-ability-type]) > :first-child { margin-top: 0; }
+.md-typeset > blockquote:not([data-ability-type]) > :last-child { margin-bottom: 0; }
+/* four corner L-brackets (8 hairline bg layers, no markup), inset for breathing room */
+.md-typeset > blockquote:not([data-ability-type])::before {
+  content: ""; position: absolute; inset: 12px; pointer-events: none;
+  --c: var(--fx-metal-line); --n: 13px;
+  background:
+    linear-gradient(var(--c), var(--c)) top left,
+    linear-gradient(var(--c), var(--c)) top left,
+    linear-gradient(var(--c), var(--c)) top right,
+    linear-gradient(var(--c), var(--c)) top right,
+    linear-gradient(var(--c), var(--c)) bottom left,
+    linear-gradient(var(--c), var(--c)) bottom left,
+    linear-gradient(var(--c), var(--c)) bottom right,
+    linear-gradient(var(--c), var(--c)) bottom right;
+  background-repeat: no-repeat;
+  background-size: var(--n) 1px, 1px var(--n), var(--n) 1px, 1px var(--n),
+                   var(--n) 1px, 1px var(--n), var(--n) 1px, 1px var(--n);
+}
+/* four corner diamonds centered on the bracket elbows (inset 9px → center at 12px) */
+.md-typeset > blockquote:not([data-ability-type])::after {
+  content: ""; position: absolute; inset: 9px; pointer-events: none;
+  --d: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Crect x='1.6' y='1.6' width='2.8' height='2.8' transform='rotate(45 3 3)' fill='%23fff'/%3E%3C/svg%3E");
+  background: var(--fx-metal);
+  -webkit-mask: var(--d) top left, var(--d) top right, var(--d) bottom left, var(--d) bottom right;
+          mask: var(--d) top left, var(--d) top right, var(--d) bottom left, var(--d) bottom right;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+}
+/* keep the inner content above the frame layers */
+.md-typeset > blockquote:not([data-ability-type]) > * { position: relative; z-index: 1; }

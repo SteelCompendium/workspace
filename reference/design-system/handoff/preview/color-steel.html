@@ -1,0 +1,27 @@
+<!-- @dsCard group="Colors" -->
+<!DOCTYPE html>
+<html data-md-color-scheme="slate">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body { margin:0; }
+  body { background: var(--bg); padding: 22px 26px; font-family: var(--font-mono); }
+  .grid { display:grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+  .sw { border-radius: var(--radius-md); overflow:hidden; border:1px solid var(--fg-lightest); }
+  .chip { height: 52px; }
+  .lab { padding: 6px 8px; font-size: 10px; color: var(--fg-light); background: var(--bg-light); }
+  .lab b { color: var(--fg); display:block; font-size: 11px; }
+</style>
+</head>
+<body>
+  <div class="grid">
+    <div class="sw"><div class="chip" style="background:#1a1e21"></div><div class="lab"><b>bg / primary</b>#1a1e21</div></div>
+    <div class="sw"><div class="chip" style="background:#22272b"></div><div class="lab"><b>bg-light</b>#22272b</div></div>
+    <div class="sw"><div class="chip" style="background:#0f1214"></div><div class="lab"><b>primary-dark</b>#0f1214</div></div>
+    <div class="sw"><div class="chip" style="background:#8e959a"></div><div class="lab"><b>steel</b>#8e959a</div></div>
+    <div class="sw"><div class="chip" style="background:#b0b7bb"></div><div class="lab"><b>steel-light</b>#b0b7bb</div></div>
+    <div class="sw"><div class="chip" style="background:#71797E"></div><div class="lab"><b>steel-glyph</b>#71797E</div></div>
+  </div>
+</body>
+</html>

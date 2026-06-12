@@ -1,0 +1,33 @@
+<!-- @dsCard group="Components" -->
+<!DOCTYPE html>
+<html data-md-color-scheme="slate">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body { margin:0; }
+  body { background: var(--bg-light); padding: 0; }
+  .bar { background: var(--primary); padding: 0 22px; display:flex; align-items:center; gap: 14px; height: 52px; }
+  .bar img { width: 26px; height: 26px; }
+  .title { font-family: var(--font-display); text-transform:uppercase; font-size: 15px; color: var(--on-primary); letter-spacing: 0.01em; }
+  .search { margin-left:auto; background: rgba(255,255,255,0.08); border-radius: var(--radius-sm); padding: 6px 12px; color: var(--fg-lighter); font-family: var(--font-body); font-size: 13px; width: 180px; }
+  .tabs { background: var(--primary); display:flex; gap: 26px; padding: 0 22px 0 62px; height: 42px; align-items:center; border-top: 1px solid rgba(255,255,255,0.06); }
+  .tabs a { font-family: var(--font-body); font-size: 14px; color: var(--fg-light); padding-bottom: 4px; }
+  .tabs a.active { color: var(--on-primary); border-bottom: 2px solid var(--accent); }
+</style>
+</head>
+<body>
+  <div class="bar">
+    <img src="../assets/steel_compendium_glow_white.svg">
+    <span class="title">Steel Compendium: Draw Steel Rules</span>
+    <div class="search">🔍 Search</div>
+  </div>
+  <div class="tabs">
+    <a href="#" class="active">Browse</a>
+    <a href="#">Rulebook Chapters</a>
+    <a href="#">Full Rulebook</a>
+    <a href="#">Bestiary</a>
+    <a href="#">Preferences</a>
+  </div>
+</body>
+</html>

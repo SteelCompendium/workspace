@@ -8,7 +8,11 @@ at hand. Add a numbered `## N.` section below instead of chasing them now, and
 Each item keeps the detail fields (**Identified / What / Why / Context / Effort**) that
 save the next person a grep. Mark a finished item with a `**Status:** done` line; on a
 periodic cleanup pass, completed items are moved to `docs/followups-archive/` and the
-rest renumbered. Most recent archive: [`docs/followups-archive/2026-06-11-completed.md`](docs/followups-archive/2026-06-11-completed.md).
+rest renumbered. **After renumbering, grep live docs (all repos: `CLAUDE.md`s,
+`docs/*.md`, `v2/.repo-docs/`) for `FOLLOWUPS` item references and fix them** — dated
+plan/spec/decision docs keep their as-written numbers (the archive preserves
+"was FOLLOWUPS #N" handles). Most recent archive:
+[`docs/followups-archive/2026-06-11-completed.md`](docs/followups-archive/2026-06-11-completed.md).
 
 <!-- Template — copy for each item, numbering sequentially:
 ## N. Short title
@@ -69,17 +73,7 @@ rest renumbered. Most recent archive: [`docs/followups-archive/2026-06-11-comple
 - **Context:** Source is `steel-etl/input/monsters/Draw Steel Monsters.md` (hand-maintained; H7=statblock, H9=featureblock/terrain — see `steel-etl/CLAUDE.md` "Monsters book"). Follow `steel-etl/docs/linking-guide.md` + `docs/linking-reference.md`. Conditions/skills/movement terms are already linkable targets. Mind the one-heading-one-code gotcha (memory `rule-scc-type`). This is a sizable sweep, akin to the heroes-doc passes.
 - **Effort:** L (multi-day sweep across the whole Monsters source)
 
-## 6. `settings-core.test.js` fails — max-width drift (test says 500, code says 300)
-
-**Status:** done — 2026-06-11 (v2 `fef309cf42`). **300 is the source of truth** — git history shows the cap was deliberately lowered 500→300 (`94eb30bd` "Setting the max manually-set width to 300em for finer control", after the earlier `83d22310` that raised it to 500), and the runtime derives the slider `max` from the single `WIDTH_MAX_EM` constant (`settings-panel.js:484` → `String(C.WIDTH_MAX_EM)`), so the whole system was already consistent at 300; only the test was stale. Updated the three stale `500` references in `tests/settings-core.test.js` (the `[44, 500]` test name, `clampEm(600)→300`, and `widthToControls("600em")→{em:300}`). Suite now 11/11 green. Test-only change (not part of the published site), so no deploy.
-
-- **Identified:** 2026-06-10, running the v2 `node:test` suite while adding `ability-cards-core.test.js` for the statblock power-roll site fix.
-- **What:** `v2/tests/settings-core.test.js` has **2 failing tests** (`node --test tests/` → 9 pass / 2 fail), both pre-existing and unrelated to the statblock work: (a) `"clampEm clamps to [44, 500] and snaps to step"` asserts `clampEm(600) === 500`, but `settings-core.js` defines `WIDTH_MAX_EM = 300`, so it returns `300`; (b) `"widthToControls maps stored width to slider state"` fails the same way (it routes through `clampEm` for an out-of-range stored width). The content-max-width cap was lowered 500→300 (the v2 footer/header / live-settings rework) without updating the test.
-- **Why it matters:** A red test suite hides real regressions and erodes the "tests pass" signal. It's a one-sided drift — pick the source of truth and align the other side.
-- **Fix options:** Decide the intended max content width. If 300 is correct, update the test's expectations (`clampEm(600) → 300`, the `[44, 500]` name, and the `widthToControls` case). If 500 is correct, bump `WIDTH_MAX_EM` back to 500 in `settings-core.js` (and check the slider's `max` in `settings-panel.js`/`steel-settings.css`). `settings-core.js:19` (`WIDTH_MAX_EM`), `settings-core.js:52` (`clampEm`), `tests/settings-core.test.js:38-49`.
-- **Effort:** XS
-
-## 7. Fixture statblocks: non-standard 2-column stat grid not parsed into size/stamina
+## 6. Fixture statblocks: non-standard 2-column stat grid not parsed into size/stamina
 
 **Status:** open
 
@@ -90,11 +84,11 @@ rest renumbered. Most recent archive: [`docs/followups-archive/2026-06-11-comple
 - **Effort:** S
 - **Note (2026-06-11):** The new statblock island renderer (`steel-etl/internal/site/statblock_page.go`) reads `size`/`speed`/`stamina` from frontmatter, so fixture cards/blocks inherit this gap (those defenses show `—` until this is fixed). Not introduced by the island work.
 
-## 8. Statblock island: shared family Malice band not embedded; retainer/fixture "With Captain" label
+## 7. Statblock island: shared family Malice band not embedded; retainer/fixture "With Captain" label
 
 **Status:** open
 
-- **Identified:** 2026-06-11, building the High-Fantasy Steel statblock client renderer (design handoff `redesign/statblocks/`).
+- **Identified:** 2026-06-11, building the High-Fantasy Steel statblock client renderer. The design handoff is now archived at `reference/design-system/handoff/redesign/statblocks/README.md` (imported 2026-06-11; the malice band + captain label are its "Notes / nice-to-haves").
 - **What:** Two deferred pieces of the statblock island (`steel-etl/internal/site/statblock_page.go` → `v2/docs/javascripts/steel-statblock.js`):
   1. **Malice band** — the design embeds the family's shared Malice featureblock into each statblock as a collapsible band (`renderStatblock` `data.malice`). The island currently omits it (the README marks it a non-blocking nice-to-have, and the family's `…-malice.md` featureblock still renders as its own Browse page). To wire it, associate each statblock with its group's malice featureblock at site-build time (the malice `.md` is a sibling in the group dir, e.g. `monster/devils/devil-malice.md`), parse its features the same way, and emit `island.malice = {name, sourceName, intro, features[]}`.
   2. **2×2 "With Captain" cell** — the island always labels the 4th meta cell "With Captain". Minions use it (captain bonus), but retainers/fixtures/solos have no captain; the design notes summoner statblocks replace it with "Free Strike Damage Type". Make the label/value context-driven (skip or relabel when there's no captain line in the body).
@@ -102,7 +96,7 @@ rest renumbered. Most recent archive: [`docs/followups-archive/2026-06-11-comple
 - **Context:** Island shape + parser in `statblock_page.go` (`buildStatblockIsland`, `sbMeta.Captain`); renderer band logic already present in `steel-statblock.js` (`band()` + `data.malice`) and CSS (`.sb__band--malice`), so this is a Go/data-association task, not a front-end one. Group-dir sibling lookup precedent: `bestiary_cards.go` (`splitByType` finds the featureblock vs. statblock split).
 - **Effort:** M (malice association) + XS (captain label)
 
-## 9. Statblock CSS: kwusage mode rules silently lose to the flatten rule; `:not()` scope leak
+## 8. Statblock CSS: kwusage mode rules silently lose to the flatten rule; `:not()` scope leak
 
 **Status:** open
 
@@ -111,5 +105,5 @@ rest renumbered. Most recent archive: [`docs/followups-archive/2026-06-11-comple
   1. **Dead mode styling** — the flatten rule (`.sb .sb__features .sc-ability { … padding: 0 }`, (0,3,0)) beats both the crest sub-card chrome (`[data-sb-kwusage="crest"] .sb__feat { background; border-left; padding }`, (0,2,0)) and the non-crest base padding (`:not(…) .sb__feat { padding: .9rem .2rem }`, (0,2,0)). The crest "sub-card frame" design has therefore **never rendered** — crest features show as flat, unpadded tinted slabs (nearly invisible in light scheme).
   2. **`:not()` scope leak** — the non-crest separator rules use an unanchored `:not([data-sb-kwusage="crest"])`, which matches `body` (the attr lives on `<html>`), so the "non-crest" separators/gap/margins apply in **every** mode including crest. This leak is currently **load-bearing**: the default view is crest mode, and the user iterates on the separator look there. Anchor as `html:not(…)` only as part of a deliberate design decision.
 - **Why deferred:** Fixing either changes statblock layouts site-wide in the default view (crest cards would appear; separators would vanish from crest mode) — a design decision, not a bug fix. Needs a call: is crest mode sub-cards (restore chrome + anchor `:not()`), or is the de facto flat+separator look the design (delete the dead crest chrome + dead padding rule)?
-- **Context:** Watermark-kill footgun is now commented at the flatten rule (`steel-statblock.css` ~line 213); separator rules re-claim `display`/`opacity`/`mix-blend-mode` explicitly. Diagnostic script pattern: `/tmp/sb-separator-diag.cjs` (session 2026-06-11), based on `v2/tests/e2e/settings-panel.e2e.cjs`.
+- **Context:** Watermark-kill footgun is now commented at the flatten rule (`steel-statblock.css` ~line 213); separator rules re-claim `display`/`opacity`/`mix-blend-mode` explicitly. Diagnostic script pattern: `/tmp/sb-separator-diag.cjs` (session 2026-06-11), based on `v2/tests/e2e/settings-panel.e2e.cjs`. The design's intent — only `crest` mode gives features the sub-card frame; the other kwusage modes are flat with diamond+line separators — is specified in `reference/design-system/handoff/redesign/statblocks/README.md` (preference contract), which should anchor the design decision.
 - **Effort:** S (CSS) + design decision

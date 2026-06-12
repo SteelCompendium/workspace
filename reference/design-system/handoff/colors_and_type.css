@@ -1,0 +1,193 @@
+/* ============================================================
+   Steel Compendium — Colors & Type
+   ============================================================
+   Extracted verbatim from SteelCompendium/v2 (Material for MkDocs
+   theme overrides: docs/stylesheets/palette.css + custom_font.css).
+   DARK ("slate") is the signature mode. Light ("default") included.
+
+   Brand fonts are commercial faces the live site loads from the
+   onlinewebfonts CDN — kept here for fidelity, with Google Font
+   fallbacks listed in each stack. DrawSteelGlyphs is the game's
+   own icon font (bundled in /fonts).
+   ============================================================ */
+
+/* ---- Brand display + body fonts (as used by the live site) ---- */
+@import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap");
+
+@font-face { /* Display — heavy, uppercase. League/Klim "Beaufort" */
+  font-family: "Beaufort W01 Heavy"; font-display: swap;
+  src: url("https://db.onlinewebfonts.com/t/5a8d949826c5f2d8733fa324b51a507d.woff2") format("woff2"),
+       url("https://db.onlinewebfonts.com/t/5a8d949826c5f2d8733fa324b51a507d.woff") format("woff");
+}
+@font-face { /* Subheads — Klim "Newzald" */
+  font-family: "Test Newzald"; font-display: swap;
+  src: url("https://db.onlinewebfonts.com/t/776429d73240ce386ead55e740ef2ece.woff2") format("woff2"),
+       url("https://db.onlinewebfonts.com/t/776429d73240ce386ead55e740ef2ece.woff") format("woff");
+}
+@font-face { /* Body — Berlingske Slab Demibold */
+  font-family: "BerlingskeSlab-DBd"; font-display: swap;
+  src: url("https://db.onlinewebfonts.com/t/8cd8b6c5a3db3b61777d58cb5860fb17.woff2") format("woff2"),
+       url("https://db.onlinewebfonts.com/t/8cd8b6c5a3db3b61777d58cb5860fb17.woff") format("woff");
+}
+@font-face { /* Draw Steel icon glyphs — bundled */
+  font-family: "DrawSteelGlyphs"; font-display: swap;
+  src: url("fonts/DrawSteelGlyphs-Regular.otf") format("opentype");
+}
+
+:root {
+  /* ---- Font stacks ---- */
+  --font-display: "Beaufort W01 Heavy", "Source Serif 4", Georgia, serif;   /* H1/H2 — UPPERCASE */
+  --font-subhead: "Test Newzald", "Source Serif 4", Georgia, serif;          /* H3–H6 */
+  --font-body:    "BerlingskeSlab-DBd", "Source Serif 4", Georgia, serif;    /* paragraphs */
+  --font-mono:    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-glyph:   "DrawSteelGlyphs", sans-serif;                             /* tier badges, icons */
+
+  /* ---- Type scale (em-based, matches site h1=5em … h6=1.75em) ---- */
+  --fs-h1: 5rem;     --fs-h2: 3rem;    --fs-h3: 1.95rem;
+  --fs-h4: 1.6rem;   --fs-h5: 1.4rem;  --fs-h6: 1.1rem;
+  --fs-body: 1rem;   --fs-small: 0.8rem;
+  --lh-body: 1.7; /* @kind other */
+  --lh-tight: 1.2; /* @kind other */
+
+  /* ---- Radii / spacing / elevation ---- */
+  --radius-sm: 0.3em;  --radius-md: 0.4em;  --radius-lg: 0.5em;
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.8rem;
+  --space-4: 1.2rem;  --space-5: 1.5rem;  --space-6: 2rem;
+  --shadow-card:  0 4px 12px rgba(0,0,0,0.30);   /* dark-mode card hover */
+  --shadow-ability: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+/* ============================================================
+   DARK MODE — "slate" — the signature Steel look
+   ============================================================ */
+:root,
+[data-md-color-scheme="slate"] {
+  /* Brand steel */
+  --sc-steel:         #8e959a;
+  --sc-steel-light:   #b0b7bb;
+  --sc-steel-lighter: #cdd1d4;
+  --sc-steel-glyph:   #71797E;   /* logo / glyph steel */
+
+  /* Accent — brighter teal for dark bg */
+  --accent:           #4db8c7;
+  --accent-transparent: rgba(77, 184, 199, 0.12);
+  --link:             #4db8c7;
+
+  /* Primary — charcoal-steel nav bar */
+  --primary:          #1a1e21;
+  --primary-light:    #2c3338;
+  --primary-dark:     #0f1214;
+  --on-primary:       #dce0e2;
+
+  /* Surfaces — cool steel charcoal */
+  --bg:               #1a1e21;
+  --bg-light:         #22272b;
+  --fg:               rgba(220, 226, 230, 0.88);
+  --fg-light:         rgba(220, 226, 230, 0.62);
+  --fg-lighter:       rgba(220, 226, 230, 0.38);
+  --fg-lightest:      rgba(220, 226, 230, 0.12);
+  --code-bg:          rgba(220, 226, 230, 0.06);
+
+  /* Ability-type colors (brighter for dark bg) */
+  --ability-strike:    #e74c3c;  /* 🗡 melee strike  */
+  --ability-ranged:    #5dade2;  /* 🏹 ranged        */
+  --ability-maneuver:  #bb8fce;  /* 👤 maneuver      */
+  --ability-triggered: #f0b429;  /* ❗ triggered     */
+  --ability-area:      #48c9a4;  /* ❇ area           */
+  --ability-passive:   #b0b7bb;  /* ⭐ passive        */
+  --ability-villain:   #e57373;  /* ☠ villain action */
+  --ability-special:   #ce93d8;  /* 🌀 special        */
+
+  /* Power-roll tiers */
+  --tier-low:  #e74c3c;   /* ≤11   */
+  --tier-mid:  #f0b429;   /* 12-16 */
+  --tier-high: #4caf6a;   /* 17+   */
+}
+
+/* ============================================================
+   LIGHT MODE — "default"
+   ============================================================ */
+[data-md-color-scheme="default"] {
+  --sc-steel:         #5a6368;
+  --sc-steel-light:   #8e959a;
+  --sc-steel-lighter: #b0b7bb;
+  --sc-steel-glyph:   #71797E;
+
+  --accent:           #2a7b88;
+  --accent-transparent: rgba(42, 123, 136, 0.10);
+  --link:             #2a7b88;
+
+  --primary:          #2c3338;
+  --primary-light:    #4a5054;
+  --primary-dark:     #1a1d20;
+  --on-primary:       #f6f8f8;
+
+  --bg:               #f6f8f8;
+  --bg-light:         #edf0f0;
+  --fg:               #2c2e30;
+  --fg-light:         #555960;
+  --fg-lighter:       #828890;
+  --fg-lightest:      #c8cdd0;
+  --code-bg:          #eaeeef;
+
+  --ability-strike:    #c0392b;
+  --ability-ranged:    #2874a6;
+  --ability-maneuver:  #7d3c98;
+  --ability-triggered: #b9770e;
+  --ability-area:      #148f77;
+  --ability-passive:   #7b8a8b;
+  --ability-villain:   #922b21;
+  --ability-special:   #6c3483;
+
+  --tier-low:  #c0392b;
+  --tier-mid:  #b9770e;
+  --tier-high: #1e8449;
+}
+
+/* ============================================================
+   SEMANTIC ELEMENT STYLES
+   ============================================================ */
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  line-height: var(--lh-body);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 { font-family: var(--font-display); font-size: var(--fs-h1); text-transform: uppercase; line-height: 1; margin: 0 0 0.1em; color: var(--sc-steel-lighter); }
+h2 { font-family: var(--font-display); font-size: var(--fs-h2); text-transform: uppercase; margin: 1.5em 0 0.3em; }
+h3 { font-family: var(--font-subhead); font-size: var(--fs-h3); margin: 1.2em 0 0.3em; }
+h4 { font-family: var(--font-subhead); font-size: var(--fs-h4); font-weight: bold; }
+h5 { font-family: var(--font-subhead); font-size: var(--fs-h5); font-weight: normal; }
+h6 { font-family: var(--font-subhead); font-size: var(--fs-h6); font-weight: bold; }
+
+a { color: var(--link); text-decoration: none; }
+a:hover { color: var(--accent); text-decoration: underline; }
+
+code, pre, kbd { font-family: var(--font-mono); background: var(--code-bg); border-radius: var(--radius-sm); }
+code { padding: 0.1em 0.35em; font-size: 0.85em; }
+
+/* Glyph helper — apply to a span to render a DrawSteelGlyphs codepoint */
+.ds-glyph {
+  font-family: var(--font-glyph);
+  font-style: normal; font-weight: normal;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+}
+
+/* Signature diamond divider (◆ on a fading rule) */
+hr.sc-rule {
+  border: none; height: 2px; position: relative; margin: 1.2em 0;
+  background:
+    linear-gradient(to left,  var(--fg-lighter) 50%, transparent 100%) no-repeat left center,
+    linear-gradient(to right, var(--fg-lighter) 50%, transparent 100%) no-repeat right center;
+  background-size: calc(50% - 7px) 2px, calc(50% - 7px) 2px;
+}
+hr.sc-rule::after {
+  content: ""; position: absolute; top: 50%; left: 50%;
+  width: 14px; height: 14px; margin: -7px 0 0 -7px;
+  background-color: var(--fg-lighter); transform: rotate(45deg);
+  box-shadow: inset 0 0 0 3px var(--bg);
+}

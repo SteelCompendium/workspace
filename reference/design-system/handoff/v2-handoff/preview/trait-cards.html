@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Brand" name="Trait &amp; Feature Cards" subtitle="High-fantasy steel traits with nested ability cards" -->
+<html lang="en" data-md-color-scheme="slate">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Steel Compendium — trait / feature cards (production preview)</title>
+<link rel="icon" href="../../assets/favicon.ico">
+<style>
+  /* shim: the v2 site's real Material vars + brand @font-face so the production
+     CSS renders exactly as it will in the repo (mirrors ability-cards.html) */
+  @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap");
+  @font-face { font-family:"Beaufort W01 Heavy"; font-display:swap; src:url("https://db.onlinewebfonts.com/t/5a8d949826c5f2d8733fa324b51a507d.woff2") format("woff2"); }
+  @font-face { font-family:"Test Newzald"; font-display:swap; src:url("https://db.onlinewebfonts.com/t/776429d73240ce386ead55e740ef2ece.woff2") format("woff2"); }
+  @font-face { font-family:"BerlingskeSlab-DBd"; font-display:swap; src:url("https://db.onlinewebfonts.com/t/8cd8b6c5a3db3b61777d58cb5860fb17.woff2") format("woff2"); }
+  @font-face { font-family:"DrawSteelGlyphs"; font-display:swap; src:url("../../fonts/DrawSteelGlyphs-Regular.otf") format("opentype"); }
+  :root, [data-md-color-scheme="slate"] {
+    --md-large-header-font:"Beaufort W01 Heavy"; --md-small-header-font:"Test Newzald";
+    --md-text-font:"BerlingskeSlab-DBd"; --md-code-font:"JetBrains Mono";
+    --md-default-bg-color:#1a1e21; --md-default-bg-color--light:#22272b;
+    --md-default-fg-color:rgba(220,226,230,.88); --md-default-fg-color--light:rgba(220,226,230,.62);
+    --md-default-fg-color--lighter:rgba(220,226,230,.38); --md-default-fg-color--lightest:rgba(220,226,230,.12);
+    --md-accent-fg-color:#4db8c7; --md-primary-fg-color:#1a1e21; --md-typeset-a-color:#4db8c7;
+    --sc-steel:#8e959a; --sc-steel-light:#b0b7bb; --sc-steel-lighter:#cdd1d4;
+    --sc-tier-high:#4caf6a; --sc-tier-mid:#f0b429; --sc-tier-low:#e74c3c;
+  }
+  [data-md-color-scheme="default"] {
+    --md-large-header-font:"Beaufort W01 Heavy"; --md-small-header-font:"Test Newzald";
+    --md-text-font:"BerlingskeSlab-DBd"; --md-code-font:"JetBrains Mono";
+    --md-default-bg-color:#f6f8f8; --md-default-bg-color--light:#edf0f0;
+    --md-default-fg-color:#2c2e30; --md-default-fg-color--light:#555960;
+    --md-default-fg-color--lighter:#828890; --md-default-fg-color--lightest:#c8cdd0;
+    --md-accent-fg-color:#2a7b88; --md-primary-fg-color:#2c3338; --md-typeset-a-color:#2a7b88;
+    --sc-steel:#5a6368; --sc-steel-light:#8e959a; --sc-steel-lighter:#5a6368;
+    --sc-tier-high:#1e8449; --sc-tier-mid:#b9770e; --sc-tier-low:#c0392b;
+  }
+  * { box-sizing: border-box; }
+  html,body { margin:0; }
+  body { background:var(--md-default-bg-color); color:var(--md-default-fg-color); font-family:var(--md-text-font);
+    transition: background .2s; }
+  .wrap { max-width: 52rem; margin: 0 auto; padding: 2.2rem 1.5rem 5rem; }
+  .bar { display:flex; align-items:center; gap:1rem; margin-bottom:.4rem; }
+  .bar h1 { font-family:var(--md-large-header-font); text-transform:uppercase; font-size:1.6rem; margin:0;
+    color:var(--sc-steel-lighter); letter-spacing:.01em; }
+  .bar .sp { flex:1; }
+  .bar button { font-family:var(--md-small-header-font); font-size:.9rem; cursor:pointer;
+    background:rgba(127,127,127,.12); border:1px solid var(--md-default-fg-color--lightest);
+    color:var(--md-default-fg-color--light); padding:.4rem .9rem; border-radius:6px; }
+  .bar button:hover { color:var(--md-accent-fg-color); border-color:var(--md-accent-fg-color); }
+  .lede { font-family:var(--md-text-font); color:var(--md-default-fg-color--light); font-size:.9rem;
+    margin:0 0 1.6rem; max-width: 60ch; line-height:1.6; }
+  .md-typeset { line-height:1.7; }
+</style>
+<link rel="stylesheet" href="../v2/docs/stylesheets/steel-redesign.css">
+<link rel="stylesheet" href="../v2/docs/stylesheets/steel-ability-cards.css">
+<link rel="stylesheet" href="../v2/docs/stylesheets/steel-traits.css">
+</head>
+<body>
+<div class="wrap md-typeset">
+  <div class="bar">
+    <h1>Traits &amp; Features</h1>
+    <span class="sp"></span>
+    <button id="themeBtn">Toggle light / dark</button>
+  </div>
+  <p class="lede">A trait is a recessed codex niche; an ability is a raised forged plate mounted inside it.
+    Four traits in sequence below show the range — pure prose, a benefit list, a feature that grants an
+    ability, and a choose-one feature whose options are themselves nested traits (one of which grants an ability).</p>
+
+  <!-- 1 · SIMPLE TEXT TRAIT (ancestry signature trait, drop cap) -->
+  <script type="application/json" class="sc-trait-data">
+  {
+    "featureType": "Ancestry Trait",
+    "name": "Stand Strong",
+    "tag": "Signature",
+    "dropcap": true,
+    "body": [
+      { "kind": "text", "text": "Carved from the bones of the mountains, you do not move when the world would have you fall. Whenever you would be force-moved, **reduce the distance by 1** square. This reduction can't bring the distance below 0." },
+      { "kind": "text", "text": "Additionally, when you make a test to resist being knocked **prone** or **grabbed**, you gain an edge on the roll." }
+    ]
+  }
+  </script>
+
+  <!-- 2 · TEXT + BENEFIT LIST (class feature, no nesting) -->
+  <script type="application/json" class="sc-trait-data">
+  {
+    "featureType": "Censor",
+    "name": "Wrath",
+    "tag": "Level 1",
+    "body": [
+      { "kind": "text", "text": "You channel divine fury into a resource called Wrath. At the start of each of your turns during an encounter, you gain Wrath equal to your Victories, and you can spend it to fuel your sanctions and abilities." },
+      { "kind": "leadin", "text": "You also gain Wrath whenever:" },
+      { "kind": "list", "items": [
+        "An enemy you can see takes the **Charge**, **Disengage**, or **Free Strike** action — gain *1 Wrath*.",
+        "Your sworn enemy is reduced to 0 Stamina — gain *2 Wrath*.",
+        "You begin your turn adjacent to two or more enemies — gain *1 Wrath*."
+      ] }
+    ]
+  }
+  </script>
+
+  <!-- 3 · TEXT + NESTED ABILITY (the user's example: "you gain the following ability") -->
+  <script type="application/json" class="sc-trait-data">
+  {
+    "featureType": "Censor",
+    "name": "Judgment",
+    "tag": "Level 1",
+    "body": [
+      { "kind": "text", "text": "As a maneuver, you can pass judgment on one enemy you can see, making them your **sworn enemy** until the end of the encounter or until you pass judgment on a different creature. While a creature is your sworn enemy, you deal extra damage to them and can call down the weight of their fate." },
+      { "kind": "leadin", "text": "You gain the following ability:" },
+      { "kind": "ability", "data": {
+        "name": "Every Step… Death!",
+        "actionType": "main",
+        "cost": "Signature",
+        "flavor": "You show your foe a glimpse of their fate after death.",
+        "keywords": ["Magic", "Ranged", "Strike"],
+        "distance": "Ranged **10**",
+        "targets": "One creature",
+        "powerRoll": {
+          "characteristic": "Presence",
+          "tiers": {
+            "low":  "**5 + P** psychic damage",
+            "mid":  "**7 + P** psychic damage",
+            "high": "**10 + P** psychic damage"
+          }
+        },
+        "sections": [
+          { "label": "Effect", "text": "Each time the target willingly moves before the end of your next turn, they take **1 psychic damage** for each square they move." }
+        ]
+      } }
+    ]
+  }
+  </script>
+
+  <!-- 4 · CHOOSE-ONE FEATURE → NESTED SUB-TRAITS (one grants an ability): full recursion -->
+  <script type="application/json" class="sc-trait-data">
+  {
+    "featureType": "Censor · Exorcist",
+    "name": "Sworn Sanction",
+    "tag": "Level 1",
+    "body": [
+      { "kind": "text", "text": "Your order trains you to enforce one of three holy sanctions. Choose one of the following when you gain this feature. You can change your choice when you finish a respite." },
+      { "kind": "trait", "data": {
+        "featureType": "Sanction",
+        "name": "Vow of Silence",
+        "body": [
+          { "kind": "text", "text": "Your sworn enemy can't benefit from being hidden from you, and whenever they would impose a **bane** on one of your power rolls, that bane is ignored." }
+        ]
+      } },
+      { "kind": "trait", "data": {
+        "featureType": "Sanction",
+        "name": "Vow of Wrath",
+        "body": [
+          { "kind": "text", "text": "When your sworn enemy is felled or flees, divine light answers. While you have this sanction, you can spend Wrath to retaliate the instant your enemy strikes one of your allies." },
+          { "kind": "leadin", "text": "You gain the following ability:" },
+          { "kind": "ability", "data": {
+            "name": "Ray of Wrath",
+            "actionType": "triggered",
+            "cost": { "value": 3, "unit": "Wrath" },
+            "flavor": "The faithful do not strike alone — divine light answers an enemy's first mistake.",
+            "keywords": ["Magic", "Ranged"],
+            "distance": "Ranged **10**",
+            "targets": "The triggering enemy",
+            "sections": [
+              { "label": "Trigger", "text": "An enemy within distance deals damage to one of your allies." },
+              { "label": "Effect",  "text": "You unleash a bolt of searing light, dealing **2 fire damage** to that enemy. A target reduced to 0 Stamina is also knocked prone." }
+            ]
+          } }
+        ]
+      } },
+      { "kind": "trait", "data": {
+        "featureType": "Sanction",
+        "name": "Vow of Absolution",
+        "body": [
+          { "kind": "segment", "tone": "benefit", "label": "Benefit", "text": "Each ally adjacent to you gains a **+1 bonus** to saving throws against effects caused by your sworn enemy." },
+          { "kind": "segment", "tone": "drawback", "label": "Cost", "text": "While this sanction is active, you can't make opportunity attacks against any creature other than your sworn enemy." }
+        ]
+      } }
+    ]
+  }
+  </script>
+
+</div>
+
+<script src="../v2/docs/javascripts/steel-ability-cards.js"></script>
+<script src="../v2/docs/javascripts/steel-traits.js"></script>
+<script>
+  document.getElementById("themeBtn").addEventListener("click", function () {
+    var h = document.documentElement;
+    h.setAttribute("data-md-color-scheme", h.getAttribute("data-md-color-scheme") === "slate" ? "default" : "slate");
+  });
+</script>
+</body>
+</html>

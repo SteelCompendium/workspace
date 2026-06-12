@@ -1,0 +1,21 @@
+/* ============================================================
+   Steel Compendium — Design System entry stylesheet
+   ============================================================
+   This is the single global stylesheet for the design system.
+   Link THIS file to get the brand tokens, font faces, type scale,
+   and base element styles. It @imports the canonical token sheet;
+   the compiler reads all design tokens + @font-face from this
+   closure.
+
+   Component / context stylesheets are loaded separately by the
+   things that need them (they layer on top of these tokens and,
+   in production, the MkDocs site's own --md-* variables):
+     • ui_kits/compendium/kit.css            — the interactive UI kit
+     • redesign/*.css                        — the redesign exploration canvas
+     • v2-handoff/v2/docs/stylesheets/*.css  — production drop-ins for the
+       live site (steel-redesign, -ability-cards, -traits, -indexes). These
+       define their own component-local CSS vars (--fx-*, --act, …) and are
+       intentionally NOT global design tokens.
+   ============================================================ */
+
+@import url("colors_and_type.css");

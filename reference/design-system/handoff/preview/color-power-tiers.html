@@ -1,0 +1,24 @@
+<!-- @dsCard group="Colors" -->
+<!DOCTYPE html>
+<html data-md-color-scheme="slate">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body { margin:0; }
+  body { background: var(--bg); padding: 24px 28px; }
+  .row { display:flex; gap: 14px; }
+  .tier { flex:1; border-radius: var(--radius-md); padding: 14px 16px; background: var(--bg-light); border-top: 4px solid var(--c); }
+  .tier .g { font-family: var(--font-glyph); font-size: 30px; color: var(--c); line-height:1; }
+  .tier .lab { font-family: var(--font-subhead); color: var(--fg); margin-top: 8px; font-size: 16px; }
+  .tier .hex { font-family: var(--font-mono); font-size: 10px; color: var(--fg-lighter); margin-top: 2px; }
+</style>
+</head>
+<body>
+  <div class="row">
+    <div class="tier" style="--c:#e74c3c"><div class="g">!</div><div class="lab">≤ 11 — low</div><div class="hex">#e74c3c</div></div>
+    <div class="tier" style="--c:#f0b429"><div class="g">@</div><div class="lab">12–16 — mid</div><div class="hex">#f0b429</div></div>
+    <div class="tier" style="--c:#4caf6a"><div class="g">#</div><div class="lab">17+ — high</div><div class="hex">#4caf6a</div></div>
+  </div>
+</body>
+</html>

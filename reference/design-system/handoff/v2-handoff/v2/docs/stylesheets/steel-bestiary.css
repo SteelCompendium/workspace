@@ -1,0 +1,54 @@
+/* Bestiary Search & Filter — results table + Level/EV range inputs.
+   Reuses the .sc-browse shell from steel-indexes.css; this file adds only the
+   table + range UI. Baseline functional styling; visual polish is a later pass. */
+
+.sc-browse__ranges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin: .25rem 0 .75rem;
+}
+.sc-browse__range { display: flex; align-items: center; gap: .4rem; }
+.sc-browse__range .lbl { font-weight: 600; font-size: .8rem; opacity: .85; }
+.sc-browse__range input {
+  width: 4.5rem;
+  padding: .25rem .4rem;
+  border: 1px solid var(--md-default-fg-color--lighter, #ccc);
+  border-radius: 4px;
+  background: var(--md-default-bg-color, #fff);
+  color: inherit;
+  font: inherit;
+}
+.sc-range__dash { opacity: .6; }
+
+.sc-bestiary {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .82rem;
+}
+.sc-bestiary thead th {
+  position: sticky;
+  top: 0;
+  background: var(--md-default-bg-color, #fff);
+  text-align: left;
+  padding: .45rem .6rem;
+  border-bottom: 2px solid var(--md-default-fg-color--lighter, #ddd);
+  white-space: nowrap;
+}
+.sc-bestiary th.is-sortable { cursor: pointer; user-select: none; }
+.sc-bestiary th.is-sortable:hover { color: var(--md-accent-fg-color, inherit); }
+.sc-bestiary tbody td {
+  padding: .4rem .6rem;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest, #eee);
+  vertical-align: top;
+}
+.sc-bestiary tbody tr:hover { background: var(--md-default-fg-color--lightest, #f3f3f3); }
+.sc-bestiary__kw {
+  display: inline-block;
+  font-size: .72rem;
+  padding: .05rem .4rem;
+  margin: .05rem .1rem;
+  border-radius: 10px;
+  background: var(--md-default-fg-color--lightest, #eee);
+  white-space: nowrap;
+}

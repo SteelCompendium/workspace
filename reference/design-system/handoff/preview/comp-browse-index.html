@@ -1,0 +1,32 @@
+<!-- @dsCard group="Components" -->
+<!DOCTYPE html>
+<html data-md-color-scheme="slate">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body { margin:0; }
+  body { background: var(--bg); padding: 22px 26px; }
+  .index { list-style:none; padding:0; margin:0; display:grid; grid-template-columns: repeat(3,1fr); gap: 8px 12px; }
+  .index li { padding: 7px 12px; border-radius: var(--radius-sm); border:1px solid var(--fg-lightest); transition: background .15s, border-color .15s; }
+  .index li:hover { background: var(--accent-transparent); border-color: var(--accent); }
+  .index a { font-family: var(--font-body); font-size: 16px; color: var(--fg); display:block; }
+  .index li:hover a { color: var(--accent); }
+  .index li.hov { background: var(--accent-transparent); border-color: var(--accent); }
+  .index li.hov a { color: var(--accent); }
+</style>
+</head>
+<body>
+  <ul class="index">
+    <li><a href="#">Censor</a></li>
+    <li class="hov"><a href="#">Conduit</a></li>
+    <li><a href="#">Elementalist</a></li>
+    <li><a href="#">Fury</a></li>
+    <li><a href="#">Null</a></li>
+    <li><a href="#">Shadow</a></li>
+    <li><a href="#">Tactician</a></li>
+    <li><a href="#">Talent</a></li>
+    <li><a href="#">Troubadour</a></li>
+  </ul>
+</body>
+</html>

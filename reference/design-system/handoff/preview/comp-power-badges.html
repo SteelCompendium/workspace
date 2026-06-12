@@ -1,0 +1,26 @@
+<!-- @dsCard group="Components" -->
+<!DOCTYPE html>
+<html data-md-color-scheme="slate">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body { margin:0; }
+  body { background: var(--bg); padding: 22px 26px; font-family: var(--font-body); color: var(--fg); }
+  .pr { display:flex; flex-direction:column; gap: 8px; }
+  .row { display:flex; align-items:center; gap: 12px; }
+  .badge { font-family: var(--font-glyph); font-size: 30px; line-height:1; }
+  .b-low { color: var(--tier-low); } .b-mid { color: var(--tier-mid); } .b-high { color: var(--tier-high); }
+  .row span:last-child { font-size: 15px; }
+  .cap { font-family: var(--font-mono); font-size: 11px; color: var(--fg-lighter); margin-top: 14px; }
+</style>
+</head>
+<body>
+  <div class="pr">
+    <div class="row"><span class="badge b-low">!</span><span>≤ 11 — minimal effect</span></div>
+    <div class="row"><span class="badge b-mid">@</span><span>12–16 — solid hit</span></div>
+    <div class="row"><span class="badge b-high">#</span><span>17+ — critical success</span></div>
+  </div>
+  <div class="cap">Power-roll tier badges · DrawSteelGlyphs "!" "@" "#" · injected by ability-cards.js</div>
+</body>
+</html>

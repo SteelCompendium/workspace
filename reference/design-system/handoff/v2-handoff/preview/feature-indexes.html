@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" data-md-color-scheme="slate">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Steel Compendium — feature & treasure index pages</title>
+<link rel="icon" href="../../assets/favicon.ico">
+<!-- shim: the v2 site's real Material vars + brand @font-face so the production
+     steel-*.css render exactly as they will in the repo -->
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap");
+  @font-face { font-family:"Beaufort W01 Heavy"; font-display:swap; src:url("https://db.onlinewebfonts.com/t/5a8d949826c5f2d8733fa324b51a507d.woff2") format("woff2"); }
+  @font-face { font-family:"Test Newzald"; font-display:swap; src:url("https://db.onlinewebfonts.com/t/776429d73240ce386ead55e740ef2ece.woff2") format("woff2"); }
+  @font-face { font-family:"BerlingskeSlab-DBd"; font-display:swap; src:url("https://db.onlinewebfonts.com/t/8cd8b6c5a3db3b61777d58cb5860fb17.woff2") format("woff2"); }
+  @font-face { font-family:"DrawSteelGlyphs"; font-display:swap; src:url("../../fonts/DrawSteelGlyphs-Regular.otf") format("opentype"); }
+  :root, [data-md-color-scheme="slate"] {
+    --md-large-header-font:"Beaufort W01 Heavy"; --md-small-header-font:"Test Newzald";
+    --md-text-font:"BerlingskeSlab-DBd"; --md-code-font:"JetBrains Mono";
+    --md-default-bg-color:#1a1e21; --md-default-bg-color--light:#22272b;
+    --md-default-fg-color:rgba(220,226,230,.88); --md-default-fg-color--light:rgba(220,226,230,.62);
+    --md-default-fg-color--lighter:rgba(220,226,230,.38); --md-default-fg-color--lightest:rgba(220,226,230,.12);
+    --md-accent-fg-color:#4db8c7; --md-primary-fg-color:#1a1e21; --md-typeset-a-color:#4db8c7;
+    --sc-steel:#8e959a; --sc-steel-light:#b0b7bb; --sc-steel-lighter:#cdd1d4;
+    --sc-ability-strike:#e74c3c; --sc-ability-ranged:#5dade2; --sc-ability-maneuver:#bb8fce;
+    --sc-ability-triggered:#f0b429; --sc-ability-area:#48c9a4; --sc-ability-passive:#b0b7bb;
+    --sc-tier-high:#4caf6a; --sc-tier-mid:#f0b429; --sc-tier-low:#e74c3c;
+  }
+  [data-md-color-scheme="default"] {
+    --md-large-header-font:"Beaufort W01 Heavy"; --md-small-header-font:"Test Newzald";
+    --md-text-font:"BerlingskeSlab-DBd"; --md-code-font:"JetBrains Mono";
+    --md-default-bg-color:#f6f8f8; --md-default-fg-color:#2c2e30; --md-default-fg-color--light:#555960;
+    --md-default-fg-color--lighter:#828890; --md-default-fg-color--lightest:#c8cdd0;
+    --md-accent-fg-color:#2a7b88; --md-primary-fg-color:#2c3338; --md-typeset-a-color:#2a7b88;
+    --sc-steel:#5a6368; --sc-steel-light:#8e959a; --sc-steel-lighter:#5a6368;
+    --sc-ability-strike:#c0392b; --sc-ability-ranged:#2874a6; --sc-ability-maneuver:#7d3c98;
+    --sc-ability-triggered:#b9770e; --sc-ability-area:#148f77; --sc-ability-passive:#7b8a8b;
+    --sc-tier-high:#1e8449; --sc-tier-mid:#b9770e; --sc-tier-low:#c0392b;
+  }
+  /* minimal Material-like shell (the real site provides this) */
+  * { box-sizing: border-box; }
+  html,body { margin:0; }
+  body { background:var(--md-default-bg-color); color:var(--md-default-fg-color); font-family:var(--md-text-font); }
+  .md-header { background:var(--md-primary-fg-color); position:sticky; top:0; z-index:10; box-shadow:0 1px 0 rgba(0,0,0,.5); }
+  .md-header__inner { display:flex; align-items:center; gap:14px; padding:0 1.2rem; height:48px; max-width:80rem; margin:0 auto; }
+  .md-header__logo img { width:26px; height:26px; display:block; }
+  .md-header__title { font-family:var(--md-large-header-font); text-transform:uppercase; font-size:15px; color:#dce0e2; letter-spacing:.01em; }
+  .md-header__spacer { flex:1; }
+  .md-search { background:rgba(255,255,255,.08); border-radius:5px; padding:6px 12px; color:rgba(220,226,230,.5); font-size:13px; width:200px; display:flex; gap:8px; align-items:center; }
+  .md-toggle { background:none; border:none; color:rgba(220,226,230,.6); cursor:pointer; font-size:16px; padding:6px; border-radius:6px; }
+  .md-toggle:hover { background:rgba(255,255,255,.08); color:var(--md-accent-fg-color); }
+  .md-tabs { background:var(--md-primary-fg-color); border-top:1px solid rgba(255,255,255,.06); }
+  .md-tabs__inner { display:flex; gap:26px; padding:0 1.2rem; height:40px; align-items:center; max-width:80rem; margin:0 auto; }
+  .md-tabs__link { font-size:14px; color:rgba(220,226,230,.6); cursor:pointer; height:100%; display:flex; align-items:center; border-bottom:2px solid transparent; }
+  .md-tabs__link.active { color:#dce0e2; border-bottom-color:var(--md-accent-fg-color); }
+  .md-tabs__link:hover { color:#dce0e2; }
+  .md-main { max-width:60rem; margin:0 auto; padding:1.6rem 1.5rem 4rem; }
+  .md-typeset { line-height:1.7; }
+  .md-typeset h1 { font-family:var(--md-large-header-font); text-transform:uppercase; font-size:3.6rem; line-height:.9; color:var(--sc-steel-lighter); margin:0 0 .1em; }
+  .md-typeset > p { color:var(--md-default-fg-color--light); font-size:1rem; max-width:64ch; }
+  .md-typeset hr { border:none; height:2px; position:relative; margin:1rem 0;
+    background:linear-gradient(to left,var(--md-default-fg-color--lighter) 50%,transparent) no-repeat left center,
+               linear-gradient(to right,var(--md-default-fg-color--lighter) 50%,transparent) no-repeat right center;
+    background-size:calc(50% - 7px) 2px,calc(50% - 7px) 2px; }
+  .md-typeset hr::after { content:""; position:absolute; top:50%; left:50%; width:14px; height:14px; margin:-7px 0 0 -7px;
+    background:var(--md-default-fg-color--lighter); transform:rotate(45deg); box-shadow:inset 0 0 0 3px var(--md-default-bg-color); }
+  .md-typeset a { color:var(--md-typeset-a-color); text-decoration:none; }
+  .md-typeset .grid.cards > ul { display:grid; padding:0; margin:0; list-style:none; }
+  .crumb { font-family:var(--md-code-font); font-size:.72rem; color:var(--md-default-fg-color--lighter); margin-bottom:.6rem; text-transform:uppercase; letter-spacing:.06em; }
+  .viewbtns { display:flex; flex-wrap:wrap; gap:6px; }
+  .viewbtns button { font-family:var(--md-small-header-font); font-size:13.5px; background:rgba(255,255,255,.05); border:1px solid var(--md-default-fg-color--lightest); color:var(--md-default-fg-color--light); padding:6px 13px; cursor:pointer; border-radius:7px; }
+  .viewbtns button:hover { color:var(--md-default-fg-color); border-color:var(--sc-steel); }
+  .viewbtns button.on { background:var(--md-accent-fg-color); color:#06232a; border-color:var(--md-accent-fg-color); }
+  [data-md-color-scheme="default"] .viewbtns button.on { color:#f3f8f8; }
+  .viewbtns__group { font-family:var(--md-small-header-font); font-variant:small-caps; letter-spacing:.06em; font-size:12px; color:var(--md-default-fg-color--lighter); align-self:center; margin:0 2px 0 8px; }
+  .viewbtns__group:first-child { margin-left:0; }
+</style>
+<link rel="stylesheet" href="../v2/docs/stylesheets/steel-redesign.css">
+<link rel="stylesheet" href="../v2/docs/stylesheets/steel-ability-cards.css">
+<link rel="stylesheet" href="../v2/docs/stylesheets/steel-indexes.css">
+</head>
+<body>
+<header class="md-header">
+  <div class="md-header__inner">
+    <span class="md-header__logo"><img src="../../assets/steel_compendium_glow_white.svg" alt=""></span>
+    <span class="md-header__title">Steel Compendium: Draw Steel Rules</span>
+    <span class="md-header__spacer"></span>
+    <button class="md-toggle" id="themeBtn" title="Toggle light/dark">🌙</button>
+    <span class="md-search">🔍 Search</span>
+  </div>
+  <nav class="md-tabs"><div class="md-tabs__inner">
+    <span class="md-tabs__link active">Browse</span>
+    <span class="md-tabs__link">Rulebook Chapters</span>
+    <span class="md-tabs__link">Full Rulebook</span>
+    <span class="md-tabs__link">Bestiary</span>
+    <span class="md-tabs__link">Preferences</span>
+  </div></nav>
+</header>
+<main class="md-main">
+  <div class="viewbtns" style="margin-bottom:1.3rem">
+    <span class="viewbtns__group">Index of indexes</span>
+    <button id="b-feature" class="on">Feature</button>
+    <button id="b-traitcls">Trait › classes</button>
+    <button id="b-levels">Censor › levels</button>
+    <button id="b-treasure">Treasure</button>
+    <span class="viewbtns__group">Parent of leaves</span>
+    <button id="b-traitidx">Trait index</button>
+    <button id="b-abilidx">Ability index</button>
+    <span class="viewbtns__group">Power view</span>
+    <button id="b-browse">Search &amp; filter</button>
+  </div>
+  <article class="md-typeset" id="content"></article>
+</main>
+
+<script src="preview-icons.js"></script>
+<script src="../v2/docs/javascripts/steel-feature-browser.js"></script>
+<script src="preview-feature-render.js"></script>
+</body>
+</html>

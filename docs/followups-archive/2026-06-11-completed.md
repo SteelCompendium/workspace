@@ -102,3 +102,14 @@ are noted; they do not correspond to the current numbering in the live file.
 - **Why it matters:** Clickable-but-404 links to skill-group landing pages on live heroes content, plus persistent build warnings. The 2026-06-09 migration repointed the **site landing** but the **link target** still resolves to the pre-relocation path.
 - **Fix options:** Make the `scc:…/skill.group/<member>` link resolver emit `skill/<member>/` (the relocated index) instead of `skill/group/<member>.md` — likely in the md-linked link-resolution / `groupLandingIndexDest` mapping (`steel-etl/internal/site/build.go`), mirroring how the page itself was relocated. Confirm against `docs/superpowers/plans/2026-06-09-group-landing-scc-migration.md`. Then re-gen heroes (`gen --book mcdm.heroes.v1`) + `steel-etl site` + `mkdocs build` and confirm zero `skill/group/` warnings. Cross-check the same pattern doesn't affect `monster.group/<category>` links.
 - **Effort:** S
+
+---
+
+## `settings-core.test.js` fails — max-width drift (test says 500, code says 300) (was FOLLOWUPS #6)
+
+**Status:** done — 2026-06-11 (v2 `fef309cf42`). **300 is the source of truth** — git history shows the cap was deliberately lowered 500→300 (`94eb30bd` "Setting the max manually-set width to 300em for finer control", after the earlier `83d22310` that raised it to 500), and the runtime derives the slider `max` from the single `WIDTH_MAX_EM` constant (`settings-panel.js:484` → `String(C.WIDTH_MAX_EM)`), so the whole system was already consistent at 300; only the test was stale. Updated the three stale `500` references in `tests/settings-core.test.js` (the `[44, 500]` test name, `clampEm(600)→300`, and `widthToControls("600em")→{em:300}`). Suite now 11/11 green. Test-only change (not part of the published site), so no deploy.
+
+- **Identified:** 2026-06-10, running the v2 `node:test` suite while adding `ability-cards-core.test.js` for the statblock power-roll site fix.
+- **What:** `v2/tests/settings-core.test.js` had **2 failing tests** (`node --test tests/` → 9 pass / 2 fail), both pre-existing and unrelated to the statblock work: (a) `"clampEm clamps to [44, 500] and snaps to step"` asserted `clampEm(600) === 500`, but `settings-core.js` defines `WIDTH_MAX_EM = 300`, so it returns `300`; (b) `"widthToControls maps stored width to slider state"` failed the same way (it routes through `clampEm` for an out-of-range stored width). The content-max-width cap was lowered 500→300 (the v2 footer/header / live-settings rework) without updating the test.
+- **Why it matters:** A red test suite hides real regressions and erodes the "tests pass" signal. It was a one-sided drift — pick the source of truth and align the other side.
+- **Effort:** XS

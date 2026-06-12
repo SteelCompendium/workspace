@@ -1,0 +1,137 @@
+/* ============================================================
+   HIGH-FANTASY STEEL — ornament layer (.fx-*)
+   Warms the system toward high fantasy WITHOUT losing the clean
+   look: polished-STEEL filigree, heraldic crest frames, small-caps
+   serif labels, engraved initials, etched texture.
+   (Ornament metal = brushed silver-steel; teal kept only for
+   semantic ability-type dots.)
+   Layers on colors_and_type.css + steel.css.
+   ============================================================ */
+
+:root {
+  --fx-metal:        #a9b0b5;   /* mid steel */
+  --fx-metal-bright: #d9dee1;   /* polished silver highlight */
+  --fx-metal-deep:   #6a7176;   /* shadowed steel */
+  --fx-metal-grad:   linear-gradient(180deg, #e3e7e9 0%, #a9b0b5 48%, #686f74 100%);
+  --fx-metal-line:   rgba(176,183,187,.5);
+  --fx-metal-faint:  rgba(176,183,187,.16);
+  /* etched (not brushed) — faint damascus wave, very low opacity */
+  --fx-etch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='30'%3E%3Cpath d='M0 15 Q22 2 45 15 T90 15' fill='none' stroke='%23b0b7bb' stroke-width='1'/%3E%3C/svg%3E");
+}
+
+/* cool page wash + soft vignette */
+.fx-page { background:
+    radial-gradient(120% 80% at 50% -10%, rgba(176,183,187,.045), transparent 60%),
+    var(--bg);
+  color: var(--fg); font-family: var(--font-body); position: relative; min-height: 100%; }
+.fx-page::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: var(--rd-grain); background-size: 180px; opacity: .03; mix-blend-mode: overlay; }
+.fx-page::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  box-shadow: inset 0 0 160px rgba(0,0,0,.5); }
+.fx-page > * { position: relative; z-index: 1; }
+
+/* small-caps serif label — old-world replacement for mono eyebrows */
+.fx-label { font-family: var(--font-subhead); font-variant: small-caps; text-transform: lowercase;
+  letter-spacing: .12em; font-size: 14px; color: var(--fx-metal); }
+.fx-kicker { font-family: var(--font-subhead); font-variant: small-caps; letter-spacing: .16em;
+  font-size: 13px; color: var(--fx-metal); }
+
+/* polished-metal gradient text — use sparingly for ornament */
+.fx-illuminated { background: var(--fx-metal-grad); -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent; }
+
+/* ── Ornamental divider: lines fade OUTWARD from the center ◆ ── */
+.fx-rule { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 14px 0; }
+.fx-rule i { height: 1px; flex: 1; max-width: 220px; }
+.fx-rule i:first-of-type { background: linear-gradient(90deg, transparent, var(--fx-metal-line)); }
+.fx-rule i:last-of-type  { background: linear-gradient(90deg, var(--fx-metal-line), transparent); }
+.fx-rule b { width: 8px; height: 8px; transform: rotate(45deg); background: var(--fx-metal);
+  box-shadow: 0 0 0 4px var(--bg), 0 0 0 5px var(--fx-metal-faint); flex-shrink: 0; }
+.fx-rule s { width: 3px; height: 3px; border-radius: 50%; background: var(--fx-metal-line); flex-shrink: 0; }
+
+/* ── Filigree corner frame: 4 L-brackets + corner diamonds ── */
+.fx-frame { position: relative; }
+.fx-cnr { position: absolute; width: 13px; height: 13px; border: 0 solid var(--fx-metal-line);
+  opacity: .8; transition: opacity .2s; }
+.fx-cnr::after { content: ""; position: absolute; width: 3px; height: 3px; background: var(--fx-metal);
+  transform: rotate(45deg); }
+.fx-cnr.tl { top: 7px; left: 7px; border-top-width: 1px; border-left-width: 1px; }
+.fx-cnr.tl::after { top: -2px; left: -2px; }
+.fx-cnr.tr { top: 7px; right: 7px; border-top-width: 1px; border-right-width: 1px; }
+.fx-cnr.tr::after { top: -2px; right: -2px; }
+.fx-cnr.bl { bottom: 7px; left: 7px; border-bottom-width: 1px; border-left-width: 1px; }
+.fx-cnr.bl::after { bottom: -2px; left: -2px; }
+.fx-cnr.br { bottom: 7px; right: 7px; border-bottom-width: 1px; border-right-width: 1px; }
+.fx-cnr.br::after { bottom: -2px; right: -2px; }
+
+/* ── Heraldic crest frame for category / type icons ── */
+.fx-crest { position: relative; width: 50px; height: 56px; flex-shrink: 0;
+  --shield: polygon(6% 0, 94% 0, 94% 58%, 50% 100%, 6% 58%);
+  clip-path: var(--shield); background: var(--fx-metal-grad); }
+.fx-crest > span { position: absolute; inset: 1.5px; clip-path: var(--shield);
+  background: radial-gradient(circle at 42% 30%, #2b3137, #14181b);
+  display: grid; place-items: center; color: var(--fx-metal-bright); }
+.fx-crest.sm { width: 38px; height: 43px; }
+
+/* ── Engraved drop cap ── */
+.fx-dropcap { overflow: hidden; } /* contain the floated initial (BFC) */
+.fx-dropcap::first-letter { font-family: var(--font-display); font-size: 3.4em; line-height: .8;
+  float: left; margin: 6px 12px 0 0; padding: 4px 2px 0; color: var(--fx-metal);
+  background: var(--fx-metal-grad); -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; text-shadow: none; }
+
+/* steel count badge */
+.fx-count { font-family: var(--font-mono); font-weight: 700; font-size: 13px; color: var(--fx-metal-bright);
+  border: 1px solid var(--fx-metal-line); border-radius: 5px; padding: 2px 9px; background: var(--fx-metal-faint); }
+
+/* item chips + enter affordance (Forged Plate A layout) */
+.fx-chip { font-family: var(--font-subhead); font-variant: small-caps; letter-spacing: .03em; font-size: 13px;
+  color: var(--fg-light); border: 1px solid var(--fx-metal-faint); border-radius: 5px; padding: 2px 9px;
+  background: rgba(255,255,255,.02); }
+.fx-cat:hover .fx-chip { border-color: var(--fx-metal-line); }
+.fx-enter { margin-left: auto; align-self: center; display: flex; align-items: center; gap: 5px;
+  font-family: var(--font-subhead); font-variant: small-caps; letter-spacing: .06em; font-size: 13px; color: var(--fx-metal); }
+
+/* ── Fantasy masthead: steel + faint etched watermark ── */
+.fx-masthead { background: linear-gradient(180deg, #20262a, #161a1d); position: relative;
+  border-bottom: 1px solid var(--fx-metal-faint); box-shadow: var(--rd-bevel-top); overflow: hidden; }
+.fx-masthead::after { content: ""; position: absolute; inset: 0; background-image: var(--fx-etch);
+  background-size: 90px 30px; opacity: .05; pointer-events: none; }
+
+/* ── Fantasy category card (Forged Plate A layout) ── */
+.fx-cat { position: relative; border-radius: 8px; padding: 18px 20px; cursor: pointer;
+  background: linear-gradient(160deg, #232a2e, #181c1f);
+  border: 1px solid rgba(255,255,255,.05);
+  box-shadow: var(--rd-bevel-top), 0 6px 18px rgba(0,0,0,.3); transition: box-shadow .2s, transform .2s; }
+.fx-cat:hover { transform: translateY(-3px);
+  box-shadow: var(--rd-bevel-top), 0 14px 28px rgba(0,0,0,.42), 0 0 0 1px var(--fx-metal-line); }
+.fx-cat:hover .fx-cnr { opacity: 1; }
+.fx-cat-h { display: flex; align-items: center; gap: 14px; }
+.fx-cat-name { font-family: var(--font-display); text-transform: uppercase; font-size: 26px; line-height: 1;
+  color: var(--sc-steel-lighter); text-shadow: var(--rd-emboss); }
+.fx-cat-blurb { font-size: 13px; color: var(--fg-light); line-height: 1.55; margin: 12px 0 14px; }
+.fx-cat-foot { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+
+/* ── Fantasy codex kit card (Forged Plate layout) ── */
+.fxk { position: relative; border-radius: 9px; padding: 16px 18px; cursor: pointer; overflow: hidden;
+  background: linear-gradient(160deg, #232a2e, #171b1e);
+  border: 1px solid rgba(255,255,255,.05);
+  box-shadow: var(--rd-bevel-top), 0 6px 18px rgba(0,0,0,.3); transition: box-shadow .2s, transform .2s; }
+.fxk:hover { transform: translateY(-2px);
+  box-shadow: var(--rd-bevel-top), 0 12px 26px rgba(0,0,0,.42), 0 0 0 1px var(--fx-metal-line); }
+.fxk:hover .fx-cnr { opacity: 1; }
+.fxk-top { display: flex; align-items: center; gap: 13px; }
+.fxk-type { font-family: var(--font-subhead); font-variant: small-caps; letter-spacing: .1em; font-size: 13px; color: var(--fx-metal); }
+.fxk-name { font-family: var(--font-display); text-transform: uppercase; font-size: 25px; line-height: 1;
+  color: var(--sc-steel-lighter); text-shadow: var(--rd-emboss); margin: 2px 0; }
+.fxk-equip { font-family: var(--font-subhead); font-variant: small-caps; letter-spacing: .04em; font-size: 13px; color: var(--fg-lighter); }
+.fxk-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; margin: 13px 0; }
+.fxk-stat { background: rgba(0,0,0,.25); border: 1px solid var(--fx-metal-faint); border-radius: 6px;
+  padding: 7px 4px; text-align: center; }
+.fxk-stat .v { font-family: var(--font-mono); font-weight: 700; font-size: 15px; color: var(--sc-steel-lighter); }
+.fxk-stat .l { font-family: var(--font-subhead); font-variant: small-caps; font-size: 11px; letter-spacing: .06em; color: var(--fg-lighter); margin-top: 2px; }
+.fxk-stat.dmg .v { color: var(--fx-metal-bright); }
+.fxk-sig { display: flex; align-items: center; gap: 9px; }
+.fxk-sig-label { font-family: var(--font-subhead); font-variant: small-caps; letter-spacing: .08em; font-size: 12px; color: var(--fx-metal); }
+.fxk-sig-name { font-family: var(--font-subhead); font-size: 16px; color: var(--fg); }
+.fxk-kw { margin-left: auto; font-family: var(--font-subhead); font-variant: small-caps; font-size: 12px; color: var(--fg-lighter); }

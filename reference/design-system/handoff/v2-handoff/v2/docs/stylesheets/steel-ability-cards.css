@@ -1,0 +1,206 @@
+/* ============================================================
+   Steel Compendium — steel-ability-cards.css
+   DROP-IN for the v2 MkDocs site. Add to mkdocs.yml `extra_css`
+   AFTER steel-redesign.css (it reuses that file's --fx-* tokens
+   and the reusable .sc-crest shield).
+
+   Renders an ABILITY / TRAIT in the high-fantasy steel language:
+   heraldic crest keyed to ACTION TYPE, persistent cost badge,
+   Distance/Targets rail, a cohesive Power-Roll panel, and titled
+   Effect/Trigger panels. Themes for both slate (dark) + default.
+
+   The HTML it targets is emitted by steel-etl (see ABILITY-CARDS.md
+   for the target shape + Go sketch) or by steel-ability-cards.js.
+   ============================================================ */
+
+/* ── ACTION-TYPE colors (the only saturated color on the card) ── */
+[data-md-color-scheme="slate"] {
+  --sc-act-main:      #e74c3c;  /* Main Action   — red    */
+  --sc-act-maneuver:  #5dade2;  /* Maneuver      — blue   */
+  --sc-act-triggered: #4caf6a;  /* Triggered     — green  */
+  --sc-act-move:      #e8a13a;  /* Move          — orange */
+  --sc-act-none:      #cdd1d4;  /* No Action     — white  */
+  --sc-act-trait:     #bb8fce;  /* Trait / Other — purple */
+}
+[data-md-color-scheme="default"] {
+  --sc-act-main:      #c0392b;
+  --sc-act-maneuver:  #2874a6;
+  --sc-act-triggered: #1e8449;
+  --sc-act-move:      #b9770e;
+  --sc-act-none:      #5a6368;
+  --sc-act-trait:     #7d3c98;
+}
+
+/* ════════════════════════════════════════════════════════════
+   PLATE
+   ════════════════════════════════════════════════════════════ */
+.md-typeset .sc-ability {
+  --act: var(--sc-act-main);
+  position: relative; margin: 1.2rem 0;
+  border: 1px solid rgba(255,255,255,.06); border-radius: .6rem;
+  padding: 1.15rem 1.25rem 1.25rem;
+  background: var(--fx-card-bg);
+  box-shadow: var(--fx-bevel), 0 8px 22px rgba(0,0,0,.34);
+  overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+[data-md-color-scheme="default"] .md-typeset .sc-ability {
+  border-color: var(--md-default-fg-color--lightest);
+  box-shadow: var(--fx-bevel), 0 4px 12px rgba(0,0,0,.08);
+}
+.md-typeset .sc-ability::before { /* faint etched watermark */
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='30'%3E%3Cpath d='M0 15 Q22 2 45 15 T90 15' fill='none' stroke='%23b0b7bb' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 92px 30px; opacity:.045; mix-blend-mode: overlay;
+}
+.md-typeset .sc-ability:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--fx-bevel), 0 14px 30px rgba(0,0,0,.46), 0 0 0 1px var(--fx-metal-line);
+}
+.md-typeset .sc-ability > * { position: relative; z-index: 1; }
+
+/* action-type → accent (crest glyph, eyebrow, diamonds) */
+.sc-ability[data-action="main"]      { --act: var(--sc-act-main); }
+.sc-ability[data-action="maneuver"]  { --act: var(--sc-act-maneuver); }
+.sc-ability[data-action="triggered"] { --act: var(--sc-act-triggered); }
+.sc-ability[data-action="move"]      { --act: var(--sc-act-move); }
+.sc-ability[data-action="none"]      { --act: var(--sc-act-none); }
+.sc-ability[data-action="trait"]     { --act: var(--sc-act-trait); }
+
+/* filigree corners (reuses .sc-fil from steel-redesign.css; included here
+   so this file works even if loaded alone) */
+.md-typeset .sc-ability.sc-fil::before,
+.md-typeset .sc-ability.sc-fil::after { content:""; }
+.md-typeset .sc-ability:hover.sc-fil::before,
+.md-typeset .sc-ability:hover.sc-fil::after { opacity:.85; }
+
+/* ════════════════════════════════════════════════════════════
+   HEAD — crest · titles · cost
+   ════════════════════════════════════════════════════════════ */
+.sc-ability__head { display:grid; grid-template-columns: auto 1fr auto; gap: .9rem; align-items: start; }
+
+.sc-ability__crest { /* extends .sc-crest (the steel shield) */
+  width: 3rem; height: 3.4rem; align-self: start; }
+.sc-ability__crest::before { inset: 1.5px; }
+.sc-ability__crest > .sc-ability__glyph { transform: translateY(-8px); } /* optical-center in shield (narrows downward) */
+.sc-ability__glyph { font-family: "DrawSteelGlyphs", sans-serif; font-size: 1.25rem; line-height: 1;
+  color: var(--act); -webkit-font-smoothing: antialiased; }
+
+/* Bottom-align the eyebrow+name stack to the crest so the name's first-line
+   baseline sits at the bottom of the shield (matches the canvas design). */
+.sc-ability__titles { min-width: 0; align-self: end; }
+.sc-ability__eyebrow { display:flex; align-items:center; gap:.5rem;
+  font-family: var(--md-small-header-font); font-variant: small-caps; text-transform: lowercase;
+  letter-spacing:.1em; font-size: .92rem; color: var(--act); }
+.sc-ability__dia { width:7px; height:7px; transform:rotate(45deg); background: var(--act); flex:0 0 auto; }
+/* .md-typeset prefix so this beats Material's `.md-typeset h3` rule, whose
+   large top-margin + line-height were being inherited and shifting the name. */
+.md-typeset .sc-ability__name { font-family: var(--md-large-header-font); text-transform: uppercase;
+  font-size: 1.85rem; line-height: 1; color: var(--sc-steel-lighter);
+  text-shadow: var(--fx-emboss); margin: 0; letter-spacing:.01em; }
+
+.sc-ability__corner { position: relative; display:flex; flex-direction:column; align-items:flex-end; }
+.sc-ability__cost { display:flex; align-items:center; gap:.3rem; white-space:nowrap; line-height:1;
+  font-family: var(--md-small-header-font); font-variant: small-caps; text-transform: lowercase; letter-spacing:.04em;
+  font-size: .92rem; color: var(--fx-metal-bright);
+  padding: .25rem .7rem; border-radius: 7px; border:1px solid var(--fx-metal-line);
+  background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(0,0,0,.14));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 1px 3px rgba(0,0,0,.3); }
+[data-md-color-scheme="default"] .sc-ability__cost { background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(0,0,0,.04)); color: var(--fx-metal-bright); }
+.sc-ability__cost .num { font-family: var(--md-code-font, monospace); font-weight:700; font-size:.9rem;
+  color: var(--md-default-fg-color); }
+
+/* optional hover utility toolbar (added by JS only) */
+.sc-ability__ops { position:absolute; top: calc(100% + .45rem); right:0; display:flex; gap:.35rem; opacity:0; transition:opacity .18s; }
+.sc-ability:hover .sc-ability__ops { opacity:1; }
+.sc-ability__op { width:1.7rem; height:1.7rem; border-radius:6px; display:grid; place-items:center; cursor:pointer;
+  color:var(--md-default-fg-color--light); background: rgba(0,0,0,.4); border:1px solid var(--fx-metal-faint); }
+.sc-ability__op:hover { color: var(--fx-metal-bright); border-color: var(--fx-metal-line); }
+.sc-ability__op svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:1.6; }
+
+/* ── flavor + keyword chips ── */
+.sc-ability__flavor { font-family: var(--md-small-header-font); font-style: italic;
+  color: var(--md-default-fg-color--light); font-size: .92rem; line-height:1.45; margin: .7rem 0 0; text-wrap: pretty; }
+.sc-ability__kw { display:flex; flex-wrap:wrap; gap:.4rem; margin: .8rem 0 0; }
+.sc-ability__chip { font-family: var(--md-small-header-font); font-variant: small-caps; text-transform: lowercase;
+  letter-spacing:.04em; font-size: .88rem; color: var(--md-default-fg-color--light);
+  padding: .02rem .6rem; border-radius: 5px; border: 1px solid var(--fx-metal-faint); background: rgba(255,255,255,.02); }
+[data-md-color-scheme="default"] .sc-ability__chip { background: rgba(0,0,0,.02); }
+
+/* ── spec rail: Distance + Targets (2-line safe) ── */
+.sc-ability__rail { display:grid; grid-template-columns: 1fr 1fr; gap:.5rem; margin: .8rem 0 0; }
+.sc-ability__cell { background: rgba(0,0,0,.2); border:1px solid var(--fx-metal-faint); border-radius:8px;
+  padding: .5rem .75rem; min-height: 3.4rem; display:flex; flex-direction:column-reverse;
+  align-items:center; justify-content:center; text-align:center; gap:.12rem; }
+[data-md-color-scheme="default"] .sc-ability__cell { background: rgba(0,0,0,.03); }
+.sc-ability__cell .l { font-family: var(--md-small-header-font); font-variant: small-caps; text-transform: lowercase;
+  letter-spacing:.08em; font-size: .78rem; color: var(--fx-metal); margin: 0; }
+.sc-ability__cell .v { font-family: var(--md-small-header-font); font-size: .98rem; color: var(--md-default-fg-color);
+  line-height:1.2; text-wrap: pretty; }
+.sc-ability__cell .v b { color: var(--sc-steel-lighter); font-weight: inherit; }
+
+/* ════════════════════════════════════════════════════════════
+   POWER ROLL — header + tiers as one framed instrument
+   ════════════════════════════════════════════════════════════ */
+.sc-ability__pr { margin-top: .9rem; border:1px solid var(--fx-metal-faint); border-radius: 9px; overflow:hidden;
+  background: rgba(0,0,0,.18); }
+[data-md-color-scheme="default"] .sc-ability__pr { background: rgba(0,0,0,.02); }
+.sc-ability__pr-head { display:flex; align-items:center; gap:.55rem; flex-wrap:wrap;
+  padding: .55rem .9rem; border-bottom: 1px solid var(--fx-metal-faint);
+  background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,0)); }
+.sc-ability__pr-head .pre { font-family: var(--md-small-header-font); font-variant: small-caps; text-transform: lowercase;
+  letter-spacing:.08em; font-size: .82rem; color: var(--fx-metal); white-space:nowrap; }
+.sc-ability__pr-head .chars { font-family: var(--md-small-header-font); font-weight: bold; font-size: 1.02rem;
+  color: var(--sc-steel-lighter); line-height:1.15; }            /* the FOCUS — read every play */
+.sc-ability__pr-rows { display:flex; flex-direction:column; }
+.sc-ability__tier { --t: var(--sc-tier-low); display:grid; grid-template-columns: 2.5rem 1fr; align-items:center; gap:.7rem;
+  padding: .55rem .9rem; border-left: 3px solid var(--t); border-top: 1px solid var(--fx-metal-faint);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--t) 8%, transparent), transparent 60%); }
+.sc-ability__tier:first-child { border-top: none; }
+.sc-ability__tier[data-tier="mid"]  { --t: var(--sc-tier-mid); }
+.sc-ability__tier[data-tier="high"] { --t: var(--sc-tier-high); }
+.sc-ability__tier .badge { font-family: "DrawSteelGlyphs", sans-serif; font-size: 1.35rem; line-height:1; color: var(--t);
+  justify-self:center; -webkit-font-smoothing: antialiased; }
+.sc-ability__tier .res { font-size: .92rem; color: var(--md-default-fg-color); line-height:1.32; text-wrap: pretty; }
+.sc-ability__tier .res b { color: var(--sc-steel-lighter); font-weight: bold; }
+
+/* ════════════════════════════════════════════════════════════
+   SECTION PANELS — Effect / Trigger / Special, titled to match
+   ════════════════════════════════════════════════════════════ */
+.sc-ability__section { margin-top: .65rem; border:1px solid var(--fx-metal-faint); border-radius: 9px; overflow:hidden;
+  background: rgba(0,0,0,.18); }
+[data-md-color-scheme="default"] .sc-ability__section { background: rgba(0,0,0,.02); }
+.sc-ability__section-head { display:flex; align-items:center; gap:.55rem; padding: .5rem .9rem;
+  background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,0)); border-bottom: 1px solid var(--fx-metal-faint); }
+.sc-ability__section-head .sc-ability__dia { background: var(--fx-metal); box-shadow: 0 0 0 3px rgba(0,0,0,.18); }
+.sc-ability__section-head .tag { font-family: var(--md-small-header-font); font-variant: small-caps; text-transform: lowercase;
+  letter-spacing:.1em; font-size: .9rem; color: var(--fx-metal-bright); }
+.sc-ability__section-body { padding: .65rem .9rem; }
+.sc-ability__section-body > :first-child { margin-top: 0; }
+.sc-ability__section-body > :last-child { margin-bottom: 0; }
+.sc-ability__section-body, .sc-ability__section-body p { font-size: .92rem; line-height:1.55; color: var(--md-default-fg-color--light); }
+.sc-ability__section-body b, .sc-ability__section-body strong { color: var(--md-default-fg-color); }
+
+/* ── enhancement / extra cost row ── */
+.sc-ability__enh { display:flex; align-items:center; gap:.7rem; margin-top:.65rem; padding: .55rem .8rem; border-radius:8px;
+  background: rgba(0,0,0,.18); border:1px dashed var(--fx-metal-faint); }
+[data-md-color-scheme="default"] .sc-ability__enh { background: rgba(0,0,0,.02); }
+.sc-ability__enh .cost { font-family: var(--md-small-header-font); font-variant: small-caps; text-transform: lowercase;
+  letter-spacing:.04em; font-size: .86rem; color: var(--fx-metal-bright); white-space:nowrap;
+  border:1px solid var(--fx-metal-line); border-radius:5px; padding:.05rem .55rem; background: var(--fx-metal-faint); }
+.sc-ability__enh .txt { font-size: .86rem; color: var(--md-default-fg-color--light); line-height:1.4; }
+
+/* ── narrow screens ── */
+@media screen and (max-width: 30em) {
+  .sc-ability__rail { grid-template-columns: 1fr; }
+  .sc-ability__name { font-size: 1.6rem; }
+}
+
+/* ── generated ability/trait pages ──────────────────────────────
+   steel-etl renders the card AS the page body, but still injects a
+   markdown "# Name" (+ its --- rule) so MkDocs has a page title for
+   the nav, browser tab, and TOC. The card's own crest+name is the
+   visible hero, so hide that duplicate H1 (and its rule) on any page
+   whose content is a single .sc-ability card. */
+.md-typeset:has(> .sc-ability) > h1:first-child,
+.md-typeset:has(> .sc-ability) > h1:first-child + hr { display: none; }

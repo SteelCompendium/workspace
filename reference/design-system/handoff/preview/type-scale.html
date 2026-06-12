@@ -1,0 +1,26 @@
+<!-- @dsCard group="Type" -->
+<!DOCTYPE html>
+<html data-md-color-scheme="slate">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body { margin:0; }
+  body { background: var(--bg); padding: 22px 32px; }
+  .scale { display:flex; flex-direction:column; gap: 2px; }
+  .line { display:flex; align-items:baseline; gap: 16px; border-bottom: 1px solid var(--fg-lightest); padding: 4px 0; }
+  .tag { font-family: var(--font-mono); font-size: 11px; color: var(--fg-lighter); width: 92px; flex-shrink:0; }
+  .samp { color: var(--fg); font-family: var(--font-subhead); }
+</style>
+</head>
+<body>
+  <div class="scale">
+    <div class="line"><span class="tag">H1 · 5rem</span><span class="samp" style="font-family:var(--font-display);text-transform:uppercase;font-size:40px">Heroes</span></div>
+    <div class="line"><span class="tag">H2 · 3rem</span><span class="samp" style="font-family:var(--font-display);text-transform:uppercase;font-size:30px">Classes</span></div>
+    <div class="line"><span class="tag">H3 · 1.95rem</span><span class="samp" style="font-size:26px">Ancestries</span></div>
+    <div class="line"><span class="tag">H4 · 1.6rem</span><span class="samp" style="font-size:21px;font-weight:bold">Kits</span></div>
+    <div class="line"><span class="tag">Body · 1rem</span><span class="samp" style="font-family:var(--font-body);font-size:16px">Look up specific rules and abilities.</span></div>
+    <div class="line"><span class="tag">Small · .8rem</span><span class="samp" style="font-family:var(--font-mono);font-size:13px;color:var(--fg-light)">mcdm.heroes.v1/kit/battlemind</span></div>
+  </div>
+</body>
+</html>

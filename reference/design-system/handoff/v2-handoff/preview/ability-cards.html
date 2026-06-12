@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" data-md-color-scheme="slate">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Steel Compendium — ability cards (production preview)</title>
+<link rel="icon" href="../../assets/favicon.ico">
+<style>
+  /* shim: the v2 site's real Material vars + brand @font-face so the production
+     CSS renders exactly as it will in the repo (mirrors site.html) */
+  @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap");
+  @font-face { font-family:"Beaufort W01 Heavy"; font-display:swap; src:url("https://db.onlinewebfonts.com/t/5a8d949826c5f2d8733fa324b51a507d.woff2") format("woff2"); }
+  @font-face { font-family:"Test Newzald"; font-display:swap; src:url("https://db.onlinewebfonts.com/t/776429d73240ce386ead55e740ef2ece.woff2") format("woff2"); }
+  @font-face { font-family:"BerlingskeSlab-DBd"; font-display:swap; src:url("https://db.onlinewebfonts.com/t/8cd8b6c5a3db3b61777d58cb5860fb17.woff2") format("woff2"); }
+  @font-face { font-family:"DrawSteelGlyphs"; font-display:swap; src:url("../../fonts/DrawSteelGlyphs-Regular.otf") format("opentype"); }
+  :root, [data-md-color-scheme="slate"] {
+    --md-large-header-font:"Beaufort W01 Heavy"; --md-small-header-font:"Test Newzald";
+    --md-text-font:"BerlingskeSlab-DBd"; --md-code-font:"JetBrains Mono";
+    --md-default-bg-color:#1a1e21; --md-default-bg-color--light:#22272b;
+    --md-default-fg-color:rgba(220,226,230,.88); --md-default-fg-color--light:rgba(220,226,230,.62);
+    --md-default-fg-color--lighter:rgba(220,226,230,.38); --md-default-fg-color--lightest:rgba(220,226,230,.12);
+    --md-accent-fg-color:#4db8c7; --md-primary-fg-color:#1a1e21; --md-typeset-a-color:#4db8c7;
+    --sc-steel:#8e959a; --sc-steel-light:#b0b7bb; --sc-steel-lighter:#cdd1d4;
+    --sc-tier-high:#4caf6a; --sc-tier-mid:#f0b429; --sc-tier-low:#e74c3c;
+  }
+  [data-md-color-scheme="default"] {
+    --md-large-header-font:"Beaufort W01 Heavy"; --md-small-header-font:"Test Newzald";
+    --md-text-font:"BerlingskeSlab-DBd"; --md-code-font:"JetBrains Mono";
+    --md-default-bg-color:#f6f8f8; --md-default-bg-color--light:#edf0f0;
+    --md-default-fg-color:#2c2e30; --md-default-fg-color--light:#555960;
+    --md-default-fg-color--lighter:#828890; --md-default-fg-color--lightest:#c8cdd0;
+    --md-accent-fg-color:#2a7b88; --md-primary-fg-color:#2c3338; --md-typeset-a-color:#2a7b88;
+    --sc-steel:#5a6368; --sc-steel-light:#8e959a; --sc-steel-lighter:#5a6368;
+    --sc-tier-high:#1e8449; --sc-tier-mid:#b9770e; --sc-tier-low:#c0392b;
+  }
+  * { box-sizing: border-box; }
+  html,body { margin:0; }
+  body { background:var(--md-default-bg-color); color:var(--md-default-fg-color); font-family:var(--md-text-font);
+    transition: background .2s; }
+  .wrap { max-width: 64rem; margin: 0 auto; padding: 2.2rem 1.5rem 5rem; }
+  .bar { display:flex; align-items:center; gap:1rem; margin-bottom:1.4rem; }
+  .bar h1 { font-family:var(--md-large-header-font); text-transform:uppercase; font-size:1.6rem; margin:0;
+    color:var(--sc-steel-lighter); letter-spacing:.01em; }
+  .bar .sp { flex:1; }
+  .bar button { font-family:var(--md-small-header-font); font-size:.9rem; cursor:pointer;
+    background:rgba(127,127,127,.12); border:1px solid var(--md-default-fg-color--lightest);
+    color:var(--md-default-fg-color--light); padding:.4rem .9rem; border-radius:6px; }
+  .bar button:hover { color:var(--md-accent-fg-color); border-color:var(--md-accent-fg-color); }
+  .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr)); gap:1.5rem; align-items:start; }
+  /* the page is a Material content area */
+  .md-typeset { line-height:1.7; }
+</style>
+<link rel="stylesheet" href="../v2/docs/stylesheets/steel-redesign.css">
+<link rel="stylesheet" href="../v2/docs/stylesheets/steel-ability-cards.css">
+</head>
+<body>
+<div class="wrap md-typeset">
+  <div class="bar">
+    <h1>Ability Cards</h1>
+    <span class="sp"></span>
+    <button id="themeBtn">Toggle light / dark</button>
+  </div>
+
+  <div class="grid">
+    <!-- MAIN ACTION (red) — full power-roll ability -->
+    <script type="application/json" class="sc-ability-data">
+    {
+      "name": "Unmooring",
+      "actionType": "main",
+      "cost": "Signature",
+      "flavor": "Your weapon unleashes psionic energy that reduces your target's weight.",
+      "keywords": ["Melee", "Psionic", "Strike", "Weapon"],
+      "distance": "Melee **1**",
+      "targets": "One creature or object",
+      "powerRoll": {
+        "characteristic": "Might, Reason, Intuition, or Presence",
+        "tiers": {
+          "low":  "**5 + M, R, I, or P** damage",
+          "mid":  "**8 + M, R, I, or P** damage; you can slide the target 1",
+          "high": "**11 + M, R, I, or P** damage; you can slide the target up to 2"
+        }
+      },
+      "sections": [
+        { "label": "Effect", "text": "Until the end of the target's next turn, any forced movement that affects the target has its distance **increased by 2**." }
+      ]
+    }
+    </script>
+
+    <!-- TRIGGERED ACTION (green) — trigger + effect + enhancement -->
+    <script type="application/json" class="sc-ability-data">
+    {
+      "name": "Ray of Wrath",
+      "actionType": "triggered",
+      "cost": { "value": 3, "unit": "Piety" },
+      "flavor": "The faithful do not strike alone — divine light answers an enemy's first mistake.",
+      "keywords": ["Magic", "Ranged"],
+      "distance": "Ranged **10**",
+      "targets": "The triggering enemy",
+      "sections": [
+        { "label": "Trigger", "text": "An enemy within distance deals damage to one of your allies." },
+        { "label": "Effect",  "text": "You unleash a bolt of searing light, dealing **2 fire damage** to that enemy. A target reduced to 0 Stamina is also knocked prone." }
+      ],
+      "enhancements": [
+        { "cost": "2 Piety", "text": "The bolt also deals 2 fire damage to each enemy adjacent to the target." }
+      ]
+    }
+    </script>
+  </div>
+</div>
+
+<script src="../v2/docs/javascripts/steel-ability-cards.js"></script>
+<script>
+  document.getElementById("themeBtn").addEventListener("click", function () {
+    var h = document.documentElement;
+    h.setAttribute("data-md-color-scheme", h.getAttribute("data-md-color-scheme") === "slate" ? "default" : "slate");
+  });
+</script>
+</body>
+</html>

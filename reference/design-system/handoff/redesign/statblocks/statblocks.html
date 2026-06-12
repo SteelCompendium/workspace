@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" data-md-color-scheme="slate"
+      data-sb-kwusage="crest" data-sb-disttarget="grid" data-sb-meta="grid"
+      data-sb-charline="two" data-sb-charbox="off" data-sb-villain="banded"
+      data-sb-wide="off" data-sb-stickymeta="on">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Steel Compendium — Statblock layouts</title>
+<link rel="icon" href="../../assets/favicon.ico">
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap");
+  @font-face { font-family:"Beaufort W01 Heavy"; font-display:swap; src:url("https://db.onlinewebfonts.com/t/5a8d949826c5f2d8733fa324b51a507d.woff2") format("woff2"); }
+  @font-face { font-family:"Test Newzald"; font-display:swap; src:url("https://db.onlinewebfonts.com/t/776429d73240ce386ead55e740ef2ece.woff2") format("woff2"); }
+  @font-face { font-family:"BerlingskeSlab-DBd"; font-display:swap; src:url("https://db.onlinewebfonts.com/t/8cd8b6c5a3db3b61777d58cb5860fb17.woff2") format("woff2"); }
+  @font-face { font-family:"DrawSteelGlyphs"; font-display:swap; src:url("../../fonts/DrawSteelGlyphs-Regular.otf") format("opentype"); }
+  :root, [data-md-color-scheme="slate"] {
+    --md-large-header-font:"Beaufort W01 Heavy"; --md-small-header-font:"Test Newzald";
+    --md-text-font:"BerlingskeSlab-DBd"; --md-code-font:"JetBrains Mono";
+    --md-default-bg-color:#1a1e21; --md-default-bg-color--light:#22272b;
+    --md-default-fg-color:rgba(220,226,230,.88); --md-default-fg-color--light:rgba(220,226,230,.62);
+    --md-default-fg-color--lighter:rgba(220,226,230,.4); --md-default-fg-color--lightest:rgba(220,226,230,.12);
+    --md-code-bg-color:rgba(220,226,230,.06);
+    --md-accent-fg-color:#4db8c7; --md-primary-fg-color:#1a1e21; --md-typeset-a-color:#4db8c7;
+    --sc-steel:#8e959a; --sc-steel-light:#b0b7bb; --sc-steel-lighter:#cdd1d4;
+    --sc-tier-high:#4caf6a; --sc-tier-mid:#f0b429; --sc-tier-low:#e74c3c;
+  }
+  [data-md-color-scheme="default"] {
+    --md-default-bg-color:#f6f8f8; --md-default-bg-color--light:#edf0f0; --md-default-fg-color:#2c2e30; --md-default-fg-color--light:#555960;
+    --md-default-fg-color--lighter:#828890; --md-default-fg-color--lightest:#c8cdd0; --md-code-bg-color:#eaeeef;
+    --md-accent-fg-color:#2a7b88; --md-primary-fg-color:#2c3338; --md-typeset-a-color:#2a7b88;
+    --sc-steel:#5a6368; --sc-steel-light:#8e959a; --sc-steel-lighter:#46505a;
+    --sc-tier-high:#1e8449; --sc-tier-mid:#b9770e; --sc-tier-low:#c0392b;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--md-default-bg-color); color: var(--md-default-fg-color); font-family: var(--md-text-font); }
+  .md-typeset { color: var(--md-default-fg-color); }
+  .md-header { background: var(--md-primary-fg-color); position: sticky; top: 0; z-index: 50; box-shadow: 0 1px 0 rgba(0,0,0,.5); }
+  .md-header__inner { display: flex; align-items: center; gap: 14px; padding: 0 1.2rem; height: 48px; max-width: 80rem; margin: 0 auto; }
+  .md-header__logo img { width: 26px; height: 26px; display: block; }
+  .md-header__title { font-family: var(--md-large-header-font); text-transform: uppercase; font-size: 15px; color: #dce0e2; letter-spacing: .01em; }
+  .md-header__spacer { flex: 1; }
+  .md-search { background: rgba(255,255,255,.08); border-radius: 5px; padding: 6px 12px; color: rgba(220,226,230,.5); font-size: 13px; width: 150px; display: flex; gap: 8px; align-items: center; }
+  [data-md-color-scheme="default"] .md-search { background: rgba(0,0,0,.06); color: #888; }
+  .md-icon-btn { background: none; border: none; color: rgba(220,226,230,.7); cursor: pointer; padding: 6px; border-radius: 6px; display: grid; place-items: center; font-size: 17px; }
+  [data-md-color-scheme="default"] .md-icon-btn { color: #555; }
+  .md-icon-btn:hover { background: rgba(255,255,255,.08); color: var(--md-accent-fg-color); }
+  .md-icon-btn svg { width: 20px; height: 20px; fill: currentColor; }
+  .md-tabs { background: var(--md-primary-fg-color); border-top: 1px solid rgba(255,255,255,.06); position: sticky; top: 48px; z-index: 49; }
+  .md-tabs__inner { display: flex; gap: 24px; padding: 0 1.2rem; height: 40px; align-items: center; max-width: 80rem; margin: 0 auto; overflow-x: auto; }
+  .md-tabs__link { font-size: 14px; color: rgba(220,226,230,.6); cursor: pointer; height: 100%; display: flex; align-items: center; border-bottom: 2px solid transparent; white-space: nowrap; }
+  [data-md-color-scheme="default"] .md-tabs__link { color: #6a6f74; }
+  .md-tabs__link.active { color: #dce0e2; border-bottom-color: var(--md-accent-fg-color); }
+  [data-md-color-scheme="default"] .md-tabs__link.active { color: #2c3338; }
+  .md-main { max-width: 72rem; margin: 0 auto; padding: 1.4rem 1.2rem 6rem; }
+  .crumb { font-family: var(--md-code-font); font-size: .72rem; color: var(--md-default-fg-color--lighter); margin-bottom: .5rem; }
+  .pagehead h1 { font-family: var(--md-large-header-font); text-transform: uppercase; font-size: 3rem; line-height: .9; color: var(--sc-steel-lighter); margin: 0; }
+  .pagehead p { color: var(--md-default-fg-color--light); font-size: .92rem; margin: .35rem 0 0; max-width: 56ch; }
+
+  /* demo control panel */
+  .demo { margin: 1.1rem 0 .2rem; border: 1px solid var(--md-default-fg-color--lightest); border-radius: .55rem; background: var(--md-default-bg-color--light); overflow: hidden; }
+  .demo__presets { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; padding: .75rem 1rem; border-bottom: 1px solid var(--md-default-fg-color--lightest); background: rgba(0,0,0,.12); }
+  [data-md-color-scheme="default"] .demo__presets { background: rgba(0,0,0,.02); }
+  .demo__presets .lbl { font-family: var(--md-large-header-font); text-transform: uppercase; font-size: 13px; letter-spacing: .03em; color: var(--sc-steel-lighter); margin-right: .2rem; }
+  .preset { font-family: var(--md-small-header-font); font-size: 13.5px; background: transparent; border: 1px solid var(--md-default-fg-color--lightest); color: var(--md-default-fg-color--light); padding: 6px 14px; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+  .preset.on { background: var(--md-accent-fg-color); color: #06232a; border-color: var(--md-accent-fg-color); }
+  [data-md-color-scheme="default"] .preset.on { color: #f3f8f8; }
+  .preset--custom { margin-left: auto; font-style: italic; opacity: .6; pointer-events: none; }
+  .preset--custom.on { opacity: 1; font-style: normal; }
+  .demo__grid { display: flex; flex-wrap: wrap; gap: .7rem 1.5rem; align-items: flex-start; padding: .85rem 1rem; }
+  .demo__field { display: flex; flex-direction: column; gap: .3rem; }
+  .demo__field > span { font-family: var(--md-small-header-font); font-variant: small-caps; letter-spacing: .06em; font-size: .74rem; color: var(--md-default-fg-color--lighter); }
+  .seg { display: flex; }
+  .seg button { font-family: var(--md-small-header-font); font-size: 12.5px; background: transparent; border: 1px solid var(--md-default-fg-color--lightest); color: var(--md-default-fg-color--light); padding: 5px 10px; cursor: pointer; white-space: nowrap; }
+  .seg button:first-child { border-radius: 6px 0 0 6px; } .seg button + button { border-left: none; } .seg button:last-child { border-radius: 0 6px 6px 0; }
+  .seg button.on { background: var(--md-accent-fg-color); color: #06232a; border-color: var(--md-accent-fg-color); }
+  [data-md-color-scheme="default"] .seg button.on { color: #f3f8f8; }
+  .demo__checks { display: flex; flex-direction: column; gap: .25rem; }
+  .demo__checks label { display: flex; align-items: center; gap: .35rem; font-size: .82rem; color: var(--md-default-fg-color--light); cursor: pointer; }
+  .demo__foot { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .65rem 1rem; border-top: 1px solid var(--md-default-fg-color--lightest); flex-wrap: wrap; }
+  .demo__note { font-size: .74rem; color: var(--md-default-fg-color--lighter); max-width: 62ch; }
+  .printbtn { font-family: var(--md-small-header-font); font-size: 13px; background: transparent; border: 1px solid var(--md-default-fg-color--lightest); color: var(--md-default-fg-color--light); padding: 6px 14px; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+  .printbtn:hover { border-color: var(--md-accent-fg-color); color: var(--md-accent-fg-color); }
+</style>
+<link rel="stylesheet" href="../../v2-handoff/v2/docs/stylesheets/steel-redesign.css">
+<link rel="stylesheet" href="../../v2-handoff/v2/docs/stylesheets/steel-ability-cards.css">
+<link rel="stylesheet" href="../../v2-handoff/v2/docs/stylesheets/steel-settings.css">
+<link rel="stylesheet" href="steel-statblock.css?v=20">
+</head>
+<body data-aug-links="on" data-aug-sticky="on">
+<header class="md-header">
+  <div class="md-header__inner">
+    <span class="md-header__logo"><img src="../../assets/steel_compendium_glow_white.svg" alt=""></span>
+    <span class="md-header__title">Steel Compendium</span>
+    <span class="md-header__spacer"></span>
+    <button class="md-icon-btn" id="themeBtn" title="Toggle light/dark" aria-label="Toggle theme">🌙</button>
+    <button class="md-icon-btn sc-settings-toggle" id="gearBtn" title="Settings" aria-label="Open settings">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.04 4.95,18.95L7.44,17.95C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.95L19.05,18.95C19.27,19.04 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/></svg>
+    </button>
+    <span class="md-search">🔍 Search</span>
+  </div>
+  <nav class="md-tabs"><div class="md-tabs__inner">
+    <span class="md-tabs__link">Browse</span>
+    <span class="md-tabs__link">Rulebook Chapters</span>
+    <span class="md-tabs__link active">Bestiary</span>
+    <span class="md-tabs__link">Preferences</span>
+  </div></nav>
+</header>
+
+<main class="md-main">
+  <div class="crumb">Bestiary › Devils</div>
+  <div class="pagehead">
+    <h1>Devils</h1>
+    <p>Infernal advocates of the Hells. Start from a <b>preset</b>, then fine-tune any piece &mdash; every control is a real preference that will live in <b>Settings → Statblocks</b>.</p>
+  </div>
+
+  <div class="demo">
+    <div class="demo__presets">
+      <span class="lbl">Preset</span>
+      <button class="preset" data-preset="steel">Steel Card</button>
+      <button class="preset" data-preset="sourcebook">Sourcebook</button>
+      <button class="preset" data-preset="index">Index Card</button>
+      <button class="preset preset--custom" id="presetCustom">Custom</button>
+    </div>
+    <div class="demo__grid">
+      <div class="demo__field"><span>Keyword + usage</span>
+        <div class="seg" data-attr="data-sb-kwusage"><button data-v="crest">Crest</button><button data-v="text">Text</button><button data-v="grid">Grid</button><button data-v="ledger">Ledger</button></div>
+      </div>
+      <div class="demo__field"><span>Distance + target</span>
+        <div class="seg" data-attr="data-sb-disttarget"><button data-v="text">Text</button><button data-v="grid">Grid</button><button data-v="ledger">Ledger</button></div>
+      </div>
+      <div class="demo__field"><span>Secondary stats</span>
+        <div class="seg" data-attr="data-sb-meta"><button data-v="grid">Grid</button><button data-v="gridc">Centered</button><button data-v="ledger">Ledger</button></div>
+      </div>
+      <div class="demo__field"><span>Characteristics</span>
+        <div class="seg" data-attr="data-sb-charline"><button data-v="two">Two-line</button><button data-v="one">One-line</button></div>
+      </div>
+      <div class="demo__field"><span>Boxed letter</span>
+        <div class="seg" data-attr="data-sb-charbox"><button data-v="off">Off</button><button data-v="on">Letter</button><button data-v="onword">+ word</button></div>
+      </div>
+      <div class="demo__field"><span>Villain actions</span>
+        <div class="seg" data-attr="data-sb-villain"><button data-v="banded">Banded</button><button data-v="inline">Inline</button></div>
+      </div>
+      <div class="demo__field"><span>Wide (multi-column)</span>
+        <div class="seg" data-attr="data-sb-wide"><button data-v="off">Off</button><button data-v="on">On</button></div>
+      </div>
+      <div class="demo__field"><span>Augmentations</span>
+        <div class="demo__checks">
+          <label><input type="checkbox" id="augLinks" checked> Rules links</label>
+          <label><input type="checkbox" id="augSticky" checked> Sticky header</label>
+          <label><input type="checkbox" id="augStickyMeta" checked> &nbsp;↳ secondary-stats line</label>
+        </div>
+      </div>
+    </div>
+    <div class="demo__foot">
+      <span class="demo__note">Each control is an independent preference; presets just set them in bundles. <b>Sourcebook</b> ≈ the book layout. Gear (top-right) opens the production Settings drawer.</span>
+      <button class="printbtn" id="printBtn">Print / PDF</button>
+    </div>
+  </div>
+
+  <div class="sb-stack" id="content"></div>
+</main>
+
+<!-- ── Settings drawer (production steel-settings.css markup) ── -->
+<div class="sc-settings-scrim" id="scrim"></div>
+<aside class="sc-settings-drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Settings" tabindex="-1">
+  <div class="sc-settings-head"><h2>Settings</h2><button type="button" class="sc-settings-close" id="closeBtn" aria-label="Close settings">&times;</button></div>
+  <div class="sc-settings-body">
+    <div class="sc-set__group">
+      <h3>Statblocks</h3>
+      <div class="sc-set__row">
+        <label class="sc-set__label" for="set-preset">Preset</label>
+        <select class="sc-set__select" id="set-preset"><option value="steel">Steel Card</option><option value="sourcebook">Sourcebook (book layout)</option><option value="index">Index Card</option><option value="custom">Custom</option></select>
+        <span class="sc-set__hint">A starting point. Words &amp; numbers never change &mdash; only the design.</span>
+      </div>
+      <div class="sc-set__row">
+        <label class="sc-set__label" for="set-kwusage">Keyword + usage</label>
+        <select class="sc-set__select" id="set-kwusage"><option value="crest">Crest + eyebrow + chips</option><option value="text">Text (space-between)</option><option value="grid">Grid cells</option><option value="ledger">Ledger rows</option></select>
+        <span class="sc-set__hint">Only the crest option shows a crest.</span>
+      </div>
+      <div class="sc-set__row">
+        <label class="sc-set__label" for="set-disttarget">Distance + target</label>
+        <select class="sc-set__select" id="set-disttarget"><option value="text">Text (space-between)</option><option value="grid">Grid cells</option><option value="ledger">Ledger rows</option></select>
+      </div>
+      <div class="sc-set__row">
+        <label class="sc-set__label" for="set-meta">Secondary stats</label>
+        <select class="sc-set__select" id="set-meta"><option value="grid">Grid (label top)</option><option value="gridc">Grid (centered)</option><option value="ledger">Ledger rows</option></select>
+      </div>
+      <div class="sc-set__row">
+        <label class="sc-set__label" for="set-charline">Characteristics</label>
+        <select class="sc-set__select" id="set-charline"><option value="two">Two lines (value over label)</option><option value="one">One line</option></select>
+      </div>
+      <div class="sc-set__row">
+        <label class="sc-set__label" for="set-charbox">Boxed first letter</label>
+        <select class="sc-set__select" id="set-charbox"><option value="off">Off</option><option value="on">Boxed letter</option><option value="onword">Boxed letter + word</option></select>
+      </div>
+      <div class="sc-set__row">
+        <label class="sc-set__label" for="set-villain">Villain actions</label>
+        <select class="sc-set__select" id="set-villain"><option value="banded">Grouped band</option><option value="inline">Inline with features</option></select>
+      </div>
+      <div class="sc-set__row"><label class="sc-set__toggle"><input type="checkbox" id="set-wide"><span>Wide layout &mdash; columns of features on wide screens</span></label></div>
+    </div>
+    <div class="sc-set__group">
+      <h3>Web extras</h3>
+      <div class="sc-set__row"><label class="sc-set__toggle"><input type="checkbox" id="set-links" checked><span>Link conditions &amp; keywords to their rules</span></label></div>
+      <div class="sc-set__row"><label class="sc-set__toggle"><input type="checkbox" id="set-sticky" checked><span>Sticky mini-header while scrolling</span></label></div>
+      <div class="sc-set__row"><label class="sc-set__toggle"><input type="checkbox" id="set-stickymeta" checked><span>&nbsp;&nbsp;↳ include secondary stats in it</span></label></div>
+    </div>
+    <div class="sc-set__group">
+      <h3>Reading</h3>
+      <div class="sc-set__row"><label class="sc-set__toggle"><input type="checkbox" id="set-theme"><span>Light theme</span></label></div>
+    </div>
+  </div>
+  <div class="sc-settings-foot"><button type="button" class="sc-settings-reset" id="resetBtn">Reset to Steel Card</button></div>
+</aside>
+
+<script src="statblock-data.js?v=20"></script>
+<script src="statblock-render.js?v=20"></script>
+<script>
+(function () {
+  "use strict";
+  var KEY = "sc-statblock-demo2";
+  var html = document.documentElement, body = document.body;
+  var content = document.getElementById("content");
+  content.appendChild(window.renderStatblock(window.STATBLOCKS.devilHighJudge));
+  content.appendChild(window.renderStatblock(window.STATBLOCKS.devilClerk));
+
+  // attr → settings-select id
+  var SEL = {
+    "data-sb-kwusage": "set-kwusage", "data-sb-disttarget": "set-disttarget", "data-sb-meta": "set-meta",
+    "data-sb-charline": "set-charline", "data-sb-charbox": "set-charbox", "data-sb-villain": "set-villain"
+  };
+  var DEFAULTS = {
+    "data-sb-kwusage": "crest", "data-sb-disttarget": "grid", "data-sb-meta": "grid",
+    "data-sb-charline": "two", "data-sb-charbox": "off", "data-sb-villain": "banded",
+    "data-sb-wide": "off", "data-sb-stickymeta": "on"
+  };
+  var PRESETS = {
+    steel:      { "data-sb-kwusage":"crest","data-sb-disttarget":"grid","data-sb-meta":"grid","data-sb-charline":"two","data-sb-charbox":"off","data-sb-villain":"banded","data-sb-wide":"off" },
+    sourcebook: { "data-sb-kwusage":"text","data-sb-disttarget":"text","data-sb-meta":"ledger","data-sb-charline":"one","data-sb-charbox":"on","data-sb-villain":"inline","data-sb-wide":"off" },
+    index:      { "data-sb-kwusage":"grid","data-sb-disttarget":"grid","data-sb-meta":"gridc","data-sb-charline":"two","data-sb-charbox":"onword","data-sb-villain":"banded","data-sb-wide":"off" }
+  };
+
+  var prefs = load();
+  function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { return {}; } }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(prefs)); } catch (e) {} }
+
+  function detectPreset() {
+    for (var name in PRESETS) {
+      var ok = true, p = PRESETS[name];
+      for (var a in p) if (html.getAttribute(a) !== p[a]) { ok = false; break; }
+      if (ok) return name;
+    }
+    return "custom";
+  }
+  function syncPresetUI() {
+    var cur = detectPreset();
+    document.querySelectorAll(".preset[data-preset]").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-preset") === cur); });
+    var cu = document.getElementById("presetCustom"); cu.classList.toggle("on", cur === "custom");
+    var ps = document.getElementById("set-preset"); if (ps) ps.value = cur;
+  }
+  function setAttr(attr, val, skipPresetSync) {
+    html.setAttribute(attr, val);
+    prefs[attr] = val; save();
+    var seg = document.querySelector('.seg[data-attr="' + attr + '"]');
+    if (seg) seg.querySelectorAll("button").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-v") === val); });
+    var sid = SEL[attr]; if (sid) { var ctl = document.getElementById(sid); if (ctl) ctl.value = val; }
+    if (attr === "data-sb-wide") { var w = document.getElementById("set-wide"); if (w) w.checked = (val === "on"); }
+    if (attr === "data-sb-stickymeta") {
+      var sm = document.getElementById("set-stickymeta"); if (sm) sm.checked = (val === "on");
+      var sm2 = document.getElementById("augStickyMeta"); if (sm2) sm2.checked = (val === "on");
+    }
+    if (!skipPresetSync) syncPresetUI();
+  }
+  function applyPreset(name) {
+    var p = PRESETS[name]; if (!p) return;
+    for (var a in p) setAttr(a, p[a], true);
+    syncPresetUI();
+  }
+  function setAug(name, on) {
+    body.setAttribute("data-aug-" + name, on ? "on" : "off");
+    prefs["aug-" + name] = on; save();
+    var c1 = document.getElementById("set-" + name); if (c1) c1.checked = on;
+    var c2 = document.getElementById("aug" + name.charAt(0).toUpperCase() + name.slice(1)); if (c2) c2.checked = on;
+  }
+  function setTheme(light) { html.setAttribute("data-md-color-scheme", light ? "default" : "slate"); document.getElementById("themeBtn").textContent = light ? "☀️" : "🌙"; var t = document.getElementById("set-theme"); if (t) t.checked = light; prefs.theme = light ? "default" : "slate"; save(); }
+
+  // initial apply
+  Object.keys(DEFAULTS).forEach(function (a) { setAttr(a, prefs[a] != null ? prefs[a] : DEFAULTS[a], true); });
+  setAug("links", prefs["aug-links"] !== false);
+  setAug("sticky", prefs["aug-sticky"] !== false);
+  setTheme(prefs.theme === "default");
+  syncPresetUI();
+
+  // presets
+  document.querySelectorAll(".preset[data-preset]").forEach(function (b) {
+    b.addEventListener("click", function () { applyPreset(b.getAttribute("data-preset")); });
+  });
+  document.getElementById("set-preset").addEventListener("change", function () { if (this.value !== "custom") applyPreset(this.value); });
+  // demo seg buttons
+  document.querySelectorAll(".seg[data-attr]").forEach(function (seg) {
+    seg.addEventListener("click", function (e) { var b = e.target.closest("button"); if (b) setAttr(seg.getAttribute("data-attr"), b.getAttribute("data-v")); });
+  });
+  // demo checkboxes
+  document.getElementById("augLinks").addEventListener("change", function () { setAug("links", this.checked); });
+  document.getElementById("augSticky").addEventListener("change", function () { setAug("sticky", this.checked); });
+  document.getElementById("augStickyMeta").addEventListener("change", function () { setAttr("data-sb-stickymeta", this.checked ? "on" : "off"); });
+  // settings selects
+  Object.keys(SEL).forEach(function (attr) {
+    var ctl = document.getElementById(SEL[attr]);
+    ctl.addEventListener("change", function () { setAttr(attr, ctl.value); });
+  });
+  document.getElementById("set-wide").addEventListener("change", function () { setAttr("data-sb-wide", this.checked ? "on" : "off"); });
+  document.getElementById("set-stickymeta").addEventListener("change", function () { setAttr("data-sb-stickymeta", this.checked ? "on" : "off"); });
+  document.getElementById("set-links").addEventListener("change", function () { setAug("links", this.checked); });
+  document.getElementById("set-sticky").addEventListener("change", function () { setAug("sticky", this.checked); });
+  document.getElementById("set-theme").addEventListener("change", function () { setTheme(this.checked); });
+  document.getElementById("themeBtn").addEventListener("click", function () { setTheme(html.getAttribute("data-md-color-scheme") !== "default"); });
+  document.getElementById("printBtn").addEventListener("click", function () { window.print(); });
+
+  // drawer
+  function open() { html.setAttribute("data-sc-settings", "open"); }
+  function close() { html.removeAttribute("data-sc-settings"); }
+  document.getElementById("gearBtn").addEventListener("click", function () { html.getAttribute("data-sc-settings") === "open" ? close() : open(); });
+  document.getElementById("closeBtn").addEventListener("click", close);
+  document.getElementById("scrim").addEventListener("click", close);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
+  document.getElementById("resetBtn").addEventListener("click", function () { applyPreset("steel"); setAug("links", true); setAug("sticky", true); setAttr("data-sb-stickymeta", "on"); });
+})();
+</script>
+</body>
+</html>

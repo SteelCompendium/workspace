@@ -1,0 +1,33 @@
+<!-- @dsCard group="Components" -->
+<!DOCTYPE html>
+<html data-md-color-scheme="slate">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body { margin:0; }
+  body { background: var(--bg); padding: 22px 26px; }
+  .grid { display:grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .card { padding: 16px; border:1px solid var(--fg-lightest); border-radius: var(--radius-md); background: var(--bg); }
+  label { display:block; font-family: var(--font-body); font-weight:600; font-size: 12px; text-transform:uppercase; letter-spacing:0.03em; color: var(--fg-light); margin-bottom: 8px; }
+  select, input { width:100%; box-sizing:border-box; padding: 8px 10px; border:1px solid var(--fg-lightest); border-radius: var(--radius-sm); background: var(--code-bg); color: var(--fg); font-family: var(--font-body); font-size: 14px; }
+  input:focus { outline: 2px solid var(--accent); outline-offset:-1px; }
+  .actions { display:flex; gap: 8px; margin-top: 12px; }
+  button { padding: 7px 16px; border:1px solid var(--fg-lightest); border-radius: var(--radius-sm); background: var(--code-bg); color: var(--fg); font-family: var(--font-body); font-size: 13px; cursor:pointer; }
+  button.primary { background: var(--accent-transparent); border-color: var(--accent); color: var(--accent); }
+</style>
+</head>
+<body>
+  <div class="grid">
+    <div class="card">
+      <label>Site Theme</label>
+      <select><option>Steel (default)</option><option>Parchment</option><option>Obsidian</option></select>
+    </div>
+    <div class="card">
+      <label>Body Font</label>
+      <input type="text" value="BerlingskeSlab-DBd">
+      <div class="actions"><button class="primary">Apply</button><button>Reset</button></div>
+    </div>
+  </div>
+</body>
+</html>

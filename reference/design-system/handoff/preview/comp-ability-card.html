@@ -1,0 +1,266 @@
+<!-- @dsCard group="Components" -->
+<!DOCTYPE html>
+<html data-md-color-scheme="slate">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body { margin:0; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    background:
+      radial-gradient(120% 80% at 50% -10%, rgba(176,183,187,.05), transparent 60%),
+      var(--bg);
+    padding: 26px 30px; font-family: var(--font-body); color: var(--fg);
+    display: flex; flex-wrap: wrap; gap: 22px; align-items: flex-start;
+  }
+
+  /* ── high-fantasy steel ornament tokens (from redesign/fantasy.css) ── */
+  :root {
+    --fx-metal:        #a9b0b5;
+    --fx-metal-bright: #d9dee1;
+    --fx-metal-grad:   linear-gradient(180deg, #e3e7e9 0%, #a9b0b5 48%, #686f74 100%);
+    --fx-metal-line:   rgba(176,183,187,.5);
+    --fx-metal-faint:  rgba(176,183,187,.16);
+    --rd-emboss: 0 1px 0 rgba(0,0,0,.55), 0 -1px 0 rgba(255,255,255,.04);
+    --etch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='30'%3E%3Cpath d='M0 15 Q22 2 45 15 T90 15' fill='none' stroke='%23b0b7bb' stroke-width='1'/%3E%3C/svg%3E");
+
+    /* ── ACTION-TYPE colors ── */
+    --act-main:      #e74c3c;  /* Main Action  — red    */
+    --act-maneuver:  #5dade2;  /* Maneuver     — blue   */
+    --act-triggered: #4caf6a;  /* Triggered    — green  */
+    --act-move:      #e8a13a;  /* Move         — orange */
+    --act-none:      #cdd1d4;  /* No Action    — white  */
+    --act-trait:     #bb8fce;  /* Traits/Other — purple */
+  }
+
+  /* ── ability / trait plate ── */
+  .ability {
+    --acc: var(--act-main); --acc-soft: rgba(231,76,60,.12);
+    position: relative; flex: 1 1 440px; max-width: 480px;
+    border-radius: 10px; padding: 20px 22px 22px;
+    background: linear-gradient(160deg, #232a2e 0%, #181c1f 100%);
+    border: 1px solid rgba(255,255,255,.06);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 8px 22px rgba(0,0,0,.34);
+    overflow: hidden;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .ability::before { /* faint etched watermark */
+    content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+    background-image: var(--etch); background-size: 92px 30px; opacity:.045; mix-blend-mode: overlay;
+  }
+  .ability:hover {
+    transform: translateY(-2px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 14px 30px rgba(0,0,0,.46), 0 0 0 1px var(--fx-metal-line);
+  }
+  .ability:hover .fx-cnr { opacity: 1; }
+  .ability > * { position: relative; z-index: 1; }
+
+  /* ── filigree corner brackets ── */
+  .fx-cnr { position:absolute; width:14px; height:14px; border:0 solid var(--fx-metal-line);
+    opacity:.7; transition: opacity .2s; z-index:2; }
+  .fx-cnr::after { content:""; position:absolute; width:3px; height:3px; background:var(--fx-metal); transform:rotate(45deg); }
+  .fx-cnr.tl { top:8px; left:8px; border-top-width:1px; border-left-width:1px; }
+  .fx-cnr.tl::after { top:-2px; left:-2px; }
+  .fx-cnr.tr { top:8px; right:8px; border-top-width:1px; border-right-width:1px; }
+  .fx-cnr.tr::after { top:-2px; right:-2px; }
+  .fx-cnr.bl { bottom:8px; left:8px; border-bottom-width:1px; border-left-width:1px; }
+  .fx-cnr.bl::after { bottom:-2px; left:-2px; }
+  .fx-cnr.br { bottom:8px; right:8px; border-bottom-width:1px; border-right-width:1px; }
+  .fx-cnr.br::after { bottom:-2px; right:-2px; }
+
+  /* ── top-right corner: persistent cost badge + hover utility ops ── */
+  .corner { position:relative; display:flex; flex-direction:column; align-items:flex-end; flex-shrink:0; }
+  .cost-badge { display:flex; align-items:baseline; gap:5px; white-space:nowrap;
+    font-family: var(--font-subhead); font-variant: small-caps; text-transform: lowercase; letter-spacing:.04em;
+    font-size: 14.5px; color: var(--fx-metal-bright);
+    padding: 4px 12px; border-radius: 7px; border:1px solid var(--fx-metal-line);
+    background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(0,0,0,.14));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 1px 3px rgba(0,0,0,.3); }
+  .cost-badge .num { font-family: var(--font-mono); font-weight:700; font-size:14px; color:#fff; }
+  .ops { position:absolute; top: calc(100% + 7px); right:0; display:flex; gap:6px; opacity:0; transition:opacity .18s; }
+  .ability:hover .ops { opacity:1; }
+  .op { width:27px; height:27px; border-radius:6px; display:grid; place-items:center; color:var(--fg-light);
+    background: rgba(0,0,0,.4); border:1px solid var(--fx-metal-faint); cursor:pointer; }
+  .op:hover { color: var(--fx-metal-bright); border-color: var(--fx-metal-line); }
+  .op svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:1.6; }
+
+  /* ── heraldic crest (polished steel shield, enameled action glyph) ── */
+  .head { display:flex; align-items:flex-start; gap:14px; }
+  .crest { position:relative; width:48px; height:54px; flex-shrink:0;
+    --shield: polygon(6% 0, 94% 0, 94% 58%, 50% 100%, 6% 58%);
+    clip-path: var(--shield); background: var(--fx-metal-grad); }
+  .crest > span { position:absolute; inset:1.5px; clip-path: var(--shield);
+    background: radial-gradient(circle at 42% 30%, #2b3137, #14181b);
+    display:grid; place-items:center; padding-bottom: 11px; }  /* optical-center the glyph in the shield's wide upper field */
+  .crest .g { font-family: var(--font-glyph); font-size: 23px; line-height:1; color: var(--acc);
+    -webkit-font-smoothing: antialiased; }
+
+  .titles { flex:1; min-width:0; padding-top:2px; }
+  .eyebrow { font-family: var(--font-subhead); font-variant: small-caps; text-transform: lowercase;
+    letter-spacing:.1em; font-size: 14.5px; color: var(--acc); display:flex; align-items:center; gap:8px; }
+  .eyebrow .dia { width:7px; height:7px; transform:rotate(45deg); background: var(--acc); flex-shrink:0; }
+  .name { font-family: var(--font-display); text-transform: uppercase; font-size: 29px; line-height:1;
+    color: var(--sc-steel-lighter); text-shadow: var(--rd-emboss); margin: 4px 0 0; letter-spacing:.01em; }
+  .flavor { font-family: var(--font-subhead); font-style: italic; color: var(--fg-light);
+    font-size: 14.5px; line-height:1.45; margin: 11px 0 0; }
+
+  /* keyword chips (small-caps serif) */
+  .kw { display:flex; flex-wrap:wrap; gap:6px; margin: 13px 0 0; }
+  .chip { font-family: var(--font-subhead); font-variant: small-caps; text-transform: lowercase;
+    letter-spacing:.04em; font-size: 14px; color: var(--fg-light); padding: 1px 10px; border-radius: 5px;
+    border: 1px solid var(--fx-metal-faint); background: rgba(255,255,255,.02); }
+
+  /* ════ unified framed-panel system ════ */
+  .panel { border:1px solid var(--fx-metal-faint); border-radius: 9px; overflow:hidden;
+    background: rgba(0,0,0,.18); }
+  .panel + .panel, .rail + .panel, .panel + .enh { margin-top: 10px; }
+  .panel-head { display:flex; align-items:center; gap:9px; padding: 8px 14px;
+    background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,0));
+    border-bottom: 1px solid var(--fx-metal-faint); }
+  .panel-head .dia { width:7px; height:7px; transform:rotate(45deg); background:var(--fx-metal); flex-shrink:0;
+    box-shadow: 0 0 0 3px rgba(0,0,0,.18); }
+  .panel-head .tag { font-family: var(--font-subhead); font-variant: small-caps; text-transform: lowercase;
+    letter-spacing:.1em; font-size: 14px; color: var(--fx-metal-bright); }
+
+  /* spec rail — Distance + Targets, each safe up to 2 lines */
+  .rail { display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin: 13px 0 0; }
+  .cell { background: rgba(0,0,0,.2); border:1px solid var(--fx-metal-faint); border-radius:8px;
+    padding: 8px 12px; min-height: 56px; display:flex; flex-direction:column; justify-content:center; }
+  .cell .l { font-family: var(--font-subhead); font-variant: small-caps; text-transform: lowercase;
+    letter-spacing:.08em; font-size: 12.5px; color: var(--fx-metal); margin-bottom: 2px; }
+  .cell .v { font-family: var(--font-subhead); font-size: 15.5px; color: var(--fg); line-height:1.2; text-wrap: pretty; }
+  .cell .v b { color: var(--sc-steel-lighter); font-weight: inherit; }
+
+  /* ── POWER ROLL panel (header + tiers = one instrument) ── */
+  .pr { margin-top: 14px; }
+  .pr-head { display:flex; align-items:center; gap:9px; flex-wrap:wrap;
+    padding: 9px 14px; border-bottom: 1px solid var(--fx-metal-faint);
+    background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,0)); }
+  .pr-head .dia { width:7px; height:7px; transform:rotate(45deg); background:var(--fx-metal); flex-shrink:0;
+    box-shadow: 0 0 0 3px rgba(0,0,0,.18); }
+  .pr-head .pre { font-family: var(--font-subhead); font-variant: small-caps; text-transform: lowercase;
+    letter-spacing:.08em; font-size: 13px; color: var(--fx-metal); flex-shrink:0; white-space: nowrap; }
+  .pr-head .chars { font-family: var(--font-subhead); font-weight: bold; font-size: 16.5px;
+    color: var(--sc-steel-lighter); line-height:1.15; }   /* the FOCUS — read every play */
+  .pr-rows { display:flex; flex-direction:column; }
+  .tier { --t: var(--tier-low); display:grid; grid-template-columns: 40px 1fr; align-items:center; gap:11px;
+    padding: 9px 14px; border-left: 3px solid var(--t);
+    border-top: 1px solid var(--fx-metal-faint);
+    background: linear-gradient(90deg, color-mix(in srgb, var(--t) 8%, transparent), transparent 60%); }
+  .tier:first-child { border-top: none; }
+  .tier.mid  { --t: var(--tier-mid); }
+  .tier.high { --t: var(--tier-high); }
+  .tier .badge { font-family: var(--font-glyph); font-size: 22px; line-height:1; color: var(--t);
+    justify-self:center; -webkit-font-smoothing: antialiased; }
+  .tier .res { font-size: 14.5px; color: var(--fg); line-height:1.32; text-wrap: pretty; }
+  .tier .res b { color: var(--sc-steel-lighter); font-weight: bold; }
+
+  /* ── effect / trigger panels (body) ── */
+  .panel-body { padding: 10px 14px; }
+  .panel-body p { margin:0; font-size: 14.5px; line-height:1.55; color: var(--fg-light); }
+  .panel-body p b { color: var(--fg); }
+
+  /* enhancement sub-row */
+  .enh { display:flex; align-items:center; gap:11px; padding: 9px 13px; border-radius:8px;
+    background: rgba(0,0,0,.18); border:1px dashed var(--fx-metal-faint); }
+  .enh .cost { font-family: var(--font-subhead); font-variant: small-caps; text-transform: lowercase;
+    letter-spacing:.04em; font-size: 13.5px; color: var(--fx-metal-bright);
+    border:1px solid var(--fx-metal-line); border-radius:5px; padding:1px 9px; flex-shrink:0; background: var(--fx-metal-faint); }
+  .enh span:last-child { font-size: 13.5px; color: var(--fg-light); line-height:1.4; }
+</style>
+</head>
+<body>
+
+  <!-- ABILITY CARD — Main Action (red) -->
+  <article class="ability" style="--acc: var(--act-main);">
+    <i class="fx-cnr tl"></i><i class="fx-cnr tr"></i><i class="fx-cnr bl"></i><i class="fx-cnr br"></i>
+    <div class="head">
+      <div class="crest"><span><span class="g">l</span></span></div>
+      <div class="titles">
+        <div class="eyebrow"><span class="dia"></span>Main Action</div>
+        <h4 class="name">Unmooring</h4>
+      </div>
+      <div class="corner">
+        <div class="cost-badge">Signature</div>
+        <div class="ops">
+          <span class="op" title="Copy permalink"><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"/><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/></svg></span>
+          <span class="op" title="Save"><svg viewBox="0 0 24 24"><path d="M5 4h14v17l-7-4-7 4z"/></svg></span>
+        </div>
+      </div>
+    </div>
+
+    <p class="flavor">Your weapon unleashes psionic energy that reduces your target&rsquo;s weight.</p>
+
+    <div class="kw">
+      <span class="chip">Melee</span><span class="chip">Psionic</span>
+      <span class="chip">Strike</span><span class="chip">Weapon</span>
+    </div>
+
+    <div class="rail">
+      <div class="cell"><div class="l">Distance</div><div class="v">Melee <b>1</b></div></div>
+      <div class="cell"><div class="l">Targets</div><div class="v">One creature or object</div></div>
+    </div>
+
+    <div class="pr panel">
+      <div class="pr-head"><span class="dia"></span><span class="pre">Power Roll +</span><span class="chars">Might, Reason, Intuition, or Presence</span></div>
+      <div class="pr-rows">
+        <div class="tier"><span class="badge">!</span><span class="res"><b>5 + M, R, I, or P</b> damage</span></div>
+        <div class="tier mid"><span class="badge">@</span><span class="res"><b>8 + M, R, I, or P</b> damage; you can slide the target 1</span></div>
+        <div class="tier high"><span class="badge">#</span><span class="res"><b>11 + M, R, I, or P</b> damage; you can slide the target up to 2</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><span class="dia"></span><span class="tag">Effect</span></div>
+      <div class="panel-body"><p>Until the end of the target&rsquo;s next turn, any forced movement that affects the target has its distance <b>increased by 2</b>.</p></div>
+    </div>
+  </article>
+
+  <!-- TRIGGERED ABILITY CARD — Triggered Action (green) -->
+  <article class="ability" style="--acc: var(--act-triggered); max-width:450px; flex-basis:400px;">
+    <i class="fx-cnr tl"></i><i class="fx-cnr tr"></i><i class="fx-cnr bl"></i><i class="fx-cnr br"></i>
+    <div class="head">
+      <div class="crest"><span><span class="g">)</span></span></div>
+      <div class="titles">
+        <div class="eyebrow"><span class="dia"></span>Triggered Action</div>
+        <h4 class="name">Ray of Wrath</h4>
+      </div>
+      <div class="corner">
+        <div class="cost-badge"><span class="num">3</span> Piety</div>
+        <div class="ops">
+          <span class="op" title="Copy permalink"><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"/><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/></svg></span>
+          <span class="op" title="Save"><svg viewBox="0 0 24 24"><path d="M5 4h14v17l-7-4-7 4z"/></svg></span>
+        </div>
+      </div>
+    </div>
+
+    <p class="flavor">The faithful do not strike alone &mdash; divine light answers an enemy&rsquo;s first mistake.</p>
+
+    <div class="kw">
+      <span class="chip">Magic</span><span class="chip">Ranged</span>
+    </div>
+
+    <div class="rail">
+      <div class="cell"><div class="l">Distance</div><div class="v">Ranged <b>10</b></div></div>
+      <div class="cell"><div class="l">Targets</div><div class="v">The triggering enemy</div></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><span class="dia"></span><span class="tag">Trigger</span></div>
+      <div class="panel-body"><p>An enemy within distance deals damage to one of your allies.</p></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><span class="dia"></span><span class="tag">Effect</span></div>
+      <div class="panel-body"><p>You unleash a bolt of searing light, dealing <b>2 fire damage</b> to that enemy. A target reduced to 0 Stamina is also knocked prone.</p></div>
+    </div>
+
+    <div class="enh">
+      <span class="cost">2 Piety</span>
+      <span>The bolt also deals 2 fire damage to each enemy adjacent to the target.</span>
+    </div>
+  </article>
+
+</body>
+</html>

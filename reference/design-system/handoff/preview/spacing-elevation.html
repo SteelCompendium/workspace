@@ -1,0 +1,23 @@
+<!-- @dsCard group="Spacing" -->
+<!DOCTYPE html>
+<html data-md-color-scheme="slate">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body { margin:0; }
+  body { background: var(--bg); padding: 30px 28px; font-family: var(--font-mono); }
+  .row { display:flex; gap: 26px; }
+  .card { background: var(--bg-light); border:1px solid var(--fg-lightest); width: 150px; height: 78px; border-radius: var(--radius-md); display:flex; align-items:center; justify-content:center; color:var(--fg-light); font-size:11px; }
+  .lab { margin-top: 12px; font-size: 10px; color: var(--fg-lighter); }
+  .e1 { box-shadow: 0 2px 8px rgba(0,0,0,0.10); }
+  .e2 { box-shadow: 0 4px 12px rgba(0,0,0,0.30); }
+</style>
+</head>
+<body>
+  <div class="row">
+    <div><div class="card e1">hover lift</div><div class="lab">ability card<br>0 2px 8px /.10 + −1px Y</div></div>
+    <div><div class="card e2">card hover</div><div class="lab">browse card<br>0 4px 12px /.30 + −2px Y</div></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,199 @@
+/* ============================================================
+   Steel Compendium — steel-traits.css
+   DROP-IN for the v2 MkDocs site. Add to mkdocs.yml `extra_css`
+   AFTER steel-ability-cards.css (it reuses that file's --sc-act-*
+   action palette + the --fx-* ornament tokens from steel-redesign.css).
+
+   Renders a TRAIT / FEATURE as an illuminated CODEX NICHE — a flat,
+   recessed panel with a colored left spine and an embossed feature
+   heading. It is deliberately a DIFFERENT register than the raised,
+   crested .sc-ability plate, so nested ability cards read as objects
+   mounted inside the trait. Traits can hold prose, lists, lead-ins,
+   nested abilities, and nested sub-traits (recursively).
+
+   Elevation language:
+     page (wall)  ->  .sc-trait (recessed niche)  ->  .sc-ability (raised plaque)
+
+   The HTML it targets is emitted by steel-etl (build-time) or by
+   steel-traits.js (runtime JSON island). See TRAITS.md.
+   ============================================================ */
+
+/* ════════════════════════════════════════════════════════════
+   NICHE — the trait container
+   ════════════════════════════════════════════════════════════ */
+.md-typeset .sc-trait {
+  --act: var(--sc-act-trait);
+  position: relative;
+  margin: 1.9rem 0;
+  padding: 1.25rem 1.4rem 1.35rem 1.55rem;
+  border: 1px solid var(--fx-metal-faint);
+  border-left: 3px solid color-mix(in srgb, var(--act) 62%, var(--fx-metal));
+  border-radius: .55rem;
+  /* recessed parchment: a hair lighter at the top, sinking into shadow */
+  background:
+    linear-gradient(168deg, rgba(255,255,255,.022), rgba(0,0,0,.10));
+  box-shadow: var(--fx-bevel), inset 0 0 40px rgba(0,0,0,.18);
+}
+[data-md-color-scheme="default"] .md-typeset .sc-trait {
+  border-color: var(--md-default-fg-color--lightest);
+  background: linear-gradient(168deg, rgba(255,255,255,.55), rgba(0,0,0,.025));
+  box-shadow: var(--fx-bevel), inset 0 0 40px rgba(0,0,0,.03);
+}
+
+/* action-type → spine + accent (default trait = purple) */
+.sc-trait[data-action="main"]      { --act: var(--sc-act-main); }
+.sc-trait[data-action="maneuver"]  { --act: var(--sc-act-maneuver); }
+.sc-trait[data-action="triggered"] { --act: var(--sc-act-triggered); }
+.sc-trait[data-action="move"]      { --act: var(--sc-act-move); }
+.sc-trait[data-action="none"]      { --act: var(--sc-act-none); }
+.sc-trait[data-action="trait"]     { --act: var(--sc-act-trait); }
+.sc-trait[data-action="steel"]     { --act: var(--fx-metal); }
+
+/* ════════════════════════════════════════════════════════════
+   HEAD — a FEATURE HEADING (eyebrow · name · tag), under a metal rule
+   ════════════════════════════════════════════════════════════ */
+.sc-trait__head {
+  position: relative; display: grid; grid-template-columns: 1fr auto;
+  align-items: start; column-gap: 1rem;
+  margin-bottom: .95rem; padding-bottom: .7rem;
+}
+.sc-trait__head::after { /* metal underline carrying a short accent segment */
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, var(--act) 0 54px, var(--fx-metal-faint) 54px);
+}
+.sc-trait__titles { min-width: 0; }
+
+/* crest — the steel shield carrying the trait glyph (full + preview cards share
+   the same crest language as ability cards). Added to crested trait cards. */
+.sc-trait--crest .sc-trait__head { grid-template-columns: auto 1fr auto; }
+.sc-trait__crest { /* extends .sc-crest */ width: 3rem; height: 3.4rem; align-self: start; }
+.sc-trait__crest::before { inset: 1.5px; }
+.sc-trait__crest > .sc-trait__glyph { transform: translateY(-8px); } /* optical-center in shield */
+.sc-trait__glyph { font-family: "DrawSteelGlyphs", sans-serif; font-size: 1.25rem; line-height: 1;
+  color: var(--act); -webkit-font-smoothing: antialiased; }
+
+.sc-trait__eyebrow {
+  display: flex; align-items: center; gap: .5rem;
+  font-family: var(--md-small-header-font); font-variant: small-caps; text-transform: lowercase;
+  letter-spacing: .1em; font-size: .86rem; color: var(--act);
+}
+.sc-trait__dia { width: 7px; height: 7px; transform: rotate(45deg); background: var(--act); flex: 0 0 auto; }
+/* .md-typeset prefix so this beats Material's `.md-typeset h3` rule, whose
+   large top-margin + line-height were being inherited and shifting the name
+   (same fix as .sc-ability__name). */
+.md-typeset .sc-trait__name {
+  font-family: var(--md-large-header-font); text-transform: uppercase;
+  font-size: 1.5rem; line-height: 1.04; color: var(--sc-steel-lighter);
+  text-shadow: var(--fx-emboss); margin: .25rem 0 0; letter-spacing: .01em;
+}
+
+/* right-hand tag (level / cost / "Signature" / point-buy) */
+.sc-trait__tag {
+  justify-self: end; white-space: nowrap;
+  display: inline-flex; align-items: baseline; gap: .3rem;
+  font-family: var(--md-small-header-font); font-variant: small-caps; text-transform: lowercase;
+  letter-spacing: .04em; font-size: .86rem; color: var(--fx-metal-bright);
+  padding: .22rem .65rem; border-radius: 6px; border: 1px solid var(--fx-metal-line);
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.12));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.07);
+}
+[data-md-color-scheme="default"] .sc-trait__tag {
+  background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(0,0,0,.03));
+}
+.sc-trait__tag .num { font-family: var(--md-code-font, monospace); font-weight: 700; font-size: .84rem;
+  color: var(--md-default-fg-color); }
+
+/* ════════════════════════════════════════════════════════════
+   BODY — codex prose
+   ════════════════════════════════════════════════════════════ */
+.sc-trait__body { font-family: var(--md-text-font); font-size: .95rem; line-height: 1.62;
+  color: var(--md-default-fg-color--light); }
+.sc-trait__body > :first-child { margin-top: 0; }
+.sc-trait__body > :last-child { margin-bottom: 0; }
+.sc-trait__body p { margin: .6rem 0; text-wrap: pretty; }
+.sc-trait__body b, .sc-trait__body strong { color: var(--md-default-fg-color); font-weight: 700; }
+.sc-trait__body em { font-style: italic; color: var(--md-default-fg-color--light); }
+
+/* flavor line (atmospheric, optional, sits just under the head) */
+.sc-trait__flavor { font-family: var(--md-small-header-font); font-style: italic;
+  color: var(--md-default-fg-color--light); font-size: .94rem; line-height: 1.5;
+  margin: 0 0 .25rem; text-wrap: pretty; }
+
+/* diamond-marked bullet list */
+.sc-trait__body ul { list-style: none; padding-left: 0; margin: .55rem 0; }
+.sc-trait__body ul li { position: relative; padding-left: 1.25rem; margin: .3rem 0; }
+.sc-trait__body ul li::before { content: ""; position: absolute; left: .15rem; top: .62em;
+  width: 6px; height: 6px; transform: translateY(-50%) rotate(45deg);
+  background: var(--fx-metal); }
+
+/* optional engraved drop cap on the opening paragraph (modifier) */
+.sc-trait--lead .sc-trait__body > p:first-of-type { overflow: hidden; }
+.sc-trait--lead .sc-trait__body > p:first-of-type::first-letter {
+  font-family: var(--md-large-header-font); font-size: 3.15em; line-height: .72;
+  float: left; margin: .06em .12em 0 0; padding-top: .04em;
+  color: var(--fx-metal-bright); text-shadow: var(--fx-emboss);
+}
+
+/* ════════════════════════════════════════════════════════════
+   LEAD-IN + NEST — how children attach to the trait
+   ════════════════════════════════════════════════════════════ */
+/* a run-in label that wraps rich prose (links included) — must stay a normal
+   text block, NOT flex, or each inline run/link becomes its own flex column */
+.sc-trait__leadin {
+  font-family: var(--md-small-header-font); font-style: italic;
+  font-size: .94rem; color: var(--fx-metal-bright);
+  margin: 1rem 0 .15rem;
+}
+.sc-trait__leadin .sc-trait__dia {
+  display: inline-block; vertical-align: middle; margin-right: .5rem;
+  background: var(--fx-metal); transform: rotate(45deg);
+}
+
+/* groups a contiguous run of nested abilities / sub-traits (no rail — the
+   trait niche already contains them; nested cards sit full-width inside it) */
+.sc-trait__nest { margin: .35rem 0 .25rem; }
+
+/* nested ability plates: trim the standalone margins so they sit snug */
+.sc-trait__nest > .sc-ability { margin: 1rem 0; }
+.sc-trait__nest > .sc-ability:first-child { margin-top: .15rem; }
+.sc-trait__nest > .sc-ability:last-child  { margin-bottom: .1rem; }
+
+/* nested sub-trait: a lighter, more recessive niche (depth reduces ornament) */
+.sc-trait__nest > .sc-trait {
+  margin: 1rem 0; padding: .95rem 1.1rem 1rem 1.2rem;
+  background: rgba(0,0,0,.14); box-shadow: var(--fx-bevel);
+  border-left-width: 3px;
+}
+[data-md-color-scheme="default"] .sc-trait__nest > .sc-trait { background: rgba(0,0,0,.022); }
+.sc-trait__nest > .sc-trait .sc-trait__name { font-size: 1.14rem; }
+.sc-trait__nest > .sc-trait .sc-trait__head { margin-bottom: .65rem; padding-bottom: .5rem; }
+.sc-trait__nest > .sc-trait .sc-trait__eyebrow { font-size: .8rem; }
+.sc-trait__nest > .sc-trait .sc-trait__body { font-size: .92rem; }
+.sc-trait__nest > .sc-trait .sc-trait__head::after {
+  background: linear-gradient(90deg, var(--act) 0 38px, var(--fx-metal-faint) 38px);
+}
+
+/* a labeled mini-panel inside the body (Benefit / Drawback / Special, etc.) */
+.sc-trait__seg { margin: .7rem 0; border: 1px solid var(--fx-metal-faint); border-radius: 8px;
+  background: rgba(0,0,0,.16); overflow: hidden; }
+[data-md-color-scheme="default"] .sc-trait__seg { background: rgba(0,0,0,.02); }
+.sc-trait__seg-head { display: flex; align-items: center; gap: .5rem; padding: .42rem .8rem;
+  border-bottom: 1px solid var(--fx-metal-faint);
+  background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0)); }
+.sc-trait__seg-head .sc-trait__dia { background: var(--fx-metal); }
+.sc-trait__seg-head .tag { font-family: var(--md-small-header-font); font-variant: small-caps;
+  text-transform: lowercase; letter-spacing: .09em; font-size: .86rem; color: var(--fx-metal-bright); }
+.sc-trait__seg-body { padding: .55rem .8rem; font-size: .92rem; line-height: 1.5;
+  color: var(--md-default-fg-color--light); }
+.sc-trait__seg-body > :first-child { margin-top: 0; }
+.sc-trait__seg-body > :last-child { margin-bottom: 0; }
+.sc-trait__seg[data-tone="benefit"]  .tag { color: var(--sc-tier-high); }
+.sc-trait__seg[data-tone="drawback"] .tag { color: var(--sc-tier-low); }
+
+/* ── narrow screens ── */
+@media screen and (max-width: 30em) {
+  .md-typeset .sc-trait { padding: 1.05rem 1.05rem 1.15rem 1.2rem; }
+  .sc-trait__head { grid-template-columns: 1fr; }
+  .sc-trait__tag { justify-self: start; margin-top: .4rem; }
+  .sc-trait__name { font-size: 1.32rem; }
+}
