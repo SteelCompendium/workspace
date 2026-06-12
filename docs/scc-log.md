@@ -173,3 +173,19 @@ frontmatter on the input doc (currently inert); wiring it as a build stamp (regi
 API → pages) and the removal/tombstone code-lifecycle model are deferred — see
 `ROADMAP.md` #6 ("Printing provenance stamp + SCC code lifecycle") and
 `steel-etl/docs/superpowers/specs/2026-06-11-printing-provenance-and-code-lifecycle-design.md`.
+
+## 2026-06-11 — Printing provenance stamp shipped
+
+The `printing:` frontmatter now flows as a non-identity build stamp: registry
+`books` map (`classification.json`) → SCC API (`index.json`/`scc.json` top-level
+`books`, per-entry `printing` in `resolve/*.json`) → site page frontmatter
+(`printing`/`printing_book`, injected by the site builder's final
+`applyPrintingStamps` pass when `v2/site.yaml` sets `registry:`) → a muted
+"Source: Heroes · printing 1.01b" line rendered by the v2 content partial.
+1,916 heroes pages stamped; books without a `printing:` field are skipped. The
+`heroes-printing-1.01b` git tag marks the source; the ingest convention (update
+frontmatter → edit content → tag `<book>-printing-<version>`) lives in
+`steel-etl/CLAUDE.md`. No SCC identity changes (`validate --scc-stable` clean).
+Plan: `steel-etl/docs/superpowers/plans/2026-06-11-printing-provenance-stamp.md`;
+site mechanics: `steel-etl/docs/site-builder.md`. The tombstone lifecycle half
+remains deferred (`ROADMAP.md` #6).

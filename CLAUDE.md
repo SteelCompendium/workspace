@@ -79,7 +79,7 @@ Current state (full history with dates and plan links: [`docs/scc-log.md`](docs/
 - **Taxonomy:** `feature` is the umbrella; `ability` = feature with combat rigor (`feature.ability.<entity>…`); `trait` is narrow — ancestry traits + monster statblock passives only (`feature.trait.<entity>…`); everything else is plain `feature.<entity>…`.
 - **Group landings** use the `<type>.group/<member>` shape (`skill.group/crafting`, `monster.group/devils`); grouped glossaries are `rule.<group>/<term>` and `skill.<group>/<item>`.
 - **Linking:** the heroes (~17,527 links) and summoner (1,464) sources are fully link-swept; monsters is not (`FOLLOWUPS.md` #5). Rules: `steel-etl/docs/linking-guide.md`; all linkable terms: `steel-etl/docs/linking-reference.md`.
-- ⚠️ **PDF printing ≠ SCC version.** The `.v1` in a source segment is the SCC *namespace* version, never the errata printing — putting the printing in `book:` re-mints every code and dangles ~19k links (tried and reverted 2026-06-11). Printing lives in inert `printing:` frontmatter; build-stamp wiring is `ROADMAP.md` #6.
+- ⚠️ **PDF printing ≠ SCC version.** The `.v1` in a source segment is the SCC *namespace* version, never the errata printing — putting the printing in `book:` re-mints every code and dangles ~19k links (tried and reverted 2026-06-11). Printing lives in non-identity `printing:` frontmatter and flows as a build stamp (registry → SCC API → page footer line); the tombstone lifecycle half is `ROADMAP.md` #6. Ingest convention: `steel-etl/CLAUDE.md`.
 
 ## Keeping docs in sync
 
