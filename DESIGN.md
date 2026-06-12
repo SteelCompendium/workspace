@@ -119,13 +119,12 @@ green, Mount teal, Support orange, Defender tan, Leader/Solo/Minion/Malice grey.
 | Trait cards (recessed "codex niche", colored spine, nesting) | `steel-traits.css/.js`, `internal/site/trait_cards.go` | `…/v2-handoff/TRAITS.md` |
 | Feature/treasure/rule index pages (folder cards, previews, search/filter) | `steel-indexes.css`, `steel-feature-browser.js`, `internal/site/feature_index.go` | `…/v2-handoff/archive/FEATURE-INDEXES.md` |
 | ◆ steel rule + filigree blockquotes | `steel-redesign.css` | `…/v2-handoff/TITLES-RULES-QUOTES.md` (§4 masthead **parked**) |
-| Statblocks (JSON island → client render, per-piece prefs + presets) | `internal/site/statblock_page.go` → `steel-statblock.js` + `steel-statblock.css` | `…/redesign/statblocks/README.md` — **the** spec |
+| Statblocks (JSON island → client render, per-piece prefs + presets) | `internal/site/statblock_page.go` → `steel-statblock.js` + `steel-statblock.css` | `…/redesign/statblocks/README.md` — **the** spec, plus the `data-sb-featstyle` addendum (`v2/.repo-docs/plans/2026-06-12-statblock-feature-style.md`) |
 | Bestiary search & filter | `internal/site/bestiary_search.go` → `steel-bestiary-browser.js` + `steel-bestiary.css` | design spec in `steel-etl/docs/superpowers/specs/2026-06-10-bestiary-restructure-and-search-design.md` |
 | Settings drawer (gear icon, live apply) | `settings-panel.js`/`settings-core.js` + `steel-settings.css` | `v2/.repo-docs/plans/2026-06-07-live-settings-panel.md` |
 
 (`…` = `reference/design-system/handoff`.) Open design debts: statblock malice band +
-captain label (`FOLLOWUPS.md` #7), statblock crest-mode CSS specificity decision
-(`FOLLOWUPS.md` #8), hidden theme/card-style controls (`FOLLOWUPS.md` #3).
+captain label (`FOLLOWUPS.md` #7), hidden theme/card-style controls (`FOLLOWUPS.md` #3).
 
 ## The user-preference system
 
@@ -133,7 +132,7 @@ Layout preference is a first-class design feature (born from the statblock
 controversy): users pick how dense/faithful the rendering is, **per part**.
 
 - Every preference is a `data-*` attribute on `<html>` (e.g. `data-card-style`,
-  `data-sb-kwusage`, `data-sb-meta`…); CSS reflows one shared DOM — no re-render,
+  `data-sb-featstyle`, `data-sb-kwusage`…); CSS reflows one shared DOM — no re-render,
   no per-page variance. Applied by `settings-panel.js`, persisted in the
   `mkdocs:fontPrefs` localStorage store.
 - **Statblock presets** bundle the `data-sb-*` attributes: **Steel Card** (default),
