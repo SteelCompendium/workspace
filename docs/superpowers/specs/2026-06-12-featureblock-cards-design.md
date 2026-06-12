@@ -116,7 +116,9 @@ discriminator exactly as today.
 name, type (featureblock | dynamic-terrain),
 kind?  (malice | feature — featureblock only),
 level?, flavor?, role?, terrain_type?,
-stats[]?:    [{label, value}]          # ordered, loose; renderer lays out whatever exists
+stats[]?:    [{name, value}]           # ordered, loose; renderer lays out whatever exists
+                                       # (key names match the SDK's prior FeatureStat model
+                                       #  on the origin/featureBlock branch)
 features[]:  [{ name, icon?, cost?, usage?, keywords[]?, distance?, target?,
                 power_roll? {formula, tiers {low, mid, high}},
                 sections[]? {label, text}, enhancements[]? {cost, text},
