@@ -12,7 +12,7 @@ rest renumbered. **After renumbering, grep live docs (all repos: `CLAUDE.md`s,
 `docs/*.md`, `v2/.repo-docs/`) for `FOLLOWUPS` item references and fix them** — dated
 plan/spec/decision docs keep their as-written numbers (the archive preserves
 "was FOLLOWUPS #N" handles). Most recent archive:
-[`docs/followups-archive/2026-06-11-completed.md`](docs/followups-archive/2026-06-11-completed.md).
+[`docs/followups-archive/2026-06-12-completed.md`](docs/followups-archive/2026-06-12-completed.md).
 
 <!-- Template — copy for each item, numbering sequentially:
 ## N. Short title
