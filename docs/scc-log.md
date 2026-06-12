@@ -182,10 +182,20 @@ The `printing:` frontmatter now flows as a non-identity build stamp: registry
 (`printing`/`printing_book`, injected by the site builder's final
 `applyPrintingStamps` pass when `v2/site.yaml` sets `registry:`) → a muted
 "Source: Heroes · printing 1.01b" line rendered by the v2 content partial.
-1,916 heroes pages stamped; books without a `printing:` field are skipped. The
-`heroes-printing-1.01b` git tag marks the source; the ingest convention (update
-frontmatter → edit content → tag `<book>-printing-<version>`) lives in
-`steel-etl/CLAUDE.md`. No SCC identity changes (`validate --scc-stable` clean).
-Plan: `steel-etl/docs/superpowers/plans/2026-06-11-printing-provenance-stamp.md`;
+Initially only heroes (1,916 pages) carried a `printing:`; books without the
+field are skipped. The `heroes-printing-1.01b` git tag marks the source; the
+ingest convention (update frontmatter → edit content → tag
+`<book>-printing-<version>`) lives in `steel-etl/CLAUDE.md`. No SCC identity
+changes (`validate --scc-stable` clean). Plan:
+`steel-etl/docs/superpowers/plans/2026-06-11-printing-provenance-stamp.md`;
 site mechanics: `steel-etl/docs/site-builder.md`. The tombstone lifecycle half
 remains deferred (`ROADMAP.md` #6).
+
+**2026-06-12 follow-up:** the remaining three books got their printings —
+**monsters 1.01, beastheart 1.0, summoner 1.0** (tags `monsters-printing-1.01`,
+`beastheart-printing-1.0`, `summoner-printing-1.0`). All **2,956** pages are now
+stamped. Note the provenance line uses each book's *site label* (`books[].label`
+in `v2/site.yaml`), so the Monsters book reads "Source: **Bestiary** · printing
+1.01"; summoner-sourced creatures in the `monster/` browse tree correctly read
+"Summoner", since the stamp keys off the page's own `scc:` book prefix, not its
+directory.
