@@ -199,3 +199,15 @@ in `v2/site.yaml`), so the Monsters book reads "Source: **Bestiary** · printing
 1.01"; summoner-sourced creatures in the `monster/` browse tree correctly read
 "Summoner", since the stamp keys off the page's own `scc:` book prefix, not its
 directory.
+
+## 2026-06-12 — Book display labels set to official names
+
+Renamed all four `books[].label` values in `v2/site.yaml` to MCDM's official book
+names: **Draw Steel: Heroes**, **Draw Steel: Monsters** (was "Bestiary"), **The
+Beastheart**, **The Summoner**. Display-only — the labels drive the Read-tab book
+cards and the printing-provenance footer (so the Monsters book now reads "Source:
+Draw Steel: Monsters · printing 1.01"), nothing else. URL folders are unchanged
+(`folder: bestiary` etc. stay), so no links, bookmarks, or SCC permalinks moved;
+no SCC identity change (`validate --scc-stable` clean). Labels with a colon are
+quoted in YAML (an unquoted `Draw Steel: Monsters` parses as a mapping). The
+**Bestiary** Search & Filter tab is a separate utility and keeps its name.
