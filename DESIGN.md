@@ -41,7 +41,11 @@ Two non-negotiables drive every component:
   fallback: **Beaufort W01 Heavy** for big UPPERCASE display (H1/H2 — "BROWSE RULES"),
   **Test Newzald** for subheads (H3–H6, Title Case), **Berlingske Slab Demibold** for
   body (line-height 1.7 for long reading). **JetBrains Mono** for code/IDs/numbers.
-  Game Terms keep their Capitalization mid-sentence.
+  Game Terms keep their Capitalization mid-sentence. **Fixed type scale:** Material's
+  responsive root-font-size scaling (125% → 137.5% at ≥100em → 150% at ≥125em) is
+  pinned to the 125% base at every width (`extra.css`), so type and rem-based layouts
+  don't enlarge or reflow on wide monitors — the **Text size** slider is the one
+  intentional way to scale reading.
 - **Backgrounds.** Flat solid charcoal. **No gradients, photos, textures, or patterns**
   as web chrome (full-bleed art is a print-book thing; box it deliberately if ever
   used). No glassmorphism, no backdrop blur — transparency only as 6–12% accent/code
