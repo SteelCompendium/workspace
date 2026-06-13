@@ -211,3 +211,29 @@ Draw Steel: Monsters · printing 1.01"), nothing else. URL folders are unchanged
 no SCC identity change (`validate --scc-stable` clean). Labels with a colon are
 quoted in YAML (an unquoted `Draw Steel: Monsters` parses as a mapping). The
 **Bestiary** Search & Filter tab is a separate utility and keeps its name.
+
+## 2026-06-12 — Monsters book link sweep + rule-glossary
+
+The Monsters book (`mcdm.monsters.v1`) was fully link-swept (FOLLOWUPS #5 direction 1):
+**5,948 inline `scc:` links** added across `input/monsters/Draw Steel Monsters.md`
+(4,759 cross-book to Heroes, 1,189 internal), covering Monster Basics, all ~50 creature
+groups (lore + malice featureblocks + ~480 statblocks), Dynamic Terrain, and Retainers.
+
+**New rule-glossary (registry 591 → 632, +41).** The Monster Basics chapter had no rule
+codes of its own, so its pervasive vocabulary was minted first as `rule.<group>/<term>`
+codes (via `@type: rule` heading annotations): **`rule.monster/*`** (9 — malice,
+encounter-value, creature-free-strike, monster-trait, end-effect, villain-action, keyword,
+squad, captain), **`rule.organization/*`** (6 — minion, horde, platoon, elite, leader,
+solo), **`rule.role/*`** (9 creature roles), **`rule.keyword/*`** (17 general creature
+keywords). Terms with an existing Heroes target (Signature Ability, conditions, movement,
+characteristics, …) link cross-book rather than minting a duplicate. Decision record:
+`steel-etl/docs/monster-rule-mapping.md`; term tables: `steel-etl/docs/monsters-linking-reference.md`.
+
+**Statblock parser hardened** so links can live in the source without corrupting structured
+data: `sbPowerRollRe` (labeled `**Power Roll + N:**` header), the title `name`/`cost`/
+`ability_type` split (a markdown link's own `)` otherwise breaks the cost-paren regex), and
+`stripBold` for the ability-table cells (`keywords`/`usage`/`distance`/`target`) all strip
+link markup; effect/tier VALUES keep their links verbatim. `validate --scc-stable` clean
+(additions only, no existing code changed). Plan + full detail:
+`steel-etl/docs/superpowers/plans/2026-06-12-monsters-content-linking.md`. Remaining FOLLOWUPS
+#5 half = direction 2 (links *into* monster pages from the other books).

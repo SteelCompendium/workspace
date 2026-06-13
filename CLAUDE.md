@@ -75,10 +75,10 @@ SCC codes are identifiers used as website permalinks (`/scc/{code}/`), API keys,
 
 Current state (full history with dates and plan links: [`docs/scc-log.md`](docs/scc-log.md)):
 
-- **Registry:** ~2,956 codes across four books — heroes (~1,915), beastheart (228), monsters (591), summoner (~221). Scheme spec is **v1.1** (`scc.vN:` prefix optional; bare `scc:` ≡ `scc.v1`). Spec + revision history: `reference/scc-specification.md`.
+- **Registry:** ~2,997 codes across four books — heroes (~1,915), beastheart (228), monsters (632), summoner (~221). The monsters count grew 591 → 632 when the Monster Basics rule-glossary was minted 2026-06-12 (`rule.{monster,role,organization,keyword}`; see `docs/scc-log.md`). Scheme spec is **v1.1** (`scc.vN:` prefix optional; bare `scc:` ≡ `scc.v1`). Spec + revision history: `reference/scc-specification.md`.
 - **Taxonomy:** `feature` is the umbrella; `ability` = feature with combat rigor (`feature.ability.<entity>…`); `trait` is narrow — ancestry traits + monster statblock passives only (`feature.trait.<entity>…`); everything else is plain `feature.<entity>…`.
 - **Group landings** use the `<type>.group/<member>` shape (`skill.group/crafting`, `monster.group/devils`); grouped glossaries are `rule.<group>/<term>` and `skill.<group>/<item>`.
-- **Linking:** the heroes (~17,527 links) and summoner (1,464) sources are fully link-swept; monsters is not (`FOLLOWUPS.md` #5). Rules: `steel-etl/docs/linking-guide.md`; all linkable terms: `steel-etl/docs/linking-reference.md`.
+- **Linking:** the heroes (~17,527 links), summoner (1,464), and monsters (5,948 — 4,759 cross-book to heroes + 1,189 internal) sources are all fully link-swept. (Monsters direction 1 done 2026-06-12; the remaining FOLLOWUPS #5 half is direction 2 — links *into* monster pages from other books.) Rules: `steel-etl/docs/linking-guide.md`; all linkable terms: `steel-etl/docs/linking-reference.md` (+ per-book `*-linking-reference.md`).
 - ⚠️ **PDF printing ≠ SCC version.** The `.v1` in a source segment is the SCC *namespace* version, never the errata printing — putting the printing in `book:` re-mints every code and dangles ~19k links (tried and reverted 2026-06-11). Printing lives in non-identity `printing:` frontmatter (all four books: heroes 1.01b, monsters 1.01, beastheart/summoner 1.0) and flows as a build stamp (registry → SCC API → page footer line, labelled by `v2/site.yaml` `books[].label`); the tombstone lifecycle half is `ROADMAP.md` #6. Ingest convention: `steel-etl/CLAUDE.md`.
 
 ## Keeping docs in sync
