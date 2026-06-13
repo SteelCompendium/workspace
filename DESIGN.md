@@ -123,7 +123,7 @@ Leader/Solo/Minion/Malice grey. (Word-form list: `reference/colors.md`.)
 | ◆ steel rule + filigree blockquotes | `steel-redesign.css` | `…/v2-handoff/TITLES-RULES-QUOTES.md` (§4 masthead **parked**) |
 | Statblocks (JSON island → client render, per-piece prefs + presets) | `internal/site/statblock_page.go` → `steel-statblock.js` + `steel-statblock.css` | `…/redesign/statblocks/README.md` — **the** spec, plus the `data-sb-featstyle` addendum (`v2/.repo-docs/plans/2026-06-12-statblock-feature-style.md`) |
 | Bestiary search & filter | `internal/site/bestiary_search.go` → `steel-bestiary-browser.js` + `steel-bestiary.css` | design spec in `steel-etl/docs/superpowers/specs/2026-06-10-bestiary-restructure-and-search-design.md` |
-| Featureblocks (`.fb-wrap` Forged Band card — titled collection of Features under a loose-stat header; statblock-like in anatomy, not rigor) | build-time `internal/site/featureblock_page.go` + `v2/docs/stylesheets/steel-featureblock.css` | `docs/superpowers/specs/2026-06-12-featureblock-cards-design.md` |
+| Featureblocks (`.fb-wrap` Forged Band card — titled collection of Features under a loose-stat header; statblock-like in anatomy, not rigor; also renders Summoner fixture statblocks via `internal/site/fixture_page.go`) | build-time `internal/site/featureblock_page.go` + `v2/docs/stylesheets/steel-featureblock.css` | `docs/superpowers/specs/2026-06-12-featureblock-cards-design.md` |
 | Settings drawer (gear icon, live apply) | `settings-panel.js`/`settings-core.js` + `steel-settings.css` | `v2/.repo-docs/plans/2026-06-07-live-settings-panel.md` |
 
 (`…` = `reference/design-system/handoff`.) Open design debts: statblock malice band +
@@ -146,6 +146,10 @@ controversy): users pick how dense/faithful the rendering is, **per part**.
   (a dedicated "Featureblocks" drawer group):
   - `data-fb-featstyle` (`card` default / `flat`) — feature rendering style, mirroring `data-sb-featstyle` for statblocks.
   - `data-fb-stats` (`grid` default / `ledger`) — loose-stat header layout (side-by-side grid vs. stacked ledger).
+- **Featureblock advancement bands** (`.fb__band--adv` / `.fb__adv-head`): features with
+  `Level > 0` group into a role-tinted "Level N Advancement" sub-head band. Used by
+  fixture statblocks (Plan 3) and planned for retainers (Plan 4). Backward-compatible:
+  existing featureblock/terrain features have `Level: 0` and emit no band.
 - New preferences must follow this pattern (attribute + `applyX()` + drawer row +
   preset detection), and must work in both color schemes.
 
