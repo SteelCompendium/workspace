@@ -102,12 +102,14 @@ statblock → traits → indexes → bestiary):
 | `--sc-steel*`, `--sc-ability-*`, `--sc-tier-*` | `v2/docs/stylesheets/palette.css` | brand palette: steel greys, 8 ability-type hues, 3 power-roll tiers |
 | `--fx-*` | `steel-redesign.css` | steel ornament tokens (metal gradients, bevels, emboss, card bg) — everything downstream reuses them |
 | `--sc-act-*` | `steel-ability-cards.css` | 6 action-type colors (Main red, Maneuver blue, Triggered green, Move orange, None, Trait purple) |
-| `--role` | `steel-statblock.css` | per-role statblock accent, set by `.sb-wrap[data-role]` |
+| `--sc-role-*` | `palette.css` | locked role-accent hex tokens (single source); consumed by `steel-statblock.css` and `steel-featureblock.css` |
+| `--role` | `steel-statblock.css` | per-role statblock accent, set by `.sb-wrap[data-role]` (reads `--sc-role-*` from `palette.css`) |
 
-Locked **statblock role colors** (hexes live at the top of `steel-statblock.css` only):
-Ambusher yellow, Harrier pink, Artillery purple, Brute blue, Controller red, Hexer
-green, Mount teal, Support orange, Defender tan, Leader/Solo/Minion/Malice grey.
-(Word-form list: `reference/colors.md`.)
+Locked **statblock/featureblock role colors** are now `--sc-role-*` tokens in
+`palette.css` (single source), consumed by both `steel-statblock.css` and
+`steel-featureblock.css`: Ambusher yellow, Harrier pink, Artillery purple, Brute blue,
+Controller red, Hexer green, Mount teal, Support orange, Defender tan,
+Leader/Solo/Minion/Malice grey. (Word-form list: `reference/colors.md`.)
 
 ## Component systems (all shipped unless noted)
 
@@ -121,6 +123,7 @@ green, Mount teal, Support orange, Defender tan, Leader/Solo/Minion/Malice grey.
 | ◆ steel rule + filigree blockquotes | `steel-redesign.css` | `…/v2-handoff/TITLES-RULES-QUOTES.md` (§4 masthead **parked**) |
 | Statblocks (JSON island → client render, per-piece prefs + presets) | `internal/site/statblock_page.go` → `steel-statblock.js` + `steel-statblock.css` | `…/redesign/statblocks/README.md` — **the** spec, plus the `data-sb-featstyle` addendum (`v2/.repo-docs/plans/2026-06-12-statblock-feature-style.md`) |
 | Bestiary search & filter | `internal/site/bestiary_search.go` → `steel-bestiary-browser.js` + `steel-bestiary.css` | design spec in `steel-etl/docs/superpowers/specs/2026-06-10-bestiary-restructure-and-search-design.md` |
+| Featureblocks (`.fb-wrap` Forged Band card — titled collection of Features under a loose-stat header; statblock-like in anatomy, not rigor) | build-time `internal/site/featureblock_page.go` + `v2/docs/stylesheets/steel-featureblock.css` | `docs/superpowers/specs/2026-06-12-featureblock-cards-design.md` |
 | Settings drawer (gear icon, live apply) | `settings-panel.js`/`settings-core.js` + `steel-settings.css` | `v2/.repo-docs/plans/2026-06-07-live-settings-panel.md` |
 
 (`…` = `reference/design-system/handoff`.) Open design debts: statblock malice band +
@@ -139,6 +142,10 @@ controversy): users pick how dense/faithful the rendering is, **per part**.
   **Sourcebook** (faithful to the book), **Index Card**. Individual overrides
   re-derive a "Custom" preset state. Full contract:
   `reference/design-system/handoff/redesign/statblocks/README.md`.
+- **Featureblock prefs** are two independent `data-fb-*` attributes with **no presets**
+  (a dedicated "Featureblocks" drawer group):
+  - `data-fb-featstyle` (`card` default / `flat`) — feature rendering style, mirroring `data-sb-featstyle` for statblocks.
+  - `data-fb-stats` (`grid` default / `ledger`) — loose-stat header layout (side-by-side grid vs. stacked ledger).
 - New preferences must follow this pattern (attribute + `applyX()` + drawer row +
   preset detection), and must work in both color schemes.
 
