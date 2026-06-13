@@ -73,17 +73,6 @@ plan/spec/decision docs keep their as-written numbers (the archive preserves
 - **Context:** Source is `steel-etl/input/monsters/Draw Steel Monsters.md` (hand-maintained; H7=statblock, H9=featureblock/terrain — see `steel-etl/CLAUDE.md` "Monsters book"). Follow `steel-etl/docs/linking-guide.md` + `docs/linking-reference.md`. Conditions/skills/movement terms are already linkable targets. Mind the one-heading-one-code gotcha (memory `rule-scc-type`). This is a sizable sweep, akin to the heroes-doc passes.
 - **Effort:** L (multi-day sweep across the whole Monsters source)
 
-## 6. Fixture statblocks: non-standard 2-column stat grid not parsed into size/stamina
-
-**Status:** open
-
-- **Identified:** 2026-06-11, during the Summoner link sweep's footgun verification (`docs/superpowers/plans/2026-06-10-summoner-content-linking.md`, Phase 3.2).
-- **What:** The four Summoner **fixture** statblocks (`fixture.<portfolio>.statblock/*` — The Boil, Barrow Gates, etc.) use a simplified **2-column** stat table — `| **Stamina:** 20 + your level | **Size:** 2 |` — instead of the standard `**VALUE**<br>Label` grid the minion/champion/rival statblocks use. `parseStatGrid` (`steel-etl/internal/content/statblock_parse.go`, `cellRe`) doesn't recognize this form, so the fixture JSON has empty `size`/`speed`/`stamina` and the whole `**Stamina:** 20 + your level` string lands in `keywords[]`. Confirmed pre-existing (the grid line carries no links, so the 2026-06-11 link sweep did not cause it) and **fixture-only** (4 statblocks).
-- **Why it matters:** Fixture statblock JSON in `data/data-summoner` has malformed/empty stat fields, so the SDK / data consumers and any stat-driven card get nothing for fixtures. The trait/ability blockquotes parse fine; only the stat grid is affected.
-- **Fix options:** Teach `parseStatGrid` (or a fixture-specific path) to recognize the `**Label:** value` 2-column inline form and map `Stamina`/`Size` (and any others) into the structured fields, keeping the `+ your level` expression as the value. Add a `statblock_parse_test.go` case from The Boil. Mind the card-data-parity checklist if a new field is surfaced.
-- **Effort:** S
-- **Note (2026-06-11):** The new statblock island renderer (`steel-etl/internal/site/statblock_page.go`) reads `size`/`speed`/`stamina` from frontmatter, so fixture cards/blocks inherit this gap (those defenses show `—` until this is fixed). Not introduced by the island work.
-
 ## 7. Statblock island: shared family Malice band not embedded; retainer/fixture "With Captain" label
 
 **Status:** open
