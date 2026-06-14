@@ -300,3 +300,21 @@ re-includes the base as a searchable **`"fixture"`** facet (advancement-features
 Plan: `docs/superpowers/plans/2026-06-14-fixture-featureblock-restructure.md`. Shipped on
 `steel-etl@feat/companion-scc-restructure` (not yet merged/deployed — Plan 5d). Next: Plan 5d
 (deploy), Plan 6 (retainers).
+
+## 2026-06-14 — Advancement-features Browse flatten (companions + fixtures, nav-only)
+
+**No SCC change** — Browse-navigation only. The advancement-features pages for beastheart
+companions and summoner fixtures now **flatten** to a sibling of their base entity in the
+v2 Browse tree: `…/advancement-features/<id>` → `…/<id>-advancement-features` (e.g.
+`Browse/monster/companion/beastheart/wolf-advancement-features`,
+`Browse/monster/fixture/demon/the-boil-advancement-features`), instead of nesting in an
+`advancement-features/` sub-folder. The group index pairs each base card with its
+advancement card on one row. SCC **codes are unchanged** (`…advancement-features/<id>`
+kept; registry stays 3015) and the `/scc/…advancement-features/<id>/` permalink stub still
+exists — now redirecting to the flattened page. This is the same deliberate **code≠path**
+divergence as `hoistStatblockPath`: implemented as `flattenAdvancementFeaturesPath`
+(`internal/site/build.go`, wired into the dest-path + `rewriteSectionLinks` mirror) +
+`buildAdvancementPairContent` (`internal/site/advancement_pairs.go`, the 2-up
+`.sc-cards--pairs` grid) + a `.sc-cards--pairs` CSS rule in v2. Spec + plan:
+`steel-etl/docs/superpowers/specs/2026-06-14-advancement-features-nav-flatten-design.md`,
+`steel-etl/docs/superpowers/plans/2026-06-14-advancement-features-nav-flatten.md`.
