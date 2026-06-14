@@ -121,3 +121,13 @@ Change the `StatblockParser` fixture branch so a `@domain: fixture` statblock cl
 
 ## Execution Handoff
 Fresh session, subagent-driven. Order 1→2→3→4→5→6 (2 before 3; 4 after 3). Task 2 (source split ×4) is a careful controller/implementer edit, regen-verified. After 5c, only Plan 5d (deploy) and Plan 6 (retainers) remain.
+
+## Status — SHIPPED 2026-06-14 (on `steel-etl@feat/companion-scc-restructure`, NOT merged/deployed)
+
+All tasks done. Commits on the branch: `5de88d7` (Task 1 base parser + Task 3 advancement branch + tests), `1cf94cd` (Task 2 source split), `699402f` (review polish — dropped dead `statblock_kind` delete, strengthened advancement test), `3057d01` (Task 4 — `fixture_page.go` retired), `09b3fc1` (Task 5 — `hoistStatblockPath` featureblock hoist + `bestiaryItemType` fixture facet + tests), plus a workspace docs commit (Task 6).
+
+- **Codes:** 8 fixture codes (4 `monster.fixture.<element>.featureblock/<id>` + 4 `…advancement-features/<id>`); zero `fixture.*.statblock` remain. Registry 3011 → **3015** (net +4).
+- **Site:** base renders `.fb-wrap`, no statblock island; advancement page has Level-5/9 `.fb__band--adv` bands; base sits at `Browse/monster/fixture/<element>/<id>`, advancement at `…/advancement-features/<id>`; all 4 fixtures appear in the Bestiary search island as `"type":"fixture"`.
+- **Design decisions made during execution:** (1) Tasks 1–3 implemented as one cohesive TDD unit (the Task 1 NOTE's sanctioned path) to avoid a broken intermediate. (2) User chose (2026-06-14) to **keep fixtures searchable** in the Bestiary (as a `"fixture"` facet) rather than browse-only. (3) The `featureblock/` hoist is scoped to `monster/fixture/` so a future `featureblock` segment in another bestiary tree isn't silently dropped.
+- **Verified:** `go build ./...` + `go test ./...` green; `gen --all` + `site` clean. Reviews: spec ✅ + code-quality ✅ (data layer); code-quality ✅ (site fixes).
+- **Remaining:** Plan 5d (deploy — merge branch, SDK sync (likely no-op), bump pointer, `just deploy`, verify live). Then Plan 6 (retainers).

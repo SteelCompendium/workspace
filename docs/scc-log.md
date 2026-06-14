@@ -279,3 +279,24 @@ Band card (`buildFeatureblockPage` + `.fb__band--adv` level bands). `type: featu
 validates against the existing `featureblock.schema.json` (no schema change). Compositing
 the card onto the companion *statblock* page is deferred to the entity-embedding effort
 (ROADMAP). Plan: `docs/superpowers/plans/2026-06-13-companion-advancement-featureblocks.md`.
+
+## 2026-06-14 — Summoner fixtures → `monster.fixture.*` featureblocks (Featureblock Plan 5c)
+
+Restructured the **4 Summoner fixtures** out of the `fixture.<element>.statblock/<id>`
+statblock family into the `monster.fixture.<element>.*` featureblock family, parallel to
+the companion 5a/5b scheme. Per fixture: a base **`monster.fixture.<element>.featureblock/<id>`**
+(`type: featureblock`) + a sibling **`monster.fixture.<element>.advancement-features/<id>`**
+holding the Level-5/9 tiers (net **+4** codes: 4 base re-pathed, 4 advancement new, 4 old
+`fixture.*.statblock` removed; registry 3011 → 3015). `StatblockParser` returns early as a
+featureblock when `@domain == fixture` (base stats via `fixtureStats` → loose `stats[]`,
+base features via `ParseRichFeatures`); the advancement tiers were **source-split** into a
+sibling `@type: featureblock | @id: <fixture-id>` section parsed by a new `FeatureblockParser`
+fixture branch. **Zero inbound `scc:` links to fixtures**, `freeze: false` → clean rebuild,
+nothing dangled. Site: **Plan 3's `internal/site/fixture_page.go` adapter retired** (fixtures
+render through the shared `buildFeatureblockPage`; its `fbFeaturesFromRich` helper moved to
+`featureblock_page.go`); `hoistStatblockPath` drops the non-leaf `featureblock/` segment
+(fixture-scoped) so the base sits at `Browse/monster/fixture/<element>/<id>`; `bestiaryItemType`
+re-includes the base as a searchable **`"fixture"`** facet (advancement-features excluded).
+Plan: `docs/superpowers/plans/2026-06-14-fixture-featureblock-restructure.md`. Shipped on
+`steel-etl@feat/companion-scc-restructure` (not yet merged/deployed — Plan 5d). Next: Plan 5d
+(deploy), Plan 6 (retainers).
