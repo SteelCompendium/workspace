@@ -86,3 +86,13 @@ plan/spec/decision docs keep their as-written numbers (the archive preserves
 - **Why:** Full fidelity to the approved design (malice is a prominent part of monster statblocks) and correct secondary-stat labeling across creature types.
 - **Context:** Island shape + parser in `statblock_page.go` (`buildStatblockIsland`, `sbMeta.Captain`); renderer band logic already present in `steel-statblock.js` (`band()` + `data.malice`) and CSS (`.sb__band--malice`), so this is a Go/data-association task, not a front-end one. Group-dir sibling lookup precedent: `bestiary_cards.go` (`splitByType` finds the featureblock vs. statblock split).
 - **Effort:** M (malice association) + XS (captain label)
+
+## 8. Featureblock card `features[]` bodies don't resolve `scc:` links
+
+**Status:** open
+
+- **Identified:** 2026-06-14, building the companion advancement-features cards (Plan 5b). Pre-existing — affects malice featureblock cards too.
+- **What:** A featureblock's `features[]` frontmatter carries each feature's prose `body` verbatim from source, including raw `[term](scc:…)` links. The SCC link resolver rewrites `scc:` → relative `.md` only in markdown **bodies**, not frontmatter, so the Forged Band card (`renderFeatureblockCard` → `richInline`) renders these as literal `scc:…` hrefs. Visible on e.g. `monster/companion/beastheart/advancement-features/wolf` (Dire Wolf's "frightened" link) and existing malice cards (`arixx-malice` → `rule.dice/edge`, etc.).
+- **Why:** Inline cross-reference links in card bodies should resolve like everywhere else.
+- **Fix options:** resolve `scc:` links inside `features[]` bodies during the link-resolution pass (extend the resolver to walk known frontmatter feature-body fields), or resolve at site render time in `richInline` (map `scc:` → permalink). The latter is contained to `internal/site` and also fixes malice. Verify against both malice and companion-advancement cards.
+- **Effort:** S

@@ -260,3 +260,22 @@ so the registry rebuilt clean. Spec + full design:
 `docs/superpowers/specs/2026-06-13-companion-restructure-advancement-featureblocks-design.md`;
 plan: `docs/superpowers/plans/2026-06-13-companion-scc-restructure.md`. Next: Plan 5b
 (companion advancement featureblocks), 5c (fixtures), 5d (docs/deploy); Plan 6 (retainers).
+
+## 2026-06-14 — Companion advancement featureblocks (Featureblock Plan 5b)
+
+Minted **14 `monster.companion.beastheart.advancement-features/<species>`** featureblock
+container codes (registry 2997 → 3011). Per companion the three context-only
+`##### Level N <C> Advancement Feature` separators were replaced by one
+`##### <C> Advancement Features` header (`@type: featureblock`) and each advancement
+feature's `@level: N` moved onto its own annotation — so the Level-3/6/10 features keep
+their **unchanged** `feature.companion.beastheart.<species>.level-N/<id>` codes (level now
+read from the feature's own annotation; the pipeline pushes a section's annotation before
+its parser runs and `Lookup` includes the section level). `FeatureblockParser` gained a
+companion branch (`internal/content/monster.go`): when companion context is present it
+classifies as `monster.companion.<class>.advancement-features/<species>` and embeds the
+child `@type:feature` sections as `features[]` (render-only; the children stay separately
+coded) via the new `collectChildFeatures`. The standalone entity page renders as a Forged
+Band card (`buildFeatureblockPage` + `.fb__band--adv` level bands). `type: featureblock`
+validates against the existing `featureblock.schema.json` (no schema change). Compositing
+the card onto the companion *statblock* page is deferred to the entity-embedding effort
+(ROADMAP). Plan: `docs/superpowers/plans/2026-06-13-companion-advancement-featureblocks.md`.
