@@ -237,3 +237,66 @@ link markup; effect/tier VALUES keep their links verbatim. `validate --scc-stabl
 (additions only, no existing code changed). Plan + full detail:
 `steel-etl/docs/superpowers/plans/2026-06-12-monsters-content-linking.md`. Remaining FOLLOWUPS
 #5 half = direction 2 (links *into* monster pages from the other books).
+
+## 2026-06-13 — Companion SCC restructure (Featureblock Plan 5a)
+
+Beastheart companions moved out of the `feature-group.companion/*` namespace into the
+`monster.companion.beastheart.*` family, mirroring the Monsters-book Rivals
+(`monster.rivals.<echelon>.statblock/<id>`) — the prerequisite for minting embeddable
+companion advancement-features entities (Plan 5b). A `beastheart` class subgroup segment
+was inserted throughout. **85 codes re-pathed, clean 1:1** (registry total unchanged at 2997):
+
+- container (×14): `feature-group.companion/wolf` → `monster.companion.beastheart.statblock/wolf`
+- feature (×57): `feature.companion.wolf.level-N/<id>` → `feature.companion.beastheart.wolf.level-N/<id>`
+- ability (×14): `feature.ability.companion.wolf.level-1/<id>` → `feature.ability.companion.beastheart.wolf.level-1/<id>`
+
+Classifier-only change (`internal/content/feature.go` container + feature branches,
+`ability.go` ability branch — a class segment appended only when non-empty so non-class
+contexts never emit a double-dot path; `classID` resolves to `beastheart` from the
+`## Beastheart` class ancestor). The companion still renders as a feature-group page
+(`fm["type"]` unchanged) — the `.statblock` kind is an identity-only change for now
+(spec §5). 13 inbound `scc:` links re-swept in the beastheart source. `freeze: false`,
+so the registry rebuilt clean. Spec + full design:
+`docs/superpowers/specs/2026-06-13-companion-restructure-advancement-featureblocks-design.md`;
+plan: `docs/superpowers/plans/2026-06-13-companion-scc-restructure.md`. Next: Plan 5b
+(companion advancement featureblocks), 5c (fixtures), 5d (docs/deploy); Plan 6 (retainers).
+
+## 2026-06-14 — Companion advancement featureblocks (Featureblock Plan 5b)
+
+Minted **14 `monster.companion.beastheart.advancement-features/<species>`** featureblock
+container codes (registry 2997 → 3011). Per companion the three context-only
+`##### Level N <C> Advancement Feature` separators were replaced by one
+`##### <C> Advancement Features` header (`@type: featureblock`) and each advancement
+feature's `@level: N` moved onto its own annotation — so the Level-3/6/10 features keep
+their **unchanged** `feature.companion.beastheart.<species>.level-N/<id>` codes (level now
+read from the feature's own annotation; the pipeline pushes a section's annotation before
+its parser runs and `Lookup` includes the section level). `FeatureblockParser` gained a
+companion branch (`internal/content/monster.go`): when companion context is present it
+classifies as `monster.companion.<class>.advancement-features/<species>` and embeds the
+child `@type:feature` sections as `features[]` (render-only; the children stay separately
+coded) via the new `collectChildFeatures`. The standalone entity page renders as a Forged
+Band card (`buildFeatureblockPage` + `.fb__band--adv` level bands). `type: featureblock`
+validates against the existing `featureblock.schema.json` (no schema change). Compositing
+the card onto the companion *statblock* page is deferred to the entity-embedding effort
+(ROADMAP). Plan: `docs/superpowers/plans/2026-06-13-companion-advancement-featureblocks.md`.
+
+## 2026-06-14 — Summoner fixtures → `monster.fixture.*` featureblocks (Featureblock Plan 5c)
+
+Restructured the **4 Summoner fixtures** out of the `fixture.<element>.statblock/<id>`
+statblock family into the `monster.fixture.<element>.*` featureblock family, parallel to
+the companion 5a/5b scheme. Per fixture: a base **`monster.fixture.<element>.featureblock/<id>`**
+(`type: featureblock`) + a sibling **`monster.fixture.<element>.advancement-features/<id>`**
+holding the Level-5/9 tiers (net **+4** codes: 4 base re-pathed, 4 advancement new, 4 old
+`fixture.*.statblock` removed; registry 3011 → 3015). `StatblockParser` returns early as a
+featureblock when `@domain == fixture` (base stats via `fixtureStats` → loose `stats[]`,
+base features via `ParseRichFeatures`); the advancement tiers were **source-split** into a
+sibling `@type: featureblock | @id: <fixture-id>` section parsed by a new `FeatureblockParser`
+fixture branch. **Zero inbound `scc:` links to fixtures**, `freeze: false` → clean rebuild,
+nothing dangled. Site: **Plan 3's `internal/site/fixture_page.go` adapter retired** (fixtures
+render through the shared `buildFeatureblockPage`; its `fbFeaturesFromRich` helper moved to
+`featureblock_page.go`); `hoistStatblockPath` drops the non-leaf `featureblock/` segment
+(fixture-scoped) so the base sits at `Browse/monster/fixture/<element>/<id>`; `bestiaryItemType`
+re-includes the base as a searchable **`"fixture"`** facet (advancement-features excluded).
+Plan: `docs/superpowers/plans/2026-06-14-fixture-featureblock-restructure.md`. Shipped on
+`steel-etl@feat/companion-scc-restructure` (not yet merged/deployed — Plan 5d). Next: Plan 5d
+(deploy), Plan 6 (retainers).

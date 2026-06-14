@@ -1,87 +1,38 @@
-# Handoff — 2026-06-08
+# HANDOFF — Featureblock Plan 5 (companion + fixture restructure) — COMPLETE
 
-## Active efforts
-
-- **Rule/glossary SCC linking — Phase 6 in-prose sweep** — **DONE** (2026-06-08).
-  Full in-prose `rule.*` sweep complete (batches 1–5 this session); only the low-yield
-  `side`/`line`/`wall`/`ground` deliberately left. Tracked as `FOLLOWUPS.md` **#9** (now
-  marked done). Term→code source of truth: `steel-etl/docs/rule-term-mapping.md`. No active
-  next step — see "You are here" for optional polish.
-- **Feature/ability/trait taxonomy refactor** — code DONE & on `main` (steel-etl +
-  workspace), breaking SCC change; heroes-doc links already rewritten to new codes.
-  **Not yet deployed** — live site/data repos still serve old `feature.trait.<class>`
-  codes until `just deploy` + manual data-repo regen. `data-sdk-npm` schema branch
-  `fork/feature-type-taxonomy` is intentionally NOT merged (Scott: ignore it).
-- **Other `plans/` efforts** — untouched.
-- **Smaller deferred items** — `FOLLOWUPS.md` #1–#8 (#7 resolve-prune now DONE).
+**Date:** 2026-06-14 · **Status:** Plans 5a + 5b + 5c + 5d all SHIPPED + LIVE. The companion+fixture featureblock effort is **done**. Only Plan 6 (retainers) remains, as a fresh ROADMAP item.
 
 ## You are here
 
-**Phase 6 (FOLLOWUPS #9) is effectively COMPLETE.** The full in-prose `rule.*` sweep is
-done — including the conservative `damage` pass and the conservative `creature`/`ability`/
-`target`/`ally`/`enemy` pass (each linked once at its defining sentence, `damage`-style).
-Heroes doc at **~17,040** SCC links (12,386 `rule.*`).
+Nothing in-flight. The "featureblock cards" effort's Plan 5 (SCC restructure + embeddable advancement-entity) is fully shipped and deployed to production. Durable detail: memory `project_featureblock_cards.md`. Design spec: `docs/superpowers/specs/2026-06-13-companion-restructure-advancement-featureblocks-design.md`.
 
-**Deliberately left unlinked in-prose:** `side`/`line`/`wall`/`ground` — mundane-dominated
-("outside", physical walls, "line of effect" is its own code, "the ground"); low mechanic
-yield / high mislink risk. All 109 codes are glossary-linked regardless.
+### What shipped (all live on steelcompendium.io)
+- **5a** companions → `monster.companion.beastheart.statblock/<species>`.
+- **5b** companion advancement-features entities (`monster.companion.beastheart.advancement-features/<species>`).
+- **5c** summoner fixtures → `monster.fixture.<element>.featureblock/<id>` + `…advancement-features/<id>`; Plan 3's `fixture_page.go` retired; fixtures render via `buildFeatureblockPage`, sit at `Browse/monster/fixture/<element>/<id>`, searchable as a `"fixture"` Bestiary facet.
+- **5d** merged to steel-etl `main` (`44d07a1`), workspace pointer bumped, `just deploy` (API + v2), live-verified.
+- Registry **3015** codes.
 
-**If resuming Phase 6:** there's no required next action. Optional polish only — sweep the
-rare clear-mechanic uses of side/line/wall/ground (your-side initiative, Wall/Line area
-abilities, the Ground-and-Ceiling rule) if desired.
+### Next (when you want it) — Plan 6 = ROADMAP #9
+Retainer advancement rework: give retainer advancement abilities their own `monster.<group>.…advancement-features` codes (collect the uncollected `########` H8 headings via `collectDeepHeadings`/`demoteOverflowHeadings`), replacing Plan 4's site-side body split. Mirrors companions (5b) / fixtures (5c). Needs its own spec/plan. Also ROADMAP #7 (statblocks→build-time-HTML + entity-embedding — enables the on-companion-page advancement card) and #8 (champion/minion/rival `monster.*` restructure) are open.
 
-Per-term loop (established): audit (`scripts/link_audit_sectioned.py "<term>"`) → dry-run
-`link_apply.py "<regex grp1>" "<code>" <excl-ranges>` → review for mundane → `--apply` →
-gen 0-WARN + broad malformed grep → commit per term-batch in steel-etl. Re-find anchors
-(`grep -nE '^#{3,6} <Heading>$'`) — plan line numbers are stale. **VERIFY the target code
-exists** (`jq -r '.codes[]' classification.json | grep <code>`) before linking — `test-difficulty`
-was an unminted Phase-3 gap (now fixed). Watch the literal `[Term]` notation footgun
-(`[potency value]`, `[damage type]`) — bare-word linking nests it into `[[…]]`.
+## Verified state (as of 2026-06-14)
+- steel-etl `main` at `44d07a1`; workspace `main` pointer bumped to it. Working trees clean.
+- Live: new companion/fixture + advancement pages 200 (fb-wrap cards, Level bands in HTML); old URLs 404 (accepted); API `monster.fixture.*` 200. CI green.
+- `git status` (workspace): clean after the docs commit below.
 
-## Verified state (as of 2026-06-08)
-
-- **steel-etl** `bfd9d15` — Phase 6 fully swept + `test-difficulty` code (**109 rule codes**),
-  rebased on top of the concurrent **card-data field-parity** effort (`2e554e2` + its 7
-  parents). Heroes doc **~17,040** SCC links (12,386 `rule.*`).
-- **Deployed live 2026-06-08 (everything):** Phase 6 (all batches + conservative
-  creature/ability/target/ally/enemy + damage) + feature.trait taxonomy + card-data parity —
-  **v2** `a15154b222`, **API** `6d7da7b`, **data-rules** `e28964ce`, **data-unified** `5cd2e78`
-  (data-bestiary unchanged). All repos in sync; nothing pending.
-- `go test ./...` → **PASS**. `gen --config pipeline.yaml` → **clean (0 WARN), 1915
-  classified**. Malformed-link grep → clean.
-
-## Gotchas & lessons (cross-cutting)
-
-- **Comprehensive linking is the policy** even for ultra-high-frequency core terms
-  (Stamina/Recovery/Surge) — Scott confirmed every mechanic instance, not first-per-section.
-  See memory `comprehensive-linking-density.md`.
-- **`[Term]` ability-notation footgun:** the doc uses literal `[Heroic Resource]` (square
-  brackets) as a placeholder; bare-word linking inside it produced `[[…]]` (fixed L4575).
-  After every apply run the **broadened** malformed grep:
-  `grep -nE '\]\(scc:[^)]*\)\]\(scc:|\[\[|\]\(\)|\(scc:[^)]*scc:|\]\(scc:[^)]*\)\]' DOC | grep -vE '\)\]\(scc:'`
-- **Multi-word before single-word:** link `temporary stamina`/`recovery value` BEFORE bare
-  `stamina`/`recovery`, else the bare pass nests inside the phrase.
-- **Plan line numbers are STALE** (doc grew ~80 lines past the 2026-06-07 numbers). Always
-  re-find anchors: `grep -nE '^#{3,5} <Heading>$' DOC` and next-heading via awk.
-- **Go/just/node need devbox:** `devbox run -- bash -c 'cd steel-etl && go …'` (bare
-  `devbox run -- go` fails).
-- **Repo topology:** steel-etl is the workspace **submodule** (bump pointer after its
-  commits). v2 / github.io / data-* are standalone siblings. `just deploy` runs gen ONCE,
-  commits/pushes API + v2; it does **not** commit the `data/data-*` repos — do those by hand.
-- **One heading = one SCC code;** don't stack `@type: rule` over an already-annotated
-  non-code container.
+## Gotchas
+- devbox: every Go/just cmd prefixed `devbox run -- … -C steel-etl …` (from workspace root).
+- `just deploy` pushes to TWO live repos (`steelCompendium.github.io` API + `v2` site → CI). Before deploying, `git -C <repo> fetch && git -C <repo> reset --hard origin/main` if local is behind — API/site are fully generated, so reset+regen is the clean reconcile (don't hand-merge generated JSON/markdown).
+- **Footgun:** if a separate automated deploy routine runs from a checkout at the OLD steel-etl pointer, it would regenerate old-code output and revert this deploy. Confirm any such routine uses the bumped pointer (44d07a1+).
+- `freeze: false` (beastheart/summoner) — restructures rebuild the registry clean; old re-minted URLs 404 with no tombstones (accepted, recent un-frozen books).
+- FOLLOWUPS #9: featureblock/terrain/malice (+ now companion-advancement + fixture) card bodies don't resolve `scc:` links (pre-existing; confirmed still present post-deploy).
 
 ## Verification commands
-
 ```
-# from workspace root
-git -C steel-etl log --oneline -1                 # 284b704
-git              log --oneline -1                 # 9b2663d (+ uncommitted doc edits)
-git status --short                                # ' M steel-etl' (pointer behind unpushed submodule HEAD)
-devbox run -- bash -c 'cd steel-etl && go test ./...'                                          # PASS
-devbox run -- bash -c 'cd steel-etl && go run ./cmd/steel-etl gen --config pipeline.yaml' 2>&1 | grep -iE "WARN|classified"  # 0 WARN, 1915
-# broad malformed-link guard (expect no output):
-grep -nE '\]\(scc:[^)]*\)\]\(scc:|\[\[|\]\(\)|\(scc:[^)]*scc:|\]\(scc:[^)]*\)\]' "steel-etl/input/heroes/Draw Steel Heroes.md" | grep -vE '\)\]\(scc:'
-# Phase 6 progress: remaining unlinked counts for a swept term should be ~def-section only
-devbox run -- bash -c 'cd steel-etl && python3 scripts/link_audit_sectioned.py "winded"'       # ~7 (def section)
+git -C steel-etl log --oneline -1            # 44d07a1 (merge)
+git status --short                           # clean
+curl -s -o /dev/null -w '%{http_code}' https://steelcompendium.io/v2/Browse/monster/fixture/demon/the-boil/   # 200
+curl -s -o /dev/null -w '%{http_code}' https://steelcompendium.io/v2/Browse/monster/companion/beastheart/advancement-features/wolf/  # 200
+devbox run -- go -C steel-etl test ./...     # all green
 ```
