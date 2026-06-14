@@ -26,7 +26,7 @@ Retainer advancement rework: give retainer advancement abilities their own `mons
 - `just deploy` pushes to TWO live repos (`steelCompendium.github.io` API + `v2` site → CI). Before deploying, `git -C <repo> fetch && git -C <repo> reset --hard origin/main` if local is behind — API/site are fully generated, so reset+regen is the clean reconcile (don't hand-merge generated JSON/markdown).
 - **Footgun:** if a separate automated deploy routine runs from a checkout at the OLD steel-etl pointer, it would regenerate old-code output and revert this deploy. Confirm any such routine uses the bumped pointer (44d07a1+).
 - `freeze: false` (beastheart/summoner) — restructures rebuild the registry clean; old re-minted URLs 404 with no tombstones (accepted, recent un-frozen books).
-- FOLLOWUPS #8: featureblock card `features[]` bodies don't resolve `scc:` links (pre-existing, malice too).
+- FOLLOWUPS #9: featureblock/terrain/malice (+ now companion-advancement + fixture) card bodies don't resolve `scc:` links (pre-existing; confirmed still present post-deploy).
 
 ## Verification commands
 ```
