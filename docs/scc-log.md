@@ -237,3 +237,26 @@ link markup; effect/tier VALUES keep their links verbatim. `validate --scc-stabl
 (additions only, no existing code changed). Plan + full detail:
 `steel-etl/docs/superpowers/plans/2026-06-12-monsters-content-linking.md`. Remaining FOLLOWUPS
 #5 half = direction 2 (links *into* monster pages from the other books).
+
+## 2026-06-13 — Companion SCC restructure (Featureblock Plan 5a)
+
+Beastheart companions moved out of the `feature-group.companion/*` namespace into the
+`monster.companion.beastheart.*` family, mirroring the Monsters-book Rivals
+(`monster.rivals.<echelon>.statblock/<id>`) — the prerequisite for minting embeddable
+companion advancement-features entities (Plan 5b). A `beastheart` class subgroup segment
+was inserted throughout. **85 codes re-pathed, clean 1:1** (registry total unchanged at 2997):
+
+- container (×14): `feature-group.companion/wolf` → `monster.companion.beastheart.statblock/wolf`
+- feature (×57): `feature.companion.wolf.level-N/<id>` → `feature.companion.beastheart.wolf.level-N/<id>`
+- ability (×14): `feature.ability.companion.wolf.level-1/<id>` → `feature.ability.companion.beastheart.wolf.level-1/<id>`
+
+Classifier-only change (`internal/content/feature.go` container + feature branches,
+`ability.go` ability branch — a class segment appended only when non-empty so non-class
+contexts never emit a double-dot path; `classID` resolves to `beastheart` from the
+`## Beastheart` class ancestor). The companion still renders as a feature-group page
+(`fm["type"]` unchanged) — the `.statblock` kind is an identity-only change for now
+(spec §5). 13 inbound `scc:` links re-swept in the beastheart source. `freeze: false`,
+so the registry rebuilt clean. Spec + full design:
+`docs/superpowers/specs/2026-06-13-companion-restructure-advancement-featureblocks-design.md`;
+plan: `docs/superpowers/plans/2026-06-13-companion-scc-restructure.md`. Next: Plan 5b
+(companion advancement featureblocks), 5c (fixtures), 5d (docs/deploy); Plan 6 (retainers).
