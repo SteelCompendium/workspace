@@ -50,3 +50,15 @@
 
 ## Execution Handoff
 Fresh session. After 5d, the companion+fixture featureblock effort is fully shipped; remaining: Plan 6 (retainers) + the two ROADMAP efforts (statblocks→build-time-HTML/embedding, summoner champion/minion/rival restructure).
+
+## Status — SHIPPED + DEPLOYED 2026-06-14
+
+All tasks done; the effort is **live**.
+- **T1 merge:** `feat/companion-scc-restructure` → steel-etl `main` (`44d07a1`, `--no-ff`); kept the harmless stray `1392a73`. Build+test green on main.
+- **T2 SDK sync:** confirmed **no schema change** across 5a–5c (`git diff 0eaf8c2 main -- schemas/` empty) → no-op.
+- **T3 pointer:** workspace `steel-etl` submodule bumped to `44d07a1`.
+- **T4 deploy:** `just deploy`. ⚠️ first run's API push was rejected (local clones of BOTH deploy repos — `steelCompendium.github.io` 9 behind, `v2` 15 behind — had un-pulled prior deploys). Reconciled by `git reset --hard origin/main` in each + fresh regen (API/site are fully generated, so reset+regen is the correct reconcile, not a manual merge), then `just deploy` again → both pushed (org `2e09d418`, v2 `ef6e17cce3a` stamped `steel-etl 44d07a1`). CI (`ci` + `pages-build-deployment`) green.
+- **T5 verify (live):** new fixture base/advancement + companion base/advancement pages → 200 (fb-wrap cards, Level-5/9 bands confirmed in live HTML); old URLs `/Browse/fixture/demon/the-boil/` + `/Browse/feature-group/companion/wolf/` → 404 (re-minted, un-frozen, no tombstones — accepted per spec); API `monster.fixture.demon.featureblock/the-boil.json` → 200, `type: featureblock`.
+- **T6 bookkeeping:** ROADMAP #7 (statblocks→build-time-HTML + entity-embedding), #8 (summoner champion/minion/rival `monster.*` restructure), #9 (Plan 6 retainer rework) added; memory + this status updated.
+
+**Remaining:** Plan 6 / ROADMAP #9 (retainer rework). **Possible footgun:** if a separate automated deploy routine runs `just deploy*` from a checkout still at the OLD steel-etl pointer, it would regenerate old-code API/site and revert this — confirm any such routine uses the bumped pointer.

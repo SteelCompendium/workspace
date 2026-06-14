@@ -104,3 +104,27 @@ What it is, why it matters, where the work lives. Code blocks, commands, links w
 - **Why it matters:** Debugging provenance (typo reports → source printing) without ever re-minting identities. The naive alternative — putting the printing in the SCC source segment (`mcdm.heroes.v1_01b`) — was tried 2026-06-11 and instantly dangled ~19k links; the design doc records why that and the snapshot-all-versions model are rejected.
 - **Decision triggers:** (b) is blocked on MCDM actually shipping a removal/replacement or announcing a true new edition — the tombstone-content question (Option A: annotated retention in source doc — leaning; Option B: registry-only) is deliberately undecided until then.
 - **Effort:** (b) unknown until a trigger fires.
+
+## 7. Statblocks → build-time HTML + entity-embedding
+
+**Status:** open (the enabling, larger half of the featureblock-cards effort; deferred out of Plan 5).
+
+- **What:** (a) Move monster/companion statblocks from the client-side JSON island (`steel-statblock.js`) to **build-time HTML** (the model `featureblock_page.go` already uses for featureblock/terrain cards). (b) Once statblocks are build-time, **embed** related entities onto a host page: Malice featureblocks into their monster statblock, and the **companion advancement-features card onto the companion statblock page** (the on-page card deferred from Plan 5 — spec §5/§8 of `steel-etl/docs/superpowers/specs/2026-06-13-companion-restructure-advancement-featureblocks-design.md`).
+- **Why it matters:** Plans 5a–5c gave companions/fixtures their own separately-coded advancement-features *entities* (live as standalone pages); compositing them onto the parent page needs the host (statblock) to render at build time first. Also removes a client-render dependency.
+- **Effort:** large; design spec exists for the embedding half; the island→build-time-HTML migration is the prerequisite.
+
+## 8. Summoner champion / minion / rival → `monster.*` restructure
+
+**Status:** open (fixtures done in Plan 5c; the other three summoner statblock trees deferred).
+
+- **What:** Move the remaining summoner statblock families (`champion.<portfolio>.statblock/*`, `minion.<portfolio>.statblock/*`, `rival.summoner.<echelon>.statblock/*`) into the `monster.*` namespace, parallel to how companions (5a) and fixtures (5c) were restructured — so all creature-like content lives under `monster.*`.
+- **Why it matters:** Consistency of the SCC taxonomy; fixtures already moved, leaving these as the odd trees still rooted at top-level `champion/`/`minion/`/`rival/`.
+- **Effort:** medium; mechanically similar to 5a/5c (classifier branch + link re-sweep — note these ARE link targets, unlike fixtures, so check inbound links first). `freeze:false` (summoner un-frozen).
+
+## 9. Plan 6 — retainer advancement rework (own SCC codes)
+
+**Status:** open (the last piece of the featureblock effort).
+
+- **What:** Give retainer advancement abilities their own `monster.<group>.…advancement-features` codes (collect the currently-uncollected `########` H8 headings — `collectDeepHeadings`/`demoteOverflowHeadings` in steel-etl), replacing **Plan 4's site-side body split** (`internal/site/retainer_page.go`) with a real coded entity, mirroring companions (5b) and fixtures (5c).
+- **Why it matters:** Plan 4 shipped retainer advancement as a site-only card built by splitting the statblock body at bold-label separators — the tiers have no SCC identity. This brings them in line with the companion/fixture advancement-features scheme.
+- **Effort:** medium; its own spec/plan when started.

@@ -1,43 +1,38 @@
-# HANDOFF — Featureblock Plan 5 (companion + fixture restructure)
+# HANDOFF — Featureblock Plan 5 (companion + fixture restructure) — COMPLETE
 
-**Date:** 2026-06-14 · **Status:** 5a + 5b + 5c shipped (on branch, NOT deployed); 5d (deploy) is the single next effort.
+**Date:** 2026-06-14 · **Status:** Plans 5a + 5b + 5c + 5d all SHIPPED + LIVE. The companion+fixture featureblock effort is **done**. Only Plan 6 (retainers) remains, as a fresh ROADMAP item.
 
 ## You are here
 
-The "featureblock cards" effort's Plan 5 = SCC restructure + embeddable advancement-entity. Full design: `docs/superpowers/specs/2026-06-13-companion-restructure-advancement-featureblocks-design.md`. Durable detail: memory `project_featureblock_cards.md`.
+Nothing in-flight. The "featureblock cards" effort's Plan 5 (SCC restructure + embeddable advancement-entity) is fully shipped and deployed to production. Durable detail: memory `project_featureblock_cards.md`. Design spec: `docs/superpowers/specs/2026-06-13-companion-restructure-advancement-featureblocks-design.md`.
 
-### Done — on `steel-etl@feat/companion-scc-restructure`, NOT merged/deployed
-- **5a — companion SCC restructure** (`docs/superpowers/plans/2026-06-13-companion-scc-restructure.md`): companions → `monster.companion.beastheart.statblock/<species>`. Commits `2771b9b`→`bfd1937`.
-- **5b — companion advancement-features** (`docs/superpowers/plans/2026-06-13-companion-advancement-featureblocks.md`): 14 `monster.companion.beastheart.advancement-features/<species>` entities. Commit `8450ed8` (+docs `8688431`). ⚠️ stray commit `1392a73` (a subagent's harmless dead-kit-helper removal + config tests) rides on the branch — keep or drop when finalizing.
-- **5c — fixture restructure** (`docs/superpowers/plans/2026-06-14-fixture-featureblock-restructure.md`): 4 summoner fixtures → base `monster.fixture.<element>.featureblock/<id>` + sibling `…advancement-features/<id>`. Plan 3's `fixture_page.go` adapter retired; fixtures render via `buildFeatureblockPage`, sit at `Browse/monster/fixture/<element>/<id>`, kept searchable as a `"fixture"` Bestiary facet. Commits `5de88d7`, `1cf94cd`, `699402f`, `3057d01`, `09b3fc1`, docs `85d34e6`. See the plan's `## Status` for per-task detail + the keep-searchable decision.
-- Registry 2997 → **3015**. Workspace docs (scc-log, CLAUDE.md, DESIGN.md, plan Status, this handoff) committed to `main`. **steel-etl submodule pointer intentionally NOT bumped** (`git status` shows `M steel-etl`) — that's 5d.
+### What shipped (all live on steelcompendium.io)
+- **5a** companions → `monster.companion.beastheart.statblock/<species>`.
+- **5b** companion advancement-features entities (`monster.companion.beastheart.advancement-features/<species>`).
+- **5c** summoner fixtures → `monster.fixture.<element>.featureblock/<id>` + `…advancement-features/<id>`; Plan 3's `fixture_page.go` retired; fixtures render via `buildFeatureblockPage`, sit at `Browse/monster/fixture/<element>/<id>`, searchable as a `"fixture"` Bestiary facet.
+- **5d** merged to steel-etl `main` (`44d07a1`), workspace pointer bumped, `just deploy` (API + v2), live-verified.
+- Registry **3015** codes.
 
-### Next — Plan 5d (deploy), execute in a fresh session
-`docs/superpowers/plans/2026-06-14-companion-fixture-deploy.md`: merge `feat/companion-scc-restructure` → steel-etl main (decide keep/drop on stray `1392a73`), SDK sync (likely no-op — no schema change in 5a/5b/5c), bump the workspace steel-etl pointer, `just deploy`, verify live (Brave — companion + fixture pages, Bestiary "fixture" facet), then ROADMAP + Plan 6 stub.
-
-### After Plan 5
-- **Plan 6** — retainer rework (own advancement-features codes, mirroring companions/fixtures; collect uncollected H8). Spec/plan TBD.
-- **ROADMAP** — statblocks → build-time HTML + entity-embedding (enables the on-companion-page advancement card, currently deferred); summoner champion/minion/rival `monster.*` restructure.
+### Next (when you want it) — Plan 6 = ROADMAP #9
+Retainer advancement rework: give retainer advancement abilities their own `monster.<group>.…advancement-features` codes (collect the uncollected `########` H8 headings via `collectDeepHeadings`/`demoteOverflowHeadings`), replacing Plan 4's site-side body split. Mirrors companions (5b) / fixtures (5c). Needs its own spec/plan. Also ROADMAP #7 (statblocks→build-time-HTML + entity-embedding — enables the on-companion-page advancement card) and #8 (champion/minion/rival `monster.*` restructure) are open.
 
 ## Verified state (as of 2026-06-14)
-- Branch: `steel-etl@feat/companion-scc-restructure`, working tree clean. Workspace `main`, only `M steel-etl` (pointer deferred to 5d).
-- Build: `devbox run -- go -C steel-etl build ./...` → clean.
-- Tests: `devbox run -- go -C steel-etl test ./...` → all 8 packages green.
-- `gen --all` → 3015 codes; `site` → clean. 8 fixture codes (4 featureblock + 4 advancement-features), zero `fixture.*.statblock`.
+- steel-etl `main` at `44d07a1`; workspace `main` pointer bumped to it. Working trees clean.
+- Live: new companion/fixture + advancement pages 200 (fb-wrap cards, Level bands in HTML); old URLs 404 (accepted); API `monster.fixture.*` 200. CI green.
+- `git status` (workspace): clean after the docs commit below.
 
 ## Gotchas
-- devbox: every Go cmd prefixed `devbox run -- go -C steel-etl <args>` (run from workspace root).
-- `freeze: false` — restructures rebuild the registry clean; `--scc-stable` deltas are informational.
-- A feature reads its own `@level` (pipeline pushes a section's annotation before its parser; `Lookup` includes the section's level).
-- `hoistStatblockPath` now also drops the `featureblock/` segment, scoped to `monster/fixture/` (only the 4 fixtures carry it).
-- FOLLOWUPS #8: featureblock card `features[]` bodies don't resolve `scc:` links (pre-existing, malice too) — not a Plan 5 regression.
+- devbox: every Go/just cmd prefixed `devbox run -- … -C steel-etl …` (from workspace root).
+- `just deploy` pushes to TWO live repos (`steelCompendium.github.io` API + `v2` site → CI). Before deploying, `git -C <repo> fetch && git -C <repo> reset --hard origin/main` if local is behind — API/site are fully generated, so reset+regen is the clean reconcile (don't hand-merge generated JSON/markdown).
+- **Footgun:** if a separate automated deploy routine runs from a checkout at the OLD steel-etl pointer, it would regenerate old-code output and revert this deploy. Confirm any such routine uses the bumped pointer (44d07a1+).
+- `freeze: false` (beastheart/summoner) — restructures rebuild the registry clean; old re-minted URLs 404 with no tombstones (accepted, recent un-frozen books).
+- FOLLOWUPS #8: featureblock card `features[]` bodies don't resolve `scc:` links (pre-existing, malice too).
 
 ## Verification commands
 ```
-git -C steel-etl branch --show-current        # feat/companion-scc-restructure
-git -C steel-etl status --short               # clean
-git status --short                            # only ' M steel-etl'
-devbox run -- go -C steel-etl build ./...
-devbox run -- go -C steel-etl test ./...
-grep -oE '"mcdm\.summoner\.v1/[^"]*fixture[^"]*"' steel-etl/classification.json | sort -u   # 8 codes (after a gen --all)
+git -C steel-etl log --oneline -1            # 44d07a1 (merge)
+git status --short                           # clean
+curl -s -o /dev/null -w '%{http_code}' https://steelcompendium.io/v2/Browse/monster/fixture/demon/the-boil/   # 200
+curl -s -o /dev/null -w '%{http_code}' https://steelcompendium.io/v2/Browse/monster/companion/beastheart/advancement-features/wolf/  # 200
+devbox run -- go -C steel-etl test ./...     # all green
 ```
