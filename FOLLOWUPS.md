@@ -87,12 +87,28 @@ plan/spec/decision docs keep their as-written numbers (the archive preserves
 - **Context:** Island shape + parser in `statblock_page.go` (`buildStatblockIsland`, `sbMeta.Captain`); renderer band logic already present in `steel-statblock.js` (`band()` + `data.malice`) and CSS (`.sb__band--malice`), so this is a Go/data-association task, not a front-end one. Group-dir sibling lookup precedent: `bestiary_cards.go` (`splitByType` finds the featureblock vs. statblock split).
 - **Effort:** M (malice association) + XS (captain label)
 
-## 8. Featureblock card `features[]` bodies don't resolve `scc:` links
+## 8. Link the remaining statblock usage-cell action terms to the rule glossary
 
 **Status:** open
 
-- **Identified:** 2026-06-14, building the companion advancement-features cards (Plan 5b). Pre-existing — affects malice featureblock cards too.
-- **What:** A featureblock's `features[]` frontmatter carries each feature's prose `body` verbatim from source, including raw `[term](scc:…)` links. The SCC link resolver rewrites `scc:` → relative `.md` only in markdown **bodies**, not frontmatter, so the Forged Band card (`renderFeatureblockCard` → `richInline`) renders these as literal `scc:…` hrefs. Visible on e.g. `monster/companion/beastheart/advancement-features/wolf` (Dire Wolf's "frightened" link) and existing malice cards (`arixx-malice` → `rule.dice/edge`, etc.).
-- **Why:** Inline cross-reference links in card bodies should resolve like everywhere else.
-- **Fix options:** resolve `scc:` links inside `features[]` bodies during the link-resolution pass (extend the resolver to walk known frontmatter feature-body fields), or resolve at site render time in `richInline` (map `scc:` → permalink). The latter is contained to `internal/site` and also fixes malice. Verify against both malice and companion-advancement cards.
-- **Effort:** S
+- **Identified:** 2026-06-13, fixing the statblock usage-cell link rendering (linked usage cells were stored/rendered link-free; now `statblock_page.go` resolves usage links like distance/target and `steel-statblock.js` renders usage via `rich()`).
+- **What:** Only **17** of ~1,000 ability usage cells in the Monsters source are actually linked (`**[Triggered Action](scc:…/rule.combat/triggered-action)**`); the other ~960 are plain text — `Main action`, `Maneuver`, `Triggered action`, `Free triggered action`, `Free maneuver`, `Move action`, `1 Eidos`, etc. Sweep the source so every action-type usage cell links to its rule-glossary term, the way the 17 already do.
+- **Why:** Comprehensive linking is part of "done" (memory `comprehensive-linking-density`); the renderer now surfaces these links, so the inconsistency (a handful clickable, the rest not) is visible to users. This is the natural completion of FOLLOWUPS #5 direction 1.
+- **Context:** Source `steel-etl/input/monsters/Draw Steel Monsters.md` (usage = 2nd cell of the 2×2 ability spec table, `> | **<keywords>** | **<usage>** |`). Confirm each phrase has a `rule.combat/*` target before linking (`triggered-action` exists; verify `main-action`/`maneuver`/`move-action`/free-action variants in `steel-etl/docs/linking-reference.md` — mint any missing glossary codes per the one-heading-one-code gotcha, memory `rule-scc-type`). The parser already strips the surrounding `**bold**` and resolves links in the usage cell, so no parser change is needed — purely a source-annotation sweep. Heroes/summoner sources likely have the same gap in their ability tables — check and fold in if cheap.
+- **Effort:** S–M (mechanical sweep, but verify/mint the action-term glossary targets first)
+
+## 9. Featureblock / terrain / malice pages render broken `../scc:` cross-reference links
+
+**Status:** open — **CONFIRMED still present after the featureblock restructure (Plans 5a–5c) landed + deployed 2026-06-14.** The new companion advancement-features cards (`monster/companion/beastheart/advancement-features/wolf` — Dire Wolf's "frightened") and fixture cards exhibit it too, alongside the original terrain/malice pages. Same root cause. Re-confirm the 98-page count post-deploy before acting.
+
+- **Identified:** 2026-06-13, auditing statblock-island link resolution (the statblock *island* path is now clean — 0 unresolved links). This is a **different render path**: `internal/site/featureblock_page.go` (malice featureblocks + dynamic terrain), not `statblock_page.go`.
+- **What:** **98 generated `v2/docs/Browse/` pages** emit broken anchor hrefs of the form `href="../scc:mcdm.heroes.v1/..."` — the raw `scc:` link was never resolved to a real page path, so the `../`-prefixed result 404s. Affected: all `dynamic-terrain/*` subdirs (~34 pages) and every monster family's `*-malice` featureblock (~64 pages).
+- **Evidence (verify these are gone after the refactor):**
+  - Count: `grep -rlE 'href="[^"]*scc:mcdm' v2/docs/Browse/ | wc -l` → **98** (want 0).
+  - Example rendered HTML, `v2/docs/Browse/monster/lich/lich-malice.md`: `<a href="../scc:mcdm.heroes.v1/feature.common.main-actions/free-strike">free strike</a>` and `<a href="../scc:mcdm.heroes.v1/condition/dazed">dazed</a>` (in `.fb__feat-body` and `.sc-ability__tier`).
+  - Example terrain, `v2/docs/Browse/dynamic-terrain/mechanisms/portcullis.md`: `[adjacent](scc:…)`, `[slowed](scc:…)` in `body:`/tier fields.
+  - Contrast: statblock islands have **0** such leaks (`grep -rlE '"(body|text|low|mid|high|trailing|usage|cost|name|label)":"[^"]*scc:mcdm' v2/docs/Browse/ | wc -l` → 0).
+- **Root cause (as of 2026-06-13):** the featureblock **structured fields** (`body`, power-roll tiers, `flavor`, `stats[].value`, enhancement `text`) retain **raw `scc:` links** in the gen output (`data/data-bestiary/en/md-linked/**`), unlike prose which the gen-time SCC resolver rewrites to relative `.md`. `featureblock_page.go` then runs those fields through `richInline` → `cardHref`, which only knows how to turn an already-resolved `.md` link into a directory URL (`"../" + dirURL`); handed a raw `scc:` target it just prepends `../` → `../scc:…`. So the gap is **gen-side**: featureblock structured text fields are not scc-resolved like prose. (Fixing it in the site renderer would mean teaching it to resolve `scc:` via the registry — the renderer already has a `registry:` path for printing stamps — but the cleaner fix is resolving at gen so every consumer benefits.)
+- **Why:** 98 pages of broken cross-reference links; comprehensive linking is part of "done" (memory `comprehensive-linking-density`).
+- **Fix options:** resolve `scc:` links inside the featureblock structured fields (`features[]` bodies, power-roll tiers, `flavor`, `stats[].value`, enhancement `text`) during the gen-time link-resolution pass (fixes every consumer), or resolve at site render time in `richInline` (`scc:` → permalink; contained to `internal/site`, also fixes malice + companion-advancement + fixture cards).
+- **Effort:** S–M (the gen-side resolve pass is the cleaner fix).
