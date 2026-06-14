@@ -99,7 +99,7 @@ plan/spec/decision docs keep their as-written numbers (the archive preserves
 
 ## 9. Featureblock / terrain / malice pages render broken `../scc:` cross-reference links
 
-**Status:** open — **CONFIRMED still present after the featureblock restructure (Plans 5a–5c) landed + deployed 2026-06-14.** The new companion advancement-features cards (`monster/companion/beastheart/advancement-features/wolf` — Dire Wolf's "frightened") and fixture cards exhibit it too, alongside the original terrain/malice pages. Same root cause. Re-confirm the 98-page count post-deploy before acting.
+**Status:** open — **CONFIRMED still present after the featureblock restructure (Plans 5a–5c) landed + deployed 2026-06-14.** The new companion advancement-features cards (`monster/companion/beastheart/wolf-advancement-features` — Dire Wolf's "frightened"; flattened from the old `…/advancement-features/wolf` path on 2026-06-14, see `docs/scc-log.md`) and fixture cards exhibit it too, alongside the original terrain/malice pages. Same root cause. Re-confirm the 98-page count post-deploy before acting.
 
 - **Identified:** 2026-06-13, auditing statblock-island link resolution (the statblock *island* path is now clean — 0 unresolved links). This is a **different render path**: `internal/site/featureblock_page.go` (malice featureblocks + dynamic terrain), not `statblock_page.go`.
 - **What:** **98 generated `v2/docs/Browse/` pages** emit broken anchor hrefs of the form `href="../scc:mcdm.heroes.v1/..."` — the raw `scc:` link was never resolved to a real page path, so the `../`-prefixed result 404s. Affected: all `dynamic-terrain/*` subdirs (~34 pages) and every monster family's `*-malice` featureblock (~64 pages).
