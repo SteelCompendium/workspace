@@ -318,3 +318,24 @@ divergence as `hoistStatblockPath`: implemented as `flattenAdvancementFeaturesPa
 `.sc-cards--pairs` grid) + a `.sc-cards--pairs` CSS rule in v2. Spec + plan:
 `steel-etl/docs/superpowers/specs/2026-06-14-advancement-features-nav-flatten-design.md`,
 `steel-etl/docs/superpowers/plans/2026-06-14-advancement-features-nav-flatten.md`.
+
+## 2026-06-14 — Featureblock structured-field `scc:` links now resolve at gen (FOLLOWUPS #9 fix)
+
+**Linking fix, no scheme/registry change.** Featureblock / dynamic-terrain / malice (and
+the new companion-advancement + fixture) pages were rendering **119** broken
+`href="…scc:mcdm…"` cross-reference links in `v2/docs/Browse/` (want 0): the gen-time
+link-resolution pass left raw `scc:` links in the **structured frontmatter fields** those
+pages read (`features[]` bodies, power-roll `tiers`, `stats[].value`, `enhancements[].text`,
+`sections[].text`), and `featureblock_page.go`'s `richInline`→`cardHref` prepended `../` to
+the unresolved target → `../scc:…` (404). Statblock pages were already clean because they
+read resolved *body* prose, not frontmatter.
+
+Root cause was a type-switch gap in `internal/scc/resolver.go` `resolveValue`: it recursed
+`[]any` / `map[string]any` / `[]string` / `string`, but the featureblock output emits
+`features`/`stats`/`sections`/`enhancements` as **`[]map[string]any`** (`RichFeatureMaps`)
+and power-roll `tiers` as **`map[string]string`** (`RichFeature.ToMap`) — both hit `default`
+and passed through untouched. Added the two missing cases (no new resolve pass; fixes every
+consumer of `md-linked`, incl. DSE). Post-fix: broken Browse `scc:` hrefs 119 → 0, raw `scc:`
+in all `md-linked` output → 0, statblock islands unchanged at 0. Guard:
+`TestResolverResolveFrontmatterTypedMapSlice` (`internal/scc/resolver_test.go`). Was
+workspace FOLLOWUPS #9.

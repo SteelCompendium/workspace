@@ -99,6 +99,10 @@ plan/spec/decision docs keep their as-written numbers (the archive preserves
 
 ## 9. Featureblock / terrain / malice pages render broken `../scc:` cross-reference links
 
+**Status:** **done 2026-06-14.** Fixed gen-side (fix option 1 — every consumer benefits): the link-resolution pass (`internal/scc/resolver.go` `resolveValue`) skipped two typed frontmatter container shapes the featureblock/terrain output uses — `[]map[string]any` (`features`/`stats`/`sections`/`enhancements`, via `RichFeatureMaps`) and `map[string]string` (power-roll `tiers`, via `RichFeature.ToMap`) — so their nested `scc:` links survived into `md-linked` and `featureblock_page.go`'s `richInline`→`cardHref` rendered them as `../scc:…`. Added both type-switch cases; broken `href="…scc:mcdm…"` count in `v2/docs/Browse/` went **119 → 0** (post-restructure count was 119, not the originally-noted 98) and raw `scc:` in all `md-linked` output is 0. Statblock islands stayed at 0 (no regression). Guard test: `TestResolverResolveFrontmatterTypedMapSlice` (`internal/scc/resolver_test.go`). scc-log 2026-06-14.
+
+<details><summary>Original report (open)</summary>
+
 **Status:** open — **CONFIRMED still present after the featureblock restructure (Plans 5a–5c) landed + deployed 2026-06-14.** The new companion advancement-features cards (`monster/companion/beastheart/wolf-advancement-features` — Dire Wolf's "frightened"; flattened from the old `…/advancement-features/wolf` path on 2026-06-14, see `docs/scc-log.md`) and fixture cards exhibit it too, alongside the original terrain/malice pages. Same root cause. Re-confirm the 98-page count post-deploy before acting.
 
 - **Identified:** 2026-06-13, auditing statblock-island link resolution (the statblock *island* path is now clean — 0 unresolved links). This is a **different render path**: `internal/site/featureblock_page.go` (malice featureblocks + dynamic terrain), not `statblock_page.go`.
@@ -112,6 +116,9 @@ plan/spec/decision docs keep their as-written numbers (the archive preserves
 - **Why:** 98 pages of broken cross-reference links; comprehensive linking is part of "done" (memory `comprehensive-linking-density`).
 - **Fix options:** resolve `scc:` links inside the featureblock structured fields (`features[]` bodies, power-roll tiers, `flavor`, `stats[].value`, enhancement `text`) during the gen-time link-resolution pass (fixes every consumer), or resolve at site render time in `richInline` (`scc:` → permalink; contained to `internal/site`, also fixes malice + companion-advancement + fixture cards).
 - **Effort:** S–M (likely a gen-side resolve pass over featureblock structured fields), **pending the featureblock refactor.**
+- **Resolution:** took the gen-side option. Root cause was narrower than "fields not resolved" — `ResolveFrontmatter` *did* recurse, but `resolveValue`'s type switch only matched `[]any`/`map[string]any`/`[]string`/`string`; the featureblock output emits `features`/`stats` as `[]map[string]any` and tiers as `map[string]string`, both of which hit `default` and passed through untouched. Two added cases (no new resolve pass needed).
+
+</details>
 
 ## 10. Statblock build-time render: deferred cleanups (CSS-only interactivity; parser link pre-resolve)
 
