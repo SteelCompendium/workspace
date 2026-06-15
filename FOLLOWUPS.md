@@ -1,20 +1,23 @@
 # Follow-ups
 
+<!-- next-id: 15 -->
+
 In-scope tangents found while working — important to fix, but they'd derail the task
-at hand. Add a numbered `## N.` section below instead of chasing them now, and
-**clear these before starting a new feature.** New features and larger efforts go in
-`ROADMAP.md`, not here.
+at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
+above, then bump it** — instead of chasing them now, and **clear these before starting
+a new feature.** New features and larger efforts go in `ROADMAP.md`, not here.
 
 Each item keeps the detail fields (**Identified / What / Why / Context / Effort**) that
 save the next person a grep. Mark a finished item with a `**Status:** done` line; on a
-periodic cleanup pass, completed items are moved to `docs/followups-archive/` and the
-rest renumbered. **After renumbering, grep live docs (all repos: `CLAUDE.md`s,
-`docs/*.md`, `v2/.repo-docs/`) for `FOLLOWUPS` item references and fix them** — dated
-plan/spec/decision docs keep their as-written numbers (the archive preserves
-"was FOLLOWUPS #N" handles). Most recent archive:
+periodic cleanup pass, completed items are moved to `docs/followups-archive/` keeping
+their original number as a `(was FOLLOWUPS #N)` handle. **Numbers are permanent — never
+reused, never renumbered**, so gaps in the live list (there's no #6) are expected and
+there is no grep-and-fix step: a `#N` reference resolves forever. **Referenced `#N` not
+in this file? It's completed — `grep -rn 'was FOLLOWUPS #N' docs/followups-archive/`.**
+Most recent archive:
 [`docs/followups-archive/2026-06-12-completed.md`](docs/followups-archive/2026-06-12-completed.md).
 
-<!-- Template — copy for each item, numbering sequentially:
+<!-- Template — copy for each item; take N from next-id above, then bump next-id:
 ## N. Short title
 **Status:** open
 - **Identified:** YYYY-MM-DD and the work it came up in
@@ -122,7 +125,7 @@ plan/spec/decision docs keep their as-written numbers (the archive preserves
 
 ## 10. Statblock build-time render: deferred cleanups (CSS-only interactivity; parser link pre-resolve)
 
-**Status:** open — **blocked on** the statblock build-time render swap landing first ([`docs/superpowers/specs/2026-06-14-statblock-build-time-render-design.md`](docs/superpowers/specs/2026-06-14-statblock-build-time-render-design.md)).
+**Status:** open — **unblocked 2026-06-14:** the statblock build-time render swap landed & deployed ([`docs/superpowers/specs/2026-06-14-statblock-build-time-render-design.md`](docs/superpowers/specs/2026-06-14-statblock-build-time-render-design.md); `internal/site/statblock_card.go` ships the `.sb-wrap` HTML, `steel-statblock.js` is now wire-only, `v2/CLAUDE.md` carries the "no longer a JSON island" note). Both cleanups below are now actionable.
 
 - **Identified:** 2026-06-14, brainstorming the statblock JSON-island → build-time HTML swap. Both items were explicitly scoped OUT of that effort to keep it a clean no-visual-change mechanism swap; capture them so they aren't lost.
 - **What:**

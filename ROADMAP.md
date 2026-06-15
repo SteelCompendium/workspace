@@ -1,18 +1,21 @@
 # Roadmap
 
+<!-- next-id: 11 -->
+
 New features and larger planned / in-flight efforts across the workspace. Smaller
 in-scope tangents to clear before the next feature go in `FOLLOWUPS.md`, not here.
 
-Each item is a numbered `## N.` section so it has a citable handle ("roadmap item 3").
-Mark a finished item with a `**Status:** done` line rather than deleting it; on a
-periodic cleanup pass, completed items are moved to `docs/roadmap-archive/` and the
-rest renumbered. **After renumbering, grep live docs (all repos: `CLAUDE.md`s,
-`docs/*.md`, `v2/.repo-docs/`) for `ROADMAP` item references and fix them** — dated
-plan/spec/decision docs keep their as-written numbers (the archive preserves
-"was ROADMAP #N" handles). Most recent archive:
+Each item is a numbered `## N.` section so it has a citable handle ("roadmap item 3");
+**take N from the `next-id` counter above, then bump it.** Mark a finished item with a
+`**Status:** done` line rather than deleting it; on a periodic cleanup pass, completed
+items are moved to `docs/roadmap-archive/` keeping their original number as a
+`(was ROADMAP #N)` handle. **Numbers are permanent — never reused, never renumbered**,
+so gaps in the live list are expected and there is no grep-and-fix step: a `#N`
+reference resolves forever. **Referenced `#N` not in this file? It's completed —
+`grep -rn 'was ROADMAP #N' docs/roadmap-archive/`.** Most recent archive:
 [`docs/roadmap-archive/2026-06-11-completed.md`](docs/roadmap-archive/2026-06-11-completed.md).
 
-<!-- Template — copy for each item, numbering sequentially:
+<!-- Template — copy for each item; take N from next-id above, then bump next-id:
 ## N. Short title
 **Status:** open
 What it is, why it matters, where the work lives. Code blocks, commands, links welcome. -->
@@ -128,3 +131,12 @@ What it is, why it matters, where the work lives. Code blocks, commands, links w
 - **What:** Give retainer advancement abilities their own `monster.<group>.…advancement-features` codes (collect the currently-uncollected `########` H8 headings — `collectDeepHeadings`/`demoteOverflowHeadings` in steel-etl), replacing **Plan 4's site-side body split** (`internal/site/retainer_page.go`) with a real coded entity, mirroring companions (5b) and fixtures (5c).
 - **Why it matters:** Plan 4 shipped retainer advancement as a site-only card built by splitting the statblock body at bold-label separators — the tiers have no SCC identity. This brings them in line with the companion/fixture advancement-features scheme.
 - **Effort:** medium; its own spec/plan when started.
+
+## 10. Architecture-redesign carry-over phases (i18n, homebrew spec, consumer migration)
+
+**Status:** open — the three not-yet-done phases of the original architecture redesign (`plans/architecture-redesign/`); surfaced here so they're tracked in the live backlog rather than buried in a 2026-04 plan. Phases 1–5 of that plan are complete (Phase 5 / Monsters shipped 2026-06-05).
+
+- **Phase 3.6 — MkDocs i18n.** *Blocked on a third party providing translation support.* The pipeline + translation tooling (3.1–3.3) are ready and the MkDocs Material i18n scaffolding stays in place; this step needs actual translated content to configure the locale switcher (language switcher links equivalent content across locales via SCC codes) and test against. Deferred deliberately until a translation contributor materializes — still waiting as of 2026-06. (`plans/architecture-redesign/phases.md` §3.6.)
+- **Phase 4.4 — Homebrew content spec.** Publisher registration process, third-party SCC allocation (`2.{publisher_id}`), content-format requirements (annotated markdown + frontmatter matching the standard schemas), and JSON-schema-conformance validation rules. (`phases.md` §4.4; "Future Phases / Phase 6: Homebrew Registry" is the build-out that follows the spec.)
+- **Phase 4.5 — Consumer migration.** Point `draw-steel-elements` at the consolidated repos, notify the MCDM VTT team of the new data locations, post deprecation notices on the old repos, and set an archive timeline (6+ months). This is the "old repos receive dual-published output" + "consumer migration planned and communicated" exit criteria still unchecked in `phases.md` Phase 4.
+- **Effort:** 3.6 M (once unblocked); 4.4 M; 4.5 M–L (cross-org coordination).
