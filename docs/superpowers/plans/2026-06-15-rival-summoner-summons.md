@@ -1,5 +1,16 @@
 # Rival Summoner ⇄ Summons Cross-References Implementation Plan
 
+## Status
+
+**Done (2026-06-15)** — shipped via subagent-driven development on branch
+`feat/rival-summoner-summons` (merged to `main` + deployed). steel-etl commits:
+`ff9bb11` (`rivalSummonsCards`), `f3f3a28` (`augmentRivalSummonerPages`), `d380ea4`
+(wired into `Build`), `04b5ef0` (docs); v2: `5f3664a` (`.sb-backlink` CSS) + regenerated
+Browse. Full test suite green, final cross-repo review passed. All four echelons render a
+`## Summons` block; each summon back-links to its Rival Summoner; Monsters-book rivals are
+untouched. No SCC/schema/data change. Docs: steel-etl `docs/site-builder.md` +
+`docs/statblocks.md`.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** On the v2 site, append a `## Summons` block of rich statblock cards to each Rival Summoner page and a back-link to its Rival Summoner on each summon page, derived from the Browse directory tree.
