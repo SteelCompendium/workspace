@@ -339,3 +339,37 @@ consumer of `md-linked`, incl. DSE). Post-fix: broken Browse `scc:` hrefs 119 �
 in all `md-linked` output → 0, statblock islands unchanged at 0. Guard:
 `TestResolverResolveFrontmatterTypedMapSlice` (`internal/scc/resolver_test.go`). Was
 workspace FOLLOWUPS #9.
+
+## 2026-06-15 — Summoner minions/champions/rivals → `monster.*` family
+
+Re-minted the Summoner book's three remaining special-statblock families out of their
+standalone domain roots into the `monster.*` family, completing the consolidation begun
+for companions/fixtures (Plans 5a–5c). These are **plain statblocks** (no
+featureblock/advancement-features machinery) — a domain-root re-mint only. `freeze:false`,
+only **2 inbound `scc:` links** (both in the summoner source) repointed, registry count
+unchanged (same entities, new codes; `gen --all` self-pruned the old roots).
+
+Old → new codes:
+
+- minion `minion.<portfolio>.statblock/<id>` → **`monster.minion.summoner.<portfolio>.statblock/<id>`**
+- champion `champion.<portfolio>.statblock/<id>` → **`monster.champion.summoner.<portfolio>.statblock/<id>`**
+- rival NPC `rival.summoner.<echelon>.statblock/<id>` → **`monster.rivals.<echelon>.statblock/<id>`**
+  (the Rival Summoner now sits *beside* the Monsters-book rivals — same type path, distinguished
+  only by `mcdm.summoner.v1` source + id; e.g. `rival-summoner` lands in the same echelon folder
+  as `rival-fury`)
+- rival summons `rival.summoner.<echelon>.statblock/<id>` → **`monster.rivals.<echelon>.summoner.minion/<id>`**
+  (the source `@category: summoner` is dropped; echelon-scoped, so recurring names like
+  `skeleton` stay distinct per echelon)
+
+Implementation: Go-side mapping in `StatblockParser` (`internal/content/monster.go`,
+`switch domain`), parallel to the existing `@domain: fixture` special-case; the `summoner`
+class segment is hardcoded (these `@domain` values appear only in the Summoner book). Rival
+split keys off the parsed `organization` (`Minion` → summons leaf; else → `.statblock` NPC).
+Site: removed the dead top-level `minion/`/`champion/`/`rival/`/`fixture/` includes from
+`v2/site.yaml` (all route through `monster/` now); extended `isBestiaryGroupDir`
+(`internal/site/bestiary_cards.go`) to recognize the deeper `monster/<domain>/summoner/<portfolio>`
+group dir so portfolio pages render rich statblock cards (the immediate-parent check missed
+the inserted class segment). **Retainers** (`retainer.summoner.*`) are explicitly out of
+scope — undecided, owned by the future retainer rework (Plan 6). Spec:
+`docs/superpowers/specs/2026-06-14-summoner-statblocks-into-monster-family-design.md`;
+plan: `docs/superpowers/plans/2026-06-14-summoner-statblocks-into-monster-family.md`.
