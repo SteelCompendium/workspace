@@ -124,6 +124,7 @@ Leader/Solo/Minion/Malice grey. (Word-form list: `reference/colors.md`.)
 | Statblocks (JSON island → client render, per-piece prefs + presets) | `internal/site/statblock_page.go` → `steel-statblock.js` + `steel-statblock.css` | `…/redesign/statblocks/README.md` — **the** spec, plus the `data-sb-featstyle` addendum (`v2/.repo-docs/plans/2026-06-12-statblock-feature-style.md`) |
 | Bestiary search & filter | `internal/site/bestiary_search.go` → `steel-bestiary-browser.js` + `steel-bestiary.css` | design spec in `steel-etl/docs/superpowers/specs/2026-06-10-bestiary-restructure-and-search-design.md` |
 | Featureblocks (`.fb-wrap` Forged Band card — titled collection of Features under a loose-stat header; statblock-like in anatomy, not rigor; also renders Summoner **fixtures** (`monster.fixture.<element>.featureblock` + `…advancement-features`), retainer advancement abilities as an "Advancement Abilities" card below the statblock island via `internal/site/retainer_page.go`, and beastheart **companion advancement-features** as a leveled-band card on `monster.companion.beastheart.advancement-features/<species>` pages) | build-time `internal/site/featureblock_page.go` + `v2/docs/stylesheets/steel-featureblock.css` | `docs/superpowers/specs/2026-06-12-featureblock-cards-design.md`, `…/2026-06-13-companion-restructure-advancement-featureblocks-design.md` |
+| Statblock preview cards (`.sb-prev` compact mini-statblock on index / group-landing pages — full header + toggleable defenses/secondary-stats/characteristics/feature-preview zones, whole-card link to the full page) | build-time `internal/site/statblock_preview.go` (+ `bestiary_cards.go`/`cards.go` routing) → `steel-statblock.css` + `statblock-preview.js` | `docs/superpowers/plans/2026-06-15-statblock-preview-cards.md` |
 | Settings drawer (gear icon, live apply) | `settings-panel.js`/`settings-core.js` + `steel-settings.css` | `v2/.repo-docs/plans/2026-06-07-live-settings-panel.md` |
 
 (`…` = `reference/design-system/handoff`.) Open design debts: statblock malice band +
@@ -152,6 +153,17 @@ controversy): users pick how dense/faithful the rendering is, **per part**.
   the `**Level N Retainer Advancement Ability**` body labels into a separate Forged Band
   card; the creature island keeps only the base features). Backward-compatible:
   existing featureblock/terrain features have `Level: 0` and emit no band.
+- **Statblock-preview prefs** are four independent `data-sbprev-*` attributes
+  (`stats`/`meta`/`chars`/`feats`, each `on`/`off`; default `stats=on`, rest `off`) in a
+  "Index previews" drawer group — they show/hide the zones of the `.sb-prev` preview
+  cards on index pages. **Deliberate exception to "no per-page variance":** the global
+  pref is the default, but each preview grid also gets a per-page toggle-bar
+  (`statblock-preview.js`) that overrides the zones for *that page* in-session (a
+  scannability affordance for index pages, not the statblock body itself). The build
+  also bakes the default onto each grid as `data-sbprev-*` (the no-JS baseline);
+  the global default lives in ONE place per layer — `settings-core.js` `SBPREV_DEFAULTS`,
+  `overrides/main.html`, and steel-etl `sbPreviewDefaults` (keep them in sync). The
+  default-zone choice is pending a community poll ([`ROADMAP.md`](ROADMAP.md) #11).
 - New preferences must follow this pattern (attribute + `applyX()` + drawer row +
   preset detection), and must work in both color schemes.
 

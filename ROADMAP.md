@@ -1,6 +1,6 @@
 # Roadmap
 
-<!-- next-id: 11 -->
+<!-- next-id: 12 -->
 
 New features and larger planned / in-flight efforts across the workspace. Smaller
 in-scope tangents to clear before the next feature go in `FOLLOWUPS.md`, not here.
@@ -140,3 +140,18 @@ What it is, why it matters, where the work lives. Code blocks, commands, links w
 - **Phase 4.4 — Homebrew content spec.** Publisher registration process, third-party SCC allocation (`2.{publisher_id}`), content-format requirements (annotated markdown + frontmatter matching the standard schemas), and JSON-schema-conformance validation rules. (`phases.md` §4.4; "Future Phases / Phase 6: Homebrew Registry" is the build-out that follows the spec.)
 - **Phase 4.5 — Consumer migration.** Point `draw-steel-elements` at the consolidated repos, notify the MCDM VTT team of the new data locations, post deprecation notices on the old repos, and set an archive timeline (6+ months). This is the "old repos receive dual-published output" + "consumer migration planned and communicated" exit criteria still unchecked in `phases.md` Phase 4.
 - **Effort:** 3.6 M (once unblocked); 4.4 M; 4.5 M–L (cross-org coordination).
+
+## 11. Statblock preview-card default zones (poll pending)
+
+**Status:** open — feature shipped 2026-06-15 with a placeholder default; final default awaits a community poll.
+
+- **What:** Decide which zones the `.sb-prev` statblock preview cards show by default
+  (`stats`/`meta`/`chars`/`feats`). Shipped default is `stats=on`, the rest `off`.
+- **Why it matters:** The user is polling the community on which preview density is most
+  useful for scanning index pages; the shipped value is a deliberate placeholder.
+- **How:** change the default in exactly three synced places — steel-etl
+  `sbPreviewDefaults` (`internal/site/statblock_preview.go`), v2 `settings-core.js`
+  `SBPREV_DEFAULTS`, and `v2/overrides/main.html`. No structural work; just the constants.
+  Feature/design context: [`DESIGN.md`](DESIGN.md) "user-preference system" +
+  `docs/superpowers/plans/2026-06-15-statblock-preview-cards.md`.
+- **Effort:** trivial (constant change) once the poll resolves.

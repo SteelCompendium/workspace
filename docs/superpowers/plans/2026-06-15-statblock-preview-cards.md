@@ -1,5 +1,12 @@
 # Statblock Preview Cards Implementation Plan
 
+> **Status:** SHIPPED 2026-06-15. All 8 tasks implemented + reviewed via subagent-driven
+> development; verified end-to-end against the real `steel-etl site` pipeline (a
+> build-order bug — group landings read leaf pages *after* they're transformed to
+> `.sb-wrap`, losing blockquote features — was found and fixed with a build-scoped
+> `statblockFeatureCache` keyed by scc). Default-zone visibility is a placeholder pending
+> a community poll ([`ROADMAP.md`](../../../ROADMAP.md) #11).
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Replace the generic `.sc-card` statblock previews on index / group-landing pages with rich mini-statblocks that always show the full statblock header and offer toggleable stats / secondary-stats / characteristics / feature-preview zones (global default + per-page override bar).
