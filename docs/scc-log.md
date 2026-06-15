@@ -2,11 +2,12 @@
 
 Dated history of changes to the SCC scheme, registry, and linking conventions.
 **Append a dated entry here whenever the scheme/registry/linking rules change, and
-update the short current-state summary in `CLAUDE.md` → "SCC" at the same time.**
-CLAUDE.md states only what is true *now*; how it got that way lives here. Entries are
-chronological (oldest first); each links to the plan/spec doc that has the full detail.
+update the current-state detail in [`scc-reference.md`](scc-reference.md) (plus the short
+summary in `CLAUDE.md` → "SCC") at the same time.** Those state what is true *now*; how it
+got that way lives here. Entries are chronological (oldest first); each links to the
+plan/spec doc that has the full detail.
 
-Current state, spec, and linking rules: `CLAUDE.md` → "SCC",
+Current state, spec, and linking rules: [`scc-reference.md`](scc-reference.md),
 `reference/scc-specification.md`, `steel-etl/docs/linking-guide.md`.
 
 ## 2026-05-29 — `project` and `god` types added
