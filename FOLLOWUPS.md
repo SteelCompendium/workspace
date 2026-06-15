@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 16 -->
+<!-- next-id: 18 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -134,6 +134,27 @@ Most recent archive:
 - **Why:** (1) deletes a whole client script and a class of navigation.instant hazards; (2) removes a render-stage special case and aligns the statblock and featureblock link paths (one resolve point, easier to reason about).
 - **Context:** `v2/docs/javascripts/steel-statblock.js` (`wire`/`chromeBottom`/sticky), `v2/docs/stylesheets/steel-statblock.css`; `steel-etl/internal/site/statblock_page.go` (`resolveSbLinks`, `buildStatblockIsland`) + the new `statblock_card.go` (`richSb`). Both are pure cleanups — no visual/behavior change intended. Do #2 with the golden DOM-equivalence test from the swap still in place as a guard.
 - **Effort:** (1) M (CSS + cross-browser/sticky verification); (2) S (parser tidy, guarded by the golden test).
+
+## 16. Echelon index pages render the old `browse-index` flat list instead of statblock preview cards
+
+**Status:** **done 2026-06-15.** Added `isBestiaryEchelonDir` (`internal/site/bestiary_cards.go`) and widened `buildMonsterGroupContent`'s guard so an "Nth-echelon" subdir whose parent is a bestiary group landing renders through the existing flat-group path (`featureblockCards` + `statblockCards` + `groupSubdirCards`, `relPrefix=""`). All 16 echelon pages (`monster/{demons,rivals,undead,war-dogs}/{1st,2nd,3rd,4th}-echelon/index.md`) now emit `sb-cards` preview cards; the rivals `summoner/` subgroup renders as a folder card. Guard tests `TestIsBestiaryEchelonDir` + `TestMonsterGroupContent_EchelonSubdir`. Verified via a real `steel-etl site` build: 0 echelon pages left with `browse-index`. (Re-deploy needed to publish — `v2/docs` regenerated locally also surfaced unrelated featureblock `intro`→`body` drift.)
+
+- **Identified:** 2026-06-15, auditing v2 index pages still rendering the pre-redesign style.
+- **What:** The 16 echelon **sub-directory** index pages — `monster/{demons,rivals,undead,war-dogs}/{1st,2nd,3rd,4th}-echelon/index.md` — render the old `<div class="browse-index">` flat bullet link-list instead of the `sb-cards` statblock preview cards. The parent group landings (`monster/demons/index.md`, etc.) already render the per-echelon preview cards correctly; only the standalone echelon pages lag.
+- **Why:** Consistency — the preview cards already exist and are used on the group landings; the echelon pages are a visible regression to the old style. No new card design needed, just routing.
+- **Context:** Root cause in `steel-etl/internal/site/`: `buildIndexContent` (`build.go`) walks each echelon dir and falls through every card builder to the default `browse-index` branch because `buildMonsterGroupContent`'s guard (`isBestiaryGroupDir`/`isBestiaryTypeRootWithStatblocks` in `bestiary_cards.go`) doesn't match an echelon dir (its parent, not itself, is the group dir). Fix: recognize an echelon dir whose parent is a bestiary group dir and render it through the existing `featureblockCards` + `statblockCards` (+ `groupSubdirCards` for the rivals `summoner/` subgroup) — the same flat-group path, `relPrefix=""`. The `*-malice`/`rival-summoner` featureblock files in those dirs already route via `splitByType`.
+- **Effort:** S (one guard helper + reuse existing renderers; guarded by a new bestiary_cards test).
+
+## 17. Non-monster `browse-index` index pages: `god`, `project`, `feature/ability/common`
+
+**Status:** **god + project done 2026-06-15** — `feature/ability/common` still open.
+
+- **Identified:** 2026-06-15, same audit as #16.
+- **What:** Three index pages still rendered the old `browse-index` flat list rather than `sc-card` stat-cards: `Browse/god/index.md`, `Browse/project/index.md`, and `Browse/feature/ability/common/index.md` (free strikes / maneuvers).
+- **Why:** Same consistency goal as #16; these are flat leaf types that were simply never added to the rich-card renderer.
+- **god + project (done):** Added both to `richCardTypes` (`steel-etl/internal/site/cards.go`) with dedicated `godCard` (Domains label line + flavor; `hands-pray` crest) and `projectCard` (flavor + Project Goal stat + Roll/Prerequisite/Source lines; `hammer-wrench` crest — both crests match the Browse landing). The project labels embed links (`**[Item Prerequisite](…):**`), so a new `bodyLabeledLineLoose` matches labels markdown-stripped, and `firstUnlabeledProse` pulls flavor from *after* the leading stat lines. All site-only (reads the page body, no schema change). Tests: `TestGodCard`, `TestProjectCard`, `TestBodyLabeledLineLoose`, `TestFirstUnlabeledProse`, `TestBuildCardsContent_GodAndProject`. Verified via a real `steel-etl site` build (9 god cards, 16 project cards; Craft Treasure has no inline stats and correctly falls back to flavor).
+- **Remaining — `feature/ability/common`:** under the **nested** feature/ability tree (`feature_index.go`), which deliberately keeps the list/expand UI — decide whether common abilities (free strikes, maneuvers) should get preview cards or stay listed; may be intentional. Different render path from god/project.
+- **Effort:** remaining `common` is S–M (needs a design call).
 
 ## 15. Back-link class-owned statblocks/featureblocks to their owning class
 
