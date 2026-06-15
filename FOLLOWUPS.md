@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 15 -->
+<!-- next-id: 16 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -134,3 +134,13 @@ Most recent archive:
 - **Why:** (1) deletes a whole client script and a class of navigation.instant hazards; (2) removes a render-stage special case and aligns the statblock and featureblock link paths (one resolve point, easier to reason about).
 - **Context:** `v2/docs/javascripts/steel-statblock.js` (`wire`/`chromeBottom`/sticky), `v2/docs/stylesheets/steel-statblock.css`; `steel-etl/internal/site/statblock_page.go` (`resolveSbLinks`, `buildStatblockIsland`) + the new `statblock_card.go` (`richSb`). Both are pure cleanups — no visual/behavior change intended. Do #2 with the golden DOM-equivalence test from the swap still in place as a guard.
 - **Effort:** (1) M (CSS + cross-browser/sticky verification); (2) S (parser tidy, guarded by the golden test).
+
+## 15. Back-link class-owned statblocks/featureblocks to their owning class
+
+**Status:** open
+
+- **Identified:** 2026-06-15, while adding the Rival Summoner summons cards + summon→summoner back-links (`docs/superpowers/specs/2026-06-15-rival-summoner-summons-design.md`).
+- **What:** Bestiary entities that belong to a hero **class** — beastheart companions (`monster.companion.beastheart.<species>` + their `…-advancement-features`) and summoner fixtures (`monster.fixture.<element>.<id>` + their `…-advancement-features`) — should carry an on-page back-link to their owning class page (`class/beastheart`, `class/summoner`). This is the class-owned analog of the rival summon→summoner back-link being built now; the rival back-link mechanism is the model to reuse.
+- **Why:** These entities live deep under `monster/*` with no on-page pointer to the class that conjures/bonds them, so a reader landing on `monster/fixture/demon/the-boil` (or a companion species page) has no path back to the Summoner/Beastheart class that owns it. Provenance + navigation.
+- **Context:** companion pages `v2/docs/Browse/monster/companion/beastheart/<species>(-advancement-features)`, fixture pages `v2/docs/Browse/monster/fixture/<element>/<id>(-advancement-features)`; class targets `class/beastheart.md`, `class/summoner.md`. Rendering lives in `steel-etl/internal/site/` (statblock + featureblock page builders); the relationship is derivable from the SCC type path's class segment (`companion.beastheart`, `fixture` under the summoner book). Keep separate from the rival effort — rivals are NPC statblocks, not class-owned.
+- **Effort:** S–M (a shared "owning-class back-link" helper in the site page builders).
