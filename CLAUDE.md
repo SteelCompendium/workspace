@@ -40,6 +40,15 @@ just deploy-api   # Pipeline + SCC API only
 just deploy-v2    # Pipeline + v2 site only
 ```
 
+## Git remotes & syncing
+
+Two remotes; `main` **tracks `origin`** (a bare `git push`/`git pull` goes there):
+
+- `origin` → `SteelCompendium/workspace` — the upstream org repo. This is the source of truth; push here.
+- `fork` → `vexa-tski/workspace` — a personal fork that runs behind. Don't rebase/push against it by default (`fork/main` lags the submodule bumps and will throw spurious `steel-etl` submodule conflicts).
+
+**Always start new work from latest `origin/main`** so you're not building on stale code: `git fetch origin && git rebase origin/main` (or branch from `origin/main`) **before** making changes. The repo carries the `steel-etl` submodule, so after pulling run `git submodule update --init steel-etl` to sync the working tree to the recorded pointer.
+
 ## Layout
 
 - `justfile` -- Workspace recipes (`clone-all`, `deploy`, `deploy-api`, `deploy-v2`)
