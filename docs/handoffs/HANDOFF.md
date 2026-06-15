@@ -1,38 +1,49 @@
-# HANDOFF — Featureblock Plan 5 (companion + fixture restructure) — COMPLETE
+# Handoff — 2026-06-15
 
-**Date:** 2026-06-14 · **Status:** Plans 5a + 5b + 5c + 5d all SHIPPED + LIVE. The companion+fixture featureblock effort is **done**. Only Plan 6 (retainers) remains, as a fresh ROADMAP item.
+## Active efforts
+- **Beastheart companion statblock previews / embedding** — IN FOCUS (not started). Resume at [`ROADMAP.md`](../../ROADMAP.md) **#12**. Needs its own plan (use `superpowers:writing-plans`) — it's parser work.
+- **Statblock preview cards** — SHIPPED + LIVE 2026-06-15. Plan: [`docs/superpowers/plans/2026-06-15-statblock-preview-cards.md`](../superpowers/plans/2026-06-15-statblock-preview-cards.md) (`## Status` = shipped). Memory: `project_statblock_preview_cards`. Only follow-on is the default-zone poll (ROADMAP #11) — a 3-constant change, no work until the poll lands.
 
 ## You are here
+Build the **companion `feature-group → sbIsland` adapter** so Beastheart companions render as `.sb-prev` statblock previews on their index (and, ideally, embed the full `.sb-wrap` card on the companion's own page). **First action:** write a plan for ROADMAP #12 with `superpowers:writing-plans`, then execute it. Do NOT start coding before the plan + the verify-restate gate.
 
-Nothing in-flight. The "featureblock cards" effort's Plan 5 (SCC restructure + embeddable advancement-entity) is fully shipped and deployed to production. Durable detail: memory `project_featureblock_cards.md`. Design spec: `docs/superpowers/specs/2026-06-13-companion-restructure-advancement-featureblocks-design.md`.
+### Why this exists (the finding that triggered the handoff)
+The statblock preview cards (just shipped) render every creature statblock as a compact `.sb-prev` card via `renderStatblockPreviewCard(sbIsland, …)`. Companions DON'T render — not a routing/CSS issue, but because **companions aren't in the `sbIsland` data model**:
+- Companion pages are `type: feature-group` (SCC `monster.companion.beastheart.statblock/<species>`), **not** `type: statblock`.
+- Stats are a 4-row markdown **table** in the body (NOT frontmatter scalars); abilities are `##` sections (NOT blockquotes). Frontmatter has only `name`/`level`/`companion`/`type`.
+- So `buildStatblockIsland(fm, body)` finds nothing → no card. The leaf page is a raw HTML table (0 `.sb-wrap`); the index (`buildAdvancementPairContent`) shows bare "Companion" `.sc-card`s.
 
-### What shipped (all live on steelcompendium.io)
-- **5a** companions → `monster.companion.beastheart.statblock/<species>`.
-- **5b** companion advancement-features entities (`monster.companion.beastheart.advancement-features/<species>`).
-- **5c** summoner fixtures → `monster.fixture.<element>.featureblock/<id>` + `…advancement-features/<id>`; Plan 3's `fixture_page.go` retired; fixtures render via `buildFeatureblockPage`, sit at `Browse/monster/fixture/<element>/<id>`, searchable as a `"fixture"` Bestiary facet.
-- **5d** merged to steel-etl `main` (`44d07a1`), workspace pointer bumped, `just deploy` (API + v2), live-verified.
-- Registry **3015** codes.
+The build-time statblock renderer IS reusable on any page (the JSON island was removed 2026-06-14), but it's **gated on having an `sbIsland`** — companions need an adapter to produce one. Full scope + file pointers + the build-order/`statblockFeatureCache` gotcha live in **ROADMAP #12** — read it; it's the spec-in-brief.
 
-### Next (when you want it) — Plan 6 = ROADMAP #9
-Retainer advancement rework: give retainer advancement abilities their own `monster.<group>.…advancement-features` codes (collect the uncollected `########` H8 headings via `collectDeepHeadings`/`demoteOverflowHeadings`), replacing Plan 4's site-side body split. Mirrors companions (5b) / fixtures (5c). Needs its own spec/plan. Also ROADMAP #7 (statblocks→build-time-HTML + entity-embedding — enables the on-companion-page advancement card) and #8 (champion/minion/rival `monster.*` restructure) are open.
+### Out of scope for #12 (separate task, per user)
+The companion **advancement-features** featureblocks (`<species>-advancement-features.md`, `type: featureblock`) — their card quality/embedding is its own task. Leave them as-is; #12 is only about the companion **base** statblock.
 
-## Verified state (as of 2026-06-14)
-- steel-etl `main` at `44d07a1`; workspace `main` pointer bumped to it. Working trees clean.
-- Live: new companion/fixture + advancement pages 200 (fb-wrap cards, Level bands in HTML); old URLs 404 (accepted); API `monster.fixture.*` 200. CI green.
-- `git status` (workspace): clean after the docs commit below.
+## Verified state (as of 2026-06-15)
+- All three repos on `main`, working trees clean, 0 unpushed (before this handoff's doc commit):
+  - `steel-etl` `main` = `9863364` (preview cards + feature cache).
+  - workspace `main` = `4c62d63` (submodule bumped to that); this handoff's doc commit lands on top.
+  - `v2` `main` = `f23aa29` (preview CSS + 2 polish rounds), pushed; CI `gh-deploy` publishes on push.
+- Preview cards are **live**: 71 group landings carry `.sb-cards` grids of `.sb-prev` cards (e.g. `/Browse/monster/draconians/`).
+- steel-etl `internal/site` tests + `go vet`: GREEN (this session). v2 `settings-core.test.js`: 4 pass.
+- Companion symptom reproducible at `v2/docs/Browse/monster/companion/beastheart/index.md` (generic cards) and `…/panther.md` (raw table, 0 `.sb-wrap`).
 
-## Gotchas
-- devbox: every Go/just cmd prefixed `devbox run -- … -C steel-etl …` (from workspace root).
-- `just deploy` pushes to TWO live repos (`steelCompendium.github.io` API + `v2` site → CI). Before deploying, `git -C <repo> fetch && git -C <repo> reset --hard origin/main` if local is behind — API/site are fully generated, so reset+regen is the clean reconcile (don't hand-merge generated JSON/markdown).
-- **Footgun:** if a separate automated deploy routine runs from a checkout at the OLD steel-etl pointer, it would regenerate old-code output and revert this deploy. Confirm any such routine uses the bumped pointer (44d07a1+).
-- `freeze: false` (beastheart/summoner) — restructures rebuild the registry clean; old re-minted URLs 404 with no tombstones (accepted, recent un-frozen books).
-- FOLLOWUPS #9: featureblock/terrain/malice (+ now companion-advancement + fixture) card bodies don't resolve `scc:` links (pre-existing; confirmed still present post-deploy).
+## Gotchas & lessons (cross-cutting)
+- **Three separate repos**, branched/merged/pushed independently: `steel-etl` (submodule), `v2` (separately-cloned, gitignored by workspace — its CSS/JS commits land on its own `main`), `workspace`. Bump the workspace submodule pointer (`git add steel-etl && commit "chore: bump steel-etl to <sha>"`) only AFTER steel-etl `main` advances. `just deploy` pushes the API repo + v2, but NOT steel-etl/workspace — push those yourself.
+- **Run Go/node via devbox from the workspace root**, cd-ing inside: `devbox run -- bash -c 'cd steel-etl && go test ./internal/site/'`. A bare `devbox run -- go …` runs in the workspace root and fails ("cannot find main module").
+- **Build-order gotcha (will bite the adapter):** `buildSection` transforms every statblock leaf to `.sb-wrap` HTML BEFORE `generateIndexPages` builds group landings — so the index reads already-transformed leaves with no blockquote features. Monster previews recover features from a build-scoped `statblockFeatureCache` (keyed by scc, populated in `buildStatblockIslandPage`, reset in `Build()`). A companion adapter parsing features from the page body must handle the same ordering.
+- **`buildIndexContent` builder order** (build.go): `buildAdvancementPairContent` → `buildCardsContent` → `buildFeatureIndexContent` → `buildMonsterGroupContent`. Companions are claimed by the FIRST (pair builder). Hook the adapter there, or make the pair builder defer for statblock-based bases.
+- **Don't hand-edit generated output** (`v2/docs/Browse/**`); `steel-etl site` overwrites it. CSS-only change → just commit `v2/docs/stylesheets/*` and push v2 (CI rebuilds). Full content change → `just deploy-v2`.
+- **Screenshots:** Playwright MCP is broken; use headless Brave (`/opt/brave.com/brave/brave --headless --screenshot=… "file://…"`). Preview zones default to stats-on/rest-off and `statblock-preview.js` reseeds grids from the global `<html data-sbprev-*>` — to capture all zones, neutralize that script + force the grid attrs, else it reseeds to default.
 
 ## Verification commands
-```
-git -C steel-etl log --oneline -1            # 44d07a1 (merge)
-git status --short                           # clean
-curl -s -o /dev/null -w '%{http_code}' https://steelcompendium.io/v2/Browse/monster/fixture/demon/the-boil/   # 200
-curl -s -o /dev/null -w '%{http_code}' https://steelcompendium.io/v2/Browse/monster/companion/beastheart/advancement-features/wolf/  # 200
-devbox run -- go -C steel-etl test ./...     # all green
+```bash
+cd /home/vexa/code/steel_compendium/workspace
+git branch --show-current && git -C steel-etl branch --show-current && git -C v2 branch --show-current   # all: main
+git -C steel-etl rev-parse --short HEAD                       # 9863364
+git -C v2 rev-list --count origin/main..HEAD                  # 0 (pushed)
+devbox run -- bash -c 'cd steel-etl && go test ./internal/site/ && go vet ./internal/site/'   # GREEN
+# reproduce the companion gap:
+grep -c 'class="sb-wrap"' v2/docs/Browse/monster/companion/beastheart/panther.md            # 0 (raw table, not a card)
+sed -n '1,9p' v2/docs/Browse/monster/companion/beastheart/panther.md                         # type: feature-group; stats in body table
+grep -o 'sb-prev\|sc-card' v2/docs/Browse/monster/companion/beastheart/index.md | sort | uniq -c   # sc-card only, no sb-prev
 ```

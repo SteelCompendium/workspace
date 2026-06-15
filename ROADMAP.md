@@ -1,6 +1,6 @@
 # Roadmap
 
-<!-- next-id: 12 -->
+<!-- next-id: 13 -->
 
 New features and larger planned / in-flight efforts across the workspace. Smaller
 in-scope tangents to clear before the next feature go in `FOLLOWUPS.md`, not here.
@@ -140,6 +140,16 @@ What it is, why it matters, where the work lives. Code blocks, commands, links w
 - **Phase 4.4 — Homebrew content spec.** Publisher registration process, third-party SCC allocation (`2.{publisher_id}`), content-format requirements (annotated markdown + frontmatter matching the standard schemas), and JSON-schema-conformance validation rules. (`phases.md` §4.4; "Future Phases / Phase 6: Homebrew Registry" is the build-out that follows the spec.)
 - **Phase 4.5 — Consumer migration.** Point `draw-steel-elements` at the consolidated repos, notify the MCDM VTT team of the new data locations, post deprecation notices on the old repos, and set an archive timeline (6+ months). This is the "old repos receive dual-published output" + "consumer migration planned and communicated" exit criteria still unchecked in `phases.md` Phase 4.
 - **Effort:** 3.6 M (once unblocked); 4.4 M; 4.5 M–L (cross-org coordination).
+
+## 12. Beastheart companion statblock previews + on-page embedding (feature-group → sbIsland adapter)
+
+**Status:** open — found 2026-06-15 while shipping statblock preview cards (#11). Companions never render as a statblock card anywhere (leaf page = raw markdown table; index = bare "Companion" cards).
+
+- **What/why:** Beastheart companion pages are `type: feature-group` (SCC `monster.companion.beastheart.statblock/<species>`), **not** `type: statblock`. Their stats live in a 4-row markdown **table** in the body (row 1 header = keywords + `Level N`; row 2 = Size/Speed/Stamina/Stability/Free Strike; row 3 = Immunity/Movement/Skills; row 4 = Might/Agility/Reason/Intuition/Presence) and their abilities are `##` sections (each its own `feature.ability.companion.beastheart.<species>.level-N/<ability>` entity). So nothing builds an `sbIsland` for them and `renderStatblockCard`/`renderStatblockPreviewCard` are never called — the leaf page shows a raw HTML table (0 `.sb-wrap`) and `Browse/monster/companion/beastheart/` shows generic "Companion" `.sc-card`s (via `buildAdvancementPairContent`), not `.sb-prev` previews. The statblock build-time renderer is reusable on any page but is **gated on having an `sbIsland`**, which companions don't produce.
+- **Goal:** a companion `feature-group → sbIsland` adapter that parses the body stat-table → defenses/secondary-stats(meta)/characteristics + ancestry(keywords)/level (role = "Companion"), and the `##` ability sections → `sbFeature` lines (name from heading; usage/cost from each ability's 2-col table). Then reuse the existing renderers for BOTH halves: embed the full `.sb-wrap` card on the companion's own page (replacing the raw table — the "embed anywhere" goal of #7) AND the `.sb-prev` preview on the index.
+- **Where (steel-etl `internal/site/`):** new parser (e.g. `companion_statblock.go`), reusing grid parsing from `applyFixtureGrid`/the monster grid reader (`monster.go`) and the ability-table parser `parseAbilityTable` (`ability_cards.go`). Index routing: `buildAdvancementPairContent` (`advancement_pairs.go`) claims `monster/companion/beastheart` FIRST in `buildIndexContent` (build.go) — hook the adapter so bases render as `.sb-prev` via `statblockCards`; the advancement-features featureblock cards stay as-is (their quality is a **separate** task per the user). Page embedding: emit the card from the companion `feature-group` page body in `buildSection` (parallel to `buildStatblockIslandPage`/`buildFeatureblockPage`); mind the build-order gotcha + `statblockFeatureCache` (keyed by scc) used by previews — see the preview plan.
+- **Cross-refs:** preview system = DESIGN.md + `docs/superpowers/plans/2026-06-15-statblock-preview-cards.md`; embedding half = #7 (its "(a) island→build-time HTML" shipped 2026-06-14, but it wrongly assumed companions were island-based — they were never on the island); default-zone poll = #11.
+- **Effort:** medium — new parser + tests + deploy; comparable to one preview-cards plan task. Worth its own plan via writing-plans.
 
 ## 11. Statblock preview-card default zones (poll pending)
 
