@@ -233,7 +233,7 @@ Each parser gets unit tests using small markdown fixtures in `testdata/`.
 - v2 build becomes: `steel-etl gen` → `steel-etl site --config site.yaml` → `mkdocs build`
 - v2 `justfile` updated (2026-04-26) to run `steel-etl gen` + `steel-etl site` directly instead of cloning `data-md-linked`
 
-**3.6: Add MkDocs i18n support** *DEFERRED — awaiting translated content (expected ~May 2026)*
+**3.6: Add MkDocs i18n support** *DEFERRED — scaffolding (3.1-3.3) stays in place awaiting a third party to provide translation support; still waiting as of 2026-06. Tracked in `ROADMAP.md`.*
 - Configure MkDocs Material i18n for locale switching
 - Language switcher uses SCC codes to link equivalent content across locales
 - Test with at least one translated locale
@@ -332,7 +332,7 @@ Each parser gets unit tests using small markdown fixtures in `testdata/`.
 
 ---
 
-## Phase 5: Monsters + Multi-Book (~1-2 weeks)
+## Phase 5: Monsters + Multi-Book (~1-2 weeks) *DONE — shipped 2026-06-05*
 
 **Goal:** Prove the multi-book pipeline works by adding the Monsters book.
 
