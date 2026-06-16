@@ -81,12 +81,26 @@ for free.
 desired singular (solos + named individuals + invariants `Lizardfolk`/`Undead`) need no
 annotation.
 
-### One code touch
+### Code touches (the `rivals → rival` slug only)
 
-`StatblockParser` hardcodes the literal `"rivals"` in two `compactPath(...)` calls (the
-rival-summoner statblock path and its minion-summons path). When `rivals → rival`, those
-two literals must become `"rival"` to stay in sync with the re-slugged group. This is the
-only Go change; everything else is annotation + re-mint.
+Every other slug flows generically through `category` context, so the 30 creature
+families are pure annotation. **`rivals` is the exception:** the literal
+`monster.rivals` / `monster/rivals` path is load-bearing in three non-test Go files and
+must be updated in lockstep when the group re-slugs to `rival`:
+
+- `internal/content/monster.go` — two `compactPath("monster", "rivals", …)` literals in
+  `StatblockParser` (the rival-summoner statblock path and its minion-summons path).
+- `internal/site/summoner_provenance.go` — the eyebrow gate matches `seg[1] == "rivals"`
+  in two `case` arms (the `…summoner.minion` and `…statblock` shapes).
+- `internal/site/rival_summons.go` — scans the `filepath.Join(sectionDir, "monster",
+  "rivals")` directory to attach the "Summons" card; the site path becomes
+  `monster/rival/<echelon>/…` after re-slug, so this literal must become `"rival"`.
+
+Five test files assert the old `rivals` paths and update alongside:
+`internal/content/monster_test.go`, `internal/site/{summoner_provenance,rival_summons,
+statblock_page,bestiary_cards}_test.go`. (Comment references to `monster.rivals.*` in
+`internal/content/feature.go` and elsewhere are prose only — update for accuracy, not
+correctness.) Everything else is annotation + re-mint.
 
 ## Scope
 
@@ -164,7 +178,8 @@ consistently; accepted rather than carving an exception.
 aliases**:
 
 1. Add `@category` annotations to the 31 plural group headings.
-2. Change the two `"rivals"` literals → `"rival"` in `StatblockParser`.
+2. Update the `rivals → rival` literals across `monster.go`, `summoner_provenance.go`,
+   and `rival_summons.go` (+ the 5 test files) per "Code touches" above.
 3. Reset the monster portion of the registry baseline and run `gen --all` twice (the
    established baseline-reset convention) so `classification.json`, `scc-to-path.json`,
    and the in-prose link references all regenerate against the new slugs.
