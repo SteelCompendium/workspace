@@ -112,6 +112,25 @@ deploy:
     git commit -m "chore: update v2 site content (steel-etl $etl_sha)" || echo >&2 "[INFO] No v2 changes to commit"
     git push
 
+    # 7. Commit and push the regenerated data repos (raw `gen --all` output).
+    # These are independent published repos (not submodules); step 1's gen wrote
+    # them and nothing since touches them, so their working trees are final here.
+    # Defensive: skip any data/ dir that isn't a clone (data-beastheart /
+    # data-summoner / data-rules-clean are local-only output dirs, no .git) or
+    # has no changes to commit.
+    for repo in data-bestiary data-rules data-unified; do
+        dir="$root/data/$repo"
+        if [ ! -d "$dir/.git" ]; then
+            echo >&2 "[INFO] $repo is not a git clone, skipping"
+            continue
+        fi
+        echo >&2 "[INFO] Committing $repo..."
+        git -C "$dir" add -A
+        git -C "$dir" commit -m "chore: update generated data (steel-etl $etl_sha)" \
+            || { echo >&2 "[INFO] No $repo changes to commit"; continue; }
+        git -C "$dir" push
+    done
+
 # Run the steel-etl pipeline and deploy the SCC API to the org site repo.
 deploy-api:
     #!/usr/bin/env bash
