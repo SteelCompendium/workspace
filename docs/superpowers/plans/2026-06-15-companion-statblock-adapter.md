@@ -973,7 +973,7 @@ git push origin main
 
 ## Status
 
-**Not started** — plan written 2026-06-15, awaiting verify-restate gate (index-layout decision: Option A recommended).
+**Shipped 2026-06-15.** Executed via subagent-driven-development (Option A — kept the base↔advancement pairing). All 12 companions render the full `.sb-wrap` card on their leaf page (raw table replaced, advancement section kept) and a `.sb-prev` preview on the index. Final go-reviewer: no blocking issues; the one MEDIUM (duplicated `data-sbprev-*` attr loop) was fixed by extracting `sbPreviewDefaultAttrs`. Full `steel-etl` suite + `go vet` green; verified end-to-end with headless-Brave screenshots of the index + the panther leaf.
 
 ## Self-review notes
 
