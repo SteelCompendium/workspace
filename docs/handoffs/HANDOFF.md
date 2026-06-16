@@ -23,11 +23,8 @@ L6 Single Bound · L10 Panther Spirit`.
 - **Process:** write a short plan via `superpowers:writing-plans`, then TDD it. It's small —
   comparable to one companion-adapter task.
 
-## Other open tasks (not started)
-- **Statblock preview default zones (ROADMAP #11)** — awaiting a community poll. Trivial: change
-  the default in three synced places (`steel-etl sbPreviewDefaults`, v2 `settings-core.js`
-  `SBPREV_DEFAULTS`, `overrides/main.html`). No work until the poll resolves.
-- **Retainer rework (ROADMAP #9 / featureblock Plan 6)** — untouched.
+Other open work is tracked in [`ROADMAP.md`](../../ROADMAP.md) (notably #9 retainer rework, #11
+preview-zone poll) and [`FOLLOWUPS.md`](../../FOLLOWUPS.md) — not duplicated here.
 
 ## Current state (clean baseline)
 - All three repos on `main`, clean, 0 unpushed. steel-etl `main` = `b7c0591` (companion adapter),
