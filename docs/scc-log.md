@@ -397,3 +397,23 @@ preview cards (no render-code change), and a `Stike` → `Strike` typo was fixed
 Implementation: `internal/content/ability.go` (common branch drops the group segment),
 guard test `TestAbilityParserCommonAbilityUnderFeatureGroupStaysFlat`. This completes the
 last open part of FOLLOWUPS #17 (the `god`/`project` card work landed 2026-06-15).
+
+## 2026-06-16 — monster category slugs singularized (pre-freeze re-mint)
+
+The Monsters-book monster-group category segment is now always **singular**
+(`monster.goblins.statblock` → `monster.goblin.statblock`, group landing
+`monster.group/goblins` → `monster.group/goblin`), matching spec §7.2 and the rest of the
+`monster.*` family (`companion`/`fixture`/`minion`/`champion` + portfolios were already
+singular). The book's plurality was count-driven (a section was titled plural only because
+it happened to print several statblocks) and so unstable for an aggregating compendium;
+singular is count-independent. 31 group slugs re-minted: 30 creature families via their
+`@category` annotations in `input/monsters/Draw Steel Monsters.md`, plus `rivals → rival`,
+which also touched the hardcoded path in `internal/content/monster.go`,
+`internal/site/summoner_provenance.go`, and `internal/site/rival_summons.go` (the
+Monsters-book rivals tree and the Summoner rival-summoner share it). 18 in-prose
+`monster.group/<plural>` cross-reference links were repointed to the singular targets.
+Plural names survive only as page **titles**. Registry was `frozen: false`, so this was a
+clean re-mint with **no aliases** — the live site's old plural URLs stop resolving. Code
+count unchanged (~3,013). Summoner / beastheart / fixture families untouched. Spec + plan:
+`docs/superpowers/specs/2026-06-16-monster-category-slug-singularization-design.md`,
+`docs/superpowers/plans/2026-06-16-monster-category-slug-singularization.md`.

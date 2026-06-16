@@ -81,9 +81,9 @@ companions/fixtures — these are plain statblocks, no featureblock machinery:
 - champions: `monster.champion.summoner.<portfolio>.statblock/<id>`
 
 The **Rival Summoner** NPC sits *beside* the Monsters-book rivals:
-`monster.rivals.<echelon>.statblock/<id>` (same type path — e.g. `rival-summoner` in the
+`monster.rival.<echelon>.statblock/<id>` (same type path — e.g. `rival-summoner` in the
 same echelon folder as `rival-fury`). Its summoned creatures are
-`monster.rivals.<echelon>.summoner.minion/<id>`.
+`monster.rival.<echelon>.summoner.minion/<id>`.
 
 Go-side mapping lives in `StatblockParser` (`switch domain`, mirroring the `@domain:
 fixture` case; the rival split keys off `organization == Minion`); `isBestiaryGroupDir`
@@ -94,8 +94,12 @@ retainer rework (ROADMAP). See `steel-etl/CLAUDE.md` for the ingest convention.
 
 ## Group landings
 
-Use the `<type>.group/<member>` shape (`skill.group/crafting`, `monster.group/devils`).
+Use the `<type>.group/<member>` shape (`skill.group/crafting`, `monster.group/devil`).
 Grouped glossaries are `rule.<group>/<term>` and `skill.<group>/<item>`.
+
+For monster groups the `<member>` slug is **singular** (`monster.group/goblin`), the same
+canonical slug used by the group's statblock category (`monster.goblin.statblock/<id>`);
+the plural group name ("Goblins") is preserved only as the page title.
 
 ## Linking
 

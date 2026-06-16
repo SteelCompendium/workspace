@@ -117,7 +117,7 @@ Compound types use `.` to add specificity:
 ```
 feature.ability.fury.level-1
 feature.trait.shadow.level-3.brawler
-monster.ogres
+monster.ogre.statblock
 ```
 
 #### Type Taxonomy
@@ -146,7 +146,7 @@ monster.ogres
 | `project` | Downtime projects | `mcdm.heroes.v1/project/build-airship` |
 | `god` | Deities | `mcdm.heroes.v1/god/cavall` |
 | `monster` | Monster entries (no category) | `mcdm.monsters.v1/monster/chimera` |
-| `monster.{category}` | Monsters by category | `mcdm.monsters.v1/monster.ogres/ogre-warrior` |
+| `monster.{category}` | Monsters by category (singular slug) | `mcdm.monsters.v1/monster.ogre.statblock/ogre-warrior` |
 | `dynamic-terrain` | Dynamic terrain features | `mcdm.monsters.v1/dynamic-terrain/lava-pool` |
 | `retainer` | Retainer NPCs | `mcdm.monsters.v1/retainer/squire` |
 
@@ -178,7 +178,7 @@ mcdm.heroes.v1/condition/dazed
 mcdm.heroes.v1/title/dragon-knight
 mcdm.heroes.v1/treasure/healing-potion
 mcdm.monsters.v1/monster/chimera
-mcdm.monsters.v1/monster.ogres/ogre-warrior
+mcdm.monsters.v1/monster.ogre.statblock/ogre-warrior
 ```
 
 ## 3. URL Mapping
@@ -377,6 +377,8 @@ SCC classifies what content IS, not where a book puts it. A Fury ability is clas
 ### 7.2 Singular Type Names
 
 All type names are singular: `class`, `chapter`, `condition`, not `classes`, `chapters`, `conditions`. The type describes what the item is, not a collection.
+
+This includes the monster category segment: `monster.goblin.statblock/<id>`, never `monster.goblins.…`. The plural group name from the sourcebook survives only as the page display title, never in the code.
 
 ### 7.3 Flat Categories
 
