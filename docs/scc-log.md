@@ -374,3 +374,26 @@ the inserted class segment). **Retainers** (`retainer.summoner.*`) are explicitl
 scope — undecided, owned by the future retainer rework (Plan 6). Spec:
 `docs/superpowers/specs/2026-06-14-summoner-statblocks-into-monster-family-design.md`;
 plan: `docs/superpowers/plans/2026-06-14-summoner-statblocks-into-monster-family.md`.
+
+## 2026-06-15 — common abilities flattened under `feature.ability.common` (FOLLOWUPS #17)
+
+Common abilities no longer take a feature-group path segment, partly narrowing the
+2026-06-06 "named feature-groups can contribute a path segment" rule: that rule still
+applies under a **class/ancestry**, but a `@type: ability` sitting in a `common`
+feature-group (the Combat chapter's **Maneuvers** / **Free Strikes** groups) now flattens
+to `feature.ability.common/<id>` instead of `feature.ability.common.<group>/<id>` — we
+don't sub-group common abilities the way class trees do. Five codes changed (freeze was
+off, **zero inbound `scc:` links**, so no link churn):
+
+- `feature.ability.common.maneuvers/{grab,knockback,escape-grab}` → `feature.ability.common/{…}`
+- `feature.ability.common.free-strikes/{melee,ranged}-weapon-free-strike-combat` → **removed**
+
+The two combat-chapter free strikes were duplicates of the canonical character-creation
+`feature.ability.common/{melee,ranged}-weapon-free-strike`; their `@type: ability`
+annotations were dropped (now bold-labeled tables) so they render inline in the Combat
+Read page but mint no duplicate page/SCC code. Side effects: the
+`feature/ability/common/` Browse landing became a pure parent-of-leaves and now renders
+preview cards (no render-code change), and a `Stike` → `Strike` typo was fixed.
+Implementation: `internal/content/ability.go` (common branch drops the group segment),
+guard test `TestAbilityParserCommonAbilityUnderFeatureGroupStaysFlat`. This completes the
+last open part of FOLLOWUPS #17 (the `god`/`project` card work landed 2026-06-15).

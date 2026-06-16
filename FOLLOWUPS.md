@@ -147,14 +147,14 @@ Most recent archive:
 
 ## 17. Non-monster `browse-index` index pages: `god`, `project`, `feature/ability/common`
 
-**Status:** **god + project done 2026-06-15** — `feature/ability/common` still open.
+**Status:** **done 2026-06-15** (god + project earlier same day; `feature/ability/common` resolved by restructure — see below).
 
 - **Identified:** 2026-06-15, same audit as #16.
 - **What:** Three index pages still rendered the old `browse-index` flat list rather than `sc-card` stat-cards: `Browse/god/index.md`, `Browse/project/index.md`, and `Browse/feature/ability/common/index.md` (free strikes / maneuvers).
 - **Why:** Same consistency goal as #16; these are flat leaf types that were simply never added to the rich-card renderer.
 - **god + project (done):** Added both to `richCardTypes` (`steel-etl/internal/site/cards.go`) with dedicated `godCard` (Domains label line + flavor; `hands-pray` crest) and `projectCard` (flavor + Project Goal stat + Roll/Prerequisite/Source lines; `hammer-wrench` crest — both crests match the Browse landing). The project labels embed links (`**[Item Prerequisite](…):**`), so a new `bodyLabeledLineLoose` matches labels markdown-stripped, and `firstUnlabeledProse` pulls flavor from *after* the leading stat lines. All site-only (reads the page body, no schema change). Tests: `TestGodCard`, `TestProjectCard`, `TestBodyLabeledLineLoose`, `TestFirstUnlabeledProse`, `TestBuildCardsContent_GodAndProject`. Verified via a real `steel-etl site` build (9 god cards, 16 project cards; Craft Treasure has no inline stats and correctly falls back to flavor).
-- **Remaining — `feature/ability/common`:** under the **nested** feature/ability tree (`feature_index.go`), which deliberately keeps the list/expand UI — decide whether common abilities (free strikes, maneuvers) should get preview cards or stay listed; may be intentional. Different render path from god/project.
-- **Effort:** remaining `common` is S–M (needs a design call).
+- **`feature/ability/common` (done):** `feature/ability/common` was the *only* mixed feature node (subgroups `free-strikes/` + `maneuvers/` **and** direct ability leaves), so it alone fell through to `browse-index`. Rather than teach the renderer about mixed nodes, we **flattened the structure**: common abilities no longer take a feature-group path segment (`internal/content/ability.go` common branch), so `feature.ability.common.{maneuvers,free-strikes}/*` → `feature.ability.common/*`. That makes the dir a pure parent-of-leaves → it renders preview cards with no render-code change. The two combat-chapter free strikes (duplicates of the canonical character-creation ones) were de-classified to inline bold-label tables (no own page/code). 5 codes changed, zero inbound links. Guard test `TestAbilityParserCommonAbilityUnderFeatureGroupStaysFlat`; scc-log 2026-06-15.
+- **Effort:** done.
 
 ## 15. Back-link class-owned statblocks/featureblocks to their owning class
 
