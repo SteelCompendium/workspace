@@ -44,10 +44,20 @@ The workspace dir holds **one submodule** and several **independent clones** (cl
 | `steel-etl/` | **submodule** (`.gitmodules`) | yes — as a recorded commit pointer | `SteelCompendium/steel-etl` |
 | workspace root (`justfile`, `docs/`, `devbox*`, `*.md`, `plans/`, `reference/`) | the workspace repo itself | yes | `SteelCompendium/workspace` (`origin`) |
 | `v2/` | independent clone | no (gitignored) | `SteelCompendium/v2` |
+| `data-sdk-npm/` | independent clone — **on the `v3` branch** (canonical), holds the published JSON-schema copy | no (gitignored) | `SteelCompendium/data-sdk-npm` (`origin`) |
 | `steelCompendium.github.io/` | independent clone | no | the org pages repo |
 | `data/data-{rules,bestiary,unified}/` | independent clones (published output) | no | their own origins |
 
 So a single change set can touch **three+ separate repos**, each pushed on its own.
+
+**`data/` mixes published clones with local-only output.** Only
+`data/data-{rules,bestiary,unified}` are clones with their own `.git` (the deploy commits to
+them); `data/data-{summoner,beastheart}` and `data/data-rules-clean` are local-only build
+output with no remote. So `rm -rf data` destroys the three clones' `.git`; restore them with
+`just clone-all` **before** re-running `gen`. (`clone-all` clones a `data/<repo>` only when the
+dir is absent — once `gen` has recreated it as a non-empty dir without `.git`, the clone fails
+with `destination path already exists and is not an empty directory`, so `rm -rf` that dir
+first.)
 
 ## Committing, merging & deploying
 
@@ -56,6 +66,12 @@ committed by the `just deploy*` recipes — never hand-commit it** (see below).
 
 1. **steel-etl code** → branch in `steel-etl/`, PR to `SteelCompendium/steel-etl`, merge to
    its `main`. (steel-etl is the source of truth for the pipeline + site builder.)
+   - **If the change edits `steel-etl/schemas/*.schema.json`,** the identical edit must also
+     land in `data-sdk-npm/src/schema/*.schema.json` **on the `v3` branch** and be committed +
+     pushed in that repo (its own `origin`). The two copies are hand-synced with nothing
+     enforcing agreement — see [`ARCHITECTURE.md`](../ARCHITECTURE.md) → "Schemas: two
+     hand-synced copies". The steel-etl copy ships with the steel-etl PR; the SDK copy ships
+     from the `data-sdk-npm` clone.
 2. **Record the new submodule pointer** in the workspace: after the steel-etl merge,
    `cd steel-etl && git fetch origin && git checkout origin/main` (or `git submodule update
    --remote steel-etl`), then in the workspace root commit the moved pointer with the
