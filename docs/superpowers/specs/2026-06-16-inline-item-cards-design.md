@@ -102,6 +102,33 @@ material link-preview pass is already disabled, so the residual runtime cost is 
   `## Basics` and its advancement table survive.
 - **Visual**: screenshot `Browse/class/censor` before/after for the user.
 
+## Implementation notes (refinements found while building)
+
+Three things surfaced during implementation and are part of the shipped design:
+
+- **`feature-group` is card-able too.** Beastheart companion statblocks are
+  `type: feature-group` (rendered to `.sb-wrap` by `companion_statblock.go`), so they
+  join the card-able + standalone sets.
+- **Swallow stops at a nested standalone.** A companion's advancement-features
+  `featureblock` is nested *under* its statblock heading. A statblock card cannot
+  reproduce it, so the swallow stops before any nested standalone
+  (statblock/featureblock/feature-group) descendant, which then gets its own card —
+  not just the recursive-container descend case.
+- **Link rebasing (dual base).** A transcluded card carries two link forms that resolve
+  against different bases: a `.md` link is resolved by MkDocs relative to the source
+  *file* directory, while every other relative link is a final URL relative to the page's
+  *URL* directory (page-name included, with directory URLs). `rebaseLinks` classifies by
+  `.md` suffix and rebases each against the correct base, in both `href`/`src` attributes
+  and Markdown `](target)` tails. Without this, transcluded cards 404 at the container's
+  depth (caught by a clean MkDocs build: 0 broken-link warnings).
+
+## Status
+
+Implemented and verified 2026-06-17 (Browse only). MkDocs build clean — **0 broken-link
+warnings**, ~3.7 min full-site build. Verified card counts: Censor (feature/ability
+cards), Beastheart (14 companion statblocks + 14 advancement featureblocks), Summoner
+(53 minion statblocks + 8 featureblocks). Read-tab embedding deferred — ROADMAP item.
+
 ## Out of scope
 
 - Read-tab embedding — gated on the Browse performance check (tracked as a follow-up).

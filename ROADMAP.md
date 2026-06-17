@@ -1,6 +1,6 @@
 # Roadmap
 
-<!-- next-id: 13 -->
+<!-- next-id: 14 -->
 
 New features and larger planned / in-flight efforts across the workspace. Smaller
 in-scope tangents to clear before the next feature go in `FOLLOWUPS.md`, not here.
@@ -19,6 +19,21 @@ reference resolves forever. **Referenced `#N` not in this file? It's completed �
 ## N. Short title
 **Status:** open
 What it is, why it matters, where the work lives. Code blocks, commands, links welcome. -->
+
+## 13. Inline item cards on the Read tab
+
+**Status:** open — Browse shipped 2026-06-17; Read deferred pending a page-weight decision.
+
+The inline item-card embedding (abilities/features/traits/statblocks/featureblocks rendered
+as their High-Fantasy Steel cards on container pages) shipped for the **Browse** tab. The
+`embed_cards.go` pass is section-scoped via `embed_card_sections` in `v2/site.yaml`, so
+enabling Read is a one-line config edit (`- Read`) — **no code change**. Deferred
+deliberately: the Read "Classes" chapter renders every class in a single page, and the user
+wants to gauge the page-weight/render impact of the much larger Browse class pages first.
+Browse baseline: full-site `mkdocs build` clean (0 broken-link warnings), ~3.7 min. Before
+flipping Read on, spot-check the heaviest Read chapter's render time and DOM weight.
+Design/plan: `docs/superpowers/specs/2026-06-16-inline-item-cards-design.md`,
+`docs/superpowers/plans/2026-06-16-inline-item-cards.md`.
 
 ## 1. v2 site load/navigation performance (page weight + search index)
 
