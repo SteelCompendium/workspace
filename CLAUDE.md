@@ -47,6 +47,12 @@ just deploy-api   # Pipeline + SCC API only
 just deploy-v2    # Pipeline + v2 site only
 ```
 
+These recipes **regenerate and commit+push the generated output themselves** (v2 `docs/`,
+`data/*`, the SCC API) — **never hand-commit generated content.** The full
+commit → merge → deploy flow across the `steel-etl` submodule and the independent v2 / data
+/ org-site clones (incl. the `chore: bump steel-etl to <sha>` pointer step) is in
+[`docs/git-workflow.md`](docs/git-workflow.md) → "Committing, merging & deploying".
+
 Pipeline details, data flow, and editable-vs-generated rules:
 [`ARCHITECTURE.md`](ARCHITECTURE.md) — **you must read it** before pipeline/deploy work.
 
