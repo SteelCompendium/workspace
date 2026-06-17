@@ -22,17 +22,18 @@ What it is, why it matters, where the work lives. Code blocks, commands, links w
 
 ## 13. Inline item cards on the Read tab
 
-**Status:** open — Browse shipped 2026-06-17; Read deferred pending a page-weight decision.
+**Status:** done — Browse shipped 2026-06-17; Read shipped 2026-06-17 after the page-weight check passed.
 
 The inline item-card embedding (abilities/features/traits/statblocks/featureblocks rendered
-as their High-Fantasy Steel cards on container pages) shipped for the **Browse** tab. The
-`embed_cards.go` pass is section-scoped via `embed_card_sections` in `v2/site.yaml`, so
-enabling Read is a one-line config edit (`- Read`) — **no code change**. Deferred
-deliberately: the Read "Classes" chapter renders every class in a single page, and the user
-wants to gauge the page-weight/render impact of the much larger Browse class pages first.
-Browse baseline: full-site `mkdocs build` clean (0 broken-link warnings), ~3.7 min. Before
-flipping Read on, spot-check the heaviest Read chapter's render time and DOM weight.
-Design/plan: `docs/superpowers/specs/2026-06-16-inline-item-cards-design.md`,
+as their High-Fantasy Steel cards on container pages) was enabled for the **Read** tab too
+by adding `Read` to `embed_card_sections` in `v2/site.yaml` (no code change — the
+`embed_cards.go` pass is section-scoped). Read chapters reference items whose card-able
+leaves live under Browse, so both sections are walked together and links rebase across the
+section boundary (verified: `mkdocs build` clean, 0 broken-link warnings). The user
+confirmed Browse class pages render snappily, clearing the page-weight gate. Heaviest pages:
+`Read/heroes/classes.md` (~1.9M, 15,277 card elements) and `Read/bestiary/monsters.md`
+(~4.5M, 415 statblock cards) — the bestiary mega-page is the one to watch. Design/plan:
+`docs/superpowers/specs/2026-06-16-inline-item-cards-design.md`,
 `docs/superpowers/plans/2026-06-16-inline-item-cards.md`.
 
 ## 1. v2 site load/navigation performance (page weight + search index)

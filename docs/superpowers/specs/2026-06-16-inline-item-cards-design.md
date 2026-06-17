@@ -124,10 +124,12 @@ Three things surfaced during implementation and are part of the shipped design:
 
 ## Status
 
-Implemented and verified 2026-06-17 (Browse only). MkDocs build clean — **0 broken-link
-warnings**, ~3.7 min full-site build. Verified card counts: Censor (feature/ability
-cards), Beastheart (14 companion statblocks + 14 advancement featureblocks), Summoner
-(53 minion statblocks + 8 featureblocks). Read-tab embedding deferred — ROADMAP item.
+Implemented and verified 2026-06-17, **Browse + Read** (Read enabled same day once the
+Browse page-weight check passed — ROADMAP #13). MkDocs build clean — **0 broken-link
+warnings** — with Read on too (cross-section links from Browse leaves into Read chapters
+rebase correctly). Verified card counts: Censor 1,677 cards; Beastheart 14 statblocks + 14
+featureblocks; Summoner 53 statblocks + 8 featureblocks; `Read/heroes/classes.md` 15,277
+card elements; `Read/bestiary/monsters.md` 415 statblocks (~4.5M — the heaviest page).
 
 ## Out of scope
 
