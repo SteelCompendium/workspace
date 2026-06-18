@@ -24,6 +24,35 @@ confirmed Browse class pages render snappily, clearing the page-weight gate. Hea
 
 ---
 
+## Printing provenance stamp + SCC code lifecycle (tombstones) (was ROADMAP #6)
+
+**Status:** retired from the live roadmap 2026-06-18 — converted to reference, not closed as
+"done." (a) The printing provenance stamp **shipped** 2026-06-11. (b) The code-lifecycle
+(tombstone) model is **settled design, implementation deferred indefinitely**: it can't be
+built until MCDM ships a removal/replacement or announces a true new edition (years out per
+the user), so it doesn't belong in the active backlog. It now lives as **current-state SCC
+reference** — [`docs/scc-reference.md`](../scc-reference.md) → "Printing provenance & code
+lifecycle" — backed by the depth design doc
+`steel-etl/docs/superpowers/specs/2026-06-11-printing-provenance-and-code-lifecycle-design.md`
+(which records the decision triggers that should reopen the work). If a trigger fires,
+open a fresh ROADMAP item for the implementation.
+
+- **(a) shipped:** the heroes source's `printing: "1.01b"` frontmatter flows as a
+  non-identity build stamp — registry `books` map → SCC API JSON (`books` + per-entry
+  `printing`) → site page frontmatter/footer line — plus the `heroes-printing-1.01b` git tag
+  (ingest convention in `steel-etl/CLAUDE.md`). Plan:
+  `steel-etl/docs/superpowers/plans/2026-06-11-printing-provenance-stamp.md`.
+- **(b) deferred design:** when MCDM removes/replaces an entity — new code for the
+  replacement, `status: removed` / `removed_in` / `superseded_by` tombstone for the old one,
+  never reuse or 404. The open sub-decision (Option A annotated-retention-in-source vs.
+  Option B registry-only) stays undecided until a trigger fires.
+- **Why it was parked:** debugging provenance (typo reports → source printing) without ever
+  re-minting identities. The naive alternative — printing in the SCC source segment
+  (`mcdm.heroes.v1_01b`) — was tried 2026-06-11 and instantly dangled ~19k links; the design
+  doc records why that and the snapshot-all-versions model are rejected.
+
+---
+
 ## v2 CI deploy build-time performance (~14 min → ~5 min) (was ROADMAP #5)
 
 **Status:** closed 2026-06-18 — investigated, measured, and a fix verified locally on

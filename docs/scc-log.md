@@ -173,7 +173,7 @@ breaking redefinition, e.g. a true 2nd Edition), never the errata printing — c
 (tried and reverted 2026-06-11). The source printing lives in non-identity `printing:`
 frontmatter on the input doc (currently inert); wiring it as a build stamp (registry →
 API → pages) and the removal/tombstone code-lifecycle model are deferred — see
-`ROADMAP.md` #6 ("Printing provenance stamp + SCC code lifecycle") and
+`scc-reference.md` → "Printing provenance & code lifecycle" and
 `steel-etl/docs/superpowers/specs/2026-06-11-printing-provenance-and-code-lifecycle-design.md`.
 
 ## 2026-06-11 — Printing provenance stamp shipped
@@ -191,7 +191,8 @@ ingest convention (update frontmatter → edit content → tag
 changes (`validate --scc-stable` clean). Plan:
 `steel-etl/docs/superpowers/plans/2026-06-11-printing-provenance-stamp.md`;
 site mechanics: `steel-etl/docs/site-builder.md`. The tombstone lifecycle half
-remains deferred (`ROADMAP.md` #6).
+remains deferred — settled design, no longer tracked as backlog (see
+`scc-reference.md` → "Printing provenance & code lifecycle").
 
 **2026-06-12 follow-up:** the remaining three books got their printings —
 **monsters 1.01, beastheart 1.0, summoner 1.0** (tags `monsters-printing-1.01`,

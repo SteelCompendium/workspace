@@ -82,15 +82,6 @@ What it is, why it matters, where the work lives. Code blocks, commands, links w
 - **Context:** 9 individual gods + 16 projects annotated in that pass; groupings adjudicated as containers and skipped. Parsers produce flat `god/<id>` / `project/<id>` codes.
 - **Effort:** S–M
 
-## 6. Printing provenance stamp + SCC code lifecycle (tombstones)
-
-**Status:** (a) printing stamp **done** 2026-06-11 (plan: `steel-etl/docs/superpowers/plans/2026-06-11-printing-provenance-stamp.md`); (b) tombstone lifecycle blocked on MCDM decision triggers. Design: `steel-etl/docs/superpowers/specs/2026-06-11-printing-provenance-and-code-lifecycle-design.md` — **read it before touching this; it captures the whole discussion.**
-
-- **What:** (a) *(shipped)* the heroes source's `printing: "1.01b"` frontmatter flows as a non-identity build stamp — registry `books` map → SCC API JSON (`books` + per-entry `printing`) → site page frontmatter/footer line — plus the `heroes-printing-1.01b` git tag (ingest convention in `steel-etl/CLAUDE.md`); (b) a code-lifecycle (tombstone) model for when MCDM removes/replaces an entity: new code for the replacement, `status: removed` / `removed_in` / `superseded_by` for the old one, never reuse or 404.
-- **Why it matters:** Debugging provenance (typo reports → source printing) without ever re-minting identities. The naive alternative — putting the printing in the SCC source segment (`mcdm.heroes.v1_01b`) — was tried 2026-06-11 and instantly dangled ~19k links; the design doc records why that and the snapshot-all-versions model are rejected.
-- **Decision triggers:** (b) is blocked on MCDM actually shipping a removal/replacement or announcing a true new edition — the tombstone-content question (Option A: annotated retention in source doc — leaning; Option B: registry-only) is deliberately undecided until then.
-- **Effort:** (b) unknown until a trigger fires.
-
 ## 7. Statblocks → build-time HTML + entity-embedding
 
 **Status:** open (the enabling, larger half of the featureblock-cards effort; deferred out of Plan 5).

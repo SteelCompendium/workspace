@@ -142,12 +142,41 @@ The heroes (~17,527 links), summoner (1,464), and monsters (5,948 — 4,759 cros
 heroes + 1,189 internal) sources are all fully link-swept. The remaining sweep work
 (links *into* monster pages from other books) is tracked in `FOLLOWUPS.md`.
 
-## ⚠️ PDF printing ≠ SCC version
+## Printing provenance & code lifecycle
 
-The `.v1` in a source segment is the SCC *namespace* version, **never** the errata
-printing. Putting the printing in `book:` re-mints every code and dangles ~19k links (tried
-and reverted — see [`scc-log.md`](scc-log.md)). Printing lives in non-identity `printing:`
-frontmatter (heroes 1.01b, monsters 1.01, beastheart/summoner 1.0) and flows as a build
-stamp: registry → SCC API → page footer line, labelled by `v2/site.yaml` `books[].label`.
-The tombstone lifecycle half is tracked in `ROADMAP.md`. Ingest convention:
-`steel-etl/CLAUDE.md`.
+SCC separates **identity** (a permanent address — *codes are forever*) from **provenance**
+(which source printing live data came from — metadata about a build). Conflating the two
+breaks links, so the rules below are load-bearing. Full reasoning, rejected alternatives,
+and the decision triggers:
+[`2026-06-11-printing-provenance-and-code-lifecycle-design.md`](../steel-etl/docs/superpowers/specs/2026-06-11-printing-provenance-and-code-lifecycle-design.md).
+
+### ⚠️ PDF printing ≠ SCC version
+
+The `.v1` in a source segment is the SCC *namespace* version — it bumps only for a genuinely
+breaking redefinition of a book's content model (a true 2nd Edition), **never** for errata.
+Putting the printing in `book:` re-mints every code and dangles ~19k links (tried and
+reverted — see [`scc-log.md`](scc-log.md)).
+
+### Provenance stamp (shipped)
+
+Printing lives in non-identity `printing:` frontmatter (heroes 1.01b, monsters 1.01,
+beastheart/summoner 1.0) and flows as a build stamp: registry → SCC API → page footer line,
+labelled by `v2/site.yaml` `books[].label`. Debug workflow: a code/URL → the page or API
+reports its printing + git SHA → `git show <book>-printing-<version>` recovers the exact
+source. Ingest convention (update `printing:`, edit, tag the commit): `steel-etl/CLAUDE.md`.
+
+### Code lifecycle / tombstones (settled design, implementation deferred)
+
+When MCDM removes or replaces an entity, SCC **never reuses or 404s a code**:
+
+- The replacement is a new entity → a new code.
+- The removed code becomes a **tombstone** carrying registry lifecycle metadata
+  (`status: removed`, `removed_in: <printing>`, optional `superseded_by: <code>`); its page
+  reads "removed in printing X, replaced by Y" with a link, rather than 404ing.
+
+This scales with *removals* (rare — a handful per printing at most), not printings × all
+codes. The implementation, plus the one open sub-decision (where tombstone content lives:
+Option A annotated-retention-in-source vs. Option B registry-only), is **deferred until a
+trigger fires** — MCDM shipping a removal/replacement, or announcing a true new edition.
+Nothing is planned before then: this is reference, not backlog. The triggers and the A/B
+trade-off live in the design doc linked above.
