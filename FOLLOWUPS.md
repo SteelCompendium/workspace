@@ -48,7 +48,7 @@ Most recent archive:
 
 ## 4. Restamp bare `scc:` links to explicit `scc.v1:` across all inputs
 
-**Status:** open (deferred deliberately)
+**Status:** done 2026-06-18 — all 25,328 in-prose `scc:` links across the four book sources (heroes 17,528, monsters 5,948, summoner 1,542, beastheart 310) restamped `](scc:` → `](scc.v1:`. Every occurrence was in markdown-link form (zero non-link uses, zero already-prefixed), so it was a pure balanced restamp. `gen --all` after the sweep resolved cleanly (3,012 codes, 0 resolver WARNs, no raw `scc.v1:` leaked into linked output). Registry already recorded `scheme_version: 1` and the resolver already normalized both forms (shipped 2026-06-09). See `docs/scc-log.md` 2026-06-18.
 
 - **Identified:** 2026-06-09, during the SCC scheme-versioning design (`steel-etl/docs/superpowers/specs/2026-06-09-scc-scheme-versioning-and-format-design.md`).
 - **What:** The SCC scheme now carries an explicit scheme-version prefix (`scc.v1`), with bare `scc:` defined as a permanent implicit-v1 alias. The canonical form is explicit, but the ~17,527 existing in-prose `scc:…` links and the registry were left bare to avoid a high-churn sweep. This follow-up restamps bare `scc:` → `scc.v1:` across all source inputs (heroes, beastheart, monsters, and the in-flight new sourcebook) and emits explicit going forward.

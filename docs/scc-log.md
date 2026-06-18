@@ -117,8 +117,9 @@ resolver recognizes + normalizes both the prefix and `#format`, and **refuses to
 resolve a non-current scheme version** against the current registry (a future
 `scc.v2:` can never silently bind to v1 content). Spec changes are tracked in the
 Revision History in `reference/scc-specification.md` §9. Restamping existing bare
-`scc:` links to explicit `scc.v1:` is deferred (`FOLLOWUPS.md` #4), as are the
-`/scc.v1/` website URL alias and the HTTP format entry point. Design + plan:
+`scc:` links to explicit `scc.v1:` was deferred (`FOLLOWUPS.md` #4 — **done
+2026-06-18**, see below), as are the `/scc.v1/` website URL alias and the HTTP format
+entry point. Design + plan:
 `steel-etl/docs/superpowers/specs/2026-06-09-scc-scheme-versioning-and-format-design.md`,
 `…/plans/2026-06-09-scc-scheme-versioning.md`.
 
@@ -431,3 +432,17 @@ second time and which had been doubling up in the Bestiary/Browse as
 registry `frozen: false` so `gen --all` simply stops minting it. Summoner 225 → 224,
 total **3,013 → 3,012**. No aliases, no in-prose links pointed at the retired code.
 Mechanics: steel-etl/ANNOTATION-GUIDE.md, the @classify: false row (Optional Fields).
+
+## 2026-06-18 — bare `scc:` links restamped to explicit `scc.v1:` (FOLLOWUPS #4)
+
+The deferred restamp from the 2026-06-09 scheme-versioning work (above) is done. All
+**25,328** in-prose `scc:` links across the four book sources — heroes (17,528),
+monsters (5,948), summoner (1,542), beastheart (310) — were rewritten from bare `scc:`
+to the canonical explicit `scc.v1:`. Every occurrence was in markdown-link form
+(`](scc:` → `](scc.v1:`); there were zero non-link uses and zero already-prefixed
+links, so the sweep was a pure, balanced restamp (12,584 lines, equal insert/delete).
+Bare `scc:` remains a permanent implicit-v1 alias, so nothing relying on the old form
+breaks; this just makes the canonical form explicit everywhere. `gen --all` after the
+sweep resolved cleanly — 3,012 codes across 4 books, **zero** resolver `WARN`s, no raw
+`scc.v1:` leaking into the linked output. Still deferred (separate items): the
+`/scc.v1/` website URL alias and the HTTP format entry point.

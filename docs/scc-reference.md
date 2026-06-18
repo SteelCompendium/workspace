@@ -20,7 +20,9 @@ Hierarchical classification used across all data repos: `source/type/item`
 (e.g. `mcdm.heroes.v1/feature.ability.fury.level-1/gouge`). SCC codes are identifiers used
 as website permalinks (`/scc/{code}/`), API keys, and cross-reference links.
 
-Scheme spec is **v1.1**: the `scc.vN:` prefix is optional; bare `scc:` ≡ `scc.v1`.
+Scheme spec is **v1.1**: the `scc.vN:` prefix is optional; bare `scc:` ≡ `scc.v1`. All
+in-prose links in the four book sources carry the explicit `scc.v1:` prefix (restamped
+2026-06-18, scc-log); bare `scc:` stays a permanent implicit-v1 alias.
 
 ## Registry
 
