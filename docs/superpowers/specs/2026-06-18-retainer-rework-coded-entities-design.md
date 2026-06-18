@@ -19,9 +19,9 @@ The goal (user, 2026-06-18): **almost everything here should be its own coded en
 2. **Full-granularity coding.** Every entity gets a code (§3), down to individual abilities — base and advancement, retainer and role.
 3. **Base statblock restructured into `monster.*`.** `retainer.statblock/<id>` → `monster.retainer.statblock/<id>`, with the advancement sibling `monster.retainer.advancement-features/<id>` (symmetric kind-swap pair, like fixtures/companions). 0 inbound links → clean re-mint.
 4. **Role Advancement Abilities included** (the 9 role groups), coded as per-role containers + per-ability children.
-5. **Rendering: keep the unified build-time card.** Statblocks already render build-time `.sb-wrap` (the client-side island was retired; see §6). Because abilities stay as blockquotes in the statblock body (§5), the existing `renderStatblockCard` keeps producing one unified card with no change — coding them as children is additive, so unlike companions no re-composition adapter is needed. The advancement card embeds below.
-6. **Coding mechanism: parser-emitted children**, not 50 hand-annotated `@type: ability` sections (§4) — minimizes source churn and leaves the build-time card unchanged.
-7. **Single plan** (not decomposed into sub-plans), despite the size.
+5. **Coding mechanism: annotated `@type: ability|trait` child sections** (the companion-source pattern). A standalone coded page is minted **only** for a real section in the document tree (`walk(doc.Sections)` → `scc.Classify`); `ParsedContent.Children` is **embed-only** and never produces a page. So every retainer ability must be **un-blockquoted into an annotated section** (heading = ability name, `@type: ability|trait`, `@level: N` for advancement/role) — exactly how companion abilities are authored (`<!-- @type: ability | @id: petrify --> ##### Petrify`). There is **no** "synthesize a coded child from a blockquote" mechanism, and building one would be net-new pipeline work — rejected.
+6. **Rendering: re-compose the unified card via a retainer adapter** (generalize the proven `companion_statblock.go`). Coding the **base** abilities pulls them out of the statblock body into sections, so the build-time `.sb-wrap` card must be rebuilt from those sections rather than from body blockquotes. The retainer adapter reads stats from **frontmatter** (the existing `buildStatblockIsland` path — retainer grids already populate frontmatter) and features from the now-`@type:ability` sections (reusing `companionFeatures`' `parseStatblockIslandFeature` trick). This is the heaviest, regression-prone piece (render fidelity across 21 cards); it is mitigated by reusing the companion adapter, not inventing one.
+7. **Single plan, staged** (not decomposed into separate plans), executed across multiple sessions if needed: Stage A namespace + advancement/role coding (no card change), Stage B base-ability coding + retainer card adapter, Stage C link-sweep + docs + deploy.
 
 ## 3. The SCC scheme (full entity tree)
 
@@ -49,40 +49,62 @@ Key properties:
 In `steel-etl/input/monsters/Draw Steel Monsters.md`:
 
 1. **Group re-namespace.** The `<!-- @type: monster-group | @domain: retainer -->` / `#### Retainer Statblocks` annotation must classify its child statblocks as `monster.retainer.statblock/*` (today they are bare `retainer.statblock/*`). Exact annotation/parser change is an implementation detail; the constraint is the §3 target codes. (Parallel: fixtures gained the `monster` top segment via `compactPath("monster", "fixture", category, …)`; retainers need `compactPath("monster", "retainer", "", "statblock")`.)
-2. **Advancement sibling (×21).** For each retainer, cut its `######## Level N Retainer Advancement Ability` H8 block (heading + following blockquote, through the next H8 or end of statblock body) out of the `@type: statblock` body and paste it into a **new sibling** section immediately after, under the same `#### Retainer Statblocks` group:
-   ```
-   <!-- @type: featureblock | @id: angulotl-hopper -->
-   ####### Angulotl Hopper Advancement Features
+2. **Base abilities → sections (×21 statblocks).** Un-blockquote each innate ability/passive in the statblock body into an annotated child section: `<!-- @type: ability | @id: <slug> -->` (or `@type: trait` for passives) with the ability name as the heading and the content as the section body (§5). The statblock's stat grid stays as-is.
+3. **Advancement sibling (×21).** Replace each retainer's `######## Level N Retainer Advancement Ability` blocks with a sibling `@type: featureblock` container whose members are annotated, un-blockquoted ability sections (see §4.1).
+4. **Role-advancement containers (×9).** The 9 `##### <Role> Abilities` groups under `#### Role Advancement Abilities` get `<!-- @type: featureblock | @id: <role> -->` (with whatever context yields `monster.retainer.role-advancement/<role>`); each `######## Level N Role Advancement Ability` block becomes an annotated `<!-- @type: ability | @level: N --> ######## <Ability Name>` member section.
 
-   ######## Level 4 Retainer Advancement Ability
-   > 🗡 **Leaping Attack (Encounter)** …
-   ######## Level 7 Retainer Advancement Ability
-   > 🏹 **Three-Poison Dart (Encounter)** …
-   ######## Level 10 Retainer Advancement Ability
-   > ❗️ **Trip of the Tongue (Encounter)** …
-   ```
-   The `@id` must equal the base statblock's slug so the codes share an item. The base statblock body now ends at its last innate ability. (H8 inside the featureblock is still uncollected and demotes to a bold `**Level N Retainer Advancement Ability**` label — see §4.1.)
-3. **Role-advancement containers (×9).** The 9 `##### <Role> Abilities` groups under `#### Role Advancement Abilities` get a `<!-- @type: featureblock | @id: <role> -->` annotation (with whatever context segment yields `monster.retainer.role-advancement/<role>`). Their member abilities stay as the H8 `######## Level N Role Advancement Ability` blocks.
+### 4.1 Worked example (Angulotl Hopper, abbreviated)
 
-### 4.1 Level-label parsing (implementation note)
+```
+<!-- @type: statblock -->
+####### Angulotl Hopper
+| …stat grid… |
 
-`ParseRichFeatures` attaches `Level` from a standalone bold label `**Level N … Advancement Feature**` (`fbLevelLabelRe`). Retainer/role advancement uses H8 **headings** ending in "Advancement **Ability**" (not "Feature"), which `demoteOverflowHeadings` rewrites to a bold label `**Level N Retainer Advancement Ability**`. The plan must ensure the level is attached for this form — either broaden `fbLevelLabelRe` to also match "…Advancement Ability", or stamp the level explicitly as Plan 4's `retainer_page.go` did. This is the same gotcha Plan 4 handled; carry it forward.
+<!-- @type: ability | @subtype: signature | @id: leapfrog -->
+######## Leapfrog
+| **Melee, Strike, Weapon** | **Main action** |
+…
+**Effect:** …
 
-## 5. Coding mechanism — parser-emitted child entities
+<!-- @type: trait | @id: toxiferous -->
+######## Toxiferous
+Whenever an adjacent enemy grabs the hopper…
 
-Base and advancement/role abilities are coded **without** rewriting each ability blockquote into an annotated `@type: ability` section. Instead the parsers emit each body blockquote as a **child `feature.ability|trait` entity** (the established kit `signature_ability` / trait `ability` embed precedent: a child ability is parsed, stored in `ParsedContent.Children`, and also written as its own standalone output file when the pipeline walks the section tree). Consequences:
+<!-- @type: featureblock | @id: angulotl-hopper -->
+####### Angulotl Hopper Advancement Features
 
-- **Statblock parser** (`StatblockParser`, `internal/content/monster.go`): for `@domain: retainer` statblocks, emit each body blockquote as a child `feature.ability|trait.retainer.<id>/<name>`. The blockquotes stay in the statblock body, so the build-time `.sb-wrap` renderer (`renderStatblockCard`) is unchanged and the card stays unified — the children are *additional* standalone entities, not a rendering change.
-- **Featureblock parser** (`FeatureblockParser`, `internal/content/monster.go`): for the retainer advancement + role-advancement featureblocks, emit the container code (§3) **and** each member blockquote as a child `feature.ability.*.level-N/<name>`.
+<!-- @type: ability | @level: 4 | @id: leaping-attack -->
+######## Leaping Attack
+…
+```
 
-The plan must verify this mechanism against exactly how companion members are coded (Plan 5b `FeatureblockParser` companion branch + `collectChildFeatures`) and reuse that path where possible rather than inventing a parallel one.
+The advancement featureblock's `@id` must equal the base statblock slug so the codes share an item. Heading depth (H7/H8) only controls tree placement; the SCC code comes from the annotation + ancestor context, not the depth (`collectDeepHeadings` still caps H7+ at level 6 — unchanged). The ability content is un-blockquoted (leading `> ` stripped) so `AbilityParser` and the site ability-card renderer handle it like every heroes-book ability.
+
+## 5. Coding mechanism — annotated `@type: ability|trait` sections
+
+A standalone coded page is minted **only** for a real section in the document tree: the pipeline's `walk(doc.Sections)` calls `scc.Classify` per section. `ParsedContent.Children` (the kit `signature_ability` / feature `ability` map) is **embed-only** — consumed by the SDK transformer for transclusion, never walked for output. (Verified in `internal/pipeline/pipeline.go` and `internal/content/feature.go`.) So to give a retainer ability its own code, the ability must **be** a section.
+
+Therefore every retainer ability blockquote is **un-blockquoted and promoted to an annotated section**, exactly as companion abilities are authored (`input/beastheart/Draw Steel Beastheart.md`):
+
+```
+<!-- @type: ability | @subtype: signature | @id: leapfrog -->
+###### Leapfrog
+<ability content (spec table, power roll, Effect) as the section body — NOT a blockquote>
+```
+
+- **Base abilities** become `@type: ability` (active) or `@type: trait` (passive) child sections of the statblock → `feature.ability|trait.retainer.<id>/<name>`. No `@level`.
+- **Advancement abilities** become `@type: ability | @level: N` child sections of the per-retainer `@type: featureblock` advancement container → `feature.ability.retainer.<id>.level-N/<name>`.
+- **Role abilities** become `@type: ability | @level: N` child sections of the per-role `@type: featureblock` container → `feature.ability.retainer.role.<role>.level-N/<name>`.
+
+The container featureblocks embed their member sections into the card via `collectChildFeatures` — **extended to collect `@type: ability` children**, not just `@type: feature` (it currently switches on `"feature"` only; add an `"ability"` case). Members keep their own codes; the embed is render-only (the companion-advancement precedent, `FeatureblockParser` companion branch).
+
+This is mechanical but large: ~130 ability blockquotes across the retainer section. A scripted transform is recommended, verified by regen + diff (§9). The ability content is currently blockquoted; promoting it to a section body means stripping the leading `> ` quote markers (the existing `AbilityParser` + site ability-card renderer expect un-blockquoted ability prose, as for every heroes-book ability).
 
 ## 6. Rendering
 
-- **Statblock card — status quo.** Statblocks already render build-time `.sb-wrap` (`buildStatblockIslandPage` → `renderStatblockCard`; the JSON island is retired — 0 built pages use `sc-statblock-mount`). The card re-composes its abilities from the body blockquotes, so coding the abilities as children (§5) leaves the card unchanged and unified.
-- **Advancement-features card — embedded below.** The `monster.retainer.advancement-features/<id>` featureblock renders as a Forged Band card (`renderFeatureblockCard`, `.fb__band--adv` leveled tiers) and is transcluded beneath the statblock via the `embed_cards.go` pass (the companion-advancement embedding precedent, ROADMAP #12/#13). This **replaces** Plan 4's `renderRetainerAdvancement` site-side split.
-- **`retainer_page.go` retired.** Once the advancement card is a real embedded entity, Plan 4's `splitRetainerAdvancement` / `renderRetainerAdvancement` and their wiring in `buildStatblockIslandPage` are removed. (Watch the shared helper `fbFeaturesFromRich` — confirm no other caller breaks, mirroring the 5c `fixture_page.go` retirement.)
-- **Role-advancement cards.** The 9 `monster.retainer.role-advancement/<role>` featureblocks render as Forged Band cards on the Role Advancement chapter page (and standalone pages); their member abilities are reachable as standalone coded pages.
+- **Advancement + role cards (Stage A — no statblock-card change).** The per-retainer `monster.retainer.advancement-features/<id>` and per-role `monster.retainer.role-advancement/<role>` featureblocks render as Forged Band cards (`renderFeatureblockCard`, `.fb__band--adv` leveled tiers) from their embedded member sections. The advancement card is transcluded beneath the statblock via the `embed_cards.go` pass (the companion-advancement embedding precedent, ROADMAP #12/#13), **replacing** Plan 4's `renderRetainerAdvancement` site split. Because retainer advancement abilities were *already* pulled out of the statblock card by Plan 4 (and role abilities are chapter prose), coding them needs **no** change to the statblock card.
+- **Statblock card via the retainer adapter (Stage B — the heavy half).** Coding the **base** abilities pulls them out of the statblock body into sections, so the `.sb-wrap` card must be rebuilt from those sections. Add a retainer adapter (generalizing `companion_statblock.go`): it reuses the existing `buildStatblockIsland(fm, …)` for stats/meta/characteristics (retainer grids already populate frontmatter) but sources `Features` from the now-`@type:ability` sections — reusing `companionFeatures`' trick (synthesize a `• **Name**` title line, reuse `parseStatblockIslandFeature`) so no feature-parsing logic is duplicated. Render fidelity across all 21 cards is the gated risk (§9 visual check).
+- **`retainer_page.go` retired (Stage B).** Plan 4's `splitRetainerAdvancement` / `renderRetainerAdvancement` and their wiring in `buildStatblockIslandPage` are removed once the advancement card is the embedded entity. Watch the shared helper `fbFeaturesFromRich` (also used by `retainer_page.go`) — relocate if needed, mirroring the 5c `fixture_page.go` retirement.
 
 ## 7. Link re-sweep + schema
 
