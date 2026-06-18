@@ -144,11 +144,16 @@ monster.ogre.statblock
 | `movement` | Movement rules | `mcdm.heroes.v1/movement/forced-movement` |
 | `negotiation` | Negotiation rules | `mcdm.heroes.v1/negotiation/interest` |
 | `project` | Downtime projects | `mcdm.heroes.v1/project/build-airship` |
-| `god` | Deities | `mcdm.heroes.v1/god/cavall` |
+| `religion.god` | Deities | `mcdm.heroes.v1/religion.god/cavall` |
+| `religion.saint` | Legendary heroes / saints | `mcdm.heroes.v1/religion.saint/llewellyn-the-valiant` |
 | `monster` | Monster entries (no category) | `mcdm.monsters.v1/monster/chimera` |
 | `monster.{category}` | Monsters by category (singular slug) | `mcdm.monsters.v1/monster.ogre.statblock/ogre-warrior` |
 | `dynamic-terrain` | Dynamic terrain features | `mcdm.monsters.v1/dynamic-terrain/lava-pool` |
 | `retainer` | Retainer NPCs | `mcdm.monsters.v1/retainer/squire` |
+
+> `religion.*` is a namespace spanning several entity types (like `monster.*` / `rule.*`).
+> `religion.domain`, `religion.order`, and `religion.pantheon` are **reserved** — allocated
+> in the scheme but not yet minted (a future religion expansion will populate them).
 
 ### 2.3 Item Component
 
