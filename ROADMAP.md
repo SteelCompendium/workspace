@@ -115,21 +115,6 @@ What it is, why it matters, where the work lives. Code blocks, commands, links w
 - **Embedding done (via #13).** The companion advancement-features now show up under the companion statblock on the statblock page (confirmed working 2026-06-18). The standalone `<species>-advancement-features.md` (`type: featureblock`) is `cardable`, so the #13 `embed_cards.go` pass (Browse in `embed_card_sections`) transcludes its card inline beneath the `.sb-wrap` — superseding the verbatim section companion_statblock.go leaves in place.
 - **Still open (separate task, per user):** the companion advancement-features featureblock **card quality** (`companion_statblock.go:9-10` still notes the section is left verbatim — its card polish was scoped out). And the default-zone poll = #11.
 
-## 11. Statblock preview-card default zones (poll pending)
-
-**Status:** open — feature shipped 2026-06-15 with a placeholder default; final default awaits a community poll.
-
-- **What:** Decide which zones the `.sb-prev` statblock preview cards show by default
-  (`stats`/`meta`/`chars`/`feats`). Shipped default is `stats=on`, the rest `off`.
-- **Why it matters:** The user is polling the community on which preview density is most
-  useful for scanning index pages; the shipped value is a deliberate placeholder.
-- **How:** change the default in exactly three synced places — steel-etl
-  `sbPreviewDefaults` (`internal/site/statblock_preview.go`), v2 `settings-core.js`
-  `SBPREV_DEFAULTS`, and `v2/overrides/main.html`. No structural work; just the constants.
-  Feature/design context: [`DESIGN.md`](DESIGN.md) "user-preference system" +
-  `docs/superpowers/plans/2026-06-15-statblock-preview-cards.md`.
-- **Effort:** trivial (constant change) once the poll resolves.
-
 ## 14. Populate reserved `religion.*` types (domains, orders, pantheons)
 
 **Status:** open (blocked on external content — an upcoming MCDM religion expansion)

@@ -6,6 +6,26 @@ numbering in the live file.
 
 ---
 
+## Statblock preview-card default zones (poll resolved) (was ROADMAP #11)
+
+**Status:** done 2026-06-18 — the community poll resolved, and the shipped default already
+matches the outcome, so no change was needed.
+
+- **Outcome:** the community ranked the **header most important, primary stats second**. In
+  the `.sb-prev` preview card the header is **always shown** (not a toggle —
+  `steel-etl/internal/site/statblock_preview.go:8`), and among the four toggleable zones the
+  shipped default is `stats=on` with `meta`/`chars`/`feats` off. That makes the visible
+  baseline header + primary stats — exactly the community ranking — so the placeholder
+  default was already correct and was simply confirmed, not changed.
+- **Where the default lives** (the three synced constants, left as-is): steel-etl
+  `sbPreviewDefaults` (`internal/site/statblock_preview.go:57`), v2 `settings-core.js`
+  `SBPREV_DEFAULTS` (`{ stats:"on", meta:"off", chars:"off", feats:"off" }`), and
+  `v2/overrides/main.html`. Feature/design context:
+  `docs/superpowers/plans/2026-06-15-statblock-preview-cards.md`, [`DESIGN.md`](../../DESIGN.md)
+  "user-preference system".
+
+---
+
 ## Inline item cards on the Read tab (was ROADMAP #13)
 
 **Status:** done — Browse shipped 2026-06-17; Read shipped 2026-06-17 after the page-weight check passed.
