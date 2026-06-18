@@ -1,6 +1,6 @@
 # Roadmap
 
-<!-- next-id: 14 -->
+<!-- next-id: 15 -->
 
 New features and larger planned / in-flight efforts across the workspace. Smaller
 in-scope tangents to clear before the next feature go in `FOLLOWUPS.md`, not here.
@@ -72,15 +72,15 @@ What it is, why it matters, where the work lives. Code blocks, commands, links w
 - **Context:** Requires threading heading ID generation through `RenderSubtree` so sub-section SCC codes get anchor-qualified targets, then emitting those anchors in the cross-reference links / SCC redirect stubs. Cross-repo: `steel-etl/internal/content/render_subtree.go`, `internal/site/permalinks.go`. (Note: the old `scc-manifest.js` friendly→SCC map was removed 2026-05-31 when the address-bar rewrite was retired — see `v2/.repo-docs/decisions/2026-05-31-retire-scc-address-bar-rewrite.md`; any anchor work now targets the redirect stubs + cross-ref link generation, not a client-side manifest.)
 - **Effort:** M
 
-## 4. Deeper modeling of gods and downtime projects
+## 4. Deeper modeling of downtime projects (gods/saints half shipped)
 
-**Status:** open
+**Status:** open (narrowed — the gods/saints half shipped 2026-06-18)
 
 - **Identified:** 2026-05-29, truncated-link fix
-- **What:** The `project`/`god` parsers (`internal/content/project.go`, `god.go`) are minimal (name/type/body only). Several god groupings were left unannotated — "Heroes of the Elves/Dwarves/Orcs/Hakaan", "Saints of Hell", "Evil Gods", "Lords of Law and Chaos", "Heralds of the Space Gods" — some of which may contain individual saints/deities worth their own codes.
-- **Why:** Completeness of deity/project content if surfaced on the site; richer structured output (e.g. project goal/prerequisites, god domain/associated ancestry). Also: ancestry purchased traits carry a "(N Point)" cost that is currently only in heading text, not structured metadata.
-- **Context:** 9 individual gods + 16 projects annotated in that pass; groupings adjudicated as containers and skipped. Parsers produce flat `god/<id>` / `project/<id>` codes.
-- **Effort:** S–M
+- **Gods/saints — DONE (2026-06-18):** the religion build-out delivered this half. Gods re-homed to `religion.god/<id>` with `domains`/`pantheon`/`alignment`/`god_class` frontmatter; the 28 saints extracted as `religion.saint/<id>` with `patron`/`domains`; the previously-unannotated groupings adjudicated — "Heroes of the Elves/Dwarves/Orcs/Hakaan" resolve to saints under their god, "Saints of Hell" → the collective `religion.god/lords-of-hell` patron, "Evil Gods" → Nikros/Cyrvis (gods) + Pentalion/Eseld (saints); the remaining groupings ("Lords of Law and Chaos", "Heralds of the Space Gods", "Religion in the Timescape") are prose, not entities, so they mint no codes. See `docs/scc-log.md` (2026-06-18) + `docs/superpowers/plans/2026-06-18-gods-religion-scc-buildout.md`.
+- **Remaining — What:** (a) The `project` parser (`internal/content/project.go`) is still minimal (name/type/body only) — no structured project goal/prerequisites/source fields in frontmatter. (b) Ancestry purchased traits carry a "(N Point)" cost that is only in heading text, not structured metadata.
+- **Why:** Richer structured output for downtime projects + ancestry trait costs.
+- **Effort:** S
 
 ## 7. Statblocks → build-time HTML + entity-embedding
 
@@ -129,3 +129,27 @@ What it is, why it matters, where the work lives. Code blocks, commands, links w
   Feature/design context: [`DESIGN.md`](DESIGN.md) "user-preference system" +
   `docs/superpowers/plans/2026-06-15-statblock-preview-cards.md`.
 - **Effort:** trivial (constant change) once the poll resolves.
+
+## 14. Populate reserved `religion.*` types (domains, orders, pantheons)
+
+**Status:** open (blocked on external content — an upcoming MCDM religion expansion)
+
+- **Identified:** 2026-06-18, religion namespace build-out.
+- **What:** The 2026-06-18 build-out **reserved** `religion.domain`, `religion.order`,
+  and `religion.pantheon` in the scheme but minted **no** entities (per the deliberate
+  decision not to squat codes the future product needs, and to avoid parking
+  conduit-flavored "Piety & Effect" prose on them). When MCDM ships the religion
+  expansion: (a) mint the 12 `religion.domain/<id>` entities (Creation, Death, Fate,
+  Knowledge, Life, Love, Nature, Protection, Storm, Sun, Trickery, War) from the new
+  source, and `religion.order/*` / `religion.pantheon/*` as content warrants; (b)
+  **upgrade** the existing god/saint `domains:` frontmatter from plain names
+  (`[War, Life]`) to `religion.domain/<id>` links (frontmatter-only, no code change).
+- **Why:** The reservation keeps the codes free now; this is the follow-through once the
+  content exists. The `domains:` name→link upgrade is intentionally deferred until the
+  link targets exist.
+- **Context:** Reserved-type rationale + the frontmatter-link principle live in
+  `docs/scc-reference.md` → "Gods & Religion" and `reference/scc-specification.md` §2.2.
+  Domains are sourced today only as the Conduit's per-domain "Piety & Effect" headers
+  (`input/heroes/Draw Steel Heroes.md` ~line 6262), which are conduit-biased — a fuller
+  domain page likely needs the new product's content, not those headers.
+- **Effort:** S–M, gated on external content.

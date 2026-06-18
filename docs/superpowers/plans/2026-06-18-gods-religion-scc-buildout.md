@@ -12,6 +12,23 @@
 
 ---
 
+## Status
+
+**Implemented on branch `feat/religion-scc-namespace` (steel-etl + workspace), 2026-06-18 — not yet merged/deployed.**
+
+All 9 tasks complete; full `go test -race ./...` green. Outcome: 11 `religion.god/*`
+(incl. collective `lords-of-hell`) + 28 `religion.saint/*`; Thellasko reclassified
+god→saint; 23 in-prose god links restamped; Browse umbrella labeled "Gods & Religion";
+`religion.domain`/`order`/`pantheon` reserved (no entities). Heroes 1,915 → **1,944**;
+total → **~3,041**. Docs routed: `docs/scc-log.md` (2026-06-18 entry),
+`docs/scc-reference.md` ("Gods & Religion"), `reference/scc-specification.md` §2.2,
+both `CLAUDE.md` routers, `ANNOTATION-GUIDE.md`. ROADMAP #4 narrowed (gods/saints half
+done); follow-through tracked as ROADMAP #14 (populate reserved types once MCDM ships).
+**Next:** merge/deploy decision (deploy recipe regenerates `data/` + `v2/docs/` and makes
+the `chore: bump steel-etl` pointer commit), then the pre-freeze step.
+
+---
+
 ## Background facts (verified against the codebase)
 
 - **`scc.Classify`** (`steel-etl/internal/scc/classifier.go:14`) joins `TypePath` with `.`, so `TypePath=["religion","god"]`, `ItemID="cavall"` → `mcdm.heroes.v1/religion.god/cavall`.
