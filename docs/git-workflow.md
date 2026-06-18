@@ -82,8 +82,8 @@ committed by the `just deploy*` recipes — never hand-commit it** (see below).
    `docs/stylesheets/`, `overrides/`, `static_content/`, `mkdocs.yml`) → commit + push in
    the `v2/` repo. These are inputs, not generated output.
 4. **Deploy = regenerate + commit generated output.** `just deploy` (or `deploy-v2` /
-   `deploy-api`) runs `steel-etl gen --all`, builds the site (`steel-etl site`), runs
-   `v2/scripts/transform_indexes.py`, stamps `mkdocs.yml` with the steel-etl sha, then
+   `deploy-api`) runs `steel-etl gen --all`, builds the site (`steel-etl site`), stamps
+   `mkdocs.yml` with the steel-etl sha, then
    **commits and pushes** the generated trees itself:
    - `v2`: `git add docs/* mkdocs.yml` → `chore: update v2 site content (steel-etl <sha>)`
    - `data/data-{bestiary,rules,unified}`: `chore: update generated data (steel-etl <sha>)`
@@ -91,7 +91,7 @@ committed by the `just deploy*` recipes — never hand-commit it** (see below).
 
 **Do not hand-commit generated content** (`v2/docs/Browse`, `v2/docs/Read`, `v2/docs/scc`,
 `data/*`, `steelCompendium.github.io/docs/api`). Running `steel-etl site` by hand and
-committing `docs/Browse` skips `transform_indexes.py` and the `mkdocs.yml` stamp, producing
+committing `docs/Browse` skips the `mkdocs.yml` stamp, producing
 a partial tree that diverges from a real deploy. Build by hand only to **verify** a change
 (then `git restore`/leave uncommitted); let `just deploy*` produce the committed output
 once the steel-etl change is merged. The recipes are idempotent (`commit … || echo "no

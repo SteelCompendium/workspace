@@ -95,15 +95,11 @@ Key operations:
 - **SCC permalink stubs** -- generates `scc/{code}/index.html` redirect files. The SCC URL is a stable, shareable redirect entry point; the friendly Browse page is the canonical, indexable location. (The former client-side `scc-manifest.js` address-bar rewrite was **retired 2026-05-31** — see `v2/.repo-docs/decisions/2026-05-31-retire-scc-address-bar-rewrite.md`.)
 - **Static overrides** -- copies `v2/static_content/docs/` last (hand-authored pages override generated ones)
 
-### 3. Index transforms (Python)
-
-`v2/scripts/transform_indexes.py` converts generated index pages into MkDocs Material grid card layouts.
-
-### 4. Commit and push
+### 3. Commit and push
 
 The v2 repo is committed with the steel-etl SHA in the commit message and pushed. MkDocs builds on GitHub Pages.
 
-### 5. Commit and push the data repos
+### 4. Commit and push the data repos
 
 The independent published data repos — `data/data-bestiary`, `data/data-rules`, `data/data-unified` (the `clone-all` set; **not** submodules) — are the raw `gen --all` output. `deploy` commits and pushes each (skipping any that isn't a clone or has no changes), so the published JSON/markdown never lags the API + site. The local-only output dirs `data/data-beastheart`, `data/data-summoner`, and `data/data-rules-clean` have no `.git` and are skipped.
 

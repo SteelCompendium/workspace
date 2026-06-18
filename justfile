@@ -99,14 +99,8 @@ deploy:
     cd "$root/steel-etl"
     go run ./cmd/steel-etl site --config "$root/v2/site.yaml"
 
-    # 5. Transform index pages into grid layouts
+    # 5. Commit and push v2 site
     cd "$root/v2"
-    if [ -d "docs/Browse" ] && [ -f "scripts/transform_indexes.py" ]; then
-        echo >&2 "[INFO] Transforming index pages..."
-        python3 scripts/transform_indexes.py docs/Browse
-    fi
-
-    # 6. Commit and push v2 site
     echo >&2 "[INFO] Committing v2 site update..."
     git add docs/* mkdocs.yml
     git commit -m "chore: update v2 site content (steel-etl $etl_sha)" || echo >&2 "[INFO] No v2 changes to commit"
@@ -170,14 +164,8 @@ deploy-v2:
     cd "$root/steel-etl"
     go run ./cmd/steel-etl site --config "$root/v2/site.yaml"
 
-    # 4. Transform index pages into grid layouts
+    # 4. Commit and push
     cd "$root/v2"
-    if [ -d "docs/Browse" ] && [ -f "scripts/transform_indexes.py" ]; then
-        echo >&2 "[INFO] Transforming index pages..."
-        python3 scripts/transform_indexes.py docs/Browse
-    fi
-
-    # 5. Commit and push
     echo >&2 "[INFO] Committing v2 site update..."
     git add docs/* mkdocs.yml
     git commit -m "chore: update v2 site content (steel-etl $etl_sha)" || echo >&2 "[INFO] No v2 changes to commit"

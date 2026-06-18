@@ -28,7 +28,14 @@ Most recent archive:
 
 ## 1. `transform_indexes.py` is dead code for the current card index pages
 
-**Status:** open
+**Status:** **done 2026-06-18.** Confirmed zero `Index.md`/`_Index.md` matches under
+`v2/docs/Browse`, so the step was a no-op. Removed it from all three justfile blocks
+(workspace `justfile` `deploy` + `deploy-v2`, `v2/justfile` `update`, with steps
+renumbered), `git rm`'d `v2/scripts/transform_indexes.py` (the now-empty `scripts/` dir
+went with it), and dropped its mention from `ARCHITECTURE.md` (the "Index transforms
+(Python)" stage is gone; pipeline steps renumbered) and `docs/git-workflow.md`. Historical
+dated plans that reference the script are left untouched (frozen history). Both justfiles
+re-validated with `just --list`.
 
 - **Identified:** 2026-06-04, card markdown-rendering / `.md`-link fix
 - **What:** `v2/scripts/transform_indexes.py` (run as step 4 of the `just deploy-v2` / `update` recipe) only matches files named `_Index.md` or `Index.md` (capitalized) via `rglob`, and only rewrites markdown **tables** into `browse-index` lists. The current `steel-etl site` builder emits lowercase `index.md` pages rendered as raw-HTML `sc-card` grids (see `internal/site/cards.go`), which the script never matches and which contain no tables. So the step is effectively a **no-op** — it transforms nothing on a normal build.
@@ -125,7 +132,24 @@ Most recent archive:
 
 ## 10. Statblock build-time render: deferred cleanups (CSS-only interactivity; parser link pre-resolve)
 
-**Status:** open — **unblocked 2026-06-14:** the statblock build-time render swap landed & deployed ([`docs/superpowers/specs/2026-06-14-statblock-build-time-render-design.md`](docs/superpowers/specs/2026-06-14-statblock-build-time-render-design.md); `internal/site/statblock_card.go` ships the `.sb-wrap` HTML, `steel-statblock.js` is now wire-only, `v2/CLAUDE.md` carries the "no longer a JSON island" note). Both cleanups below are now actionable.
+**Status:** **done 2026-06-18.** Both cleanups landed.
+- **10.2 (parser link pre-resolve)** — `resolveSbLinks` deleted; the `sbIsland` model now
+  carries raw `.md` link targets and `richSb` (`statblock_card.go`) resolves them once at
+  render via `cardHref`, the `richInline` shape. `companion_statblock.go` `metaVal` no longer
+  pre-resolves. Guarded by `TestStatblockCard_GoldenEquivalence` (final HTML byte-identical)
+  plus a new render-resolution assertion in `TestBuildStatblockIsland_PreservesRawLinksInAllFields`.
+- **10.1 (CSS-only interactivity → retire `steel-statblock.js`)** — collapsible Villain/Malice
+  bands are now native `<details>`/`<summary>` (`renderStatblockBand`); the sticky mini-header
+  is a CSS scroll-driven animation (`@supports (animation-timeline: view())` → `view-timeline`
+  on `.sb__head` inset by `--sticky-top`, revealing `.sb__sticky` over `exit 75–100%`; safe
+  hidden fallback where unsupported). `steel-statblock.js` deleted + dropped from `mkdocs.yml`;
+  statblocks now ship with **no JS**. The golden HTML, no longer re-capturable from the retired
+  JS renderer, became a committed `renderStatblockCard` snapshot (regenerate with
+  `STEEL_UPDATE_GOLDEN=1`). Docs updated: `statblocks.md`, `site-builder.md`, `v2/CLAUDE.md`,
+  `statblock_card.go` header. **Deploy-verify (cannot reproduce locally — scroll/navigation.instant):**
+  (a) the sticky reveal timing + park offset across font sizes and the <76.25em tabs breakpoint
+  (tune `--sticky-top` / `animation-range`); (b) the `<details>` chevron/expand look; (c) the
+  `statblock-featstyle` + `settings-panel` e2e suites against a fresh `mkdocs build`.
 
 - **Identified:** 2026-06-14, brainstorming the statblock JSON-island → build-time HTML swap. Both items were explicitly scoped OUT of that effort to keep it a clean no-visual-change mechanism swap; capture them so they aren't lost.
 - **What:**
