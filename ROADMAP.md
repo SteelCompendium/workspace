@@ -13,28 +13,12 @@ items are moved to `docs/roadmap-archive/` keeping their original number as a
 so gaps in the live list are expected and there is no grep-and-fix step: a `#N`
 reference resolves forever. **Referenced `#N` not in this file? It's completed —
 `grep -rn 'was ROADMAP #N' docs/roadmap-archive/`.** Most recent archive:
-[`docs/roadmap-archive/2026-06-11-completed.md`](docs/roadmap-archive/2026-06-11-completed.md).
+[`docs/roadmap-archive/2026-06-18-completed.md`](docs/roadmap-archive/2026-06-18-completed.md).
 
 <!-- Template — copy for each item; take N from next-id above, then bump next-id:
 ## N. Short title
 **Status:** open
 What it is, why it matters, where the work lives. Code blocks, commands, links welcome. -->
-
-## 13. Inline item cards on the Read tab
-
-**Status:** done — Browse shipped 2026-06-17; Read shipped 2026-06-17 after the page-weight check passed.
-
-The inline item-card embedding (abilities/features/traits/statblocks/featureblocks rendered
-as their High-Fantasy Steel cards on container pages) was enabled for the **Read** tab too
-by adding `Read` to `embed_card_sections` in `v2/site.yaml` (no code change — the
-`embed_cards.go` pass is section-scoped). Read chapters reference items whose card-able
-leaves live under Browse, so both sections are walked together and links rebase across the
-section boundary (verified: `mkdocs build` clean, 0 broken-link warnings). The user
-confirmed Browse class pages render snappily, clearing the page-weight gate. Heaviest pages:
-`Read/heroes/classes.md` (~1.9M, 15,277 card elements) and `Read/bestiary/monsters.md`
-(~4.5M, 415 statblock cards) — the bestiary mega-page is the one to watch. Design/plan:
-`docs/superpowers/specs/2026-06-16-inline-item-cards-design.md`,
-`docs/superpowers/plans/2026-06-16-inline-item-cards.md`.
 
 ## 1. v2 site load/navigation performance (page weight + search index)
 
@@ -132,14 +116,6 @@ confirmed Browse class pages render snappily, clearing the page-weight gate. Hea
 - **Why it matters:** Plans 5a–5c gave companions/fixtures their own separately-coded advancement-features *entities* (live as standalone pages); compositing them onto the parent page needs the host (statblock) to render at build time first. Also removes a client-render dependency.
 - **Effort:** large; design spec exists for the embedding half; the island→build-time-HTML migration is the prerequisite.
 
-## 8. Summoner champion / minion / rival → `monster.*` restructure
-
-**Status:** open (fixtures done in Plan 5c; the other three summoner statblock trees deferred).
-
-- **What:** Move the remaining summoner statblock families (`champion.<portfolio>.statblock/*`, `minion.<portfolio>.statblock/*`, `rival.summoner.<echelon>.statblock/*`) into the `monster.*` namespace, parallel to how companions (5a) and fixtures (5c) were restructured — so all creature-like content lives under `monster.*`.
-- **Why it matters:** Consistency of the SCC taxonomy; fixtures already moved, leaving these as the odd trees still rooted at top-level `champion/`/`minion/`/`rival/`.
-- **Effort:** medium; mechanically similar to 5a/5c (classifier branch + link re-sweep — note these ARE link targets, unlike fixtures, so check inbound links first). `freeze:false` (summoner un-frozen).
-
 ## 9. Plan 6 — retainer advancement rework (own SCC codes)
 
 **Status:** open (the last piece of the featureblock effort).
@@ -162,7 +138,8 @@ confirmed Browse class pages render snappily, clearing the page-weight gate. Hea
 **Status:** shipped 2026-06-15. All 12 beastheart companions now render through a site-only `feature-group → sbIsland` adapter: the full `.sb-wrap` card is embedded on each companion's own page (replacing the raw stat table; the `## …Advancement Features` section is kept verbatim below it), and the index (`monster/companion/beastheart/`) shows each base as a `.sb-prev` preview paired with its advancement card.
 
 - **What shipped:** `steel-etl/internal/site/companion_statblock.go` — `parseCompanionGrid` (body `**value**<br>Label` table → defenses/meta/chars/ancestry/level; role "Companion", grey "leader" accent, no EV), `companionFeatures` (parses `##` ability sections by reusing `parseStatblockIslandFeature` via a synthesized `"• **Name**"` title line — zero new feature-parse logic), and `buildCompanionStatblockPage` (leaf transform, hooked into the `buildSection` card chain). Because companion stats live in the body (not frontmatter), the **whole island** is cached in `companionStatblockCache` (reset in `Build()`) so the later index pass can render the preview after the leaf body is already HTML. Index: `buildAdvancementPairContent` renders the base via the cache and tags the grid `.sb-cards` + `data-sbprev-*` so the zone toggles/JS apply (kept the base↔advancement pairing — "Option A"). Shared-renderer tweak: `renderStatblockHead` omits the EV field when empty. v2 CSS: `.sc-cards--pairs.sb-cards` layout in `steel-statblock.css`. Plan: `docs/superpowers/plans/2026-06-15-companion-statblock-adapter.md`.
-- **Still open (separate task, per user):** the companion **advancement-features** featureblock card quality/embedding (`<species>-advancement-features.md`, `type: featureblock`) — left as-is by #12. And the default-zone poll = #11.
+- **Embedding done (via #13).** The companion advancement-features now show up under the companion statblock on the statblock page (confirmed working 2026-06-18). The standalone `<species>-advancement-features.md` (`type: featureblock`) is `cardable`, so the #13 `embed_cards.go` pass (Browse in `embed_card_sections`) transcludes its card inline beneath the `.sb-wrap` — superseding the verbatim section companion_statblock.go leaves in place.
+- **Still open (separate task, per user):** the companion advancement-features featureblock **card quality** (`companion_statblock.go:9-10` still notes the section is left verbatim — its card polish was scoped out). And the default-zone poll = #11.
 
 ## 11. Statblock preview-card default zones (poll pending)
 
