@@ -59,7 +59,7 @@ likely just noise. Decided 2026-06-18.
 
 ## Registry
 
-~3,041 codes across four books:
+~3,042 codes across four books:
 
 | Book | Codes |
 |------|------:|

@@ -472,6 +472,7 @@ namespace (parallels `monster.*` / `rule.*`), the last structural pass before fr
 - Browse: flat `god/` include replaced by `religion/`, labeled **"Gods & Religion"**
   (`god` → "Gods", `saint` → "Saints"). `rule.world/saint` (the concept) is untouched.
 
-Heroes 1,915 → **1,944**; total **3,012 → 3,041**. `gen --all` resolves cleanly, zero
+Heroes → **1,944**; total **3,012 → 3,042** (incl. a cross-book `god/val` link in the
+Summoner book restamped to `religion.god/val`). `gen --all` resolves cleanly, zero
 resolver `WARN`s. Plan:
 `docs/superpowers/plans/2026-06-18-gods-religion-scc-buildout.md`.

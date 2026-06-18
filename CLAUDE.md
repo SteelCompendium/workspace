@@ -91,7 +91,7 @@ Hierarchical classification used across all data repos: `source/type/item` (e.g.
 `mcdm.heroes.v1/feature.ability.fury.level-1/gouge`). Codes are website permalinks
 (`/scc/{code}/`), API keys, and cross-reference links. Scheme spec is **v1.1**.
 
-Registry is **~3,041 codes** across four books (heroes ~1,944, beastheart 242, monsters 632,
+Registry is **~3,042 codes** across four books (heroes ~1,944, beastheart 242, monsters 632,
 summoner ~224). `feature` is the umbrella type; companions/fixtures/summoner statblocks all
 live in the `monster.*` family. Gods and saints live in the `religion.*` family
 (`religion.god/<id>`, `religion.saint/<id>`; `religion.domain`/`order`/`pantheon` reserved).
