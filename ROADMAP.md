@@ -1,6 +1,6 @@
 # Roadmap
 
-<!-- next-id: 15 -->
+<!-- next-id: 16 -->
 
 New features and larger planned / in-flight efforts across the workspace. Smaller
 in-scope tangents to clear before the next feature go in `FOLLOWUPS.md`, not here.
@@ -138,3 +138,13 @@ What it is, why it matters, where the work lives. Code blocks, commands, links w
   (`input/heroes/Draw Steel Heroes.md` ~line 6262), which are conduit-biased — a fuller
   domain page likely needs the new product's content, not those headers.
 - **Effort:** S–M, gated on external content.
+
+## 15. Monsters/Summoner header-levels rework → per-ability coding for statblocks & featureblocks
+
+**Status:** open — the deferred half of Plan 6 (retainer rework). Its own brainstorm/spec/plan when started.
+
+- **Identified:** 2026-06-18, writing Plan 6 (`docs/superpowers/plans/2026-06-18-retainer-rework-containers.md`; spec §7).
+- **What:** Give the *individual abilities* inside Monsters/Summoner-book statblocks and featureblocks their own SCC codes (`feature.ability.*` / `feature.trait.*`) so third-party tools can address a single ability (e.g. "this retainer's level-10 advancement ability") by code. Covers retainer base/advancement/role abilities **and** per-member coding for **all** featureblocks (fixtures, malice, terrain — currently inline/uncoded), plus companion-style **on-page embedding** of advancement cards.
+- **Why it's blocked today:** the pipeline mints a page only for a real section in the document tree (`ParsedContent.Children` is embed-only). The Monsters book uses H7+ headings, which `collectDeepHeadings` maps **all to level 6**, and `ContextStack` rejects levels > 6 (`internal/parser/document.go`, `internal/context/stack.go`) — so an ability (H8) cannot nest **under** a statblock (H7); they become siblings, and an ability has no statblock parent to inherit `<id>` context from. Both candidate mechanisms (nested ability sections; synthesizing coded children from blockquotes) are therefore dead.
+- **The fix (user direction 2026-06-18):** rework the input docs to use proper header levels **and** raise the level cap / preserve relative depth so H7/H8/H9 nest by document structure. This is an infrastructure change touching `collectDeepHeadings` + `ContextStack` + every Monsters/Summoner parser that assumes the flat level-6 model — needs its own design (`--scc-stable` scrutiny, the companion-adapter generalization for the re-composed statblock card, link re-sweep). Plan 6's container-level work (`monster.retainer.*` + advancement/role containers) ships without it; this unlocks the per-ability layer on top.
+- **Effort:** L (cross-cutting parser/infra + large source restructure + re-mint).

@@ -491,9 +491,9 @@ Serve/build v2 and open Angulotl Hopper: `.sb-wrap` statblock card renders innat
 
 - [ ] **Step 3: ROADMAP**
 
-`ROADMAP.md`: mark **#9 done** (container scope; reword away from "collect H8 globally"). Add two new items (take N from the `next-id` counter, bump it):
-  1. **Header-levels rework → per-ability coding.** Rework the Monsters/Summoner input docs' header levels (and raise the level-6 cap / preserve relative depth) so abilities nest under statblocks, unblocking per-ability `feature.ability.*` codes for retainers (base + advancement + role) and per-member coding for **all** featureblocks (fixtures, malice, terrain), plus companion-style on-page advancement embedding. Spec §7.
-  2. **Stale-island-docs fix.** ROADMAP #7 + `steel-etl/CLAUDE.md` + `docs/statblocks.md` still describe client-side JSON islands; statblocks already render build-time `.sb-wrap` (`buildStatblockIslandPage`; 0 built pages use `sc-statblock-mount`; `steel-statblock.js` is dead). Correct the docs and re-assess what remains of #7 (the entity-embedding half).
+`ROADMAP.md`: mark **#9 done** (container scope; reword away from "collect H8 globally"). Reference the two follow-ups that track the deferred work — **already created 2026-06-18**, do NOT re-create them:
+  - **ROADMAP #15** — Monsters/Summoner header-levels rework → per-ability coding (the spec §7 deferral + per-member coding for all featureblocks + companion-style on-page embedding).
+  - **FOLLOWUPS #18** — stale "client-side statblock island" docs (statblocks already render build-time).
 
 - [ ] **Step 4: Memory**
 

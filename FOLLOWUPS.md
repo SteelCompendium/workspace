@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 18 -->
+<!-- next-id: 19 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -99,3 +99,13 @@ Most recent archive:
 - **Why:** These entities live deep under `monster/*` with no on-page pointer to the class that conjures/bonds them, so a reader landing on `monster/fixture/demon/the-boil` (or a companion species page) has no path back to the Summoner/Beastheart class that owns it. Provenance + navigation.
 - **Context:** companion pages `v2/docs/Browse/monster/companion/beastheart/<species>(-advancement-features)`, fixture pages `v2/docs/Browse/monster/fixture/<element>/<id>(-advancement-features)`; class targets `class/beastheart.md`, `class/summoner.md`. Rendering lives in `steel-etl/internal/site/` (statblock + featureblock page builders); the relationship is derivable from the SCC type path's class segment (`companion.beastheart`, `fixture` under the summoner book). Keep separate from the rival effort — rivals are NPC statblocks, not class-owned.
 - **Effort:** S–M (a shared "owning-class back-link" helper in the site page builders).
+
+## 18. Stale "client-side statblock island" docs — statblocks already render build-time
+
+**Status:** open
+
+- **Identified:** 2026-06-18, investigating Plan 6 (retainer rework) rendering.
+- **What:** Several docs still describe monster/retainer statblocks as **client-side JSON islands** awaiting a build-time-HTML migration, but that migration already shipped: `buildStatblockIslandPage` (`steel-etl/internal/site/statblock_page.go`) renders the build-time `.sb-wrap` card via `renderStatblockCard` (its own comment: "it no longer emits a JSON island"), **0** built pages contain `sc-statblock-mount`, and `v2/site/javascripts/steel-statblock.js` is dead code. Stale references: `ROADMAP.md` #7 (lists "move statblocks from client-side JSON island to build-time HTML" as open), `steel-etl/CLAUDE.md` + `steel-etl/docs/statblocks.md` (describe the island as live).
+- **Why:** The docs actively mislead — an agent reading them will believe statblocks need a migration that's done, and may mis-plan around a JSON island that no longer exists (it nearly derailed Plan 6's scoping).
+- **Context:** Correct the three doc locations; **re-assess what genuinely remains of ROADMAP #7** — part (a) (island → build-time HTML) appears complete; part (b) (entity-embedding, `embed_cards.go`) partly shipped for Browse. Decide whether #7 is done, partly-done, or should be re-scoped, and delete the dead `steel-statblock.js` if nothing references it.
+- **Effort:** S (doc correction + a grep to confirm `steel-statblock.js` is unreferenced before deleting).
