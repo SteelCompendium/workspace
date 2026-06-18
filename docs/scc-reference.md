@@ -24,14 +24,14 @@ Scheme spec is **v1.1**: the `scc.vN:` prefix is optional; bare `scc:` ≡ `scc.
 
 ## Registry
 
-~3,015 codes across four books:
+~3,012 codes across four books:
 
 | Book | Codes |
 |------|------:|
 | heroes | ~1,915 |
 | beastheart | 242 |
 | monsters | 632 |
-| summoner | ~225 |
+| summoner | ~224 |
 
 (How each count reached its current value — and which plan moved it — is in
 [`scc-log.md`](scc-log.md).)

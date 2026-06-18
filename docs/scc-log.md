@@ -417,3 +417,17 @@ clean re-mint with **no aliases** — the live site's old plural URLs stop resol
 count unchanged (~3,013). Summoner / beastheart / fixture families untouched. Spec + plan:
 `docs/superpowers/specs/2026-06-16-monster-category-slug-singularization-design.md`,
 `docs/superpowers/plans/2026-06-16-monster-category-slug-singularization.md`.
+
+## 2026-06-17 — `@classify: false` retires the converted-pixie example code
+
+New annotation `@classify: false` (steel-etl): a section so marked is parsed and
+rendered in place but never classified — no SCC code, no leaf page, no Browse page,
+no Bestiary row. A statblock keeps rendering as an inline `.sb-wrap` card on its
+container page (RenderSubtree stamps `{data-sb-inline="true"}`; the v2 `embed_cards`
+post-pass builds the card from the inline markdown). Applied to the Summoner book's
+**"Pixie Bellringer (Converted)"** minion-conversion example, which the book prints a
+second time and which had been doubling up in the Bestiary/Browse as
+`mcdm.summoner.v1/monster.statblock/pixie-bellringer-converted`. That code is retired;
+registry `frozen: false` so `gen --all` simply stops minting it. Summoner 225 → 224,
+total **3,013 → 3,012**. No aliases, no in-prose links pointed at the retired code.
+Mechanics: steel-etl/ANNOTATION-GUIDE.md, the @classify: false row (Optional Fields).
