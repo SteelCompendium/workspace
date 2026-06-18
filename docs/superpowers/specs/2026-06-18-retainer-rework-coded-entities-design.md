@@ -62,7 +62,7 @@ All under `mcdm.monsters.v1`. `<id>` = retainer slug; `<role>` = role slug.
 
 ### 4.1 Level-label parsing (implementation note)
 
-`ParseRichFeatures` attaches a member `Level` from a standalone bold label `**Level N … Advancement Feature**` (`fbLevelLabelRe`). Retainer/role advancement uses `Level N … Advancement **Ability**` (ends "Ability", not "Feature"); inside the featureblock the H8 heading is uncollected and `demoteOverflowHeadings` rewrites it to a bold label `**Level N Retainer Advancement Ability**`. The plan must attach the level for this form — broaden `fbLevelLabelRe` to also match "…Advancement Ability", matching what Plan 4's `retainerAdvLabelRe` already did. This keeps the `.fb__band--adv` leveled tiers.
+`ParseRichFeatures` (run by `FeatureblockParser` on the **raw** `section.FullBodySource()`) attaches a member `Level` from a standalone bold label line via `fbLevelLabelRe = ^\*\*Level\s+(\d+)\b[^*]*\*\*$`. That regex **already matches** `**Level 4 Retainer Advancement Ability**` (the `[^*]*` accepts "Retainer Advancement Ability") — **no regex change needed**. The real work is in the **source restructure**: the retainer/role advancement separators are H8 *headings* (`######## Level N … Advancement Ability`), which the parser sees verbatim and `fbLevelLabelRe` does **not** match. So the restructure (§4 steps 2–3) must rewrite each `######## Level N … Advancement Ability` heading into a **bold label line** `**Level N … Advancement Ability**` (the exact form fixtures use), so `ParseRichFeatures` attaches the level and the `.fb__band--adv` leveled tiers render.
 
 ## 5. Parser / classifier changes
 
