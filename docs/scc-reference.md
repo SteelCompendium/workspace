@@ -24,6 +24,39 @@ Scheme spec is **v1.1**: the `scc.vN:` prefix is optional; bare `scc:` ≡ `scc.
 in-prose links in the four book sources carry the explicit `scc.v1:` prefix (restamped
 2026-06-18, scc-log); bare `scc:` stays a permanent implicit-v1 alias.
 
+### Why the entity's own `scc` field is bare but links are prefixed (don't "fix" this)
+
+An entity's self-identity field is the **bare identity** with no scheme prefix; references
+*to* it carry `scc.v1:`. This asymmetry is **intentional** — leave it alone:
+
+```yaml
+scc: mcdm.heroes.v1/class/fury                      # identity field — bare
+skills:
+  - 'gain the [Nature](scc.v1:.../skill.lore/nature) skill'   # reference — prefixed
+```
+```json
+{ "scc": "mcdm.heroes.v1/class/fury", "type": "class" }
+```
+
+The two map onto two different axes of the [scheme-versioning design](../steel-etl/docs/superpowers/specs/2026-06-09-scc-scheme-versioning-and-format-design.md):
+
+- The **`scc` field value is the identity** (`source/type/item`) — the frozen cache key.
+  The scheme version is *not* part of it.
+- The **`scc.v1:` prefix is the reference form.** It "swaps in wherever the `scc` namespace
+  token appears" (links, URNs, `/scc.v1/` URLs) because in free prose there is no
+  surrounding key to signal "this string is an SCC reference" — the prefix *is* that signal.
+  A structured `scc:` key already supplies that context, so its value stays bare.
+
+**Do not rename the field key `scc` → `scc.v1`** (or bake the prefix into the value). The
+registry's own precedent is a **sibling** `scheme_version: 1` field (next to `version`), not
+a versioned code string or key — per-entity metadata mirrors that. A versioned *key* would
+also churn on any future v2 mint (breaking every `data["scc"]` consumer, defeating v1/v2
+coexistence) and is an awkward dotted JSON/YAML key (`.scc.v1` reads as nesting). If a
+consumer ever genuinely needs scheme version per-record, add an additive sibling
+`scheme_version` field (frontmatter + **both** schema copies + the validation allowlist) —
+but it's globally `1` and already recorded at the registry / SCC-API top level, so it's
+likely just noise. Decided 2026-06-18.
+
 ## Registry
 
 ~3,012 codes across four books:
