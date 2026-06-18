@@ -24,6 +24,34 @@ confirmed Browse class pages render snappily, clearing the page-weight gate. Hea
 
 ---
 
+## v2 CI deploy build-time performance (~14 min → ~5 min) (was ROADMAP #5)
+
+**Status:** closed 2026-06-18 — investigated, measured, and a fix verified locally on
+2026-06-05; **not applied.** Closed at user request: the current ~14 min CI deploy time is
+acceptable, so the verified fix is deliberately left on the shelf rather than shipped. Reopen
+(new ROADMAP number) if deploy time becomes a pain point again.
+
+**Distinct from item 1** (client-side page-load/render time). This was *CI build/deploy
+wall-clock* time.
+
+- **What:** Every push to `main` runs `mkdocs gh-deploy --force` (`v2/.github/workflows/ci.yml`)
+  and takes ~14 min. Measured breakdown: **checkout ~248s** (`fetch-depth: 0` pulls the full
+  ~800 MB git history) + **`mkdocs gh-deploy` ~557s** (build single-threaded CPU-bound, ~614s
+  locally for 3,097 pages).
+- **Root causes (cProfile):** (1) **Nav rendering (~half the build)** — Material re-renders the
+  entire 3,097-item nav tree on *every* page → O(pages × nav-size), 9.5M `nav-item.html` macro
+  calls. (2) **`roamlinks` plugin (~15%)** — v0.3.2 does a full `os.walk` of all 5,740 files
+  (no early `break`) per bare-filename link.
+- **Verified fix (unapplied):** adding **`navigation.prune`** took a local build
+  **614s → 222s (−64%)**, no new warnings. Plus `fetch-depth: 1` in `ci.yml` (`ghp-import`
+  force-pushes `gh-pages` independently and needs no `main` history, −~3.5 min). Items 1+2
+  alone ≈ 14 min → ~5 min, both low-risk. Trade-off on `navigation.prune`: sidebar shows only
+  the active branch (`navigation.tabs` keeps top nav).
+- **Full detail / numbers:** `v2/.repo-docs/decisions/2026-06-05-ci-deploy-build-time-perf.md`
+  (the verified fix and breakdown are preserved there even though never shipped).
+
+---
+
 ## Summoner champion / minion / rival → `monster.*` restructure (was ROADMAP #8)
 
 **Status:** done 2026-06-15 — all three summoner statblock trees moved into `monster.*` (scc-log 2026-06-15 "Summoner minions/champions/rivals → `monster.*` family"). Now `monster.minion.summoner.<portfolio>.statblock/*`, `monster.champion.summoner.<portfolio>.statblock/*`, and `monster.rival.<echelon>.statblock/*` (+ `monster.rival.<echelon>.summoner.minion/*` for the rival's summons — the rival NPC sits beside the Monsters-book rivals on the same type path rather than the anticipated `rival.summoner.<echelon>` form; `rivals`→`rival` slug singularized in c62753e). Zero top-level `champion.`/`minion.`/`rival.` segments remain in the registry; dead top-level site includes removed. (Retainers — `retainer.summoner.statblock` — were out of scope here; tracked as #9.)
