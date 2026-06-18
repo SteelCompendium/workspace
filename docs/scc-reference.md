@@ -59,11 +59,11 @@ likely just noise. Decided 2026-06-18.
 
 ## Registry
 
-~3,012 codes across four books:
+~3,041 codes across four books:
 
 | Book | Codes |
 |------|------:|
-| heroes | ~1,915 |
+| heroes | ~1,944 |
 | beastheart | 242 |
 | monsters | 632 |
 | summoner | ~224 |
@@ -78,6 +78,33 @@ likely just noise. Decided 2026-06-18.
 - `feature.ability.<entity>…` — a feature with combat rigor (`ability`).
 - `feature.trait.<entity>…` — **narrow**: ancestry traits + monster statblock passives only.
 - `feature.<entity>…` — everything else (plain feature; hub-and-spoke).
+
+## Gods & Religion
+
+Gods and saints share a `religion.*` namespace (added 2026-06-18), paralleling `monster.*` /
+`rule.*` — a namespace prefix spanning several distinct entity types:
+
+- `religion.god/<id>` — deities (Val, Cavall, Cyrvis, plus the collective `lords-of-hell`).
+- `religion.saint/<id>` — the ~28 legendary heroes / saints, **flat** (not nested under
+  their god).
+- `religion.domain` / `religion.order` / `religion.pantheon` — **reserved**, no entities
+  minted (an upcoming MCDM product is expected to expand domains; the codes are kept free).
+
+**Relationships are frontmatter links, never path nesting.** This is the load-bearing rule:
+the book places several saints (Pentalion under Nikros, Eseld under Cyrvis, the Saints of
+Hell under the Lords of Hell) as document *siblings* of their god, not inside its subtree,
+and gods can belong to multiple pantheons — so parentage can't be path-derived. Instead:
+
+- saint frontmatter: `patron` (→`religion.god/<id>`, plain text if none), `domains`, `ancestry`.
+- god frontmatter: `domains`, `pantheon`, `alignment` (`good`/`evil`/`devil`), `god_class`
+  (`elder`/`younger`/`space`/`devil`).
+
+`domains` values are plain names today (extracted from the `**Domains:**` line); upgrading
+them to `religion.domain/<id>` links is a future frontmatter-only follow-up once domain
+pages exist. The world-glossary term `rule.world/saint` (the *concept*) is unchanged — it is
+distinct from the `religion.saint/<id>` *instances*. Browse groups the tree under a
+"Gods & Religion" umbrella (`god` → "Gods", `saint` → "Saints"). Plan:
+`docs/superpowers/plans/2026-06-18-gods-religion-scc-buildout.md`.
 
 ## Companions (beastheart)
 

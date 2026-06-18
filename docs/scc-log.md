@@ -447,3 +447,31 @@ breaks; this just makes the canonical form explicit everywhere. `gen --all` afte
 sweep resolved cleanly — 3,012 codes across 4 books, **zero** resolver `WARN`s, no raw
 `scc.v1:` leaking into the linked output. Still deferred (separate items): the
 `/scc.v1/` website URL alias and the HTTP format entry point.
+
+## 2026-06-18 — `religion.*` namespace: gods re-homed, saints extracted
+
+Built out the Heroes book's Gods and Religion chapter into a shared `religion.*` type
+namespace (parallels `monster.*` / `rule.*`), the last structural pass before freeze:
+
+- **Gods** moved `god/<id>` → **`religion.god/<id>`** (re-mint, registry `frozen: false`).
+  The 23 in-prose `…/god/<id>` links were restamped to `religion.god/<id>`. Two gods that
+  had been folded into prose (Nikros, Cyrvis) became proper entities, and the collective
+  **`religion.god/lords-of-hell`** was minted from the existing "Devil Gods" intro (via a
+  `@name` display override) so the Saints of Hell have a real patron. 9 → 11 gods.
+- **Saints** extracted as **`religion.saint/<id>`** — the 28 legendary heroes/saints that
+  previously folded into their god's body. **Flat**, never nested: a saint's patron is the
+  explicit `@patron` frontmatter, because the book places several saints (Pentalion, Eseld,
+  the Saints of Hell) as document siblings of their god. **Thellasko** reclassified
+  `god → saint` ("Saint of Strategy"); its one inbound link moved to `religion.saint/thellasko`.
+- **Reserved (no entities):** `religion.domain`, `religion.order`, `religion.pantheon` —
+  kept free for an upcoming MCDM religion expansion. Domains are captured only as plain-name
+  god/saint frontmatter (`domains:`), not minted as codes.
+- **Frontmatter relationships:** gods gained `domains`/`pantheon`/`alignment`/`god_class`;
+  saints gained `patron`/`domains`. Principle: relationships are frontmatter links, never
+  path nesting. New parser `SaintParser` (registry 25 → 26 parsers); `GodParser` re-homed.
+- Browse: flat `god/` include replaced by `religion/`, labeled **"Gods & Religion"**
+  (`god` → "Gods", `saint` → "Saints"). `rule.world/saint` (the concept) is untouched.
+
+Heroes 1,915 → **1,944**; total **3,012 → 3,041**. `gen --all` resolves cleanly, zero
+resolver `WARN`s. Plan:
+`docs/superpowers/plans/2026-06-18-gods-religion-scc-buildout.md`.
