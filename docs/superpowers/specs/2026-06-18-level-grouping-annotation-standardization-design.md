@@ -51,9 +51,14 @@ Convert the **plain** level groupings `@type: feature \| @id: <N>-level-features
 bare → make explicit), 2nd, 3rd, 4th, 5th, 6th, 7th, 8th, 9th, 10th "Features" headers.
 
 **Keep as `feature`** (do **not** touch): `1st-level-circle-features`,
-`5th-level-circle-feature`, `8th-level-circle-feature`. These are linked from the Summoner
-Advancement table's "Circle Features" column and carry a circle→feature lookup table — the
-Heroes "Domain Feature" shape.
+`5th-level-circle-feature`, `8th-level-circle-feature`. The reason is **not** "they're circle
+features" — it is that they are **referenceable table containers**: each carries a
+circle→feature lookup table and is a link target from the Summoner Advancement table, the
+Heroes "Domain Feature" shape. (The circle-vs-summoner *track* is a separate concern captured
+by the `feature_source` field — see
+[`2026-06-18-summoner-feature-source-design.md`](2026-06-18-summoner-feature-source-design.md).
+Most circle features, e.g. Summoner's Dominion, are *plain* features under a `feature-group`,
+so "is it a grouping header" and "is it circle" are orthogonal.)
 
 **Why child codes are safe:** the `level-N` path segment comes from `@level`, not the parent's
 `@id` — `feature.summoner.level-2/summoners-dominion` is already a *flat sibling* under
