@@ -1,73 +1,99 @@
-# Handoff — 2026-06-15 (advancement cards shipped)
+# Handoff — 2026-06-18 (Plan 6 part 1 shipped; starting part 2 = ROADMAP #15)
 
 ## Active efforts
-None in flight. The previous "Next up" (advancement-features preview cards) **shipped + live
-this session** — see "Just shipped" below. Pick the next item from
-[`ROADMAP.md`](../../ROADMAP.md) / [`FOLLOWUPS.md`](../../FOLLOWUPS.md).
+- **ROADMAP #15 — Monsters/Summoner header-levels rework → per-ability coding** — IN FOCUS.
+  The deferred *second half* of the retainer/featureblock effort. **No plan/spec doc yet** —
+  it starts in brainstorming (see "You are here"). Canonical description:
+  [`ROADMAP.md`](../../ROADMAP.md) → item #15. The "why it's blocked" + "the fix" are there.
+- **Plan 6 part 1 (retainer rework, container scope)** — ✅ DONE & DEPLOYED this session.
+  Retainers joined `monster.*`: `monster.retainer.statblock/<id>` (×21) +
+  `monster.retainer.advancement-features/<id>` (×21) + `monster.retainer.role-advancement/<role>`
+  (×9), members inline/uncoded; Plan 4 `retainer_page.go` retired. Registry +30 → 3,072. All
+  repos pushed & live. Plan: [`docs/superpowers/plans/2026-06-18-retainer-rework-containers.md`];
+  spec: [`docs/superpowers/specs/2026-06-18-retainer-rework-coded-entities-design.md`];
+  log: [`docs/scc-log.md`](../scc-log.md) (2026-06-18 entry).
 
-## You are here — pick the next task
-No task is mid-flight; choose from ROADMAP. Natural candidates, in rough order:
-- **ROADMAP #8** — build-time statblock embed: move monster/companion statblocks off the
-  client JSON island to build-time HTML, then embed the **companion advancement-features card
-  onto the companion statblock page** (the on-page composite deferred from Plan 5). This is the
-  direct follow-on to the preview-card / companion-adapter work just finished.
-- **ROADMAP #9** — Plan 6 retainer advancement rework (give retainer advancement its own
-  `…advancement-features` SCC codes, replacing Plan 4's site-side body split).
-- **ROADMAP #11** — blocked on a community poll (preview default-zone visibility); don't start.
+## You are here
+Start **ROADMAP #15** in **brainstorming**, not code. It needs its own brainstorm → spec →
+plan (writing-plans) before any implementation — it's an infrastructure change touching
+`collectDeepHeadings` (`steel-etl/internal/parser/document.go`) + `ContextStack`
+(`steel-etl/internal/context/stack.go`) + every Monsters/Summoner parser that assumes the flat
+level-6 heading model.
 
-## Just shipped this session — advancement-features preview cards
-The `advancement-features` index card on companion + summoner-fixture group landings now lists
-the **features gained and the level each is gained at** (e.g. Panther → `L3 Cat and Mouse ·
-L6 Single Bound · L10 Panther Spirit`; fixtures advance at L5/L9), instead of a bare card.
-- `advancementCardInner(dir, advFile)` in `steel-etl/internal/site/advancement_pairs.go` reads
-  the adv leaf's frontmatter `features[]` (the `fbDoc` shape) → `<ul class="sc-card__advlist">`.
-  No cache needed (frontmatter survives the leaf transform). CSS `.sc-card__adv*` in
-  `v2/docs/stylesheets/steel-redesign.css`. Shared pair builder → companions + fixtures together.
-- Plan: `steel-etl/docs/superpowers/plans/2026-06-15-advancement-preview-cards.md`.
-- Memory: `project_statblock_preview_cards` (updated).
+**Goal:** give the *individual abilities* inside Monsters/Summoner statblocks & featureblocks
+their own codes (`feature.ability.*` / `feature.trait.*` per the taxonomy) — retainer
+base/advancement/role abilities, per-member coding for ALL featureblocks (fixtures, malice,
+terrain — currently inline/uncoded), and companion-style on-page embedding of advancement cards.
 
-## Verified state (as of 2026-06-15, end of session)
-- **All three repos on `main`, clean, 0 unpushed, 0 behind origin.** steel-etl `main` =
-  `8daee93` (advancement card features), v2 `main` = `78859794fc8` (deployed content +
-  CSS), workspace `main` = `b42932e` (submodule bump). CI `gh-deploy` publishes v2 on push.
-- **Registry is now 3013 codes** (was 3015): a parallel effort that landed mid-session
-  ("flatten common abilities under `feature.ability.common`", FOLLOWUPS #17) reduced it by 2.
-  I rebased my work onto it cleanly — no overlap.
-- `steel-etl` `go test ./internal/site/` + `go vet`: GREEN. Full `go test -race ./...`: GREEN.
+**Read first (don't re-derive):** ROADMAP #15; spec §7 (why per-ability is blocked) + §8
+(feature/ability/trait guardrail) in the Plan-6 spec above; the Plan-6 plan (what part 1
+shipped); [`steel-etl/docs/statblocks.md`](../../steel-etl/docs/statblocks.md) (H7/H9 model,
+code≠path, the "Retainers" section); `steel-etl/CLAUDE.md` → "Statblocks" + "Feature taxonomy";
+[`docs/superpowers/specs/2026-06-07-feature-taxonomy-design.md`].
 
-## Gotchas & lessons (cross-cutting — still true)
-- **Three separate repos**, pushed independently: `steel-etl` (submodule), `v2` (separately
-  cloned, gitignored by workspace), `workspace`. **`origin/main` advanced on ALL THREE
-  mid-session** this time (parallel flatten + deploy-recipe efforts). ALWAYS `git fetch origin`
-  + rebase each repo onto its `origin/main` before pushing/deploying. Ship order that worked:
-  rebase+test+push steel-etl → discard stale regen + commit CSS + rebase v2 → rebase workspace
-  → `just deploy-v2` (regenerates fresh, commits v2 docs, pushes v2) → bump workspace submodule
-  pointer (`git add steel-etl && commit "chore: bump steel-etl to <sha>"`) + push workspace.
-  Do NOT `git submodule update` after rebasing steel-etl — it would detach and abandon your
-  rebased commit; bump the pointer manually instead.
-- **Run Go/node via devbox from the workspace root**, cd-ing inside: `devbox run -- bash -c 'cd
-  steel-etl && go test ./internal/site/'`. A bare `devbox run -- go …` fails ("cannot find main
-  module").
-- **Build-order gotcha:** `buildSection` transforms statblock/companion leaves to HTML BEFORE
-  `generateIndexPages` builds group landings. Statblock previews recover features from
-  `statblockFeatureCache`; companions cache the whole island in `companionStatblockCache` (both
-  reset in `Build()`). The advancement card reads the adv leaf's **frontmatter**, which survives
-  the transform — so it needs no cache (unlike the preview cards).
-- **`gen` book filter wants the book ID** (`--book mcdm.beastheart.v1`), not a short name. A bare
-  `gen` skips the `books:` list; deploy recipes pass `--all`.
-- **Don't hand-edit generated output** (`v2/docs/Browse/**`); `steel-etl site` overwrites it.
-  CSS-only change → commit `v2/docs/stylesheets/*` + push v2 (CI rebuilds). Content change →
-  `just deploy-v2` (regenerates + commits `v2/docs/*` + pushes v2; does NOT push steel-etl/workspace).
-- **Screenshots:** Playwright MCP is broken; use headless Brave (`/opt/brave.com/brave/brave
-  --headless --no-sandbox --screenshot=… "file://…"`), against the built `v2/site/…` HTML.
+**Process & guardrails:** branch from latest `origin/main` (read
+[`docs/git-workflow.md`](../git-workflow.md) first); Go via devbox —
+`devbox run -- bash -c 'cd steel-etl && go ...'` from the workspace root. Brainstorm/spec must
+grapple with: `--scc-stable` scrutiny + registry delta + link re-sweep (`validate`) since
+per-ability coding re-mints many codes; re-composing the statblock card once abilities are real
+child sections (generalize the companion `feature-group→sbIsland` adapter /
+`embed_cards.go`); keeping the part-1 `monster.retainer.*` containers undisturbed. **Stop
+before code and before deploy** — the user decides when to implement and ship.
+
+**Not a prerequisite — don't chase it:** Monsters/Summoner statblocks already render as
+build-time `.sb-wrap` cards (the client-side JSON island is retired; 0 pages use
+`sc-statblock-mount`). So ROADMAP #7's "move statblocks to build-time HTML" premise is largely
+stale (tracked in [`FOLLOWUPS.md`](../../FOLLOWUPS.md) #18); #15 does **not** need to wait on
+it. The on-page embedding work is generalizing the existing build-time embed
+(`embed_cards.go`, already used for fixtures/companions) to the re-composed Monsters statblock,
+**not** a fresh island→HTML migration.
+
+## Verified state (as of 2026-06-18 23:27 -0400)
+Everything from part 1 is merged, pushed, and live. All seven repos are **0 ahead / 0 behind**
+their `origin/main` and clean:
+- workspace `main` @ `c5db5a2` (submodule pointer bump + Plan 6 docs)
+- `steel-etl` `main` @ `6880948`
+- `v2` @ `23a7c509`, `data-bestiary` @ `b3df9e8b`, `data-unified` @ `396b4f1b`,
+  `data-rules` @ `ec3996e17` (unchanged), `steelCompendium.github.io` @ `1213ec96`
+- Build/vet/test: green (run the commands below to confirm).
+- Registry: 3,072 codes; retainer family = 21 statblock + 21 advancement-features + 9
+  role-advancement; summoner retainers correctly untouched at `retainer.summoner.statblock/*`.
+
+## Gotchas & lessons (cross-cutting — will trip up #15)
+- **Blockquote-label footgun.** `ParseRichFeatures` → `splitBlockquoteBlocks`
+  (`internal/content/featureparse.go` / `statblock_parse.go`) only ever reads `>`-prefixed
+  lines. A level label must be `> **Level N …**` (inside the blockquote); a standalone bold
+  line is **invisible** and the level silently never attaches. The Plan-6 plan's source script
+  got this wrong; the spec was right. #15 will do a lot more source/heading surgery — design
+  with this in mind and always regen-verify that levels/members actually attach.
+- **`@domain: retainer` is in BOTH books.** Monsters retainers have no `@category`; **summoner**
+  retainers carry `@category: summoner`. Both retainer parser branches in
+  `internal/content/monster.go` (`StatblockParser` + `FeatureblockParser`) guard on
+  `category != "summoner"` so summoner retainers stay `retainer.summoner.statblock`. #15 edits
+  these same parsers — **don't undo the guard** (there's a regression test
+  `TestStatblockParser_SummonerRetainerUnchanged`).
+- **`just deploy` push-order footgun.** The recipe pushes **github.io FIRST** (step 2) under
+  `set -euo pipefail`; if ANY output clone (`v2`, `data/*`, `steelCompendium.github.io`) is
+  behind its origin, that first push is rejected and the whole recipe aborts before v2/data
+  ever run. **Before deploying, sync every output clone to its `origin/main`**
+  (`git -C <clone> fetch origin && git reset --hard origin/main` — they carry no local-only
+  work). Then `just deploy` pushes cleanly.
+- **Subagents hit the monthly account spend limit this session.** Implementer/reviewer
+  subagents failed mid-run (one died after partial edits). Be ready to execute and self-verify
+  directly rather than relying on dispatched agents.
 
 ## Verification commands
 ```bash
-cd /home/vexa/code/steel_compendium/workspace
-git branch --show-current && git -C steel-etl branch --show-current && git -C v2 branch --show-current   # all: main
-git fetch origin -q && git -C steel-etl fetch origin -q && git -C v2 fetch origin -q
-for r in . steel-etl v2; do echo "$r: $(git -C $r rev-list --left-right --count origin/main...HEAD)"; done   # all 0  0
-devbox run -- bash -c 'cd steel-etl && go test ./internal/site/ && go vet ./internal/site/'   # GREEN
-# the shipped feature (generated output): each companion/fixture adv card lists L<n> + name
-grep -o 'advlvl">L[0-9]*' v2/docs/Browse/monster/companion/beastheart/index.md | sort | uniq -c   # 14× L3, L6, L10
+cd /home/scott/code/steelCompendium/workspace
+# all repos in sync & clean:
+for r in . steel-etl v2 data/data-bestiary data/data-rules data/data-unified steelCompendium.github.io; do
+  git -C "$r" fetch origin -q 2>/dev/null; b=$(git -C "$r" branch --show-current)
+  printf "%-26s %s\n" "$r" "$(git -C "$r" rev-list --left-right --count HEAD...origin/$b 2>/dev/null)"
+done
+# build/vet/test (devbox; Go not on PATH):
+devbox run -- bash -c 'cd steel-etl && go build ./... && go vet ./... && go test ./...'
+# registry sanity (after a fresh gen --all):
+devbox run -- bash -c 'cd steel-etl && go run ./cmd/steel-etl gen --all --config pipeline.yaml' >/dev/null
+grep -oE 'monster\.retainer\.(statblock|advancement-features|role-advancement)/' steel-etl/classification.json | sort | uniq -c   # 21 / 21 / 9
+grep -oE 'retainer\.summoner\.statblock/' steel-etl/classification.json | wc -l                                                  # 4 (summoner, unchanged)
 ```
