@@ -1,8 +1,13 @@
 # Summoner `feature_source` (circle / summoner track) — design
 
 **Date:** 2026-06-18
-**Status:** Approved. **No implementation plan yet** — next step is `writing-plans` for this
-spec (larger than Spec A: parser + validate oracle + schema/SDK + card eyebrow + browser facet).
+**Status:** Approved. **Implementation plan written** (2026-06-19):
+[`../plans/2026-06-19-summoner-feature-source.md`](../plans/2026-06-19-summoner-feature-source.md)
+(7 tasks). **Not yet executed.** Note: the plan deliberately **skips** the spec's schema-file +
+`schema_validation_test.go` allowlist edits — feature/ability route through SDK `metadata`
+(`additionalProperties: true`) like the existing `subclass` field, not through the passthrough
+schema path; carrying `feature_source` into `metadata` is the SDK-parity deliverable (the
+TS-SDK consumer side stays a separate tracked effort per `card-data-parity.md` step 5).
 **Scope:** `steel-etl` content parsers + `validate`, `input/summoner`, both JSON-schema copies
 + the SDK (`data-sdk-npm` `v3`), v2 card eyebrow + feature-browser facet. Cross-repo →
 workspace-level spec.
