@@ -90,13 +90,14 @@ What it is, why it matters, where the work lives. Code blocks, commands, links w
 - **Why it matters:** Plans 5a–5c gave companions/fixtures their own separately-coded advancement-features *entities* (live as standalone pages); compositing them onto the parent page needs the host (statblock) to render at build time first. Also removes a client-render dependency.
 - **Effort:** large; design spec exists for the embedding half; the island→build-time-HTML migration is the prerequisite.
 
-## 9. Plan 6 — retainer advancement rework (own SCC codes)
+## 9. Plan 6 — retainer rework (own SCC codes)
 
-**Status:** open (the last piece of the featureblock effort).
+**Status:** done 2026-06-18 (container scope) — the last piece of the featureblock effort.
 
-- **What:** Give retainer advancement abilities their own `monster.<group>.…advancement-features` codes (collect the currently-uncollected `########` H8 headings — `collectDeepHeadings`/`demoteOverflowHeadings` in steel-etl), replacing **Plan 4's site-side body split** (`internal/site/retainer_page.go`) with a real coded entity, mirroring companions (5b) and fixtures (5c).
-- **Why it matters:** Plan 4 shipped retainer advancement as a site-only card built by splitting the statblock body at bold-label separators — the tiers have no SCC identity. This brings them in line with the companion/fixture advancement-features scheme.
-- **Effort:** medium; its own spec/plan when started.
+- **What shipped:** retainers joined the `monster.*` family and their advancement/role groups became coded **container** entities (members inline/uncoded), mirroring fixtures (5c): `monster.retainer.statblock/<id>` (×21), `monster.retainer.advancement-features/<id>` (×21), `monster.retainer.role-advancement/<role>` (×9). Registry net **+30** (3,042 → 3,072). **Plan 4's site-side body split** (`internal/site/retainer_page.go`) was retired in favour of the real paired entities; Browse pairs base+advancement and links a role-advancement landing; Bestiary keeps the `retainer` facet.
+- **How:** parser branches (`StatblockParser`/`FeatureblockParser` `domain == "retainer"`) + a source restructure that moves each retainer's `########` H8 advancement headings into sibling `@type: featureblock` sections as **blockquote** level labels (`> **Level N …**` — the only form `ParseRichFeatures` sees). No `collectDeepHeadings`/`demoteOverflowHeadings`/`ContextStack` change.
+- **Deferred:** **per-ability** coding (each base/advancement/role ability as its own `feature.ability.*`) is blocked by the flat H7+/level-6 heading model → **ROADMAP #15**.
+- **Refs:** spec `docs/superpowers/specs/2026-06-18-retainer-rework-coded-entities-design.md`, plan `docs/superpowers/plans/2026-06-18-retainer-rework-containers.md`, log `docs/scc-log.md` (2026-06-18).
 
 ## 10. Architecture-redesign carry-over phases (i18n, homebrew spec, consumer migration)
 

@@ -476,3 +476,34 @@ Heroes → **1,944**; total **3,012 → 3,042** (incl. a cross-book `god/val` li
 Summoner book restamped to `religion.god/val`). `gen --all` resolves cleanly, zero
 resolver `WARN`s. Plan:
 `docs/superpowers/plans/2026-06-18-gods-religion-scc-buildout.md`.
+
+## 2026-06-18 — retainers join `monster.*` + coded advancement/role containers (Plan 6)
+
+The Monsters-book retainers — the last bestiary family outside `monster.*` — moved into the
+namespace and their advancement/role-advancement groups became their own coded **container**
+entities (members inline/uncoded), mirroring fixtures (Plan 5c). Registry `frozen: false` →
+clean re-mint; **0 inbound `scc:` links** to the old codes, so nothing dangled.
+
+- **Base re-namespace:** `retainer.statblock/<id>` → **`monster.retainer.statblock/<id>`** (×21).
+  Parser-only (`StatblockParser` `domain == "retainer"` branch); no source edit to the base.
+- **Advancement containers:** new **`monster.retainer.advancement-features/<id>`** (×21), one
+  per retainer, kind-swap pair with the base (shared `monster.retainer` group + `<id>` item).
+- **Role-advancement containers:** new **`monster.retainer.role-advancement/<role>`** (×9 —
+  ambusher, artillery, brute, controller, defender, harrier, hexer, mount, support).
+- **Members inline/uncoded** (`features[]` via `ParseRichFeatures`), and they are **abilities**
+  (combat rigor preserved, leveled `.fb__band--adv` tiers), not "features". Per-ability coding
+  is **deferred** (ROADMAP #15) — blocked by the flat H7+/level-6 heading model.
+- **Source restructure** (`input/monsters/Draw Steel Monsters.md`): each retainer's `########
+  Level N Retainer Advancement Ability` H8 headings moved into a sibling `@type: featureblock |
+  @id: <slug>` section and rewritten as **blockquote** labels `> **Level N …**` (the only form
+  `ParseRichFeatures`/`splitBlockquoteBlocks` sees — a standalone bold line is invisible to it);
+  the 9 `##### <Role> Abilities` groups wrapped in a `@domain: retainer | @category:
+  role-advancement` monster-group and annotated `@type: featureblock | @id: <role>`.
+- **Plan 4 retired:** `internal/site/retainer_page.go` (the site-side body split) deleted;
+  advancement is now a real paired entity. Browse: `monster/retainer/` pairs base+advancement
+  and links a "Role Advancement Abilities" landing; Bestiary keeps the `retainer` facet.
+
+21 old `retainer.statblock/*` removed, 51 added → registry net **+30** (3,042 → **3,072**).
+`gen --all` clean, zero resolver `WARN`s. Spec:
+`docs/superpowers/specs/2026-06-18-retainer-rework-coded-entities-design.md`; plan:
+`docs/superpowers/plans/2026-06-18-retainer-rework-containers.md`.

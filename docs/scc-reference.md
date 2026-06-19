@@ -151,8 +151,12 @@ Go-side mapping lives in `StatblockParser` (`switch domain`, mirroring the `@dom
 fixture` case; the rival split keys off `organization == Minion`); `isBestiaryGroupDir`
 recognizes the deeper `monster/<domain>/summoner/<portfolio>` group dir.
 
-**Retainers** (`retainer.summoner.*`) stay top-level — out of scope, owned by the future
-retainer rework (ROADMAP). See `steel-etl/CLAUDE.md` for the ingest convention.
+**Retainers.** The **Monsters-book** retainers joined the `monster.*` family in Plan 6
+(2026-06-18): base `monster.retainer.statblock/<id>` (×21), plus coded **container** siblings
+`monster.retainer.advancement-features/<id>` (×21) and `monster.retainer.role-advancement/<role>`
+(×9), members inline/uncoded — the same treatment fixtures got (5c). Per-ability coding is
+deferred (ROADMAP #15). The **Summoner-book** retainers (`retainer.summoner.*`) stay top-level,
+unchanged. See `docs/scc-log.md` (2026-06-18) and `steel-etl/CLAUDE.md` for the convention.
 
 ## Group landings
 
