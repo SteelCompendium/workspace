@@ -122,6 +122,26 @@ Three things surfaced during implementation and are part of the shipped design:
   and Markdown `](target)` tails. Without this, transcluded cards 404 at the container's
   depth (caught by a clean MkDocs build: 0 broken-link warnings).
 
+## Composition with the trait-card transform (fix 2026-06-18)
+
+The embed post-pass only fires on pages that still hold `{data-scc}` **markdown** markers
+when it runs. `buildSection`'s inline `renderTraitCard` (for `type: feature`/`trait` pages)
+runs *first* and rewrites the whole subtree into nested `.sc-trait` HTML — consuming those
+markers and rendering any **standalone** descendant (statblock/featureblock/dynamic-terrain/
+feature-group) as a generic `.sc-trait` niche that mangles its `>`-blockquote stat/feature
+content into escaped text. So a feature **leaf** page that contained fixtures (e.g. summoner
+`2nd-Level Features` → "The Boil" featureblock) rendered the item as a Feature, while the
+same subtree on the un-carded `type: class` page embedded correctly.
+
+**Fix:** `buildAbilityCardPage` now leaves a feature/trait page **uncarded** when its body
+has a `{data-scc}` descendant whose own page type is standalone (`bodyHasStandaloneDescendant`,
+keyed off a `standaloneCodeSet(entries)` prescan built before any section renders). The raw
+markdown then reaches `embedItemCards`, which renders the subtree exactly as it does on
+`type: class` pages — splicing the proper statblock/featureblock cards and re-carding the
+non-standalone sub-features. Blast radius: 13 summoner fixture/minion-bearing pages. Trade-off:
+those features' parent-index **preview** cards lose their flavor + "N options" line (the
+flavor was previously the *wrong* fixture role line anyway).
+
 ## Status
 
 Implemented and verified 2026-06-17, **Browse + Read** (Read enabled same day once the
