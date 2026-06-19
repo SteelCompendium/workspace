@@ -1,7 +1,8 @@
 # Summoner `feature_source` (circle / summoner track) — design
 
 **Date:** 2026-06-18
-**Status:** Design (approved direction; spec under review)
+**Status:** Approved. **No implementation plan yet** — next step is `writing-plans` for this
+spec (larger than Spec A: parser + validate oracle + schema/SDK + card eyebrow + browser facet).
 **Scope:** `steel-etl` content parsers + `validate`, `input/summoner`, both JSON-schema copies
 + the SDK (`data-sdk-npm` `v3`), v2 card eyebrow + feature-browser facet. Cross-repo →
 workspace-level spec.

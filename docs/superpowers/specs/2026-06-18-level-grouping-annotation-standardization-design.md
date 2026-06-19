@@ -1,7 +1,9 @@
 # Level-grouping annotation standardization — design
 
 **Date:** 2026-06-18
-**Status:** Design (approved direction; spec under review)
+**Status:** Approved. **Implementation plan written:**
+[`../plans/2026-06-19-level-grouping-annotation-standardization.md`](../plans/2026-06-19-level-grouping-annotation-standardization.md)
+(4 tasks, one steel-etl PR). **Not yet executed.**
 **Scope:** book sources (`steel-etl/input/{summoner,beastheart}`), `steel-etl` `validate`
 command. Cross-book SCC-convention contract → workspace-level spec.
 
