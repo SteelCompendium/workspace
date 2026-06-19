@@ -2,6 +2,32 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
+## Status
+
+**SHIPPED + LIVE 2026-06-19.** All 7 tasks executed via `executing-plans`; merged + deployed.
+steel-etl `main` @ `8564c3a` (6 commits `2967190`→`8564c3a`), workspace pointer `e69342e`,
+v2 site deploy `28227b0`, v2 JS commit `bb2b769`. **26 circle + 81 summoner** features tagged;
+**zero SCC code change** (verified pristine-vs-edited); validate oracle reports **0** drift on the
+real book; full `go test ./...` green.
+
+**Two deliberate deviations from the written plan (both improvements found during execution):**
+1. **Helper signature** `featureSource(ctx, section)` instead of `(ctx, headingLevel)` — checks the
+   section's own `@feature_source` first, so explicit marks (e.g. Summoner's Dominion) don't depend
+   on the pipeline having pushed the section's own annotation onto the stack first (more robust;
+   surfaced by a TDD red).
+2. **Schema/allowlist untouched** (as the plan's Global Constraints already prescribed) — `feature_source`
+   rides in SDK `metadata` like `subclass`; no `feature.schema.json` or `schema_validation_test.go`
+   edit, no `data-sdk-npm` change.
+
+Surfacing notes for future work: the circle eyebrow shows on **leaf-carded** circle features (e.g.
+`return-to-the-source`); Summoner's Dominion itself is the **embed-deferral** case (has fixture
+descendants → left uncarded → no eyebrow, by design). The feature-browser **Track** facet + the
+`feature_source` JSON live on the aggregate `Browse/feature/index.md` `.sc-browse-mount` island, **not**
+the per-level index pages (those use static `.sc-prev` cards). **Phase 2** (`circle-of-<name>` for the
+~24 named-circle picks) remains out of scope.
+
+---
+
 **Goal:** Add a `feature_source` frontmatter field (`summoner` | `circle`) to every Summoner-book feature/ability, surface it on the card eyebrow ("Summoner **Circle** Feature") and the feature-browser facet, carry it into the SDK data, and add a `validate` oracle that cross-checks it against the Summoner Advancement table.
 
 **Architecture:** A book-gated helper `featureSource(ctx, headingLevel)` reads the field from the context stack (own `@feature_source` annotation or an inherited ancestor's, mirroring how `@level` propagates) and defaults Summoner-book features to `summoner`. Only `FeatureParser`/`AbilityParser` consume it, so `statblock`/`featureblock`/`monster-group` descendants (the fixtures under Summoner's Dominion) never inherit it. The field rides in frontmatter (md) and in SDK `metadata` — exactly like the existing `subclass` field. Source edits mark the 10 circle features/containers from the advancement table's "Circle Features" column; the 3 circle-lookup containers propagate `circle` to their pick-children automatically.

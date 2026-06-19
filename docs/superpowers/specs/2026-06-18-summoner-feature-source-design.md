@@ -1,9 +1,11 @@
 # Summoner `feature_source` (circle / summoner track) — design
 
 **Date:** 2026-06-18
-**Status:** Approved. **Implementation plan written** (2026-06-19):
+**Status:** **SHIPPED + LIVE 2026-06-19** via
 [`../plans/2026-06-19-summoner-feature-source.md`](../plans/2026-06-19-summoner-feature-source.md)
-(7 tasks). **Not yet executed.** Note: the plan deliberately **skips** the spec's schema-file +
+→ `## Status` (steel-etl `main` @ `8564c3a`, workspace pointer `e69342e`, v2 deploy `28227b0`;
+26 circle + 81 summoner features tagged, zero SCC code change, oracle clean). Note: the plan
+deliberately **skipped** the spec's schema-file +
 `schema_validation_test.go` allowlist edits — feature/ability route through SDK `metadata`
 (`additionalProperties: true`) like the existing `subclass` field, not through the passthrough
 schema path; carrying `feature_source` into `metadata` is the SDK-parity deliverable (the
