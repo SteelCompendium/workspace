@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 19 -->
+<!-- next-id: 20 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -109,3 +109,13 @@ Most recent archive:
 - **Why:** The docs actively mislead — an agent reading them will believe statblocks need a migration that's done, and may mis-plan around a JSON island that no longer exists (it nearly derailed Plan 6's scoping).
 - **Context:** Correct the three doc locations; **re-assess what genuinely remains of ROADMAP #7** — part (a) (island → build-time HTML) appears complete; part (b) (entity-embedding, `embed_cards.go`) partly shipped for Browse. Decide whether #7 is done, partly-done, or should be re-scoped, and delete the dead `steel-statblock.js` if nothing references it.
 - **Effort:** S (doc correction + a grep to confirm `steel-statblock.js` is unreferenced before deleting).
+
+## 19. Stale summoner statblock codes in `summoner-linking-reference.md`
+
+**Status:** open
+
+- **Identified:** 2026-06-19, hand-adding the fixture advancement member codes (ROADMAP #16) to the linking reference.
+- **What:** The **Statblocks** section of `steel-etl/docs/summoner-linking-reference.md` lists summoner minions/fixtures/champions/rivals under their **pre-`monster.*`-rehoming** codes (e.g. `mcdm.summoner.v1/minion.demon.statblock/…`, `fixture.demon.statblock/the-boil`, `champion.demon.statblock/…`). The actual registry (Plan 5c/6) homes them under `monster.*`: `monster.minion.summoner.<portfolio>.statblock/<id>`, `monster.fixture.<element>.featureblock/<id>` (+ the new `feature.fixture.*` members), `monster.champion.summoner.<portfolio>.statblock/<id>`, `monster.rival.<echelon>.statblock/<id>`. (Summoner **retainers** — `retainer.summoner.statblock/<id>` — are correct, kept that way deliberately in Plan 6.)
+- **Why:** Anyone authoring `scc.v1:` links from these curated codes will write dangling links; the reference is supposed to be the canonical linkable-target list.
+- **Context:** Refresh the section against `classification.json` (`grep -oE "mcdm.summoner.v1/monster\.[a-z.]+statblock/[a-z-]+"` etc.). Pre-existing drift, not introduced by #16 — the #16 fixture-member subsection added 2026-06-19 is already correct. Likely the Monsters-book linking reference has similar drift worth a glance.
+- **Effort:** S (mechanical code refresh in one curated table).
