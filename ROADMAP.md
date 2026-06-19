@@ -1,6 +1,6 @@
 # Roadmap
 
-<!-- next-id: 16 -->
+<!-- next-id: 17 -->
 
 New features and larger planned / in-flight efforts across the workspace. Smaller
 in-scope tangents to clear before the next feature go in `FOLLOWUPS.md`, not here.
@@ -140,12 +140,53 @@ What it is, why it matters, where the work lives. Code blocks, commands, links w
   domain page likely needs the new product's content, not those headers.
 - **Effort:** S–M, gated on external content.
 
-## 15. Monsters/Summoner header-levels rework → per-ability coding for statblocks & featureblocks
+## 15. Monsters/Summoner per-ability coding for statblocks & featureblocks
 
-**Status:** open — the deferred half of Plan 6 (retainer rework). Its own brainstorm/spec/plan when started.
+**Status:** open — **narrowed 2026-06-19**: the fixture-advancement-members slice split out to **#16**
+(in flight); the remaining per-ability work below is **deferred by scope choice** ("juice isn't worth
+the squeeze"), no longer a hard technical block. Its own brainstorm/spec/plan when started.
 
 - **Identified:** 2026-06-18, writing Plan 6 (`docs/superpowers/plans/2026-06-18-retainer-rework-containers.md`; spec §7).
-- **What:** Give the *individual abilities* inside Monsters/Summoner-book statblocks and featureblocks their own SCC codes (`feature.ability.*` / `feature.trait.*`) so third-party tools can address a single ability (e.g. "this retainer's level-10 advancement ability") by code. Covers retainer base/advancement/role abilities **and** per-member coding for **all** featureblocks (fixtures, malice, terrain — currently inline/uncoded), plus companion-style **on-page embedding** of advancement cards.
-- **Why it's blocked today:** the pipeline mints a page only for a real section in the document tree (`ParsedContent.Children` is embed-only). The Monsters book uses H7+ headings, which `collectDeepHeadings` maps **all to level 6**, and `ContextStack` rejects levels > 6 (`internal/parser/document.go`, `internal/context/stack.go`) — so an ability (H8) cannot nest **under** a statblock (H7); they become siblings, and an ability has no statblock parent to inherit `<id>` context from. Both candidate mechanisms (nested ability sections; synthesizing coded children from blockquotes) are therefore dead.
-- **The fix (user direction 2026-06-18):** rework the input docs to use proper header levels **and** raise the level cap / preserve relative depth so H7/H8/H9 nest by document structure. This is an infrastructure change touching `collectDeepHeadings` + `ContextStack` + every Monsters/Summoner parser that assumes the flat level-6 model — needs its own design (`--scc-stable` scrutiny, the companion-adapter generalization for the re-composed statblock card, link re-sweep). Plan 6's container-level work (`monster.retainer.*` + advancement/role containers) ships without it; this unlocks the per-ability layer on top.
-- **Effort:** L (cross-cutting parser/infra + large source restructure + re-mint).
+- **What (remaining):** Give the *individual abilities* inside Monsters/Summoner-book **statblocks**
+  (monster statblocks + summoner minions/champions/rivals) and the other **featureblock members**
+  (malice, terrain, retainer base/advancement/role abilities) their own SCC codes
+  (`feature.ability.*` / `feature.trait.*`) so third-party tools can address a single ability by code.
+  *(Fixture advancement members — the featureblock case — are handled by #16 and are no longer part of
+  #15.)*
+- **Framing correction (2026-06-19).** This item previously claimed **both** candidate mechanisms were
+  dead — nested ability sections *and* "synthesizing coded children from blockquotes" — because
+  `ParsedContent.Children` is embed-only and the H7+/level-6 cap (`collectDeepHeadings` maps all H7+ to
+  level 6; `ContextStack` rejects > 6) blocks tree-nesting. **The second mechanism is not dead.** #16
+  adds a small, reusable pipeline capability — **classify parser-emitted coded children** — so a parser
+  hands back extra coded entities that get registered + written as leaf pages **without** any
+  tree-nesting or cap change. That mechanism generalizes to *any* blockquote members (malice/terrain
+  members, statblock/retainer abilities). See the #16 spec §2.1.
+- **So what's actually left:** (a) **per-ability statblock coding** is now a *scope* decision, not a
+  technical wall — declined for monster statblocks + summoner minions/champions/rivals as not worth the
+  cost; (b) coding malice/terrain/retainer **featureblock** members can reuse #16's mechanism whenever
+  it's deemed worth it; (c) true **tree-nested ability *sections*** (an ability as a real child section
+  of a statblock, inheriting `<id>` context structurally) — the only thing that genuinely needs the
+  `collectDeepHeadings` + `ContextStack` cap rework + source re-leveling — remains the large, deferred
+  infrastructure change, and is **not** required for (a) or (b).
+- **Effort:** L for the cap-rework/tree-nested-sections path; M to extend #16's mechanism to other
+  featureblock members; the statblock per-ability coding is declined for now.
+
+## 16. Fixture advancement features → coded members (annotation-based, no infra change)
+
+**Status:** done 2026-06-19 — shipped. Registry +12 (3,063 → 3,075). See `docs/scc-log.md` (2026-06-19).
+
+- **Split from #15** (2026-06-19) as the first concrete, shippable slice.
+- **What:** the 4 summoner fixtures' advancement members (`⭐️ Soul Rancor`, `⭐️ Size Increase`, …)
+  get individually coded `feature.fixture.<category>.<base-id>.level-N/<member-id>` (×12), each
+  resolving to its own leaf page, with the advancement card embedded on the base fixture's page at build
+  time. Same *outcome* as beastheart companions, different *mechanism*.
+- **How (the key win):** **no source re-leveling, no `ContextStack`/`collectDeepHeadings` change.** Source
+  headers stay faithful to the PDF (fixture group H5, etc.); members stay as `> ⭐️ **Name**` blockquotes
+  with a per-member inline annotation; the `FeatureblockParser` mints each as a **parser-emitted coded
+  child** via the new pipeline capability (see #15 framing correction). One behavioural difference from
+  companions: members render as the advancement card's tiers + their own leaves, not as nested in-card
+  child sections (a consequence of the level-6 cap, accepted).
+- **Refs:** spec `docs/superpowers/specs/2026-06-19-fixture-advancement-coded-members-design.md` (§2 has
+  the full decision record); plan `docs/superpowers/plans/2026-06-19-fixture-advancement-coded-members.md`
+  (rewritten for the annotation/coded-children approach); log `docs/scc-log.md` (2026-06-19).
+- **Effort:** M.

@@ -524,3 +524,39 @@ recur (circle lookup containers `1st-level-circle-features` / `5th-level-circle-
 deliberately don't match and stay `feature`). `gen --all` clean. Spec:
 `docs/superpowers/specs/2026-06-18-level-grouping-annotation-standardization-design.md`;
 plan: `docs/superpowers/plans/2026-06-19-level-grouping-annotation-standardization.md`.
+
+## 2026-06-19 — fixture advancement features → coded members
+
+The 4 summoner fixtures' advancement-features members are now **individually coded**
+`feature.fixture.<category>.<base-id>.level-N/<member-id>` (×12), each with its own leaf page —
+mirroring `feature.companion.*`:
+
+- demon/the-boil: `soul-rancor` (L5), `size-increase` (L9), `fester-field` (L9)
+- elemental/primordial-crystal: `terra-resonance` (L5), `size-increase` (L9), `magnified-strike` (L9)
+- fey/glade-pond: `garden-of-jest` (L5), `size-increase` (L9), `folly-field` (L9)
+- undead/barrow-gates: `memento-mori` (L5), `size-increase` (L9), `open-the-gates` (L9)
+
+(Base-inclusive code: `size-increase` repeats across all four fixtures in four distinct
+`<category>.<base-id>` namespaces — no collision.)
+
+**Mechanism (the notable part).** No source heading re-leveling and **no
+`collectDeepHeadings`/`ContextStack` change** — the binding constraint was that input headers
+stay faithful to the PDF outline (fixture group is genuinely H5), and the advancement
+featureblock is a parse-**sibling** of the base statblock, not a child. The level-6 heading cap
+therefore forbids nesting members under the advancement block. So members keep their faithful
+`> ⭐️ **Name**` blockquote form (gaining only a per-member inline `@type: feature` annotation)
+and are minted as **parser-emitted coded children**: a new `ParsedContent.CodedChildren` field
+the pipeline (and `CollectSCCCodes`) classifies + writes as leaf pages. This **revives the
+"coded children from blockquotes" mechanism ROADMAP #15 had declared dead**, and it generalizes
+to other blockquote members (malice/terrain/retainer abilities) — #15 narrowed accordingly.
+
+**Rendering.** The advancement card is now **embedded on the base fixture page** at build time
+(`embedFixtureAdvancement` injects the `{data-scc}` marker for the embed_cards post-pass);
+the group-index base+advancement pairing is **kept** (full companion parity — the plan/spec
+originally said retire it, but companions keep pairing + embed, so fixtures match).
+
+Base `monster.fixture.*.featureblock/*` + container `…advancement-features/*` codes
+**unchanged**. `validate --scc-stable` + `gen --all` clean. Registry **+12** (3,063 → **3,075**).
+This shipped ROADMAP **#16** (split 2026-06-19 from #15). Spec:
+`docs/superpowers/specs/2026-06-19-fixture-advancement-coded-members-design.md`; plan:
+`docs/superpowers/plans/2026-06-19-fixture-advancement-coded-members.md`.

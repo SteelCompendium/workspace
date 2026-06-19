@@ -155,7 +155,10 @@ controversy): users pick how dense/faithful the rendering is, **per part**.
   `…role-advancement/<role>` featureblock entities on their own paired pages; the creature
   statblock island keeps only the base features). Plan 4's site-side body split
   (`retainer_page.go`) was retired. Backward-compatible: existing featureblock/terrain
-  features have `Level: 0` and emit no band.
+  features have `Level: 0` and emit no band. As of 2026-06-19 (ROADMAP #16) the **fixture
+  advancement card is embedded on the base fixture's page** at build time (`embedFixtureAdvancement`
+  injects the `{data-scc}` marker for the embed_cards post-pass), companion-style — its
+  Level-5/9 members are now individually coded leaf features too.
 - **Statblock-preview prefs** are four independent `data-sbprev-*` attributes
   (`stats`/`meta`/`chars`/`feats`, each `on`/`off`; default `stats=on`, rest `off`) in a
   "Index previews" drawer group — they show/hide the zones of the `.sb-prev` preview

@@ -2,152 +2,83 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Give the 4 summoner fixtures' advancement-features members their own SCC codes (`feature.fixture.<category>.<base-id>.level-N/<member-id>`) by adopting the beastheart-companion model — real nested `@type: feature` child sections, embedded in the advancement card and transcluded onto the base fixture page.
+**Goal:** Give the 4 summoner fixtures' advancement members their own SCC codes (`feature.fixture.<category>.<base-id>.level-N/<member-id>`, ×12) and their own leaf pages, with the advancement card embedded on the base fixture page at build time — **without** changing any source heading levels.
 
-**Architecture:** Reuse the proven companion machinery (`collectChildFeatures`, the `FeatureParser` companion branch, `embed_cards.go`). The fixtures move from the flat H7 statblock zone into shallow (≤H6) headings so the advancement featureblock nests under the base and its members nest under it — **no change** to `collectDeepHeadings` / `ContextStack`. Each advancement member becomes a coded `feature` section; the advancement featureblock keeps its existing `monster.fixture.<category>.advancement-features/<base-id>` code (only its tree position changes). Fixture *base* abilities stay inline/uncoded.
+**Architecture:** The advancement featureblock is a **sibling** of the base statblock (both children of the `@domain: fixture` monster-group), and the H1–H6 `ContextStack` cap means a member can never tree-nest under it. So instead of nesting, the advancement `FeatureblockParser` emits each member as a **parser-emitted coded child** (new `ParsedContent.CodedChildren` field), which a new pipeline pass classifies + writes as its own leaf page. Members stay as the existing `> ⭐️ **Name**` blockquotes, gaining only a per-member inline annotation. No `collectDeepHeadings` / `ContextStack` / heading-level change.
 
-**Tech Stack:** Go (steel-etl pipeline), devbox toolchain, MkDocs/Material site builder. Spec: `docs/superpowers/specs/2026-06-19-fixture-advancement-coded-members-design.md`.
+**Tech Stack:** Go (steel-etl pipeline), devbox toolchain, MkDocs/Material site builder. Spec: `docs/superpowers/specs/2026-06-19-fixture-advancement-coded-members-design.md` (read §2 — the decision record — first; it explains why the earlier "re-level to H3" approach was rejected).
 
-**Conventions for every task:**
-- Run Go via devbox from the workspace root: `devbox run -- bash -c 'cd steel-etl && <cmd>'`.
+## Global Constraints
+
+- Run Go via devbox from the workspace root: `devbox run -- bash -c 'cd steel-etl && <cmd>'`. A bare `devbox run -- go …` fails.
 - Branch is already `feat/fixture-advancement-coded-members` (off `origin/main`).
+- **Never change fixture source heading levels** (faithful to the PDF outline): fixture group stays H5, base statblock + advancement block stay H7. Only add inline annotation comments + (Task 6) site rendering.
 - Never hand-edit generated output (`data/*`, `v2/docs/Browse|Read|scc`). Source edits go in `steel-etl/input/...`.
+- SCC scheme: members are `feature.fixture.<category>.<base-id>.level-<N>/<member-id>` under `mcdm.summoner.v1`. The 4 base `monster.fixture.<cat>.featureblock/<id>` and 4 container `monster.fixture.<cat>.advancement-features/<id>` codes must stay **unchanged**.
+- Schemas live in two hand-synced copies (`steel-etl/schemas/` + `../data-sdk-npm/src/schema/`); any schema field change lands in BOTH.
 
 ---
 
-### Task 1: `FeatureParser` fixture branch — code an advancement member
+### Task 1: `FeatureblockParser` fixture branch emits coded member children
 
-A `@type: feature` under fixture context (`@domain: fixture` group + a `@fixture: <base-id>` key on the enclosing advancement featureblock) must classify as `feature.fixture.<category>.<base-id>.level-<N>/<member-id>`, mirroring the companion branch.
-
-**Files:**
-- Modify: `steel-etl/internal/content/feature.go` (the type-path build, ~lines 119–140)
-- Test: `steel-etl/internal/content/feature_test.go` (add a test; file already exists)
-
-- [ ] **Step 1: Write the failing test**
-
-Add to `steel-etl/internal/content/feature_test.go`:
-
-```go
-func TestFeatureParser_FixtureAdvancementMember(t *testing.T) {
-	// Simulate the context a Level-5 fixture advancement feature sees:
-	//   monster-group  @domain: fixture | @category: demon   (pushed at H3)
-	//   featureblock   @id: the-boil   | @fixture: the-boil   (pushed at H5)
-	//   feature        @id: soul-rancor | @level: 5           (pushed at H6, its own level)
-	ctx := context.NewContextStack(nil)
-	ctx.Push(3, map[string]string{"domain": "fixture", "category": "demon"})
-	ctx.Push(5, map[string]string{"type": "featureblock", "id": "the-boil", "fixture": "the-boil"})
-	ctx.Push(6, map[string]string{"type": "feature", "id": "soul-rancor", "level": "5"})
-
-	sec := newSection("Soul Rancor", 6,
-		map[string]string{"type": "feature", "id": "soul-rancor", "level": "5"},
-		"You gain a surge the first time your demon minions deal 3+ damage.")
-
-	p := &FeatureParser{}
-	got, err := p.Parse(ctx, sec)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if got.Frontmatter["type"] != "feature" {
-		t.Errorf("type = %v, want feature (not trait/ability)", got.Frontmatter["type"])
-	}
-	if gotPath := strings.Join(got.TypePath, "/"); gotPath != "feature/fixture/demon/the-boil/level-5" {
-		t.Errorf("TypePath = %q, want feature/fixture/demon/the-boil/level-5", gotPath)
-	}
-	if got.ItemID != "soul-rancor" {
-		t.Errorf("ItemID = %q, want soul-rancor", got.ItemID)
-	}
-}
-```
-
-- [ ] **Step 2: Run the test to verify it fails**
-
-Run: `devbox run -- bash -c 'cd steel-etl && go test ./internal/content/ -run TestFeatureParser_FixtureAdvancementMember -v'`
-Expected: FAIL — `TypePath = "feature/level-5"` (or similar) because no fixture branch exists yet.
-
-- [ ] **Step 3: Implement the fixture branch**
-
-In `steel-etl/internal/content/feature.go`, find the companion species lookup (currently ~line 68):
-
-```go
-	// Companion species (beastheart book) takes precedence over class in the path.
-	companionID, _ := ctx.Lookup(section.HeadingLevel, "companion")
-```
-
-Immediately after it, add the fixture lookups:
-
-```go
-	// Fixture base-id (summoner book): the enclosing advancement featureblock
-	// pushes @fixture: <base-id> so its child @type:feature members can resolve
-	// the owning fixture without colliding with their own @id. Category comes
-	// from the @domain: fixture monster-group ancestor.
-	fixtureID, _ := ctx.Lookup(section.HeadingLevel, "fixture")
-	_, fixtureCategory, _ := statblockDomain(ctx, section.HeadingLevel)
-```
-
-Then, in the hub-and-spoke type-path build (the `if companionID != "" { ... } else if classID != "" { ... }` chain, ~lines 119–140), insert a fixture arm immediately **after** the companion arm and **before** `else if classID != ""`:
-
-```go
-	if companionID != "" {
-		// ... existing companion arm unchanged ...
-	} else if fixtureID != "" {
-		// Fixture advancement features: feature.fixture.<category>.<base-id>.level-N/<id>,
-		// mirroring the monster.fixture.<category>.advancement-features/<base-id> container.
-		typePath = append(typePath, "fixture")
-		if fixtureCategory != "" {
-			typePath = append(typePath, fixtureCategory)
-		}
-		typePath = append(typePath, fixtureID)
-	} else if classID != "" {
-		typePath = append(typePath, classID)
-	} else if ancestryID != "" {
-```
-
-(The trailing `level-<N>` segment is appended by the existing `if levelStr != "" { typePath = append(typePath, "level-"+levelStr) }` block, since `@level: 5` is pushed at the feature's own level and read via `ctx.Lookup(section.HeadingLevel, "level")`.)
-
-- [ ] **Step 4: Run the test to verify it passes**
-
-Run: `devbox run -- bash -c 'cd steel-etl && go test ./internal/content/ -run TestFeatureParser_FixtureAdvancementMember -v'`
-Expected: PASS
-
-- [ ] **Step 5: Run the full content package to check for regressions**
-
-Run: `devbox run -- bash -c 'cd steel-etl && go test ./internal/content/'`
-Expected: PASS (no companion/feature regressions)
-
-- [ ] **Step 6: Commit**
-
-```bash
-git add steel-etl/internal/content/feature.go steel-etl/internal/content/feature_test.go
-git commit -m "feat(scc): code fixture advancement members as feature.fixture.<cat>.<base>.level-N"
-```
-
----
-
-### Task 2: `FeatureblockParser` fixture branch — embed coded child features
-
-The fixture advancement featureblock must embed its child `@type: feature` sections via `collectChildFeatures` (like companions) instead of parsing inline blockquote members from its body. Its container code is unchanged.
+Add a `CodedChildren` field to `ParsedContent` and have the fixture advancement-features branch populate it: one coded child per advancement member, code `feature.fixture.<category>.<base-id>.level-N/<member-id>`. Member id/level come from a per-member inline annotation when present, else derived (slug of name + the `> **Level N …**` band level).
 
 **Files:**
-- Modify: `steel-etl/internal/content/monster.go` (fixture advancement branch, ~lines 230–243)
+- Modify: `steel-etl/internal/content/parser.go` (add `CodedChildren` field, ~line 36)
+- Modify: `steel-etl/internal/content/monster.go` (fixture advancement branch, ~lines 233–243; add a member-annotation helper)
 - Test: `steel-etl/internal/content/monster_test.go` (add a test)
 
-- [ ] **Step 1: Write the failing test**
+**Interfaces:**
+- Produces: `ParsedContent.CodedChildren []*ParsedContent` — extra coded entities (each with its own `Frontmatter`/`Body`/`TypePath`/`ItemID`) that the pipeline (Task 2) classifies + writes as leaf pages. Distinct from the existing embed-only `Children map[string]*ParsedContent`.
+- Consumes: `ParseRichFeatures(body) []RichFeature` (each `RichFeature` has `.Name`, `.Level`, `.Body`), `parser.ExtractAnnotations(string) []parser.Annotation` (document-ordered; `.Fields["type"|"id"|"level"]`), `Slugify`, `compactPath`, `statblockDomain`.
+
+- [ ] **Step 1: Add the `CodedChildren` field to `ParsedContent`**
+
+In `steel-etl/internal/content/parser.go`, after the existing `Children` field (~line 36):
+
+```go
+	// Children holds parsed sub-content that should be embedded in the parent.
+	// For example, a kit's signature ability is stored under "signature_ability".
+	Children map[string]*ParsedContent
+
+	// CodedChildren holds extra entities the parser mints from a container's body
+	// (e.g. fixture advancement members parsed from blockquotes) that are NOT real
+	// document sections but still get their own SCC code + leaf page. The pipeline
+	// classifies and writes each one after the parent. Distinct from Children
+	// (which is embed-only). See docs/superpowers/specs/2026-06-19-fixture-advancement-coded-members-design.md §5.
+	CodedChildren []*ParsedContent
+```
+
+- [ ] **Step 2: Write the failing test**
 
 Add to `steel-etl/internal/content/monster_test.go`:
 
 ```go
-func TestFeatureblockParser_FixtureAdvancementChildFeatures(t *testing.T) {
-	// The advancement featureblock with two @type:feature children (Level 5 + Level 9).
-	fb := newSection("The Boil Advancement Features", 5,
-		map[string]string{"type": "featureblock", "id": "the-boil", "fixture": "the-boil"}, "")
-	fb.Children = []*parser.Section{
-		newSection("Soul Rancor", 6,
-			map[string]string{"type": "feature", "id": "soul-rancor", "level": "5"},
-			"You gain a surge the first time your demon minions deal 3+ damage."),
-		newSection("Fester Field", 6,
-			map[string]string{"type": "feature", "id": "fester-field", "level": "9"},
-			"Each non-abyssal enemy within 3 squares takes 5 corruption damage."),
-	}
+func TestFeatureblockParser_FixtureAdvancementCodedChildren(t *testing.T) {
+	// The advancement featureblock body: two leveled bands, three members, each
+	// member preceded by its inline annotation (the source form, Task 3).
+	body := strings.Join([]string{
+		"> **Level 5 Fixture Advancement Feature**",
+		"",
+		"<!-- @type: feature | @id: soul-rancor | @level: 5 -->",
+		"> ⭐️ **Soul Rancor**",
+		">",
+		"> You gain a surge the first time your demon minions deal 3+ damage.",
+		"",
+		"> **Level 9 Fixture Advancement Feature**",
+		"",
+		"<!-- @type: feature | @id: size-increase | @level: 9 -->",
+		"> ⭐️ **Size Increase**",
+		">",
+		"> The boil is now size 3.",
+		"",
+		"<!-- @type: feature | @id: fester-field | @level: 9 -->",
+		"> ⭐️ **Fester Field**",
+		">",
+		"> Each non-abyssal enemy within 3 squares takes 5 corruption damage.",
+	}, "\n")
+	fb := newSection("The Boil Advancement Features", 6,
+		map[string]string{"type": "featureblock", "id": "the-boil"}, body)
 
 	ctx := context.NewContextStack(nil)
 	ctx.Push(3, map[string]string{"domain": "fixture", "category": "demon"})
@@ -159,33 +90,116 @@ func TestFeatureblockParser_FixtureAdvancementChildFeatures(t *testing.T) {
 	}
 	// Container code unchanged (Plan 5c).
 	if gotPath := strings.Join(got.TypePath, "/"); gotPath != "monster/fixture/demon/advancement-features" {
-		t.Errorf("TypePath = %q, want monster/fixture/demon/advancement-features", gotPath)
+		t.Errorf("container TypePath = %q, want monster/fixture/demon/advancement-features", gotPath)
 	}
 	if got.ItemID != "the-boil" {
-		t.Errorf("ItemID = %q, want the-boil", got.ItemID)
+		t.Errorf("container ItemID = %q, want the-boil", got.ItemID)
 	}
-	// Members come from the child @type:feature sections, with their levels.
-	feats, ok := got.Frontmatter["features"].([]map[string]any)
-	if !ok || len(feats) != 2 {
-		t.Fatalf("features = %v, want 2 child features", got.Frontmatter["features"])
+	// The card still gets its inline features[].
+	if feats, ok := got.Frontmatter["features"].([]map[string]any); !ok || len(feats) != 3 {
+		t.Fatalf("features = %v, want 3 inline members", got.Frontmatter["features"])
 	}
-	if feats[0]["name"] != "Soul Rancor" || feats[0]["level"] != 5 {
-		t.Errorf("features[0] = %v, want Soul Rancor/level 5", feats[0])
+	// And each member is now a coded child with a base-inclusive, leveled path.
+	if len(got.CodedChildren) != 3 {
+		t.Fatalf("CodedChildren = %d, want 3", len(got.CodedChildren))
 	}
-	if feats[1]["name"] != "Fester Field" || feats[1]["level"] != 9 {
-		t.Errorf("features[1] = %v, want Fester Field/level 9", feats[1])
+	want := []struct {
+		path, id string
+	}{
+		{"feature/fixture/demon/the-boil/level-5", "soul-rancor"},
+		{"feature/fixture/demon/the-boil/level-9", "size-increase"},
+		{"feature/fixture/demon/the-boil/level-9", "fester-field"},
+	}
+	for i, w := range want {
+		c := got.CodedChildren[i]
+		if gotPath := strings.Join(c.TypePath, "/"); gotPath != w.path {
+			t.Errorf("child[%d] TypePath = %q, want %q", i, gotPath, w.path)
+		}
+		if c.ItemID != w.id {
+			t.Errorf("child[%d] ItemID = %q, want %q", i, c.ItemID, w.id)
+		}
+		if c.Frontmatter["type"] != "feature" {
+			t.Errorf("child[%d] type = %v, want feature", i, c.Frontmatter["type"])
+		}
+		if strings.TrimSpace(c.Body) == "" {
+			t.Errorf("child[%d] Body is empty, want the member prose", i)
+		}
 	}
 }
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [ ] **Step 3: Run the test to verify it fails**
 
-Run: `devbox run -- bash -c 'cd steel-etl && go test ./internal/content/ -run TestFeatureblockParser_FixtureAdvancementChildFeatures -v'`
-Expected: FAIL — `features` is empty/nil because the branch reads `ParseRichFeatures(body)` (the body has no inline members now).
+Run: `devbox run -- bash -c 'cd steel-etl && go test ./internal/content/ -run TestFeatureblockParser_FixtureAdvancementCodedChildren -v'`
+Expected: FAIL — `CodedChildren = 0, want 3` (the fixture branch doesn't emit children yet).
 
-- [ ] **Step 3: Swap inline parsing for child-feature collection**
+- [ ] **Step 4: Add the member-annotation helper**
 
-In `steel-etl/internal/content/monster.go`, the fixture advancement branch currently reads (~lines 233–243):
+In `steel-etl/internal/content/monster.go` (near `collectChildFeatures`, ~line 369), add a helper that reads the per-member inline annotations from a featureblock body in document order:
+
+```go
+// fixtureMemberAnn is one advancement member's explicit identity from its inline
+// annotation (`<!-- @type: feature | @id: … | @level: … -->`), in document order.
+type fixtureMemberAnn struct {
+	id    string
+	level int
+}
+
+// fixtureMemberAnnotations returns the per-member @type:feature annotations found
+// in a fixture advancement-features body, in document order — one per `> ⭐️`
+// member. ParseRichFeatures yields the members in the same order, so the two lists
+// zip by index (see fixtureCodedChildren).
+func fixtureMemberAnnotations(body string) []fixtureMemberAnn {
+	var out []fixtureMemberAnn
+	for _, a := range parser.ExtractAnnotations(body) {
+		if a.Fields["type"] != "feature" {
+			continue
+		}
+		m := fixtureMemberAnn{id: strings.TrimSpace(a.Fields["id"])}
+		if lv := strings.TrimSpace(a.Fields["level"]); lv != "" {
+			m.level, _ = strconv.Atoi(lv)
+		}
+		out = append(out, m)
+	}
+	return out
+}
+
+// fixtureCodedChildren builds one coded child per advancement member:
+// feature.fixture.<category>.<baseID>.level-N/<memberID>. Member id/level come
+// from the inline annotation when present, else derive (slug of name + band level).
+func fixtureCodedChildren(feats []RichFeature, anns []fixtureMemberAnn, category, baseID string) []*ParsedContent {
+	var children []*ParsedContent
+	for i, f := range feats {
+		memberID := Slugify(f.Name)
+		level := f.Level
+		if i < len(anns) {
+			if anns[i].id != "" {
+				memberID = anns[i].id
+			}
+			if anns[i].level != 0 {
+				level = anns[i].level
+			}
+		}
+		fm := map[string]any{"name": f.Name, "type": "feature"}
+		typePath := []string{"feature", "fixture", category, baseID}
+		if level != 0 {
+			fm["level"] = level
+			typePath = append(typePath, "level-"+strconv.Itoa(level))
+		}
+		children = append(children, &ParsedContent{
+			Frontmatter: fm,
+			Body:        strings.TrimSpace(f.Body),
+			TypePath:    compactPath(typePath...),
+			ItemID:      memberID,
+		})
+	}
+	return children
+}
+```
+
+- [ ] **Step 5: Emit the coded children from the fixture advancement branch**
+
+In `steel-etl/internal/content/monster.go`, replace the fixture advancement branch (~lines 233–243):
 
 ```go
 	if domain, category, _ := statblockDomain(ctx, section.HeadingLevel); domain == "fixture" {
@@ -201,62 +215,68 @@ In `steel-etl/internal/content/monster.go`, the fixture advancement branch curre
 	}
 ```
 
-Replace the inner feature collection so it uses the child `@type:feature` sections (the companion pattern):
+with:
 
 ```go
 	if domain, category, _ := statblockDomain(ctx, section.HeadingLevel); domain == "fixture" {
-		// Members are now real @type:feature child sections (each carrying its own
-		// feature.fixture.<category>.<base>.level-N/<id> code), embedded render-only
-		// — exactly like the companion advancement-features branch above.
-		if feats := collectChildFeatures(section); len(feats) > 0 {
+		// Members stay inline (the card's features[]) AND become coded children:
+		// each mints feature.fixture.<category>.<base>.level-N/<id> + its own leaf
+		// page (parser-emitted, not a tree section — the level-6 cap forbids
+		// nesting them under this block). Spec §5; container code unchanged.
+		feats := ParseRichFeatures(body)
+		if len(feats) > 0 {
 			fm["features"] = RichFeatureMaps(feats)
 		}
 		return &ParsedContent{
-			Frontmatter: fm,
-			Body:        body,
-			TypePath:    compactPath("monster", "fixture", category, "advancement-features"),
-			ItemID:      id,
+			Frontmatter:   fm,
+			Body:          body,
+			TypePath:      compactPath("monster", "fixture", category, "advancement-features"),
+			ItemID:        id,
+			CodedChildren: fixtureCodedChildren(feats, fixtureMemberAnnotations(body), category, id),
 		}, nil
 	}
 ```
 
-- [ ] **Step 4: Run the test to verify it passes**
+- [ ] **Step 6: Run the test to verify it passes**
 
-Run: `devbox run -- bash -c 'cd steel-etl && go test ./internal/content/ -run TestFeatureblockParser_FixtureAdvancementChildFeatures -v'`
+Run: `devbox run -- bash -c 'cd steel-etl && go test ./internal/content/ -run TestFeatureblockParser_FixtureAdvancementCodedChildren -v'`
 Expected: PASS
 
-- [ ] **Step 5: Run the full content package**
+- [ ] **Step 7: Run the full content package to check for regressions**
 
 Run: `devbox run -- bash -c 'cd steel-etl && go test ./internal/content/'`
-Expected: PASS
+Expected: PASS (no featureblock/companion/retainer regressions)
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 8: Commit**
 
 ```bash
-git add steel-etl/internal/content/monster.go steel-etl/internal/content/monster_test.go
-git commit -m "feat(scc): embed fixture advancement child features via collectChildFeatures"
+git add steel-etl/internal/content/parser.go steel-etl/internal/content/monster.go steel-etl/internal/content/monster_test.go
+git commit -m "feat(scc): fixture advancement members become parser-emitted coded children"
 ```
 
 ---
 
-### Task 3: Source restructure — The Boil (demon fixture, the pilot)
+### Task 2: Pipeline classifies + writes `CodedChildren` as leaf pages
 
-Restructure the demon fixture in the book source: shift its subtree into shallow headings and convert its inline advancement members into `@type: feature` child sections. This is the model for the other 3 (Task 5).
+The pipeline currently mints a code + leaf page only for real document sections. Teach the classification walk to also process `parsed.CodedChildren`, and guard the deferred PageBody render against the (section-less) children.
 
 **Files:**
-- Modify: `steel-etl/input/summoner/Draw Steel Summoner.md` (~lines 1489–1528, the demon fixture)
+- Modify: `steel-etl/internal/pipeline/pipeline.go` (the `walk` classify block ~lines 173–202, and the deferred render loop ~lines 216–219)
+- Test: `steel-etl/internal/pipeline/codedchildren_test.go` (create) + `steel-etl/testdata/fixtures/fixture_advancement.md` (create)
 
-- [ ] **Step 1: Apply the restructure**
+**Interfaces:**
+- Consumes: `ParsedContent.CodedChildren` (Task 1).
+- Produces: each coded child gets `scc` frontmatter, a registry entry, and a deferred `pendingWrite` (so every generator writes its leaf), exactly like a classified section.
 
-Replace the demon fixture block. The base statblock body (grid + `> ⭐️ Hunger Thrush` / `> ⭐️ Oh, It Pops` inline abilities) is unchanged in content — only heading levels change. The advancement members lose their `> **Level N …**` labels (now `@level:`) and `> ⭐️` blockquote wrappers (now H6 headings + un-blockquoted body).
+- [ ] **Step 1: Create the test fixture**
 
-**Before** (current source):
+Create `steel-etl/testdata/fixtures/fixture_advancement.md`:
 
-```
+```markdown
 <!-- @type: monster-group | @domain: fixture | @category: demon -->
 ##### Demon Portfolio Fixture
 
-The boil arises from the chaotic depths…
+Lore about the boil.
 
 <!-- @type: statblock -->
 ####### The Boil
@@ -268,12 +288,160 @@ The boil arises from the chaotic depths…
 
 > ⭐️ **Hunger Thrush**
 >
-> Each enemy that starts their turn within 3 squares…
+> Inline base ability, stays uncoded.
 
-> ⭐️ **Oh, It Pops**
+<!-- @type: featureblock | @id: the-boil -->
+####### The Boil Advancement Features
+
+> **Level 5 Fixture Advancement Feature**
 >
-> When the boil is destroyed, each enemy within 3 squares…
+<!-- @type: feature | @id: soul-rancor | @level: 5 -->
+> ⭐️ **Soul Rancor**
+>
+> You gain a surge the first time your demon minions deal 3+ damage.
 
+> **Level 9 Fixture Advancement Feature**
+>
+<!-- @type: feature | @id: fester-field | @level: 9 -->
+> ⭐️ **Fester Field**
+>
+> Each non-abyssal enemy within 3 squares takes 5 corruption damage.
+```
+
+- [ ] **Step 2: Write the failing test**
+
+Create `steel-etl/internal/pipeline/codedchildren_test.go`:
+
+```go
+package pipeline
+
+import (
+	"os"
+	"path/filepath"
+	"strings"
+	"testing"
+)
+
+// A fixture advancement-features block's members are parser-emitted coded children;
+// the pipeline must register each one's SCC code (the registry file records it)
+// while the base/container codes are untouched.
+func TestPipeline_FixtureCodedChildrenRegistered(t *testing.T) {
+	inputPath := "../../testdata/fixtures/fixture_advancement.md"
+	baseDir := t.TempDir()
+	registryPath := filepath.Join(t.TempDir(), "classification.json")
+
+	cfg := &Config{
+		Input:  inputPath,
+		Locale: "en",
+		Output: OutputConfig{
+			BaseDir:  baseDir,
+			Variants: VariantsConfig{Linked: true},
+		},
+		Classification: ClassificationConfig{Registry: registryPath},
+	}
+	if _, err := RunWithConfig(cfg, inputPath, "", registryPath); err != nil {
+		t.Fatalf("pipeline run: %v", err)
+	}
+
+	data, err := os.ReadFile(registryPath)
+	if err != nil {
+		t.Fatalf("read registry: %v", err)
+	}
+	reg := string(data)
+	for _, code := range []string{
+		"feature.fixture.demon.the-boil.level-5/soul-rancor",
+		"feature.fixture.demon.the-boil.level-9/fester-field",
+		"monster.fixture.demon.advancement-features/the-boil", // container unchanged
+		"monster.fixture.demon.featureblock/the-boil",         // base unchanged
+	} {
+		if !strings.Contains(reg, code) {
+			t.Errorf("registry missing expected code %q", code)
+		}
+	}
+}
+```
+
+- [ ] **Step 3: Run the test to verify it fails**
+
+Run: `devbox run -- bash -c 'cd steel-etl && go test ./internal/pipeline/ -run TestPipeline_FixtureCodedChildrenRegistered -v'`
+Expected: FAIL — the two `feature.fixture.*` member codes are missing (the pipeline ignores `CodedChildren`).
+
+- [ ] **Step 4: Classify the coded children in the walk**
+
+In `steel-etl/internal/pipeline/pipeline.go`, inside `walk`, immediately **after** the parent's `pending = append(...)` line (~line 199) and **before** `walk(section.Children)` (~line 202), add:
+
+```go
+			// Parser-emitted coded children (e.g. fixture advancement members):
+			// classify + register + write each as its own leaf, like a section.
+			for _, child := range parsed.CodedChildren {
+				if child.TypePath == nil || child.ItemID == "" {
+					continue
+				}
+				childCode := scc.Classify(bookSource, child.TypePath, child.ItemID)
+				child.Frontmatter["scc"] = childCode
+				sccRegistry.Add(childCode)
+				result.ClassifiedSections++
+				if prev, exists := seenSCC[childCode]; exists {
+					result.Errors = append(result.Errors, fmt.Sprintf("duplicate SCC %s: %q overwrites %q", childCode, fmt.Sprint(child.Frontmatter["name"]), prev))
+				}
+				seenSCC[childCode] = fmt.Sprint(child.Frontmatter["name"])
+				pending = append(pending, pendingWrite{section: nil, parsed: child, sccCode: childCode})
+			}
+```
+
+- [ ] **Step 5: Guard the deferred PageBody render against section-less children**
+
+In the deferred write loop (~lines 216–219), the `RenderSubtree(pw.section, …)` call must not run for coded children (whose `section` is nil). Change:
+
+```go
+	for _, pw := range pending {
+		if t, _ := pw.parsed.Frontmatter["type"].(string); t != "monster" {
+			pw.parsed.PageBody = content.RenderSubtree(pw.section, sccBySection)
+		}
+```
+
+to:
+
+```go
+	for _, pw := range pending {
+		if t, _ := pw.parsed.Frontmatter["type"].(string); pw.section != nil && t != "monster" {
+			pw.parsed.PageBody = content.RenderSubtree(pw.section, sccBySection)
+		}
+```
+
+(A coded child leaves `PageBody` empty, so reading-format generators fall back to its `Body` — the member prose — which is exactly the "page containing just the feature" we want.)
+
+- [ ] **Step 6: Run the test to verify it passes**
+
+Run: `devbox run -- bash -c 'cd steel-etl && go test ./internal/pipeline/ -run TestPipeline_FixtureCodedChildrenRegistered -v'`
+Expected: PASS
+
+- [ ] **Step 7: Run the pipeline package**
+
+Run: `devbox run -- bash -c 'cd steel-etl && go test ./internal/pipeline/'`
+Expected: PASS
+
+- [ ] **Step 8: Commit**
+
+```bash
+git add steel-etl/internal/pipeline/pipeline.go steel-etl/internal/pipeline/codedchildren_test.go steel-etl/testdata/fixtures/fixture_advancement.md
+git commit -m "feat(scc): pipeline classifies + writes parser-emitted coded children as leaves"
+```
+
+---
+
+### Task 3: Source — annotate The Boil's advancement members (the pilot)
+
+Add a per-member inline annotation to the demon fixture's advancement block. **No heading levels change.** This is the model for the other 3 (Task 5).
+
+**Files:**
+- Modify: `steel-etl/input/summoner/Draw Steel Summoner.md` (~lines 1510–1527, the demon advancement block)
+
+- [ ] **Step 1: Add the member annotations**
+
+In `steel-etl/input/summoner/Draw Steel Summoner.md`, the demon advancement block currently reads:
+
+```
 <!-- @type: featureblock | @id: the-boil -->
 ####### The Boil Advancement Features
 
@@ -281,7 +449,7 @@ The boil arises from the chaotic depths…
 >
 > ⭐️ **Soul Rancor**
 >
-> You gain a surge the first time in a round that your demon minions…
+> You gain a [surge](scc.v1:…) the first time in a round that your demon [minions](scc.v1:…)…
 
 > **Level 9 Fixture Advancement Feature**
 >
@@ -291,60 +459,43 @@ The boil arises from the chaotic depths…
 >
 > ⭐️ **Fester Field**
 >
-> Each non-abyssal enemy that starts their turn within 3 squares…
+> Each non-abyssal enemy that starts their [turn](scc.v1:…) within 3 squares…
 ```
 
-**After** (note: group `#####`→`###`, base `#######`→`####`, advancement `#######`→`#####`, members become `######` `@type: feature` sections; `@fixture: the-boil` added to the featureblock):
+Insert one annotation comment immediately before each `> ⭐️ **Name**` member (heading levels, labels, blockquote prose, and every `scc.v1:` link stay **exactly** as-is):
 
 ```
-<!-- @type: monster-group | @domain: fixture | @category: demon -->
-### Demon Portfolio Fixture
+<!-- @type: featureblock | @id: the-boil -->
+####### The Boil Advancement Features
 
-The boil arises from the chaotic depths…
-
-<!-- @type: statblock -->
-#### The Boil
-
-*Hazard Support*
-
-| **Stamina:** 20 + your level | **Size:** 2 |
-|------------------------------|------------:|
-
-> ⭐️ **Hunger Thrush**
+> **Level 5 Fixture Advancement Feature**
 >
-> Each enemy that starts their turn within 3 squares…
-
-> ⭐️ **Oh, It Pops**
->
-> When the boil is destroyed, each enemy within 3 squares…
-
-<!-- @type: featureblock | @id: the-boil | @fixture: the-boil -->
-##### The Boil Advancement Features
-
 <!-- @type: feature | @id: soul-rancor | @level: 5 -->
-###### Soul Rancor
+> ⭐️ **Soul Rancor**
+>
+> You gain a [surge](scc.v1:…) the first time in a round that your demon [minions](scc.v1:…)…
 
-You gain a surge the first time in a round that your demon minions…
-
+> **Level 9 Fixture Advancement Feature**
+>
 <!-- @type: feature | @id: size-increase | @level: 9 -->
-###### Size Increase
-
-The boil is now size 3.
-
+> ⭐️ **Size Increase**
+>
+> The boil is now size 3.
+>
 <!-- @type: feature | @id: fester-field | @level: 9 -->
-###### Fester Field
-
-Each non-abyssal enemy that starts their turn within 3 squares…
+> ⭐️ **Fester Field**
+>
+> Each non-abyssal enemy that starts their [turn](scc.v1:…) within 3 squares…
 ```
 
-Preserve every inline `scc.v1:` link in the member bodies verbatim (un-blockquote the prose but keep link markup). Keep the base abilities (`Hunger Thrush`, `Oh, It Pops`) exactly as blockquotes — they stay inline/uncoded.
+(The `…` above stand for the existing link markup — do not alter it. The annotation goes at column 0, between the blockquote lines; it splits the blockquote harmlessly — `splitBlockquoteBlocks` already separates members by their `⭐️ **Title**` line and the band level persists.)
 
-- [ ] **Step 2: Verify the tree nests correctly (build + targeted parse)**
+- [ ] **Step 2: Regenerate the Summoner book and confirm no errors/duplicates**
 
-Run: `devbox run -- bash -c 'cd steel-etl && go run ./cmd/steel-etl gen --book summoner --config pipeline.yaml 2>&1 | grep -iE "error|duplicate|the-boil|soul-rancor" | head'`
-Expected: no errors/duplicates; (the grep may print nothing — that's fine, errors are what matter).
+Run: `devbox run -- bash -c 'cd steel-etl && go run ./cmd/steel-etl gen --book summoner --config pipeline.yaml 2>&1 | grep -iE "error|duplicate" | head'`
+Expected: no error/duplicate lines.
 
-- [ ] **Step 3: Confirm the new demon codes minted**
+- [ ] **Step 3: Confirm the 3 demon member codes minted**
 
 Run: `devbox run -- bash -c 'cd steel-etl && grep -oE "feature\.fixture\.demon\.the-boil\.level-[0-9]+/[a-z-]+" classification.json | sort -u'`
 Expected:
@@ -358,167 +509,181 @@ feature.fixture.demon.the-boil.level-9/size-increase
 
 ```bash
 git add "steel-etl/input/summoner/Draw Steel Summoner.md"
-git commit -m "feat(summoner): restructure The Boil fixture for coded advancement members"
+git commit -m "feat(summoner): annotate The Boil advancement members for coding"
 ```
 
 ---
 
-### Task 4: Integration test — fixture nesting + codes via ParseDocument
+### Task 4: Integration test — source shape → codes via `ParseDocument`
 
-Lock the structural assumption (advancement featureblock is a child of the base; members are children of the featureblock) so a future source edit can't silently flatten it.
+Lock the source-shape→codes contract (annotated blockquote members under a `@domain: fixture` advancement block become coded children) so a future source edit can't silently drop the member codes.
 
 **Files:**
-- Test: `steel-etl/internal/content/monster_test.go` (add a ParseDocument-based test)
+- Test: `steel-etl/internal/content/monster_test.go` (add a `ParseDocument`-based test)
 
 - [ ] **Step 1: Write the failing test**
 
+Add to `steel-etl/internal/content/monster_test.go`:
+
 ```go
-func TestFixtureSubtreeNesting(t *testing.T) {
+func TestFixtureAdvancementCodedChildren_ViaParseDocument(t *testing.T) {
 	src := []byte(strings.Join([]string{
 		"<!-- @type: monster-group | @domain: fixture | @category: demon -->",
-		"### Demon Portfolio Fixture", "", "Lore.", "",
+		"##### Demon Portfolio Fixture", "", "Lore.", "",
 		"<!-- @type: statblock -->",
-		"#### The Boil", "", "*Hazard Support*", "",
+		"####### The Boil", "", "*Hazard Support*", "",
 		"| **Stamina:** 20 + your level | **Size:** 2 |",
 		"|------------------------------|------------:|", "",
 		"> ⭐️ **Hunger Thrush**", ">", "> Inline base ability.", "",
-		"<!-- @type: featureblock | @id: the-boil | @fixture: the-boil -->",
-		"##### The Boil Advancement Features", "",
+		"<!-- @type: featureblock | @id: the-boil -->",
+		"####### The Boil Advancement Features", "",
+		"> **Level 5 Fixture Advancement Feature**", ">",
 		"<!-- @type: feature | @id: soul-rancor | @level: 5 -->",
-		"###### Soul Rancor", "", "Surge body.", "",
+		"> ⭐️ **Soul Rancor**", ">", "> Surge body.", "",
+		"> **Level 9 Fixture Advancement Feature**", ">",
 		"<!-- @type: feature | @id: fester-field | @level: 9 -->",
-		"###### Fester Field", "", "Corruption body.", "",
+		"> ⭐️ **Fester Field**", ">", "> Corruption body.", "",
 	}, "\n"))
 
 	doc, err := parser.ParseDocument(src)
 	if err != nil {
 		t.Fatal(err)
 	}
-	// group -> statblock -> featureblock -> [feature, feature]
-	group := doc.Sections[0]
-	if group.Type() != "monster-group" || len(group.Children) != 1 {
-		t.Fatalf("group children = %d, want 1 (the base)", len(group.Children))
-	}
-	base := group.Children[0]
-	if base.Type() != "statblock" {
-		t.Fatalf("base type = %q, want statblock", base.Type())
-	}
-	// The advancement featureblock must be a CHILD of the base (companion model),
-	// not a sibling — this is what makes on-page embedding + member coding work.
+	// Find the advancement featureblock section in the parsed tree.
 	var fb *parser.Section
-	for _, c := range base.Children {
-		if c.Type() == "featureblock" {
-			fb = c
+	var walk func(ss []*parser.Section)
+	walk = func(ss []*parser.Section) {
+		for _, s := range ss {
+			if s.Type() == "featureblock" && s.ID() == "the-boil" {
+				fb = s
+			}
+			walk(s.Children)
 		}
 	}
+	walk(doc.Sections)
 	if fb == nil {
-		t.Fatalf("base has no featureblock child; advancement did not nest under base")
+		t.Fatal("advancement featureblock @id:the-boil not found in parsed tree")
 	}
-	if len(fb.Children) != 2 {
-		t.Fatalf("featureblock children = %d, want 2 (the members)", len(fb.Children))
+
+	ctx := context.NewContextStack(nil)
+	ctx.Push(3, map[string]string{"domain": "fixture", "category": "demon"})
+	got, err := (&FeatureblockParser{}).Parse(ctx, fb)
+	if err != nil {
+		t.Fatal(err)
 	}
-	if fb.Children[0].Type() != "feature" || fb.Children[0].ID() != "soul-rancor" {
-		t.Errorf("member[0] = %q/%q, want feature/soul-rancor", fb.Children[0].Type(), fb.Children[0].ID())
+	if len(got.CodedChildren) != 2 {
+		t.Fatalf("CodedChildren = %d, want 2", len(got.CodedChildren))
+	}
+	if strings.Join(got.CodedChildren[0].TypePath, "/") != "feature/fixture/demon/the-boil/level-5" ||
+		got.CodedChildren[0].ItemID != "soul-rancor" {
+		t.Errorf("child[0] = %v/%q, want feature/fixture/demon/the-boil/level-5/soul-rancor",
+			got.CodedChildren[0].TypePath, got.CodedChildren[0].ItemID)
 	}
 }
 ```
 
-Add `"github.com/SteelCompendium/steel-etl/internal/parser"` to the imports if not already present (it is, per existing tests).
-
 - [ ] **Step 2: Run it**
 
-Run: `devbox run -- bash -c 'cd steel-etl && go test ./internal/content/ -run TestFixtureSubtreeNesting -v'`
-Expected: PASS (Tasks 1–2 made the parsers handle this; this test confirms the tree shape the source restructure relies on). If it FAILS at "advancement did not nest under base", the heading levels in the test string (or real source) are wrong — fix the levels so base=H4, featureblock=H5, members=H6.
+Run: `devbox run -- bash -c 'cd steel-etl && go test ./internal/content/ -run TestFixtureAdvancementCodedChildren_ViaParseDocument -v'`
+Expected: PASS (Tasks 1–3 make this hold). If it FAILS at "featureblock not found", the deep-heading parse of the H7 advancement block changed — re-check the source heading convention.
 
 - [ ] **Step 3: Commit**
 
 ```bash
 git add steel-etl/internal/content/monster_test.go
-git commit -m "test(scc): lock fixture advancement nesting (base > featureblock > members)"
+git commit -m "test(scc): lock fixture advancement source-shape → coded members"
 ```
 
 ---
 
-### Task 5: Source restructure — the remaining 3 fixtures
+### Task 5: Source — annotate the remaining 3 fixtures
 
-Apply the exact Task 3 transformation to elemental, fey, and undead fixtures.
+Apply the exact Task 3 annotation pass to elemental, fey, and undead. **No heading changes.**
 
 **Files:**
-- Modify: `steel-etl/input/summoner/Draw Steel Summoner.md` (~lines 1529–1568 elemental, 1569–1608 fey, 1609–1653 undead)
+- Modify: `steel-etl/input/summoner/Draw Steel Summoner.md` (elemental ~lines 1550–1567, fey ~lines 1590–1607, undead ~lines 1630–1647)
 
-- [ ] **Step 1: Restructure each fixture (same shape as Task 3)**
+- [ ] **Step 1: Annotate each fixture's members**
 
-For each, apply: group `#####`→`###`, base `#######`→`####`, advancement `#######`→`#####` + add `@fixture: <base-id>`, members → `######` `@type: feature` sections with `@id`/`@level`. The base abilities stay inline blockquotes. Members per fixture:
+Insert a `<!-- @type: feature | @id: <slug> | @level: <N> -->` comment immediately before each `> ⭐️ **Name**` member, exactly as Task 3. Members per fixture (`@id` = slug of the existing name; `@level` = the band it sits under):
 
-- **Elemental** — `@fixture: primordial-crystal`: `terra-resonance` (level 5), `size-increase` (level 9), `magnified-strike` (level 9).
-- **Fey** — `@fixture: glade-pond`: `garden-of-jest` (level 5), `size-increase` (level 9), `folly-field` (level 9).
-- **Undead** — `@fixture: barrow-gates`: `memento-mori` (level 5), `size-increase` (level 9), `open-the-gates` (level 9).
-
-(Use the exact member names/bodies from the current source; slugify names for `@id`, e.g. "Garden of Jest" → `garden-of-jest`.)
+- **Elemental** (`@id: primordial-crystal` block): `terra-resonance` (level 5), `size-increase` (level 9), `magnified-strike` (level 9).
+- **Fey** (`@id: glade-pond` block): `garden-of-jest` (level 5), `size-increase` (level 9), `folly-field` (level 9).
+- **Undead** (`@id: barrow-gates` block): `memento-mori` (level 5), `size-increase` (level 9), `open-the-gates` (level 9).
 
 - [ ] **Step 2: Regenerate and confirm all 12 codes**
 
 Run: `devbox run -- bash -c 'cd steel-etl && go run ./cmd/steel-etl gen --book summoner --config pipeline.yaml >/dev/null 2>&1 && grep -oE "feature\.fixture\.[a-z-]+\.[a-z-]+\.level-[0-9]+/[a-z-]+" classification.json | sort -u'`
-Expected: exactly 12 lines — 3 each for demon/the-boil, elemental/primordial-crystal, fey/glade-pond, undead/barrow-gates.
+Expected: exactly 12 lines — 3 each for `demon.the-boil`, `elemental.primordial-crystal`, `fey.glade-pond`, `undead.barrow-gates`.
 
 - [ ] **Step 3: Commit**
 
 ```bash
 git add "steel-etl/input/summoner/Draw Steel Summoner.md"
-git commit -m "feat(summoner): restructure elemental/fey/undead fixtures for coded advancement members"
+git commit -m "feat(summoner): annotate elemental/fey/undead advancement members for coding"
 ```
 
 ---
 
-### Task 6: Site routing & rendering — companion-style embed, retire fixture pairing
+### Task 6: Site — embed the advancement card on the base page; retire fixture pairing
 
-With the advancement featureblock now a child of the base, fixtures should render like companions: the advancement card embeds on the base fixture's page (via `embed_cards.go`) and keeps its own leaf page. Retire the Plan-5c fixture-specific *pairing* path. The exact edits are output-driven — regenerate, diff the Browse tree, and adjust the named functions until the acceptance criteria hold.
+With members coded and the advancement block still its own leaf, make the v2 site render the advancement card **on the base fixture's page** at build time, and stop the Plan-5c side-by-side *pairing* of fixtures on the group index. This task is **output-driven**: make the known edits, regenerate, diff the Browse tree, and adjust until the acceptance criteria hold.
 
-**Files (the fixture-specific site logic to reconcile):**
-- `steel-etl/internal/site/advancement_pairs.go` — `buildAdvancementPairContent`, fixture branch at the `pathHasSegment(dir, "fixture")` guard (~line 148)
-- `steel-etl/internal/site/build.go` — `hoistStatblockPath` / `flattenAdvancementFeaturesPath` calls (~lines 275–277)
-- `steel-etl/internal/site/bestiary_search.go` — fixture facet (~lines 51–61)
-- `steel-etl/internal/site/embed_cards.go` — already handles nested advancement-under-base for companions (no change expected; confirm it now fires for fixtures)
+**Files:**
+- `steel-etl/internal/site/advancement_pairs.go` — `buildAdvancementPairContent` / `advancementPairNavOrder` fixture handling (`pathHasSegment(dir, "fixture")`, ~line 148)
+- `steel-etl/internal/site/build.go` — where a fixture base leaf page body is finalized (the `buildSection` leaf-transform chain; `buildFeatureblockPage` for the base) and where a paired advancement code can be injected as a `{data-scc}` embed marker
+- `steel-etl/internal/site/embed_cards.go` — the existing `{data-scc}` transclusion post-pass (no change expected; it must fire once the base page carries the advancement's marker)
+- `steel-etl/internal/site/bestiary_search.go` — fixture facet (confirm member leaves excluded)
 
-- [ ] **Step 1: Build the site and capture the fixture Browse tree (baseline of new behavior)**
+- [ ] **Step 1: Baseline — build the site and capture the fixture Browse tree**
 
 Run:
 ```bash
 devbox run -- bash -c 'cd steel-etl && go run ./cmd/steel-etl gen --all --config pipeline.yaml >/dev/null 2>&1 && go run ./cmd/steel-etl site --config ../v2/site.yaml >/dev/null 2>&1'
 find v2/docs/Browse -path '*fixture*' -name '*.md' | sort
 ```
-Expected: base fixture pages under `Browse/monster/fixture/<category>/…` and advancement-features leaves still present. Note any double-listing, broken folder index, or 404-prone paths.
+Expected: base fixture pages + advancement-features leaves under `Browse/monster/fixture/<category>/…`, plus new member leaves under `Browse/feature/fixture/<category>/<base>/level-N/…`. Note any double-listing or orphan folder cards.
 
-- [ ] **Step 2: Confirm the advancement card embeds on the base fixture page**
+- [ ] **Step 2: Retire the fixture branch of the pairing**
 
-Run: `grep -l 'fb__band--adv' v2/docs/Browse/monster/fixture/*/the-boil*.md` (and check the base page contains the advancement card inline).
-Expected: the base fixture page body now contains the advancement Forged Band card (transcluded by `embed_cards.go`), because the advancement featureblock is a `{data-scc}` descendant of the base. If it does **not** embed, verify `RenderSubtree` stamps the advancement heading inside the base page (the base must be the parent in the tree — confirmed by Task 4).
+In `steel-etl/internal/site/advancement_pairs.go`, remove fixtures from the pairing path so they no longer render as side-by-side base+advancement cards on the group index (keep the **companion** and **retainer** branches intact). Concretely: make `buildAdvancementPairContent` / `advancementPairNavOrder` return `ok=false` for `pathHasSegment(dir, "fixture")` dirs (so fixtures fall through to the default index/leaf builders), or drop the `fixture` arm of the `baseEyebrow, icon` switch and the pairing it drives — whichever the regenerated tree shows is cleanest. Re-run Step 1's build and confirm the fixture group index no longer shows paired cards.
 
-- [ ] **Step 3: Reconcile the pairing/flatten logic**
+- [ ] **Step 3: Inject the advancement embed marker onto the base fixture page**
 
-The fixture advancement is no longer a flat sibling, so the Plan-5c pairing should no longer apply to fixtures. Remove the fixture branch from `buildAdvancementPairContent` (the `pathHasSegment(dir, "fixture")` handling) so fixtures fall through to the companion-style rendering (embedded card + own leaf). Keep the beastheart-companion behavior intact. Adjust `flattenAdvancementFeaturesPath` only if the regenerated tree shows fixture advancement leaves landing in the wrong place. Do the change that makes fixtures genuinely consistent with the companion path — keep the edit scoped so the companion and retainer branches are untouched, but do not stop short of full companion parity for fixtures.
+The advancement featureblock is a sibling of the base, so `RenderSubtree(base)` does not carry its `{data-scc}` marker and `embed_cards.go` won't transclude it. In `build.go`, when finalizing a fixture **base** leaf page (`type: featureblock` under `monster/fixture/<cat>/`), append a heading carrying the paired advancement code, e.g.:
 
-- [ ] **Step 4: Confirm bestiary facets unchanged**
+```
+## <Base Name> Advancement Features {data-scc="<adv-code>"}
+```
 
-Run: `grep -c '"type": *"fixture"' v2/docs/Browse/**/*bestiary* 2>/dev/null || true` and inspect `bestiary_search.go` output.
-Expected: each base fixture still indexed as a `"fixture"` facet; advancement-features + member-feature pages excluded from the bestiary index (extend the `/advancement-features/` exclusion to also skip the new `feature.fixture.*` member leaves if they appear).
+where `<adv-code>` is the `scc` from the sibling `…advancement-features/<base-id>` leaf (discoverable via the same base↔advancement filename pairing `advancementPairs` already computes). The existing `embed_cards.go` post-pass then replaces that heading with the finished advancement card inline on the base page. Re-run Step 1's build.
 
-- [ ] **Step 5: Acceptance — rebuild and verify the four criteria**
+- [ ] **Step 4: Confirm the advancement card embeds on the base page**
+
+Run: `grep -l 'fb__band--adv' v2/docs/Browse/monster/fixture/demon/the-boil.md`
+Expected: the base page (`the-boil.md`) body now contains the advancement Forged Band card with its Level-5/9 tiers and per-member `{data-scc}` permalink markers. If it does not embed, verify Step 3's marker code matches `dataSCCHeadingRe` in `embed_cards.go` and that the advancement leaf is `cardable`.
+
+- [ ] **Step 5: Confirm bestiary facets + member leaves**
+
+Run: `devbox run -- bash -c 'cd steel-etl && go run ./cmd/steel-etl site --config ../v2/site.yaml >/dev/null 2>&1'; ls v2/docs/Browse/feature/fixture/demon/the-boil/level-5/`
+Expected: each base fixture still indexed as a `"fixture"` bestiary facet (inspect `bestiary_search.go` output); the `feature.fixture.*` member leaf pages exist and are **excluded** from the bestiary index (they are `type: feature`, so already excluded — confirm no fixture-member rows appear in the bestiary mount data).
+
+- [ ] **Step 6: Acceptance — rebuild and verify the four criteria**
 
 Run: `devbox run -- bash -c 'cd steel-etl && go build ./... && go vet ./... && go test ./...'`
 Then rebuild the site (Step 1 command) and verify, for The Boil:
 1. Base fixture card renders (inline base abilities only), under `Browse/monster/fixture/demon/`.
-2. The advancement Forged Band card (Level-5/9 tiers) is embedded on the base page, with per-member permalink icons (`{data-scc}` headings).
-3. The advancement-features leaf page still exists and renders.
+2. The advancement Forged Band card (Level-5/9 tiers) is embedded on the base page, with per-member permalink icons.
+3. Each member resolves to its own leaf page (`Browse/feature/fixture/demon/the-boil/level-5/soul-rancor/` etc.) containing just that feature.
 4. No duplicate/orphan fixture folder cards; fixtures still appear in the Bestiary tab.
 
 Expected: all four hold; `go test ./...` green.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
 git add steel-etl/internal/site/
-git commit -m "feat(site): fixtures render companion-style (embedded advancement); retire fixture pairing"
+git commit -m "feat(site): fixtures embed advancement card on base page; retire fixture pairing"
 ```
 
 ---
@@ -532,31 +697,33 @@ git commit -m "feat(site): fixtures render companion-style (embedded advancement
 Run: `devbox run -- bash -c 'cd steel-etl && go run ./cmd/steel-etl gen --all --config pipeline.yaml'`
 Expected: completes without errors.
 
-- [ ] **Step 2: Confirm the SCC delta is only the 12 new feature codes + unchanged containers**
+- [ ] **Step 2: Confirm the container/base codes are unchanged**
 
 Run: `devbox run -- bash -c 'cd steel-etl && grep -oE "monster\.fixture\.[a-z-]+\.(featureblock|advancement-features)/[a-z-]+" classification.json | sort -u'`
-Expected: 8 lines — `featureblock/<base>` ×4 and `advancement-features/<base>` ×4, **unchanged** from before (the 4 fixtures: the-boil, primordial-crystal, glade-pond, barrow-gates).
+Expected: 8 lines — `featureblock/<base>` ×4 and `advancement-features/<base>` ×4 (the-boil, primordial-crystal, glade-pond, barrow-gates), **unchanged**.
+
+- [ ] **Step 3: Confirm the SCC delta is only the 12 new member codes**
 
 Run: `devbox run -- bash -c 'cd steel-etl && go run ./cmd/steel-etl classify --diff 2>&1 | head -40'`
-Expected: additions are only the 12 `feature.fixture.*.level-N/<member>` codes; **no** statblock/minion/champion/rival/retainer code changed, no removals beyond the (now-restructured) fixtures' prior state.
+Expected: additions are only the 12 `feature.fixture.*.level-N/<member>` codes; no statblock/minion/champion/rival/retainer code changed; no removals beyond the (now-annotated) fixtures' prior state.
 
-- [ ] **Step 3: Schema validation + full test suite**
+- [ ] **Step 4: Schema validation + full test suite**
 
-Run: `devbox run -- bash -c 'cd steel-etl && go test ./internal/output/ ./internal/content/ ./internal/site/'`
-Expected: PASS. If `schema_validation_test.go` rejects the fixture advancement featureblock's embedded `features[]`, add the fixture variant to its allowlist exactly as the companion variant is allowed (and mirror the change in `data-sdk-npm/src/schema/featureblock.schema.json` if a schema field is touched — dual-schema-sync rule).
+Run: `devbox run -- bash -c 'cd steel-etl && go test ./internal/output/ ./internal/content/ ./internal/site/ ./internal/pipeline/'`
+Expected: PASS. If `schema_validation_test.go` rejects the fixture advancement featureblock's embedded `features[]` or the new member-feature leaves, add the fixture variant to its allowlist exactly as the companion variant is allowed (and mirror any schema-field change in BOTH `steel-etl/schemas/` and `data-sdk-npm/src/schema/` — dual-schema-sync rule).
 
-- [ ] **Step 4: Commit (if any allowlist/schema change was needed)**
+- [ ] **Step 5: Commit (if any allowlist/schema change was needed)**
 
 ```bash
 git add steel-etl/internal/output/ steel-etl/schemas/ ../data-sdk-npm/src/schema/ 2>/dev/null
-git commit -m "test(schema): accept fixture advancement embedded child features" || echo "no schema change needed"
+git commit -m "test(schema): accept fixture advancement coded members" || echo "no schema change needed"
 ```
 
 ---
 
 ### Task 8: Link validation + linking-reference (hand-curated)
 
-⚠️ `linking-reference.md` is **manually curated and canonical** — the old `gen_linking_reference.py` generator was retired (it can't reproduce the curated file). The Summoner book's own terms live in `steel-etl/docs/summoner-linking-reference.md`. So this task **hand-adds** the 12 new codes to the Summoner reference file; there is no regen command.
+⚠️ `summoner-linking-reference.md` is **manually curated and canonical** (the old generator was retired). Hand-add the 12 new codes; there is no regen command.
 
 **Files:**
 - Modify: `steel-etl/docs/summoner-linking-reference.md`
@@ -566,9 +733,9 @@ git commit -m "test(schema): accept fixture advancement embedded child features"
 Run: `devbox run -- bash -c 'cd steel-etl && go run ./cmd/steel-etl validate --scc-stable 2>&1 | tail -20'`
 Expected: no new dangling `scc:` links (0 inbound links to these today, so nothing breaks); the 12 codes are registered.
 
-- [ ] **Step 2: Hand-add the 12 fixture-feature codes to the Summoner reference table**
+- [ ] **Step 2: Hand-add the 12 fixture-member codes to the Summoner reference**
 
-Edit `steel-etl/docs/summoner-linking-reference.md`: add the 12 `feature.fixture.<category>.<base>.level-N/<member>` codes as linkable targets (one row per member, with display name + variants), following the file's existing table format and the fixture section if one exists (else add a "Fixture Advancement Features" subsection). Match the curation style of the neighboring entries.
+Edit `steel-etl/docs/summoner-linking-reference.md`: add the 12 `feature.fixture.<category>.<base>.level-N/<member>` codes as linkable targets (one row per member, with display name + variants), following the file's existing table format. If there's a fixtures section, extend it; else add a "Fixture Advancement Features" subsection. Match the curation style of neighboring entries.
 
 - [ ] **Step 3: Commit**
 
@@ -587,29 +754,29 @@ git commit -m "docs(linking): add fixture advancement member codes to summoner l
 
 - [ ] **Step 1: Append a dated `docs/scc-log.md` entry**
 
-Content: dated 2026-06-19 — fixtures' advancement members now coded `feature.fixture.<category>.<base>.level-N/<member>` (×12, enumerate or summarize); fixtures adopt the companion nested+embedded model; Plan-5c fixture *pairing* retired (codes for base `monster.fixture.*.featureblock/*` + container `…advancement-features/*` unchanged); registry +12. Note this is the narrowed first slice of ROADMAP #15 (statblock/retainer per-ability coding declined).
+Dated 2026-06-19: fixtures' advancement members now coded `feature.fixture.<category>.<base>.level-N/<member>` (×12; enumerate or summarize); minted via a new **parser-emitted coded-children** pipeline capability (`ParsedContent.CodedChildren`) from annotated `> ⭐️` blockquotes — **no source re-leveling, no `ContextStack`/`collectDeepHeadings` change** (headers stay faithful to the PDF; advancement block remains a sibling of the base). Advancement card now **embedded on the base fixture page** at build time; Plan-5c fixture *pairing* retired. Base `monster.fixture.*.featureblock/*` + container `…advancement-features/*` codes **unchanged**; registry +12. Note this shipped ROADMAP #16 (split from #15).
 
-- [ ] **Step 2: Update `docs/scc-reference.md` + the workspace `CLAUDE.md` SCC summary**
+- [ ] **Step 2: Update `docs/scc-reference.md` + workspace `CLAUDE.md` SCC summary**
 
-In `docs/scc-reference.md`: under the fixture/summoner section, document `feature.fixture.<category>.<base>.level-N/<member>` and the registry count bump. In workspace `CLAUDE.md` SCC paragraph (the "~3,072 codes" line), bump the count by 12 and note fixtures' advancement members are coded.
+`docs/scc-reference.md`: under the fixture/summoner section, document `feature.fixture.<category>.<base>.level-N/<member>` + the registry bump. Workspace `CLAUDE.md` SCC paragraph (the "~3,072 codes" line): bump the count by 12 and note fixtures' advancement members are coded.
 
 - [ ] **Step 3: Update `steel-etl/CLAUDE.md` + `steel-etl/docs/statblocks.md`**
 
-In `statblocks.md` "Fixture rendering" + "Summoner book reuse" sections: fixtures now use the companion model — advancement parsed via `collectChildFeatures` (coded child `@type:feature` members), nested under the base, embedded on the base page; Plan-5c pairing retired; base abilities stay inline (the one intentional divergence from companions). Mirror the one-line summary in `steel-etl/CLAUDE.md` "Statblocks" bullets.
+In `statblocks.md` (Fixture rendering / Summoner book reuse) + the `steel-etl/CLAUDE.md` Statblocks bullets: fixture advancement members are coded via the **parser-emitted coded-children** mechanism (`FeatureblockParser` fixture branch → `ParsedContent.CodedChildren` → pipeline classify/write); the advancement block stays a *sibling* of the base (no nesting, no heading/cap change), and its card is embedded on the base page at build time; Plan-5c pairing retired; base abilities stay inline (intentional divergence from companions). Note the new `CodedChildren` capability generalizes to other blockquote members (ROADMAP #15).
 
 - [ ] **Step 4: Update `DESIGN.md` + `ROADMAP.md`**
 
-`DESIGN.md`: the fixture advancement card is now an embedded (companion-style) Forged Band instance. `ROADMAP.md`: record #15 narrowed — statblock/summoner-statblock/retainer per-ability coding **declined**; this fixture slice shipped. Keep #15's number (permanent-id rule); move to archive with `(was #15)` only if you consider it fully closed, else leave it live with the narrowed scope noted.
+`DESIGN.md`: the fixture advancement card is now an embedded (companion-style placement) Forged Band instance on the base fixture page. `ROADMAP.md`: mark **#16** `**Status:** done`; confirm **#15**'s narrowed scope + framing-correction note (already added 2026-06-19) still reads correctly now that the mechanism shipped.
 
 - [ ] **Step 5: Update the in-flight memory note**
 
-In `featureblock-refactor-in-flight.md`: note fixture advancement members are now coded (companion model); statblock/retainer per-ability coding declined. Add a one-line pointer update in `MEMORY.md` if the description changes.
+In `featureblock-refactor-in-flight.md`: update the 2026-06-19 entry from "design redone / plan to follow" to "shipped" — fixture members coded via `CodedChildren`; mechanism available for reuse; statblock/retainer per-ability coding still deferred (#15). Update the `MEMORY.md` pointer line if its hook changed.
 
 - [ ] **Step 6: Commit**
 
 ```bash
 git add docs/ CLAUDE.md DESIGN.md ROADMAP.md steel-etl/CLAUDE.md "steel-etl/docs/statblocks.md"
-git commit -m "docs: fixture advancement coded members (companion model) — scc-log, reference, statblocks, roadmap"
+git commit -m "docs: fixture advancement coded members (parser-emitted children) — scc-log, reference, statblocks, roadmap"
 ```
 
 ---
@@ -623,4 +790,4 @@ devbox run -- bash -c 'cd steel-etl && go build ./... && go vet ./... && go test
 devbox run -- bash -c 'cd steel-etl && go run ./cmd/steel-etl gen --all --config pipeline.yaml >/dev/null && go run ./cmd/steel-etl classify --diff 2>&1 | head -40'
 ```
 
-Expected: build/vet/test green; `classify --diff` shows **only** the +12 `feature.fixture.*.level-N/<member>` additions. Spot-check a rendered fixture page per Task 6 Step 5. **Do not deploy** — deploy is decided separately by Scott.
+Expected: build/vet/test green; `classify --diff` shows **only** the +12 `feature.fixture.*.level-N/<member>` additions (base + container codes unchanged). Spot-check a rendered fixture page per Task 6 Step 6. **Do not deploy** — deploy is decided separately by Scott.

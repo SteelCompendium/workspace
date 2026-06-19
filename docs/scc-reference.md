@@ -59,14 +59,14 @@ likely just noise. Decided 2026-06-18.
 
 ## Registry
 
-~3,042 codes across four books:
+~3,075 codes across four books:
 
 | Book | Codes |
 |------|------:|
 | heroes | ~1,944 |
 | beastheart | 242 |
-| monsters | 632 |
-| summoner | ~224 |
+| monsters | 662 |
+| summoner | ~227 |
 
 (How each count reached its current value — and which plan moved it — is in
 [`scc-log.md`](scc-log.md).)
@@ -127,12 +127,22 @@ Mirror the companion scheme:
 
 - base: `monster.fixture.<element>.featureblock/<id>` (`type: featureblock`)
 - advancement-features: `monster.fixture.<element>.advancement-features/<id>` (Level-5/9 tiers)
+- advancement **members**: `feature.fixture.<element>.<base-id>.level-N/<member-id>` (×12,
+  2026-06-19) — each Level-5/9 advancement feature is individually coded with its own leaf
+  page, mirroring `feature.companion.*`. Base-inclusive: `size-increase` repeats across all
+  four fixtures but lives in four distinct `<element>.<base-id>` namespaces (no collision).
 
 Fixtures render through the shared `buildFeatureblockPage`, sit at
 `Browse/monster/fixture/<element>/<id>`, and stay searchable as a `"fixture"` Bestiary
-facet. (The old `fixture_page.go` site adapter was retired.) The advancement page
-**flattens** to a Browse sibling (`…/fixture/<element>/<id>-advancement-features`) and pairs
-with its base on the element index, same as companions (nav-only; code/permalink unchanged).
+facet (member leaves are `feature` type, excluded from the bestiary). (The old
+`fixture_page.go` site adapter was retired.) The advancement page **flattens** to a Browse
+sibling (`…/fixture/<element>/<id>-advancement-features`) and pairs with its base on the
+element index, same as companions (nav-only; code/permalink unchanged) — **and** its card is
+**embedded on the base fixture's page** at build time (`embedFixtureAdvancement` injects the
+`{data-scc}` marker the embed_cards post-pass transcludes, since the advancement block is a
+parse-sibling of the base). The members keep their faithful `> ⭐️` blockquote form in source;
+they are minted as **parser-emitted coded children** (no heading re-leveling / `ContextStack`
+change). See `docs/superpowers/specs/2026-06-19-fixture-advancement-coded-members-design.md`.
 
 ## Summoner special statblocks
 
