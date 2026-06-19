@@ -1,9 +1,11 @@
 # Level-grouping annotation standardization — design
 
 **Date:** 2026-06-18
-**Status:** Approved. **Implementation plan written:**
+**Status:** **SHIPPED + LIVE 2026-06-19** via
 [`../plans/2026-06-19-level-grouping-annotation-standardization.md`](../plans/2026-06-19-level-grouping-annotation-standardization.md)
-(4 tasks, one steel-etl PR). **Not yet executed.**
+→ `## Status` (steel-etl `main` @ `3328469`, workspace pointer `8ef0430`, v2 deploy `10771af`;
+9 phantom summoner codes removed → registry 3,072 → 3,063; Beastheart normalized zero-change;
+`validate` guard added). See also `docs/scc-log.md` (2026-06-19).
 **Scope:** book sources (`steel-etl/input/{summoner,beastheart}`), `steel-etl` `validate`
 command. Cross-book SCC-convention contract → workspace-level spec.
 

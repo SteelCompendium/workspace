@@ -305,3 +305,32 @@ This task has no commit — it is the integration gate before opening the PR. Af
 - **Spec coverage:** Canonical convention → Tasks 2–3 (feature-group). Summoner migration (keep 3 circle headers) → Task 2 + Global Constraints. Beastheart consistency → Task 3. Validate guard → Task 1. SCC/registry validation (only phantoms removed, zero child changes) → Task 2 Step 4 + Task 3 Step 2. Build assertion (no phantom leaf, index correct, fixtures intact) → Task 4. Heroes/Monsters unchanged → not touched. ✓
 - **Placeholder scan:** none — every edit has exact old/new strings; `N`/`Nth` in Task 3 are explicitly enumerated (1–10) with a worked example.
 - **Type consistency:** `isLevelGroupingFeatureID` defined and used consistently (Task 1 Steps 3/5, test Step 1). Annotation format `<!-- @type: feature-group | @level: N -->` identical everywhere.
+
+## Status
+
+**SHIPPED + LIVE 2026-06-19.** All 4 tasks executed via `executing-plans`; merged + deployed.
+
+- **Task 1** — `validate` grouping-shape guard (`isLevelGroupingFeatureID` + `walkSections`
+  wire-in + test) → steel-etl `2a03210`.
+- **Task 2** — Summoner level headers → `feature-group` (1st bare→explicit, 2nd–10th drop
+  `@id`) → `70f011e`. Isolated code diff confirmed: removed **exactly** the 9 phantom
+  `feature.summoner.level-{2..10}/<N>-level-features` codes, **zero** child changes.
+- **Task 3** — Beastheart bare level headers → explicit `feature-group` → `3328469`.
+  Isolated diff confirmed **zero** beastheart code change (242 = 242, purely structural).
+- **Task 4** — full `gen --all` + site build: phantom leaf gone, parent index lists the real
+  features (Perk / Summoner's Dominion / New Portfolio Minion), Summoner's Dominion still
+  renders its fixture cards (`fb-wrap` = 8, no leak); full `go test ./...` green.
+
+**Verification deviation worth noting:** the plan's `classify --all --diff` command is wrong —
+`--all` is a `gen`/`validate` flag, not a `classify` flag, and per-file `classify --diff`
+diffs against the *whole* registry (floods with cross-book "removals"). The authoritative
+gate was instead done by **set-diffing the book's codes pristine-vs-edited**
+(`classify <book.md>` with edits stashed vs applied), which isolates the change exactly. A
+pre-existing source-vs-registry drift (`monster.statblock/pixie-bellringer-converted`) surfaced
+during this and was confirmed unrelated (present in the pristine source); absorbed by the
+`gen --all` registry rebuild.
+
+Integrated: steel-etl merged to `main` @ `3328469` (pushed); workspace pointer bump `8ef0430`;
+v2 site deploy `10771af` (registry **3,072 → 3,063**). The shipped **embed-deferral** fix
+(`bodyHasStandaloneDescendant`, steel-etl `71def61`) is complementary and verified intact by
+Task 4 Step 4. Spec `## Status` updated alongside.

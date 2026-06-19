@@ -507,3 +507,20 @@ clean re-mint; **0 inbound `scc:` links** to the old codes, so nothing dangled.
 `gen --all` clean, zero resolver `WARN`s. Spec:
 `docs/superpowers/specs/2026-06-18-retainer-rework-coded-entities-design.md`; plan:
 `docs/superpowers/plans/2026-06-18-retainer-rework-containers.md`.
+
+## 2026-06-19 — Summoner/Beastheart level-grouping headers → `feature-group`
+
+The "Nth-Level Features" section headers in the Summoner and Beastheart books are now
+structural `feature-group` (no page, no SCC code), matching the Heroes convention. In
+Summoner these were mis-annotated `@type: feature | @id: <N>-level-features`, minting **9
+phantom leaf codes** (`feature.summoner.level-{2..10}/<N>-level-features`) with no real
+content; converting the headers (and adding an explicit `feature-group` to the bare
+1st-Level header) **removed exactly those 9 codes, zero child changes** (registry net
+**3,072 → 3,063**). Beastheart's bare level headers were made explicit `feature-group` for
+cross-book consistency — purely structural, **zero code change** (children already carry
+their own `@level`). A new `validate` guard warns when a `@type: feature` section has a
+grouping-shaped `@id` (`^\d+(st|nd|rd|th)-level-features$`) so the mis-annotation can't
+recur (circle lookup containers `1st-level-circle-features` / `5th-level-circle-feature`
+deliberately don't match and stay `feature`). `gen --all` clean. Spec:
+`docs/superpowers/specs/2026-06-18-level-grouping-annotation-standardization-design.md`;
+plan: `docs/superpowers/plans/2026-06-19-level-grouping-annotation-standardization.md`.
