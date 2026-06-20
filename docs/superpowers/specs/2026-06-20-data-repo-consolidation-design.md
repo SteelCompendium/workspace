@@ -46,7 +46,12 @@ layout mirrors the site's Browse/Read split, with **locale on top**:
 <locale>/                                   # en/ today; es/, … later — the i18n axis
   unified/                                  # Browse: cross-book aggregate, organized by type
     md/<type>/<item>.md
-    _index/...                              # (existing aggregate index pages)
+    json/<type>/...                         # aggregate now spans ALL formats, not just md
+    yaml/<type>/...
+    md-linked/<type>/...
+    md-dse/<type>/...
+    md-dse-linked/<type>/...
+    _index/...                              # (existing aggregate index pages, per format)
   books/                                    # Read: book-faithful, full fidelity
     <book>/                                 # heroes | monsters | beastheart | summoner
       md/<type>/<item>.md
@@ -66,9 +71,11 @@ Key decisions (settled in brainstorm):
 - **Repo: reuse `data-unified`.** Restructure its contents into the layout above. Its current
   `en/md/<type>` aggregate moves to `en/unified/md/<type>`. GitHub-renaming the repo to `data`
   is optional and explicitly deferred.
-- **`unified/` aggregate scope unchanged.** Keep it as the existing by-type **md** Browse
-  corpus, now under `en/unified/md/`. Expanding the aggregate to json/yaml is a possible future
-  follow-up, not part of this work.
+- **`unified/` aggregate carries all formats.** The cross-book aggregate is no longer md-only:
+  it spans the same six structured variants the books do (`md`, `json`, `yaml`, `md-linked`,
+  `md-dse`, `md-dse-linked`), now under `en/unified/<format>/`. This is a real expansion of the
+  aggregator, which today only merges `md` (see §1). (`clean`/stripped stays a per-book
+  distribution variant; it is not aggregated.)
 - **Book directory slugs:** `heroes`, `monsters`, `beastheart`, `summoner` (short slugs, set
   explicitly per book — not derived from the `mcdm.<x>.v1` id).
 
@@ -84,8 +91,11 @@ Today (`internal/pipeline/pipeline.go`):
 Target — insert a **group segment** between `locale` and `<format>`:
 - Per-book: `Join(Output.BaseDir, locale, "books", <book-slug>, "<format>")`
   ⇒ `data-unified/en/books/heroes/md`.
-- Aggregate: `Join(Aggregate.OutputDir, locale, "unified", "md")`
-  ⇒ `data-unified/en/unified/md`.
+- Aggregate: `Join(Aggregate.OutputDir, locale, "unified", "<format>")`
+  ⇒ `data-unified/en/unified/{md,json,yaml,md-linked,md-dse,md-dse-linked}`. **The aggregator
+  (`internal/output/aggregate.go`), today md-only, must be extended to merge every format** —
+  collecting each format's per-item rendering by type the same way it currently does for md, and
+  emitting per-format `_index` pages.
 - Stripped: into the book folder, e.g. `…/books/<slug>/clean`.
 
 `pipeline.yaml` then points **every** book's `output.base_dir`, the `aggregate.output_dir`, and
@@ -144,14 +154,14 @@ links equivalent content by code.
 - Touching `data-sdk-npm` or `draw-steel-elements` plugin code (link-only on old-repo READMEs).
 - GitHub-renaming `data-unified` → `data` (optional, deferable; auto-redirect makes it safe
   later).
-- Expanding the `unified/` aggregate beyond `md`.
 - Actual translated content / MkDocs i18n locale-switcher config (Phase 3.6, blocked).
 - Any SCC code/registry change.
 
 ## Risks & mitigations
 
 - **Repo size growth.** `data-unified` goes from md-only aggregate to all books × all six
-  variants + aggregate. Accepted (the "publish everything" choice). Mitigation: it is one git
+  variants + clean **and** an all-format aggregate. Accepted (the "publish everything" +
+  "all-format unified" choices). Mitigation: it is one git
   history, so growth is linear and expected; no submodules.
 - **In-flight working trees.** `data/` dirs are gitignored independent clones. Migration must
   (a) restructure the `data-unified` clone in place, (b) stop writing the abandoned dirs, and
@@ -163,8 +173,8 @@ links equivalent content by code.
 ## Acceptance criteria
 
 1. `steel-etl gen --all` writes **only** `data/data-unified/`, populated as
-   `en/unified/md/<type>/…` and `en/books/<slug>/<6 variants + clean>/<type>/…` for all four
-   books.
+   `en/unified/<6 variants>/<type>/…` (cross-book aggregate, all formats) and
+   `en/books/<slug>/<6 variants + clean>/<type>/…` for all four books.
 2. No pipeline writes to `data/data-rules`, `data/data-bestiary`, `data/data-beastheart`,
    `data/data-summoner`, or `data/data-rules-clean`.
 3. `steel-etl site` builds the v2 site unchanged in output, reading the new `source_dirs`
