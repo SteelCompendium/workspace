@@ -136,3 +136,72 @@ deploy-v2:
     git add docs/* mkdocs.yml
     git commit -m "chore: update v2 site content (steel-etl $etl_sha)" || echo >&2 "[INFO] No v2 changes to commit"
     git push
+
+# Submodules are branched (not left detached) so commits are never lost.
+# See docs/worktrees-and-submodules.md.
+# Create an isolated env: workspace worktree at ../worktrees/<name>, all submodules on branch <name>, scratch data/.
+wt-new name:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    root="{{justfile_directory()}}"
+    name="{{name}}"
+    wtroot="$(cd "$root/.." && pwd)/worktrees"
+    wt="$wtroot/$name"
+    if [ -e "$wt" ]; then echo >&2 "[ERR] Env already exists: $wt"; exit 1; fi
+    mkdir -p "$wtroot"
+    git -C "$root" worktree add -b "$name" "$wt"
+    # Init submodules referencing the main checkout's object stores so we don't
+    # re-download from origin (near-instant, offline-capable). git otherwise
+    # clones each worktree's submodules fresh into .git/worktrees/<wt>/modules.
+    git -C "$wt" config -f .gitmodules --get-regexp 'submodule\..*\.path' | awk '{print $2}' | while read -r sm; do
+        ref="$root/.git/modules/$sm"
+        if [ -d "$ref" ]; then
+            git -C "$wt" submodule update --init --reference "$ref" -- "$sm"
+        else
+            git -C "$wt" submodule update --init -- "$sm"
+        fi
+    done
+    # Branch every submodule (not detached) so commits are never lost.
+    git -C "$wt" submodule foreach "git checkout -b '$name' 2>/dev/null || git checkout '$name'"
+    mkdir -p "$wt/data"
+    echo >&2 "[INFO] Environment ready: $wt (branch: $name)"
+
+# Refuses if the superproject or any submodule has uncommitted changes.
+# Tear down a wt-new env and delete its per-env branches.
+wt-rm name:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    root="{{justfile_directory()}}"
+    name="{{name}}"
+    wt="$(cd "$root/.." && pwd)/worktrees/$name"
+    if [ ! -d "$wt" ]; then echo >&2 "[ERR] No such env: $wt"; exit 1; fi
+    if [ -n "$(git -C "$wt" status --porcelain)" ]; then
+        echo >&2 "[ERR] Uncommitted changes in $name (superproject); commit or discard first."; exit 1
+    fi
+    if ! git -C "$wt" submodule foreach 'test -z "$(git status --porcelain)"' >/dev/null 2>&1; then
+        echo >&2 "[ERR] Uncommitted changes in a submodule of $name; commit or discard first."; exit 1
+    fi
+    # `git worktree remove` refuses worktrees containing submodules, so remove
+    # the tree directly then prune the admin entry. This also drops the per-env
+    # submodule git dirs (and their <name> branches) under .git/worktrees/<name>.
+    rm -rf "$wt"
+    git -C "$root" worktree prune
+    git -C "$root" branch -D "$name" 2>/dev/null || true
+    echo >&2 "[INFO] Removed env: $name"
+
+# Show what an env has that isn't yet on its tracked branches.
+# Report an env's submodules ahead of tracked branches + pending pointer bumps.
+wt-status name:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    root="{{justfile_directory()}}"
+    name="{{name}}"
+    wt="$(cd "$root/.." && pwd)/worktrees/$name"
+    if [ ! -d "$wt" ]; then echo >&2 "[ERR] No such env: $wt"; exit 1; fi
+    echo "== submodules ahead of their tracked branch =="
+    git -C "$wt" submodule foreach '
+        tracked="$(git -C "$toplevel" config -f .gitmodules submodule.$name.branch || echo main)"
+        ahead="$(git rev-list --count origin/$tracked..HEAD 2>/dev/null || echo "?")"
+        echo "  $name: $ahead commit(s) ahead of origin/$tracked"' || true
+    echo "== superproject pending pointer bumps =="
+    git -C "$wt" status --porcelain -- . | grep -E '^ M|^M ' || echo "  (none)"
