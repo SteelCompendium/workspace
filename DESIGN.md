@@ -170,6 +170,11 @@ controversy): users pick how dense/faithful the rendering is, **per part**.
   the global default lives in ONE place per layer — `settings-core.js` `SBPREV_DEFAULTS`,
   `overrides/main.html`, and steel-etl `sbPreviewDefaults` (keep them in sync). The
   default-zone choice is pending a community poll ([`ROADMAP.md`](ROADMAP.md) #11).
+- **Hide drop caps** (`data-no-dropcap` on `<html>`, a Reading-group checkbox) is a single
+  global boolean (absent ≡ shown) that suppresses the engraved `::first-letter` drop cap on
+  lead trait cards (`.sc-trait--lead`, `steel-traits.css`). Like `data-compact`, only the
+  non-default ("hide") state is stored in `mkdocs:fontPrefs` (`noDropcap: true`) and seeded
+  in the `overrides/main.html` early-apply.
 - New preferences must follow this pattern (attribute + `applyX()` + drawer row +
   preset detection), and must work in both color schemes.
 
