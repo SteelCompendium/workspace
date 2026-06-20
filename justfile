@@ -16,8 +16,8 @@ default:
 	just --list
 
 # Clone SteelCompendium repos needed for development.
-# Local-only output dirs (data/data-unified, data/data-rules-clean) are created
-# by the pipeline, not cloned.
+# The pipeline writes all generated data into the single cloned data-unified repo
+# (under en/books/<book>/ and en/unified/); no other data dirs are cloned.
 clone-all:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -44,10 +44,9 @@ clone-all:
         fi
     done
 
-    # Consolidated data repos (pipeline output targets)
+    # Consolidated data repo (single pipeline output target: every book, every
+    # format, both the unified/ Browse aggregate and the books/ Read trees).
     data_repos=(
-        data-bestiary
-        data-rules
         data-unified
     )
 
@@ -106,13 +105,12 @@ deploy:
     git commit -m "chore: update v2 site content (steel-etl $etl_sha)" || echo >&2 "[INFO] No v2 changes to commit"
     git push
 
-    # 7. Commit and push the regenerated data repos (raw `gen --all` output).
-    # These are independent published repos (not submodules); step 1's gen wrote
-    # them and nothing since touches them, so their working trees are final here.
-    # Defensive: skip any data/ dir that isn't a clone (data-beastheart /
-    # data-summoner / data-rules-clean are local-only output dirs, no .git) or
+    # 7. Commit and push the regenerated data repo (raw `gen --all` output).
+    # The single consolidated `data-unified` repo is an independent published
+    # repo (not a submodule); step 1's gen wrote it and nothing since touches it,
+    # so its working tree is final here. Defensive: skip if it isn't a clone or
     # has no changes to commit.
-    for repo in data-bestiary data-rules data-unified; do
+    for repo in data-unified; do
         dir="$root/data/$repo"
         if [ ! -d "$dir/.git" ]; then
             echo >&2 "[INFO] $repo is not a git clone, skipping"
