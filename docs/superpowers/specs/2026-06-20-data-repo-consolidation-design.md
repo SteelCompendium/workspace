@@ -51,7 +51,7 @@ layout mirrors the site's Browse/Read split, with **locale on top**:
     md-linked/<type>/...
     md-dse/<type>/...
     md-dse-linked/<type>/...
-    _index/...                              # (existing aggregate index pages, per format)
+    md/_index/...                           # navigation index pages (markdown, under md/ only)
   books/                                    # Read: book-faithful, full fidelity
     <book>/                                 # heroes | monsters | beastheart | summoner
       md/<type>/<item>.md
@@ -94,8 +94,9 @@ Target — insert a **group segment** between `locale` and `<format>`:
 - Aggregate: `Join(Aggregate.OutputDir, locale, "unified", "<format>")`
   ⇒ `data-unified/en/unified/{md,json,yaml,md-linked,md-dse,md-dse-linked}`. **The aggregator
   (`internal/output/aggregate.go`), today md-only, must be extended to merge every format** —
-  collecting each format's per-item rendering by type the same way it currently does for md, and
-  emitting per-format `_index` pages.
+  collecting each format's per-item rendering by type the same way it currently does for md. The
+  navigation `_index` pages stay markdown under `unified/md/_index/` only (they are a browse aid,
+  not a per-format data contract).
 - Stripped: into the book folder, e.g. `…/books/<slug>/clean`.
 
 `pipeline.yaml` then points **every** book's `output.base_dir`, the `aggregate.output_dir`, and
