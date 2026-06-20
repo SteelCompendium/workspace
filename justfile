@@ -205,3 +205,21 @@ wt-status name:
         echo "  $name: $ahead commit(s) ahead of origin/$tracked"' || true
     echo "== superproject pending pointer bumps =="
     git -C "$wt" status --porcelain -- . | grep -E '^ M|^M ' || echo "  (none)"
+
+# Submodules end in detached HEAD at the pinned commit -- normal for consuming a
+# version; branch (via wt-new) only when editing.
+# Sync this checkout to origin: pull superproject (if tracking) + update submodules.
+sync:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    root="{{justfile_directory()}}"
+    cd "$root"
+    if git rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 2>&1; then
+        echo >&2 "[INFO] Pulling superproject..."
+        git pull --ff-only
+    else
+        echo >&2 "[INFO] No upstream for current branch; skipping superproject pull."
+    fi
+    echo >&2 "[INFO] Updating submodules to pinned commits..."
+    git submodule update --init --recursive
+    echo >&2 "[INFO] In sync."
