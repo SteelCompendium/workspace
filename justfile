@@ -223,3 +223,37 @@ sync:
     echo >&2 "[INFO] Updating submodules to pinned commits..."
     git submodule update --init --recursive
     echo >&2 "[INFO] In sync."
+
+# Run from the main checkout. PUBLISHES: pushes submodule work to origin and
+# pushes superproject main. Requires the env (and main checkout) to be clean.
+# Land an env's cross-repo work: push each touched submodule's <name> branch to its tracked branch, then merge+push superproject main.
+wt-finish name:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    root="{{justfile_directory()}}"
+    name="{{name}}"
+    wt="$(cd "$root/.." && pwd)/worktrees/$name"
+    if [ ! -d "$wt" ]; then echo >&2 "[ERR] No such env: $wt"; exit 1; fi
+    if [ -n "$(git -C "$wt" status --porcelain)" ]; then
+        echo >&2 "[ERR] Commit or discard changes in $name (incl. superproject pointer bumps) first."; exit 1
+    fi
+    if [ -n "$(git -C "$root" status --porcelain)" ]; then
+        echo >&2 "[ERR] Main checkout is dirty; commit/stash before landing."; exit 1
+    fi
+    # 1. Push each ahead submodule's <name> branch onto its tracked branch on origin.
+    git -C "$wt" config -f .gitmodules --get-regexp 'submodule\..*\.path' | awk '{print $2}' | while read -r sm; do
+        tracked="$(git -C "$wt" config -f .gitmodules "submodule.$sm.branch" || echo main)"
+        ahead="$(git -C "$wt/$sm" rev-list --count "origin/$tracked..$name" 2>/dev/null || echo 0)"
+        if [ "$ahead" -gt 0 ]; then
+            echo >&2 "[INFO] Pushing $sm: $name -> origin/$tracked ($ahead commit(s))"
+            git -C "$wt/$sm" push origin "$name:$tracked"
+        fi
+    done
+    # 2. Land the superproject env branch on main and push. submodule update
+    # fetches the just-pushed commits from origin for the new pins.
+    echo >&2 "[INFO] Merging superproject $name -> main"
+    git -C "$root" checkout main
+    git -C "$root" merge --no-ff "$name" -m "merge $name into main"
+    git -C "$root" submodule update --init --recursive
+    git -C "$root" push origin main
+    echo >&2 "[INFO] Landed and pushed. Remove the env with: just wt-rm $name"
