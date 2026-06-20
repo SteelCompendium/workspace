@@ -91,6 +91,15 @@ deploy:
         git -C "$dir" push
     done
 
+    # 8. Bump submodule pointers in the workspace superproject. deploy pushed
+    # new commits into the v2 and org-site submodules; record them so main pins
+    # the published state. (steel-etl included in case it was bumped manually.)
+    cd "$root"
+    git add steel-etl v2 steelCompendium.github.io
+    git commit -m "chore: bump submodule pointers (deploy ${etl_sha})" \
+        || echo >&2 "[INFO] No submodule pointer changes to commit"
+    git push
+
 # Run the steel-etl pipeline and deploy the SCC API to the org site repo.
 deploy-api:
     #!/usr/bin/env bash
@@ -99,10 +108,17 @@ deploy-api:
     cd "$root/steel-etl"
     echo >&2 "[INFO] Running steel-etl gen..."
     go run ./cmd/steel-etl gen --config pipeline.yaml --all
+    etl_sha="$(git rev-parse --short HEAD)"
     cd "$root/steelCompendium.github.io"
     echo >&2 "[INFO] Committing API update..."
     git add docs/api/
     git commit -m "chore: update SCC resolution API" || echo >&2 "[INFO] No API changes to commit"
+    git push
+    # Bump the org-site submodule pointer in the workspace superproject.
+    cd "$root"
+    git add steelCompendium.github.io
+    git commit -m "chore: bump org-site submodule pointer (deploy-api ${etl_sha})" \
+        || echo >&2 "[INFO] No org-site pointer change to commit"
     git push
 
 # Run the steel-etl pipeline and deploy the v2 compendium site.
@@ -135,6 +151,13 @@ deploy-v2:
     echo >&2 "[INFO] Committing v2 site update..."
     git add docs/* mkdocs.yml
     git commit -m "chore: update v2 site content (steel-etl $etl_sha)" || echo >&2 "[INFO] No v2 changes to commit"
+    git push
+
+    # 5. Bump the v2 submodule pointer in the workspace superproject.
+    cd "$root"
+    git add v2
+    git commit -m "chore: bump v2 submodule pointer (deploy-v2 ${etl_sha})" \
+        || echo >&2 "[INFO] No v2 pointer change to commit"
     git push
 
 # Submodules are branched (not left detached) so commits are never lost.
