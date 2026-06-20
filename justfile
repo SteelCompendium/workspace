@@ -15,52 +15,18 @@ org := "git@github.com:SteelCompendium"
 default:
 	just --list
 
-# Clone SteelCompendium repos needed for development.
-# Local-only output dirs (data/data-unified, data/data-rules-clean) are created
-# by the pipeline, not cloned.
-clone-all:
+# On a fresh machine, prefer cloning with submodules directly:
+#   git clone --recurse-submodules git@github.com:SteelCompendium/workspace.git
+# data/ is NOT a repo; it is regenerable scratch the pipeline fills (ARCHITECTURE.md).
+# Initialize the workspace: idempotent submodule init + data/ scratch dir.
+bootstrap:
     #!/usr/bin/env bash
     set -euo pipefail
     root="{{justfile_directory()}}"
-
-    # Top-level repos: dir -> GitHub repo name
-    declare -A top_repos=(
-        [steel-etl]=steel-etl
-        [data-gen]=data-gen
-        [data-sdk-npm]=data-sdk-npm
-        [draw-steel-elements]=draw-steel-elements
-        [steelCompendium.github.io]=SteelCompendium
-        [v2]=v2
-    )
-
-    for dir in "${!top_repos[@]}"; do
-        repo="${top_repos[$dir]}"
-        target="$root/$dir"
-        if [ -d "$target/.git" ]; then
-            echo "Already exists: $dir"
-        else
-            echo "Cloning $repo -> $dir"
-            git clone "{{org}}/${repo}.git" "$target"
-        fi
-    done
-
-    # Consolidated data repos (pipeline output targets)
-    data_repos=(
-        data-bestiary
-        data-rules
-        data-unified
-    )
-
+    echo >&2 "[INFO] Initializing submodules..."
+    git -C "$root" submodule update --init --recursive
     mkdir -p "$root/data"
-    for repo in "${data_repos[@]}"; do
-        target="$root/data/$repo"
-        if [ -d "$target/.git" ]; then
-            echo "Already exists: data/$repo"
-        else
-            echo "Cloning $repo -> data/$repo"
-            git clone "{{org}}/${repo}.git" "$target"
-        fi
-    done
+    echo >&2 "[INFO] Workspace ready (submodules initialized, data/ scratch present)."
 
 # Runs `gen --all` ONCE (not once per sub-recipe): the API JSON carries a
 # time.Now() "generated" stamp, so a second gen would re-stamp docs/api/*.json
