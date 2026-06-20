@@ -5,7 +5,9 @@ sub-repos (`steel-etl/docs/`, `v2/.repo-docs/`); routing rules are in
 [`CLAUDE.md`](../CLAUDE.md) → "Keeping docs in sync".
 
 - [`git-workflow.md`](git-workflow.md) — git remotes, branching from `origin/main`, and the
-  `steel-etl` submodule sync (must-obey essentials mirrored in `CLAUDE.md`)
+  submodule superproject sync (must-obey essentials mirrored in `CLAUDE.md`)
+- [`worktrees-and-submodules.md`](worktrees-and-submodules.md) — cheatsheet for the submodule
+  superproject + per-agent worktree environments (commands, the two-commit rule, gotchas)
 - [`scc-reference.md`](scc-reference.md) — SCC **current state**: taxonomy, companion/fixture/
   summoner schemes, group landings, linking, printing-vs-version
 - [`scc-log.md`](scc-log.md) — **dated history** of SCC scheme/registry/linking changes
