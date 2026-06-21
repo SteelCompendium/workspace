@@ -1,5 +1,28 @@
 # Submodules + Worktrees Implementation Plan
 
+> **Status: EXECUTED 2026-06-20** on branch `feature/submodules-worktrees`. All 13 tasks done
+> and verified. Deviations encountered during execution (the plan body below is the original
+> design-time version):
+> - **`steel-etl` had an embedded `.git` dir** (old-style submodule). Ran
+>   `git submodule absorbgitdirs` to normalize all 8 to the `.git/modules/<name>` layout —
+>   required for the `wt-new` object-sharing optimization below.
+> - **`wt-new` re-cloned every submodule from origin** (minutes per env). Changed it to
+>   `git submodule update --reference "$root/.git/modules/<sub>"` per submodule, so envs share
+>   the main checkout's objects (~6s, offline-capable).
+> - **`git worktree remove` refuses worktrees containing submodules.** `wt-rm` now `rm -rf`s
+>   the tree + `git worktree prune` (env submodule branches live in the per-worktree module
+>   store, so they vanish with the tree — no separate branch deletion needed).
+> - **`wt-finish` is push-based** (per spec), not local-only: worktree submodules are isolated
+>   clones, so origin is the only viable sync point. Ahead-detection verified; full publish
+>   path is verified on first real use.
+> - **devbox:** verification steps that run Go must use `eval "$(devbox shellenv)"` first, not
+>   `devbox run -- go run ...` (which resets cwd to the workspace root, off the Go module).
+> - Also refreshed `README.md` + `ARCHITECTURE.md` (Task 12 widened beyond CLAUDE.md /
+>   git-workflow.md) to drop `clone-all`/`fork`.
+> - **Known transitional gap:** `bootstrap` no longer clones `data/data-{bestiary,rules,unified}`;
+>   `deploy` pushes them only if the clones exist. Clean data-publishing setup belongs to the
+>   in-flight `data-*` → `data-unified` consolidation.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Convert all authored sub-repos to git submodules of the workspace superproject, keep `data/` as floating regenerable scratch, and add `just` recipes for isolated per-agent worktree environments, multi-machine sync, finishing, and an adapted deploy.
