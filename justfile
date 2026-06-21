@@ -55,6 +55,12 @@ deploy:
     git -C "$root/steelCompendium.github.io" checkout -q -B main origin/main
     git -C "$root/v2" fetch origin -q
     git -C "$root/v2" checkout -q -B main origin/main
+    # data-unified is a plain clone (not a submodule) that deploy pushes; reset it
+    # to origin/main so gen writes on top of the latest published state (ff push).
+    if [ -d "$root/data/data-unified/.git" ]; then
+        git -C "$root/data/data-unified" fetch origin -q
+        git -C "$root/data/data-unified" reset --hard origin/main -q
+    fi
 
     # 1. Run the steel-etl pipeline once (shared by API + site)
     cd "$root/steel-etl"
