@@ -560,3 +560,27 @@ Base `monster.fixture.*.featureblock/*` + container `…advancement-features/*` 
 This shipped ROADMAP **#16** (split 2026-06-19 from #15). Spec:
 `docs/superpowers/specs/2026-06-19-fixture-advancement-coded-members-design.md`; plan:
 `docs/superpowers/plans/2026-06-19-fixture-advancement-coded-members.md`.
+
+## 2026-06-21 — Summoner retainers folded into the monster.\* family
+
+The four Summoner-book retainers re-mint from `retainer.summoner.statblock/<id>` to
+**`monster.retainer.statblock/<id>`** — the same type as the Monsters-book retainers,
+distinguished only by the `mcdm.summoner.v1` source segment and the source-derived
+"Summoner ·" card eyebrow. This **reverses the Plan 6 (2026-06-18) decision** to keep them
+top-level: once the Monsters-book retainers moved under `monster.retainer.*`, the lone
+top-level `retainer.*` tree stranded the summoner four at `Browse/retainer/summoner/` instead
+of with the rest at `Browse/monster/retainer/` (the reported bug).
+
+**Mechanism.** One branch in `StatblockParser.Classify` (`internal/content/monster.go`): the
+`@category: summoner` retainer case now drops the `summoner` category segment and emits
+`monster.retainer.statblock`. Everything else follows from the code via `SCCToFilePath` —
+data (`en/{unified,books/<book>}/…/monster/retainer/statblock/<id>`), site placement
+(`Browse/monster/retainer/<id>`, flat-merged into the 25-card grid), permalink stubs
+(`/scc/mcdm.summoner.v1/monster.retainer.statblock/<id>/`), the SCC API, and
+`scc-to-path.json`. The four grid cards are tagged "Summoner · Retainer" via `withSource`
+(`internal/site/advancement_pairs.go`); each retainer's full statblock still renders on its
+own page.
+
+**Cost.** 4 permalink URLs change (old `retainer.summoner.statblock` URLs 404); **0** inbound
+`scc:` links dangled (nothing referenced them). Registry count **unchanged** (3,075 — a
+type-path rename, not an add/remove). `go test ./...`, `gen --all`, and `site` clean.

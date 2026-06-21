@@ -165,8 +165,11 @@ recognizes the deeper `monster/<domain>/summoner/<portfolio>` group dir.
 (2026-06-18): base `monster.retainer.statblock/<id>` (×21), plus coded **container** siblings
 `monster.retainer.advancement-features/<id>` (×21) and `monster.retainer.role-advancement/<role>`
 (×9), members inline/uncoded — the same treatment fixtures got (5c). Per-ability coding is
-deferred (ROADMAP #15). The **Summoner-book** retainers (`retainer.summoner.*`) stay top-level,
-unchanged. See `docs/scc-log.md` (2026-06-18) and `steel-etl/CLAUDE.md` for the convention.
+deferred (ROADMAP #15). The **Summoner-book** retainers folded in too (2026-06-21, reversing
+Plan 6's "keep top-level"): the four re-mint to `monster.retainer.statblock/<id>` — same type
+as the Monsters-book retainers, distinguished only by the `mcdm.summoner.v1` source and the
+source-derived "Summoner ·" card eyebrow — so all 25 share one `Browse/monster/retainer/`
+landing. See `docs/scc-log.md` (2026-06-18, 2026-06-21) and `steel-etl/CLAUDE.md`.
 
 ## Group landings
 
