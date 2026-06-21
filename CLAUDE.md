@@ -24,10 +24,10 @@ These two rules are non-negotiable. Read them every session; they override conve
      `origin/main`) so you're not building on stale code, then
      `git submodule update --init steel-etl` to sync the submodule working tree.
 
-2. **Never edit generated output.** Never hand-edit files in `data/data-rules/`,
-   `data/data-unified/`, `data/data-rules-clean/`, `v2/docs/Browse/`, `v2/docs/Read/`, or
-   `v2/docs/scc/` — `steel-etl` overwrites them every build. Content changes go in the book
-   sources under `steel-etl/input/` (e.g. `steel-etl/input/heroes/Draw Steel Heroes.md`).
+2. **Never edit generated output.** Never hand-edit files in `data/data-unified/`,
+   `v2/docs/Browse/`, `v2/docs/Read/`, or `v2/docs/scc/` — `steel-etl` overwrites them every
+   build. Content changes go in the book sources under `steel-etl/input/` (e.g.
+   `steel-etl/input/heroes/Draw Steel Heroes.md`).
 
 ## Dev environment (devbox)
 
@@ -80,8 +80,11 @@ Pipeline details, data flow, and editable-vs-generated rules:
 - `steel-etl/` -- Go CLI tool: the primary ETL pipeline and site builder (own CLAUDE.md)
 - `v2/` -- MkDocs Material site; `v2/site.yaml` configures the steel-etl site builder. See
   `v2/.repo-docs/` for detailed architecture docs (incl. the SCC permalink system).
-- `data/` -- Generated output repos (`data-rules`, `data-unified`, `data-bestiary`,
-  `data-beastheart`, `data-summoner`). Do not edit directly.
+- `data/` -- The single generated output repo `data-unified` (the consolidated product).
+  Layout: `en/unified/<format>/` (Browse: everything aggregated by type, all formats) and
+  `en/books/<book>/<format>/` (Read: book-faithful — `heroes`, `monsters`, `beastheart`,
+  `summoner`; all six formats + `clean`). `<locale>` is the top segment (i18n-ready). Do not
+  edit directly.
 - Sub-repos at top level: `compendium/`, `data-gen/`, `data-sdk-npm/`,
   `draw-steel-elements/`, `statblock-adapter-gl-pages/`, `steelCompendium.github.io/`
 
