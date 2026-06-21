@@ -584,3 +584,34 @@ own page.
 **Cost.** 4 permalink URLs change (old `retainer.summoner.statblock` URLs 404); **0** inbound
 `scc:` links dangled (nothing referenced them). Registry count **unchanged** (3,075 — a
 type-path rename, not an add/remove). `go test ./...`, `gen --all`, and `site` clean.
+
+## 2026-06-21 — Summoner retainer modeled like the Rival Summoner
+
+Built on the re-home above. The "Retainer Summoner" section is **one** retainer (Devil
+Detective) plus three statblocks it *summons* (Razor/Violent/Gorrre, `organization:
+Minion`), and a shared pool of advancement abilities. This change models it like the Rival
+Summoner:
+
+- **Summons nest off the index.** `StatblockParser` retainer branch: a summoner-book
+  retainer with `organization == Minion` now mints
+  `monster.retainer.summoner.minion.statblock/<id>` (parallel to the rival summons) instead
+  of `monster.retainer.statblock/<id>`, so only Devil Detective remains on the
+  `monster/retainer/` Browse landing. The three summons are surfaced on the detective's page
+  by the new `augmentSummonerRetainerPages` site pass (`## Summons` grid + `Summoned by`
+  back-links), like `augmentRivalSummonerPages`.
+- **Shared advancement featureblock.** The detective's `Level 4/7/10 Retainer Advancement
+  Ability` blocks (previously H8, leaked inline onto the minion pages) are authored as one
+  `@type: featureblock | @id: devil-detective` section; the `FeatureblockParser` retainer
+  branch's `category != "summoner"` guard was lifted so it mints
+  `monster.retainer.advancement-features/devil-detective`. It shows on the detective's page
+  (advancement card) and beside the detective on the index.
+- **Rival summons `.statblock` parity.** The rival summons gained the `.statblock` segment
+  too — `monster.rival.<echelon>.summoner.minion.statblock/<id>` — so every statblock code
+  terminates in `.statblock`. Browse URLs unchanged (`hoistStatblockPath` drops the non-leaf
+  segment).
+
+**Cost.** Registry **+1** (the new advancement featureblock); the 3 retainer-minion and 17
+rival-summon rows are type-path renames, not adds. **0** inbound `scc:` links dangled
+(verified by grep over `input/`). Browse URLs unchanged for all renamed rows. `go test ./...`,
+`gen --all`, `validate --scc-stable`, and `site` clean. Spec/plan:
+`steel-etl/docs/superpowers/{specs/2026-06-21-summoner-retainer-rival-pattern-design.md,plans/2026-06-21-summoner-retainer-rival-pattern.md}`.
