@@ -17,8 +17,9 @@ default:
 
 # On a fresh machine, prefer cloning with submodules directly:
 #   git clone --recurse-submodules git@github.com:SteelCompendium/workspace.git
-# data/ is NOT a repo; it is regenerable scratch the pipeline fills (ARCHITECTURE.md).
-# Initialize the workspace: idempotent submodule init + data/ scratch dir.
+# Authored repos are submodules; the single published data repo is data-unified
+# (the consolidated pipeline output target); the rest of data/ is regenerable scratch.
+# Initialize the workspace: submodule init + clone data-unified + data/ scratch (idempotent).
 bootstrap:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -26,7 +27,15 @@ bootstrap:
     echo >&2 "[INFO] Initializing submodules..."
     git -C "$root" submodule update --init --recursive
     mkdir -p "$root/data"
-    echo >&2 "[INFO] Workspace ready (submodules initialized, data/ scratch present)."
+    # Clone the single consolidated published data repo (deploy commits+pushes it).
+    if [ ! -e "$root/data/data-unified" ]; then
+        echo >&2 "[INFO] Cloning data-unified..."
+        git clone "{{org}}/data-unified.git" "$root/data/data-unified"
+    elif [ ! -d "$root/data/data-unified/.git" ]; then
+        echo >&2 "[WARN] data/data-unified exists but isn't a clone (gen output?); deploy won't push it."
+        echo >&2 "[WARN] Remove it and re-run 'just bootstrap' to clone the published repo."
+    fi
+    echo >&2 "[INFO] Workspace ready (submodules initialized, data-unified cloned, data/ scratch present)."
 
 # Runs `gen --all` ONCE (not once per sub-recipe): the API JSON carries a
 # time.Now() "generated" stamp, so a second gen would re-stamp docs/api/*.json
@@ -72,13 +81,12 @@ deploy:
     git commit -m "chore: update v2 site content (steel-etl $etl_sha)" || echo >&2 "[INFO] No v2 changes to commit"
     git push
 
-    # 7. Commit and push the regenerated data repos (raw `gen --all` output).
-    # These are independent published repos (not submodules); step 1's gen wrote
-    # them and nothing since touches them, so their working trees are final here.
-    # Defensive: skip any data/ dir that isn't a clone (data-beastheart /
-    # data-summoner / data-rules-clean are local-only output dirs, no .git) or
+    # 7. Commit and push the regenerated data repo (raw `gen --all` output).
+    # The single consolidated `data-unified` repo is an independent published
+    # repo (not a submodule); step 1's gen wrote it and nothing since touches it,
+    # so its working tree is final here. Defensive: skip if it isn't a clone or
     # has no changes to commit.
-    for repo in data-bestiary data-rules data-unified; do
+    for repo in data-unified; do
         dir="$root/data/$repo"
         if [ ! -d "$dir/.git" ]; then
             echo >&2 "[INFO] $repo is not a git clone, skipping"
