@@ -48,6 +48,14 @@ deploy:
     set -euo pipefail
     root="{{justfile_directory()}}"
 
+    # 0. Sync deploy-target submodules to their latest published state. deploy
+    # pushes v2 + org-site, so their origin/main can be ahead of the workspace
+    # pin; build on top of it (and attach to a branch so pushes aren't detached).
+    git -C "$root/steelCompendium.github.io" fetch origin -q
+    git -C "$root/steelCompendium.github.io" checkout -q -B main origin/main
+    git -C "$root/v2" fetch origin -q
+    git -C "$root/v2" checkout -q -B main origin/main
+
     # 1. Run the steel-etl pipeline once (shared by API + site)
     cd "$root/steel-etl"
     echo >&2 "[INFO] Running steel-etl gen..."
@@ -114,6 +122,9 @@ deploy-api:
     #!/usr/bin/env bash
     set -euo pipefail
     root="{{justfile_directory()}}"
+    # Sync the org-site submodule to its latest published state (deploy pushes it).
+    git -C "$root/steelCompendium.github.io" fetch origin -q
+    git -C "$root/steelCompendium.github.io" checkout -q -B main origin/main
     cd "$root/steel-etl"
     echo >&2 "[INFO] Running steel-etl gen..."
     go run ./cmd/steel-etl gen --config pipeline.yaml --all
@@ -135,6 +146,9 @@ deploy-v2:
     #!/usr/bin/env bash
     set -euo pipefail
     root="{{justfile_directory()}}"
+    # Sync the v2 submodule to its latest published state (deploy pushes it).
+    git -C "$root/v2" fetch origin -q
+    git -C "$root/v2" checkout -q -B main origin/main
 
     # 1. Run steel-etl pipeline
     cd "$root/steel-etl"
