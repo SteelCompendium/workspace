@@ -55,12 +55,13 @@ deploy:
     etl_sha="$(git rev-parse --short HEAD)"
     etl_date="$(date +%Y-%m-%d)"
 
-    # 2. Deploy SCC API to the org site repo
+    # 2. Deploy SCC API to the org site repo. (Submodule is detached at the
+    # pinned commit, so push via explicit refspec onto its branch.)
     cd "$root/steelCompendium.github.io"
     echo >&2 "[INFO] Committing API update..."
     git add docs/api/
     git commit -m "chore: update SCC resolution API" || echo >&2 "[INFO] No API changes to commit"
-    git push
+    git push origin HEAD:main
 
     # 3. Stamp the steel-etl pipeline version into mkdocs.yml extra.* fields.
     # mkdocs.yml is committed below so CI's `mkdocs gh-deploy` (which builds the
@@ -74,12 +75,12 @@ deploy:
     cd "$root/steel-etl"
     go run ./cmd/steel-etl site --config "$root/v2/site.yaml"
 
-    # 5. Commit and push v2 site
+    # 5. Commit and push v2 site (detached submodule → push via refspec)
     cd "$root/v2"
     echo >&2 "[INFO] Committing v2 site update..."
     git add docs/* mkdocs.yml
     git commit -m "chore: update v2 site content (steel-etl $etl_sha)" || echo >&2 "[INFO] No v2 changes to commit"
-    git push
+    git push origin HEAD:main
 
     # 7. Commit and push the regenerated data repo (raw `gen --all` output).
     # The single consolidated `data-unified` repo is an independent published
@@ -121,7 +122,7 @@ deploy-api:
     echo >&2 "[INFO] Committing API update..."
     git add docs/api/
     git commit -m "chore: update SCC resolution API" || echo >&2 "[INFO] No API changes to commit"
-    git push
+    git push origin HEAD:main
     # Bump the org-site submodule pointer in the workspace superproject.
     cd "$root"
     git add steelCompendium.github.io
@@ -154,12 +155,12 @@ deploy-v2:
     cd "$root/steel-etl"
     go run ./cmd/steel-etl site --config "$root/v2/site.yaml"
 
-    # 4. Commit and push
+    # 4. Commit and push (detached submodule → push via refspec)
     cd "$root/v2"
     echo >&2 "[INFO] Committing v2 site update..."
     git add docs/* mkdocs.yml
     git commit -m "chore: update v2 site content (steel-etl $etl_sha)" || echo >&2 "[INFO] No v2 changes to commit"
-    git push
+    git push origin HEAD:main
 
     # 5. Bump the v2 submodule pointer in the workspace superproject.
     cd "$root"
