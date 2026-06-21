@@ -5,19 +5,19 @@ Orchestration repo for the [Steel Compendium](https://steelcompendium.github.io/
 ## Quick Start
 
 ```bash
-git clone git@github.com:SteelCompendium/workspace.git steelCompendium
+git clone --recurse-submodules git@github.com:SteelCompendium/workspace.git steelCompendium
 cd steelCompendium
 devbox shell
-just clone-all
+just bootstrap
 ```
 
-`clone-all` clones all sub-repos into the correct locations. Data repos land in `data/`; everything else is at the top level.
+Authored sub-repos are **git submodules**; `--recurse-submodules` fetches them on clone, and `just bootstrap` is the idempotent catch-up (submodule init + the regenerable `data/` scratch dir). For parallel/isolated work use `just wt-new <name>` — see [`docs/worktrees-and-submodules.md`](docs/worktrees-and-submodules.md).
 
 ## Layout
 
 ```
 steelCompendium/
-  justfile              # Workspace recipes (clone-all, deploy, deploy-api, deploy-v2)
+  justfile              # Workspace recipes (bootstrap, sync, wt-new/wt-rm/wt-status/wt-finish, deploy*)
   devbox.json           # Devbox environment (Go, Node, Python, just, jq, yq, etc.)
   reference/            # Draw Steel condensed reference docs for AI agents
   steel-etl/            # Go ETL pipeline + site builder — THE source of truth for content
@@ -44,8 +44,12 @@ Content flows: annotated `steel-etl/input/*` → `steel-etl gen` → `data/*` �
 
 | Recipe | Description |
 |--------|-------------|
-| `just clone-all` | Clone all sub-repos into the workspace |
-| `just switch_repos_to <branch>` | Switch all data repos to a given branch |
+| `just bootstrap` | Initialize submodules + `data/` scratch (idempotent) |
+| `just sync` | Pull + move submodules to pinned commits (lockstep) |
+| `just wt-new <name>` | Create an isolated worktree env (all submodules on branch `<name>`) |
+| `just wt-status <name>` | Show an env's submodules ahead + pending pointer bumps |
+| `just wt-finish <name>` | Land an env's work (pushes submodules + superproject main) |
+| `just wt-rm <name>` | Tear down an env |
 | `just deploy` | Full pipeline: gen + SCC API + v2 site |
 | `just deploy-api` | Pipeline + SCC resolution API only |
 | `just deploy-v2` | Pipeline + v2 site only |

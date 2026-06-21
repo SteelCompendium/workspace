@@ -101,7 +101,7 @@ The v2 repo is committed with the steel-etl SHA in the commit message and pushed
 
 ### 4. Commit and push the data repos
 
-The independent published data repos — `data/data-bestiary`, `data/data-rules`, `data/data-unified` (the `clone-all` set; **not** submodules) — are the raw `gen --all` output. `deploy` commits and pushes each (skipping any that isn't a clone or has no changes), so the published JSON/markdown never lags the API + site. The local-only output dirs `data/data-beastheart`, `data/data-summoner`, and `data/data-rules-clean` have no `.git` and are skipped.
+The independent published data repos — `data/data-bestiary`, `data/data-rules`, `data/data-unified` (separate clones under the gitignored `data/`; **not** submodules) — are the raw `gen --all` output. `deploy` commits and pushes each (skipping any that isn't a clone or has no changes), so the published JSON/markdown never lags the API + site. The local-only output dirs `data/data-beastheart`, `data/data-summoner`, and `data/data-rules-clean` have no `.git` and are skipped.
 
 ## Data flow summary
 

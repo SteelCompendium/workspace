@@ -2,8 +2,9 @@
 
 Workspace orchestration for the Steel Compendium multi-repo project -- a structured,
 searchable reference for the Draw Steel TTRPG by MCDM Productions. This repo holds
-workspace-level config (justfile, devbox) and reference docs; all other code lives in
-sub-repos cloned via `just clone-all`.
+workspace-level config (justfile, devbox) and reference docs; all other authored code lives
+in sub-repos pinned as **git submodules** (clone with `--recurse-submodules`, or run
+`just bootstrap`). Generated `data/` is not pinned — the pipeline regenerates it.
 
 This file is a **router**: current state + pointers only. Depth lives in the linked files —
 see "Keeping docs in sync" below for where each kind of fact belongs. Do **not** grow this
@@ -13,16 +14,17 @@ file with detail or dated history.
 
 These two rules are non-negotiable. Read them every session; they override convenience.
 
-1. **Start new work from latest `origin/main`, and know your remotes.** Full rules in
-   [`docs/git-workflow.md`](docs/git-workflow.md) — read it before branching, committing, or
-   pushing. The essentials:
-   - Two remotes: `origin` → `SteelCompendium/workspace` (upstream, source of truth — push
-     here) and `fork` → `vexa-tski/workspace` (personal fork that lags — **don't**
-     rebase/push against it by default; it throws spurious `steel-etl` submodule conflicts).
-     `main` tracks `origin`.
+1. **Start new work from latest `origin/main`; the workspace is a submodule superproject.**
+   Full rules in [`docs/git-workflow.md`](docs/git-workflow.md) — read it before branching,
+   committing, or pushing. The essentials:
+   - One remote everywhere: `origin` → `SteelCompendium/<repo>` (source of truth — push here).
+     `main` tracks `origin`. There is **no `fork` remote** anymore.
    - **Before making changes:** `git fetch origin && git rebase origin/main` (or branch from
-     `origin/main`) so you're not building on stale code, then
-     `git submodule update --init steel-etl` to sync the submodule working tree.
+     `origin/main`), then `just sync` to move the submodules to their pinned commits.
+   - Editing a submodule is **two commits** (commit inside the submodule, then commit the
+     superproject pointer bump). For parallel work, create an isolated environment with
+     `just wt-new <name>` — see
+     [`docs/worktrees-and-submodules.md`](docs/worktrees-and-submodules.md).
 
 2. **Never edit generated output.** Never hand-edit files in `data/data-rules/`,
    `data/data-unified/`, `data/data-rules-clean/`, `v2/docs/Browse/`, `v2/docs/Read/`, or
@@ -58,7 +60,7 @@ Pipeline details, data flow, and editable-vs-generated rules:
 
 ## Layout
 
-- `justfile` -- Workspace recipes (`clone-all`, `deploy`, `deploy-api`, `deploy-v2`)
+- `justfile` -- Workspace recipes (`bootstrap`, `sync`, `wt-new`/`wt-rm`/`wt-status`/`wt-finish`, `deploy`, `deploy-api`, `deploy-v2`)
 - `devbox.json` / `devbox.lock` -- Dev environment
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) -- Pipeline architecture, data flow, editable vs.
   generated files. You MUST read this.
@@ -69,9 +71,10 @@ Pipeline details, data flow, and editable-vs-generated rules:
 - [`ROADMAP.md`](ROADMAP.md) -- New features and larger planned / in-flight efforts
   (numbered `## N.` sections).
 - [`docs/`](docs/index.md) -- Workspace-level docs (see [`docs/index.md`](docs/index.md)):
-  `git-workflow.md`, `scc-reference.md` (SCC current state), `scc-log.md` (dated SCC
-  history), `followups-archive/` + `roadmap-archive/`, `handoffs/` (per-session `HANDOFF.md`;
-  see `creating-handoffs` skill), `superpowers/` (workspace-level plans/specs).
+  `git-workflow.md`, `worktrees-and-submodules.md` (submodule + worktree cheatsheet),
+  `scc-reference.md` (SCC current state), `scc-log.md` (dated SCC history),
+  `followups-archive/` + `roadmap-archive/`, `handoffs/` (per-session `HANDOFF.md`; see
+  `creating-handoffs` skill), `superpowers/` (workspace-level plans/specs).
 - [`reference/`](reference/index.md) -- Draw Steel reference docs, SCC specification, brand
   assets, and `design-system/` (see [`reference/index.md`](reference/index.md)).
 - `templates/` -- Repo documentation templates (`repo-docs/`) and `TEMPLATE-GUIDE.md`
