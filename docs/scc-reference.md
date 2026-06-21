@@ -155,7 +155,7 @@ companions/fixtures — these are plain statblocks, no featureblock machinery:
 The **Rival Summoner** NPC sits *beside* the Monsters-book rivals:
 `monster.rival.<echelon>.statblock/<id>` (same type path — e.g. `rival-summoner` in the
 same echelon folder as `rival-fury`). Its summoned creatures are
-`monster.rival.<echelon>.summoner.minion/<id>`.
+`monster.rival.<echelon>.summoner.minion.statblock/<id>`.
 
 Go-side mapping lives in `StatblockParser` (`switch domain`, mirroring the `@domain:
 fixture` case; the rival split keys off `organization == Minion`); `isBestiaryGroupDir`
@@ -165,8 +165,16 @@ recognizes the deeper `monster/<domain>/summoner/<portfolio>` group dir.
 (2026-06-18): base `monster.retainer.statblock/<id>` (×21), plus coded **container** siblings
 `monster.retainer.advancement-features/<id>` (×21) and `monster.retainer.role-advancement/<role>`
 (×9), members inline/uncoded — the same treatment fixtures got (5c). Per-ability coding is
-deferred (ROADMAP #15). The **Summoner-book** retainers (`retainer.summoner.*`) stay top-level,
-unchanged. See `docs/scc-log.md` (2026-06-18) and `steel-etl/CLAUDE.md` for the convention.
+deferred (ROADMAP #15). The **Summoner-book** retainer folded in too (2026-06-21, reversing
+Plan 6's "keep top-level") and is modeled like the Rival Summoner: the conjurer **Devil
+Detective** is `monster.retainer.statblock/devil-detective` with a shared
+`monster.retainer.advancement-features/devil-detective` featureblock; its summons
+(Razor/Violent/Gorrre, `organization: Minion`) nest as
+`monster.retainer.summoner.minion.statblock/<id>` — off the `Browse/monster/retainer/`
+index, surfaced on the detective's page by `augmentSummonerRetainerPages`. So the landing
+shows the 21 Monsters-book retainers + Devil Detective (distinguished by the `mcdm.summoner.v1`
+source and "Summoner ·" eyebrow) + their advancement-features cards. See `docs/scc-log.md`
+(2026-06-18, 2026-06-21) and `steel-etl/CLAUDE.md`.
 
 ## Group landings
 
