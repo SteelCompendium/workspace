@@ -29,13 +29,10 @@ steelCompendium/
   draw-steel-elements/  # Web components for Draw Steel content
   statblock-adapter-gl-pages/  # Statblock rendering adapter
   steelCompendium.github.io/   # Root GitHub Pages site (also hosts the SCC API)
-  data/                 # Generated output (gitignored build artifacts; do not edit)
-    data-rules/         # Heroes book — md/json/yaml/linked/dse, by locale
-    data-bestiary/      # Monsters book — statblocks, featureblocks, terrain, retainers
-    data-beastheart/    # Beastheart book
-    data-unified/       # All books merged together
-    data-rules-clean/   # Stripped markdown (annotations removed) for distribution
-    data-bestiary-*     # Legacy bestiary output (data-gen era; kept as validation reference)
+  data/                 # Generated output (gitignored; do not edit). bootstrap clones data-unified
+    data-unified/       # The single consolidated published data repo:
+                        #   en/books/<book>/<format>  (Read: book-faithful, + clean)
+                        #   en/unified/<format>        (Browse: cross-book aggregate)
 ```
 
 Content flows: annotated `steel-etl/input/*` → `steel-etl gen` → `data/*` → `steel-etl site` → `v2/docs/` → MkDocs build. See `ARCHITECTURE.md` and `steel-etl/README.md`.

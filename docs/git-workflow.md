@@ -36,11 +36,11 @@ The workspace pins exact commits of the **authored** sub-repos as git submodules
 One workspace commit therefore pins a **coherent snapshot** of every source repo — `git pull`
 brings them all to matching versions in lockstep.
 
-> **`data/` output repos (transitional).** `just deploy` still pushes generated data to
-> `data/data-{bestiary,rules,unified}` *if those clones exist*. `just bootstrap` no longer
-> clones them (the old `clone-all` did). On the machine driving the `data-*` → `data-unified`
-> consolidation those clones are managed there; on a fresh machine deploy will skip absent
-> data clones. Setting up data publishing cleanly is part of that consolidation effort.
+> **`data/` output repo.** There is a single consolidated published data repo,
+> `data/data-unified` (`en/books/<book>/` for Read + `en/unified/` for Browse). `just bootstrap`
+> clones it; `just deploy` commits and pushes it. The rest of `data/` is pure regenerable
+> scratch the pipeline rewrites each run. `data-unified` is a normal clone, **not** a submodule
+> (it is generated output, not authored source).
 
 ## First-time setup on a machine
 
