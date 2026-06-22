@@ -39,6 +39,40 @@ bootstrap:
     fi
     echo >&2 "[INFO] Workspace ready (submodules initialized, data-unified cloned, data/ scratch present)."
 
+# (private) Abort the deploy if any listed repo has uncommitted changes. The
+# deploy resets its publish targets with `git checkout -B main origin/main`
+# (and `reset --hard` for data-unified), which SILENTLY DISCARDS uncommitted
+# work sitting in the shared main checkout — e.g. another agent's in-progress
+# edit. Deploy must run from a CLEAN main checkout; for parallel work use
+# `just wt-new`. Pass a space-separated list of paths relative to the root.
+_require-clean +paths:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    root="{{justfile_directory()}}"
+    bad=0
+    for p in {{paths}}; do
+        dir="$root/$p"
+        if [ ! -e "$dir/.git" ]; then
+            echo >&2 "[WARN] $p: not a git repo — skipping clean check"
+            continue
+        fi
+        dirty="$(git -C "$dir" status --porcelain)"
+        if [ -n "$dirty" ]; then
+            [ "$bad" -eq 0 ] && echo >&2 ""
+            echo >&2 "[ABORT] '$p' has uncommitted changes the deploy would clobber:"
+            echo "$dirty" | sed 's/^/    /' >&2
+            bad=1
+        fi
+    done
+    if [ "$bad" -ne 0 ]; then
+        echo >&2 ""
+        echo >&2 "Deploy runs from a CLEAN checkout: it resets publish targets to origin/main"
+        echo >&2 "(git checkout -B main origin/main), which discards the changes above."
+        echo >&2 "  • Another agent/session's work?  Do NOT deploy here — isolate with 'just wt-new <name>'."
+        echo >&2 "  • Your own in-progress work?     Commit or stash it first (or land via 'just wt-finish')."
+        exit 1
+    fi
+
 # Runs `gen --all` ONCE (not once per sub-recipe): the API JSON carries a
 # time.Now() "generated" stamp, so a second gen would re-stamp docs/api/*.json
 # and leave the org repo dirty with an uncommitted timestamp-only diff. The
@@ -49,6 +83,9 @@ deploy:
     #!/usr/bin/env bash
     set -euo pipefail
     root="{{justfile_directory()}}"
+
+    # Guard: refuse to deploy from a dirty checkout (would clobber concurrent WIP).
+    just _require-clean steel-etl v2 steelCompendium.github.io
 
     # 0. Sync deploy-target submodules to their latest published state. deploy
     # pushes v2 + org-site, so their origin/main can be ahead of the workspace
@@ -130,6 +167,8 @@ deploy-api:
     #!/usr/bin/env bash
     set -euo pipefail
     root="{{justfile_directory()}}"
+    # Guard: refuse to deploy from a dirty checkout (would clobber concurrent WIP).
+    just _require-clean steel-etl steelCompendium.github.io
     # Sync the org-site submodule to its latest published state (deploy pushes it).
     git -C "$root/steelCompendium.github.io" fetch origin -q
     git -C "$root/steelCompendium.github.io" checkout -q -B main origin/main
@@ -154,6 +193,8 @@ deploy-v2:
     #!/usr/bin/env bash
     set -euo pipefail
     root="{{justfile_directory()}}"
+    # Guard: refuse to deploy from a dirty checkout (would clobber concurrent WIP).
+    just _require-clean steel-etl v2
     # Sync the v2 submodule to its latest published state (deploy pushes it).
     git -C "$root/v2" fetch origin -q
     git -C "$root/v2" checkout -q -B main origin/main

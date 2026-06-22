@@ -12,9 +12,26 @@ file with detail or dated history.
 
 ## ⚠️ MUST READ / MUST OBEY before any change
 
-These two rules are non-negotiable. Read them every session; they override convenience.
+These rules are non-negotiable. Read them every session; they override convenience.
 
-1. **Start new work from latest `origin/main`; the workspace is a submodule superproject.**
+1. **Do your editing in an isolated worktree — not the shared main checkout.**
+   This checkout is **shared global state**: another agent or session may be working in it
+   right now, and `just deploy*` resets submodules to `origin/main`
+   (`git checkout -B main origin/main`), which **silently discards any uncommitted work**
+   sitting here. So **before editing any submodule file**, make your own environment:
+
+   ```bash
+   just wt-new <name>      # ../worktrees/<name>: isolated worktree, every submodule on branch <name>
+   # …edit / verify there…
+   just wt-finish <name>   # land it: pushes each touched submodule + the superproject pointer
+   ```
+
+   **Reserve the main checkout for `just sync` and `just deploy*` only.** Edit directly in the
+   main checkout *only* if the user explicitly tells you to — and even then, first confirm it
+   is clean (`git status`; the `deploy*` recipes now hard-abort on a dirty tree rather than
+   clobber it). Full guide: [`docs/worktrees-and-submodules.md`](docs/worktrees-and-submodules.md).
+
+2. **Start new work from latest `origin/main`; the workspace is a submodule superproject.**
    Full rules in [`docs/git-workflow.md`](docs/git-workflow.md) — read it before branching,
    committing, or pushing. The essentials:
    - One remote everywhere: `origin` → `SteelCompendium/<repo>` (source of truth — push here).
@@ -22,11 +39,9 @@ These two rules are non-negotiable. Read them every session; they override conve
    - **Before making changes:** `git fetch origin && git rebase origin/main` (or branch from
      `origin/main`), then `just sync` to move the submodules to their pinned commits.
    - Editing a submodule is **two commits** (commit inside the submodule, then commit the
-     superproject pointer bump). For parallel work, create an isolated environment with
-     `just wt-new <name>` — see
-     [`docs/worktrees-and-submodules.md`](docs/worktrees-and-submodules.md).
+     superproject pointer bump). `just wt-finish` does both for an env (rule 1).
 
-2. **Never edit generated output.** Never hand-edit files in `data/data-unified/`,
+3. **Never edit generated output.** Never hand-edit files in `data/data-unified/`,
    `v2/docs/Browse/`, `v2/docs/Read/`, or `v2/docs/scc/` — `steel-etl` overwrites them every
    build. Content changes go in the book sources under `steel-etl/input/` (e.g.
    `steel-etl/input/heroes/Draw Steel Heroes.md`).

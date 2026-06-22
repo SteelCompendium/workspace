@@ -65,10 +65,14 @@ footgun (uncommitted work isn't silently wiped by the next update, and commits l
 branch). The raw `git submodule update --init --recursive` still detaches at the pin; prefer
 `just sync`.
 
-## Parallel work — worktree environments
+## Edit in a worktree, not the shared main checkout
 
-For isolated, parallel work (multiple agents/tasks on one machine), use a worktree
-environment instead of editing the main checkout:
+The main checkout is **shared global state** — another agent or session may be working in it
+at the same time, and `just deploy*` resets submodules (`git checkout -B main origin/main`),
+which silently discards any uncommitted work sitting there. So **edit in an isolated worktree
+by default**, and reserve the main checkout for `just sync` and `just deploy*`. (Edit in the
+main checkout only when explicitly told to, and only when it is clean — the `deploy*` recipes
+now hard-abort on a dirty publish-target tree rather than clobber it.)
 
 ```bash
 just wt-new <name>      # ../worktrees/<name>: workspace worktree + submodules on branch <name>
@@ -109,7 +113,10 @@ Route each change to its repo, then integrate. **Generated output is committed b
    repos they touch. Workspace-only changes (docs, `justfile`, specs/plans, `ROADMAP.md`)
    commit to the workspace repo the same way.
 3. **Deploy = regenerate + commit generated output + bump pointers.** `just deploy` (or
-   `deploy-v2` / `deploy-api`), run from a clean `main` checkout, runs `steel-etl gen --all`,
+   `deploy-v2` / `deploy-api`) **must run from a clean `main` checkout** — each recipe first
+   calls `_require-clean` on its publish targets (`steel-etl` + `v2` / `steelCompendium.github.io`)
+   and **hard-aborts if any has uncommitted changes**, so a concurrent agent's WIP can't be
+   silently clobbered by the reset. From a clean checkout it runs `steel-etl gen --all`,
    builds the site, stamps `mkdocs.yml` with the steel-etl sha, then **commits and pushes**
    the generated trees and **bumps the submodule pointers**:
    - `v2`: `chore: update v2 site content (steel-etl <sha>)` + v2 pointer bump
