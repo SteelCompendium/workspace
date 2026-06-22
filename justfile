@@ -26,6 +26,8 @@ bootstrap:
     root="{{justfile_directory()}}"
     echo >&2 "[INFO] Initializing submodules..."
     git -C "$root" submodule update --init --recursive
+    echo >&2 "[INFO] Putting submodules on their tracked branches..."
+    just _submodules-on-branch
     mkdir -p "$root/data"
     # Clone the single consolidated published data repo (deploy commits+pushes it).
     if [ ! -e "$root/data/data-unified" ]; then
@@ -258,9 +260,28 @@ wt-status name:
     echo "== superproject pending pointer bumps =="
     git -C "$wt" status --porcelain -- . | grep -E '^ M|^M ' || echo "  (none)"
 
-# Submodules end in detached HEAD at the pinned commit -- normal for consuming a
-# version; branch (via wt-new) only when editing.
-# Sync this checkout to origin: pull superproject (if tracking) + update submodules.
+# (private) Put each submodule on its tracked branch (from .gitmodules) at the
+# pinned commit, fast-forward only -- so editing never happens in detached HEAD.
+# Safe: never resets; if a branch can't fast-forward to the pin (local commits
+# ahead / diverged) it is left untouched with a warning.
+_submodules-on-branch:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    root="{{justfile_directory()}}"
+    git -C "$root" submodule foreach --quiet '
+        br="$(git config -f "$toplevel/.gitmodules" "submodule.$name.branch" 2>/dev/null || echo main)"
+        if git show-ref -q --verify "refs/heads/$br"; then
+            git checkout -q "$br" && git merge --ff-only -q "$sha1" 2>/dev/null \
+                || echo >&2 "[WARN] $sm_path: branch $br not fast-forwardable to pin $sha1; left as-is"
+        else
+            git checkout -q -b "$br"
+            git branch -q --set-upstream-to "origin/$br" 2>/dev/null || true
+        fi'
+
+# After sync each submodule sits on its tracked branch (main, or v3) at the
+# pinned commit -- no detached-HEAD footgun; use wt-new for isolated parallel
+# work, or raw `git submodule update` for an exact-pin detached checkout.
+# Sync this checkout to origin (pull superproject + put submodules on their tracked branches).
 sync:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -268,12 +289,19 @@ sync:
     cd "$root"
     if git rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 2>&1; then
         echo >&2 "[INFO] Pulling superproject..."
-        git pull --ff-only
+        # Fetch + fast-forward to exactly the upstream ref. (Plain `git pull
+        # --ff-only` selects merge heads from FETCH_HEAD, which can fail with
+        # "Cannot fast-forward to multiple branches" depending on fetch/config
+        # state; merging a single explicit ref avoids that.)
+        git fetch --quiet
+        git merge --ff-only -q '@{u}'
     else
         echo >&2 "[INFO] No upstream for current branch; skipping superproject pull."
     fi
     echo >&2 "[INFO] Updating submodules to pinned commits..."
     git submodule update --init --recursive
+    echo >&2 "[INFO] Putting submodules on their tracked branches..."
+    just _submodules-on-branch
     echo >&2 "[INFO] In sync."
 
 # Run from the main checkout. PUBLISHES: pushes submodule work to origin and
@@ -307,5 +335,6 @@ wt-finish name:
     git -C "$root" checkout main
     git -C "$root" merge --no-ff "$name" -m "merge $name into main"
     git -C "$root" submodule update --init --recursive
+    just _submodules-on-branch
     git -C "$root" push origin main
     echo >&2 "[INFO] Landed and pushed. Remove the env with: just wt-rm $name"

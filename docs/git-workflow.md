@@ -56,11 +56,14 @@ git fetch origin && git rebase origin/main   # or branch from origin/main
 just sync                                     # pull + move submodules to pinned commits
 ```
 
-After any pull/rebase that moves recorded pointers, `just sync` (or
-`git submodule update --init --recursive`) brings the submodule working trees in line with the
-recorded commits. Skipping this is the usual cause of a "dirty" submodule entry that looks
-like an accidental change. Submodules end in **detached HEAD** at the pinned commit — that is
-normal for *consuming* a version; you only branch when *editing* (see below).
+After any pull/rebase that moves recorded pointers, `just sync` brings the submodule working
+trees in line with the recorded commits. Skipping this is the usual cause of a "dirty"
+submodule entry that looks like an accidental change. `just sync` leaves each submodule on its
+**tracked branch** (`main`, or `v3` for `data-sdk-npm` / `data-gen`) at the pinned commit —
+fast-forward only, never resetting — so you can edit immediately without the detached-HEAD
+footgun (uncommitted work isn't silently wiped by the next update, and commits land on a
+branch). The raw `git submodule update --init --recursive` still detaches at the pin; prefer
+`just sync`.
 
 ## Parallel work — worktree environments
 

@@ -42,12 +42,21 @@ change "disappears" on other machines. `just wt-status` and lazygit's
 Submodules panel show pending bumps so you notice. (`wt-rm` refuses to delete an
 env with an uncommitted pointer bump — that is the guard catching step 2.)
 
-## Detached HEAD is normal (when consuming)
+## Submodules land on their tracked branch (no detached HEAD)
 
-After `just sync` / `git submodule update`, submodules sit in **detached HEAD**
-at the pinned commit. That is correct for *using* a version. Only **edit** in an
-env created by `wt-new` (which branches every submodule for you, named after the
-env) so commits are never lost.
+After `just sync` / `just bootstrap`, each submodule is checked out on its
+**tracked branch** (`main`, or `v3` for `data-sdk-npm` / `data-gen`) at the
+pinned commit — so you can edit straight away in the main checkout without the
+detached-HEAD footgun: uncommitted work can't be silently wiped by the next
+`git submodule update`, and commits always land on a branch (no stray commits).
+`just sync` fast-forwards each branch to the pin and **never resets**; if a
+branch has local commits that don't fast-forward to the pin, it's left as-is
+with a warning.
+
+The raw `git submodule update` (run directly, not via `just`) still leaves
+**detached HEAD** at the pin — harmless for a throwaway consume, but prefer
+`just sync` so you stay on a branch. For parallel/isolated work, `wt-new` still
+gives each env its own per-env branch on every submodule.
 
 ## Landing work — what `wt-finish` does
 
