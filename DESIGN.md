@@ -111,6 +111,43 @@ Locked **statblock/featureblock role colors** are now `--sc-role-*` tokens in
 Controller red, Hexer green, Mount teal, Support orange, Defender tan,
 Leader/Solo/Minion/Malice grey. (Word-form list: `reference/colors.md`.)
 
+## Card header system (the "6-slot header") — specced, not yet shipped
+
+Every entity card (ability, feature/trait, statblock, featureblock/fixture/terrain, their
+previews, and nested sub-features) shares **one** header model so the same kind of field
+always lands in the same place — the direct expression of the **Predictable lookup**
+principle. It replaces the per-card headers that drifted (`Shadow Feature` vs
+`Maneuver - Black Ash` for the same entity). Full spec + per-card fill maps:
+[`docs/superpowers/specs/2026-06-23-unified-card-header-design.md`](docs/superpowers/specs/2026-06-23-unified-card-header-design.md).
+
+The header is a **3-lane × 2-column grid** of six positionally-named slots:
+
+```
+          LEFT (stack)              RIGHT (rail)
+  top   left-eyebrow             right-eyebrow
+  mid   left-primary (= name)    right-primary
+  bot   left-deck                right-deck
+```
+
+- **Lanes are the consistency contract**: `eyebrow` = small context, `primary` = headline,
+  `deck` = quiet detail — same emphasis on both sides. Slot names are **positional, never
+  purpose-bound**, so a slot never misrepresents its contents.
+- **Render style is a separate modifier** (`--line` / `--chip`). Default right column:
+  eyebrow = chip, **primary = mini-title**, deck = chip → the header reads as **two mirrored
+  title blocks**. Every slot is independently optional (empty = a gap, by design).
+- **Fill guideline**: `left-eyebrow` = the kind-noun (the "…is a ___" phrase, specialized
+  per family — Monster/Companion/…, Feature/Trait, Dynamic Terrain/Fixture/…); `left-deck` =
+  provenance as `class · subclass`; `right-eyebrow` = Level; `right-primary` = the headline
+  attribute (colored category, else cost); `right-deck` = a secondary attribute (cost/usage/EV).
+- **Sub-features** (inside a statblock/featureblock) drop the implied lanes → name + cost +
+  usage; the **Flat-list** Feature Style (`data-sb-featstyle`/`data-fb-featstyle` = `flat`)
+  inlines those onto the name (`Cleave · Signature · Main Action`). **Mobile** wraps tight
+  slots to a second line, never truncates.
+
+Built as one shared renderer (`renderCardHead`) + one CSS contract (`.sc-head`), so
+consistency is structural. The statblock head already embodies the model (`Level / Org+Role /
+EV` = right `eyebrow / primary / deck`).
+
 ## Component systems (all shipped unless noted)
 
 | Component | Implementation | Design spec (intent, archive) |
