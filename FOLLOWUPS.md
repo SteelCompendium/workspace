@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 22 -->
+<!-- next-id: 23 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -140,3 +140,13 @@ Most recent archive:
 - **Why:** It's the only header slot whose data plumbing (SCC → deck) wasn't validated against a real generated page; a wrong/empty deck would silently drop fixture provenance.
 - **Context:** Live page under `v2` (Brave per memory `reference_playwright_mcp_broken`), or grep the generated leaf: `grep -o 'sc-head__left-deck[^<]*</div>' v2/docs/Browse/monster/fixture/*/*.md`. If empty, the fixture frontmatter `scc` may not match the `monster.fixture.<element>.featureblock` shape `fbOrigin` expects — adjust the matcher.
 - **Effort:** XS (verify; small matcher tweak only if it's wrong).
+
+## 22. v2 deploy is racy — `mkdocs gh-deploy --force` with no concurrency guard
+
+**Status:** open
+
+- **Identified:** 2026-06-24, debugging "still no gradient" after the card-head chrome deploy.
+- **What:** `v2/.github/workflows/ci.yml` runs `mkdocs gh-deploy --force` on **every** push to `main`, with **no `concurrency:` block**. Two pushes close together (here: the CSS chrome commit, then the deploy's `chore: update v2 site content` commit ~30s later) each spawn a `ci` run; both force-push `gh-pages`, and whichever finishes last wins. The earlier-content (CSS-only) run won, force-pushing `gh-pages` back to HTML that predated the content regen — so the live site served stale HTML (`class="sc-head"` without `sb__head`) even though both the CSS and the regenerated HTML were correct on `main`. Manual fix that worked: `gh run rerun <content-commit-run-id>` once nothing else was pushing.
+- **Why:** Any normal deploy that also bumps another commit (e.g. a code change + its `chore: update v2 site content` pair — the standard `just deploy-v2` shape!) can silently publish the wrong build. This will recur.
+- **Fix:** Add a concurrency guard to `ci.yml` so deploys serialize instead of racing, e.g. `concurrency: { group: pages-deploy, cancel-in-progress: false }` (queue — don't cancel, or a superseding run could skip the final deploy). Consider also having `just deploy-v2` make a **single** commit (or push superproject + v2 in an order that triggers one CI run), so there's only one deploy per logical deploy. Re-check after: two rapid pushes should end with `gh-pages` at the LATER commit.
+- **Effort:** XS (add `concurrency:` to `ci.yml`) + S (optional deploy-recipe single-commit cleanup).
