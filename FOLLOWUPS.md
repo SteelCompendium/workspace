@@ -143,7 +143,7 @@ Most recent archive:
 
 ## 22. v2 deploy is racy — `mkdocs gh-deploy --force` with no concurrency guard
 
-**Status:** open
+**Status:** done 2026-06-24 — added a workflow-level `concurrency: { group: pages-deploy, cancel-in-progress: false }` to `v2/.github/workflows/ci.yml`, so `ci` runs queue instead of racing: two pushes close together now deploy in order and `gh-pages` ends at the later commit (no force-push-clobber by an earlier build). Chose queue (not cancel) so a superseding run can't skip the final deploy. The optional `just deploy-v2` single-commit cleanup was **not** done — with the guard it's an efficiency nicety (avoids a redundant queued run), not a correctness fix; left for later if the extra run proves annoying.
 
 - **Identified:** 2026-06-24, debugging "still no gradient" after the card-head chrome deploy.
 - **What:** `v2/.github/workflows/ci.yml` runs `mkdocs gh-deploy --force` on **every** push to `main`, with **no `concurrency:` block**. Two pushes close together (here: the CSS chrome commit, then the deploy's `chore: update v2 site content` commit ~30s later) each spawn a `ci` run; both force-push `gh-pages`, and whichever finishes last wins. The earlier-content (CSS-only) run won, force-pushing `gh-pages` back to HTML that predated the content regen — so the live site served stale HTML (`class="sc-head"` without `sb__head`) even though both the CSS and the regenerated HTML were correct on `main`. Manual fix that worked: `gh run rerun <content-commit-run-id>` once nothing else was pushing.
