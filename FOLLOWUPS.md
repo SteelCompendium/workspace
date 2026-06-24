@@ -120,15 +120,16 @@ Most recent archive:
 - **Context:** Refresh the section against `classification.json` (`grep -oE "mcdm.summoner.v1/monster\.[a-z.]+statblock/[a-z-]+"` etc.). Pre-existing drift, not introduced by #16 — the #16 fixture-member subsection added 2026-06-19 is already correct. Likely the Monsters-book linking reference has similar drift worth a glance.
 - **Effort:** S (mechanical code refresh in one curated table).
 
-## 20. Strip the dead per-card head CSS selectors superseded by `.sc-head`
+## 20. Strip the genuinely-dead per-card head CSS selectors superseded by `.sc-head`
 
-**Status:** open
+**Status:** open — **scope narrowed 2026-06-24 (chrome-restore, steel-etl 754c31e / v2 da9641d); read this before deleting anything.**
 
 - **Identified:** 2026-06-24, landing the unified 6-slot card header (`docs/superpowers/specs/2026-06-23-unified-card-header-design.md`).
-- **What:** Every entity-card header now renders through the shared `renderCardHead`/`.sc-head` contract (`steel-etl/internal/site/card_head.go` + `v2/docs/stylesheets/steel-cardhead.css`), but the per-card stylesheets still carry their old head rules as now-unused selectors: `.sb__head`/`.sb__head-row`/`.sb__kw`/`.sb__class`/`.sb__level`/`.sb__role`/`.sb__ev` (`steel-statblock.css`), `.sc-ability__head`/`__titles`/`__eyebrow`/`__corner` (`steel-ability-cards.css`), `.sc-trait__head`/`__titles`/`__eyebrow`/`__tag` (`steel-traits.css`), `.fb__head`/`__eyebrow`/`__name` (`steel-featureblock.css`), `.sc-prev__head`/`__titles`/`__eyebrow`/`__tag` (`steel-indexes.css`). Sub-feature wrappers `.sb__feat-head`/`.fb__feat-head` are still emitted (they wrap `.sc-head` for the flat-list hook) — keep those; drop only the inner `*-titles`/`*-eyebrow`/`*-corner` rules.
-- **Why:** Dead CSS is harmless at runtime but misleads the next agent into thinking those classes are live (they're not emitted by any Go renderer anymore) and bloats the sheets.
-- **Context:** Confirm each selector is unemitted before deleting: `grep -rn '<selector>' steel-etl/internal/site/*.go` should return nothing for the head ones. Do it per-sheet. The mini-title/chip/line look now lives in `steel-cardhead.css`; per-card sheets keep only their crest/spine/colour specifics.
-- **Effort:** S (mechanical, per-sheet grep-and-delete + a visual diff).
+- **⚠️ NOT dead — load-bearing:** `.sb__head` and `.fb__head` are **re-attached to the main head** by `renderCardHead`'s `Class` field (`statblock_card.go` sets `Class:"sb__head"`, `featureblock_page.go` `Class:"fb__head"`) and **carry the role-gradient band, centered diamond, role border, and the statblock sticky-reveal `view-timeline`**. Deleting them re-flattens the cards (the original regression this follow-up almost caused). Likewise the typography rules now re-pointed onto the new slots — `.sb__head .sc-head__left-primary`/`__right-primary`, `.fb__head .sc-head__*`, `.sc-trait > .sc-head*` (underline + name + eyebrow), `.sc-ability > .sc-head .sc-head__left-primary` — are **live**, not dead.
+- **What's actually safe to strip:** only the selectors no Go renderer emits anymore — the inner head pieces of the OLD DOM: `.sb__head-row`, `.sb__kw`, `.sb__class`, `.sb__level`, `.sb__role`, `.sb__ev`, `.md-typeset .sb__name` (statblock); `.fb__eyebrow`, `.md-typeset .fb__name` (featureblock); `.sc-ability__head`/`__titles`/`__eyebrow`/`__corner`/`.sc-ability__name` (ability); `.sc-trait__head`/`__titles`/`__eyebrow`/`__tag`/`.sc-trait__name` (traits); `.sc-prev__head`/`__titles`/`__eyebrow`/`__tag`/`__name` (indexes). Keep `.sb__head`/`.fb__head` and the sub-feature wrappers `.sb__feat-head`/`.fb__feat-head`.
+- **Why:** Dead inner selectors mislead the next agent and bloat the sheets — but the head-element + re-pointed-slot selectors are the chrome and must stay.
+- **Context:** Confirm each candidate is unemitted before deleting: `grep -rn '<selector>' steel-etl/internal/site/*.go` returns nothing. Do NOT grep-and-delete by the `.X__head` prefix blindly — that catches the load-bearing `.sb__head`/`.fb__head`.
+- **Effort:** S (mechanical, per-sheet — but verify against the live class list above first).
 
 ## 21. Verify the summoner-fixture `left-deck` provenance renders on live pages
 
