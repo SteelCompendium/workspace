@@ -379,3 +379,60 @@ wt-finish name:
     just _submodules-on-branch
     git -C "$root" push origin main
     echo >&2 "[INFO] Landed and pushed. Remove the env with: just wt-rm $name"
+
+# Anchored on the primary worktree, so it runs from any checkout. Serves via
+# mkdocs at http://127.0.0.1:8123 (kill it with: devbox run local-kill).
+# Preview a worktree's v2 site locally; no name → list envs, newest-touched first.
+local-deploy name="":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    # The primary (main) checkout is always the first `git worktree list` entry;
+    # anchor ../worktrees on it so paths resolve regardless of the invocation dir.
+    primary="$(git worktree list --porcelain | awk '/^worktree /{print $2; exit}')"
+    wtroot="$(cd "$primary/.." && pwd)/worktrees"
+    name="{{name}}"
+    # "last touched" = newest git-index mtime across the superproject + v2 submodule
+    # (bumped by status / add / commit / checkout — i.e. real activity in the env).
+    env_mtime() {
+        local d="$1" t=0 f m
+        for f in "$(git -C "$d" rev-parse --git-path index 2>/dev/null || true)" \
+                 "$(git -C "$d/v2" rev-parse --git-path index 2>/dev/null || true)"; do
+            [ -f "$f" ] || continue
+            m="$(stat -c %Y "$f" 2>/dev/null || echo 0)"
+            if (( m > t )); then t="$m"; fi
+        done
+        echo "$t"
+    }
+    list_envs() {   # emits: <mtime>\t<name>\t<v2-branch>\t<dirty>
+        [ -d "$wtroot" ] || return 0
+        for d in "$wtroot"/*/; do
+            d="${d%/}"; [ -d "$d/v2" ] || continue
+            local br dirty
+            br="$(git -C "$d/v2" branch --show-current 2>/dev/null || echo '?')"
+            dirty=""; [ -n "$(git -C "$d/v2" status --porcelain 2>/dev/null)" ] && dirty="dirty"
+            printf '%s\t%s\t%s\t%s\n' "$(env_mtime "$d")" "$(basename "$d")" "$br" "$dirty"
+        done
+    }
+    if [ -z "$name" ]; then
+        rows="$(list_envs | sort -rn || true)"
+        if [ -z "$rows" ]; then
+            echo >&2 "[INFO] No worktree envs under $wtroot — create one with: just wt-new <name>"
+            exit 0
+        fi
+        echo "Local v2 worktrees (most recently updated first):"
+        printf '%s\n' "$rows" | while IFS=$'\t' read -r t nm br dirty; do
+            printf '  %-24s v2@%-22s %-6s %s\n' "$nm" "$br" "$dirty" "$(date -d "@$t" '+%Y-%m-%d %H:%M' 2>/dev/null || true)"
+        done
+        echo "→ serve one:  devbox run local-deploy <name>   (http://127.0.0.1:8123)"
+        exit 0
+    fi
+    wt="$wtroot/$name"
+    if [ ! -d "$wt/v2" ]; then
+        echo >&2 "[ERR] No worktree env named '$name' (expected $wt/v2). Available:"
+        list_envs | sort -rn | awk -F'\t' '{print "  " $2}' >&2
+        exit 1
+    fi
+    # Prefer the env's own v2 venv mkdocs; fall back to whatever devbox put on PATH.
+    mk="mkdocs"; [ -x "$wt/v2/.venv/bin/mkdocs" ] && mk="$wt/v2/.venv/bin/mkdocs"
+    echo >&2 "[INFO] Serving '$name' (v2@$(git -C "$wt/v2" branch --show-current 2>/dev/null)) at http://127.0.0.1:8123"
+    cd "$wt/v2" && exec "$mk" serve -a 127.0.0.1:8123
