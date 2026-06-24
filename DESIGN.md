@@ -111,14 +111,15 @@ Locked **statblock/featureblock role colors** are now `--sc-role-*` tokens in
 Controller red, Hexer green, Mount teal, Support orange, Defender tan,
 Leader/Solo/Minion/Malice grey. (Word-form list: `reference/colors.md`.)
 
-## Card header system (the "6-slot header") — specced, not yet shipped
+## Card header system (the "6-slot header")
 
 Every entity card (ability, feature/trait, statblock, featureblock/fixture/terrain, their
 previews, and nested sub-features) shares **one** header model so the same kind of field
 always lands in the same place — the direct expression of the **Predictable lookup**
-principle. It replaces the per-card headers that drifted (`Shadow Feature` vs
+principle. It replaced the per-card headers that drifted (`Shadow Feature` vs
 `Maneuver - Black Ash` for the same entity). Full spec + per-card fill maps:
-[`docs/superpowers/specs/2026-06-23-unified-card-header-design.md`](docs/superpowers/specs/2026-06-23-unified-card-header-design.md).
+[`docs/superpowers/specs/2026-06-23-unified-card-header-design.md`](docs/superpowers/specs/2026-06-23-unified-card-header-design.md)
+(plan: [`docs/superpowers/plans/2026-06-23-unified-card-header.md`](docs/superpowers/plans/2026-06-23-unified-card-header.md)).
 
 The header is a **3-lane × 2-column grid** of six positionally-named slots:
 
