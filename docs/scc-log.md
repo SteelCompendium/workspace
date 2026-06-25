@@ -615,3 +615,17 @@ rival-summon rows are type-path renames, not adds. **0** inbound `scc:` links da
 (verified by grep over `input/`). Browse URLs unchanged for all renamed rows. `go test ./...`,
 `gen --all`, `validate --scc-stable`, and `site` clean. Spec/plan:
 `steel-etl/docs/superpowers/{specs/2026-06-21-summoner-retainer-rival-pattern-design.md,plans/2026-06-21-summoner-retainer-rival-pattern.md}`.
+
+## 2026-06-25 — `rule.general/always-round-down` minted
+
+The Heroes "Always Round Down" rule (The Basics chapter,
+`steel-etl/input/heroes/Draw Steel Heroes.md`) was the only sibling in its section with no
+`@type: rule` annotation, so it was never classified and never reached the
+`Browse/rule/general/` glossary. Added the annotation
+`<!-- @type: rule | @group: general | @id: always-round-down -->` above the heading; the
+`RuleParser` general branch handles it unchanged (no parser/schema/test change). Mints one new
+leaf code `mcdm.heroes.v1/rule.general/always-round-down`. **Cost.** Registry **+1** (3080 →
+3081); `validate --scc-stable` clean (one added, zero changed/removed), `go test ./...` /
+`gen --all` / `site` clean. The adjacent unannotated `### Game of Exceptions` heading is
+deliberately left unclassified (out of scope). Plan:
+`docs/superpowers/plans/2026-06-25-always-round-down-general-rule.md`.
