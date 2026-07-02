@@ -1,5 +1,7 @@
 # P8 — Encounter Builder (EV Budget Tray) Implementation Plan
 
+> **Status: EXECUTED — shipped & live 2026-07-02.** All tasks completed and verified on production; kept for reference.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Turn the Bestiary Search & Filter into an encounter-building tool: a "+" on every result row adds the creature to a persistent tray showing picked monsters × counts, total EV against the party's encounter-strength budget (with the book's Trivial→Extreme difficulty bands), shareable via URL, exportable as markdown.

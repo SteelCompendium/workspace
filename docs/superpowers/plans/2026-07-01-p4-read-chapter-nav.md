@@ -1,5 +1,7 @@
 # P4 — Read-Tab Chapter Navigation Implementation Plan
 
+> **Status: EXECUTED — shipped & live 2026-07-02.** All tasks completed and verified on production; kept for reference.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Make the book-faithful Read chapters navigable as a *reading* experience: (1) prev/next chapter links, (2) a collapsible "In this chapter" mini-TOC at the top of every chapter, (3) "resume where you left off" scroll restore. The classes chapter is 677,000px tall — readers currently get no map and no way back to where they stopped.

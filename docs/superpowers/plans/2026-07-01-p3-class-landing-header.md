@@ -1,5 +1,7 @@
 # P3 — Class Landing Header + Jump Bar Implementation Plan
 
+> **Status: EXECUTED — shipped & live 2026-07-02.** All tasks completed and verified on production; kept for reference.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Give every Browse class page (`/Browse/class/<name>/`, 11 pages) a proper landing: a card-style header (name, "Class" eyebrow, source book, potency strip) plus an in-page jump bar built from the page's `##` sections — replacing today's experience of unanchored prose on an 82,000px page.
