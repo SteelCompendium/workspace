@@ -8,6 +8,10 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+_Nothing pending._
+
+## 2026-07-02 — UX-wave feedback round (SOT-3847)
+
 Feedback round on the UX wave — the SOT-3847 subtasks (SOT-3839…3845).
 
 ### Fixed
