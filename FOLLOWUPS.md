@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 23 -->
+<!-- next-id: 24 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -25,6 +25,17 @@ Most recent archive:
 - **Why:** motivation / value
 - **Context:** file paths, gotchas, anything that saves grep time
 - **Effort:** XS (<1 h) / S (1–4 h) / M (1 day) / L (multi-day) -->
+
+## 23. Statblock sticky mini-header too bulky at phone widths
+
+**Status:** open
+
+- **Identified:** 2026-07-01, P1 bug batch visual QA (`docs/superpowers/plans/2026-07-01-p1-v2-bugfix-batch.md` Task 3).
+- **What:** On a 390px viewport, the statblock sticky mini-header (`.sb__sticky`, CSS scroll-driven reveal in `steel-statblock.css`) occupies ~40% of the screen while scrolled: large name + role wrap to multiple lines, then the stats row, then the movement/captain/immunity/weakness row. Pre-existing — NOT caused by the 2026-07-01 `.sc-head` mobile stacking (the sticky uses its own `sb__sticky-*` classes).
+- **Why:** The sticky exists to keep core stats in view at the table; at phone widths it crowds out the content it's meant to annotate.
+- **Fix options:** A compact phone variant — single-line name (smaller, truncate-with-title), drop row 2 (movement/captain/immunity/weakness), tighter stat pills; or suppress the sticky below a width breakpoint entirely (readers can re-scroll).
+- **Context:** `v2/docs/stylesheets/steel-statblock.css` (`.sb__sticky*`); screenshot evidence in the 2026-07-01 session (`53-sb-mobile-feat`).
+- **Effort:** S
 
 ## 2. Settings panel: card-style toggle still triggers a full page reload
 
