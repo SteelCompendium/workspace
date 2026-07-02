@@ -8,6 +8,10 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+_Nothing pending._
+
+## 2026-07-02 — UX-wave feedback round 2 (SOT-3850…3854)
+
 Second feedback round on the UX wave (SOT-3847 subtasks SOT-3850…3854).
 
 ### Changed
@@ -35,6 +39,13 @@ Second feedback round on the UX wave (SOT-3847 subtasks SOT-3850…3854).
 - **Chapter pages open book-style** — centered title with a small-caps
   "book · Chapter N" eyebrow above it, symmetric over the ◆ divider, instead
   of a full-width display H1 jammed left. (SOT-3854)
+
+### Fixed
+
+- **Duplicate page title over statblock cards (live regression)** — the
+  scaler's control row sat between the page's `hr` and the card, breaking the
+  strict h1+hr+card adjacency that hides the duplicate H1; the scaler UI (now
+  the note) lives inside the card wrap instead. (found while testing SOT-3850)
 
 ## 2026-07-02 — UX-wave feedback round (SOT-3847)
 
