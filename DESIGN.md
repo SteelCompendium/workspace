@@ -144,6 +144,11 @@ The header is a **3-lane × 2-column grid** of six positionally-named slots:
   usage; the **Flat-list** Feature Style (`data-sb-featstyle`/`data-fb-featstyle` = `flat`)
   inlines those onto the name (`Cleave · Signature · Main Action`). **Mobile** wraps tight
   slots to a second line, never truncates.
+- **Phone widths (≤30em) stack the columns**: the right rail's content-sized grid column
+  otherwise starves the name track (letter-per-line wrap), so the right slots re-place as
+  lanes 4–6 *under* the left stack, left-aligned — one column, six lanes. CSS-only
+  (`steel-cardhead.css` narrow-screen block; regression test
+  `v2/tests/e2e/cardhead-mobile.e2e.cjs`).
 
 Built as one shared renderer (`renderCardHead`) + one CSS contract (`.sc-head`), so
 consistency is structural. The statblock head already embodies the model (`Level / Org+Role /
