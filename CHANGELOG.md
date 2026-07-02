@@ -8,7 +8,48 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
-_Nothing pending._
+Feedback round on the UX wave — the SOT-3847 subtasks (SOT-3839…3845).
+
+### Fixed
+
+- **Pinboard removal works** — the × on `/pins/` used a toggle that could re-add the
+  item with no title (rendering "undefined"); removal is now a pure remove, the
+  delegated listener survives instant-nav script re-execution, and removing the last
+  pin restores the empty-state prose. (SOT-3840)
+- **"Copy as Markdown" no longer truncates** — python-markdown's link pattern outranks
+  its raw-HTML pattern and rewrote `[text](url)` *inside* the card's `data-src`
+  attribute into an `<a href>` whose quote terminated the attribute mid-statblock.
+  Trigger characters (`[`, backtick, backslash) are now entity-encoded; the copied
+  markdown also converts file-relative links to absolute site URLs. (SOT-3843)
+- **Statblock scaler potencies actually scale** — the potency rewrite matched a
+  literal `<` but tier rows arrive as innerHTML where it's `&lt;`; the pattern is now
+  entity-aware. (SOT-3844)
+
+### Changed
+
+- **Pin control is a pushpin and auto-hides** — the ★ became the Material pushpin
+  (outline → filled when pinned) and the inline button beside prose H1s is
+  hover-revealed like the ¶ permalink. (SOT-3841)
+- **Encounter tray got a ⋯ menu** — Clear encounter / Reset builder / Close (close is
+  session-scoped and re-opens when something is added). The footer Clear button moved
+  into the menu. (SOT-3842)
+- **Statblock scaler is comprehensive** — "Scale to level" now also shifts the five
+  characteristics (clamped ±5), every "Power Roll +N" bonus (the dice roller follows),
+  and potencies inside ability effect prose, all as deltas from the printed values
+  per the book's *Adjusting Monster Levels* formulas. (SOT-3844)
+- **Class landing card carries the class's numbers** — starting characteristics,
+  starting stamina, stamina per level, recoveries, and the skills line, plus the
+  flavor text styled inside the card (its duplicate opening paragraph is dropped from
+  the body). The ten "Nth-Level Features" jump pills collapsed into one "Level
+  1 2 … 10" group. Parser now emits `starting_stamina` / `stamina_per_level` /
+  `recoveries` / `primary_characteristics` frontmatter (schema fields already
+  existed). (SOT-3845)
+- **Table Reference covers the official Rules Reference** — added common main/move
+  actions, hero token spends, surges, saving throws / EoT / potency notation, size,
+  areas of effect, forced-movement specifics (stability, slams, breaking objects),
+  edge+bane mixing, and the skill +2 — paraphrased and cross-checked against the
+  book text (which supersedes the PDF where they differ, e.g. surge damage).
+  (SOT-3839)
 
 ## 2026-07-02 — the UX wave (P1–P11)
 
