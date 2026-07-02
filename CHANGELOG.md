@@ -8,7 +8,33 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
-_Nothing pending._
+Second feedback round on the UX wave (SOT-3847 subtasks SOT-3850…3854).
+
+### Changed
+
+- **Statblock scaler lives in the Level chip** — hover the card and −/+ steppers
+  appear flanking the chip (the same reveal as the copy-link/pin/encounter
+  controls); while scaled the chip turns amber, the steppers stay visible, and
+  the approximation note above the card gains a Reset button. The separate
+  "Scale to level" input row above the card is gone. (SOT-3850)
+- **Page actions moved to a top-right strip** — on plain (non-card) pages the
+  page permalink and pin are now always-visible card-style buttons in the
+  top-right of the content pane, replacing the hover-revealed inline icons
+  beside the H1. Read chapters — whose pin previously mounted on the first
+  *embedded* card — now pin correctly as pages, under the chapter's own title.
+  (SOT-3851)
+- **Encounter tray: the whole header row collapses/expands** — the chevron
+  alone was too small a target; the ⋯ menu button hides while collapsed (its
+  dropdown opened below the bottom-fixed tray, off-screen) and an empty tray's
+  menu now opens upward. (SOT-3852)
+- **Class card header balanced** — the head's right rail now carries the book
+  chip and the primary characteristics ("Might · Agility" + "start at 2"),
+  mirroring the statblock's Level/role/EV rail; the stat and potency strips
+  became two matched 3-column rows of centered value-over-label cells (the
+  statblock defense-grid pattern). (SOT-3853)
+- **Chapter pages open book-style** — centered title with a small-caps
+  "book · Chapter N" eyebrow above it, symmetric over the ◆ divider, instead
+  of a full-width display H1 jammed left. (SOT-3854)
 
 ## 2026-07-02 — UX-wave feedback round (SOT-3847)
 
