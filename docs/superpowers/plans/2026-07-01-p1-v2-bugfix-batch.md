@@ -1,5 +1,7 @@
 # P1 — v2 UX Bug Batch Implementation Plan
 
+> **Status: EXECUTED — shipped & live 2026-07-02.** All tasks completed and verified on production; kept for reference.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Fix the five shipped UX defects found in the 2026-07-01 UX review: mobile statblock-name collapse, hidden page titles on class/chapter pages, the bare 404 page, the leftover `index_old` page (which is also the phantom "Browse Rules" sidebar entry), and home-page polish.

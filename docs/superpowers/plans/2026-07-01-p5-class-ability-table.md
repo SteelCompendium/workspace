@@ -1,5 +1,7 @@
 # P5 — Per-Class Ability Table Index Implementation Plan
 
+> **Status: EXECUTED — shipped & live 2026-07-02.** All tasks completed and verified on production; kept for reference.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** On each per-class ability index (`/Browse/feature/ability/<class>/`, 11 pages + `common/`), show a sortable **all-abilities table** (Name · Lv · Cost · Action · Distance · Target) below the existing level folder cards — today you cannot see a single ability name without clicking into a level bucket.

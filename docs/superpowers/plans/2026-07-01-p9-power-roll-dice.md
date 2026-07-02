@@ -1,5 +1,7 @@
 # P9 — Click-to-Roll Power Rolls Implementation Plan
 
+> **Status: EXECUTED — shipped & live 2026-07-02.** All tasks completed and verified on production; kept for reference.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Clicking any power-roll header on an ability card or statblock rolls 2d10, applies edges/banes with the real Draw Steel semantics (single = ±2, double = tier shift, natural 19–20 = crit), and highlights the matching tier band on the card.

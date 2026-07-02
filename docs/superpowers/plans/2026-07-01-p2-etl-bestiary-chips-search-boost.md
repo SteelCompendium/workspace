@@ -1,5 +1,7 @@
 # P2 — Bestiary Size-Chip Cleanup + Search Ranking Boosts Implementation Plan
 
+> **Status: EXECUTED — shipped & live 2026-07-02.** All tasks completed and verified on production; kept for reference.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** (a) Stop dynamic-terrain area descriptions ("any area; the area can't be moved through") from appearing as Size filter chips on the Bestiary page; (b) fix search ranking so canonical pages (classes, rules, conditions) outrank monster statblocks for their own names ("fury" currently returns four Rival Fury statblocks above the Fury class).

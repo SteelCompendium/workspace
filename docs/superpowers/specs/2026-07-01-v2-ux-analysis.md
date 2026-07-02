@@ -1,5 +1,7 @@
 # v2 Site UX Analysis & Feature Proposals — 2026-07-01
 
+> **Status: all recommendations EXECUTED — shipped & live 2026-07-01/02** via plans `../plans/2026-07-01-p1…p11-*.md` (P1 bugs, P2 search/chips, P3 class landing, P4 read nav, P5 ability tables, P6 table reference, P7 pins, P8 encounter builder, P9 dice, P10 exports, P11 scaler). Not executed: §2.5 search duplicates + §3.5 index weight (investigations), §3.4 cross-tab links (needs ROADMAP #3 anchors), 4.7 random tables, 4.8/4.9 builders (deferred by design).
+
 Session artifact: full UX review of https://steelcompendium.io/v2/ driven with a real
 browser (Brave via playwright-core) at desktop (1440×900) and mobile (390×844) viewports,
 plus a read-through of `v2/` config, `.repo-docs/`, ROADMAP and FOLLOWUPS. Focus per user

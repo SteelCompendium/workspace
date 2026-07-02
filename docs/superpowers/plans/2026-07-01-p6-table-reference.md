@@ -1,5 +1,7 @@
 # P6 — Table Reference (GM-Screen Page) Implementation Plan
 
+> **Status: EXECUTED — shipped & live 2026-07-02.** All tasks completed and verified on production; kept for reference.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** One curated, print-perfect "Table Reference" page — turn structure, power roll, conditions one-liners, common maneuvers, movement — every entry linking to its canonical Browse page. The single most-consulted artifacts at a game table, on one screen.
