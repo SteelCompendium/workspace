@@ -151,6 +151,7 @@ home — don't let detail or dated history pool back into this router.
 | Change the git remotes / branching workflow | [`docs/git-workflow.md`](docs/git-workflow.md) (and the must-obey callout above) |
 | Hit a small in-scope tangent (deferred bug/gap) | a numbered `## N.` section in [`FOLLOWUPS.md`](FOLLOWUPS.md); clear before the next feature |
 | Plan a new feature or larger effort | a numbered `## N.` section in [`ROADMAP.md`](ROADMAP.md) |
+| Ship a user-facing change (site feature/fix, API change) | a bullet under `## Unreleased` in [`CHANGELOG.md`](CHANGELOG.md); promote to a dated header at deploy |
 | Write a per-effort plan/spec | the sub-repo's `docs/superpowers/` if confined to one repo; the workspace `docs/superpowers/` if it spans repos or changes a workspace-level contract (SCC scheme, deploy flow, schemas) |
 | Write a deep single-topic reference | the owning repo's `docs/` + its `docs/index.md` |
 | Find non-obvious "funky logic" (workaround, footgun, magic number) | capture it where it lives: inline comment if local, `ARCHITECTURE.md` / the relevant sub-repo doc if cross-cutting |
@@ -175,8 +176,12 @@ forward.
   leave survivors' numbers untouched (gaps like 1, 2, 5, 8 are expected). A `#N` reference
   then resolves forever — either still live, or in the archive under `(was #N)`.
 
-This repo has **no `CHANGELOG.md`**: it is an orchestration workspace with no release tags —
-shipped history is the git log (`chore: bump steel-etl …` commits and v2 deploy commits).
+Shipped history lives in [`CHANGELOG.md`](CHANGELOG.md) (added 2026-07-02; entries are
+headed by **deploy date** — this workspace has no release tags, so a "release" is a
+deploy of the live site / SCC API). New user-facing work goes under `## Unreleased`
+and is promoted to a dated header when deployed. Mechanical deploy history remains
+the git log (`chore: bump steel-etl …` / v2 deploy commits) — the changelog carries
+the user-facing story, not every pointer bump.
 
 ## Sub-repo CLAUDE.md files
 

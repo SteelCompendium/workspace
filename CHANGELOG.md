@@ -1,0 +1,101 @@
+# Steel Compendium Releases
+
+This workspace has no version tags — a "release" here is a deploy of the live site
+(steelcompendium.io/v2) and/or the SCC API, so entries are headed by **deploy date**
+instead of a tag. New work lands under `## Unreleased` and is promoted to a dated
+header when it goes live. One bullet per user-facing change; internal/process changes
+go under an *Internal* sub-heading.
+
+## Unreleased
+
+_Nothing pending._
+
+## 2026-07-02 — the UX wave (P1–P11)
+
+Eleven efforts from the 2026-07-01 UX review
+(`docs/superpowers/specs/2026-07-01-v2-ux-analysis.md`), all shipped to the live v2
+site across a series of deploys on 2026-07-02. Per-effort detail:
+`docs/superpowers/plans/2026-07-01-p1…p11-*.md`.
+
+### Fixed
+
+- **Mobile statblock names no longer collapse letter-per-line** — at phone widths the
+  card header's right rail (role/Level/EV) now stacks *under* the name instead of
+  starving its grid column. Applies to every card type (statblock, ability, kit,
+  featureblock). (P1)
+- **Class pages and Read chapters got their titles back** — the CSS that hides the
+  duplicate `# Name` heading on single-card leaf pages over-matched any page
+  *containing* a card; it is now keyed on strict `h1 + hr + card` adjacency. (P1)
+- **Custom 404 page** — search hint, links to Browse/Books/Bestiary, and a
+  report-a-broken-link action, replacing the bare "404 - Not found". (P1)
+- **Leftover `/Browse/index_old/` page removed** — it was live, search-indexed, and
+  the source of the phantom duplicate "Browse Rules" sidebar entry. (P1)
+- **Browse landing "View Retainers" card** pointed at the retired `retainer/` path;
+  now links `monster/retainer/`. (P1)
+- **Search ranking favors canonical pages** — per-type `search.boost` frontmatter
+  (classes 4×, rules/conditions/ancestries/movement 3×, statblocks 0.6×): searching
+  "fury" now returns the Fury class before the four Rival Fury statblocks, "jump" the
+  movement rule before War Dog Blood Jumper. (P2)
+- **Bestiary Size filter is a closed vocabulary** — dynamic-terrain free-text area
+  descriptions ("any area; the area can't be moved through", …) bucket as a single
+  "Area" chip instead of appearing verbatim. (P2)
+- **Home page polish** — brand line unified ("Steel Compendium" + curated-by byline),
+  the 12-repo legacy data list collapsed behind a disclosure. (P1)
+
+### Added — navigation
+
+- **Class landing headers** — every Browse class page opens with a card (Class
+  eyebrow, name, Weak/Average/Strong potency strip) and a jump bar over its ~12
+  sections, instead of untitled prose 82,000px tall. (P3)
+- **Read-chapter reading aids** — prev/next chapter links (book order), a collapsible
+  "In this chapter" mini-TOC at the top of each chapter, and a "Resume reading (N%)"
+  chip that restores your last position per chapter. (P4)
+- **Per-class ability tables** — each `Browse → Features → Abilities → <class>` index
+  now carries a sortable Name · Lv · Cost · Action · Distance · Target table of the
+  class's complete ability list (tablesort column sorting; responsive column-dropping
+  on phones). (P5)
+
+### Added — at-the-table tools
+
+- **Table Reference tab** — a one-page GM screen: turn structure, the power roll with
+  edge/bane/crit rules, condition one-liners (verified against the rule text), common
+  maneuvers, movement, dying/recovery, combat modifiers, and director quick numbers.
+  Print-optimized. (P6)
+- **"My Table" pinboard** — a ★ control on every entity page pins it to `/pins/`,
+  grouped by kind (localStorage, this-browser-only). (P7)
+- **Encounter builder** — a "+" on every Bestiary row (and on statblock pages) feeds a
+  budget tray: party inputs (heroes/level/victories), the book's encounter-strength
+  math and Trivial→Extreme difficulty bands, minions priced four-at-a-time, over-level
+  ⚠ warnings, shareable `?enc=` links, and copy-as-markdown. (P8)
+- **Click-to-roll power rolls** — click any power-roll header for a 2d10 popover with
+  edge/bane steppers (single = ±2, double = tier shift, natural 19–20 crits) and a
+  highlight on the matching tier row. (P9)
+- **Card exports** — hover any entity card for MD (copies the original source
+  markdown) and PNG (2× card render) export chips, joining copy-link / pin /
+  add-to-encounter in the top-center control strip. (P10)
+- **Statblock level scaler** — a "Scale to level" stepper applies the Monsters book's
+  *Adjusting Monster Levels* formulas as deltas from the printed values (EV, Stamina,
+  free strike, damage tiers, potencies — the formulas reproduce printed blocks
+  exactly at their own level), with a dashed outline + "approximation, not a published
+  statblock" banner and exact restore. Session-only by design. (P11)
+
+### Internal
+
+- **Test infrastructure**: two e2e regression suites (`page-titles`, `cardhead-mobile`;
+  playwright-core driving Brave, runnable against local builds or production) and six
+  new node:test unit suites (~35 tests) over the new `*-core.js` logic modules; five
+  new Go test files in steel-etl's site builder.
+- **steel-etl site builder**: new leaf transforms `class_page.go` (landing header),
+  `ability_table.go`, `search_boost.go`, `export_src.go` (single-line `sc-src`
+  source-template island; the embed pass strips it from transclusions), and
+  `sizeFacet` normalization in `bestiary_search.go`.
+- **Shared UI contract**: per-card page actions live in the hover-revealed top-center
+  control strip (documented in `DESIGN.md` → "Card header system") — the head grid's
+  right column is off-limits.
+- **Bestiary data seam**: `steel-bestiary-browser.js` republishes its parsed records
+  as `window.SC_BESTIARY_ITEMS` (its mount destroys the JSON island).
+- **Vendored**: `html-to-image` 1.11.13 (MIT) for the PNG export.
+- **Docs**: v2 `.repo-docs` + `README`/`CLAUDE.md` refreshed and cold-start-tested;
+  steel-etl `docs/site-builder.md` extended; DESIGN.md component rows; FOLLOWUPS #23
+  (mobile sticky mini-header bulk) recorded; all 11 plans + the analysis stamped
+  executed.
