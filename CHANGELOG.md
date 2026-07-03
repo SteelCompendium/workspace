@@ -8,6 +8,10 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+_Nothing pending._
+
+## 2026-07-02 — round-2 review fixes (SOT-3847)
+
 Fixes from the round-2 review (SOT-3847 comment feedback).
 
 ### Changed
