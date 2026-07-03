@@ -8,7 +8,26 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
-_Nothing pending._
+Fixes from the round-2 review (SOT-3847 comment feedback).
+
+### Changed
+
+- **Card control strip is one aligned row** — the copy-permalink button now
+  mounts inside the card head with the pin / encounter-add / MD/PNG buttons
+  (same top, matching gaps); it no longer straddles the card border, where it
+  had ended up overlapping the scaler's "≈ scaled from level…" note.
+- **Empty encounter tray still expands** — the heroes/level/victories party
+  inputs (and difficulty bands) are reachable before any monster is added;
+  the share/markdown actions stay hidden until there is something to share.
+- **Class card rail reads as one field** — the deck line under the
+  "Might · Presence" mini is now its caption ("primary characteristics")
+  instead of the second data point "start at 2".
+
+### Removed
+
+- **"In this chapter" mini-TOC** on Read chapters — redundant with the
+  built-in right-sidebar table of contents, and it sat off-center under the
+  new centered chapter titles.
 
 ## 2026-07-02 — UX-wave feedback round 2 (SOT-3850…3854)
 
