@@ -8,7 +8,25 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
-_Nothing pending._
+### Fixed
+
+- **Card-preview names no longer break mid-word** — long ability names on index
+  cards (e.g. "Unearthly Reflexes", "To the Uttermost End") wrapped as
+  "UNEARTH / LY / REFLEXES"; they now wrap on whole words. (Material's prose-link
+  `word-break` was being inherited into the card `<a>`, and the compact preview
+  name/rail sizing was starving the title track.)
+- **Card titles & stat readouts are legible in light mode** — the "steel" ink
+  used for ability/statblock/featureblock titles, stat values, and card footer
+  figures was a washed-out ~1.9:1 grey on light backgrounds; it now uses a
+  readable steel. (Dark mode is unchanged.)
+- **No more stray "-" keyword chip** — abilities with no keywords (Furious Change,
+  Unearthly Reflexes, …) rendered a lone "-" chip on their preview and full cards;
+  the "none" placeholder is now dropped.
+- **Chip text is vertically centered** — keyword chips, folder-count pills, and the
+  class-page "Level 1–10" rail no longer ride high/low in their pills; the rail
+  figures also sit flat on the baseline (lining numerals).
+- **Settings sliders line up** — Text size and Card size both show 100% with their
+  thumbs at the same (centered) track position instead of at 33% vs 60%.
 
 ## 2026-07-02 — round-2 review fixes (SOT-3847)
 
