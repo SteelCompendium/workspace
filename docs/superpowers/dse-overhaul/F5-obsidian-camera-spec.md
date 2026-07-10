@@ -1,6 +1,9 @@
 # F5 — Real-Obsidian CDP Camera (ground-truth screenshots)
 
-**Status:** spec draft (2026-07-10, awaiting Scott's review) · **Repo:** `draw-steel-elements`
+**Status:** built (Plan 12, 2026-07-10; Opus-approved ready-to-merge). **As-built deltas:** CDP
+port **9223** (not 9222); attach is **raw CDP over WebSocket** — Playwright `connectOverCDP`
+proved incompatible with Obsidian's Electron; a warm-up launch precedes the sweep (the system
+Obsidian self-updates its asar into the scratch user-data-dir). · **Repo:** `draw-steel-elements`
 (branch `dse-framework`) · **Depends on:** F4 (built — Plan 11) · **Linear:** SC-9 follow-on
 (the "real Obsidian" half); serves SC-10 sign-off and SC-11's "Legacy looks unchanged" gate.
 

@@ -29,7 +29,7 @@ build status after the build started; split 2026-07-10.*
 | **F2** | Data-unified + SDK 3.x integration | (F1 seam) | Fable | ✅ approved | ⛔ gated on cross-repo prereqs |
 | **F3** | Health audit + test harness | — | Fable | ✅ approved | ✅ built (Plan 01) |
 | **F4** | Visual feedback harness (Linear SC-9) | F1 built | Opus | ✅ approved (2026-07-10) | ✅ built (unlanded; Plan 11, Opus-approved ready-to-merge) |
-| **F5** | Real-Obsidian CDP camera (ground truth) | F4 | Opus | ▶ drafting | — |
+| **F5** | Real-Obsidian CDP camera (ground truth) | F4 | Opus | ✅ approved (2026-07-10) | ✅ built (unlanded; Plan 12, Opus-approved ready-to-merge) |
 | **D1** | Vue removal / first migration | F1, F3 | Fable | ✅ approved | ✅ built |
 | **D2** | UI/UX overhaul (High-Fantasy Steel) | F1 | Fable | ✅ approved | ✅ built (unlanded) |
 | **D3** | Theming (+ Legacy theme) + print/export | F1 | Fable | ✅ approved | ✅ built (unlanded; Steel look pending design pass, Linear SC-10) |
