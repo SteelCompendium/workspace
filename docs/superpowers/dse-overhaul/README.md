@@ -28,10 +28,10 @@ build status after the build started; split 2026-07-10.*
 | **F1** | Element Framework v2 (keystone) | — | Fable | ✅ approved | ✅ built (Plans 01–02) |
 | **F2** | Data-unified + SDK 3.x integration | (F1 seam) | Fable | ✅ approved | ⛔ gated on cross-repo prereqs |
 | **F3** | Health audit + test harness | — | Fable | ✅ approved | ✅ built (Plan 01) |
-| **F4** | Visual feedback harness (Linear SC-9) | F1 built | Opus | ✅ approved (2026-07-10) | ✅ built (unlanded; Plan 11, Opus-approved ready-to-merge) |
-| **F5** | Real-Obsidian CDP camera (ground truth) | F4 | Opus | ✅ approved (2026-07-10) | ✅ built (unlanded; Plan 12, Opus-approved ready-to-merge) |
+| **F4** | Visual feedback harness (Linear SC-9) | F1 built | Opus | ✅ approved (2026-07-10) | ✅ built + landed (Plan 11) |
+| **F5** | Real-Obsidian CDP camera (ground truth) | F4 | Opus | ✅ approved (2026-07-10) | ✅ built + landed (Plan 12) |
 | **D1** | Vue removal / first migration | F1, F3 | Fable | ✅ approved | ✅ built |
-| **D2** | UI/UX overhaul (High-Fantasy Steel) | F1 | Fable | ✅ approved | ✅ built (unlanded) |
+| **D2** | UI/UX overhaul (High-Fantasy Steel) | F1 | Fable | ✅ approved | ✅ built + landed |
 | **D3** | Theming (+ Legacy theme) + print/export | F1 | Fable | ✅ approved | ✅ built (unlanded; Steel look pending design pass, Linear SC-10) |
 | **D4** | Preferences system | F1 | Fable | ✅ approved | not started (no plan yet) |
 | **D5** | Rolling & interactivity (M1/A) | F1 | Fable | ✅ approved | not started (no plan yet) |
