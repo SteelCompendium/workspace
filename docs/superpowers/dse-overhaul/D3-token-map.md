@@ -272,3 +272,34 @@ The spec predates D2; the shipped Legacy base wins (this column is a **record**)
    purple `#7c5cd6` (which would also de-overlap from `act-move`).
 5. **Print scoping of `role-*`/`act-*`** to Steel-composed only (Legacy prints stay
    monochrome) — the map's recommendation; Task 5 implements.
+
+---
+
+## SC-10 amendments (2026-07-10 — post-ground-truth design pass)
+
+Two catalog corrections from the SC-10 Steel pass (see the sc10-steel branch commits for
+full rationale; both ground-truth-verified via the F5 obsidian camera):
+
+1. **`badge-fg` is now theme-INVARIANT** (`var(--dse-fg)` from the Legacy base; the Steel
+   dark `#0f1214`, Steel light `#fff`, and print `#fff` overrides are REMOVED). The tier
+   badge is a hollow clip-path frame — its interior is the card surface, so the ink is
+   always ink-on-surface. The old values assumed solid fills and rendered invisible.
+   Split counts moved: Steel 59+5 → **58 overridden + 6 invariant**; light 32 → **31**;
+   print neutral 42 → **41** (print invariant 16 → **17**).
+
+2. **`act-*` realigned to the site's canonical `--sc-act-*` action-type tokens**
+   (steel-ability-cards.css), replacing the draft's `--sc-ability-*` classification chain:
+
+   | token | dark (chained, fallback) | light | print twin |
+   |---|---|---|---|
+   | act-main | `var(--sc-act-main, #e74c3c)` | `#c0392b` | `#c0392b` |
+   | act-maneuver | `var(--sc-act-maneuver, #5dade2)` | `#2874a6` | `#2874a6` |
+   | act-triggered | `var(--sc-act-triggered, #4caf6a)` | `#1e8449` | `#1e8449` |
+   | act-move | `var(--sc-act-move, #e8a13a)` | `#b9770e` | `#b9770e` |
+   | act-none | `var(--sc-act-none, #cdd1d4)` | `#5a6368` | `#5a6368` |
+   | act-trait | `var(--sc-act-trait, #bb8fce)` | `#7d3c98` | `#7d3c98` |
+
+Also new (structural, not tokens): the Steel skin now CONSUMES the ornament tokens —
+card-bg/bevel/shadow on top-level feature/featureblock/statblock panels, emboss on
+titles/section keys/pr-heads/statgrid values, display face on primary titles, metal-faint
+chip washes, and a reserved act-spine lane (`padding-left`).
