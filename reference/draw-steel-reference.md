@@ -11,7 +11,7 @@ All rolls: **2d10 + characteristic score**. Three tier outcomes:
 - **Tier 3**: 17+
 - **Natural 19-20**: Always tier 3. On ability rolls with main actions, also a **critical hit** (grants an extra main action immediately).
 
-**Edges and Banes**: Edge = +2, Bane = -2. Double edge (2+ edges, 0 banes) = auto-shift tier up by 1. Double bane (2+ banes, 0 edges) = auto-shift tier down by 1. Edges and banes cancel 1-for-1.
+**Edges and Banes**: Edge = +2, Bane = -2. Double edge = tier up 1; double bane = tier down 1. Cancellation caps each side at 2 (double) FIRST, then subtracts: net = min(edges,2) − min(banes,2) — e.g. a double edge and one bane = ONE edge (+2 flat), NOT a tier shift; double vs double cancels fully. (Corrected 2026-07-11 — was oversimplified as "cancel 1-for-1".)
 
 ### Characteristics
 

@@ -1,5 +1,11 @@
 # D5 Rolling & Interactivity Implementation Plan (Plan 14)
 
+> **⚠️ AMENDMENT (2026-07-11, Task-1 review):** the edge/bane math originally drafted here
+> (cancel-then-clamp) contradicted the rulebook — each side caps at 2 (double) BEFORE
+> cancelling: `net = min(edges,2) − min(banes,2)` ("a double edge and just one bane = one
+> edge, regardless of how many edges contributed"). The engine + Task-1 pins were corrected
+> in the fix round; any later task text implying cancel-then-clamp is superseded by this.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** The D5 rolling system, reconciled against what F1/D2/D3/D4 actually built: a pure
@@ -242,7 +248,7 @@ describe('D5 §8.2 — edges & banes (single = flat, double = shift, cancel, cap
 		[0, 1, [5, 6], { net: -1, edgeBaneFlat: -2, total: 9, tier: 1 }],  // single bane = −2
 		[2, 0, [5, 6], { net: 2, edgeBaneFlat: 0, total: 11, tier: 2 }],   // double edge: band 1 → shift → 2
 		[0, 2, [8, 8], { net: -2, edgeBaneFlat: 0, total: 16, tier: 1 }],  // double bane: band 2 → shift → 1
-		[3, 1, [5, 6], { net: 2, edgeBaneFlat: 0, total: 11, tier: 2 }],   // 3e−1b = net +2 (cap)
+		[3, 1, [5, 6], { net: 1, edgeBaneFlat: 2, total: 13, tier: 2 }],   // 3e−1b: cap sides at 2 FIRST → double edge − one bane = ONE edge (+2 flat) [AMENDED: rulebook cap-before-cancel; Plan-14 Task-1 review]
 		[2, 2, [5, 6], { net: 0, edgeBaneFlat: 0, total: 11, tier: 1 }],   // full cancel
 		[1, 2, [8, 9], { net: -1, edgeBaneFlat: -2, total: 15, tier: 2 }], // net −1: flat, not shift
 		[2, 0, [10, 9], { net: 2, edgeBaneFlat: 0, total: 19, tier: 3 }],  // double edge on nat19: clamp at 3
@@ -505,7 +511,7 @@ export function resolveRoll(input: RollInput, dice: DiceSource): RollResult {
 	// 2. Net edges/banes: cancel 1-for-1, cap magnitude at 2 (D5 §1.3).
 	const edges = Math.max(0, Math.trunc(input.edges ?? 0));
 	const banes = Math.max(0, Math.trunc(input.banes ?? 0));
-	const net = clamp(edges - banes, -2, 2);
+	const net = Math.min(edges, 2) - Math.min(banes, 2); // cap-before-cancel (rulebook; AMENDED per Task-1 review)
 
 	// 3. Flat portion of edge/bane (mode-dependent; doubles shift instead — step 5).
 	let edgeBaneFlat = 0;
