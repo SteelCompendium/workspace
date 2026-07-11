@@ -34,7 +34,7 @@ build status after the build started; split 2026-07-10.*
 | **D2** | UI/UX overhaul (High-Fantasy Steel) | F1 | Fable | ✅ approved | ✅ built + landed |
 | **D3** | Theming (+ Legacy theme) + print/export | F1 | Fable | ✅ approved | ✅ built + landed (Steel look pending design pass, Linear SC-10) |
 | **D4** | Preferences system | F1 | Fable | ✅ approved | ✅ built + landed (Plan 13) |
-| **D5** | Rolling & interactivity (M1/A) | F1 | Fable | ✅ approved | not started (no plan yet) |
+| **D5** | Rolling & interactivity (M1/A) | F1 | Fable | ✅ approved | ✅ built + landed (Plan 14) |
 | **D6** | Compendium-powered reference family (M1/D) | F1, F2 | Fable | ✅ approved | not started (no plan yet) |
 | **D7** | Hero-facing suite (M1/B) | F1 | Fable | ✅ approved | not started (no plan yet) |
 | **D8** | GM subsystems (M1/C) | F1, F2 | Fable | ✅ approved | not started (no plan yet) |
