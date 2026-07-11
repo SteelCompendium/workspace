@@ -1,81 +1,79 @@
-# Handoff — 2026-07-10 evening (D2+D3+F4+F5+SC-10 ALL LANDED on plugin main; D4 in flight autonomously; Scott away for a few hours)
+# Handoff — 2026-07-11 early AM (autonomous session COMPLETE: D2+D3+F4+F5+SC-10+D4+SC-4-headline all LANDED; awaiting Scott's review)
 
 ## Active efforts
-- **DSE plugin → 6.0.0** — **IN FOCUS.** Scott's gate: pre-existing features 100% stable +
-  new features stable + UI fully overhauled **incl. D4 settings**. Everything through SC-10
-  is **landed on `draw-steel-elements` main @ `a9d4ec7`** (no more unlanded overhaul branch).
-  **D4 (preferences/settings UI) is the in-flight increment**: Plan 13 being drafted by a
-  Fable planner → `docs/superpowers/dse-overhaul/plans/2026-07-10-plan-13-d4-preferences.md`,
-  to be executed SDD-style in a NEW worktree `d4-prefs`. Scott's directive (2026-07-10,
-  leaving for a few hours): "merge to the remote and work on sc-10… After sc-10, continue on
-  as far as you can without me."
-- **Backlog** — Linear "Steel Compendium" team → "DSE 6.0.0" project. SC-9 Done; SC-10/SC-11
-  have detailed progress comments; SC-4 holds the deferred-polish list (incl. the REAL
-  initiative unhandled-rejection bug at `src/elements/initiative/view.ts:306`).
+- **DSE plugin → 6.0.0** — paused at a natural review point; **nothing in flight**. Scott's
+  gate (pre-existing stable + new stable + UI overhauled incl. D4 settings): the BUILD side
+  is now substantially complete — what remains is **Scott's review/QA + taste calls + the
+  release decision (SC-11)**, then the optional D5+ feature wave.
+- **Backlog** — Linear "DSE 6.0.0" project. SC-8 (D4) and SC-9 (harness) **Done** with full
+  comments; SC-10/SC-11/SC-4 carry detailed progress comments.
 
 ## You are here
-Waiting on the Plan-13 draft (Fable subagent). Next actions in order: review/fix the drafted
-plan → commit it → `just wt-new d4-prefs` → execute tasks via subagent-driven-development
-(implementer + task-reviewer per task, Opus whole-branch final review) → land via
-`just wt-finish d4-prefs` → Linear SC-8 comment. After D4, if capacity remains: SC-4 quick
-wins (the initiative `.catch` bug first), the ts-node devDependency hygiene commit, then stop
-and write the wrap-up for Scott.
+Session ended after Scott's "continue as far as you can" directive was exhausted through
+D4 + the SC-4 headline fix. **Next action belongs to Scott** (see "For Scott" below). If a
+fresh agent resumes BEFORE Scott returns: there is no queued in-flight work — reasonable
+next autonomous increments would be (a) drafting D5 (rolling) from its spec the way Plan 13
+was drafted, or (b) the deferred-Minors polish bundle — but both are judgment calls better
+left for Scott's go-ahead given the review-point pileup.
 
-## What landed today (all pushed)
-- **Plugin main `b80a8a9 → a9d4ec7`** (~105 commits): D2 element/kit redesign + D3 theming +
-  **F4 browser harness** (`npm run shots`, 59 PNGs) + **F5 real-Obsidian CDP camera**
-  (`npm run obsidian-shots`, 44 PNGs; raw CDP, NOT playwright-connectOverCDP) + **SC-10
-  High-Fantasy Steel pass** (both ground-truth bugs fixed; act-* realigned to the site's
-  canonical `--sc-act-*`; ornament tokens now consumed: forged card ground/emboss/chips;
-  print ink economy). Each increment Opus-reviewed; SC-10's review also **closed the
-  deferred D3 whole-increment review**.
-- **`demo-vault/`** now lives IN the plugin repo (plugin symlinked; `DS Compendium`/
-  `Harness`/workspace.json git-ignored). Scott's `~/Documents/draw-steel-elements-demo`
-  untouched — he still needs to open the repo vault once and retire the old one (SC-9 comment).
-- Workspace docs: dse-overhaul README effort map current; `build-ledger-plans-01-12.md` =
-  archived SDD ledger; D3-token-map has SC-10 amendments; F4/F5 specs have as-built notes.
-- Memory: `dse-visual-harness.md` (the "never do blind plugin CSS work again" capability).
+## What landed today (plugin main `b80a8a9 → 76df29f`, ~115 commits, all pushed)
+1. **D2+D3 overhaul landed** (was the unlanded dse-framework branch) + **F4 browser
+   harness** (`npm run shots`) + **F5 real-Obsidian CDP camera** (`npm run obsidian-shots`;
+   `demo-vault/` now lives in the repo, plugin symlinked).
+2. **SC-10 High-Fantasy Steel pass** (Plan: inline; Opus-reviewed): both ground-truth Steel
+   bugs fixed (invisible tier-badge ink; spine text overlap), act-* realigned to the site's
+   canonical `--sc-act-*`, ornament tokens finally CONSUMED (forged card ground, emboss,
+   chips), print ink economy. Also closed the deferred D3 whole-increment review.
+3. **D4 preferences landed** (Plan 13, 7 tasks, SDD; Opus-reviewed zero-findings): real
+   settings tab (descriptor-driven, presets, resets, live-apply, live statblock preview),
+   sparse debounced saveData persistence, per-block `prefs:` overrides, declared-collapse
+   side-channel (byte-compat structurally preserved), temp theme/print commands deleted,
+   `ts-node` devDependency hygiene. Suite 993 → **1037**.
+4. **SC-4 headline fix**: initiative missing-portrait unhandled rejection — all THREE bare
+   `.then()` sites caught, RED-verified regression test.
 
-## Gotchas & lessons (cross-cutting, this session)
-- **Visual work protocol:** shoot → Read PNG → tweak. Browser harness for iteration,
-  obsidian camera for sign-off. Steel is the DEFAULT theme (`DEFAULT_THEME_ID='steel'`) —
-  drive `frameworkV2.services.theme.setActive` explicitly per shot or you're photographing
-  steel while thinking it's legacy (the spike did exactly that).
-- **devbox:** every `devbox run` dirties `devbox.lock` (restore it, never commit); devbox
-  eats `$?` in the inner shell — check exit codes inside; `just wt-finish` requires BOTH the
-  worktree superproject (pointer bump committed) and the main checkout clean — restore
-  devbox.lock INSIDE the same devbox session before `just wt-finish` runs.
-- **Recurring ts-node churn:** `npx jest` under devbox sometimes ADDS ts-node to
-  package.json (4+ sightings) — always `git checkout -- package.json package-lock.json`
-  before committing. Proper fix (deliberate ts-node devDependency) is a queued hygiene item.
-- **Theme value pins:** `theme-steel/theme-print/token-coverage` tests pin token VALUES and
-  COUNT SPLITS verbatim — any token value change means updating pins (that's their job);
-  current split: steel 58 overridden + 6 invariant, light 31, print 41 neutral + 6 act +
-  17 invariant; `badge-fg` is theme-INVARIANT by design (hollow badge frame).
-- **The demo vault sets custom fonts** (Bookinsanity) via `appearance.json` — that's why
-  ground-truth shots render serif, NOT an Obsidian default (F5 README's fidelity note is
-  slightly off; low-priority correction).
-- **PROPOSED taste calls still open for Scott** (one-line flips in styles-source.css):
-  tier-crit/vp gold `#e3c14a`, stamina-temp blue `#5dade2` vs purple `#7c5cd6`.
-- Plugin main carries version `6.0.0-rc1`; the real 6.0.0 release (SC-11) stays gated on
-  Scott's criteria; BRAT users are effectively on merged main already.
+## For Scott (the review pile)
+1. **Load the plugin** (rebuild or BRAT off main) — see: the Steel look post-SC-10, the new
+   **Settings tab** (theme picker, statblock presets, live preview), per-block `prefs:`.
+   Before/after PNGs regenerate via `npm run shots` / `npm run obsidian-shots`.
+2. **Taste calls** (one-line flips, PROPOSED-labeled in styles-source.css): tier-crit/vp
+   gold `#e3c14a`; stamina-temp blue `#5dade2` vs purple. Deeper flourishes deliberately
+   not taken: statblock name display-face, boxed section headers, the hidden `.dse-crest`.
+3. **Two one-line confirmations**: settings preview suppresses the read-only badge
+   (`canPersist:true` — argued exception to your explicit-readonly rule); Plan 13's
+   Open-Decision defaults table (plan header) veto pass.
+4. **Demo vault**: open `workspace/draw-steel-elements/demo-vault/` in Obsidian once (it's
+   on main now), confirm your demo setup; then retire `~/Documents/draw-steel-elements-demo`.
+5. **SC-11 release decision** whenever the above satisfies your 6.0.0 gate (bump rc1 → 6.0.0,
+   cut from main). Note BRAT users are effectively on merged main already.
 
-## Verified state (as of this handoff)
-- Plugin main `a9d4ec7`, workspace main `5102d5e`, both pushed; all submodules synced.
-- Gates at plugin main: tsc 0 · jest 61 suites / 993 tests · `npm run shots` 59/59 clean ·
-  `npm run obsidian-shots` 44/44 clean (~58s) · trailer greps empty.
-- Worktrees: `sc10-steel` landed (removable via `just wt-rm sc10-steel`); `dse-framework`
-  landed earlier (removable; its SDD ledger is archived in docs); `d4-prefs` NOT created yet.
+## Gotchas & lessons (durable, this session — see also the 2026-07-10 evening handoff in git history)
+- Visual protocol: shoot → Read PNG → tweak; browser harness = iteration, obsidian camera =
+  sign-off; Steel is the DEFAULT theme — set it explicitly per shot.
+- devbox.lock churns on EVERY devbox run (restore inside the same session before
+  `just wt-finish`'s clean-check); devbox eats `$?` in the inner shell.
+- ts-node churn mystery SOLVED: jest.config.ts requires ts-node; now a declared
+  devDependency (D4 branch) — fresh `npm ci` worktrees work without workarounds.
+- Theme token tests pin VALUES + COUNT SPLITS (currently steel 58+6, light 31, print
+  41+6+17) — value changes mean pin updates, by design.
+- The demo vault sets custom fonts (Bookinsanity) via appearance.json — the "serif in real
+  Obsidian" F5-doc note slightly misattributes this (low-priority correction).
+- A `cardhead-spacing` worktree exists that is NOT from this session — left untouched.
+
+## Verified state (session end)
+- Plugin main `76df29f`, workspace main `bc014a4`, both pushed, submodules synced,
+  working trees clean. Session worktrees removed (dse-framework, sc10-steel, d4-prefs,
+  sc4-init-fix).
+- Gates at plugin main: tsc 0 · jest 68 suites / **1037 tests** · shots 59/59 ·
+  obsidian-shots 44/44 · trailer greps clean.
 
 ## Verification commands
 ```bash
 cd /home/scott/code/steelCompendium/workspace
-git log --oneline -3 && git -C draw-steel-elements log --oneline -3   # 5102d5e… / a9d4ec7…
-git status --short && git -C draw-steel-elements status --short       # clean (devbox.lock churn = restore)
-ls docs/superpowers/dse-overhaul/plans/ | tail -3                     # plan-13 present once drafted
-devbox run -- bash -c 'cd draw-steel-elements && npx jest 2>&1 | grep Tests:'   # 993 passed
+git log --oneline -3 && git -C draw-steel-elements log --oneline -5
+git status --short && git -C draw-steel-elements status --short
+devbox run -- bash -c 'cd draw-steel-elements && npx jest 2>&1 | grep Tests:'   # 1037 passed
+devbox run -- bash -c 'cd draw-steel-elements && npm run shots 2>&1 | tail -1'  # 59 clean
 ```
-**Resume protocol:** read this file + the Linear "DSE 6.0.0" project comments (SC-9/10/11
-carry the detailed state), verify above, then continue D4 per "You are here" — or if Scott
-is back, present the SC-10 before/after shots (`visual-harness/shots/`) and the taste calls
-first.
+**Resume protocol:** read this file + the Linear DSE 6.0.0 comments (SC-4/8/9/10/11),
+verify above, then WAIT for Scott's direction — the next moves are his review calls.
