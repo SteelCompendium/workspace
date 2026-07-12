@@ -6,6 +6,18 @@ instead of a tag. New work lands under `## Unreleased` and is promoted to a date
 header when it goes live. One bullet per user-facing change; internal/process changes
 go under an *Internal* sub-heading.
 
+## Unreleased
+
+### Fixed
+
+- **Beastheart Companion Rules match the sourcebook** — the "Ranged Free Strikes"
+  and "Shared Maneuvers" entries were merged into one bullet, the two "You and your
+  companion…" action-economy paragraphs floated as unlabeled bullets instead of
+  sitting inside the "Companion Actions" entry, and the list split in two at a PDF
+  column break. The input transcription now matches the book, and the trait-card
+  renderer learned proper markdown list semantics (loose lists stay one list;
+  indented continuation paragraphs stay inside their item). (SC-81)
+
 ## 2026-07-12 — title pages show echelon (SC-83 follow-up)
 
 ### Fixed
