@@ -6,6 +6,14 @@ instead of a tag. New work lands under `## Unreleased` and is promoted to a date
 header when it goes live. One bullet per user-facing change; internal/process changes
 go under an *Internal* sub-heading.
 
+## 2026-07-12 — title pages show echelon (SC-83 follow-up)
+
+### Fixed
+
+- **Title pages show their echelon** — each Browse title leaf page now carries an
+  "**Echelon:** 1st" line above its Prerequisite (the flat page had lost the book's
+  echelon group header; follow-up to the grouped Titles index). (SC-83)
+
 ## 2026-07-12 — site fixes (SC-79, SC-80)
 
 ### Fixed
@@ -25,14 +33,6 @@ go under an *Internal* sub-heading.
   book source now carries the standard blockquoted ability shape (keywords/action +
   📏/🎯 tables, verified against the printed book), so they render like the heroes
   book's ability-granting perks. (SC-80)
-
-## Unreleased
-
-### Fixed
-
-- **Title pages show their echelon** — each Browse title leaf page now carries an
-  "**Echelon:** 1st" line above its Prerequisite (the flat page had lost the book's
-  echelon group header; follow-up to the grouped Titles index). (SC-83)
 
 ## 2026-07-12 — site fixes (SC-82, SC-83) + card polish
 
