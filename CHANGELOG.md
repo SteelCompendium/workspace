@@ -18,6 +18,13 @@ go under an *Internal* sub-heading.
   tags. The Basics sections were annotated as features against the annotation
   guide, hiding their prose from the class parser; they now render and carry
   class data exactly like the base classes. (SC-79)
+- **Beastheart's Ride Along and Wild Rumpus perks render as proper ability blocks** —
+  both perk pages showed raw PDF-extraction artifacts: keywords and action type mashed
+  into one bold line, a garbled "o Melee 1 x Companion" distance/target line, a stray
+  "Main action" line, and a mid-sentence line break in Wild Rumpus's effect text. The
+  book source now carries the standard blockquoted ability shape (keywords/action +
+  📏/🎯 tables, verified against the printed book), so they render like the heroes
+  book's ability-granting perks. (SC-80)
 
 ## 2026-07-12 — site fixes (SC-82, SC-83) + card polish
 
