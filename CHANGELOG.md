@@ -6,7 +6,7 @@ instead of a tag. New work lands under `## Unreleased` and is promoted to a date
 header when it goes live. One bullet per user-facing change; internal/process changes
 go under an *Internal* sub-heading.
 
-## Unreleased
+## 2026-07-12 — site fixes (SC-79, SC-80)
 
 ### Fixed
 
