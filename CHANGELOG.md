@@ -18,6 +18,12 @@ go under an *Internal* sub-heading.
   "Signature Trait: Shadowmeld" gained its own trait page/code
   (`feature.trait.polder/shadowmeld`) embedding the Shadowmeld ability, like
   Wode Elf's The Wode Defends. (SC-82)
+- **Titles show their echelon again** — the Browse Titles index is grouped under
+  "1st Echelon" … "4th Echelon" sub-headers (as the book and the v1 site grouped
+  them), each title card's type label reads "Echelon N", and the `echelon` field
+  now flows into title frontmatter/JSON/YAML for both the Heroes and Summoner
+  books. (The `N-echelon-titles` groups in the book sources never carried the
+  `@echelon` annotation, so no title ever got the field.) (SC-83)
 - **Card-preview names no longer break mid-word** — long ability names on index
   cards (e.g. "Unearthly Reflexes", "To the Uttermost End") wrapped as
   "UNEARTH / LY / REFLEXES"; they now wrap on whole words. (Material's prose-link
