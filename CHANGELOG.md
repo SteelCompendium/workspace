@@ -26,6 +26,14 @@ go under an *Internal* sub-heading.
   📏/🎯 tables, verified against the printed book), so they render like the heroes
   book's ability-granting perks. (SC-80)
 
+## Unreleased
+
+### Fixed
+
+- **Title pages show their echelon** — each Browse title leaf page now carries an
+  "**Echelon:** 1st" line above its Prerequisite (the flat page had lost the book's
+  echelon group header; follow-up to the grouped Titles index). (SC-83)
+
 ## 2026-07-12 — site fixes (SC-82, SC-83) + card polish
 
 ### Fixed
