@@ -6,6 +6,19 @@ instead of a tag. New work lands under `## Unreleased` and is promoted to a date
 header when it goes live. One bullet per user-facing change; internal/process changes
 go under an *Internal* sub-heading.
 
+## Unreleased
+
+### Fixed
+
+- **Summoner and Beastheart Basics match the base classes** — both class pages
+  rendered their Basics section as a "Level 1 Feature" trait card (with a nested
+  advancement-table card) instead of the plain prose every Heroes-book class uses,
+  and their class landing cards were missing the stats strip (starting stamina,
+  stamina per level, recoveries, potencies, skills) and primary-characteristic
+  tags. The Basics sections were annotated as features against the annotation
+  guide, hiding their prose from the class parser; they now render and carry
+  class data exactly like the base classes. (SC-79)
+
 ## 2026-07-12 — site fixes (SC-82, SC-83) + card polish
 
 ### Fixed

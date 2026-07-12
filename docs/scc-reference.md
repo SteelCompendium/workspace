@@ -59,14 +59,14 @@ likely just noise. Decided 2026-06-18.
 
 ## Registry
 
-~3,075 codes across four books:
+~3,080 codes across four books:
 
 | Book | Codes |
 |------|------:|
-| heroes | ~1,944 |
-| beastheart | 242 |
+| heroes | ~1,950 |
+| beastheart | 241 |
 | monsters | 662 |
-| summoner | ~227 |
+| summoner | 227 |
 
 (How each count reached its current value — and which plan moved it — is in
 [`scc-log.md`](scc-log.md).)

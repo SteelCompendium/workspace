@@ -647,3 +647,22 @@ parser/schema/test change). **Cost.** Registry **+1** (3081 → 3082,
 heroes codes changed/removed. `go test ./...`, `gen --all`, `validate --scc-stable`, and
 `site` clean; the Polder page now renders nested trait cards with cost chips matching the
 other ancestries.
+
+## 2026-07-12 — Summoner/Beastheart `basics` feature codes removed (class Basics normalized)
+
+The Summoner and Beastheart books annotated their class `### Basics` sections as
+`<!-- @type: feature | @id: basics | @level: 1 -->`, against the ANNOTATION-GUIDE rule
+that Basics is structural grouping the class parser consumes. That carved Basics out of
+the class section body, so both class pages rendered Basics as a Level-1 feature trait
+card instead of the base classes' plain prose (Linear SC-79) — and, because
+`FullBodySource()` excludes annotated children, the `ClassParser` never saw the Basics
+prose, leaving both class entities without `starting_stamina` / `stamina_per_level` /
+`recoveries` / potencies / `skills` / `primary_characteristics` (no classhead stats strip
+or primary-characteristic tags on the site). Removed the two annotation lines
+(`steel-etl/input/summoner/Draw Steel Summoner.md`, `…/beastheart/Draw Steel
+Beastheart.md`); no parser/schema/test change. **Cost.** Registry **−2** (3082 → 3080;
+`mcdm.summoner.v1/feature.summoner.level-1/basics`,
+`mcdm.beastheart.v1/feature.beastheart.level-1/basics` — their pages/permalink stubs/API
+entries drop out; nothing linked to either code). `go test ./...`, `gen --all`,
+`validate --scc-stable`, and `site` clean; both class pages now match the base-class
+Basics layout and carry the full classhead stats.
