@@ -629,3 +629,21 @@ leaf code `mcdm.heroes.v1/rule.general/always-round-down`. **Cost.** Registry **
 `gen --all` / `site` clean. The adjacent unannotated `### Game of Exceptions` heading is
 deliberately left unclassified (out of scope). Plan:
 `docs/superpowers/plans/2026-06-25-always-round-down-general-rule.md`.
+
+## 2026-07-12 — `feature.trait.polder/shadowmeld` minted (Polder traits structure fix)
+
+The Polder ancestry's `### Signature Trait: Shadowmeld` heading
+(`steel-etl/input/heroes/Draw Steel Heroes.md`) was H3 — a sibling of `### Polder Traits`
+instead of a child like every other ancestry's H4 signature-trait heading — and had no
+`@type: feature` annotation. That left "Signature Trait: Small!", "Purchased Polder Traits",
+and the six purchased traits outside the annotated `polder-traits` subtree the trait-card
+builder renders, so the Polder page showed them as plain text without point costs (Linear
+SC-82). Demoted the heading to H4 and annotated it
+`<!-- @type: feature | @id: shadowmeld -->`, following the Wode Elf "The Wode Defends"
+precedent (trait wrapping an ability, same id in the `feature.trait.*` and
+`feature.ability.*` namespaces; `collectAbilityChildren` embeds the ability — no
+parser/schema/test change). **Cost.** Registry **+1** (3081 → 3082,
+`mcdm.heroes.v1/feature.trait.polder/shadowmeld`); `classify --diff` showed one added, zero
+heroes codes changed/removed. `go test ./...`, `gen --all`, `validate --scc-stable`, and
+`site` clean; the Polder page now renders nested trait cards with cost chips matching the
+other ancestries.
