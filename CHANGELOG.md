@@ -10,6 +10,14 @@ go under an *Internal* sub-heading.
 
 ### Fixed
 
+- **Polder traits render as proper trait cards** — the Polder ancestry page showed
+  "Signature Trait: Small!" and all six purchased traits as plain text without their
+  point costs (the signature-trait heading sat at the wrong level, outside the
+  "Polder Traits" section every other ancestry nests under). They now render as
+  nested trait cards with cost chips, matching the other ancestries, and
+  "Signature Trait: Shadowmeld" gained its own trait page/code
+  (`feature.trait.polder/shadowmeld`) embedding the Shadowmeld ability, like
+  Wode Elf's The Wode Defends. (SC-82)
 - **Card-preview names no longer break mid-word** — long ability names on index
   cards (e.g. "Unearthly Reflexes", "To the Uttermost End") wrapped as
   "UNEARTH / LY / REFLEXES"; they now wrap on whole words. (Material's prose-link
