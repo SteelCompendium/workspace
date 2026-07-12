@@ -38,7 +38,7 @@ build status after the build started; split 2026-07-10.*
 | **D6** | Compendium-powered reference family (M1/D) | F1, F2 | Fable | ✅ approved | not started (no plan yet) |
 | **D7** | Hero-facing suite (M1/B) | F1 | Fable | ✅ approved | not started (no plan yet) |
 | **D8** | GM subsystems (M1/C) | F1, F2 | Fable | ✅ approved | not started (no plan yet) |
-| **D9** | Authoring & editing UX (M1/E) | F1 | Fable | ✅ approved | not started (no plan yet) |
+| **D9** | Authoring & editing UX (M1/E) | F1 | Fable | ✅ approved | ✅ built + landed (Plan 15) |
 | **M0** | This master roadmap + sequencing | — | Opus | ✅ finalized | — |
 | **M1** | New-Element ideation menu | — | Opus | ✅ drafted — awaiting your curation | — |
 | **M2** | Long-term / stretch roadmap | — | Opus | ✅ drafted | — |
