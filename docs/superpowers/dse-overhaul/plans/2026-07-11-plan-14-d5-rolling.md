@@ -1,5 +1,7 @@
 # D5 Rolling & Interactivity Implementation Plan (Plan 14)
 
+> **STATUS: BUILT + LANDED** (plugin main 6b4a532, 2026-07-11; Opus-reviewed ready-to-merge; suite 1037→1142; edge/bane math AMENDED per header note). Linear SC-7 Done.
+
 > **⚠️ AMENDMENT (2026-07-11, Task-1 review):** the edge/bane math originally drafted here
 > (cancel-then-clamp) contradicted the rulebook — each side caps at 2 (double) BEFORE
 > cancelling: `net = min(edges,2) − min(banes,2)` ("a double edge and just one bane = one

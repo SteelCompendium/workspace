@@ -1,5 +1,7 @@
 # D4 Preferences System Implementation Plan (Plan 13)
 
+> **STATUS: BUILT + LANDED** (plugin main 0a00cb5, 2026-07-10; Opus-reviewed zero-findings; suite 993→1036). Linear SC-8 Done.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** The D4 preference system, reconciled against what D2/D3 actually built: a real

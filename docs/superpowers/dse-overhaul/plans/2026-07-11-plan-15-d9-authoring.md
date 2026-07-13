@@ -1,5 +1,7 @@
 # D9 Authoring & Editing UX Implementation Plan (Plan 15)
 
+> **STATUS: BUILT + LANDED** (plugin main 4d09614, 2026-07-12; Opus-reviewed merge-ready; suite 1142→1191; REMAINING-TASKS relocation executed per review). Linear SC-5 Done.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development
 > (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps
 > use checkbox (`- [ ]`) syntax for tracking.
