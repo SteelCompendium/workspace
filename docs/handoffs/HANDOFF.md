@@ -1,81 +1,95 @@
-# Handoff — 2026-07-13 (autonomous Fable-window run COMPLETE: D5 + D9 + F2-OD-1 all landed; awaiting Scott)
+# Handoff — 2026-07-13 (D1–D5 + D9 + F2-OD-1 all landed · Fable access EXTENDED to 2026-07-19 · fresh session should start here)
 
 ## Active efforts
-- **DSE plugin → 6.0.0** — paused, **nothing in flight**. The D-wave is now D1–D5 + D9
-  landed; D6/D8 wait on F2; F2 waits on two 5-minute Scott actions (below). The remaining
-  gate items for Scott's 6.0.0 criteria are review/QA/taste + the release call (SC-11).
-- **Linear "DSE 6.0.0" project is the live tracker** — SC-5, SC-7, SC-8, SC-9 Done with
-  detailed comments; SC-6 carries the F2 gate assessment + OD-1 closure; SC-10/SC-11/SC-4
-  carry earlier progress comments.
+- **DSE plugin → 6.0.0** — **IN FOCUS.** The build wave is far ahead of the review wave:
+  D1–D5, D9, F4/F5 (cameras), SC-10 (Steel pass) are all **landed on plugin main
+  `4d09614`**; F2's first cross-repo gate (OD-1) is landed on steel-etl main `117eb9f`.
+  What blocks further feature work is mostly **Scott's queue** (below), plus two 5-minute
+  Scott-gated F2 actions that unblock D6/D8.
+- **Fable access extended to 2026-07-19** — the "maximize Fable" directive has runway
+  again. Preferred division of labor (proven over plans 13–15): Fable/Opus for planning +
+  hard implementers, sonnet for mechanical implementers + task reviews, **Opus for every
+  whole-branch final review**. Fable session caps WILL kill subagents mid-flight —
+  always have them write artifact files first, and check worktrees/plan dirs for
+  committed-but-unreported work before re-dispatching.
+- **Linear "Steel Compendium" → "DSE 6.0.0" project is the live tracker.** Done w/ full
+  comments: SC-5 (D9), SC-7 (D5), SC-8 (D4), SC-9 (cameras). SC-6 = F2 gate assessment +
+  OD-1 closure. SC-10/SC-11/SC-4 = earlier progress + Scott's open calls.
 
 ## You are here
-Session ended after Scott's "keep going, maximize Fable" directive was carried through
-D5 (rolling), D9 (authoring UX), and F2's OD-1 gate. **Next actions are Scott's** (see
-below). A fresh agent resuming BEFORE Scott should NOT start D6/D7/D8 (F2-gated /
-D5+D6-dependent) — the only clean autonomous increments left are polish items; better to
-wait for direction.
+Clean stop; **nothing in flight**. The next agent should NOT start new feature work
+unprompted: D6/D8 are F2-gated, D7 needs D5+D6. With Scott present, the highest-value
+next moves are (in order):
+1. **Scott's play/QA pass** on D5 rolling + D9 authoring (see "For Scott").
+2. **F2 unlock pair** (Scott-gated, agent-preppable): SDK 3.2.0 publish prep
+   (data-sdk-npm CHANGELOG backfill + version bump; Scott runs `just release 3.2.0`) and
+   the data-release-zip deploy step (OD-2; Scott runs the deploy). Then plan F2 proper
+   (plugin sync service + SDK 3.x upgrade — spec `F2-data-unified-sdk-integration-spec.md`),
+   which unblocks **D6 → D8 → D7**, all Fable-plannable like plans 13–15.
+3. Without Scott: only the deferred-polish tail (Linear SC-4 + the plans' post-plan
+   deferral lists) is safely autonomous.
 
-## What landed this run (all pushed, all Opus-final-reviewed)
-- **Plugin main `76df29f → 4d09614`** (~20 commits):
-  - **D5 rolling** (Plan 14): opt-in rolling on ability cards (default OFF), `ds-roll` as
-    the 12th element, Dice-Roller-plugin bridge with native fallback, per-block session
-    history. Review caught a RULEBOOK contradiction in the drafted edge/bane math —
-    engine ships cap-before-cancel (`min(e,2)−min(b,2)`); the reference doc was corrected
-    too. Suite → 1142.
-  - **D9 authoring** (Plan 15): 12 insert commands, `/ds` scaffolder (fence-scan hardened
-    twice: callouts/indents/long fences/mis-clear), in-fence key/enum autocomplete
-    (allOf/$ref resolved via single-source dependencySchemas), schema-driven form editor
-    behind default-OFF `authoringControls` (prefs-map-preserving Save, read-only preview,
-    managedModal lifecycle), single-source `example.yaml` per element. Two Criticals
-    caught+fixed in review (Save data-loss; preview second-write-path). Suite → **1191**.
-- **steel-etl main → `117eb9f`** (F2 OD-1): md-dse emits `ds-sb`/`ds-fb` blocks (SDK-3.x
-  shape per spec §3.3, transforms reused 1:1). Verified via LOCAL regen only — generated
-  data NOT committed; blocks appear in data-unified on the next deploy.
-- Plugin rebuilt in the main checkout (`main.js`/`styles.css` current) so the demo vault
-  loads D5+D9 on next open.
+## The program map (workspace `docs/superpowers/dse-overhaul/`)
+- `README.md` — effort map (Spec/Build columns, current). `REMAINING-TASKS.md` — the
+  deferral catalog (incl. D9 v1 deferrals, relocated 2026-07-12).
+- Plans 11–15 in `plans/` are all stamped BUILT+LANDED with their landing SHAs; plans
+  13–15 headers carry OD-resolution tables **Scott has not yet vetoed**.
+- `build-ledger-plans-01-12.md` — archived SDD ledger (plans 13–15 have no ledger; their
+  task-by-task record = the Linear comments + `workspace/.superpowers/sdd/*report*.md`
+  scratch, which is git-ignored and may be clobbered by future runs — Linear is canonical).
 
-## For Scott (ordered)
-1. **Play with the new stuff**: Settings → Rolling → Enable rolling (+ optional
-   click-to-roll); Settings → Authoring → Editing controls (the ✎ pencil + form);
-   type `/ds` in the editor; try a ```` ```ds-roll ```` block. The demo vault at
-   `workspace/draw-steel-elements/demo-vault/` is current.
-2. **Two 5-minute F2 gates** (agents can prep both on request): publish SDK 3.2.0
-   (`just release 3.2.0` in data-sdk-npm — CHANGELOG needs backfill first); add the
-   release-zip step to the deploy recipe + first `gh release create` (OD-2). Then F2
-   proper (plugin sync service) → D6/D8 unblock.
-3. **Standing review pile from the earlier session** (unchanged): SC-10 Steel taste calls
-   (PROPOSED-labeled one-liners), the D4 OD-defaults veto pass, the settings-preview
-   read-only-badge exception, the live Dice-Roller smoke test (OD-3), and the SC-11
-   release decision.
-4. Plan OD tables to veto/confirm: Plan 14 + Plan 15 headers.
+## For Scott (the consolidated queue)
+1. **Try the new features** (demo vault `workspace/draw-steel-elements/demo-vault/` has a
+   current build): Settings → Rolling → Enable rolling (+ click-to-roll); Settings →
+   Authoring → Editing controls → the ✎ pencil/form; `/ds` in the editor; a
+   ```` ```ds-roll ```` block; in-fence autocomplete.
+2. **Veto passes**: Plan 13/14/15 header OD tables; the Steel taste calls
+   (PROPOSED-labeled in styles-source.css: tier-crit/vp gold, stamina-temp blue-vs-purple);
+   the settings-preview read-only-badge exception (D4).
+3. **F2 unlock pair** (5 min each): `just release 3.2.0` in data-sdk-npm (after agent
+   prep); OD-2 zip step + first `gh release create` at next deploy. NOTE: next deploy's
+   regen will include the new `ds-sb`/`ds-fb` blocks in data-unified (intended).
+4. **Manual smoke tests**: live Dice-Roller-plugin delegation (D5 OD-3 — fallback is
+   unit-proven, this is confidence only); retire `~/Documents/draw-steel-elements-demo`
+   whenever (repo vault confirmed working — he opened it 2026-07-11).
+5. **SC-11**: the 6.0.0 release call whenever the gate feels satisfied.
 
-## Gotchas & lessons (this run, durable)
-- **Fable session caps burned 3 planners/implementers mid-flight** — the survivors' rule:
-  write the artifact FILE first, report second; always check the worktree/plan dir for
-  committed-but-unreported work before re-dispatching (recovered all three).
-- **wt-finish races**: any direct push to a submodule's main between wt-new and wt-finish
-  causes a non-FF (rebase the env branch) and/or a superproject submodule CONFLICT
-  (resolve = take the env pointer, commit merge, `git submodule update`,
-  `_submodules-on-branch`, push). Happened twice (canvas resave; other-session steel-etl
-  landings); both resolved cleanly this way.
-- Another session is actively landing steel-etl/site work (SC-79/SC-83…) — fetch/rebase
-  before landing anything into steel-etl.
-- The rest: see the 2026-07-11 handoff in git history (visual-work protocol, devbox.lock,
-  theme-pin counts, demo-vault fonts, ts-node fix).
+## Gotchas & lessons (durable, this window)
+- **Fable caps**: 3 subagents died mid-flight across the window; all recovered from
+  on-disk artifacts (plan files, uncommitted worktree diffs). File-first, then report.
+- **wt-finish races**: direct pushes to a submodule's main between wt-new and wt-finish →
+  non-FF push and/or superproject submodule CONFLICT. Fix: rebase the env branch onto the
+  submodule's origin/main (+ re-run its tests), re-bump the pointer, wt-finish; if the
+  superproject merge conflicts, take the env pointer, commit the merge, `git submodule
+  update`, `just _submodules-on-branch`, push. Happened twice; both clean.
+- **Another session lands steel-etl/site work concurrently** (SC-79/SC-83 etc.) — always
+  fetch/rebase before landing into steel-etl.
+- devbox dirties `devbox.lock` on every run (restore inside the same devbox session
+  before wt-finish's clean check); devbox eats `$?` in inner shells.
+- Plugin invariants the test suite enforces (don't fight them): theme token pins
+  (steel 58+6 / light 31 / print 41+6+17), fixtures↔registry equality (a 13th element
+  needs example.yaml + aliases.json in the same commit), byte-compat serialize, golden
+  default renders. Camera batteries: shots 64, obsidian-shots 48.
+- The edge/bane rulebook rule is **cap-before-cancel** (`min(e,2)−min(b,2)`) — the old
+  "cancel 1-for-1" wording was wrong and got corrected in `reference/draw-steel-reference.md`.
 
-## Verified state (session end)
-- Plugin main `4d09614` · steel-etl main `117eb9f` · workspace main `42bd9da` — all
-  pushed; main checkout clean, submodules synced; session worktrees removed (only the
-  pre-existing `cardhead-spacing` env remains — not mine, untouched).
-- Gates at plugin main: tsc 0 · **1191 tests** · shots 64/64 · obsidian-shots 48/48.
-- steel-etl: go build/test green at 117eb9f.
+## Verified state (as of this handoff)
+- Plugin main `4d09614` · steel-etl main `117eb9f` · workspace main (this commit's
+  parent) — all pushed; main checkout clean + synced; no session worktrees remain (only
+  the pre-existing `cardhead-spacing` env — not this session's, untouched).
+- Gates at plugin main: tsc 0 · jest **1191** · `npm run shots` 64/64 ·
+  `npm run obsidian-shots` 48/48 · go build/test green at steel-etl main.
 
 ## Verification commands
 ```bash
 cd /home/scott/code/steelCompendium/workspace
-git log --oneline -3 && git -C draw-steel-elements log --oneline -3 && git -C steel-etl log --oneline -2
-git status --short && git -C draw-steel-elements status --short
-devbox run -- bash -c 'cd draw-steel-elements && npx jest 2>&1 | grep Tests:'   # 1191 passed
+git fetch origin && git status -sb | head -2                      # up to date w/ origin/main
+git -C draw-steel-elements log --oneline -2                       # 4d09614 …
+git -C steel-etl log --oneline -1                                 # 117eb9f feat(dse): emit ds-sb/ds-fb …
+git status --short && git -C draw-steel-elements status --short   # clean (devbox.lock churn = restore)
+devbox run -- bash -c 'cd draw-steel-elements && npx jest 2>&1 | grep Tests:'  # 1191 passed
+ls ../worktrees/                                                  # only cardhead-spacing
 ```
-**Resume protocol:** read this + the Linear DSE 6.0.0 comments, verify above, WAIT for
-Scott — the remaining moves are his.
+**Resume protocol:** read this file + the Linear DSE 6.0.0 comments (SC-4/5/6/7/8/9/10/11),
+run the commands above, **restate you-are-here/next-action/drift and WAIT for Scott's
+pick** from "You are here" — don't start F2/D6/D7/D8 without him.
