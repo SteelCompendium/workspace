@@ -1,79 +1,81 @@
-# Handoff — 2026-07-11 early AM (autonomous session COMPLETE: D2+D3+F4+F5+SC-10+D4+SC-4-headline all LANDED; awaiting Scott's review)
+# Handoff — 2026-07-13 (autonomous Fable-window run COMPLETE: D5 + D9 + F2-OD-1 all landed; awaiting Scott)
 
 ## Active efforts
-- **DSE plugin → 6.0.0** — paused at a natural review point; **nothing in flight**. Scott's
-  gate (pre-existing stable + new stable + UI overhauled incl. D4 settings): the BUILD side
-  is now substantially complete — what remains is **Scott's review/QA + taste calls + the
-  release decision (SC-11)**, then the optional D5+ feature wave.
-- **Backlog** — Linear "DSE 6.0.0" project. SC-8 (D4) and SC-9 (harness) **Done** with full
-  comments; SC-10/SC-11/SC-4 carry detailed progress comments.
+- **DSE plugin → 6.0.0** — paused, **nothing in flight**. The D-wave is now D1–D5 + D9
+  landed; D6/D8 wait on F2; F2 waits on two 5-minute Scott actions (below). The remaining
+  gate items for Scott's 6.0.0 criteria are review/QA/taste + the release call (SC-11).
+- **Linear "DSE 6.0.0" project is the live tracker** — SC-5, SC-7, SC-8, SC-9 Done with
+  detailed comments; SC-6 carries the F2 gate assessment + OD-1 closure; SC-10/SC-11/SC-4
+  carry earlier progress comments.
 
 ## You are here
-Session ended after Scott's "continue as far as you can" directive was exhausted through
-D4 + the SC-4 headline fix. **Next action belongs to Scott** (see "For Scott" below). If a
-fresh agent resumes BEFORE Scott returns: there is no queued in-flight work — reasonable
-next autonomous increments would be (a) drafting D5 (rolling) from its spec the way Plan 13
-was drafted, or (b) the deferred-Minors polish bundle — but both are judgment calls better
-left for Scott's go-ahead given the review-point pileup.
+Session ended after Scott's "keep going, maximize Fable" directive was carried through
+D5 (rolling), D9 (authoring UX), and F2's OD-1 gate. **Next actions are Scott's** (see
+below). A fresh agent resuming BEFORE Scott should NOT start D6/D7/D8 (F2-gated /
+D5+D6-dependent) — the only clean autonomous increments left are polish items; better to
+wait for direction.
 
-## What landed today (plugin main `b80a8a9 → 76df29f`, ~115 commits, all pushed)
-1. **D2+D3 overhaul landed** (was the unlanded dse-framework branch) + **F4 browser
-   harness** (`npm run shots`) + **F5 real-Obsidian CDP camera** (`npm run obsidian-shots`;
-   `demo-vault/` now lives in the repo, plugin symlinked).
-2. **SC-10 High-Fantasy Steel pass** (Plan: inline; Opus-reviewed): both ground-truth Steel
-   bugs fixed (invisible tier-badge ink; spine text overlap), act-* realigned to the site's
-   canonical `--sc-act-*`, ornament tokens finally CONSUMED (forged card ground, emboss,
-   chips), print ink economy. Also closed the deferred D3 whole-increment review.
-3. **D4 preferences landed** (Plan 13, 7 tasks, SDD; Opus-reviewed zero-findings): real
-   settings tab (descriptor-driven, presets, resets, live-apply, live statblock preview),
-   sparse debounced saveData persistence, per-block `prefs:` overrides, declared-collapse
-   side-channel (byte-compat structurally preserved), temp theme/print commands deleted,
-   `ts-node` devDependency hygiene. Suite 993 → **1037**.
-4. **SC-4 headline fix**: initiative missing-portrait unhandled rejection — all THREE bare
-   `.then()` sites caught, RED-verified regression test.
+## What landed this run (all pushed, all Opus-final-reviewed)
+- **Plugin main `76df29f → 4d09614`** (~20 commits):
+  - **D5 rolling** (Plan 14): opt-in rolling on ability cards (default OFF), `ds-roll` as
+    the 12th element, Dice-Roller-plugin bridge with native fallback, per-block session
+    history. Review caught a RULEBOOK contradiction in the drafted edge/bane math —
+    engine ships cap-before-cancel (`min(e,2)−min(b,2)`); the reference doc was corrected
+    too. Suite → 1142.
+  - **D9 authoring** (Plan 15): 12 insert commands, `/ds` scaffolder (fence-scan hardened
+    twice: callouts/indents/long fences/mis-clear), in-fence key/enum autocomplete
+    (allOf/$ref resolved via single-source dependencySchemas), schema-driven form editor
+    behind default-OFF `authoringControls` (prefs-map-preserving Save, read-only preview,
+    managedModal lifecycle), single-source `example.yaml` per element. Two Criticals
+    caught+fixed in review (Save data-loss; preview second-write-path). Suite → **1191**.
+- **steel-etl main → `117eb9f`** (F2 OD-1): md-dse emits `ds-sb`/`ds-fb` blocks (SDK-3.x
+  shape per spec §3.3, transforms reused 1:1). Verified via LOCAL regen only — generated
+  data NOT committed; blocks appear in data-unified on the next deploy.
+- Plugin rebuilt in the main checkout (`main.js`/`styles.css` current) so the demo vault
+  loads D5+D9 on next open.
 
-## For Scott (the review pile)
-1. **Load the plugin** (rebuild or BRAT off main) — see: the Steel look post-SC-10, the new
-   **Settings tab** (theme picker, statblock presets, live preview), per-block `prefs:`.
-   Before/after PNGs regenerate via `npm run shots` / `npm run obsidian-shots`.
-2. **Taste calls** (one-line flips, PROPOSED-labeled in styles-source.css): tier-crit/vp
-   gold `#e3c14a`; stamina-temp blue `#5dade2` vs purple. Deeper flourishes deliberately
-   not taken: statblock name display-face, boxed section headers, the hidden `.dse-crest`.
-3. **Two one-line confirmations**: settings preview suppresses the read-only badge
-   (`canPersist:true` — argued exception to your explicit-readonly rule); Plan 13's
-   Open-Decision defaults table (plan header) veto pass.
-4. **Demo vault**: open `workspace/draw-steel-elements/demo-vault/` in Obsidian once (it's
-   on main now), confirm your demo setup; then retire `~/Documents/draw-steel-elements-demo`.
-5. **SC-11 release decision** whenever the above satisfies your 6.0.0 gate (bump rc1 → 6.0.0,
-   cut from main). Note BRAT users are effectively on merged main already.
+## For Scott (ordered)
+1. **Play with the new stuff**: Settings → Rolling → Enable rolling (+ optional
+   click-to-roll); Settings → Authoring → Editing controls (the ✎ pencil + form);
+   type `/ds` in the editor; try a ```` ```ds-roll ```` block. The demo vault at
+   `workspace/draw-steel-elements/demo-vault/` is current.
+2. **Two 5-minute F2 gates** (agents can prep both on request): publish SDK 3.2.0
+   (`just release 3.2.0` in data-sdk-npm — CHANGELOG needs backfill first); add the
+   release-zip step to the deploy recipe + first `gh release create` (OD-2). Then F2
+   proper (plugin sync service) → D6/D8 unblock.
+3. **Standing review pile from the earlier session** (unchanged): SC-10 Steel taste calls
+   (PROPOSED-labeled one-liners), the D4 OD-defaults veto pass, the settings-preview
+   read-only-badge exception, the live Dice-Roller smoke test (OD-3), and the SC-11
+   release decision.
+4. Plan OD tables to veto/confirm: Plan 14 + Plan 15 headers.
 
-## Gotchas & lessons (durable, this session — see also the 2026-07-10 evening handoff in git history)
-- Visual protocol: shoot → Read PNG → tweak; browser harness = iteration, obsidian camera =
-  sign-off; Steel is the DEFAULT theme — set it explicitly per shot.
-- devbox.lock churns on EVERY devbox run (restore inside the same session before
-  `just wt-finish`'s clean-check); devbox eats `$?` in the inner shell.
-- ts-node churn mystery SOLVED: jest.config.ts requires ts-node; now a declared
-  devDependency (D4 branch) — fresh `npm ci` worktrees work without workarounds.
-- Theme token tests pin VALUES + COUNT SPLITS (currently steel 58+6, light 31, print
-  41+6+17) — value changes mean pin updates, by design.
-- The demo vault sets custom fonts (Bookinsanity) via appearance.json — the "serif in real
-  Obsidian" F5-doc note slightly misattributes this (low-priority correction).
-- A `cardhead-spacing` worktree exists that is NOT from this session — left untouched.
+## Gotchas & lessons (this run, durable)
+- **Fable session caps burned 3 planners/implementers mid-flight** — the survivors' rule:
+  write the artifact FILE first, report second; always check the worktree/plan dir for
+  committed-but-unreported work before re-dispatching (recovered all three).
+- **wt-finish races**: any direct push to a submodule's main between wt-new and wt-finish
+  causes a non-FF (rebase the env branch) and/or a superproject submodule CONFLICT
+  (resolve = take the env pointer, commit merge, `git submodule update`,
+  `_submodules-on-branch`, push). Happened twice (canvas resave; other-session steel-etl
+  landings); both resolved cleanly this way.
+- Another session is actively landing steel-etl/site work (SC-79/SC-83…) — fetch/rebase
+  before landing anything into steel-etl.
+- The rest: see the 2026-07-11 handoff in git history (visual-work protocol, devbox.lock,
+  theme-pin counts, demo-vault fonts, ts-node fix).
 
 ## Verified state (session end)
-- Plugin main `76df29f`, workspace main `bc014a4`, both pushed, submodules synced,
-  working trees clean. Session worktrees removed (dse-framework, sc10-steel, d4-prefs,
-  sc4-init-fix).
-- Gates at plugin main: tsc 0 · jest 68 suites / **1037 tests** · shots 59/59 ·
-  obsidian-shots 44/44 · trailer greps clean.
+- Plugin main `4d09614` · steel-etl main `117eb9f` · workspace main `42bd9da` — all
+  pushed; main checkout clean, submodules synced; session worktrees removed (only the
+  pre-existing `cardhead-spacing` env remains — not mine, untouched).
+- Gates at plugin main: tsc 0 · **1191 tests** · shots 64/64 · obsidian-shots 48/48.
+- steel-etl: go build/test green at 117eb9f.
 
 ## Verification commands
 ```bash
 cd /home/scott/code/steelCompendium/workspace
-git log --oneline -3 && git -C draw-steel-elements log --oneline -5
+git log --oneline -3 && git -C draw-steel-elements log --oneline -3 && git -C steel-etl log --oneline -2
 git status --short && git -C draw-steel-elements status --short
-devbox run -- bash -c 'cd draw-steel-elements && npx jest 2>&1 | grep Tests:'   # 1037 passed
-devbox run -- bash -c 'cd draw-steel-elements && npm run shots 2>&1 | tail -1'  # 59 clean
+devbox run -- bash -c 'cd draw-steel-elements && npx jest 2>&1 | grep Tests:'   # 1191 passed
 ```
-**Resume protocol:** read this file + the Linear DSE 6.0.0 comments (SC-4/8/9/10/11),
-verify above, then WAIT for Scott's direction — the next moves are his review calls.
+**Resume protocol:** read this + the Linear DSE 6.0.0 comments, verify above, WAIT for
+Scott — the remaining moves are his.
