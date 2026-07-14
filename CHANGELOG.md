@@ -8,6 +8,15 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+### Fixed
+
+- **Stray purple line beside ancestry/class content** — every ancestry page (and the
+  class pages' big ability collections) wrapped its whole trait tree in one card
+  whose panel spanned thousands of pixels, invisible except its 3px purple act
+  spine running down the page gutter. Section-scale wrappers are now frameless
+  (the crested header stays; nested sections carry the framing), and their content
+  aligns with the rest of the page. Leaf trait cards are unchanged. (SC-84)
+
 ## 2026-07-14 — site fixes (SC-66, SC-81)
 
 ### Fixed
