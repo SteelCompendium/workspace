@@ -10,6 +10,14 @@ go under an *Internal* sub-heading.
 
 ### Fixed
 
+- **Statblock "Villain Actions" band lost its stray admonition chrome** — Material
+  styles every `details`/`summary` in page content as a collapsible "note"
+  admonition, which painted a pencil icon, a blue border, a second chevron, and a
+  cramped block header over the band's own design; the band now neutralizes that
+  chrome (crest · title · one chevron on the rail, correct spacing). Head chips
+  mixing a link and a value ("Villain Action 1", "2 Malice") also regained the
+  space that inline-flex was dropping — all ~350 such chips site-wide. (SC-66)
+
 - **Beastheart Companion Rules match the sourcebook** — the "Ranged Free Strikes"
   and "Shared Maneuvers" entries were merged into one bullet, the two "You and your
   companion…" action-economy paragraphs floated as unlabeled bullets instead of
