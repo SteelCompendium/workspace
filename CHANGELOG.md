@@ -8,6 +8,8 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+## 2026-07-14 — site fixes (SC-66, SC-81)
+
 ### Fixed
 
 - **Statblock "Villain Actions" band lost its stray admonition chrome** — Material
