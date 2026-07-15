@@ -8,6 +8,8 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+## 2026-07-15 — site fixes (SC-84)
+
 ### Fixed
 
 - **Stray purple line beside ancestry/class content** — every ancestry page (and the
