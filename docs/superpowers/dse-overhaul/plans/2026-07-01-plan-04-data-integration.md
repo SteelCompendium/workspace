@@ -2,6 +2,67 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
+## Status / Execution notes (2026-07-16 — read BEFORE your task)
+
+**BUILD COMPLETE 2026-07-17 — PENDING SDK PUBLISH.** Tasks 1-13 + final fix wave landed on
+branch `f2` (plugin `dbfef73`); opus whole-branch review: READY-TO-MERGE-PENDING-GATES.
+Gates: tsc clean · jest 1292 · shots 64/64 · obsidian-shots 48/48. Remaining: Task 14 only
+(swap `file:../data-sdk-npm` → `"3.2.0"` after Scott publishes, live-release sync smoke,
+then `just wt-finish f2`). Task record: Linear SC-6. Originally: BUILD STARTED 2026-07-16 in worktree env `f2` (`/home/scott/code/steelCompendium/worktrees/f2`),
+under Scott's autonomy window (no live review; self-verify everything). The plan below was
+written 2026-07-01 against the pre-D2/D4 tree — **these deltas override the plan's stale
+file references wherever they conflict:**
+
+1. **Cross-repo gates are now OPEN** (were "INTEGRATION-GATED / not in scope"):
+   - steel-etl emits `ds-sb`/`ds-fb` in md-dse (OD-1, steel-etl `33a84a8`); data-unified
+     `f40b10b8` carries them.
+   - data-unified publishes release zips (OD-2): **real release `v4.20260717013458`, asset
+     `md-dse-unified-en.zip`** (content at zip root, 3,719 entries) — use it for Task 10/14
+     integration verification.
+   - SDK 3.2.0 is changelog-prepped + test-green on `v3` branch `057140c` but **NOT yet on
+     npm** (needs Scott's `just release 3.2.0`). Therefore `<SDK_VERSION>` = the Task 1
+     fallback: pin `"steel-compendium-sdk": "file:../data-sdk-npm"` (the worktree's
+     submodule copy at `057140c`, run its `npm install && npm run build` first so `dist/`
+     exists). Task 14 swaps to `"3.2.0"` once published — landing to main is gated on that.
+2. **`StatblockProcessor.ts` no longer exists** (D2 element redesign). The B1 consumers are
+   now `src/elements/statblock/view.ts` (with `const sb = model.statblock` at :70):
+   `applyRoleTint(card, sb.roles?.join(', '))` (:79), `leftEyebrow: sb.ancestry?.join(', ')
+   ?? 'Unknown Ancestry'` (:86), `rightPrimary: sb.roles?.join(', ') ?? 'No Role'` (:89).
+   Task 1's `statblockHeaderParts` helper should be created in
+   `src/elements/statblock/view.ts` (exported) and the three call sites migrated:
+   role tint from `sb.role`, leftEyebrow from `sb.keywords?.join(', ')`, rightPrimary from
+   `[sb.organization, sb.role].filter(Boolean).join(' ')` ("Horde Controller" style).
+   Mind the plugin's golden-render pins — if `test/dom` statblock goldens encode the old
+   eyebrow/primary text, update the goldens deliberately in the same commit and say so.
+3. **Settings are D4-era** (`plan-13`): `DSESettings`/`DEFAULT_SETTINGS`/`migrateSettings`
+   live in `src/model/Settings.ts` (`compendiumReleaseTag` :4, `compendiumDestinationDirectory`
+   :5, `settingsVersion` :10). The tab (`src/views/SettingsTab.ts`, `DseSettingTab`) has a
+   two-owner model: pref sections generate from `src/prefs/catalog.ts` descriptors;
+   **operational sections are hand-written in `renderOperationalSections` (:198)** — the
+   compendium section (currently "Draw Steel Compendium Downloader", :199-243) is what
+   Task 11 rewrites in place. New *preferences* (e.g. OD-7 web fallback toggle) may fit the
+   descriptor catalog instead — use `prefs` only if it's a render preference; sync settings
+   stay operational (`DSESettings`).
+4. **F1 seam is live and already reserves scc**: `src/framework/seams/refs.ts` exports
+   `ReferenceService`/`RefProvider`/`RefKind` (includes `'scc'`), has `SCC_PREFIX_RE =
+   /^scc(\.v\d+)?:/` (:78) and a placeholder scc provider (:7-12, :179). Task 7 replaces
+   that placeholder — do NOT invent a parallel seam. Note the comment at :22: legacy
+   `ReferenceResolver.ts` stays live for legacy elements (Task 6 still patches it).
+5. **Framework wiring**: elements register via `registerFrameworkElementDefinitions` +
+   `registerFrameworkElements(this, frameworkV2)` (`main.ts:221-234, :282`);
+   `ElementFrameworkV2Services` is the service bundle (`main.ts:64-71`) — the resolver
+   service belongs there (`refs` exists; sync service can hang off the plugin instance).
+   `main.ts` repo constants at :247-248; download command at :296-300 (`download-data-md-dse`).
+6. **Test layout**: `test/unit/**` (node) / `test/dom/**` (jsdom), `npx jest --selectProjects
+   unit`; obsidian mock `test/mocks/obsidian.ts`; path aliases in `jest.config.ts`. Suite
+   baseline at env start: **1191 passing**. Gates for every task: `npm run tsc` clean +
+   full `npx jest` green. Whole-branch gates before landing: `npm run shots` (64) +
+   `npm run obsidian-shots` (48) — counts may grow if fixtures are added deliberately.
+7. **Env discipline**: all commands `devbox run -- bash -c 'cd draw-steel-elements && …'`
+   from the worktree root. Commit per task (conventional commits, no AI attribution).
+   Fable session caps can kill you mid-task — commit early, write findings to files, and
+   if you inherit a half-done task, check `git log`/`git status` before redoing work.
+
 **Goal:** Move the Draw Steel Elements (DSE) Obsidian plugin off the dead `data-md-dse` repo onto `data-unified` releases with a non-destructive, manifest-driven compendium sync; upgrade `steel-compendium-sdk` from 2.1.5 to the 3.x line (statblock `roles`/`ancestry` → `role`/`organization`/`keywords`); and make `scc.v1:` links resolve everywhere the plugin renders markdown.
 
 **Architecture:** Three new subsystems, each unit-tested against local fixtures cut from the real `data-unified` tree: (1) `src/refs/` — a synchronous `SccResolver` (path derivation → frontmatter index → web fallback → unresolved) plus a pure DOM pass `rewriteSccAnchors` wired into a vault-wide markdown post-processor and into F1's `ReferenceService` as a `RefProvider {kind:"scc"}`; (2) `src/data/` — a `CompendiumSyncService` that diffs a downloaded release zip against a `compendium-manifest.json` and only ever creates/updates/trashes files *it* installed; (3) model-layer SDK 3.x migration with a one-cycle legacy-key shim for homebrew `ds-sb` YAML. Cross-repo prerequisites (SDK 3.2.0 npm release, steel-etl `ds-sb`/`ds-fb` emission, data-unified release assets) are **not** in scope; tasks that can only be verified against them are marked **INTEGRATION-GATED**.
@@ -734,7 +795,9 @@ git -C draw-steel-elements add src/refs/SccResolver.ts test/fakes/fakeObsidian.t
 git -C draw-steel-elements commit -m "feat: scc code normalization + steel-etl path-derivation mirror; test fakes + real md-dse fixtures"
 ```
 
----### Task 4: `SccResolver` — resolution order against real fixtures
+---
+
+### Task 4: `SccResolver` — resolution order against real fixtures
 
 The injectable, synchronous resolver: (1) path derivation under the managed root, (2) lazily seeded frontmatter-`scc` index (code-vs-path principle: codes are forever, paths move), (3) web permalink behind a settings toggle, (4) unresolved. Adds the `sccWebFallback` setting.
 
@@ -1789,7 +1852,9 @@ git -C draw-steel-elements add src/data/manifest.ts test/unit/data/manifest.test
 git -C draw-steel-elements commit -m "feat: compendium manifest schema, sha256 helper, atomic ManifestStore"
 ```
 
----### Task 9: `CompendiumSyncService.applySync` — the manifest-diff engine
+---
+
+### Task 9: `CompendiumSyncService.applySync` — the manifest-diff engine
 
 The heart of F2 §3.4: given the incoming file set and the old manifest, create / update / skip / trash with the guarantees: **never touch a file we didn't put there; never hard-delete user modifications.** The "homebrew is never deleted" invariant is an explicit test here.
 
