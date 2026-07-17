@@ -70,7 +70,7 @@ aggregate ("Browse") are siblings under each locale; `<book>` is one of `heroes`
 | `data/data-unified/en/books/<book>/json` | JSON | SDK consumption |
 | `data/data-unified/en/books/<book>/yaml` | YAML | SDK consumption |
 | `data/data-unified/en/books/<book>/md-linked` | Markdown with resolved `scc:` links | Input for site builder |
-| `data/data-unified/en/books/<book>/md-dse` | Draw Steel Elements plugin format | Obsidian plugin |
+| `data/data-unified/en/books/<book>/md-dse` | Draw Steel Elements plugin format (now carries `ds-sb`/`ds-fb` blocks, F2 OD-1, steel-etl `33a84a8`) | Obsidian plugin |
 | `data/data-unified/en/books/<book>/md-dse-linked` | DSE + resolved links | Obsidian plugin |
 | `data/data-unified/en/books/<book>/clean` | Stripped markdown (no annotations) | Distribution / reading (where enabled) |
 | `data/data-unified/en/unified/<format>` | All six formats, aggregated by type + md `_index` | Cross-book browsing (Browse) |

@@ -8,6 +8,16 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+### Added
+
+- **Draw Steel Elements plugin 6.0.0** — compendium sync now pulls from data-unified
+  releases instead of the retired data-md-dse repo, is non-destructive and
+  manifest-driven (only plugin-installed files are ever updated or trashed), and
+  resolves `scc.v1:` links throughout compendium notes and element text. Statblock YAML
+  adopts the SDK 3.x `role`/`organization`/`keywords` fields (legacy `roles`/`ancestry`
+  keys still work through the 6.x cycle with a deprecation warning). Re-sync your
+  compendium after updating.
+
 ### Internal
 
 - **data-unified now publishes pinnable releases** — `just deploy` (and standalone
