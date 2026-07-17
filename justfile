@@ -151,6 +151,8 @@ deploy:
         git -C "$dir" commit -m "chore: update generated data (steel-etl $etl_sha)" \
             || { echo >&2 "[INFO] No $repo changes to commit"; continue; }
         git -C "$dir" push
+        # 7b. Publish a pinnable release zip for plugin consumers (F2 OD-2).
+        just release-data
     done
 
     # 8. Bump submodule pointers in the workspace superproject. deploy pushed
@@ -161,6 +163,42 @@ deploy:
     git commit -m "chore: bump submodule pointers (deploy ${etl_sha})" \
         || echo >&2 "[INFO] No submodule pointer changes to commit"
     git push
+
+# Publish a GitHub Release on data-unified carrying the DSE-consumable zip
+# (F2 OD-2). Runs automatically at the end of `deploy` (step 7b); safe to run
+# standalone after any data-unified push. Contract (F2 spec §3.2): asset
+# `{format}-unified-{locale}.zip` with the format dir's CONTENT at the zip
+# root (class/…, monster/… — extraction lands directly under the plugin's
+# managed folder); tag `v4.<UTC-timestamp>` (data-md-dse used v3.<ts>). The
+# zip is cut from data-unified's committed HEAD via `git archive`, so a dirty
+# tree can't leak into a release.
+release-data:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    root="{{justfile_directory()}}"
+    dir="$root/data/data-unified"
+    if [ ! -d "$dir/.git" ]; then echo >&2 "[ERR] data-unified is not a git clone"; exit 1; fi
+    if [ -n "$(git -C "$dir" status --porcelain)" ]; then
+        echo >&2 "[ERR] data-unified has uncommitted changes; deploy (or commit+push) first so the release matches the published tree."; exit 1
+    fi
+    if ! git -C "$dir" diff --quiet origin/main HEAD 2>/dev/null; then
+        echo >&2 "[ERR] data-unified HEAD differs from origin/main; push first."; exit 1
+    fi
+    tag="v4.$(date -u +%Y%m%d%H%M%S)"
+    tmp="$(mktemp -d)"
+    trap 'rm -rf "$tmp"' EXIT
+    git -C "$dir" archive --format=zip -o "$tmp/md-dse-unified-en.zip" HEAD:en/unified/md-dse
+    etl_sha="$(git -C "$root/steel-etl" rev-parse --short HEAD)"
+    data_sha="$(git -C "$dir" rev-parse --short HEAD)"
+    echo >&2 "[INFO] Releasing $tag (data-unified $data_sha, steel-etl $etl_sha)..."
+    notes="Generated data release (data-unified $data_sha, steel-etl $etl_sha)."
+    notes="$notes"$'\n\n'"md-dse-unified-en.zip — the en/unified/md-dse Browse-aggregate tree (DSE format: frontmatter scc: identity, ds-feature/ds-sb/ds-fb blocks, scc.v1: links), content at the zip root. Consumed by the Draw Steel Elements plugin's compendium sync."
+    gh release create "$tag" "$tmp/md-dse-unified-en.zip" \
+        --repo SteelCompendium/data-unified \
+        --target main \
+        --title "$tag" \
+        --notes "$notes"
+    echo >&2 "[INFO] Released $tag"
 
 # Run the steel-etl pipeline and deploy the SCC API to the org site repo.
 deploy-api:

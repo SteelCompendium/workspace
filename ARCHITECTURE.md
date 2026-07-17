@@ -43,7 +43,7 @@ All content flows through a single pipeline: annotated source markdown is proces
 
 ## Step-by-step: `just deploy`
 
-The `deploy` recipe runs `gen --all` **once**, commits the SCC API to the org repo, builds and commits the v2 site, then commits and pushes the regenerated data repos. (The standalone `deploy-api` / `deploy-v2` recipes each self-`gen`; `deploy` inlines a single shared `gen` so the `time.Now()` "generated" stamp in `docs/api/*.json` is committed once — a second `gen` would re-stamp those files and leave the org repo dirty with an uncommitted timestamp-only diff.) The full sequence:
+The `deploy` recipe runs `gen --all` **once**, commits the SCC API to the org repo, builds and commits the v2 site, then commits and pushes the regenerated data repos, and finally publishes a **GitHub Release on data-unified** (`just release-data`, F2 OD-2, added 2026-07-16): tag `v4.<UTC-timestamp>`, asset `md-dse-unified-en.zip` = the committed `en/unified/md-dse` tree content (cut via `git archive`, so it always matches the pushed HEAD). The DSE plugin's compendium sync pins these releases; `release-data` is also runnable standalone after any data push. (The standalone `deploy-api` / `deploy-v2` recipes each self-`gen`; `deploy` inlines a single shared `gen` so the `time.Now()` "generated" stamp in `docs/api/*.json` is committed once — a second `gen` would re-stamp those files and leave the org repo dirty with an uncommitted timestamp-only diff.) The full sequence:
 
 ### 1. `steel-etl gen` (pipeline)
 

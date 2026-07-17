@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+### Internal
+
+- **data-unified now publishes pinnable releases** — `just deploy` (and standalone
+  `just release-data`) cuts a GitHub Release on data-unified (tag `v4.<timestamp>`)
+  carrying `md-dse-unified-en.zip`, the DSE-format Browse tree the Draw Steel
+  Elements plugin will sync from (F2 OD-2). First release: `v4.20260717013458`.
+
 ## 2026-07-15 — site fixes (SC-84)
 
 ### Fixed
