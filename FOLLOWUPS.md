@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 24 -->
+<!-- next-id: 25 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -161,3 +161,15 @@ Most recent archive:
 - **Why:** Any normal deploy that also bumps another commit (e.g. a code change + its `chore: update v2 site content` pair — the standard `just deploy-v2` shape!) can silently publish the wrong build. This will recur.
 - **Fix:** Add a concurrency guard to `ci.yml` so deploys serialize instead of racing, e.g. `concurrency: { group: pages-deploy, cancel-in-progress: false }` (queue — don't cancel, or a superseding run could skip the final deploy). Consider also having `just deploy-v2` make a **single** commit (or push superproject + v2 in an order that triggers one CI run), so there's only one deploy per logical deploy. Re-check after: two rapid pushes should end with `gh-pages` at the LATER commit.
 - **Effort:** XS (add `concurrency:` to `ci.yml`) + S (optional deploy-recipe single-commit cleanup).
+
+## 24. D6: vault-classification vs compendium-index timing mismatch
+
+`SccResolver.resolve` (used for `cx.sccAnchors` classification) tries path-derivation
+against the managed compendium root first, falling back to the lazily-seeded frontmatter
+index; `CompendiumIndex.getEntity`/`getEntry` (RefUnwrapView's typed-model lookup) is
+index-only. A freshly-synced compendium file can classify `vault` via `sccAnchors.resolve`
+before `CompendiumIndex` sees it, producing a transiently-misleading "found but not
+renderable — re-sync" card where re-syncing won't help. Confirmed real (D6 Task 3 review,
+2026-07-17), pinned by test, scoped out of the D6 build. Fix by waiting for
+`metadataCache` to settle after sync, or giving `CompendiumIndex.getEntry` the same
+path-derivation fallback `SccResolver.resolve` has.
