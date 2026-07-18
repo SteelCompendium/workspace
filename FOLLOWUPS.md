@@ -28,7 +28,13 @@ Most recent archive:
 
 ## 29. steel-etl gen/site output not fully deterministic run-to-run
 
-**Status:** open
+**Status:** done (with caveat) — 2026-07-18, `steel-etl` `ff85a10` (landed to main): the
+observed troubadour flake did NOT reproduce (16 consecutive full builds byte-identical),
+but a static sweep found exactly one structural hazard of the suspected shape —
+`fbFeatureAction` ranged a map with first-match-wins semantics — fixed as a
+priority-ordered slice with a red/green determinism test. Every other map-range in
+internal/* either sorts before emission or marshals through key-sorting yaml/json. If
+the flake ever recurs, reopen WITH the captured diff of the flapping file.
 
 - **Identified:** 2026-07-18, FOLLOWUPS #15 verification (A/B diffing full site builds); confirmed unrelated to the #15 change (reproduced with it reverted).
 - **What:** Back-to-back `gen --all` + site builds occasionally produce a transient diff on unrelated pages (observed: troubadour feature pages). The #15 implementer worked around it by re-baselining; the #15 reviewer flagged that a non-deterministic build deserves its own tracked item.
