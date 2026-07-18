@@ -8,6 +8,16 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+### Added (pending plugin 6.0.0 release)
+
+- **DSE compendium reference family (D6)** — eleven new plugin elements (`ds-kit`,
+  `ds-ancestry`, `ds-culture`, `ds-career`, `ds-class`, `ds-title`, `ds-perk`,
+  `ds-treasure`, `ds-complication`, `ds-condition`, `ds-rule`), reference-by-SCC for
+  statblocks/features/featureblocks (`ds-statblock` + a bare code renders from the
+  synced compendium), compendium search/insert commands, and the `CompendiumIndex`
+  typed-entity API for the coming encounter builder. md-dse kit files no longer
+  double-carry rendered ability sections (steel-etl). Ships with DSE 6.0.0.
+
 ### Added
 
 - **Draw Steel Elements plugin 6.0.0** — compendium sync now pulls from data-unified
