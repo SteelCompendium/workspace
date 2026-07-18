@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 25 -->
+<!-- next-id: 26 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -173,3 +173,12 @@ renderable — re-sync" card where re-syncing won't help. Confirmed real (D6 Tas
 2026-07-17), pinned by test, scoped out of the D6 build. Fix by waiting for
 `metadataCache` to settle after sync, or giving `CompendiumIndex.getEntry` the same
 path-derivation fallback `SccResolver.resolve` has.
+
+## 25. steel-etl: DSELinkedGenerator drops Children — md-dse-linked kits never emit ds-feature fences
+
+Found during the D6 MUST-FIX (2026-07-17, stash-diff-confirmed pre-existing):
+`DSELinkedGenerator` never copies `Children` when deriving md-dse-linked from md-dse,
+so md-dse-linked kit files have NEVER contained their ` ```ds-feature ` fence. Harmless
+today (DSE consumes md-dse, not md-dse-linked, per F2 OD-3), but the format is
+advertised as "identical except link encoding" — either fix the Children copy or
+document the divergence in ARCHITECTURE's format table.
