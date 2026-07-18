@@ -28,7 +28,10 @@ Most recent archive:
 
 ## 28. D7 hero-suite final-review tail (MED-1 + six LOWs)
 
-**Status:** open
+**Status:** done — items 1–2 and 4–7 fixed in worktree f2 (`draw-steel-elements` `80abd63`,
+2026-07-18, reviewed/approved; jest 1946). Item 3 (`onUpdate` full-remount collapses
+expanded ability cards) deliberately NOT fixed — differential-update architecture change,
+cosmetic-only; revisit only if it annoys in real use.
 
 - **Identified:** 2026-07-18, D7 whole-branch opus final review (verdict SHIP; plan 18, worktree `f2`, plugin range `5c6e33d..903fe4a`). Full detail: the ledger `worktrees/f2/.superpowers/sdd/progress.md` + the final-review report (session scratch).
 - **What:** Deferred non-blocking findings in `draw-steel-elements`:
