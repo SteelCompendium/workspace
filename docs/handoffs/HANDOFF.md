@@ -1,12 +1,12 @@
-# Handoff — 2026-07-18 (F2 + D6 BUILT pending SDK publish · autonomy window through 07-19)
+# Handoff — 2026-07-18 (F2 + D6 + D8 BUILT pending SDK publish · autonomy window through 07-19)
 
 ## Active efforts
-- **F2 + D6 — BOTH BUILT, IN WORKTREE `f2`, NOT LANDED.** Plugin branch `f2` at
-  `68ba54e`, steel-etl at `74d54d0` (D6 kit-dedup), worktree superproject `10e50ec`.
-  Opus whole-branch reviews clean for both. Gates at tip: tsc · jest 1453 · shots 119
-  · obsidian-shots 93 (incl. by-SCC recursion ground-truth camera). Records: Linear
-  SC-6 (F2) + SC-3 (D6), worktree ledger `worktrees/f2/.superpowers/sdd/progress.md`,
-  plans 04 + 16 status stamps (dse-overhaul/plans/).
+- **F2 + D6 + D8 — ALL BUILT, IN WORKTREE `f2`, NOT LANDED.** Plugin branch `f2` at
+  `5c6e33d`, steel-etl at `74d54d0`, worktree superproject `64eda94`. Opus whole-branch
+  reviews clean for all three. Gates at tip: tsc · jest 1725 · shots 139 ·
+  obsidian-shots 110 (incl. sidebar-leaf + by-SCC recursion ground-truth cameras).
+  Records: Linear SC-6 (F2) + SC-3 (D6) + SC-1 (D8), worktree ledger
+  `worktrees/f2/.superpowers/sdd/progress.md`, plans 04/16/17 status stamps.
 - **Landing gate (Scott, 5 min):** `just release 3.2.0` in `data-sdk-npm` (branch `v3`
   at `057140c`, changelog-prepped, build+jest green; recipe bumps version itself, needs
   his npm auth). THEN execute plan 04 Task 14 in the f2 worktree: swap plugin
@@ -19,8 +19,8 @@
   the f2 branch (it consumes SccResolver/sync), i.e. keep working in worktree `f2`.
 
 ## You are here
-F2 + D6 done + verified. Next: D8 planning (spec `D8-gm-subsystems-spec.md`; consumes
-the now-built `CompendiumIndex.getStatblock`) — build in the SAME f2 worktree/branch.
+F2 + D6 + D8 done + verified. Next: D7 planning (spec `D7-hero-suite-spec.md`; consumes
+D8's sidebar host + D5 rolling + D6 references) — build in the SAME f2 worktree/branch.
 NOTE: npm latest for steel-compendium-sdk is still 2.2.0 — the 3.x line was NEVER
 published; Scott's `just release 3.2.0` is the first 3.x publish. After publish: plan-04
 Task 14 (swap plugin pin file:→3.2.0, npm install, full gates), `wt-finish f2`, then
