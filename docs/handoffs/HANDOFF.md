@@ -1,64 +1,67 @@
-# Handoff — 2026-07-18 (F2 + D6 + D8 BUILT pending SDK publish · autonomy window through 07-19)
+# Handoff — 2026-07-18 (DSE 6.0.0 wave BUILD-COMPLETE: F2+D6+D8+D7 in worktree `f2` · pending SDK publish)
 
 ## Active efforts
-- **F2 + D6 + D8 — ALL BUILT, IN WORKTREE `f2`, NOT LANDED.** Plugin branch `f2` at
-  `5c6e33d`, steel-etl at `74d54d0`, worktree superproject `64eda94`. Opus whole-branch
-  reviews clean for all three. Gates at tip: tsc · jest 1725 · shots 139 ·
-  obsidian-shots 110 (incl. sidebar-leaf + by-SCC recursion ground-truth cameras).
-  Records: Linear SC-6 (F2) + SC-3 (D6) + SC-1 (D8), worktree ledger
-  `worktrees/f2/.superpowers/sdd/progress.md`, plans 04/16/17 status stamps.
-- **Landing gate (Scott, 5 min):** `just release 3.2.0` in `data-sdk-npm` (branch `v3`
-  at `057140c`, changelog-prepped, build+jest green; recipe bumps version itself, needs
-  his npm auth). THEN execute plan 04 Task 14 in the f2 worktree: swap plugin
-  `package.json` `"steel-compendium-sdk": "file:../data-sdk-npm"` → `"3.2.0"`,
-  `npm install`, re-run gates (tsc / jest 1292 / shots 64 / obsidian-shots 48), live
-  sync smoke vs data-unified release `v4.20260717013458`, then `just wt-finish f2`.
-- **Autonomy window through 2026-07-19** (memory: fable-autonomy-window): Scott
-  delegated — build without him, self-verify incl. UI; prep-not-run his npm/deploy/release
-  actions. Next build target: **D6** (spec `D6-compendium-reference-spec.md`) — build ON
-  the f2 branch (it consumes SccResolver/sync), i.e. keep working in worktree `f2`.
+- **F2 + D6 + D8 + D7 — ALL BUILT, IN WORKTREE `f2`, NOT LANDED.** D7 (the final feature
+  of the overhaul wave) finished 2026-07-18: plugin branch `f2` at `903fe4a`, worktree
+  superproject `c2474d4`, steel-etl at `74d54d0`. Opus whole-branch verdicts: SHIP for all
+  four efforts. Gates at tip: tsc · jest **1936** (142 suites) · shots **164** ·
+  obsidian-shots **131** · **32 registered elements** (all five D7 elements visually
+  verified in real Obsidian, incl. hero-in-sidebar ground truth).
+  Records: Linear SC-6 (F2) + SC-3 (D6) + SC-1 (D8) + SC-2 (D7) — all **Awaiting**;
+  worktree ledger `worktrees/f2/.superpowers/sdd/progress.md`; plans 04/16/17/18 stamped.
+- **Landing gate (Scott, 5 min):** `just release 3.2.0` in `data-sdk-npm` (branch `v3` at
+  `057140c`, changelog-prepped; recipe bumps version itself, needs his npm auth). THEN:
+  plan-04 Task 14 in the f2 worktree (swap plugin `package.json`
+  `"steel-compendium-sdk": "file:../data-sdk-npm"` → `"3.2.0"`, `npm install`, re-run full
+  gates at the NEW baselines above), live sync smoke vs data-unified release
+  `v4.20260717013458`, `just wt-finish f2` (from the MAIN checkout), then
+  `just release-data` re-cut. Detect gate opening: `npm view steel-compendium-sdk version`
+  → `3.2.0` (still `2.2.0` as of 2026-07-18 morning).
+- **Autonomy window through 2026-07-19** (memory: fable-autonomy-window): build without
+  Scott, self-verify incl. UI; prep-not-run his npm/deploy/release actions.
 
 ## You are here
-F2 + D6 + D8 done + verified. Next: D7 planning (spec `D7-hero-suite-spec.md`; consumes
-D8's sidebar host + D5 rolling + D6 references) — build in the SAME f2 worktree/branch.
-NOTE: npm latest for steel-compendium-sdk is still 2.2.0 — the 3.x line was NEVER
-published; Scott's `just release 3.2.0` is the first 3.x publish. After publish: plan-04
-Task 14 (swap plugin pin file:→3.2.0, npm install, full gates), `wt-finish f2`, then
-`just release-data` re-cut from main checkout (publishes the D6 md-dse kit fix).
+D7 wrap just completed (plan 18 stamped BUILT-SHIP, Linear SC-2 commented → Awaiting,
+FOLLOWUPS #28 filed+pushed on workspace main `05b9a8e`). Next autonomous target:
+**FOLLOWUPS cleanup in the f2 worktree** — #28 (D7 tail: MED-1 state-splice trailing
+comment + two missing tests; S effort) and review #24–#27 for what's clearable before the
+wave lands. House rule: clear FOLLOWUPS before the next feature; no next feature exists —
+the overhaul wave is fully built.
 
 ## Cross-repo state (all pushed)
-- OD-2 landed: `just release-data` recipe on workspace main (`1be882c`); data-unified
-  `f40b10b8` (has ds-sb/ds-fb); first release `v4.20260717013458` cut + contract-verified.
-- OD-5 prepped: SDK v3 `057140c` (3.2.0 changelog + backfilled 3.0.0 entry).
-- Site fixes wave done earlier: SC-66/79/80/81/82/83/84 deployed+Done (SC-84 awaiting
-  Scott's zoom-dot recheck); SC-68/12/75 Done; SC-13/76 await Scott's confirmation.
-
-## Verified state (2026-07-17)
-- Workspace main clean/pushed; f2 worktree: plugin `dbfef73`, superproject `71b9202`,
-  clean trees. Gates at `dbfef73`: tsc 0 · jest 93/1292 · shots 64/64 · obsidian-shots
-  48/48.
-- data-sdk-npm npm publish NOT run (package.json still says 3.1.0 until Scott releases).
+- Worktree f2: plugin `903fe4a`, superproject `c2474d4` — D7 = 15 commits
+  `5c6e33d..903fe4a` (surge-rule fix `74d2401`, sidebar-anchor schema fix `161bd45`,
+  sweep `903fe4a`).
+- data-sdk-npm v3 `057140c` (3.2.0 changelog-prepped, NOT published — npm latest 2.2.0).
+- data-unified `f40b10b8` + release `v4.20260717013458` (contract-verified).
+- Workspace main `05b9a8e`: FOLLOWUPS #24–#28 live; `release-data` recipe landed.
+- Site fixes wave deployed+Done earlier (SC-66/79/80/81/82/83/84 etc.); SC-84 zoom-dot
+  recheck, SC-13/76 confirmations, SC-77, SC-11 release call all await Scott.
 
 ## Gotchas & lessons (this window)
-- data/ clone does NOT propagate into worktrees (empty there); read fixtures from the
-  main checkout read-only, or regen locally.
-- `.superpowers/sdd/` in the MAIN workspace is shared scratch — collides across efforts
-  (a stale D2-era task-9 report was found there). Worktree-local ledger is authoritative.
-- wt-finish must run from the MAIN checkout (recipe resolves ../worktrees/<name>); it
-  pushes each submodule to its .gitmodules-tracked branch (data-sdk-npm → v3, not main).
-- One implementer subagent died mid-flight (API error) — work was already committed;
-  ledger + git log recovered it. File-first discipline works; keep it.
-- plan 04's task headings had `---### Task N` typos — fixed in the worktree copy only.
+- `.superpowers/` is GITIGNORED in the worktree superproject — the ledger persists on disk
+  only; plan stamps are the committed record.
+- wt-finish must run from the MAIN checkout; it pushes each submodule to its
+  .gitmodules-tracked branch (data-sdk-npm → v3, not main).
+- data/ clone does not propagate into worktrees; read fixtures from the main checkout.
+- Sidebar anchor stamping vs `additionalProperties:false` schemas: fixed framework-wide in
+  `prepareModel` (`dataForSchemaValidation`, ANCHOR_KEY single source) — any future
+  schema'd persisted element gets this for free.
+- Obsidian camera: multi-panel sidebar leaves leak across ground-truth captures — detach
+  `dse-sidebar` leaves before each capture (fixed in `903fe4a`); notes-gen needs the
+  id→dirname override map for `heroic-resource`/`hero-tokens`.
+- Never-fabricate held: a tier≥2 surge auto-spend invented by an implementer was caught in
+  review and removed — surges are player-spent only.
 
 ## Verification commands
 ```bash
-cd /home/scott/code/steelCompendium/workspace && git status -sb | head -1
-git -C ../worktrees/f2/draw-steel-elements log --oneline -3   # dbfef73 …
-cat ../worktrees/f2/.superpowers/sdd/progress.md | tail -6
-git -C data-sdk-npm log --oneline -1                          # 057140c
-gh release view --repo SteelCompendium/data-unified --json tagName -q .tagName  # v4.20260717013458
-devbox run -- bash -c 'cd ../worktrees/f2/draw-steel-elements && npx jest 2>&1 | grep Tests:'  # 1292
+cd /home/scott/code/steelCompendium/workspace && git status -sb | head -1   # 05b9a8e clean
+git -C ../worktrees/f2/draw-steel-elements log --oneline -3                 # 903fe4a …
+git -C ../worktrees/f2 log --oneline -2                                     # c2474d4 …
+tail -12 ../worktrees/f2/.superpowers/sdd/progress.md
+devbox run -- bash -c 'cd ../worktrees/f2/draw-steel-elements && npx jest 2>&1 | grep Tests:'  # 1936
+npm view steel-compendium-sdk version   # 2.2.0 = gate closed; 3.2.0 = run plan-04 Task 14
 ```
-**Resume protocol:** read this + Linear SC-6 + the f2 ledger; verify; if Scott has
-published SDK 3.2.0 (npm view steel-compendium-sdk version → 3.2.0), run Task 14 then
-wt-finish f2. Otherwise continue D6 in the f2 worktree under the autonomy window.
+**Resume protocol:** read this + the f2 ledger; verify. If SDK 3.2.0 is live → plan-04
+Task 14 → `wt-finish f2` → `just release-data`. Otherwise continue FOLLOWUPS cleanup in
+the f2 worktree under the autonomy window.
