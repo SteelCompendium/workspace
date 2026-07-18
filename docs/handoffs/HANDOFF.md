@@ -13,7 +13,8 @@
   `057140c`, changelog-prepped; recipe bumps version itself, needs his npm auth). THEN:
   plan-04 Task 14 in the f2 worktree (swap plugin `package.json`
   `"steel-compendium-sdk": "file:../data-sdk-npm"` → `"3.2.0"`, `npm install`, re-run full
-  gates at the NEW baselines above), live sync smoke vs data-unified release
+  gates — new baselines: jest 1969, shots 164, obsidian-shots 131), live sync smoke vs
+  data-unified release
   `v4.20260717013458`, `just wt-finish f2` (from the MAIN checkout), then
   `just release-data` re-cut. Detect gate opening: `npm view steel-compendium-sdk version`
   → `3.2.0` (still `2.2.0` as of 2026-07-18 morning).
@@ -21,17 +22,21 @@
   Scott, self-verify incl. UI; prep-not-run his npm/deploy/release actions.
 
 ## You are here
-D7 wrap just completed (plan 18 stamped BUILT-SHIP, Linear SC-2 commented → Awaiting,
-FOLLOWUPS #28 filed+pushed on workspace main `05b9a8e`). Next autonomous target:
-**FOLLOWUPS cleanup in the f2 worktree** — #28 (D7 tail: MED-1 state-splice trailing
-comment + two missing tests; S effort) and review #24–#27 for what's clearable before the
-wave lands. House rule: clear FOLLOWUPS before the next feature; no next feature exists —
-the overhaul wave is fully built.
+D7 wrapped (plan 18 stamped BUILT-SHIP, Linear SC-2 → Awaiting) AND the FOLLOWUPS
+cleanup wave is done: **#24–#28 all fixed+reviewed in the f2 worktree** (plugin now at
+`67b1539`, jest **1969**; steel-etl at `310ecef` — md-dse-linked kits regain their
+ds-feature fence, 25 heroes kit files change on next regen; superproject `0cc8484`).
+Review catches worth knowing: a jest `setTooltip` mock/production divergence hid a stale
+aria-label bug (mock now mirrors production); Spend Recovery now gates on
+`recoveries_max`. Workspace main `6356672` marks #24–#28 done. Remaining open FOLLOWUPS
+(#2/#3/#7/#8/#15/#18/#23) are all v2-site/steel-etl content items — none DSE, none
+blocking. The DSE wave is build-complete and review-clean; the only thing left is the
+landing gate.
 
 ## Cross-repo state (all pushed)
-- Worktree f2: plugin `903fe4a`, superproject `c2474d4` — D7 = 15 commits
-  `5c6e33d..903fe4a` (surge-rule fix `74d2401`, sidebar-anchor schema fix `161bd45`,
-  sweep `903fe4a`).
+- Worktree f2: plugin `67b1539`, steel-etl `310ecef`, superproject `0cc8484` — D7 = 15
+  commits `5c6e33d..903fe4a` (surge-rule fix `74d2401`, sidebar-anchor schema fix
+  `161bd45`, sweep `903fe4a`) + FOLLOWUPS wave `80abd63..67b1539`.
 - data-sdk-npm v3 `057140c` (3.2.0 changelog-prepped, NOT published — npm latest 2.2.0).
 - data-unified `f40b10b8` + release `v4.20260717013458` (contract-verified).
 - Workspace main `05b9a8e`: FOLLOWUPS #24–#28 live; `release-data` recipe landed.
@@ -56,10 +61,10 @@ the overhaul wave is fully built.
 ## Verification commands
 ```bash
 cd /home/scott/code/steelCompendium/workspace && git status -sb | head -1   # 05b9a8e clean
-git -C ../worktrees/f2/draw-steel-elements log --oneline -3                 # 903fe4a …
-git -C ../worktrees/f2 log --oneline -2                                     # c2474d4 …
+git -C ../worktrees/f2/draw-steel-elements log --oneline -3                 # 67b1539 …
+git -C ../worktrees/f2 log --oneline -2                                     # 0cc8484 …
 tail -12 ../worktrees/f2/.superpowers/sdd/progress.md
-devbox run -- bash -c 'cd ../worktrees/f2/draw-steel-elements && npx jest 2>&1 | grep Tests:'  # 1936
+devbox run -- bash -c 'cd ../worktrees/f2/draw-steel-elements && npx jest 2>&1 | grep Tests:'  # 1969
 npm view steel-compendium-sdk version   # 2.2.0 = gate closed; 3.2.0 = run plan-04 Task 14
 ```
 **Resume protocol:** read this + the f2 ledger; verify. If SDK 3.2.0 is live → plan-04
