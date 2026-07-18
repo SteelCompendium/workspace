@@ -17,6 +17,14 @@ go under an *Internal* sub-heading.
   synced compendium), compendium search/insert commands, and the `CompendiumIndex`
   typed-entity API for the coming encounter builder. md-dse kit files no longer
   double-carry rendered ability sections (steel-etl). Ships with DSE 6.0.0.
+- **GM subsystems (D8)** — sidebar-pinned trackers, encounter builder, montage/project/
+  party trackers, malice + turn economy. A persistent Draw Steel sidebar panel that
+  survives note navigation; a new Encounter Builder (`ds-encounter`) computing live
+  EV/budget/difficulty from the synced compendium and handing off to a ready-to-run
+  tracker; three new trackers (`ds-montage`, `ds-project`, `ds-party`) for montage
+  tests, downtime projects, and party-level victories/renown/wealth; and the initiative
+  tracker's Malice pool is now a first-class panel (round-gain, spend/gain log,
+  quick-add) alongside a per-turn action checklist. Ships with DSE 6.0.0.
 
 ### Added
 
