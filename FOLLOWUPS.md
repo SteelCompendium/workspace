@@ -184,6 +184,11 @@ cosmetic-only; revisit only if it annoys in real use.
 
 ## 24. D6: vault-classification vs compendium-index timing mismatch
 
+**Status:** done — fixed in worktree f2 (`draw-steel-elements` `0fe7c6b`, 2026-07-18,
+reviewed/approved): `CompendiumIndex.getEntry` gained the same path-derivation fallback as
+`SccResolver.resolve` (opportunistic index-seeding, generation-guard preserved; getEntity/
+getStatblock route through getEntry). `query()`/`resolveSlug()` stay index-only by scope.
+
 `SccResolver.resolve` (used for `cx.sccAnchors` classification) tries path-derivation
 against the managed compendium root first, falling back to the lazily-seeded frontmatter
 index; `CompendiumIndex.getEntity`/`getEntry` (RefUnwrapView's typed-model lookup) is
@@ -210,6 +215,10 @@ document the divergence in ARCHITECTURE's format table.
 
 ## 26. DSE: anchor passthrough for counter/negotiation/stamina-bar persisted models
 
+**Status:** done — fixed in worktree f2 (`draw-steel-elements` `d1d01d0`, 2026-07-18,
+reviewed/approved): optional `_dse_anchor` passthrough on all three models, round-trip
+byte-stable, D8 emission-order convention.
+
 The sidebar host's `_dse_anchor` key survives parse/serialize for initiative and the four
 D8 trackers, but counter, negotiation, and stamina-bar build fixed-field model instances
 that drop unknown keys — if one of those is ever sent to the sidebar, its first persist
@@ -218,6 +227,13 @@ fix: an optional passthrough field on those three models, per D8 spec §1.5. Low
 none has a sidebar mount today. (D8 final review, 2026-07-18.)
 
 ## 27. DSE stamina: winded boundary off-by-one in kit core + modal Spend Recovery unsynced
+
+**Status:** done — fixed in worktree f2 (`draw-steel-elements` `a165341` + fix-round
+`e8b19e8`, 2026-07-18, reviewed/approved): kit bar winded boundary now `<=` (RR "half or
+below"); Spend Recovery gates on `recoveries_max`, decrements the counter, disables with
+visible reason at zero, heals from the model's recoveryValue; recovery-spend math
+consolidated into one shared helper; jest setTooltip mock now mirrors production
+aria-label behavior (a mock/production divergence had hidden a stale-tooltip bug).
 
 Two related items from D7 Task 4 review (2026-07-18): (a) the shared
 `framework/kit/StaminaBarPanel.ts` bar-fill color uses `current < floor(max/2)` but the
