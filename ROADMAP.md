@@ -84,7 +84,9 @@ What it is, why it matters, where the work lives. Code blocks, commands, links w
 
 ## 7. Statblocks → build-time HTML + entity-embedding
 
-**Status:** open — narrowed 2026-07-18 (FOLLOWUPS #18); only the Malice-band embedding half remains.
+**Status:** done — the last remaining half (Malice-band embedding) shipped 2026-07-18 via
+FOLLOWUPS #7 (`steel-etl` `ace9bc8`, landed to main): every monster statblock leaf page now
+embeds its family's shared Malice featureblock band. See FOLLOWUPS #7 for detail.
 
 - **Done:** (a) monster/companion statblocks moved off the client-side JSON island to **build-time HTML** — `buildStatblockIslandPage`/`renderStatblockCard` (`steel-etl/internal/site/statblock_page.go`, `statblock_card.go`) emit the finished `.sb-wrap` DOM at build time (shipped 2026-06-14; `steel-statblock.js` itself retired from `v2/` 2026-06-18, commit `7fca6cc1d0`). (b, partial) The **companion advancement-features card embeds onto the companion statblock page** — shipped via ROADMAP #12/#13 (`embed_cards.go` transcludes any `cardable` leaf, including `statblock`, by `{data-scc}` code).
 - **What remains:** embed the shared-family **Malice featureblock band into its monster statblock** page. `renderStatblockCard` explicitly omits it today (`statblock_card.go`: "The shared family Malice band stays omitted (not in island data; FOLLOWUPS #7)") — each family's malice block still only renders as its own standalone page. The prerequisite (build-time statblock rendering) is done, so this is now just a data-plumbing + embedding task, not a rendering-model change.

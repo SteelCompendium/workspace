@@ -116,7 +116,14 @@ change (statblock_card.go) — do with the next statblock Go touch.
 
 ## 7. Statblock island: shared family Malice band not embedded; retainer/fixture "With Captain" label
 
-**Status:** open
+**Status:** done — 2026-07-18, site-followups wave (`steel-etl` `68887ab`+`ace9bc8`+`36818f2`,
+reviewed/approved, LANDED to main): (1) every monster statblock leaf page embeds its family's
+shared Malice featureblock as a band (381 pages; open-by-default per the Villain-band
+precedent; embedded compact cards correctly suppress it; standalone malice pages remain);
+(2) the meta cell is context-driven — real "With Captain" values restored (a parsed-but-
+never-read `with_captain` field was silently dropping them; 116 leaf pages), summoner
+minions show "Free Strike Damage Type" (75 leaf pages), others drop the blank cell.
+Not yet deployed — lands on the next `just deploy-v2`.
 
 - **Identified:** 2026-06-11, building the High-Fantasy Steel statblock client renderer. The design handoff is now archived at `reference/design-system/handoff/redesign/statblocks/README.md` (imported 2026-06-11; the malice band + captain label are its "Notes / nice-to-haves").
 - **What:** Two deferred pieces of the statblock island (`steel-etl/internal/site/statblock_page.go` → `v2/docs/javascripts/steel-statblock.js`):
