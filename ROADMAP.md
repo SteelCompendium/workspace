@@ -84,11 +84,12 @@ What it is, why it matters, where the work lives. Code blocks, commands, links w
 
 ## 7. Statblocks → build-time HTML + entity-embedding
 
-**Status:** open (the enabling, larger half of the featureblock-cards effort; deferred out of Plan 5).
+**Status:** open — narrowed 2026-07-18 (FOLLOWUPS #18); only the Malice-band embedding half remains.
 
-- **What:** (a) Move monster/companion statblocks from the client-side JSON island (`steel-statblock.js`) to **build-time HTML** (the model `featureblock_page.go` already uses for featureblock/terrain cards). (b) Once statblocks are build-time, **embed** related entities onto a host page: Malice featureblocks into their monster statblock, and the **companion advancement-features card onto the companion statblock page** (the on-page card deferred from Plan 5 — spec §5/§8 of `steel-etl/docs/superpowers/specs/2026-06-13-companion-restructure-advancement-featureblocks-design.md`).
-- **Why it matters:** Plans 5a–5c gave companions/fixtures their own separately-coded advancement-features *entities* (live as standalone pages); compositing them onto the parent page needs the host (statblock) to render at build time first. Also removes a client-render dependency.
-- **Effort:** large; design spec exists for the embedding half; the island→build-time-HTML migration is the prerequisite.
+- **Done:** (a) monster/companion statblocks moved off the client-side JSON island to **build-time HTML** — `buildStatblockIslandPage`/`renderStatblockCard` (`steel-etl/internal/site/statblock_page.go`, `statblock_card.go`) emit the finished `.sb-wrap` DOM at build time (shipped 2026-06-14; `steel-statblock.js` itself retired from `v2/` 2026-06-18, commit `7fca6cc1d0`). (b, partial) The **companion advancement-features card embeds onto the companion statblock page** — shipped via ROADMAP #12/#13 (`embed_cards.go` transcludes any `cardable` leaf, including `statblock`, by `{data-scc}` code).
+- **What remains:** embed the shared-family **Malice featureblock band into its monster statblock** page. `renderStatblockCard` explicitly omits it today (`statblock_card.go`: "The shared family Malice band stays omitted (not in island data; FOLLOWUPS #7)") — each family's malice block still only renders as its own standalone page. The prerequisite (build-time statblock rendering) is done, so this is now just a data-plumbing + embedding task, not a rendering-model change.
+- **Why it matters:** a Malice ability card on its own separate page forces readers to jump away from the statblock they're using it against; embedding it inline (like the companion advancement-features card) keeps the statblock page self-contained.
+- **Effort:** M — down from "large" now that the build-time-HTML prerequisite and the embedding mechanism (`embed_cards.go`) both already exist; the remaining work is sourcing/attaching each family's malice block to its statblock(s).
 
 ## 9. Plan 6 — retainer rework (own SCC codes)
 
