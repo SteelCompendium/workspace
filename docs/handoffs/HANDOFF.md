@@ -22,16 +22,22 @@
   Scott, self-verify incl. UI; prep-not-run his npm/deploy/release actions.
 
 ## You are here
-D7 wrapped (plan 18 stamped BUILT-SHIP, Linear SC-2 → Awaiting) AND the FOLLOWUPS
-cleanup wave is done: **#24–#28 all fixed+reviewed in the f2 worktree** (plugin now at
-`67b1539`, jest **1969**; steel-etl at `310ecef` — md-dse-linked kits regain their
-ds-feature fence, 25 heroes kit files change on next regen; superproject `0cc8484`).
-Review catches worth knowing: a jest `setTooltip` mock/production divergence hid a stale
-aria-label bug (mock now mirrors production); Spend Recovery now gates on
-`recoveries_max`. Workspace main `6356672` marks #24–#28 done. Remaining open FOLLOWUPS
-(#2/#3/#7/#8/#15/#18/#23) are all v2-site/steel-etl content items — none DSE, none
-blocking. The DSE wave is build-complete and review-clean; the only thing left is the
-landing gate.
+Two full waves done today beyond the D7 wrap:
+1. **DSE FOLLOWUPS #24–#28** fixed+reviewed in the f2 worktree (plugin `67b1539`, jest
+   **1969**; steel-etl-in-f2 `310ecef` — md-dse-linked kits regain their ds-feature
+   fence). Catches: a jest `setTooltip` mock/production divergence hid a stale aria-label
+   bug (mock now mirrors production); Spend Recovery now gates on `recoveries_max`.
+2. **Site wave #7/#8/#15/#18/#23 — DONE AND LANDED** via worktree `site-followups`
+   (wt-finished + removed): steel-etl main → `36818f2` (malice bands on 381 statblock
+   pages, context-driven captain/damage-type cell incl. a restored parsed-but-never-read
+   `with_captain` field, 1,685 usage-cell glossary links, 36 class-owned back-link pages,
+   ROADMAP #7 now fully done), v2 main → `75b4320` (compact phone sticky, evidence in
+   `.superpowers/sdd/shots-23/`; malice shots in `shots-7/`). **NOT deployed** — next
+   `just deploy-v2` picks it all up; note it will also regen the 25 md-dse-linked kit
+   files from f2's #25 fix ONLY after f2 lands (that fix is on the f2 branch).
+Remaining open FOLLOWUPS: #2/#3 (dormant settings-panel design work) + #29 (new:
+gen/site output not fully deterministic — troubadour feature pages flake). Nothing else
+is open. The DSE wave still just waits on the landing gate.
 
 ## Cross-repo state (all pushed)
 - Worktree f2: plugin `67b1539`, steel-etl `310ecef`, superproject `0cc8484` — D7 = 15
