@@ -8,6 +8,21 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **Monster statblocks now carry their family's Malice features** — every monster
+  statblock page embeds the group's shared Malice featureblock as a band (381 Browse
+  statblock pages; the standalone Malice pages remain).
+- **Statblock secondary-stat cell is now context-driven** — minions show their real
+  "With Captain" bonus (a parser field that was silently dropped is now rendered),
+  summoner minions show "Free Strike Damage Type", and creatures with neither drop the
+  blank cell instead of showing a dash.
+- **All statblock action-type usage cells link to the rules glossary** — 1,685 cells
+  swept across all four books (Main action, Maneuver, Triggered action, …), completing
+  the linking pass the first 19 exemplar cells started.
+- **Class-owned bestiary pages back-link their class** — beastheart companions and
+  summoner fixtures (36 pages) now point back to `class/beastheart` / `class/summoner`.
+- **Statblock sticky mini-header gets a compact phone variant** — one-line truncating
+  name + single stat row (~9% of a 390px viewport, was ~23%); desktop unchanged.
+
 ### Internal
 
 - **data-unified now publishes pinnable releases** — `just deploy` (and standalone
