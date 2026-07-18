@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 27 -->
+<!-- next-id: 28 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -191,3 +191,14 @@ that drop unknown keys — if one of those is ever sent to the sidebar, its firs
 drops the anchor (the visible read-only degrade net catches it; no silent no-save). Root
 fix: an optional passthrough field on those three models, per D8 spec §1.5. Low priority —
 none has a sidebar mount today. (D8 final review, 2026-07-18.)
+
+## 27. DSE stamina: winded boundary off-by-one in kit core + modal Spend Recovery unsynced
+
+Two related items from D7 Task 4 review (2026-07-18): (a) the shared
+`framework/kit/StaminaBarPanel.ts` bar-fill color uses `current < floor(max/2)` but the
+rule is winded at half **or below** (`reference/draw-steel-reference.md:274-278`) — the
+new winded badge is correct (`<=`), so the two indicators disagree at exactly half
+stamina; fix the kit core with boundary-case golden updates as its own scoped change.
+(b) `StaminaEditModal`'s pre-existing "Spend Recovery" quick button heals `floor(max/3)`
+but never decrements the new `recoveries` counter and has no zero-remaining gate — sync
+it with the D7 recoveries model.
