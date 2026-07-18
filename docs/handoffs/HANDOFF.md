@@ -10,7 +10,7 @@
   Records: Linear SC-6 (F2) + SC-3 (D6) + SC-1 (D8) + SC-2 (D7) — all **Awaiting**;
   worktree ledger `worktrees/f2/.superpowers/sdd/progress.md`; plans 04/16/17/18 stamped.
 - **Landing gate (Scott, 5 min):** `just release 3.2.0` in `data-sdk-npm` (branch `v3` at
-  `057140c`, changelog-prepped; recipe bumps version itself, needs his npm auth). THEN:
+  `a9dadb1` — 057140c + the scc-schema declaration fix, changelog-prepped; recipe bumps version itself, needs his npm auth). THEN:
   plan-04 Task 14 in the f2 worktree (swap plugin `package.json`
   `"steel-compendium-sdk": "file:../data-sdk-npm"` → `"3.2.0"`, `npm install`, re-run full
   gates — new baselines: jest 1969, shots 164, obsidian-shots 131), live sync smoke vs
