@@ -13,6 +13,16 @@ just bootstrap
 
 Authored sub-repos are **git submodules**; `--recurse-submodules` fetches them on clone, and `just bootstrap` is the idempotent catch-up (submodule init + the regenerable `data/` scratch dir). For parallel/isolated work use `just wt-new <name>` — see [`docs/worktrees-and-submodules.md`](docs/worktrees-and-submodules.md).
 
+## What it looks like
+
+This pipeline produces the live site at [steelcompendium.io/v2](https://steelcompendium.io/v2/):
+
+| ![v2 home](assets/readme/v2-index.png) | ![Bestiary search & filter](assets/readme/bestiary-index.png) |
+| --- | --- |
+| [Home](https://steelcompendium.io/v2/) — Browse / Read / Bestiary tabs | [Bestiary](https://steelcompendium.io/v2/Bestiary/) — search/filter + encounter builder |
+
+More screenshots (Browse, Read, class pages, statblocks, dark mode) live in [`v2/README.md`](v2/README.md#what-it-looks-like).
+
 ## Layout
 
 ```
