@@ -118,7 +118,12 @@ change (statblock_card.go) — do with the next statblock Go touch.
 
 ## 8. Link the remaining statblock usage-cell action terms to the rule glossary
 
-**Status:** open
+**Status:** done — 2026-07-18 in worktree site-followups (`steel-etl` `c34a8fd` + review
+fix `0190eaf`): 1,685 usage cells linked across all four books (monsters 1,152, heroes
+496+13, summoner 41, beastheart 2), reviewed/approved; 0 resolver WARNs, registry count
+unchanged at 3,080. Left unlinked by design: 156× `-` (passive) and 4× `1 Eidos`
+(resource cost, no glossary heading). Action-type terms map to `rule.combat/turn` per the
+glossary's own pre-existing convention (no per-action-type headings exist).
 
 - **Identified:** 2026-06-13, fixing the statblock usage-cell link rendering (linked usage cells were stored/rendered link-free; now `statblock_page.go` resolves usage links like distance/target and `steel-statblock.js` renders usage via `rich()`).
 - **What:** Only **17** of ~1,000 ability usage cells in the Monsters source are actually linked (`**[Triggered Action](scc:…/rule.combat/triggered-action)**`); the other ~960 are plain text — `Main action`, `Maneuver`, `Triggered action`, `Free triggered action`, `Free maneuver`, `Move action`, `1 Eidos`, etc. Sweep the source so every action-type usage cell links to its rule-glossary term, the way the 17 already do.
