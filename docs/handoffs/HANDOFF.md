@@ -1,79 +1,71 @@
-# Handoff — 2026-07-18 (DSE 6.0.0 wave BUILD-COMPLETE: F2+D6+D8+D7 in worktree `f2` · pending SDK publish)
+# Handoff — 2026-07-18 evening (DSE 6.0.0 fully release-prepped in `f2` · site waves landed · pending SDK publish)
 
-## Active efforts
-- **F2 + D6 + D8 + D7 — ALL BUILT, IN WORKTREE `f2`, NOT LANDED.** D7 (the final feature
-  of the overhaul wave) finished 2026-07-18: plugin branch `f2` at `903fe4a`, worktree
-  superproject `c2474d4`, steel-etl at `74d54d0`. Opus whole-branch verdicts: SHIP for all
-  four efforts. Gates at tip: tsc · jest **1936** (142 suites) · shots **164** ·
-  obsidian-shots **131** · **32 registered elements** (all five D7 elements visually
-  verified in real Obsidian, incl. hero-in-sidebar ground truth).
-  Records: Linear SC-6 (F2) + SC-3 (D6) + SC-1 (D8) + SC-2 (D7) — all **Awaiting**;
-  worktree ledger `worktrees/f2/.superpowers/sdd/progress.md`; plans 04/16/17/18 stamped.
-- **Landing gate (Scott, 5 min):** `just release 3.2.0` in `data-sdk-npm` (branch `v3` at
-  `a9dadb1` — 057140c + the scc-schema declaration fix, changelog-prepped; recipe bumps version itself, needs his npm auth). THEN:
-  plan-04 Task 14 in the f2 worktree (swap plugin `package.json`
-  `"steel-compendium-sdk": "file:../data-sdk-npm"` → `"3.2.0"`, `npm install`, re-run full
-  gates — new baselines: jest 1970, shots 164, obsidian-shots 131), live sync smoke vs
-  data-unified release
-  `v4.20260717013458`, `just wt-finish f2` (from the MAIN checkout), then
-  `just release-data` re-cut. Detect gate opening: `npm view steel-compendium-sdk version`
-  → `3.2.0` (still `2.2.0` as of 2026-07-18 morning).
-- **Autonomy window through 2026-07-19** (memory: fable-autonomy-window): build without
-  Scott, self-verify incl. UI; prep-not-run his npm/deploy/release actions.
+## The one gate (Scott, ~5 min)
+`just release 3.2.0` in `data-sdk-npm` (branch `v3` @ `a9dadb1` — changelog-prepped, incl.
+the scc-schema declaration; recipe bumps the version itself, needs his npm auth). Detect:
+`npm view steel-compendium-sdk version` → `3.2.0` (still `2.2.0` as of 2026-07-18 20:00).
+THEN (autonomous): plan-04 Task 14 in the f2 worktree — swap plugin `package.json`
+`"steel-compendium-sdk": "file:../data-sdk-npm"` → `"3.2.0"`, `npm install`, full gates
+(baselines: tsc clean · jest **1970** · shots **164/295 PNGs** · obsidian-shots **131**),
+live sync smoke vs data-unified release `v4.20260717013458`, `just wt-finish f2` (from the
+MAIN checkout — see gotchas), then `just release-data` re-cut.
 
-## You are here
-Two full waves done today beyond the D7 wrap:
-1. **DSE FOLLOWUPS #24–#28** fixed+reviewed in the f2 worktree (plugin now `ffbfec7` — incl. release-prep: migration guide, docs corrections, SDK-3.x
-   insert template, obsidianmd submission audit CLEAN, eslint 348→3 type-safety waves;
-   jest **1970**; steel-etl-in-f2 `310ecef` — md-dse-linked kits regain their ds-feature
-   fence). Catches: a jest `setTooltip` mock/production divergence hid a stale aria-label
-   bug (mock now mirrors production); Spend Recovery now gates on `recoveries_max`.
-2. **Site wave #7/#8/#15/#18/#23 — DONE AND LANDED** via worktree `site-followups`
-   (wt-finished + removed): steel-etl main → `36818f2` (malice bands on 381 statblock
-   pages, context-driven captain/damage-type cell incl. a restored parsed-but-never-read
-   `with_captain` field, 1,685 usage-cell glossary links, 36 class-owned back-link pages,
-   ROADMAP #7 now fully done), v2 main → `75b4320` (compact phone sticky, evidence in
-   `.superpowers/sdd/shots-23/`; malice shots in `shots-7/`). **NOT deployed** — next
-   `just deploy-v2` picks it all up; note it will also regen the 25 md-dse-linked kit
-   files from f2's #25 fix ONLY after f2 lands (that fix is on the f2 branch).
-Remaining open FOLLOWUPS: #2/#3 (dormant settings-panel design work) + #29 (new:
-gen/site output not fully deterministic — troubadour feature pages flake). Nothing else
-is open. The DSE wave still just waits on the landing gate.
+## State: worktree `f2` (branches pushed to origin as `f2`)
+- Plugin `draw-steel-elements` @ **`ffbfec7`**: F2+D6+D8+D7 built (opus SHIP verdicts, 32
+  elements) + FOLLOWUPS #24/#26/#27/#28 fixes + 6.0.0 release prep: migration guide
+  (`docs/migrating-to-6.md`), sync-era docs corrections, SDK-3.x insert template,
+  obsidianmd submission audit CLEAN (manifest/LICENSE PASS, lint wired in-repo), SC-4
+  a11y roles, eslint **348 → 3** type-safety waves (survivors documented in-place; zero
+  test edits; all 295 shots byte-identical).
+- steel-etl-in-f2 @ `310ecef` (FOLLOWUPS #25: md-dse-linked kits regain ds-feature fence).
+- Superproject @ `f804491`. Ledger: `worktrees/f2/.superpowers/sdd/progress.md`
+  (authoritative build history). Plans 04/16/17/18 stamped BUILT.
+- Records: Linear SC-6/SC-3/SC-1/SC-2 (features) + SC-4 — all **Awaiting** the gate;
+  SC-11 carries the release-prep trail + exact human release commands
+  (`.superpowers/sdd/sc-11-audit-report.md`).
 
-## Cross-repo state (all pushed)
-- Worktree f2: plugin `67b1539`, steel-etl `310ecef`, superproject `0cc8484` — D7 = 15
-  commits `5c6e33d..903fe4a` (surge-rule fix `74d2401`, sidebar-anchor schema fix
-  `161bd45`, sweep `903fe4a`) + FOLLOWUPS wave `80abd63..67b1539`.
-- data-sdk-npm v3 `057140c` (3.2.0 changelog-prepped, NOT published — npm latest 2.2.0).
-- data-unified `f40b10b8` + release `v4.20260717013458` (contract-verified).
-- Workspace main `05b9a8e`: FOLLOWUPS #24–#28 live; `release-data` recipe landed.
-- Site fixes wave deployed+Done earlier (SC-66/79/80/81/82/83/84 etc.); SC-84 zoom-dot
-  recheck, SC-13/76 confirmations, SC-77, SC-11 release call all await Scott.
+## State: landed to main (NOT deployed — one `just deploy-v2` + `just deploy-api` shows all of it)
+- steel-etl main @ **`c139dd4`**: malice bands (381 statblock pages), context-driven
+  captain/damage-type cell (restored a parsed-but-never-read `with_captain`), 1,685
+  usage-cell glossary links, 36 class-owned back-link pages (+ back-link first-child
+  chrome fix, also fixing the older rival-pass duplicate-H1 bug on 13 live pages), SC-86/87
+  idiomatic unlink sweep (23 unlinks), treasure extractor fields (SC-13) + scc schema
+  declaration, deterministic fbIconAction. ROADMAP #7 done; FOLLOWUPS #7/#8/#15/#18/#23/#29
+  all closed (only #2/#3 settings-panel design remain, dormant).
+- v2 main @ `6c08c192bb`: compact phone sticky + README screenshots (SC-67).
+- Deploy-preview evidence for Scott's yes/no: `.superpowers/sdd/shots-deploy-preview/`
+  (9 live-vs-new pairs + 2 fixed shots) + `deploy-preview-report.md` (verdict: recommend).
+  Other evidence dirs: `shots-23/` (mobile sticky), `shots-7/` (malice), `shots-67/`
+  (READMEs), `shots-sc10/` + `sc-10-decisions.md` (taste multiple-choice, awaiting picks).
+
+## Awaiting Scott (beyond the gate)
+Deploy yes/no (evidence above) · SC-10 taste picks (4 decisions, recommendations posted) ·
+SC-76 close confirm (30s) · SC-84 zoom-dot recheck · SC-11 release cut after landing.
 
 ## Gotchas & lessons (this window)
-- `.superpowers/` is GITIGNORED in the worktree superproject — the ledger persists on disk
-  only; plan stamps are the committed record.
-- wt-finish must run from the MAIN checkout; it pushes each submodule to its
-  .gitmodules-tracked branch (data-sdk-npm → v3, not main).
-- data/ clone does not propagate into worktrees; read fixtures from the main checkout.
-- Sidebar anchor stamping vs `additionalProperties:false` schemas: fixed framework-wide in
-  `prepareModel` (`dataForSchemaValidation`, ANCHOR_KEY single source) — any future
-  schema'd persisted element gets this for free.
-- Obsidian camera: multi-panel sidebar leaves leak across ground-truth captures — detach
-  `dse-sidebar` leaves before each capture (fixed in `903fe4a`); notes-gen needs the
-  id→dirname override map for `heroic-resource`/`hero-tokens`.
-- Never-fabricate held: a tier≥2 surge auto-spend invented by an implementer was caught in
-  review and removed — surges are player-spent only.
+- **wt-finish/wt-rm (memory: wt-finish-footguns):** devbox swallows recipe exit codes —
+  NEVER chain `wt-finish && wt-rm` (lost commits once; redone). Run wt-finish from the
+  MAIN checkout only; verify "Landed and pushed" + origin log BEFORE wt-rm. Clean worktree
+  churn first (org-site API timestamps, v2 generated docs from local builds).
+- `.superpowers/` is gitignored in the worktree superproject — ledger persists on disk only.
+- data/ clone does not propagate into worktrees; read fixtures from main checkout or regen.
+- v2 CSS hides the injected statblock-page H1 only when h1+hr+card are ADJACENT — any
+  page-level insertion before the card breaks it; insert INSIDE the card div (first child).
+- Never-fabricate held twice: tier≥2 surge auto-spend (removed); jest `setTooltip` mock
+  divergence hid a stale aria-label bug (mock now mirrors production).
 
 ## Verification commands
 ```bash
-cd /home/scott/code/steelCompendium/workspace && git status -sb | head -1   # 05b9a8e clean
-git -C ../worktrees/f2/draw-steel-elements log --oneline -3                 # ffbfec7 …
-git -C ../worktrees/f2 log --oneline -2                                     # 0cc8484 …
-tail -12 ../worktrees/f2/.superpowers/sdd/progress.md
-devbox run -- bash -c 'cd ../worktrees/f2/draw-steel-elements && npx jest 2>&1 | grep Tests:'  # 1969
+cd /home/scott/code/steelCompendium/workspace && git status -sb | head -1
+git -C ../worktrees/f2/draw-steel-elements log --oneline -3   # ffbfec7 …
+git -C steel-etl log --oneline origin/main -3                  # c139dd4 …
+git -C data-sdk-npm log --oneline origin/v3 -1                 # a9dadb1
+tail -15 ../worktrees/f2/.superpowers/sdd/progress.md
+devbox run -- bash -c 'cd ../worktrees/f2/draw-steel-elements && npx jest 2>&1 | grep Tests:'  # 1970
 npm view steel-compendium-sdk version   # 2.2.0 = gate closed; 3.2.0 = run plan-04 Task 14
 ```
 **Resume protocol:** read this + the f2 ledger; verify. If SDK 3.2.0 is live → plan-04
-Task 14 → `wt-finish f2` → `just release-data`. Otherwise continue FOLLOWUPS cleanup in
-the f2 worktree under the autonomy window.
+Task 14 → `wt-finish f2` (carefully, see gotchas) → `just release-data`. If Scott said
+"deploy" → `just deploy-v2` + `just deploy-api` from the main checkout, then promote the
+workspace CHANGELOG Unreleased section and mark SC-86/87 (+ site tickets) Done. Otherwise:
+board is clear — gate-watch.
