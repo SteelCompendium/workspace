@@ -25,6 +25,12 @@ go under an *Internal* sub-heading.
   tests, downtime projects, and party-level victories/renown/wealth; and the initiative
   tracker's Malice pool is now a first-class panel (round-gain, spend/gain log,
   quick-add) alongside a per-turn action checklist. Ships with DSE 6.0.0.
+- **Hero suite (D7)** — flagship hero sheet (`ds-hero`) composing characteristics,
+  stamina, heroic resource, surges, conditions, skills, and expandable/rollable
+  abilities over one persisted, byte-stable-authored block, plus four standalone
+  trackers it's built from: conditions/resource/surges/tokens. Stamina recoveries
+  and a winded/dying badge and Catch Breath action land on the existing Stamina
+  tracker. Ships with DSE 6.0.0.
 
 ### Added
 
