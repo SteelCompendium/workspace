@@ -48,7 +48,12 @@ cosmetic-only; revisit only if it annoys in real use.
 
 ## 23. Statblock sticky mini-header too bulky at phone widths
 
-**Status:** open
+**Status:** done (pending Scott's taste check on deploy) — 2026-07-18 in worktree
+site-followups (`v2` `75b4320259`, CSS-only compact phone variant): single-line truncating
+name, second meta row hidden, tighter pills; sticky 22.5% → 9.3% of a 390×844 viewport,
+desktop screenshots byte-identical. Before/after evidence: `.superpowers/sdd/shots-23/`
+(main checkout scratch). Punt: hover `title` on truncated names needs a build-time markup
+change (statblock_card.go) — do with the next statblock Go touch.
 
 - **Identified:** 2026-07-01, P1 bug batch visual QA (`docs/superpowers/plans/2026-07-01-p1-v2-bugfix-batch.md` Task 3).
 - **What:** On a 390px viewport, the statblock sticky mini-header (`.sb__sticky`, CSS scroll-driven reveal in `steel-statblock.css`) occupies ~40% of the screen while scrolled: large name + role wrap to multiple lines, then the stats row, then the movement/captain/immunity/weakness row. Pre-existing — NOT caused by the 2026-07-01 `.sc-head` mobile stacking (the sticky uses its own `sb__sticky-*` classes).
@@ -133,7 +138,11 @@ cosmetic-only; revisit only if it annoys in real use.
 
 ## 18. Stale "client-side statblock island" docs — statblocks already render build-time
 
-**Status:** open
+**Status:** done — 2026-07-18 in worktree site-followups (`steel-etl` `fabbd70`, superproject
+`3e3678b`): reality verified (migration fully shipped; `steel-statblock.js` already deleted
+in v2 `7fca6cc1d0`; statblocks.md/site-builder.md already accurate). Fixed the two genuinely
+stale spots: ROADMAP #7 re-scoped to its one remaining piece (malice-band embedding ≡
+FOLLOWUPS #7 item 1, effort M) and a misleading phrase in steel-etl/CLAUDE.md.
 
 - **Identified:** 2026-06-18, investigating Plan 6 (retainer rework) rendering.
 - **What:** Several docs still describe monster/retainer statblocks as **client-side JSON islands** awaiting a build-time-HTML migration, but that migration already shipped: `buildStatblockIslandPage` (`steel-etl/internal/site/statblock_page.go`) renders the build-time `.sb-wrap` card via `renderStatblockCard` (its own comment: "it no longer emits a JSON island"), **0** built pages contain `sc-statblock-mount`, and `v2/site/javascripts/steel-statblock.js` is dead code. Stale references: `ROADMAP.md` #7 (lists "move statblocks from client-side JSON island to build-time HTML" as open), `steel-etl/CLAUDE.md` + `steel-etl/docs/statblocks.md` (describe the island as live).
