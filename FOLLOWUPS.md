@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 29 -->
+<!-- next-id: 30 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -25,6 +25,16 @@ Most recent archive:
 - **Why:** motivation / value
 - **Context:** file paths, gotchas, anything that saves grep time
 - **Effort:** XS (<1 h) / S (1–4 h) / M (1 day) / L (multi-day) -->
+
+## 29. steel-etl gen/site output not fully deterministic run-to-run
+
+**Status:** open
+
+- **Identified:** 2026-07-18, FOLLOWUPS #15 verification (A/B diffing full site builds); confirmed unrelated to the #15 change (reproduced with it reverted).
+- **What:** Back-to-back `gen --all` + site builds occasionally produce a transient diff on unrelated pages (observed: troubadour feature pages). The #15 implementer worked around it by re-baselining; the #15 reviewer flagged that a non-deterministic build deserves its own tracked item.
+- **Why:** Deterministic output is what makes A/B diff verification (and clean deploy commits) trustworthy; a flaky page diff can mask or fake regressions.
+- **Context:** Detail in the session report `.superpowers/sdd/followups-15-report.md` (scratch; capture what's needed before archiving). Suspects: map-iteration order somewhere in the troubadour/feature aggregation path.
+- **Effort:** S (reproduce, find the unordered iteration, sort it)
 
 ## 28. D7 hero-suite final-review tail (MED-1 + six LOWs)
 
@@ -133,7 +143,12 @@ glossary's own pre-existing convention (no per-action-type headings exist).
 
 ## 15. Back-link class-owned statblocks/featureblocks to their owning class
 
-**Status:** open
+**Status:** done — 2026-07-18 in worktree site-followups (`steel-etl` `c3714a6`,
+reviewed/approved): `augmentClassOwnedBackLinks` (rival back-link pattern reused verbatim,
+`.sb-backlink`), 36 pages gain the link (14 beastheart companion species ×2 pages, 4
+summoner fixtures ×2), zero leaks into class landings/rival pages. Runs after
+`embedItemCards` (ordering bug caught+fixed+documented in build.go). Devil Detective
+retainer deferred by scope (structurally excluded).
 
 - **Identified:** 2026-06-15, while adding the Rival Summoner summons cards + summon→summoner back-links (`docs/superpowers/specs/2026-06-15-rival-summoner-summons-design.md`).
 - **What:** Bestiary entities that belong to a hero **class** — beastheart companions (`monster.companion.beastheart.<species>` + their `…-advancement-features`) and summoner fixtures (`monster.fixture.<element>.<id>` + their `…-advancement-features`) — should carry an on-page back-link to their owning class page (`class/beastheart`, `class/summoner`). This is the class-owned analog of the rival summon→summoner back-link being built now; the rival back-link mechanism is the model to reuse.
