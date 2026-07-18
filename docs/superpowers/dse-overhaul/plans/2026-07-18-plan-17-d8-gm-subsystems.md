@@ -1,5 +1,11 @@
 # D8 — GM Subsystems Implementation Plan
 
+> **STATUS 2026-07-18: BUILT — READY-PENDING-GATES.** Tasks 1-10 + docs MUST-FIX landed
+> (plugin `5c6e33d`); opus whole-branch review clean after the docs fix. Gates: tsc · jest
+> 1725 · shots 139 · obsidian-shots 110 (incl. visually-confirmed sidebar leaf). Rides the
+> F2/D6 landing gate (SDK 3.2.0 publish). Records: Linear SC-1 + worktree ledger.
+
+
 > **STATUS 2026-07-18: DRAFT — READY TO EXECUTE.** Written against the BUILT F1/F2/D6
 > framework at worktree `f2`, plugin branch tip **`68ba54e`** (jest baseline **1453** green,
 > fixtures `23`, shots `119`, obsidian-shots `93`). Rides the same F2 landing gate as D6:
