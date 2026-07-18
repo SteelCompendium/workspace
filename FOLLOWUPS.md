@@ -196,6 +196,11 @@ path-derivation fallback `SccResolver.resolve` has.
 
 ## 25. steel-etl: DSELinkedGenerator drops Children — md-dse-linked kits never emit ds-feature fences
 
+**Status:** done — fixed in worktree f2 (`steel-etl` `310ecef`, 2026-07-18): `WriteSection`
+now recursively resolves+copies `Children`; verified red→green, full pipeline regen shows
+exactly the expected 25 heroes kit files (+25 unified mirrors) gaining their fence. Lands
+with the f2 worktree.
+
 Found during the D6 MUST-FIX (2026-07-17, stash-diff-confirmed pre-existing):
 `DSELinkedGenerator` never copies `Children` when deriving md-dse-linked from md-dse,
 so md-dse-linked kit files have NEVER contained their ` ```ds-feature ` fence. Harmless
