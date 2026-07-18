@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 28 -->
+<!-- next-id: 29 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -25,6 +25,23 @@ Most recent archive:
 - **Why:** motivation / value
 - **Context:** file paths, gotchas, anything that saves grep time
 - **Effort:** XS (<1 h) / S (1–4 h) / M (1 day) / L (multi-day) -->
+
+## 28. D7 hero-suite final-review tail (MED-1 + six LOWs)
+
+**Status:** open
+
+- **Identified:** 2026-07-18, D7 whole-branch opus final review (verdict SHIP; plan 18, worktree `f2`, plugin range `5c6e33d..903fe4a`). Full detail: the ledger `worktrees/f2/.superpowers/sdd/progress.md` + the final-review report (session scratch).
+- **What:** Deferred non-blocking findings in `draw-steel-elements`:
+  1. **MED-1** — `findStateSpan`/`splitDefnRaw` (`src/elements/hero/model.ts:393-452`) absorb trailing comments/blank lines *after* a state-last `state:` block into the removed span, so a `# comment` below `state:` is dropped on first persist (comment/whitespace only; no data loss).
+  2. LOW — full-degrade stamina bar renders NaN width when every ref fails and no authored max (cosmetic).
+  3. LOW — `ds-hero` `onUpdate` full-remount collapses expanded ability cards (tab state survives).
+  4. LOW — missing test: authored `resource` override + resolved class simultaneously (gainHint source).
+  5. LOW — missing test: sheet-level roll-disabled static fallback path.
+  6. LOW — conditions chip text runs together (cosmetic, pre-existing pattern).
+  7. LOW — mixed-EOL-after-anchor edge in the sidebar anchor stamper.
+- **Why:** Keeps the SHIP verdict honest — none block merge, but MED-1 is a real (if tiny) authored-bytes fidelity gap in the flagship element's persist path.
+- **Context:** Byte-stability tests in `test/unit/elements/hero/` show the pattern to extend; Task 8/9 reviews name the exact missing assertions.
+- **Effort:** S (MED-1 + the two tests) / XS each for the cosmetic ones
 
 ## 23. Statblock sticky mini-header too bulky at phone widths
 
