@@ -13,7 +13,7 @@
   `a9dadb1` — 057140c + the scc-schema declaration fix, changelog-prepped; recipe bumps version itself, needs his npm auth). THEN:
   plan-04 Task 14 in the f2 worktree (swap plugin `package.json`
   `"steel-compendium-sdk": "file:../data-sdk-npm"` → `"3.2.0"`, `npm install`, re-run full
-  gates — new baselines: jest 1969, shots 164, obsidian-shots 131), live sync smoke vs
+  gates — new baselines: jest 1970, shots 164, obsidian-shots 131), live sync smoke vs
   data-unified release
   `v4.20260717013458`, `just wt-finish f2` (from the MAIN checkout), then
   `just release-data` re-cut. Detect gate opening: `npm view steel-compendium-sdk version`
@@ -23,8 +23,9 @@
 
 ## You are here
 Two full waves done today beyond the D7 wrap:
-1. **DSE FOLLOWUPS #24–#28** fixed+reviewed in the f2 worktree (plugin now `aa17e63` — incl. release-prep: 5.x→6.0 migration guide, sync-era docs
-   corrections, SDK-3.x insert template; jest **1969**; steel-etl-in-f2 `310ecef` — md-dse-linked kits regain their ds-feature
+1. **DSE FOLLOWUPS #24–#28** fixed+reviewed in the f2 worktree (plugin now `ffbfec7` — incl. release-prep: migration guide, docs corrections, SDK-3.x
+   insert template, obsidianmd submission audit CLEAN, eslint 348→3 type-safety waves;
+   jest **1970**; steel-etl-in-f2 `310ecef` — md-dse-linked kits regain their ds-feature
    fence). Catches: a jest `setTooltip` mock/production divergence hid a stale aria-label
    bug (mock now mirrors production); Spend Recovery now gates on `recoveries_max`.
 2. **Site wave #7/#8/#15/#18/#23 — DONE AND LANDED** via worktree `site-followups`
@@ -67,7 +68,7 @@ is open. The DSE wave still just waits on the landing gate.
 ## Verification commands
 ```bash
 cd /home/scott/code/steelCompendium/workspace && git status -sb | head -1   # 05b9a8e clean
-git -C ../worktrees/f2/draw-steel-elements log --oneline -3                 # aa17e63 …
+git -C ../worktrees/f2/draw-steel-elements log --oneline -3                 # ffbfec7 …
 git -C ../worktrees/f2 log --oneline -2                                     # 0cc8484 …
 tail -12 ../worktrees/f2/.superpowers/sdd/progress.md
 devbox run -- bash -c 'cd ../worktrees/f2/draw-steel-elements && npx jest 2>&1 | grep Tests:'  # 1969
