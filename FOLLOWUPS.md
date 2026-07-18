@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 26 -->
+<!-- next-id: 27 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -182,3 +182,12 @@ so md-dse-linked kit files have NEVER contained their ` ```ds-feature ` fence. H
 today (DSE consumes md-dse, not md-dse-linked, per F2 OD-3), but the format is
 advertised as "identical except link encoding" — either fix the Children copy or
 document the divergence in ARCHITECTURE's format table.
+
+## 26. DSE: anchor passthrough for counter/negotiation/stamina-bar persisted models
+
+The sidebar host's `_dse_anchor` key survives parse/serialize for initiative and the four
+D8 trackers, but counter, negotiation, and stamina-bar build fixed-field model instances
+that drop unknown keys — if one of those is ever sent to the sidebar, its first persist
+drops the anchor (the visible read-only degrade net catches it; no silent no-save). Root
+fix: an optional passthrough field on those three models, per D8 spec §1.5. Low priority —
+none has a sidebar mount today. (D8 final review, 2026-07-18.)
