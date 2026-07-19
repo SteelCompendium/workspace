@@ -1,11 +1,13 @@
 # Plan 19 — High-Fantasy Steel: port the v2 site look into the DSE "Steel" theme (SC-10)
 
-> **STATUS 2026-07-19: DRAFT — READY TO EXECUTE.** Baselines at plugin tip **`ffbfec7`**
-> (worktree `f2`): `npx jest` **1970** green · `npm run shots` **164 fixtures / 295 PNGs** ·
-> `npm run obsidian-shots` **131**. This plan only ADDS (fonts + Steel-scoped CSS + a handful
-> of theme-agnostic slot fills); Legacy is frozen byte-for-byte as the proof of "original look
-> untouched." Records: Linear **SC-10**; recon of record
-> `workspace/.superpowers/sdd/hfs-recon.md` (+ paired shots `.superpowers/sdd/shots-hfs-recon/`).
+> **STATUS 2026-07-19: BUILT — SHIP (opus whole-branch verdict).** All 8 tasks landed
+> (plugin `ffbfec7..40d341e`). Gates at tip: tsc · jest **1981** · shots **295** ·
+> obsidian-shots **131** (8-family real-Obsidian visual audit clean). Legacy freeze proven
+> empirically (only sanctioned hero-grid fix drifts, incl. its steel-print improvement).
+> Steel now matches the site's HFS language: bundled Source Serif 4 (OFL), forged
+> cards/chips/rails, crest badges, ◆ grammar, role-tinted statblock plate, featureblock
+> band+glyphs, purple temp-stamina, teal links. Open for Scott: statblock-head crest
+> deviation (1-line revert), spend-title paren nit. Records: Linear SC-10 + ledger.
 
 > **For agentic workers:** REQUIRED SUB-SKILL — use `superpowers:subagent-driven-development`
 > (recommended) or `superpowers:executing-plans` to implement task-by-task. Steps use checkbox
