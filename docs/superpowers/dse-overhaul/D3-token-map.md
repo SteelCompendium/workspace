@@ -80,7 +80,13 @@ the theme automatically (custom properties may reference other custom properties
 ⁵ The spec has no separate heading token; D2 does. Steel grades headings slightly brighter
 (dark) / darker (light) than body fg — the emboss shadow (`--dse-emboss`) does the rest.
 ⁶ **Legacy differs from spec:** the spec's §1.2-I proposed `var(--font-interface)`; D2 shipped
-`var(--font-text)`. The shipped value stands (Legacy is a record).
+`var(--font-text)`. The shipped value stands (Legacy is a record). **Update 2026-07-19** (plan
+19 Task 1): the face itself now SHIPS — `SourceSerif4-SemiBold.woff2`/`-Bold.woff2` (OFL, Latin
+subset) bundled as base64 `@font-face` `src` directly in `styles-source.css`'s Steel scope
+(`assets/fonts/` carries the raw woff2 + `OFL.txt` as the license-compliance record). Until this
+task the token was declared but no face was ever registered, so every Steel title silently fell
+back to `var(--font-text)` (Steel ≈ Legacy typographically); it now actually resolves to Source
+Serif 4.
 
 ## Accent / interaction
 
@@ -143,16 +149,17 @@ the near-universal game-UI crit cue. Light/dark-stable like the role hues. **Sco
 | `--dse-stamina-healthy` | §1.2-E `hp-healthy` | `limegreen` | `var(--sc-role-hexer, #5cc98a)` | | `#1a7a3a` |
 | `--dse-stamina-winded` | §1.2-E `hp-winded` | `yellow` | `#f0b429` | | `#8a6a00` |
 | `--dse-stamina-dying` | §1.2-E `hp-dying` | `red` | `#e74c3c` | | `#a11` |
-| `--dse-stamina-temp` | §1.2-E `hp-temp` (also the heal cue — no `healing` token, plan T3) ¹¹ | `deepskyblue` | `#5dade2` (**proposed**; spec said `#7c5cd6`) | | `#555` |
+| `--dse-stamina-temp` | §1.2-E `hp-temp` (also the heal cue — no `healing` token, plan T3) ¹¹ | `deepskyblue` | `#7c5cd6` (**RESOLVED** 2026-07-19, plan 19 Task 6) | | `#555` |
 | `--dse-stamina-track` | §1.2-E (bar track) | `var(--code-background)` | `rgba(220,226,230,0.06)` | `#eaeeef` | `#fff` |
 
 Bar fills are fills, not text — hues stay light/dark-stable (no contrast pressure).
 ¹¹ **Legacy differs from spec:** the spec assumed the live bar's temp indicator was `purple`
-and derived Steel `#7c5cd6` for continuity; D2 actually shipped Legacy `deepskyblue`. The same
-continuity argument now points **blue**: proposed `#5dade2` (palette's ranged-blue — a defined
-palette hue, reads "temp/shield" next to the green/amber/red fills). If Scott prefers the
-spec's purple to disambiguate from `act-move` blue, `#7c5cd6` is the alternative. **Scott
-review.**
+and derived Steel `#7c5cd6` for continuity; D2 actually shipped Legacy `deepskyblue`. **RESOLVED
+2026-07-19** (plan 19 Task 6, taste call #1, `sc-10-decisions.md`): Scott chose the spec's
+purple `#7c5cd6` over the blue alternative (`#5dade2`, palette's ranged-blue) — it frees blue for
+`act-move`/Maneuver (which the blue alternative collided with, see `act-move`'s note below) and
+sits outside the green/amber/red HP ramp as its own "temp/shield" signal. Legacy's `deepskyblue`
+is unchanged.
 
 ## Encounter
 
@@ -212,9 +219,13 @@ color-consistent with the site's ability borders and nothing new is invented:
 | `act-trait` | steel-grey ⇐ `--sc-ability-passive` | traits ARE the passive, always-on features — grey de-emphasizes exactly like the site's passive border |
 
 Alternative considered: `act-none` ⇐ `ability-special` light-purple — rejected (too close to
-maneuver-purple at 3px-spine size); the area-teal is unambiguous. Note `act-move`'s `#5dade2`
-is shared with the proposed `stamina-temp` (spine vs bar-fill — no co-location; flag if Scott
-takes the purple temp alternative, which removes the overlap entirely).
+maneuver-purple at 3px-spine size); the area-teal is unambiguous. **Superseded** by the SC-10
+amendments below (2026-07-10): `act-*` was realigned to the site's canonical `--sc-act-*`
+tokens, which reassigned `#5dade2` (blue) from this draft's `act-move` onto `act-maneuver`
+instead (`act-move` is now the amber `--sc-act-move, #e8a13a`). The `act-move`/`stamina-temp`
+overlap this note flagged is moot either way — the token holding blue changed, and
+`stamina-temp` separately RESOLVED to purple `#7c5cd6` (2026-07-19, plan 19 Task 6) — but worth
+noting `act-maneuver` now carries the blue this note originally worried about.
 
 Print keeps the darkened (light-column) hue, composed with Steel only (scoping caveat above).
 
@@ -258,18 +269,22 @@ The spec predates D2; the shipped Legacy base wins (this column is a **record**)
 | `hover` | `var(--color-base-25)` | `var(--background-modifier-hover)` |
 | `pad` | `1em` | `1rem` |
 | `font-display` | `var(--font-interface)` | `var(--font-text)` |
-| `stamina-temp` | `purple` | `deepskyblue` (→ footnote 11: Steel proposal follows the blue) |
+| `stamina-temp` | `purple` | `deepskyblue` (→ footnote 11: Steel RESOLVED to the spec's purple `#7c5cd6`) |
 | `role-*` (all 12) | `inherit` | `var(--dse-fg-muted)` (renders the grey spine Legacy statblocks actually draw) |
 | `act-*` (all 6) | *(spec `ability-*`)* `inherit` | `none` (no spine in Legacy) |
 
-## Open items for Scott
+## Open items for Scott — ALL RESOLVED (2026-07-19, plan 19 preamble / `sc-10-decisions.md`)
 
-1. **`act-*` Steel hues** — the action-type → palette-slot mapping above (main=red,
-   maneuver=purple, triggered=amber, move=blue, none=teal-green, trait=grey).
-2. **`tier-crit` gold `#e3c14a`** (no site analog to inherit).
-3. **`vp` gold `#e3c14a`** vs keeping it on `warn`'s orange family.
-4. **`stamina-temp` Steel blue `#5dade2`** (continuity with shipped deepskyblue) vs the spec's
-   purple `#7c5cd6` (which would also de-overlap from `act-move`).
+1. **`act-*` Steel hues** — RESOLVED by the SC-10 amendments below (2026-07-10): realigned to
+   the site's canonical `--sc-act-*` action-type tokens, replacing this map's draft
+   `--sc-ability-*` classification chain.
+2. **`tier-crit` gold `#e3c14a`** — RESOLVED: kept as proposed (no site analog; the site
+   reserves its teal accent for links/tabs/focus/badges only, never crit/VP, so gold stays a
+   free hue). No change.
+3. **`vp` gold `#e3c14a`** — RESOLVED: kept as proposed, shared with `tier-crit` (both are
+   "triumph" semantics, never co-located in one widget). No change.
+4. **`stamina-temp`** — RESOLVED 2026-07-19 (plan 19 Task 6): the spec's purple `#7c5cd6`,
+   over the blue alternative `#5dade2` (see footnote 11) — frees blue for `act-move`/Maneuver.
 5. **Print scoping of `role-*`/`act-*`** to Steel-composed only (Legacy prints stay
    monochrome) — the map's recommendation; Task 5 implements.
 
@@ -303,3 +318,26 @@ Also new (structural, not tokens): the Steel skin now CONSUMES the ornament toke
 card-bg/bevel/shadow on top-level feature/featureblock/statblock panels, emboss on
 titles/section keys/pr-heads/statgrid values, display face on primary titles, metal-faint
 chip washes, and a reserved act-spine lane (`padding-left`).
+
+## SC-10 amendments (2026-07-19 — plan 19 HFS Steel-theme port, Task 8 final sweep)
+
+Two items closed out; every "Open items for Scott" flag above is now resolved (see that
+section) rather than pending:
+
+1. **`--dse-stamina-temp` resolved to `#7c5cd6`** (purple, the spec's original value) — Task 6,
+   taste call #1. The Steel (dark) cell and footnote 11 above are updated in place; Legacy
+   (`deepskyblue`) and Print (`#555`) are untouched.
+2. **`--dse-font-display`'s Source Serif 4 face now actually ships** — Task 1 bundled
+   `SourceSerif4-SemiBold.woff2` / `-Bold.woff2` (OFL, Latin subset) as base64 `@font-face` `src`
+   directly in `styles-source.css`'s Steel scope (`assets/fonts/` carries the raw woff2 +
+   `OFL.txt`). Before this task the token declared the family name but no face was registered,
+   so every Steel title silently fell back to `var(--font-text)`; Steel titles now render in the
+   actual serif.
+
+Structural (not tokens, for completeness — full detail: `dse-overhaul/plans/2026-07-19-plan-19-hfs-steel-theme.md`):
+crest wired into feature/statblock card heads, boxed Distance/Target rail + ◆ EFFECT section
+panels + dashed keyword-spend box on ability cards, role-tinted statblock header band + boxed
+stat rows, featureblock grey header band + per-option glyphs, teal in-card link color, hero-sheet
+Steel chrome, and (Task 8 polish) a placeholder-only Keywords/Type meta chip (the book's lone-dash
+"none" convention) is now dropped entirely in Steel instead of showing an empty `KEYWORDS: --` /
+`TYPE: --` chip (Legacy's existing unlabeled dash text is unchanged).

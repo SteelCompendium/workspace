@@ -31,6 +31,13 @@ go under an *Internal* sub-heading.
   trackers it's built from: conditions/resource/surges/tokens. Stamina recoveries
   and a winded/dying badge and Catch Breath action land on the existing Stamina
   tracker. Ships with DSE 6.0.0.
+- **Steel theme, High-Fantasy Steel port (SC-10)** — the plugin's Steel theme now
+  matches the steelcompendium.io look: forged cards, embossed serif titles (bundled
+  Source Serif 4), crest badges, role-tinted statblock plates, a featureblock header
+  band, boxed Distance/Target and stat rows, and teal in-card links. The original
+  look remains available as the Legacy style (Settings → Appearance → Theme). No
+  design-language change — the site is unchanged; the plugin now ports it. Ships
+  with DSE 6.0.0.
 
 ### Added
 
