@@ -1,4 +1,4 @@
-# Handoff — 2026-07-18 evening (DSE 6.0.0 fully release-prepped in `f2` · site waves landed · pending SDK publish)
+# Handoff — 2026-07-19 (DSE 6.0.0 + HFS Steel theme release-prepped in `f2` · site waves landed · pending SDK publish)
 
 ## The one gate (Scott, ~5 min)
 `just release 3.2.0` in `data-sdk-npm` (branch `v3` @ `a9dadb1` — changelog-prepped, incl.
@@ -6,17 +6,20 @@ the scc-schema declaration; recipe bumps the version itself, needs his npm auth)
 `npm view steel-compendium-sdk version` → `3.2.0` (still `2.2.0` as of 2026-07-18 20:00).
 THEN (autonomous): plan-04 Task 14 in the f2 worktree — swap plugin `package.json`
 `"steel-compendium-sdk": "file:../data-sdk-npm"` → `"3.2.0"`, `npm install`, full gates
-(baselines: tsc clean · jest **1970** · shots **164/295 PNGs** · obsidian-shots **131**),
+(baselines: tsc clean · jest **1981** · shots **295 PNGs** · obsidian-shots **131**),
 live sync smoke vs data-unified release `v4.20260717013458`, `just wt-finish f2` (from the
 MAIN checkout — see gotchas), then `just release-data` re-cut.
 
 ## State: worktree `f2` (branches pushed to origin as `f2`)
-- Plugin `draw-steel-elements` @ **`ffbfec7`**: F2+D6+D8+D7 built (opus SHIP verdicts, 32
-  elements) + FOLLOWUPS #24/#26/#27/#28 fixes + 6.0.0 release prep: migration guide
-  (`docs/migrating-to-6.md`), sync-era docs corrections, SDK-3.x insert template,
-  obsidianmd submission audit CLEAN (manifest/LICENSE PASS, lint wired in-repo), SC-4
-  a11y roles, eslint **348 → 3** type-safety waves (survivors documented in-place; zero
-  test edits; all 295 shots byte-identical).
+- Plugin `draw-steel-elements` @ **`40d341e`**: F2+D6+D8+D7 built (opus SHIP verdicts, 32
+  elements) + FOLLOWUPS #24/#26/#27/#28 fixes + 6.0.0 release prep (migration guide,
+  docs corrections, SDK-3.x insert template, obsidianmd audit CLEAN, eslint 348 → 3) +
+  **SC-10 HFS Steel theme BUILT-SHIP (plan 19, 2026-07-19)**: Source Serif 4 bundled
+  (OFL), forged card grammar (crest/eyebrows/chips/rails/◆ panels), statblock plate,
+  featureblock band+glyphs, tracker/hero harmonization (temp-stamina purple per site),
+  reference-card polish; Legacy byte-frozen (only sanctioned hero-grid bug fix drifts).
+  Gates at tip: tsc · jest **1981** · shots **295** · obsidian-shots **131**.
+  Open for Scott's taste: statblock-head crest deviation (1-line revert).
 - steel-etl-in-f2 @ `310ecef` (FOLLOWUPS #25: md-dse-linked kits regain ds-feature fence).
 - Superproject @ `f804491`. Ledger: `worktrees/f2/.superpowers/sdd/progress.md`
   (authoritative build history). Plans 04/16/17/18 stamped BUILT.
@@ -39,7 +42,7 @@ MAIN checkout — see gotchas), then `just release-data` re-cut.
   (READMEs), `shots-sc10/` + `sc-10-decisions.md` (taste multiple-choice, awaiting picks).
 
 ## Awaiting Scott (beyond the gate)
-Deploy yes/no (evidence above) · SC-10 taste picks (4 decisions, recommendations posted) ·
+Deploy yes/no (evidence above) · SC-10 crest deviation call (theme itself now BUILT — taste picks were resolved by "match the site") ·
 SC-76 close confirm (30s) · SC-84 zoom-dot recheck · SC-11 release cut after landing.
 
 ## Gotchas & lessons (this window)
@@ -57,11 +60,11 @@ SC-76 close confirm (30s) · SC-84 zoom-dot recheck · SC-11 release cut after l
 ## Verification commands
 ```bash
 cd /home/scott/code/steelCompendium/workspace && git status -sb | head -1
-git -C ../worktrees/f2/draw-steel-elements log --oneline -3   # ffbfec7 …
+git -C ../worktrees/f2/draw-steel-elements log --oneline -3   # 40d341e …
 git -C steel-etl log --oneline origin/main -3                  # c139dd4 …
 git -C data-sdk-npm log --oneline origin/v3 -1                 # a9dadb1
 tail -15 ../worktrees/f2/.superpowers/sdd/progress.md
-devbox run -- bash -c 'cd ../worktrees/f2/draw-steel-elements && npx jest 2>&1 | grep Tests:'  # 1970
+devbox run -- bash -c 'cd ../worktrees/f2/draw-steel-elements && npx jest 2>&1 | grep Tests:'  # 1981
 npm view steel-compendium-sdk version   # 2.2.0 = gate closed; 3.2.0 = run plan-04 Task 14
 ```
 **Resume protocol:** read this + the f2 ledger; verify. If SDK 3.2.0 is live → plan-04
