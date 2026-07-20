@@ -1,16 +1,28 @@
 # Handoff — 2026-07-19 (DSE 6.0.0 + HFS Steel theme release-prepped in `f2` · site waves landed · pending SDK publish)
 
-## The one gate (Scott, ~5 min)
-`just release 3.0.0` in `data-sdk-npm` (branch `v3` @ `6622d2d` — the never-published
-3.0/3.1/3.2 work is now collapsed into a single **3.0.0** publish; changelog-prepped with
-a consumer-safety note; recipe bumps the version itself + `npm publish`, needs his npm
-auth — not present in the agent env). Detect: `npm view steel-compendium-sdk version` →
-`3.0.0` (still `2.2.0` as of 2026-07-20). THEN (autonomous): plan-04 Task 14 in the f2
-worktree — swap plugin `package.json`
-`"steel-compendium-sdk": "file:../data-sdk-npm"` → `"3.0.0"`, `npm install`, full gates
-(baselines: tsc clean · jest **1981** · shots **295 PNGs** · obsidian-shots **131**),
-live sync smoke vs data-unified release `v4.20260717013458`, `just wt-finish f2` (from the
-MAIN checkout — see gotchas), then `just release-data` re-cut.
+## GATE PASSED — f2 LANDED to main (2026-07-20)
+SDK **3.0.0 published** (Scott), and the f2 build is **landed to main** (scoped land, NOT
+`wt-finish` — see below):
+- `draw-steel-elements` main → **`01822bd`** (F2+D6+D8+D7+HFS Steel, 32 elements; SDK pin
+  swapped `file:` → npm **3.0.0**; gates green tsc / jest **1981** / shots **295**).
+- `steel-etl` main → **`e7ec4a2`** (the 2 unlanded DSE-generator commits — #25 Children
+  copy + kit-dedup — cherry-picked onto current main, go build/vet/test green).
+- `data-sdk-npm` **3.0.0** live on npm; superproject records `e7192fb`.
+- superproject main → **`38bfb15`**.
+
+**Why scoped, not `wt-finish f2`:** f2 was branched early and its superproject still pinned
+OLD v2 / org-site / data-sdk-npm (all *behind* current main) — a blanket merge would have
+reverted them (and aborted on steel-etl's non-FF push). Only `draw-steel-elements` was
+uniquely ahead; steel-etl's 2 commits were cherry-picked. v2 + org-site left untouched.
+
+**Remaining (Scott):**
+- **Deploy** (`just deploy` — his standing separate decision): regenerates `data-unified`
+  from steel-etl `e7ec4a2` (currently HEAD `f40b10b8` is the stale 2026-07-17 tree) AND
+  auto-runs `release-data` (step 7b) to cut a fresh `v4.*` release. `release-data`
+  standalone would re-zip stale data, so it is NOT run separately — it rides the deploy.
+- **SC-11**: the 6.0.0 plugin release cut (`gh release create` + community-catalog PR).
+- f2 worktree still on disk (ledger lives there, gitignored); safe to `just wt-rm f2`
+  after confirming nothing else is needed — its unique content is landed.
 
 ## State: worktree `f2` (branches pushed to origin as `f2`)
 - Plugin `draw-steel-elements` @ **`40d341e`**: F2+D6+D8+D7 built (opus SHIP verdicts, 32
