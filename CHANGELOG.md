@@ -8,6 +8,36 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+### Added (pending plugin 6.0.0 release)
+
+- **Draw Steel Elements plugin 6.0.0** — compendium sync now pulls from data-unified
+  releases instead of the retired data-md-dse repo, is non-destructive and
+  manifest-driven (only plugin-installed files are ever updated or trashed), and
+  resolves `scc.v1:` links throughout compendium notes and element text. Statblock YAML
+  adopts the SDK 3.x `role`/`organization`/`keywords` fields (legacy `roles`/`ancestry`
+  keys still work through the 6.x cycle with a deprecation warning). Re-sync your
+  compendium after updating.
+- **DSE compendium reference family (D6)** — eleven new plugin elements (`ds-kit`,
+  `ds-ancestry`, `ds-culture`, `ds-career`, `ds-class`, `ds-title`, `ds-perk`,
+  `ds-treasure`, `ds-complication`, `ds-condition`, `ds-rule`), reference-by-SCC for
+  statblocks/features/featureblocks, compendium search/insert commands, and the
+  `CompendiumIndex` typed-entity API.
+- **GM subsystems (D8)** — a persistent Draw Steel sidebar panel; an Encounter Builder
+  (`ds-encounter`) computing live EV/budget/difficulty from the synced compendium;
+  `ds-montage`/`ds-project`/`ds-party` trackers; the initiative tracker's Malice pool
+  as a first-class panel plus a per-turn action checklist.
+- **Hero suite (D7)** — flagship hero sheet (`ds-hero`) plus standalone
+  conditions/resource/surges/tokens trackers; stamina recoveries, winded/dying badge,
+  Catch Breath.
+- **Steel theme, High-Fantasy Steel port (SC-10)** — the plugin's Steel theme now
+  matches the steelcompendium.io look (forged cards, embossed serif titles with bundled
+  Source Serif 4, crest badges, role-tinted statblock plates, teal links); the original
+  look remains available as the Legacy style.
+
+## 2026-07-20 — data + site deploy (DSE 6.0.0 wave)
+
+### Added
+
 - **Monster statblocks now carry their family's Malice features** — every monster
   statblock page embeds the group's shared Malice featureblock as a band (381 Browse
   statblock pages; the standalone Malice pages remain).
@@ -22,13 +52,32 @@ go under an *Internal* sub-heading.
   summoner fixtures (36 pages) now point back to `class/beastheart` / `class/summoner`.
 - **Statblock sticky mini-header gets a compact phone variant** — one-line truncating
   name + single stat row (~9% of a 390px viewport, was ~23%); desktop unchanged.
+- **Treasure data is now structurally complete** (SC-13) — `item_prerequisite`,
+  `project_source`, and per-level `level_effects` populate in the JSON/YAML formats,
+  and every entity's JSON declares its `scc` key so strict schema validation passes.
+- **`steel-compendium-sdk` 3.0.0 published to npm** — the first 3.x release: single
+  `role` + `organization` + `keywords` statblock fields, ten new typed model families,
+  2019-09 schemas. Existing 2.x version-range consumers are unaffected until they
+  upgrade.
+
+### Fixed
+
+- **Idiomatic false-positive links removed** (SC-86, SC-87) — 23 prose words that were
+  wrongly linked as game terms ("guidelines", "edge case", "in turn", "misguided", …)
+  are plain text again; genuinely mechanical uses keep their links.
+- **Companion/fixture/rival pages no longer show a duplicate page title** — the
+  class-owned back-link line now sits inside the statblock card, preserving the
+  title-suppression the other statblock pages get.
 
 ### Internal
 
-- **data-unified now publishes pinnable releases** — `just deploy` (and standalone
+- **data-unified publishes pinnable releases** — `just deploy` (and standalone
   `just release-data`) cuts a GitHub Release on data-unified (tag `v4.<timestamp>`)
-  carrying `md-dse-unified-en.zip`, the DSE-format Browse tree the Draw Steel
-  Elements plugin will sync from (F2 OD-2). First release: `v4.20260717013458`.
+  carrying `md-dse-unified-en.zip`, the DSE-format Browse tree the Draw Steel Elements
+  plugin syncs from (F2 OD-2). Today's release: `v4.20260720213840` (first:
+  `v4.20260717013458`).
+- Deploy recipe fix: `release-data` is now invoked against the workspace justfile
+  (sub-repo justfiles shadowed it, aborting the first full `just deploy`).
 
 ## 2026-07-15 — site fixes (SC-84)
 

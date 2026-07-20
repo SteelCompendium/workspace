@@ -155,16 +155,11 @@ postprocessor → teardown + fresh mount, F1 §4.2 step 3). The sidebar **owns i
 
 - On mount, the host registers `plugin.registerEvent(vault.on("modify", f => { if (f === backingFile) refresh() }))`.
 - `refresh()` re-reads the anchored block body; if it differs from the mounted model's serialization,
-  the panel refreshes it. The design intent is **`view.update(newModel)`** — F1's
-  `ElementView.update()`/`onUpdate()` in-place path (F1 §3.3), making the sidebar the first real
-  consumer of `onUpdate` ("so an LP host — and any future same-DOM refresh — can hand a changed model
-  to a live view without rebuild"). **As shipped (Task 2 review, D8 build), this is a full
-  unload-and-remount through the same `pipeline.run()` entry point, not `onUpdate()`** — `pipeline.run()`
-  doesn't return the view it mounted, so there's no handle to call `update()` on from outside the
-  pipeline (that plumbing lives in `pipeline.ts`, an F1 file). Correct (no leaked Component, no
-  duplicate DOM) but heavier than an in-place patch; wiring true `onUpdate` reuse here is a FOLLOWUPS
-  candidate. This makes the sidebar tracker refresh when the same block is edited in a note view
-  side-by-side — just via remount today, not in place.
+  it calls **`view.update(newModel)`** — F1's `ElementView.update()`/`onUpdate()` in-place path
+  (F1 §3.3). **The sidebar is the first real consumer of `onUpdate`** (F1 explicitly designed it
+  "so an LP host — and any future same-DOM refresh — can hand a changed model to a live view without
+  rebuild"). This makes the sidebar tracker update smoothly when the same block is edited in a note
+  view side-by-side.
 - **Self-echo guard:** our own `persist()` write triggers `vault.on("modify")`. The host stamps the
   last source it wrote and short-circuits `refresh()` when the incoming body equals it — avoiding a
   write→modify→update loop. (Reading mode tolerates the echo rebuild; the sidebar must suppress it
@@ -195,11 +190,8 @@ collapsible) is additive — no host or view change, only `DseSidebarView` chrom
 
 D7's hero sheet is a persisted F1 element. To pin it during play, D7 needs **nothing D8-specific** —
 it uses `addPanel({ filePath, alias: "ds-hero", anchorId })` exactly like initiative. D8's contract
-to D7: **(a)** the sidebar host is element-agnostic (no initiative assumptions); **(b)** external
-edits to the backing block refresh any mounted view — **as shipped (Task 2 review) via a full
-unload-and-remount, not yet `onUpdate()` in place** (see §1.6's correction; don't assume `onUpdate`
-fires today — a later task closing the `pipeline.ts` gap would make this literally true); **(c)**
-`SidebarPanelState`/`addPanel` are the public surface.
+to D7: **(a)** the sidebar host is element-agnostic (no initiative assumptions); **(b)** `onUpdate`
+in-place refresh works for any view; **(c)** `SidebarPanelState`/`addPanel` are the public surface.
 
 ---
 
