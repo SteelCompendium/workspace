@@ -1,11 +1,13 @@
 # Handoff — 2026-07-19 (DSE 6.0.0 + HFS Steel theme release-prepped in `f2` · site waves landed · pending SDK publish)
 
 ## The one gate (Scott, ~5 min)
-`just release 3.2.0` in `data-sdk-npm` (branch `v3` @ `a9dadb1` — changelog-prepped, incl.
-the scc-schema declaration; recipe bumps the version itself, needs his npm auth). Detect:
-`npm view steel-compendium-sdk version` → `3.2.0` (still `2.2.0` as of 2026-07-18 20:00).
-THEN (autonomous): plan-04 Task 14 in the f2 worktree — swap plugin `package.json`
-`"steel-compendium-sdk": "file:../data-sdk-npm"` → `"3.2.0"`, `npm install`, full gates
+`just release 3.0.0` in `data-sdk-npm` (branch `v3` @ `6622d2d` — the never-published
+3.0/3.1/3.2 work is now collapsed into a single **3.0.0** publish; changelog-prepped with
+a consumer-safety note; recipe bumps the version itself + `npm publish`, needs his npm
+auth — not present in the agent env). Detect: `npm view steel-compendium-sdk version` →
+`3.0.0` (still `2.2.0` as of 2026-07-20). THEN (autonomous): plan-04 Task 14 in the f2
+worktree — swap plugin `package.json`
+`"steel-compendium-sdk": "file:../data-sdk-npm"` → `"3.0.0"`, `npm install`, full gates
 (baselines: tsc clean · jest **1981** · shots **295 PNGs** · obsidian-shots **131**),
 live sync smoke vs data-unified release `v4.20260717013458`, `just wt-finish f2` (from the
 MAIN checkout — see gotchas), then `just release-data` re-cut.
@@ -65,9 +67,9 @@ git -C steel-etl log --oneline origin/main -3                  # c139dd4 …
 git -C data-sdk-npm log --oneline origin/v3 -1                 # a9dadb1
 tail -15 ../worktrees/f2/.superpowers/sdd/progress.md
 devbox run -- bash -c 'cd ../worktrees/f2/draw-steel-elements && npx jest 2>&1 | grep Tests:'  # 1981
-npm view steel-compendium-sdk version   # 2.2.0 = gate closed; 3.2.0 = run plan-04 Task 14
+npm view steel-compendium-sdk version   # 2.2.0 = gate closed; 3.0.0 = run plan-04 Task 14
 ```
-**Resume protocol:** read this + the f2 ledger; verify. If SDK 3.2.0 is live → plan-04
+**Resume protocol:** read this + the f2 ledger; verify. If SDK 3.0.0 is live → plan-04
 Task 14 → `wt-finish f2` (carefully, see gotchas) → `just release-data`. If Scott said
 "deploy" → `just deploy-v2` + `just deploy-api` from the main checkout, then promote the
 workspace CHANGELOG Unreleased section and mark SC-86/87 (+ site tickets) Done. Otherwise:
