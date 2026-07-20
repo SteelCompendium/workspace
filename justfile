@@ -152,7 +152,9 @@ deploy:
             || { echo >&2 "[INFO] No $repo changes to commit"; continue; }
         git -C "$dir" push
         # 7b. Publish a pinnable release zip for plugin consumers (F2 OD-2).
-        just release-data
+        # Anchor to the workspace justfile: earlier steps cd into sub-repos
+        # (steel-etl/v2) that carry their own justfiles, which would shadow ours.
+        just -f "$root/justfile" -d "$root" release-data
     done
 
     # 8. Bump submodule pointers in the workspace superproject. deploy pushed
