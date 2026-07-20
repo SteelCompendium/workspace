@@ -30,13 +30,17 @@ MAIN checkout — see gotchas), then `just release-data` re-cut.
   (`.superpowers/sdd/sc-11-audit-report.md`).
 
 ## State: landed to main (NOT deployed — one `just deploy-v2` + `just deploy-api` shows all of it)
-- steel-etl main @ **`c139dd4`**: malice bands (381 statblock pages), context-driven
+- steel-etl main @ **`83eef48`**: malice bands (381 statblock pages), context-driven
   captain/damage-type cell (restored a parsed-but-never-read `with_captain`), 1,685
   usage-cell glossary links, 36 class-owned back-link pages (+ back-link first-child
   chrome fix, also fixing the older rival-pass duplicate-H1 bug on 13 live pages), SC-86/87
   idiomatic unlink sweep (23 unlinks), treasure extractor fields (SC-13) + scc schema
-  declaration, deterministic fbIconAction. ROADMAP #7 done; FOLLOWUPS #7/#8/#15/#18/#23/#29
-  all closed (only #2/#3 settings-panel design remain, dormant).
+  declaration, deterministic fbIconAction, `sbIsland.Ancestry`→`Eyebrow` rename (holds
+  provenance too; vestigial island JSON tag). ROADMAP #7 done;
+  FOLLOWUPS #7/#8/#15/#18/#23/#29 all closed (only #2/#3 settings-panel design, dormant).
+- **data-sdk-npm v3 @ `6622d2d`** — the never-published 3.0/3.1/3.2 work collapsed into a
+  single **3.0.0** (consumer-safety note in CHANGELOG; reader warns on 2nd role token,
+  407 tests). Prepped + pushed; awaiting Scott's `just release 3.0.0` (npm auth).
 - v2 main @ `6c08c192bb`: compact phone sticky + README screenshots (SC-67).
 - Deploy-preview evidence for Scott's yes/no: `.superpowers/sdd/shots-deploy-preview/`
   (9 live-vs-new pairs + 2 fixed shots) + `deploy-preview-report.md` (verdict: recommend).
