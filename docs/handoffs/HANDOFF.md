@@ -15,14 +15,21 @@ OLD v2 / org-site / data-sdk-npm (all *behind* current main) — a blanket merge
 reverted them (and aborted on steel-etl's non-FF push). Only `draw-steel-elements` was
 uniquely ahead; steel-etl's 2 commits were cherry-picked. v2 + org-site left untouched.
 
+**DEPLOYED 2026-07-20 (Scott's go):** full `just deploy` — data-unified `012d474d` +
+fresh release **`v4.20260720213840`**; SCC API `8d21cd8a`; v2 site `55148acee4`
+published + verified LIVE (malice bands, back-links, SC-86/87 unlinks confirmed by
+curl). Found+fixed a deploy-recipe bug mid-flight: bare `just release-data` resolved
+against sub-repo justfiles (cd'd cwd) — now anchored `-f "$root/justfile"` (c54676c).
+CHANGELOG promoted to a dated 2026-07-20 header; f2's plan docs (16-19) + plugin
+bullets brought to main (d8e9638). Linear: SC-86/87/13 → Done.
+
 **Remaining (Scott):**
-- **Deploy** (`just deploy` — his standing separate decision): regenerates `data-unified`
-  from steel-etl `e7ec4a2` (currently HEAD `f40b10b8` is the stale 2026-07-17 tree) AND
-  auto-runs `release-data` (step 7b) to cut a fresh `v4.*` release. `release-data`
-  standalone would re-zip stale data, so it is NOT run separately — it rides the deploy.
-- **SC-11**: the 6.0.0 plugin release cut (`gh release create` + community-catalog PR).
-- f2 worktree still on disk (ledger lives there, gitignored); safe to `just wt-rm f2`
-  after confirming nothing else is needed — its unique content is landed.
+- **SC-11**: the 6.0.0 plugin release cut (`gh release create` + community-catalog
+  submission) — plugin main `01822bd` is release-ready (SDK npm 3.0.0 pin, gates
+  green); exact commands in `.superpowers/sdd/sc-11-audit-report.md`. After the cut,
+  users sync against `v4.20260720213840`.
+- f2 worktree still on disk (gitignored ledger); safe to `just wt-rm f2` — all unique
+  content is landed (plugin, steel-etl commits, plan docs, changelog bullets).
 
 ## State: worktree `f2` (branches pushed to origin as `f2`)
 - Plugin `draw-steel-elements` @ **`40d341e`**: F2+D6+D8+D7 built (opus SHIP verdicts, 32
