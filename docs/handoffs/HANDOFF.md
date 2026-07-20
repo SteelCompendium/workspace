@@ -64,7 +64,7 @@ SC-76 close confirm (30s) · SC-84 zoom-dot recheck · SC-11 release cut after l
 cd /home/scott/code/steelCompendium/workspace && git status -sb | head -1
 git -C ../worktrees/f2/draw-steel-elements log --oneline -3   # 40d341e …
 git -C steel-etl log --oneline origin/main -3                  # c139dd4 …
-git -C data-sdk-npm log --oneline origin/v3 -1                 # a9dadb1
+git -C data-sdk-npm log --oneline origin/v3 -1                 # 6622d2d (3.0.0 prepped)
 tail -15 ../worktrees/f2/.superpowers/sdd/progress.md
 devbox run -- bash -c 'cd ../worktrees/f2/draw-steel-elements && npx jest 2>&1 | grep Tests:'  # 1981
 npm view steel-compendium-sdk version   # 2.2.0 = gate closed; 3.0.0 = run plan-04 Task 14
