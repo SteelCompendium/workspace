@@ -1,99 +1,69 @@
-# Handoff — 2026-07-19 (DSE 6.0.0 + HFS Steel theme release-prepped in `f2` · site waves landed · pending SDK publish)
+# Handoff — 2026-07-20 (DSE 6.0.0 wave LANDED + DEPLOYED · SDK 3.0.0 on npm · only the plugin release cut remains)
 
-## GATE PASSED — f2 LANDED to main (2026-07-20)
-SDK **3.0.0 published** (Scott), and the f2 build is **landed to main** (scoped land, NOT
-`wt-finish` — see below):
-- `draw-steel-elements` main → **`01822bd`** (F2+D6+D8+D7+HFS Steel, 32 elements; SDK pin
-  swapped `file:` → npm **3.0.0**; gates green tsc / jest **1981** / shots **295**).
-- `steel-etl` main → **`e7ec4a2`** (the 2 unlanded DSE-generator commits — #25 Children
-  copy + kit-dedup — cherry-picked onto current main, go build/vet/test green).
-- `data-sdk-npm` **3.0.0** live on npm; superproject records `e7192fb`.
-- superproject main → **`38bfb15`**.
+## Where things stand (everything verified)
+The entire DSE 6.0.0 wave is **landed, deployed, and live**:
+- **`steel-compendium-sdk@3.0.0` on npm** (Scott published 2026-07-20). The unpublished
+  3.0/3.1/3.2 line was collapsed into one 3.0.0 (consumer-safety note in its CHANGELOG:
+  2.x version-range/tag consumers unaffected). v3 tip includes the reader's
+  second-role-token warning (+5 tests, 407 total).
+- **`draw-steel-elements` main @ `01822bd`** — the full 6.0.0 build (F2+D6+D8+D7 + HFS
+  Steel theme, 32 elements), SDK pinned to npm 3.0.0. Gates green against the published
+  SDK: tsc · jest 1981 · shots 295 (zero drift). Release-ready.
+- **`steel-etl` main @ `e7ec4a2`** — all site/data work incl. the 2 cherry-picked DSE
+  generator fixes (#25 Children copy + kit dedup) and the `sbIsland.Eyebrow` rename.
+- **Deployed 2026-07-20** (Scott's go, full `just deploy` + manual completion):
+  data-unified `012d474d` + release **`v4.20260720213840`** · SCC API `8d21cd8a` ·
+  v2 site `55148acee4` — verified live by curl (malice bands, class back-links,
+  SC-86/87 unlinks all serving).
+- Workspace main: CHANGELOG has a dated **2026-07-20** deploy section; plan docs 16–19
+  brought over from the f2 branch; handoff current.
+- Linear: SC-1/2/3/6/10 (features) + SC-13/86/87 → **Done**. SC-11 = the release cut.
 
-**Why scoped, not `wt-finish f2`:** f2 was branched early and its superproject still pinned
-OLD v2 / org-site / data-sdk-npm (all *behind* current main) — a blanket merge would have
-reverted them (and aborted on steel-etl's non-FF push). Only `draw-steel-elements` was
-uniquely ahead; steel-etl's 2 commits were cherry-picked. v2 + org-site left untouched.
+## The one remaining step (Scott): SC-11 — cut plugin 6.0.0
+Plugin main `01822bd` is release-ready (manifest/LICENSE/lint clean — see
+`.superpowers/sdd/sc-11-audit-report.md` for the audited checklist + exact commands):
+```bash
+cd draw-steel-elements   # main checkout, on main @ 01822bd
+npm run build            # produces main.js + styles.css
+# bump manifest.json/versions.json if not already at 6.0.0, then:
+gh release create 6.0.0 main.js manifest.json styles.css --title "6.0.0" \
+  --notes-file <(sed -n '/^## 6.0.0/,/^## 5.1.1/p' CHANGELOG.md | head -n -1)
+```
+Users then update in Obsidian and re-sync the compendium (guide:
+`docs/migrating-to-6.md`). No community-catalog PR needed (plugin id unchanged).
 
-**DEPLOYED 2026-07-20 (Scott's go):** full `just deploy` — data-unified `012d474d` +
-fresh release **`v4.20260720213840`**; SCC API `8d21cd8a`; v2 site `55148acee4`
-published + verified LIVE (malice bands, back-links, SC-86/87 unlinks confirmed by
-curl). Found+fixed a deploy-recipe bug mid-flight: bare `just release-data` resolved
-against sub-repo justfiles (cd'd cwd) — now anchored `-f "$root/justfile"` (c54676c).
-CHANGELOG promoted to a dated 2026-07-20 header; f2's plan docs (16-19) + plugin
-bullets brought to main (d8e9638). Linear: SC-86/87/13 → Done.
+## Loose ends (small, non-blocking)
+- **f2 worktree**: all unique content landed; `just wt-rm f2` when convenient (the
+  gitignored SDD ledger lives there — copy it first if you want the build history).
+- The f2 origin branches (`f2` in plugin/steel-etl/superproject) can be deleted after
+  wt-rm; everything is on main.
+- Scott taste checks, whenever: statblock-head crest deviation (1-line revert,
+  flagged in SC-10/plan 19), SC-76 close confirm, SC-84 zoom-dot recheck.
+- FOLLOWUPS: only #2/#3 (settings-panel design, dormant) remain open.
 
-**Remaining (Scott):**
-- **SC-11**: the 6.0.0 plugin release cut (`gh release create` + community-catalog
-  submission) — plugin main `01822bd` is release-ready (SDK npm 3.0.0 pin, gates
-  green); exact commands in `.superpowers/sdd/sc-11-audit-report.md`. After the cut,
-  users sync against `v4.20260720213840`.
-- f2 worktree still on disk (gitignored ledger); safe to `just wt-rm f2` — all unique
-  content is landed (plugin, steel-etl commits, plan docs, changelog bullets).
-
-## State: worktree `f2` (branches pushed to origin as `f2`)
-- Plugin `draw-steel-elements` @ **`40d341e`**: F2+D6+D8+D7 built (opus SHIP verdicts, 32
-  elements) + FOLLOWUPS #24/#26/#27/#28 fixes + 6.0.0 release prep (migration guide,
-  docs corrections, SDK-3.x insert template, obsidianmd audit CLEAN, eslint 348 → 3) +
-  **SC-10 HFS Steel theme BUILT-SHIP (plan 19, 2026-07-19)**: Source Serif 4 bundled
-  (OFL), forged card grammar (crest/eyebrows/chips/rails/◆ panels), statblock plate,
-  featureblock band+glyphs, tracker/hero harmonization (temp-stamina purple per site),
-  reference-card polish; Legacy byte-frozen (only sanctioned hero-grid bug fix drifts).
-  Gates at tip: tsc · jest **1981** · shots **295** · obsidian-shots **131**.
-  Open for Scott's taste: statblock-head crest deviation (1-line revert).
-- steel-etl-in-f2 @ `310ecef` (FOLLOWUPS #25: md-dse-linked kits regain ds-feature fence).
-- Superproject @ `f804491`. Ledger: `worktrees/f2/.superpowers/sdd/progress.md`
-  (authoritative build history). Plans 04/16/17/18 stamped BUILT.
-- Records: Linear SC-6/SC-3/SC-1/SC-2 (features) + SC-4 — all **Awaiting** the gate;
-  SC-11 carries the release-prep trail + exact human release commands
-  (`.superpowers/sdd/sc-11-audit-report.md`).
-
-## State: landed to main (NOT deployed — one `just deploy-v2` + `just deploy-api` shows all of it)
-- steel-etl main @ **`83eef48`**: malice bands (381 statblock pages), context-driven
-  captain/damage-type cell (restored a parsed-but-never-read `with_captain`), 1,685
-  usage-cell glossary links, 36 class-owned back-link pages (+ back-link first-child
-  chrome fix, also fixing the older rival-pass duplicate-H1 bug on 13 live pages), SC-86/87
-  idiomatic unlink sweep (23 unlinks), treasure extractor fields (SC-13) + scc schema
-  declaration, deterministic fbIconAction, `sbIsland.Ancestry`→`Eyebrow` rename (holds
-  provenance too; vestigial island JSON tag). ROADMAP #7 done;
-  FOLLOWUPS #7/#8/#15/#18/#23/#29 all closed (only #2/#3 settings-panel design, dormant).
-- **data-sdk-npm v3 @ `6622d2d`** — the never-published 3.0/3.1/3.2 work collapsed into a
-  single **3.0.0** (consumer-safety note in CHANGELOG; reader warns on 2nd role token,
-  407 tests). Prepped + pushed; awaiting Scott's `just release 3.0.0` (npm auth).
-- v2 main @ `6c08c192bb`: compact phone sticky + README screenshots (SC-67).
-- Deploy-preview evidence for Scott's yes/no: `.superpowers/sdd/shots-deploy-preview/`
-  (9 live-vs-new pairs + 2 fixed shots) + `deploy-preview-report.md` (verdict: recommend).
-  Other evidence dirs: `shots-23/` (mobile sticky), `shots-7/` (malice), `shots-67/`
-  (READMEs), `shots-sc10/` + `sc-10-decisions.md` (taste multiple-choice, awaiting picks).
-
-## Awaiting Scott (beyond the gate)
-Deploy yes/no (evidence above) · SC-10 crest deviation call (theme itself now BUILT — taste picks were resolved by "match the site") ·
-SC-76 close confirm (30s) · SC-84 zoom-dot recheck · SC-11 release cut after landing.
-
-## Gotchas & lessons (this window)
-- **wt-finish/wt-rm (memory: wt-finish-footguns):** devbox swallows recipe exit codes —
-  NEVER chain `wt-finish && wt-rm` (lost commits once; redone). Run wt-finish from the
-  MAIN checkout only; verify "Landed and pushed" + origin log BEFORE wt-rm. Clean worktree
-  churn first (org-site API timestamps, v2 generated docs from local builds).
-- `.superpowers/` is gitignored in the worktree superproject — ledger persists on disk only.
-- data/ clone does not propagate into worktrees; read fixtures from main checkout or regen.
-- v2 CSS hides the injected statblock-page H1 only when h1+hr+card are ADJACENT — any
-  page-level insertion before the card breaks it; insert INSIDE the card div (first child).
-- Never-fabricate held twice: tier≥2 surge auto-spend (removed); jest `setTooltip` mock
-  divergence hid a stale aria-label bug (mock now mirrors production).
+## Gotchas & lessons (this window — keep)
+- **wt-finish/wt-rm** (memory: wt-finish-footguns): devbox swallows recipe exit codes —
+  never chain `wt-finish && wt-rm`; run from the MAIN checkout; verify origin log before
+  wt-rm; clean generated churn first.
+- **Stale-worktree landings**: a long-lived worktree's superproject pins go stale as main
+  advances — `wt-finish` would REVERT other submodules. Land scoped: push only the
+  submodules the branch uniquely advances (FF-check first), cherry-pick where diverged.
+- **Deploy recipe**: `just deploy` steps cd into sub-repos that have their own justfiles —
+  recipe-internal `just` calls must anchor `-f "$root/justfile"` (fixed c54676c after it
+  aborted the first full deploy at release-data; the deploy was completed manually:
+  release-data → deploy-api → deploy-v2).
+- deploy churn: restore (never commit) org-site API-timestamp + devbox.lock dirt.
+- GitHub Pages lags the gh-pages push by a few minutes (`gh api repos/<o>/<r>/pages/builds/latest`).
 
 ## Verification commands
 ```bash
 cd /home/scott/code/steelCompendium/workspace && git status -sb | head -1
-git -C ../worktrees/f2/draw-steel-elements log --oneline -3   # 40d341e …
-git -C steel-etl log --oneline origin/main -3                  # c139dd4 …
-git -C data-sdk-npm log --oneline origin/v3 -1                 # 6622d2d (3.0.0 prepped)
-tail -15 ../worktrees/f2/.superpowers/sdd/progress.md
-devbox run -- bash -c 'cd ../worktrees/f2/draw-steel-elements && npx jest 2>&1 | grep Tests:'  # 1981
-npm view steel-compendium-sdk version   # 2.2.0 = gate closed; 3.0.0 = run plan-04 Task 14
+git -C draw-steel-elements log --oneline origin/main -1   # 01822bd
+git -C steel-etl log --oneline origin/main -1              # e7ec4a2
+npm view steel-compendium-sdk version                      # 3.0.0
+gh release view --repo SteelCompendium/data-unified --json tagName -q .tagName  # v4.20260720213840
+curl -sL 'https://steelcompendium.io/v2/Browse/monster/devil/devil-clerk/' | grep -c 'Malice Features'  # 1
 ```
-**Resume protocol:** read this + the f2 ledger; verify. If SDK 3.0.0 is live → plan-04
-Task 14 → `wt-finish f2` (carefully, see gotchas) → `just release-data`. If Scott said
-"deploy" → `just deploy-v2` + `just deploy-api` from the main checkout, then promote the
-workspace CHANGELOG Unreleased section and mark SC-86/87 (+ site tickets) Done. Otherwise:
-board is clear — gate-watch.
+**Resume protocol:** verify the above; if SC-11 is cut (gh release 6.0.0 exists on
+draw-steel-elements), mark SC-11 Done and archive this wave; otherwise the board is
+clear — nothing is blocked on an agent.
