@@ -8,6 +8,14 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+### Fixed
+
+- **Green Animal Forms table no longer shows literal `<br>` text** (SC-89) — the
+  elementalist Disciple of the Green forms table carried mid-sentence `<br>`
+  PDF-extraction artifacts, and the feature-card table renderer escaped them into
+  visible text. Artifacts removed from the source, and card prose now renders a
+  deliberate `<br>` (e.g. the Summon Source of Earth stat grid) as a real line break.
+
 ### Added (pending plugin 6.0.0 release)
 
 - **Draw Steel Elements plugin 6.0.0** — compendium sync now pulls from data-unified
