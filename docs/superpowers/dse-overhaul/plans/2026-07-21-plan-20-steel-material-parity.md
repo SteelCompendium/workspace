@@ -109,6 +109,47 @@ recording this reasoning and the concrete seam (the token contract from Task 1),
   captured site inventory (Task 1) or to an existing `--dse-*` token. If the site has no
   counterpart for a plugin-only surface, derive it from an existing token with a documented
   formula and say so in the commit message.
+- **Never silence a gap.** A parity GAP is closed by fixing CSS, or by a numbered
+  `FOLLOWUPS.md` entry explaining why a DOM change is required — **never** by editing
+  `selector-map.json` to stop looking at it.
+- **Verification is the deliverable, not a formality.** Plan 19 shipped correct structure with
+  flat surfaces and passed review because reviewers compared *layout* to screenshots and
+  said "close match." Therefore: Task 2 must reach **zero WARNs** before any CSS is written (a
+  WARN means a selector is wrong and would hide a real gap as "absent"); Task 7 Step 3 is
+  **mandatory** (break a rule, watch the test fail, restore it); and wherever a step says
+  READ a PNG, actually read it and compare against the named site reference rather than
+  inferring success from the fact that the code changed.
+
+## Execution
+
+**Worktree (required — never edit the shared main checkout).** From
+`/home/scott/code/steelCompendium/workspace`:
+
+```bash
+devbox run -- bash -c 'just wt-new steel-material'
+```
+
+All work happens in
+`/home/scott/code/steelCompendium/worktrees/steel-material/draw-steel-elements`
+(branch `steel-material`).
+
+**Stop condition: do NOT land this branch.** Finish Task 8, then report. Scott lands it
+himself with `just wt-finish` from the MAIN checkout — never chained with `wt-rm`, and
+verifying the superproject pins first, since a long-lived worktree's pins go stale as main
+advances (this bit the f2 landing on 2026-07-20).
+
+**Natural early check-in: after Task 3.** That task closes the bulk of the gap report (chips,
+section heads, power-roll heads at once), so it is where "still flat grey" should visibly
+become "there it is." If it does not look right at Task 3, later tasks will not rescue it —
+surface it then rather than at the end.
+
+**Expect `urls.json` to need corrections.** The 12 URLs in Task 1 were written from SCC path
+conventions, not fetched one by one. Verifying and fixing them is Task 1's job, not a
+failure.
+
+**Final report must include:** commit sha per task · the parity GAP count at Task 2 baseline
+vs. final · final gate numbers (tsc / jest / shots / obsidian-shots) · the per-family visual
+verdicts from Task 8 Step 2 · anything deferred to `FOLLOWUPS.md` with its number.
 
 ## File Structure
 
