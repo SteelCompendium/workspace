@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 32 -->
+<!-- next-id: 36 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -25,6 +25,122 @@ Most recent archive:
 - **Why:** motivation / value
 - **Context:** file paths, gotchas, anything that saves grep time
 - **Effort:** XS (<1 h) / S (1–4 h) / M (1 day) / L (multi-day) -->
+
+*(Items 32–35 below were all identified during Plan 20 — Steel material parity — Task 8
+final visual verification, `draw-steel-elements` worktree `steel-material`: documented in
+the session report but not filed as durable follow-ups, caught by review before the plan
+closed. Evidence for all four: `.superpowers/sdd/task-8-report.md` §2 (per-family visual
+verdicts) and the contact-sheet image pairs in `.superpowers/sdd/shots-parity/`
+(`0N-<family>--site.png` / `--plugin.png`), both session scratch in the `steel-material`
+worktree. All four are DOM/markup changes — Plan 20 was CSS-only (material properties:
+sheen/bevel/hairline/gradients) and the plugin's card DOM is pinned by the jest suite (143
+suites / 2000 tests) and the golden-PNG baseline (LEGACY-FREEZE byte-identity check), so
+none could be fixed inside that plan. None trips the automated parity gate
+(`draw-steel-elements/visual-harness/parity`): the gate diffs material properties
+(background-image/box-shadow/border) on mapped selectors, not layout/structure, so a
+structural divergence like these is invisible to it by design.)*
+
+## 35. Statblock diamond notch sits under the characteristics strip, not the head band like the site
+
+**Status:** open
+
+- **Identified:** 2026-07-21, Plan 20 (Steel material parity) Task 8 final visual
+  verification.
+- **What:** On the site's statblock card (e.g. Browse → Monsters → Ashen Hoarder), the
+  diamond rule/notch sits directly beneath the head band — right after the
+  name/level/role/EV row and the "Construct, Undead" subtitle, before the five stat tiles.
+  On the plugin's statblock card, the same diamond notch sits much further down, beneath
+  the characteristics strip (the Might/Agility/Reason/Intuition/Presence row) — after the
+  stat tiles and the Immunity/Weakness/Movement panels.
+- **Why:** Smallest/most cosmetic of the four residual divergences, but still an
+  unintended structural difference from the parity target — worth a one-line entry so it
+  isn't silently lost the way this whole batch almost was.
+- **Context:** Moving the notch requires relocating a DOM element within the statblock
+  card markup (`draw-steel-elements` statblock element renderer), which is a structural
+  change, not a CSS reorder — out of scope for a CSS-only material plan. Evidence:
+  contact-sheet pair `02-statblock--site.png` / `02-statblock--plugin.png`;
+  `task-8-report.md` §2 item 2.
+- **Effort:** XS–S (relocate the notch element in the statblock card DOM + update the
+  jest DOM assertions and golden PNG that pin its current position)
+
+## 34. Feature card carries a left action-type spine the site card does not have
+
+**Status:** open
+
+- **Identified:** 2026-07-21, Plan 20 (Steel material parity) Task 8 final visual
+  verification.
+- **What:** The plugin's ability/feature card renders a coloured vertical bar down the
+  left edge of the whole card (e.g. red for a Main Action strike), visible on both the
+  feature and featureblock contact sheets (e.g. "Devastating Rush", "Whip and Magic
+  Longsword"). The site's equivalent ability card has no such spine — only the
+  outcome-tier rows inside the power-roll table carry a left colour bar.
+- **Why:** This is a plugin-only *addition*, not something missing, so filing it is about
+  flagging an unintended divergence from a parity-target theme rather than a gap to
+  close. The right resolution may legitimately be "keep it" — it could be a deliberate
+  plugin affordance (at-a-glance action-type identification in Obsidian, which has no
+  site-style page chrome around the card) rather than a mistake to remove. Whoever picks
+  this up should make that call explicitly rather than reflexively stripping it.
+- **Context:** Removing (or conditionally keeping) the spine is a DOM/markup change in the
+  ability/feature card renderer, not a CSS-only tweak, so it was out of scope for the
+  CSS-only Plan 20; the card DOM is pinned by the jest suite and the golden-PNG baseline.
+  Evidence: contact-sheet pair `01-feature--site.png` / `01-feature--plugin.png` (also
+  visible in the `04-kit--plugin.png` and `03-featureblock--plugin.png` shots, since
+  nested ability cards carry it too); `task-8-report.md` §2 item 1.
+- **Effort:** S (once a keep/remove decision is made) — removal means deleting the spine
+  element and its DOM hook plus updating the pinned tests/baseline; "keep" just needs this
+  entry closed as a documented, intentional divergence.
+
+## 33. Featureblock option cost renders as an outlined chip, not the site's plain display text; one continuous accent rail instead of a bar per option
+
+**Status:** open
+
+- **Identified:** 2026-07-21, Plan 20 (Steel material parity) Task 8 final visual
+  verification.
+- **What:** On the site's featureblock option panels (e.g. Devil Malice's "Bureaucratic
+  Tape" / "Underhanded Tactics" / "Read the Small Print"), each option's cost renders as
+  large plain display text at the right of the option title ("3 MALICE", "5+ MALICE", "7
+  MALICE"), and each option panel gets its own short coloured left accent bar (a
+  different colour per option — blue, gold, teal). The plugin renders the cost as a small
+  outlined/bordered chip instead of plain display text, and draws a single continuous
+  accent rail down the entire block rather than a distinct bar per option panel.
+- **Why:** Second-highest-priority residual divergence after the kit grid — both pieces
+  (cost styling and the per-option vs. continuous bar) are visible on every featureblock
+  with priced options, a common surface (malice features, etc.).
+- **Context:** Both parts are DOM/markup changes in the featureblock option renderer (a
+  plain-text cost slot vs. a chip wrapper; a bar-per-option-panel element vs. a single
+  rail spanning the block are different DOM shapes, not restyleable in place), so neither
+  fit inside the CSS-only Plan 20; the featureblock DOM is pinned by the jest suite and
+  the golden-PNG baseline. Evidence: contact-sheet pair `03-featureblock--site.png` /
+  `03-featureblock--plugin.png`; `task-8-report.md` §2 item 3.
+- **Effort:** M (restructure the option-panel DOM to give each option its own accent-bar
+  wrapper and swap the cost chip for plain display text, plus updated jest assertions and
+  a re-baselined golden PNG)
+
+## 32. Kit card renders a label-value stat list instead of the site's stat-tile grid
+
+**Status:** open
+
+- **Identified:** 2026-07-21, Plan 20 (Steel material parity) Task 8 final visual
+  verification.
+- **What:** The site's kit tiles (Browse → Kits, e.g. "Arcane Archer", "Battlemind") lead
+  with a crest/shield glyph, a small-caps "MARTIAL KIT" eyebrow above the name, an
+  equipment summary line, and then a grid of stat tiles — a large value over a
+  small-caps label (Stamina per Echelon, Speed, Stability, Disengage, Melee Dmg, Ranged
+  Dmg, etc.). The plugin's kit card instead renders a plain label-value list — `Stamina:
+  +6 per echelon`, `Speed: +1`, `Stability: +1`, `Melee damage: +0/+0/+4`, `Equipment:
+  …` — with no crest glyph and no eyebrow at all.
+- **Why:** Highest-priority of the four — the most visible surface and the one most
+  obviously mismatched at a glance against the site. Kit is one of the five card families
+  the parity gate samples, but the gate only checks material properties, so this
+  structural gap sails through it untouched.
+- **Context:** Requires new stat-tile-grid markup plus crest/eyebrow slots in the kit
+  card renderer (`draw-steel-elements` kit element), a DOM change out of scope for the
+  CSS-only Plan 20; the kit card DOM is pinned by the jest suite and the golden-PNG
+  baseline. Evidence: contact-sheet pair `04-kit--site.png` / `04-kit--plugin.png`;
+  `task-8-report.md` §2 item 4 (also notes the site's kit *detail* page has no `.sc-card`
+  at all, so the index tiles are the only valid site counterpart for this comparison).
+- **Effort:** M (new stat-tile-grid + crest/eyebrow markup in the kit card DOM, updated
+  jest DOM assertions, and a re-baselined golden PNG)
 
 ## 31. DSE modals are untouchable by the Steel theme (no `data-dse-theme` on the modal root)
 
