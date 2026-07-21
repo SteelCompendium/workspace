@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 30 -->
+<!-- next-id: 31 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -25,6 +25,20 @@ Most recent archive:
 - **Why:** motivation / value
 - **Context:** file paths, gotchas, anything that saves grep time
 - **Effort:** XS (<1 h) / S (1–4 h) / M (1 day) / L (multi-day) -->
+
+## 30. Facet-mode (any/all) toggle a11y polish: fixed aria-label
+**Status:** open
+- **Identified:** 2026-07-21, SC-88 final review (facet match-mode toggle)
+- **What:** The `.sc-facet-mode` toggle uses `aria-pressed` plus a flipping visible
+  label (`any`/`all`). Convention for `aria-pressed` is a *fixed* accessible name with
+  changing state — add `aria-label="Require all selected values"` (kept constant) so
+  screen readers announce "Require all selected values, pressed/not pressed", while
+  the visible text keeps flipping.
+- **Why:** Current form is interpretable but a mild toggle anti-pattern; two-line fix.
+- **Context:** `v2/docs/javascripts/steel-feature-browser.js` + `steel-bestiary-browser.js`
+  (`modeBtn` markup string in `facetRow` + the `.sc-facet-mode` click wiring). Keep both
+  files byte-identical — the two browsers share the markup/CSS contract.
+- **Effort:** XS
 
 ## 29. steel-etl gen/site output not fully deterministic run-to-run
 
