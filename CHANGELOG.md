@@ -33,6 +33,13 @@ go under an *Internal* sub-heading.
   matches the steelcompendium.io look (forged cards, embossed serif titles with bundled
   Source Serif 4, crest badges, role-tinted statblock plates, teal links); the original
   look remains available as the Legacy style.
+- **Steel material parity (plan 20)** — the plugin's Steel theme now carries the site's
+  actual material treatment (sheen/bevel/hairline on card plates, section heads and the
+  ability cost chip; tier-coloured power-roll washes; role and malice header bands; crest
+  accent) rather than an approximation of it. A new automated site-vs-plugin parity gate
+  (`npm run parity` in `draw-steel-elements`) captures the live site's computed styles and
+  fails on any flat surface, so the theme can no longer drift from steelcompendium.io
+  unnoticed; a jest material contract guards the same properties offline.
 
 ## 2026-07-21 — any/all keyword filters (SC-88)
 

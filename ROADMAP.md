@@ -1,6 +1,6 @@
 # Roadmap
 
-<!-- next-id: 17 -->
+<!-- next-id: 18 -->
 
 New features and larger planned / in-flight efforts across the workspace. Smaller
 in-scope tangents to clear before the next feature go in `FOLLOWUPS.md`, not here.
@@ -194,3 +194,47 @@ the squeeze"), no longer a hard technical block. Its own brainstorm/spec/plan wh
   the full decision record); plan `docs/superpowers/plans/2026-06-19-fixture-advancement-coded-members.md`
   (rewritten for the annotation/coded-children approach); log `docs/scc-log.md` (2026-06-19).
 - **Effort:** M.
+
+## 17. Extract a shared steel-design token/CSS package for site + plugin
+
+**Status:** open — deliberately deferred past plugin 6.0.0.
+
+- **Identified:** 2026-07-21, plan 20 (Steel material parity). Plan 20 fixed the *symptom*
+  (the plugin's Steel theme had drifted from the live site's material treatment); this item
+  is the *structural* answer to why the drift was possible at all — the site
+  (`v2/docs/stylesheets/steel-*.css`) and the plugin (`draw-steel-elements/styles-source.css`)
+  each hand-maintain their own copy of the same design language.
+- **What:** publish one package of design tokens (and possibly the primitive rules that
+  consume them) that both the v2 site and the Obsidian plugin import, instead of two parallel
+  hand-ported stylesheets.
+- **The seam already exists.** Plan 20 Tasks 1–2 produced an explicit token contract:
+  every `--dse-*` ornament token is mapped to the site `--fx-*` declaration it was ported
+  from, line by line, in
+  [`docs/superpowers/dse-overhaul/D3-token-map.md`](docs/superpowers/dse-overhaul/D3-token-map.md).
+  That table is the concrete extraction boundary — the shared package is essentially that
+  table promoted to source of truth, with both consumers aliasing into it.
+- **How much actually overlaps: ~40–60%, not "everything."** Only the *presentational card
+  family* is common ground (ability/feature cards, statblocks, featureblocks, reference
+  cards, power-roll tiers, chips, crests). The plugin additionally owns trackers (initiative,
+  montage, project, party, resources), the hero sheet, the Draw Steel sidebar, modals, the
+  **Legacy** theme, and the print stylesheet — none of which have a site counterpart, and all
+  of which must keep working untouched. So the package can only ever cover the shared subset;
+  the plugin keeps a substantial private layer regardless.
+- **Main cost: the class vocabulary, not the tokens.** Tokens are easy to share. Sharing
+  *rules* means migrating the plugin's `dse-` class names to the site's `sc-` names
+  (`.dse-section__title` ↔ `.sc-ability__section-head`, `.dse-sb` ↔ `.md-typeset.sb`,
+  `.dse-head__deck--chip` ↔ `.sc-head__slot--chip`, …; the current mapping lives in
+  `draw-steel-elements/visual-harness/parity/selector-map.json`). That rename would
+  simultaneously invalidate the golden-PNG visual baseline (~295 shots) **and** the
+  LEGACY-FREEZE byte-identity proof (98 legacy+print PNGs) — i.e. it destroys both safety nets
+  at the exact moment it makes a large visual change. That is the reason to defer, not the
+  effort of the CSS itself.
+- **Cheaper interim answer, already shipped:** the automated site-vs-plugin parity gate
+  (plan 20 Tasks 2 and 7). `npm run parity` captures the *live* site's computed styles for
+  the mapped selector pairs and fails on any material gap, and
+  `test/dom/theme/steelMaterial.test.ts` guards the same properties offline. Duplication
+  remains, but silent divergence does not — which was the actual failure mode. Revisit this
+  item if the gate starts reporting churn faster than it is worth maintaining, or if a third
+  consumer of the design language appears.
+- **Effort:** L (M for tokens-only; L once rules/classes move, because of the baseline
+  re-capture and freeze re-proof).
