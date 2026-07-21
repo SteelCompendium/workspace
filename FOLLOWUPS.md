@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 31 -->
+<!-- next-id: 32 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -25,6 +25,56 @@ Most recent archive:
 - **Why:** motivation / value
 - **Context:** file paths, gotchas, anything that saves grep time
 - **Effort:** XS (<1 h) / S (1–4 h) / M (1 day) / L (multi-day) -->
+
+## 31. DSE modals are untouchable by the Steel theme (no `data-dse-theme` on the modal root)
+
+**Status:** open
+
+- **Identified:** 2026-07-21, SC-10 / Plan 20 Task 6 fix round (`draw-steel-elements`,
+  worktree `steel-material`).
+- **What:** Nothing under a `.dse-modal` can be themed from CSS today, because
+  `data-dse-theme` never appears anywhere in a modal's ancestry. `ThemeService.apply()`
+  (`src/framework/seams/theme.ts:80`) is the **single writer** of that attribute and it
+  stamps only the per-element render root it is handed — called once, from
+  `src/framework/pipeline.ts:380`, for an in-note element mount. `theme.ts:16-17` states
+  the rule explicitly: state is per-root, "document.body is never touched" (popout safety,
+  D3 §2.5). Obsidian `Modal`s, however, mount into `.modal-container` on `document.body`;
+  `src/framework/kit/managedModal.ts:45-47` puts `.dse-modal` on `modalEl` and
+  `.dse-modal__title` on `titleEl` there, and `:74-78` builds the footer's kit `.dse-btn`s
+  under `contentEl`. All of that is outside every `[data-dse-theme]` subtree, so any
+  selector of the form `[data-dse-theme='steel'] .dse-modal…` is dead CSS.
+- **Why:** Task 6 wrote exactly such selectors, believing modals were covered, and they
+  had to be removed as dead CSS in the fix round. Until this is resolved the plugin's
+  modals stay on flat Obsidian chrome while every in-note surface is a forged Steel plate —
+  a visible seam — and, worse, the seam is invisible to review: a `[data-dse-theme='steel']`
+  modal rule *looks* correct in `styles-source.css`. The affected selectors, all removed
+  from `draw-steel-elements/styles-source.css` in the fix round, were:
+  - `.dse-modal__section` — was a member of the Steel sunken-cell `:is(…)` list (would have
+    given the modal's side-by-side panels the statblock's boxed-cell grammar);
+  - `[data-dse-theme='steel'] .dse-modal__title` (emboss) and
+    `[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-modal__title`
+    (display face / uppercase / letter-spacing).
+  Also still unreached, though the rule itself is correct and live for trackers, the hero
+  sheet and the sidebar leaf: the Steel forged-controls rule
+  (`[data-dse-theme='steel']:not([data-dse-print="on"]) :is(.dse-btn, .dse-tabs__tab)…`)
+  never reaches modal **footer** buttons.
+- **Context:** The fix is a **DOM/TS** change, which is why it could not be done inside
+  Plan 20 (that plan forbids touching `src/`). Sketch: have `ManagedModal` stamp the theme
+  on its own `dialogEl()` — e.g. call `themeService.apply(this.dialogEl(), this.lifecycle)`
+  in `open()`, which also gets the live re-stamp on theme change for free via the existing
+  `onChange` subscription. Two things to get right: (a) a modal has no `RenderContext`, so
+  the `ThemeService` has to be reachable from the plugin instance rather than from `cx`
+  (check how `ManagedModal`'s `App` is threaded); (b) popout safety — stamp the modal's own
+  root in whatever window it opened in, never `document.body`, preserving the `theme.ts`
+  contract. Once stamped, the three removed selectors can be restored verbatim, and the
+  forged-controls rule reaches footer buttons with no edit at all. Cross-refs: the
+  scope-limit comments left in `styles-source.css` on the forged-controls rule and on the
+  tracker-headings rule both point at this item. Note there is no parity pair for modals
+  (they are a plugin-only surface with no site counterpart), so
+  `visual-harness/parity/selector-map.json`'s `expectedGaps` stays empty — this deferral is
+  **not** a silenced gate finding.
+- **Effort:** S (1–4 h), mostly wiring the `ThemeService` handle + a `managedModal` test
+  asserting `data-dse-theme` lands on `modalEl`.
 
 ## 30. Facet-mode (any/all) toggle a11y polish: fixed aria-label
 **Status:** open
