@@ -34,6 +34,15 @@ go under an *Internal* sub-heading.
   Source Serif 4, crest badges, role-tinted statblock plates, teal links); the original
   look remains available as the Legacy style.
 
+## 2026-07-21 — any/all keyword filters (SC-88)
+
+### Added
+
+- **Keyword filters can now require ALL selected keywords** (SC-88) — the Features and
+  Bestiary browsers' Keyword facet gained an `any`/`all` toggle pill: `any` keeps the
+  match-any behavior, `all` narrows to entries carrying every selected keyword
+  (e.g. Area **and** Fire). Single-valued facets (Type, Role, Level…) are unchanged.
+
 ## 2026-07-21 — site fix (SC-89)
 
 ### Fixed
