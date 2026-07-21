@@ -8,14 +8,6 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
-### Fixed
-
-- **Green Animal Forms table no longer shows literal `<br>` text** (SC-89) — the
-  elementalist Disciple of the Green forms table carried mid-sentence `<br>`
-  PDF-extraction artifacts, and the feature-card table renderer escaped them into
-  visible text. Artifacts removed from the source, and card prose now renders a
-  deliberate `<br>` (e.g. the Summon Source of Earth stat grid) as a real line break.
-
 ### Added (pending plugin 6.0.0 release)
 
 - **Draw Steel Elements plugin 6.0.0** — compendium sync now pulls from data-unified
@@ -41,6 +33,16 @@ go under an *Internal* sub-heading.
   matches the steelcompendium.io look (forged cards, embossed serif titles with bundled
   Source Serif 4, crest badges, role-tinted statblock plates, teal links); the original
   look remains available as the Legacy style.
+
+## 2026-07-21 — site fix (SC-89)
+
+### Fixed
+
+- **Green Animal Forms table no longer shows literal `<br>` text** (SC-89) — the
+  elementalist Disciple of the Green forms table carried mid-sentence `<br>`
+  PDF-extraction artifacts, and the feature-card table renderer escaped them into
+  visible text. Artifacts removed from the source, and card prose now renders a
+  deliberate `<br>` (e.g. the Summon Source of Earth stat grid) as a real line break.
 
 ## 2026-07-20 — data + site deploy (DSE 6.0.0 wave)
 
