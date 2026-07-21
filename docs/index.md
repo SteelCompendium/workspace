@@ -8,6 +8,9 @@ sub-repos (`steel-etl/docs/`, `v2/.repo-docs/`); routing rules are in
   submodule superproject sync (must-obey essentials mirrored in `CLAUDE.md`)
 - [`worktrees-and-submodules.md`](worktrees-and-submodules.md) — cheatsheet for the submodule
   superproject + per-agent worktree environments (commands, the two-commit rule, gotchas)
+- [`working-preferences.md`](working-preferences.md) — Scott's working preferences &
+  collaboration conventions (review style, design-question style, visible progress,
+  parallel agents); the canonical home for what would otherwise be machine-local agent memory
 - [`scc-reference.md`](scc-reference.md) — SCC **current state**: taxonomy, companion/fixture/
   summoner schemes, group landings, linking, printing-vs-version
 - [`scc-log.md`](scc-log.md) — **dated history** of SCC scheme/registry/linking changes

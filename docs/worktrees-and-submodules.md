@@ -108,6 +108,21 @@ origin/main` reset. Commit/stash it, or move it into an env, then re-run.
 
 ## Gotchas
 
+- **`wt-finish` hazards (one caused real commit loss, 2026-07-18):**
+  1. **Never chain `wt-finish && wt-rm`.** `devbox run -- bash -c 'just wt-finish …'`
+     does not reliably propagate the recipe's failure exit code, so the chained `wt-rm`
+     can delete the env even though the landing FAILED — env submodules are independent
+     clones, so unpushed commits are permanently lost. Run `wt-finish` alone, verify its
+     "Landed and pushed" output (and `git -C <submodule> log origin/<branch>`), THEN
+     `wt-rm` separately.
+  2. `wt-finish` must run with **cwd = the main checkout** (`workspace/`), never from
+     inside the env (it resolves `../worktrees/<name>` relative to cwd).
+  3. **Clean incidental churn before landing** or the clean-guards hard-abort: env-side
+     `steelCompendium.github.io` API-timestamp churn, any `v2/docs` regeneration from
+     local verify builds (`git checkout -- . && git clean -fd docs`), and `devbox.lock`
+     in both the superproject and the `v2` submodule (see
+     [`git-workflow.md`](git-workflow.md) → "Post-deploy incidental churn" for the
+     devbox.lock chicken-and-egg and the same-shell workaround).
 - `data/` is scratch: never `git add` it in the workspace (it is gitignored).
 - `wt-rm` refuses to delete an env with uncommitted work (including an
   uncommitted pointer bump) — commit or discard first.

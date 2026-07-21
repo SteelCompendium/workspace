@@ -106,6 +106,13 @@ Route each change to its repo, then integrate. **Generated output is committed b
      [`ARCHITECTURE.md`](../ARCHITECTURE.md) → "Schemas: two hand-synced copies".
    - From a worktree env, `just wt-finish <name>` does all of this (pushes each touched
      submodule's branch onto its tracked branch on origin), **and** lands the superproject.
+   - ⚠️ **Pushing `v2` main IS a deploy.** The v2 repo's CI (`v2/.github/workflows/ci.yml`)
+     runs `mkdocs gh-deploy` on every push to main, so landing a v2-only change
+     (`docs/javascripts/`, `docs/stylesheets/`, `overrides/`, `mkdocs.yml`) goes live on
+     steelcompendium.io/v2 within minutes with **no deploy recipe needed** — verify by
+     polling the live asset URL, and give the CHANGELOG entry a dated header, not
+     `## Unreleased`. `just deploy-v2` exists to regenerate *content* (steel-etl gen +
+     site); run it only when generated output must change.
 2. **Record the new submodule pointer(s)** in the workspace (the two-commit rule): after the
    submodule push, `just sync` (or `git submodule update --remote <sub>`), then commit the
    moved pointer with the house pattern **`chore: bump <sub> to <short-sha> (<one-line what>)`**
@@ -129,3 +136,26 @@ Route each change to its repo, then integrate. **Generated output is committed b
 (then `git restore`/leave uncommitted); let `just deploy*` produce the committed output once
 the source change is merged. The recipes are idempotent (`commit … || echo "no changes"`), so
 a deploy with nothing to ship is a safe no-op.
+
+### Post-deploy incidental churn (restore, don't commit)
+
+After a clean `just deploy-v2` the working tree shows two dirty entries that are **not**
+part of the deploy and must be discarded:
+
+- ` M devbox.lock` — devbox rewrites `plugin_version` fields at startup. Environment
+  noise: `git restore devbox.lock`. (The v2 submodule has its own `devbox.lock` that
+  gets the same treatment after in-worktree builds.)
+- ` M steelCompendium.github.io` — `gen --all` regenerates the SCC API, rewriting only
+  the `generated:` timestamps in `docs/api/v1/{index,scc}.json`. Only `deploy-api` /
+  `deploy` commit the API; restore it after `deploy-v2`:
+  `git -C steelCompendium.github.io restore docs/api/v1/index.json docs/api/v1/scc.json`.
+
+**Chicken-and-egg with the clean-guards:** every `devbox run -- …` re-dirties
+`devbox.lock` at devbox startup, *before* your command runs — so a naive
+`devbox run -- just wt-finish` (or `deploy-v2`) can abort with "dirty checkout" right
+after you restored the lock. Fix: restore and run the guarded recipe in the SAME
+activated shell: `devbox run -- bash -c 'cd <workspace> && git checkout -- devbox.lock && just wt-finish <name>'`
+— the inner `just` runs inside the active env and triggers no second lock rewrite.
+
+**If the v2 remote advanced under a deploy of generated artifacts:** don't 3-way merge
+regenerated `docs/` — `git reset --hard origin/main`, regenerate fresh, then commit.

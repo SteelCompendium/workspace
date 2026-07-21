@@ -48,13 +48,18 @@ These rules are non-negotiable. Read them every session; they override convenien
 
 ## Dev environment (devbox)
 
-Go, Node, Python, just, etc. are **not** on the system PATH — activate devbox first:
+Go, Node, Python, just, etc. are **not** on the system PATH — activate devbox first.
+`devbox run --` executes from the **devbox project root (the workspace)**, which has no
+`go.mod`, and it ignores the surrounding shell's `cd` — so always wrap with `bash -c`:
 
 ```bash
-devbox run -- go build ./...   # prefix any Go/just/node command with `devbox run --`
+devbox run -- bash -c 'cd steel-etl && go build ./... && go test ./...'
+devbox run -- just <recipe>        # just recipes are fine bare (they cd themselves)
 ```
 
-`devbox.json` packages: bash, python, just, jq, yq-go, perl, figlet, nodejs, go (go1.26.1).
+Caveat: `$PIPESTATUS` / `${var:-x}` substitutions break under devbox's `sh` wrapper —
+use plain forms. `devbox.json` packages: bash, python, just, jq, yq-go, perl, figlet,
+nodejs, go (go1.26.1).
 
 ## Deploy
 
@@ -143,12 +148,19 @@ Four reference docs + the SCC spec live in `reference/` — see
 **Updating docs is part of "done."** Route every new fact by lifespan into its canonical
 home — don't let detail or dated history pool back into this router.
 
+**All agent knowledge lives in the repo — never in machine-local memory.** Scott works
+across multiple computers, so anything saved to a per-machine agent memory/state store is
+invisible everywhere else. Persist working preferences, footguns, and project facts as
+repo docs using the routing table below (collaboration preferences →
+[`docs/working-preferences.md`](docs/working-preferences.md)).
+
 | When you… | Put it in… |
 |---|---|
 | Change the pipeline / deploy flow / data flow / an output target | [`ARCHITECTURE.md`](ARCHITECTURE.md) (and its diagram) |
 | Change the design language (component system, tokens, look-and-feel rule) | [`DESIGN.md`](DESIGN.md) (`reference/design-system/` stays a frozen archive) |
 | Change the SCC scheme / registry / linking | append a dated entry to [`docs/scc-log.md`](docs/scc-log.md) **and** update [`docs/scc-reference.md`](docs/scc-reference.md) + the SCC summary above |
 | Change the git remotes / branching workflow | [`docs/git-workflow.md`](docs/git-workflow.md) (and the must-obey callout above) |
+| Learn a working preference of Scott's or a cross-cutting collaboration convention | [`docs/working-preferences.md`](docs/working-preferences.md) |
 | Hit a small in-scope tangent (deferred bug/gap) | a numbered `## N.` section in [`FOLLOWUPS.md`](FOLLOWUPS.md); clear before the next feature |
 | Plan a new feature or larger effort | a numbered `## N.` section in [`ROADMAP.md`](ROADMAP.md) |
 | Ship a user-facing change (site feature/fix, API change) | a bullet under `## Unreleased` in [`CHANGELOG.md`](CHANGELOG.md); promote to a dated header at deploy |
