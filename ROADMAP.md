@@ -229,12 +229,18 @@ the squeeze"), no longer a hard technical block. Its own brainstorm/spec/plan wh
   LEGACY-FREEZE byte-identity proof (98 legacy+print PNGs) — i.e. it destroys both safety nets
   at the exact moment it makes a large visual change. That is the reason to defer, not the
   effort of the CSS itself.
-- **Cheaper interim answer, already shipped:** the automated site-vs-plugin parity gate
-  (plan 20 Tasks 2 and 7). `npm run parity` captures the *live* site's computed styles for
-  the mapped selector pairs and fails on any material gap, and
-  `test/dom/theme/steelMaterial.test.ts` guards the same properties offline. Duplication
-  remains, but silent divergence does not — which was the actual failure mode. Revisit this
-  item if the gate starts reporting churn faster than it is worth maintaining, or if a third
-  consumer of the design language appears.
+- **Cheaper interim answer, already shipped — but only a partial one:** the site-vs-plugin
+  parity check (plan 20 Tasks 2 and 7). `npm run parity` captures the *live* site's computed
+  styles for the mapped selector pairs, compares both colour schemes, and fails on a
+  flat-where-the-site-is-forged gap; `test/dom/theme/steelMaterial.test.ts` guards the same
+  declarations offline. Be precise about what that buys: it is developer-run, **not in CI**
+  (FOLLOWUPS #36), it monitors 12 selector pairs across 5 of the 32 element families, and it
+  models material only as flat-vs-forged — colour, typography and pseudo-element decoration
+  are captured but never asserted (`visual-harness/parity/README.md` → "Known blind spots").
+  So duplication remains and divergence *within those blind spots can still happen quietly*;
+  what can no longer happen quietly is the wholesale flattening that plan 19 shipped.
+  Revisit this item if the check starts reporting churn faster than it is worth maintaining,
+  if the blind spots start hiding real drift, or if a third consumer of the design language
+  appears.
 - **Effort:** L (M for tokens-only; L once rules/classes move, because of the baseline
   re-capture and freeze re-proof).

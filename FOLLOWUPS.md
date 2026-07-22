@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 36 -->
+<!-- next-id: 38 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -39,6 +39,55 @@ none could be fixed inside that plan. None trips the automated parity gate
 (`draw-steel-elements/visual-harness/parity`): the gate diffs material properties
 (background-image/box-shadow/border) on mapped selectors, not layout/structure, so a
 structural divergence like these is invisible to it by design.)*
+
+## 37. No fixture exercises three Steel featureblock/sidebar rules
+
+**Status:** open
+
+- **Identified:** 2026-07-22, Plan 20 (Steel material parity) final whole-branch review
+  fix round, `draw-steel-elements` worktree `steel-material`.
+- **What:** Three shipped Steel rules are rendered by no harness fixture, so nothing —
+  neither the golden PNGs nor `npm run parity` — has ever *seen* them: (a)
+  `.dse-fb__adv-head`, (b) the Steel `.dse-fb__band--adv` override
+  (`styles-source.css:3930`, the malice-rail correction), and (c) the sidebar initiative
+  plate override (`styles-source.css` §5 "Sidebar leaf", now a dark rule plus a
+  `body.theme-light` twin).
+- **Why:** The malice-rail correction is the visually load-bearing one and is currently
+  *unproven*: it is asserted only in CSS text. The whole point of this branch is that
+  "looks right in a screenshot" is not verification; a rule no fixture renders is worse —
+  it isn't even in a screenshot.
+- **Context:** The default featureblock fixture emits no Level>0 advancement run
+  (`featureblock/view.ts:145-149`), which is what gates the `--adv` band and the adv head.
+  Adding a featureblock fixture with a Level>0 advancement run would light up (a) and (b)
+  and give both a golden PNG. For (c), the sidebar mount is only shot via
+  `obsidian-camera.mjs` (`*--obsidian-sidebar-steel-dark.png`, dark only) — the light
+  twin's effect was verified for this fix by injecting a `.dse-sidebar` wrapper in the
+  harness and reading `getComputedStyle().boxShadow`, which is a manual, unretained check;
+  a light sidebar shot would retain it.
+- **Effort:** S (new fixture + regenerate/approve its shots; the sidebar light shot is
+  the fiddlier half since it needs the Obsidian camera path)
+
+## 36. `npm run parity` is not wired into CI
+
+**Status:** open
+
+- **Identified:** 2026-07-22, Plan 20 (Steel material parity) final whole-branch review
+  fix round, `draw-steel-elements` worktree `steel-material`.
+- **What:** `.github/workflows/plugin-ci.yml` runs `npm run tsc`, `npm test -- --ci` and
+  `npm run build-no-check` — not `npm run parity`. So half of plan 20's anti-drift
+  mechanism (the jest material contract) is enforced and the other half (the computed-style
+  site-vs-plugin diff) runs only when a human remembers to.
+- **Why:** Human discipline is precisely what failed before: plan 19 shipped a wholly flat
+  Steel theme and *passed human review*. A gate that only fires when someone chooses to run
+  it does not close that hole.
+- **Context:** `npm run parity` needs **no network** — it builds the harness, samples it
+  with Playwright locally, and diffs against the committed
+  `visual-harness/parity/baseline/site-inventory.json`. Only `npm run parity:site` (the
+  deliberate baseline refresh) touches the live site, and that must stay out of CI. The one
+  CI prerequisite is a browser: `npx playwright install chromium` (plus `--with-deps` on a
+  bare runner) before the step. Also decide the failure policy for a genuine site
+  redesign — a stale baseline should fail loudly, not be auto-refreshed.
+- **Effort:** XS (one install step + one run step in `plugin-ci.yml`)
 
 ## 35. Statblock diamond notch sits under the characteristics strip, not the head band like the site
 

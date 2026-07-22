@@ -36,10 +36,16 @@ go under an *Internal* sub-heading.
 - **Steel material parity (plan 20)** — the plugin's Steel theme now carries the site's
   actual material treatment (sheen/bevel/hairline on card plates, section heads and the
   ability cost chip; tier-coloured power-roll washes; role and malice header bands; crest
-  accent) rather than an approximation of it. A new automated site-vs-plugin parity gate
-  (`npm run parity` in `draw-steel-elements`) captures the live site's computed styles and
-  fails on any flat surface, so the theme can no longer drift from steelcompendium.io
-  unnoticed; a jest material contract guards the same properties offline.
+  accent) rather than an approximation of it. It also adds a developer-run site-vs-plugin
+  parity check (`npm run parity` in `draw-steel-elements`): it diffs the plugin's computed
+  styles, in both colour schemes, against a committed capture of the live site's, over 12
+  mapped selector pairs, and fails when a surface the site forges renders flat. It is a
+  narrow instrument on purpose — **not wired into CI** (see FOLLOWUPS #36), covering 5 of
+  the 32 element families, asserting flat-vs-forged only and never exact colour,
+  typography or pseudo-elements. The jest material contract
+  (`test/dom/theme/steelMaterial.test.ts`) pins the same declarations offline and does run
+  in CI. The pair makes a wholesale flattening loud; it does not make the plugin
+  pixel-identical to the site, and drift within those blind spots can still pass.
 
 ## 2026-07-21 — any/all keyword filters (SC-88)
 
