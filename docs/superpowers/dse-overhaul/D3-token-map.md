@@ -112,6 +112,11 @@ Steel values are verbatim ports of `v2/docs/stylesheets/steel-redesign.css`'s `-
 | `--dse-metal-grad` | §1.2-J `fx-plate` (site `--fx-metal-grad`) ⁸ | `none` | `linear-gradient(180deg, #e3e7e9 0%, #a9b0b5 48%, #686f74 100%)` | `linear-gradient(180deg, #9aa1a6 0%, #6a7176 48%, #474d51 100%)` | `none` |
 | `--dse-metal-line` | D2 extra (site `--fx-metal-line`) | `none` | `rgba(176,183,187,.5)` | `rgba(95,103,108,.45)` | `none` |
 | `--dse-metal-faint` | D2 extra (site `--fx-metal-faint`) | `none` | `rgba(176,183,187,.16)` | `rgba(95,103,108,.14)` | `none` |
+| `--dse-metal` | Plan 20 T3 (site `--fx-metal`, steel-redesign.css:15/26) ⁹ | `inherit` | `#a9b0b5` | `#5f676c` | `inherit` |
+| `--dse-metal-bright` | Plan 20 T3 (site `--fx-metal-bright`, steel-redesign.css:16/27) ⁹ | `inherit` | `#d9dee1` | `#2c3338` | `inherit` |
+| `--dse-sheen` | Plan 20 T3 (site `.sc-ability__cost` gradient, steel-ability-cards.css:117 / light :119) | `none` | `linear-gradient(180deg, rgba(255,255,255,.07), rgba(0,0,0,.14))` | `linear-gradient(180deg, rgba(255,255,255,.9), rgba(0,0,0,.04))` | `none` |
+| `--dse-sheen-soft` | Plan 20 T3 (site head-strip gradient, steel-ability-cards.css:160/184) | `none` | `linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,0))` | = Steel dark (no site light override) | `none` |
+| `--dse-chip-bevel` | Plan 20 T3 (site `.sc-ability__cost` shadow, steel-ability-cards.css:118) ¹⁰ | `none` | `inset 0 1px 0 rgba(255,255,255,.08), 0 1px 3px rgba(0,0,0,.3)` | = Steel dark (no site light override) | `none` |
 | `--dse-bevel` | §1.2-J `fx-bevel` | `none` | `inset 0 1px 0 rgba(255,255,255,.07)` | `inset 0 1px 0 rgba(255,255,255,.8)` | `none` |
 | `--dse-emboss` | §1.2-J `fx-emboss` | `none` | `0 1px 0 rgba(0,0,0,.55), 0 -1px 0 rgba(255,255,255,.04)` | `none` (site: no light emboss) | `none` |
 | `--dse-card-bg` | D2 extra (site `--fx-card-bg`) | `none` | `linear-gradient(160deg, #232a2e, #181c1f)` | `linear-gradient(160deg, #ffffff, #eef1f1)` | `none` |
@@ -123,6 +128,13 @@ Steel values are verbatim ports of `v2/docs/stylesheets/steel-redesign.css`'s `-
 crest/plate **metal fill** (`.dse-crest{background:var(--dse-metal-grad)}`), matching the
 site's crest, so Steel ports the site's full `--fx-metal-grad`. The near-transparent plate
 sheen the spec described is what `metal-faint` gives Task 3 to work with.
+
+⁹ Flat metal **text** colours (chip/tag ink and the ◆ markers). Legacy/Print value is the
+keyword `inherit`, so `color: var(--dse-metal)` is a no-op outside Steel.
+
+¹⁰ Deliberately a SEPARATE token from `--dse-bevel`: that one already carries the site's
+`--fx-bevel` and is consumed by the card plates, so the cost chip's two-part shadow needed
+its own name rather than a redefinition.
 
 ## Power-roll tiers
 
@@ -341,3 +353,46 @@ stat rows, featureblock grey header band + per-option glyphs, teal in-card link 
 Steel chrome, and (Task 8 polish) a placeholder-only Keywords/Type meta chip (the book's lone-dash
 "none" convention) is now dropped entirely in Steel instead of showing an empty `KEYWORDS: --` /
 `TYPE: --` chip (Legacy's existing unlabeled dash text is unchanged).
+
+## Plan 20 amendments (2026-07-21 — Steel material parity)
+
+Plan 20 closed the gap between the plugin's Steel theme and the live site's *material*
+treatment (the forged look: sheen, bevel, hairline, tier washes, role bands, crest accent).
+Five tokens were added to the **Steel ornament** table above (that table stays the one
+authoritative row-per-token list — `token-coverage.test.ts` counts first-column rows, so this
+section deliberately uses prose, not a second table). Their site provenance, all under
+`v2/docs/stylesheets/`:
+
+- **metal** — `steel-redesign.css:15` (dark) / `:26` (light), the site's `--fx-metal`.
+- **metal-bright** — `steel-redesign.css:16` (dark) / `:27` (light), the site's `--fx-metal-bright`.
+- **sheen** — `steel-ability-cards.css:117` (dark) / `:119` (light), the `.sc-ability__cost` fill.
+- **sheen-soft** — `steel-ability-cards.css:160` and `:184`, the section-head / power-roll-head strip.
+- **chip-bevel** — `steel-ability-cards.css:118`, the `.sc-ability__cost` two-part shadow.
+
+`--dse-bevel` is **not** new. It pre-existed carrying the site's `--fx-bevel` and is consumed
+by the card-plate rules; the cost chip needs a different, two-part shadow, which is why the
+new `--dse-chip-bevel` exists alongside it rather than redefining it (footnote 10).
+
+### The rule: material belongs on shared primitives, never per-element
+
+Sheen, bevel and hairline are declared **once, on the shared primitive** that every element
+reuses — the card plate, `.dse-section__title`, `.dse-pr__head`, the forged cost chip, the
+statblock/featureblock head band — and never re-declared inside a per-element block
+(`.dse-kit …`, `.dse-condition …`, and friends). Two reasons:
+
+1. Per-element copies drift. Plan 19 shipped a Steel theme that *looked* ported because a few
+   elements carried material locally while the shared primitives stayed flat, so whole
+   families rendered as plain grey boxes. Putting the material on the primitive makes "did
+   this element get the treatment?" unanswerable-by-accident: it did, because it uses the
+   primitive.
+2. It is what the parity gate can check. `visual-harness/parity` samples computed properties
+   for a fixed site-selector ↔ plugin-selector map; a primitive appears once in that map, and
+   a flat surface fails the gate (`npm run parity`, 0 GAPs / 0 WARNs) and the jest material
+   contract (`test/dom/theme/steelMaterial.test.ts`). Per-element material is invisible to
+   both.
+
+Corollary, also asserted in the jest contract: **not every chip is forged.** The site has two
+chip surfaces — the flat outlined right-rail slot (`.sc-head__slot--chip` ↔
+`.dse-head__deck--chip`) and the forged ability cost corner (`.sc-ability__cost` ↔
+`.dse-feature .dse-head__eyebrow--chip`). Giving the rail chip a sheen would be *diverging*
+from the site, so the contract asserts the rail chip stays flat.
