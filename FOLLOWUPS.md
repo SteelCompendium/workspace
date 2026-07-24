@@ -53,11 +53,11 @@ structural divergence like these is invisible to it by design.)*
   (`.md-typeset.fb`, which is deliberately `margin: 0`) to the plugin's *host* node
   (`[data-dse-element='featureblock']`, the outermost node). The site's block rhythm lives one
   level up, on `.fb-wrap` — `margin: 1.7rem auto`
-  (`v2/docs/stylesheets/steel-featureblock.css:40`), i.e. **34px** at the site's 20px rem base.
+  (`v2/docs/stylesheets/steel-featureblock.css:41`), i.e. **34px** at the site's 20px rem base.
   So the real, unmeasured finding is the opposite of what the gate prints: the plugin's
   featureblock separates from surrounding prose by 8px where the site uses 34px. The same
   latent hole exists for `statblock` (site `.sb-wrap` `margin: 1.7rem auto`,
-  `steel-statblock.css:70`; plugin host `margin: 0.5em`) — there it is fully invisible, because
+  `steel-statblock.css:68`; plugin host `margin: 0.5em`) — there it is fully invisible, because
   `.md-typeset.sb` and `.dse-sb` both compute 0 and the pair reads clean.
 - **Why:** This is the plan's own failure mode — a real difference that the ruler cannot
   express — so it must not be closed by "fixing" the plugin to the number the gate prints.
