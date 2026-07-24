@@ -10,6 +10,16 @@ go under an *Internal* sub-heading.
 
 ### Fixed
 
+- **Encounter builder no longer charges 4× EV for minions** — a minion statblock's EV
+  buys *four* minions ("The EV for minions represents four minions together"), and the
+  builder adds them four at a time, but two paths priced that group per-creature: the
+  qualifier match only accepted the word spelling `for four minions`, so the 12
+  statblocks the book spells `for 4 minions` (angulotl, dwarf, radenwight) were billed
+  4× — four 1st-level minions cost 12 EV instead of 3; and the statblock-page **+**
+  button captured only the first token of the `EV 3 for four minions` head chip,
+  dropping the qualifier and mispricing *every* minion added from its own page. Both
+  now price per group of four, so eight 1st-level minions total 6 EV — exactly one
+  1st-level hero slot, matching the quick-build rule "eight minions fill one hero slot".
 - **Ability `effects[]` no longer drops named effects** — the parser previously
   recognized only `Effect`, the *first* `Spend X`, and `Trigger`, so any other named
   rider (`Persistent N`, `Strained`, `Special`, `Mark Benefit`, class-specific labels)
