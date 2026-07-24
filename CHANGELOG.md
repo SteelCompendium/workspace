@@ -20,6 +20,13 @@ go under an *Internal* sub-heading.
   Hoarfrost (missing "Strained"). The array now mirrors source document order, including
   where the power roll sits (e.g. an Effect stated before the power roll stays before it).
   No schema change (the existing `{name, cost, effect}` entry already covered it).
+- **Dragon's Fire no longer lists eight armor enhancements as its effects** — the
+  9th-level armor-enhancement descriptions (Invulnerable, Leyline Walker, Life, …) were
+  printed after the Dragon's Fire statblock in the source and got absorbed into its
+  `effects[]`. The source now places the ability at the end of the enhancement list, so
+  its `effects[]` is just the power roll; the enhancements render as prose on the Imbue
+  Armor page as before. (The general "end a section's scope without moving content"
+  annotation this motivates is roadmapped.)
 
 ### Added (pending plugin 6.0.0 release)
 

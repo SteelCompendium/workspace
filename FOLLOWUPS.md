@@ -517,6 +517,16 @@ it with the D7 recoveries model.
 
 ## 38. Dragon's Fire ability body mis-nests eight 9th-level armor enhancements
 
+**Status:** done — fixed 2026-07-23 in worktree `fix-dragons-fire` by reordering the source
+(chosen over minting codes): the `Dragon Soul II` blurb + `Dragon's Fire` statblock now sit
+at the **end** of the 9th-Level Armor Enhancement list (right before the table), so nothing
+but the table follows the ability and it absorbs no enhancement prose. Verified: Dragon's
+Fire `effects[]` is the power roll only, zero odd effect names corpus-wide, all 8
+enhancements + Dragon Soul II still render as prose (and inline the ability after "you have
+the following ability") on the Imbue Armor page, SCC registry unchanged (1950→1950). The
+general "declare a section boundary without moving content" mechanism this case motivates is
+**ROADMAP #18**.
+
 **Identified:** 2026-07-23, while fixing the ability named-effects parser (three-example
 bug report: Minor Telekinesis / Conflagration / Hoarfrost).
 
