@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 39 -->
+<!-- next-id: 40 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -39,6 +39,41 @@ none could be fixed inside that plan. None trips the automated parity gate
 (`draw-steel-elements/visual-harness/parity`): the gate diffs material properties
 (background-image/box-shadow/border) on mapped selectors, not layout/structure, so a
 structural divergence like these is invisible to it by design.)*
+
+## 39. Parity gate cannot see the statblock/featureblock block margin — the site's lives on the `*-wrap` node, outside every pair
+
+**Status:** open
+
+- **Identified:** 2026-07-23, Plan 21 (Steel typography & spacing) Task 1 review fix round,
+  `draw-steel-elements` worktree `steel-type`, while adding the `margin-top`/`margin-bottom`
+  rule to `visual-harness/parity/diff.mjs`.
+- **What:** The new margin rule reports `featureblock` `margin-top`/`margin-bottom` as
+  "site 0px, plugin 8px" in both schemes, and the fix it demands (shrink the plugin to 0) is
+  **wrong**. The `featureblock` pair maps the site's *inner plate*
+  (`.md-typeset.fb`, which is deliberately `margin: 0`) to the plugin's *host* node
+  (`[data-dse-element='featureblock']`, the outermost node). The site's block rhythm lives one
+  level up, on `.fb-wrap` — `margin: 1.7rem auto`
+  (`v2/docs/stylesheets/steel-featureblock.css:40`), i.e. **34px** at the site's 20px rem base.
+  So the real, unmeasured finding is the opposite of what the gate prints: the plugin's
+  featureblock separates from surrounding prose by 8px where the site uses 34px. The same
+  latent hole exists for `statblock` (site `.sb-wrap` `margin: 1.7rem auto`,
+  `steel-statblock.css:70`; plugin host `margin: 0.5em`) — there it is fully invisible, because
+  `.md-typeset.sb` and `.dse-sb` both compute 0 and the pair reads clean.
+- **Why:** This is the plan's own failure mode — a real difference that the ruler cannot
+  express — so it must not be closed by "fixing" the plugin to the number the gate prints.
+  Until it is resolved, the two heaviest card families have **no** block-rhythm coverage, while
+  the `card` pair (`.sc-ability`, which carries its own `margin: 1.2rem 0` = 24px) does.
+- **Context:** Deferred in `visual-harness/parity/selector-map.json` as
+  `"featureblock:margin-top"` / `"featureblock:margin-bottom"` (the per-(pair, rule) form,
+  p21 constraint C3), cited from `expectedGapsNote`; `diff.mjs` enforces the citation. The
+  clean fix is to add `sb-wrap` / `fb-wrap` pairs (site `.sb-wrap` / `.fb-wrap` → plugin
+  `[data-dse-element='statblock']` / `[data-dse-element='featureblock']`) so the outermost
+  nodes are compared like-for-like, then drop the deferral — that needs a
+  `npm run parity:site` baseline regeneration (live-site capture), which is why it was not
+  done inside a review fix round. Note the new pairs would also start reporting the other
+  rules on those wrapper nodes; expect to triage that list once.
+- **Effort:** S (two pairs + one baseline regeneration + triage of whatever the wrappers
+  newly report)
 
 ## 37. No fixture exercises three Steel featureblock/sidebar rules
 
