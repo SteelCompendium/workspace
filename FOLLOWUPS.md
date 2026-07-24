@@ -270,8 +270,18 @@ structural divergence like these is invisible to it by design.)*
   baseline. Evidence: contact-sheet pair `04-kit--site.png` / `04-kit--plugin.png`;
   `task-8-report.md` §2 item 4 (also notes the site's kit *detail* page has no `.sc-card`
   at all, so the index tiles are the only valid site counterpart for this comparison).
+- **Plan 21 (2026-07-24):** scoped into plan 21 as its Task 4 (kit DOM rebuild) and then
+  **DEFERRED, not done.** The rebuild conflicts with LEGACY-FREEZE — a Steel-only DOM
+  restructure changes the frozen `kit--steel-print.png`, and the codebase builds one
+  theme-agnostic DOM themed purely in CSS, so theme-conditional kit markup would be a new
+  architectural pattern. It needs its own design plan to resolve the freeze/architecture
+  question first. Plan 21 only gave the kit's existing label-value layout the §A
+  type/space/ink treatment (serif body/labels, open line-height, cool ink); the stat-tile
+  grid + crest + eyebrow are still absent (see the plan-21 contact sheet
+  `.superpowers/sdd/shots-parity-type/04-kit--{site,plugin}.png`).
 - **Effort:** M (new stat-tile-grid + crest/eyebrow markup in the kit card DOM, updated
-  jest DOM assertions, and a re-baselined golden PNG)
+  jest DOM assertions, and a re-baselined golden PNG) — plus, first, a design plan for the
+  theme-conditional-DOM vs print-freeze question (plan 21 deferral).
 
 ## 31. DSE modals are untouchable by the Steel theme (no `data-dse-theme` on the modal root)
 
