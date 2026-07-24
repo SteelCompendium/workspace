@@ -8,6 +8,19 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+### Fixed
+
+- **Ability `effects[]` no longer drops named effects** — the parser previously
+  recognized only `Effect`, the *first* `Spend X`, and `Trigger`, so any other named
+  rider (`Persistent N`, `Strained`, `Special`, `Mark Benefit`, class-specific labels)
+  and every second `Spend X` were dropped from the structured `effects[]` array in the
+  JSON/YAML/DSE data (they still showed in the rendered body). Effects are now captured
+  generally, in document order, across all formats. Fixes the reported gaps on Minor
+  Telekinesis (missing "Spend 3 Clarity"), Conflagration (missing "Persistent 2"), and
+  Hoarfrost (missing "Strained"). The array now mirrors source document order, including
+  where the power roll sits (e.g. an Effect stated before the power roll stays before it).
+  No schema change (the existing `{name, cost, effect}` entry already covered it).
+
 ### Added (pending plugin 6.0.0 release)
 
 - **Draw Steel Elements plugin 6.0.0** — compendium sync now pulls from data-unified

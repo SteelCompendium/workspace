@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 38 -->
+<!-- next-id: 39 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -514,3 +514,33 @@ stamina; fix the kit core with boundary-case golden updates as its own scoped ch
 (b) `StaminaEditModal`'s pre-existing "Spend Recovery" quick button heals `floor(max/3)`
 but never decrements the new `recoveries` counter and has no zero-remaining gate — sync
 it with the D7 recoveries model.
+
+## 38. Dragon's Fire ability body mis-nests eight 9th-level armor enhancements
+
+**Identified:** 2026-07-23, while fixing the ability named-effects parser (three-example
+bug report: Minor Telekinesis / Conflagration / Hoarfrost).
+
+**What:** In `steel-etl/input/heroes/Draw Steel Heroes.md` (~line 23153-23169), the
+descriptions of eight 9th-level armor enhancements — Invulnerable, Leyline Walker, Life,
+Magic Resistance III, Phasing III, Psionic Resistance III, Temporal Flux, Unbending — sit
+as bare `**Name:** …` paragraphs *inside* the `@type: ability` **Dragon's Fire** section
+(no heading separates them from the ability until the "9th-Level Armor Enhancements Table"
+at ~23171). The new general named-effect parser (`extractNamedEffects` in
+`internal/content/ability.go`) therefore captures all eight as `effects[]` entries on
+Dragon's Fire, where they don't belong.
+
+**Why:** They're peers of "Dragon Soul II" (the enhancement that *grants* Dragon's Fire),
+not riders of the ability. There is no syntactic way to distinguish `**Invulnerable:**`
+(an enhancement) from `**Strained:**` (a real rider), and a keyword whitelist is exactly
+the fragility the bug report called out — so the parser is correct in general; the source
+structure is the anomaly. This is the **only** such false positive across all 522 ability
+JSONs (corpus swept 2026-07-23).
+
+**Context:** Fix belongs in the source: restructure the eight enhancements as their own
+sections/entries (like other treasure enhancements) so they stop being Dragon's Fire body
+text. Note this will **mint new SCC codes** for them (they currently produce none), so it
+needs classification/registry consideration — hence out of scope for the parser bugfix.
+Site cards render from the body (unaffected); only the JSON/YAML/DSE `effects[]` array
+mis-attributes them today.
+
+**Effort:** S-M (source edit + decide enhancement modeling/SCC placement + regen).
