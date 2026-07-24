@@ -1,6 +1,6 @@
 # Roadmap
 
-<!-- next-id: 18 -->
+<!-- next-id: 19 -->
 
 New features and larger planned / in-flight efforts across the workspace. Smaller
 in-scope tangents to clear before the next feature go in `FOLLOWUPS.md`, not here.
@@ -244,3 +244,33 @@ the squeeze"), no longer a hard technical block. Its own brainstorm/spec/plan wh
   appears.
 - **Effort:** L (M for tokens-only; L once rules/classes move, because of the baseline
   re-capture and freeze re-proof).
+
+## 18. Section-scope annotation: end an entity's structured/rendered scope without moving content
+
+**Status:** open — motivated by FOLLOWUPS #38 (Dragon's Fire), which was fixed by a source
+reorder instead. This is the general mechanism so a future case needn't reorder.
+
+- **Identified:** 2026-07-23. When an `@type: ability` (or any structured entity) heading is
+  followed by trailing prose that semantically belongs to its *parent* — e.g. the 8 armor
+  enhancements printed after `###### Dragon's Fire` under `##### Imbue Armor` — that prose
+  falls into the entity's section body. Two bad consequences: (a) the structured extractors
+  (`extractNamedEffects` et al. in `internal/content/ability.go`) capture it as bogus
+  `effects[]`/fields, and (b) it renders on the entity's own narrow page.
+- **What:** A source annotation (e.g. `<!-- @scope: end -->`) placed inside a section body
+  that marks "structured scope ends here." Both consumers honor it: the field/effects
+  extractors stop at the marker (fixes the data bug), and the renderer treats the trailing
+  run like an `@owner: loose` callout — stripped from the entity's *own* (root) page but kept
+  on broader pages (the parent renders it in-place, matching the book). **No content moves,
+  no re-parenting.**
+- **Why it's the right seam:** it is a direct generalization of the existing
+  `@type: callout | @owner: self|loose` work (`steel-etl/docs/superpowers/specs/2026-06-17-callout-annotation-owner-suppression-design.md`),
+  whose spec explicitly reserves this grow-later path — but extended two ways that work does
+  not cover: (1) from blockquote-only to arbitrary trailing paragraph runs, and (2) from
+  render-only to **extraction-aware** (the effects bug happens pre-render on raw
+  `BodySource`, so a render-only strip would not fix it).
+- **Context:** currently the only real case is Dragon's Fire (522-ability corpus sweep,
+  2026-07-23), which is why it was reordered rather than blocked on this. Build when a second
+  case appears or when the render/extraction seams are being touched anyway. Needs: section
+  parser or body-extractor change, `validate` coverage (like the callout `@owner` check), and
+  render_subtree tests mirroring the callout suite.
+- **Effort:** M (parser/extraction + render + validate + tests; grammar already precedented).
