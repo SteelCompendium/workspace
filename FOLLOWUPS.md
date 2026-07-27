@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 39 -->
+<!-- next-id: 41 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -39,6 +39,88 @@ none could be fixed inside that plan. None trips the automated parity gate
 (`draw-steel-elements/visual-harness/parity`): the gate diffs material properties
 (background-image/box-shadow/border) on mapped selectors, not layout/structure, so a
 structural divergence like these is invisible to it by design.)*
+
+## 40. Parity `section-head`/`pr-head` pairs compare the site's text-less flex wrapper against the plugin's title/header content node
+
+**Status:** open
+
+- **Identified:** 2026-07-24, Plan 21 (Steel typography & spacing) Task 3,
+  `draw-steel-elements` worktree `steel-type`, closing the body-font/ink/letter-spacing GAPs.
+- **What:** Task 1's new `ink` and `letter-spacing` rules report three (pair, rule) misses that
+  the gate demands be "matched" but where matching the site node the pair names would make the
+  plugin **less** faithful to the site's *visible* text, not more:
+  - `section-head:ink` — the pair maps the plugin's `.dse-section__title` to the site's
+    `.sc-ability__section-head` (a flex WRAPPER with no text of its own; it computes the
+    inherited body ink `rgba(220,226,230,0.88)` dark / `rgb(44,46,48)` light). The site's actual
+    visible title text lives in that wrapper's child `.tag`
+    (`v2/docs/stylesheets/steel-ability-cards.css:186`), which is
+    `color: var(--fx-metal-bright)` = `#d9dee1` dark / `#2c3338` light. The plugin emits no
+    separate wrapper+tag (renderFeature.ts writes only `__title` + `__body`), so
+    `.dse-section__title` IS the tag and is coloured `var(--dse-metal-bright)` — which computes
+    `rgb(217,222,225)` dark / `rgb(44,51,56)` light, i.e. **exactly** the site's `--fx-metal-bright`
+    (`steel-redesign.css:16,26`). The plugin already matches the site's real title; the GAP is
+    the pair comparing against the wrong (text-less) site node.
+  - `section-head:letter-spacing` — same wrapper-vs-tag split. Site wrapper computes `normal`;
+    the site's `.tag` is `letter-spacing: .1em` small-caps (…:186); the plugin's title tracks
+    `0.07em` (`styles-source.css` small-caps section-title rule). Stripping the plugin to
+    `normal` would delete a deliberate small-caps treatment the brief explicitly says not to
+    touch (same class as the chip/eyebrow tracking).
+  - `pr-head:ink` — the pair maps the plugin's `.dse-pr__head` to the site's
+    `.sc-ability__pr-head` wrapper (again body ink). The site's visible pr-head text is `.pre`
+    (`--fx-metal`) + `.chars` (`--sc-steel-lighter`, "the FOCUS — read every play",
+    steel-ability-cards.css:164) — both *emphasis* inks, neither the wrapper's body-ink default.
+    The plugin deliberately renders the power-roll header with heading emphasis
+    (`.dse-pr__head { font-weight: bold; color: var(--dse-heading) }`, styles-source.css:~4852),
+    computing `rgba(220,226,230,0.95)` dark (RGB identical to the wrapper, alpha .95 vs .88) /
+    `rgb(26,29,32)` light. Routing it to body ink `--dse-fg` would make the gate green but
+    **de-emphasise** the header the site itself emphasises.
+- **Why:** Fixing any of the three to the pair's named site node is the exact anti-pattern
+  Plan 21 exists to prevent (a value chosen to make the number vanish). They are deferred as
+  deliberate, correct treatments, not silenced defects.
+- **Context:** Deferred in `visual-harness/parity/selector-map.json` as
+  `"section-head:ink"` / `"section-head:letter-spacing"` / `"pr-head:ink"` (per-(pair, rule)
+  form, p21 constraint C3), cited from `expectedGapsNote`; `diff.mjs` enforces the citation.
+  The clean fix is to split the two pairs so the gate compares like-for-like: add a
+  `section-tag` pair (site `.sc-ability__section-head .tag` → plugin `.dse-section__title`) and
+  a `pr-chars` pair (site `.sc-ability__pr-head .chars` → the plugin node carrying the roll
+  focus), then drop these deferrals. That needs a `npm run parity:site` baseline regeneration
+  (live-site capture), which is why it was not done inside Task 3.
+- **Effort:** S (two pairs + one baseline regeneration + triage of whatever the new nodes report)
+
+## 39. Parity gate cannot see the statblock/featureblock block margin — the site's lives on the `*-wrap` node, outside every pair
+
+**Status:** open
+
+- **Identified:** 2026-07-23, Plan 21 (Steel typography & spacing) Task 1 review fix round,
+  `draw-steel-elements` worktree `steel-type`, while adding the `margin-top`/`margin-bottom`
+  rule to `visual-harness/parity/diff.mjs`.
+- **What:** The new margin rule reports `featureblock` `margin-top`/`margin-bottom` as
+  "site 0px, plugin 8px" in both schemes, and the fix it demands (shrink the plugin to 0) is
+  **wrong**. The `featureblock` pair maps the site's *inner plate*
+  (`.md-typeset.fb`, which is deliberately `margin: 0`) to the plugin's *host* node
+  (`[data-dse-element='featureblock']`, the outermost node). The site's block rhythm lives one
+  level up, on `.fb-wrap` — `margin: 1.7rem auto`
+  (`v2/docs/stylesheets/steel-featureblock.css:41`), i.e. **34px** at the site's 20px rem base.
+  So the real, unmeasured finding is the opposite of what the gate prints: the plugin's
+  featureblock separates from surrounding prose by 8px where the site uses 34px. The same
+  latent hole exists for `statblock` (site `.sb-wrap` `margin: 1.7rem auto`,
+  `steel-statblock.css:68`; plugin host `margin: 0.5em`) — there it is fully invisible, because
+  `.md-typeset.sb` and `.dse-sb` both compute 0 and the pair reads clean.
+- **Why:** This is the plan's own failure mode — a real difference that the ruler cannot
+  express — so it must not be closed by "fixing" the plugin to the number the gate prints.
+  Until it is resolved, the two heaviest card families have **no** block-rhythm coverage, while
+  the `card` pair (`.sc-ability`, which carries its own `margin: 1.2rem 0` = 24px) does.
+- **Context:** Deferred in `visual-harness/parity/selector-map.json` as
+  `"featureblock:margin-top"` / `"featureblock:margin-bottom"` (the per-(pair, rule) form,
+  p21 constraint C3), cited from `expectedGapsNote`; `diff.mjs` enforces the citation. The
+  clean fix is to add `sb-wrap` / `fb-wrap` pairs (site `.sb-wrap` / `.fb-wrap` → plugin
+  `[data-dse-element='statblock']` / `[data-dse-element='featureblock']`) so the outermost
+  nodes are compared like-for-like, then drop the deferral — that needs a
+  `npm run parity:site` baseline regeneration (live-site capture), which is why it was not
+  done inside a review fix round. Note the new pairs would also start reporting the other
+  rules on those wrapper nodes; expect to triage that list once.
+- **Effort:** S (two pairs + one baseline regeneration + triage of whatever the wrappers
+  newly report)
 
 ## 37. No fixture exercises three Steel featureblock/sidebar rules
 
@@ -188,8 +270,18 @@ structural divergence like these is invisible to it by design.)*
   baseline. Evidence: contact-sheet pair `04-kit--site.png` / `04-kit--plugin.png`;
   `task-8-report.md` §2 item 4 (also notes the site's kit *detail* page has no `.sc-card`
   at all, so the index tiles are the only valid site counterpart for this comparison).
+- **Plan 21 (2026-07-24):** scoped into plan 21 as its Task 4 (kit DOM rebuild) and then
+  **DEFERRED, not done.** The rebuild conflicts with LEGACY-FREEZE — a Steel-only DOM
+  restructure changes the frozen `kit--steel-print.png`, and the codebase builds one
+  theme-agnostic DOM themed purely in CSS, so theme-conditional kit markup would be a new
+  architectural pattern. It needs its own design plan to resolve the freeze/architecture
+  question first. Plan 21 only gave the kit's existing label-value layout the §A
+  type/space/ink treatment (serif body/labels, open line-height, cool ink); the stat-tile
+  grid + crest + eyebrow are still absent (see the plan-21 contact sheet
+  `.superpowers/sdd/shots-parity-type/04-kit--{site,plugin}.png`).
 - **Effort:** M (new stat-tile-grid + crest/eyebrow markup in the kit card DOM, updated
-  jest DOM assertions, and a re-baselined golden PNG)
+  jest DOM assertions, and a re-baselined golden PNG) — plus, first, a design plan for the
+  theme-conditional-DOM vs print-freeze question (plan 21 deferral).
 
 ## 31. DSE modals are untouchable by the Steel theme (no `data-dse-theme` on the modal root)
 

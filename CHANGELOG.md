@@ -76,6 +76,23 @@ go under an *Internal* sub-heading.
   (`test/dom/theme/steelMaterial.test.ts`) pins the same declarations offline and does run
   in CI. The pair makes a wholesale flattening loud; it does not make the plugin
   pixel-identical to the site, and drift within those blind spots can still pass.
+- **Steel typography, spacing & ink parity (plan 21)** — the plugin's Steel theme now also
+  matches the site's body **type, spacing and ink** on the same card families (feature/
+  ability, statblock, featureblock, card-ref/condition, and the shared head/row/band
+  primitives): body and label text is routed to a serif face, opened to the site's
+  line-height and card/head/row/band spacing, and given the site's cooler ink. The parity
+  check was widened to measure type, spacing, ink and letter-spacing alongside material
+  across the same 12 selector pairs (~5 of 32 element families), both schemes — still
+  **not wired into CI** (FOLLOWUPS #36) — and a second offline jest contract
+  (`test/dom/theme/steelTypography.test.ts`) pins the serif route, the ≥1.6 body
+  line-height and the ~24px card inset. Two deliberate limits: the site's licensed slab
+  (BerlingskeSlab) can't be bundled, so the plugin uses a free serif (Source Serif 4) — a
+  serif, not that exact slab, and only its 600/700 weights ship, so body copy reads a
+  touch heavier than the site's; and this is **only** the shared card families. It does
+  **not** cover the plugin-only families, nor the deferred structural rebuilds — the kit
+  stat-tile grid (FOLLOWUPS #32, needs its own plan against the print/legacy freeze), the
+  featureblock option layout (#33), the feature action spine (#34) and the statblock notch
+  (#35) all remain as they were. Bundling the slab is a possible future upgrade.
 
 ## 2026-07-21 — any/all keyword filters (SC-88)
 

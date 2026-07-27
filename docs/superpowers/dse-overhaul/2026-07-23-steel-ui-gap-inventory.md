@@ -21,6 +21,33 @@ single face for titles and body); bundling a true slab (Zilla Slab / Bitter, OFL
 
 ---
 
+## Status — after plan 21 (2026-07-24)
+
+- **§A (cross-cutting type/space/ink) — CLOSED and GUARDED.** A1–A7 are all fixed in
+  `styles-source.css` (Steel-scoped, screen-only; the print/legacy freeze is intact) and locked
+  by two offline jest contracts + the extended parity gate: `steelMaterial.test.ts` (material)
+  and the new `steelTypography.test.ts` (serif route, ≥1.6 body line-height, ~24px card inset,
+  `letter-spacing: normal`). The gate now measures type/space/ink/letter-spacing/material across
+  the 12 pairs, both schemes, at `0 GAPs / 10 documented-deferral WARNs / exit 0`. **A1 note:**
+  there is still **no `--dse-font-body` token** — registering a `--dse-*` token needs a
+  `src/framework/tokens.ts` edit the plan forbade, so body text routes directly to the existing
+  `--dse-font-display` (Source Serif 4). It is a serif, **not** the site's slab, and only its
+  600/700 weights ship (body reads slightly heavy). The 10 WARNs are the documented per-(pair,
+  rule) deferrals: 4× FOLLOWUPS #39 (block-margin lives on the un-paired `*-wrap` node) + 6×
+  FOLLOWUPS #40 (`section-head`/`pr-head` pairs compare the plugin's content node to the site's
+  text-less wrapper).
+- **§B (structural / layout) — still OPEN; #32 now deferred to its own plan.** None of the §B
+  rebuilds were done in plan 21 (it was CSS-only). **#32 (kit stat-tile grid) was pulled from
+  plan 21's Task 4 and DEFERRED:** a Steel-only DOM restructure would change the frozen
+  `kit--steel-print.png`, and the codebase builds one theme-agnostic DOM themed purely in CSS —
+  theme-conditional rendering would be a new architectural pattern. It needs its own design plan
+  to resolve the freeze/architecture question before the rebuild. #33 (featureblock option
+  layout), #34 (feature action spine) and #35 (statblock notch) remain open as filed.
+- **§C (plugin-only families) — still OPEN, un-audited.** Out of plan 21's scope; needs its own
+  coherence pass now that the §A tokens/spacing have landed.
+
+---
+
 ## A. Cross-cutting — fix once on shared primitives, cascades to every card family (CSS, no DOM)
 
 | # | Category | Finding (site → plugin) | Impact | Effort |
