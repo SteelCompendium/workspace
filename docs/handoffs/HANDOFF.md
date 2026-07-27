@@ -1,3 +1,35 @@
+# Handoff — 2026-07-27 addendum (⚠️ 6.0.0 is RETIRED — the plugin's next major is 7.0.0)
+
+**Read this before acting on SC-11 below.** On 2026-07-07 the `6.0.0-rc1` release
+candidate was published to `draw-steel-elements` as a **regular** GitHub release (not
+marked pre-release). Consequences: Obsidian auto-updated existing users onto the RC
+(~120 downloads), and around 2026-07-21/22 the plugin was **delisted from the Obsidian
+community store** (`6.0.0-rc1` is not a valid `x.y.z` plugin version, and the registry
+is now auto-mirrored by Obsidian's backend).
+
+**Recovery (done 2026-07-27):**
+- Deleted the `6.0.0-rc1` release + tag.
+- Published **`6.0.1`** — byte-identical to 5.1.1 (tag on the 5.1.1 commit, manifest
+  patched to 6.0.1) — so RC users get pulled back to stable via a normal update.
+  6.0.1 chosen over 6.0.0 so version comparison beats an installed `6.0.0-rc1`.
+- Plugin main: root `manifest.json`/`versions.json` → 6.0.1 (latest released);
+  `package.json` → 7.0.0 (dev target); CHANGELOG/docs/deprecation strings renumbered
+  (migration guide is now `docs/migrating-to-7.md`; the `roles:`/`ancestry:` shim and
+  the legacy sync-command alias are now removed in **8.0.0**, not 7.0.0).
+- Awaiting automatic re-listing in `community-plugins.json` (Obsidian's mirror runs
+  ~hourly). **If still absent after ~2026-07-29**, contact Obsidian: resubmit via
+  community.obsidian.md or ask in Discord `#plugin-dev` (the release is fixed; the
+  listing needs their side).
+
+**Rules going forward:** the version `6.0.0` is permanently retired — never cut it.
+The overhaul release (everything the 2026-07-20 handoff below calls "6.0.0", and
+everything Linear calls the 6.0.0 wave) ships as **7.0.0**. Scott has ruled the
+current build is **not ready to release** — do not cut 7.0.0 without his go. Betas:
+use BRAT, or at minimum tick "Set as a pre-release" and keep manifest versions
+strictly `x.y.z`.
+
+---
+
 # Handoff — 2026-07-20 (DSE 6.0.0 wave LANDED + DEPLOYED · SDK 3.0.0 on npm · only the plugin release cut remains)
 
 ## Where things stand (everything verified)
@@ -19,18 +51,18 @@ The entire DSE 6.0.0 wave is **landed, deployed, and live**:
   brought over from the f2 branch; handoff current.
 - Linear: SC-1/2/3/6/10 (features) + SC-13/86/87 → **Done**. SC-11 = the release cut.
 
-## The one remaining step (Scott): SC-11 — cut plugin 6.0.0
+## The one remaining step (Scott): SC-11 — cut the plugin major (was 6.0.0, now **7.0.0** — see 2026-07-27 addendum; NOT ready per Scott)
 Plugin main `01822bd` is release-ready (manifest/LICENSE/lint clean — see
 `.superpowers/sdd/sc-11-audit-report.md` for the audited checklist + exact commands):
 ```bash
 cd draw-steel-elements   # main checkout, on main @ 01822bd
 npm run build            # produces main.js + styles.css
-# bump manifest.json/versions.json if not already at 6.0.0, then:
-gh release create 6.0.0 main.js manifest.json styles.css --title "6.0.0" \
-  --notes-file <(sed -n '/^## 6.0.0/,/^## 5.1.1/p' CHANGELOG.md | head -n -1)
+# bump manifest.json/versions.json to 7.0.0 (currently 6.0.1, the recovery release), then:
+gh release create 7.0.0 main.js manifest.json styles.css --title "7.0.0" \
+  --notes-file <(sed -n '/^## 7.0.0/,/^## 6.0.1/p' CHANGELOG.md | head -n -1)
 ```
 Users then update in Obsidian and re-sync the compendium (guide:
-`docs/migrating-to-6.md`). No community-catalog PR needed (plugin id unchanged).
+`docs/migrating-to-7.md`). No community-catalog PR needed (plugin id unchanged).
 
 ## Loose ends (small, non-blocking)
 - **f2 worktree**: all unique content landed; `just wt-rm f2` when convenient (the
@@ -64,6 +96,6 @@ npm view steel-compendium-sdk version                      # 3.0.0
 gh release view --repo SteelCompendium/data-unified --json tagName -q .tagName  # v4.20260720213840
 curl -sL 'https://steelcompendium.io/v2/Browse/monster/devil/devil-clerk/' | grep -c 'Malice Features'  # 1
 ```
-**Resume protocol:** verify the above; if SC-11 is cut (gh release 6.0.0 exists on
+**Resume protocol:** verify the above; if SC-11 is cut (gh release 7.0.0 exists on
 draw-steel-elements), mark SC-11 Done and archive this wave; otherwise the board is
 clear — nothing is blocked on an agent.

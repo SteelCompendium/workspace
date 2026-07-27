@@ -5,6 +5,13 @@ Master index for the **Draw Steel Elements (DSE)** Obsidian-plugin overhaul. Thi
 analysis, orchestrated by Opus), to be **implemented in later sessions**. No code changes
 happen as part of this program.
 
+> **⚠️ 2026-07-27 — version renumbering:** every "6.0.0" in this doc now means
+> **7.0.0**. The 6.0.0 number is retired after `6.0.0-rc1` was accidentally published
+> as a regular release (auto-updated users; got the plugin delisted from the community
+> store). `6.0.1` = a re-release of 5.1.1 cut for recovery. Details:
+> `docs/handoffs/HANDOFF.md` (2026-07-27 addendum) and the plugin CHANGELOG.
+
+
 > **Why these live in the workspace repo, not `draw-steel-elements/`:** DSE is a git
 > submodule and the shared main checkout gets reset by `just deploy*`. Staging the whole
 > multi-week program here avoids that footgun. Specs may be relocated into the DSE repo at

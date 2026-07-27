@@ -197,7 +197,7 @@ the squeeze"), no longer a hard technical block. Its own brainstorm/spec/plan wh
 
 ## 17. Extract a shared steel-design token/CSS package for site + plugin
 
-**Status:** open — deliberately deferred past plugin 6.0.0.
+**Status:** open — deliberately deferred past plugin 7.0.0 (the release previously numbered 6.0.0; see the 2026-07-27 handoff addendum).
 
 - **Identified:** 2026-07-21, plan 20 (Steel material parity). Plan 20 fixed the *symptom*
   (the plugin's Steel theme had drifted from the live site's material treatment); this item

@@ -1,5 +1,11 @@
 # DSE Plugin — Remaining Task Backlog (for Linear "Steel Compendium" project)
 
+> **⚠️ 2026-07-27 — version renumbering:** every "6.0.0" in this doc now means
+> **7.0.0**. The 6.0.0 number is retired after `6.0.0-rc1` was accidentally published
+> as a regular release (auto-updated users; got the plugin delisted from the community
+> store). `6.0.1` = a re-release of 5.1.1 cut for recovery. Details:
+> `docs/handoffs/HANDOFF.md` (2026-07-27 addendum) and the plugin CHANGELOG.
+
 Paste-ready. All start in **Todo**. Everything below is the `draw-steel-elements` **Obsidian plugin** (renders in Obsidian; the v2 site is separate). Current state: D2 (element/kit redesign) + D3 (theming machinery + values) are done on the **`dse-framework`** branch (83 commits ahead of `main`, unlanded), released as **`6.0.0-rc1`**. Specs live in `docs/superpowers/dse-overhaul/`.
 
 > **Full context for a fresh session:** the "you are here" router is `docs/handoffs/HANDOFF.md`; the detailed task-by-task build record is the SDD ledger at `worktrees/dse-framework/draw-steel-elements/.superpowers/sdd/progress.md`; per-phase plans are in `docs/superpowers/dse-overhaul/plans/`. This doc is self-contained enough to create the Linear issues on its own.
