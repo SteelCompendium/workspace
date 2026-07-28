@@ -43,8 +43,14 @@ single face for titles and body); bundling a true slab (Zilla Slab / Bitter, OFL
   theme-conditional rendering would be a new architectural pattern. It needs its own design plan
   to resolve the freeze/architecture question before the rebuild. #33 (featureblock option
   layout), #34 (feature action spine) and #35 (statblock notch) remain open as filed.
-- **§C (plugin-only families) — still OPEN, un-audited.** Out of plan 21's scope; needs its own
-  coherence pass now that the §A tokens/spacing have landed.
+- **§C (plugin-only families) — AUDITED 2026-07-27; ONE headline gap (C1).** Their material is
+  coherent (shared `cardHead`/`powerRollPanel`/plates all render right), but their **body text is
+  still sans** because plan 21's serif/spacing routing landed only on the card families, not a
+  Steel-theme-root selector. One CSS-only routing change fixes every family at once — cheaper and
+  safer than the kit rebuild. See §C/§E. **Recommended as the next plan.**
+- **§D (prose/reference families) — AUDITED 2026-07-27.** Typography fix landed well; in good
+  shape. The card-vs-page framing is a defensible plugin choice (§D1). class/kit stats-as-list
+  folds into #32 (§D2).
 
 ---
 
@@ -78,14 +84,67 @@ match the **px/em target**, not the site's rem literal (same lesson as plan 20's
 - **statblock (FOLLOWUPS #35):** diamond notch under the characteristics strip vs under the head
   band. Otherwise the strongest structural match.
 
-## C. Plugin-only families (trackers, hero sheet, sidebar, modals, montage, encounter,
-## initiative, project, negotiation, …)
+## C. Plugin-only families — AUDITED 2026-07-27 (post-plan-21 landing)
 
-No site counterpart — goal is internal coherence with the card family once the A-series lands
-(shared tokens). **Not yet individually audited** — needs its own coherence pass. Modals are
-additionally FOLLOWUPS #31 (untouchable without a TS change).
+Read the landed steel-dark shots for **hero** (hero sheet), **encounter** + **negotiation**
+(trackers), against the now-serif card families. Representative; the finding is structural
+(single root cause) so it generalizes to all ~20 plugin-only families.
 
-## D. What was NOT verified
-- The ~20 plugin-only families individually (Section C).
-- condition / ancestry / class / treasure visually (prose pages; expect mostly A-series gaps).
+- **C1 [type] — the headline finding. Plugin-only body/label/control/sub-header text is still
+  sans, against the now-serif card families.** Every plugin-only family correctly reuses the
+  shared `cardHead` (crest + serif title + flat chips) and `powerRollPanel` (sheen head + tier
+  washes) — so its *head* is serif and material-correct — but its *body* (panel labels like
+  "Ferocity"/"Surges", table cells, summary strips, buttons, checkboxes, sub-headers like
+  "Motivations"/"Interest", ladder descriptions) renders `-apple-system` sans at the old 1.5
+  line-height. Root cause: plan 21 Task 3 scoped the serif/line-height/ink routing to the
+  **card-family body containers**, not a Steel-theme-root selector. Result: serif head + sans
+  body *inside the same element*, and a note card (serif) next to a hero sheet (sans body) reads
+  as two different type systems. **Impact: HIGH** (it's the bulk of the plugin's surface).
+  **Effort: S–M, CSS-only, no DOM** — route body text at the Steel theme root
+  (`[data-dse-theme='steel']`) with careful exclusions (numeric `<input>`s, monospace SCC codes,
+  the small-caps chip/eyebrow rules) so it inherits everywhere. This is **cheaper and safer than
+  the kit DOM rebuild and touches every family at once** — strong candidate for the next plan.
+- **C2 [space]** — same root cause: plugin-only body inherits the old 1.5 line-height; folds
+  into C1's root-level routing.
+- **Material/structure IS coherent** — verified in negotiation's power-roll panel: tier washes
+  bleed full-width, sheen head, flat chips, plates all render correctly. The shared-primitive
+  strategy paid off; only the type routing didn't reach these families.
+- **C3 [space] Minor** — hero-sheet grid panels (CHARACTERISTICS/CONDITIONS/SKILLS) show large
+  empty vertical space below sparse content (grid row-height matches the tallest neighbour).
+  Low priority.
+- **NOT a defect (harness-data artifact):** hero/encounter shots show "Compendium not installed
+  — run Sync compendium" banners and raw `scc.v1:…` codes as titles. That's the demo harness
+  lacking a synced compendium; resolves in a real vault. Ignore for styling.
+- Modals remain FOLLOWUPS #31 (untouchable without a TS change) — not re-audited; C1's root
+  routing would still not reach them (they mount on `document.body`, outside `[data-dse-theme]`).
+
+## D. Prose / reference families — AUDITED 2026-07-27
+
+Read **condition** and **class** (representative of ancestry/treasure) plugin shots vs the live
+site.
+
+- **Typography fix landed well** — body copy is serif + open + cool-ink; coherent with the site.
+  These families are in good shape now; the A-series was the main gap and it's closed.
+- **D1 [layout] Card-vs-page framing (note, not defect).** The site renders reference content as
+  a **full-bleed page** (large display title + ◆ centred divider + prose + source line); the
+  plugin renders a **self-contained boxed card** with a kind chip. That is a *defensible plugin
+  affordance* — an embeddable inline reference in a note is the right shape for a plugin, vs a
+  browsable wiki page. Not a fix; record only.
+- **D2 [layout] class/kit stats render as a label-value list**, not a stat-tile strip, and the
+  display title is less prominent than the site's large title. Same family as kit #32 (the
+  `display`/`CardLayout` render path); fold into that work. MED.
+
+## E. Recommended sequencing (revised by the 07-27 audit)
+
+1. **Steel body-text coherence (C1/C2)** — CSS-only, no DOM, no sign-off, extends plan 21's
+   exact pattern to a root selector; makes the *whole* plugin read coherently. Highest
+   value-per-risk. **Recommend this as the next plan.**
+2. **Kit / display-layout structure (#32, D2)** — DOM + a sanctioned `kit--steel-print`
+   rebaseline; needs a design decision (theme-conditional render). Its own plan.
+3. **#33 / #34 / #35** — smaller filed structural items.
+
+## F. What was NOT verified
+- The remaining plugin-only families individually (montage/initiative/project/party/sidebar/…);
+  C1 is structural so it applies, but per-family layout quirks (like C3) weren't all catalogued.
+- ancestry / treasure read only shallowly (prose; same story as condition/class).
 - Print scheme (frozen; out of scope).
