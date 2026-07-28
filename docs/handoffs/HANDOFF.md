@@ -1,3 +1,90 @@
+# Handoff — Steel Compendium workspace (canonical router)
+
+## Active efforts
+- **Release / SC-11 → 7.0.0** — the session Scott is actively driving ("moving through"). The
+  overhaul release cut. 6.0.1 recovery published; **7.0.0 NOT cut** (Scott: build not ready) — so
+  **no agent action is pending here** (its resume protocol below confirms the board is clear).
+  Full detail in the two dated sections BELOW (`6.0.0 RETIRED` addendum + `2026-07-20` wave) and
+  `.superpowers/sdd/sc-11-audit-report.md`.
+- **Steel UI parity** — paused, awaiting a Scott decision (added 2026-07-27, this session).
+  Plan 20 (material) + plan 21 (typography/spacing/ink) are **LANDED into the 7.0.0-dev build**;
+  plan 22 (body-text coherence) is **DRAFTED, not executed**. Resume at
+  `docs/superpowers/dse-overhaul/plans/2026-07-27-plan-22-steel-body-text-coherence.md` (STATUS
+  header) + gap inventory `docs/superpowers/dse-overhaul/2026-07-23-steel-ui-gap-inventory.md`.
+  Per-task history: `.superpowers/sdd/progress.md` (gitignored scratch).
+
+> **Overall: nothing is agent-actionable right now — both efforts wait on Scott.** Release is
+> paused until he says 7.0.0 is ready to cut; Steel UI is paused until he answers the C1
+> aesthetic question below. A resuming agent should verify state, restate, and **wait for his
+> go** — do not start editing/building/releasing.
+
+---
+
+## Steel UI parity — you are here
+**Next action is Scott's, not an agent's:** decide the **C1 aesthetic** — serif body text
+*everywhere* (coherent, book-like) vs. keep the data-dense trackers/hero-sheet **sans** (UI
+density). A freeze-verified before/after A/B was captured (ephemeral, see gotchas). His answer
+gates plan-22 execution. Nothing is blocked on an agent; do **not** execute plan-22 or touch kit
+without his call.
+
+## Steel UI parity — verified state (2026-07-27)
+- **Superproject** `main` = `origin/main` (`e7fad33`) + **2 unpushed** docs commits (plan-22
+  draft + §C/§D audit `b6e9356`; this handoff update). Clean tree, FF-ahead — not diverged.
+  Push is a clean fast-forward whenever Scott wants it.
+- **dse submodule** @ `b7ea4af` (7.0.0-dev; `package.json` 7.0.0 / `manifest.json` 6.0.1). Plan
+  20+21 Steel work **is present** (`f5923f8` is an ancestor); the release renumber did **not**
+  touch `styles-source.css` (only version strings), so plan-22's CSS line refs still hold.
+- **Landed & guarded** (gap inventory §A): body serif + open line-height + cool ink on the
+  **card families**; extended parity gate + two jest contracts.
+- **Plan 22 drafted, NOT executed.** Its one CSS change broadens that routing to *every* element
+  root so the ~20 plugin-only families (hero sheet, trackers, negotiation, …) stop rendering
+  sans body (finding **C1**). CSS-only, no DOM, freeze-safe.
+- **No Steel worktrees exist** (removed after landing). Plan-22 needs a fresh
+  `just wt-new steel-body` **off the current dse main (`b7ea4af`)**, then `npm ci`.
+- **Gates last verified at `f5923f8`** (pre-renumber): tsc clean · jest **2010 / 144** · parity
+  **0 GAPs / 10 WARNs / exit 0** · freeze **98/98**. The renumber changed one test's version
+  string only — **re-run at `b7ea4af` to confirm** (see verification commands). Demo-vault build
+  in the main checkout is from `f5923f8`; visually current (CSS unchanged), version strings stale.
+
+## Steel UI parity — open decisions (Scott)
+1. **C1 direction** (above) — gates plan-22. Before/after A/B captured.
+2. **kit #32** — needs a theme-conditional-render design + a sanctioned `kit--steel-print`
+   rebaseline (a Steel-only DOM change necessarily changes that frozen shot). Its own plan.
+3. **#33 / #34 / #35** filed; **C6** font-token / true-slab bundle deferred.
+
+## Steel UI parity — gotchas & lessons
+- **Freeze check is bytes, not git** — `visual-harness/shots/` is gitignored so the plan's
+  `git status` freeze check is vacuous. Use `bash
+  /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <shots-dir>`
+  (98 legacy+print PNGs vs sha256 baseline; `<shots-dir>` arg required now that steel-type is
+  gone — its default path is dead).
+- **Every new Steel CSS rule** must carry `[data-dse-theme='steel']:not([data-dse-print="on"])`
+  or it changes the frozen `*--legacy-*`/`*--steel-print` shots. Only unfrozen steel-dark/light
+  shots may change.
+- **devbox**: wrap commands `bash -c` with an **absolute** `cd` (`devbox run --` ignores cwd);
+  read a node exit code by running the command **last** with no trailing `echo` (the sh wrapper
+  masks exit 1 as 0).
+- **The parity gate covers only the 12 card-family pairs** (no site counterpart for plugin-only
+  families), so C1's coherence can only be verified by **reading the shots**, not the gate.
+- **C1 preview A/B is ephemeral** — it was `scratchpad/c1-preview/*.png` in a now-deleted
+  session scratchpad; **regenerate** by applying plan-22 Task 1 in a worktree and re-shooting.
+- **Plan-22 baseline refs are pre-renumber**: it cites `f5923f8` / "6.0.0" / "jest 2010" — the
+  build is now `b7ea4af` / 7.0.0; treat those as "current dse main" and re-verify counts.
+
+## Steel UI parity — verification commands
+```bash
+cd /home/scott/code/steelCompendium/workspace
+git status -sb | head -1                                    # main …ahead 1 (unpushed plan-22 docs)
+git log --oneline origin/main..main                          # the plan-22 docs commit only
+git -C draw-steel-elements rev-parse --short HEAD            # b7ea4af (or later)
+git -C draw-steel-elements merge-base --is-ancestor f5923f8 HEAD && echo "Steel work present"
+ls docs/superpowers/dse-overhaul/plans/2026-07-27-plan-22-steel-body-text-coherence.md
+# Re-verify Steel gates at current main (do this in a FRESH worktree, never the main checkout):
+#   devbox run -- bash -c 'cd <wt>/draw-steel-elements && npm run tsc && npx jest 2>&1|tail -3 && npm run parity 2>&1|tail -3'
+```
+
+---
+
 # Handoff — 2026-07-27 addendum (⚠️ 6.0.0 is RETIRED — the plugin's next major is 7.0.0)
 
 **Read this before acting on SC-11 below.** On 2026-07-07 the `6.0.0-rc1` release
