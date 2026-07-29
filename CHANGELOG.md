@@ -68,12 +68,16 @@ go under an *Internal* sub-heading.
 
 ### Fixed
 
-- **Monster statblock abilities now label their action type in the header** — each
-  statblock feature's header shows the action type ("Main Action", "Triggered Action",
-  "Maneuver", "Move Action", "Trait") as a bottom-right chip, the same slot class
-  ability cards use, instead of encoding it only in the glyph color. The chip is
-  skipped where the cost chip already names the type (villain actions' "Villain
-  Action N", malice features' "N Malice"). (SC-95)
+- **Monster statblock abilities name their action type in the default "Crest" keyword
+  display** — the "Crest (decorated)" keyword-display setting hid each feature's Action
+  field (it assumed the since-retired head eyebrow carried it), so the default view
+  never said whether an ability was a main action, maneuver, or triggered action. The
+  action type now renders as a right-aligned chip on the keyword line in crest mode —
+  the inline-text option's placement, pill-styled to match the head's cost chip. The
+  other keyword-display modes (Inline text / Grid / Ledger) already showed it and are
+  unchanged. (An intermediate take that stamped the label into every feature header
+  regardless of display mode shipped briefly earlier today and was reverted — it
+  doubled the label everywhere except crest.) (SC-95)
 - **Encounter builder no longer charges 4× EV for minions** — a minion statblock's EV
   buys *four* minions ("The EV for minions represents four minions together"), and the
   builder adds them four at a time, but two paths priced that group per-creature: the
