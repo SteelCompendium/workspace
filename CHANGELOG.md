@@ -8,42 +8,6 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
-### Fixed
-
-- **Monster statblock abilities now label their action type in the header** — each
-  statblock feature's header shows the action type ("Main Action", "Triggered Action",
-  "Maneuver", "Move Action", "Trait") as a bottom-right chip, the same slot class
-  ability cards use, instead of encoding it only in the glyph color. The chip is
-  skipped where the cost chip already names the type (villain actions' "Villain
-  Action N", malice features' "N Malice"). (SC-95)
-- **Encounter builder no longer charges 4× EV for minions** — a minion statblock's EV
-  buys *four* minions ("The EV for minions represents four minions together"), and the
-  builder adds them four at a time, but two paths priced that group per-creature: the
-  qualifier match only accepted the word spelling `for four minions`, so the 12
-  statblocks the book spells `for 4 minions` (angulotl, dwarf, radenwight) were billed
-  4× — four 1st-level minions cost 12 EV instead of 3; and the statblock-page **+**
-  button captured only the first token of the `EV 3 for four minions` head chip,
-  dropping the qualifier and mispricing *every* minion added from its own page. Both
-  now price per group of four, so eight 1st-level minions total 6 EV — exactly one
-  1st-level hero slot, matching the quick-build rule "eight minions fill one hero slot".
-- **Ability `effects[]` no longer drops named effects** — the parser previously
-  recognized only `Effect`, the *first* `Spend X`, and `Trigger`, so any other named
-  rider (`Persistent N`, `Strained`, `Special`, `Mark Benefit`, class-specific labels)
-  and every second `Spend X` were dropped from the structured `effects[]` array in the
-  JSON/YAML/DSE data (they still showed in the rendered body). Effects are now captured
-  generally, in document order, across all formats. Fixes the reported gaps on Minor
-  Telekinesis (missing "Spend 3 Clarity"), Conflagration (missing "Persistent 2"), and
-  Hoarfrost (missing "Strained"). The array now mirrors source document order, including
-  where the power roll sits (e.g. an Effect stated before the power roll stays before it).
-  No schema change (the existing `{name, cost, effect}` entry already covered it).
-- **Dragon's Fire no longer lists eight armor enhancements as its effects** — the
-  9th-level armor-enhancement descriptions (Invulnerable, Leyline Walker, Life, …) were
-  printed after the Dragon's Fire statblock in the source and got absorbed into its
-  `effects[]`. The source now places the ability at the end of the enhancement list, so
-  its `effects[]` is just the power roll; the enhancements render as prose on the Imbue
-  Armor page as before. (The general "end a section's scope without moving content"
-  annotation this motivates is roadmapped.)
-
 ### Added (pending plugin 6.0.0 release)
 
 - **Draw Steel Elements plugin 6.0.0** — compendium sync now pulls from data-unified
@@ -99,6 +63,44 @@ go under an *Internal* sub-heading.
   stat-tile grid (FOLLOWUPS #32, needs its own plan against the print/legacy freeze), the
   featureblock option layout (#33), the feature action spine (#34) and the statblock notch
   (#35) all remain as they were. Bundling the slab is a possible future upgrade.
+
+## 2026-07-29 — site deploy (SC-95 statblock action labels)
+
+### Fixed
+
+- **Monster statblock abilities now label their action type in the header** — each
+  statblock feature's header shows the action type ("Main Action", "Triggered Action",
+  "Maneuver", "Move Action", "Trait") as a bottom-right chip, the same slot class
+  ability cards use, instead of encoding it only in the glyph color. The chip is
+  skipped where the cost chip already names the type (villain actions' "Villain
+  Action N", malice features' "N Malice"). (SC-95)
+- **Encounter builder no longer charges 4× EV for minions** — a minion statblock's EV
+  buys *four* minions ("The EV for minions represents four minions together"), and the
+  builder adds them four at a time, but two paths priced that group per-creature: the
+  qualifier match only accepted the word spelling `for four minions`, so the 12
+  statblocks the book spells `for 4 minions` (angulotl, dwarf, radenwight) were billed
+  4× — four 1st-level minions cost 12 EV instead of 3; and the statblock-page **+**
+  button captured only the first token of the `EV 3 for four minions` head chip,
+  dropping the qualifier and mispricing *every* minion added from its own page. Both
+  now price per group of four, so eight 1st-level minions total 6 EV — exactly one
+  1st-level hero slot, matching the quick-build rule "eight minions fill one hero slot".
+- **Ability `effects[]` no longer drops named effects** — the parser previously
+  recognized only `Effect`, the *first* `Spend X`, and `Trigger`, so any other named
+  rider (`Persistent N`, `Strained`, `Special`, `Mark Benefit`, class-specific labels)
+  and every second `Spend X` were dropped from the structured `effects[]` array in the
+  JSON/YAML/DSE data (they still showed in the rendered body). Effects are now captured
+  generally, in document order, across all formats. Fixes the reported gaps on Minor
+  Telekinesis (missing "Spend 3 Clarity"), Conflagration (missing "Persistent 2"), and
+  Hoarfrost (missing "Strained"). The array now mirrors source document order, including
+  where the power roll sits (e.g. an Effect stated before the power roll stays before it).
+  No schema change (the existing `{name, cost, effect}` entry already covered it).
+- **Dragon's Fire no longer lists eight armor enhancements as its effects** — the
+  9th-level armor-enhancement descriptions (Invulnerable, Leyline Walker, Life, …) were
+  printed after the Dragon's Fire statblock in the source and got absorbed into its
+  `effects[]`. The source now places the ability at the end of the enhancement list, so
+  its `effects[]` is just the power roll; the enhancements render as prose on the Imbue
+  Armor page as before. (The general "end a section's scope without moving content"
+  annotation this motivates is roadmapped.)
 
 ## 2026-07-21 — any/all keyword filters (SC-88)
 
