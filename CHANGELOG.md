@@ -10,6 +10,12 @@ go under an *Internal* sub-heading.
 
 ### Fixed
 
+- **Monster statblock abilities now label their action type in the header** — each
+  statblock feature's header shows the action type ("Main Action", "Triggered Action",
+  "Maneuver", "Move Action", "Trait") as a bottom-right chip, the same slot class
+  ability cards use, instead of encoding it only in the glyph color. The chip is
+  skipped where the cost chip already names the type (villain actions' "Villain
+  Action N", malice features' "N Malice"). (SC-95)
 - **Encounter builder no longer charges 4× EV for minions** — a minion statblock's EV
   buys *four* minions ("The EV for minions represents four minions together"), and the
   builder adds them four at a time, but two paths priced that group per-creature: the
