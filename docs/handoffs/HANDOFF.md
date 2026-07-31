@@ -115,6 +115,17 @@ without his call.
 the old one was in a deleted scratchpad), SC-100 (kit: own plan vs theme-branched render vs
 drop), SC-105 (font token + whether to bundle an OFL slab), SC-106 (provisional hues/gold).
 
+## Linear conventions — read before touching the board
+`Todo` = not started · `In Progress` + **`Needs Review`** = needs Scott · `Awaiting` = an agent
+is actively on it **or** it's blocked on something **external** · `Backlog` = someday.
+**Never park internally-blocked work in `Awaiting` — that's `Todo`.** When you need Scott's
+input, set `In Progress` + `Needs Review` (both) so it surfaces in his filter, and comment what
+he's being asked to look at. Full rule: [`../working-preferences.md`](../working-preferences.md).
+
+**Currently awaiting Scott (8):** SC-98, SC-100, SC-105, SC-106 (Steel decisions) · SC-76
+(close confirm), SC-84 (zoom-dot recheck), SC-77 (site check-in), SC-78 (Fable planning effort
+— looks complete, confirm close).
+
 ## Steel UI parity — gotchas & lessons
 - **Freeze check is bytes, not git** — `visual-harness/shots/` is gitignored so the plan's
   `git status` freeze check is vacuous. Use `bash

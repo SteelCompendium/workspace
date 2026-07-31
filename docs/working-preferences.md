@@ -92,6 +92,25 @@ throwaway `6.0.1` re-release of 5.1.1, and days of waiting on Obsidian's mirror.
   "Set as a pre-release" must be ticked *and* the manifest version must stay strictly
   `x.y.z` — but the default answer is still no.
 
+## Linear status & label convention (Scott's rule, 2026-07-31)
+
+Team: **Steel Compendium** (`SC-*`). Statuses mean specific things — don't improvise.
+
+| State | Means |
+|---|---|
+| **Todo** | Not yet started. Nothing is happening and nobody is waiting. |
+| **In Progress** + **`Needs Review`** label | **Needs Scott.** A decision, a taste check, a "can this close?" — anything requiring his eyes. **Both** the status and the label, always together. |
+| **Awaiting** | An **agent is actively working it**, *or* it is blocked on something **external** (an upstream publish, a third party, a mirror). Not a parking spot. |
+| **Backlog** | Someday/maybe. |
+| **Done** / **Canceled** / **Duplicate** | Terminal. |
+
+Rules that follow from this:
+
+- **Never leave something in `Awaiting` because it is merely blocked on other internal work** — that is `Todo`. `Awaiting` implies motion or an outside party. (SC-11 and SC-4 had both drifted into `Awaiting` this way and were corrected.)
+- **When you need Scott's input, don't bury it in a report** — set the issue to `In Progress` + `Needs Review` so it shows up when he filters. A question he never sees is a blocked project.
+- **If a ticket needs review but has a thin description** (old TaskNotes imports especially), **add a comment saying what he is actually being asked to look at** and where. "Needs Review" with no context just moves the confusion.
+- Filtering the `Needs Review` label should always give a complete, current list of what is waiting on him. Keep it honest — remove the label when the answer lands.
+
 ## Parallel agents
 
 Scott runs multiple agents concurrently (commits authored e.g. "Vexa" may land on
