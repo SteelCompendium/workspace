@@ -1,5 +1,18 @@
 # Handoff — Steel Compendium workspace (canonical router)
 
+> # ⛔ NEVER TAG OR RELEASE `draw-steel-elements`
+> **Standing order (Scott, 2026-07-31):** *"7.0.0 will not be ready to cut until the visual
+> overhauls to DSE are fully complete. Do not make any tags (even rc tags... that's how we got
+> into the mess)."*
+>
+> No tags. No GitHub releases. **No RC or pre-release tags either.** `6.0.0-rc1` shipped as a
+> regular release, auto-updated ~120 users onto an RC, and got the plugin **delisted from the
+> community store** — costing a permanently retired major version and a throwaway `6.0.1`.
+> Releasing is **Scott's action alone**: prepare the commands, never run them. Betas use BRAT.
+> Full rule: [`../working-preferences.md`](../working-preferences.md) → "Deploy & landing".
+>
+> **Release gate: 7.0.0 ships only when SC-97 (Steel UI parity) is complete.**
+
 ## Active efforts
 - **Release / SC-11 → 7.0.0** — the overhaul release cut. 6.0.1 recovery published; **7.0.0 NOT
   cut** (Scott: build not ready) — so **no agent action is pending here**. ✅ The community-store
@@ -80,11 +93,27 @@ without his call.
   string only — **re-run at `b7ea4af` to confirm** (see verification commands). Demo-vault build
   in the main checkout is from `f5923f8`; visually current (CSS unchanged), version strings stale.
 
-## Steel UI parity — open decisions (Scott)
-1. **C1 direction** (above) — gates plan-22. Before/after A/B captured.
-2. **kit #32** — needs a theme-conditional-render design + a sanctioned `kit--steel-print`
-   rebaseline (a Steel-only DOM change necessarily changes that frozen shot). Its own plan.
-3. **#33 / #34 / #35** filed; **C6** font-token / true-slab bundle deferred.
+## Steel UI parity — the full release scope is now in Linear (2026-07-31)
+`SC-97` is the umbrella and carries a sub-issue index + suggested order. **It blocks SC-11.**
+
+| Issue | Item | Kind |
+|---|---|---|
+| **SC-98** | **DECISION: C1 direction** — serif everywhere vs trackers sans | Scott · *critical path head* |
+| **SC-99** | **Plan 22** — body-text coherence at the theme root (C1/C2) | CSS · biggest win |
+| SC-100 | #32 + D2 — kit / display stat-tile grid rebuild | DOM + Scott decision |
+| SC-104 | #31 — Steel theme can't reach modals | TS |
+| SC-108 | #37 — three Steel rules no fixture renders | Test gap |
+| SC-101 | #33 — featureblock option cost + per-option bars | DOM |
+| SC-105 | C6 + slab — body-font token / bundle a real slab | Scott + chore |
+| SC-106 | Provisional Steel taste-calls (hues, gold) | Scott |
+| SC-109 | #36 — wire `npm run parity` into CI | CI |
+| SC-111 | Re-verify the gate battery at current main | Verification |
+| SC-102 / SC-103 | #34 action spine · #35 statblock notch | DOM |
+| SC-107 / SC-110 | C3 whitespace · #39/#40 parity WARNs | Cosmetic / gate precision |
+
+**Open decisions needing Scott specifically:** SC-98 (C1 direction — regenerate the A/B first,
+the old one was in a deleted scratchpad), SC-100 (kit: own plan vs theme-branched render vs
+drop), SC-105 (font token + whether to bundle an OFL slab), SC-106 (provisional hues/gold).
 
 ## Steel UI parity — gotchas & lessons
 - **Freeze check is bytes, not git** — `visual-harness/shots/` is gitignored so the plan's

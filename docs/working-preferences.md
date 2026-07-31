@@ -73,6 +73,25 @@ one-element patch (DSE ships `data-dse-readonly` stamped by the pipeline when
 - His actions to prep-not-run: npm publish, `gh release create`, release calls — reduce
   them to a queued 5-minute action (Linear comment + exact commands).
 
+### ⛔ NEVER create a tag or release on `draw-steel-elements` (standing order, 2026-07-31)
+
+**No tags. No GitHub releases. Not even an RC or pre-release tag.** Scott's words: *"Do not
+make any tags (even rc tags... that's how we got into the mess)."*
+
+This is not caution, it is scar tissue. `6.0.0-rc1` was published as a regular GitHub
+release; Obsidian auto-updated ~120 real users onto a release candidate, and because
+`6.0.0-rc1` is not a valid `x.y.z` plugin version the plugin was **delisted from the
+community store**. Recovery cost a burned major version (6.0.0 is permanently retired), a
+throwaway `6.0.1` re-release of 5.1.1, and days of waiting on Obsidian's mirror.
+
+- **7.0.0 is gated on the DSE visual overhaul being fully complete** (SC-97), not on the
+  code merely working. Scott's call, stated 2026-07-31.
+- Tagging/releasing is **Scott's action alone**. Prep it — bump commands, changelog slice,
+  the exact `gh release create` line — and hand it over. Never run it.
+- If a beta is ever needed: **BRAT**, not a tag. If a GitHub release is truly unavoidable,
+  "Set as a pre-release" must be ticked *and* the manifest version must stay strictly
+  `x.y.z` — but the default answer is still no.
+
 ## Parallel agents
 
 Scott runs multiple agents concurrently (commits authored e.g. "Vexa" may land on
