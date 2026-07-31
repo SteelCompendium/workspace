@@ -8,15 +8,19 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
-### Added (pending plugin 6.0.0 release)
+### Added (pending plugin 7.0.0 release)
 
-- **Draw Steel Elements plugin 6.0.0** — compendium sync now pulls from data-unified
+> The plugin major below was drafted as "6.0.0". That number is **retired** after the
+> `6.0.0-rc1` incident (an RC published as a regular release; `6.0.1` was cut as a
+> recovery re-release of 5.1.1). It ships as **7.0.0** — see the plugin CHANGELOG.
+
+- **Draw Steel Elements plugin 7.0.0** — compendium sync now pulls from data-unified
   releases instead of the retired data-md-dse repo, is non-destructive and
   manifest-driven (only plugin-installed files are ever updated or trashed), and
   resolves `scc.v1:` links throughout compendium notes and element text. Statblock YAML
   adopts the SDK 3.x `role`/`organization`/`keywords` fields (legacy `roles`/`ancestry`
-  keys still work through the 6.x cycle with a deprecation warning). Re-sync your
-  compendium after updating.
+  keys still work through the 7.x cycle with a deprecation warning; support is removed
+  in 8.0.0). Re-sync your compendium after updating.
 - **DSE compendium reference family (D6)** — eleven new plugin elements (`ds-kit`,
   `ds-ancestry`, `ds-culture`, `ds-career`, `ds-class`, `ds-title`, `ds-perk`,
   `ds-treasure`, `ds-complication`, `ds-condition`, `ds-rule`), reference-by-SCC for

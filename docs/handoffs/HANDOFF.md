@@ -1,22 +1,55 @@
 # Handoff — Steel Compendium workspace (canonical router)
 
 ## Active efforts
-- **Release / SC-11 → 7.0.0** — the session Scott is actively driving ("moving through"). The
-  overhaul release cut. 6.0.1 recovery published; **7.0.0 NOT cut** (Scott: build not ready) — so
-  **no agent action is pending here** (its resume protocol below confirms the board is clear).
-  Full detail in the two dated sections BELOW (`6.0.0 RETIRED` addendum + `2026-07-20` wave) and
+- **Release / SC-11 → 7.0.0** — the overhaul release cut. 6.0.1 recovery published; **7.0.0 NOT
+  cut** (Scott: build not ready) — so **no agent action is pending here**. ✅ The community-store
+  re-listing prerequisite is now **satisfied** (verified 2026-07-31, SC-96 closed). Full detail in
+  the two dated sections BELOW (`6.0.0 RETIRED` addendum + `2026-07-20` wave) and
   `.superpowers/sdd/sc-11-audit-report.md`.
-- **Steel UI parity** — paused, awaiting a Scott decision (added 2026-07-27, this session).
-  Plan 20 (material) + plan 21 (typography/spacing/ink) are **LANDED into the 7.0.0-dev build**;
-  plan 22 (body-text coherence) is **DRAFTED, not executed**. Resume at
+- **Steel UI parity → SC-97** — paused, awaiting a Scott decision. Plan 19 (theme port) + plan 20
+  (material) + plan 21 (typography/spacing/ink) are **LANDED into the 7.0.0-dev build**; plan 22
+  (body-text coherence) is **DRAFTED, not executed**. Resume at
   `docs/superpowers/dse-overhaul/plans/2026-07-27-plan-22-steel-body-text-coherence.md` (STATUS
   header) + gap inventory `docs/superpowers/dse-overhaul/2026-07-23-steel-ui-gap-inventory.md`.
   Per-task history: `.superpowers/sdd/progress.md` (gitignored scratch).
+  > ⚠️ **"Landed" ≠ "done."** Plans 20/21 hardened only the **5 of 32 element families** the
+  > parity gate covers — the serif/ink routing in `styles-source.css:3439-3442` targets exactly
+  > four selectors (`feature`, `featureblock`, `.dse-sb`, `.dse-card`). The ~20 plugin-only
+  > families still render sans body, and every §B structural gap is open. **SC-97** carries the
+  > full remaining scope; SC-10 was closed early (2026-07-20) and does not cover it.
 
 > **Overall: nothing is agent-actionable right now — both efforts wait on Scott.** Release is
 > paused until he says 7.0.0 is ready to cut; Steel UI is paused until he answers the C1
 > aesthetic question below. A resuming agent should verify state, restate, and **wait for his
 > go** — do not start editing/building/releasing.
+
+## 2026-07-31 — Linear ↔ repo reconciliation (drift audit)
+Scott flagged possible duplicate-agent work across plans 19-22 and suspected Linear drift. Audited;
+findings:
+- **No code work was lost or duplicated.** Plans 19/20/21 ran *sequentially* in separate worktrees
+  (`f2`/HFS → `steel-material` → `steel-type`), all landed, all worktrees since removed. Zero
+  orphaned `steel-*`/`hfs`/`plan*` branches in the superproject or any submodule.
+- **What the concurrent agents DID clobber was `.superpowers/sdd/` — it lives in the shared MAIN
+  checkout, not per-worktree.** `progress-plan20-archive.md` says outright: *"(Previous ledger for
+  SC-88 — complete and landed — overwritten here.)"* Other tells: `task-3-report-{d3,d4,sc88}.md`,
+  `task-8-report.plan-18-stale.md`, and plan 21's Task 5 report self-catching a leak into the main
+  checkout. **Lesson: give each effort a namespaced ledger filename (`p21-*`) from task 1, or keep
+  the ledger inside its own worktree.** Build history was lost; nothing shippable was.
+- **Linear fixed:** SC-91 → Done (encounter-builder minion EV; shipped + deployed 2026-07-29 but
+  never moved), SC-96 → Done (store re-listed, verified), SC-11 retitled (the "land the overhaul"
+  half finished 2026-07-20; only the release cut remains), **SC-97 created** for the Steel UI
+  parity effort — plans 20/21/22 had *no* Linear representation at all.
+- **Docs fixed:** workspace `CHANGELOG.md` Unreleased said "plugin 6.0.0" (→ 7.0.0, and the
+  `roles:`/`ancestry:` shim removal corrected to 8.0.0); `REMAINING-TASKS.md` was badly stale (it
+  still described D2/D3 as unlanded on `dse-framework` with everything Todo) — rewritten as a
+  superseded pointer to Linear, keeping only its unique D9-deferral and D2/D3-polish catalogs.
+- **Worktrees removed:** `f2` and `cardhead-spacing`, both verified fully landed. `wt-status`
+  reported f2's `steel-etl` as *2 commits ahead* — **false alarm, verified by patch-id**: both were
+  cherry-picked to steel-etl main as `e7ec4a2` / `51930c5` (identical patch-ids). f2's gitignored
+  SDD ledger + briefs were preserved first to
+  `docs/superpowers/dse-overhaul/build-ledgers/`. Tree is now worktree-free and clean.
+- **Still unverified:** the Steel gates have not been re-run since the `f5923f8` → `b7ea4af`
+  renumber (see below).
 
 ---
 
@@ -27,10 +60,11 @@ density). A freeze-verified before/after A/B was captured (ephemeral, see gotcha
 gates plan-22 execution. Nothing is blocked on an agent; do **not** execute plan-22 or touch kit
 without his call.
 
-## Steel UI parity — verified state (2026-07-27)
-- **Superproject** `main` = `origin/main` (`e7fad33`) + **2 unpushed** docs commits (plan-22
-  draft + §C/§D audit `b6e9356`; this handoff update). Clean tree, FF-ahead — not diverged.
-  Push is a clean fast-forward whenever Scott wants it.
+## Steel UI parity — verified state (2026-07-27, re-verified 2026-07-31)
+- **Superproject** `main` = `origin/main` (`a6cfbf9`) — the 2026-07-27 docs commits were pushed,
+  and two site deploys have landed since (SC-95 statblock action labels, 2026-07-29). Every
+  submodule HEAD equals its `origin` tracked branch. **No worktrees exist** (both removed
+  2026-07-31).
 - **dse submodule** @ `b7ea4af` (7.0.0-dev; `package.json` 7.0.0 / `manifest.json` 6.0.1). Plan
   20+21 Steel work **is present** (`f5923f8` is an ancestor); the release renumber did **not**
   touch `styles-source.css` (only version strings), so plan-22's CSS line refs still hold.
@@ -152,10 +186,11 @@ Users then update in Obsidian and re-sync the compendium (guide:
 `docs/migrating-to-7.md`). No community-catalog PR needed (plugin id unchanged).
 
 ## Loose ends (small, non-blocking)
-- **f2 worktree**: all unique content landed; `just wt-rm f2` when convenient (the
-  gitignored SDD ledger lives there — copy it first if you want the build history).
-- The f2 origin branches (`f2` in plugin/steel-etl/superproject) can be deleted after
-  wt-rm; everything is on main.
+- ~~**f2 worktree**~~ — **removed 2026-07-31**, verified fully landed; its SDD ledger + briefs
+  were preserved to `docs/superpowers/dse-overhaul/build-ledgers/`.
+- The stale **origin** branches (`f2` in plugin/steel-etl/superproject, plus `sc10-steel`,
+  `sc4-init-fix`, `d4-prefs`, `d5-rolling`, `d9-authoring`, `dse-framework`) can all be deleted —
+  everything is on main. Not done yet; purely cosmetic.
 - Scott taste checks, whenever: statblock-head crest deviation (1-line revert,
   flagged in SC-10/plan 19), SC-76 close confirm, SC-84 zoom-dot recheck.
 - FOLLOWUPS: only #2/#3 (settings-panel design, dormant) remain open.

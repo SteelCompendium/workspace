@@ -82,6 +82,25 @@ integrate by rebasing your commits onto `origin/main` (structural work already l
 wins — re-apply your intent inside the new structure). Doc conventions can change
 mid-session; re-read `CLAUDE.md` / doc rules before doc edits.
 
+### `.superpowers/sdd/` is shared global state — namespace your ledger (learned 2026-07-31)
+
+Worktrees isolate *code*; they do **not** isolate the SDD scratch dir. `.superpowers/sdd/`
+lives in the **shared main checkout**, so every concurrent effort writes to the same
+namespace. Generic filenames (`progress.md`, `task-3-report.md`) get silently overwritten by
+whichever agent finishes last. This has already cost real build history: the plan-20 ledger
+opens with *"(Previous ledger for SC-88 — complete and landed — overwritten here.)"*, and the
+tree carries the scars of after-the-fact disambiguation (`task-3-report-{d3,d4,sc88}.md`,
+`task-8-report.plan-18-stale.md`).
+
+**Rule: prefix every ledger, brief, report and diff with the effort ID from task 1** — plan 21
+did this right (`p21-progress.md`, `p21-task-N-report.md`). Never open a bare `progress.md`.
+Alternative: keep the ledger inside its own worktree, but then **copy it out before
+`just wt-rm`** — the dir is gitignored and `wt-rm` is `rm -rf`.
+
+A related hazard: an agent working in a worktree can still *leak edits into the shared main
+checkout* (plan 21's Task 5 caught and reverted exactly this). If you touch anything outside
+your worktree path, verify `git -C <main-checkout> status` is clean before reporting done.
+
 ## Two products, don't conflate
 
 The **DSE Obsidian plugin** (`draw-steel-elements/`, renders element code blocks in
