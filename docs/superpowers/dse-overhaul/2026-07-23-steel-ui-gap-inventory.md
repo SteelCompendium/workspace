@@ -43,6 +43,16 @@ single face for titles and body); bundling a true slab (Zilla Slab / Bitter, OFL
   theme-conditional rendering would be a new architectural pattern. It needs its own design plan
   to resolve the freeze/architecture question before the rebuild. #33 (featureblock option
   layout), #34 (feature action spine) and #35 (statblock notch) remain open as filed.
+- **§C1 DIRECTION DECIDED 2026-08-01 (Scott): serif everywhere — option (a).** The A/B was
+  regenerated (`.superpowers/sdd/shots-c1-ab/{before,after}/`, 6 families, steel-dark; freeze
+  verified 98/98 with the change applied). Plan 22 executes as drafted — a Steel-theme-root
+  selector, **not** an allow-list. Density on dense trackers is answered by **size controls**
+  (site-style Text/Card scales → SC-112), not by keeping those surfaces sans. Scott also asked
+  for **user-customisable fonts**: semantic font slots + scales, driven from preferences → its
+  own effort, **SC-112** (needs tokens + prefs + settings UI, all forbidden inside plan 22), with
+  **SC-105** defining the token vocabulary it consumes. One carry-forward into plan 22 Task 1
+  Step 3: the encounter `EV 0 / 40` chip loses its numeric emphasis under the broadened rule —
+  fix with a targeted chip-value rule, never by narrowing the selector.
 - **§C (plugin-only families) — AUDITED 2026-07-27; ONE headline gap (C1).** Their material is
   coherent (shared `cardHead`/`powerRollPanel`/plates all render right), but their **body text is
   still sans** because plan 21's serif/spacing routing landed only on the card families, not a

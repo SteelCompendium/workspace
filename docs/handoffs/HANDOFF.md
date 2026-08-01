@@ -19,9 +19,10 @@
   re-listing prerequisite is now **satisfied** (verified 2026-07-31, SC-96 closed). Full detail in
   the two dated sections BELOW (`6.0.0 RETIRED` addendum + `2026-07-20` wave) and
   `.superpowers/sdd/sc-11-audit-report.md`.
-- **Steel UI parity → SC-97** — paused, awaiting a Scott decision. Plan 19 (theme port) + plan 20
-  (material) + plan 21 (typography/spacing/ink) are **LANDED into the 7.0.0-dev build**; plan 22
-  (body-text coherence) is **DRAFTED, not executed**. Resume at
+- **Steel UI parity → SC-97** — **ACTIVE.** Plan 19 (theme port) + plan 20 (material) + plan 21
+  (typography/spacing/ink) are **LANDED into the 7.0.0-dev build**; plan 22 (body-text coherence)
+  is **drafted, unblocked (C1 decided 2026-08-01), worktree ready — SC-99 is executable now**.
+  Resume at
   `docs/superpowers/dse-overhaul/plans/2026-07-27-plan-22-steel-body-text-coherence.md` (STATUS
   header) + gap inventory `docs/superpowers/dse-overhaul/2026-07-23-steel-ui-gap-inventory.md`.
   Per-task history: `.superpowers/sdd/progress.md` (gitignored scratch).
@@ -31,10 +32,11 @@
   > families still render sans body, and every §B structural gap is open. **SC-97** carries the
   > full remaining scope; SC-10 was closed early (2026-07-20) and does not cover it.
 
-> **Overall: nothing is agent-actionable right now — both efforts wait on Scott.** Release is
-> paused until he says 7.0.0 is ready to cut; Steel UI is paused until he answers the C1
-> aesthetic question below. A resuming agent should verify state, restate, and **wait for his
-> go** — do not start editing/building/releasing.
+> **Overall:** the **release** waits on Scott (7.0.0 not ready; never tag — see banner). **Steel
+> UI is now agent-actionable**: C1 is decided and **SC-99 / plan 22 can be executed** in the
+> existing `steel-body` worktree. Still Scott's alone: SC-100 (kit), SC-105 (font tokens/slab),
+> SC-106 (taste-calls). Do not touch kit, and do not land — plan 22's stop condition holds
+> (finish, report, Scott runs `just wt-finish steel-body`).
 
 ## 2026-07-31 — Linear ↔ repo reconciliation (drift audit)
 Scott flagged possible duplicate-agent work across plans 19-22 and suspected Linear drift. Audited;
@@ -67,11 +69,26 @@ findings:
 ---
 
 ## Steel UI parity — you are here
-**Next action is Scott's, not an agent's:** decide the **C1 aesthetic** — serif body text
-*everywhere* (coherent, book-like) vs. keep the data-dense trackers/hero-sheet **sans** (UI
-density). A freeze-verified before/after A/B was captured (ephemeral, see gotchas). His answer
-gates plan-22 execution. Nothing is blocked on an agent; do **not** execute plan-22 or touch kit
-without his call.
+**C1 is DECIDED (Scott, 2026-08-01): serif everywhere — option (a).** Plan 22 / **SC-99 is
+unblocked** and executes as drafted (theme-root selector, no allow-list). Density is answered by
+size controls, not by keeping surfaces sans.
+
+**A live worktree already exists:** `../worktrees/steel-body` (off dse `b7ea4af`) with plan 22
+Task 1 Step 2 **applied but uncommitted** — it was cut to regenerate the A/B. **Resume there**
+rather than cutting a new one. Freeze verified **98/98** with the change in place. A/B shots:
+`.superpowers/sdd/shots-c1-ab/{before,after}/` (6 families, steel-dark).
+
+**Carry-forward for plan 22 Task 1 Step 3:** the encounter head's `EV 0 / 40` chip loses its
+numeric emphasis under the broadened rule. Fix with a targeted chip-value rule — **never** by
+narrowing the broadened selector.
+
+Scott also asked for **user-customisable fonts** → **SC-112** (semantic slots + site-style
+Text/Card scales, driven from prefs). Not part of plan 22 (needs tokens + prefs + settings UI);
+**SC-105** should define the token vocabulary SC-112 consumes. Site precedent to copy:
+`v2/docs/stylesheets/custom_font.css` (4 family slots) + `v2/docs/javascripts/settings-core.js`
+(`--sc-content-scale` 0.6–1.4, `--sc-card-scale` 0.8–1.2, both symmetric about 1.0 on purpose).
+
+Kit (#32 / SC-100) still needs his call — do **not** touch it.
 
 ## Steel UI parity — verified state (2026-07-27, re-verified 2026-07-31)
 - **Superproject** `main` = `origin/main` (`a6cfbf9`) — the 2026-07-27 docs commits were pushed,
@@ -86,8 +103,8 @@ without his call.
 - **Plan 22 drafted, NOT executed.** Its one CSS change broadens that routing to *every* element
   root so the ~20 plugin-only families (hero sheet, trackers, negotiation, …) stop rendering
   sans body (finding **C1**). CSS-only, no DOM, freeze-safe.
-- **No Steel worktrees exist** (removed after landing). Plan-22 needs a fresh
-  `just wt-new steel-body` **off the current dse main (`b7ea4af`)**, then `npm ci`.
+- **A `steel-body` worktree EXISTS** (created 2026-08-01 off dse `b7ea4af`, `npm ci` done, plan 22
+  Task 1 Step 2 applied but uncommitted). Resume in it; do not cut a new one.
 - **Gates last verified at `f5923f8`** (pre-renumber): tsc clean · jest **2010 / 144** · parity
   **0 GAPs / 10 WARNs / exit 0** · freeze **98/98**. The renumber changed one test's version
   string only — **re-run at `b7ea4af` to confirm** (see verification commands). Demo-vault build
@@ -98,8 +115,8 @@ without his call.
 
 | Issue | Item | Kind |
 |---|---|---|
-| **SC-98** | **DECISION: C1 direction** — serif everywhere vs trackers sans | Scott · *critical path head* |
-| **SC-99** | **Plan 22** — body-text coherence at the theme root (C1/C2) | CSS · biggest win |
+| ~~SC-98~~ | ~~C1 direction~~ — **DECIDED 2026-08-01: serif everywhere (a)** | ✅ Done |
+| **SC-99** | **Plan 22** — body-text coherence at the theme root (C1/C2) | CSS · biggest win · **unblocked, worktree ready** |
 | SC-100 | #32 + D2 — kit / display stat-tile grid rebuild | DOM + Scott decision |
 | SC-104 | #31 — Steel theme can't reach modals | TS |
 | SC-108 | #37 — three Steel rules no fixture renders | Test gap |
@@ -111,9 +128,9 @@ without his call.
 | SC-102 / SC-103 | #34 action spine · #35 statblock notch | DOM |
 | SC-107 / SC-110 | C3 whitespace · #39/#40 parity WARNs | Cosmetic / gate precision |
 
-**Open decisions needing Scott specifically:** SC-98 (C1 direction — regenerate the A/B first,
-the old one was in a deleted scratchpad), SC-100 (kit: own plan vs theme-branched render vs
-drop), SC-105 (font token + whether to bundle an OFL slab), SC-106 (provisional hues/gold).
+**Open decisions needing Scott specifically:** SC-100 (kit: own plan vs theme-branched render vs
+drop), SC-105 (font token vocabulary + whether to bundle an OFL slab — now coupled to SC-112),
+SC-106 (provisional hues/gold). *SC-98 (C1) was answered 2026-08-01: serif everywhere.*
 
 ## Linear conventions — read before touching the board
 `Todo` = not started · `In Progress` + **`Needs Review`** = needs Scott · `Awaiting` = an agent
@@ -122,9 +139,10 @@ is actively on it **or** it's blocked on something **external** · `Backlog` = s
 input, set `In Progress` + `Needs Review` (both) so it surfaces in his filter, and comment what
 he's being asked to look at. Full rule: [`../working-preferences.md`](../working-preferences.md).
 
-**Currently awaiting Scott (8):** SC-98, SC-100, SC-105, SC-106 (Steel decisions) · SC-76
-(close confirm), SC-84 (zoom-dot recheck), SC-77 (site check-in), SC-78 (Fable planning effort
-— looks complete, confirm close).
+**Currently awaiting Scott (7):** SC-100 (kit approach), SC-105 (font tokens + slab — now
+coupled to SC-112), SC-106 (taste-calls) · SC-76 (close confirm), SC-84 (zoom-dot recheck),
+SC-77 (site check-in), SC-78 (Fable planning effort — looks complete, confirm close).
+**SC-112** (customizable fonts) is filed but not release-gating — Scott to confirm that call.
 
 ## Steel UI parity — gotchas & lessons
 - **Freeze check is bytes, not git** — `visual-harness/shots/` is gitignored so the plan's
@@ -140,8 +158,9 @@ he's being asked to look at. Full rule: [`../working-preferences.md`](../working
   masks exit 1 as 0).
 - **The parity gate covers only the 12 card-family pairs** (no site counterpart for plugin-only
   families), so C1's coherence can only be verified by **reading the shots**, not the gate.
-- **C1 preview A/B is ephemeral** — it was `scratchpad/c1-preview/*.png` in a now-deleted
-  session scratchpad; **regenerate** by applying plan-22 Task 1 in a worktree and re-shooting.
+- ~~**C1 preview A/B is ephemeral**~~ — **regenerated 2026-08-01 and preserved** at
+  `.superpowers/sdd/shots-c1-ab/{before,after}/` (6 families, steel-dark). Note `.superpowers/`
+  is gitignored: copy anything you need to keep out of it before removing a worktree.
 - **Plan-22 baseline refs are pre-renumber**: it cites `f5923f8` / "6.0.0" / "jest 2010" — the
   build is now `b7ea4af` / 7.0.0; treat those as "current dse main" and re-verify counts.
 
