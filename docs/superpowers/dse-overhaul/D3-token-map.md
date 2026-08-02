@@ -73,9 +73,8 @@ the theme automatically (custom properties may reference other custom properties
 | `--dse-fg` | §1.2-C `text` | `var(--text-normal)` | `rgba(220,226,230,0.88)` | `#2c2e30` | `#000` |
 | `--dse-fg-muted` | §1.2-C `text-muted` | `var(--text-muted)` | `rgba(220,226,230,0.62)` | `#555960` | `#333` |
 | `--dse-fg-faint` | §1.2-C `text-faint` | `var(--text-faint)` | `rgba(220,226,230,0.38)` | `#828890` | `#666` |
-| `--dse-font-display` | §1.2-I `font-display` ⁶ | `var(--font-text)` | `"Source Serif 4", var(--font-text)` (OD-4) | | = active theme (no override) |
 | `--dse-font-mono` | §1.2-I `font-mono` | `var(--font-monospace)` | = Legacy (theme-invariant) | | = Legacy |
-| `--dse-font-title` | SC-105 T1 (six-slot vocabulary) ⁷ | `var(--font-text)` | `"Source Serif 4", var(--font-text)` | | = active theme (no override) |
+| `--dse-font-title` | SC-105 T1/T2 (six-slot vocabulary) ⁶ ⁷ | `var(--font-text)` | `"Source Serif 4", var(--font-text)` | | = active theme (no override) |
 | `--dse-font-body` | SC-105 T1 (six-slot vocabulary) ⁷ | `var(--font-text)` | `"Source Serif 4", var(--font-text)` | | = active theme (no override) |
 | `--dse-font-card-body` | SC-105 T1 (six-slot vocabulary) ⁷ | `var(--dse-font-body)` | `var(--dse-font-body)` | | = active theme (no override) |
 | `--dse-font-label` | SC-105 T1 (six-slot vocabulary) ⁷ | `var(--dse-font-title)` | `var(--dse-font-title)` | | = active theme (no override) |
