@@ -106,6 +106,8 @@ Route each change to its repo, then integrate. **Generated output is committed b
      [`ARCHITECTURE.md`](../ARCHITECTURE.md) → "Schemas: two hand-synced copies".
    - From a worktree env, `just wt-finish <name>` does all of this (pushes each touched
      submodule's branch onto its tracked branch on origin), **and** lands the superproject.
+     Step-by-step landing procedure (pre-flight FF/scope checks, cleanliness, verification,
+     teardown): the `land-stack` skill (`.claude/skills/land-stack/`).
    - ⚠️ **Pushing `v2` main IS a deploy.** The v2 repo's CI (`v2/.github/workflows/ci.yml`)
      runs `mkdocs gh-deploy` on every push to main, so landing a v2-only change
      (`docs/javascripts/`, `docs/stylesheets/`, `overrides/`, `mkdocs.yml`) goes live on

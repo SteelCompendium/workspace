@@ -63,6 +63,10 @@ gives each env its own per-env branch on every submodule.
 
 ## Landing work — what `wt-finish` does
 
+**Full landing procedure (pre-flight checks, cleanliness, verification, teardown):**
+the `land-stack` skill (`.claude/skills/land-stack/`) — read it before running
+`wt-finish`/`wt-rm`. This section stays a summary.
+
 Worktree submodules are *independent clones*, so origin is the sync point.
 `just wt-finish <name>`:
 
@@ -108,6 +112,8 @@ origin/main` reset. Commit/stash it, or move it into an env, then re-run.
 
 ## Gotchas
 
+- **Step-by-step landing mechanics (pre-flight, cleanliness, verification order) now live
+  in the `land-stack` skill** — the items below are the short version.
 - **`wt-finish` hazards (one caused real commit loss, 2026-07-18):**
   1. **Never chain `wt-finish && wt-rm`.** `devbox run -- bash -c 'just wt-finish …'`
      does not reliably propagate the recipe's failure exit code, so the chained `wt-rm`
