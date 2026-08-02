@@ -97,8 +97,10 @@ go under an *Internal* sub-heading.
 ### Internal
 
 - **Draw Steel Elements visual-harness coverage** — featureblock advancement bands
-  and the sidebar panel's light scheme now have dedicated fixtures with frozen
-  golden-PNG coverage (freeze set widened 98 → 101).
+  and the sidebar panel now have dedicated fixtures with golden-PNG shots: the
+  featureblock fixture's legacy/print renders joined the frozen set (98 → 101),
+  while its Steel-scheme shots and both new sidebar shots are regenerated
+  (unfrozen) goldens verified by eye.
 
 ## 2026-07-29 — site deploy (SC-95 statblock action labels)
 
