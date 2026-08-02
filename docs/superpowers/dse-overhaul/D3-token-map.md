@@ -75,6 +75,11 @@ the theme automatically (custom properties may reference other custom properties
 | `--dse-fg-faint` | §1.2-C `text-faint` | `var(--text-faint)` | `rgba(220,226,230,0.38)` | `#828890` | `#666` |
 | `--dse-font-display` | §1.2-I `font-display` ⁶ | `var(--font-text)` | `"Source Serif 4", var(--font-text)` (OD-4) | | = active theme (no override) |
 | `--dse-font-mono` | §1.2-I `font-mono` | `var(--font-monospace)` | = Legacy (theme-invariant) | | = Legacy |
+| `--dse-font-title` | SC-105 T1 (six-slot vocabulary) ⁷ | `var(--font-text)` | `"Source Serif 4", var(--font-text)` | | = active theme (no override) |
+| `--dse-font-body` | SC-105 T1 (six-slot vocabulary) ⁷ | `var(--font-text)` | `"Source Serif 4", var(--font-text)` | | = active theme (no override) |
+| `--dse-font-card-body` | SC-105 T1 (six-slot vocabulary) ⁷ | `var(--dse-font-body)` | `var(--dse-font-body)` | | = active theme (no override) |
+| `--dse-font-label` | SC-105 T1 (six-slot vocabulary) ⁷ | `var(--dse-font-title)` | `var(--dse-font-title)` | | = active theme (no override) |
+| `--dse-font-controls` | SC-105 T1 (six-slot vocabulary) ⁷ | `var(--font-text)` | = Legacy (theme-invariant) | | = Legacy |
 | `--dse-chip-bg` | D2 extra (chips/tags) | `var(--tag-background)` | `rgba(220,226,230,0.06)` | `#eaeeef` | `transparent` |
 
 ⁵ The spec has no separate heading token; D2 does. Steel grades headings slightly brighter
@@ -101,6 +106,16 @@ head's numeric `EV n / n` chip (`font-variant-caps: normal`, keeping it out of s
 removed same-day per Scott's consistency ruling (2026-08-02) — the chip now takes the same
 small-caps treatment as every other chip, with no numeric-content exemption. Screen-only
 (`:not([data-dse-print="on"])`); print and Legacy are unaffected either way.
+
+⁷ SC-105 Task 1 splits the single `--dse-font-display` slot into six independent slots
+(Title/Body/Card-body/Label/Controls/Mono) as a **pure no-op**: every value here reproduces
+`--dse-font-display`'s existing per-theme resolution exactly, and Task 1 touches zero
+consumers (`--dse-font-display` itself stays defined and still drives all 7 of its CSS rules
+until Task 2 re-points them). Title/Body/Controls are independent literals per theme block
+(never `var()`-chain to each other — SC-112 needs to move Title without dragging Body);
+Card-body/Label are deliberate `var()` CHAINS to Body/Title (Scott's "same as Body"/"same as
+Title" ruling) so a future prefs UI can offer just 3 user-facing controls while Card-body/Label
+track them automatically. See the "SC-105 amendment" section below for the full rationale.
 
 ## Accent / interaction
 
@@ -410,3 +425,40 @@ chip surfaces — the flat outlined right-rail slot (`.sc-head__slot--chip` ↔
 `.dse-head__deck--chip`) and the forged ability cost corner (`.sc-ability__cost` ↔
 `.dse-feature .dse-head__eyebrow--chip`). Giving the rail chip a sheen would be *diverging*
 from the site, so the contract asserts the rail chip stays flat.
+
+## SC-105 amendment (2026-08-02 — six-slot font vocabulary, Task 1)
+
+Today's plugin drives titles, body prose, card body, and label text through the single
+`--dse-font-display` token — which is *why* they already render pixel-identical. SC-105 splits
+that one slot into six ("title", "body", "card-body", "label", "controls", "mono" — `mono`
+pre-existed and is unchanged) so a future prefs UI (SC-112) can let a user diverge them. The
+work is staged across two tasks so the split itself never moves a pixel:
+
+- **Task 1 (this amendment)** adds the 5 new tokens — `font-title`, `font-body`,
+  `font-card-body`, `font-label`, `font-controls` — to `DSE_TOKEN_NAMES` with full Legacy/Steel/
+  Print coverage (the 5 new rows in the Text table above), but re-points **zero** consumers.
+  `--dse-font-display` keeps every one of its 7 CSS consumers untouched; nothing that renders
+  today references any of the 5 new names. `grep -c "var(--dse-font-display)"` in
+  `styles-source.css` stays exactly 7.
+- **Task 2** (not yet done) re-points those 7 consumers plus the stepper's sans-font exclusion
+  to their classified slot token, then retires `--dse-font-display` from the union, this map,
+  `LEGACY_MAP`, and the theme tests in the same task (a zombie alias with no consumers would
+  just be confusing).
+
+**The chain decision (load-bearing for SC-112):** `font-title`, `font-body`, `font-controls`,
+and `font-mono` get **independent literal values** per theme block — they happen to be equal
+today (all resolve through `var(--font-text)` in Legacy, `"Source Serif 4", var(--font-text)`
+in Steel dark), but must never `var()`-chain to each other, because SC-112 needs to move Title
+without dragging Body along, and vice versa. `font-card-body` and `font-label` instead get
+**`var()`-chained defaults** — `var(--dse-font-body)` and `var(--dse-font-title)` respectively —
+exactly matching Scott's "Card-body = same as Body" / "Label = same as Title" rulings. This is
+what lets SC-112 offer just 3 user-facing controls (Title/Body/Controls) while Card-body/Label
+track them automatically unless a future "advanced" override breaks the chain explicitly.
+
+The chain is safe as a no-op because `token-coverage.test.ts`'s guard is a raw-text
+presence/equality check on whatever string follows `--dse-<name>:` — it already treats existing
+tokens that chain (e.g. `--dse-surface: var(--code-background)`) as ordinary values, so
+`--dse-font-card-body: var(--dse-font-body);` is accepted identically to a literal in the
+Legacy fidelity map, the Steel presence check, and the Print presence check. `font-controls`
+joins `font-mono` as Steel/Print-invariant (defined only in the Legacy base — always sans,
+never overridden by either theme block), since no consumer re-points to it in Task 1.
