@@ -93,6 +93,13 @@ go under an *Internal* sub-heading.
   condition pickers, the form editor, and others) now follow the active theme too:
   Steel renders the forged treatment (title emboss, sunken sections, forged footer
   buttons) instead of unstyled defaults, and Legacy modals are unchanged.
+- **Steel body-text true weight (SC-105 face decision)** — the Steel theme now bundles
+  Source Serif 4's Regular (400) weight alongside the existing 600/700, so body and
+  label prose render at their real book weight instead of being mapped up to the
+  bundled 600 (SemiBold) face for lack of a 400 — the "reads slightly heavier than the
+  site's" gap called out in plan 21/22 above is closed. Titles are unaffected (they set
+  600/700 explicitly). Screen-only, same scoping as the rest of the Steel typography
+  work: Legacy and print/export are untouched. Adds ~20KB to the bundled font payload.
 
 ### Internal
 
