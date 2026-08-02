@@ -68,9 +68,9 @@ findings:
 
 ---
 
-## Steel UI parity — you are here (2026-08-02: the steel-body STACK is BUILT, awaiting Scott)
-**Three issues are COMPLETE on the `steel-body` worktree branch, every change agent-reviewed
-clean, nothing pushed, pointer unbumped — one landing for the whole stack:**
+## Steel UI parity — you are here (2026-08-02: the steel-body stack is LANDED)
+**Three issues COMPLETE and LANDED to main (superproject merge `eb346a3`, dse `0a3ce4d`) after
+Scott's visual review (shots + live modal check in the worktree demo-vault). Landed set:**
 - **SC-99 / plan 22** — serif body text on ALL ~32 element families (C1/C2 closed). Scott's
   rulings applied: EV chip joined the uniform chip family (carve-out removed); steppers stay sans
   as the future Controls-slot default.
@@ -84,12 +84,13 @@ clean, nothing pushed, pointer unbumped — one landing for the whole stack:**
 **2016/144** · shots **169** · obsidian-shots **132** · parity **0 GAPs/10 WARNs/exit 0** ·
 freeze **101/101** · token-coverage green · all commits attribution-free.
 
-**Branch state (FINAL, 2026-08-02):** dse `b7ea4af..0a3ce4d` (**11 commits**) · superproject
-`c4b71e1..9f086a5` (**5 docs commits**, pointer unbumped) · nothing pushed (ls-remote verified) ·
-**Scott lands with `just wt-finish steel-body` from the MAIN checkout** after his visual review
-(SC-99/SC-108/SC-104 all carry Needs Review with the exact shots/checks to perform). NOTE:
-origin/main moved (docs) after the worktree branched — wt-finish's superproject step may need a
-trivial docs-only rebase; no pin conflicts exist.
+**LANDED 2026-08-02** via `just wt-finish steel-body`: dse `b7ea4af..0a3ce4d` (11 commits) on
+origin/main; superproject merge `eb346a3` (5 docs commits + pointer bump `68b0e41`). Ledgers +
+designs preserved to `docs/superpowers/dse-overhaul/build-ledgers/steel-body-*`. Worktree removed
+after verification. Post-landing note: the deliverable `main.js`/`styles.css` are untracked build
+artifacts — rebuild (`npm run build-no-check`) before any live-vault review; the harness compiles
+its own bundle so gates stay green while the vault build lags (learned during Scott's SC-104
+modal review).
 
 Full per-task record: `.superpowers/sdd/{2026-07-27-plan-22-steel-body-text-coherence,
 sc108-fixture-coverage,sc104-modal-theming}/progress.md` (gitignored scratch).
