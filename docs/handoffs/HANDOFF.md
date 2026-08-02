@@ -159,17 +159,12 @@ SC-77 (site check-in), SC-78 (Fable planning effort — looks complete, confirm 
 **SC-112** (customizable fonts) is filed but not release-gating — Scott to confirm that call.
 
 ## Steel UI parity — gotchas & lessons
-- **Freeze check is bytes, not git** — `visual-harness/shots/` is gitignored so the plan's
-  `git status` freeze check is vacuous. Use `bash
-  /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <shots-dir>`
-  (98 legacy+print PNGs vs sha256 baseline; `<shots-dir>` arg required now that steel-type is
-  gone — its default path is dead).
+- **Verification command shapes, devbox wrapping, and the freeze/parity mechanics** now live
+  in the `dse-verify` skill (`.claude/skills/dse-verify/`) — read it before gating any DSE
+  change.
 - **Every new Steel CSS rule** must carry `[data-dse-theme='steel']:not([data-dse-print="on"])`
   or it changes the frozen `*--legacy-*`/`*--steel-print` shots. Only unfrozen steel-dark/light
   shots may change.
-- **devbox**: wrap commands `bash -c` with an **absolute** `cd` (`devbox run --` ignores cwd);
-  read a node exit code by running the command **last** with no trailing `echo` (the sh wrapper
-  masks exit 1 as 0).
 - **The parity gate covers only the 12 card-family pairs** (no site counterpart for plugin-only
   families), so C1's coherence can only be verified by **reading the shots**, not the gate.
 - ~~**C1 preview A/B is ephemeral**~~ — **regenerated 2026-08-01 and preserved** at

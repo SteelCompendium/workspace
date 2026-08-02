@@ -101,11 +101,9 @@ Scott reviews visual work *in Linear, from the attachments*. Two standing rules:
 - **Any A/B (or A/B/C…) decision Scott has to make gets the candidate screenshots attached**,
   one titled attachment per option, so he can decide by looking without leaving the ticket.
 
-Mechanics (proven 2026-08-02 on SC-105): `mcp__linear__prepare_attachment_upload` → immediate
-`curl -X PUT --data-binary` with the returned signed URL + ALL returned headers verbatim (the
-URL expires in **60 seconds** — prepare and PUT one file at a time, never batch prepares) →
-`mcp__linear__create_attachment_from_upload` with the assetUrl. Give each attachment a title
-that names the option/state ("Current look — …", "After — …", "Option C — Zilla Slab").
+Operational mechanics (the exact tool-call sequence, curl shape, and the 60-second-expiry
+footgun) live in the `linear-flow` skill (`.claude/skills/linear-flow/`) — read it before
+attaching screenshots.
 
 ## Linear status & label convention (Scott's rule, 2026-07-31)
 
@@ -118,6 +116,9 @@ Team: **Steel Compendium** (`SC-*`). Statuses mean specific things — don't imp
 | **Awaiting** | An **agent is actively working it**, *or* it is blocked on something **external** (an upstream publish, a third party, a mirror). Not a parking spot. |
 | **Backlog** | Someday/maybe. |
 | **Done** / **Canceled** / **Duplicate** | Terminal. |
+
+The operational side of working this convention (thin-ticket comment rule, screenshot
+attachment mechanics) lives in the `linear-flow` skill (`.claude/skills/linear-flow/`).
 
 Rules that follow from this:
 

@@ -168,6 +168,7 @@ repo docs using the routing table below (collaboration preferences →
 | Write a deep single-topic reference | the owning repo's `docs/` + its `docs/index.md` |
 | Find non-obvious "funky logic" (workaround, footgun, magic number) | capture it where it lives: inline comment if local, `ARCHITECTURE.md` / the relevant sub-repo doc if cross-cutting |
 | Pause mid-task / hand off | `docs/handoffs/HANDOFF.md` (the `creating-handoffs` skill owns this) |
+| Document a repeatable multi-step workflow with footguns (exact commands, gate semantics) | a repo-local skill in `.claude/skills/` |
 
 `FOLLOWUPS.md` / `ROADMAP.md` exist **only at the workspace root** — sub-repos must not grow
 their own. Historical (dated) docs stay where they were written; fix routing only going
