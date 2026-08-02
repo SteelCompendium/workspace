@@ -68,23 +68,34 @@ findings:
 
 ---
 
-## Steel UI parity — you are here
-**C1 is DECIDED (Scott, 2026-08-01): serif everywhere — option (a).** Plan 22 / **SC-99 is
-unblocked** and executes as drafted (theme-root selector, no allow-list). Density is answered by
-size controls, not by keeping surfaces sans.
+## Steel UI parity — you are here (2026-08-02: the steel-body STACK is BUILT, awaiting Scott)
+**Three issues are COMPLETE on the `steel-body` worktree branch, every change agent-reviewed
+clean, nothing pushed, pointer unbumped — one landing for the whole stack:**
+- **SC-99 / plan 22** — serif body text on ALL ~32 element families (C1/C2 closed). Scott's
+  rulings applied: EV chip joined the uniform chip family (carve-out removed); steppers stay sans
+  as the future Controls-slot default.
+- **SC-108 / #37** — featureblock `advancement` fixture + sidebar light shot; shots 169,
+  obsidian-shots 132; **freeze widened 98→101 additions-only** (the check-freeze baseline is
+  machine-local gitignored scratch — see gotchas).
+- **SC-104 / #31** — Steel theme reaches modals: WeakMap registry + `DseModal.open()` stamp
+  (src/ change, deliberate) + 4 token-gate widenings to `:is([data-dse-element], .dse-modal)`.
 
-**A live worktree already exists:** `../worktrees/steel-body` (off dse `b7ea4af`) with plan 22
-Task 1 Step 2 **applied but uncommitted** — it was cut to regenerate the A/B. **Resume there**
-rather than cutting a new one. Freeze verified **98/98** with the change in place. A/B shots:
-`.superpowers/sdd/shots-c1-ab/{before,after}/` (6 families, steel-dark).
+**Final branch gates (execution-verified by independent reviewers):** tsc clean · jest
+**2016/144** · shots **169** · obsidian-shots **132** · parity **0 GAPs/10 WARNs/exit 0** ·
+freeze **101/101** · token-coverage green · all commits attribution-free.
 
-**Carry-forward for plan 22 Task 1 Step 3:** the encounter head's `EV 0 / 40` chip loses its
-numeric emphasis under the broadened rule. Fix with a targeted chip-value rule — **never** by
-narrowing the broadened selector.
+**Branch state:** dse `b7ea4af..95958ab` (10 commits) · superproject `c4b71e1..233d5f2` +
+changelog-bullet commit(s) in flight (3-4 docs commits) · **Scott lands with
+`just wt-finish steel-body` from the MAIN checkout** after his visual review (SC-99/SC-108/SC-104
+all carry Needs Review with the exact shots to eyeball).
 
-Scott also asked for **user-customisable fonts** → **SC-112** (semantic slots + site-style
-Text/Card scales, driven from prefs). Not part of plan 22 (needs tokens + prefs + settings UI);
-**SC-105** should define the token vocabulary SC-112 consumes. Site precedent to copy:
+Full per-task record: `.superpowers/sdd/{2026-07-27-plan-22-steel-body-text-coherence,
+sc108-fixture-coverage,sc104-modal-theming}/progress.md` (gitignored scratch).
+
+Scott also asked for **user-customisable fonts** → **SC-112** (now **in 7.0.0 scope, gates the
+release**; **SIX** settable slots — Title/Body/Card-body/Label/**Controls** (interactive
+components, Scott-confirmed 2026-08-02)/Mono — plus Text/Card size scales). **SC-105** defines
+the token vocabulary SC-112 consumes. Site precedent to copy:
 `v2/docs/stylesheets/custom_font.css` (4 family slots) + `v2/docs/javascripts/settings-core.js`
 (`--sc-content-scale` 0.6–1.4, `--sc-card-scale` 0.8–1.2, both symmetric about 1.0 on purpose).
 

@@ -142,7 +142,10 @@ structural divergence like these is invisible to it by design.)*
 
 ## 37. No fixture exercises three Steel featureblock/sidebar rules
 
-**Status:** open
+**Status:** done — fixed in worktree steel-body (SC-108, dse `eda8eec`, 2026-08-02,
+reviewed/approved; lands with the steel-body stack). Featureblock `advancement` fixture (shots
+164→169; shoot.mjs now fixture-aware with collision-safe naming) + sidebar light shot
+(obsidian-shots 131→132). Freeze widened 98→101 additions-only. Parity-pair half spun off as #41.
 
 - **Identified:** 2026-07-22, Plan 20 (Steel material parity) final whole-branch review
   fix round, `draw-steel-elements` worktree `steel-material`.
@@ -303,7 +306,12 @@ structural divergence like these is invisible to it by design.)*
 
 ## 31. DSE modals are untouchable by the Steel theme (no `data-dse-theme` on the modal root)
 
-**Status:** open
+**Status:** done — fixed in worktree steel-body (SC-104, dse `29b1f92`+`95958ab`, 2026-08-02,
+reviewed/approved; lands with the steel-body stack). Two-gap fix: a `WeakMap<App, ThemeService>`
+registry + stamp in `DseModal.open()` (per-modal-element; `document.body` still never touched),
+AND widening the 4 Steel token-value gates to `:is([data-dse-element], .dse-modal)` — the recon
+found the original entry's "no CSS edit needed" claim was wrong. 4 contract tests added
+(stamp / live re-stamp / unload teardown / no-op).
 
 - **Identified:** 2026-07-21, SC-10 / Plan 20 Task 6 fix round (`draw-steel-elements`,
   worktree `steel-material`).
