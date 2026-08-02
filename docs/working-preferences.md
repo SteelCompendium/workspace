@@ -158,6 +158,15 @@ A related hazard: an agent working in a worktree can still *leak edits into the 
 checkout* (plan 21's Task 5 caught and reverted exactly this). If you touch anything outside
 your worktree path, verify `git -C <main-checkout> status` is clean before reporting done.
 
+## The v2 site is a reference, not gospel (Scott, 2026-08-02)
+
+The v2 site is **MVP-state** — usable as the design reference for plugin parity work, but not
+the polished finished product. Consequence for parity efforts: when the plugin's design is
+*better* than the site's (e.g. the kit signature-ability inline render), the right move is to
+**converge on the best design and file a v2-site ticket** to bring the site up — never to
+degrade the plugin to match an MVP page. "Do the right thing" (his standing preference)
+explicitly extends to changing the site when parity work reveals its gaps.
+
 ## Two products, don't conflate
 
 The **DSE Obsidian plugin** (`draw-steel-elements/`, renders element code blocks in
