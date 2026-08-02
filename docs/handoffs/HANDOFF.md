@@ -84,10 +84,12 @@ clean, nothing pushed, pointer unbumped — one landing for the whole stack:**
 **2016/144** · shots **169** · obsidian-shots **132** · parity **0 GAPs/10 WARNs/exit 0** ·
 freeze **101/101** · token-coverage green · all commits attribution-free.
 
-**Branch state:** dse `b7ea4af..95958ab` (10 commits) · superproject `c4b71e1..233d5f2` +
-changelog-bullet commit(s) in flight (3-4 docs commits) · **Scott lands with
-`just wt-finish steel-body` from the MAIN checkout** after his visual review (SC-99/SC-108/SC-104
-all carry Needs Review with the exact shots to eyeball).
+**Branch state (FINAL, 2026-08-02):** dse `b7ea4af..0a3ce4d` (**11 commits**) · superproject
+`c4b71e1..9f086a5` (**5 docs commits**, pointer unbumped) · nothing pushed (ls-remote verified) ·
+**Scott lands with `just wt-finish steel-body` from the MAIN checkout** after his visual review
+(SC-99/SC-108/SC-104 all carry Needs Review with the exact shots/checks to perform). NOTE:
+origin/main moved (docs) after the worktree branched — wt-finish's superproject step may need a
+trivial docs-only rebase; no pin conflicts exist.
 
 Full per-task record: `.superpowers/sdd/{2026-07-27-plan-22-steel-body-text-coherence,
 sc108-fixture-coverage,sc104-modal-theming}/progress.md` (gitignored scratch).
