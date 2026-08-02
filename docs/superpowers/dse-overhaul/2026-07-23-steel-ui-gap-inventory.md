@@ -57,11 +57,13 @@ single face for titles and body); bundling a true slab (Zilla Slab / Bitter, OFL
   ink rule now sits on a single Steel-theme-root selector (`[data-dse-element]`, every element
   root) instead of the four-family allow-list, so every plugin-only family reads the same serif/
   open-line-height/cool-ink type system as the card families (C2's line-height folded into the
-  same rule, as anticipated). Two exclusions guard the Global Constraints: numeric stepper/
-  counter values keep their prior non-serif rendering (Task 1 fix-round, Finding 2), and the
-  encounter head's numeric `EV n / n` chip keeps solid, natural-size caps instead of collapsing
-  under Source Serif 4's `smcp` digit-shrink (Task 1 Step 3, exactly the carry-forward noted
-  above). `test/dom/theme/steelTypography.test.ts` gained a dedicated contract test locking the
+  same rule, as anticipated). One exclusion guards a Global Constraint: numeric stepper/
+  counter values keep their prior non-serif rendering (Task 1 fix-round, Finding 2). Task 1
+  Step 3's encounter-chip carve-out (the `EV n / n` chip kept solid, natural-size caps instead
+  of collapsing under Source Serif 4's `smcp` digit-shrink) was removed same-day per Scott's
+  consistency ruling (2026-08-02): no sibling chip gets a numeric-content exemption, so the EV
+  chip now takes the same small-caps treatment as every other chip, digit-shrink included.
+  `test/dom/theme/steelTypography.test.ts` gained a dedicated contract test locking the
   selector's shape (element-root, not an allow-list) so a future edit can't quietly re-narrow it
   without failing the suite. Gates: tsc clean, jest 2011/144, shots 164/164, parity 0 GAP/10
   WARN/exit 0 (unchanged from plan 21's baseline), freeze 98/98. No parity-gate coverage exists

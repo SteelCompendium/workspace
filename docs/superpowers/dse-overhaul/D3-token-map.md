@@ -94,11 +94,13 @@ broadened from the four card-family selectors to a single Steel-theme-root selec
 (`[data-dse-theme='steel']:not([data-dse-print="on"])[data-dse-element]`, `styles-source.css`
 ~:3439) — every element root, not an allow-list — so the token now reaches every plugin-only
 family (hero, encounter, negotiation, montage, initiative, project, party, …) the same way it
-already reached the card families. Two targeted exclusions sit downstream of this rule and do
+already reached the card families. One targeted exclusion sits downstream of this rule and does
 not change the token itself: numeric stepper/counter controls (`.dse-stepper__input`/`__value`)
-are explicitly set back to `var(--font-text)`, and the encounter head's numeric `EV n / n` chip
-keeps `font-variant-caps: normal` so Source Serif 4's small-caps digit-shrink doesn't collapse
-it. Screen-only (`:not([data-dse-print="on"])`); print and Legacy are unaffected either way.
+are explicitly set back to `var(--font-text)`. A short-lived second exclusion for the encounter
+head's numeric `EV n / n` chip (`font-variant-caps: normal`, keeping it out of small-caps) was
+removed same-day per Scott's consistency ruling (2026-08-02) — the chip now takes the same
+small-caps treatment as every other chip, with no numeric-content exemption. Screen-only
+(`:not([data-dse-print="on"])`); print and Legacy are unaffected either way.
 
 ## Accent / interaction
 
