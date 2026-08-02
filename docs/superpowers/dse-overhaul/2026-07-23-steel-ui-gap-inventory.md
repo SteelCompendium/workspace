@@ -53,6 +53,22 @@ single face for titles and body); bundling a true slab (Zilla Slab / Bitter, OFL
   **SC-105** defining the token vocabulary it consumes. One carry-forward into plan 22 Task 1
   Step 3: the encounter `EV 0 / 40` chip loses its numeric emphasis under the broadened rule —
   fix with a targeted chip-value rule, never by narrowing the selector.
+- **§C1/§C2 CLOSED 2026-08-02 (plan 22 executed).** The decision above is landed: the body-font/
+  ink rule now sits on a single Steel-theme-root selector (`[data-dse-element]`, every element
+  root) instead of the four-family allow-list, so every plugin-only family reads the same serif/
+  open-line-height/cool-ink type system as the card families (C2's line-height folded into the
+  same rule, as anticipated). One exclusion guards a Global Constraint: numeric stepper/
+  counter values keep their prior non-serif rendering (Task 1 fix-round, Finding 2). Task 1
+  Step 3's encounter-chip carve-out (the `EV n / n` chip kept solid, natural-size caps instead
+  of collapsing under Source Serif 4's `smcp` digit-shrink) was removed same-day per Scott's
+  consistency ruling (2026-08-02): no sibling chip gets a numeric-content exemption, so the EV
+  chip now takes the same small-caps treatment as every other chip, digit-shrink included.
+  `test/dom/theme/steelTypography.test.ts` gained a dedicated contract test locking the
+  selector's shape (element-root, not an allow-list) so a future edit can't quietly re-narrow it
+  without failing the suite. Gates: tsc clean, jest 2011/144, shots 164/164, parity 0 GAP/10
+  WARN/exit 0 (unchanged from plan 21's baseline), freeze 98/98. No parity-gate coverage exists
+  for the plugin-only families — the shot-read remains the primary visual guard there, called out
+  honestly rather than implied by the gate.
 - **§C (plugin-only families) — AUDITED 2026-07-27; ONE headline gap (C1).** Their material is
   coherent (shared `cardHead`/`powerRollPanel`/plates all render right), but their **body text is
   still sans** because plan 21's serif/spacing routing landed only on the card families, not a

@@ -86,7 +86,21 @@ subset) bundled as base64 `@font-face` `src` directly in `styles-source.css`'s S
 (`assets/fonts/` carries the raw woff2 + `OFL.txt` as the license-compliance record). Until this
 task the token was declared but no face was ever registered, so every Steel title silently fell
 back to `var(--font-text)` (Steel ≈ Legacy typographically); it now actually resolves to Source
-Serif 4.
+Serif 4. **Update 2026-07-24** (plan 21 Task 3): body/label text was routed directly to this
+token too — there is deliberately no separate `--dse-font-body` (registering one needs a
+`src/framework/tokens.ts` edit both plans forbade), so `--dse-font-display` now covers both
+titles and body under Steel. **Update 2026-08-02** (plan 22, C1/C2): that body routing was
+broadened from the four card-family selectors to a single Steel-theme-root selector
+(`[data-dse-theme='steel']:not([data-dse-print="on"])[data-dse-element]`, `styles-source.css`
+~:3439) — every element root, not an allow-list — so the token now reaches every plugin-only
+family (hero, encounter, negotiation, montage, initiative, project, party, …) the same way it
+already reached the card families. One targeted exclusion sits downstream of this rule and does
+not change the token itself: numeric stepper/counter controls (`.dse-stepper__input`/`__value`)
+are explicitly set back to `var(--font-text)`. A short-lived second exclusion for the encounter
+head's numeric `EV n / n` chip (`font-variant-caps: normal`, keeping it out of small-caps) was
+removed same-day per Scott's consistency ruling (2026-08-02) — the chip now takes the same
+small-caps treatment as every other chip, with no numeric-content exemption. Screen-only
+(`:not([data-dse-print="on"])`); print and Legacy are unaffected either way.
 
 ## Accent / interaction
 
