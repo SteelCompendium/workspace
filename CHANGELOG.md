@@ -67,6 +67,26 @@ go under an *Internal* sub-heading.
   stat-tile grid (FOLLOWUPS #32, needs its own plan against the print/legacy freeze), the
   featureblock option layout (#33), the feature action spine (#34) and the statblock notch
   (#35) all remain as they were. Bundling the slab is a possible future upgrade.
+- **Steel body-text coherence (plan 22)** — plan 21's body-type routing above reached only
+  the shared card families; every plugin-only family (hero sheet, encounter, negotiation,
+  montage, initiative, project, party, and the rest) still rendered a serif card head next
+  to a sans body/label/control, reading as two different type systems in the same note.
+  The routing now lives on a single Steel-theme-root selector (every `[data-dse-element]`
+  host) instead of a four-family allow-list, so body text, labels, table cells, sub-headers
+  and chips are serif and open-line-height everywhere Steel is active. Two exclusions kept
+  from regressing under the broadened rule: numeric stepper/counter values (hero stamina,
+  party awards, montage/initiative trackers, the standalone counter) and the encounter
+  head's numeric `EV n / n` chip both keep their prior, non-serif rendering — the former
+  because the Global Constraint against changing numeric `<input>`s/steppers is absolute,
+  the latter because Source Serif 4's small-caps substitution collapses digits to one
+  uniform size with no DOM boundary to target the value separately. `steelTypography.test.ts`
+  gained a dedicated contract test that locks the *shape* of the selector (every element
+  root, not a named list) independently of the existing font-value assertion, so a future
+  edit can't quietly re-narrow the routing without failing the suite. Same honest limits as
+  plan 21: screen-only (print/export and Legacy are untouched), serif-not-slab, and only the
+  600/700 weights ship. No parity-gate coverage exists for the plugin-only families (they
+  have no site counterpart in the 12 mapped pairs), so a shot-read remains the primary
+  visual guard for this surface.
 
 ## 2026-07-29 — site deploy (SC-95 statblock action labels)
 
