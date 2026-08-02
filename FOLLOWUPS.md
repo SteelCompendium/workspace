@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 41 -->
+<!-- next-id: 42 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -39,6 +39,24 @@ none could be fixed inside that plan. None trips the automated parity gate
 (`draw-steel-elements/visual-harness/parity`): the gate diffs material properties
 (background-image/box-shadow/border) on mapped selectors, not layout/structure, so a
 structural divergence like these is invisible to it by design.)*
+
+## 41. Parity pair for featureblock advancement bands + stale "PLUGIN-ONLY" CSS comment
+
+**Status:** open
+
+- **Identified:** 2026-08-02, SC-108 design recon (read-only Plan agent), main checkout.
+- **What:** Two coupled items. (1) `styles-source.css`'s comment on `.dse-fb__adv-head`
+  (~:3877-3880) claims the surface is "PLUGIN-ONLY, no site counterpart" — **factually wrong**:
+  `v2/docs/stylesheets/steel-featureblock.css:202-217` has real `.fb__band--adv` and
+  `.fb__adv-head` rules, and ~70 live Browse pages carry the DOM (e.g.
+  `/v2/Browse/monster/fixture/demon/the-boil-advancement-features/`). Fix the comment.
+  (2) A parity pair for `.dse-fb__adv-head`/`.dse-fb__band--adv` is therefore possible and
+  would close a real, currently-uncaught material gap.
+- **Why not done with SC-108:** the pair needs `plugin-capture.mjs` fixture-selection support
+  (its `ELEMENTS` list is flat ids hardcoded to `fixture=default`), a new `urls.json` entry,
+  two `selector-map.json` pairs, and a human-reviewed `npm run parity:site` baseline regen —
+  a deliberate act per the parity README, not CI-adjacent. Different discipline, own change.
+- **Effort:** S-M (the parity:site regen review is the care-heavy part).
 
 ## 40. Parity `section-head`/`pr-head` pairs compare the site's text-less flex wrapper against the plugin's title/header content node
 
