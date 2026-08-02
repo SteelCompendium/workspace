@@ -74,12 +74,14 @@ go under an *Internal* sub-heading.
   The routing now lives on a single Steel-theme-root selector (every `[data-dse-element]`
   host) instead of a four-family allow-list, so body text, labels, table cells, sub-headers
   and chips are serif and open-line-height everywhere Steel is active. Two exclusions kept
-  from regressing under the broadened rule: numeric stepper/counter values (hero stamina,
-  party awards, montage/initiative trackers, the standalone counter) and the encounter
-  head's numeric `EV n / n` chip both keep their prior, non-serif rendering — the former
-  because the Global Constraint against changing numeric `<input>`s/steppers is absolute,
-  the latter because Source Serif 4's small-caps substitution collapses digits to one
-  uniform size with no DOM boundary to target the value separately. `steelTypography.test.ts`
+  from regressing under the broadened rule: numeric stepper/counter values (hero
+  stamina/ferocity/surges steppers, montage/initiative trackers, the standalone counter)
+  keep their prior, non-serif rendering — because the Global Constraint against changing
+  numeric `<input>`s/steppers is absolute — while the encounter head's numeric `EV n / n`
+  chip does adopt the serif face like everything else, but is excluded from the
+  small-caps treatment, so its digits render solid and natural-size instead of collapsing
+  under Source Serif 4's small-caps digit-shrink (its old label-vs-value size emphasis
+  isn't reproducible without a DOM boundary). `steelTypography.test.ts`
   gained a dedicated contract test that locks the *shape* of the selector (every element
   root, not a named list) independently of the existing font-value assertion, so a future
   edit can't quietly re-narrow the routing without failing the suite. Same honest limits as
