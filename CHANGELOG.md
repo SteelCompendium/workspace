@@ -89,6 +89,16 @@ go under an *Internal* sub-heading.
   600/700 weights ship. No parity-gate coverage exists for the plugin-only families (they
   have no site counterpart in the 12 mapped pairs), so a shot-read remains the primary
   visual guard for this surface.
+- **Steel modal theming (SC-104)** — DSE's modals (stamina edit / Spend Recovery,
+  condition pickers, the form editor, and others) now follow the active theme too:
+  Steel renders the forged treatment (title emboss, sunken sections, forged footer
+  buttons) instead of unstyled defaults, and Legacy modals are unchanged.
+
+### Internal
+
+- **Draw Steel Elements visual-harness coverage** — featureblock advancement bands
+  and the sidebar panel's light scheme now have dedicated fixtures with frozen
+  golden-PNG coverage (freeze set widened 98 → 101).
 
 ## 2026-07-29 — site deploy (SC-95 statblock action labels)
 
