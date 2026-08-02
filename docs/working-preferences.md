@@ -92,6 +92,21 @@ throwaway `6.0.1` re-release of 5.1.1, and days of waiting on Obsidian's mirror.
   "Set as a pre-release" must be ticked *and* the manifest version must stay strictly
   `x.y.z` — but the default answer is still no.
 
+## Linear: screenshots are the review medium (Scott's rule, 2026-08-02)
+
+Scott reviews visual work *in Linear, from the attachments*. Two standing rules:
+
+- **Any issue involving a visual change gets before/after screenshots attached** to the Linear
+  issue (not just described in comments) before it is flagged `Needs Review`.
+- **Any A/B (or A/B/C…) decision Scott has to make gets the candidate screenshots attached**,
+  one titled attachment per option, so he can decide by looking without leaving the ticket.
+
+Mechanics (proven 2026-08-02 on SC-105): `mcp__linear__prepare_attachment_upload` → immediate
+`curl -X PUT --data-binary` with the returned signed URL + ALL returned headers verbatim (the
+URL expires in **60 seconds** — prepare and PUT one file at a time, never batch prepares) →
+`mcp__linear__create_attachment_from_upload` with the assetUrl. Give each attachment a title
+that names the option/state ("Current look — …", "After — …", "Option C — Zilla Slab").
+
 ## Linear status & label convention (Scott's rule, 2026-07-31)
 
 Team: **Steel Compendium** (`SC-*`). Statuses mean specific things — don't improvise.
