@@ -13,6 +13,19 @@
 >
 > **Release gate: 7.0.0 ships only when SC-97 (Steel UI parity) is complete.**
 
+## 2026-08-02 session end — state snapshot
+**Landed to main today (all pushed):** the steel-body stack (SC-99 serif coherence all families ·
+SC-108 fixture coverage, freeze 98→101 · SC-104 modal theming) and the SC-105 pair (six-slot font
+token vocabulary, `--dse-font-display` retired · Option B: SS4 400 weight, body at true book
+weight — Scott's pick, landed byte-identical to his approved swatch). All Linear issues Done with
+before/after attachments. dse main @ `ccf465e`.
+**Three repo-local skills now live** (`.claude/skills/`): `dse-verify`, `linear-flow`,
+`land-stack` — procedures single-sourced out of the docs; use them instead of pasting footguns
+into briefs.
+**Remaining for 7.0.0 (SC-97):** SC-112 (six-slot settings UI + scales — biggest build, fully
+unblocked) · SC-100 + SC-106 (Scott decisions; swatches offered) · SC-101/102/103 (structural) ·
+SC-109/110/111 (guards). No worktrees exist; nothing in flight.
+
 ## Active efforts
 - **Release / SC-11 → 7.0.0** — the overhaul release cut. 6.0.1 recovery published; **7.0.0 NOT
   cut** (Scott: build not ready) — so **no agent action is pending here**. ✅ The community-store
