@@ -8,6 +8,18 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+### Fixed
+
+- **Wall rule page no longer carries the "Straight Lines" sidebar** — the printed
+  sidebar sits inside the Wall section in the Heroes book, so the ETL folded it into
+  the wall rule's Browse page. It is now tagged as a loose callout, so the narrow wall
+  page drops it while book-faithful pages (Area of Effect, the Read chapter) keep it
+  in its printed position. (SC-114)
+- **Table-reference combat modifiers: corrected opportunity-attack trigger** — the
+  summary said "leaving a creature's reach without shifting"; the trigger is
+  adjacency-based, so it now reads "willingly moving out of a square adjacent to a
+  creature without shifting". (SC-113)
+
 ### Added (pending plugin 7.0.0 release)
 
 > The plugin major below was drafted as "6.0.0". That number is **retired** after the
