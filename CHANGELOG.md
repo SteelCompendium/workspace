@@ -101,6 +101,12 @@ go under an *Internal* sub-heading.
   featureblock fixture's legacy/print renders joined the frozen set (98 → 101),
   while its Steel-scheme shots and both new sidebar shots are regenerated
   (unfrozen) goldens verified by eye.
+- **Draw Steel Elements font token vocabulary (SC-105)** — the plugin's single
+  `--dse-font-display` token is retired, replaced by six semantic slots
+  (title/body/card-body/label/controls/mono), each independently themeable.
+  Every consumer was re-pointed to its classified slot with zero rendering
+  change — freeze and parity gates stayed green throughout. Groundwork only,
+  for user-customizable fonts (SC-112).
 
 ## 2026-07-29 — site deploy (SC-95 statblock action labels)
 
