@@ -33,14 +33,20 @@ no context just moves the confusion into the ticket.
 
 ## Screenshot rules
 
-Scott reviews visual work *in Linear, from the attachments* — not the rendered app, not a
-description in a comment.
+Scott reviews visual work *in Linear, from the images on the ticket* — not the rendered app,
+not a prose description. (Scott's ruling, 2026-08-02.)
 
-- **Any issue involving a visual change** gets before/after screenshots attached to the issue
-  **before** it is flagged `Needs Review`.
-- **Any A/B (or A/B/C…) decision** Scott has to make gets the candidate screenshots attached,
-  **one titled attachment per option**, so he can decide by looking without leaving the
-  ticket.
+- **Default: embed images INLINE in comments**, next to the text that explains them —
+  `![title](assetUrl)` in the comment body after the same upload flow below. Two reasons:
+  the explanatory context travels with the image, and the comment thread becomes a visual
+  history — Scott reviews change-over-time by scrolling past screenshots of the same thing.
+- **Any issue involving a visual change** gets its before/after pair posted (inline, in a
+  comment narrating the change) **before** it is flagged `Needs Review`.
+- **A/B decision sets** go inline in the decision comment, one labeled image per option,
+  with the trade-offs text beside them.
+- **Root-level attachments are for durable reference material only**: the baseline "before"
+  shot, design-reference/target images that guide how the ticket gets implemented — things
+  someone should find without scrolling the thread. Not for evolving progress evidence.
 
 ## Attachment mechanics
 
@@ -52,9 +58,13 @@ Use the fully-qualified MCP tool names — `mcp__linear__prepare_attachment_uplo
 2. **Immediately** `curl -X PUT --data-binary @<file> <uploadUrl>`, passing **every** header
    the tool returned, **verbatim** (name and value unchanged — a pre-signed URL's signature is
    sensitive to the exact header set; dropping or altering one breaks the upload).
-3. `mcp__linear__create_attachment_from_upload` with the resulting `assetUrl`, and a **title
-   that names the option or state** — e.g. `"Current look — sidebar collapsed"`,
-   `"After — sidebar collapsed"`, `"Option C — Zilla Slab"`.
+3. Then EITHER of:
+   - **Inline (the default):** put `![<label>](assetUrl)` in a `mcp__linear__save_comment`
+     body. Linear recognizes the bare org assetUrl and rewrites it to a signed, rendered
+     image automatically — no extra call needed.
+   - **Root attachment (reference material):** `mcp__linear__create_attachment_from_upload`
+     with the `assetUrl` and a **title that names the state** — e.g.
+     `"Baseline — statblock steel-dark"`, `"Design reference — site head band"`.
 
 **One file at a time.** Never call `prepare_attachment_upload` for multiple files up front —
 by the time you get to the second PUT, its URL has expired. Prepare, PUT, create; then repeat

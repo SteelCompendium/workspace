@@ -96,10 +96,13 @@ throwaway `6.0.1` re-release of 5.1.1, and days of waiting on Obsidian's mirror.
 
 Scott reviews visual work *in Linear, from the attachments*. Two standing rules:
 
-- **Any issue involving a visual change gets before/after screenshots attached** to the Linear
-  issue (not just described in comments) before it is flagged `Needs Review`.
-- **Any A/B (or A/B/C…) decision Scott has to make gets the candidate screenshots attached**,
-  one titled attachment per option, so he can decide by looking without leaving the ticket.
+- **Default: images go INLINE in comments** (Scott, 2026-08-02) — context text travels with the
+  image, and the thread becomes a change-over-time visual history he can review and comment on.
+  Before/after pairs and A/B candidate sets are posted inline in the narrating comment **before**
+  the issue is flagged `Needs Review`.
+- **Root-level attachments are reserved for durable reference material** — the baseline "before"
+  shot, design-reference/target images guiding implementation — things findable without
+  scrolling the thread.
 
 Operational mechanics (the exact tool-call sequence, curl shape, and the 60-second-expiry
 footgun) live in the `linear-flow` skill (`.claude/skills/linear-flow/`) — read it before
