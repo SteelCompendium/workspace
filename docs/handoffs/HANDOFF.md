@@ -26,6 +26,26 @@ into briefs.
 unblocked) · SC-100 + SC-106 (Scott decisions; swatches offered) · SC-101/102/103 (structural) ·
 SC-109/110/111 (guards). No worktrees exist; nothing in flight.
 
+## 2026-08-03 — IN-FLIGHT STATE (compact-safety snapshot; trust ledgers over memory)
+**Two parallel SDD executions, both mid-flight:**
+- **Plan 24 / SC-100 (worktree `kit-tiles`, dse @ 3eaf662):** Tasks 1-3 complete + gradient fix
+  round (Scott gate feedback: tiles now use the site's translucent-black fills — the site's
+  "gradient" is parent-card bleed-through, plugin token was an occluding white wash). **PAUSED at
+  Task 4 = Scott's visual gate, ROUND 2 posted inline on SC-100.** His approval sanctions the
+  kit--steel-print single-hash rebaseline at landing. Task 5 (docs/tickets; SC-115/116 pre-filed)
+  remains. Freeze intentionally at 100/101 sole-mismatch (kit--steel-print), baseline untouched.
+- **Plan 23 / SC-112 (worktree `font-settings`, dse @ 42086e9):** Tasks 1-4 complete (spike:
+  queryLocalFonts WORKS unconditionally, 424 fonts; pref-CSS plumbing; Controls flip — pinned a
+  MAJOR finding: :root font-slot chains are IACVT-DEAD (var() flattens at declaring element,
+  --font-text is body-scoped), steppers were already serif since SC-105's rename, fix chains
+  font-controls in the Steel block; slot-independence + 9 label pins with live divergence probe).
+  **Task 4 review in flight.** Tasks 5-9 remain: Task 5 = Legacy gate (easy→ship/hard→skip, the
+  IACVT finding is load-bearing input), then descriptors, scales, settings UI, wrap.
+- **SC-117 filed** (dark-mode richness audit, all families — Scott's pattern observation;
+  scope-in-7.0.0 pending his call; runs AFTER plans 23/24 land).
+- Ledgers: .superpowers/sdd/2026-08-02-plan-{23,24}-*/progress.md — complete per-task history.
+- Landings: serialized via land-stack when both branches finish; second lander rebases.
+
 ## Active efforts
 - **Release / SC-11 → 7.0.0** — the overhaul release cut. 6.0.1 recovery published; **7.0.0 NOT
   cut** (Scott: build not ready) — so **no agent action is pending here**. ✅ The community-store
