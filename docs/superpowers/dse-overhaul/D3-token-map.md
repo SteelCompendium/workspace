@@ -516,3 +516,22 @@ Task 3 (docs only, no CSS/TS changes) closed out the loop: this file's migration
 footnotes ⁶/⁷ above, Appendix A/B, `visual-harness/parity/README.md`, and any remaining
 `font-display` mentions in `draw-steel-elements`' prose docs were brought current to describe
 the six-slot vocabulary as the plugin's only font seam.
+
+## SC-112 amendment (2026-08-03 — user size-scale tokens, Task 7)
+
+SC-112 Task 7 adds two **user-scale** tokens — multipliers, not theme values — mirroring the
+site's text/card size sliders (`v2/docs/javascripts/settings-core.js:22-23`; both ranges
+symmetric about the 1.0 default). The `textScale`/`cardScale` prefs (plugin `catalog.ts`)
+stamp a `snap()`-normalized non-1 value inline per element root and remove it at the default
+(site remove-on-default semantics), so the `:root` default of `1` is what every root resolves
+at defaults — the consumer rules (`font-size: calc(1em * var(--dse-text-scale))` on element
+roots; `zoom: var(--dse-card-scale)` on the card hosts, plus nested-root resets so a by-SCC
+referenced card scales exactly once) are provably inert (freeze 101/101). Consumers carry
+`:not([data-dse-print="on"])` — print/export always renders 1:1 — so neither token is
+overridden in any theme or print block: both are Steel-, light-, and print-invariant
+(`STEEL_INVARIANT`/`PRINT_INVARIANT`/`THEME_INVARIANT` in the guards; union 73 → 75).
+
+| Token | D3-spec concept | Legacy (verbatim) | Steel (dark) | Steel light | Print |
+|---|---|---|---|---|---|
+| `--dse-text-scale` | SC-112 T7 (user text-size multiplier) | `1` | = Legacy (theme-invariant) | | = Legacy (consumers print-excluded) |
+| `--dse-card-scale` | SC-112 T7 (user card-size multiplier) | `1` | = Legacy (theme-invariant) | | = Legacy (consumers print-excluded) |
