@@ -666,3 +666,22 @@ Beastheart.md`); no parser/schema/test change. **Cost.** Registry **−2** (3082
 entries drop out; nothing linked to either code). `go test ./...`, `gen --all`,
 `validate --scc-stable`, and `site` clean; both class pages now match the base-class
 Basics layout and carry the full classhead stats.
+
+## 2026-08-03 — Crafting and Research Events Table hoisted to its own `rule.downtime` code
+
+The shared d100 fallback events table for crafting/research downtime projects was
+transcribed inside Discover Lore → Forbidden Knowledge (a book page-layout artifact —
+same class as the two misplaced project tables fixed earlier in SC-118), so it rendered
+on the discover-lore Browse page and nested under Forbidden Knowledge everywhere. Both
+the Crafting Projects and Research Projects intros reference it as the general fallback
+("the Director uses the Crafting and Research Events table"), so it belongs to neither
+project. Hoisted it to its own H3 section after Research Projects (before `### Other
+Projects`), annotated `<!-- @type: rule | @group: downtime | @id:
+crafting-and-research-events-table -->` like its `rule.downtime` siblings — a pure move +
+heading re-level in `steel-etl/input/heroes/Draw Steel Heroes.md`, no prose authored; the
+intros' plain-text references still read correctly. **Cost.** Registry **+1**
+(3080 → 3081, `mcdm.heroes.v1/rule.downtime/crafting-and-research-events-table`); API
+diff against the deployed `scc.json`/`types.json` showed exactly the one added entry,
+zero codes changed/removed. `go test ./...`, `gen --all`, and `site` clean; the table now
+has its own Browse rule page + permalink stub, and the discover-lore /
+research-project pages drop it. (Linear SC-118, hoist round.)
