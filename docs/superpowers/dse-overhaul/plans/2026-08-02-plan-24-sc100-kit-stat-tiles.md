@@ -164,7 +164,8 @@ class/career counterparts (`.sc-classhead`, `careerCard` stat boxes) need their 
 composition read — folding them in would bloat the review surface of an already very
 visible change. This plan builds the **generic** seam (`CardLayout.steel` +
 `DisplayCardView` branch + stat-tile primitive) so each follow-up family is layout-data +
-CSS + one sanctioned rebaseline. Task 5 files the follow-up ticket.
+CSS + one sanctioned rebaseline. Task 5 files the follow-up ticket. *(Filed 2026-08-03:
+**SC-120**.)*
 
 ## Global Constraints
 
@@ -365,8 +366,12 @@ git commit -m "feat(kit): Steel stat-tile composition — cardHead crest/eyebrow
 
 Ready to paste; file in Task 5 Step 4 and link from SC-100. Task 1 Step 5 may append more.
 
+*(All filed and related from SC-100: ticket 1 → **SC-115**, ticket 2 → **SC-116** — both
+pre-filed 2026-08-02 at plan time; ticket 3 → **SC-119**, filed 2026-08-03 in Task 5. The
+§D2 plugin follow-up from Task 5 Step 4 is **SC-120**.)*
+
 **1. Kit Browse tile: render the signature ability as a full inline ability card (adopt
-the plugin's sub-render)**
+the plugin's sub-render)** — filed as **SC-115**
 
 The DSE plugin's `ds-kit` card renders the kit's signature ability as a complete inline
 ability card — keywords, action chip, power-roll tier table, effects — via its shared
@@ -380,7 +385,7 @@ tile grid can't take the height — the information should be reachable without 
 index). Evidence: SC-100 before/after set (plugin steel-dark kit card vs site kit tile).
 
 **2. Emit kit kind (Martial / Magic / Psionic) as frontmatter; stop keyword-sniffing in
-the kit renderers**
+the kit renderers** — filed as **SC-116**
 
 Both site kit renderers derive the kit's kind by sniffing the signature ability's keyword
 line out of the page body (`kitKind` in `steel-etl/internal/site/kit_page.go`, duplicated
@@ -392,6 +397,24 @@ schema copies → validation allowlist → card reads the field with body fallba
 consume it in `kitCard`/`renderKitPlate` — and the DSE plugin's by-SCC hybrid mode (which
 today has no principled way to know the kind without re-sniffing the source body, as
 SC-100 had to) gets it for free.
+
+**3. Kit Browse tile: unify absent-bonus formatting to dashes (matches the detail page and
+SC-100's plugin design)** — filed as **SC-119**
+
+`kitCard` (`steel-etl/internal/site/cards.go:298-345`, the Browse kit index tile) formats
+its two stat rows with **different absent-value conventions**: row 1 (Stamina/Speed/
+Stability/Disengage) uses `bonusShort`/`orZero`, which render an absent bonus as **"0"**;
+row 2 (Melee Dmg/Ranged Dmg/Melee Dist/Ranged Dist) uses `orDash`, which renders **"—"**.
+The kit *detail* page's `renderKitPlate` (`kit_page.go:35-44, 110-127`) already converged
+on a single `kitBonus()` helper that shows "—" uniformly across all 8 slots — its doc
+comment states this explicitly: "the approved all-8 grid uses '—' for every absent bonus."
+SC-100's plugin composition (Design §4) ports `kitBonus()`'s semantics exactly, so once it
+ships, the plugin's Steel kit card will show uniform dashes while the site's own Browse
+tile still shows "0" for half its absent bonuses — inconsistent with both the site's own
+detail page and the plugin. Repoint `kitCard`'s two `statsBlock` calls to `kitBonus()` (or
+inline-equivalent), retiring `bonusShort`/`orZero` for kit rows. Evidence: site kit index
+screenshot (this ticket's baseline capture, `kit-index--site.png`) — compare Boren/Corven/
+Raden tiles' first row ("0"s) against their second row ("—"s).
 
 ---
 

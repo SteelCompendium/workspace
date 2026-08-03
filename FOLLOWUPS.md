@@ -270,7 +270,18 @@ reviewed/approved; LANDED 2026-08-02, superproject eb346a3). Featureblock `advan
 
 ## 32. Kit card renders a label-value stat list instead of the site's stat-tile grid
 
-**Status:** open
+**Status:** done — rebuilt in worktree kit-tiles (SC-100 / plan 24, dse `db98e13..11e6741`,
+2026-08-03, reviewed; Scott's visual gate approved after three rounds). The plan-21 deferral's
+freeze/architecture question is resolved by a theme-conditional composition seam
+(`CardLayout.steel` slot + `DisplayCardView` branch-at-mount; legacy DOM moved verbatim as
+the canonical fallback for every non-steel theme) plus the Steel kit composition: cardHead
+crest/eyebrow, boxed Equipment band, fixed 2×4 stat-tile grid with dash tiles (new generic
+`statTiles` primitive, own `.dse-tiles*` grammar), signature-ability sub-render kept. Legacy
+kit shots byte-identical; the one sanctioned freeze change is the `kit--steel-print.png`
+single-hash rebaseline at landing (dse-verify skill documents the exception). §D2's remaining
+display families (class/career/…) are deliberately NOT done here — sequenced as **SC-120**
+(each needs its own sanctioned `*--steel-print` sign-off; the seam/primitive make each one
+layout-data + CSS). Site-side kit gaps filed as SC-115/SC-116/SC-119.
 
 - **Identified:** 2026-07-21, Plan 20 (Steel material parity) Task 8 final visual
   verification.
