@@ -101,17 +101,6 @@ go under an *Internal* sub-heading.
   600/700 explicitly). Screen-only, same scoping as the rest of the Steel typography
   work: Legacy and print/export are untouched. Adds ~20KB to the bundled font payload.
 
-### Fixed
-
-- **Downtime project tables now sit in their owning projects** — the Heroes book
-  transcription carried two page-layout artifacts where a table trailed the previous
-  project: the Hone Career Skills Events Table rendered on the Go Undercover page
-  instead of Hone Career Skills, and the Build or Repair Road Renown Table rendered
-  on the Build Airship page instead of Build or Repair Road. Both moved to their
-  correct projects. The shared Crafting and Research Events Table (the d100 fallback
-  for all crafting/research projects) was likewise hoisted out of Discover Lore's
-  Forbidden Knowledge subsection onto its own downtime-rule page. (SC-118)
-
 ### Internal
 
 - **Draw Steel Elements visual-harness coverage** — featureblock advancement bands
@@ -125,6 +114,19 @@ go under an *Internal* sub-heading.
   Every consumer was re-pointed to its classified slot with zero rendering
   change — freeze and parity gates stayed green throughout. Groundwork only,
   for user-customizable fonts (SC-112).
+
+## 2026-08-03 — site deploy (SC-118 downtime table placement)
+
+### Fixed
+
+- **Downtime project tables now sit in their owning projects** — the Heroes book
+  transcription carried two page-layout artifacts where a table trailed the previous
+  project: the Hone Career Skills Events Table rendered on the Go Undercover page
+  instead of Hone Career Skills, and the Build or Repair Road Renown Table rendered
+  on the Build Airship page instead of Build or Repair Road. Both moved to their
+  correct projects. The shared Crafting and Research Events Table (the d100 fallback
+  for all crafting/research projects) was likewise hoisted out of Discover Lore's
+  Forbidden Knowledge subsection onto its own downtime-rule page. (SC-118)
 
 ## 2026-08-02 — site deploy (SC-113/SC-114 rules-content fixes)
 
