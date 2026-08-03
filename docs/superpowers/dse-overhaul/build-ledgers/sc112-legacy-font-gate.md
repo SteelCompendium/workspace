@@ -93,7 +93,9 @@ and needed no change. Re-ran the full battery after the fix:
 | `npm run parity` | **0 gap(s), 10 warning(s)**, exit 0 — identical WARN set to baseline (4× featureblock margin, 6× section-head/pr-head, FOLLOWUPS #39/#40) |
 
 **Exclusion list for this SHIP: exactly one class of fix (the print-anchor), applied to
-every descendant-form arm (11 of 14 selector arms across the 5 widened slots), discovered
+every descendant-form arm (15 of 18 selector arms across the 5 widened slots — Title 5/6,
+Body 2/3, Card-body 1/2, Label 1/1, Controls 6/6; the remaining 3 were already
+compound-on-the-root and needed no change), discovered
 in one freeze run and not requiring iteration.** This is what makes it CONTAINED per
 Scott's bar ("easy add-in") rather than sprawling: one root cause, one fix pattern, applied
 uniformly, verified once, held. No further exclusions were needed after the anchor fix —
