@@ -27,24 +27,27 @@ unblocked) · SC-100 + SC-106 (Scott decisions; swatches offered) · SC-101/102/
 SC-109/110/111 (guards). No worktrees exist; nothing in flight.
 
 ## 2026-08-03 — IN-FLIGHT STATE (compact-safety snapshot; trust ledgers over memory)
-**Two parallel SDD executions, both mid-flight:**
-- **Plan 24 / SC-100 (worktree `kit-tiles`, dse @ 3eaf662):** Tasks 1-3 complete + gradient fix
-  round (Scott gate feedback: tiles now use the site's translucent-black fills — the site's
-  "gradient" is parent-card bleed-through, plugin token was an occluding white wash). **PAUSED at
-  Task 4 = Scott's visual gate, ROUND 2 posted inline on SC-100.** His approval sanctions the
-  kit--steel-print single-hash rebaseline at landing. Task 5 (docs/tickets; SC-115/116 pre-filed)
-  remains. Freeze intentionally at 100/101 sole-mismatch (kit--steel-print), baseline untouched.
-- **Plan 23 / SC-112 (worktree `font-settings`, dse @ 42086e9):** Tasks 1-4 complete (spike:
-  queryLocalFonts WORKS unconditionally, 424 fonts; pref-CSS plumbing; Controls flip — pinned a
-  MAJOR finding: :root font-slot chains are IACVT-DEAD (var() flattens at declaring element,
-  --font-text is body-scoped), steppers were already serif since SC-105's rename, fix chains
-  font-controls in the Steel block; slot-independence + 9 label pins with live divergence probe).
-  **Task 4 review in flight.** Tasks 5-9 remain: Task 5 = Legacy gate (easy→ship/hard→skip, the
-  IACVT finding is load-bearing input), then descriptors, scales, settings UI, wrap.
-- **SC-117 filed** (dark-mode richness audit, all families — Scott's pattern observation;
-  scope-in-7.0.0 pending his call; runs AFTER plans 23/24 land).
-- Ledgers: .superpowers/sdd/2026-08-02-plan-{23,24}-*/progress.md — complete per-task history.
-- Landings: serialized via land-stack when both branches finish; second lander rebases.
+- **Plan 24 / SC-100: LANDED + DONE.** Scott approved gate round 3 (crest head, gradient-bleed
+  dash tiles, sunk Equipment band, kept ability card). All 5 tasks complete, final whole-branch
+  review MERGEABLE (0C/0I). dse main @ edc69b4, workspace merge ff4c9d4. The sanctioned
+  `kit--steel-print.png` single-hash rebaseline was applied at landing → freeze 101/101 again
+  (procedure + dated sign-off recorded in the dse-verify skill). Ledger preserved at
+  docs/superpowers/dse-overhaul/build-ledgers/kit-tiles-sc100-ledger.md; worktree removed.
+  Spin-offs filed + linked from SC-100: SC-119 (orZero/orDash), SC-120 (§D2 families);
+  SC-117 got a scope note (ability-card interior's shared --dse-surface-sunken selectors).
+- **Plan 23 / SC-112 (worktree `font-settings`, dse @ fe4142a):** Tasks 1-7 complete
+  (Task 5 Legacy gate = SHIP; Task 6 six font prefs + sanitizer; Task 7 text/card scales,
+  real-Obsidian evidence). **Task 7 review in flight.** Tasks 8-9 remain: settings UI
+  (dropdown via queryLocalFonts — works unconditionally, 424 fonts; 'font'/'slider' control
+  kinds + PrefUi.advanced already typed), then docs/wrap (changelog must tell the honest
+  Controls-flip story). ⚠️ Before Task 8: rebase the worktree onto new main (kit rebuild +
+  rebaselined freeze line landed; its old-kit shots now mismatch kit--steel-print by design).
+- **SC-118 (site bug): DONE + deployed** (steel-etl b184b6a, site verified live; new SCC code
+  rule.downtime/crafting-and-research-events-table, registry 3,081).
+- **SC-117** (dark-mode richness audit): **IN 7.0.0 scope (Scott's call)**; runs after plan 23
+  lands; first lead = sweep all --dse-surface-sunken consumers (2 kit-scope hits already fixed).
+- Ledgers: .superpowers/sdd/2026-08-02-plan-23-*/progress.md (live); plan-24's preserved copy
+  in build-ledgers/. Landing: font-settings via land-stack when Tasks 8-9 + final review clear.
 
 ## Active efforts
 - **Release / SC-11 → 7.0.0** — the overhaul release cut. 6.0.1 recovery published; **7.0.0 NOT
