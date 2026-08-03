@@ -95,6 +95,19 @@ that directory is vacuous. It runs `sha256sum -c` against
   fixture): append the new hash lines, never touch/reorder the existing ones, and bump the
   two literal count strings in `check-freeze.sh`'s comment + success echo to match. Full
   procedure: `.superpowers/sdd/sc108-fixture-coverage-design.md` §3.
+- **Sanctioned single-line rebaselines — the third case (rare; Scott-approved only).** A
+  Steel-only DOM rebuild of a display family necessarily changes that family's frozen
+  `*--steel-print.png` (print is a pure CSS attribute over whatever DOM the active theme
+  built, so it renders the new Steel DOM — it cannot be branched around). When Scott has
+  explicitly approved the after-shots for exactly that family, replace **only** that one
+  `<hash>  <name>` line in `freeze-baseline.sha256` with the approved worktree shot's
+  `sha256sum`, **at landing time, never mid-plan** — count unchanged, then re-run
+  `check-freeze.sh` → `freeze OK (101/101 …)`. During execution the expected result is a
+  sole mismatch on that file (e.g. `100/101`, only that name); any other mismatch is still
+  a leak to fix. Each rebaseline needs its own dated sign-off recorded here:
+  - **2026-08-03, SC-100** (plan 24 kit stat-tile rebuild): `kit--steel-print.png` only —
+    Scott approved the round-3 after-shots; rebaseline applied at landing. Future Steel
+    compositions for the remaining display families (SC-120) each need their own entry.
 
 ## Parity semantics
 

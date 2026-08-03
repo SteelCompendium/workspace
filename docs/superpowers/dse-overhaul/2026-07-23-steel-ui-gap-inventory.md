@@ -43,6 +43,20 @@ single face for titles and body); bundling a true slab (Zilla Slab / Bitter, OFL
   theme-conditional rendering would be a new architectural pattern. It needs its own design plan
   to resolve the freeze/architecture question before the rebuild. #33 (featureblock option
   layout), #34 (feature action spine) and #35 (statblock notch) remain open as filed.
+- **§B #32 (kit) CLOSED 2026-08-03 — SC-100 / plan 24 executed; Scott's visual gate
+  approved.** The freeze/architecture question is resolved: `CardLayout` gained an optional
+  `steel` composition slot and `DisplayCardView` branches once at mount (legacy DOM moved
+  verbatim, the canonical fallback under every non-steel theme; live theme switches
+  re-render). The Steel kit card now renders the crest/eyebrow head, boxed Equipment band
+  and fixed 2×4 dash-tile grid (new generic `statTiles` primitive), keeping the richer
+  signature-ability sub-render. One sanctioned freeze change: the `kit--steel-print.png`
+  single-hash rebaseline at landing (exception documented in the dse-verify skill). #33/
+  #34/#35 remain open. §D2's remaining families are filed as **SC-120** — the seam +
+  primitive make each one layout-data + CSS + its own sanctioned `*--steel-print` sign-off.
+  Site-side kit gaps: SC-115 (Browse-tile sig ability), SC-116 (kit-kind frontmatter),
+  SC-119 (orZero/orDash dash unification). Dark-mode material lead for SC-117: the site's
+  tile richness is the card gradient through translucent-black fills; the plugin's
+  `--dse-surface-sunken` white wash occluded it on two selectors.
 - **§C1 DIRECTION DECIDED 2026-08-01 (Scott): serif everywhere — option (a).** The A/B was
   regenerated (`.superpowers/sdd/shots-c1-ab/{before,after}/`, 6 families, steel-dark; freeze
   verified 98/98 with the change applied). Plan 22 executes as drafted — a Steel-theme-root
@@ -97,11 +111,11 @@ match the **px/em target**, not the site's rem literal (same lesson as plan 20's
 
 ## B. Structural / layout (need DOM — mostly filed)
 
-- **kit (FOLLOWUPS #32, most visible):** no crest, no "◆ MARTIAL KIT" eyebrow; bonuses render
+- **kit (FOLLOWUPS #32, most visible):** ~~no crest, no "◆ MARTIAL KIT" eyebrow; bonuses render
   as a `Stamina: +6` label-value list, not the site's stat-tile grid; equipment is a list row,
-  not a boxed panel. (Rendered by the generic `display` element — `src/elements/display/` —
-  which is why it's a plain layout.) The signature-ability sub-render is richer than the site's;
-  keep it.
+  not a boxed panel~~ — **CLOSED 2026-08-03, SC-100 / plan 24** (see Status above). (Rendered
+  by the generic `display` element — `src/elements/display/` — via the new `CardLayout.steel`
+  composition slot.) The signature-ability sub-render is richer than the site's; kept.
 - **feature/ability (FOLLOWUPS #34):** standalone ability card has a full-height coloured left
   action spine the site's standalone card lacks. Nuance: the site's *statblock* abilities DO
   carry a red left rail, so the plugin matches inside statblocks — divergence is standalone-only.
@@ -158,7 +172,10 @@ site.
   browsable wiki page. Not a fix; record only.
 - **D2 [layout] class/kit stats render as a label-value list**, not a stat-tile strip, and the
   display title is less prominent than the site's large title. Same family as kit #32 (the
-  `display`/`CardLayout` render path); fold into that work. MED.
+  `display`/`CardLayout` render path). **Kit half done with #32 (SC-100, 2026-08-03); the
+  remaining display families (class/career/…) are filed as SC-120** — the SC-100 seam
+  (`CardLayout.steel`) + `statTiles` primitive make each one layout-data + CSS, but each
+  family needs its own sanctioned `*--steel-print` rebaseline sign-off. MED.
 
 ## E. Recommended sequencing (revised by the 07-27 audit)
 
@@ -167,6 +184,7 @@ site.
    value-per-risk. **Recommend this as the next plan.**
 2. **Kit / display-layout structure (#32, D2)** — DOM + a sanctioned `kit--steel-print`
    rebaseline; needs a design decision (theme-conditional render). Its own plan.
+   *(Done 2026-08-03 for kit: SC-100 / plan 24; remaining D2 families → SC-120.)*
 3. **#33 / #34 / #35** — smaller filed structural items.
 
 ## F. What was NOT verified

@@ -100,6 +100,21 @@ go under an *Internal* sub-heading.
   site's" gap called out in plan 21/22 above is closed. Titles are unaffected (they set
   600/700 explicitly). Screen-only, same scoping as the rest of the Steel typography
   work: Legacy and print/export are untouched. Adds ~20KB to the bundled font payload.
+- **Steel kit card stat-tile rebuild (SC-100 / plan 24)** — the plugin's Steel kit card
+  (`ds-kit`) now renders the site's composition instead of a label-value list: a crest and
+  kind eyebrow head ("Martial/Magic/Psionic Kit"), a boxed Equipment panel, and Kit
+  Bonuses as the fixed two-row stat-tile grid with "—" dash tiles for absent bonuses; the
+  signature ability keeps the plugin's richer full inline ability card (site convergence
+  filed as SC-115). Structurally this is the plugin's first theme-conditional DOM: an
+  optional `CardLayout.steel` composition slot, branched once at mount and re-rendered on
+  a live theme switch, while the Legacy theme keeps the old DOM verbatim (all frozen shots
+  byte-identical; the single sanctioned freeze change is the `kit--steel-print.png`
+  one-hash rebaseline, approved by Scott's visual gate 2026-08-03 and applied at landing).
+  A gate-round finding worth keeping: the site's dark-mode tile richness is the card's own
+  gradient bleeding through **translucent-black** fills — the plugin's
+  `--dse-surface-sunken` 6%-white wash was occluding it (two selectors fixed; the pattern
+  seeds SC-117's dark-mode audit). Remaining display families (class/career/…) are
+  sequenced as SC-120; site-side kit gaps filed as SC-115/SC-116/SC-119.
 
 ### Internal
 
