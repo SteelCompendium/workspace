@@ -98,6 +98,14 @@ that directory is vacuous. It runs `sha256sum -c` against
 
 ## Parity semantics
 
+**Site reference captures (Scott's rule, 2026-08-03): always capture BOTH color schemes.**
+The site's top-right toggle switches light/dark, and **dark mode carries design features light
+lacks** (e.g. gradient treatment on the kit-bonus tiles) — Scott finds dark the richer
+reference and reviews against it. A light-only reference capture is an incomplete reference;
+any ad-hoc Playwright capture of a site page for design-reference purposes must produce a
+dark-mode shot (and ideally the light twin), matching how `parity:site` already captures both
+schemes.
+
 `npm run parity` diffs plugin-rendered CSS/DOM against the live v2 site on a fixed set of
 mapped selectors. Expected clean result: **0 GAPs / 10 WARNs / exit 0**.
 
