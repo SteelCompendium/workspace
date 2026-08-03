@@ -108,7 +108,9 @@ go under an *Internal* sub-heading.
   project: the Hone Career Skills Events Table rendered on the Go Undercover page
   instead of Hone Career Skills, and the Build or Repair Road Renown Table rendered
   on the Build Airship page instead of Build or Repair Road. Both moved to their
-  correct projects. (SC-118)
+  correct projects. The shared Crafting and Research Events Table (the d100 fallback
+  for all crafting/research projects) was likewise hoisted out of Discover Lore's
+  Forbidden Knowledge subsection onto its own downtime-rule page. (SC-118)
 
 ### Internal
 
