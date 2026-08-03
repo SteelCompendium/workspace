@@ -16,6 +16,19 @@
 > obsidian-shots **132** are the dse-verify skill's numbers at `0a3ce4d` — re-verify in
 > Task 1 Step 1. Binding design decisions: `.superpowers/sdd/sc112-decisions.md`
 > (Scott, 2026-08-02) — this plan implements them, it does not reopen them.
+>
+> **RULING 2026-08-02 (Scott):** resolves Self-review risk #1 below ("Fonts-are-Steel-only
+> is an inference, not a ruling") — it is no longer open. The legacy plugin shipped with
+> zero font options and simply inherited the Obsidian vault fonts; that behavior IS the
+> product's default, not a Steel-only fallback. Two consequences, both folded into this
+> plan: **(1)** every one of the six font pickers gets an explicit first/default option
+> labeled **"Default (Obsidian vault fonts)"** — this is today's `var(--font-text)`
+> resolution, it writes no override, and it is what Legacy renders no matter what else
+> ships (Task 6 Step 3, Task 8 Step 3). **(2)** whether non-default overrides should ALSO
+> reach Legacy renders is not decided here — it's an explicit investigate-then-gate: cheap
+> → ship it, expensive → skip it. That investigation is new **Task 5**; its SHIP/SKIP
+> verdict is a load-bearing input to Task 6's and Task 8's help text and DoDs (both are
+> written below to cover either outcome).
 
 **Goal:** Ship the SC-112 preference surface the SC-105 vocabulary was built for: six
 user-settable font slots (3 primary pickers — Title / Body / Controls; 3 advanced —
@@ -53,13 +66,20 @@ sliders mirroring the site exactly (Text 0.6–1.4, Card 0.8–1.2, step .05, sy
   WeakMap in `seams/prefs.ts` plus a narrow `reflectCss(rootEl, owner)` store method
   (css-bearing descriptors only — modals must NOT receive the attr prefs like
   `data-dse-density`), called from `DseModal.open()` beside the theme stamp.
-- **Fonts are Steel-facing; Legacy keeps matching Obsidian.** Every `--dse-font-*`
-  *consumer* rule is Steel-scoped (`[data-dse-theme='steel']:not([data-dse-print="on"])` —
-  Body `:3487`, Card-body `:3498`, titles `:3433` etc.), so the pickers move pixels under
-  the Steel theme only; under Legacy the tokens resolve but nothing consumes them, and
-  Obsidian's own appearance settings govern — consistent with Legacy's "Match Obsidian"
-  contract. The pickers' help text states this. (Flagged in Self-review as the plan's
-  riskiest product assumption.)
+- **Fonts default to the vault; whether overrides reach Legacy is gated, not assumed.**
+  Every `--dse-font-*` *consumer* rule is Steel-scoped today
+  (`[data-dse-theme='steel']:not([data-dse-print="on"])` — Body `:3487`, Card-body `:3498`,
+  titles `:3433` etc.), so at the current selectors the pickers move pixels under Steel
+  only; under Legacy the tokens resolve but nothing consumes them, and Obsidian's own
+  appearance settings govern. Per Scott's 2026-08-02 ruling this status quo is exactly what
+  the **"Default (Obsidian vault fonts)"** option promises everywhere — Legacy is never
+  worse off than today regardless of the gate outcome. Task 5 investigates whether widening
+  the same consumer selectors to be theme-agnostic (dropping the `[data-dse-theme='steel']`
+  qualifier, keeping the print exclusion) is a contained, freeze-safe change; if it is,
+  Task 5 ships it and non-default picker choices reach Legacy too. If it isn't (a sprawl of
+  inheritance exclusions or a freeze break), Task 5 skips it, pickers stay Steel-scoped for
+  non-default choices, and the Default option's help text says so explicitly. Either
+  outcome is a valid, recorded completion — see Task 5.
 - **Scales are theme-independent** (site precedent: `--sc-content-scale`/`--sc-card-scale`
   apply regardless of site theme, `v2/docs/stylesheets/extra.css:16-21,61`): two new tokens
   `text-scale`/`card-scale` (default `1` in `:root`), consumed by theme-unscoped but
@@ -131,7 +151,7 @@ CDP camera (`visual-harness/obsidian-camera.mjs`) for the spike and evidence sho
 
 **Files:** No product code. Output = a spike ledger at
 `docs/superpowers/dse-overhaul/build-ledgers/sc112-qlf-spike.md` (workspace repo) + the
-Task 6 outcome selection. Scratch probe code stays out of the commit.
+Task 8 outcome selection. Scratch probe code stays out of the commit.
 
 The dropdown decision (`sc112-decisions.md` §3) hinges on whether Chromium's
 `queryLocalFonts()` is exposed, permitted, and useful inside Obsidian's Electron. The
@@ -154,9 +174,9 @@ requires transient user activation.
   **without** the gesture flag, to characterize the activation requirement. Electron only
   consults a session permission-request handler if the app registered one — record which
   behavior Obsidian actually exhibits, don't assume.
-- [ ] **Step 3: Write the verdict + select the Task 6 path.** In the ledger: raw evidence
+- [ ] **Step 3: Write the verdict + select the Task 8 path.** In the ledger: raw evidence
   from Step 2, Obsidian version probed, and ONE of:
-  - **Outcome A — usable:** the Task 6 font control gains a "List installed fonts" flow:
+  - **Outcome A — usable:** the Task 8 font control gains a "List installed fonts" flow:
     dropdown initially shows the curated list; a click affordance (satisfying user
     activation) calls `queryLocalFonts()`, de-duplicates by `family`, sorts, and merges
     into the dropdown for the session. Must be feature-detected (`'queryLocalFonts' in
@@ -164,7 +184,7 @@ requires transient user activation.
     and mobile WebViews lack the API entirely.
   - **Outcome B — unusable (absent, denied, or empty):** dropdown = bundled face
     ("Source Serif 4") + curated common list + "Custom…" free-text escape hatch. This is
-    also Outcome A's fallback branch, so **Task 6 builds the curated+Custom control
+    also Outcome A's fallback branch, so **Task 8 builds the curated+Custom control
     unconditionally; Outcome A only adds the population flow.**
 - [ ] **Step 4: Commit the ledger** (workspace repo, not the submodule):
   `docs(sc112): queryLocalFonts spike verdict for the font dropdown`.
@@ -265,7 +285,7 @@ This is the one deliberate pixel change (`sc112-decisions.md` §1). Scope: Steel
 - [ ] **Step 7: AFTER evidence + visual verdict.** Read the regenerated
   `hero--steel-dark.png` / `initiative--steel-dark.png` (+ light twin) against the Step 1
   copies: stepper digits now serif; buttons/tabs/collapse visually unchanged. One-line
-  verdict per shot in the task report. Keep both halves for the Task 8 Linear comment
+  verdict per shot in the task report. Keep both halves for the Task 9 Linear comment
   (linear-flow: pair posted inline BEFORE flagging Needs Review).
 - [ ] **Step 8: Commit.**
   `git commit -m "feat(steel): Controls slot defaults to 'same as Body' — steppers join the serif; print pinned sans (SC-112)"`.
@@ -280,7 +300,7 @@ proves the intended steel-screen change and nothing else.
 **Files:** Modify `styles-source.css`, `test/dom/theme/steelTypography.test.ts`.
 
 At current defaults every slot resolves identically, so both fixes must land as pixel
-no-ops — but without them the Task 5 pickers would lie (Card-body divergence ignored on
+no-ops — but without them the Task 6 pickers would lie (Card-body divergence ignored on
 feature/featureblock roots; Label divergence ignored everywhere).
 
 - [ ] **Step 1: Fix the Body/Card-body specificity race** (documented at
@@ -322,7 +342,73 @@ slots actually separate.
 
 ---
 
-### Task 5: Font-slot pref descriptors + curated list + sanitizer
+### Task 5: Legacy-support investigation + gate — do user overrides reach Legacy renders?
+
+**Files:** No product code by default. Output = an investigation ledger at
+`docs/superpowers/dse-overhaul/build-ledgers/sc112-legacy-font-gate.md` (workspace repo),
+following Task 1's ledger pattern. If the verdict is SHIP: also modify
+`styles-source.css` (widen the Steel-scoped `--dse-font-*` consumer selectors — Body
+`:3487`, Card-body `:3498`, titles `:3433`, and the Controls/Label/Mono siblings, per
+Task 3/Task 4's final selector shapes — to be theme-agnostic, keeping every
+`:not([data-dse-print="on"])` exclusion) and the matching guard tests
+(`token-coverage.test.ts` LEGACY_MAP/STEEL_INVARIANT sets, `theme-steel.test.ts`,
+`steelTypography.test.ts`) wherever a Steel-only assertion becomes theme-agnostic.
+
+Per Scott's 2026-08-02 ruling this is an investigate-then-gate, not a commitment either
+way. **"Default (Obsidian vault fonts)"** — the option every picker gets (Task 6 Step 3,
+Task 8 Step 3) — already covers the do-nothing case identically under both themes, so this
+task's only open question is whether NON-default picker choices should also move Legacy
+pixels.
+
+- [ ] **Step 1: Confirm the current Legacy surface.** Re-grep (line numbers drift) each of
+  the six slots' Steel-scoped consumer rules as landed by Task 3/Task 4. Confirm Legacy has
+  no explicit font-family consumer rule for any slot — Obsidian's own CSS governs by
+  inheritance, exactly as the Architecture note states. List the full rule set that would
+  need widening.
+- [ ] **Step 2: Prototype the theme-agnostic rewrite.** For each listed rule, drop the
+  `[data-dse-theme='steel']` qualifier and keep `:not([data-dse-print="on"])`. Because
+  every slot's `:root` default already resolves to `var(--font-text)` — directly (Title,
+  Body) or via chain (Controls → Body per Task 3; Card-body/Label → Body/Title per Task 4;
+  Mono → `var(--font-monospace)`) — the widened rule's computed value at default prefs
+  should be byte-identical to what Obsidian already supplies Legacy via inheritance: a
+  computed no-op.
+- [ ] **Step 3: Prove or disprove the no-op.** Run the full battery (dse-verify skill) with
+  the widened selectors live, at DEFAULT prefs. **Freeze 101/101 is the proof** — it
+  renders exactly this surface. Enumerate every case that does NOT hold byte-identical
+  (nested contexts, mono/code spans, any Legacy-side rule that already sets its own
+  `font-family` and would now lose to the widened rule, popout windows via the per-root
+  stamping architecture) — each needs its own `:not(...)` exclusion, added and re-tested
+  one at a time.
+- [ ] **Step 4: Apply the gate and record the verdict.**
+  - **Contained** (freeze holds at 101/101, and the Step 3 exclusion list is short and
+    enumerable — Scott's bar: "easy add-in") → **SHIP:** keep the widened selectors + their
+    exclusions; extend the guard tests to match; update Task 6 Step 3's and Task 8 Step 3's
+    help text to state fonts apply under both Steel and Legacy; record "SHIP" + the
+    exclusion list + freeze/parity numbers in the ledger.
+  - **Sprawling** (freeze breaks and stays broken across a growing exclusion list, or the
+    exclusions don't converge — Scott's bar: "a ton of work") → **SKIP:** revert to the
+    Steel-scoped-only selectors (status quo, zero code diff from Task 4's end state);
+    pickers stay Steel-only for non-default choices; the "Default (Obsidian vault fonts)"
+    option's help text (Task 6 Step 3, Task 8 Step 3) states Legacy always uses the vault
+    fonts, regardless of any picker selection; record "SKIP" + the evidence that tripped it
+    in the ledger.
+  - Both are valid completions of this task — the ledger states which was chosen and why.
+- [ ] **Step 5: Gates + commit.** tsc · jest · shots · **freeze 101/101** (mandatory either
+  way — SHIP must prove it holds with the widened rules live; SKIP proves nothing moved,
+  since the revert restores Task 4's end state) · parity 0/10/exit0 if CSS changed · commit
+  the ledger (workspace repo):
+  `docs(sc112): Legacy font-override investigation verdict (SHIP|SKIP)`; if SHIP, a second
+  commit in the submodule:
+  `feat(steel): widen font-slot consumer rules to apply under Legacy too (SC-112)`.
+
+**Verification:** ledger records the enumerated rule set, the Step 3 evidence (freeze
+numbers with the widened rules live), and an unambiguous SHIP/SKIP verdict; Task 6 and
+Task 8's help text/DoDs are written below to already match whichever verdict lands — no
+follow-up edit to this plan needed once Task 5 completes.
+
+---
+
+### Task 6: Font-slot pref descriptors + curated list + sanitizer
 
 **Files:** Modify `src/prefs/catalog.ts`; add `src/prefs/fontStacks.ts` (curated list +
 value builder + sanitizer); extend `test/unit/prefs/catalog.test.ts` + a new unit suite
@@ -330,8 +416,9 @@ for the sanitizer/builder.
 
 - [ ] **Step 1: Augment `DsePrefs`** (catalog.ts module augmentation, `:25-46`) with six
   string prefs: `fontTitle`, `fontBody`, `fontControls`, `fontCardBody`, `fontLabel`,
-  `fontMono` — default `''` = "use the theme default / same-as-X chain" sentinel (maps to
-  `toCss → null`, i.e. no inline override; the CSS chains from Tasks 3-4 govern).
+  `fontMono` — default `''` = the **"Default (Obsidian vault fonts)"** sentinel (Scott's
+  2026-08-02 ruling; maps to `toCss → null`, i.e. no inline override; the CSS chains from
+  Tasks 3-4, and Task 5's consumer selectors, govern what actually resolves).
 - [ ] **Step 2: `fontStacks.ts`.** (a) `sanitizeFamily(input)`: split on commas, trim,
   strip `;{}()"'\` + control chars, drop empties, quote tokens containing spaces, rejoin;
   return `null` if nothing survives (treated as default). (b)
@@ -347,13 +434,19 @@ for the sanitizer/builder.
   (`catalog.ts:84-88`): no `attr`; `css: { varName: '--dse-font-<slot>', toCss: (v) =>
   v === '' ? null : fontCss(slot, v) }`. New `PrefGroup` `'Typography'` inserted in the
   union (`:48-53`) and `GROUP_ORDER` (`:56-62`) after `'Appearance'`. `ui`: `control:
-  'font'` (new PrefUi kind, typed in Task 7), `advanced: true` on
+  'font'` (new PrefUi kind, typed in Task 8); `advanced: true` on
   fontCardBody/fontLabel/fontMono; labels "Title font" / "Body font" / "Controls font" /
-  "Card body font" / "Label font" / "Monospace font"; help text names the default ("Same
-  as body" / "Same as title" / "Theme default") and notes fonts apply to the Steel theme.
-  Note: until Task 7 the settings tab renders these rows without a control
-  (`SettingsTab.ts:164-195` switch has no `'font'` case) — acceptable mid-plan state,
-  called out in the task report.
+  "Card body font" / "Label font" / "Monospace font". **Per Scott's 2026-08-02 ruling,
+  every one of the six dropdowns' first/default option is uniformly labeled "Default
+  (Obsidian vault fonts)"** (value `''`) — this is today's `var(--font-text)` behavior for
+  every slot (directly for Title/Body, via the Task 3/4 chains for the other four) and
+  what Legacy always renders. Help text per slot names this explicitly, and its closing
+  clause depends on Task 5's verdict: **if SHIP,** "…applies under both the Steel and
+  Legacy themes"; **if SKIP,** "…applies under the Steel theme; Legacy always uses the
+  vault fonts above, regardless of this setting." Write whichever clause matches Task 5's
+  recorded verdict (Task 5 runs before this task, per plan order). Note: until Task 8 the
+  settings tab renders these rows without a control (`SettingsTab.ts:164-195` switch has
+  no `'font'` case) — acceptable mid-plan state, called out in the task report.
 - [ ] **Step 4: Per-block `prefs:`** — no change needed: css-bearing keys have no `attr`,
   so `extractPrefOverrides` warns+ignores them (`src/framework/prefOverrides.ts:53-57`).
   Add a one-line comment there naming font/scale prefs as intentionally global-only.
@@ -374,7 +467,7 @@ freeze proves default inertness.
 
 ---
 
-### Task 6: Size scales — tokens, consumer rules, snap, descriptors
+### Task 7: Size scales — tokens, consumer rules, snap, descriptors
 
 **Files:** Modify `src/framework/tokens.ts`, `styles-source.css`, `src/prefs/catalog.ts`,
 `src/prefs/fontStacks.ts` (or a sibling `scale.ts` for snap), token/test guards
@@ -414,7 +507,7 @@ freeze proves default inertness.
   `css: { varName: '--dse-text-scale'|'--dse-card-scale', toCss: (v) => snap(v) === 1 ?
   null : String(snap(v)) }` (remove-at-default = site behavior,
   `settings-panel.js:92-103`). `ui`: group `'Typography'`, `control: 'slider'` with
-  `min/max/step` carried in the ui shape (Task 7 renders them), labels "Text size" /
+  `min/max/step` carried in the ui shape (Task 8 renders them), labels "Text size" /
   "Card size".
 - [ ] **Step 5: Contract + evidence.** Source-text contract test: both consumer rules
   exist and carry `:not([data-dse-print="on"])`; the nested resets exist. Visual
@@ -435,7 +528,7 @@ screenshots prove the effect and the nested-reset correctness.
 
 ---
 
-### Task 7: Settings-tab UI — Typography group (3 primary + 3 advanced + 2 sliders)
+### Task 8: Settings-tab UI — Typography group (3 primary + 3 advanced + 2 sliders)
 
 **Files:** Modify `src/prefs/catalog.ts` (PrefUi typing), `src/views/SettingsTab.ts`,
 `styles-source.css` (only if the advanced disclosure needs cosmetic rules); dom tests for
@@ -449,14 +542,16 @@ the renderer.
   `<details>` ("Advanced") — keep the group reset button resetting ALL members including
   advanced (it already iterates the full member list, `:83-88`).
 - [ ] **Step 3: `'font'` renderer** in `renderRow` (`:164-195`): an Obsidian dropdown
-  with: the default option (label from the descriptor's help — "Same as body" / "Same as
-  title" / "Theme default", value `''`), the curated entries for the slot, `Custom…`. A
-  current value not in the list selects `Custom…` and reveals a text input
-  (`setting.addText`) holding the raw value; text edits save through the normal `save()`
-  path (sanitization happens in `toCss`, but reject-to-default obviously-empty input).
-  Outcome A only (per the Task 1 ledger): a "List installed fonts" affordance inside the
-  row populates the dropdown from `queryLocalFonts()` on click (user activation),
-  feature-detected, graceful fallback to the curated list.
+  with, in order: the default option — fixed label **"Default (Obsidian vault fonts)"**
+  (Scott's 2026-08-02 ruling; value `''`, identical wording across all six pickers; help
+  text underneath carries the Steel/Legacy-reach clause per Task 6 Step 3, matching
+  Task 5's SHIP/SKIP verdict), the curated entries for the slot, then `Custom…`. A current
+  value not in the list selects `Custom…` and reveals a text input (`setting.addText`)
+  holding the raw value; text edits save through the normal `save()` path (sanitization
+  happens in `toCss`, but reject-to-default obviously-empty input). Outcome A only (per
+  the Task 1 ledger): a "List installed fonts" affordance inside the row populates the
+  dropdown from `queryLocalFonts()` on click (user activation), feature-detected,
+  graceful fallback to the curated list.
 - [ ] **Step 4: `'slider'` renderer:** `setting.addSlider` with
   `setLimits(min, max, step)` from `ui.slider`, `setDynamicTooltip()`, plus a percent
   value label (`Math.round(v*100) + '%'`) updated on change — the site's
@@ -470,7 +565,7 @@ the renderer.
   whose change persists via `prefs.set`; `''` round-trips; custom value shows the text
   input; a `'slider'` descriptor renders with the right limits and snaps. Evidence
   screenshot of the whole Typography section (real Obsidian settings dialog via the
-  camera CDP, or a window shot) for the Task 8 Linear comment.
+  camera CDP, or a window shot) for the Task 9 Linear comment.
 - [ ] **Step 7: Gates + commit.** tsc · jest · shots + freeze 101/101 · parity untouched ·
   `git commit -m "feat(settings): Typography section — font pickers (3 primary + 3 advanced) and size sliders (SC-112)"`.
 
@@ -479,7 +574,7 @@ a rendered element.
 
 ---
 
-### Task 8: Contracts sweep, docs, changelog, final battery, evidence
+### Task 9: Contracts sweep, docs, changelog, final battery, evidence
 
 **Files:** `docs/superpowers/dse-overhaul/D3-token-map.md`, plugin `CHANGELOG.md`,
 workspace `CHANGELOG.md`, plugin `.repo-docs/` (prefs/architecture pages that describe
@@ -496,8 +591,8 @@ workspace `FOLLOWUPS.md` if any tangent surfaced.
   sans" claim and align it with the flip.
 - [ ] **Step 3: Changelogs.** Plugin `CHANGELOG.md`: user-facing entry (font pickers,
   size sliders, Controls-serif change called out honestly as a visual change under
-  Steel). Workspace `CHANGELOG.md` `## Unreleased`: one bullet (plugin font settings
-  shipped).
+  Steel, the Legacy font-support gate outcome from Task 5 stated plainly — SHIP or SKIP).
+  Workspace `CHANGELOG.md` `## Unreleased`: one bullet (plugin font settings shipped).
 - [ ] **Step 4: Full battery** per the dse-verify skill, in order, recording every
   number: tsc · jest (final count vs 2022/144 baseline) · shots (count vs 169) · freeze
   **101/101** · parity **0/10/exit0** · obsidian-shots if a display is available (count
@@ -505,9 +600,10 @@ workspace `FOLLOWUPS.md` if any tangent surfaced.
 - [ ] **Step 5: Linear evidence + report.** Per the linear-flow skill: post the Task 3
   before/after stepper pair, one scale-extremes shot, and the Typography-section
   screenshot inline in an SC-112 comment narrating the changes; set In Progress +
-  `Needs Review`. Final report: per-task commit shas, gate numbers, the spike verdict,
-  and the explicit reminder that the worktree is NOT landed (`just wt-finish sc112-fonts`
-  is Scott's).
+  `Needs Review`. Final report: per-task commit shas, gate numbers, the `queryLocalFonts`
+  spike verdict, the Legacy font-support gate verdict (Task 5, SHIP or SKIP), and the
+  explicit reminder that the worktree is NOT landed (`just wt-finish sc112-fonts` is
+  Scott's).
 - [ ] **Step 6: Commit** docs (workspace repo) + any plugin doc file (submodule) as
   separate commits, no pointer bump, no push.
 
@@ -519,11 +615,13 @@ images; no push anywhere.
 ## Self-review
 
 **Decision coverage.** `sc112-decisions.md` §1 (Controls flip incl. stepper re-point +
-evidence) → Task 3; §2 (3 primary + 3 advanced, "same as X" defaults) → Tasks 5+7 (the
+evidence) → Task 3; §2 (3 primary + 3 advanced, "same as X" defaults) → Tasks 6+8 (the
 `''` sentinel maps to the CSS chains SC-105 shipped and `steelTypography.test.ts:223-252`
-pins); §3 (dropdown + spike + degradation) → Tasks 1+7; §4 (site-exact scale ranges/step/
-symmetry) → Task 6 (constants copied from `settings-core.js:22-23`, snap semantics from
-`:28-35`).
+pins); §3 (dropdown + spike + degradation) → Tasks 1+8; §4 (site-exact scale ranges/step/
+symmetry) → Task 7 (constants copied from `settings-core.js:22-23`, snap semantics from
+`:28-35`). **Scott's 2026-08-02 ruling** (uniform "Default (Obsidian vault fonts)" option +
+Legacy easy/hard gate, superseding the open question in Self-review risk #1 below) → Task 5
+(the investigation + gate) and Task 6 Step 3 / Task 8 Step 3 (the picker wording it drives).
 
 **Verified-against-code claims.** Token values and lines (`:2997`, `:3166-3169`,
 `:3487-3501`, `:3576-3579`, `:5316`, `:5378`), guard counts (73 / 66-7 / 52-21 at
@@ -535,22 +633,30 @@ under edit — each task says re-grep before editing; selectors and values are t
 contract, not the line numbers.
 
 **Guard arithmetic** (executor cross-check): after Task 3 — union 73, Steel 66/7, Print
-**53/20**, `LEGACY_MAP['font-controls'] = 'var(--dse-font-body)'`; after Task 6 — union
+**53/20**, `LEGACY_MAP['font-controls'] = 'var(--dse-font-body)'`; after Task 7 — union
 **75**, Steel 66/**9**, Print 53/**22**, `LEGACY_MAP` +2. If the real numbers differ,
-find out why before "fixing" a test.
+find out why before "fixing" a test. This arithmetic is the SKIP-path (status-quo
+selector scoping) baseline; if Task 5's verdict is SHIP, the widened selectors change
+which tokens are Legacy-consumed, and the STEEL_INVARIANT/LEGACY_MAP/PRINT_INVARIANT
+bucket membership for those tokens needs re-deriving against the actual test file at that
+point — Task 5 Step 4's guard-test update covers this, it is not re-litigated here.
 
 **Known risks, in order:**
 
-1. **Fonts-are-Steel-only is an inference, not a ruling.** The decisions doc grounds the
-   Controls flip in site behavior but never says whether pickers should also restyle the
-   Legacy theme. This plan keeps consumers Steel-scoped (Legacy = "Match Obsidian" stays
-   literally true; zero freeze risk) and says so in the pickers' help text — but if Scott
-   expects site-style theme-independent fonts, Task 4/5 need Legacy consumer rules and a
-   fresh freeze argument. Surfaced for the go/no-go read of this draft.
+1. **RESOLVED by Scott's 2026-08-02 ruling — was an inference, now a decision + gate.**
+   The prior open question ("should pickers also restyle Legacy?") is answered: every
+   picker's default is explicitly **"Default (Obsidian vault fonts)"** (the legacy
+   plugin's only-ever behavior, now named rather than left implicit), and whether
+   non-default choices reach Legacy is Task 5's investigate-then-gate, not a plan-time
+   guess. Residual risk moved from "is this the right product call" to "does the
+   investigation call it correctly": Task 5's freeze-based no-op proof (Step 3) is the
+   actual evidence; a false SHIP (an exclusion missed, freeze silently degraded) is the
+   failure mode, which is why freeze 101/101 is a mandatory gate on Task 5 itself, not
+   just a downstream check.
 2. **The always-present scale rules under the freeze.** `font-size: calc(1em * 1)` on
    every element root should be computationally invisible; the audit found no competing
    root-level `font-size`, but the freeze run is the real proof, and the inline-write
-   fallback is specified (Task 6 Step 3) if it trips.
+   fallback is specified (Task 7 Step 3) if it trips.
 3. **`queryLocalFonts` in Electron is genuinely unknown** — which is why it is Task 1,
    with both outcomes fully specified and Outcome B (curated+Custom) built
    unconditionally as the shared base.
