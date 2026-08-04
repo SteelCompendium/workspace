@@ -183,14 +183,18 @@ its own name rather than a redefinition.
 | `--dse-tier-low` | §1.2-H `tier-low` | `var(--text-normal)` | `var(--sc-tier-low, #e74c3c)` | `#c0392b` | `#c0392b` |
 | `--dse-tier-mid` | §1.2-H `tier-mid` | `var(--text-normal)` | `var(--sc-tier-mid, #f0b429)` | `#b9770e` | `#b9770e` |
 | `--dse-tier-high` | §1.2-H `tier-high` | `var(--text-normal)` | `var(--sc-tier-high, #4caf6a)` | `#1e8449` | `#1e8449` |
-| `--dse-tier-crit` | D2 extra (no site analog) ⁹ | `var(--text-normal)` | `#e3c14a` (gold — **proposed**) | | `#8a6a00` |
+| `--dse-tier-crit` | D2 extra (no site analog) ⁹ | `var(--text-normal)` | `#e0b050` (gold — **RESOLVED SC-106**) | | `#8a6a00` |
 | `--dse-badge-fg` | D2 extra (§2.8 badge-text hook) ¹⁰ | `var(--dse-fg)` | `#0f1214` | `#fff` | `#fff` |
 
 Tier badges are meaning-bearing → the Task-5 print rule adds `print-color-adjust: exact`
 (mirrors `v2/print.css` `.power-roll-badge`).
-⁹ The site has no crit tier color (`--sc-tier-crit` does not exist). Proposal: **gold**
-`#e3c14a` — crit (nat 19–20) is the jackpot outcome, above the red/amber/green ramp; gold is
-the near-universal game-UI crit cue. Light/dark-stable like the role hues. **Scott review.**
+⁹ The site has no `--sc-tier-crit` token, but it DOES style a crit highlight elsewhere:
+`v2/docs/stylesheets/steel-dice.css:11` (`.sc-dice-pop .crit { color: #e0b050; }`), a single
+value shared by both color schemes. **RESOLVED (SC-106, 2026-08-03):** adopted that exact
+gold verbatim (was the draft's invented `#e3c14a`) — crit (nat 19–20) is the jackpot outcome,
+above the red/amber/green ramp, and this keeps the plugin's crit cue traceable to a real site
+value instead of an invented one. Single value for both Steel dark/light, matching the
+existing fills-not-text pattern (footnote 11 below).
 ¹⁰ Badge text sits ON the tier fill: dark-scheme fills are the bright hues → near-black ink
 (`#0f1214`); light-scheme fills are the darker hues → white ink.
 
@@ -211,7 +215,11 @@ and derived Steel `#7c5cd6` for continuity; D2 actually shipped Legacy `deepskyb
 purple `#7c5cd6` over the blue alternative (`#5dade2`, palette's ranged-blue) — it frees blue for
 `act-move`/Maneuver (which the blue alternative collided with, see `act-move`'s note below) and
 sits outside the green/amber/red HP ramp as its own "temp/shield" signal. Legacy's `deepskyblue`
-is unchanged.
+is unchanged. **RE-CONFIRMED (SC-106, 2026-08-03):** Scott delegated the final call; purple
+`#7c5cd6` stands unchanged — it stays distinguishable from the HP ramp (green/amber/red), from
+`act-maneuver`'s blue, and reads distinctly from the other purples in the palette
+(`role-artillery` `#a87cd6`, `act-trait` `#bb8fce`/`#7d3c98`) since those never co-occur with a
+stamina bar in the same visual context.
 
 ## Encounter
 
@@ -219,14 +227,19 @@ is unchanged.
 |---|---|---|---|---|---|
 | `--dse-turn-done` | §1.2-E `taken-turn` | `limegreen` | `var(--sc-role-hexer, #5cc98a)` | | `#1a7a3a` |
 | `--dse-malice` | §1.2-E `malice` (standalone — D2 has NO `role-malice`) | `red` | `#e0584b` | | `#a11` |
-| `--dse-vp` | D2 extra (victories / negotiation) ¹² | `orange` | `#e3c14a` (gold — **proposed**) | | `#8a6a00` |
+| `--dse-vp` | D2 extra (victories / negotiation) ¹² | `orange` | `#e0b050` (gold — **RESOLVED SC-106**) | | `#8a6a00` |
 | `--dse-warn` | §1.2-E `warning` | `orange` | `#e8954a` | | `#8a5a00` |
 | `--dse-danger` | §1.2-E `damage` | `crimson` | `#e74c3c` | | `#a11` |
 
 ¹² Legacy has `vp` and `warn` both `orange` (indistinguishable). Steel splits them: warnings
-keep the spec's support-orange `#e8954a`; victories go **gold** `#e3c14a` ("victory = gold",
-and it separates a VP chip from a warning at a glance). Gold is shared with `tier-crit`
-(deliberate: both are "triumph" semantics, never co-located in one widget). **Scott review.**
+keep the spec's support-orange `#e8954a`; victories go **gold**. **RESOLVED (SC-106,
+2026-08-03):** `#e0b050`, the site's own crit gold (steel-dice.css:11) — shared with
+`tier-crit` (deliberate: both are "triumph" semantics, never co-located in one widget). One
+usage caveat found during SC-106: `.dse-enc__band[data-band="hard"/"extreme"]` (styles-source.css
+~2288) consumes `--dse-vp` as TEXT ink over `--dse-surface-raised`, not a fill — on the light
+Steel surface (`#edf0f0`) this gold's contrast is low (~1.7:1), same pre-existing shortfall the
+old `#e3c14a` had (~1.5:1, marginally worse) — not a regression, but flagged here since it's
+the one `--dse-vp` consumer with real contrast pressure rather than a fill.
 
 ## Combat-role accents
 
@@ -251,7 +264,7 @@ exact`) but **only composed with Steel** — see the Print-layer scoping caveat 
 | `--dse-role-solo` | §1.2-F `role-solo` | `var(--dse-fg-muted)` | `var(--sc-role-solo, #9aa2a8)` | | = Steel (exact) |
 | `--dse-role-minion` | §1.2-F `role-minion` | `var(--dse-fg-muted)` | `var(--sc-role-minion, #9aa2a8)` | | = Steel (exact) |
 
-## Ability action-type accents (the Steel design proposal — **Scott review**)
+## Ability action-type accents (the Steel design proposal — **RESOLVED, SC-106 2026-08-03**)
 
 D2's `act-*` set is the **six Draw Steel action types** (main / maneuver / triggered / move /
 none / trait), NOT the spec's eight ability *categories* (§1.2-G `ability-strike/ranged/…`).
@@ -595,3 +608,50 @@ overridden in any theme or print block: both are Steel-, light-, and print-invar
 |---|---|---|---|---|---|
 | `--dse-text-scale` | SC-112 T7 (user text-size multiplier) | `1` | = Legacy (theme-invariant) | | = Legacy (consumers print-excluded) |
 | `--dse-card-scale` | SC-112 T7 (user card-size multiplier) | `1` | = Legacy (theme-invariant) | | = Legacy (consumers print-excluded) |
+
+## SC-106 amendment (2026-08-03 — provisional Steel hue resolution)
+
+Scott's ruling (2026-08-03): act-spine/action-type colors follow `reference/colors.md`
+(canonical, not judgment); temp-stamina hue and crit/VP gold are delegated to best judgment.
+All three of the map's outstanding "Scott review" / "PROPOSED" flags are now closed:
+
+1. **Act-spine hues — CONFIRMED, no value change.** `reference/colors.md`'s Ability Colors
+   (Main=Red, Maneuver=Blue, Triggered=Green, Move=Orange/Yellow, No Action=Black/white
+   theme-based, Traits/Other=Purple) match the `act-*` table above **exactly**, hue for hue —
+   the SC-10 realignment (2026-07-10) had already landed on the site's canonical `--sc-act-*`
+   tokens, which happen to already encode this same scheme. Verified against a ground-truth
+   statblock render (Whip and Magic Longsword=red/Main, Kneel Peasant=blue/Maneuver,
+   Bloodstones=green/Triggered, End Effect/Supernatural Insight=purple/Trait), both schemes.
+   Only the stale "Scott review" comment wording in `styles-source.css` was cleaned up.
+2. **Temp-stamina hue — CONFIRMED, no value change.** Kept the existing purple `#7c5cd6`
+   (footnote 11 above). Rationale: purple is the only hue in the palette that is simultaneously
+   outside the green/amber/red HP ramp *and* outside `act-maneuver`'s blue, so it reads as its
+   own "temp/shield" signal rather than borrowing a state or action-type meaning; the palette's
+   other purples (`role-artillery`, `act-trait`) never co-occur with a stamina bar, so there's
+   no real collision risk. Ground-truth-verified on the `stamina-bar` fixture (temp segment
+   renders as a distinct purple hatch over the healthy/dying fill, both schemes).
+3. **Crit / Victory-Point gold — CHANGED, `#e3c14a` → `#e0b050`.** The site turned out to
+   already style a specific crit gold (`v2/docs/stylesheets/steel-dice.css:11`,
+   `.sc-dice-pop .crit { color: #e0b050; }`, one value shared by both color schemes) — the map's
+   draft `#e3c14a` was an invented hue chosen because `--sc-tier-crit` doesn't exist as a
+   palette token; `#e0b050` does exist, verbatim, in the site's own CSS, so it was adopted
+   instead of the invented one. `--dse-vp` shares the same gold (unchanged rationale: both are
+   "triumph" semantics, never co-located in one widget). Only the Steel (dark+light, single
+   value — a fill, not text) cells changed; the print-scoped darkened value (`#8a6a00`) was left
+   untouched since print composes its own value regardless of the Steel base. Verified on the
+   `feature` fixture's crit power-roll-tier badge, both schemes — legible, and visually distinct
+   from `tier-mid`'s amber (`#f0b429` dark / `#b9770e` light). One caveat surfaced and documented
+   in footnote 12 above (not a regression): `--dse-vp` also has a TEXT-ink consumer
+   (`.dse-enc__band[data-band="hard"/"extreme"]`) with pre-existing low contrast on the light
+   Steel surface, marginally improved (not worsened) by this change.
+
+**SC-121 audit lead (bonus item, resolved SKIP):** the site tints the power-roll tier badge's
+glyph text to match its tier color (`steel-ability-cards.css:172`,
+`.sc-ability__tier .badge { color: var(--t); }`). The plugin's `.dse-pr__badge` is architecturally
+different — a SOLID clip-path-filled badge (`background: var(--dse-tier-*)`) with the tier ink
+supplied separately by the theme-invariant `--dse-badge-fg` (SC-10 amendment above: "the tier
+badge is a hollow clip-path frame — its interior is the card surface, so the ink is always
+ink-on-surface"). Tinting the plugin's badge TEXT to `var(--t)` would set it to the exact same
+color as its own solid fill directly behind it — mathematically invisible, not a rendering
+nuance to visually confirm. Skipped; no code change. (Filed as an SC-121 audit lead per the
+SC-106 task brief, not implemented here.)
