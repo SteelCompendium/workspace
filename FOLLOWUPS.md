@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 45 -->
+<!-- next-id: 47 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -39,6 +39,54 @@ none could be fixed inside that plan. None trips the automated parity gate
 (`draw-steel-elements/visual-harness/parity`): the gate diffs material properties
 (background-image/box-shadow/border) on mapped selectors, not layout/structure, so a
 structural divergence like these is invisible to it by design.)*
+
+## 45. `--dse-font-mono` never resolves — the mono slot is dead everywhere
+**Status:** open
+- **Identified:** 2026-08-04, SC-121 Batch 2 (B-3, the tier-1 "≤" glyph fix) — found by
+  reading computed styles off a running Obsidian, not from the stylesheet.
+- **What:** `styles-source.css` declares `--dse-font-mono: var(--font-monospace)` in the
+  `:root` token block (~3009). Obsidian declares `--font-monospace` on **`body`**, one
+  level DOWN from `:root` — and the browser harness's `visual-harness/vars.css` does the
+  same. So at `:root` the `var()` is unresolvable, `--dse-font-mono` computes to the
+  guaranteed-invalid value, and it inherits as invalid to every descendant: any
+  `font-family: var(--dse-font-mono)` declaration is dropped at computed-value time.
+  Confirmed in the app: `getComputedStyle(elementRoot).getPropertyValue('--dse-font-mono')`
+  returns the empty string while `--font-monospace` right beside it returns the full stack.
+- **Why:** Two consumers are silently not getting the face they ask for — SC-100's kit
+  stat-tile **value** (`.dse-tiles__value`, whose whole design point is the site's
+  monospace readout) and `.dse-rollcard__breakdown`. Neither has ever rendered monospace in
+  Obsidian OR in the harness, so no shot or gate has ever shown the difference. SC-121 B-3
+  worked around it locally with a `var(--dse-font-mono, <literal monospace stack>)`
+  fallback; that rule picks the real slot back up for free once this is fixed.
+- **Context:** Fix is to re-home the declaration to a scope that can see Obsidian's vars
+  (`body`, or the element-root selector the other slots already use) rather than adding a
+  literal fallback at `:root`, which would permanently ignore the user's configured
+  monospace font. Note it lands a **visible** change on the kit steel shots (tile values
+  become monospace) — expected, and the frozen print shot is unaffected (`.dse-tiles__value`
+  is already print-excluded). `test/dom/theme/steelTypography.test.ts`'s mono gate and its
+  `SC100_STEEL_CONSUMERS` allowlist are the tests to update alongside.
+- **Effort:** S
+
+## 46. Keywords chip is one chip for all keywords, not one chip per keyword like the site
+**Status:** open
+- **Identified:** 2026-08-04, SC-121 Batch 2 review fix round (B-1 meta block
+  recomposition).
+- **What:** The site renders each keyword as its own `.sc-ability__chip`
+  (`steel-ability-cards.css`); the plugin renders the whole Keywords value as ONE
+  chip, since `renderFeature.ts` produces it as a single markdown-rendered,
+  comma-joined text node rather than a list of discrete keyword strings.
+- **Why:** Deferred rather than fixed in Batch 2 because splitting the value into
+  N chips would restructure the DOM feeding the Legacy inline "Label: value" text
+  run, and that run's bytes are pinned by the LEGACY-FREEZE PNG baseline — a real
+  risk for no alignment benefit, since the alignment defect Batch 2 fixed was the
+  band structure (Keywords/Type vs. Distance/Target), not the chip count within
+  the Keywords band.
+- **Context:** `.dse-feature__meta-cell--keywords` (`styles-source.css` ~4333,
+  scoped under `[data-dse-theme='steel']:not([data-dse-print="on"])`);
+  `renderFeature.ts` (chip-band DOM emission). Would need the keywords value
+  split into a list before render, theme-agnostically, without touching the
+  Legacy text-run path.
+- **Effort:** S
 
 ## 44. Text-size scale doesn't reach modal content while card zoom does
 **Status:** open
