@@ -492,6 +492,18 @@ the Steel block like `card-body`/`label` (a `:root`-declared chain flattens on `
 never carry the theme swap), and the neutral print block pins it back to `var(--font-text)`.
 It is *overridden*, not invariant, in both the Steel and Print guard sets.]
 
+[**Amended 2026-08-04, SC-121 Batch 3 (dse `5df83f4`, fixed FOLLOWUPS #45)** — the
+"defined only in the Legacy base" clause for `font-mono` is now stale. `--dse-font-mono` is
+still declared at `:root` in the Legacy base (unchanged, still the vocabulary contract), but
+is now ALSO re-declared, theme-agnostically, on every element root and Obsidian modal root
+(`:is([data-dse-element], .dse-modal) { --dse-font-mono: var(--font-monospace) }`) so the
+`var(--font-monospace)` reference resolves (a `:root`-declared `var()` referencing a
+`body`-scoped custom property is IACVT — the pre-existing bug). This does not change its
+Steel/Print-*value*-invariance (still no theme or print block overrides it, and
+`token-coverage.test.ts`'s block-regex extraction doesn't match the new element-root
+selector, so `inBase`/`inSteel`/`inPrint` are unaffected) — it changes only *where* it is
+declared.]
+
 ## SC-105 amendment (2026-08-02 — six-slot font vocabulary, Task 2 — retirement)
 
 Task 2 completed the migration the amendment above staged: every one of `--dse-font-display`'s
