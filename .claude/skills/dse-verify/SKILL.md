@@ -126,6 +126,11 @@ didn't mount) plus human review of the PNGs.
   - **2026-08-03, SC-100** (plan 24 kit stat-tile rebuild): `kit--steel-print.png` only —
     Scott approved the round-3 after-shots; rebaseline applied at landing. Future Steel
     compositions for the remaining display families (SC-120) each need their own entry.
+  - **2026-08-04, SC-121 (C-5)**: 5 lines — `treasure--legacy-{dark,light}.png`,
+    `treasure--steel-print.png`, `gallery--legacy-{dark,light}.png`. A theme-agnostic
+    CONTENT fix (treasure Project row rendered a raw markdown literal; `markdown: true`
+    in treasureLayout) necessarily reaches Legacy/print. Scott approved explicitly
+    ("oh that's fine. Fix it."); rebaseline applied at landing, count unchanged at 107.
 
 ## Parity semantics
 

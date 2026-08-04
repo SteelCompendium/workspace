@@ -130,6 +130,22 @@ go under an *Internal* sub-heading.
   "same as Body" per Scott's ruling — ratifying the serif rendering steppers already
   had (see the plan-22 correction above) rather than changing pixels; print pins
   controls sans and always renders text/cards at 100%.
+- **Steel UI refinement pass (SC-121)** — a systematic four-batch polish sweep across
+  every element family, both color schemes, driven by a screenshot-audited defect
+  catalog. Highlights: compact stepper/icon-button density (28px on desktop pointers,
+  full 44px touch targets on mobile); the ability-card keyword/type/distance/target
+  region rebuilt to the site's two-band grammar with the type chip right-aligned;
+  power-roll tier badges at site proportions and the "≤" glyph rendering correctly in
+  real Obsidian; crest faces corrected per scheme (a hairline token had inverted them);
+  statblock stat-row gaps; themed negotiation checkboxes; markdown tables scroll
+  instead of clipping; the treasure card's Project row renders its markdown (was a raw
+  literal — a content fix reaching all themes, with a Scott-sanctioned 5-shot freeze
+  rebaseline). The pass also unearthed and fixed silent capability-floor failures:
+  CSS nesting dropped wholesale on older-Electron Obsidian installs (SC-122 — trackers
+  rendered unstyled there for ~a year), the monospace font token never resolving,
+  and color-mix()/text-wrap uses above the supported floor — each now regression-
+  guarded, with harness coverage extended to modals, the sidebar, canvas read-only
+  states and the settings tab (freeze pins 101 → 107).
 
 ### Internal
 
