@@ -1,6 +1,6 @@
 # Roadmap
 
-<!-- next-id: 19 -->
+<!-- next-id: 20 -->
 
 New features and larger planned / in-flight efforts across the workspace. Smaller
 in-scope tangents to clear before the next feature go in `FOLLOWUPS.md`, not here.
@@ -274,3 +274,20 @@ reorder instead. This is the general mechanism so a future case needn't reorder.
   parser or body-extractor change, `validate` coverage (like the callout `@owner` check), and
   render_subtree tests mirroring the callout suite.
 - **Effort:** M (parser/extraction + render + validate + tests; grammar already precedented).
+
+## 19. Steel UI refinement pass — density, padding & alignment polish (SC-121, gates 7.0.0)
+
+**Origin:** Scott, 2026-08-03, reviewing the post-SC-100/SC-112 build: *"there needs to be a
+LOT of refinement before the 7.0.0 release."* Named examples: stepper +/- buttons (and other
+buttons) massive with unnecessary padding; power roll tier icons badly padded/sized; the
+ability-card "keywords, type, distance, target" meta block horribly misaligned — **examples,
+not the list**; the task is a systematic sweep.
+
+**Shape:** catalog-first — a shot-read sweep across ALL element families, both color schemes
+(dark-mode rule), site-referenced where a counterpart exists; defect inventory with
+screenshots posted inline on SC-121; batched Steel-scoped fix rounds, each with a Scott
+before/after gate. Freeze (101) and parity (0/10) hold throughout. Coordinate with SC-117
+(dark-mode richness audit — same sweep infrastructure; its `--dse-surface-sunken` lead list
+is on that ticket). Together with SC-101/102/103, SC-106, SC-109/110/111 and SC-117 this
+defines "visual overhaul fully complete" = the 7.0.0 gate. No tags/releases ever without
+Scott's explicit go.

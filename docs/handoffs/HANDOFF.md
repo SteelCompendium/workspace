@@ -35,13 +35,17 @@ SC-109/110/111 (guards). No worktrees exist; nothing in flight.
   docs/superpowers/dse-overhaul/build-ledgers/kit-tiles-sc100-ledger.md; worktree removed.
   Spin-offs filed + linked from SC-100: SC-119 (orZero/orDash), SC-120 (§D2 families);
   SC-117 got a scope note (ability-card interior's shared --dse-surface-sunken selectors).
-- **Plan 23 / SC-112 (worktree `font-settings`, dse @ fe4142a):** Tasks 1-7 complete
-  (Task 5 Legacy gate = SHIP; Task 6 six font prefs + sanitizer; Task 7 text/card scales,
-  real-Obsidian evidence). **Task 7 review in flight.** Tasks 8-9 remain: settings UI
-  (dropdown via queryLocalFonts — works unconditionally, 424 fonts; 'font'/'slider' control
-  kinds + PrefUi.advanced already typed), then docs/wrap (changelog must tell the honest
-  Controls-flip story). ⚠️ Before Task 8: rebase the worktree onto new main (kit rebuild +
-  rebaselined freeze line landed; its old-kit shots now mismatch kit--steel-print by design).
+- **Plan 23 / SC-112: LANDED + DONE** (Scott approved 2026-08-03). All 9 tasks + mid-plan
+  rebase over SC-100 + final whole-branch review (caught & fixed I1: Legacy chained-picker
+  tails hit the IACVT-dead :root set — nested var() fallbacks, Chromium-proven). dse main @
+  809b9e8, workspace merge 3081071. Final battery: jest 2138/150 · freeze 101/101 · parity
+  0/10 · obsidian-shots 132/132. Ledger preserved at build-ledgers/font-settings-sc112-
+  ledger.md; worktree removed. FOLLOWUPS #42 (double slider label), #43 (generalize
+  print-anchor guard), #44 (modal text-scale asymmetry) filed. NO release/tag made.
+- **SC-121 filed (2026-08-03, gates 7.0.0): Steel UI refinement pass** — Scott's cleanup
+  call (stepper/button density, power-roll tier icons, ability meta-block alignment, "many
+  more"). ROADMAP #19. Catalog-first sweep, both schemes, batched Scott-gated fix rounds;
+  coordinate with SC-117.
 - **SC-118 (site bug): DONE + deployed** (steel-etl b184b6a, site verified live; new SCC code
   rule.downtime/crafting-and-research-events-table, registry 3,081).
 - **SC-117** (dark-mode richness audit): **IN 7.0.0 scope (Scott's call)**; runs after plan 23
