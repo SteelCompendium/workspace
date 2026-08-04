@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 48 -->
+<!-- next-id: 50 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -39,6 +39,45 @@ none could be fixed inside that plan. None trips the automated parity gate
 (`draw-steel-elements/visual-harness/parity`): the gate diffs material properties
 (background-image/box-shadow/border) on mapped selectors, not layout/structure, so a
 structural divergence like these is invisible to it by design.)*
+
+## 48. Hero sheet still overflows a 300px sidebar leaf after the container-query fix
+**Status:** open
+- **Identified:** 2026-08-04, SC-121 Batch 4 (catalog D-7 re-verification) — dse `a420ef3`
+- **What:** `.dse-hero__grid`'s `@container (max-width: 480px)` fold was dead (containment
+  declared on the grid itself, so it queried an ancestor that did not exist); Batch 4 moved
+  the containment up to `.dse-hero` and the fold now works. The sheet nonetheless still runs
+  off the right edge of a real 300px Obsidian sidebar leaf: after the fold its min-content
+  is ~370px against ~266px of usable width, so Presence is still clipped out of the
+  Characteristics row and the panel frames still extend past the leaf.
+- **Why:** the sidebar is a first-class mount for `ds-hero` ("Send block to sidebar" is
+  universal, plan-18 spec §5). Half-fixed is better than dead, but the sheet is still not
+  usable at sidebar width.
+- **Context:** the residual comes from two rows that do not shrink — the 5-column
+  Characteristics grid and the stamina row (stepper + pips + Catch Breath). Evidence:
+  `hero--obsidian-sidebar-steel-dark.png` (post-fix) and the before/after composite in
+  `.superpowers/sdd/sc121-audit/batch4-evidence/hero-sidebar-before-after.png`. Reproduce in
+  the browser harness with `?element=hero&width=300` (the Batch 4 narrow axis) — no Obsidian
+  needed to iterate. Deliberately not fixed in Batch 4: choosing between wrapping the
+  characteristics row, giving it its own scroll frame, or scaling the type is a design
+  decision, not a dead-rule repair.
+- **Effort:** S (1–4 h)
+
+## 49. Legacy theme has no markdown-table styling at all, including the new scroll frame
+**Status:** open
+- **Identified:** 2026-08-04, SC-121 Batch 4 (batch-3 review L-5 fix) — dse `d94e025`
+- **What:** Batch 3's C-6 table baseline and Batch 4's `.dse-md-table` scroll frame are both
+  Steel-only + print-excluded, so under the Legacy theme (and in print/PDF export) a book
+  pipe-table is still unstyled AND still overflows its card at narrow width — measured
+  380px of table in a 300px leaf.
+- **Why:** Legacy is still a shipping theme and the compendium's mini-statblocks are common.
+  The overflow half of this is arguably a bug rather than a styling choice.
+- **Context:** `styles-source.css` §7, `table:not([class])` + `.dse-md-table` rules. The
+  wrapper ELEMENT is emitted in every theme (`src/framework/mdTableWrap.ts` runs from
+  `ElementView.renderMarkdown`), so a Legacy fix is CSS-only — but any Legacy-scoped rule
+  changes the frozen `*--legacy-*` bytes and needs a sanctioned rebaseline (see the
+  `dse-verify` skill's freeze section). `perk-narrow--legacy-dark.png` is now a pinned
+  fixture showing exactly this state.
+- **Effort:** S (1–4 h)
 
 ## 45. `--dse-font-mono` never resolves — the mono slot is dead everywhere
 **Status:** done (2026-08-04, SC-121 Batch 3 — dse `5df83f4`)
