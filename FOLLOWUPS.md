@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 47 -->
+<!-- next-id: 51 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -40,8 +40,81 @@ none could be fixed inside that plan. None trips the automated parity gate
 (background-image/box-shadow/border) on mapped selectors, not layout/structure, so a
 structural divergence like these is invisible to it by design.)*
 
-## 45. `--dse-font-mono` never resolves — the mono slot is dead everywhere
+## 48. Hero sheet still overflows a 300px sidebar leaf after the container-query fix
 **Status:** open
+- **Identified:** 2026-08-04, SC-121 Batch 4 (catalog D-7 re-verification) — dse `a420ef3`
+- **What:** `.dse-hero__grid`'s `@container (max-width: 480px)` fold was dead (containment
+  declared on the grid itself, so it queried an ancestor that did not exist); Batch 4 moved
+  the containment up to `.dse-hero` and the fold now works. The sheet nonetheless still runs
+  off the right edge of a real 300px Obsidian sidebar leaf: after the fold its min-content
+  is ~370px against ~266px of usable width, so Presence is still clipped out of the
+  Characteristics row and the panel frames still extend past the leaf.
+- **Why:** the sidebar is a first-class mount for `ds-hero` ("Send block to sidebar" is
+  universal, plan-18 spec §5). Half-fixed is better than dead, but the sheet is still not
+  usable at sidebar width.
+- **Context:** the residual comes from two rows that do not shrink — the 5-column
+  Characteristics grid and the stamina row (stepper + pips + Catch Breath). Evidence:
+  `hero--obsidian-sidebar-steel-dark.png` (post-fix) and the before/after composite in
+  `.superpowers/sdd/sc121-audit/batch4-evidence/hero-sidebar-before-after.png`. Reproduce in
+  the browser harness with `?element=hero&width=300` (the Batch 4 narrow axis) — no Obsidian
+  needed to iterate. Deliberately not fixed in Batch 4: choosing between wrapping the
+  characteristics row, giving it its own scroll frame, or scaling the type is a design
+  decision, not a dead-rule repair.
+- **Effort:** S (1–4 h)
+
+## 49. Legacy theme has no markdown-table styling at all, including the new scroll frame
+**Status:** open
+- **Identified:** 2026-08-04, SC-121 Batch 4 (batch-3 review L-5 fix) — dse `d94e025`
+- **What:** Batch 3's C-6 table baseline and Batch 4's `.dse-md-table` scroll frame are both
+  Steel-only + print-excluded, so under the Legacy theme (and in print/PDF export) a book
+  pipe-table is still unstyled AND still overflows its card at narrow width — measured
+  380px of table in a 300px leaf.
+- **Why:** Legacy is still a shipping theme and the compendium's mini-statblocks are common.
+  The overflow half of this is arguably a bug rather than a styling choice.
+- **Context:** `styles-source.css` §7, `table:not([class])` + `.dse-md-table` rules. The
+  wrapper ELEMENT is emitted in every theme (`src/framework/mdTableWrap.ts` runs from
+  `ElementView.renderMarkdown`), so a Legacy fix is CSS-only — but any Legacy-scoped rule
+  changes the frozen `*--legacy-*` bytes and needs a sanctioned rebaseline (see the
+  `dse-verify` skill's freeze section). `perk-narrow--legacy-dark.png` is now a pinned
+  fixture showing exactly this state.
+- **Effort:** S (1–4 h)
+
+## 50. Stamina-edit modal's "Dying" zone label is near-invisible, and no "Winded" zone renders at all
+**Status:** open
+- **Identified:** 2026-08-04, SC-121 Batch 4 review (finding L-5), surfaced by the new
+  `modal-stamina*` Obsidian-camera coverage — `modal-stamina--obsidian-steel-dark.png`
+- **What:** two related gaps in `staminaPreviewBar()`
+  (`src/views/StaminaEditModal.ts`): (1) `.dse-stamina--modal .dse-stamina__threshold--dying`
+  sets `color: var(--dse-stamina-track)` on the "Dying" label, which renders grey-on-green
+  at roughly 1.1:1 contrast against the healthy fill behind it — effectively unreadable;
+  (2) the modal only ever renders a `dyingZone`, never a "Winded" threshold, so that zone
+  has no label at all in the modal, unlike the card/canvas stamina bar
+  (`canvas--obsidian-readonly-steel-dark.png`) where both zone labels
+  (`.dse-stamina__pill`) render legibly in white over a hatched fill.
+- **Why:** the coverage batch's job was to surface exactly this kind of never-looked-at
+  defect rather than leave it sitting unnoticed in a PNG.
+- **Context:** compare `.dse-stamina__threshold--dying`'s color rule (styles-source.css,
+  the "hero Dying zone" block) against `.dse-stamina__pill`'s (`color: var(--dse-fg)` on an
+  opaque `--background-primary-alt` chip) for the contrast fix; adding a "Winded" zone to
+  the modal preview bar is a second, separate design call (`StaminaPreviewBarOptions` would
+  need a `windedZone` fraction, and dying/winded modal semantics differ from the card's
+  live-model zones).
+- **Effort:** S (1–4 h)
+
+## 45. `--dse-font-mono` never resolves — the mono slot is dead everywhere
+**Status:** done (2026-08-04, SC-121 Batch 3 — dse `5df83f4`)
+- **Resolution:** re-homed the declaration to the element roots
+  (`:is([data-dse-element], .dse-modal)`), which sit below `body` and can therefore see
+  Obsidian's `--font-monospace`. Deliberately NOT copied into the per-theme Steel blocks
+  the way SC-112 did for `--dse-font-controls`: mono is theme-INVARIANT in the token map
+  (`STEEL_INVARIANT` in `token-coverage.test.ts`) and one of its consumers
+  (`.dse-rollcard__breakdown`) is theme-agnostic, so a Steel-only re-declaration would
+  have left the Legacy path just as dead. The `:root` entry stays as the vocabulary
+  contract (`LEGACY_MAP` pins it). Verified by real-browser computed-style probe in both
+  themes: token `''` → the full monospace stack; `.dse-tiles__value` serif → monospace;
+  `.dse-rollcard__breakdown` inherited → monospace; the tier-1 badge's `::first-letter`
+  now takes the real slot (B-3's literal fallback stack kept as belt-and-braces).
+  Confirmed in real Obsidian (`kit--obsidian-steel-dark.png`). freeze 101/101.
 - **Identified:** 2026-08-04, SC-121 Batch 2 (B-3, the tier-1 "≤" glyph fix) — found by
   reading computed styles off a running Obsidian, not from the stylesheet.
 - **What:** `styles-source.css` declares `--dse-font-mono: var(--font-monospace)` in the
@@ -86,6 +159,38 @@ structural divergence like these is invisible to it by design.)*
   `renderFeature.ts` (chip-band DOM emission). Would need the keywords value
   split into a list before render, theme-agnostically, without touching the
   Legacy text-run path.
+- **Effort:** S
+
+## 47. Steel card-head NAME is 83% of the site's — the crest only *looks* oversized
+**Status:** open
+- **Identified:** 2026-08-04, SC-121 Batch 3, investigating catalog item C-3 ("kit crest
+  icon oversized ~1.9x relative to its eyebrow/title block"). **C-3 as written did not
+  reproduce** — the crest is already at site parity; measuring it turned up this instead.
+- **What:** Measured in the harness (900px viewport, Steel dark, `getBoundingClientRect`
+  + `getComputedStyle`, not pixel-counting a 2x PNG):
+  - `.dse-crest--lg` box **48 x 54.39px**, glyph svg **24 x 24px** — against the site's
+    `.sc-crest.lg { width: 50px; height: 56px }` and `.sc-crest.lg svg { 24px }`
+    (`v2/docs/stylesheets/steel-redesign.css:55-56`). That is **96% / 100%** of the site.
+    The catalog's "~84px wide" figure is explained exactly by the shield's own clip-path
+    (`polygon(6% 0, 94% 0, …)` = 88% of 48px = 42.2 CSS px = 84.5 device px at the shot's
+    2x scale), which confirms the 48px box rather than contradicting it.
+  - `.dse-head__primary--left` (the card NAME) is **20px / 23px line-height** against the
+    site's `.sc-head__left-primary { font-size: 1.5rem; line-height: 1.04 }` = **24px /
+    24.96px** — the plugin's name is **83%** of the site's. The eyebrow is 13.6px vs the
+    site's `.9rem` = 14.4px (94%).
+  So the crest reads large *relative to* its title because the title is small, not
+  because the crest is big. Same 20px name on feature, statblock and kit — it is one
+  shared Steel rule, not a kit quirk.
+- **Why:** Real, measurable site-parity gap on the single most prominent piece of type in
+  every card. Invisible to the parity gate: the `head` pair maps `.sc-head` ↔ `.dse-head`
+  (the wrapper), so the name slot's font-size is never compared.
+- **Context:** `draw-steel-elements/styles-source.css` — the Steel head-primary rules
+  around `~3520` (`[data-dse-theme='steel'] .dse-head__primary--left`). Deliberately NOT
+  fixed in SC-121 Batch 3: bumping it is a cross-family Steel type-scale change (every
+  card head in every family moves, and it interacts with the head's row-gap and the right
+  rail's optical centering), which belongs with SC-120's card-head composition work, not
+  a "kit crest sizing" item. Whoever takes it should re-check the crest/name ratio
+  afterwards (site 56/24.96 = 2.24; plugin today 54.39/23 = 2.37).
 - **Effort:** S
 
 ## 44. Text-size scale doesn't reach modal content while card zoom does
