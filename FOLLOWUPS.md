@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 42 -->
+<!-- next-id: 44 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -39,6 +39,45 @@ none could be fixed inside that plan. None trips the automated parity gate
 (`draw-steel-elements/visual-harness/parity`): the gate diffs material properties
 (background-image/box-shadow/border) on mapped selectors, not layout/structure, so a
 structural divergence like these is invisible to it by design.)*
+
+## 42. Typography sliders show a double value label ("100%" ours + "1.00" Obsidian's)
+**Status:** open
+- **Identified:** 2026-08-03, SC-112 Task 8 (Typography settings UI) — flagged in the
+  Task 8 review as deferred-minor; Scott to rule after seeing the Typography screenshot
+  (attached to the SC-112 Linear comment).
+- **What:** The Text size / Card size slider rows render our formatted percent label
+  ("100%") next to Obsidian's own native slider value readout ("1.00") — two value
+  displays for one control.
+- **Why:** Cosmetic clutter in the settings tab; the native "1.00" duplicates (in less
+  useful units) what our "100%" already says.
+- **Context:** `draw-steel-elements/src/views/SettingsTab.ts` slider rendering.
+  Suppressing Obsidian's native readout needs a version-fragile selector against
+  Obsidian's internal Setting DOM (it isn't exposed as an API knob) — which is exactly
+  why it was deferred rather than done inline. Alternative: drop our label and reformat
+  around the native one. Decision is Scott's.
+- **Effort:** XS-S
+
+## 43. Print-anchor shape guard doesn't scan the SC-112 scale consumer rules
+**Status:** open
+- **Identified:** 2026-08-03, SC-112 Task 7 review (deferred-minor findings 1+2),
+  recorded at Task 9.
+- **What:** `findUnanchoredPrintExclusions()` (Task 5's guard in
+  `draw-steel-elements/test/dom/theme/steelTypography.test.ts`) scans only the five
+  font-slot consumer rules, not Task 7's text/card scale rules — its pass over the
+  scale rules is vacuous. Related: the zoom nested-reset arm anchors a bare
+  `[data-dse-element]` compound (safe in context, but it would trip a generalized
+  guard as written).
+- **Why:** The footgun the guard exists for — a bare `:not([data-dse-print="on"])`
+  *descendant* selector is trivially satisfied by any unstamped ancestor, silently
+  un-excluding print — applies just as much to the scale rules; today only the
+  exact-selector pins (and the freeze) compensate.
+- **Context:** Candidate fix is a generalized shape guard: walk EVERY rule in
+  `styles-source.css` that both consumes a `--dse-*` font/scale token and carries a
+  `:not([data-dse-print="on"])`, and assert the exclusion is compounded onto the
+  stamped node (`:is([data-dse-element], .dse-modal)` idiom) rather than free-floating.
+  Expect to have to classify the safe root-compound arms (Task 5 counted 15 anchored +
+  3 root-compound; Task 7 added the scale arms).
+- **Effort:** S
 
 ## 41. Parity pair for featureblock advancement bands + stale "PLUGIN-ONLY" CSS comment
 

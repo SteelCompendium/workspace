@@ -153,7 +153,7 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-As of dse `0a3ce4d`: jest **2016/144**, shots **169**, obsidian-shots **132**, freeze
-**101/101**. These numbers change as the plugin grows — treat them as "what to expect right
+As of dse `c9a9d90` (SC-112 branch `font-settings`): jest **2135/150 suites**, shots
+**169**, obsidian-shots **132**, freeze **101/101**, parity **0 GAPs / 10 WARNs / exit 0**. These numbers change as the plugin grows — treat them as "what to expect right
 now," not a hardcoded target. Always confirm the actual counts against whatever commit you're
 gating, and if they differ, figure out why before treating it as either pass or fail.
