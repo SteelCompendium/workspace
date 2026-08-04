@@ -26,7 +26,7 @@ absolute paths — devbox ignores your shell's `cd`.
 | 1. Type-check | `npm run tsc` | clean (no output) |
 | 2. Unit tests | `npx jest` | all suites/tests green |
 | 3. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
-| 4. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | `freeze OK (101/101 …)` |
+| 4. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | `freeze OK (107/107 …)` |
 | 5. Parity (LAST) | `npm run parity` | `0 GAPs`, exactly the documented 10-WARN deferral set, exit 0 |
 | 6. Obsidian shots (only if a display is available) | `npm run obsidian-shots` | regenerates ground-truth PNGs from a real spawned Obsidian |
 
@@ -77,8 +77,16 @@ gate command itself.
 `check-freeze.sh` (`/home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh`)
 compares real bytes because `visual-harness/shots/` is gitignored — a `git status` check on
 that directory is vacuous. It runs `sha256sum -c` against
-`.superpowers/sdd/freeze-baseline.sha256`, a flat list of **101** `<hash>  <filename>` lines
+`.superpowers/sdd/freeze-baseline.sha256`, a flat list of **107** `<hash>  <filename>` lines
 (`*--legacy-{dark,light}.png` + `*--steel-print.png`).
+
+**The baseline covers the BROWSER camera only.** Obsidian-camera output
+(`*--obsidian-*.png`, incl. the modal/settings/canvas/sidebar specials) is deliberately not
+pinned: those shots come from a real, self-updating Obsidian against a live display and are
+not byte-reproducible, so freezing them would produce noise, not a gate. Their regression
+protection is the camera's own in-run ASSERTIONS (e.g. the canvas capture fails loudly if any
+element root is missing `data-dse-readonly`; the by-SCC capture fails if the nested card
+didn't mount) plus human review of the PNGs.
 
 - **The `<shots-dir>` argument is mandatory** — the script's built-in default path points at
   a worktree that no longer exists.
@@ -91,10 +99,20 @@ that directory is vacuous. It runs `sha256sum -c` against
   rule's selector scope (see "Steel scoping rule" below). **Never edit the baseline to accept
   the new bytes** — that defeats the entire check.
 - **Widening the baseline is additions-only**, and only when you deliberately want new shots
-  pinned against future regression (e.g. SC-108 widened 98→101 for a new featureblock
-  fixture): append the new hash lines, never touch/reorder the existing ones, and bump the
-  two literal count strings in `check-freeze.sh`'s comment + success echo to match. Full
-  procedure: `.superpowers/sdd/sc108-fixture-coverage-design.md` §3.
+  pinned against future regression: append the new hash lines, never touch/reorder the
+  existing ones, and bump the two literal count strings in `check-freeze.sh`'s comment +
+  success echo to match. Full procedure:
+  `.superpowers/sdd/sc108-fixture-coverage-design.md` §3. Widenings so far:
+  - **2026-08-02, SC-108 / FOLLOWUPS #37: 98 → 101.** The `featureblock/advancement`
+    fixture (3 lines: legacy-dark, legacy-light, steel-print).
+  - **2026-08-04, SC-121 Batch 4: 101 → 107.** Two new browser fixtures, 3 lines each —
+    `negotiation-checked` (the first fixture anywhere that renders a CHECKED checkbox;
+    batch-1 review M-4) and `perk-narrow` (the first fixture at a NARROW/sidebar width,
+    300px; batch-3 review L-5). Verified before and after: the pre-existing 101 lines are
+    byte-identical and the run reported the SAME 5 known-mismatch names both times
+    (96/101 → 102/107; the 5 treasure/gallery lines are a deliberate open item awaiting
+    Scott's sanction, not a leak). Batch 4's modal/settings/canvas/sidebar coverage is
+    Obsidian-camera and therefore out of the baseline by construction (see above).
 - **Sanctioned single-line rebaselines — the third case (rare; Scott-approved only).** A
   Steel-only DOM rebuild of a display family necessarily changes that family's frozen
   `*--steel-print.png` (print is a pure CSS attribute over whatever DOM the active theme
@@ -153,7 +171,9 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-As of dse `c9a9d90` (SC-112 branch `font-settings`): jest **2135/150 suites**, shots
-**169**, obsidian-shots **132**, freeze **101/101**, parity **0 GAPs / 10 WARNs / exit 0**. These numbers change as the plugin grows — treat them as "what to expect right
-now," not a hardcoded target. Always confirm the actual counts against whatever commit you're
+As of dse SC-121 Batch 4 (branch `sc121-fixes`, 2026-08-04): jest **2189/154 suites**,
+shots **179**, obsidian-shots **141**, freeze **107** lines (currently 102/107 — the 5
+treasure/gallery mismatches are a KNOWN open item pending Scott's sanction, not a
+regression), parity **0 GAPs / 10 WARNs / exit 0**. These numbers change as the plugin
+grows — treat them as "what to expect right now," not a hardcoded target. Always confirm the actual counts against whatever commit you're
 gating, and if they differ, figure out why before treating it as either pass or fail.
