@@ -54,16 +54,18 @@ SC-109/110/111 (guards). No worktrees exist; nothing in flight.
   recovered in real Obsidian (evidence inline on SC-122). Verification:
   `.superpowers/sdd/sc121-audit/nesting-verification.md`. Stepper-size bug INDEPENDENT
   (stays SC-121 batch 1). jest guard suite now 2141/151.
-- **SC-121 catalog POSTED, Needs Review (Scott):** 17 defects (8 High) in 4 sequenced
-  batches — (1) control density, (2) ability-card anatomy, (3) cross-family + content bugs
-  incl. B-4 villain-action crest/spine (Scott routing call), (4) harness coverage (modals/
-  sidebar/canvas/settings have ZERO shots). Catalog: `.superpowers/sdd/sc121-audit/
-  catalog.md`. Batches start on Scott's approval, post-SC-122 rendering.
-- **SC-106 IMPLEMENTED, Needs Review taste gate (worktree sc106-hues, UNLANDED):** dse
-  5b760a7 + workspace dccf779. Act-spine hues already matched colors.md (no change);
-  temp-stamina purple confirmed; crit gold → site's #e0b050. Tier-tint lead skipped
-  (solid-fill badge — text would vanish). Evidence inline on SC-106. Land via land-stack
-  on Scott's approval. Battery green, freeze 101/101.
+- **SC-121 PASS COMPLETE (2026-08-04): batches 1-2 LANDED (dse dcee3ec on main), batches
+  3-4 done+reviewed in worktree `sc121-fixes` (dse @ fd5171a, workspace @ ac0bb42),
+  AWAITING Scott's C-5 freeze sanction** (treasure markdown fix moves 5 frozen shots:
+  treasure--legacy-x2/steel-print + gallery--legacy-x2; approve = 5-hash rebaseline at
+  landing, decline = revert 154d95e). Freeze deliberately RED in worktree: 102/107, exactly
+  those 5. Full disposition in the SC-121 wrap comment + `.superpowers/sdd/sc121-audit/`
+  (catalog, 4 batch reviews, batch-ledger). Landed along the way: SC-106 hues (e50a761),
+  SC-122 nesting fix (8871463). Notable: pass found+fixed dead --dse-font-mono, 7 color-mix
+  + 1 text-wrap floor violations, dead hero container query, unstyled form editor, table
+  clip; coverage 169/132/101 → 179/141/107; floor guard w/ 14-row deny-list; B-4 villain
+  action routed to SC-102 w/ root cause (usage:"-" shadows ability_type). FOLLOWUPS #46-50
+  filed. 3 modal taste items + C-5 await Scott on the ticket.
 - **SC-118 (site bug): DONE + deployed** (steel-etl b184b6a, site verified live; new SCC code
   rule.downtime/crafting-and-research-events-table, registry 3,081).
 - **SC-117** (dark-mode richness audit): **IN 7.0.0 scope (Scott's call)**; runs after plan 23
