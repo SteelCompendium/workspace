@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 44 -->
+<!-- next-id: 45 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -39,6 +39,25 @@ none could be fixed inside that plan. None trips the automated parity gate
 (`draw-steel-elements/visual-harness/parity`): the gate diffs material properties
 (background-image/box-shadow/border) on mapped selectors, not layout/structure, so a
 structural divergence like these is invisible to it by design.)*
+
+## 44. Text-size scale doesn't reach modal content while card zoom does
+**Status:** open
+- **Identified:** 2026-08-03, SC-112 final whole-branch review (end-to-end walk of the
+  Typography preferences), recorded during the review-I1 fix round.
+- **What:** Of the two Task 7 scale prefs, card zoom applies inside DSE modals (the
+  `.dse-modal` root is a Steel token-scope member and gets css-bearing prefs stamped
+  via `reflectCss()` in `DseModal.open()`), but the text-size scale does not reach
+  modal content — an asymmetry: the same modal honors one scale pref and ignores the
+  other.
+- **Why:** User-visible inconsistency: bumping text size scales rendered blocks in
+  notes but leaves modal text at 100%, while card zoom tracks in both places.
+- **Context:** `draw-steel-elements/src/views/DseModal.ts` (reflectCss stamping),
+  `styles-source.css` scale consumer rules (SC-112 Task 7) — likely the text-scale
+  consumer selectors don't include the `.dse-modal` scope the card-zoom rules do.
+  Decide whether modals SHOULD track text size (probably yes, for consistency) and
+  widen the consumer scope accordingly; mind FOLLOWUPS #43's print-anchor shape
+  concerns when touching those rules.
+- **Effort:** S
 
 ## 42. Typography sliders show a double value label ("100%" ours + "1.00" Obsidian's)
 **Status:** open
