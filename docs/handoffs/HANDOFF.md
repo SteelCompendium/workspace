@@ -43,9 +43,22 @@ SC-109/110/111 (guards). No worktrees exist; nothing in flight.
   ledger.md; worktree removed. FOLLOWUPS #42 (double slider label), #43 (generalize
   print-anchor guard), #44 (modal text-scale asymmetry) filed. NO release/tag made.
 - **SC-121 filed (2026-08-03, gates 7.0.0): Steel UI refinement pass** — Scott's cleanup
-  call (stepper/button density, power-roll tier icons, ability meta-block alignment, "many
-  more"). ROADMAP #19. Catalog-first sweep, both schemes, batched Scott-gated fix rounds;
-  coordinate with SC-117.
+  call. ROADMAP #19. **Catalog sweep DONE** (4 parallel agents, 22 defects, inventories +
+  catalog in `.superpowers/sdd/sc121-audit/`); synthesis posting to SC-121 w/ batches.
+  Routing: C-1 (families lack kit cardhead) → SC-120; nesting → SC-122.
+- **SC-122 DISCOVERED + FILED (Urgent, 2026-08-03): compiled CSS ships un-flattened native
+  nesting** — silently dropped on old-Electron Obsidian (dev vault = Chromium 106; Obsidian
+  auto-update never upgrades the shell). 231 nested rules / 21 families; initiative/
+  negotiation/hero collapse in real Obsidian while browser-harness gates (Chromium 149) see
+  nothing. **LIVE in released 6.0.1 (~1 year).** Verified end-to-end (CDP probes both
+  runtimes): `.superpowers/sdd/sc121-audit/nesting-verification.md`. Fix = one-line esbuild
+  CSS target (chrome106) + no-nesting build guard; agent implementing in worktree
+  sc122-nesting. Stepper-size bug is INDEPENDENT (base .dse-btn 44px touch-min; stays in
+  SC-121). **SC-122 lands before any SC-121 fix batch.**
+- **SC-106 unblocked (Scott, 2026-08-03):** act-spine hues per `reference/colors.md`
+  (Main red/Maneuver blue/Triggered green/Move orange-yellow/None theme-bw/Traits purple);
+  temp-stamina + crit/VP gold = agent judgment. Implementing in worktree sc106-hues
+  (+ tier-badge text tint lead); ends at Needs Review taste gate w/ before/after inline.
 - **SC-118 (site bug): DONE + deployed** (steel-etl b184b6a, site verified live; new SCC code
   rule.downtime/crafting-and-research-events-table, registry 3,081).
 - **SC-117** (dark-mode richness audit): **IN 7.0.0 scope (Scott's call)**; runs after plan 23
