@@ -26,7 +26,7 @@ absolute paths — devbox ignores your shell's `cd`.
 | 1. Type-check | `npm run tsc` | clean (no output) |
 | 2. Unit tests | `npx jest` | all suites/tests green |
 | 3. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
-| 4. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | `freeze OK (107/107 …)` |
+| 4. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | `freeze OK (107/107 …)` (currently 102/107 — see "Current expected numbers" below for the 5 known open mismatches) |
 | 5. Parity (LAST) | `npm run parity` | `0 GAPs`, exactly the documented 10-WARN deferral set, exit 0 |
 | 6. Obsidian shots (only if a display is available) | `npm run obsidian-shots` | regenerates ground-truth PNGs from a real spawned Obsidian |
 

@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 50 -->
+<!-- next-id: 51 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -77,6 +77,28 @@ structural divergence like these is invisible to it by design.)*
   changes the frozen `*--legacy-*` bytes and needs a sanctioned rebaseline (see the
   `dse-verify` skill's freeze section). `perk-narrow--legacy-dark.png` is now a pinned
   fixture showing exactly this state.
+- **Effort:** S (1–4 h)
+
+## 50. Stamina-edit modal's "Dying" zone label is near-invisible, and no "Winded" zone renders at all
+**Status:** open
+- **Identified:** 2026-08-04, SC-121 Batch 4 review (finding L-5), surfaced by the new
+  `modal-stamina*` Obsidian-camera coverage — `modal-stamina--obsidian-steel-dark.png`
+- **What:** two related gaps in `staminaPreviewBar()`
+  (`src/views/StaminaEditModal.ts`): (1) `.dse-stamina--modal .dse-stamina__threshold--dying`
+  sets `color: var(--dse-stamina-track)` on the "Dying" label, which renders grey-on-green
+  at roughly 1.1:1 contrast against the healthy fill behind it — effectively unreadable;
+  (2) the modal only ever renders a `dyingZone`, never a "Winded" threshold, so that zone
+  has no label at all in the modal, unlike the card/canvas stamina bar
+  (`canvas--obsidian-readonly-steel-dark.png`) where both zone labels
+  (`.dse-stamina__pill`) render legibly in white over a hatched fill.
+- **Why:** the coverage batch's job was to surface exactly this kind of never-looked-at
+  defect rather than leave it sitting unnoticed in a PNG.
+- **Context:** compare `.dse-stamina__threshold--dying`'s color rule (styles-source.css,
+  the "hero Dying zone" block) against `.dse-stamina__pill`'s (`color: var(--dse-fg)` on an
+  opaque `--background-primary-alt` chip) for the contrast fix; adding a "Winded" zone to
+  the modal preview bar is a second, separate design call (`StaminaPreviewBarOptions` would
+  need a `windedZone` fraction, and dying/winded modal semantics differ from the card's
+  live-model zones).
 - **Effort:** S (1–4 h)
 
 ## 45. `--dse-font-mono` never resolves — the mono slot is dead everywhere
