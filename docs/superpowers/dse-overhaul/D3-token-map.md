@@ -78,7 +78,7 @@ the theme automatically (custom properties may reference other custom properties
 | `--dse-font-body` | SC-105 T1 (six-slot vocabulary) ⁷ | `var(--font-text)` | `"Source Serif 4", var(--font-text)` | | = active theme (no override) |
 | `--dse-font-card-body` | SC-105 T1 (six-slot vocabulary) ⁷ | `var(--dse-font-body)` | `var(--dse-font-body)` | | = active theme (no override) |
 | `--dse-font-label` | SC-105 T1 (six-slot vocabulary) ⁷ | `var(--dse-font-title)` | `var(--dse-font-title)` | | = active theme (no override) |
-| `--dse-font-controls` | SC-105 T1 (six-slot vocabulary) ⁷ | `var(--font-text)` | = Legacy (theme-invariant) | | = Legacy |
+| `--dse-font-controls` | SC-105 T1 / SC-112 T3 ("same as Body") ⁷ | `var(--dse-font-body)` | `var(--dse-font-body)` | | `var(--font-text)` (pinned sans) |
 | `--dse-chip-bg` | D2 extra (chips/tags) | `var(--tag-background)` | `rgba(220,226,230,0.06)` | `#eaeeef` | `transparent` |
 
 ⁵ The spec has no separate heading token; D2 does. Steel grades headings slightly brighter
@@ -473,6 +473,11 @@ tokens that chain (e.g. `--dse-surface: var(--code-background)`) as ordinary val
 Legacy fidelity map, the Steel presence check, and the Print presence check. `font-controls`
 joins `font-mono` as Steel/Print-invariant (defined only in the Legacy base — always sans,
 never overridden by either theme block), since no consumer re-points to it in Task 1.
+[**Superseded 2026-08-03 by SC-112 Task 3** — see the SC-112 amendment below. `font-controls`
+is now a `var(--dse-font-body)` chain ("same as Body", Scott's re-ruling), re-declared inside
+the Steel block like `card-body`/`label` (a `:root`-declared chain flattens on `<html>` and can
+never carry the theme swap), and the neutral print block pins it back to `var(--font-text)`.
+It is *overridden*, not invariant, in both the Steel and Print guard sets.]
 
 ## SC-105 amendment (2026-08-02 — six-slot font vocabulary, Task 2 — retirement)
 
@@ -493,7 +498,12 @@ classified slot per the design's classification table:
 stay on `font: inherit` — Controls silently renders serif today (inherited from the Body/
 Card-body routing) even though Scott's ruling is that Controls should default to sans; wiring
 that now would move real pixels and break the freeze, so it's explicitly deferred to SC-112,
-not part of this retirement.
+not part of this retirement. [**Closed 2026-08-03 by SC-112 Task 3** — with the opposite
+outcome this paragraph assumed: the stepper "sans exclusion" itself had been dead since this
+very rename (the `:root` slot set is IACVT on `<html>` — see the SC-112 amendment below), so
+steppers were *already* rendering serif; Scott re-ruled Controls' default to "same as Body",
+and all six Controls sites (the two stepper selectors plus these four `font: inherit` ones)
+now route through `var(--dse-font-controls)`. Print pins Controls back to sans.]
 
 With every consumer re-pointed, `--dse-font-display` itself was removed: from
 `DSE_TOKEN_NAMES` (74 → 73), its Legacy and Steel-dark `:root`/theme-block definitions, its row
@@ -511,8 +521,77 @@ than the new Card-body rule's `:is(...)` alternative ((0,3,0)), so Body technica
 the cascade for those two hosts today. Harmless now because `--dse-font-card-body` chains to
 `--dse-font-body` (whichever rule wins renders the identical value) — but not yet a clean
 mutual exclusion, flagged inline in `styles-source.css` at the Body/Card-body rule split.
+[**Resolved 2026-08-03 by SC-112 Task 4** — the Card-body rule gained a *root-compound* arm
+(`:not([data-dse-print="on"]):is([data-dse-element='feature'],[data-dse-element='featureblock']):not([data-dse-error-stage])`,
+equal specificity to the Body arm and later in source order, so it wins the cascade): the
+feature/featureblock roots, which ARE their own card, now take Card-body directly. A live
+divergence probe (Task 4 review) confirmed Card-body genuinely moves those hosts without
+dragging Body.]
 
 Task 3 (docs only, no CSS/TS changes) closed out the loop: this file's migration prose and
 footnotes ⁶/⁷ above, Appendix A/B, `visual-harness/parity/README.md`, and any remaining
 `font-display` mentions in `draw-steel-elements`' prose docs were brought current to describe
 the six-slot vocabulary as the plugin's only font seam.
+
+## SC-112 amendment (2026-08-03 — Controls flip, slot routability, Legacy support — Tasks 3–5)
+
+**Task 3 — the Controls flip + the IACVT root cause.** Scott re-ruled Controls' default from
+"sans" to **"same as Body"**. Investigating why the flip moved zero pixels exposed the root
+cause: every `var(--font-text)`-chained font slot declared at `:root` is **dead at
+computed-value time** — `var()` substitutes on the *declaring* element (`<html>`), where
+Obsidian's `--font-text` (defined on `body`) is invalid, so the whole `:root` slot set is
+IACVT and consumers render via `font-family`'s inherit fallback. Concretely: the stepper
+"sans exclusion" SC-105 preserved had been dead since that rename — steppers were *already*
+silently serif under Steel (SC-105's "zero rendering change" claim was false in the stepper
+region of the unfrozen steel shots; the guards were structurally blind there). SC-112 made
+the intent real instead of resurrecting the accident: the Steel block re-declares
+`--dse-font-controls: var(--dse-font-body)` (only a scoped re-declaration can carry the theme
+swap — the `:root` entry remains as the vocabulary contract), and the neutral print block pins
+`--dse-font-controls: var(--font-text)` so the frozen `*--steel-print.png` set holds.
+`font-controls` thereby moved from the Steel- and Print-invariant guard sets to *overridden*
+in both (Steel 67 overridden / 8 invariant with Task 7's scales; Print 53 / 22).
+
+**Task 4 — six slots independently routable.** Two gaps kept the slots from being truly
+independent knobs: (a) **Card-body root-compound** — feature/featureblock roots ARE their own
+card but took Body via specificity; the Card-body rule gained a root-compound arm that wins
+the cascade (see the resolved open-item note in the Task 2 amendment above). (b) **Label
+graduation** — Label's only consumer was `.dse-hero__region-title`; nine label-class selectors
+that reached their look via Title/Body routing (`.dse-head__eyebrow--chip`,
+`.dse-head__eyebrow--line`, `.dse-head__deck--chip`, `.dse-section__title`, `.dse-sb__item-l`,
+`.dse-sb__kv-l`, `.dse-enc__table th`, `.dse-pr__head`, `.dse-pr__badge-text`) were pinned to
+`var(--dse-font-label)` — 10 selectors total, so moving Label moves the label family without
+dragging Title/Body. All chains preserve identical defaults; freeze stayed 101/101.
+
+**Task 5 — Legacy font support (gate verdict: SHIP).** The five slot consumer rules
+(Title/Body/Card-body/Label/Controls; Mono was never Steel-gated) were widened from
+Steel-only to **theme-agnostic**, so a user's chosen font applies under Legacy too. Steel-only
+*visual* properties (weight/uppercase/color/…) that had been bundled with `font-family` were
+split, not qualifier-dropped (8/10 sites). Every descendant-selector arm anchors its print
+exclusion on the stamped node itself — `:is([data-dse-element], .dse-modal):not([data-dse-print="on"])`
+— because a bare `:not([data-dse-print="on"])` *descendant* selector is trivially satisfied by
+any unstamped ancestor (`<html>`), which the first freeze run caught (22 steel-print shots
+broke; one uniform anchor pattern fixed it — 15 anchored + 3 safe root-compound arms = 18).
+`findUnanchoredPrintExclusions()` in `steelTypography.test.ts` now locks that *shape*. At
+defaults the widening is a true no-op — Legacy resolves the same IACVT-inherit values as
+before (freeze 101/101; live probe confirmed both the no-op and that Legacy responds to a
+per-root override). Full investigation ledger:
+`docs/superpowers/dse-overhaul/build-ledgers/sc112-legacy-font-gate.md`.
+
+## SC-112 amendment (2026-08-03 — user size-scale tokens, Task 7)
+
+SC-112 Task 7 adds two **user-scale** tokens — multipliers, not theme values — mirroring the
+site's text/card size sliders (`v2/docs/javascripts/settings-core.js:22-23`; both ranges
+symmetric about the 1.0 default). The `textScale`/`cardScale` prefs (plugin `catalog.ts`)
+stamp a `snap()`-normalized non-1 value inline per element root and remove it at the default
+(site remove-on-default semantics), so the `:root` default of `1` is what every root resolves
+at defaults — the consumer rules (`font-size: calc(1em * var(--dse-text-scale))` on element
+roots; `zoom: var(--dse-card-scale)` on the card hosts, plus nested-root resets so a by-SCC
+referenced card scales exactly once) are provably inert (freeze 101/101). Consumers carry
+`:not([data-dse-print="on"])` — print/export always renders 1:1 — so neither token is
+overridden in any theme or print block: both are Steel-, light-, and print-invariant
+(`STEEL_INVARIANT`/`PRINT_INVARIANT`/`THEME_INVARIANT` in the guards; union 73 → 75).
+
+| Token | D3-spec concept | Legacy (verbatim) | Steel (dark) | Steel light | Print |
+|---|---|---|---|---|---|
+| `--dse-text-scale` | SC-112 T7 (user text-size multiplier) | `1` | = Legacy (theme-invariant) | | = Legacy (consumers print-excluded) |
+| `--dse-card-scale` | SC-112 T7 (user card-size multiplier) | `1` | = Legacy (theme-invariant) | | = Legacy (consumers print-excluded) |

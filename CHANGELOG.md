@@ -73,11 +73,14 @@ go under an *Internal* sub-heading.
   to a sans body/label/control, reading as two different type systems in the same note.
   The routing now lives on a single Steel-theme-root selector (every `[data-dse-element]`
   host) instead of a four-family allow-list, so body text, labels, table cells, sub-headers
-  and chips are serif and open-line-height everywhere Steel is active. One exclusion kept
-  from regressing under the broadened rule: numeric stepper/counter values (hero
-  stamina/ferocity/surges steppers, montage/initiative trackers, the standalone counter)
-  keep their prior, non-serif rendering — because the Global Constraint against changing
-  numeric `<input>`s/steppers is absolute. The encounter head's numeric `EV n / n` chip now
+  and chips are serif and open-line-height everywhere Steel is active. One exclusion was
+  written to keep numeric stepper/counter values (hero stamina/ferocity/surges steppers,
+  montage/initiative trackers, the standalone counter) in their prior, non-serif
+  rendering. [Correction, SC-112: that exclusion quietly died during SC-105's font-slot
+  rename — its token chain went invalid at the root and steppers silently rendered serif
+  under Steel, unseen by the freeze (which covers legacy+print shots only). Scott's
+  SC-112 ruling makes the serif deliberate: Controls default to "same as Body" — see the
+  SC-112 bullet below.] The encounter head's numeric `EV n / n` chip now
   takes the exact same serif small-caps treatment as every other chip — a fully uniform
   chip family, with no numeric-content exemption — so its digits render at small-caps cap
   height, a Source Serif 4 `smcp` behavior; this is accepted as the correct look, and the
@@ -115,6 +118,18 @@ go under an *Internal* sub-heading.
   `--dse-surface-sunken` 6%-white wash was occluding it (two selectors fixed; the pattern
   seeds SC-117's dark-mode audit). Remaining display families (class/career/…) are
   sequenced as SC-120; site-side kit gaps filed as SC-115/SC-116/SC-119.
+- **Plugin typography settings (SC-112 / plan 23)** — the plugin settings gain a
+  Typography section: six font pickers (Title/Body/Controls primary, Card
+  body/Label/Monospace behind an Advanced fold; curated list + "Custom…" free text +
+  a feature-detected "List installed fonts" affordance) and two size sliders (Text
+  60%–140%, Card 80%–120%, 5% steps — the site's exact slider ranges and snap
+  semantics). Every picker defaults to "Default (Obsidian vault fonts)" — the
+  plugin's only-ever prior behavior — and choices apply under both Steel and Legacy
+  (the Legacy support gate's verdict was SHIP; at defaults Legacy stays
+  byte-identical, freeze-verified). Controls (steppers/buttons/tabs) now default to
+  "same as Body" per Scott's ruling — ratifying the serif rendering steppers already
+  had (see the plan-22 correction above) rather than changing pixels; print pins
+  controls sans and always renders text/cards at 100%.
 
 ### Internal
 
