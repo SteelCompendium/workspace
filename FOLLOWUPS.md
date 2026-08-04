@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 46 -->
+<!-- next-id: 47 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -65,6 +65,27 @@ structural divergence like these is invisible to it by design.)*
   become monospace) — expected, and the frozen print shot is unaffected (`.dse-tiles__value`
   is already print-excluded). `test/dom/theme/steelTypography.test.ts`'s mono gate and its
   `SC100_STEEL_CONSUMERS` allowlist are the tests to update alongside.
+- **Effort:** S
+
+## 46. Keywords chip is one chip for all keywords, not one chip per keyword like the site
+**Status:** open
+- **Identified:** 2026-08-04, SC-121 Batch 2 review fix round (B-1 meta block
+  recomposition).
+- **What:** The site renders each keyword as its own `.sc-ability__chip`
+  (`steel-ability-cards.css`); the plugin renders the whole Keywords value as ONE
+  chip, since `renderFeature.ts` produces it as a single markdown-rendered,
+  comma-joined text node rather than a list of discrete keyword strings.
+- **Why:** Deferred rather than fixed in Batch 2 because splitting the value into
+  N chips would restructure the DOM feeding the Legacy inline "Label: value" text
+  run, and that run's bytes are pinned by the LEGACY-FREEZE PNG baseline — a real
+  risk for no alignment benefit, since the alignment defect Batch 2 fixed was the
+  band structure (Keywords/Type vs. Distance/Target), not the chip count within
+  the Keywords band.
+- **Context:** `.dse-feature__meta-cell--keywords` (`styles-source.css` ~4333,
+  scoped under `[data-dse-theme='steel']:not([data-dse-print="on"])`);
+  `renderFeature.ts` (chip-band DOM emission). Would need the keywords value
+  split into a list before render, theme-agnostically, without touching the
+  Legacy text-run path.
 - **Effort:** S
 
 ## 44. Text-size scale doesn't reach modal content while card zoom does
