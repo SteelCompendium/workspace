@@ -54,18 +54,23 @@ SC-109/110/111 (guards). No worktrees exist; nothing in flight.
   recovered in real Obsidian (evidence inline on SC-122). Verification:
   `.superpowers/sdd/sc121-audit/nesting-verification.md`. Stepper-size bug INDEPENDENT
   (stays SC-121 batch 1). jest guard suite now 2141/151.
-- **SC-121 PASS COMPLETE (2026-08-04): batches 1-2 LANDED (dse dcee3ec on main), batches
-  3-4 done+reviewed in worktree `sc121-fixes` (dse @ fd5171a, workspace @ ac0bb42),
-  AWAITING Scott's C-5 freeze sanction** (treasure markdown fix moves 5 frozen shots:
-  treasure--legacy-x2/steel-print + gallery--legacy-x2; approve = 5-hash rebaseline at
-  landing, decline = revert 154d95e). Freeze deliberately RED in worktree: 102/107, exactly
-  those 5. Full disposition in the SC-121 wrap comment + `.superpowers/sdd/sc121-audit/`
-  (catalog, 4 batch reviews, batch-ledger). Landed along the way: SC-106 hues (e50a761),
-  SC-122 nesting fix (8871463). Notable: pass found+fixed dead --dse-font-mono, 7 color-mix
-  + 1 text-wrap floor violations, dead hero container query, unstyled form editor, table
-  clip; coverage 169/132/101 → 179/141/107; floor guard w/ 14-row deny-list; B-4 villain
-  action routed to SC-102 w/ root cause (usage:"-" shadows ability_type). FOLLOWUPS #46-50
-  filed. 3 modal taste items + C-5 await Scott on the ticket.
+- **SC-121: DONE, FULLY LANDED (2026-08-04, dse main @ f09f6cc, workspace b33a3d5).** All
+  4 batches + Scott's tweak round (crest face token inversion fixed; type chip
+  right-aligned per site kwusage default; stat-row gaps). C-5 sanctioned by Scott →
+  5-hash rebaseline applied, freeze **107/107**, dated sign-off in dse-verify skill.
+  Pass artifacts preserved: build-ledgers/sc121-refinement-{catalog,batch-ledger}.md.
+  Landed along the way: SC-106 hues (e50a761), SC-122 nesting fix (8871463). Notable
+  finds fixed: dead --dse-font-mono, color-mix/text-wrap floor violations (+ 14-row floor
+  guard), dead hero container query, unstyled form editor, table clip. Spin-offs: SC-123
+  (site display-settings parity, 18-setting inventory — Scott to scope 7.0.0-or-after),
+  SC-124 (PDF link fidelity, Backlog, post-7.0.0 per Scott), villain-action root cause on
+  SC-102 (usage:"-" shadows ability_type). FOLLOWUPS #46-#50 (45 fixed in-pass). 3 modal
+  taste items on the ticket, non-blocking. Battery at landing: jest 2190/154 · freeze
+  107/107 · parity 0/10.
+- **7.0.0 remaining gate:** SC-101/102/103 (structural; SC-102 now carries the villain
+  analysis), SC-109/110/111 (guards), SC-117 (dark-mode audit; --dse-surface-sunken lead
+  list + SC-100 interior note on ticket), SC-123 scoping call. Then SC-11 (release cut —
+  Scott alone, NO TAGS).
 - **SC-118 (site bug): DONE + deployed** (steel-etl b184b6a, site verified live; new SCC code
   rule.downtime/crafting-and-research-events-table, registry 3,081).
 - **SC-117** (dark-mode richness audit): **IN 7.0.0 scope (Scott's call)**; runs after plan 23
