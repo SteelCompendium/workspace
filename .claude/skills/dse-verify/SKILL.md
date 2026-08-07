@@ -113,6 +113,22 @@ didn't mount) plus human review of the PNGs.
     (96/101 → 102/107; the 5 treasure/gallery lines are a deliberate open item awaiting
     Scott's sanction, not a leak). Batch 4's modal/settings/canvas/sidebar coverage is
     Obsidian-camera and therefore out of the baseline by construction (see above).
+  - **2026-08-07, SC-117 Batch 6: 107 → 113.** Two new browser fixtures, 3 lines each —
+    `feature/spend` (the `--dse-surface-sunken` audit's D9: `.dse-section--spend` never
+    rendered anywhere, so the class's own dashed-box styling was unverified — a named
+    fixture variant gives one effect a `cost` starting "Spend") and
+    `negotiation-pr-checked`, the harness's first INTERACTION_SHOTS entry (`shoot.mjs`
+    performs one real click on the production affordance between mount-done and the
+    screenshot, `entry.ts`'s new `INTERACTION_SHOTS` list, same "own id, own manifest
+    array" convention as `NARROW_SHOTS`) — closes consumer #16:
+    `.dse-pr__row[aria-checked='true']` was reachable only by user selection, which no
+    static fixture could express. Verified before and after: `check-freeze.sh` reported
+    a clean `107/107` before this widening (the SC-121 C-5 rebaseline already covers the
+    5 treasure/gallery lines — no open mismatches on this branch) and `113/113` after,
+    with the pre-existing 107 lines untouched. Deliberately landed BEFORE SC-117 B1 (the
+    `--dse-surface-sunken` token flip): both new fixtures render surfaces gated by that
+    token, and it's a Steel-scoped rule, so legacy/print must be unaffected by the flip —
+    pinning them now makes any future leak into legacy/print loud instead of silent.
 - **Sanctioned single-line rebaselines — the third case (rare; Scott-approved only).** A
   Steel-only DOM rebuild of a display family necessarily changes that family's frozen
   `*--steel-print.png` (print is a pure CSS attribute over whatever DOM the active theme
@@ -180,5 +196,13 @@ As of dse SC-121 Batch 4 (branch `sc121-fixes`, 2026-08-04): jest **2189/154 sui
 shots **179**, obsidian-shots **141**, freeze **107** lines (currently 102/107 — the 5
 treasure/gallery mismatches are a KNOWN open item pending Scott's sanction, not a
 regression), parity **0 GAPs / 10 WARNs / exit 0**. These numbers change as the plugin
-grows — treat them as "what to expect right now," not a hardcoded target. Always confirm the actual counts against whatever commit you're
+grows — treat them as "what to expect right now," not a hardcoded target.
+
+As of dse SC-117 Batch 6 (branch `sc117-audit`, 2026-08-07, `f09f6cc` + this batch's
+commit): jest **2191/154 suites** (+1: the new `feature/spend` fixture's own
+fixtures.test.ts mount case), shots **189** (+10: `feature-spend`/`negotiation-pr-checked`
+× 5 combos each), freeze **113/113 clean** (widened from 107 — no open mismatches on this
+branch; the SC-121 C-5 rebaseline already covers the 5 treasure/gallery lines main was
+still carrying), parity **0 GAPs / 10 WARNs / exit 0** (unchanged — the documented
+FOLLOWUPS #39/#40 deferral set, not a new gap). Always confirm the actual counts against whatever commit you're
 gating, and if they differ, figure out why before treating it as either pass or fail.
