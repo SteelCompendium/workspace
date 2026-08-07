@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 51 -->
+<!-- next-id: 52 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -39,6 +39,32 @@ none could be fixed inside that plan. None trips the automated parity gate
 (`draw-steel-elements/visual-harness/parity`): the gate diffs material properties
 (background-image/box-shadow/border) on mapped selectors, not layout/structure, so a
 structural divergence like these is invisible to it by design.)*
+
+## 51. Steel section-title type scale is a size below the site's — 16px/.07em against 18px/.1em
+
+**Status:** open
+
+- **Identified:** 2026-08-07, SC-110 (parity gate retargeting), `draw-steel-elements`
+  worktree `guards`. Surfaced by the new `section-tag` pair the moment the type rules stopped
+  reading a text-less wrapper. Descends from **#40**, which deferred the tracking half of this
+  against the wrong node.
+- **What:** the site's section-head title is `.sc-ability__section-head .tag`
+  (`v2/docs/stylesheets/steel-ability-cards.css:186-187`) — `font-size: .9rem` = **18px** at
+  the site's 20px rem base, `letter-spacing: .1em` = **1.8px**, line-height **30.6px** (the
+  shared 1.7 ratio). The plugin's `.dse-section__title` runs **16px / 1.12px (.07em) /
+  27.2px** (`styles-source.css` ~4158, ~4612). Three parity rows × 2 schemes = 6 declared.
+  `line-height` is a pure consequence — both sides run 1.7, so fixing `font-size` closes it.
+- **Why it isn't just fixed:** it is a visible **12.5% enlargement of every Steel section
+  title** across feature/statblock/featureblock/kit cards, i.e. a pixel decision for Scott,
+  not the "exact-value CSS catch-up" a gate ticket may make unilaterally. Everything else the
+  same retarget touched came out clean or better: `section-head:ink` turned out to match the
+  site **exactly** once compared against the real `.tag`.
+- **Context:** declared in `visual-harness/parity/selector-map.json` `declaredDeferrals` as
+  `section-tag:font-size` / `:line-height` / `:letter-spacing`, citing this number. The fix,
+  if Scott wants it, is two declarations in the existing Steel-scoped rule (`1.125rem` and
+  `0.1em`) — screen-only, so the frozen legacy/print shots cannot move; the unfrozen
+  `*--steel-{dark,light}.png` shots would, and want an eye.
+- **Effort:** XS to change, M to review (it moves type on four card families).
 
 ## 48. Hero sheet still overflows a 300px sidebar leaf after the container-query fix
 **Status:** open
@@ -271,7 +297,30 @@ structural divergence like these is invisible to it by design.)*
 
 ## 40. Parity `section-head`/`pr-head` pairs compare the site's text-less flex wrapper against the plugin's title/header content node
 
-**Status:** open
+**Status:** RESTATED 2026-08-07 (SC-110, worktree `guards`) — the wrong-node half is **done**;
+what remains is one deliberate divergence, now declared instead of mis-measured.
+
+- The gate half is closed. `selector-map.json` gained a `section-tag` pair
+  (`.sc-ability__section-head .tag` → `.dse-section__title`) and a `pr-chars` pair
+  (`.sc-ability__pr-head .chars` → `.dse-pr__head`), each owning the type/ink rules while the
+  original pairs keep the box/material rules (the new `owns` partition mechanism). Baseline
+  regenerated (`npm run parity:site`, 2026-08-07).
+- **`section-head:ink` is GONE — the plugin was right all along.** Compared against the real
+  `.tag` it matches **exactly**: `rgb(217,222,225)` dark / `rgb(44,51,56)` light on both
+  sides. Three years of that row being "deferred" measured nothing.
+- **`section-head:letter-spacing` was a real miss in the OPPOSITE direction**, and moved to
+  **#51** with the rest of the section title's type scale (site `.1em`/1.8px vs plugin
+  `.07em`/1.12px — the plugin *under*-tracks; the wrapper's `normal` reading was noise).
+- **What is left of #40 is exactly one declaration: `pr-chars:ink`** (2 rows, both schemes).
+  The site splits its power-roll caption into `.pre` (dim metal) and `.chars` (the bright roll
+  readout); the plugin's `.dse-pr__head` is ONE node carrying the whole caption, painted
+  `var(--dse-heading)` so the line reads as a heading — brighter than `.chars` in dark
+  (`rgba(220,226,230,.95)` vs `rgb(205,209,212)`) and darker in light (`rgb(26,29,32)` vs
+  `rgb(95,104,109)`). More emphasis, both schemes, **by design**. Changing it is a pixel
+  decision for Scott (an A/B is the natural next step); the gate now says so out loud
+  instead of pretending the comparison was against body ink.
+
+The original write-up, kept because it is the evidence for the above:
 
 - **Identified:** 2026-07-24, Plan 21 (Steel typography & spacing) Task 3,
   `draw-steel-elements` worktree `steel-type`, closing the body-font/ink/letter-spacing GAPs.
@@ -318,7 +367,36 @@ structural divergence like these is invisible to it by design.)*
 
 ## 39. Parity gate cannot see the statblock/featureblock block margin — the site's lives on the `*-wrap` node, outside every pair
 
-**Status:** open
+**Status:** RESTATED 2026-08-07 (SC-110, worktree `guards`) — the gate half is **done**; what
+remains is the pixel decision the blindness was hiding.
+
+- **The gate can see it now.** `selector-map.json` gained `statblock-wrap`
+  (`.sb-wrap` → `[data-dse-element='statblock']`) and `featureblock-wrap`
+  (`.fb-wrap` → `[data-dse-element='featureblock']`), each owning **only**
+  `margin-top`/`margin-bottom` so the plate pairs keep the material rules. The old
+  `featureblock:margin-*` deferral — which compared the site's `margin: 0` inner plate against
+  the host and demanded a shrink to 0 — is deleted. Baseline regenerated
+  (`npm run parity:site`, 2026-08-07); `.sb-wrap`/`.fb-wrap` both confirmed at **34px**.
+- **The real miss, now measured: site 34px vs plugin 8px**, both families, both schemes
+  (8 declared rows). The plugin's hosts still carry the theme-agnostic Legacy base
+  `margin: 0.5em` (`styles-source.css` ~1799 / ~1956).
+- **Left open deliberately: it is a PIXEL decision for Scott, not a gate ticket's call.**
+  Plan 21 Task 2 set the precedent for closing it — it ported the site's 24px `.sc-ability`
+  margin onto the feature host, Steel-scoped and screen-only (`styles-source.css` ~3497), so
+  the shape of the fix is known and freeze-safe:
+  ```css
+  [data-dse-theme='steel']:not([data-dse-print="on"])[data-dse-element='statblock']:not([data-dse-error-stage]),
+  [data-dse-theme='steel']:not([data-dse-print="on"])[data-dse-element='featureblock']:not([data-dse-error-stage]) {
+  	margin-top: 2.125em;    /* 34px — site .sb-wrap/.fb-wrap `margin: 1.7rem auto` @ its 20px rem base */
+  	margin-bottom: 2.125em;
+  }
+  ```
+  But that is 26px of new air above and below **every** statblock and featureblock in an
+  Obsidian note, where Obsidian already contributes its own block spacing around the
+  code-block wrapper (the site has no such container). Scott should see an A/B before it
+  ships. Declared in `selector-map.json` citing this number until he rules.
+
+The original write-up, kept because it is the evidence for the above:
 
 - **Identified:** 2026-07-23, Plan 21 (Steel typography & spacing) Task 1 review fix round,
   `draw-steel-elements` worktree `steel-type`, while adding the `margin-top`/`margin-bottom`

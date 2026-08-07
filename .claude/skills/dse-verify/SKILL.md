@@ -27,7 +27,7 @@ absolute paths — devbox ignores your shell's `cd`.
 | 2. Unit tests | `npx jest` | all suites/tests green |
 | 3. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
 | 4. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | `freeze OK (107/107 …)` (currently 102/107 — see "Current expected numbers" below for the 5 known open mismatches) |
-| 5. Parity (LAST) | `npm run parity` | `0 GAPs`, exactly the documented 10-WARN deferral set, exit 0 |
+| 5. Parity (LAST) | `npm run parity` | `0 GAPs`, `0 undeclared WARNs`, exactly the documented declared-deferral set, exit 0 |
 | 6. Obsidian shots (only if a display is available) | `npm run obsidian-shots` | regenerates ground-truth PNGs from a real spawned Obsidian |
 
 Run parity last: it rebuilds the harness bundle itself (`harness:build` is a
@@ -159,18 +159,39 @@ dark-mode shot (and ideally the light twin), matching how `parity:site` already 
 schemes.
 
 `npm run parity` diffs plugin-rendered CSS/DOM against the live v2 site on a fixed set of
-mapped selectors. Expected clean result: **0 GAPs / 10 WARNs / exit 0**.
+mapped selectors. **The gate contract is a biconditional (SC-110):**
 
-The 10 WARNs are not noise — they are exactly the documented per-(pair, rule) deferrals from
-`visual-harness/parity/selector-map.json`'s `expectedGapsNote`:
-- **4×** FOLLOWUPS #39 — `featureblock:margin-top` / `featureblock:margin-bottom`, ×2 schemes
-  (the site's real block margin lives on the un-paired `*-wrap` node, not the mapped pair).
-- **6×** FOLLOWUPS #40 — `section-head:ink`, `section-head:letter-spacing`, `pr-head:ink`,
-  ×2 schemes (the pair maps the plugin's content node to the site's text-less flex wrapper).
+> **exit 0 ⟺ 0 GAPs AND 0 undeclared WARNs.**
 
-If the WARN count or composition differs from this set, don't just accept a new number:
+Expected clean result today: **0 GAPs / 0 undeclared WARNs / 16 DECLARED rows / exit 0**.
+
+A `WARN` now means "the comparison did not happen" (a selector that never rendered, an
+unparseable value) and **fails the run** — before SC-110 it was printed and ignored, so a
+pair could go blind with the gate still green. The only escape is an explicit
+`declaredDeferrals` entry in `visual-harness/parity/selector-map.json`
+(`{ pair, rule, scheme?, why }`), which prints as `DECLARED` and must cite a workspace
+`FOLLOWUPS.md` number or a Linear ticket. `compare.cjs` refuses to run on a declaration that
+names a missing pair, an unknown rule, a rule the pair doesn't own, or carries no citation;
+`diff.mjs` fails on a declaration that **matched nothing** (anti-rot). Unit-tested, can-fail
+proof included, in `test/unit/parity/compare.test.ts`.
+
+The 8 declared entries (16 rows — each covers both schemes) are three findings:
+- **FOLLOWUPS #39** (8 rows) — `statblock-wrap` / `featureblock-wrap` `margin-top`/`-bottom`:
+  site 34px (`1.7rem` on `.sb-wrap`/`.fb-wrap`) vs plugin 8px (Legacy-base `0.5em` on the
+  host). A **pixel decision** for Scott, no longer an invisible one.
+- **FOLLOWUPS #51** (6 rows) — `section-tag` `font-size`/`line-height`/`letter-spacing`:
+  site 18px/30.6px/1.8px vs plugin 16px/27.2px/1.12px. One type-scale decision for Scott.
+- **FOLLOWUPS #40** (2 rows) — `pr-chars:ink`: the plugin's single-node power-roll caption is
+  deliberately heading-emphasised where the site splits `.pre`/`.chars`.
+
+If the DECLARED count or composition differs from this set, don't just accept a new number:
 either it's a regression (fix it) or a new legitimate deferral (file it under its own
-FOLLOWUPS number and update `selector-map.json`'s `expectedGapsNote`).
+FOLLOWUPS number and add a `declaredDeferrals` entry citing it).
+
+**`owns`** is the sibling mechanism: when the plugin collapses two site nodes into one, two
+pairs share the plugin selector and each declares which rules it is authoritative for. It can
+only **move** a rule — `compare.cjs` requires the owned sets to partition the full rule list
+exactly, so nothing can be dropped or double-counted.
 
 ## Steel scoping rule
 
@@ -195,7 +216,7 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 As of dse SC-121 Batch 4 (branch `sc121-fixes`, 2026-08-04): jest **2189/154 suites**,
 shots **179**, obsidian-shots **141**, freeze **107** lines (currently 102/107 — the 5
 treasure/gallery mismatches are a KNOWN open item pending Scott's sanction, not a
-regression), parity **0 GAPs / 10 WARNs / exit 0**. These numbers change as the plugin
+regression), parity — see the current contract below. These numbers change as the plugin
 grows — treat them as "what to expect right now," not a hardcoded target.
 
 As of dse SC-117 Batch 6 (branch `sc117-audit`, 2026-08-07, `f09f6cc` + this batch's
@@ -203,6 +224,11 @@ commit): jest **2191/154 suites** (+1: the new `feature/spend` fixture's own
 fixtures.test.ts mount case), shots **189** (+10: `feature-spend`/`negotiation-pr-checked`
 × 5 combos each), freeze **113/113 clean** (widened from 107 — no open mismatches on this
 branch; the SC-121 C-5 rebaseline already covers the 5 treasure/gallery lines main was
-still carrying), parity **0 GAPs / 10 WARNs / exit 0** (unchanged — the documented
-FOLLOWUPS #39/#40 deferral set, not a new gap). Always confirm the actual counts against whatever commit you're
+still carrying).
+
+As of the `guards` branch (SC-110/109, 2026-08-07): parity is **0 GAPs / 0 undeclared
+WARNs / 18 DECLARED rows / exit 0** — the old "10 WARNs" number predates the
+declared-deferrals contract (exit 0 ⟺ 0 GAPs AND every WARN declared; material classes
+`bg`/`shadow`/`hairline-*` are never declarable). `npm run parity` also runs in CI as of
+SC-109. Jest on that branch: **2248/155**. Always confirm the actual counts against whatever commit you're
 gating, and if they differ, figure out why before treating it as either pass or fail.
