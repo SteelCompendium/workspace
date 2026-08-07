@@ -26,7 +26,7 @@ absolute paths — devbox ignores your shell's `cd`.
 | 1. Type-check | `npm run tsc` | clean (no output) |
 | 2. Unit tests | `npx jest` | all suites/tests green |
 | 3. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
-| 4. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | `freeze OK (107/107 …)` (currently 102/107 — see "Current expected numbers" below for the 5 known open mismatches) |
+| 4. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
 | 5. Parity (LAST) | `npm run parity` | `0 GAPs`, `0 undeclared WARNs`, exactly the documented declared-deferral set, exit 0 |
 | 6. Obsidian shots (only if a display is available) | `npm run obsidian-shots` | regenerates ground-truth PNGs from a real spawned Obsidian |
 
@@ -163,7 +163,7 @@ mapped selectors. **The gate contract is a biconditional (SC-110):**
 
 > **exit 0 ⟺ 0 GAPs AND 0 undeclared WARNs.**
 
-Expected clean result today: **0 GAPs / 0 undeclared WARNs / 16 DECLARED rows / exit 0**.
+Expected clean result today: **0 GAPs / 0 undeclared WARNs / 18 DECLARED rows / exit 0**.
 
 A `WARN` now means "the comparison did not happen" (a selector that never rendered, an
 unparseable value) and **fails the run** — before SC-110 it was printed and ignored, so a
@@ -171,11 +171,29 @@ pair could go blind with the gate still green. The only escape is an explicit
 `declaredDeferrals` entry in `visual-harness/parity/selector-map.json`
 (`{ pair, rule, scheme?, why }`), which prints as `DECLARED` and must cite a workspace
 `FOLLOWUPS.md` number or a Linear ticket. `compare.cjs` refuses to run on a declaration that
-names a missing pair, an unknown rule, a rule the pair doesn't own, or carries no citation;
-`diff.mjs` fails on a declaration that **matched nothing** (anti-rot). Unit-tested, can-fail
-proof included, in `test/unit/parity/compare.test.ts`.
+names a missing pair, an unknown rule, a **non-declarable** rule, a rule the pair doesn't own,
+or carries no citation; `diff.mjs` fails on a declaration that **matched nothing** (anti-rot).
+Unit-tested, can-fail proof included, in `test/unit/parity/compare.test.ts`.
 
-The 8 declared entries (16 rows — each covers both schemes) are three findings:
+**Which classes are declarable.** Every rule has a property class, and the class decides
+whether a divergence in it can ever be excused:
+
+| Class | Rules | Declarable? |
+|---|---|---|
+| **material** | `bg`, `shadow`, `hairline-top`, `hairline-bottom` | **NEVER** — a hard contract error |
+| geometry | `padding-*`, `margin-top`, `margin-bottom` | yes |
+| typography | `font-size`, `line-height`, `body-font`, `letter-spacing` | yes |
+| ink | `ink` | yes |
+| capture | `capture-site`, `capture-plugin` (directional — one does not silence the other) | yes |
+
+A flat surface, a missing bevel or a missing hairline is always closable in
+`styles-source.css`, and a wholly flat Steel theme that passed human review is the exact
+failure this gate was built to catch (plan 19) — so no material row may be declared away.
+Geometry/typography/ink stay declarable because that is where genuine pixel decisions live.
+(Conservative by design; relaxing it is a one-line change to `NON_DECLARABLE_CLASSES` in
+`compare.cjs`.)
+
+The 9 declared entries (18 rows — each covers both schemes) are four findings:
 - **FOLLOWUPS #39** (8 rows) — `statblock-wrap` / `featureblock-wrap` `margin-top`/`-bottom`:
   site 34px (`1.7rem` on `.sb-wrap`/`.fb-wrap`) vs plugin 8px (Legacy-base `0.5em` on the
   host). A **pixel decision** for Scott, no longer an invisible one.
@@ -183,6 +201,10 @@ The 8 declared entries (16 rows — each covers both schemes) are three findings
   site 18px/30.6px/1.8px vs plugin 16px/27.2px/1.12px. One type-scale decision for Scott.
 - **FOLLOWUPS #40** (2 rows) — `pr-chars:ink`: the plugin's single-node power-roll caption is
   deliberately heading-emphasised where the site splits `.pre`/`.chars`.
+- **FOLLOWUPS #52** (2 rows) — `statblock-wrap:line-height`: site `.sb-wrap` 27.2px vs the
+  plugin's statblock host 24px. A **one-line CSS fix** (the Plan 21 Task 2 `line-height: 1.7`
+  group at `styles-source.css` ~3512 omits the statblock host), deferred only because the
+  SC-110 fix round that surfaced it changes no plugin CSS.
 
 If the DECLARED count or composition differs from this set, don't just accept a new number:
 either it's a regression (fix it) or a new legitimate deferral (file it under its own
@@ -190,8 +212,17 @@ FOLLOWUPS number and add a `declaredDeferrals` entry citing it).
 
 **`owns`** is the sibling mechanism: when the plugin collapses two site nodes into one, two
 pairs share the plugin selector and each declares which rules it is authoritative for. It can
-only **move** a rule — `compare.cjs` requires the owned sets to partition the full rule list
-exactly, so nothing can be dropped or double-counted.
+only **move** a rule — `compare.cjs` requires, for **every** plugin selector (shared or named
+by a single pair), that each rule be owned by exactly one pair, so nothing can be dropped or
+double-counted. The one way to drop a rule is an explicit `excludes: [{ rule, why }]` entry
+citing a FOLLOWUPS number / ticket, priced exactly like a declared deferral; the shipped map
+uses none.
+
+> Until the SC-110 fix round that invariant ran **only on shared selectors**, so a pair naming
+> a plugin node no one else named could narrow `owns` and silently drop the rest — exit 0, no
+> error, no dead declaration. `statblock-wrap` was live proof, hiding two real `line-height`
+> rows (now FOLLOWUPS #52). If you read a doc anywhere claiming the partition is unconditional
+> and older than 2026-08-07, it was describing the intent, not the code.
 
 ## Steel scoping rule
 
@@ -213,12 +244,6 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-As of dse SC-121 Batch 4 (branch `sc121-fixes`, 2026-08-04): jest **2189/154 suites**,
-shots **179**, obsidian-shots **141**, freeze **107** lines (currently 102/107 — the 5
-treasure/gallery mismatches are a KNOWN open item pending Scott's sanction, not a
-regression), parity — see the current contract below. These numbers change as the plugin
-grows — treat them as "what to expect right now," not a hardcoded target.
-
 As of dse SC-117 Batch 6 (branch `sc117-audit`, 2026-08-07, `f09f6cc` + this batch's
 commit): jest **2191/154 suites** (+1: the new `feature/spend` fixture's own
 fixtures.test.ts mount case), shots **189** (+10: `feature-spend`/`negotiation-pr-checked`
@@ -226,9 +251,11 @@ fixtures.test.ts mount case), shots **189** (+10: `feature-spend`/`negotiation-p
 branch; the SC-121 C-5 rebaseline already covers the 5 treasure/gallery lines main was
 still carrying).
 
-As of the `guards` branch (SC-110/109, 2026-08-07): parity is **0 GAPs / 0 undeclared
-WARNs / 18 DECLARED rows / exit 0** — the old "10 WARNs" number predates the
-declared-deferrals contract (exit 0 ⟺ 0 GAPs AND every WARN declared; material classes
-`bg`/`shadow`/`hairline-*` are never declarable). `npm run parity` also runs in CI as of
-SC-109. Jest on that branch: **2248/155**. Always confirm the actual counts against whatever commit you're
+As of dse SC-110/SC-109 + fix round (branch `guards` rebased onto B6, 2026-08-07): jest
+**2248/155 suites**, parity **0 GAPs / 0 undeclared WARNs / 18 DECLARED / exit 0** — the
+old "10 WARNs" number predates the declared-deferrals contract (exit 0 ⟺ 0 GAPs AND every
+WARN declared; material classes `bg`/`shadow`/`hairline-*` are never declarable; the
+"16 DECLARED" number predates the fix round that stopped `statblock-wrap` hiding two rows).
+`npm run parity` also runs in CI as of SC-109. These numbers change as the plugin
+grows — treat them as "what to expect right now," not a hardcoded target. Always confirm the actual counts against whatever commit you're
 gating, and if they differ, figure out why before treating it as either pass or fail.

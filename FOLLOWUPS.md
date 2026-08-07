@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 52 -->
+<!-- next-id: 53 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -39,6 +39,44 @@ none could be fixed inside that plan. None trips the automated parity gate
 (`draw-steel-elements/visual-harness/parity`): the gate diffs material properties
 (background-image/box-shadow/border) on mapped selectors, not layout/structure, so a
 structural divergence like these is invisible to it by design.)*
+
+## 52. Steel statblock HOST missed the Plan 21 body-rhythm group — line-height 24px vs the site's 27.2px
+
+**Status:** open
+
+- **Identified:** 2026-08-07, SC-110 **fix round** (review finding M-1), `draw-steel-elements`
+  worktree `guards`. Not found by looking: it was **being actively suppressed**. The
+  `statblock-wrap` pair narrowed `owns` to `["margin-top","margin-bottom"]`, and the gate's
+  rule-coverage invariant only ran on plugin selectors named by **two or more** pairs — so on
+  this pair (its plugin selector is named by no other) the other 13 rules were dropped with no
+  error, no dead declaration and exit 0. The fix round made coverage mandatory on every pair;
+  these two rows fell out the moment it did.
+- **What:** site `.sb-wrap` computes `line-height: 27.2px` (16px × the site's 1.7 body ratio);
+  the plugin's `[data-dse-element='statblock']` host computes **24px** — Obsidian's inherited
+  1.5, untouched. **Both schemes**, so 2 parity rows. The plate *inside* it (`.dse-sb`) is
+  already 27.2px and matches, which is why nothing looked wrong: the host is transparent and
+  its 1.5 very likely never reaches painted text. "Very likely never reaches text" is exactly
+  the state SC-110 exists to abolish, so it is measured and declared rather than assumed.
+- **Why it isn't just fixed:** the fix round that surfaced it is contract-only and changes **no
+  plugin CSS** (the freeze baseline must not move underneath a gate change). It is otherwise a
+  trivially safe fix.
+- **The remedy — one selector.** `styles-source.css` ~3512, the Plan 21 Task 2 `line-height:
+  1.7` group, currently lists the feature host, the featureblock host, `.dse-sb` and
+  `.dse-card` — the statblock host is the one member missing. Add:
+
+  ```css
+  [data-dse-theme='steel']:not([data-dse-print="on"])[data-dse-element='statblock']
+  ```
+
+  to that selector list. Steel-scoped and screen-only, like its siblings, so the frozen
+  legacy/print shots cannot move; expect no visible change at all (the host paints no text of
+  its own), which means the `*--steel-{dark,light}.png` shots should also come back identical
+  — worth confirming rather than assuming.
+- **Context:** declared in `visual-harness/parity/selector-map.json` `declaredDeferrals` as
+  `statblock-wrap:line-height`, citing this number. The gate's anti-rot check deletes the
+  declaration for you: the moment the CSS lands, the declaration matches nothing and the run
+  fails until it is removed.
+- **Effort:** XS (one selector + a shot re-read).
 
 ## 51. Steel section-title type scale is a size below the site's — 16px/.07em against 18px/.1em
 
