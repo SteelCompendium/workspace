@@ -673,8 +673,10 @@ the shared per-option card frame (see #33/#35, D3). Along the way this also fixe
 separate bug it exposed: villain actions (`usage: "-"` placeholder + `cost: "Villain Action N"`)
 had NO spine/crest/`data-dse-act` at all in any theme — a new `villain` `ActionType` +
 `--dse-act-villain` token now covers them (site-exact `#e0584b`, scheme-invariant). Freeze:
-`feature--steel-print.png` + `statblock--steel-print.png` move (structure-tier), pending
-Scott's landing-time sanction — not yet applied as of this note.
+`feature--steel-print.png`, `feature-spend--steel-print.png` (a SC-117 Batch 6 fixture this
+branch acquired at the Task 7 rebase — same `feature` element, so the same rule reaches it)
+and `statblock--steel-print.png` move (structure-tier), pending Scott's landing-time
+sanction — not yet applied as of this note.
 
 - **Identified:** 2026-07-21, Plan 20 (Steel material parity) Task 8 final visual
   verification.
