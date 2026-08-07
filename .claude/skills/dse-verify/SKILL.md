@@ -154,6 +154,20 @@ didn't mount) plus human review of the PNGs.
     `--dse-surface-sunken` token flip): both new fixtures render surfaces gated by that
     token, and it's a Steel-scoped rule, so legacy/print must be unaffected by the flip —
     pinning them now makes any future leak into legacy/print loud instead of silent.
+  - **2026-08-07, plan 25 / SC-102 S-5 (worktree `sc10x-structural`, Task 7): 113 → 119.**
+    Two new browser fixtures, 3 lines each — `feature/villain`, the only REAL standalone
+    villain action anywhere (the D9 `feature/example.yaml` is a *permanent* false villain:
+    `ability_type: Villain Action 1` alongside `usage: Main action`, and usage correctly
+    wins — FOLLOWUPS #53), and `statblock/villain-corpus`, villain actions in the shape
+    `steel-etl` actually emits (`cost: "Villain Action N"` + `usage: "-"`, **no**
+    `ability_type` — the shape the task-3 review found made the whole feature a no-op on
+    real content). Verified: `diff <(head -113 …) …pre-plan25-bak` is empty — the
+    pre-existing 113 lines are byte-untouched — and both fixtures' **legacy** twins were
+    green *before* the widening (they were simply unlisted), so pinning them records a
+    proven-clean state, not a leak. **What this widening does NOT do:** it pins the trio's
+    own after-bytes only for *new names with no prior frozen state*. The 5 pre-existing
+    `*--steel-print.png` lines the trio moves are a separate, Scott-sanctioned rebaseline
+    (below) applied at landing — never bundled into a widening.
 - **Sanctioned single-line rebaselines — the third case (rare; Scott-approved only).** A
   Steel-only DOM rebuild of a display family necessarily changes that family's frozen
   `*--steel-print.png` (print is a pure CSS attribute over whatever DOM the active theme
@@ -172,20 +186,29 @@ didn't mount) plus human review of the PNGs.
     CONTENT fix (treasure Project row rendered a raw markdown literal; `markdown: true`
     in treasureLayout) necessarily reaches Legacy/print. Scott approved explicitly
     ("oh that's fine. Fix it."); rebaseline applied at landing, count unchanged at 107.
-  - **PENDING, plan 25 (SC-101/SC-102/SC-103, worktree sc10x-structural, Tasks 2-5 complete,
-    review-clean 2026-08-07): NOT YET APPLIED.** The trio's structure-tier CSS (the shared
-    nested-card frame, the villain action type, the head-band notch — all "print follows
-    structure" per S-1(a)) necessarily reaches print, so during development the expected
-    sole content mismatches are exactly 4 lines: `statblock--steel-print.png`,
-    `feature--steel-print.png`, `featureblock--steel-print.png`,
-    `featureblock-advancement--steel-print.png` (103/113 OK on that branch, plus 6
-    environmental misses from a concurrent sibling branch's fixtures). **This is a record of
-    what's expected, not a completed rebaseline** — Task 7 (final integration) owns the
-    actual re-verification and the consolidated rebaseline request to Scott; only once that
-    lands does this list gain a dated, hash-applied entry like the ones above. A fifth,
-    related but SEPARATE call is still open: Task 4 added a new `feature-villain` harness
-    fixture (S-5(a)) whose golden shots are deliberately NOT pinned yet — widening
-    107 → 110 to freeze them is its own later decision, not bundled into this rebaseline.
+  - **PENDING, plan 25 (SC-101/SC-102/SC-103, worktree `sc10x-structural`, Tasks 2-7
+    complete, rebased onto the parity-contract main 2026-08-07): NOT YET APPLIED — the ask
+    is posted on SC-102, awaiting Scott.** The trio's structure-tier CSS (the shared
+    nested-card frame, the standalone action-spine removal, the villain action type, the
+    head-band notch — all "print follows structure" per S-1(a)) necessarily reaches print.
+    **FIVE** lines, all `*--steel-print.png`: `statblock`, `feature`, `featureblock`,
+    `featureblock-advancement`, **`feature-spend`**. Post-rebase state on that branch:
+    **114/119 OK**, exactly those 5 names, no environmental misses.
+    - The 5th (`feature-spend`) appeared only at Task 7: it is a **SC-117 Batch 6** fixture
+      that did not exist on this branch until the rebase, and it is a `feature`-element card
+      — so the Task 4 spine-removal rule
+      (`[data-dse-theme='steel'][data-dse-element='feature'] .dse-feature[data-dse-act]::before`)
+      reaches it for exactly the same reason it reaches `feature--steel-print`. Diagnosed,
+      not assumed: its **legacy** twins stayed byte-identical (so no theme-agnostic DOM
+      change touched it — the move is Steel-structure-only), and its pre-trio bytes were
+      regenerated at `origin/main` and **hash-matched the frozen baseline line exactly**,
+      giving a real before/after pair for the sanction ask.
+    - **Lesson worth keeping:** a sibling branch's new fixture can silently enlarge *your*
+      rebaseline ask. Re-run the freeze check **after** the rebase, never only before, and
+      count the mismatch names rather than trusting the plan's predicted number.
+    **This is a record of what's expected, not a completed rebaseline** — only once Scott
+    sanctions and the landing agent applies the hashes does this list gain a dated,
+    hash-applied entry like the ones above.
 
 **2026-08-07, SC-117 fix wave M3 — exit-code semantics fixed: MISSING and MISMATCH used to
 be conflated.** `sha256sum -c` reports both a not-yet-producible file and a real byte
@@ -378,13 +401,20 @@ semantics. Parity **0 GAPs / 0 undeclared WARNs / 16 DECLARED / exit 0**, unchan
 itself) has no branch/version number of its own — it's shared workspace scratch, not part
 of this repo's test surface.
 
-**Branch-local example — `sc10x-structural` (plan 25, Tasks 2-5 complete, 2026-08-07):** a
-concurrent sibling branch (SC-117 Batch 6) widened the SHARED `freeze-baseline.sha256` to
-113 lines mid-session before this branch carried its fixtures, so this branch's own freeze
-denominator is **113, not 107** — jest **2230/154 suites**, shots **189**, obsidian-shots
-**145**, freeze **103/113 OK** (4 content mismatches, all `*--steel-print.png`, all
-S-1(a)-predicted and pending sanction per "Freeze semantics" above, + 6 environmental
-misses for the sibling branch's not-yet-present fixtures), parity **0 GAPs / 10 WARNs / exit
-0** (composition unchanged — none of the 10 documented WARNs concern anything this plan
-touched). This is exactly the "confirm the actual counts against whatever commit you're
-gating" case the paragraph above warns about: don't average, don't assume, re-run.
+**Branch-local example — `sc10x-structural` (plan 25, Tasks 2-7 complete, rebased onto main
+2026-08-07):** jest **2289/155 suites**, shots **199 browser**, freeze **114/119 OK**
+(5 content mismatches, all `*--steel-print.png`, all S-1(a)-predicted and pending Scott's
+sanction per "Freeze semantics" above; **no** environmental misses), parity **0 GAPs / 0
+undeclared WARNs / 18 DECLARED / exit 0** — composition byte-for-byte identical to main's,
+because none of the 18 declarations concerns a surface this plan touched and none of the
+trio's rules moved a sampled property. The freeze denominator went 113 → **119** on this
+branch (this plan's own S-5 widening, above).
+
+The arithmetic is worth spelling out, because two sibling branches landed between this
+branch's baseline and its finale: jest = main's **2248** (B6 + guards) **+ 41** the trio's
+own; shots = **179 + 10** (B6's two fixtures) **+ 10** (the trio's two); freeze = **113 + 6**
+(the S-5 widening). This is exactly the "confirm the actual counts against whatever commit
+you're gating" case the paragraph above warns about: the plan predicted 4 print mismatches
+and the real post-rebase answer was 5, because a sibling branch's new `feature-spend` fixture
+sits in a family this plan restyles. **Don't average, don't assume, re-run — after the
+rebase.**
