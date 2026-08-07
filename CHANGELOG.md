@@ -148,8 +148,9 @@ go under an *Internal* sub-heading.
   states and the settings tab (freeze pins 101 → 107).
 - **Steel structural trio — action spine, villain actions, statblock notch (SC-101/
   SC-102/SC-103, plan 25)** — the plugin's Steel theme closes its last three DOM-level
-  divergences from the site, all CSS-only in the end (no markup change was needed for
-  any of them). Villain actions (Shoot!, Form Up!, and every "Villain Action N" ability
+  divergences from the site. The action-spine and statblock-notch fixes are Steel-scoped
+  CSS only (no DOM restructuring); villain-action classification needed a real TypeScript
+  rendering fix instead. Villain actions (Shoot!, Form Up!, and every "Villain Action N" ability
   in your synced compendium) now render with their own red accent and a skull crest,
   instead of no decoration at all — a mapping bug had them falling through unclassified
   in every theme. A card's coloured action-type bar now appears only where the site
