@@ -67,10 +67,26 @@ SC-109/110/111 (guards). No worktrees exist; nothing in flight.
   SC-102 (usage:"-" shadows ability_type). FOLLOWUPS #46-#50 (45 fixed in-pass). 3 modal
   taste items on the ticket, non-blocking. Battery at landing: jest 2190/154 · freeze
   107/107 · parity 0/10.
-- **7.0.0 remaining gate:** SC-101/102/103 (structural; SC-102 now carries the villain
-  analysis), SC-109/110/111 (guards), SC-117 (dark-mode audit; --dse-surface-sunken lead
-  list + SC-100 interior note on ticket), SC-123 scoping call. Then SC-11 (release cut —
-  Scott alone, NO TAGS).
+- **PLAN 25 (structural trio SC-101/102/103): ALL 7 TASKS COMPLETE, final whole-branch
+  review in flight (2026-08-07).** Worktree sc10x-structural: workspace @ 9cd08cd, dse @
+  ef7821d, REBASED onto main (guards+B6; FOLLOWUPS renumbered #51/52/53→#53/54/55).
+  Shipped: notch on both families' head bands, villain ActionType (cost-prefix classifier
+  matching steel-etl verbatim — works on real corpus; two shapes archaeology documented),
+  standalone spine removal, shared nested-card frame + display-text costs, corpus-shaped
+  fixtures (statblock-villain-corpus, feature-villain). Battery @ tip: jest 2289/155 ·
+  shots 199 · freeze 114/119 (5 sanction-pending: statblock/feature/featureblock/
+  featureblock-advancement/feature-spend --steel-print; widening 113→119 applied,
+  .pre-plan25-bak backups) · parity 0/0/18-declared exit 0. **AWAITING Scott's 5-print-shot
+  sanction on SC-102 (comment f8bbaadf, Needs Review set; S-decisions executed under
+  recommendations, S-3 shipped scheme-invariant #e0584b).** Land via land-stack + 5-hash
+  rebaseline on approval.
+- **SC-109/110/111: DONE + landed** (parity declared-deferrals contract + CI; SC-111
+  closed by process evidence). 4-divergence decision set parked on SC-110 (no urgency).
+- **SC-125 filed** (link-preserving migration, 7.0.0 project, QUEUED — Scott: not until
+  plugin done; design = shipped path-mapping, NOT SCC codes — codes changed in refactor).
+- **7.0.0 remaining gate:** plan-25 landing (Scott sanction) + SC-117 visual batches
+  (catalog posted, awaiting Scott's B1-B5 approval; B6 landed) + SC-123 scoping call +
+  SC-125 (queued). Then SC-11 (release cut — Scott alone, NO TAGS).
 - **SC-118 (site bug): DONE + deployed** (steel-etl b184b6a, site verified live; new SCC code
   rule.downtime/crafting-and-research-events-table, registry 3,081).
 - **SC-117** (dark-mode richness audit): **IN 7.0.0 scope (Scott's call)**; runs after plan 23
