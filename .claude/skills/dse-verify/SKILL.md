@@ -172,6 +172,20 @@ didn't mount) plus human review of the PNGs.
     CONTENT fix (treasure Project row rendered a raw markdown literal; `markdown: true`
     in treasureLayout) necessarily reaches Legacy/print. Scott approved explicitly
     ("oh that's fine. Fix it."); rebaseline applied at landing, count unchanged at 107.
+  - **PENDING, plan 25 (SC-101/SC-102/SC-103, worktree sc10x-structural, Tasks 2-5 complete,
+    review-clean 2026-08-07): NOT YET APPLIED.** The trio's structure-tier CSS (the shared
+    nested-card frame, the villain action type, the head-band notch — all "print follows
+    structure" per S-1(a)) necessarily reaches print, so during development the expected
+    sole content mismatches are exactly 4 lines: `statblock--steel-print.png`,
+    `feature--steel-print.png`, `featureblock--steel-print.png`,
+    `featureblock-advancement--steel-print.png` (103/113 OK on that branch, plus 6
+    environmental misses from a concurrent sibling branch's fixtures). **This is a record of
+    what's expected, not a completed rebaseline** — Task 7 (final integration) owns the
+    actual re-verification and the consolidated rebaseline request to Scott; only once that
+    lands does this list gain a dated, hash-applied entry like the ones above. A fifth,
+    related but SEPARATE call is still open: Task 4 added a new `feature-villain` harness
+    fixture (S-5(a)) whose golden shots are deliberately NOT pinned yet — widening
+    107 → 110 to freeze them is its own later decision, not bundled into this rebaseline.
 
 **2026-08-07, SC-117 fix wave M3 — exit-code semantics fixed: MISSING and MISMATCH used to
 be conflated.** `sha256sum -c` reports both a not-yet-producible file and a real byte
@@ -288,6 +302,22 @@ uses none.
 > rows (now FOLLOWUPS #52). If you read a doc anywhere claiming the partition is unconditional
 > and older than 2026-08-07, it was describing the intent, not the code.
 
+## Capture-width convention (Scott's rule, 2026-08-07)
+
+**Design-review evidence gets the standard main-pane width.** Narrow/sidebar captures are
+only for when narrow behaviour is literally the thing under review (e.g. FOLLOWUPS #48's
+hero-sheet sidebar overflow, or a `--width=` narrow-axis shot). Don't reach for a narrow
+capture as a shortcut or as "extra thoroughness" on an ordinary design-review pass — it
+answers a different question than the one being reviewed.
+
+**The camera sets pane widths programmatically — never ask Scott to resize his vault.** Both
+cameras already do this in code, not by hand: the browser harness fixes its page at
+`viewport: { width: 900, height: 1200 }` (`visual-harness/shoot.mjs`) with an explicit
+`?width=<px>` override for the narrow axis (`visual-harness/entry.ts`'s `NARROW_SHOTS`); the
+Obsidian camera drives real sidebar-leaf width via `Emulation.setDeviceMetricsOverride` over
+CDP (`visual-harness/obsidian-camera.mjs`). If a capture needs a specific width, set it in the
+capture script/CDP call — don't ask a human to resize a window and hope the next run matches.
+
 ## Steel scoping rule
 
 Every new Steel CSS rule must carry
@@ -347,3 +377,14 @@ semantics. Parity **0 GAPs / 0 undeclared WARNs / 16 DECLARED / exit 0**, unchan
 (M4 only edited README prose, no selector-map/compare.cjs change). M3 (`check-freeze.sh`
 itself) has no branch/version number of its own — it's shared workspace scratch, not part
 of this repo's test surface.
+
+**Branch-local example — `sc10x-structural` (plan 25, Tasks 2-5 complete, 2026-08-07):** a
+concurrent sibling branch (SC-117 Batch 6) widened the SHARED `freeze-baseline.sha256` to
+113 lines mid-session before this branch carried its fixtures, so this branch's own freeze
+denominator is **113, not 107** — jest **2230/154 suites**, shots **189**, obsidian-shots
+**145**, freeze **103/113 OK** (4 content mismatches, all `*--steel-print.png`, all
+S-1(a)-predicted and pending sanction per "Freeze semantics" above, + 6 environmental
+misses for the sibling branch's not-yet-present fixtures), parity **0 GAPs / 10 WARNs / exit
+0** (composition unchanged — none of the 10 documented WARNs concern anything this plan
+touched). This is exactly the "confirm the actual counts against whatever commit you're
+gating" case the paragraph above warns about: don't average, don't assume, re-run.

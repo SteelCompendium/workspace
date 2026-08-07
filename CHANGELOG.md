@@ -146,6 +146,27 @@ go under an *Internal* sub-heading.
   and color-mix()/text-wrap uses above the supported floor — each now regression-
   guarded, with harness coverage extended to modals, the sidebar, canvas read-only
   states and the settings tab (freeze pins 101 → 107).
+- **Steel structural trio — action spine, villain actions, statblock notch (SC-101/
+  SC-102/SC-103, plan 25)** — the plugin's Steel theme closes its last three DOM-level
+  divergences from the site, all CSS-only in the end (no markup change was needed for
+  any of them). Villain actions (Shoot!, Form Up!, and every "Villain Action N" ability
+  in your synced compendium) now render with their own red accent and a skull crest,
+  instead of no decoration at all — a mapping bug had them falling through unclassified
+  in every theme. A card's coloured action-type bar now appears only where the site
+  draws one: inside a statblock or featureblock's nested feature list, never on a
+  standalone ability card. Those nested lists — a malice featureblock's options, a
+  statblock's abilities — now render each entry as its own bordered, filled card
+  (matching the site) instead of one continuous accent line, and a featureblock
+  option's cost renders as plain large display text next to its name instead of a
+  small outlined chip (statblock/standalone costs keep the existing forged pill, same
+  as the site). The statblock and featureblock's diamond notch moves from a generic
+  divider between the characteristics strip and the feature list to the site's actual
+  position, straddling the bottom edge of the head band, tinted to the block's role.
+  **Known limits:** compendium content synced before 2026-07-16 carries villain actions
+  as plain body-markdown prose (how they were written at the time) rather than the
+  structured card — re-sync your compendium to get the new rendering. Printed/exported
+  output follows the same structural change as the screen (pending final sign-off at
+  landing, tracked on SC-97).
 
 ### Fixed
 
