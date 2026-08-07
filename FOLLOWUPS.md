@@ -461,7 +461,18 @@ reviewed/approved; LANDED 2026-08-02, superproject eb346a3). Featureblock `advan
 
 ## 36. `npm run parity` is not wired into CI
 
-**Status:** open
+**Status:** done 2026-08-07 (SC-109, worktree `guards`) — `.github/workflows/plugin-ci.yml`
+gained three steps after "Bundle must build": an `actions/cache@v4` of
+`~/.cache/ms-playwright` keyed on `package-lock.json`, `npx playwright install --with-deps
+chromium`, and `npm run parity`. Offline claim re-verified by reading the scripts: nothing in
+`esbuild.mjs` → `plugin-capture.mjs` (a `file://` harness URL) → `diff.mjs` → `compare.cjs`
+contains a URL; only `site-capture.mjs` does, and it is not part of `npm run parity`. Failure
+policy implemented as asked: a baseline that no longer covers the contract fails with an
+explicit `STALE BASELINE` message naming `npm run parity:site` as the deliberate human action
+(`compare.cjs` `checkBaselineCoverage`) — CI never auto-refreshes the reference of record. No
+WARN special-casing was needed: SC-110 made the contract `exit 0 ⟺ 0 GAPs AND 0 undeclared
+WARNs`, so the exit code is the whole story. The workflow's exact command sequence was
+sanity-run locally end to end (exit 0).
 
 - **Identified:** 2026-07-22, Plan 20 (Steel material parity) final whole-branch review
   fix round, `draw-steel-elements` worktree `steel-material`.
