@@ -633,7 +633,7 @@ sanity-run locally end to end (exit 0).
 
 ## 35. Statblock diamond notch sits under the characteristics strip, not the head band like the site
 
-**Status:** done — fixed in worktree sc10x-structural (SC-103 / plan 25, dse `37d8674`,
+**Status:** done — fixed in worktree sc10x-structural (SC-103 / plan 25, dse `2ba7d38`,
 2026-08-07, reviewed/approved). CSS-only (D4, inverting this item's original "relocate the DOM
 element" framing): the legacy `.dse-hr` divider stays mounted (unconditional in every theme,
 asserted by three tests) but is hidden under `[data-dse-theme='steel'] .dse-sb > .dse-hr`, and
@@ -663,8 +663,8 @@ pending Scott's landing-time sanction — not yet applied as of this note.
 
 ## 34. Feature card carries a left action-type spine the site card does not have
 
-**Status:** done — fixed in worktree sc10x-structural (SC-102 / plan 25, dse `949a4d4` +
-`59a3492` + `54f6855`, 2026-08-07, reviewed/approved after one fix round). CSS-only (D3,
+**Status:** done — fixed in worktree sc10x-structural (SC-102 / plan 25, dse `632ce08` +
+`148f9eb` + `15fc806`, 2026-08-07, reviewed/approved after one fix round). CSS-only (D3,
 answering this item's own "keep or remove?" question with "keep on nested, remove on
 standalone" — the site's actual rule, not a binary choice): the spine is now suppressed only
 under `[data-dse-theme='steel'][data-dse-element='feature']` (the standalone pipeline root);
@@ -701,8 +701,8 @@ Scott's landing-time sanction — not yet applied as of this note.
 
 ## 33. Featureblock option cost renders as an outlined chip, not the site's plain display text; one continuous accent rail instead of a bar per option
 
-**Status:** done — fixed in worktree sc10x-structural (SC-101 / plan 25, dse `b80bcd6` +
-`e655e63`, 2026-08-07, reviewed/approved after one fix round). CSS-only (D2/D3, inverting this
+**Status:** done — fixed in worktree sc10x-structural (SC-101 / plan 25, dse `2d0db45` +
+`b28093a`, 2026-08-07, reviewed/approved after one fix round). CSS-only (D2/D3, inverting this
 item's original "restructure the DOM" framing): `.dse-head` was already a real CSS grid, so the
 cost re-places from the eyebrow row to the primary row and sheds its chip chrome entirely in
 CSS; the "one continuous rail" was always N adjacent per-option bars that only looked fused
