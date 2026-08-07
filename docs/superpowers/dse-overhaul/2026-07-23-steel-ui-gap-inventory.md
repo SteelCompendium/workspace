@@ -117,9 +117,12 @@ single face for titles and body); bundling a true slab (Zilla Slab / Bitter, OFL
   (`usage: "-"` + `cost: "Villain Action N"`) had no spine, no crest and no `data-dse-act` at
   all in any theme — the "no spine" reading in #34's original 2026-07-21 write-up was a villain
   action misread as an unstyled main action, not a deliberate absence. Freeze impact: all three
-  items are Steel-scoped, so only `*--steel-print.png` moves (4 lines total, cumulative across
-  the trio) — pending Scott's landing-time sanction (dse-verify skill, "Sanctioned single-line
-  rebaselines"), not yet applied as of this note. Residual nits (not closed by this plan): filed
+  items are Steel-scoped, so only `*--steel-print.png` moves (5 lines total, cumulative across
+  the trio: `statblock`, `feature`, `featureblock`, `featureblock-advancement`, and
+  `feature-spend` — the fifth joined at Task 7's rebase, a SC-117 Batch 6 fixture the branch
+  didn't originally carry) — pending Scott's landing-time sanction (dse-verify skill,
+  "Sanctioned single-line rebaselines"), not yet applied as of this note. Residual nits (not
+  closed by this plan): filed
   as one workspace FOLLOWUPS entry, "featureblock/standalone head-detail parity nits (SC-101
   residuals)".
 

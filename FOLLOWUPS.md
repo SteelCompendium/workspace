@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 56 -->
+<!-- next-id: 57 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -25,6 +25,36 @@ Most recent archive:
 - **Why:** motivation / value
 - **Context:** file paths, gotchas, anything that saves grep time
 - **Effort:** XS (<1 h) / S (1–4 h) / M (1 day) / L (multi-day) -->
+
+## 56. Unmapped-role statblock loses its section break entirely under Steel
+
+**Status:** open
+
+- **Identified:** 2026-08-07, plan 25 final whole-branch review (finding L-3), worktree
+  `sc10x-structural`. New on this branch; invisible to every gate (no fixture renders an
+  unmapped-role statblock).
+- **What:** `[data-dse-theme='steel'] .dse-sb > .dse-hr { display: none }` is **ungated**, but
+  the replacement notch is gated on `[data-dse-role]` (correctly — it follows the
+  role-mapped band). So a statblock whose role text maps to nothing (the CSS comment itself
+  names "Boss") gets: no band, no notch, and now no ◆ divider either — the chars→features gap
+  collapses from 28px (Legacy, `.dse-hr` visible) to 8px (Steel, both suppressed with nothing
+  painted in their place). Measured at runtime by removing the attribute:
+  `legacy: hr display:flex, no notch, gap 28px` vs `steel: hr display:none, no notch, gap 8px`.
+- **Why:** the featureblock twin deliberately left *its* notch ungated (hue-chained to
+  `var(--dse-role, var(--dse-role-leader))`), so an unmapped featureblock still gets a notch —
+  the two families diverge here, and the statblock's suppression comment justifies itself with
+  "the framed feature cards carry the section break instead," which is thinner for a card that
+  also has no band. Taste call, not a regression blocker: the site draws no chars/features
+  divider in any case (so absence is site-correct) and Task 5's framed option cards already
+  give the feature list a stronger visual identity than the old divider did.
+- **Context:** candidate fix is either (a) gate the `.dse-hr` suppression on `[data-dse-role]`
+  identically to the notch, so an unmapped statblock keeps its ◆, or (b) give the roleless case
+  a neutral notch — the malice-grey fallback already exists in the featureblock twin
+  (`var(--dse-role, var(--dse-role-leader))`) and could be mirrored here. See the final review
+  §5 L-3 and §6 triage
+  (`.superpowers/sdd/2026-08-07-plan-25-sc10x-structural-trio/final-review.md`) for the full
+  measurement.
+- **Effort:** XS (one selector, once Scott picks (a) or (b)).
 
 *(Items 32–35 below were all identified during Plan 20 — Steel material parity — Task 8
 final visual verification, `draw-steel-elements` worktree `steel-material`: documented in
