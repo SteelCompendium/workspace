@@ -8,6 +8,11 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **Site: crest glyphs optically centered (SC-129)** — the shield-crest icons across
+  browse cards, category headers, folder/kit tiles, ability/trait cards and preview lists
+  sat 0.4-1.5px off the shield's optical center; nudges are now measured (polygon-erosion
+  pixel audit), verified in both schemes and across card-scale/zoom settings.
+
 ### Added (pending plugin 7.0.0 release)
 
 > The plugin major below was drafted as "6.0.0". That number is **retired** after the
