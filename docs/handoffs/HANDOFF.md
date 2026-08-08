@@ -84,9 +84,27 @@ SC-109/110/111 (guards). No worktrees exist; nothing in flight.
   closed by process evidence). 4-divergence decision set parked on SC-110 (no urgency).
 - **SC-125 filed** (link-preserving migration, 7.0.0 project, QUEUED — Scott: not until
   plugin done; design = shipped path-mapping, NOT SCC codes — codes changed in refactor).
-- **7.0.0 remaining gate:** plan-25 landing (Scott sanction) + SC-117 visual batches
-  (catalog posted, awaiting Scott's B1-B5 approval; B6 landed) + SC-123 scoping call +
-  SC-125 (queued). Then SC-11 (release cut — Scott alone, NO TAGS).
+- **SC-117 FIX WAVE IMPLEMENTED OVERNIGHT (2026-08-07/08, worktree sc117-audit, UNLANDED,
+  awaiting Scott's visual gate):** B1 token flip (both scopes, site literals), B2 alpha
+  ladder (+ flagged-for-veto --spend border -> metal-faint), B3 section-title recipe, B4
+  chip cells; B5 SKIPPED (ships via plan-25's shared frame — close as delivered); R1
+  FOLLOWUPS #52 line-height (parity declaration HEALED -> anti-rot forced removal, 18->16
+  declared — mechanism proven in production); R2 (#56) BLOCKED on plan-25 (rules live
+  there; recommendation flipped to candidate A — statblock role-gate is deliberate).
+  Opus review: all PASS, 4M/4L; fix round closed M1 (hover-contaminated B6 capture —
+  3-line baseline correction, print line was never contaminated), M2 (boxed-cell borders
+  -> metal-faint), M3 (check-freeze now distinguishes missing vs mismatch, exits 0 on
+  clean-producible — script + backup in .superpowers/sdd/), M4 (parity bg-blindness
+  recorded in parity README + skill: background-color sampled but NEVER compared — file
+  guard-extension ticket at landing, polarity-check first), L2 (card badge, last defect
+  instance). dse @ a7050c2, workspace @ 2f32dca. Battery: jest 2249/155 · shots 189 ·
+  freeze exit 0 (113/119 producible, new semantics) · parity 0/0/16. Evidence + addendum
+  on SC-117 (comments 26fec165 + 34f98123). L1/L3/L4 report-noted for the gate.
+- **7.0.0 remaining gate:** Scott's TWO approvals — (1) SC-102 five-print-shot sanction ->
+  land plan-25; (2) SC-117 fix-wave visual gate (+ --spend border veto, #56 A-vs-B pick,
+  L1/L3/L4 taste notes) -> land sc117-audit (second lander rebases). Then: #56 one-liner,
+  parity-guard ticket, B5/SC-117 closure, SC-97 closure, SC-123 scoping, SC-125 (queued),
+  SC-11 release checklist (Scott alone, NO TAGS).
 - **SC-118 (site bug): DONE + deployed** (steel-etl b184b6a, site verified live; new SCC code
   rule.downtime/crafting-and-research-events-table, registry 3,081).
 - **SC-117** (dark-mode richness audit): **IN 7.0.0 scope (Scott's call)**; runs after plan 23
