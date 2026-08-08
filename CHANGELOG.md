@@ -169,6 +169,15 @@ go under an *Internal* sub-heading.
   output follows the same structural change as the screen; Scott signed off on the five
   moved print goldens on 2026-08-08 (the ask and its before/after pairs are on SC-102),
   and the rebaseline was applied at landing.
+- **Steel horizontal rules — both of the site's variants (SC-128)** — the site draws two
+  distinct diamond rules and the plugin now carries both. The standalone `ds-hr` /
+  `ds-horizontal-rule` element gets the **ornate** one: a small haloed diamond flanked by
+  two seed dots, with hairlines fading outward to nothing, replacing the old heavy look (a
+  large solid diamond on two thick full-width lines). The **plain** variant — the same
+  diamond seated on a solid line, no dots, no fade — is the statblock header's bottom edge
+  and was already shipped verbatim by SC-103's notch, so nothing was rebuilt for it. Where
+  the site draws no rule at all (between a statblock's characteristics and its features)
+  the plugin still draws none. Screen only; printed output is unchanged.
 
 ### Fixed
 
@@ -181,6 +190,11 @@ go under an *Internal* sub-heading.
   flat tone regardless of where it sat on the plate. They now carry the site's measured
   translucent-**black** fills, per surface, in both schemes, and section header strips
   drop the opaque plate they painted under their sheen (the site paints none).
+- **A roleless statblock lost its section break under Steel (FOLLOWUPS #56, with SC-128)** —
+  a statblock whose role maps to nothing (a summoner Champion, a Noncombatant — 5 of the
+  512 statblocks the pipeline emits) was left with no head band, no diamond notch and no
+  divider, so its characteristics strip butted straight into its feature list. It keeps the
+  diamond divider again. Role-mapped statblocks are unchanged.
 
 ### Internal
 
