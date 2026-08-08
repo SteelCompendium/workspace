@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 57 -->
+<!-- next-id: 58 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -26,9 +26,71 @@ Most recent archive:
 - **Context:** file paths, gotchas, anything that saves grep time
 - **Effort:** XS (<1 h) / S (1–4 h) / M (1 day) / L (multi-day) -->
 
-## 56. Unmapped-role statblock loses its section break entirely under Steel
+## 57. `:root` tokens that alias Obsidian `body`-scoped vars are guaranteed-invalid — the Legacy ◆ divider paints NOTHING
 
 **Status:** open
+
+- **Identified:** 2026-08-08, SC-128 (worktree `sc128-hr`), while measuring the kit divider's
+  computed values before porting the site's ornate rule.
+- **What:** `styles-source.css:3016` opens a `:root { … }` token block that aliases Obsidian
+  theme variables directly — `--dse-page-bg: var(--background-primary)` (`:3023`) and
+  `--dse-rule: var(--icon-color)` (`:3101`) among them. Obsidian (and the harness's
+  `visual-harness/vars.css`, faithfully) declares those on **`body.theme-dark` /
+  `body.theme-light`**, not on `:root`. At `:root` they are undefined, so each aliasing
+  token computes to the **guaranteed-invalid value** and every property that consumes it
+  without a `var()` fallback drops to its initial value. Measured on the kit divider,
+  Legacy, both schemes: `.dse-hr__diamond` gets `background-color: rgba(0,0,0,0)` (from
+  `var(--dse-rule)`), `box-shadow: none` (from `inset … var(--dse-page-bg)`) and no borders
+  — and `.dse-hr__line` likewise. **`horizontal-rule--legacy-{dark,light}.png` are frozen
+  golden shots of a completely BLANK rule** (see them: the element renders nothing at all).
+- **Why:** two costs. (1) A user-visible one — `ds-hr` / `ds-horizontal-rule` renders
+  invisibly under Legacy, and the same chain reaches anything else keyed off these tokens.
+  (2) A gate-integrity one — the freeze baseline currently pins "renders nothing" as the
+  correct Legacy look for this element, so the defect is *protected* by the very check meant
+  to catch regressions.
+- **Context:** Steel is unaffected because its own token block re-declares the same names on
+  the ELEMENT root (`:is([data-dse-element], .dse-modal)[data-dse-theme="steel"]`, a
+  descendant of `body`) with literal fallbacks — e.g. `--dse-rule: var(--sc-steel, #8e959a)`
+  — which is also the shape of the fix: re-declare the aliasing tokens on the element root,
+  or give each `:root` alias a literal fallback. SC-128's ornate rule sidesteps it with
+  `var(--dse-page-bg, var(--dse-surface))` and documents the chain inline, so fixing this
+  makes that rule follow the real page background with no edit there. Sweep the whole
+  `:root` block, not just these two — any `--dse-*: var(--<obsidian-var>)` with no fallback
+  has the same defect. **Needs Scott's sanction before landing:** it necessarily moves
+  frozen `*--legacy-*` shots (things that painted nothing will start painting), which is a
+  sanctioned-rebaseline case, not a widening.
+- **Effort:** S (the edit is small; the sanction ask + rebaseline is the work).
+
+## 56. Unmapped-role statblock loses its section break entirely under Steel
+
+**Status:** DONE 2026-08-08 (SC-128, worktree `sc128-hr`) — **candidate (a)**, the one-line
+gate: `[data-dse-theme='steel'] .dse-sb[data-dse-role] > .dse-hr { display: none }`. A
+role-mapped statblock is byte-identical (all four combos + print re-probed); a roleless one
+keeps the plain kit ◆ and its section gap comes back (8px → 30px, measured). Scott chose (a)
+over (b) on the fix wave's reasoning: the statblock band is `[data-dse-role]`-gated *by
+design* (a fail-safe — no band, so a grey diamond would hang off nothing), unlike the
+featureblock band, which is unconditional and hue-chains to the malice grey. Three things
+landed with it, all of which are why this was invisible in the first place:
+- **The missing fixture.** `test/fixtures/statblock/roleless-corpus.yaml` — the first
+  fixture anywhere that renders an unmapped-role statblock, registered as
+  `FIXTURES.statblock['roleless-corpus']` (5 new shots) with a DOM catcher in
+  `statblock.test.ts`. **Corpus-shaped, not invented:** a scan of all 512 statblocks in
+  `data-unified` found exactly 5 that map no role — the 4 summoner Champions (`role: ""` +
+  `organization: "Champion"`) and `Noncombatant` (both empty) — so this is a production
+  shape, not a hypothetical. Note the trap the scan exposed: `role: ""` **alone** is not
+  enough, because `statblockHeaderParts` falls back to `organization`, which is why the
+  existing `role: ""` + `organization: Leader` fixtures are role-MAPPED.
+- **The structural invariant**, `steelMaterial.test.ts`: within one family, a suppression
+  and its replacement must agree on *when* they apply. That is the general shape of this
+  bug — hide always, paint only sometimes — and it is now asserted for both families
+  (sb gated, fb ungated) with a can-fail proof feeding it the exact pre-fix asymmetry.
+- The divider stays the **plain** kit ◆ on purpose. SC-128's ornate rule landed in the same
+  branch but is scoped to `[data-dse-element='horizontal-rule']`, so it does not reach here:
+  this node's job is a section break, not an ornament.
+
+*(Original entry below, unchanged.)*
+
+**Status (original):** open
 
 - **Identified:** 2026-08-07, plan 25 final whole-branch review (finding L-3), worktree
   `sc10x-structural`. New on this branch; invisible to every gate (no fixture renders an
