@@ -259,6 +259,10 @@ go under an *Internal* sub-heading.
   unchanged. (An intermediate take that stamped the label into every feature header
   regardless of display mode shipped briefly earlier today and was reverted — it
   doubled the label everywhere except crest.) (SC-95)
+- **Stamina edit modal math fixed (SC-133)** — negative Apply inputs no longer invert
+  operations, Spend Recovery never burns a Recovery for zero gain (honest preview + real
+  disabled state with reason), and temp grants follow RAW take-higher against live
+  session temp.
 - **Encounter builder no longer charges 4× EV for minions** — a minion statblock's EV
   buys *four* minions ("The EV for minions represents four minions together"), and the
   builder adds them four at a time, but two paths priced that group per-creature: the
