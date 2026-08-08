@@ -113,40 +113,38 @@ SC-109/110/111 (guards). No worktrees exist; nothing in flight.
 - **SC-128 filed** (horizontal rules: site's two variants — ornate diamond+dots+fade vs
   plain diamond+line; reconcile with SC-103's landed notch first; interacts w/ FOLLOWUPS
   #56). Under SC-97 → SC-97 CANNOT close yet.
-- **WAVE STATUS (updated 2026-08-08 later): 4 of 5 agents COMPLETE, all gated on Scott;
-  SC-132 still running. Four tickets sit in his Needs Review filter:**
-  1. **SC-128 + FOLLOWUPS #56: COMPLETE, Needs Review.** Branch sc128-hr (dse 0713e13 +
-     77d55f3, superproject 30f3954 incl. pointer bump — committed, NOT pushed). Ornate rule
-     built for `ds-hr`; statblock/featureblock band notch confirmed to already BE the plain
-     variant (SC-103/101) — nothing double-built, surface map in CSS comments. #56 shipped
-     candidate A (roleless card keeps plain ◆ rule, role-mapped byte-identical) — marked
-     DONE. Battery green (jest 2299, shots 204, freeze 119/119, parity 0/0/16). FOLLOWUPS
-     **#57 filed** (Legacy `ds-hr` paints nothing — `:root`-scoped aliases of body-scoped
-     Obsidian vars are invalid; fix needs a frozen-legacy sanction). Print variant = noted
-     option, not implemented. Its landing closes SC-97.
-  2. **SC-129: still iterating** (worktree sc129-crest, Sonnet): site crest centering; agent
-     keeps parking on long mkdocs builds — orchestrator watches the build PID and wakes it
-     via SendMessage (twice so far). NO push (v2 main auto-deploys!). SC-130 (plugin twin)
-     QUEUED behind SC-129 geometry + SC-128 landing.
-  3. **SC-131: COMPLETE, Needs Review** — 3 candidates built switchable behind
-     SETTINGS_NAV_MODE (dse 0048386 on sc131-settings; pointer left unstaged by design),
-     real-Obsidian evidence (6,850px today → ~1,000-1,100px all candidates; live preview
-     alone was 3,900px, now capped scrollable pane). Recommendation: C (tabs+search).
-     After pick: delete losing modes + `off`, honor preview-cap call, CHANGELOG, rebase over
-     sc128-hr, re-run freeze POST-rebase. Code review deferred to final shape.
-  4. **SC-132: STILL RUNNING** (worktree sc132-stamina, Opus): stamina-cluster redesign
-     candidates; now carries SC-133's RC-1/RC-2 as hard requirements (temp stamina must be
-     first-class + geometrically correct in every candidate; msg sent mid-run).
-  5. **SC-133 + SC-134: DIAGNOSES COMPLETE, both Needs Review** with consolidated asks.
-     SC-133: 5 root causes (RC-1 preview blind to temp; RC-2 overlay wrong origin; RC-3
-     negative Apply input INVERTS op — "Damage −3" mints temp, persisted; RC-4 Spend
-     Recovery over-burns near full; RC-5 no take-higher RAW). Ask: fold RC-1/2 into SC-132,
-     fix RC-3/4/5 now. SC-134: builder emits `scc.v1:` refs (encounter/view.ts:355), tracker
-     resolver is bare-path-only (initiative/resolveRefs.ts:77-79) — every generated tracker
-     dies; ask: fix in tracker via SccRefProvider + round-trip test. Orchestrator
-     spot-checked both cited sites. Reports + evidence in sdd/sc133-134-bugs/.
-  NOTHING lands without Scott's gate. dse landings serialize; every branch rebases at
-  landing (sc128/131/132 all touch styles-source.css in bounded regions).
+- **STATE (updated 2026-08-08 evening — Scott away several hours, working autonomously):**
+  **LANDED today:** SC-128 (dse 77d55f3, SC-97's ornate rule + #56, Done) · SC-129 (v2
+  5bb5bf6e04, site crest centering + scaling-rider proof, Done — NOTE: the v2 push
+  auto-deployed the site; consequence corrected on-ticket) · SC-134 (dse 6e2f2dd, tracker
+  resolves scc.v1: refs via SccRefProvider + genuine round-trip/negative-control tests,
+  Done — 1 review round: I1 vacuous-test finding fixed) · SC-133 (dse 704396f, modal math:
+  RC-3 magnitude clamp, RC-4 honest capped Spend Recovery w/ CB-8 disable+reason, RC-5
+  take-higher anchored to LIVE pending temp, Done — 2 review rounds; reviewer executed
+  jsdom probes, caught critical stale-anchor corruption in round 1; implementer's rebased
+  Spend-Recovery accounting independently verified superior to reviewer's own sketch).
+  Battery at current dse main 704396f: jest 2335/155 · shots 204 · freeze 119/119 ·
+  parity 0/0/16. FOLLOWUPS filed today: #57 (legacy ds-hr paints nothing), #58 (SCC
+  predicate 5 copies), #59 (initiative SCC-ref error UX + portrait warn), #60 (minion pool
+  modal RC-3 twin). #58 COLLISION pending: sc137-138 worktree filed its own "#58" —
+  renumber to #61 at that landing.
+  **GATED ON SCOTT (Needs Review):** SC-130 (plugin crest, dse d3a5590 on sc130-crest —
+  em-nudge, scale-proof, freeze-inert) · SC-131 (settings: NEW option D = Obsidian 1.13
+  native declarative getSettingDefinitions + native search, spike PROVEN in sandbox 1.13.4,
+  minAppVersion 0.15.0→1.13.0 verdict; vs built A/B/C shell; dse aa8f273+69d1eb8) ·
+  SC-137 (9 essence-cost traits silently dropped by title-format slip; source normalization
+  + corpus guard; steel-etl 9789b4d) · SC-138 (champion L10 advancements banded like
+  beastheart; +4 SCC codes 3081→3085; steel-etl 6c42d8f) — both on sc137-138-summoner ·
+  SC-78 (close-as-Done ask posted).
+  **IN FLIGHT:** SC-132 round 3 (worktree sc132-stamina, Opus) — Scott's component-level
+  feedback (comment d76531ae): NO layout pick yet; building option strips for temp-stamina
+  materials (ephemeral), recovery-marker shapes/labels (diamonds dead — read as ornaments),
+  Catch Breath control (answer function factually; remove-chip option), C height ladder
+  (incl. A-channel-in-C hybrid), A temp-edge separator fix (suspected CSS bug), base-max
+  mark options (the "unfamiliar separator" on winded-with-temp), dying-effect strip
+  (keepers), 1-2 fresh directions, conditions-location factual answer + chips mock.
+  Multi-layout-per-context is affirmed direction (D-style rail for sidebar).
+  NOTHING new lands without Scott. dse landings serialize; every branch rebases at landing.
 - **7.0.0 remaining gate:** the five above + SC-130 (queued) + taste tail (modal items,
   SC-110 divergence set — no urgency) + SC-123 scoping + SC-125 (queued) → SC-97 closes
   when SC-128/129/130/132 land → SC-11 release checklist (Scott alone, NO TAGS).
