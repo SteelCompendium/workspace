@@ -113,28 +113,40 @@ SC-109/110/111 (guards). No worktrees exist; nothing in flight.
 - **SC-128 filed** (horizontal rules: site's two variants — ornate diamond+dots+fade vs
   plain diamond+line; reconcile with SC-103's landed notch first; interacts w/ FOLLOWUPS
   #56). Under SC-97 → SC-97 CANNOT close yet.
-- **IN FLIGHT (compact-safety snapshot, 2026-08-08 — FIVE parallel agents, all report to
-  .superpowers/sdd/&lt;dir&gt;/ and post to their tickets; poll those files post-compact):**
-  1. **SC-128 + FOLLOWUPS #56** (worktree sc128-hr, Opus): horizontal-rule variants
-     (ornate diamond+dots+fade; plain diamond+line) + roleless-divider candidate A.
-     Reports to sdd/sc128-hr/. LAST SC-97 child — its landing closes SC-97.
-  2. **SC-129** (worktree sc129-crest, Sonnet): SITE crest-glyph centering, measured fix;
-     v2 branch only, NO push (v2 main auto-deploys!). Reports to sdd/sc129-crest/.
-     SC-130 (plugin twin) QUEUED behind SC-129 geometry + SC-128 landing.
-  3. **SC-131** (worktree sc131-settings, Opus): settings-view navigation shell — 3
-     candidates (tabs / collapsibles / tabs+search) built switchable, Scott picks from
-     real screenshots. Reports to sdd/sc131-settings/.
-  4. **SC-132** (worktree sc132-stamina, Opus): stamina-cluster ground-up redesign —
-     3-4 full-fidelity candidate directions (forged gauge / tiered segments / banner+crest
-     / optional 4th), dark+light, full state matrix; Scott picks or escalates to
-     ClaudeDesign with candidates as input. Reports to sdd/sc132-stamina/.
-  5. **SC-133 + SC-134** (worktree sc133-134-bugs, Opus): DIAGNOSIS ONLY — temp-stamina
-     modal misbehavior (vs RAW in reference/) and encounter-builder→initiative-tracker
-     error attribution (builder vs tracker; note SC-122 pre-fix ghosts possible).
-     Reports to sdd/sc133-134-bugs/.
-  All five end in self-contained "What you're approving"/diagnosis comments; NOTHING lands
-  without review + (visual items) Scott's gate. dse landings serialize; every branch
-  rebases at landing (sc128/131/132 all touch styles-source.css in bounded regions).
+- **WAVE STATUS (updated 2026-08-08 later): 4 of 5 agents COMPLETE, all gated on Scott;
+  SC-132 still running. Four tickets sit in his Needs Review filter:**
+  1. **SC-128 + FOLLOWUPS #56: COMPLETE, Needs Review.** Branch sc128-hr (dse 0713e13 +
+     77d55f3, superproject 30f3954 incl. pointer bump — committed, NOT pushed). Ornate rule
+     built for `ds-hr`; statblock/featureblock band notch confirmed to already BE the plain
+     variant (SC-103/101) — nothing double-built, surface map in CSS comments. #56 shipped
+     candidate A (roleless card keeps plain ◆ rule, role-mapped byte-identical) — marked
+     DONE. Battery green (jest 2299, shots 204, freeze 119/119, parity 0/0/16). FOLLOWUPS
+     **#57 filed** (Legacy `ds-hr` paints nothing — `:root`-scoped aliases of body-scoped
+     Obsidian vars are invalid; fix needs a frozen-legacy sanction). Print variant = noted
+     option, not implemented. Its landing closes SC-97.
+  2. **SC-129: still iterating** (worktree sc129-crest, Sonnet): site crest centering; agent
+     keeps parking on long mkdocs builds — orchestrator watches the build PID and wakes it
+     via SendMessage (twice so far). NO push (v2 main auto-deploys!). SC-130 (plugin twin)
+     QUEUED behind SC-129 geometry + SC-128 landing.
+  3. **SC-131: COMPLETE, Needs Review** — 3 candidates built switchable behind
+     SETTINGS_NAV_MODE (dse 0048386 on sc131-settings; pointer left unstaged by design),
+     real-Obsidian evidence (6,850px today → ~1,000-1,100px all candidates; live preview
+     alone was 3,900px, now capped scrollable pane). Recommendation: C (tabs+search).
+     After pick: delete losing modes + `off`, honor preview-cap call, CHANGELOG, rebase over
+     sc128-hr, re-run freeze POST-rebase. Code review deferred to final shape.
+  4. **SC-132: STILL RUNNING** (worktree sc132-stamina, Opus): stamina-cluster redesign
+     candidates; now carries SC-133's RC-1/RC-2 as hard requirements (temp stamina must be
+     first-class + geometrically correct in every candidate; msg sent mid-run).
+  5. **SC-133 + SC-134: DIAGNOSES COMPLETE, both Needs Review** with consolidated asks.
+     SC-133: 5 root causes (RC-1 preview blind to temp; RC-2 overlay wrong origin; RC-3
+     negative Apply input INVERTS op — "Damage −3" mints temp, persisted; RC-4 Spend
+     Recovery over-burns near full; RC-5 no take-higher RAW). Ask: fold RC-1/2 into SC-132,
+     fix RC-3/4/5 now. SC-134: builder emits `scc.v1:` refs (encounter/view.ts:355), tracker
+     resolver is bare-path-only (initiative/resolveRefs.ts:77-79) — every generated tracker
+     dies; ask: fix in tracker via SccRefProvider + round-trip test. Orchestrator
+     spot-checked both cited sites. Reports + evidence in sdd/sc133-134-bugs/.
+  NOTHING lands without Scott's gate. dse landings serialize; every branch rebases at
+  landing (sc128/131/132 all touch styles-source.css in bounded regions).
 - **7.0.0 remaining gate:** the five above + SC-130 (queued) + taste tail (modal items,
   SC-110 divergence set — no urgency) + SC-123 scoping + SC-125 (queued) → SC-97 closes
   when SC-128/129/130/132 land → SC-11 release checklist (Scott alone, NO TAGS).
