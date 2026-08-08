@@ -40,7 +40,7 @@ Conventions:
 |---|---|---|---|---|---|
 | `--dse-surface` | §1.2-A `surface` | `var(--code-background)` | `#1a1e21` | `#f6f8f8` | `#fff` |
 | `--dse-surface-raised` | §1.2-A `surface-raised` | `var(--color-base-25)` | `#22272b` | `#edf0f0` | `#fff` |
-| `--dse-surface-sunken` | §1.2-A `surface-sunken` ¹ | `rgba(0,0,0,.2)` | `rgba(220,226,230,0.06)` | `#eaeeef` | `#fff` |
+| `--dse-surface-sunken` | §1.2-A `surface-sunken` ¹ | `rgba(0,0,0,.2)` | `rgba(0,0,0,0.18)` | `rgba(0,0,0,0.02)` | `#fff` |
 | `--dse-page-bg` | D2 extra (divider punch-out) ² | `var(--background-primary)` | = Legacy (theme-invariant) | | `#fff` |
 | `--dse-border` | §1.2-B `border-muted` (D2's default hairline) ³ | `var(--background-modifier-border)` | `rgba(220,226,230,0.12)` | `#c8cdd0` | `#ccc` |
 | `--dse-border-strong` | §1.2-B `border` (solid card edges) ³ | `var(--text-normal)` | `rgba(220,226,230,0.24)` | `#8e959a` | `#999` |
@@ -54,6 +54,14 @@ Conventions:
 reads *inset-panel*, not *darker*). Legacy's `rgba(0,0,0,.2)` is the darker-well approach.
 Followed the spec; if the Steel render makes wells look *raised*, flip to `rgba(0,0,0,0.25)`
 (visual QA call, Task 3).
+**Superseded 2026-08-07 (SC-117 B1).** The "6% white wash" premise was wrong about the site:
+the live site's dark body surfaces are an entirely translucent-**black** ladder
+(`.25/.22/.20/.18/.16`) over the card plate's own 160deg gradient, and light is the same
+mechanism thinner (`.02–.04`). The white wash added a constant toward white, compressing the
+plate's internal ramp and flattening every panel — the flatness SC-117 was opened for. The
+Steel columns above now carry the measured site values (`.18` dark / `.02` light); the four
+surfaces whose site value differs from `.18` carry their own literal (SC-117 B2). Legacy and
+print are unchanged.
 ² `page-bg` must equal the **actual host page** behind the element (the ◆ divider's punch-out
 box-shadow keys off it). Steel skins only the element's own surfaces, never the note behind it,
 so this token is theme-invariant by construction.
