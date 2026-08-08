@@ -100,11 +100,23 @@ SC-109/110/111 (guards). No worktrees exist; nothing in flight.
   instance). dse @ a7050c2, workspace @ 2f32dca. Battery: jest 2249/155 · shots 189 ·
   freeze exit 0 (113/119 producible, new semantics) · parity 0/0/16. Evidence + addendum
   on SC-117 (comments 26fec165 + 34f98123). L1/L3/L4 report-noted for the gate.
-- **7.0.0 remaining gate:** Scott's TWO approvals — (1) SC-102 five-print-shot sanction ->
-  land plan-25; (2) SC-117 fix-wave visual gate (+ --spend border veto, #56 A-vs-B pick,
-  L1/L3/L4 taste notes) -> land sc117-audit (second lander rebases). Then: #56 one-liner,
-  parity-guard ticket, B5/SC-117 closure, SC-97 closure, SC-123 scoping, SC-125 (queued),
-  SC-11 release checklist (Scott alone, NO TAGS).
+- **BOTH LANDED 2026-08-08 (Scott approved both):** SC-117 fix wave (dse a7050c2, Done;
+  spin-offs SC-126 parity bg-guard, SC-127 print-capture fidelity) and plan-25 structural
+  trio (dse e0c93ae, workspace a0919bf; 5-hash rebaseline applied w/ dated sign-off,
+  freeze 119/119 CLEAN; SC-101/102/103 Done; ledger preserved in build-ledgers/). The two
+  branches' rebase was CSS-conflict-free — independently derived site values agreed.
+  Print-shot dark-on-dark question answered: longstanding harness capture artifact
+  (print-tokens-over-dark-scheme), NOT a bug — SC-127 fixes capture fidelity post-landing.
+- **NEW CONVENTION (Scott, 2026-08-08): Linear approval asks must be self-contained in the
+  LAST comment** ("What you're approving" section, evidence re-inlined) — recorded in
+  docs/working-preferences.md + linear-flow skill.
+- **SC-128 filed** (horizontal rules: site's two variants — ornate diamond+dots+fade vs
+  plain diamond+line; reconcile with SC-103's landed notch first; interacts w/ FOLLOWUPS
+  #56). Under SC-97 → SC-97 CANNOT close yet.
+- **7.0.0 remaining gate:** SC-128 (horizontal rules) + FOLLOWUPS #56 one-liner (candidate
+  A per fix-wave analysis) + taste tail (modal items, SC-110 divergence set — Scott,
+  no urgency) + SC-123 scoping + SC-125 (queued) → then SC-97 closes → SC-11 release
+  checklist (Scott alone, NO TAGS).
 - **SC-118 (site bug): DONE + deployed** (steel-etl b184b6a, site verified live; new SCC code
   rule.downtime/crafting-and-research-events-table, registry 3,081).
 - **SC-117** (dark-mode richness audit): **IN 7.0.0 scope (Scott's call)**; runs after plan 23
