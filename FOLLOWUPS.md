@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 60 -->
+<!-- next-id: 61 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1279,3 +1279,16 @@ deferred call on row-scoped degradation (one bad ref currently kills the whole t
 lives on SC-134's comments.
 
 **Effort:** S (each half), plus one Scott decision.
+
+## 60. DSE: MinionStaminaPoolModal carries the RC-3 negative-input inversion, unfixed
+
+**Found:** 2026-08-08, SC-133 fix review (M9).
+
+`src/views/MinionStaminaPoolModal.ts:100-105` (`damageInput`, no `min`) and `:126-132`
+(`parseInt`, no magnitude clamp): "Apply Damage" with `-3` heals the minion pool — the
+same class of bug SC-133's RC-3 fixed in `StaminaEditModal`. Out of scope there (different
+modal/operation, and this one surfaces a "minions typically can't regain stamina" warning
+so it isn't fully silent). Apply the same parse-boundary `Math.max(0, …)` clamp + `min="0"`
+and a red-first test.
+
+**Effort:** XS.
