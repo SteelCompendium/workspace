@@ -685,3 +685,28 @@ diff against the deployed `scc.json`/`types.json` showed exactly the one added e
 zero codes changed/removed. `go test ./...`, `gen --all`, and `site` clean; the table now
 has its own Browse rule page + permalink stub, and the discover-lore /
 research-project pages drop it. (Linear SC-118, hoist round.)
+
+## 2026-08-08 — Portfolio Champion advancement containers (`monster.champion.summoner.<circle>.advancement-features`)
+
+Each of the four summoner **Portfolio Champions** printed its Level-10 advancement as a
+`> **Level 10 Champion Advancement Feature**` label blockquote *inside* the champion's stat
+block. The statblock island renderer has no level-band concept, so it dropped the label and
+rendered Size Increase + the eidos-costed Champion Action as ordinary innate features —
+nothing on the page said they were 10th-level (user report via Discord, Linear SC-138).
+Hoisted each block into a sibling `<!-- @type: featureblock | @id: <champion-id> -->`
+section (`####### <Champion> Advancement Features`) in
+`steel-etl/input/summoner/Draw Steel Summoner.md` — the same shape the summoner **fixtures**
+(5c/ROADMAP #16) and beastheart **companions** (5a/5b) already use, so the shared
+`buildFeatureblockPage` renderer bands them under a "Level 10 Advancement" sub-head. New
+`FeatureblockParser` branch for `@domain: champion`; members stay **inline/uncoded** — the
+retainer container model (Plan 6), not the fixtures' coded-children model, so this mints
+containers only. Site-side: `fbOrigin` gained the champion form ("Summoner Champion ·
+<Circle>"), `embedFixtureAdvancement` → `embedSiblingAdvancement` (also swaps
+`.statblock/` → `.advancement-features/`, so the champion's own page still shows the
+advancement, now banded), and champion dirs are held **out** of
+`buildAdvancementPairContent` so the portfolio index keeps its richer bestiary
+group-landing preview card. **Cost.** Registry **+4** (3081 → 3085):
+`mcdm.summoner.v1/monster.champion.summoner.{demon,elemental,fey,undead}.advancement-features/{demon-lords-aspect,dragons-portent,celestial-attendant,avatar-of-death}`.
+Purely additive — every pre-existing code, including the four
+`monster.champion.summoner.<circle>.statblock/<id>` bases, is unchanged. `go test ./...`,
+`gen --all`, and `site` clean. (Linear SC-138.)

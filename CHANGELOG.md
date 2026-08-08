@@ -189,6 +189,24 @@ go under an *Internal* sub-heading.
 
 ### Fixed
 
+- **Circle of Storms minions were missing their essence-cost traits (SC-137)** — 9 of the
+  13 Elemental-portfolio minions (Walking Boulder, Crux of Ash, Flow of Magma, Desolation
+  of Sand, Dancing Silk, Principle of the Swamp, Iron Reaver, Knight of Blood, Light of
+  the Sun) each lost a whole trait — Pile Up, Ashen Cloud, Eruption, Shifting Sand Pit,
+  Web, Sludgefoot, Iron Barricade, Red River, Radiant Field. Their essence cost had been
+  transcribed after the bold name ("**Pile Up** 1 Essence") instead of in the corpus-wide
+  cost parenthetical ("**Pile Up (1 Essence)**"), and a title the statblock parser can't
+  match is discarded outright rather than rendered plainly, so the trait vanished from
+  every format with no warning. The nine titles now use the standard form and the traits
+  are back, with the cost in the same head chip every other cost uses. A corpus guard test
+  now scans all four books for unparseable feature titles.
+- **Portfolio Champion Level 10 advancements are labelled again (SC-138)** — Size Increase
+  and each champion's eidos-costed Champion Action rendered as ordinary innate features on
+  the Demon Lord's Aspect / Dragon's Portent / Celestial Attendant / Avatar of Death stat
+  blocks, with nothing marking them as 10th-level. They now sit in their own
+  "<Champion> Advancement Features" card under a **Level 10 Advancement** band — the same
+  presentation beastheart companion and summoner fixture advancements already get — shown
+  both on its own page and inline on the champion's page.
 - **Steel dark mode reads flat — the sunken-surface polarity (SC-117)** — every recessed
   panel inside a Steel card (ability sections, power-roll frames, Distance/Targets cells,
   statblock stat and field boxes, hero regions, initiative cells, the encounter summary)
