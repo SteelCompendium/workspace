@@ -113,10 +113,34 @@ SC-109/110/111 (guards). No worktrees exist; nothing in flight.
 - **SC-128 filed** (horizontal rules: site's two variants — ornate diamond+dots+fade vs
   plain diamond+line; reconcile with SC-103's landed notch first; interacts w/ FOLLOWUPS
   #56). Under SC-97 → SC-97 CANNOT close yet.
-- **7.0.0 remaining gate:** SC-128 (horizontal rules) + FOLLOWUPS #56 one-liner (candidate
-  A per fix-wave analysis) + taste tail (modal items, SC-110 divergence set — Scott,
-  no urgency) + SC-123 scoping + SC-125 (queued) → then SC-97 closes → SC-11 release
-  checklist (Scott alone, NO TAGS).
+- **IN FLIGHT (compact-safety snapshot, 2026-08-08 — FIVE parallel agents, all report to
+  .superpowers/sdd/&lt;dir&gt;/ and post to their tickets; poll those files post-compact):**
+  1. **SC-128 + FOLLOWUPS #56** (worktree sc128-hr, Opus): horizontal-rule variants
+     (ornate diamond+dots+fade; plain diamond+line) + roleless-divider candidate A.
+     Reports to sdd/sc128-hr/. LAST SC-97 child — its landing closes SC-97.
+  2. **SC-129** (worktree sc129-crest, Sonnet): SITE crest-glyph centering, measured fix;
+     v2 branch only, NO push (v2 main auto-deploys!). Reports to sdd/sc129-crest/.
+     SC-130 (plugin twin) QUEUED behind SC-129 geometry + SC-128 landing.
+  3. **SC-131** (worktree sc131-settings, Opus): settings-view navigation shell — 3
+     candidates (tabs / collapsibles / tabs+search) built switchable, Scott picks from
+     real screenshots. Reports to sdd/sc131-settings/.
+  4. **SC-132** (worktree sc132-stamina, Opus): stamina-cluster ground-up redesign —
+     3-4 full-fidelity candidate directions (forged gauge / tiered segments / banner+crest
+     / optional 4th), dark+light, full state matrix; Scott picks or escalates to
+     ClaudeDesign with candidates as input. Reports to sdd/sc132-stamina/.
+  5. **SC-133 + SC-134** (worktree sc133-134-bugs, Opus): DIAGNOSIS ONLY — temp-stamina
+     modal misbehavior (vs RAW in reference/) and encounter-builder→initiative-tracker
+     error attribution (builder vs tracker; note SC-122 pre-fix ghosts possible).
+     Reports to sdd/sc133-134-bugs/.
+  All five end in self-contained "What you're approving"/diagnosis comments; NOTHING lands
+  without review + (visual items) Scott's gate. dse landings serialize; every branch
+  rebases at landing (sc128/131/132 all touch styles-source.css in bounded regions).
+- **7.0.0 remaining gate:** the five above + SC-130 (queued) + taste tail (modal items,
+  SC-110 divergence set — no urgency) + SC-123 scoping + SC-125 (queued) → SC-97 closes
+  when SC-128/129/130/132 land → SC-11 release checklist (Scott alone, NO TAGS).
+- **Design-authority note (Scott, 2026-08-08):** stamina redesign delegated to agents via
+  candidates-first (no site counterpart = original design in the Steel vocabulary);
+  ClaudeDesign app is the agreed escalation path if no candidate lands.
 - **SC-118 (site bug): DONE + deployed** (steel-etl b184b6a, site verified live; new SCC code
   rule.downtime/crafting-and-research-events-table, registry 3,081).
 - **SC-117** (dark-mode richness audit): **IN 7.0.0 scope (Scott's call)**; runs after plan 23
