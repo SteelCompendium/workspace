@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 53 -->
+<!-- next-id: 57 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -25,6 +25,36 @@ Most recent archive:
 - **Why:** motivation / value
 - **Context:** file paths, gotchas, anything that saves grep time
 - **Effort:** XS (<1 h) / S (1–4 h) / M (1 day) / L (multi-day) -->
+
+## 56. Unmapped-role statblock loses its section break entirely under Steel
+
+**Status:** open
+
+- **Identified:** 2026-08-07, plan 25 final whole-branch review (finding L-3), worktree
+  `sc10x-structural`. New on this branch; invisible to every gate (no fixture renders an
+  unmapped-role statblock).
+- **What:** `[data-dse-theme='steel'] .dse-sb > .dse-hr { display: none }` is **ungated**, but
+  the replacement notch is gated on `[data-dse-role]` (correctly — it follows the
+  role-mapped band). So a statblock whose role text maps to nothing (the CSS comment itself
+  names "Boss") gets: no band, no notch, and now no ◆ divider either — the chars→features gap
+  collapses from 28px (Legacy, `.dse-hr` visible) to 8px (Steel, both suppressed with nothing
+  painted in their place). Measured at runtime by removing the attribute:
+  `legacy: hr display:flex, no notch, gap 28px` vs `steel: hr display:none, no notch, gap 8px`.
+- **Why:** the featureblock twin deliberately left *its* notch ungated (hue-chained to
+  `var(--dse-role, var(--dse-role-leader))`), so an unmapped featureblock still gets a notch —
+  the two families diverge here, and the statblock's suppression comment justifies itself with
+  "the framed feature cards carry the section break instead," which is thinner for a card that
+  also has no band. Taste call, not a regression blocker: the site draws no chars/features
+  divider in any case (so absence is site-correct) and Task 5's framed option cards already
+  give the feature list a stronger visual identity than the old divider did.
+- **Context:** candidate fix is either (a) gate the `.dse-hr` suppression on `[data-dse-role]`
+  identically to the notch, so an unmapped statblock keeps its ◆, or (b) give the roleless case
+  a neutral notch — the malice-grey fallback already exists in the featureblock twin
+  (`var(--dse-role, var(--dse-role-leader))`) and could be mirrored here. See the final review
+  §5 L-3 and §6 triage
+  (`.superpowers/sdd/2026-08-07-plan-25-sc10x-structural-trio/final-review.md`) for the full
+  measurement.
+- **Effort:** XS (one selector, once Scott picks (a) or (b)).
 
 *(Items 32–35 below were all identified during Plan 20 — Steel material parity — Task 8
 final visual verification, `draw-steel-elements` worktree `steel-material`: documented in
@@ -178,6 +208,93 @@ structural divergence like these is invisible to it by design.)*
   need a `windedZone` fraction, and dying/winded modal semantics differ from the card's
   live-model zones).
 - **Effort:** S (1–4 h)
+
+## 55. featureblock/standalone head-detail parity nits (SC-101 residuals)
+**Status:** open
+- **Identified:** 2026-08-07, plan 25 Task 5 (SC-101, the featureblock nested-card frame +
+  display-text cost) and its review — four small residual divergences noted but deliberately
+  not fixed (out of that task's cost/frame scope), collected here as one entry rather than four.
+- **What:**
+  1. The featureblock option's `◆ TRAIT` left eyebrow has no site counterpart — the site's
+     `.fb__feat` head carries name + cost + usage only, no kind-noun eyebrow (SC-10 Task 2's
+     addition, a separate decision from SC-101).
+  2. The option's leading icon spans all three head-grid lanes (`grid-row: 1 / -1`) where the
+     site pins a sub-feature icon to the primary row only (`steel-cardhead.css:69-70`), so the
+     glyph reads slightly high beside the name.
+  3. The standalone ability card's cost is still the forged pill, though the site renders it as
+     `hMini` display text there too (`ability_cards.go:306`) — SC-101 was scoped to the
+     featureblock only; this is the natural follow-on, alongside the standalone card's eyebrow
+     not yet consuming `--dse-act` (filed by #34's SC-102 fix, same family of gap).
+  4. **Coverage gap (SC-101 review L-4):** no featureblock fixture has an option carrying
+     `ability_type`, so the featureblock's `rightPrimary` deck-row degrade path (cost present +
+     `ability_type` present, both rows occupied) has never been rendered by any harness shot —
+     today's fixtures only exercise the cost-alone case.
+- **Why:** none of these are regressions from SC-101 — they're pre-existing or explicitly
+  out-of-scope divergences SC-101's review surfaced while verifying the cost/frame work. Worth
+  one durable entry so they aren't re-discovered from scratch by the next pass over this family.
+- **Context:** `draw-steel-elements` `styles-source.css` ~4024-4227 (the SC-101 cost re-place
+  block) and `renderFeature.ts` (`featBlockIcon`/`cardHead` calls) for items 1-3; a new
+  featureblock fixture option with `ability_type` set for item 4. Evidence:
+  `.superpowers/sdd/2026-08-07-plan-25-sc10x-structural-trio/evidence-task5/` (side-by-side
+  site-vs-plugin crops already show items 1-2).
+- **Effort:** S per item (CSS-only for 1-3, once a decision is made); XS for the new fixture (4)
+
+## 54. Villain-action *grouping* (banded vs inline) is unbuilt — the shared classification work (SC-102) is its prerequisite, not its scope
+**Status:** open
+- **Identified:** 2026-08-07, plan 25 (SC-101/102/103), §"Deferred: the villain band" —
+  the obvious next question once villain actions render with their own accent/crest (SC-102).
+- **What:** The site's DEFAULT statblock presentation bands villain actions into their own
+  collapsible `<details>` section (`.sb__band--villain`, a role-tinted head + chevron over a
+  body list) rather than listing them inline with everything else; `inline` is the site's other,
+  non-default option (`data-sb-villain`, `settings-panel.js` `SB_DEFAULTS`). The plugin has no
+  band concept anywhere (`grep -rn 'malice\|band' src/elements/statblock/*.ts` returns one
+  comment) — villain actions render as ordinary siblings in the feature list, in both
+  presentations the site would call "inline".
+- **Why:** SC-123's 18-setting preference inventory names `villain` (banded/inline) explicitly
+  and says it "should sequence with SC-102 (shares the new action-type work)" — plan 25
+  delivered exactly that shared work (the `villain` ActionType, `--dse-act-villain`, the hue,
+  the crest), which is what makes building the pref + both presentations tractable next.
+  Shipping only the inline look under a real `data-dse-sb-villain` attribute whose site-default
+  value is "banded" would make the attribute a lie, so plan 25 deliberately did not add it.
+- **Context:** `.dse-collapse` (header/region/chevron) is a shipped primitive that already does
+  print-forced-open (`[data-dse-print="on"] .dse-collapse__region[hidden] { display: block
+  !important }`), so the banding infrastructure is cheap to reach — the work is new grouping
+  logic in `renderFeatures` plus the band head/print-open behaviour, not a primitive gap. Site
+  reference: `.sb__band--villain` (`steel-statblock.css:403-421,434-449`). Linked from SC-102
+  and SC-123; owning ticket for whether this is 7.0.0-blocking is SC-123's, not this entry's.
+- **Effort:** M (new band DOM + grouping logic + a preference descriptor + both presentations'
+  golden shots)
+
+## 53. `src/elements/feature/example.yaml` is a semantically false villain action — cannot be fixed in place
+**Status:** open
+- **Identified:** 2026-08-07, plan 25 Task 1 re-verification (D5), confirmed unchanged through
+  Task 4 (the false-villain trap the standalone-spine removal had to prove a no-op against).
+- **What:** the standalone `feature` element's single-sourced authoring fixture
+  (`src/elements/feature/example.yaml`) declares `ability_type: Villain Action 1` (`:5`) AND
+  `usage: Main action` (`:10`) on the same card. `usage` correctly wins (a real usage line beats
+  `ability_type` in `actionTypeOf`'s precedence, and must keep doing so — that's the exact
+  precedence rule SC-102 exists to pin), so the fixture resolves to `main` — sword crest, red
+  main-action spine — while its own YAML claims to be a villain action. It is demo/example data
+  that is internally contradictory, not a rendering bug.
+- **Why:** this is the element's `authoring.example` scaffold (what a user gets when they insert
+  a new `ds-feature` block) AND the F4/F5 visual-harness fixture (D9 single-sourcing) AND the
+  frozen `feature--legacy-{dark,light}.png` golden shots, all from the one file — so it's
+  simultaneously visible to real users and locked by the freeze gate. Left uncorrected, new
+  users' first inserted feature block is a self-contradictory example.
+- **Context:** cannot be fixed in place without a deliberate call, because the two ways to
+  correct it have different costs: (a) fix the data (drop the `ability_type` line, or change
+  `usage` to a real villain usage) — correct content, but moves the frozen
+  `feature--legacy-{dark,light}.png` shots and needs a sanctioned rebaseline; (b) change
+  `ability_type` to `Main Action 1` to match `usage` — no freeze impact, but is a smaller,
+  less-illustrative example (a plain main action, not a villain-action demo). Verified by direct
+  sha256 comparison in plan 25 Task 3 that `feature--steel-{dark,print}.png` do NOT move under
+  the current (uncorrected) data — proof the false-villain reading is real and not an artifact
+  of some other change. Deliberately NOT touched by plan 25 (D9 single-source + LEGACY-FREEZE
+  both apply); a new, separate `feature-villain` harness fixture proves the real villain path
+  standalone instead (`visual-harness/entry.ts`, `feature: { default, spend, villain }` —
+  `spend` arrived from SC-117 Batch 6 at the Task 7 rebase; added SC-102 part 2 / S-5).
+- **Effort:** XS (either fix is a one-line YAML edit) once the freeze-impact call is made; S if
+  (a) is chosen (needs the `feature--legacy-*` rebaseline sign-off)
 
 ## 45. `--dse-font-mono` never resolves — the mono slot is dead everywhere
 **Status:** done (2026-08-04, SC-121 Batch 3 — dse `5df83f4`)
@@ -546,7 +663,14 @@ sanity-run locally end to end (exit 0).
 
 ## 35. Statblock diamond notch sits under the characteristics strip, not the head band like the site
 
-**Status:** open
+**Status:** done — fixed in worktree sc10x-structural (SC-103 / plan 25, dse `2ba7d38`,
+2026-08-07, reviewed/approved). CSS-only (D4, inverting this item's original "relocate the DOM
+element" framing): the legacy `.dse-hr` divider stays mounted (unconditional in every theme,
+asserted by three tests) but is hidden under `[data-dse-theme='steel'] .dse-sb > .dse-hr`, and
+the site's 9px role-hued notch is painted as a new `::after` on `.dse-sb[data-dse-role] >
+.dse-head`. Featureblock got the identical twin (SC-101 fix round, since S-4 = shared scope).
+Freeze: only `statblock--steel-print.png` moves (structure-tier, print-follows-structure),
+sanctioned by Scott 2026-08-08 (SC-102) and rebaselined at landing as one of the five.
 
 - **Identified:** 2026-07-21, Plan 20 (Steel material parity) Task 8 final visual
   verification.
@@ -569,7 +693,20 @@ sanity-run locally end to end (exit 0).
 
 ## 34. Feature card carries a left action-type spine the site card does not have
 
-**Status:** open
+**Status:** done — fixed in worktree sc10x-structural (SC-102 / plan 25, dse `632ce08` +
+`148f9eb` + `15fc806`, 2026-08-07, reviewed/approved after one fix round). CSS-only (D3,
+answering this item's own "keep or remove?" question with "keep on nested, remove on
+standalone" — the site's actual rule, not a binary choice): the spine is now suppressed only
+under `[data-dse-theme='steel'][data-dse-element='feature']` (the standalone pipeline root);
+every nested context (inside a statblock or featureblock feature list) keeps it, now as part of
+the shared per-option card frame (see #33/#35, D3). Along the way this also fixed a deeper,
+separate bug it exposed: villain actions (`usage: "-"` placeholder + `cost: "Villain Action N"`)
+had NO spine/crest/`data-dse-act` at all in any theme — a new `villain` `ActionType` +
+`--dse-act-villain` token now covers them (site-exact `#e0584b`, scheme-invariant). Freeze:
+`feature--steel-print.png`, `feature-spend--steel-print.png` (a SC-117 Batch 6 fixture this
+branch acquired at the Task 7 rebase — same `feature` element, so the same rule reaches it)
+and `statblock--steel-print.png` move (structure-tier), sanctioned by Scott 2026-08-08
+(SC-102) and rebaselined at landing.
 
 - **Identified:** 2026-07-21, Plan 20 (Steel material parity) Task 8 final visual
   verification.
@@ -596,7 +733,20 @@ sanity-run locally end to end (exit 0).
 
 ## 33. Featureblock option cost renders as an outlined chip, not the site's plain display text; one continuous accent rail instead of a bar per option
 
-**Status:** open
+**Status:** done — fixed in worktree sc10x-structural (SC-101 / plan 25, dse `2d0db45` +
+`b28093a`, 2026-08-07, reviewed/approved after one fix round). CSS-only (D2/D3, inverting this
+item's original "restructure the DOM" framing): `.dse-head` was already a real CSS grid, so the
+cost re-places from the eyebrow row to the primary row and sheds its chip chrome entirely in
+CSS; the "one continuous rail" was always N adjacent per-option bars that only looked fused
+because the list used padding instead of a real `gap` — now each option is a full bordered,
+filled card (site's exact `rgba(0,0,0,.16)`/`9px`-radius/`.7rem .85rem .78rem` recipe), shared
+with the statblock via one rule (`:is(.dse-sb, .dse-fb)`, not a per-family fork). Freeze:
+`featureblock--steel-print.png` + `featureblock-advancement--steel-print.png` move (structure
+tier), sanctioned by Scott 2026-08-08 (SC-102) and rebaselined at landing. Residual nits
+(eyebrow with no site counterpart, option icon lane, standalone-card cost still a pill): filed
+as FOLLOWUPS #55.
+
+- **Identified:** 2026-07-21, Plan 20 (Steel material parity) Task 8 final visual
 
 - **Identified:** 2026-07-21, Plan 20 (Steel material parity) Task 8 final visual
   verification.

@@ -91,6 +91,41 @@ single face for titles and body); bundling a true slab (Zilla Slab / Bitter, OFL
 - **§D (prose/reference families) — AUDITED 2026-07-27.** Typography fix landed well; in good
   shape. The card-vs-page framing is a defensible plugin choice (§D1). class/kit stats-as-list
   folds into #32 (§D2).
+- **§B #33/#34/#35 CLOSED 2026-08-07 — plan 25 (SC-101/SC-102/SC-103) executed, all THREE
+  turned out to be CSS-only, no DOM change at all — inverting this section's own framing
+  (written pre-SC-108, which assumed every §B item needed a DOM rebuild the way #32/kit did).**
+  Three findings drove that reversal, all verified in code, not assumed:
+  - **D2 — the featureblock's cost chip and option layout are reachable as Steel-scoped CSS.**
+    `.dse-head` is a real CSS grid with explicit `grid-area` per slot, and the "one continuous
+    rail" was always N adjacent per-option `::before` bars that only *looked* fused because the
+    list used padding instead of a real `gap`. No `renderFeature.ts`/`cardHead.ts` change
+    needed.
+  - **D3 — #33 (featureblock) and #34 (feature spine) are two halves of ONE site rule, not two
+    independent gaps.** The site draws the identical `.sb__feat`/`.fb__feat` nested-card
+    declaration in both its statblock and featureblock sheets, and **nothing** in its
+    standalone-ability sheet. The plugin implements this as one shared rule
+    (`:is(.dse-sb, .dse-fb) .dse-feature__nested > .dse-feature`) plus one standalone-only
+    suppression (`[data-dse-element='feature']`) — not a per-family fork. See the plugin's
+    `.repo-docs/architecture.md` "The action spine: a nested-card frame, not a standalone
+    ornament" for the full selector map.
+  - **D4 — #35's notch is a real, theme-agnostic DOM node (`kit/divider.ts`) that three tests
+    assert unconditionally**, so it could never move in TS without breaking Legacy. Fixed by
+    hiding the old node under Steel and painting the site's notch as new CSS on the existing
+    head-band anchor.
+
+  SC-102 additionally fixed a *separate*, deeper bug it surfaced along the way: villain actions
+  (`usage: "-"` + `cost: "Villain Action N"`) had no spine, no crest and no `data-dse-act` at
+  all in any theme — the "no spine" reading in #34's original 2026-07-21 write-up was a villain
+  action misread as an unstyled main action, not a deliberate absence. Freeze impact: all three
+  items are Steel-scoped, so only `*--steel-print.png` moves (5 lines total, cumulative across
+  the trio: `statblock`, `feature`, `featureblock`, `featureblock-advancement`, and
+  `feature-spend` — the fifth joined at Task 7's rebase, a SC-117 Batch 6 fixture the branch
+  didn't originally carry) — sanctioned by Scott 2026-08-08 on SC-102 and applied at landing
+  (dse-verify skill, "Sanctioned single-line rebaselines"; count unchanged at 119, freeze
+  then fully green at 119/119). Residual nits (not
+  closed by this plan): filed
+  as one workspace FOLLOWUPS entry, "featureblock/standalone head-detail parity nits (SC-101
+  residuals)".
 
 ---
 
@@ -116,13 +151,21 @@ match the **px/em target**, not the site's rem literal (same lesson as plan 20's
   not a boxed panel~~ — **CLOSED 2026-08-03, SC-100 / plan 24** (see Status above). (Rendered
   by the generic `display` element — `src/elements/display/` — via the new `CardLayout.steel`
   composition slot.) The signature-ability sub-render is richer than the site's; kept.
-- **feature/ability (FOLLOWUPS #34):** standalone ability card has a full-height coloured left
+- ~~**feature/ability (FOLLOWUPS #34):** standalone ability card has a full-height coloured left
   action spine the site's standalone card lacks. Nuance: the site's *statblock* abilities DO
-  carry a red left rail, so the plugin matches inside statblocks — divergence is standalone-only.
-- **featureblock (FOLLOWUPS #33):** option cost as a chip vs site's large display text; one
-  continuous rail vs the site's per-option bars.
-- **statblock (FOLLOWUPS #35):** diamond notch under the characteristics strip vs under the head
-  band. Otherwise the strongest structural match.
+  carry a red left rail, so the plugin matches inside statblocks — divergence is standalone-only.~~
+  **CLOSED 2026-08-07, SC-102 / plan 25** (see Status above) — CSS-only (D3): the spine is now
+  suppressed under `[data-dse-theme='steel'][data-dse-element='feature']` and stays on every
+  nested context.
+- ~~**featureblock (FOLLOWUPS #33):** option cost as a chip vs site's large display text; one
+  continuous rail vs the site's per-option bars.~~ **CLOSED 2026-08-07, SC-101 / plan 25** (see
+  Status above) — CSS-only (D2/D3): the cost re-places in the existing `.dse-head` grid as
+  display text, and the nested list gains the shared per-option card frame (`:is(.dse-sb,
+  .dse-fb)`, D3), replacing the fused rail.
+- ~~**statblock (FOLLOWUPS #35):** diamond notch under the characteristics strip vs under the head
+  band. Otherwise the strongest structural match.~~ **CLOSED 2026-08-07, SC-103 / plan 25** (see
+  Status above) — CSS-only (D4): the legacy `.dse-hr` node is hidden under Steel and the site's
+  9px role-hued notch is painted as a new `::after` on the head band.
 
 ## C. Plugin-only families — AUDITED 2026-07-27 (post-plan-21 landing)
 

@@ -310,6 +310,23 @@ Print keeps the darkened (light-column) hue, composed with Steel only (scoping c
 | `--dse-act-move` | §1.2-G intent, re-keyed to action type | `none` | `var(--sc-ability-ranged, #5dade2)` | `#2874a6` | `#2874a6` (Steel-composed, exact) |
 | `--dse-act-none` | §1.2-G intent, re-keyed to action type | `none` | `var(--sc-ability-area, #48c9a4)` | `#148f77` | `#148f77` (Steel-composed, exact) |
 | `--dse-act-trait` | §1.2-G intent, re-keyed to action type | `none` | `var(--sc-ability-passive, #b0b7bb)` | `#7b8a8b` | `#7b8a8b` (Steel-composed, exact) |
+| `--dse-act-villain` | SC-102 — villain actions are their own action type | `none` | `#e0584b` | | `#b03a2e` (Steel-composed, plugin-chosen) |
+
+**SC-102 (2026-08-07): `--dse-act-villain`.** The seventh action type. The site has **no**
+`--sc-act-villain` token — its statblock sheet hard-codes
+`.sb__feat[data-action="villain"] { --act: #e0584b }` (`steel-statblock.css`) and its
+featureblock sheet chains `--sc-role-controller`, which resolves to the same `#e0584b`
+(`palette.css`). So the Steel-dark value is that literal verbatim (S-3). Legacy is `none`
+like every other `act-*` (OD-2).
+
+**Light is BLANK — the one `act-*` that does not shift** (fix round, task-3 review M-2).
+The other six light values are verbatim copies of the site's light `--sc-act-*` column;
+there is no derivation rule, and the site has no light villain value to copy: `#e0584b` is
+scheme-invariant site-side. Applying the family's *actual* convention therefore yields
+light-stable, which is also exactly how this map already treats `--dse-role-controller` —
+the same hue. The **print** twin `#b03a2e` is kept and is the one act print value with no
+site value behind it: a deliberate contrast / ink-economy darkening for paper, recorded
+here as a divergence rather than dressed up as a convention.
 
 ## Appendix A — spec concepts with NO D2 token (nothing to value)
 

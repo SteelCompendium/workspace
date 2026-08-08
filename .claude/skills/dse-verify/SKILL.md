@@ -154,6 +154,20 @@ didn't mount) plus human review of the PNGs.
     `--dse-surface-sunken` token flip): both new fixtures render surfaces gated by that
     token, and it's a Steel-scoped rule, so legacy/print must be unaffected by the flip —
     pinning them now makes any future leak into legacy/print loud instead of silent.
+  - **2026-08-07, plan 25 / SC-102 S-5 (worktree `sc10x-structural`, Task 7): 113 → 119.**
+    Two new browser fixtures, 3 lines each — `feature/villain`, the only REAL standalone
+    villain action anywhere (the D9 `feature/example.yaml` is a *permanent* false villain:
+    `ability_type: Villain Action 1` alongside `usage: Main action`, and usage correctly
+    wins — FOLLOWUPS #53), and `statblock/villain-corpus`, villain actions in the shape
+    `steel-etl` actually emits (`cost: "Villain Action N"` + `usage: "-"`, **no**
+    `ability_type` — the shape the task-3 review found made the whole feature a no-op on
+    real content). Verified: `diff <(head -113 …) …pre-plan25-bak` is empty — the
+    pre-existing 113 lines are byte-untouched — and both fixtures' **legacy** twins were
+    green *before* the widening (they were simply unlisted), so pinning them records a
+    proven-clean state, not a leak. **What this widening does NOT do:** it pins the trio's
+    own after-bytes only for *new names with no prior frozen state*. The 5 pre-existing
+    `*--steel-print.png` lines the trio moves are a separate, Scott-sanctioned rebaseline
+    (below) applied at landing — never bundled into a widening.
 - **Sanctioned single-line rebaselines — the third case (rare; Scott-approved only).** A
   Steel-only DOM rebuild of a display family necessarily changes that family's frozen
   `*--steel-print.png` (print is a pure CSS attribute over whatever DOM the active theme
@@ -172,6 +186,44 @@ didn't mount) plus human review of the PNGs.
     CONTENT fix (treasure Project row rendered a raw markdown literal; `markdown: true`
     in treasureLayout) necessarily reaches Legacy/print. Scott approved explicitly
     ("oh that's fine. Fix it."); rebaseline applied at landing, count unchanged at 107.
+  - **2026-08-08, plan 25 (SC-101/SC-102/SC-103, worktree `sc10x-structural`): 5 lines,
+    count unchanged at 119 — APPLIED at landing.** The trio's structure-tier CSS (the shared
+    nested-card frame, the standalone action-spine removal, the villain action type, the
+    head-band notch — all "print follows structure" per S-1(a)) necessarily reaches print.
+    The five, all `*--steel-print.png`: `statblock`, `feature`, `featureblock`,
+    `featureblock-advancement`, `feature-spend`.
+    - **Scott's approval, 2026-08-08**, against the self-contained sanction ask on **SC-102**
+      — comment `f8bbaadf` (the five before/after pairs, every "before" regenerated and
+      hash-verified byte-identical to the baseline line it replaces) plus its follow-up
+      `a9e0158d`, which answers Scott's question about the shots and enumerates exactly what
+      approval covers: *"Approve = I rebaseline exactly those five hashes at landing (dated
+      sign-off, established procedure)."* Nothing else in the baseline was touched. The
+      dark-on-dark look of the `steel-print` captures is a longstanding **harness capture
+      artifact** (print tokens over the DARK scheme), shared by both halves of every pair —
+      a separate follow-up will re-capture print over the light scheme, which will be its
+      own deliberate all-print-lines re-pin, not part of this sanction.
+    - Applied procedure: `npm run shots` re-run at the exact landing commit (post-rebase onto
+      the SC-117 fix wave), baseline backed up to
+      `freeze-baseline.sha256.pre-plan25-landing-bak`, exactly those 5 `<hash>  <name>` lines
+      replaced (`diff` against the backup shows 5 changed lines and no others, `wc -l` still
+      119), then `check-freeze.sh` → `freeze OK (119/119 legacy+print PNGs byte-identical)`,
+      exit 0.
+    - The 5th (`feature-spend`) appeared only at Task 7: it is a **SC-117 Batch 6** fixture
+      that did not exist on this branch until the rebase, and it is a `feature`-element card
+      — so the Task 4 spine-removal rule
+      (`[data-dse-theme='steel'][data-dse-element='feature'] .dse-feature[data-dse-act]::before`)
+      reaches it for exactly the same reason it reaches `feature--steel-print`. Diagnosed,
+      not assumed: its **legacy** twins stayed byte-identical (so no theme-agnostic DOM
+      change touched it — the move is Steel-structure-only), and its pre-trio bytes were
+      regenerated at `origin/main` and **hash-matched the frozen baseline line exactly**,
+      giving a real before/after pair for the sanction ask.
+    - **Lesson worth keeping:** a sibling branch's new fixture can silently enlarge *your*
+      rebaseline ask. Re-run the freeze check **after** the rebase, never only before, and
+      count the mismatch names rather than trusting the plan's predicted number.
+    - **Consequence for other in-flight branches:** the baseline now carries the trio's
+      *after* bytes for those five names. Any branch still based on pre-plan-25 `main` will
+      report exactly those 5 as `FAILED` until it rebases. That is the rebaseline showing
+      through, not a leak — rebase, then re-check.
 
 **2026-08-07, SC-117 fix wave M3 — exit-code semantics fixed: MISSING and MISMATCH used to
 be conflated.** `sha256sum -c` reports both a not-yet-producible file and a real byte
@@ -288,6 +340,22 @@ uses none.
 > rows (now FOLLOWUPS #52). If you read a doc anywhere claiming the partition is unconditional
 > and older than 2026-08-07, it was describing the intent, not the code.
 
+## Capture-width convention (Scott's rule, 2026-08-07)
+
+**Design-review evidence gets the standard main-pane width.** Narrow/sidebar captures are
+only for when narrow behaviour is literally the thing under review (e.g. FOLLOWUPS #48's
+hero-sheet sidebar overflow, or a `--width=` narrow-axis shot). Don't reach for a narrow
+capture as a shortcut or as "extra thoroughness" on an ordinary design-review pass — it
+answers a different question than the one being reviewed.
+
+**The camera sets pane widths programmatically — never ask Scott to resize his vault.** Both
+cameras already do this in code, not by hand: the browser harness fixes its page at
+`viewport: { width: 900, height: 1200 }` (`visual-harness/shoot.mjs`) with an explicit
+`?width=<px>` override for the narrow axis (`visual-harness/entry.ts`'s `NARROW_SHOTS`); the
+Obsidian camera drives real sidebar-leaf width via `Emulation.setDeviceMetricsOverride` over
+CDP (`visual-harness/obsidian-camera.mjs`). If a capture needs a specific width, set it in the
+capture script/CDP call — don't ask a human to resize a window and hope the next run matches.
+
 ## Steel scoping rule
 
 Every new Steel CSS rule must carry
@@ -325,9 +393,12 @@ Two branch-specific notes that will read as failures if you don't expect them:
   which live on the unlanded `sc10x-structural` branch, so `sha256sum -c` reports them as
   `No such file or directory` rather than as checksum mismatches. **A missing file is not a
   leak; a `FAILED` checksum is.** Read the two categories separately before calling the gate
-  red. Equally: the 5 sanction-pending `*--steel-print.png` mismatches plan 25 carries do NOT
-  apply on any other branch — those files still render the old way elsewhere and must stay
-  byte-identical.
+  red. (**Superseded 2026-08-08:** plan 25 landed, so those 6 lines are producible on `main`
+  and this "6 missing" arm no longer fires there. The *category* distinction is permanent and
+  still the point.) Equally: the 5 then-sanction-pending `*--steel-print.png` mismatches plan
+  25 carried did NOT apply on any other branch at the time — but the sanctioned rebaseline
+  has since been applied, so the baseline now holds the trio's *after* bytes and a branch
+  still based on pre-plan-25 `main` will report exactly those 5 as `FAILED` until it rebases.
 - Historical numbers: jest was **2248/155** on `guards` (before B6's fixture test) and parity
   was **18 DECLARED** until SC-117 R1 healed FOLLOWUPS #52. The old "10 WARNs" figure predates
   the declared-deferrals contract entirely (exit 0 ⟺ 0 GAPs AND every WARN declared; material
@@ -347,3 +418,32 @@ semantics. Parity **0 GAPs / 0 undeclared WARNs / 16 DECLARED / exit 0**, unchan
 (M4 only edited README prose, no selector-map/compare.cjs change). M3 (`check-freeze.sh`
 itself) has no branch/version number of its own — it's shared workspace scratch, not part
 of this repo's test surface.
+
+**LANDING STATE — `sc10x-structural` (plan 25, structural trio, rebased onto the SC-117
+fix-wave main and rebaselined 2026-08-08):** jest **2289 passed / 155 suites / 3 snapshots**,
+shots **199 browser** (0 FAIL), freeze **`freeze OK (119/119 legacy+print PNGs
+byte-identical)`, exit 0** — the first fully-green freeze on this work, and the state the
+five-line sanctioned rebaseline above produced. Parity **0 GAPs / 0 undeclared WARNs / 16
+DECLARED / exit 0**, composition byte-for-byte identical to main's (`git diff
+origin/main...HEAD -- visual-harness/parity/` is empty): none of the 16 declarations concerns
+a surface this plan touched, and none of the trio's rules moved a sampled property.
+`obsidian-shots` was NOT run at landing — a live Obsidian session owned display `:1`; the
+last recorded value for this branch is 145.
+
+Two numbers moved between this branch's own finale and its landing, both because the SC-117
+**fix wave** landed on `main` in between:
+- **Parity 18 → 16 DECLARED.** Not this branch's doing: the fix wave healed FOLLOWUPS #52,
+  removing the two `statblock-wrap:line-height` declarations. This branch never touched
+  `selector-map.json`, and the rebase must not resurrect the removed declaration — verified
+  by the empty parity diff above.
+- **Freeze 114/119 → 119/119.** The rebaseline, not new work.
+
+Jest is unchanged at 2289 across the rebase, which is the correct answer and worth checking
+rather than assuming: the fix wave added **zero** test cases (its only `test(...)` edit
+renamed "the documented 9 entries" → "8"), so main's count did not move and the trio's own
++41 lands on the same base. The freeze denominator went 113 → **119** on this branch (this
+plan's own S-5 widening, above). This whole block is exactly the "confirm the actual counts
+against whatever commit you're gating" case the paragraph above warns about: the plan
+predicted 4 print mismatches and the real post-rebase answer was 5, because a sibling
+branch's new `feature-spend` fixture sits in a family this plan restyles. **Don't average,
+don't assume, re-run — after the rebase.**
