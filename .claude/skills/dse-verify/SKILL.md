@@ -163,7 +163,7 @@ mapped selectors. **The gate contract is a biconditional (SC-110):**
 
 > **exit 0 ⟺ 0 GAPs AND 0 undeclared WARNs.**
 
-Expected clean result today: **0 GAPs / 0 undeclared WARNs / 18 DECLARED rows / exit 0**.
+Expected clean result today: **0 GAPs / 0 undeclared WARNs / 16 DECLARED rows / exit 0**.
 
 A `WARN` now means "the comparison did not happen" (a selector that never rendered, an
 unparseable value) and **fails the run** — before SC-110 it was printed and ignored, so a
@@ -193,7 +193,7 @@ Geometry/typography/ink stay declarable because that is where genuine pixel deci
 (Conservative by design; relaxing it is a one-line change to `NON_DECLARABLE_CLASSES` in
 `compare.cjs`.)
 
-The 9 declared entries (18 rows — each covers both schemes) are four findings:
+The 8 declared entries (16 rows — each covers both schemes) are three findings:
 - **FOLLOWUPS #39** (8 rows) — `statblock-wrap` / `featureblock-wrap` `margin-top`/`-bottom`:
   site 34px (`1.7rem` on `.sb-wrap`/`.fb-wrap`) vs plugin 8px (Legacy-base `0.5em` on the
   host). A **pixel decision** for Scott, no longer an invisible one.
@@ -201,10 +201,15 @@ The 9 declared entries (18 rows — each covers both schemes) are four findings:
   site 18px/30.6px/1.8px vs plugin 16px/27.2px/1.12px. One type-scale decision for Scott.
 - **FOLLOWUPS #40** (2 rows) — `pr-chars:ink`: the plugin's single-node power-roll caption is
   deliberately heading-emphasised where the site splits `.pre`/`.chars`.
-- **FOLLOWUPS #52** (2 rows) — `statblock-wrap:line-height`: site `.sb-wrap` 27.2px vs the
-  plugin's statblock host 24px. A **one-line CSS fix** (the Plan 21 Task 2 `line-height: 1.7`
-  group at `styles-source.css` ~3512 omits the statblock host), deferred only because the
-  SC-110 fix round that surfaced it changes no plugin CSS.
+
+**FOLLOWUPS #52 HEALED and was deleted (2026-08-07, SC-117 rider R1) — 9/18 → 8/16.** Its
+one-selector fix (the statblock host joined the Plan 21 `line-height: 1.7` group) landed, and
+the next `npm run parity` **failed** with `DEAD DECLARATION(S): … statblock-wrap:line-height
+… Delete them` because the declaration matched nothing. Removing it is the required response,
+not a rebaseline — and it is the shape every entry above is expected to end in. When you fix a
+declared finding, expect the run to go red until you delete its declaration, and expect to move
+`compare.test.ts`'s "the declared set is exactly the documented N entries" guard and
+`visual-harness/parity/README.md` in the same commit.
 
 If the DECLARED count or composition differs from this set, don't just accept a new number:
 either it's a regression (fix it) or a new legitimate deferral (file it under its own
@@ -251,11 +256,24 @@ fixtures.test.ts mount case), shots **189** (+10: `feature-spend`/`negotiation-p
 branch; the SC-121 C-5 rebaseline already covers the 5 treasure/gallery lines main was
 still carrying).
 
-As of dse SC-110/SC-109 + fix round (branch `guards` rebased onto B6, 2026-08-07): jest
-**2248/155 suites**, parity **0 GAPs / 0 undeclared WARNs / 18 DECLARED / exit 0** — the
-old "10 WARNs" number predates the declared-deferrals contract (exit 0 ⟺ 0 GAPs AND every
-WARN declared; material classes `bg`/`shadow`/`hairline-*` are never declarable; the
-"16 DECLARED" number predates the fix round that stopped `statblock-wrap` hiding two rows).
-`npm run parity` also runs in CI as of SC-109. These numbers change as the plugin
+As of dse SC-117 fix wave B1-B4 + riders (branch `sc117-audit`, 2026-08-07): jest
+**2249/155 suites**, shots **189**, freeze **113 producible lines OK / 0 mismatches**, parity
+**0 GAPs / 0 undeclared WARNs / 16 DECLARED / exit 0**.
+
+Two branch-specific notes that will read as failures if you don't expect them:
+- **The freeze baseline is 119 lines, but only 113 of them are producible here.** The other 6
+  (`feature-villain--*`, `statblock-villain-corpus--*`) belong to plan 25's two new fixtures,
+  which live on the unlanded `sc10x-structural` branch, so `sha256sum -c` reports them as
+  `No such file or directory` rather than as checksum mismatches. **A missing file is not a
+  leak; a `FAILED` checksum is.** Read the two categories separately before calling the gate
+  red. Equally: the 5 sanction-pending `*--steel-print.png` mismatches plan 25 carries do NOT
+  apply on any other branch — those files still render the old way elsewhere and must stay
+  byte-identical.
+- Historical numbers: jest was **2248/155** on `guards` (before B6's fixture test) and parity
+  was **18 DECLARED** until SC-117 R1 healed FOLLOWUPS #52. The old "10 WARNs" figure predates
+  the declared-deferrals contract entirely (exit 0 ⟺ 0 GAPs AND every WARN declared; material
+  classes `bg`/`shadow`/`hairline-*` are never declarable), and a "16 DECLARED" written before
+  2026-08-07 means the pre-fix-round set, not this one — same number, different composition.
+  `npm run parity` also runs in CI as of SC-109. These numbers change as the plugin
 grows — treat them as "what to expect right now," not a hardcoded target. Always confirm the actual counts against whatever commit you're
 gating, and if they differ, figure out why before treating it as either pass or fail.

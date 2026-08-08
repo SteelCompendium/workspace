@@ -42,7 +42,21 @@ structural divergence like these is invisible to it by design.)*
 
 ## 52. Steel statblock HOST missed the Plan 21 body-rhythm group — line-height 24px vs the site's 27.2px
 
-**Status:** open
+**Status:** DONE 2026-08-07 (SC-117 fix wave, rider R1, worktree `sc117-audit`)
+
+- **Fixed exactly as the remedy below predicted:** `[data-dse-theme='steel']:not([data-dse-print="on"])[data-dse-element='statblock']`
+  joined the Plan 21 Task 2 `line-height: 1.7` group — one selector, no other change. The host
+  now computes 27.2px in both schemes, matching the site's `.sb-wrap`.
+- **The anti-rot check then did its job, which is the point worth recording.** With the CSS in
+  and the declaration still present, `npm run parity` **failed** with
+  `DEAD DECLARATION(S): … statblock-wrap:line-height … Delete them` — the declaration matched
+  nothing because the divergence was gone. Removing it took the shipped set from **9 entries /
+  18 rows to 8 / 16**; `compare.test.ts`'s "the declared set is exactly the documented N
+  entries" guard and `visual-harness/parity/README.md` moved with it. A declared deferral
+  cannot outlive its finding, and no one had to remember to clean it up.
+- **The "expect no visible change" prediction held:** every `*--steel-{dark,light}.png` shot
+  came back byte-identical across this rider, and the freeze set was untouched — the
+  transparent host paints no text of its own.
 
 - **Identified:** 2026-08-07, SC-110 **fix round** (review finding M-1), `draw-steel-elements`
   worktree `guards`. Not found by looking: it was **being actively suppressed**. The
