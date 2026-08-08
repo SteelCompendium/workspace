@@ -14,6 +14,9 @@ go under an *Internal* sub-heading.
 > `6.0.0-rc1` incident (an RC published as a regular release; `6.0.1` was cut as a
 > recovery re-release of 5.1.1). It ships as **7.0.0** — see the plugin CHANGELOG.
 
+- **Encounter builder → initiative tracker fixed (SC-134)** — builder-generated tracker
+  blocks (SCC-code statblock refs) render again instead of an error card; pre-existing
+  generated encounters recover with no edits.
 - **Draw Steel Elements plugin 7.0.0** — compendium sync now pulls from data-unified
   releases instead of the retired data-md-dse repo, is non-destructive and
   manifest-driven (only plugin-installed files are ever updated or trashed), and
