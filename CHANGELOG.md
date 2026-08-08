@@ -147,6 +147,18 @@ go under an *Internal* sub-heading.
   guarded, with harness coverage extended to modals, the sidebar, canvas read-only
   states and the settings tab (freeze pins 101 → 107).
 
+### Fixed
+
+- **Steel dark mode reads flat — the sunken-surface polarity (SC-117)** — every recessed
+  panel inside a Steel card (ability sections, power-roll frames, Distance/Targets cells,
+  statblock stat and field boxes, hero regions, initiative cells, the encounter summary)
+  was painted with a 6%-**white** wash in dark mode and an opaque grey in light. Both
+  occluded the card plate's own diagonal gradient, which is exactly where
+  steelcompendium.io's dark-mode richness comes from — so every panel landed on the same
+  flat tone regardless of where it sat on the plate. They now carry the site's measured
+  translucent-**black** fills, per surface, in both schemes, and section header strips
+  drop the opaque plate they painted under their sheen (the site paints none).
+
 ### Internal
 
 - **Draw Steel Elements visual-harness coverage** — featureblock advancement bands

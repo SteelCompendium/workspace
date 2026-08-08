@@ -98,6 +98,31 @@ didn't mount) plus human review of the PNGs.
   a new/edited Steel CSS rule leaked into the legacy or print scheme. Fix it by narrowing the
   rule's selector scope (see "Steel scoping rule" below). **Never edit the baseline to accept
   the new bytes** — that defeats the entire check.
+- **Baseline corrections — a fourth case (rare): the baseline pinned a CAPTURE ARTIFACT, not
+  a look.** Distinct from a widening (new name, additions-only) and a sanctioned rebaseline
+  (an approved DOM/CSS change legitimately moves a frozen shot) — here the *harness itself*
+  was capturing the wrong thing, so the frozen bytes never represented the surface they claim
+  to.
+  - **2026-08-07, SC-117 fix wave M1.** `shoot.mjs`'s interaction-shot click
+    (`page.locator(opts.click).click()`) left the pointer sitting on the clicked row, so
+    every `negotiation-pr-checked--*` shot captured `:hover` (`--dse-hover`,
+    `rgba(77,184,199,.1)`) painted OVER the row's resting fill instead of the resting fill
+    itself — the three frozen lines were pinned to a hover wash, not to consumer #16's
+    actual at-rest surface. Fix: `await page.mouse.move(0, 0)` right after the click, before
+    the screenshot (one line, `visual-harness/shoot.mjs`). Verified live before re-pinning: a
+    standalone probe (click via `page.locator(...).click()`, then `mouse.move(0,0)`, then
+    read `getComputedStyle`) reports `hover: false`, `background-color: rgba(0,0,0,.18)`
+    steel-dark / `rgba(0,0,0,.02)` steel-light — the surface `.dse-pr__row[aria-checked=true]`
+    is actually supposed to paint. Baseline backed up to
+    `freeze-baseline.sha256.pre-hoverfix-bak` before editing; only **2 of the 3** frozen lines
+    actually changed bytes on regeneration — `negotiation-pr-checked--legacy-{dark,light}.png`
+    changed, but `--steel-print.png` came back byte-**identical**, because `:hover` does not
+    apply under Playwright's print-media emulation regardless of pointer position, so that one
+    line was never actually contaminated. All three lines were nonetheless re-pinned to the
+    freshly regenerated at-rest bytes (the unchanged one is a no-op write), count unchanged at
+    119. This is a **capture-artifact correction, not a visual change** — no CSS moved, no
+    surface got lighter or darker; the fix only stopped the camera from pinning its own
+    pointer position into the golden.
 - **Widening the baseline is additions-only**, and only when you deliberately want new shots
   pinned against future regression: append the new hash lines, never touch/reorder the
   existing ones, and bump the two literal count strings in `check-freeze.sh`'s comment +
@@ -148,6 +173,27 @@ didn't mount) plus human review of the PNGs.
     in treasureLayout) necessarily reaches Legacy/print. Scott approved explicitly
     ("oh that's fine. Fix it."); rebaseline applied at landing, count unchanged at 107.
 
+**2026-08-07, SC-117 fix wave M3 — exit-code semantics fixed: MISSING and MISMATCH used to
+be conflated.** `sha256sum -c` reports both a not-yet-producible file and a real byte
+mismatch as a non-`: OK` line, and the old script's logic (`grep -v ': OK$'`, nonempty ->
+`FREEZE VIOLATED`, exit 1) treated them identically — so any branch that doesn't (yet) carry
+every fixture the shared baseline has grown to (the normal state whenever one worktree
+widens the baseline before another lands, e.g. plan 25's unlanded 113 -> 119) could never
+exit 0. A gate that always reads red trains people to skim it, which is exactly the failure
+mode the freeze check exists to prevent. Fixed to distinguish the two: `: FAILED$` (checksum
+mismatch — still `FREEZE VIOLATED`, still exit 1) from `: FAILED open or read$` (missing —
+not producible on this branch, reported by count but not fatal), and exit 0 whenever
+mismatches are zero, regardless of how many are missing. The two count literals in the
+success message are now computed from the actual run (`ok_count`/`total`) instead of
+hardcoded, so they no longer drift the next time the baseline widens. **New proof-of-life
+result** (first time the fixed script can ever say this on a branch missing sibling
+fixtures): `freeze OK (113/119 producible OK, 6 missing (not producible on this branch), 0
+checksum mismatches)`, exit 0 — the 6 missing are plan 25's `feature-villain--*` /
+`statblock-villain-corpus--*` trio (unlanded `sc10x-structural`), same 6 the old script
+reported as `FREEZE VIOLATED` for no actionable reason. A real mismatch still prints and
+still exits 1, unchanged. Script backed up to `check-freeze.sh.pre-distinguish-bak` before
+editing (main-checkout scratch, `.superpowers/sdd/`).
+
 ## Parity semantics
 
 **Site reference captures (Scott's rule, 2026-08-03): always capture BOTH color schemes.**
@@ -163,7 +209,7 @@ mapped selectors. **The gate contract is a biconditional (SC-110):**
 
 > **exit 0 ⟺ 0 GAPs AND 0 undeclared WARNs.**
 
-Expected clean result today: **0 GAPs / 0 undeclared WARNs / 18 DECLARED rows / exit 0**.
+Expected clean result today: **0 GAPs / 0 undeclared WARNs / 16 DECLARED rows / exit 0**.
 
 A `WARN` now means "the comparison did not happen" (a selector that never rendered, an
 unparseable value) and **fails the run** — before SC-110 it was printed and ignored, so a
@@ -193,7 +239,20 @@ Geometry/typography/ink stay declarable because that is where genuine pixel deci
 (Conservative by design; relaxing it is a one-line change to `NON_DECLARABLE_CLASSES` in
 `compare.cjs`.)
 
-The 9 declared entries (18 rows — each covers both schemes) are four findings:
+**Known limitation (SC-117 fix wave M4) — `background-color` is sampled but never compared.**
+The `bg` rule (`compare.cjs:323-324`) fires only when the site's `background-image` is
+non-flat and the plugin's is flat — it never reads `background-color`, even though
+`background-color` is already captured into both inventories for every mapped pair, both
+schemes. SC-117 washed 13 declaration sites the wrong **polarity** (translucent white where
+the site sits on translucent black) and every pair passed clean throughout, because neither
+side's `background-image` was `none`. `bg` stays `material` (never declarable), so closing
+this only ever tightens the gate. Future fix, as its own ticket: a polarity-only check first
+(site translucent-black vs. plugin translucent-white/opaque) — cheap, near-noise-free, would
+have caught SC-117 on day one; a full `background-color` comparison is separately-scoped,
+larger work. Full reasoning: `visual-harness/parity/README.md` → "Known limitation —
+`background-color` is sampled but never compared."
+
+The 8 declared entries (16 rows — each covers both schemes) are three findings:
 - **FOLLOWUPS #39** (8 rows) — `statblock-wrap` / `featureblock-wrap` `margin-top`/`-bottom`:
   site 34px (`1.7rem` on `.sb-wrap`/`.fb-wrap`) vs plugin 8px (Legacy-base `0.5em` on the
   host). A **pixel decision** for Scott, no longer an invisible one.
@@ -201,10 +260,15 @@ The 9 declared entries (18 rows — each covers both schemes) are four findings:
   site 18px/30.6px/1.8px vs plugin 16px/27.2px/1.12px. One type-scale decision for Scott.
 - **FOLLOWUPS #40** (2 rows) — `pr-chars:ink`: the plugin's single-node power-roll caption is
   deliberately heading-emphasised where the site splits `.pre`/`.chars`.
-- **FOLLOWUPS #52** (2 rows) — `statblock-wrap:line-height`: site `.sb-wrap` 27.2px vs the
-  plugin's statblock host 24px. A **one-line CSS fix** (the Plan 21 Task 2 `line-height: 1.7`
-  group at `styles-source.css` ~3512 omits the statblock host), deferred only because the
-  SC-110 fix round that surfaced it changes no plugin CSS.
+
+**FOLLOWUPS #52 HEALED and was deleted (2026-08-07, SC-117 rider R1) — 9/18 → 8/16.** Its
+one-selector fix (the statblock host joined the Plan 21 `line-height: 1.7` group) landed, and
+the next `npm run parity` **failed** with `DEAD DECLARATION(S): … statblock-wrap:line-height
+… Delete them` because the declaration matched nothing. Removing it is the required response,
+not a rebaseline — and it is the shape every entry above is expected to end in. When you fix a
+declared finding, expect the run to go red until you delete its declaration, and expect to move
+`compare.test.ts`'s "the declared set is exactly the documented N entries" guard and
+`visual-harness/parity/README.md` in the same commit.
 
 If the DECLARED count or composition differs from this set, don't just accept a new number:
 either it's a regression (fix it) or a new legitimate deferral (file it under its own
@@ -251,11 +315,35 @@ fixtures.test.ts mount case), shots **189** (+10: `feature-spend`/`negotiation-p
 branch; the SC-121 C-5 rebaseline already covers the 5 treasure/gallery lines main was
 still carrying).
 
-As of dse SC-110/SC-109 + fix round (branch `guards` rebased onto B6, 2026-08-07): jest
-**2248/155 suites**, parity **0 GAPs / 0 undeclared WARNs / 18 DECLARED / exit 0** — the
-old "10 WARNs" number predates the declared-deferrals contract (exit 0 ⟺ 0 GAPs AND every
-WARN declared; material classes `bg`/`shadow`/`hairline-*` are never declarable; the
-"16 DECLARED" number predates the fix round that stopped `statblock-wrap` hiding two rows).
-`npm run parity` also runs in CI as of SC-109. These numbers change as the plugin
+As of dse SC-117 fix wave B1-B4 + riders (branch `sc117-audit`, 2026-08-07): jest
+**2249/155 suites**, shots **189**, freeze **113 producible lines OK / 0 mismatches**, parity
+**0 GAPs / 0 undeclared WARNs / 16 DECLARED / exit 0**.
+
+Two branch-specific notes that will read as failures if you don't expect them:
+- **The freeze baseline is 119 lines, but only 113 of them are producible here.** The other 6
+  (`feature-villain--*`, `statblock-villain-corpus--*`) belong to plan 25's two new fixtures,
+  which live on the unlanded `sc10x-structural` branch, so `sha256sum -c` reports them as
+  `No such file or directory` rather than as checksum mismatches. **A missing file is not a
+  leak; a `FAILED` checksum is.** Read the two categories separately before calling the gate
+  red. Equally: the 5 sanction-pending `*--steel-print.png` mismatches plan 25 carries do NOT
+  apply on any other branch — those files still render the old way elsewhere and must stay
+  byte-identical.
+- Historical numbers: jest was **2248/155** on `guards` (before B6's fixture test) and parity
+  was **18 DECLARED** until SC-117 R1 healed FOLLOWUPS #52. The old "10 WARNs" figure predates
+  the declared-deferrals contract entirely (exit 0 ⟺ 0 GAPs AND every WARN declared; material
+  classes `bg`/`shadow`/`hairline-*` are never declarable), and a "16 DECLARED" written before
+  2026-08-07 means the pre-fix-round set, not this one — same number, different composition.
+  `npm run parity` also runs in CI as of SC-109. These numbers change as the plugin
 grows — treat them as "what to expect right now," not a hardcoded target. Always confirm the actual counts against whatever commit you're
 gating, and if they differ, figure out why before treating it as either pass or fail.
+
+**As of the SC-117 fix-wave FIX ROUND (branch `sc117-audit`, 2026-08-07, M1+M2+M4+L2
+commits on top of R1):** jest **2249/155 suites, 3 snapshots** (unchanged — no test surface
+touched), shots **189** (unchanged — no fixture added, M1 only changed what one existing
+capture does with the mouse), freeze (fixed script, see "Baseline corrections" above) →
+`freeze OK (113/119 producible OK, 6 missing (not producible on this branch), 0 checksum
+mismatches)`, exit **0** — the first branch that can ever say this with the corrected
+semantics. Parity **0 GAPs / 0 undeclared WARNs / 16 DECLARED / exit 0**, unchanged from R1
+(M4 only edited README prose, no selector-map/compare.cjs change). M3 (`check-freeze.sh`
+itself) has no branch/version number of its own — it's shared workspace scratch, not part
+of this repo's test surface.
