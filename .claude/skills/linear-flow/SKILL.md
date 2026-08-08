@@ -48,6 +48,21 @@ not a prose description. (Scott's ruling, 2026-08-02.)
   shot, design-reference/target images that guide how the ticket gets implemented — things
   someone should find without scrolling the thread. Not for evolving progress evidence.
 
+### Approval asks are self-contained (Scott's rule, 2026-08-08)
+
+When flagging `Needs Review` for an approval/decision, **the LAST comment must carry a
+clearly-marked section stating exactly what Scott is approving** — even if that duplicates
+images or facts from earlier comments (re-upload the deciding image inline if needed).
+He reviews from that one comment without scrolling. Shape:
+
+1. A heading like **"What you're approving"**.
+2. The enumerated decision(s), one line each, concrete ("rebaseline these 5 files: …").
+3. The deciding evidence inline in the same comment.
+4. The consequence of each answer ("approve = X happens; decline = Y").
+
+If discussion continues after an ask (questions, new rounds), post a fresh consolidated
+ask as the new last comment rather than pointing back up the thread.
+
 ## Attachment mechanics
 
 Use the fully-qualified MCP tool names — `mcp__linear__prepare_attachment_upload` and

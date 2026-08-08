@@ -92,6 +92,15 @@ throwaway `6.0.1` re-release of 5.1.1, and days of waiting on Obsidian's mirror.
   "Set as a pre-release" must be ticked *and* the manifest version must stay strictly
   `x.y.z` — but the default answer is still no.
 
+## Linear: approval asks must be self-contained (Scott's rule, 2026-08-08)
+
+When a ticket needs Scott's approval, **the last comment must contain a clearly-marked
+section stating exactly what he is being asked to approve — self-contained, even if that
+duplicates images or content from earlier comments.** He should never have to scroll the
+thread to reconstruct the ask. Shape: a heading like "**What you're approving**", the
+enumerated decision(s), and the deciding evidence (images inline, re-uploaded if needed)
+right there in the same comment. The operational side lives in the `linear-flow` skill.
+
 ## Linear: screenshots are the review medium (Scott's rule, 2026-08-02)
 
 Scott reviews visual work *in Linear, from the attachments*. Two standing rules:
