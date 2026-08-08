@@ -63,6 +63,14 @@ He reviews from that one comment without scrolling. Shape:
 If discussion continues after an ask (questions, new rounds), post a fresh consolidated
 ask as the new last comment rather than pointing back up the thread.
 
+### ⚠️ `save_issue` labels are REPLACE, not merge
+
+`mcp__linear__save_issue`'s `labels` param replaces the issue's **full** label set, and
+some write paths have silently cleared labels as a side effect (observed 2026-08-08 on
+SC-131). Always pass the complete intended set (fetch current labels first if unsure), and
+re-verify labels after any save that matters (`Needs Review` disappearing = invisible to
+Scott's filter).
+
 ## Attachment mechanics
 
 Use the fully-qualified MCP tool names — `mcp__linear__prepare_attachment_upload` and
