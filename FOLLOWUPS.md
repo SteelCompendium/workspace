@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 58 -->
+<!-- next-id: 60 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1247,3 +1247,35 @@ Site cards render from the body (unaffected); only the JSON/YAML/DSE `effects[]`
 mis-attributes them today.
 
 **Effort:** S-M (source edit + decide enhancement modeling/SCC placement + regen).
+
+## 58. DSE: five drifted copies of the SCC-prefix predicate — export one
+
+**Found:** 2026-08-08, SC-134 fix review (M2).
+
+`/^scc(\.v\d+)?:/` now exists in five places (`refs.ts:85`, `SccRefProvider.ts:6`,
+`ReferenceResolver.ts`, `rewriteSccAnchors.ts`, `initiative/resolveRefs.ts:47`) and the
+copies have already drifted semantically on trim behavior (`SccRefProvider.canResolve`
+trims its input; `refs.ts`'s reserved-placeholder check does not). Export a single
+predicate (+ trim policy) from the refs seam and consume it everywhere before a sixth
+copy appears.
+
+**Effort:** S.
+
+## 59. DSE initiative: SCC-ref failure UX — bogus filename hint + portrait warn noise
+
+**Found:** 2026-08-08, SC-134 fix review (M4 + N2).
+
+Two polish items around builder-emitted `scc.v1:` refs in the tracker, both out of scope
+for the SC-134 resolution fix: (a) an unresolvable SCC ref wraps SccRefProvider's good
+message ("…is not available in this vault. Sync the compendium…") in the legacy outer
+hint "Are there multiple instances of the '<ref>' file in your vault?" — nonsense for an
+SCC code; the outer message is pinned byte-exact by
+`test/unit/model/initiative-resolve-refs.test.ts` against a legacy oracle, so changing it
+means updating that contract deliberately. (b) every builder-created tracker fires
+`console.warn("no portrait image found for …")` per creature (initiative/view.ts:710)
+because md-dse compendium statblocks carry no `image` key — decide whether to ship images
+in md-dse, suppress the warn for compendium-sourced rows, or both. Related: Scott's
+deferred call on row-scoped degradation (one bad ref currently kills the whole tracker)
+lives on SC-134's comments.
+
+**Effort:** S (each half), plus one Scott decision.
