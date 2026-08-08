@@ -291,8 +291,8 @@ structural divergence like these is invisible to it by design.)*
   the current (uncorrected) data — proof the false-villain reading is real and not an artifact
   of some other change. Deliberately NOT touched by plan 25 (D9 single-source + LEGACY-FREEZE
   both apply); a new, separate `feature-villain` harness fixture proves the real villain path
-  standalone instead (`visual-harness/entry.ts`, `feature: { default, villain }`, added SC-102
-  part 2 / S-5).
+  standalone instead (`visual-harness/entry.ts`, `feature: { default, spend, villain }` —
+  `spend` arrived from SC-117 Batch 6 at the Task 7 rebase; added SC-102 part 2 / S-5).
 - **Effort:** XS (either fix is a one-line YAML edit) once the freeze-impact call is made; S if
   (a) is chosen (needs the `feature--legacy-*` rebaseline sign-off)
 
@@ -670,7 +670,7 @@ asserted by three tests) but is hidden under `[data-dse-theme='steel'] .dse-sb >
 the site's 9px role-hued notch is painted as a new `::after` on `.dse-sb[data-dse-role] >
 .dse-head`. Featureblock got the identical twin (SC-101 fix round, since S-4 = shared scope).
 Freeze: only `statblock--steel-print.png` moves (structure-tier, print-follows-structure),
-pending Scott's landing-time sanction — not yet applied as of this note.
+sanctioned by Scott 2026-08-08 (SC-102) and rebaselined at landing as one of the five.
 
 - **Identified:** 2026-07-21, Plan 20 (Steel material parity) Task 8 final visual
   verification.
@@ -705,8 +705,8 @@ had NO spine/crest/`data-dse-act` at all in any theme — a new `villain` `Actio
 `--dse-act-villain` token now covers them (site-exact `#e0584b`, scheme-invariant). Freeze:
 `feature--steel-print.png`, `feature-spend--steel-print.png` (a SC-117 Batch 6 fixture this
 branch acquired at the Task 7 rebase — same `feature` element, so the same rule reaches it)
-and `statblock--steel-print.png` move (structure-tier), pending Scott's landing-time
-sanction — not yet applied as of this note.
+and `statblock--steel-print.png` move (structure-tier), sanctioned by Scott 2026-08-08
+(SC-102) and rebaselined at landing.
 
 - **Identified:** 2026-07-21, Plan 20 (Steel material parity) Task 8 final visual
   verification.
@@ -742,7 +742,7 @@ because the list used padding instead of a real `gap` — now each option is a f
 filled card (site's exact `rgba(0,0,0,.16)`/`9px`-radius/`.7rem .85rem .78rem` recipe), shared
 with the statblock via one rule (`:is(.dse-sb, .dse-fb)`, not a per-family fork). Freeze:
 `featureblock--steel-print.png` + `featureblock-advancement--steel-print.png` move (structure
-tier), pending Scott's landing-time sanction — not yet applied as of this note. Residual nits
+tier), sanctioned by Scott 2026-08-08 (SC-102) and rebaselined at landing. Residual nits
 (eyebrow with no site counterpart, option icon lane, standalone-card cost still a pill): filed
 as FOLLOWUPS #55.
 

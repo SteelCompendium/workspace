@@ -120,8 +120,9 @@ single face for titles and body); bundling a true slab (Zilla Slab / Bitter, OFL
   items are Steel-scoped, so only `*--steel-print.png` moves (5 lines total, cumulative across
   the trio: `statblock`, `feature`, `featureblock`, `featureblock-advancement`, and
   `feature-spend` — the fifth joined at Task 7's rebase, a SC-117 Batch 6 fixture the branch
-  didn't originally carry) — pending Scott's landing-time sanction (dse-verify skill,
-  "Sanctioned single-line rebaselines"), not yet applied as of this note. Residual nits (not
+  didn't originally carry) — sanctioned by Scott 2026-08-08 on SC-102 and applied at landing
+  (dse-verify skill, "Sanctioned single-line rebaselines"; count unchanged at 119, freeze
+  then fully green at 119/119). Residual nits (not
   closed by this plan): filed
   as one workspace FOLLOWUPS entry, "featureblock/standalone head-detail parity nits (SC-101
   residuals)".

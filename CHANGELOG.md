@@ -166,8 +166,9 @@ go under an *Internal* sub-heading.
   **Known limits:** compendium content synced before 2026-07-16 carries villain actions
   as plain body-markdown prose (how they were written at the time) rather than the
   structured card — re-sync your compendium to get the new rendering. Printed/exported
-  output follows the same structural change as the screen (pending final sign-off at
-  landing, tracked on SC-97).
+  output follows the same structural change as the screen; Scott signed off on the five
+  moved print goldens on 2026-08-08 (the ask and its before/after pairs are on SC-102),
+  and the rebaseline was applied at landing.
 
 ### Fixed
 

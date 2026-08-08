@@ -186,14 +186,28 @@ didn't mount) plus human review of the PNGs.
     CONTENT fix (treasure Project row rendered a raw markdown literal; `markdown: true`
     in treasureLayout) necessarily reaches Legacy/print. Scott approved explicitly
     ("oh that's fine. Fix it."); rebaseline applied at landing, count unchanged at 107.
-  - **PENDING, plan 25 (SC-101/SC-102/SC-103, worktree `sc10x-structural`, Tasks 2-7
-    complete, rebased onto the parity-contract main 2026-08-07): NOT YET APPLIED — the ask
-    is posted on SC-102, awaiting Scott.** The trio's structure-tier CSS (the shared
+  - **2026-08-08, plan 25 (SC-101/SC-102/SC-103, worktree `sc10x-structural`): 5 lines,
+    count unchanged at 119 — APPLIED at landing.** The trio's structure-tier CSS (the shared
     nested-card frame, the standalone action-spine removal, the villain action type, the
     head-band notch — all "print follows structure" per S-1(a)) necessarily reaches print.
-    **FIVE** lines, all `*--steel-print.png`: `statblock`, `feature`, `featureblock`,
-    `featureblock-advancement`, **`feature-spend`**. Post-rebase state on that branch:
-    **114/119 OK**, exactly those 5 names, no environmental misses.
+    The five, all `*--steel-print.png`: `statblock`, `feature`, `featureblock`,
+    `featureblock-advancement`, `feature-spend`.
+    - **Scott's approval, 2026-08-08**, against the self-contained sanction ask on **SC-102**
+      — comment `f8bbaadf` (the five before/after pairs, every "before" regenerated and
+      hash-verified byte-identical to the baseline line it replaces) plus its follow-up
+      `a9e0158d`, which answers Scott's question about the shots and enumerates exactly what
+      approval covers: *"Approve = I rebaseline exactly those five hashes at landing (dated
+      sign-off, established procedure)."* Nothing else in the baseline was touched. The
+      dark-on-dark look of the `steel-print` captures is a longstanding **harness capture
+      artifact** (print tokens over the DARK scheme), shared by both halves of every pair —
+      a separate follow-up will re-capture print over the light scheme, which will be its
+      own deliberate all-print-lines re-pin, not part of this sanction.
+    - Applied procedure: `npm run shots` re-run at the exact landing commit (post-rebase onto
+      the SC-117 fix wave), baseline backed up to
+      `freeze-baseline.sha256.pre-plan25-landing-bak`, exactly those 5 `<hash>  <name>` lines
+      replaced (`diff` against the backup shows 5 changed lines and no others, `wc -l` still
+      119), then `check-freeze.sh` → `freeze OK (119/119 legacy+print PNGs byte-identical)`,
+      exit 0.
     - The 5th (`feature-spend`) appeared only at Task 7: it is a **SC-117 Batch 6** fixture
       that did not exist on this branch until the rebase, and it is a `feature`-element card
       — so the Task 4 spine-removal rule
@@ -206,9 +220,10 @@ didn't mount) plus human review of the PNGs.
     - **Lesson worth keeping:** a sibling branch's new fixture can silently enlarge *your*
       rebaseline ask. Re-run the freeze check **after** the rebase, never only before, and
       count the mismatch names rather than trusting the plan's predicted number.
-    **This is a record of what's expected, not a completed rebaseline** — only once Scott
-    sanctions and the landing agent applies the hashes does this list gain a dated,
-    hash-applied entry like the ones above.
+    - **Consequence for other in-flight branches:** the baseline now carries the trio's
+      *after* bytes for those five names. Any branch still based on pre-plan-25 `main` will
+      report exactly those 5 as `FAILED` until it rebases. That is the rebaseline showing
+      through, not a leak — rebase, then re-check.
 
 **2026-08-07, SC-117 fix wave M3 — exit-code semantics fixed: MISSING and MISMATCH used to
 be conflated.** `sha256sum -c` reports both a not-yet-producible file and a real byte
@@ -378,9 +393,12 @@ Two branch-specific notes that will read as failures if you don't expect them:
   which live on the unlanded `sc10x-structural` branch, so `sha256sum -c` reports them as
   `No such file or directory` rather than as checksum mismatches. **A missing file is not a
   leak; a `FAILED` checksum is.** Read the two categories separately before calling the gate
-  red. Equally: the 5 sanction-pending `*--steel-print.png` mismatches plan 25 carries do NOT
-  apply on any other branch — those files still render the old way elsewhere and must stay
-  byte-identical.
+  red. (**Superseded 2026-08-08:** plan 25 landed, so those 6 lines are producible on `main`
+  and this "6 missing" arm no longer fires there. The *category* distinction is permanent and
+  still the point.) Equally: the 5 then-sanction-pending `*--steel-print.png` mismatches plan
+  25 carried did NOT apply on any other branch at the time — but the sanctioned rebaseline
+  has since been applied, so the baseline now holds the trio's *after* bytes and a branch
+  still based on pre-plan-25 `main` will report exactly those 5 as `FAILED` until it rebases.
 - Historical numbers: jest was **2248/155** on `guards` (before B6's fixture test) and parity
   was **18 DECLARED** until SC-117 R1 healed FOLLOWUPS #52. The old "10 WARNs" figure predates
   the declared-deferrals contract entirely (exit 0 ⟺ 0 GAPs AND every WARN declared; material
@@ -401,20 +419,31 @@ semantics. Parity **0 GAPs / 0 undeclared WARNs / 16 DECLARED / exit 0**, unchan
 itself) has no branch/version number of its own — it's shared workspace scratch, not part
 of this repo's test surface.
 
-**Branch-local example — `sc10x-structural` (plan 25, Tasks 2-7 complete, rebased onto main
-2026-08-07):** jest **2289/155 suites**, shots **199 browser**, freeze **114/119 OK**
-(5 content mismatches, all `*--steel-print.png`, all S-1(a)-predicted and pending Scott's
-sanction per "Freeze semantics" above; **no** environmental misses), parity **0 GAPs / 0
-undeclared WARNs / 18 DECLARED / exit 0** — composition byte-for-byte identical to main's,
-because none of the 18 declarations concerns a surface this plan touched and none of the
-trio's rules moved a sampled property. The freeze denominator went 113 → **119** on this
-branch (this plan's own S-5 widening, above).
+**LANDING STATE — `sc10x-structural` (plan 25, structural trio, rebased onto the SC-117
+fix-wave main and rebaselined 2026-08-08):** jest **2289 passed / 155 suites / 3 snapshots**,
+shots **199 browser** (0 FAIL), freeze **`freeze OK (119/119 legacy+print PNGs
+byte-identical)`, exit 0** — the first fully-green freeze on this work, and the state the
+five-line sanctioned rebaseline above produced. Parity **0 GAPs / 0 undeclared WARNs / 16
+DECLARED / exit 0**, composition byte-for-byte identical to main's (`git diff
+origin/main...HEAD -- visual-harness/parity/` is empty): none of the 16 declarations concerns
+a surface this plan touched, and none of the trio's rules moved a sampled property.
+`obsidian-shots` was NOT run at landing — a live Obsidian session owned display `:1`; the
+last recorded value for this branch is 145.
 
-The arithmetic is worth spelling out, because two sibling branches landed between this
-branch's baseline and its finale: jest = main's **2248** (B6 + guards) **+ 41** the trio's
-own; shots = **179 + 10** (B6's two fixtures) **+ 10** (the trio's two); freeze = **113 + 6**
-(the S-5 widening). This is exactly the "confirm the actual counts against whatever commit
-you're gating" case the paragraph above warns about: the plan predicted 4 print mismatches
-and the real post-rebase answer was 5, because a sibling branch's new `feature-spend` fixture
-sits in a family this plan restyles. **Don't average, don't assume, re-run — after the
-rebase.**
+Two numbers moved between this branch's own finale and its landing, both because the SC-117
+**fix wave** landed on `main` in between:
+- **Parity 18 → 16 DECLARED.** Not this branch's doing: the fix wave healed FOLLOWUPS #52,
+  removing the two `statblock-wrap:line-height` declarations. This branch never touched
+  `selector-map.json`, and the rebase must not resurrect the removed declaration — verified
+  by the empty parity diff above.
+- **Freeze 114/119 → 119/119.** The rebaseline, not new work.
+
+Jest is unchanged at 2289 across the rebase, which is the correct answer and worth checking
+rather than assuming: the fix wave added **zero** test cases (its only `test(...)` edit
+renamed "the documented 9 entries" → "8"), so main's count did not move and the trio's own
++41 lands on the same base. The freeze denominator went 113 → **119** on this branch (this
+plan's own S-5 widening, above). This whole block is exactly the "confirm the actual counts
+against whatever commit you're gating" case the paragraph above warns about: the plan
+predicted 4 print mismatches and the real post-rebase answer was 5, because a sibling
+branch's new `feature-spend` fixture sits in a family this plan restyles. **Don't average,
+don't assume, re-run — after the rebase.**
