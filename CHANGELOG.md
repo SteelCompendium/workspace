@@ -259,6 +259,9 @@ go under an *Internal* sub-heading.
   unchanged. (An intermediate take that stamped the label into every feature header
   regardless of display mode shipped briefly earlier today and was reverted — it
   doubled the label everywhere except crest.) (SC-95)
+- **Plugin crest glyphs optically centered (SC-130)** — the plugin twin of the site's
+  SC-129 fix; one measured em-based nudge across all crest surfaces, scale-proof at the
+  text-size extremes.
 - **Stamina edit modal math fixed (SC-133)** — negative Apply inputs no longer invert
   operations, Spend Recovery never burns a Recovery for zero gain (honest preview + real
   disabled state with reason), and temp grants follow RAW take-higher against live
