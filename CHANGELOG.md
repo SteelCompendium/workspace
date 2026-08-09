@@ -259,6 +259,12 @@ go under an *Internal* sub-heading.
   unchanged. (An intermediate take that stamped the label into every feature header
   regardless of display mode shipped briefly earlier today and was reverted — it
   doubled the label everywhere except crest.) (SC-95)
+- **Settings rebuilt as native Obsidian pages with global search (SC-131)** — the 6,850px
+  single-scroll settings tab became native per-section pages rendered from declarative
+  definitions; every setting is findable from Obsidian's built-in settings search; the live
+  preview docks to the viewport bottom so it stays visible while toggling. [BREAKING for
+  pre-1.13 Obsidian clients: minAppVersion raised to 1.13.0; versions.json pins them to
+  6.0.1.]
 - **Plugin crest glyphs optically centered (SC-130)** — the plugin twin of the site's
   SC-129 fix; one measured em-based nudge across all crest surfaces, scale-proof at the
   text-size extremes.
