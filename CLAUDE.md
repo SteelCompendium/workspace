@@ -117,8 +117,8 @@ Hierarchical classification used across all data repos: `source/type/item` (e.g.
 `mcdm.heroes.v1/feature.ability.fury.level-1/gouge`). Codes are website permalinks
 (`/scc/{code}/`), API keys, and cross-reference links. Scheme spec is **v1.1**.
 
-Registry is **~3,080 codes** across four books (heroes ~1,950, beastheart 241, monsters 662,
-summoner 227). `feature` is the umbrella type; companions/fixtures/**retainers**/summoner
+Registry is **~3,085 codes** across four books (heroes ~1,950, beastheart 241, monsters 662,
+summoner 231). `feature` is the umbrella type; companions/fixtures/**retainers**/summoner
 statblocks all live in the `monster.*` family. Monsters-book retainers are
 `monster.retainer.statblock/<id>` with coded `advancement-features`/`role-advancement`
 container siblings (Plan 6, 2026-06-18; per-ability coding deferred — ROADMAP #15). The
@@ -128,7 +128,9 @@ summoner retainer (Devil Detective) is modeled like the Rival Summoner (2026-06-
 `monster.retainer.summoner.minion.statblock/<id>` (off the index); rival summons gained the
 same `.statblock` segment. The 4
 summoner fixtures' advancement members are coded `feature.fixture.<category>.<base>.level-N/<member>`
-(×12, 2026-06-19 — ROADMAP #16; parser-emitted coded children, no heading/cap change). Gods and
+(×12, 2026-06-19 — ROADMAP #16; parser-emitted coded children, no heading/cap change). The 4
+Portfolio Champions gained `monster.champion.summoner.<circle>.advancement-features/<id>`
+container siblings (×4, 2026-08-08 — SC-138; members inline/uncoded, retainer model). Gods and
 saints live in the `religion.*` family (`religion.god/<id>`, `religion.saint/<id>`;
 `religion.domain`/`order`/`pantheon` reserved).
 

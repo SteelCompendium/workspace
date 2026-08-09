@@ -150,7 +150,17 @@ Portfolio minions/champions + the rival summoner live in the `monster.*` family 
 companions/fixtures — these are plain statblocks, no featureblock machinery:
 
 - minions: `monster.minion.summoner.<portfolio>.statblock/<id>`
-- champions: `monster.champion.summoner.<portfolio>.statblock/<id>`
+- champions: `monster.champion.summoner.<portfolio>.statblock/<id>`, each paired since
+  2026-08-08 (SC-138) with a coded **container** sibling
+  `monster.champion.summoner.<portfolio>.advancement-features/<id>` (×4) holding the
+  Level-10 advancement the book prints inside the stat block. Members stay
+  inline/uncoded (the retainer container model, not the fixtures' coded children). The
+  page renders through the shared featureblock card, so the members sit under a
+  "Level 10 Advancement" band; `embedSiblingAdvancement` also transcludes that card back
+  onto the champion's own page. Nav-only flatten as usual
+  (`…/advancement-features/<id>` → `…/<id>-advancement-features`), but champion dirs are
+  deliberately **excluded** from `buildAdvancementPairContent` — their base is a real
+  statblock, so the bestiary group landing gives a richer preview card than the pair grid.
 
 The **Rival Summoner** NPC sits *beside* the Monsters-book rivals:
 `monster.rival.<echelon>.statblock/<id>` (same type path — e.g. `rival-summoner` in the

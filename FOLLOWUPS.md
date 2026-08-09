@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 62 -->
+<!-- next-id: 63 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1313,3 +1313,29 @@ destroyed popout settings window leaks one loaded preview Component (render clea
 aren't guaranteed on window destroy); bounded, fold into any settings follow-up.
 
 **Effort:** S.
+## 62. Statblock cards silently drop non-icon blockquotes (the "Traits with an Essence Cost" sidebar)
+
+**Status:** open
+- **Identified:** 2026-08-08, while fixing SC-137 (essence-cost traits missing from Circle
+  of Storms minions).
+- **What:** `parseStatblockIslandFeature` / `parseRichFeature` only accept a blockquote
+  whose first line is `ICON **Title**`. A blockquote inside a stat block that is a
+  publisher *sidebar* rather than a feature — e.g. `> **Traits with an Essence Cost**`
+  under Walking Boulder (`steel-etl/input/summoner/Draw Steel Summoner.md`, right after
+  the Pile Up trait) — matches nothing and is dropped from every rendered page. It
+  survives only inside the hidden `sc-src` export template. Same class of loss as SC-137,
+  different trigger.
+- **Why:** it is the one place the book explains what the new essence-cost chips mean, so
+  it is exactly the text a reader hitting SC-137's traits wants; and any future sidebar
+  transcribed inside a stat block will vanish the same way.
+- **Context:** the feature/trait card path already handles this well — tag the blockquote
+  `<!-- @type: callout | @owner: loose -->` and `renderTraitCallout`
+  (`internal/site/trait_cards.go`, `.sc-callout`) renders it as a recessed aside. The
+  **statblock/featureblock** card renderers have no callout branch at all (`grep -c
+  sc-callout internal/site/statblock_card.go` → 0), so the annotation alone would not
+  help; this needs a `renderStatblockCallout` equivalent plus the source annotation.
+  Guard test for the sibling failure mode:
+  `TestBookSources_StatblockFeatureTitlesParse` in
+  `steel-etl/internal/content/statblock_parse_test.go`.
+- **Effort:** S (1–4 h)
+
