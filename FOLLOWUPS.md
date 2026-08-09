@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 61 -->
+<!-- next-id: 62 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1292,3 +1292,24 @@ so it isn't fully silent). Apply the same parse-boundary `Math.max(0, …)` clam
 and a red-first test.
 
 **Effort:** XS.
+
+## 61. DSE: `npm run lint` reports 6 pre-existing problems in 5 files
+
+**Found:** 2026-08-09, SC-131 (which added the `lint` script — the flat config existed but
+nothing ran it, so it had drifted). Clean for every file SC-131 touched; reports **5 errors
++ 1 warning** in five files the ticket never went near:
+
+- `src/authoring/FormModal.ts` — `no-floating-promises`
+- `src/elements/display/layouts.ts` ×2 — `no-unnecessary-type-assertion`
+- `src/framework/pipeline.ts` — `only-throw-error`
+- `src/utils/JsonSchemaValidator.ts` — unused `getAjvInstance`
+- `src/utils/ReferenceResolver.ts` — `no-explicit-any`
+
+Deliberately not fixed in SC-131 (unrelated subsystems). Until cleared the script is red,
+so it is NOT wired into the `dse-verify` battery — clear these, then add it as a gate.
+Note `eslint .` cannot be the script's form: `obsidianmd`'s typed rules crash on
+`package.json`/`manifest.json` (no tsconfig project). Related: SC-131 review L4 — a
+destroyed popout settings window leaks one loaded preview Component (render cleanups
+aren't guaranteed on window destroy); bounded, fold into any settings follow-up.
+
+**Effort:** S.
