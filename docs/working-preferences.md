@@ -33,6 +33,20 @@ SCC link sweeps), deliver breadth and document what's deferred. He'll accept a
 scoped/deferred tail when the rationale is sound. (Linking density policy itself:
 `steel-etl/docs/linking-guide.md`.)
 
+## Scott is colorblind — design and evidence implications (disclosed 2026-08-09)
+
+Scott: *"sorry I didnt realize it was purple before; im colorblind"* (SC-132, reacting to
+the violet temp-stamina bar he'd perceived as something else — the blue/purple axis at
+minimum is unreliable for him). Consequences for all design work and review evidence:
+
+- **Never let hue be the only channel** for a state or category — pair color with shape,
+  position, texture, label, or icon (the Steel design language's materials/notches/glyphs
+  already lean this way; keep it that way deliberately).
+- **Name the colors in prose** when presenting options or describing what a screenshot
+  shows ("the violet segment", "amber at winded") — he may not see the distinction being
+  discussed, and unnamed color references can silently mislead his picks.
+- Blue-vs-purple contrasts specifically should never carry meaning alone.
+
 ## Brainstorming & design questions
 
 Prefer **open-ended prose questions** over rigid multiple-choice UI (`AskUserQuestion`):
