@@ -145,6 +145,23 @@ SC-109/110/111 (guards). No worktrees exist; nothing in flight.
   (keepers), 1-2 fresh directions, conditions-location factual answer + chips mock.
   Multi-layout-per-context is affirmed direction (D-style rail for sidebar).
   NOTHING new lands without Scott. dse landings serialize; every branch rebases at landing.
+- **2026-08-09 update:** SC-130 LANDED (dse f50b3bc, Done; SC-97 closes when SC-132's winner
+  lands). SC-131 IMPLEMENTED per Scott's rulings (D-pages · Path A · minAppVersion 1.13.0 ·
+  bottom-docked sticky preview) and REVIEW-CLEAN after 2 rounds (branch sc131-settings @
+  2075f7b, jest 2354/155; reviewer decompiled obsidian-1.13.4.asar and proved the .d.ts
+  render-lifecycle claim false — preview ownership now per-mount w/ cleanup contract;
+  versions.json gating fixed, version-bump.mjs restored, manifest 7.0.0). Awaiting Scott's
+  gate. **SC-131 LANDING CHECKLIST:** (1) FOLLOWUPS.md in the worktree is a STALE-BASE edit —
+  merging wholesale would delete main's #57-#60 and roll next-id back; renumber its new
+  entry (worktree "#57", lint-debt) to the next free number and hand-merge. (2) Same hazard
+  in worktree sc137-138-summoner (its "#58" → renumber). (3) One-line comment fix at
+  SettingsPreview.ts:9-11 (still describes the deleted per-display() owner). (4) L4 noted:
+  popout-window destroy leaks one preview Component (bounded; FOLLOWUPS candidate).
+  SC-132 ROUND 4 posted (branch @ 88601df): shield-blue temp strips (S1 rec), sub-bar
+  placement, R6 fill-in cells (rec), G4 grouping, Model M interaction (markers SET count —
+  RAW: losing recoveries common/multiple, regaining exists in exactly 2 effects); flagged
+  that blue temp REVERSES the ratified SC-10/SC-106 blue=maneuver reservation (token
+  question is ask #1). Scott's queue: SC-132 picks · SC-131 gate · SC-137 · SC-138 · SC-78.
 - **7.0.0 remaining gate:** the five above + SC-130 (queued) + taste tail (modal items,
   SC-110 divergence set — no urgency) + SC-123 scoping + SC-125 (queued) → SC-97 closes
   when SC-128/129/130/132 land → SC-11 release checklist (Scott alone, NO TAGS).
