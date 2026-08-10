@@ -255,6 +255,13 @@ controversy): users pick how dense/faithful the rendering is, **per part**.
 5. Glyph font / typed emoji / Material thin-line — never new hand-drawn icons.
 6. Reuse the shared grammars: `.sc-ability__pr/__tier/__section` power-roll panel,
    `.sc-card`/`.sc-folder`/`.sc-prev` index cards, `.sc-crest`, `hr` ◆ rule.
-7. **Update this file** when the design language changes (new component system, new
+7. **No decorative colored left-borders** (Scott's rule, 2026-08-10, SC-132): the wide
+   colored left-border/accent-spine on cards and panels is banned for new work — Scott:
+   *"it's become a cliche in the software community because claude agents always include
+   it in their UI designs."* Carry state/category through the Steel grammars instead
+   (materials, crests/glyph silhouettes, notches, banner grounds, borders-all-around).
+   Existing components that ship one today may stay for now but **will be replaced** —
+   don't copy the pattern into anything new.
+8. **Update this file** when the design language changes (new component system, new
    tokens, a changed rule) — current state + pointers only; effort history goes in
    the plan/spec docs and `reference/design-system/` stays a frozen archive.
