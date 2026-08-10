@@ -145,6 +145,23 @@ SC-109/110/111 (guards). No worktrees exist; nothing in flight.
   (keepers), 1-2 fresh directions, conditions-location factual answer + chips mock.
   Multi-layout-per-context is affirmed direction (D-style rail for sidebar).
   NOTHING new lands without Scott. dse landings serialize; every branch rebases at landing.
+- **2026-08-10 (later): SC-132 LANDED · SC-97 CLOSED — THE HIGH-FANTASY STEEL OVERHAUL IS
+  COMPLETE.** dse main `97c71d2` (workspace `6bf9727`). Scott's four gate answers executed:
+  crest light-rim fix (shared `.dse-crest` bevel-shadow artifact, pre-existing), rail state
+  word dropped, rail dying = red border + red gradient ground, 5-line rebaseline SANCTIONED
+  + applied with `freeze-baseline.sha256.pre-sc132-bak` backup and dated record in
+  dse-verify SKILL.md; baseline WIDENED 119 → 137 (SC-132's five fixtures + SC-128's missed
+  `statblock-roleless-corpus`). Battery at close: tsc clean · jest 2414/156 · shots 229/0 ·
+  freeze 137/137 · parity 0/0/16 (CI). Design+impl ledgers preserved in
+  docs/superpowers/dse-overhaul/build-ledgers/ (8 sc132-* files). Review trail: whole-branch
+  Opus review caught a free-healing regression on the newly-editable hero sheet (H1, fixed
+  via full recovery bridge with equality-pinned heal rate); scoped re-review regenerated all
+  229 shots to prove the fix round pixel-inert. **7.0.0 is UNBLOCKED. Next: SC-11 release
+  prep — PREP ONLY, Scott alone tags/releases, NO TAGS EVER by agents** (manifest/version
+  already 7.0.0 + versions.json gating landed with SC-131; changelog written; remaining:
+  stage the exact release commands + changelog slice on SC-11). Non-blocking tail: SC-110
+  divergence set, SC-123 scoping, SC-125 (migration, now eligible — "plugin finished"
+  condition met), SC-126/127, FOLLOWUPS #57-#62, SC-139.
 - **2026-08-10 update:** SC-131 LANDED (dse 74adb05, Done — native declarative settings,
   FOLLOWUPS #61 hand-merged). SC-137 LANDED (steel-etl, Done). SC-138 LANDED twice-refined
   (steel-etl e64a063, Done — Scott diagnosed the source markdown as the real bug; parser
