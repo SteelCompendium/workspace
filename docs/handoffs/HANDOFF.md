@@ -145,6 +145,23 @@ SC-109/110/111 (guards). No worktrees exist; nothing in flight.
   (keepers), 1-2 fresh directions, conditions-location factual answer + chips mock.
   Multi-layout-per-context is affirmed direction (D-style rail for sidebar).
   NOTHING new lands without Scott. dse landings serialize; every branch rebases at landing.
+- **2026-08-10 (evening): the DSE 7.0.0 tail wave — ALL SIX DELIVERED, all gated on Scott.**
+  SC-136 (CI: workspace-doc test skip-guard, FOLLOWUPS #61 lint debt cleared, lint wired
+  into Plugin CI; the "ci"-vs-"Plugin CI" mystery = a mislabeled docs-deploy job; branch
+  sc136-ci) · SC-107 (hero grid align-items:start Steel-scoped + sparse fixture; freeze
+  unmoved; sc107-grid) · SC-4 (audit: 7 of 8 items already fixed; one live decision —
+  Legacy-print monochrome — gated w/ screenshot; sc4-polish, superproject-only commit) ·
+  SC-135 (plan-only: scc.v1: links unregistered; "prompt then nothing" = Live Preview;
+  phased rec = click-handler now, sync-time link-format setting maybe; 7 open questions) ·
+  SC-125 (migration: map from PUBLISHED release, 83.34% final coverage all-unmatched-
+  explained, rename engine w/ write-ahead state + pending re-offer + danger-consent sync;
+  survived FOUR probe-driven review rounds — C1/C2/C3/C3c stranding mechanisms all fixed +
+  independently reproduced; branch sc125-migration, stack 85761df→8db9c6b→e9d56ba→66bf67c,
+  LANDABLE) · SC-11 (release prep comment: exact sequence staged, versions verified;
+  recommendation = cut after SC-125 lands). Main-checkout note: `npm run build` failing =
+  stale node_modules vs SC-131's obsidian 1.13.1 typings; npm ci fixes (footgun index).
+  The `orchestrate` skill now exists (.claude/skills/orchestrate/) — Scott's preferred
+  mode, incl. new-machine bootstrap for his work computer.
 - **2026-08-10 (later): SC-132 LANDED · SC-97 CLOSED — THE HIGH-FANTASY STEEL OVERHAUL IS
   COMPLETE.** dse main `97c71d2` (workspace `6bf9727`). Scott's four gate answers executed:
   crest light-rim fix (shared `.dse-crest` bevel-shadow artifact, pre-existing), rail state
