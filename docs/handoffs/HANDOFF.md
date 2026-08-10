@@ -522,3 +522,40 @@ curl -sL 'https://steelcompendium.io/v2/Browse/monster/devil/devil-clerk/' | gre
 **Resume protocol:** verify the above; if SC-11 is cut (gh release 7.0.0 exists on
 draw-steel-elements), mark SC-11 Done and archive this wave; otherwise the board is
 clear — nothing is blocked on an agent.
+
+## 2026-08-10 (evening) — Scott's bug-hunt wave 1: settings parity (SC-146 / SC-123)
+
+Scott filed SC-140–146 from his manual bug hunt. He directed: start with the Statblock
+Display settings; SC-146 + SC-123 both worked now (he doesn't care which ticket carries
+what). SC-140/141/143/144/145 remain queued (Todo, untouched).
+
+- **SC-146: LANDED, In Progress + Needs Review (close-out ask posted).** dse main
+  `9083dbe`, ws merge `5b766a2`, bookkeeping `88a34ef`. Full pipeline: audit (ledgered at
+  docs/superpowers/dse-overhaul/build-ledgers/sc146/) → 7 fixes → adversarial review
+  (Critical: gridc label/value inversion under Steel) → fix round → delta re-review LAND.
+  Battery at landed sha: tsc/lint clean · jest 2514+1skip/159 · shots 254 · freeze
+  **149/149** (widened 137→149 additions-only for 4 new statblock pref fixtures;
+  recorded dated in dse-verify SKILL.md; backup freeze-baseline.sha256.pre-sc146-fixround-bak)
+  · parity 0/0/16.
+- **SC-123: fix round 1 + rebase IN FLIGHT (Awaiting).** Worktree `sc123-settings-ports`.
+  Implementation landed 7 new prefs (kwUsage, distTarget, sbCharLine, sbCharBox, sbVillain,
+  fbFeatureStyle, fbStats) via conditional DOM — default output proven byte-identical
+  (40-render DOM diff) — presets widened 4→9. Review: 4 Medium (worst: per-block override
+  of conditional-DOM keys renders corrupt "+2Might") + 9 Low; fix-round agent has findings
+  + post-fix rebase instructions (keep-both merges; adopt ◆ separators for fb flat;
+  battery vs 149-line baseline; any new frozen names reported for orchestrator to apply).
+  Parked for Scott at gate time: preset migration (existing Sourcebook/Index users derive
+  "Custom") and the 2 site-divergent defaults (sbCharLine, sbVillain — distTarget claim was
+  an audit error, corrected). FOLLOWUPS #54 (villain band) is DONE by this work — flip the
+  status line at SC-123 landing.
+- **Board sweep per Scott:** SC-120 + SC-65 added to DSE 7.0.0 project (SC-65 related to
+  SC-142/144). SC-124/127 deliberately left out (print-export territory, Scott's SC-4
+  ruling); SC-126 left out (QA infra).
+- **Open question to Scott (conversation, no ticket yet):** display-family authoring
+  surface — recommended collapsing ds-kit/ds-class/… into one reference-first `ds-card`
+  before 7.0.0 (schemas are already public in the SDK npm as a DATA contract, but the
+  plugin authoring contract is uncommitted and the family has never shipped; frees
+  ds-class for his future character-management vision). Awaiting his call; if approved,
+  file a ticket in DSE 7.0.0 and orchestrate.
+- Main checkout: stray untracked draw-steel-elements/compendium-manifest.json (from
+  Scott's build) removed pre-landing.
