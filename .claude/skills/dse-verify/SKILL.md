@@ -187,6 +187,18 @@ didn't mount) plus human review of the PNGs.
     CONTENT fix (treasure Project row rendered a raw markdown literal; `markdown: true`
     in treasureLayout) necessarily reaches Legacy/print. Scott approved explicitly
     ("oh that's fine. Fix it."); rebaseline applied at landing, count unchanged at 107.
+  - **2026-08-10, SC-123 settings-parity ports (worktree `sc123-settings-ports`):
+    39-line widening (additions-only), 149 → 188 — APPLIED at landing by the orchestrator.**
+    No rebaselined lines. 36 lines are the frozen-class twins (`legacy-{dark,light}`,
+    `steel-print`) of SC-123's 12 new preference-variant fixtures
+    (`statblock-{kwusage-{text,grid,ledger},disttarget-{text,ledger},charline-two,charbox-{on,onword},villain-banded}`,
+    `featureblock-{stats,stats-ledger,featstyle-flat}`) — hashes verified byte-identical to a
+    fresh capture by the delta re-review, applied verbatim from the branch-prepared
+    `sc123-freeze-widening-36.txt` (preserved in the sc123 build-ledger dir). 3 more lines fix
+    a PRE-EXISTING gap: `hero-sparse--{legacy-dark,legacy-light,steel-print}` (SC-107's sparse
+    fixture landed 2026-08-10 without its widening — same missed-widening class as SC-128's,
+    caught by the SC-123 fix-round agent). Backup:
+    `freeze-baseline.sha256.pre-sc123-landing-bak`. Duplicate-name check clean (188 unique).
   - **2026-08-10, SC-146 statblock settings fixes (worktree `sc146-statblock-settings`):
     12-line widening (additions-only), 137 → 149 — APPLIED pre-landing.** No rebaselined
     lines: orchestrator-verified additions-only (sorted-diff, 0 changed/0 removed). The 12

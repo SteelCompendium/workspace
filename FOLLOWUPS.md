@@ -302,7 +302,9 @@ structural divergence like these is invisible to it by design.)*
 - **Effort:** S per item (CSS-only for 1-3, once a decision is made); XS for the new fixture (4)
 
 ## 54. Villain-action *grouping* (banded vs inline) is unbuilt — the shared classification work (SC-102) is its prerequisite, not its scope
-**Status:** open
+**Status:** DONE (2026-08-10, SC-123 landing — `sbVillain` banded/inline shipped with the
+display-settings parity ports; banded = collapsible band with crest head + chevron, verified
+against the site in the SC-123 review pipeline)
 - **Identified:** 2026-08-07, plan 25 (SC-101/102/103), §"Deferred: the villain band" —
   the obvious next question once villain actions render with their own accent/crest (SC-102).
 - **What:** The site's DEFAULT statblock presentation bands villain actions into their own

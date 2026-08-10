@@ -559,3 +559,17 @@ what). SC-140/141/143/144/145 remain queued (Todo, untouched).
   file a ticket in DSE 7.0.0 and orchestrate.
 - Main checkout: stray untracked draw-steel-elements/compendium-manifest.json (from
   Scott's build) removed pre-landing.
+
+### SC-123 LANDED (same evening, later)
+dse main `e141582`, ws merge `b6e805a`. Fix round cleared all 4 Medium + cheap Lows
+(perBlock warn-and-ignore for the 3 conditional-DOM keys; print consistency; legacy border
+fallbacks; distTarget default corrected everywhere + dated §8 correction appended to the
+SC-146 audit), rebased over SC-146 cleanly (presets verified carrying both sides), fb ◆
+separator twin added, delta re-review LAND (all live-probed). Battery at landed sha:
+tsc/lint clean · jest 2540+1skip/159 · shots 314 · freeze **188/188** (orchestrator applied
++36 SC-123 variants +3 hero-sparse pre-existing gap-fix at landing; recorded in dse-verify
+SKILL.md; backup pre-sc123-landing-bak) · parity 0/0/16. FOLLOWUPS #54 → DONE.
+SC-123 → In Progress + Needs Review; Scott's open calls on the ticket ask: preset migration
+(existing Sourcebook/Index users derive "Custom"), 2 site-divergent defaults (sbCharLine,
+sbVillain — rec: leave), sticky-header + link-toggle defer proposals, per-block support for
+conditional-DOM keys (feature, own ticket if wanted).
