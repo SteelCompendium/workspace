@@ -145,6 +145,22 @@ SC-109/110/111 (guards). No worktrees exist; nothing in flight.
   (keepers), 1-2 fresh directions, conditions-location factual answer + chips mock.
   Multi-layout-per-context is affirmed direction (D-style rail for sidebar).
   NOTHING new lands without Scott. dse landings serialize; every branch rebases at landing.
+- **2026-08-10 update:** SC-131 LANDED (dse 74adb05, Done — native declarative settings,
+  FOLLOWUPS #61 hand-merged). SC-137 LANDED (steel-etl, Done). SC-138 LANDED twice-refined
+  (steel-etl e64a063, Done — Scott diagnosed the source markdown as the real bug; parser
+  allowlist reverted in favor of putting Champion Action/1 Eidos in standard fields; also
+  fixed a live DSE bug: "1 Eidos" in usage → no spine/crest). SC-78 Done. SC-139 filed
+  (Backlog: featureblock-before-statblock card order). FOLLOWUPS #62 = statblock-sidebar
+  callout loss. **SC-132 design LOCKED after 7 rounds** (Scott's own layout: left crest
+  spanning two rows, state word + big numerals/max/violet temp chip top row, full-width
+  gauge bottom; N1 hairline separators; stable crest + living icon breathing at
+  winded/dying; R6 fill-in cells G4-grouped; Model M + optional popover setting; dying =
+  red border+ground w/ grey-steel divider; two-line rail). **PRODUCTION IMPLEMENTATION
+  IN FLIGHT** (worktree sc132-stamina): re-author + integrate (hero stepper row deleted →
+  bar canPersist:true; modal preview temp segment = SC-133 RC-1/RC-2 fold; candidate
+  harness deleted) + EXPECTED print-freeze sanction request at the gate (SC-100
+  precedent). Rail state-word and rail dying-ground go to Scott both-ways at the gate.
+  SC-97 closes when SC-132 lands → then SC-11 release prep (Scott alone, NO TAGS).
 - **2026-08-09 update:** SC-130 LANDED (dse f50b3bc, Done; SC-97 closes when SC-132's winner
   lands). SC-131 IMPLEMENTED per Scott's rulings (D-pages · Path A · minAppVersion 1.13.0 ·
   bottom-docked sticky preview) and REVIEW-CLEAN after 2 rounds (branch sc131-settings @
