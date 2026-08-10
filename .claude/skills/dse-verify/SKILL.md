@@ -187,6 +187,16 @@ didn't mount) plus human review of the PNGs.
     CONTENT fix (treasure Project row rendered a raw markdown literal; `markdown: true`
     in treasureLayout) necessarily reaches Legacy/print. Scott approved explicitly
     ("oh that's fine. Fix it."); rebaseline applied at landing, count unchanged at 107.
+  - **2026-08-10, SC-146 statblock settings fixes (worktree `sc146-statblock-settings`):
+    12-line widening (additions-only), 137 → 149 — APPLIED pre-landing.** No rebaselined
+    lines: orchestrator-verified additions-only (sorted-diff, 0 changed/0 removed). The 12
+    new lines are the frozen-class twins (`legacy-{dark,light}`, `steel-print`) of four new
+    harness fixture variants added for regression coverage of the SC-146 pref fixes:
+    `statblock-{stats-ledger,stats-gridc,featstyle-flat,columns-wide}`. Widening-only, so
+    no Scott sanction required (existing hashes untouched); delta re-review eyeballed the
+    new frozen shots for theme correctness. Backup:
+    `freeze-baseline.sha256.pre-sc146-fixround-bak`. Verified after:
+    `freeze OK (149/149 legacy+print PNGs byte-identical)`, exit 0.
   - **2026-08-10, SC-132 stamina redesign (worktree `sc132-stamina`): 5 lines rebaselined
     + 18-line widening, 119 → 137 — APPLIED at landing.** The five rebaselined lines —
     `hero--legacy-{dark,light}`, `hero--steel-print`, `gallery--legacy-{dark,light}` — all
