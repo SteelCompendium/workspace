@@ -145,6 +145,18 @@ SC-109/110/111 (guards). No worktrees exist; nothing in flight.
   (keepers), 1-2 fresh directions, conditions-location factual answer + chips mock.
   Multi-layout-per-context is affirmed direction (D-style rail for sidebar).
   NOTHING new lands without Scott. dse landings serialize; every branch rebases at landing.
+- **2026-08-10 (close of wave): SC-136, SC-107, SC-4 ALL LANDED + DONE** — dse main
+  `9fb56f5` (SC-136 0a37cb8: CI skip-guard + lint gate live, token-map test KEPT per
+  Scott's conditional "if we need it, approved" — it's the only token↔D3-doc sync
+  enforcement; SC-107 9fb56f5: hero grid align-start + sparse fixture, shots 234).
+  SC-4 closed: item 7 (Legacy-print monochrome) = leave-as-is per Scott ("don't care
+  about print exports; easiest for now"), future print-exports effort owns it. Battery at
+  final main: jest 2503/159+1skip · shots 234 · freeze 137/137 · parity 0/0/16 · lint
+  clean, gated in CI. **SC-11 DEFERRED → Todo: Scott bug-hunts the plugin manually
+  first; release sequence stays staged on the ticket; as bugs are filed the orchestrator
+  fixes them.** SC-135 parked (Scott: "another day"; plan + 7 questions on the ticket).
+  DSE 7.0.0 project board: every ticket Done except SC-11 (Todo, Scott's hunt) and
+  SC-135 (parked). No worktrees exist; nothing in flight.
 - **2026-08-10 (night): SC-125 LANDED + DONE** (dse ff63dde, workspace 980517f) under
   Scott's conditional approval — the backup condition (edited files copied to a sibling
   `<root> backup (pre-7.0.0)` folder BEFORE any rename; unbackupable = unmigrated) built
