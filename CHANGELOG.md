@@ -28,6 +28,22 @@ go under an *Internal* sub-heading.
   on every change; the hero sheet's duplicate `− 31 +` row is gone and its bar opens the
   editor instead. Closes the last child of the High-Fantasy Steel overhaul (SC-97).
 
+- **Plugin: pre-7.0.0 compendium links survive the reorganisation (SC-125)** — the
+  data-unified switch renames every compendium file, which would have broken every
+  user-authored `[[wikilink]]` into it. The plugin now ships a reviewed old-path →
+  new-path map (3,290 entries across all 243 data-md-dse releases; 2,036 of the final
+  release's 2,443 paths, 83.3%) and replays it through `FileManager.renameFile`, so
+  **Obsidian** rewrites the links — the plugin never edits a user note. Dry-run preview,
+  abortable, resumable (each move is recorded *before* it happens, so even a force-quit
+  strands nothing and the next sync re-offers rather than silently closing the door),
+  and it cannot delete or overwrite anything. Declining does not fall through
+  into a sync — a sync creates the new files and makes the move impossible, so that is
+  its own labelled choice. Before anything moves, every file whose bytes differ from the
+  release it came from is copied into a backup folder beside the compendium (Scott's
+  approval condition), and a file that could not be copied is not moved. Every skipped
+  or flagged path is listed in the dialog and in a report note written into the vault; unmapped paths are enumerated with reasons in
+  the plugin's `docs/compendium-migration-map.md`.
+
 - **Encounter builder → initiative tracker fixed (SC-134)** — builder-generated tracker
   blocks (SCC-code statblock refs) render again instead of an error card; pre-existing
   generated encounters recover with no edits.
