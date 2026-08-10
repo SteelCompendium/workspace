@@ -19,6 +19,15 @@ go under an *Internal* sub-heading.
 > `6.0.0-rc1` incident (an RC published as a regular release; `6.0.1` was cut as a
 > recovery re-release of 5.1.1). It ships as **7.0.0** — see the plugin CHANGELOG.
 
+- **Stamina cluster redesigned for the Steel theme (SC-132)** — the bar, temp Stamina,
+  Recoveries, Winded/Dying and Catch Breath are one forged instrument: a state crest
+  whose glyph breathes when Winded and falters when Dying, big current-Stamina numerals
+  with a temp chip, and a gauge whose zero is a marked bulkhead (green is Stamina you
+  have, red is how far past zero you are — never the same pixels) with temp as a real
+  segment past the pour. Recoveries became editable by clicking a marker, with an Undo
+  on every change; the hero sheet's duplicate `− 31 +` row is gone and its bar opens the
+  editor instead. Closes the last child of the High-Fantasy Steel overhaul (SC-97).
+
 - **Encounter builder → initiative tracker fixed (SC-134)** — builder-generated tracker
   blocks (SCC-code statblock refs) render again instead of an error card; pre-existing
   generated encounters recover with no edits.
