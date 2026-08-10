@@ -145,6 +145,15 @@ SC-109/110/111 (guards). No worktrees exist; nothing in flight.
   (keepers), 1-2 fresh directions, conditions-location factual answer + chips mock.
   Multi-layout-per-context is affirmed direction (D-style rail for sidebar).
   NOTHING new lands without Scott. dse landings serialize; every branch rebases at landing.
+- **2026-08-10 (night): SC-125 LANDED + DONE** (dse ff63dde, workspace 980517f) under
+  Scott's conditional approval — the backup condition (edited files copied to a sibling
+  `<root> backup (pre-7.0.0)` folder BEFORE any rename; unbackupable = unmigrated) built
+  and probe-verified; 5 impl rounds + 5 review rounds total. Landing incident: the SC-136
+  agent had leaked its dse-verify skill edit into the MAIN checkout — caught by
+  wt-finish's dirty-abort, relocated into the sc136-ci worktree as commit be885b7, main
+  restored. **SC-11's wait-for-SC-125 recommendation is now satisfied — 7.0.0 can be cut
+  at dse ff63dde whenever Scott runs the staged sequence.** Still gated: SC-136, SC-107,
+  SC-4 (print-monochrome decision), SC-135 (plan discussion).
 - **2026-08-10 (evening): the DSE 7.0.0 tail wave — ALL SIX DELIVERED, all gated on Scott.**
   SC-136 (CI: workspace-doc test skip-guard, FOLLOWUPS #61 lint debt cleared, lint wired
   into Plugin CI; the "ci"-vs-"Plugin CI" mystery = a mislabeled docs-deploy job; branch
