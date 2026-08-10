@@ -206,7 +206,12 @@ go under an *Internal* sub-heading.
   blocks, with nothing marking them as 10th-level. They now sit in their own
   "<Champion> Advancement Features" card under a **Level 10 Advancement** band — the same
   presentation beastheart companion and summoner fixture advancements already get — shown
-  both on its own page and inline on the champion's page.
+  both on its own page and inline on the champion's page. Those four abilities also had
+  their eidos cost sitting in the spec table's action-type cell, which pushed "Champion
+  Action" out below the table as a stray bold line under the effect. The source now uses
+  the standard form the rest of the corpus uses — cost in the title parenthetical
+  ("**Reality Flense (1 Eidos)**"), action type in the table — so each card reads like the
+  book: **1 Eidos** beside the name and a **Champion Action** chip under it.
 - **Steel dark mode reads flat — the sunken-surface polarity (SC-117)** — every recessed
   panel inside a Steel card (ability sections, power-roll frames, Distance/Targets cells,
   statblock stat and field boxes, hero regions, initiative cells, the encounter summary)
