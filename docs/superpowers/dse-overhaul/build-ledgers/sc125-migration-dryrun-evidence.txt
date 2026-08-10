@@ -1,0 +1,40 @@
+legacy tree: /home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc125-migration/final-tree  (2443 markdown files)
+map: v3.20260403152914 → v4.20260803143953
+
+DETECTION: {"root":"DS Compendium","filesInRoot":2444,"legacyPaths":2036,"newLayoutPaths":0,"isLegacyLayout":true}
+
+DRY-RUN PREVIEW (describePlan):
+2036 file(s) will be moved to their 7.0.0 paths in "DS Compendium".
+Obsidian rewrites links to every moved file; nothing is deleted.
+1 of them differ from the last legacy release (edited, or from an older release) — they are moved too, and listed afterwards.
+1 of them are copied to "DS Compendium backup (pre-7.0.0)" first, so nothing you edited can be lost.
+408 file(s) have no 7.0.0 counterpart — left in place, untouched.
+    Bestiary/Basics/Keywords/Abyssal.md  →  rule/keyword/abyssal.md
+    Bestiary/Basics/Keywords/Accursed.md  →  rule/keyword/accursed.md
+    Bestiary/Basics/Keywords/Animal.md  →  rule/keyword/animal.md
+    Bestiary/Basics/Keywords/Beast.md  →  rule/keyword/beast.md
+    Bestiary/Basics/Keywords/Construct.md  →  rule/keyword/construct.md
+    Bestiary/Basics/Keywords/Dragon.md  →  rule/keyword/dragon.md
+    Bestiary/Basics/Keywords/Elemental.md  →  rule/keyword/elemental.md
+    Bestiary/Basics/Keywords/Fey.md  →  rule/keyword/fey.md
+    …and 2028 more.
+
+renames=2036 blocked=0 unmapped=408
+modified-flagged=1
+  plan census: 2036 + 0 + 408 = 2444 (files in root: 2444)
+
+UNMAPPED (first 10):
+  DS Compendium/Adventures/README.md
+  DS Compendium/Adventures/adventures.md
+  DS Compendium/Bestiary/Basics/_Index.md
+  DS Compendium/Bestiary/Chapters/_Index.md
+  DS Compendium/Bestiary/Draw Steel Monsters - Unlinked.md
+  DS Compendium/Bestiary/Dynamic Terrain/_Index.md
+  DS Compendium/Bestiary/Monsters/_Index.md
+  DS Compendium/Bestiary/README.md
+  DS Compendium/Bestiary/Retainers/Role Advancement Abilities/Ambusher abilities/Level 10 Role Advancement Ability.md
+  DS Compendium/Bestiary/Retainers/Role Advancement Abilities/Ambusher abilities/Level 4 Role Advancement Ability.md
+
+EXECUTED: migrated=2036 failed=0 blocked=0 aborted=false
+  post-migration census: 2038 at new-layout paths + 406 still under a legacy top level = 2444 (files in root: 2444)
+RE-RUN (idempotency): renames=0
