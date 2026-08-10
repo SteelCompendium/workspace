@@ -186,6 +186,20 @@ didn't mount) plus human review of the PNGs.
     CONTENT fix (treasure Project row rendered a raw markdown literal; `markdown: true`
     in treasureLayout) necessarily reaches Legacy/print. Scott approved explicitly
     ("oh that's fine. Fix it."); rebaseline applied at landing, count unchanged at 107.
+  - **2026-08-10, SC-132 stamina redesign (worktree `sc132-stamina`): 5 lines rebaselined
+    + 18-line widening, 119 → 137 — APPLIED at landing.** The five rebaselined lines —
+    `hero--legacy-{dark,light}`, `hero--steel-print`, `gallery--legacy-{dark,light}` — all
+    trace to ONE theme-agnostic change: deleting the duplicative `.dse-hero__stamina-stepper`
+    row (the redesign itself is base-hidden/Steel-revealed and moves zero frozen pixels;
+    proven by two independent reviews, both of which reproduced the 5-line set and its
+    hashes). **Scott's approval 2026-08-10**, SC-132 comment `b3b6806d` item 4 ("approved"),
+    against the gate ask (comment `02903859`) carrying the five before/after crops with
+    every "before" hash-verified against the baseline. The widening adds the frozen-class
+    lines for six fixtures: SC-132's five new stamina fixtures (`hero-narrow`,
+    `stamina-bar-{dying,recoveries,winded}`, `stamina-rail`) and `statblock-roleless-corpus`
+    — an SC-128 fixture whose widening was missed at that landing, caught here. Backup:
+    `freeze-baseline.sha256.pre-sc132-bak` (keep forever). Verified after:
+    `freeze OK (137/137 legacy+print PNGs byte-identical)`, exit 0.
   - **2026-08-08, plan 25 (SC-101/SC-102/SC-103, worktree `sc10x-structural`): 5 lines,
     count unchanged at 119 — APPLIED at landing.** The trio's structure-tier CSS (the shared
     nested-card frame, the standalone action-spine removal, the villain action type, the
