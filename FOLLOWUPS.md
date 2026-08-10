@@ -1295,6 +1295,36 @@ and a red-first test.
 
 ## 61. DSE: `npm run lint` reports 6 pre-existing problems in 5 files
 
+**Status:** DONE 2026-08-10 (SC-136, worktree `sc136-ci`) — all 5 items fixed properly (no
+blanket eslint-disable): `FormModal.ts`'s `super.onOpen()` marked `void` (Modal's declared
+return is `Promise<void> | void`; no other DseModal subclass calls `super.onOpen()` at all,
+so this is genuinely fire-and-forget); `layouts.ts`'s two `source!.body` non-null assertions
+simply dropped (TS 4.4+ control-flow analysis already narrows `source` from the `hybrid`
+const alias, so the `!` never did anything); `pipeline.ts`'s `throw result` got a targeted
+`eslint-disable-next-line only-throw-error` (the file's own top-of-function comment already
+documents `error: Error | ValidationResult` as a deliberate contract — a real Error wrapper
+would break `isValidationResult()`'s whole point); `JsonSchemaValidator.ts`'s `getAjvInstance`
+confirmed genuinely dead (the singleton `globalAjv` it served was never read anywhere else —
+`validateJsonSchema` always builds a fresh Ajv instance) and deleted along with `globalAjv`;
+`ReferenceResolver.ts`'s `Promise<any>` got a targeted `eslint-disable-next-line
+no-explicit-any` (the function already carried a paragraph explaining `unknown` breaks a
+test that's off-limits to modify — a documented-unsolvable case, not a silenceable one).
+
+By landing time `npm run lint` also had to absorb **new** drift from the SC-132 stamina
+redesign (`97c71d2`, landed on `main` after this entry was filed) — 5 errors + 7 warnings in
+`RecoveriesStrip.ts` (3 `obsidianmd/ui/sentence-case` on the popover's aria-labels/button
+text, fixed at the source with the matching `staminaRecoveries.test.ts` assertions updated
+to match; 2 `no-unsafe-assignment`/`no-unsafe-argument` from `Array.prototype.indexOf.call`
+on an `HTMLCollection`, fixed by switching to `Array.from(pipsEl.children).indexOf(target)`;
+1 `obsidianmd/prefer-active-doc` on the outside-click listener), `undoNotice.ts` (3
+`prefer-active-doc` on its DOM-fragment builders) and `hero/view.ts` (3 unused imports —
+`stepper`/`tooltip`/`StepperHandle` — left behind when the redesign deleted the hero sheet's
+own stamina-stepper row). Fixing `prefer-active-doc` required adding an `activeDocument`
+global shim to `test/setup/dom-setup.ts` (jsdom has no such global; real Obsidian does) —
+without it every test that mounts `RecoveriesStrip`/`undoNotice` crashed at render.
+`npm run lint` is clean (0 problems) and is now wired as a gate in
+`.github/workflows/plugin-ci.yml` and listed in the `dse-verify` skill battery (step 2).
+
 **Found:** 2026-08-09, SC-131 (which added the `lint` script — the flat config existed but
 nothing ran it, so it had drifted). Clean for every file SC-131 touched; reports **5 errors
 + 1 warning** in five files the ticket never went near:
@@ -1310,7 +1340,8 @@ so it is NOT wired into the `dse-verify` battery — clear these, then add it as
 Note `eslint .` cannot be the script's form: `obsidianmd`'s typed rules crash on
 `package.json`/`manifest.json` (no tsconfig project). Related: SC-131 review L4 — a
 destroyed popout settings window leaks one loaded preview Component (render cleanups
-aren't guaranteed on window destroy); bounded, fold into any settings follow-up.
+aren't guaranteed on window destroy); bounded, fold into any settings follow-up (still
+open — not part of this fix).
 
 **Effort:** S.
 ## 62. Statblock cards silently drop non-icon blockquotes (the "Traits with an Essence Cost" sidebar)
