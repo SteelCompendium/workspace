@@ -17,6 +17,25 @@ go under an *Internal* sub-heading.
   Stamina) no longer stretch to their row's tallest neighbour and show a slab of blank
   space below a couple of lines of content; Steel-scoped fix, Legacy is unchanged.
 
+### Internal
+
+- **SC-4 (D2/D3 polish) audited to closure** — the six code items on the ticket's list
+  were re-verified against current `draw-steel-elements` main (97c71d2) rather than
+  assumed stale: five were already fixed by earlier D3/D4 commits and by SC-4's own prior
+  session (`b1d33a0`, 2026-07-18) — the kit `head:''`→`false` normalize (`a1945bf`),
+  `aria-selected` on role-less divs (`ConditionSelectModal.ts`, `b1d33a0`), the
+  cardHead-contract test's `.dse-head {` grep (now anchored `^\.dse-head\s*\{`,
+  `cardHead.test.ts:154`), kit-index color-function scan symmetry
+  (`kit-index.test.ts:116,135`), and `void prefs.set` hardening (every call site is now
+  `.catch`-ed or `await`-ed, `theme.ts:108`). `CodeBlocks.ts` and `labeledIcon` were
+  confirmed production-import-dead (only two test suites still import `CodeBlocks.ts`, as
+  an intentional byte-compat oracle; `labeledIcon` is fully gone). The provisional Steel
+  taste-calls item closed separately as SC-106 (2026-08-04). One item stayed open: whether
+  Legacy prints should mute their tier/stamina fill colors to fully monochrome — that's a
+  taste call for Scott, tracked on the ticket rather than decided here. No code changed;
+  full battery reconfirmed green (tsc clean, jest 2414/156, shots 229, freeze 137/137,
+  parity 0/0/16).
+
 ### Added (pending plugin 7.0.0 release)
 
 > The plugin major below was drafted as "6.0.0". That number is **retired** after the
