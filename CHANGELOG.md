@@ -12,6 +12,10 @@ go under an *Internal* sub-heading.
   browse cards, category headers, folder/kit tiles, ability/trait cards and preview lists
   sat 0.4-1.5px off the shield's optical center; nudges are now measured (polygon-erosion
   pixel audit), verified in both schemes and across card-scale/zoom settings.
+- **Plugin: hero sheet grid panels hug their own content (SC-107)** — Characteristics /
+  Conditions / Skills (and any sparse region sharing a row with a fuller one, e.g.
+  Stamina) no longer stretch to their row's tallest neighbour and show a slab of blank
+  space below a couple of lines of content; Steel-scoped fix, Legacy is unchanged.
 
 ### Added (pending plugin 7.0.0 release)
 
