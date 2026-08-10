@@ -153,6 +153,17 @@ Rules that follow from this:
 - **If a ticket needs review but has a thin description** (old TaskNotes imports especially), **add a comment saying what he is actually being asked to look at** and where. "Needs Review" with no context just moves the confusion.
 - Filtering the `Needs Review` label should always give a complete, current list of what is waiting on him. Keep it honest — remove the label when the answer lands.
 
+## The orchestrator workflow (Scott's preferred mode, 2026-08-10)
+
+Multi-ticket sessions run with **the top model as an orchestrator that implements nothing**:
+background agents in isolated worktrees do all code changes; the orchestrator dispatches,
+watches, reviews (independent adversarial review before any landing-bound merge), gates
+through Linear, and lands. Scott: *"This session with you as a sort of orchestrator that
+delegates off work is working really well. I would like to do work in this workflow more
+often."* The full operating rules, footgun index, and new-machine bootstrap live in the
+**`orchestrate` skill** (`.claude/skills/orchestrate/`). Entering the mode is a prompt away
+("orchestrate the open DSE tickets") — the skill makes it deterministic.
+
 ## Parallel agents
 
 Scott runs multiple agents concurrently (commits authored e.g. "Vexa" may land on
