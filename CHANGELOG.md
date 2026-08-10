@@ -34,9 +34,12 @@ go under an *Internal* sub-heading.
   new-path map (3,301 entries across all 243 data-md-dse releases; 2,036 of the final
   release's 2,443 paths, 83.3%) and replays it through `FileManager.renameFile`, so
   **Obsidian** rewrites the links — the plugin never edits a user note. Dry-run preview,
-  abortable, idempotent, and it cannot delete or overwrite anything. Unmapped paths are
-  left in place and enumerated with reasons in the plugin's
-  `docs/compendium-migration-map.md`.
+  abortable, resumable (bookkeeping is checkpointed, so an interrupted run strands
+  nothing), and it cannot delete or overwrite anything. Declining does not fall through
+  into a sync — a sync creates the new files and makes the move impossible, so that is
+  its own labelled choice. Every skipped or flagged path is listed in the dialog and in
+  a report note written into the vault; unmapped paths are enumerated with reasons in
+  the plugin's `docs/compendium-migration-map.md`.
 
 - **Encounter builder → initiative tracker fixed (SC-134)** — builder-generated tracker
   blocks (SCC-code statblock refs) render again instead of an error card; pre-existing
