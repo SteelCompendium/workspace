@@ -24,11 +24,12 @@ absolute paths — devbox ignores your shell's `cd`.
 | Step | Command | Expects |
 |---|---|---|
 | 1. Type-check | `npm run tsc` | clean (no output) |
-| 2. Unit tests | `npx jest` | all suites/tests green |
-| 3. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
-| 4. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
-| 5. Parity (LAST) | `npm run parity` | `0 GAPs`, `0 undeclared WARNs`, exactly the documented declared-deferral set, exit 0 |
-| 6. Obsidian shots (only if a display is available) | `npm run obsidian-shots` | regenerates ground-truth PNGs from a real spawned Obsidian |
+| 2. Lint | `npm run lint` | clean (no output), exit 0 — gated in CI as of SC-136/FOLLOWUPS #61 |
+| 3. Unit tests | `npx jest` | all suites/tests green |
+| 4. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
+| 5. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
+| 6. Parity (LAST) | `npm run parity` | `0 GAPs`, `0 undeclared WARNs`, exactly the documented declared-deferral set, exit 0 |
+| 7. Obsidian shots (only if a display is available) | `npm run obsidian-shots` | regenerates ground-truth PNGs from a real spawned Obsidian |
 
 Run parity last: it rebuilds the harness bundle itself (`harness:build` is a
 `predependency` step inside `npm run parity`), so running it after the freeze check keeps
