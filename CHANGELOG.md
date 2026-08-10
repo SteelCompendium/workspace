@@ -31,11 +31,12 @@ go under an *Internal* sub-heading.
 - **Plugin: pre-7.0.0 compendium links survive the reorganisation (SC-125)** — the
   data-unified switch renames every compendium file, which would have broken every
   user-authored `[[wikilink]]` into it. The plugin now ships a reviewed old-path →
-  new-path map (3,301 entries across all 243 data-md-dse releases; 2,036 of the final
+  new-path map (3,290 entries across all 243 data-md-dse releases; 2,036 of the final
   release's 2,443 paths, 83.3%) and replays it through `FileManager.renameFile`, so
   **Obsidian** rewrites the links — the plugin never edits a user note. Dry-run preview,
-  abortable, resumable (bookkeeping is checkpointed, so an interrupted run strands
-  nothing), and it cannot delete or overwrite anything. Declining does not fall through
+  abortable, resumable (each move is recorded *before* it happens, so even a force-quit
+  strands nothing and the next sync re-offers rather than silently closing the door),
+  and it cannot delete or overwrite anything. Declining does not fall through
   into a sync — a sync creates the new files and makes the move impossible, so that is
   its own labelled choice. Every skipped or flagged path is listed in the dialog and in
   a report note written into the vault; unmapped paths are enumerated with reasons in
