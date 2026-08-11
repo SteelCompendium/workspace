@@ -187,6 +187,13 @@ didn't mount) plus human review of the PNGs.
     CONTENT fix (treasure Project row rendered a raw markdown literal; `markdown: true`
     in treasureLayout) necessarily reaches Legacy/print. Scott approved explicitly
     ("oh that's fine. Fix it."); rebaseline applied at landing, count unchanged at 107.
+  - **2026-08-11, SC-145 edit-button placement (worktree `sc145-edit-button`): 12-line
+    widening (additions-only), 188 → 200 — APPLIED at landing by the orchestrator.** The 12
+    lines are the frozen-class twins of 4 new `*-edit-btn` authoring-controls fixtures (the
+    setting's first shot coverage). Hashes pre-verified byte-identical by the independent
+    review (`sc145-freeze-widening-12.txt`, preserved in the sc145 build-ledger dir).
+    Backup: `freeze-baseline.sha256.pre-sc145-landing-bak`. Duplicate-name check clean (200
+    unique).
   - **2026-08-10, SC-123 settings-parity ports (worktree `sc123-settings-ports`):
     39-line widening (additions-only), 149 → 188 — APPLIED at landing by the orchestrator.**
     No rebaselined lines. 36 lines are the frozen-class twins (`legacy-{dark,light}`,
