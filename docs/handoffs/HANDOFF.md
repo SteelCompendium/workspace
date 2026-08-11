@@ -620,3 +620,19 @@ land. THEN: SC-142 + SC-65 docs (after SC-144 to avoid docs/ conflicts).
 **Board after this window:** 7.0.0 project has SC-11 (cut, Scott), SC-135 (parked),
 SC-146/SC-123 (landed, Needs Review asks pending Scott), SC-156 (needs sanction),
 SC-120 (design-gated), SC-142/SC-65 (docs, queued), SC-144 (in flight).
+
+### Window complete (2026-08-11 early AM): 8 landed, board clear except Scott-gated items
+Final landings after the last entry: **SC-144** `73b156d` (legacy theme removed; freeze
+RETIRED 200→66 steel-print-only — new regime documented in dse-verify SKILL.md;
+check-freeze.sh patched; FOLLOWUPS #49 archived, #57 rewritten print-only, #64 sweep filed;
+workspace CHANGELOG bullet) and **SC-142/SC-65 docs pass** `cbf17fa` (README rewritten with
+install/migration; 4 new pages — writing-blocks, settings, hero-suite, gm-trackers; all 22
+elements documented; display families named nowhere; snapshot-why present; SC-65's legacy
+readme content gone). dse main final: `cbf17fa`. Battery at final: jest 2686 · shots 200 ·
+freeze 66/66 · parity 0/0/16 · tsc/lint clean.
+**For Scott (Needs Review):** SC-146 + SC-123 close-outs, SC-142 (accuracy pass landed —
+decide if the tutorials/screenshots ambition is phase-2 or pre-7.0.0; ALL screenshots
+except roll.png are stale, list in the sc142 ledger; regeneration needs his display).
+**Scott-gated remainders:** SC-11 (cut), SC-135 (parked), SC-156 (9-line sanction),
+SC-120 (design), SC-155 (upstream SDK/ETL pick). No worktrees except sc142 (remove after
+his review if he wants screenshot work in it — actually removed; regenerate if needed).
