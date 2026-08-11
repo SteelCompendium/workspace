@@ -663,3 +663,9 @@ Scott returned comments on 107/146/142. All actioned; dse main now `4615db6`:
 **Awaiting Scott:** SC-146 sanction (then land sc146-round2 — the ONLY live worktree),
 SC-142 confirm, SC-123 rulings, SC-158's no-migration veto window, SC-11 cut, SC-135,
 SC-156 sanction, SC-155/SC-157 scheduling.
+
+### SC-146 SANCTIONED + ROUND 2 LANDED (Scott: "146 is good to go")
+dse main `3a9242f`, ws `5cccff3`. Freeze 66→67 (17-line sanctioned rebaseline + with-captain
+widening; recorded in dse-verify SKILL.md; backup pre-sc146r2-bak). Battery at landed sha:
+jest 2698+1skip · shots 203 · freeze 67/67 · parity 0/0/16. SC-146 → Done. No live worktrees.
+Scott reviewing: SC-142, SC-123, SC-158 veto window.

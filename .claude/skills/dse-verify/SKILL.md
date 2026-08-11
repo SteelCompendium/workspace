@@ -232,6 +232,18 @@ didn't mount) plus human review of the PNGs.
     CONTENT fix (treasure Project row rendered a raw markdown literal; `markdown: true`
     in treasureLayout) necessarily reaches Legacy/print. Scott approved explicitly
     ("oh that's fine. Fix it."); rebaseline applied at landing, count unchanged at 107.
+  - **2026-08-11, SC-146 round 2 (worktree `sc146-round2`): 17 lines rebaselined + 1-line
+    widening, 66 → 67 — APPLIED at landing.** The 17 rebaselined `*--steel-print.png` lines
+    (statblock + its preference-variant fixtures) all trace to ONE Scott-requested change:
+    the head-notch diamond's clearance above the primary stat row (Scott's SC-146 round-2
+    bug #4), which shifts print content below the head down ~9 CSS px. Pixel forensics
+    (independent re-review) confirmed a pure vertical translation + sub-pixel glyph
+    re-hinting, nothing structural; every "before" hash verified against the pre-sanction
+    baseline. **Scott's approval 2026-08-11, SC-146 comment "146 is good to go"** against
+    the self-contained sanction ask (comment `1cf8beb7`) carrying the before/after crop
+    (`r2-item3-notch-print.png`). The widening adds `statblock-with-captain--steel-print.png`
+    (the new 4-secondary-cell fixture). Backup: `freeze-baseline.sha256.pre-sc146r2-bak`.
+    Verified after: `freeze OK (67/67 steel-print PNGs byte-identical)`, exit 0.
   - **2026-08-11, SC-145 edit-button placement (worktree `sc145-edit-button`): 12-line
     widening (additions-only), 188 → 200 — APPLIED at landing by the orchestrator.** The 12
     lines are the frozen-class twins of 4 new `*-edit-btn` authoring-controls fixtures (the
