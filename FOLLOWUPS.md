@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 63 -->
+<!-- next-id: 64 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1372,3 +1372,13 @@ open — not part of this fix).
   `steel-etl/internal/content/statblock_parse_test.go`.
 - **Effort:** S (1–4 h)
 
+
+## 63. Compendium Sync / Check-for-updates buttons have no busy state
+**Status:** open
+- **Identified:** 2026-08-11, SC-140 fix round (settings sync-status live-refresh).
+- **What:** The settings' Sync and Check-for-updates buttons stay enabled while a sync is
+  in flight — a double-click starts a second run. Wants a disabled/busy affordance driven
+  by the sync service's in-flight state (the SC-140 ManifestStore.onChange seam plus a
+  sync-service busy signal would carry it).
+- **Why deferred:** UX addition beyond the SC-140 bug scope; noted by the implementer,
+  confirmed non-blocking by review.
