@@ -636,3 +636,30 @@ except roll.png are stale, list in the sc142 ledger; regeneration needs his disp
 **Scott-gated remainders:** SC-11 (cut), SC-135 (parked), SC-156 (9-line sanction),
 SC-120 (design), SC-155 (upstream SDK/ETL pick). No worktrees except sc142 (remove after
 his review if he wants screenshot work in it — actually removed; regenerate if needed).
+
+## 2026-08-11 (day) — Scott's review round + the camera dividend
+
+Scott returned comments on 107/146/142. All actioned; dse main now `4615db6`:
+- **SC-107** — his earlier "approved" had landed but the Done save silently no-op'd; state fixed.
+- **SC-146 round 2** — his 3 findings: ledger = NO defect (stale build; site measured identical
+  ×0.8 rem-root; the 4th cell = With Captain, which the SITE drops → SC-157 filed); flat
+  separator now the site's full fading-lines recipe; head-notch clearance fixed screen+print.
+  Re-review LAND pending his sanction of a 17-line steel-print rebaseline (pure ~9px vertical
+  shift, forensically verified; rebaseline-17.txt in sdd/sc146/round2/). **GATED: In Progress
+  + Needs Review — awaiting "sanctioned", then land worktree sc146-round2 (branch kept;
+  worktree ALIVE, commit a9e3ac5 + auto-rebases cleanly).**
+- **SC-142 phases 2a+2b LANDED** — headless docs-shots pipeline (Xvfb; obsidian-shots now
+  headless too; 40 images automated) + six tutorials (Getting Started etc., camera can shoot
+  Obsidian's own UI). GATED: Needs Review — Scott to read Getting Started, then Done.
+- **Camera dividend: 3 real bugs found by pointing real cameras at the product** —
+  SC-158 (sidebar _dse_anchor corrupted ds-scc; strictBody fix LANDED+Done, `4120f47`),
+  SC-159 (search modal rows had NO CSS; fix LANDED+Done, `4615db6`; FOLLOWUPS #66 filed:
+  dead --dse-* tokens outside element roots, no gate sees them), SC-157 (site drops
+  With Captain — Todo, site-side). FOLLOWUPS #65 (same-code sidebar bind) also filed.
+- **Session note:** hit the 200-subagent cap; continuing via SendMessage RESUMES of prior
+  agents (works fine). New sessions reset the cap; CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION
+  raises it.
+
+**Awaiting Scott:** SC-146 sanction (then land sc146-round2 — the ONLY live worktree),
+SC-142 confirm, SC-123 rulings, SC-158's no-migration veto window, SC-11 cut, SC-135,
+SC-156 sanction, SC-155/SC-157 scheduling.
