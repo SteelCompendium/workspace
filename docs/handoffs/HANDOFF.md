@@ -586,3 +586,37 @@ section + schema descriptions + model comments + integration.md); statblock/feat
 featureblock untouched/stable; 407/407 tests green. ws merge `ba74ec1`.
 PENDING Scott's go: remove display families from the snapshot insert command in 7.0.0
 (recommended; reference + inline-link inserts stay; sb/feature/fb keep snapshots).
+
+## 2026-08-11 — Scott's 5-hour go: 7.0.0 ticket sweep (autonomous window)
+
+Scott: "Go for implementing the things/tickets we talked about that are to be included in
+7.0.0... If you finish those tickets, you can start working on the other tickets I added
+today... mostly bug fixes and I dont think they need much (or any) approval from me."
+Convention this window: bugs land + go Done with evidence (he vetoes by reopening).
+
+**LANDED + DONE (dse main progression e141582 → 20a78e2):**
+- SC-143 `94cfb17` — kit band-heads 12.8px→16px (rem-root conversion miss; orchestrator-
+  eyeballed in lieu of review per right-sizing).
+- SC-140 `c196222` — sync-status live refresh (ManifestStore.onChange + live mount on the
+  SC-131 cleanup contract). FOLLOWUPS #63 filed (sync buttons lack busy state).
+- SC-145 `5abfa62` — authoringAnchor() seam; pencil inside card everywhere; hr buttonless.
+  Freeze widened 188→200 (12 lines, review-verified, recorded in dse-verify).
+- SC-141 `23ed677` — FEATURE_TYPE_RE claims ability/trait (716 files were unreferenceable
+  by code!); slug twin tie-break (92 keys); FEATUREBLOCK_TYPE_RE claims dynamic-terrain;
+  action-chip actionTypeOf; featureblock feature_type SHIM (→ SC-155 upstream ticket:
+  SDK fromDTO throws on all 152 corpus featureblocks). SC-156 filed (hero example.yaml
+  ships 2 invalid codes; needs 9-line sanction).
+- SC-149 `20a78e2` — ds-scc catch-all live; ten typed aliases + ds-rule retired (ds-rule =
+  orchestrator ruling, flagged for Scott veto on ticket); friendly notice cards; insert
+  routing on shared family regexes; H-1 element-restamp with stylesheet-parity oracle.
+**Earlier same evening:** SDK beta notices landed (data-sdk-npm v3 a4c2a3e); SC-150/151
+filed (Backlog); SC-142 carries thin-docs + snapshot-rationale requirements.
+
+**IN FLIGHT:** SC-144 legacy-theme removal — implementer executing the 7-phase plan
+(.superpowers/sdd/sc144/sc144-removal-plan.md; KEY: legacy IS the unscoped base, zero CSS
+deleted; freeze 200→66 steel-print-only via sc144-freeze-baseline-66.txt + skill patch
+file, orchestrator applies both at landing; silent settings migration). Then review →
+land. THEN: SC-142 + SC-65 docs (after SC-144 to avoid docs/ conflicts).
+**Board after this window:** 7.0.0 project has SC-11 (cut, Scott), SC-135 (parked),
+SC-146/SC-123 (landed, Needs Review asks pending Scott), SC-156 (needs sanction),
+SC-120 (design-gated), SC-142/SC-65 (docs, queued), SC-144 (in flight).
