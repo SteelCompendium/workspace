@@ -573,3 +573,16 @@ SC-123 → In Progress + Needs Review; Scott's open calls on the ticket ask: pre
 (existing Sourcebook/Index users derive "Custom"), 2 site-divergent defaults (sbCharLine,
 sbVillain — rec: leave), sticky-header + link-toggle defer proposals, per-block support for
 conditional-DOM keys (feature, own ticket if wanted).
+
+### Display families ruled INTERNAL for 7.0.0 (Scott, 2026-08-10/11) + SDK beta notices landed
+Scott's rulings on the ds-* display family (conversation): keep the ten elements but
+**internal** — no verbose schema docs in the DSE plugin (requirement pinned on SC-142);
+reference-by-SCC is the story (already live-resolving + offline via synced vault copy;
+no staleness gap — only the "Insert compendium block" SNAPSHOT command bakes YAML).
+ds-card: NOT adding (internal marking makes it unnecessary). data-sdk-npm `v3` now at
+`a4c2a3e`: 10 family schemas (ancestry/career/class/complication/condition/culture/kit/
+perk/title/treasure) marked "BETA — subject to change without notice" (README stability
+section + schema descriptions + model comments + integration.md); statblock/feature/
+featureblock untouched/stable; 407/407 tests green. ws merge `ba74ec1`.
+PENDING Scott's go: remove display families from the snapshot insert command in 7.0.0
+(recommended; reference + inline-link inserts stay; sb/feature/fb keep snapshots).
