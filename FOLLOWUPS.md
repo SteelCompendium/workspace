@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 66 -->
+<!-- next-id: 67 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1365,3 +1365,17 @@ open — not part of this fix).
   identically — but a real, silent contract violation that will matter the moment strict-body
   elements gain interactive state. Fix sketch: occurrence-index in the sidebar binding, or a
   Notice when the body-text lookup is ambiguous.
+
+## 66. `--dse-*` tokens are silently dead outside `[data-dse-element]`/`.dse-modal` roots — no gate catches chrome styled with them
+**Status:** open
+- **Identified:** 2026-08-11, SC-159 (compendium search modal styling). The token block
+  re-declares `--dse-*` on element/modal roots; chrome OUTSIDE those roots (suggester
+  popovers, future status-bar items) gets the guaranteed-invalid value — worst case
+  `var(--dse-font-mono)` → `unset` → inherit, actively degrading built-in element styling.
+  SC-159's first pass shipped 4 dead declarations + 1 harmful one and EVERY gate stayed
+  green (freeze can't see modal chrome, parity maps element surfaces only, jest doesn't
+  compute styles). Same root mechanism as archived (was #57)'s print arm.
+- **Fix sketch:** a "styling outside an element root" doc note in the plugin architecture
+  docs + a lint/test rule: any `--dse-*` consumption in a selector not scoped under an
+  element/modal root must use a literal fallback. SC-159 ships a cross-file guard that
+  every emitted class is styled — this item is the token-validity twin of that guard.
