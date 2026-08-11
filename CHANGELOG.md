@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the "legacy" theme is gone (SC-144).** The Steel look is now the only look.
+  The Theme row leaves Settings → Appearance, and a beta vault that had chosen Legacy is
+  moved to Steel silently on next load. No released user is affected — the picker only ever
+  existed in unreleased 7.0.0. Print and PDF export are byte-for-byte unchanged, as is
+  every Steel surface: all 200 Steel screenshots are identical before and after. The visual
+  freeze baseline retires from 200 to 66 lines (print only), removals-only, with no hash
+  changed.
 - **Site: crest glyphs optically centered (SC-129)** — the shield-crest icons across
   browse cards, category headers, folder/kit tiles, ability/trait cards and preview lists
   sat 0.4-1.5px off the shield's optical center; nudges are now measured (polygon-erosion

@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 64 -->
+<!-- next-id: 65 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -26,40 +26,17 @@ Most recent archive:
 - **Context:** file paths, gotchas, anything that saves grep time
 - **Effort:** XS (<1 h) / S (1–4 h) / M (1 day) / L (multi-day) -->
 
-## 57. `:root` tokens that alias Obsidian `body`-scoped vars are guaranteed-invalid — the Legacy ◆ divider paints NOTHING
-
+## 57. In PRINT, the ◆ divider paints nothing
 **Status:** open
+- The standalone `ds-hr` diamond resolves its fill through a `:root` var chain that is
+  invalid at computed-value time, so it renders empty. On screen this is moot — Steel gives
+  standalone `ds-hr` a real treatment (`styles-source.css` ~6367-6422) — but those rules
+  carry `:not([data-dse-print="on"])`, so print still falls through to the broken chain.
+- Narrowed from a two-arm finding to a print-only one by SC-144 (2026-08-11), which removed
+  the legacy theme that owned the other arm. Not fixed there: any fix moves
+  `*--steel-print.png` bytes, which is the only frozen class left and needs its own
+  sanctioned rebaseline.
 
-- **Identified:** 2026-08-08, SC-128 (worktree `sc128-hr`), while measuring the kit divider's
-  computed values before porting the site's ornate rule.
-- **What:** `styles-source.css:3016` opens a `:root { … }` token block that aliases Obsidian
-  theme variables directly — `--dse-page-bg: var(--background-primary)` (`:3023`) and
-  `--dse-rule: var(--icon-color)` (`:3101`) among them. Obsidian (and the harness's
-  `visual-harness/vars.css`, faithfully) declares those on **`body.theme-dark` /
-  `body.theme-light`**, not on `:root`. At `:root` they are undefined, so each aliasing
-  token computes to the **guaranteed-invalid value** and every property that consumes it
-  without a `var()` fallback drops to its initial value. Measured on the kit divider,
-  Legacy, both schemes: `.dse-hr__diamond` gets `background-color: rgba(0,0,0,0)` (from
-  `var(--dse-rule)`), `box-shadow: none` (from `inset … var(--dse-page-bg)`) and no borders
-  — and `.dse-hr__line` likewise. **`horizontal-rule--legacy-{dark,light}.png` are frozen
-  golden shots of a completely BLANK rule** (see them: the element renders nothing at all).
-- **Why:** two costs. (1) A user-visible one — `ds-hr` / `ds-horizontal-rule` renders
-  invisibly under Legacy, and the same chain reaches anything else keyed off these tokens.
-  (2) A gate-integrity one — the freeze baseline currently pins "renders nothing" as the
-  correct Legacy look for this element, so the defect is *protected* by the very check meant
-  to catch regressions.
-- **Context:** Steel is unaffected because its own token block re-declares the same names on
-  the ELEMENT root (`:is([data-dse-element], .dse-modal)[data-dse-theme="steel"]`, a
-  descendant of `body`) with literal fallbacks — e.g. `--dse-rule: var(--sc-steel, #8e959a)`
-  — which is also the shape of the fix: re-declare the aliasing tokens on the element root,
-  or give each `:root` alias a literal fallback. SC-128's ornate rule sidesteps it with
-  `var(--dse-page-bg, var(--dse-surface))` and documents the chain inline, so fixing this
-  makes that rule follow the real page background with no edit there. Sweep the whole
-  `:root` block, not just these two — any `--dse-*: var(--<obsidian-var>)` with no fallback
-  has the same defect. **Needs Scott's sanction before landing:** it necessarily moves
-  frozen `*--legacy-*` shots (things that painted nothing will start painting), which is a
-  sanctioned-rebaseline case, not a widening.
-- **Effort:** S (the edit is small; the sanction ask + rebaseline is the work).
 
 ## 56. Unmapped-role statblock loses its section break entirely under Steel
 
@@ -232,22 +209,6 @@ structural divergence like these is invisible to it by design.)*
   decision, not a dead-rule repair.
 - **Effort:** S (1–4 h)
 
-## 49. Legacy theme has no markdown-table styling at all, including the new scroll frame
-**Status:** open
-- **Identified:** 2026-08-04, SC-121 Batch 4 (batch-3 review L-5 fix) — dse `d94e025`
-- **What:** Batch 3's C-6 table baseline and Batch 4's `.dse-md-table` scroll frame are both
-  Steel-only + print-excluded, so under the Legacy theme (and in print/PDF export) a book
-  pipe-table is still unstyled AND still overflows its card at narrow width — measured
-  380px of table in a 300px leaf.
-- **Why:** Legacy is still a shipping theme and the compendium's mini-statblocks are common.
-  The overflow half of this is arguably a bug rather than a styling choice.
-- **Context:** `styles-source.css` §7, `table:not([class])` + `.dse-md-table` rules. The
-  wrapper ELEMENT is emitted in every theme (`src/framework/mdTableWrap.ts` runs from
-  `ElementView.renderMarkdown`), so a Legacy fix is CSS-only — but any Legacy-scoped rule
-  changes the frozen `*--legacy-*` bytes and needs a sanctioned rebaseline (see the
-  `dse-verify` skill's freeze section). `perk-narrow--legacy-dark.png` is now a pinned
-  fixture showing exactly this state.
-- **Effort:** S (1–4 h)
 
 ## 50. Stamina-edit modal's "Dying" zone label is near-invisible, and no "Winded" zone renders at all
 **Status:** open
@@ -1382,3 +1343,15 @@ open — not part of this fix).
   sync-service busy signal would carry it).
 - **Why deferred:** UX addition beyond the SC-140 bug scope; noted by the implementer,
   confirmed non-blocking by review.
+
+## 64. Disposition sweep: deferrals whose "it would move the frozen legacy bytes" blocker evaporated (SC-144, 2026-08-11)
+**Status:** open
+- The freeze went 200 → 66 lines, `*--steel-print.png` only, so any deferral justified by
+  legacy-shot byte-identity needs re-reading. Items to re-read: **#39** (statblock/
+  featureblock host margin — unaffected, it was always a pixel decision for Scott, not a
+  freeze blocker), **#45**, **#46**, **#47**, **#53**, **#54**, **#56**. For each, the
+  question is now only "does this move a *print* shot?" — if not, the blocker is gone and it
+  is a plain design/priority call. No code was changed by SC-144 for any of them. Also in
+  this class, filed separately in the SC-144 plan: the SC-123 conditional-DOM defaults
+  (`sbCharLine`/`sbCharBox`/`sbVillain`) and the SC-103 ◆-divider TS constraint, both of
+  which now *could* change and deliberately did not.

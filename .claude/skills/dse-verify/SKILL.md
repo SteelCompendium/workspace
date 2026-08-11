@@ -78,8 +78,27 @@ gate command itself.
 `check-freeze.sh` (`/home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh`)
 compares real bytes because `visual-harness/shots/` is gitignored — a `git status` check on
 that directory is vacuous. It runs `sha256sum -c` against
-`.superpowers/sdd/freeze-baseline.sha256`, a flat list of **107** `<hash>  <filename>` lines
-(`*--legacy-{dark,light}.png` + `*--steel-print.png`).
+`.superpowers/sdd/freeze-baseline.sha256`, a flat list of **66** `<hash>  <filename>` lines —
+**`*--steel-print.png` only**, one per browser capture id.
+
+**Only print is frozen (SC-144, 2026-08-11).** The baseline used to be three classes
+(`*--legacy-{dark,light}.png` + `*--steel-print.png`) and two thirds of it existed to hold
+the legacy theme still. That theme is gone; those 134 lines were retired. What the gate is
+now, and is not:
+
+- **What it still catches:** `steel-print` renders the SAME DOM as the screen combos (print
+  is a CSS attribute layered over whatever DOM the render produced — it cannot be branched
+  around). So every theme-agnostic DOM or content regression still trips it — the class the
+  SC-121 treasure fix tripped — just at one capture class instead of three. It also catches
+  the specific accident worth a byte gate: a structure-tier Steel rule leaking into print.
+- **What was genuinely lost:** byte coverage of *screen-only, base-layer* CSS regressions.
+  Nothing pins steel-dark/steel-light bytes today.
+- **Why Steel is deliberately NOT frozen:** Steel is under active design (SC-120's remaining
+  family compositions, SC-117's token work). A frozen Steel would go red on every *intended*
+  change and demand a sanctioned rebaseline each time — precisely the "a gate that always
+  reads red trains people to skim it" failure the SC-117 M3 fix was written to eliminate.
+  Revisit once 7.0.0 ships. `steel-print` is the right survivor because print is stable and
+  is never itself the target of design work, so it goes red only when something leaked.
 
 **The baseline covers the BROWSER camera only.** Obsidian-camera output
 (`*--obsidian-*.png`, incl. the modal/settings/canvas/sidebar specials) is deliberately not
@@ -96,10 +115,29 @@ didn't mount) plus human review of the PNGs.
   flagged, not reported. New fixtures produce new files that don't trip the freeze check by
   construction (they don't collide with an existing frozen name).
 - **A reported mismatch means an existing frozen shot changed bytes** — almost always because
-  a new/edited Steel CSS rule leaked into the legacy or print scheme. Fix it by narrowing the
-  rule's selector scope (see "Steel scoping rule" below). **Never edit the baseline to accept
-  the new bytes** — that defeats the entire check.
-- **Baseline corrections — a fourth case (rare): the baseline pinned a CAPTURE ARTIFACT, not
+  a new/edited Steel CSS rule leaked into the print scheme. Fix it by narrowing the rule's
+  selector scope (see "Steel scoping rule" below). **Never edit the baseline to accept the
+  new bytes** — that defeats the entire check.
+- **RETIREMENT — the fourth baseline operation (2026-08-11, SC-144).** Distinct from a
+  widening (new names, additions-only), a sanctioned rebaseline (an approved change moves an
+  existing frozen shot's bytes) and a capture-artifact correction (the harness was pinning
+  the wrong thing). A **retirement removes lines for a surface that no longer exists** — the
+  shots are not wrong, they are no longer producible at all, so leaving them in would make
+  the gate permanently report "missing" for a reason no future branch can ever fix.
+  - **The sanction is Scott's ruling on SC-144**: *"The 'legacy' theme option is completely
+    broken. I dont particularly feel like fixing it. Instead lets just drop support for
+    it."* Dropping the theme is what makes the 134 legacy lines unproducible; retiring them
+    is the mechanical consequence, not a separate visual decision.
+  - **200 → 66, removals-only.** 67 `*--legacy-dark.png` + 67 `*--legacy-light.png` deleted;
+    all 66 `*--steel-print.png` lines kept **byte-identical**. Proof recorded at the time:
+    a sorted diff of old vs. new shows **134 `<` lines, 0 `>` lines** (nothing added,
+    nothing changed), and `diff <(grep -- '--steel-print.png$' <old>) <new>` is empty. The
+    66 hashes were then re-verified against a fresh `npm run shots` on the SC-144 branch →
+    `freeze OK (66/66 …)`, exit 0.
+  - Backup kept forever: `freeze-baseline.sha256.pre-sc144-bak`.
+  - **A retirement is removals-only by definition.** If applying one would change or add a
+    hash, something else is going on — stop and diagnose it as its own case.
+- **Baseline corrections — the CAPTURE-ARTIFACT case (rare): the baseline pinned an artifact, not
   a look.** Distinct from a widening (new name, additions-only) and a sanctioned rebaseline
   (an approved DOM/CSS change legitimately moves a frozen shot) — here the *harness itself*
   was capturing the wrong thing, so the frozen bytes never represented the surface they claim
@@ -128,7 +166,14 @@ didn't mount) plus human review of the PNGs.
   pinned against future regression: append the new hash lines, never touch/reorder the
   existing ones, and bump the two literal count strings in `check-freeze.sh`'s comment +
   success echo to match. Full procedure:
-  `.superpowers/sdd/sc108-fixture-coverage-design.md` §3. Widenings so far:
+  `.superpowers/sdd/sc108-fixture-coverage-design.md` §3.
+  - **Post-SC-144 arithmetic: a widening is ONE line per new capture id, not three.** Every
+    historical entry below reads "3 lines each (legacy-dark, legacy-light, steel-print)"
+    because all three classes were frozen then. Only `*--steel-print.png` is now, so a new
+    fixture contributes exactly one line — don't pattern-match the examples and go looking
+    for two more hashes that no longer exist.
+
+  Widenings so far:
   - **2026-08-02, SC-108 / FOLLOWUPS #37: 98 → 101.** The `featureblock/advancement`
     fixture (3 lines: legacy-dark, legacy-light, steel-print).
   - **2026-08-04, SC-121 Batch 4: 101 → 107.** Two new browser fixtures, 3 lines each —
@@ -350,8 +395,10 @@ larger work. Full reasoning: `visual-harness/parity/README.md` → "Known limita
 
 The 8 declared entries (16 rows — each covers both schemes) are three findings:
 - **FOLLOWUPS #39** (8 rows) — `statblock-wrap` / `featureblock-wrap` `margin-top`/`-bottom`:
-  site 34px (`1.7rem` on `.sb-wrap`/`.fb-wrap`) vs plugin 8px (Legacy-base `0.5em` on the
-  host). A **pixel decision** for Scott, no longer an invisible one.
+  site 34px (`1.7rem` on `.sb-wrap`/`.fb-wrap`) vs plugin 8px (the unscoped base's `0.5em`
+  on the host — reworded from "Legacy base" by SC-144, matching `selector-map.json` and
+  `parity/README.md`; the finding itself is unchanged, that `0.5em` is a base rule and it
+  survived the theme removal). A **pixel decision** for Scott, no longer an invisible one.
 - **FOLLOWUPS #51** (6 rows) — `section-tag` `font-size`/`line-height`/`letter-spacing`:
   site 18px/30.6px/1.8px vs plugin 16px/27.2px/1.12px. One type-scale decision for Scott.
 - **FOLLOWUPS #40** (2 rows) — `pr-chars:ink`: the plugin's single-node power-roll caption is
@@ -403,9 +450,26 @@ capture script/CDP call — don't ask a human to resize a window and hope the ne
 ## Steel scoping rule
 
 Every new Steel CSS rule must carry
-`[data-dse-theme='steel']:not([data-dse-print="on"])` — otherwise it leaks into the frozen
-legacy/print shots and trips the freeze check. Only unfrozen steel-dark/steel-light shots may
-change.
+`[data-dse-theme='steel']:not([data-dse-print="on"])`. Both halves still matter, for
+different reasons since SC-144:
+
+- **`:not([data-dse-print="on"])` is the load-bearing half — it is the whole freeze rule
+  now.** Print is the only frozen class, so a screen-intended rule that forgets this
+  exclusion leaks into `*--steel-print.png` and trips the check. Only the unfrozen
+  steel-dark/steel-light shots may change freely.
+- **`[data-dse-theme='steel']` is always true, and stays anyway.** With one theme, the
+  prefix on ~297 rule blocks can never fail to match. **Do not strip it.** Removing it drops
+  the specificity of every one of those rules by one attribute selector, which silently
+  reorders the cascade against the unscoped base — putting all 66 frozen bytes and every
+  Steel shot back in play for a pure-readability gain. It also keeps the snippet-theme door
+  (D3 §6) open. Declined by default; if it is ever revisited, it is its own ticket with its
+  own full battery.
+
+**Where "legacy" went.** There is no second theme. Legacy was never a scoped rule set — it
+was the unscoped `:root` base that Steel overrides, and that base **stays**, because Steel
+inherits from it. SC-144 therefore deleted **zero** CSS; the sheet's own contract comment
+(`styles-source.css`, the theming-contract block) is the authority. Anything you read that
+says a rule "must not leak into legacy" means "must not leak into print" today.
 
 ## Rebuild before live-vault review
 
@@ -419,6 +483,50 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 ```
 
 ## Current expected numbers (drift — verify against current main)
+
+**CURRENT — SC-144, the legacy-theme removal (branch `sc144-legacy-removal`, 2026-08-11,
+based on dse main `20a78e2` = post-SC-149).** Measured at the landing commit, full battery
+in order:
+
+| Gate | Before (base `20a78e2`) | After |
+|---|---|---|
+| `npm run tsc` | clean | clean |
+| `npm run lint` | clean, exit 0 | clean, exit 0 |
+| `npx jest` | 2680 passed / 1 skipped / **164 suites** (+1 skipped) / 3 snapshots | **2686 passed / 1 skipped / 164 suites / 3 snapshots** (net **+6**) |
+| `npm run shots` | 334, 0 FAIL | **200, 0 FAIL** |
+| `check-freeze.sh` | `freeze OK (200/200 …)`, exit 0 | **`freeze OK (66/66 …)`, exit 0** |
+| `npm run parity` | 0 GAPs / 0 undeclared / 16 DECLARED / exit 0 | **unchanged** |
+| `npm run obsidian-shots` | not run (display busy); last recorded 145 | not run; the theme axis halved, so expect roughly half |
+
+Three of those want explaining before you treat a difference as a failure:
+
+- **Shots 334 → 200 is the combo count, not lost coverage.** `shoot.mjs`'s `COMBOS` went
+  5 → 3 (the two `legacy-*` entries are gone); 66 capture ids × 3 + 2 galleries = 200.
+  Every `*--legacy-*.png` name simply no longer exists.
+- **Jest went UP (+6), not down. This is not a miscount.** The plan predicted −7 to −9.
+  The four theme-switching contracts in `displayCardThemeBranch.test.ts` did die (that file
+  is now `displayCardBranch.test.ts` with 4 tests). Against that: 4 new `migrateSettings`
+  cases, 6 harness cases pinning the theme-param clamp (`parseParams` ×4 + two rendered-root
+  cases), and — the part that swallows the predicted deletions — several tests the plan
+  said to DELETE were converted into stronger invariants instead. The descriptor's "carries
+  the OD-5 options" pin (a fixture) became "carries NO `ui`" (the contract); tokens.test.ts's
+  "no `[data-dse-theme="legacy"]` scope" (one banned literal) became "`steel` is the only
+  `[data-dse-theme]` value in the sheet" (any second theme scope, under any name). All were
+  can-fail proven by re-introducing the exact regression each catches. Deleting them to hit
+  a predicted number would trade a real guard for a tidy figure — don't.
+- **Jest counts are LOCATION-SENSITIVE — check where you ran from before believing a delta.**
+  `test/dom/framework/token-coverage.test.ts` resolves the workspace D3 token map against a
+  fixed list of known layouts (the main checkout and the worktrees dir). Run the suite from
+  anywhere else — a scratch checkout under `/tmp`, say — and it silently SKIPS 2 tests:
+  you get `3 skipped / 2680 passed` where the same commit reports `1 skipped / 2682 passed`
+  in a proper worktree. Independently hit and confirmed during the SC-144 review while
+  re-deriving the base numbers from a scratch tree. A −2 "regression" discovered this way is
+  an artifact of your working directory, not the branch.
+- **Every Steel shot is byte-identical across the whole ticket.** That was the primary
+  correctness gate: a sha256 of all 200 `*--steel-*.png` was taken before any edit and
+  re-diffed at phases 2, 3 and 7 — empty diff every time, including all 66 `steel-print`.
+  Removing a theme changed nothing about the theme that remains.
+
 
 As of dse SC-117 Batch 6 (branch `sc117-audit`, 2026-08-07, `f09f6cc` + this batch's
 commit): jest **2191/154 suites** (+1: the new `feature/spend` fixture's own

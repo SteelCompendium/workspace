@@ -348,7 +348,7 @@ author `--dse-` values for them.
 | `elevation-hover`, `transition` | not tokenized in D2 — add ONLY if a Task-3 Steel rule needs them (plan reconciliation); if added, that is a union + base + map + guard change |
 | `accent-spine` | not a token — it is the element-set alias `--dse-act`/`--dse-role` (already wired in D2) |
 
-## Appendix B — Legacy values that differ from the spec's assumptions
+## Appendix B — Base values that differ from the spec's assumptions
 
 The spec predates D2; the shipped Legacy base wins (this column is a **record**). Deltas:
 

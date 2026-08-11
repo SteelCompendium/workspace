@@ -216,8 +216,8 @@ the squeeze"), no longer a hard technical block. Its own brainstorm/spec/plan wh
 - **How much actually overlaps: ~40–60%, not "everything."** Only the *presentational card
   family* is common ground (ability/feature cards, statblocks, featureblocks, reference
   cards, power-roll tiers, chips, crests). The plugin additionally owns trackers (initiative,
-  montage, project, party, resources), the hero sheet, the Draw Steel sidebar, modals, the
-  **Legacy** theme, and the print stylesheet — none of which have a site counterpart, and all
+  montage, project, party, resources), the hero sheet, the Draw Steel sidebar, modals, and
+  the print stylesheet — none of which have a site counterpart, and all
   of which must keep working untouched. So the package can only ever cover the shared subset;
   the plugin keeps a substantial private layer regardless.
 - **Main cost: the class vocabulary, not the tokens.** Tokens are easy to share. Sharing
@@ -225,9 +225,10 @@ the squeeze"), no longer a hard technical block. Its own brainstorm/spec/plan wh
   (`.dse-section__title` ↔ `.sc-ability__section-head`, `.dse-sb` ↔ `.md-typeset.sb`,
   `.dse-head__deck--chip` ↔ `.sc-head__slot--chip`, …; the current mapping lives in
   `draw-steel-elements/visual-harness/parity/selector-map.json`). That rename would
-  simultaneously invalidate the golden-PNG visual baseline (~295 shots) **and** the
-  LEGACY-FREEZE byte-identity proof (98 legacy+print PNGs) — i.e. it destroys both safety nets
-  at the exact moment it makes a large visual change. That is the reason to defer, not the
+  simultaneously invalidate the golden-PNG visual baseline (~200 shots) **and** the
+  freeze byte-identity proof (66 `*--steel-print.png` lines — the only frozen class since
+  SC-144 removed the legacy theme) — i.e. it destroys both safety nets at the exact moment
+  it makes a large visual change. That is the reason to defer, not the
   effort of the CSS itself.
 - **Cheaper interim answer, already shipped — but only a partial one:** the site-vs-plugin
   parity check (plan 20 Tasks 2 and 7). `npm run parity` captures the *live* site's computed
