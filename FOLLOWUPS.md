@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 65 -->
+<!-- next-id: 66 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1355,3 +1355,13 @@ open — not part of this fix).
   this class, filed separately in the SC-144 plan: the SC-123 conditional-DOM defaults
   (`sbCharLine`/`sbCharBox`/`sbVillain`) and the SC-103 ◆-divider TS constraint, both of
   which now *could* change and deliberately did not.
+
+## 65. Sidebar pin of the SECOND same-code ds-scc block silently binds the first
+**Status:** open
+- **Identified:** 2026-08-11, SC-158 review (probe 3). With two `ds-scc` blocks carrying the
+  SAME code in one note, pinning the non-first occurrence binds the sidebar to the first,
+  silently, from the very first lookup (body-text addressing has no per-occurrence
+  disambiguation). Benign today — ds-scc is read-only/static and duplicate content renders
+  identically — but a real, silent contract violation that will matter the moment strict-body
+  elements gain interactive state. Fix sketch: occurrence-index in the sidebar binding, or a
+  Notice when the body-text lookup is ambiguous.
