@@ -669,3 +669,14 @@ dse main `3a9242f`, ws `5cccff3`. Freeze 66→67 (17-line sanctioned rebaseline 
 widening; recorded in dse-verify SKILL.md; backup pre-sc146r2-bak). Battery at landed sha:
 jest 2698+1skip · shots 203 · freeze 67/67 · parity 0/0/16. SC-146 → Done. No live worktrees.
 Scott reviewing: SC-142, SC-123, SC-158 veto window.
+
+### SC-123 rulings executed, defaults flip LANDED — SC-123 → Done (2026-08-12/13)
+Scott's 4 rulings (his SC-123 comment; his "sc-132" messages were a typo): no preset
+migration; defaults FLIPPED to site parity (sbCharLine 'two', sbVillain 'banded' —
+"nobody has this code yet... do the correct thing"); sticky header → SC-160 (7.0.0, spec'd);
+link toggle dropped; per-block structural → SC-161 (Backlog). Flip landed dse `221acc9`
+(review: zero findings; 18-line statblock-family print rebaseline applied, count 67,
+recorded in dse-verify; backup pre-sc123-defaults-bak). FOLLOWUPS #67 (steel preset ≡
+defaults coupling). jest 2702 · shots 203 · freeze 67/67 · parity 0/0/16.
+SC-158 veto window closed (Scott: "sc-158 is fine"). Remaining at Scott: SC-142 Getting
+Started read-through, SC-11 cut, SC-135, SC-156.

@@ -232,6 +232,17 @@ didn't mount) plus human review of the PNGs.
     CONTENT fix (treasure Project row rendered a raw markdown literal; `markdown: true`
     in treasureLayout) necessarily reaches Legacy/print. Scott approved explicitly
     ("oh that's fine. Fix it."); rebaseline applied at landing, count unchanged at 107.
+  - **2026-08-12, SC-123 defaults flip (worktree `sc123-defaults`): 18 lines rebaselined,
+    count unchanged at 67 — APPLIED at landing.** All 18 statblock-family
+    `*--steel-print.png` lines (and ONLY those — the untouched 49 cross-checked) moved by
+    ONE ruling: Scott flipped the two site-divergent defaults to site parity
+    (`sbCharLine` 'one'→'two', `sbVillain` 'inline'→'banded') — **his sanction, SC-123
+    comment 2026-08-12: "nobody has this code yet... Lets do the correct thing"**, given in
+    direct response to the gate ask that named the frozen-shot cost. Independent re-review
+    hash-verified all 18 after-hashes against its own regenerated shots and eyeballed crops
+    (only the characteristics/villain reshapes). Backup:
+    `freeze-baseline.sha256.pre-sc123-defaults-bak`. Verified after: 67 lines, 0 duplicate
+    names.
   - **2026-08-11, SC-146 round 2 (worktree `sc146-round2`): 17 lines rebaselined + 1-line
     widening, 66 → 67 — APPLIED at landing.** The 17 rebaselined `*--steel-print.png` lines
     (statblock + its preference-variant fixtures) all trace to ONE Scott-requested change:

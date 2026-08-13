@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 67 -->
+<!-- next-id: 68 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1379,3 +1379,15 @@ open — not part of this fix).
   docs + a lint/test rule: any `--dse-*` consumption in a selector not scoped under an
   element/modal root must use a literal fallback. SC-159 ships a cross-file guard that
   every emitted class is styled — this item is the token-validity twin of that guard.
+
+## 67. `SB_PRESETS.steel` must mirror the descriptor defaults — enforced by one test, not by structure
+**Status:** open
+- **Identified:** 2026-08-12, SC-123 defaults flip. A fresh install derives its preset label
+  by comparing stored prefs to the bundles, so the steel bundle and the descriptor defaults
+  are now REQUIRED to be identical — any future default change that forgets the bundle makes
+  a fresh install read "Custom" with every gate green. Pinned two-directionally in one test
+  (scratch-falsified both ways) + a `SB_PRESETS` comment, but it's a convention, not a
+  structural impossibility.
+- **Fix sketch (when it drifts once):** derive the steel bundle FROM the descriptor defaults
+  instead of restating them — changes the exported constant's shape, hence deferred out of a
+  two-value flip.
