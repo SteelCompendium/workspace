@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 70 -->
+<!-- next-id: 71 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1408,3 +1408,11 @@ Context: `src/framework/sidebar/` + the SC-153 fix branch report
 identity — two blocks then claim the same sidebar binding. Info-level in the SC-153 review;
 no corruption, but the second block's sidebar behavior is undefined-by-accident. A future
 hardening could detect duplicate `_dse_from` ids at parse time and re-mint the second.
+
+## 70. Malice column clips at the print right edge — pre-existing, both trees (SC-154 review, 2026-08-16)
+
+The SC-154 review found the initiative tracker's Malice column clipped at the right edge in
+the steel-print rendering — present in base (`221acc9`) and branch alike, so neither caused
+nor fixed by SC-154 (the branch actually sits 6.4px further inside). Purely a print-output
+cosmetic; fix by giving the print scheme's tracker container a right-side inset or letting
+the column shrink. Evidence in `.superpowers/sdd/sc154/sc154-review-report.md` (LOW 2).
