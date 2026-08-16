@@ -700,3 +700,21 @@ dispatch queue with SC-160 (sticky header). In flight right now: SC-153 review (
 SC-154+162 impl (a1984a), SC-164 mike impl (a13092b), SC-135 phase 1 impl (a4c1daa);
 SC-152 independent review also queued (must not be aab4d301, its author). Still gated on
 Scott: SC-156 3-line print sanction (unblocks landing sc147-inserts → closes SC-147/148/156).
+
+### 2026-08-16 — SC-164 LANDED+Done; SC-154 impl complete; agent pool down to 2
+SC-164 mike-versioned docs landed to develop (`9bb24c3`, ws a3ed2e8; ledger preserved).
+Live gh-pages verified (root→latest, /dev/ banner, 14 legacy deep-link redirects; rollback
+sha 5d662f0 on the ticket). Two flags on the ticket for Scott: main lacks branch protection
+(stray pre-release push to main runs the OLD gh-deploy --force and wipes mike's layout) and
+main's manifest.json (5.1.1) ≠ its tag (6.0.1) — self-heals at the 7.0.0 manifest bump.
+SC-153 review returned FIX ROUND (Major: "Open in sidebar" regenerates the fence and
+destroys live combat state; Medium: orphan panel after user deletes fence) — fix round 1
+dispatched to aab4d301 (reviewer-as-fixer; original implementer transcript gone); LOW/INFO
+deferred as FOLLOWUPS #68/#69. SC-154+162 impl complete on sc154-tracker-layout (326a8d5,
+6 measured layout fixes + shield/skull fallback icons; 2-file steel-print freeze delta,
+hashes at .superpowers/sdd/sc154/rebaseline.txt — needs Scott sanction at landing).
+**Agent pool: a1984a + a13092b transcripts EXPIRED; spawn cap still 200/200 (fresh spawn
+retried+refused). Live: aab4d301 (SC-153 fix), a4c1daa (SC-135 ph1).** Queue: SC-152 review
+(MUST be a4c1daa — aab4d301 authored), SC-154 review (either), SC-153 re-review (prefer
+not-aab4d301 or orchestrator), SC-165 impl (sanctioned), SC-160 impl. Stale sc133-134-bugs
+worktree removed (tickets Done 08-08, tip ancestor of develop, trees clean).
