@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 68 -->
+<!-- next-id: 70 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1391,3 +1391,20 @@ open — not part of this fix).
 - **Fix sketch (when it drifts once):** derive the steel bundle FROM the descriptor defaults
   instead of restating them — changes the exported constant's shape, hence deferred out of a
   two-value flip.
+
+## 68. Sidebar "Open in sidebar" debounce-starvation window can emit a second tracker fence (SC-153 review, 2026-08-16)
+
+The SC-153 review reproduced a real-but-rare window: if the debounced settings/save timers
+are fully starved (e.g. a hammered event loop), a second tracker fence can be written before
+the first flush lands. Under normal timing it never fires; the shipped handler was also
+verified deadlock-free under full clock starvation. Deferred as low-probability; revisit if
+a user report matches "two trackers appeared after heavy vault activity."
+Context: `src/framework/sidebar/` + the SC-153 fix branch report
+(`.superpowers/sdd/sc153/sc153-review-report.md`).
+
+## 69. Copy-pasting a generated tracker block duplicates its `_dse_from` identity (SC-153 review, 2026-08-16)
+
+`_dse_from` is written into the generated fence, so a user copy-pasting the block clones the
+identity — two blocks then claim the same sidebar binding. Info-level in the SC-153 review;
+no corruption, but the second block's sidebar behavior is undefined-by-accident. A future
+hardening could detect duplicate `_dse_from` ids at parse time and re-mint the second.
