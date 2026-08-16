@@ -118,6 +118,16 @@ didn't mount) plus human review of the PNGs.
   a new/edited Steel CSS rule leaked into the print scheme. Fix it by narrowing the rule's
   selector scope (see "Steel scoping rule" below). **Never edit the baseline to accept the
   new bytes** — that defeats the entire check.
+- **Division of labor (standardized 2026-08-11 → 08-16): worktree agents NEVER edit the
+  shared baseline — only the orchestrator applies changes, at landing.** When a branch
+  legitimately moves frozen bytes, the agent's deliverable is a ready-to-apply hash file at
+  `.superpowers/sdd/<effort>/rebaseline.txt` (`<sha256>  <filename>` lines, verified
+  deterministic across 2 runs) plus before/after crops for the sanction ask. The
+  orchestrator then: (1) gets Scott's explicit sanction on the ticket (his "sanctioned" /
+  "good to go" quote is the record), (2) backs the baseline up to a dated
+  `freeze-baseline.sha256.pre-<effort>-bak`, (3) applies the lines, (4) appends a dated
+  entry to this file quoting the sanction. Widenings (additions-only) need no sanction —
+  the orchestrator verifies additions-only by sorted-diff and applies at landing.
 - **RETIREMENT — the fourth baseline operation (2026-08-11, SC-144).** Distinct from a
   widening (new names, additions-only), a sanctioned rebaseline (an approved change moves an
   existing frozen shot's bytes) and a capture-artifact correction (the harness was pinning

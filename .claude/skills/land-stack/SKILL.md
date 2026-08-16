@@ -73,6 +73,12 @@ comm -12 \
 # (usually a single-hunk CHANGELOG reconcile: keep both additions).
 ```
 
+**CHANGELOG conflicts are the routine case, not a surprise.** Nearly every dse landing
+conflicts in `CHANGELOG.md` because each branch appends under the same header. The
+standard resolution is **keep both sides' bullets** (strip the conflict markers, retain
+every addition, keep the header once) — never pick a side. Verify the merged file reads
+sanely before committing the resolution.
+
 ### 2. Cleanliness — `wt-finish` hard-aborts if EITHER tree has any porcelain output
 
 Two recurring trips, both silent until `wt-finish` refuses to run:
@@ -96,6 +102,22 @@ rest.
 ```bash
 git -C "$wt/$sub" status --porcelain   # untracked ("??") lines are the culprit
 ```
+
+**(c) Scott's LIVE vault state sits in the main checkout's dse submodule — stash-wrap
+it, never discard it.** The main checkout's `draw-steel-elements/demo-vault/` is Scott's
+actual working Obsidian vault: expect a modified `demo-vault/Welcome.md` and an untracked
+`compendium-manifest.json` (or similar) at any time. `wt-finish` hard-aborts on them.
+The standardized wrap (used on every landing since 2026-08-11):
+
+```bash
+git -C draw-steel-elements stash push -u -m "scott-vault-state-during-<name>-landing"
+devbox run -- just wt-finish "$name"     # …verify post-conditions…
+git -C draw-steel-elements stash pop     # ALWAYS pop — his state must come back
+```
+
+Verify the pop restored the same files (`git -C draw-steel-elements status --porcelain`).
+If `wt-finish` fails mid-run, still pop before diagnosing — his state must never be left
+stranded in the stash.
 
 ### 3. Run `wt-finish` alone — never chained
 

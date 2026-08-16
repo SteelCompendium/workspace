@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: Use when running a multi-ticket session as an orchestrator — the top model coordinates, gates, and reviews while background agents in isolated worktrees do all implementation. Battle-tested across the 7.0.0 endgame (2026-08-08 → 08-10).
+description: Use when running a multi-ticket session as an orchestrator — the top model coordinates, gates, and reviews while background agents in isolated worktrees do all implementation. Battle-tested across the 7.0.0 endgame (2026-08-08 → 08-16).
 ---
 
 # Orchestrate
@@ -31,10 +31,13 @@ rule #1, doc routing).
    worktrees (`just wt-new <ticket-slug>`), by agents.
 
 2. **One worktree per effort; landings serialize.** Land via the `land-stack` skill from
-   the main checkout. Every branch rebases onto `origin/main` at landing (worktree
-   submodule clones have **independent refs — fetch in the clone**, not the main
-   checkout). After any landing, message still-running agents whose branches went stale
-   (new main sha + new battery baselines).
+   the main checkout. Every branch rebases onto the submodule's **tracked branch** at
+   landing — `develop` for draw-steel-elements (SC-163 two-branch model: `develop` =
+   mainline, `main` = released content only; `docs/git-workflow.md` owns the policy),
+   `v3` for data-sdk-npm/data-gen, `main` elsewhere. Worktree submodule clones have
+   **independent refs — fetch in the clone**, not the main checkout. After any landing,
+   message still-running agents whose branches went stale (new tracked-branch sha + new
+   battery baselines).
 
 3. **Dispatch shape.** Background `Agent` per effort. Model tiering: **Opus** for design,
    judgment, reviews, anything open-ended; **Sonnet** for well-specified implementation
@@ -60,6 +63,19 @@ rule #1, doc routing).
    long-running output to files rather than streaming (the 600s stream watchdog kills
    silent agents).
 
+   **The spawn cap (learned 2026-08-11 → 08-16):** sessions cap at 200 subagent spawns;
+   the cap **survives compaction** — only a genuinely fresh session (or
+   `CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`) resets it. Past the cap, the only moves are
+   SendMessage resumes of prior identities, and **transcripts expire unpredictably** even
+   for recently-finished agents — so the live pool only shrinks. Consequences: (a) probe
+   the cap by simply attempting a spawn (clean error, no side effects); (b) when the pool
+   is tight, plan identity assignment around **author-independence** — an agent must
+   never review its own work, so track who authored what and route reviews accordingly;
+   (c) **reviewer-as-fixer is an acceptable fallback** for a fix round (the reviewer's
+   findings context is fresh) — the scoped re-review then goes to a different identity or
+   the orchestrator; (d) exiting the session kills in-flight background agents — when
+   Scott plans a restart to reset the cap, drain or checkpoint in-flight work first.
+
 5. **The review pipeline** (for anything correctness-critical or landing-bound):
    implementer → **independent reviewer** (Opus; instruct it to *execute and probe*, not
    just read — jsdom probes, decompiling vendored bundles, re-running the battery,
@@ -67,8 +83,27 @@ rule #1, doc routing).
    prescribed fixes) → fix rounds (resume the implementer with findings verbatim) →
    **scoped re-review of the delta only** → land. Design/evidence rounds skip review;
    Scott's eye is the gate there. This pipeline caught a free-healing regression, a
-   vacuous test suite, and a preview-vanishing lifecycle bug that 2000+ green tests
-   missed — it is not optional for release-bound code.
+   vacuous test suite, a preview-vanishing lifecycle bug, a sidebar button that silently
+   destroyed live combat state, and a ds-scc restamp gap that unstyled 84 CSS rules —
+   none of which 2000+ green tests saw. It is not optional for release-bound code.
+   Refinements that earned their keep:
+   - **Anything that writes into user notes gets note-integrity probes**: content
+     below/above the fence survives, two same-element blocks don't cross-talk,
+     hand-edited YAML survives re-trigger, user-deleted blocks regenerate cleanly.
+   - **Deferred findings get an explicit orchestrator ruling**: LOW/INFO findings the
+     fix round won't address go to `FOLLOWUPS.md` immediately, and the fix-round
+     dispatch cites them as out of scope — otherwise fixers "helpfully" expand scope.
+   - **Return contract**: agents are told their final text goes to the orchestrator,
+     not a human — raw facts (verdict, shas, measured battery numbers), no prose.
+   - **Orchestrator-direct review is acceptable ONLY for small infra-only diffs**
+     (CI/docs config with runtime behavior already live-verified) when the pool is
+     exhausted — never for plugin runtime code.
+
+   **Freeze-delta flow (division of labor):** agents NEVER touch the shared baseline;
+   a branch that moves frozen print bytes ships `.superpowers/sdd/<effort>/rebaseline.txt`
+   (ready-to-apply hash lines) + before/after crops. The orchestrator puts the sanction
+   ask on the ticket, and only after Scott's explicit sanction applies the lines at
+   landing — dated backup + dated record in `dse-verify`'s SKILL.md, every time.
 
 6. **Evidence discipline.** The orchestrator personally eyeballs key boards/screenshots
    before relaying to Scott (his eye has caught what agents missed; yours must try

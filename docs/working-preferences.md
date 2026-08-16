@@ -68,6 +68,16 @@ like zero progress to someone looking at the running app — that perception cos
    reviews are for correctness-critical work; be sparing on low-risk mechanical or
    CSS-value tasks.
 
+## Deferred functionality must be documented in the user-facing docs (Scott's rule, 2026-08-16)
+
+From the SC-135 rulings: *"Anything we are delaying until after 7.0.0 needs to get clearly
+documented in the site documentation. Clarity with what works and what doesnt is important
+so I dont need to be addressing a ton of 'why doesnt X work?'"* When a feature ships
+partially (a mode unsupported, a phase deferred to a backlog ticket), the shipping ticket's
+scope **includes a plain-language "what works / what deliberately doesn't yet" section in
+the plugin's site docs** — written for his non-technical userbase, not as internal ticket
+references. A deferral without that docs note is incomplete work.
+
 ## UI principle: explicit read-only states
 
 When a UI can't persist edits (e.g. DSE elements on Obsidian canvas), show that
