@@ -680,3 +680,15 @@ recorded in dse-verify; backup pre-sc123-defaults-bak). FOLLOWUPS #67 (steel pre
 defaults coupling). jest 2702 · shots 203 · freeze 67/67 · parity 0/0/16.
 SC-158 veto window closed (Scott: "sc-158 is fine"). Remaining at Scott: SC-142 Getting
 Started read-through, SC-11 cut, SC-135, SC-156.
+
+## 2026-08-16 — SC-163: dse branching model changed (develop = mainline, main = 6.0.1)
+Scott's directive executed with all gates green: origin/develop = full 7.0.0 line
+(efdced2, incl. new plugin-ci develop trigger); origin/main FORCE-RESET to the 6.0.1 tag
+(0645aca) so the gh-pages docs deploy (ci.yml, main-push-triggered) shows released content
+only; main-7.0-backup (221acc9) kept as belt-and-braces. .gitmodules dse branch → develop
+(all just machinery follows); workspace pin bumped to efdced2; local main checkout
+submodule now ON develop; git-workflow.md owns the policy. **ALL FUTURE dse LANDINGS
+TARGET develop** (wt-finish does this automatically now); at a release Scott FFs main to
+the release sha (docs deploy fires) then tags. In-flight wave (sc147-inserts,
+sc153-sidebar-dup, sc154-tracker-layout, sc152-sheet-styling — cut from 221acc9, an
+ancestor of develop) lands normally onto develop with the usual rebase.

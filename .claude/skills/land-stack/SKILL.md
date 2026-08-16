@@ -41,7 +41,7 @@ never from inside the worktree.
 ### 1. Pre-flight — verify before touching anything
 
 ```bash
-name=<env-name>; sub=<submodule>; tracked=main   # tracked = v3 for data-sdk-npm/data-gen
+name=<env-name>; sub=<submodule>; tracked=main   # tracked = develop for draw-steel-elements (SC-163), v3 for data-sdk-npm/data-gen
 wt="../worktrees/$name"
 
 # Fetch fresh state everywhere first.

@@ -26,7 +26,7 @@ The workspace pins exact commits of the **authored** sub-repos as git submodules
 | `v2/` | submodule | `main` | `SteelCompendium/v2` |
 | `steelCompendium.github.io/` | submodule | `main` | the org pages repo |
 | `compendium/` | submodule | `main` | `SteelCompendium/compendium` |
-| `draw-steel-elements/` | submodule | `main` | `SteelCompendium/draw-steel-elements` |
+| `draw-steel-elements/` | submodule | **`develop`** (mainline; `main` = RELEASED content only — see below) | `SteelCompendium/draw-steel-elements` |
 | `statblock-adapter-gl-pages/` | submodule | `main` | `SteelCompendium/statblock-adapter-gl-pages` |
 | `data-sdk-npm/` | submodule | **`v3`** (canonical; `main` = deprecated v2 line) | `SteelCompendium/data-sdk-npm` |
 | `data-gen/` | submodule | **`v3`** (deprecated/frozen) | `SteelCompendium/data-gen` |
@@ -62,6 +62,27 @@ submodule entry that looks like an accidental change. `just sync` leaves each su
 **tracked branch** (`main`, or `v3` for `data-sdk-npm` / `data-gen`) at the pinned commit —
 fast-forward only, never resetting — so you can edit immediately without the detached-HEAD
 footgun (uncommitted work isn't silently wiped by the next update, and commits land on a
+
+### `draw-steel-elements` branching model (SC-163, 2026-08-16)
+
+The DSE plugin repo is the one submodule with a two-branch model, because its docs
+(README + `docs/`, deployed to gh-pages by its `ci.yml` **on pushes to `main`** via
+`mkdocs gh-deploy`) are user-facing and must describe only *released* behavior:
+
+- **`develop` is the mainline** — every feature branch, worktree landing, and pointer bump
+  targets `develop` (`.gitmodules` `branch = develop` makes all the workspace machinery —
+  `just sync`, `wt-finish`, `wt-status` — follow it automatically).
+- **`main` holds released content only.** It sits at the last released tag (reset to
+  `6.0.1` / `0645aca` at the model's introduction; the pre-reset 7.0.0 tip is preserved on
+  `develop` and on the `main-7.0-backup` branch). It advances ONLY at a release: Scott
+  fast-forwards `main` to the release sha on `develop`
+  (`git push origin <release-sha>:refs/heads/main`), which also triggers the docs deploy —
+  then tags (his action alone, never an agent's).
+- GitHub's default branch stays `main`, so the repo's rendered README/docs are release-true.
+- CI: `plugin-ci.yml` runs on pushes to `main` AND `develop` (+ all PRs); the docs-deploy
+  `ci.yml` deliberately stays main-only.
+
+
 branch). The raw `git submodule update --init --recursive` still detaches at the pin; prefer
 `just sync`.
 
