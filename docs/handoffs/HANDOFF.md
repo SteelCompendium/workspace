@@ -718,3 +718,13 @@ retried+refused). Live: aab4d301 (SC-153 fix), a4c1daa (SC-135 ph1).** Queue: SC
 (MUST be a4c1daa — aab4d301 authored), SC-154 review (either), SC-153 re-review (prefer
 not-aab4d301 or orchestrator), SC-165 impl (sanctioned), SC-160 impl. Stale sc133-134-bugs
 worktree removed (tickets Done 08-08, tip ancestor of develop, trees clean).
+
+### 2026-08-16 (cont) — SC-153 fix round 1 green; SC-167 filed; aab4d301 → SC-154 review
+SC-153 fix `ff56aca` on sc153-sidebar-dup: bind-don't-rewrite (state survives re-press),
+orphan-panel sweep (`stillAddressable`); full battery green (jest 2712+1skip · shots 203 ·
+freeze 67/67 · parity 0/0/16), can-fail proven both directions. Fixer=reviewer (aab4d301),
+so the SCOPED RE-REVIEW of 102b43c..ff56aca(+docs note) needs DIFFERENT eyes — queued for
+the post-restart fresh pool. SC-167 filed (Backlog: explicit re-sync action; SC-153 ships
+the site-docs snapshot note per the docs-clarity rule — aab4d301 adding it to the branch
+now, then starting the SC-154+162 adversarial review). Scott plans a session restart to
+reset the spawn cap once in-flight agents drain.
