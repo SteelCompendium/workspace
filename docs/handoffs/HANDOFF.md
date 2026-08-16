@@ -692,3 +692,11 @@ TARGET develop** (wt-finish does this automatically now); at a release Scott FFs
 the release sha (docs deploy fires) then tags. In-flight wave (sc147-inserts,
 sc153-sidebar-dup, sc154-tracker-layout, sc152-sheet-styling — cut from 221acc9, an
 ancestor of develop) lands normally onto develop with the usual rebase.
+
+### 2026-08-16 — SC-165 sanctioned (Scott: "sc-165 sanctioned")
+SC-165 (strip render-inert `metadata:` from snapshot insert output; synced files unchanged)
+is greenlit for 7.0.0. Spawn cap means it queues for the first identity that frees, in the
+dispatch queue with SC-160 (sticky header). In flight right now: SC-153 review (aab4d301),
+SC-154+162 impl (a1984a), SC-164 mike impl (a13092b), SC-135 phase 1 impl (a4c1daa);
+SC-152 independent review also queued (must not be aab4d301, its author). Still gated on
+Scott: SC-156 3-line print sanction (unblocks landing sc147-inserts → closes SC-147/148/156).
