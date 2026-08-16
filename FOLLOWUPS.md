@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 71 -->
+<!-- next-id: 72 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1416,3 +1416,13 @@ the steel-print rendering — present in base (`221acc9`) and branch alike, so n
 nor fixed by SC-154 (the branch actually sits 6.4px further inside). Purely a print-output
 cosmetic; fix by giving the print scheme's tracker container a right-side inset or letting
 the column shrink. Evidence in `.superpowers/sdd/sc154/sc154-review-report.md` (LOW 2).
+
+## 71. Malice quick-add input widths are pinned to their placeholder strings (SC-154 fix, 2026-08-16)
+
+`32236ed` sizes the Malice quick-add inputs with fixed em widths chosen to fit the current
+placeholders ("Amount" at 6em, "E.g. Feytouched" at 9.5em). Reword either placeholder
+longer — or grow the row's 0.85em font — and the clip returns silently; `measureText` is
+unreliable on this element (it approved round 0's clipped widths), so any future resize
+must be verified by screenshot. Durable fix: `width: auto` + `min-width` with flex sizing.
+Handle together with #70 (the wider label box already crowds the pre-existing print
+right-edge clip). Evidence: `.superpowers/sdd/sc154/sc154-review-report.md` fix round 1.
