@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 73 -->
+<!-- next-id: 74 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1438,3 +1438,46 @@ via `pos<=to`), and drag-select from a folded link being impossible because the 
 `mousedown`. Fix shape: consult `syntaxTree(state)` at the position and bail inside
 InlineCode/FencedCode nodes; tighten the resolver with the review's probe cases as tests.
 Evidence: `.superpowers/sdd/sc135/sc135-review-report.md` (L-1, L-2, L-4).
+
+## 73. The `color-mix()` support-floor fallback idiom is inert wherever the enhanced declaration contains `var()` (SC-160, 2026-08-17)
+
+**Identified:** SC-160 (statblock sticky mini-header), running the branch in a real Obsidian
+on a scratch Xvfb display.
+
+**What:** `styles-source.css`'s SUPPORT FLOOR doctrine (the note above `.dse-pr__row`,
+~line 6123) says a `color-mix()` declaration is "invalid at parse time" on the Chromium 106
+floor, so the static declaration authored immediately above it survives. That is true only
+when the enhanced declaration contains **no `var()`**. A declaration containing `var()`
+parses fine and fails later, at **computed-value time**, which happens *after* the cascade
+has already discarded the static declaration beneath it — the property is then set to its
+`unset` value, not to the fallback. **All 15 `color-mix()` declarations in the sheet contain
+`var()`**, so on the floor engine every one of them yields `unset`, not the intended static
+twin. `test/unit/build/cssSupportFloor.test.ts` cannot see this: it is a source-text
+adjacency scan and the adjacency *is* authored.
+
+**Why:** silent, and invisible to every gate — the visual harness runs a modern Chromium
+where `color-mix()` resolves, so the static line is inert there too and the shots look right.
+It only shows up in the app. SC-160 hit the worst instance of it (a `background` shorthand on
+the sticky bar → fully transparent, pinned stats illegible over the scrolling card body);
+the remaining instances are `background-image` washes on `.dse-pr__row` and friends, where
+the failure is a missing tier wash rather than an unreadable surface — cosmetic, but real.
+
+**Context (measured, not reasoned):** real Obsidian here is Chromium 106.0.5249.199 /
+Electron 21.4.1 — the Obsidian *asar* self-updates, the Electron shell does not, which is
+exactly why the floor is 106. Probed in-app:
+`background: #1a1e21; background: linear-gradient(…color-mix(…)…)` with **literal** colours
+keeps `rgb(26, 30, 33)`; the same pair with `var()` computes to `rgba(0, 0, 0, 0)` /
+`background-image: none`. The shipped `.dse-pr__row` pair likewise computes to
+`background-image: none`.
+
+**Fix shape:** wrap the enhanced declarations in
+`@supports (background: color-mix(in srgb, red 14%, blue))` — a floor engine never enters
+the block, so the static declaration stands. SC-160 does this for the sticky bar (keeping the
+pair *inside* the block so the existing adjacency guard still passes) and leaves the other
+instances alone. Sweep the remaining 13 the same way, correct the doctrine note's
+"invalid at parse time" claim, and teach `cssSupportFloor.test.ts` to require the
+`@supports` gate whenever the enhanced declaration contains `var()`.
+
+**Effort:** small-medium (mechanical sweep + one guard change + a re-shoot).
+
+Tracked as **SC-171** (7.0.0) — the sweep + a gate that can see it.
