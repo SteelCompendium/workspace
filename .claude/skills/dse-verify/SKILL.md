@@ -57,6 +57,11 @@ A pipe or a trailing command can silently turn a real failure into an apparent s
   `$PIPESTATUS` doesn't survive the devbox sh wrapper, you can't recover the real code that
   way either.
 - `cmd; echo done` has the same effect: `echo`'s exit status (0) becomes the new `$?`.
+- `devbox run -- bash -c "cmd; echo X=\$?"` (DOUBLE quotes) reported `X=0` for a jest run
+  with 6 real failures (SC-165 review, 2026-08-16) — the escaped `\$?` is expanded by the
+  outer shell/devbox wrapper before bash ever sees it. Never trust an echoed `$?` through
+  double quotes; read the tool's own textual summary (jest's "Tests:" line, `freeze OK`,
+  parity's counts) as the truth, or use single quotes with the gate command LAST.
 
 **Rule: whichever command's pass/fail you actually need, make it the LAST thing evaluated in
 the `bash -c '...'` string** — no `| tail`, no `; echo`, nothing chained after it:
