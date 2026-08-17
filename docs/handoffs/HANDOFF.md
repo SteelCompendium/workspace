@@ -766,3 +766,12 @@ green (jest 2742+1skip/169, shots 203, freeze 67/67, parity 0/0/16). Concern: po
 coverage reasoned, not e2e-verified. SC-135 → Todo (done pending independent review+land;
 a4c1daa authored BOTH phases — review needs different eyes, post-restart). a4c1daa now on
 SC-154 round 2 (Awaiting). Queue unchanged otherwise.
+
+### 2026-08-16 — SC-169 (element menu panel) written up; rulings taken; spec phase queued
+Scott filed SC-169 (7.0.0): standard hover menu panel + whole-element collapse for HFS
+containers. His 4 rulings recorded on the ticket (collapse = YAML default + session
+toggles, never note-writes; edit icon gated by authoringControls; card-like opt-in only;
+mobile = always-visible panel + top space, Platform.isMobile). Spec-phase brief at
+.superpowers/sdd/sc169/spec-brief.md — dispatch when capacity frees (taste gate before
+rollout). Queue: SC-154 r2 (in flight, a4c1daa) → re-reviews 153/154/135 → SC-152 review
+→ SC-165 → SC-160 → SC-169 spec.
