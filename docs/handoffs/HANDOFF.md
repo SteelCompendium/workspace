@@ -755,3 +755,14 @@ same actions; keep DOM handler as safety net; end-to-end xdotool proof required)
 to a4c1daa (RESUMED fine — the usage-limit death was transient). SC-135 → Awaiting.
 Pool: a4c1daa on SC-135 1b; NOTHING else live. Queue: SC-154 round 2, SC-153+SC-154
 re-reviews, SC-152 review, SC-165, SC-160.
+
+### 2026-08-16 (night) — SC-135 phase 1b DONE end-to-end; a4c1daa → SC-154 round 2
+Phase 1b `5e56f6a` on sc135-links: CM6 extension (sccLinkAtPos.ts pure resolver +
+sccLinkCm6.ts registerEditorExtension, Prec.highest REQUIRED — Obsidian's core mousedown
+otherwise swallows it silently; recorded as a repo footgun candidate). PROVEN twice on
+real Obsidian with OS-level clicks: folded-LP plain click navigates; raw-syntax plain
+click only moves cursor; Ctrl-click navigates; Source-mode Ctrl-click navigates. Battery
+green (jest 2742+1skip/169, shots 203, freeze 67/67, parity 0/0/16). Concern: popout CM6
+coverage reasoned, not e2e-verified. SC-135 → Todo (done pending independent review+land;
+a4c1daa authored BOTH phases — review needs different eyes, post-restart). a4c1daa now on
+SC-154 round 2 (Awaiting). Queue unchanged otherwise.
