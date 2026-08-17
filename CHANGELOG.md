@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: homebrew snapshots no longer paste a duplicate you can't edit (SC-165).**
+  "Insert compendium block" (the copy-and-edit snapshot) used to include the entry's
+  `metadata:` block — for an ability, a second copy of most of the entry whose edits never
+  changed the rendered card. Snapshots now drop it (an ability snapshot roughly halves);
+  synced compendium files are unchanged. Pinned by tests that render the snapshot and the
+  original synced block byte-identically.
 - **DSE plugin: the "legacy" theme is gone (SC-144).** The Steel look is now the only look.
   The Theme row leaves Settings → Appearance, and a beta vault that had chosen Legacy is
   moved to Steel silently on next load. No released user is affected — the picker only ever

@@ -802,3 +802,16 @@ because their padding selectors are DEAD (class on root vs descendant selector),
 canvas-character-sheet.png stale (obsidian-sourced) → fresh fix-round agent (reviewer
 transcript expired). Live: SC-154 r2, SC-153 fr2, SC-135 fr1, SC-152 fr1, SC-165, SC-160.
 Queued: SC-169 spec, SC-170.
+
+### 2026-08-16 — SC-165 LANDED to develop (`c39cf4f`) + Done
+Review LAND (render fidelity proven byte-identical across 3 families; stronger than the
+branch's own proof); text-only fix round (docs no longer overclaim; fidelity assertion
+adopted as 3 permanent tests, can-fail proven — it catches deny-list overreach the delete
+sweep structurally cannot). ws 30733d1; ledger preserved. develop moved 9bb24c3→c39cf4f:
+in-flight branches cut from 9bb24c3 (sc160, sc169) rebase trivially; older ones
+(sc147/152/153/154 from 221acc9, sc135 from efdced2) rebase at landing as usual —
+CHANGELOG adjacent-hunk conflicts expected (keep-both). Reviewer footgun recorded in
+dse-verify (double-quoted \$? through devbox reports false 0). Load-sensitive jest suites
+noted: settings-tab/settings-preview time out at 5s under CPU saturation — re-run before
+believing red there. Live: SC-154 r2, SC-153 fr2, SC-135 fr1, SC-152 fr1, SC-160, SC-169.
+Queued: SC-170.
