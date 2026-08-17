@@ -840,3 +840,14 @@ resource/surges selectors fixed → 2-line print rebaseline (heroic-resource, su
 NEEDS SANCTION; canvas-character-sheet.png stale-pending; SC-152 comment/ask NOT yet
 posted (one image uploaded). Next: post SC-152 ask, resume the 4 killed agents, SC-164
 CI fix, SC-170.
+
+### 2026-08-17 — SC-164 CI fix LANDED (`e7442f2`) + Done; SC-154 r2 + SC-152 asks live
+CI fix (shallow explicit-refspec gh-pages fetch before mike) landed to develop; the landing
+push was the live test: **develop ci run SUCCEEDED (first ever)**, gh-pages 032d296 on top
+of mike tip 0b3752f, versions.json = 6.0.1/latest + dev. SC-164 Done. SC-154 round 2 done
+(`975fde6`, 12 defects incl. Scott's 3 = one root cause; 44-combo zero-inset sweep) — TASTE
++ 2-line print SANCTION ask live (In Progress+Needs Review). SC-152 fr1 done (`4c92257`) —
+2-line print SANCTION + 2 taste calls ask live. Scott's queue: SC-154, SC-152, SC-156.
+Live agents: SC-135 scoped re-review (resumed), SC-160 (fresh, from WIP), SC-169 spec
+(resumed). Queued: SC-170. develop tip e7442f2 — all four in-flight branches now behind it
+(rebase at landing; expected trivial except CHANGELOG keep-both).
