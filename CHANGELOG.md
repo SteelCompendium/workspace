@@ -8,6 +8,15 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: compendium links work in Live Preview and Source mode (SC-135).** A
+  `scc.v1:` link typed into a note used to prompt "open external link?" and then do
+  nothing outside Reading view. Clicking one now opens the compendium note everywhere
+  (Reading view, Live Preview, Source mode, popout windows), with Ctrl/Cmd- and
+  middle-click for new tab/split, matching Obsidian's own conventions (in raw-syntax
+  view a plain click just places the cursor). Backlinks/graph still don't see these
+  links, and links inside code spans behave slightly differently while editing — both
+  spelled out in the docs (SC-166 tracks the sync-format option; FOLLOWUPS #72 the
+  code-span nuance).
 - **DSE plugin: "Open in sidebar" no longer duplicates the initiative tracker or wipes
   live combat (SC-153).** Pressing the encounter's sidebar button now binds to the tracker
   block the note already has instead of appending another (and, in the fix's first cut,
