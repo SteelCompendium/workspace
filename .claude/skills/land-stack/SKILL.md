@@ -49,6 +49,15 @@ git fetch origin
 git -C "$sub" fetch origin
 git -C "$wt/$sub" fetch origin
 
+# 0) ⚠️ WHICH BRANCH WILL wt-finish PUSH TO? It reads the tracked branch from the
+#    WORKTREE's superproject .gitmodules — NOT the main checkout's. A worktree cut before
+#    a tracked-branch change (SC-163 moved dse main→develop on 2026-08-16) still says the
+#    OLD branch and wt-finish will push there. This pushed a 7.0 branch onto dse `main`
+#    (released-only, pinned at 6.0.1) on 2026-08-16 — recovered, but it fired the old
+#    docs workflow, which wiped the mike gh-pages layout. CHECK EVERY TIME:
+git -C "$wt" config -f "$wt/.gitmodules" "submodule.$sub.branch"   # must equal $tracked
+#    If it doesn't: git -C "$wt" checkout origin/main -- .gitmodules && commit it (superproject-only).
+
 # a) Is the submodule push a fast-forward? (local branch must contain origin's tip)
 git -C "$wt/$sub" merge-base --is-ancestor "origin/$tracked" "$name" \
   && echo "FF-safe" || echo "DIVERGED — reconcile before pushing"

@@ -815,3 +815,28 @@ dse-verify (double-quoted \$? through devbox reports false 0). Load-sensitive je
 noted: settings-tab/settings-preview time out at 5s under CPU saturation — re-run before
 believing red there. Live: SC-154 r2, SC-153 fr2, SC-135 fr1, SC-152 fr1, SC-160, SC-169.
 Queued: SC-170.
+
+## 2026-08-17 (early) — SC-153 LANDED (with an INCIDENT); usage window killed 4 agents
+**SC-153 landed to develop `a2fc374` + Done** (ws 6bdc630, ledger preserved). Rebased
+221acc9→c39cf4f clean; jest 2729 = 2714+15 (SC-165) exact.
+**INCIDENT:** wt-finish pushed sc153 to dse **main** (0645aca→a2fc374) — the sc153
+worktree's superproject predates SC-163 so its .gitmodules said `branch = main`.
+Recovery, all lease-guarded: dse main force-reset back to 0645aca (6.0.1); branch pushed
+to develop; superproject gitlink conflict resolved by hand (merge 6bdc630, .gitmodules
+kept develop). SECOND-ORDER: the restore push ran the OLD ci.yml (`gh-deploy --force`) →
+gh-pages WIPED to a single mkdocs commit → force-restored to mike tip 0b3752f (latest=
+6.0.1, dev, versions.json, redirects). Then found: **SC-164's develop→dev deploy has
+FAILED in CI on every run** (checkout has no gh-pages → mike push non-FF) — SC-164
+REOPENED (Todo) with the fix (fetch gh-pages before mike deploy); must land before SC-11.
+Prevented recurrence: sc147/sc152/sc154 worktrees had the same stale .gitmodules → each
+got a superproject-only "sync .gitmodules" commit; land-stack pre-flight step 0 added;
+git-workflow.md documents both footguns.
+**Usage window limit (resets ~1:50am ET / next window) killed 4 agents mid-task:** SC-154
+r2 (was writing its Linear comment — check worktree for committed work), SC-135 scoped
+re-review (battery green, mutation probes not started), SC-160 impl (mid harness
+manifest), SC-169 spec (mid shoot.mjs). All resumable by SendMessage or fresh dispatch;
+worktrees hold their state. SC-152 fr1 DONE (`4c92257`): hero un-double-plated, dead
+resource/surges selectors fixed → 2-line print rebaseline (heroic-resource, surges)
+NEEDS SANCTION; canvas-character-sheet.png stale-pending; SC-152 comment/ask NOT yet
+posted (one image uploaded). Next: post SC-152 ask, resume the 4 killed agents, SC-164
+CI fix, SC-170.

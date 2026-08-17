@@ -80,7 +80,20 @@ The DSE plugin repo is the one submodule with a two-branch model, because its do
   then tags (his action alone, never an agent's).
 - GitHub's default branch stays `main`, so the repo's rendered README/docs are release-true.
 - CI: `plugin-ci.yml` runs on pushes to `main` AND `develop` (+ all PRs); the docs-deploy
-  `ci.yml` deliberately stays main-only.
+  `ci.yml` runs on both — `main` → mike `latest`, `develop` → mike `dev` (SC-164).
+
+**Two footguns of this model, both hit on 2026-08-16 (`land-stack` skill has the checks):**
+
+1. **A worktree created BEFORE a tracked-branch change carries the OLD `.gitmodules`.**
+   `wt-finish` reads the tracked branch from the *worktree's* superproject file, so an
+   old worktree pushes to the old branch. This fast-forwarded dse `main` from 6.0.1 to a
+   7.0 sha (recovered with a lease-guarded `push 0645aca:refs/heads/main`). Sync a
+   worktree's `.gitmodules` from `origin/main` before its first landing.
+2. **Any push to dse `main` runs the ci.yml *at that sha*.** Restoring `main` to 6.0.1
+   re-ran the OLD `mkdocs gh-deploy --force`, which overwrote gh-pages and wiped the mike
+   layout (recovered with a lease-guarded push of the mike tip back to gh-pages). Until a
+   release moves `main` past SC-164, treat every push to `main` — including a restore — as
+   a gh-pages wipe, and restore gh-pages from the last mike commit afterward.
 
 
 branch). The raw `git submodule update --init --recursive` still detaches at the pin; prefer

@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: "Open in sidebar" no longer duplicates the initiative tracker or wipes
+  live combat (SC-153).** Pressing the encounter's sidebar button now binds to the tracker
+  block the note already has instead of appending another (and, in the fix's first cut,
+  regenerating it — which would have reset round/HP mid-combat; the review caught that).
+  A user-deleted tracker regenerates cleanly with exactly one sidebar panel. The tracker
+  is a snapshot: encounter edits don't flow into it (docs say so; SC-167 tracks a re-sync
+  action).
 - **DSE plugin: homebrew snapshots no longer paste a duplicate you can't edit (SC-165).**
   "Insert compendium block" (the copy-and-edit snapshot) used to include the entry's
   `metadata:` block — for an ability, a second copy of most of the entry whose edits never
