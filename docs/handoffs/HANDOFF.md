@@ -787,3 +787,18 @@ SC-160 impl (new wt sc160-sticky-header off 9bb24c3). Linear: SC-165/160/135/154
 Still queued: SC-169 spec phase (brief at .superpowers/sdd/sc169/spec-brief.md).
 Scott gates open: SC-156 sanction (sc147-inserts landing), SC-154 sanction (after r2),
 SC-152 taste (after review), SC-11 cut.
+
+### 2026-08-16 (late) — three reviews back, three fix rounds live; SC-170 filed
+SC-153 re-review: code LAND, 3 text/edge fixes (stale CHANGELOG line, misleading Notice on
+"Create tracker block", orphan sweep must skip degraded ds-scc panels) → fix round 2 to the
+reviewer. SC-135 review: FIX ROUND — H-1 middle-click navigates TWICE (mousedown+auxclick
+both fire; delete auxclick), M-1 docs sentence broken, M-2 phase-1b tests vacuous (reviewer
+proved real CM6 jsdom coverage feasible), L-3 multicursor gating, L-6 popout Set leak → fix
+round to the reviewer; L-1/L-2/L-4 deferred as FOLLOWUPS #72; Prec.highest requirement
+CONFIRMED by execution; CM6 correctly external in esbuild. SC-152 review: FIX ROUND — H-1
+ds-hero double-plated (.dse-hero already IS the plate), H-2 heroic-resource/surges crop
+because their padding selectors are DEAD (class on root vs descendant selector), H-3 real
+@media print gets the full Steel plate — PRE-EXISTING, filed SC-170 (7.0.0, Todo), M-1
+canvas-character-sheet.png stale (obsidian-sourced) → fresh fix-round agent (reviewer
+transcript expired). Live: SC-154 r2, SC-153 fr2, SC-135 fr1, SC-152 fr1, SC-165, SC-160.
+Queued: SC-169 spec, SC-170.

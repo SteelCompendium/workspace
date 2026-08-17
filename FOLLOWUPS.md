@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 72 -->
+<!-- next-id: 73 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1426,3 +1426,15 @@ unreliable on this element (it approved round 0's clipped widths), so any future
 must be verified by screenshot. Durable fix: `width: auto` + `min-width` with flex sizing.
 Handle together with #70 (the wider label box already crowds the pre-existing print
 right-edge clip). Evidence: `.superpowers/sdd/sc154/sc154-review-report.md` fix round 1.
+
+## 72. CM6 scc-link click resolver has no syntax awareness — links inside inline code / fences navigate (SC-135 review, 2026-08-16)
+
+`src/refs/sccLinkAtPos.ts` scans line text for `[text](scc…)`, so an `scc.v1:` link typed inside
+a backtick span or a code fence still resolves and navigates on click in Live Preview/Source,
+where Reading view (correctly) does not. Measured blast radius: 0 of 37,771 compendium links —
+user-notes only. Also deferred from the same review: resolver edge cases (nested brackets,
+`[![img]](scc:)`, escaped brackets, paren-in-URL false-positive, trailing comma half-clickable
+via `pos<=to`), and drag-select from a folded link being impossible because the handler acts on
+`mousedown`. Fix shape: consult `syntaxTree(state)` at the position and bail inside
+InlineCode/FencedCode nodes; tighten the resolver with the review's probe cases as tests.
+Evidence: `.superpowers/sdd/sc135/sc135-review-report.md` (L-1, L-2, L-4).
