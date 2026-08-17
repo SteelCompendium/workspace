@@ -728,3 +728,19 @@ the post-restart fresh pool. SC-167 filed (Backlog: explicit re-sync action; SC-
 the site-docs snapshot note per the docs-clarity rule — aab4d301 adding it to the branch
 now, then starting the SC-154+162 adversarial review). Scott plans a session restart to
 reset the spawn cap once in-flight agents drain.
+
+### 2026-08-16 (late) — pool DRAINED; two Scott gates live; safe to restart session
+SC-154 fix round 1 done (`32236ed`: quick-add widths 6em/9.5em, placeholders verified
+complete BY PIXELS; battery green; rebaseline.txt regenerated — encounter hash unchanged
+from round 0, initiative moved). Evidence preserved to .superpowers/sdd/sc154/evidence/
+(scratchpad dies with the session). SANCTION ASK LIVE on SC-154 (In Progress+Needs Review,
+3 inline images). FOLLOWUPS #71 (input width ≡ placeholder coupling). SC-135 phase 1 DONE
+on sc135-links (`51c3f18`, battery green +19 tests, docs section in) but the implementer
+found LP links are CM6 spans, not anchors — the handler may not fire on the PRIMARY bug
+surface; 30-SECOND MANUAL TEST ASK LIVE on SC-135 (In Progress+Needs Review). Its agent
+died at the finish line on the usage-window limit (resets 2:10am ET) — work was already
+committed. **Both agent identities now idle/dead — NOTHING in flight; Scott can restart
+whenever.** Post-restart queue: SC-153 scoped re-review (102b43c..a0c23e4, fresh eyes),
+SC-154 scoped re-review (326a8d5+32236ed, fresh eyes), SC-152 review (NOT aab4d301),
+SC-165 impl (sanctioned), SC-160 impl. Scott gates: SC-156 sanction, SC-154 sanction,
+SC-135 LP click test, SC-152 taste gate (post-review), SC-11 cut.
