@@ -744,3 +744,14 @@ whenever.** Post-restart queue: SC-153 scoped re-review (102b43c..a0c23e4, fresh
 SC-154 scoped re-review (326a8d5+32236ed, fresh eyes), SC-152 review (NOT aab4d301),
 SC-165 impl (sanctioned), SC-160 impl. Scott gates: SC-156 sanction, SC-154 sanction,
 SC-135 LP click test, SC-152 taste gate (post-review), SC-11 cut.
+
+### 2026-08-16 (later) — Scott returns: SC-154 round 2 wanted; SC-135 LP confirmed broken
+Scott on SC-154: "still looking really rough" — comprehensive spacing pass required
+(3 named examples + "other issues"); round-2 brief at .superpowers/sdd/sc154/round2-brief.md;
+sanction ask superseded (hashes will move again). SC-154 → Todo (no agent free; aab4d301
+transcript EXPIRED). Scott's LP test + pasted DOM confirmed SC-135 concern #1: cm-link
+spans, no anchor — phase 1b (CM6 EditorView extension: posAtCoords → link-at-position →
+same actions; keep DOM handler as safety net; end-to-end xdotool proof required) dispatched
+to a4c1daa (RESUMED fine — the usage-limit death was transient). SC-135 → Awaiting.
+Pool: a4c1daa on SC-135 1b; NOTHING else live. Queue: SC-154 round 2, SC-153+SC-154
+re-reviews, SC-152 review, SC-165, SC-160.
