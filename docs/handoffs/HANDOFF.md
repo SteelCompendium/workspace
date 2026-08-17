@@ -877,3 +877,18 @@ carry into rollout: ds-stamina double-collapse (old kit header), mobile top-spac
 card-anchored panel on stamina, mkdocs exclude_docs unvalidated locally, 3 rewritten
 assertions need reviewer eye. SC-170 dispatched (wt sc170-real-print off 478f991).
 Live: SC-160, SC-170. Scott's queue: SC-154, SC-152, SC-156, SC-169.
+
+### 2026-08-17 — SC-160 LANDED (`c676d58`) + Done; freeze 67→72; SC-171 dispatched
+SC-160 pipeline: impl (resumed from killed WIP) → adversarial review (real Obsidian Chromium
+106; FIX ROUND: print guard inert (0,1,0) vs reveal (0,5,0), FOLLOWUPS #73 count wrong,
+indent absent) → fix round (`@media screen` on reveal — one declaration path, composes with
+SC-170; indent declined on evidence: Obsidian settings re-render moves DocumentFragment
+children out → pinned) → fresh-eyes re-review LAND (print fix reproduces on Chromium 149
+too; decline correct, stated reasons wrong) → text polish → rebased 478f991→c676d58 clean.
+**Freeze widening APPLIED at landing: +5 statblock-sticky* print lines, 67→72, additions-
+only proven, backup .pre-sc160-widening-bak, hashes from the REBASED tree; recorded in
+dse-verify.** ws df9fb5c (superproject gitlink UU resolved by hand again — first attempt
+short-circuited because the main checkout submodule hadn't fetched the new sha: FETCH
+FIRST). SC-171 (color-mix sweep, 8 ungated decls; gate test that can see it) dispatched
+(wt sc171-colormix off c676d58). Session tally: SC-165/153/164/135/160 landed+Done.
+Live: SC-170, SC-171. Scott's queue: SC-154, SC-152, SC-156, SC-169.
