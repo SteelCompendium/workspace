@@ -1480,4 +1480,9 @@ instances alone. Sweep the remaining 13 the same way, correct the doctrine note'
 
 **Effort:** small-medium (mechanical sweep + one guard change + a re-shoot).
 
+**Correction (SC-160 adversarial review, measured on the floor engine):** the count is **10**
+declarations (8 pre-existing ungated + 2 new on the SC-160 branch, already gated there), not
+15 — and the residue is not merely cosmetic: `.dse-sb > .dse-head` (the statblock header)
+loses `background-image`, `background-color` AND `border-bottom` entirely.
+
 Tracked as **SC-171** (7.0.0) — the sweep + a gate that can see it.
