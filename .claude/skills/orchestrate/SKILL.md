@@ -133,6 +133,10 @@ rule #1, doc routing).
   occasionally no-op silently — verify the response, retry once.
 - Agents' harness may block report-file writes — briefs must say "return inline if the
   write is blocked."
+- **Scratchpad is pre-populated across sessions/agents.** An agent keying a wait-loop on a
+  scratch log's *contents* matched a stale log from a different branch and read a false
+  `FREEZE VIOLATED` (SC-160 fix round, 2026-08-17). Tell agents: never wait on scratch
+  filenames/contents — read the process's own output, or write to a per-run unique path.
 - The freeze baseline (`.superpowers/sdd/freeze-baseline.sha256`) is **machine-local**
   (screenshot bytes are not portable across machines). On a new machine, regenerate it
   from a clean `main` checkout before trusting freeze gates — procedure in `dse-verify`.
