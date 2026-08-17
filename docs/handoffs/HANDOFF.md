@@ -851,3 +851,16 @@ of mike tip 0b3752f, versions.json = 6.0.1/latest + dev. SC-164 Done. SC-154 rou
 Live agents: SC-135 scoped re-review (resumed), SC-160 (fresh, from WIP), SC-169 spec
 (resumed). Queued: SC-170. develop tip e7442f2 — all four in-flight branches now behind it
 (rebase at landing; expected trivial except CHANGELOG keep-both).
+
+### 2026-08-17 — SC-135 LANDED (`478f991`) + Done
+Fresh-eyes re-review LAND (all fixes mutation-proven; L-6 popout cleanup leak-free; window-
+close signature verified vs obsidian.d.ts); polish round (R-4 docs deferrals added per
+Scott's clarity rule; two vacuous assertions made falsifiable — the popout one needed an
+iframe, createHTMLDocument has no browsing context; R-3 teardown). Rebased efdced2→e7442f2
+(CHANGELOG keep-both ×1); post-rebase jest 2790 = 2763+27 exact. wt-finish pushed submodule
+OK then hit the superproject gitlink conflict again (old worktree superproject history) —
+resolved by hand as before (ws 8950db7). NOTE for land-stack: worktrees whose superproject
+branch predates several main merges will keep hitting this gitlink UU; resolution = checkout
+the pushed tip in the main checkout's submodule, add, commit "merge <env> into main", push.
+Session tally: SC-165, SC-153, SC-164, SC-135 landed+Done. Live: SC-160, SC-169. Scott's
+queue: SC-154, SC-152, SC-156. Queued: SC-170.
