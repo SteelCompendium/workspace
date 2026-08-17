@@ -49,6 +49,17 @@ devbox run -- bash -c 'cd /home/scott/code/steelCompendium/worktrees/<name>/draw
 `$PIPESTATUS` and `${var:-x}`-style substitutions **break under devbox's sh wrapper** — don't
 rely on them to recover a command's exit code.
 
+### Load-sensitive jest suites (shared build host, 2026-08-16)
+
+With several agents running batteries concurrently (1-min load 45–57 observed), jest's
+default 5s per-test timeout fires in the two slowest suites — `test/dom/views/settings-tab`
+and `settings-preview` — producing 4–6 "Exceeded timeout" failures that look like a
+regression and are not. Proven by A/B: the BASE commit under the same load fails the same
+five tests; a re-run on a quiet machine is fully green. **Rule: on a timeout-shaped red in
+those suites, check `/proc/loadavg` and re-run before believing it** — and never let a
+fix round "address" it. Prefer to run the full battery when load is low; tsc/lint/shots/
+freeze/parity are not load-sensitive in the same way.
+
 ### THE exit-code footgun
 
 A pipe or a trailing command can silently turn a real failure into an apparent success:
