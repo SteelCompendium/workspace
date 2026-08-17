@@ -281,6 +281,16 @@ didn't mount) plus human review of the PNGs.
     (`r2-item3-notch-print.png`). The widening adds `statblock-with-captain--steel-print.png`
     (the new 4-secondary-cell fixture). Backup: `freeze-baseline.sha256.pre-sc146r2-bak`.
     Verified after: `freeze OK (67/67 steel-print PNGs byte-identical)`, exit 0.
+  - **2026-08-17, SC-160 statblock sticky mini-header (worktree `sc160-sticky-header`,
+    landed dse `c676d58`): 5-line widening (additions-only), 67 → 72 — APPLIED at landing by
+    the orchestrator.** The 5 lines are `statblock-sticky{,-unscrolled,-nometa,-off,-narrow}
+    --steel-print.png` — new fixture NAMES only; the sticky is screen-only chrome (reveal rule
+    under `@media screen` + `:not([data-dse-print="on"])`), so three of the five print twins
+    are byte-identical to each other (bar inert in print) — expected. Hashes generated from
+    the REBASED tip in the landing tree, not the agent's rebaseline file. Additions-only proof:
+    sorted diff 0 `<` / 5 `>`; no duplicate names. Backup:
+    `freeze-baseline.sha256.pre-sc160-widening-bak`. Verified after: `freeze OK (72/72
+    steel-print PNGs byte-identical)`, exit 0. No sanction needed (no existing hash moved).
   - **2026-08-11, SC-145 edit-button placement (worktree `sc145-edit-button`): 12-line
     widening (additions-only), 188 → 200 — APPLIED at landing by the orchestrator.** The 12
     lines are the frozen-class twins of 4 new `*-edit-btn` authoring-controls fixtures (the

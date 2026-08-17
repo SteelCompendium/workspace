@@ -8,6 +8,15 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: statblock sticky mini-header (SC-160).** While a statblock's own header is
+  scrolled out of view, a compact bar with the monster's name and core stats pins to the top
+  of the pane (Reading view, sidebar in a compact form, popout windows); inert on canvas
+  and in print/PDF. Two new settings, both ON to match the site: "Sticky mini-header" and a
+  dependent "↳ Sticky mini-header: include secondary stats" (Immunity/Weakness/Movement
+  row). Documented limits: no bar inside callouts (they don't scroll); the bar briefly
+  covers a strip of following text at the very end of a statblock. Real-Obsidian
+  verification of this feature also surfaced SC-171 (color-mix fallbacks inert on the
+  app's Chromium 106 — statblock header loses its background there today).
 - **DSE plugin: compendium links work in Live Preview and Source mode (SC-135).** A
   `scc.v1:` link typed into a note used to prompt "open external link?" and then do
   nothing outside Reading view. Clicking one now opens the compendium note everywhere
