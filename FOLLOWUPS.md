@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 74 -->
+<!-- next-id: 75 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1486,3 +1486,13 @@ declarations (8 pre-existing ungated + 2 new on the SC-160 branch, already gated
 loses `background-image`, `background-color` AND `border-bottom` entirely.
 
 Tracked as **SC-171** (7.0.0) — the sweep + a gate that can see it.
+
+## 74. PDF export shows the "Read-only" badge overlapping the statblock role banner (SC-170 review, 2026-08-17)
+
+Every real Obsidian PDF export renders the framework's `data-dse-readonly` badge (stamped
+because the exporter's hidden popout can't persist) on top of the statblock's role banner —
+pre-existing, present at base, not caused by SC-170's print fix. Under print media the badge
+should either be suppressed (a PDF is read-only by nature; the badge conveys nothing) or
+placed off the banner. Fix in the print scheme (`@media print` + the twin), freeze twin bytes
+must not move unless the badge is visible in the twin too (check). Evidence: SC-170 review
+report L-3, `.superpowers/sdd/sc170/`.
