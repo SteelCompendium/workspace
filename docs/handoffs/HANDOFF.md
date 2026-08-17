@@ -864,3 +864,16 @@ branch predates several main merges will keep hitting this gitlink UU; resolutio
 the pushed tip in the main checkout's submodule, add, commit "merge <env> into main", push.
 Session tally: SC-165, SC-153, SC-164, SC-135 landed+Done. Live: SC-160, SC-169. Scott's
 queue: SC-154, SC-152, SC-156. Queued: SC-170.
+
+### 2026-08-17 — SC-169 prototype at Scott's gate; SC-170 dispatched
+SC-169 spec+prototype DONE on sc169-menu-panel (`1ac671a`, rebased on e7442f2): framework
+chrome slot (`ElementDefinition.chrome`), withReference lifts it, `collapsed:` reserved
+key + SessionStore toggles, mobile via Platform seam, panel absent from print (67/67 held),
+24 new fixture names (widening pending, 8 print lines), jest 2758. Prototype on statblock/
+hero/stamina; 13 evidence PNGs; Linear comment with A/B/C ownership options; orchestrator
+eyeballed stacked + collapsed shots — matches Scott's spec. 5 open questions posted;
+SC-169 In Progress+Needs Review. Rollout = follow-on phase after his calls. Concerns to
+carry into rollout: ds-stamina double-collapse (old kit header), mobile top-space vs
+card-anchored panel on stamina, mkdocs exclude_docs unvalidated locally, 3 rewritten
+assertions need reviewer eye. SC-170 dispatched (wt sc170-real-print off 478f991).
+Live: SC-160, SC-170. Scott's queue: SC-154, SC-152, SC-156, SC-169.
