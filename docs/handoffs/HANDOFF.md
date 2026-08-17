@@ -775,3 +775,15 @@ mobile = always-visible panel + top space, Platform.isMobile). Spec-phase brief 
 .superpowers/sdd/sc169/spec-brief.md — dispatch when capacity frees (taste gate before
 rollout). Queue: SC-154 r2 (in flight, a4c1daa) → re-reviews 153/154/135 → SC-152 review
 → SC-165 → SC-160 → SC-169 spec.
+
+## 2026-08-16 (session restart) — spawn cap RESET; full parallel fan-out
+Scott restarted the CLI (/resume); cap confirmed reset (fresh spawns work). Killed agent's
+SC-154 round-2 partial work (uncommitted view.ts + styles-source.css, tsc/lint clean) left
+in the worktree — new implementer told to build on it critically, not discard. SIX agents
+live in parallel: SC-154 round 2 (impl, from partial), SC-153 scoped re-review
+(102b43c..a0c23e4), SC-135 phases 1+1b review (efdced2..5e56f6a), SC-152 review
+(221acc9..3e67b60), SC-165 impl (new wt sc165-snapshot-meta off develop 9bb24c3),
+SC-160 impl (new wt sc160-sticky-header off 9bb24c3). Linear: SC-165/160/135/154 Awaiting.
+Still queued: SC-169 spec phase (brief at .superpowers/sdd/sc169/spec-brief.md).
+Scott gates open: SC-156 sanction (sc147-inserts landing), SC-154 sanction (after r2),
+SC-152 taste (after review), SC-11 cut.
