@@ -892,3 +892,18 @@ short-circuited because the main checkout submodule hadn't fetched the new sha: 
 FIRST). SC-171 (color-mix sweep, 8 ungated decls; gate test that can see it) dispatched
 (wt sc171-colormix off c676d58). Session tally: SC-165/153/164/135/160 landed+Done.
 Live: SC-170, SC-171. Scott's queue: SC-154, SC-152, SC-156, SC-169.
+
+### 2026-08-17/18 — SC-171 LANDED (`8b6064d`) + Done; SC-170 in scoped re-review
+SC-171: review LAND (branch = base + 8 duplicated static decls, proven; floor before/after
+reproduced on own Chromium-106 Obsidian; composes with SC-170); rider hardened the guard
+(two-sided, rejects not()/non-color-mix or, parse-based neuter control — all mutation-
+proven). Landed clean (fresh worktree, no gitlink UU); ws c6366f3; FOLLOWUPS #73 archived
+to docs/followups-archive/2026-08-11-completed.md; SC-172 (Backlog) filed for the real-
+engine floor probe. Deferred nit: styles-source.css doctrine comment says "both halves"
+(now three). SC-170 fix round 1 done (`75a2ca4`: central snap() media derivation +
+coverage assertion, 72-line widening deterministic, drift-pin test + --dse-font-controls
+restored in print copy, (0,4,0) cascade test) → scoped re-review in flight; ORCHESTRATOR
+DECISION: apply the 72-line realprint widening at landing (72→144; twin==realprint IS the
+invariant to pin). Both usage-window kills this window resumed cleanly via SendMessage.
+Session tally: SC-165/153/164/135/160/171 landed+Done. Live: SC-170 re-review.
+Scott's queue: SC-154, SC-152, SC-156, SC-169.
