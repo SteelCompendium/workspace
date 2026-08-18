@@ -984,3 +984,17 @@ two forged panels / expanding rail), full+500+300px, light+dark, recommendation;
 UNCHANGED this round so freeze delta stays exactly the encounter+initiative PAIRS
 (regenerate rebaseline.txt as pairs from the rebased tree). SC-154 Awaiting.
 Live: SC-169 phase 3, SC-154 round 3. Scott's queue: SC-152 only.
+
+### 2026-08-18 — SC-154 round 3 at Scott's gate; SC-169 phase 3 done → full review
+SC-154 r3 `2795657` (rebased on 3bc7685): 3 options fully built behind hidden pref
+`initControls` (default unchanged=stacked; allow-list tripwire demands deletion at pick):
+1 command bar (RECOMMENDED), 2 two forged panels, 3 expanding rail; 30 shots + comparison
+sheets; freeze delta still exactly the encounter+initiative PAIRS (byte-proven).
+Orchestrator eyeballed the bands sheet. SC-154 In Progress+Needs Review (pick 1/2/3 +
+sanction). SC-169 phase 3 `c15a4b4`: E3 real CSS; 31 opted in (incl. ds-scc — REVERSAL of
+spec, justified: pipeline reads def.chrome off the block's own def); root-framed
+box-in-a-box collapse fix; DESIGN.md + user docs; freeze delta exactly the 10 sanctioned
+stamina lines; 5 new capture ids = widening candidates. Agent leaked FOLLOWUPS #76 into
+main FOLLOWUPS (uncommitted) → committed as bookkeeping. FULL adversarial review dispatched
+(31-element surface: note safety, ds-scc reversal, print invariants, placement across all
+frames, lifecycle, real-Obsidian + PDF). Live: SC-169 review. Scott: SC-154 pick, SC-152.
