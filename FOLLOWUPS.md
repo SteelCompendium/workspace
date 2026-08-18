@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 76 -->
+<!-- next-id: 77 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1457,3 +1457,22 @@ proven by mutation (exit 0, no message) — which in a full sweep would silently
 parity denominator. One line: print "parity not asserted (no print class in this run)" and
 fail on "neither class" unless `args.bg`/`--element` narrowing explains it. Evidence:
 `.superpowers/sdd/sc170/sc170-rereview-report.md` N-1.
+
+## 76. `ds-skills` still carries its own disclosure header alongside the element menu (SC-169 rollout, 2026-08-18)
+
+**Identified:** SC-169 round 3 (the chrome rollout).
+**What:** `ds-skills` is now the only element with TWO collapse mechanisms — its own kit
+`collapsible()` "Skills" header inside the card (`src/elements/skills/view.ts`) and the
+standard element menu's whole-element collapse. That is exactly the double affordance Scott
+called out on `ds-stamina` in round 2, and his ruling 3 was general: *"Remove the old. Replace
+with the consistent option that all card elements use."*
+**Why not done in the rollout:** removing the header is real DOM leaving the flow, so it moves
+2 frozen print lines (`skills--steel-print` + `skills--steel-realprint`). Round 3's freeze
+budget was Scott's existing 10-line stamina sanction and nothing else, and a second
+rebaseline needs its own ask. The element IS opted into chrome and sets
+`collapseKeysOwnedByModel`, so the only remaining work is deleting the wrapper and taking the
+2-line sanction.
+**Context:** `.superpowers/sdd/sc169/sc169-round3-report.md`; the stamina precedent (what the
+change looks like and how it was asked for) is `rebaseline-README.md` in the same directory.
+**Effort:** small — the `collapsible(...)` wrapper in `skills/view.ts`, its tests, and a 2-line
+sanctioned rebaseline at landing.
