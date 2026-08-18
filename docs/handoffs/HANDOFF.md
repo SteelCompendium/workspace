@@ -974,3 +974,13 @@ characteristics, values-row, negotiation) rollout, DESIGN.md + user docs + CHANG
 5-pair rebaseline regenerated from the rebased tree (SANCTIONED — apply at landing as
 pairs). Agent must rebase 65c3aba→3bc7685 first (SC-156 hero lines). SC-169 Awaiting.
 Scott's queue: SC-154, SC-152.
+
+### 2026-08-18 — SC-154 round 3 dispatched (control-cluster layout options)
+Scott on round 2: "This looks great!" — remaining: the Malice/round/turn control cluster sits
+ragged on the right with the left empty; "propose a few options for layout and I'll pick
+one". Round 3 dispatched on sc154-tracker-layout (must rebase 975fde6→3bc7685; integrate
+through SC-170's snap()): 3 fully-implemented options behind a fixture param (command bar /
+two forged panels / expanding rail), full+500+300px, light+dark, recommendation; DEFAULT
+UNCHANGED this round so freeze delta stays exactly the encounter+initiative PAIRS
+(regenerate rebaseline.txt as pairs from the rebased tree). SC-154 Awaiting.
+Live: SC-169 phase 3, SC-154 round 3. Scott's queue: SC-152 only.
