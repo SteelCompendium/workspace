@@ -953,3 +953,15 @@ landings + a class); count 144→144; backup .pre-sc156-bak; recorded in dse-ver
 00b40b9 (gitlink UU by hand, fetched first). Lesson → working-preferences.md "Lead with the
 one-line ask". Session tally: SC-165/153/164/135/160/171/170/147/148/156 landed+Done (10).
 Live: SC-169 round 2. Scott's queue: SC-154, SC-152.
+
+### 2026-08-18 — SC-169 round 2 at Scott's gate (D+E1 shipped as default)
+Round 2 `65c3aba` on sc169-menu-panel (rebased on da96da2; chrome loop routed through
+SC-170's central snap()). Placement 10.00px on all 3 (harness-gated); border-not-covered
+verified (orchestrator eyeballed winded stamina); old stamina header removed → 10-line
+(5 pairs) rebaseline in .superpowers/sdd/sc169/rebaseline.txt — NEEDS SANCTION; options
+A/B/C/D + styles E1/E2/E3 rendered as titled cards; collapsible/collapse_default supported;
+expand-only + real names. Agent's "blocking: develop freeze fails on 6 hero lines" is a
+FALSE ALARM: it measured at da96da2, but SC-156 (`3bc7685`) swapped exactly those 6 hero
+lines while it worked — the branch renders the OLD hero; vanishes on rebase to 3bc7685.
+SC-169 In Progress+Needs Review (letter picks + sanction). Nothing in flight.
+Scott's queue: SC-169 picks+sanction, SC-154, SC-152.
