@@ -965,3 +965,12 @@ FALSE ALARM: it measured at da96da2, but SC-156 (`3bc7685`) swapped exactly thos
 lines while it worked — the branch renders the OLD hero; vanishes on rebase to 3bc7685.
 SC-169 In Progress+Needs Review (letter picks + sanction). Nothing in flight.
 Scott's queue: SC-169 picks+sanction, SC-154, SC-152.
+
+### 2026-08-18 — SC-169 Scott picked "D and E3, sanctioned" → phase 3 (rollout) dispatched
+E3 = "Hairline crown" (no chamfer; bright top hairline + upward shadow; most restrained) —
+existed only in the evidence renderer, so phase 3 ships it as real CSS FIRST, then wave-1
+(14 reference-capable families via lifted slot) + wave-2 (hero suite, GM trackers, counter,
+characteristics, values-row, negotiation) rollout, DESIGN.md + user docs + CHANGELOG, stamina
+5-pair rebaseline regenerated from the rebased tree (SANCTIONED — apply at landing as
+pairs). Agent must rebase 65c3aba→3bc7685 first (SC-156 hero lines). SC-169 Awaiting.
+Scott's queue: SC-154, SC-152.
