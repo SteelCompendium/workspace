@@ -907,3 +907,26 @@ DECISION: apply the 72-line realprint widening at landing (72→144; twin==realp
 invariant to pin). Both usage-window kills this window resumed cleanly via SendMessage.
 Session tally: SC-165/153/164/135/160/171 landed+Done. Live: SC-170 re-review.
 Scott's queue: SC-154, SC-152, SC-156, SC-169.
+
+## 2026-08-18 — SC-170 LANDED (`da96da2`) + Done; freeze 72→144 (realprint class); POOL DRAINED
+SC-170: fix round → fresh-eyes re-review LAND (all mutation-proven; widening byte-
+reproducible) → rebased c676d58→8b6064d (CHANGELOG keep-both) → post-rebase jest 2846 =
+2836+10 exact, freeze 72/72, 72 realprint shots each == twin hash → **72-line widening
+APPLIED (72→144), backup .pre-sc170-widening-bak; check-freeze.sh echo label updated
+(backup .pre-sc170-bak); recorded in dse-verify incl. the NEW RULE: a sanctioned twin
+rebaseline now moves TWO lines (twin+realprint) together.** ws c46d118 (gitlink UU by hand
+again — fetched first this time). FOLLOWUPS #75. dse develop tip = da96da2.
+**Session tally: SC-165, SC-153, SC-164, SC-135, SC-160, SC-171, SC-170 landed + Done (7).**
+Filed this session: SC-167 (Backlog), SC-170 (done), SC-171 (done), SC-172 (Backlog).
+NOTHING IN FLIGHT. Remaining 7.0.0 work is entirely Scott-gated:
+- SC-154 (branch sc154-tracker-layout @975fde6): taste + 2-line print sanction
+- SC-152 (branch sc152-sheet-styling @4c92257): 2-line print sanction + 2 taste calls
+  (statgrid keep? skills collapse-by-default?) → then scoped re-review → land
+- SC-156 (branch sc147-inserts): 3-line print sanction → land → closes SC-147/148/156
+- SC-169 (branch sc169-menu-panel @1ac671a): prototype taste gate + 5 design calls → rollout phase
+- SC-11: the cut (sequence: docs-shots pre-cut, manifest bump, main FF, tag — Scott's).
+NOTE for those landings: sc154/sc152/sc147 worktrees predate develop moving 221acc9→da96da2
+— rebase at landing (CHANGELOG keep-both; SC-152/154 print rebaselines: with the realprint
+class now frozen, each sanctioned twin line moves its realprint sibling too → regenerate
+both from the rebased tree and apply as PAIRS). Superproject gitlink UU expected on all
+three (old superproject history) — fetch, checkout tip, commit "merge <env> into main".
