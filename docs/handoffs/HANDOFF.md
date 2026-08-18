@@ -930,3 +930,15 @@ NOTE for those landings: sc154/sc152/sc147 worktrees predate develop moving 221a
 class now frozen, each sanctioned twin line moves its realprint sibling too → regenerate
 both from the rebased tree and apply as PAIRS). Superproject gitlink UU expected on all
 three (old superproject history) — fetch, checkout tip, commit "merge <env> into main".
+
+### 2026-08-18 — SC-169 design round 2 dispatched (Scott's rulings)
+Scott on the prototype: "basically what I was looking for". Rulings: consistent panel
+placement across elements; panel must NOT cover the element border (winded/dying colored
+borders were cropped); Q1 show all 3 options + a 4th "panel under the border"; Q2 keep
+`collapsed:` AND support `collapsible:`/`collapse_default:`; Q3 remove ds-stamina's old
+header (→ stamina print twin+realprint pair moves — needs sanction; agent writes
+rebaseline.txt); Q4 collapsed = expand icon only; Q5 real resolved names; plus 2–3 HFS
+style alternatives (his example: diagonal/chamfered left edge). Round-2 agent dispatched on
+sc169-menu-panel (must rebase 1ac671a→da96da2 first; integrate harness params THROUGH
+SC-170's central snap()). SC-169 Awaiting. Everything else still Scott-gated:
+SC-154, SC-152, SC-156, SC-11.
