@@ -942,3 +942,14 @@ style alternatives (his example: diagonal/chamfered left edge). Round-2 agent di
 sc169-menu-panel (must rebase 1ac671a→da96da2 first; integrate harness params THROUGH
 SC-170's central snap()). SC-169 Awaiting. Everything else still Scott-gated:
 SC-154, SC-152, SC-156, SC-11.
+
+### 2026-08-18 — SC-156 sanctioned → sc147-inserts LANDED (`3bc7685`); SC-147/148/156 Done
+Scott asked "what is the ask" — the sanction comment led with hash mechanics; answered
+plainly ("two words of text in the hero card; say yes"), he sanctioned. Rebase 221acc9→
+da96da2 clean; jest 2853 = 2846+7 exact. First rebaseline under the twin+realprint pair
+rule: 3 sanctioned twins → 6 hashes as 3 PAIRS (each pair identical, deterministic ×2),
+regenerated from the rebased tree (the branch's old sc156-rebaseline.txt was stale by 6
+landings + a class); count 144→144; backup .pre-sc156-bak; recorded in dse-verify. ws
+00b40b9 (gitlink UU by hand, fetched first). Lesson → working-preferences.md "Lead with the
+one-line ask". Session tally: SC-165/153/164/135/160/171/170/147/148/156 landed+Done (10).
+Live: SC-169 round 2. Scott's queue: SC-154, SC-152.

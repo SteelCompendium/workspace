@@ -125,6 +125,16 @@ thread to reconstruct the ask. Shape: a heading like "**What you're approving**"
 enumerated decision(s), and the deciding evidence (images inline, re-uploaded if needed)
 right there in the same comment. The operational side lives in the `linear-flow` skill.
 
+### Lead with the one-line ask; mechanics below (learned 2026-08-18, SC-156)
+
+A sanction ask whose honest summary was "two words of text changed in a screenshot — say
+yes" was written as a hash table with freeze-regime rationale first; Scott's response was
+"I'm confused what the ask from me is." Rule: the ask's **first line** states the decision
+in plain words and its visible consequence ("Approve: the starter hero's two ability rows
+now say brutal-slam / thunder-roar; nothing else changes"). Hash lists, baseline counts,
+and procedure go **below** that, for the record — never in the way of it. If the reader
+would need the mechanics to decide, the ask is not yet self-contained.
+
 ## Linear: screenshots are the review medium (Scott's rule, 2026-08-02)
 
 Scott reviews visual work *in Linear, from the attachments*. Two standing rules:
