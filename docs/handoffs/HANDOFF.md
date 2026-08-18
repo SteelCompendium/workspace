@@ -998,3 +998,17 @@ stamina lines; 5 new capture ids = widening candidates. Agent leaked FOLLOWUPS #
 main FOLLOWUPS (uncommitted) → committed as bookkeeping. FULL adversarial review dispatched
 (31-element surface: note safety, ds-scc reversal, print invariants, placement across all
 frames, lifecycle, real-Obsidian + PDF). Live: SC-169 review. Scott: SC-154 pick, SC-152.
+
+### 2026-08-18 — SC-169 review: FIX ROUND (H-1 blocker); shared-checkout leak cleaned
+Review: H-1 BLOCKER — ElementView.update() (rootEl.empty()+onMount) wipes chrome nodes
+while data-dse-collapsed survives → collapsed element becomes an invisible zero-height
+block, PERMANENT on pref-subscription rebuilds (Enable dice rolling), setCharacteristicProvider,
+SidebarPanel.handleExternalChange; repro'd in real Obsidian. M-1 `collapsed:` on prose
+bodies error-cards; L-1 ds-scc non-code body collapses to nameless bar hiding its notice.
+Everything else LAND-quality: placement 10.00px on all 32, collapse clean on all 30, PDF
+PASS (collapsed prints in full, no panel), ds-scc reversal judged RIGHT, 5 new ids
+widening-ready. M-2 leak: agent wrote DESIGN.md/CHANGELOG into the SHARED main checkout →
+moved into the worktree superproject (`42f444b`), main restored clean; orchestrate skill
+footgun added (briefs must path workspace files to the worktree). Fix round dispatched to
+the reviewer (framework-level re-mount after every rebuild + self-heal invariant + jsdom
+pins + real-Obsidian re-verify). Live: SC-169 fr1. Scott: SC-154 pick, SC-152.

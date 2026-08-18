@@ -133,6 +133,13 @@ rule #1, doc routing).
   occasionally no-op silently — verify the response, retry once.
 - Agents' harness may block report-file writes — briefs must say "return inline if the
   write is blocked."
+- **A brief that names a WORKSPACE-level file (DESIGN.md, CHANGELOG.md, FOLLOWUPS.md) sends
+  the agent to the shared main checkout** — twice on SC-169 (2026-08-18) an agent wrote
+  those files into `workspace/` instead of `worktrees/<env>/`. Briefs must say explicitly:
+  "the workspace-level files live in YOUR worktree's superproject at
+  `/home/scott/code/steelCompendium/worktrees/<env>/DESIGN.md` — never under
+  `/home/scott/code/steelCompendium/workspace/`"; FOLLOWUPS additions stay orchestrator-only
+  (agents report the entry text; the orchestrator writes it, avoiding next-id races).
 - **Scratchpad is pre-populated across sessions/agents.** An agent keying a wait-loop on a
   scratch log's *contents* matched a stale log from a different branch and read a false
   `FREEZE VIOLATED` (SC-160 fix round, 2026-08-17). Tell agents: never wait on scratch
