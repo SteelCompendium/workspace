@@ -281,6 +281,21 @@ didn't mount) plus human review of the PNGs.
     (`r2-item3-notch-print.png`). The widening adds `statblock-with-captain--steel-print.png`
     (the new 4-secondary-cell fixture). Backup: `freeze-baseline.sha256.pre-sc146r2-bak`.
     Verified after: `freeze OK (67/67 steel-print PNGs byte-identical)`, exit 0.
+  - **2026-08-18, SC-170 real `@media print` (worktree `sc170-real-print`, landed dse
+    `da96da2`): 72-line widening (additions-only), 72 → 144 — APPLIED at landing by the
+    orchestrator. THIS ADDS A SECOND FROZEN CLASS.** The harness now captures every
+    element under Playwright `emulateMedia({media:'print'})` as `<id>--steel-realprint.png`
+    alongside the existing print-preview twin `<id>--steel-print.png`. **Invariant pinned:
+    every realprint hash equals its twin's hash** (verified 72/72 at landing on the REBASED
+    tree; deterministic across clean sweeps) — real Ctrl-P/PDF export must render exactly
+    what the print-preview twin renders. `npm run shots` also asserts this in-run
+    ("print-twin parity 72/72") and asserts print-class coverage (a capture with one class
+    but not the other fails). Backup: `freeze-baseline.sha256.pre-sc170-widening-bak`;
+    `check-freeze.sh` echo label updated (backup `.pre-sc170-bak`; arithmetic unchanged —
+    it was always `sha256sum -c` over the whole file). Verified after: `freeze OK (144/144
+    …)`, exit 0. **Consequence for future rebaselines: a sanctioned change to a print twin
+    now moves TWO lines (twin + realprint), and they must move together — a delta touching
+    only one of the pair is a bug (real print diverging from the preview), not a rebaseline.**
   - **2026-08-17, SC-160 statblock sticky mini-header (worktree `sc160-sticky-header`,
     landed dse `c676d58`): 5-line widening (additions-only), 67 → 72 — APPLIED at landing by
     the orchestrator.** The 5 lines are `statblock-sticky{,-unscrolled,-nometa,-off,-narrow}

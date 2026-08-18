@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 75 -->
+<!-- next-id: 76 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1448,3 +1448,12 @@ should either be suppressed (a PDF is read-only by nature; the badge conveys not
 placed off the banner. Fix in the print scheme (`@media print` + the twin), freeze twin bytes
 must not move unless the badge is visible in the twin too (check). Evidence: SC-170 review
 report L-3, `.superpowers/sdd/sc170/`.
+
+## 75. `assertPrintTwinParity` returns silently when it compared nothing (SC-170 re-review N-1, 2026-08-18)
+
+`visual-harness/shoot.mjs`'s parity assertion exits quietly on `compared === 0`. Benign for a
+`--bg=` narrowed run, but the same path swallows a loop that shoots NEITHER print class —
+proven by mutation (exit 0, no message) — which in a full sweep would silently shrink the
+parity denominator. One line: print "parity not asserted (no print class in this run)" and
+fail on "neither class" unless `args.bg`/`--element` narrowing explains it. Evidence:
+`.superpowers/sdd/sc170/sc170-rereview-report.md` N-1.

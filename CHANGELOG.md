@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: PDF export and Ctrl-P print now use the print scheme (SC-170).** Real
+  printing kept the full Steel card plate (gradient, border, radius, shadow, boxed stat
+  cells) — only the on-screen "print preview" toggle ever showed the neutral print look.
+  Both now render identically (verified on a real Obsidian PDF export: white ground, square
+  corners, thin frame, no shadow), and the print-preview twin is also fixed in light-theme
+  vaults (Obsidian's exporter forces light). Harness gains a real-print capture class
+  pinned byte-identical to the preview twin (freeze 72 → 144 lines).
 - **DSE plugin: statblock/featureblock headers and power-roll tier washes render again in
   the app (SC-171).** Obsidian's engine (Chromium 106) silently dropped every Steel surface
   whose enhanced `color-mix()` declaration used a `var()` — the static fallback authored
