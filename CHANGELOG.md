@@ -8,6 +8,14 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: statblock/featureblock headers and power-roll tier washes render again in
+  the app (SC-171).** Obsidian's engine (Chromium 106) silently dropped every Steel surface
+  whose enhanced `color-mix()` declaration used a `var()` — the static fallback authored
+  beside it never survived — so statblock and featureblock headers lost their background
+  and rule, the notch halos vanished, and the four power-roll tier washes were missing.
+  All eight are now behind proper `@supports` gates; the harness (modern Chromium) is
+  byte-identical, and a source-scan test rejects the pattern (two-sided: gate AND fallback
+  required; `not()`/`or` gates rejected).
 - **DSE plugin: statblock sticky mini-header (SC-160).** While a statblock's own header is
   scrolled out of view, a compact bar with the monster's name and core stats pins to the top
   of the pane (Reading view, sidebar in a compact form, popout windows); inert on canvas
