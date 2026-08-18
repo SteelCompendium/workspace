@@ -8,6 +8,15 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: compendium insert commands fixed; the starter hero is no longer broken
+  (SC-147, SC-148, SC-156).** "Insert compendium block" no longer double-wraps a reference
+  (SC-147) and the two insert-command failures are pinned by regression tests (SC-148).
+  The `ds-hero` starter block every user gets from "Insert element" shipped two placeholder
+  ability codes, so every new hero began with unresolvable abilities (the origin of the
+  SC-141 report); it now ships two real Fury abilities, and a test resolves every code in
+  the shipped example against the real compendium so a placeholder can't ship again.
+  Docs screenshots refreshed; the docs-screenshot pipeline now refuses to run on the
+  developer's own display.
 - **DSE plugin: PDF export and Ctrl-P print now use the print scheme (SC-170).** Real
   printing kept the full Steel card plate (gradient, border, radius, shadow, boxed stat
   cells) — only the on-screen "print preview" toggle ever showed the neutral print look.

@@ -281,6 +281,20 @@ didn't mount) plus human review of the PNGs.
     (`r2-item3-notch-print.png`). The widening adds `statblock-with-captain--steel-print.png`
     (the new 4-secondary-cell fixture). Backup: `freeze-baseline.sha256.pre-sc146r2-bak`.
     Verified after: `freeze OK (67/67 steel-print PNGs byte-identical)`, exit 0.
+  - **2026-08-18, SC-156 hero example codes (worktree `sc147-inserts`, landed dse `3bc7685`
+    with SC-147/148): 6-line SANCTIONED rebaseline, count unchanged 144 → 144 — APPLIED at
+    landing by the orchestrator. FIRST rebaseline under the twin+realprint pair rule.** The
+    ask on SC-156 was 3 twin lines (`hero`, `hero-narrow`, `hero-sparse` `--steel-print`);
+    landing after SC-170 froze the realprint class, each twin's `--steel-realprint` sibling
+    moved identically → 6 lines applied as 3 PAIRS. Verified before applying: each pair's
+    twin hash == realprint hash on the rebased tree; deterministic across 2 runs; check-freeze
+    reported exactly these 6 and nothing else. Visible change = two ability-row titles in the
+    starter hero (placeholders → `brutal-slam`/`thunder-roar`); crop of the entire pixel delta
+    on the ticket. **Scott's sanction, 2026-08-18: "sanctioned"** (after asking what the ask
+    was — lesson recorded in orchestrate/linear-flow: lead with the one-line ask, mechanics
+    below). Hashes regenerated from the REBASED landing tree (da96da2 base), NOT the branch's
+    old `sc156-rebaseline.txt` (which predates SC-170's class and 6 landings). Backup:
+    `freeze-baseline.sha256.pre-sc156-bak`. Verified after: `freeze OK (144/144 …)`, exit 0.
   - **2026-08-18, SC-170 real `@media print` (worktree `sc170-real-print`, landed dse
     `da96da2`): 72-line widening (additions-only), 72 → 144 — APPLIED at landing by the
     orchestrator. THIS ADDS A SECOND FROZEN CLASS.** The harness now captures every
