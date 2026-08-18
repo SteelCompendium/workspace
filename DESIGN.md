@@ -191,9 +191,75 @@ merely *embeds* cards (Read chapters) is a plain page.
 | Kit pages (unified `.sc-kit` forged plate — header + flavor + equipment box + all-8 fixed-slot bonus grid + a Signature Ability band; the signature-ability `.sc-ability` card is spliced beneath via the preserved `{data-scc}` marker and fused flush by CSS; reuses the preview card's `.sc-card__stats` grid) | build-time `internal/site/kit_page.go` + `v2/docs/stylesheets/steel-kit.css` | `docs/superpowers/specs/2026-06-23-kit-page-unified-card-design.md` |
 | Settings drawer (gear icon, live apply) | `settings-panel.js`/`settings-core.js` + `steel-settings.css` | `v2/.repo-docs/plans/2026-06-07-live-settings-panel.md` |
 | Card copy-link button (`.sc-copylink` — hover-revealed permalink-copy injected into statblock / featureblock / ability card pages, which hide their `<h1>` and thus the native ¶ permalink; copies the page's `/scc/<code>/` URL from `<meta name="scc-permalink">`; faint-persistent on touch, hidden in print — a new UI utility icon in the thin-line Material style, per Iconography) | `v2/docs/javascripts/scc-card-copy.js` (+ DOM-free `scc-card-copy-core.js`) + `v2/docs/stylesheets/steel-copylink.css` | `v2/.repo-docs/plans/2026-06-16-scc-card-copy-button.md` |
+| **Element chrome panel** (plugin) — the standard hover-revealed menu panel + whole-element collapse every card-like DSE element carries. See "The element chrome panel" below for the form factor, geometry and rules. | `draw-steel-elements` `src/framework/chrome/` + the "Element chrome" block at the foot of `styles-source.css` | `draw-steel-elements/docs/superpowers/sc169-element-menu-panel-spec.md` |
 
 (`…` = `reference/design-system/handoff`.) Open design debts: statblock malice band +
 captain label (`FOLLOWUPS.md` #7), hidden theme/card-style controls (`FOLLOWUPS.md` #3).
+
+### The element chrome panel
+
+The plugin's counterpart to the site's hover-revealed card control strip, and the **only**
+per-element affordance surface in High-Fantasy Steel: every future per-element action ("add to
+encounter", "export", "send to sidebar") goes here rather than inventing a second place.
+Shipped by SC-169, rolled out 2026-08-18 to all 31 card-like elements. Opting in is one
+`chrome` slot on the element definition; an element that does not declare it emits zero extra
+DOM, which is what keeps the print freeze quiet by construction.
+
+**Form factor.** A short, icon-only plate in the form of an OS window's control cluster,
+top-right, seated *outside* the card and overlapping the space above its top edge — so it
+costs no element a reserved top margin on desktop. It is right-anchored and **grows
+right-to-left**: the collapse toggle is always the rightmost control (the fixed anchor a
+reader's eye returns to) and every added item extends the plate leftward.
+
+**Geometry — option D, Scott's pick (SC-169, 2026-08-18).** One number, one rule, on every
+element: the panel's right edge sits `--dse-chrome-inset: 10px` inside the card frame's
+**visible (border-box) right edge**, and the panel's bottom edge lands **exactly on** the
+frame's border-box top. It never paints into the border row, so a card's own 1px hairline —
+including the amber *winded* / red *dying* stamina frames — renders complete and unbroken
+beneath the whole plate. The card's border is the panel's floor, which is why the panel keeps
+no bottom border and square bottom corners. Both facts are a **gate, not a promise**:
+`assertChromePlacement` in `visual-harness/shoot.mjs` re-measures seven element families every
+sweep and fails the run naming what moved (jsdom computes no layout, so this cannot live in
+the unit suite).
+
+**Material — style E3, "hairline crown", Scott's pick (same ruling).** A plain rounded plate:
+`--dse-surface-raised`, a 1px `--dse-border`, radius on the top corners only, one bright
+hairline along the top edge (a light catch on the plate's lip — the `inset 0 1px 0 rgba(255
+255 255 / …)` gesture `--dse-bevel` already uses on every raised Steel surface), and an
+**upward-cast** shadow so the plate reads as floating over the element above and resting on
+the one below. Deliberately no chamfer and no `clip-path`/`filter` (the rejected E1): the
+silhouette stays a plain box, so the panel cannot clip its own shadow or a focus ring. Light
+mode retunes both halves — the hairline goes to full white and the plate's top border is
+deepened a step, because on a near-white surface a light catch has to be carried by contrast,
+not brightness; the cast shadow drops to 15% black, since 34% under a light card reads as
+grime rather than lift.
+
+**Hover, mobile, print.**
+- Desktop: hidden until the cursor is over the element *or* the panel, `:focus-within` as the
+  keyboard twin. No reserved space.
+- Mobile (`Platform.isMobile`): always visible, and the element reserves `2.1em` of top space
+  so an always-on panel never covers the element above it.
+- Print: **absent, in both modes.** The base layer sets `display: none` on the chrome nodes and
+  every revealing rule is scoped `[data-dse-theme='steel']:not([data-dse-print="on"])`. The
+  collapse rules carry the same exclusion, so **a collapsed element prints in full** — the same
+  answer print rule 3 already gives the kit collapsible. Proven in bytes: the rollout to 31
+  elements moved zero frozen print shots.
+
+**The collapsed one-liner.** Collapse is by attribute (`data-dse-collapsed="on"`), never by
+unmounting, so expanding is instant and no state is lost. The folded form is one line in a
+fixed grammar the framework owns — `LABEL: Name (detail)` — with an always-visible expand
+button on the right (in flow, not in the hover panel: a collapsed element must never be a dead
+end on touch). While collapsed the floating panel is suppressed outright, so the one chevron is
+the entire interface. Elements supply only the three parts, never the punctuation:
+
+- `label` — the type, always present ("Statblock", "Encounter", "Resource").
+- `name` — the instance name when the element has one, and always the name a reader would say
+  out loud: the **resolved** entity name for a compendium reference, never the SCC code, and
+  the resolved resource name ("Ferocity") rather than the raw class key.
+- `detail` — a few characters of the one fact worth folding on. A bare number when it is
+  unambiguous ("Surges (3)"), a fraction for a track ("Stamina (15/20)"), and **worded** when a
+  bare number would not be ("Skills (12 selected)", "Party (4 heroes)") — the discipline being
+  that the folded line must never be readable two ways.
 
 ## The user-preference system
 

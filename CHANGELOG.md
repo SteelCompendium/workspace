@@ -8,6 +8,74 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: every card element gains a standard hover menu and one-line collapse
+  (SC-169).** Point at a statblock, ability card, hero sheet or GM tracker and a small
+  icon-only panel appears at its top-right corner, seated on the card's edge — always a
+  collapse control, plus the edit pencil when that setting is on. Collapsed, an element folds
+  to a single line carrying its type, its name and an expand button ("STATBLOCK: Goblin
+  Stinker", "ENCOUNTER: Ambush at the Ford (EV 42)"); a compendium reference resolves to the
+  entry's real name rather than showing its code. Three block keys (`collapsed:`,
+  `collapsible:`, `collapse_default:`) plus two global defaults control it; a collapse is
+  remembered for the session and never edits the note, and the panel is absent from print and
+  PDF export — a collapsed element prints in full. Always visible instead of hover-revealed on
+  mobile. The stamina bar's own "Stamina Bar" disclosure header is retired in favour of it.
+  The panel is now a design-language component ([`DESIGN.md`](DESIGN.md) → "The element chrome
+  panel").
+- **DSE plugin: compendium insert commands fixed; the starter hero is no longer broken
+  (SC-147, SC-148, SC-156).** "Insert compendium block" no longer double-wraps a reference
+  (SC-147) and the two insert-command failures are pinned by regression tests (SC-148).
+  The `ds-hero` starter block every user gets from "Insert element" shipped two placeholder
+  ability codes, so every new hero began with unresolvable abilities (the origin of the
+  SC-141 report); it now ships two real Fury abilities, and a test resolves every code in
+  the shipped example against the real compendium so a placeholder can't ship again.
+  Docs screenshots refreshed; the docs-screenshot pipeline now refuses to run on the
+  developer's own display.
+- **DSE plugin: PDF export and Ctrl-P print now use the print scheme (SC-170).** Real
+  printing kept the full Steel card plate (gradient, border, radius, shadow, boxed stat
+  cells) — only the on-screen "print preview" toggle ever showed the neutral print look.
+  Both now render identically (verified on a real Obsidian PDF export: white ground, square
+  corners, thin frame, no shadow), and the print-preview twin is also fixed in light-theme
+  vaults (Obsidian's exporter forces light). Harness gains a real-print capture class
+  pinned byte-identical to the preview twin (freeze 72 → 144 lines).
+- **DSE plugin: statblock/featureblock headers and power-roll tier washes render again in
+  the app (SC-171).** Obsidian's engine (Chromium 106) silently dropped every Steel surface
+  whose enhanced `color-mix()` declaration used a `var()` — the static fallback authored
+  beside it never survived — so statblock and featureblock headers lost their background
+  and rule, the notch halos vanished, and the four power-roll tier washes were missing.
+  All eight are now behind proper `@supports` gates; the harness (modern Chromium) is
+  byte-identical, and a source-scan test rejects the pattern (two-sided: gate AND fallback
+  required; `not()`/`or` gates rejected).
+- **DSE plugin: statblock sticky mini-header (SC-160).** While a statblock's own header is
+  scrolled out of view, a compact bar with the monster's name and core stats pins to the top
+  of the pane (Reading view, sidebar in a compact form, popout windows); inert on canvas
+  and in print/PDF. Two new settings, both ON to match the site: "Sticky mini-header" and a
+  dependent "↳ Sticky mini-header: include secondary stats" (Immunity/Weakness/Movement
+  row). Documented limits: no bar inside callouts (they don't scroll); the bar briefly
+  covers a strip of following text at the very end of a statblock. Real-Obsidian
+  verification of this feature also surfaced SC-171 (color-mix fallbacks inert on the
+  app's Chromium 106 — statblock header loses its background there today).
+- **DSE plugin: compendium links work in Live Preview and Source mode (SC-135).** A
+  `scc.v1:` link typed into a note used to prompt "open external link?" and then do
+  nothing outside Reading view. Clicking one now opens the compendium note everywhere
+  (Reading view, Live Preview, Source mode, popout windows), with Ctrl/Cmd- and
+  middle-click for new tab/split, matching Obsidian's own conventions (in raw-syntax
+  view a plain click just places the cursor). Backlinks/graph still don't see these
+  links, and links inside code spans behave slightly differently while editing — both
+  spelled out in the docs (SC-166 tracks the sync-format option; FOLLOWUPS #72 the
+  code-span nuance).
+- **DSE plugin: "Open in sidebar" no longer duplicates the initiative tracker or wipes
+  live combat (SC-153).** Pressing the encounter's sidebar button now binds to the tracker
+  block the note already has instead of appending another (and, in the fix's first cut,
+  regenerating it — which would have reset round/HP mid-combat; the review caught that).
+  A user-deleted tracker regenerates cleanly with exactly one sidebar panel. The tracker
+  is a snapshot: encounter edits don't flow into it (docs say so; SC-167 tracks a re-sync
+  action).
+- **DSE plugin: homebrew snapshots no longer paste a duplicate you can't edit (SC-165).**
+  "Insert compendium block" (the copy-and-edit snapshot) used to include the entry's
+  `metadata:` block — for an ability, a second copy of most of the entry whose edits never
+  changed the rendered card. Snapshots now drop it (an ability snapshot roughly halves);
+  synced compendium files are unchanged. Pinned by tests that render the snapshot and the
+  original synced block byte-identically.
 - **DSE plugin: the "legacy" theme is gone (SC-144).** The Steel look is now the only look.
   The Theme row leaves Settings → Appearance, and a beta vault that had chosen Legacy is
   moved to Steel silently on next load. No released user is affected — the picker only ever
