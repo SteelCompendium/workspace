@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 77 -->
+<!-- next-id: 78 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1476,3 +1476,15 @@ rebaseline needs its own ask. The element IS opted into chrome and sets
 change looks like and how it was asked for) is `rebaseline-README.md` in the same directory.
 **Effort:** small — the `collapsible(...)` wrapper in `skills/view.ts`, its tests, and a 2-line
 sanctioned rebaseline at landing.
+
+## 77. A built `main.js` at the plugin root shadows `main.ts` for jest — 67 phantom failures (SC-169 fix round, 2026-08-18)
+
+`visual-harness/entry.ts` imports `'../main'` (relative, so the `'^main$'` moduleNameMapper
+doesn't apply) and jest resolves `.js` before `.ts`, so a stale production bundle at the
+plugin root silently replaces source. Worse: `test/unit/build/cssNesting.test.ts` runs the
+production esbuild and WRITES `main.js`, so every jest run plants the artifact that shadows
+source on the next run. Measured: same tree reports 67 failures with it present
+(`view.setAfterRender is not a function` from the stale bundle) across `chromeRollout`,
+`visual-harness/fixtures`, `sidebarEncounterHandoff`; deleted → green. One-line remedy:
+`'^\.\./main$': '<rootDir>/main.ts'` in `moduleNameMapper` (and/or have cssNesting build to
+a temp dir). Until then: `rm -f main.js styles.css` before `npx jest` (recorded in dse-verify).
