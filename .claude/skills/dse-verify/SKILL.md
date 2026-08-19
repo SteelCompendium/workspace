@@ -49,6 +49,16 @@ devbox run -- bash -c 'cd /home/scott/code/steelCompendium/worktrees/<name>/draw
 `$PIPESTATUS` and `${var:-x}`-style substitutions **break under devbox's sh wrapper** — don't
 rely on them to recover a command's exit code.
 
+### Stale `main.js` shadows `main.ts` for jest (2026-08-18, FOLLOWUPS #77)
+
+A built `main.js` at the plugin root silently replaces `main.ts` for any test that reaches
+`visual-harness/entry.ts` (it imports `'../main'` relatively — the `'^main$'` mapper misses
+it; jest prefers `.js`). **`cssNesting.test.ts` WRITES `main.js`, so each jest run plants the
+artifact for the next.** Symptom: dozens of failures shaped `X is not a function` from a
+bundle older than the source you're testing (67 on SC-169's fix round). **Protocol until
+#77 lands: `rm -f main.js styles.css` in the plugin root before `npx jest`**, and if a jest
+red mentions a method you just added, suspect this first.
+
 ### Load-sensitive jest suites (shared build host, 2026-08-16)
 
 With several agents running batteries concurrently (1-min load 45–57 observed), jest's
