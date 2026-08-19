@@ -8,6 +8,19 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: every card element gains a standard hover menu and one-line collapse
+  (SC-169).** Point at a statblock, ability card, hero sheet or GM tracker and a small
+  icon-only panel appears at its top-right corner, seated on the card's edge — always a
+  collapse control, plus the edit pencil when that setting is on. Collapsed, an element folds
+  to a single line carrying its type, its name and an expand button ("STATBLOCK: Goblin
+  Stinker", "ENCOUNTER: Ambush at the Ford (EV 42)"); a compendium reference resolves to the
+  entry's real name rather than showing its code. Three block keys (`collapsed:`,
+  `collapsible:`, `collapse_default:`) plus two global defaults control it; a collapse is
+  remembered for the session and never edits the note, and the panel is absent from print and
+  PDF export — a collapsed element prints in full. Always visible instead of hover-revealed on
+  mobile. The stamina bar's own "Stamina Bar" disclosure header is retired in favour of it.
+  The panel is now a design-language component ([`DESIGN.md`](DESIGN.md) → "The element chrome
+  panel").
 - **DSE plugin: compendium insert commands fixed; the starter hero is no longer broken
   (SC-147, SC-148, SC-156).** "Insert compendium block" no longer double-wraps a reference
   (SC-147) and the two insert-command failures are pinned by regression tests (SC-148).
