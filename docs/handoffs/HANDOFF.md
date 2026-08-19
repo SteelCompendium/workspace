@@ -1030,3 +1030,17 @@ NOTHING IN FLIGHT. Scott-gated: SC-154 (pick layout 1/2/3 + sanction — branch 
 hidden pref initControls to be DELETED at pick), SC-152 (2-line sanction + statgrid/skills
 taste — branch @4c92257), SC-11 (the cut). Both branches predate develop 062a109 by many
 landings — rebase at landing; SC-152/154 print rebaselines apply as PAIRS.
+
+### 2026-08-19 — SC-173 (site: Talent Repel) LANDED to steel-etl main (`a59b5a4`)
+User bug report → diagnosis confirmed (heading one level short escaping its grouping; the
+TOC/prose symptom chain corrected by the agent: card-splice fails on the escaped heading).
+6 headings fixed (Talent Repel + Stasis Shield + Universal Connection; Null L5 ×3), durable
+`TestBookHeadingStructure` committed, registry byte-identical (3085), browser before/after.
+Sweep found a BIGGER code defect: embed_cards.go:118 regex rejects headings with extra
+data-attributes → 60 headings / 8 pages render as prose (Beastheart/Summoner/Fury) →
+**SC-174 filed (High, Todo)**; Beastheart's 12 "ambiguous" level hits parked there (render
+right once the regex is fixed). ws 7a0231b. SC-173 moved OUT of DSE 7.0.0 (Scott: mistake);
+no site project exists — offered to create one. Ships on the next SITE deploy (Scott's).
+NOTE: v2/docs on main is ~40 files stale from SC-138 — `git diff` vs committed generated
+tree is not a review signal; use before/after regen snapshots. Live: nothing.
+Scott's queue: SC-154 pick, SC-152; SC-174 is ready to dispatch on his word.

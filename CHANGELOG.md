@@ -8,6 +8,15 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **Site: six class features render as proper ability blocks again (SC-173).** A user
+  reported the Talent's level-1 "Repel" showing as plain text with a stray entry in the
+  page's section sidebar. Root cause: its heading was one level short of its siblings, so
+  it escaped its tradition grouping. Fixed — plus five more of the same class found by a
+  full four-book sweep (Talent L8 Stasis Shield / Universal Connection; Null L5 Chilling
+  Readiness / Inertial Fulcrum / Instant Action) — and a structural test in steel-etl now
+  fails on the pattern. Registry unchanged (3,085 codes). The sweep also exposed a larger,
+  separate defect: 60 headings across three books render as prose because the site's
+  card-splice regex rejects headings with extra attributes — tracked as SC-174.
 - **DSE plugin: every card element gains a standard hover menu and one-line collapse
   (SC-169).** Point at a statblock, ability card, hero sheet or GM tracker and a small
   icon-only panel appears at its top-right corner, seated on the card's edge — always a
