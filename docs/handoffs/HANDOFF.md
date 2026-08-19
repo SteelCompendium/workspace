@@ -1012,3 +1012,21 @@ moved into the worktree superproject (`42f444b`), main restored clean; orchestra
 footgun added (briefs must path workspace files to the worktree). Fix round dispatched to
 the reviewer (framework-level re-mount after every rebuild + self-heal invariant + jsdom
 pins + real-Obsidian re-verify). Live: SC-169 fr1. Scott: SC-154 pick, SC-152.
+
+## 2026-08-19 — SC-169 LANDED (`062a109`) + Done; freeze 144→182; POOL DRAINED
+Fix round (H-1 framework-level afterRender hook keyed on element ROOT — load-bearing for
+RefUnwrapView child rebuilds; ensureCollapseInvariant; M-1 peel inside parse-failure catch
+makes collapsed: work on reference/prose bodies; L-1 collapsible(ctx) veto) → fresh-eyes
+re-review LAND (real-Obsidian H-1 closed across all rebuild paths) → polish (CRLF/True
+peel parity via parseYaml; ds-rule dropped from user docs). Landed FF (no rebase): 10
+sanctioned stamina swaps + 38-line widening (19 chrome/collapse ids × pairs; none had
+ever been widened across the 3 rounds) → 182/182; backup .pre-sc169-bak; recorded in
+dse-verify. ws 5712651 (CHANGELOG keep-both + gitlink UU by hand; DESIGN.md landed via the
+worktree superproject after the leak fix). FOLLOWUPS #77 (stale main.js shadows main.ts
+for jest — rm protocol in dse-verify). NOTE for landing hygiene: rm -f main.js styles.css
+before any jest in a worktree.
+**Session tally: 11 landed+Done** (165/153/164/135/160/171/170/147/148/156/169).
+NOTHING IN FLIGHT. Scott-gated: SC-154 (pick layout 1/2/3 + sanction — branch @2795657,
+hidden pref initControls to be DELETED at pick), SC-152 (2-line sanction + statgrid/skills
+taste — branch @4c92257), SC-11 (the cut). Both branches predate develop 062a109 by many
+landings — rebase at landing; SC-152/154 print rebaselines apply as PAIRS.
