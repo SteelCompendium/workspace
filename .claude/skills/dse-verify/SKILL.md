@@ -291,6 +291,20 @@ didn't mount) plus human review of the PNGs.
     (`r2-item3-notch-print.png`). The widening adds `statblock-with-captain--steel-print.png`
     (the new 4-secondary-cell fixture). Backup: `freeze-baseline.sha256.pre-sc146r2-bak`.
     Verified after: `freeze OK (67/67 steel-print PNGs byte-identical)`, exit 0.
+  - **2026-08-18, SC-169 element chrome panel + collapse (worktree `sc169-menu-panel`, landed
+    dse `062a109`): SANCTIONED 10-line rebaseline (5 stamina pairs) + 38-line WIDENING (19 new
+    capture ids × twin+realprint), 144 → 182 — APPLIED at landing by the orchestrator.**
+    Sanction: Scott on SC-169, 2026-08-18: **"Option D and E3. Sanctioned"** — the stamina
+    bar's old "Stamina Bar" disclosure header removed in favour of the framework chrome
+    panel; every `ds-stamina` fixture (`stamina-bar`, `-dying`, `-recoveries`, `-winded`,
+    `stamina-rail`) moves as a twin+realprint pair (each pair identical, deterministic; before
+    hashes matched the live baseline; crops on the ticket). Widening: 19 chrome/collapse
+    capture ids (`chrome-*`, `*-collapsed`, `stamina-bar-collapse-default`,
+    `stamina-bar-not-collapsible`) — none had ever been widened because the branch spanned 3
+    rounds; each pair twin==realprint, 0 collisions. Verified in one pass: 10 swapped, 38
+    added, 0 removed, 0 duplicate names, `freeze OK (182/182 …)`. Backup:
+    `freeze-baseline.sha256.pre-sc169-bak`. Panel itself is print-absent by construction
+    (both classes) — verified on a real Obsidian PDF export by two independent reviewers.
   - **2026-08-18, SC-156 hero example codes (worktree `sc147-inserts`, landed dse `3bc7685`
     with SC-147/148): 6-line SANCTIONED rebaseline, count unchanged 144 → 144 — APPLIED at
     landing by the orchestrator. FIRST rebaseline under the twin+realprint pair rule.** The
