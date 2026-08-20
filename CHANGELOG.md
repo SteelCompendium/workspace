@@ -8,7 +8,22 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
-- **DSE plugin: every card element gains a standard hover menu and one-line collapse
+- **DSE plugin: the initiative tracker's round/Malice controls become a command bar;
+  encounter/initiative spacing overhauled (SC-154); broken portraits get themed
+  placeholders (SC-162).** The round counter, its two controls, the Malice pool,
+  quick-add and log used to hang off the right of the "Enemy groups" heading, leaving
+  the left half of that band empty; they now form a single full-width bar between the
+  heroes and the enemies — round state at the left edge, Malice at the right, the log
+  folded into a "Malice log · N entries" disclosure that opens a full-width drawer,
+  stays open across edits, always prints open, and stacks to one column in a narrow
+  pane. (Scott picked this "command bar" from three fully-built candidates on the
+  ticket.) Underneath it, the whole tracker got a measured spacing pass: both tracker
+  roots carry the standard tracker padding, hero rows got real card insets with the
+  turn checkbox built inside the row, buttons wrap as whole units, the quick-add inputs
+  fit their placeholders, and the encounter roster scrolls at sidebar width instead of
+  losing columns. Imageless combatants show a themed shield (heroes) / skull (enemies)
+  glyph instead of the browser's broken-image icon (SC-162). Freeze baseline 182 → 196
+  (sanctioned 4-pair rebaseline + 7 new capture ids).
   (SC-169).** Point at a statblock, ability card, hero sheet or GM tracker and a small
   icon-only panel appears at its top-right corner, seated on the card's edge — always a
   collapse control, plus the edit pencil when that setting is on. Collapsed, an element folds
