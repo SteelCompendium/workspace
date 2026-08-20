@@ -260,6 +260,31 @@ didn't mount) plus human review of the PNGs.
   `check-freeze.sh` → `freeze OK (101/101 …)`. During execution the expected result is a
   sole mismatch on that file (e.g. `100/101`, only that name); any other mismatch is still
   a leak to fix. Each rebaseline needs its own dated sign-off recorded here:
+  - **2026-08-20, SC-154 tracker layout + SC-162 (worktree `sc154-tracker-layout`, landed
+    dse to develop): SANCTIONED 8-line rebaseline (4 twin+realprint pairs) + 14-line
+    WIDENING (7 new capture ids × twin+realprint), 182 → 196 — APPLIED at landing by the
+    orchestrator.** Sanction: **Scott on SC-154, 2026-08-20: "Option 1, sanctioned"** —
+    covering (a) the round-0→2 encounter/initiative spacing + portrait-fallback changes
+    (the "encounter/initiative print pair still pending from round 2") and (b) the round-3
+    command-bar layout he picked becoming the default. The ask named 2 pairs
+    (`encounter`, `initiative`); the applied set is 4 pairs because SC-169 landed in
+    between and froze two NEW encounter-rendering fixtures (`encounter-collapsed`,
+    `chrome-collapsed-rollout`) at the pre-SC-154 bytes — the plan-25 "sibling branch's
+    new fixture enlarges your rebaseline ask" case. Diagnosed, not assumed:
+    `encounter-collapsed--steel-print` was byte-identical to `encounter--steel-print` in
+    the OLD baseline and is byte-identical to it again in the new bytes (a collapsed
+    element prints expanded — chrome is print-absent), so the extra pairs are the same
+    sanctioned pixels under new names; `chrome-collapsed-rollout` is the rollout stack
+    containing the encounter. Every pair twin==realprint (in-run print-twin parity 98/98);
+    deterministic across 3 full sweeps incl. one from an rm-rf'd shots dir (which caught
+    stale round-3 review shots masquerading as producible — wipe before trusting a name
+    list). The widening's 7 ids: `encounter-narrow`, `initiative-narrow`,
+    `initiative-no-images`, `initiative-no-images-narrow` (rounds 0-2 fixtures that were
+    never widened), `initiative-controls` (the mid-fight bar), `initiative-controls-narrow`
+    and `initiative-log-open` (the drawer open — the promotion round's two permanent
+    regression shots). Backup: `freeze-baseline.sha256.pre-sc154-bak`. Deliverable files
+    preserved in `.superpowers/sdd/sc154/`. Verified after: `freeze OK (196/196 …)`,
+    exit 0.
   - **2026-08-03, SC-100** (plan 24 kit stat-tile rebuild): `kit--steel-print.png` only —
     Scott approved the round-3 after-shots; rebaseline applied at landing. Future Steel
     compositions for the remaining display families (SC-120) each need their own entry.
