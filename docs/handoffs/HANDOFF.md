@@ -1044,3 +1044,13 @@ no site project exists — offered to create one. Ships on the next SITE deploy 
 NOTE: v2/docs on main is ~40 files stale from SC-138 — `git diff` vs committed generated
 tree is not a review signal; use before/after regen snapshots. Live: nothing.
 Scott's queue: SC-154 pick, SC-152; SC-174 is ready to dispatch on his word.
+
+### 2026-08-20 — v2 SITE DEPLOYED (Scott-authorized): SC-173 live
+`just deploy-v2` from clean synced main (steel-etl a59b5a4): v2 main 3065adc, ws 085de3a;
+v2 ci SUCCESS; deploy also shipped the previously-landed-but-never-deployed SC-138 summoner
+content (~40 stale files — expected). LIVE VERIFIED on steelcompendium.io/v2/Read/heroes/
+classes/: Repel renders as a proper sc-head ability card (feature + ability headers,
+"Talent · Telekinesis", Triggered Action chip) and has ZERO TOC anchor entries (was the
+stray sidebar entry). CHANGELOG: SC-173 entry promoted to "## 2026-08-20 — v2 site deploy"
+dated header (Unreleased stays on top; plugin entries remain Unreleased until the 7.0.0
+cut). SC-173 Done. Scott's queue: SC-154 pick, SC-152; SC-174 on his go.
