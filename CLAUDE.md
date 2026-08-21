@@ -117,7 +117,7 @@ Hierarchical classification used across all data repos: `source/type/item` (e.g.
 `mcdm.heroes.v1/feature.ability.fury.level-1/gouge`). Codes are website permalinks
 (`/scc/{code}/`), API keys, and cross-reference links. Scheme spec is **v1.1**.
 
-Registry is **~3,085 codes** across four books (heroes ~1,950, beastheart 241, monsters 662,
+Registry is **3,086 codes** across four books (heroes 1,952, beastheart 241, monsters 662,
 summoner 231). `feature` is the umbrella type; companions/fixtures/**retainers**/summoner
 statblocks all live in the `monster.*` family. Monsters-book retainers are
 `monster.retainer.statblock/<id>` with coded `advancement-features`/`role-advancement`
@@ -130,7 +130,9 @@ same `.statblock` segment. The 4
 summoner fixtures' advancement members are coded `feature.fixture.<category>.<base>.level-N/<member>`
 (×12, 2026-06-19 — ROADMAP #16; parser-emitted coded children, no heading/cap change). The 4
 Portfolio Champions gained `monster.champion.summoner.<circle>.advancement-features/<id>`
-container siblings (×4, 2026-08-08 — SC-138; members inline/uncoded, retainer model). Gods and
+container siblings (×4, 2026-08-08 — SC-138; members inline/uncoded, retainer model). The heroes book's one
+statblock (the Elementalist's Source of Earth summon) is
+`monster.summon.elementalist.statblock/source-of-earth` (2026-08-21, SC-180). Gods and
 saints live in the `religion.*` family (`religion.god/<id>`, `religion.saint/<id>`;
 `religion.domain`/`order`/`pantheon` reserved).
 

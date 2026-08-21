@@ -59,14 +59,14 @@ likely just noise. Decided 2026-06-18.
 
 ## Registry
 
-~3,081 codes across four books:
+3,086 codes across four books (exact as of 2026-08-21):
 
 | Book | Codes |
 |------|------:|
-| heroes | ~1,951 |
+| heroes | 1,952 |
 | beastheart | 241 |
 | monsters | 662 |
-| summoner | 227 |
+| summoner | 231 |
 
 (How each count reached its current value — and which plan moved it — is in
 [`scc-log.md`](scc-log.md).)
@@ -161,6 +161,15 @@ companions/fixtures — these are plain statblocks, no featureblock machinery:
   (`…/advancement-features/<id>` → `…/<id>-advancement-features`), but champion dirs are
   deliberately **excluded** from `buildAdvancementPairContent` — their base is a real
   statblock, so the bestiary group landing gives a richer preview card than the pair grid.
+
+**Heroes-book summon (2026-08-21, SC-180).** The heroes book's one statblock — the
+Elementalist's Source of Earth — is `mcdm.heroes.v1/monster.summon.elementalist.statblock/source-of-earth`,
+the first `monster.*` code outside the monsters/summoner/beastheart books. `summon` is a
+role branch in the established `monster.<role>.<class>` grammar; the source is authored to
+the corpus-standard statblock shape right after its Summon Source of Earth ability, and
+its Browse page sits at `monster/summon/elementalist/` (statblock segment hoisted). Any
+future class-summon statblock (another book's, or an errata's) takes the same shape:
+`monster.summon.<class>.statblock/<id>`.
 
 The **Rival Summoner** NPC sits *beside* the Monsters-book rivals:
 `monster.rival.<echelon>.statblock/<id>` (same type path — e.g. `rival-summoner` in the

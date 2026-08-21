@@ -710,3 +710,27 @@ group-landing preview card. **Cost.** Registry **+4** (3081 → 3085):
 Purely additive — every pre-existing code, including the four
 `monster.champion.summoner.<circle>.statblock/<id>` bases, is unchanged. `go test ./...`,
 `gen --all`, and `site` clean. (Linear SC-138.)
+
+## 2026-08-21 — Heroes-book summon statblock: `monster.summon.elementalist.statblock/source-of-earth`
+
+The heroes book's ONE statblock — the Source of Earth from the Elementalist's Summon
+Source of Earth ability — was authored inside the ability's blockquote under a
+`>####### Source of Earth Statblock` heading. `collectBlockquoteHeadings`' regex
+(`^>\s*(#{6,})\s+`) matches that line, so the statblock split off as an untyped sibling
+section and rendered as a flattened paragraph of literal `>` markers and pipe syntax
+(user report via Discord, Linear SC-180). Restructured in
+`steel-etl/input/heroes/Draw Steel Heroes.md` to the corpus-standard statblock shape
+(the summoner book's minions are the precedent): top-level
+`<!-- @type: statblock | @category: summon | @subcategory: elementalist -->` +
+`####### Source of Earth`, stat table un-blockquoted, ⭐️/🗡 feature blockquotes,
+stat-grid labels + Power Roll header un-linked per the statblock source rules. No parser
+change. **This is the first `monster.*` code in `mcdm.heroes.v1`**, and it mints a new
+`summon` role branch following the established `monster.<role>.<class>` grammar
+(companions: `monster.companion.beastheart.*`; summoner minions:
+`monster.minion.summoner.<portfolio>.statblock`). Site: the statblock now renders as a
+real `sb-wrap` card on the Elementalist class page, the Read chapter, and its own Browse
+page (`Browse/monster/summon/elementalist/source-of-earth`, statblock path segment
+hoisted as usual). **Cost.** Registry **+1** (3,085 → 3,086):
+`mcdm.heroes.v1/monster.summon.elementalist.statblock/source-of-earth`. Purely additive —
+verified against the prior registry: nothing changed or removed. `gen --all`, `site`,
+`go test ./...`, `validate` all clean. (Linear SC-180.)
