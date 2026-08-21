@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **Site: subclass features render as proper Feature/Ability cards again (SC-174).** Any
+  feature or ability whose heading carried an extra attribute (its subclass, a cost) was
+  silently skipped by the card-splice pass and rendered as raw prose with icons — 60
+  headings across the Beastheart, Summoner and Fury class pages, and (since the Source of
+  Earth statblock fix) the Elementalist's whole 8th-level specialization section. A
+  one-line regex widening restores the cards everywhere; a regression test pins it.
+
 - **DSE plugin: the initiative tracker's round/Malice controls become a command bar;
   encounter/initiative spacing overhauled (SC-154); broken portraits get themed
   placeholders (SC-162).** The round counter, its two controls, the Malice pool,
