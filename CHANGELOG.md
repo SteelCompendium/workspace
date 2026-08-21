@@ -8,6 +8,16 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **Site: the Source of Earth statblock renders as a real statblock card (SC-180).** The
+  Elementalist's Summon Source of Earth summon — the heroes book's only statblock — used
+  to render as a flattened wall of raw `>` markers and pipe-table syntax with its stats
+  scrambled. It's now a proper Draw Steel statblock card (head band, stat tiles,
+  characteristics, traits, Boulder Bash with its power roll) on the Elementalist class
+  page, the Read chapter, and its own new Browse page under `monster/summon/elementalist/`
+  — pinnable and permalinked like every other statblock
+  (`mcdm.heroes.v1/monster.summon.elementalist.statblock/source-of-earth`, the registry's
+  first heroes-book `monster.*` code).
+
 - **DSE plugin: the initiative tracker's round/Malice controls become a command bar;
   encounter/initiative spacing overhauled (SC-154); broken portraits get themed
   placeholders (SC-162).** The round counter, its two controls, the Malice pool,
