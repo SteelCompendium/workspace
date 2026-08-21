@@ -34,6 +34,7 @@ go under an *Internal* sub-heading.
   losing columns. Imageless combatants show a themed shield (heroes) / skull (enemies)
   glyph instead of the browser's broken-image icon (SC-162). Freeze baseline 182 → 196
   (sanctioned 4-pair rebaseline + 7 new capture ids).
+- **DSE plugin: every card element gains a standard hover menu and one-line collapse
   (SC-169).** Point at a statblock, ability card, hero sheet or GM tracker and a small
   icon-only panel appears at its top-right corner, seated on the card's edge — always a
   collapse control, plus the edit pencil when that setting is on. Collapsed, an element folds
