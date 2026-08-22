@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: `ds-skills` is a High-Fantasy Steel element with three layouts
+  (SC-182).** The two-viewport plain checklist gives way to a `style:` YAML choice —
+  `ledger` (recessed codex-niche grid, the new default, ~2.9× shorter), `chips`
+  (forged owned-chips against ghost chips, whole catalog in ~one viewport) or the
+  classic `list` — plus a menu-panel eye button that shows/hides unowned skills
+  per block (YAML `only_show_selected` seeds it). Print/PDF always keeps the classic
+  checklist form.
 - **DSE plugin: the character-sheet elements are forged cards, and characteristics
   are the statblock's own rail (SC-152).** Characteristics, Values row, Heroic
   resource, Surges, Hero tokens and Conditions all rendered as bare text; they now
