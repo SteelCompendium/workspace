@@ -260,6 +260,30 @@ didn't mount) plus human review of the PNGs.
   `check-freeze.sh` → `freeze OK (101/101 …)`. During execution the expected result is a
   sole mismatch on that file (e.g. `100/101`, only that name); any other mismatch is still
   a leak to fix. Each rebaseline needs its own dated sign-off recorded here:
+  - **2026-08-22, SC-152 sheet styling + characteristics unification (worktree
+    `sc152-sheet-styling`, landed dse to develop): SANCTIONED 20-line rebaseline
+    (10 twin+realprint pairs), count unchanged at 196 — APPLIED at landing by the
+    orchestrator.** Sanction: **Scott on SC-152, 2026-08-22: "sc-152 looks great, kick
+    it off"** — against the round-3 self-contained ask that enumerated exactly this
+    set. The ask grew from round 2's "2 lines" to 20: SC-170's realprint class doubled
+    every line, and round 3 (Scott's same-comment direction: "The characteristics here
+    should probably be the same css and code that is used in the statblocks") moved 8
+    more pairs. The 10 pairs by cause: `heroic-resource` + `surges` — the round-2
+    dead-selector padding repair (base-tier, legitimately reaches print, exactly as
+    hero-tokens' always has); `characteristics`, `hero`, `hero-narrow`, `hero-sparse`,
+    `hero-collapsed`, `chrome-hover-hero`, `chrome-placement-trio`,
+    `chrome-collapsed-trio` — the characteristics DOM unification (ds-char + the hero
+    sheet's region render the statblock's `.dse-sb__chars` rail via the shared kit
+    builder; the three chrome/collapsed names are SC-169 fixtures that render the hero
+    — the plan-25 "sibling fixture name-collateral" case, and collapsed prints
+    expanded). **No statblock pair moved** — the statblock's renderChars delegation to
+    the kit was proven byte-identical, which was the unification's own correctness
+    gate. Every pair twin==realprint; deterministic across repeated clean sweeps;
+    hashes computed from the REBASED landing tree (post-SC-168 develop), re-verified
+    unchanged after the fresh-eyes fix round (docs-image regen + comment fixes +
+    screen-only overflow guard — none touch print). Backup:
+    `freeze-baseline.sha256.pre-sc152-bak`. Deliverable preserved in
+    `.superpowers/sdd/sc152/`. Verified after: `freeze OK (196/196 …)`, exit 0.
   - **2026-08-20, SC-154 tracker layout + SC-162 (worktree `sc154-tracker-layout`, landed
     dse to develop): SANCTIONED 8-line rebaseline (4 twin+realprint pairs) + 14-line
     WIDENING (7 new capture ids × twin+realprint), 182 → 196 — APPLIED at landing by the
