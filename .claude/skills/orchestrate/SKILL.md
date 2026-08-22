@@ -39,9 +39,19 @@ rule #1, doc routing).
    message still-running agents whose branches went stale (new tracked-branch sha + new
    battery baselines).
 
-3. **Dispatch shape.** Background `Agent` per effort. Model tiering: **Opus** for design,
-   judgment, reviews, anything open-ended; **Sonnet** for well-specified implementation
-   and scoped re-reviews; the orchestrator model implements nothing. Every brief is
+3. **Dispatch shape.** Background `Agent` per effort. Model tiering (Scott's directive,
+   2026-08-22: subagents run the right-sized model — keeps the orchestrator session free
+   for his input and the workers cheap): **pass `model` explicitly on EVERY Agent
+   dispatch.** An omitted `model` silently inherits the orchestrator's model (Fable — the
+   most expensive tier; a full session of default-dispatched agents ran ~1.6M subagent
+   tokens on Fable before this was caught), and `subagent_type: "fork"` ALWAYS inherits
+   it regardless of `model` — fork only when the full conversation context is genuinely
+   required. Tiers: **Opus** for design, judgment, reviews, anything open-ended;
+   **Sonnet** for well-specified implementation, scoped re-reviews, and evidence/mock
+   rounds against a written spec; **Haiku** for mechanical chores (file shuffling,
+   attachment upload loops, re-running a battery someone else specified). The
+   orchestrator model implements nothing. A `SendMessage` resume keeps the agent's
+   original model — another reason to get the tier right at first dispatch. Every brief is
    self-contained and assumes the agent may later be REPLACED by a fresh one:
    - a context-loading section: the Linear ticket (read issue + ALL comments), the
      `.superpowers/sdd/<effort>/` reports from prior rounds, the worktree path + branch,
