@@ -8,6 +8,18 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the character-sheet elements are forged cards, and characteristics
+  are the statblock's own rail (SC-152).** Characteristics, Values row, Heroic
+  resource, Surges, Hero tokens and Conditions all rendered as bare text; they now
+  carry the same forged plate every tracker has, so a sheet reads as a set of
+  matching panels (heroic-resource/surges also got a dead-selector repair that
+  restores their intended padding + bold label). The characteristics element goes
+  one further: it renders the statblock's own characteristics rail — same code,
+  same CSS, same signed values, following the same two Characteristics display
+  settings — because they are exactly the same five numbers; the hero sheet's
+  Characteristics region does too. `ds-skills` is deliberately left bare — it
+  needs a real overhaul, not a frame (SC-182). Freeze baseline: sanctioned
+  10-pair rebaseline, count unchanged at 196.
 - **DSE plugin: inner features get real breathing room (SC-168).** A feature nested
   inside a standalone ability/feature card rendered flush against its parent card's
   edges with no frame of its own; it now wears the same nested-card treatment
