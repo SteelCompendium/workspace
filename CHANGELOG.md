@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: inner features get real breathing room (SC-168).** A feature nested
+  inside a standalone ability/feature card rendered flush against its parent card's
+  edges with no frame of its own; it now wears the same nested-card treatment
+  statblock/featureblock sub-features already have — its own rounded plate, proper
+  insets, and the action-type spine as the card's left edge. Screen-only; print and
+  the frozen shot baseline are byte-unchanged.
 - **DSE plugin: the initiative tracker's round/Malice controls become a command bar;
   encounter/initiative spacing overhauled (SC-154); broken portraits get themed
   placeholders (SC-162).** The round counter, its two controls, the Malice pool,
