@@ -1,17 +1,22 @@
 ---
 name: orchestrate
-description: Use when running a multi-ticket session as an orchestrator — the top model coordinates, gates, and reviews while background agents in isolated worktrees do all implementation. Battle-tested across the 7.0.0 endgame (2026-08-08 → 08-16).
+description: Use when running a multi-ticket session as an orchestrator — an Opus orchestrator coordinates, gates, and reviews while right-sized background agents in isolated worktrees do all implementation. Battle-tested across the 7.0.0 endgame (2026-08-08 → 08-16).
 ---
 
 # Orchestrate
 
 ## Overview
 
-The operating mode that shipped the DSE 7.0.0 endgame: **the orchestrator (Fable, or the
-most capable available model) never implements — it dispatches, watches, reviews,
-gates, and lands.** Background agents in isolated worktrees do every code change. The
-orchestrator's context stays lean enough to hold the whole board: every ticket's state,
-every agent's status, Scott's rulings, and the review pipeline.
+The operating mode that shipped the DSE 7.0.0 endgame: **the orchestrator never
+implements — it dispatches, watches, reviews, gates, and lands.** Background agents in
+isolated worktrees do every code change. The orchestrator's context stays lean enough to
+hold the whole board: every ticket's state, every agent's status, Scott's rulings, and
+the review pipeline.
+
+**Run the orchestrator on Opus, not Fable** (Scott's ruling, 2026-08-22): a long-lived
+orchestrator re-reads its whole context every turn, and most turns are mechanical
+(dispatch, gating, Linear bookkeeping) — frontier rates on that loop are waste. Fable is
+opt-in for a session Scott explicitly wants top-model judgment on.
 
 Enter this mode when Scott says some form of "work the backlog / kick off work /
 orchestrate," or when more than one independent effort is in play. For a single small
@@ -53,16 +58,43 @@ rule #1, doc routing).
    orchestrator model implements nothing. A `SendMessage` resume keeps the agent's
    original model — another reason to get the tier right at first dispatch. Every brief is
    self-contained and assumes the agent may later be REPLACED by a fresh one:
-   - a context-loading section: the Linear ticket (read issue + ALL comments), the
-     `.superpowers/sdd/<effort>/` reports from prior rounds, the worktree path + branch,
-     a fetch-and-rebase-first instruction carrying the current main sha and battery
-     baselines;
-   - the task, with Scott's rulings quoted or precisely paraphrased;
+   - a context-loading section: the effort's **`decisions.md` ledger** + prior-round
+     reports in `.superpowers/sdd/<effort>/`, the worktree path + branch, a
+     fetch-and-rebase-first instruction carrying the current main sha and battery
+     baselines. **Agents NEVER call Linear** — not to read history, not to post (rule 3b);
+   - the task, with Scott's rulings quoted **verbatim** (the ledger carries them; never
+     paraphrase a ruling into a brief);
    - gates (point at `dse-verify`; state expected numbers);
-   - the Linear deliverable (point at `linear-flow`; self-contained ask, inline images,
-     labels are REPLACE-not-merge on `save_issue` — pass the full set);
+   - the deliverable draft: for any round that ends in a Scott decision, the agent writes
+     `linear-ask.md` in its sdd dir — self-contained ask text with `{{IMG:<filename>}}`
+     placeholders for its evidence PNGs. The ORCHESTRATOR edits/approves and posts it;
    - report path (`sdd/<effort>/`, effort-prefixed filenames) + a short return contract.
-   Context travels in **files and Linear comments, never conversation memory**.
+   Context travels in **files, never conversation memory** — Linear is Scott's UI and the
+   audit trail, not the agents' context source.
+
+3b. **Linear economics** (Scott's ruling, 2026-08-22 — the ticket loop was burning
+   tokens; keep Linear as his UI, make it nobody else's):
+   - **The decisions ledger is the gate ritual.** Each effort has
+     `.superpowers/sdd/<effort>/decisions.md`: every Scott ruling appended **verbatim,
+     dated**, with anything it supersedes struck through (`~~…~~ superseded by …`).
+     Update it the moment a ruling arrives, before dispatching on it. Agents read the
+     ledger instead of the thread — it is distilled current-state, so it also prevents
+     the real failure mode of thread-skimming: resurrecting a superseded instruction
+     (SC-182's thread still said "the loser gets deleted" two rulings after Scott chose
+     to keep both). The ledger dir is gitignored/machine-local — cross-machine and
+     cross-session continuity is the ledger + `HANDOFF.md`, per existing doctrine.
+   - **Fetch discipline:** on "ticket updated", `list_comments` with a small `limit`
+     and read newest-first; expand backward only when a ruling references earlier
+     discussion or is ambiguous. Never re-pull a full thread to find one new comment
+     (every fetch re-signs every inline image URL into context).
+   - **Posting goes through `scripts/linear-post.py`** (uploads evidence PNGs + posts
+     the comment + optional state flip in ONE Bash call — no signed upload URLs ever
+     enter model context). Needs `LINEAR_API_KEY` (env var, or
+     `~/.config/linear/api_key`). Fall back to the MCP prepare/PUT loop only if the
+     script is unavailable; labels still go via `save_issue` (REPLACE — full set).
+   - **Scoped eyeballing:** the orchestrator personally views only the 1–2 DECIDING
+     images before relaying to Scott; full-set eyeballing belongs to the (Opus) design
+     and review agents. Vision tokens at orchestrator rates are real money.
 
 4. **Continuity ladder.** To continue an agent: `SendMessage` resume first (works after
    stalls, session-limit kills, and even completion). On "No transcript found", dispatch

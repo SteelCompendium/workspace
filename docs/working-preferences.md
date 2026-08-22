@@ -228,3 +228,15 @@ Obsidian) and the **v2 compendium site** (`v2/`, MkDocs, built by steel-etl) are
 products. The plugin touches the site in exactly one place: `v2/docs/stylesheets/palette.css`
 is the read-only source of brand `--sc-*` hex values for the plugin's "Steel" theme.
 Visual QA for plugin work happens in Obsidian, not on the v2 site.
+
+## Token economics: right-sized models, Linear stays Scott's UI (2026-08-22)
+
+Scott's directives, same day, in order: *"make sure work is done on subagents that are
+spun up with the right models to save tokens"*; the orchestrator itself should not run on
+Fable; and Linear must stay his review surface (screenshots, rich text, awaiting-filter)
+while the *machinery* around it stops burning tokens. The mechanics all live in the
+`orchestrate` skill (rules 3/3b): explicit `model` on every dispatch, Opus orchestrator,
+per-effort verbatim `decisions.md` ledgers instead of agents reading ticket threads,
+newest-first comment fetches, `scripts/linear-post.py` for image+comment posting, and
+orchestrator eyeballing only the deciding images. When in doubt, the cheaper model with a
+self-contained brief beats the bigger model with ambient context.
