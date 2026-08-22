@@ -8,6 +8,14 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: one Conditions manager modal replaces the picker + Customize pair
+  (SC-186).** A vertical list of the *active* conditions (duration/effect badges,
+  inline cog editor, per-row delete) with an autocomplete "Add condition" input —
+  typing filters the catalog and any novel text becomes a custom condition with a
+  fallback glyph. Conditions gain a first-class `duration` (`eot` / `save-ends` /
+  `eoe`); the old modal's bug that silently erased hand-authored durations on save is
+  fixed. Full independent-review pipeline: 4 HIGH + 5 MED findings fixed and
+  probe-verified before landing.
 - **DSE plugin: `ds-skills` is a High-Fantasy Steel element with three layouts
   (SC-182).** The two-viewport plain checklist gives way to a `style:` YAML choice —
   `ledger` (recessed codex-niche grid, the new default, ~2.9× shorter), `chips`

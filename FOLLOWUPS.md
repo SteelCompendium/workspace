@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 78 -->
+<!-- next-id: 79 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1488,3 +1488,16 @@ source on the next run. Measured: same tree reports 67 failures with it present
 `visual-harness/fixtures`, `sidebarEncounterHandoff`; deleted → green. One-line remedy:
 `'^\.\./main$': '<rootDir>/main.ts'` in `moduleNameMapper` (and/or have cssNesting build to
 a temp dir). Until then: `rm -f main.js styles.css` before `npx jest` (recorded in dse-verify).
+
+## 78. Non-Latin custom-condition names slug to empty — silent no-op (SC-186 re-review, 2026-08-22)
+
+`slugConditionKey` (dse `src/elements/conditionDisplay.ts`) follows the repo's ASCII
+`slugify` convention: NFKD-normalize, strip non-ASCII, clamp 64. Consequence found by the
+SC-186 re-review: `æ` doesn't decompose ("æther-touched" → "ther-touched") and fully
+non-Latin input slugs to `""` ("日本語" → empty), making the conditions modal's
+"Add custom" row a silent no-op in a non-Latin vault. Inherited repo-wide convention, not
+an SC-186 bug — fixing it properly means deciding a transliteration/passthrough policy for
+every slugify call site at once. Also parked here from the same review (INFO, unreachable
+via normal UI): `ConditionsModal.emitChange()` clones entries, so reference-equality
+removal from a pre-modal icon closure can never match — a key/identity-based removal
+predicate is the real fix if it ever becomes reachable.
