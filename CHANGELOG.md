@@ -8,6 +8,18 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the settings preview is a full-height sample, not a porthole; Features
+  get their own settings page (SC-187, SC-193).** The preview pane was docked to the
+  bottom of the settings page and therefore height-capped — 350px showing a 3646px
+  statblock, its own scrollbar nested inside Obsidian's, and on some pages the *only*
+  scrollbar on screen. Worse, it never scrolled far enough to reach a feature card, so
+  four settings (Feature style, Feature columns, Keyword display, Distance+target)
+  changed content you couldn't see. The dock is gone: the sample sits in the page flow
+  at its natural height, one scroller per page, with a shorter canned statblock chosen
+  so every setting on the page visibly moves it. Separately, two preferences that have
+  always affected standalone Features were filed under Statblock display; they now have
+  a **Feature display** page of their own (still part of the statblock preset, so
+  nothing changes for existing vaults).
 - **DSE plugin: the initiative tracker wears the stamina instruments, and the portrait
   is the turn control (SC-183).** Every hero row and expanded enemy row now mounts the
   real stamina bar — state word, big readout, temp plate, forged gauge — on a rebalanced
