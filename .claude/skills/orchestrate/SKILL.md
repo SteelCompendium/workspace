@@ -186,6 +186,13 @@ rule #1, doc routing).
   scratch log's *contents* matched a stale log from a different branch and read a false
   `FREEZE VIOLATED` (SC-160 fix round, 2026-08-17). Tell agents: never wait on scratch
   filenames/contents — read the process's own output, or write to a per-run unique path.
+- **`git checkout -- .` in `v2` DESTROYS hand-authored source** (found the hard way,
+  SC-90, 2026-08-23 — it cost that agent its JS + CSS edits once). `v2/docs/` is mostly
+  generated, but `docs/javascripts/` and `docs/stylesheets/` are **hand-authored and
+  tracked** and live *inside* that tree, so the reflexive "clean the generated dirt"
+  recipe reverts real work. Safe form, and the one briefs must specify:
+  `git clean -fdq docs site && git checkout -- docs/Browse docs/Read docs/scc`
+  (restore only the genuinely generated subtrees; never blanket-checkout `docs/`).
 - The freeze baseline (`.superpowers/sdd/freeze-baseline.sha256`) is **machine-local**
   (screenshot bytes are not portable across machines). On a new machine, regenerate it
   from a clean `main` checkout before trusting freeze gates — procedure in `dse-verify`.
