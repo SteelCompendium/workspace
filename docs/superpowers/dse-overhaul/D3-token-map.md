@@ -646,6 +646,52 @@ overridden in any theme or print block: both are Steel-, light-, and print-invar
 | `--dse-text-scale` | SC-112 T7 (user text-size multiplier) | `1` | = Legacy (theme-invariant) | | = Legacy (consumers print-excluded) |
 | `--dse-card-scale` | SC-112 T7 (user card-size multiplier) | `1` | = Legacy (theme-invariant) | | = Legacy (consumers print-excluded) |
 
+## SC-185 amendment (2026-08-22 — the type-size role scale)
+
+SC-185 adds twelve **type-size** tokens: nine ROLE tokens plus three USER knobs. They are
+the plugin's standard way to state a font size — a bare `font-size: 0.85em` is prohibited
+for new work and fails `test/unit/build/fontSizeContract.test.ts`. Authoring rules live in
+the plugin's `docs/font-sizes.md`.
+
+Three properties matter for this map:
+
+1. **They are ratios, not sizes.** Every role is an `em` ratio against the element's own
+   inherited size, so the ROOT of the scale is whatever the user's theme gives the note.
+   The plugin therefore never states an absolute size and cannot fight a theme's
+   typography — deliberately unlike Obsidian's `--font-ui-*` variables, which are absolute
+   px tied to the *interface* font-size slider and drift against em-based card text
+   whenever a user moves either slider.
+2. **Defaults are transcriptions.** Each role's ratio is the value the dominant cluster of
+   existing declarations already used (audit: 116 `font-size` declarations across 30
+   distinct values), and the knobs default to `1`, so every role computes to exactly the
+   literal it replaced. Adopting a token is a zero-pixel rename; every *intentional* size
+   correction is a separate, evidence-backed change.
+3. **Theme- AND print-invariant, by design rather than omission.** No theme or print block
+   overrides any of them: a caption is still a caption on paper, and the size prefs are
+   documented to apply everywhere including print/export — the same contract the six
+   `--dse-font-*` family pickers already carry, and the reason the print blocks avoid
+   `!important`. This differs from `--dse-text-scale`/`--dse-card-scale` above, whose
+   consumer rules ARE print-excluded because they are a whole-element zoom. The `control`
+   role is the one whose consumer rule is itself print-excluded (controls are screen
+   chrome), so it cannot reach paper either way.
+
+Union 76 → 88; `STEEL_INVARIANT`/`THEME_INVARIANT` 8 → 20, `PRINT_INVARIANT` 22 → 34.
+
+| Token | D3-spec concept | Legacy (verbatim) | Steel (dark) | Steel light | Print |
+|---|---|---|---|---|---|
+| `--dse-fs-small-scale` | SC-185 (user knob: below-body roles) | `1` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
+| `--dse-fs-large-scale` | SC-185 (user knob: above-body roles) | `1` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
+| `--dse-fs-control-scale` | SC-185 (user knob: control text) | `1` | = Legacy (theme-invariant) | | = Legacy (consumer print-excluded) |
+| `--dse-fs-heading` | SC-185 role: card headline (the name the card is about) | `calc(1.25em * var(--dse-fs-large-scale))` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
+| `--dse-fs-subheading` | SC-185 role: band / group title | `calc(1.15em * var(--dse-fs-large-scale))` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
+| `--dse-fs-numeral` | SC-185 role: display stat VALUE | `calc(1.75em * var(--dse-fs-large-scale))` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
+| `--dse-fs-body` | SC-185 role: the element's reading size (= the host note's) | `1em` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
+| `--dse-fs-control` | SC-185 role: button / stepper / tab / collapse-header text | `calc(1em * var(--dse-fs-control-scale))` | = Legacy (theme-invariant) | | = Legacy (consumer print-excluded) |
+| `--dse-fs-secondary` | SC-185 role: supporting prose, dense tables | `calc(0.9em * var(--dse-fs-small-scale))` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
+| `--dse-fs-label` | SC-185 role: field labels, eyebrows, decks, chips | `calc(0.85em * var(--dse-fs-small-scale))` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
+| `--dse-fs-caption` | SC-185 role: hints, log lines, small badges | `calc(0.8em * var(--dse-fs-small-scale))` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
+| `--dse-fs-micro` | SC-185 role: tallies, tags, superscript markers | `calc(0.7em * var(--dse-fs-small-scale))` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
+
 ## SC-106 amendment (2026-08-03 — provisional Steel hue resolution)
 
 Scott's ruling (2026-08-03): act-spine/action-type colors follow `reference/colors.md`

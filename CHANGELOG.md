@@ -8,6 +8,19 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: font sizes are a named scale you can tune, not scattered literals
+  (SC-185, part 1).** The plugin's type sizes were 116 hand-written values across 30
+  distinct numbers, so "a label" was a different size in every element. They now come
+  from nine named roles — heading, subheading, numeral, body, control, secondary, label,
+  caption, micro — and three new Typography sliders retune them against your own theme:
+  **Small text size** (labels, captions, hints, log lines), **Large text size** (card
+  names, band titles, display numbers) and **Control text size** (buttons, steppers,
+  tabs), each 80–120% with the live preview reacting as you drag. Every size is stated
+  as a *ratio* to your theme's own text size rather than in fixed pixels, so changing
+  your Obsidian font size carries the whole plugin with it. Defaults are today's exact
+  sizes — nothing moves until you move a slider. *Internal:* the rule that new CSS must
+  use the scale is enforced by a build test, not just documented, and the remaining 106
+  pre-scale declarations are inventoried for the round-2 sweep.
 - **DSE plugin: one Conditions manager modal replaces the picker + Customize pair
   (SC-186).** A vertical list of the *active* conditions (duration/effect badges,
   inline cog editor, per-row delete) with an autocomplete "Add condition" input —

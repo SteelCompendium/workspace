@@ -46,6 +46,15 @@ Two non-negotiables drive every component:
   pinned to the 125% base at every width (`extra.css`), so type and rem-based layouts
   don't enlarge or reflow on wide monitors — the **Text size** slider is the one
   intentional way to scale reading.
+  **Type SIZES are a named role scale, not free numbers.** In the plugin this is the
+  nine `--dse-fs-*` tokens (heading / subheading / numeral / body / control / secondary /
+  label / caption / micro), every one an **`em` ratio** so the root of the scale is the
+  host theme's own text size — the plugin states no absolute size and therefore cannot
+  fight a user's theme. Pick the role that says what the text *is*, never how big it
+  should look; a hardcoded `font-size` is prohibited and gated
+  (`draw-steel-elements/test/unit/build/fontSizeContract.test.ts`). Three settings
+  sliders retune the bands (Small / Large / Control text size). Full rules:
+  [`draw-steel-elements/.repo-docs/font-sizes.md`](draw-steel-elements/.repo-docs/font-sizes.md).
 - **Backgrounds.** Flat solid charcoal. **No gradients, photos, textures, or patterns**
   as web chrome (full-bleed art is a print-book thing; box it deliberately if ever
   used). No glassmorphism, no backdrop blur — transparency only as 6–12% accent/code
@@ -315,7 +324,9 @@ controversy): users pick how dense/faithful the rendering is, **per part**.
    Site-only polish lives in `v2` CSS/JS/static_content or `steel-etl/internal/site`
    (which emits only the website). See `ARCHITECTURE.md` for where changes go.
 3. Compose existing tokens (`--sc-*`, `--fx-*`); don't invent brand colors. Define
-   both slate + default themes. Respect the load order.
+   both slate + default themes. Respect the load order. **The same applies to type
+   size**: compose the plugin's `--dse-fs-*` role scale, never a fresh literal — see
+   "Type" above.
 4. Saturated color = semantics only. No gradients/textures as chrome. No animation
    beyond hover-lift and 0.15–0.2s transitions.
 5. Glyph font / typed emoji / Material thin-line — never new hand-drawn icons.
