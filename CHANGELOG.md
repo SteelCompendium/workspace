@@ -8,6 +8,17 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **Filter abilities by condition (SC-90).** The feature Search & Filter page gained a
+  **Condition** chip row — bleeding, dazed, frightened, grabbed, prone, restrained,
+  slowed, taunted, weakened — so "show me everything that deals with *prone*" is one
+  click (44 abilities), and it combines with the existing Type/Source/Level/Action/
+  Keyword facets and the any/all toggle (prone **and** slowed → 1). Every ability card
+  now chips the conditions it involves, so a filtered result shows on its face why it
+  matched. A condition counts when it appears in the ability's **rules text** —
+  whether the ability inflicts it, requires it, or removes it; flavor text doesn't
+  count, so Assassinate's "an already weakened foe" and Accelerate's "the world has
+  slowed down" stay out of those lists.
+
 - **DSE plugin: the initiative tracker wears the stamina instruments, and the portrait
   is the turn control (SC-183).** Every hero row and expanded enemy row now mounts the
   real stamina bar — state word, big readout, temp plate, forged gauge — on a rebalanced
