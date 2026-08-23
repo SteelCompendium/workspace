@@ -8,6 +8,19 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the element menu panel reads as seated, not detached, on
+  header-bearing cards (SC-189).** The panel's position was already exact — its
+  bottom edge lands 0.00px from the card's own top border on every element,
+  measured three independent ways. The actual defect was material: that top
+  border, the panel's documented "floor," is only 12%-alpha and all but
+  disappears next to a statblock's or featureblock's vivid role-tinted header
+  band starting immediately beneath it (a measured brightness step of ~34-37
+  points at the seam, vs ~0.5 on a headerless card — the exact asymmetry behind
+  "feels detached… almost looks 1 pixel too low"). The border now picks up the
+  same role accent its own header band already carries on the band's bottom
+  border, so the seam reads as a deliberate line instead of an accidental gap.
+  *Internal:* CSS-contract test added; screen-only, so print/freeze are
+  byte-identical before and after.
 - **DSE plugin: font sizes are a named scale you can tune, not scattered literals
   (SC-185, part 1).** The plugin's type sizes were 116 hand-written values across 30
   distinct numbers, so "a label" was a different size in every element. They now come
