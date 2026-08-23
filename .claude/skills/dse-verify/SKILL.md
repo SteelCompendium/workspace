@@ -210,6 +210,19 @@ didn't mount) plus human review of the PNGs.
     for two more hashes that no longer exist.
 
   Widenings so far:
+  - **2026-08-23, SC-183 promotion round: 196 → 210.** Seven new capture ids × twin +
+    realprint (14 lines), from the tracker overhaul's new fixtures: `initiative-roster`,
+    `-roster-500`, `-roster-narrow`, `initiative-squads`, `-squads-500`,
+    `initiative-portraits-off`, `initiative-mark-seal`. **Additions-only, so no sanction
+    needed** — verified before applying that none of the 7 names already existed in the
+    196-line baseline (scripted collision check, zero hits), hashes deterministic across
+    two clean sweeps, twin==realprint per pair. Backup:
+    `freeze-baseline.sha256.pre-sc183-bak`. Post-apply: `freeze OK (210/210)`, exit 0.
+    Note the four losing `initiative-mark-*` candidates (sheathe/shutter/laurel) were
+    deleted in the same round and were never in the baseline, so this is a pure addition,
+    not a swap. **`check-freeze.sh` needs no edit for a widening** — its counts are
+    computed (`${ok_count}/${total}`), not literals; the "66" in its header comment is
+    stale historical prose, not a live count.
   - **2026-08-02, SC-108 / FOLLOWUPS #37: 98 → 101.** The `featureblock/advancement`
     fixture (3 lines: legacy-dark, legacy-light, steel-print).
   - **2026-08-04, SC-121 Batch 4: 101 → 107.** Two new browser fixtures, 3 lines each —
