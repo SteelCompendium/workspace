@@ -105,6 +105,22 @@ rule #1, doc routing).
    long-running output to files rather than streaming (the 600s stream watchdog kills
    silent agents).
 
+   **Parked-on-a-background-job is the #1 agent stall — and briefs do NOT prevent it
+   (3 occurrences in one day, 2026-08-23: SC-183, SC-189, SC-187-rebase).** An agent
+   starts `npm run shots` / `parity` / `mkdocs` in the background or under a Monitor,
+   says "I'll wait for the notification", and stops — the notification never comes,
+   because a job the agent itself started does not wake the agent's loop. Telling them
+   "never background a gate, run it in the foreground" in the brief did not stop it
+   even once; the Monitor tool makes waiting *feel* like a supported path. **So treat
+   this as the orchestrator's job, not the agent's:** when an agent's final text says
+   it is waiting on anything, immediately (a) `ps aux` for the real process, (b) if
+   it's alive, arm a watcher —
+   `pid=<pid>; while kill -0 $pid 2>/dev/null; do sleep 15; done; echo EXITED`
+   as a **background Bash** call, which DOES wake you — and (c) on that notification,
+   `SendMessage` the agent that the job finished and it must read the job's own log
+   rather than wait again. Cost of the loop is ~2 minutes of orchestrator time; cost
+   of missing it is a dead agent holding a finished branch.
+
    **The spawn cap (learned 2026-08-11 → 08-16):** sessions cap at 200 subagent spawns;
    the cap **survives compaction** — only a genuinely fresh session (or
    `CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`) resets it. Past the cap, the only moves are
