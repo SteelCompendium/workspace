@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: "Flat List" feature style now matches the site (SC-188).** In flat mode
+  the plugin still drew the action-type colored spine down each feature's left edge —
+  a bar the v2 site never draws in that style, so the setting didn't produce the look it
+  advertises. Flat features now carry no spine and rely on the HFS separators between
+  them, exactly as the site renders them; card style is unchanged. (An earlier fix round
+  had only squared the bar's corners, acting on an assumption its own comment recorded
+  as fact.) Freeze baseline: sanctioned 4-line rebaseline, count unchanged at 210.
 - **DSE plugin: the settings preview is a full-height sample, not a porthole; Features
   get their own settings page (SC-187, SC-193).** The preview pane was docked to the
   bottom of the settings page and therefore height-capped — 350px showing a 3646px

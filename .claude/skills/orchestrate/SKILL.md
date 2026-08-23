@@ -202,6 +202,16 @@ rule #1, doc routing).
   scratch log's *contents* matched a stale log from a different branch and read a false
   `FREEZE VIOLATED` (SC-160 fix round, 2026-08-17). Tell agents: never wait on scratch
   filenames/contents — read the process's own output, or write to a per-run unique path.
+- **A worktree's SUPERPROJECT pin goes stale and fails doc-reading tests** (bit twice,
+  2026-08-23: SC-183 and SC-188 rebase rounds). `git rebase origin/develop` updates the
+  *submodule* branch but leaves the worktree's superproject checkout wherever it was cut,
+  so workspace-level docs there are frozen in the past. `token-coverage.test.ts` reads
+  `docs/superpowers/dse-overhaul/D3-token-map.md` by candidate-path search and finds the
+  stale copy first — after SC-185 landed 12 new `--dse-fs-*` rows, every older worktree
+  reported a phantom red. **Diagnose by comparing the two copies** (`grep -c` the new
+  token in the worktree's copy vs the main checkout's) before believing the failure, and
+  clear it with the test's own `DSE_TOKEN_MAP_PATH` override pointed at the main
+  checkout. Not a code defect and never a reason to edit the branch.
 - **`git checkout -- .` in `v2` DESTROYS hand-authored source** (found the hard way,
   SC-90, 2026-08-23 — it cost that agent its JS + CSS edits once). `v2/docs/` is mostly
   generated, but `docs/javascripts/` and `docs/stylesheets/` are **hand-authored and
