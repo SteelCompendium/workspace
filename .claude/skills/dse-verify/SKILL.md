@@ -209,6 +209,21 @@ didn't mount) plus human review of the PNGs.
     fixture contributes exactly one line — don't pattern-match the examples and go looking
     for two more hashes that no longer exist.
 
+  **2026-08-23, SC-188 (flat feature style): 4-line sanctioned rebaseline, count
+  unchanged at 210.** The plugin drew an act-colored spine bar in flat mode that the
+  site never draws — a previous round (SC-101) had only squared the bar's corners, on an
+  assumption its own code comment recorded as fact ("the site's flat mode uses a plain
+  square border-left"), which turned out to be false. Setting the flat-mode bar to
+  `display:none` legitimately moves exactly two twin+realprint pairs:
+  `statblock-featstyle-flat--steel-{print,realprint}` and
+  `featureblock-featstyle-flat--steel-{print,realprint}`. **Scott's sanction: "sc-188
+  approved" (2026-08-23)**, on an ask that named the four files and showed before/after.
+  Verified before applying: the agent stash-proved the "before" hashes byte-identical to
+  the then-live baseline, hashes deterministic across two clean sweeps, twin==realprint
+  within each pair. Backup: `freeze-baseline.sha256.pre-sc188-bak`. Post-apply against
+  the branch's shots: `0 checksum mismatches` (14 "missing" are SC-183's newer tracker
+  ids, not producible on that older base — expected, not a failure).
+
   Widenings so far:
   - **2026-08-23, SC-183 promotion round: 196 → 210.** Seven new capture ids × twin +
     realprint (14 lines), from the tracker overhaul's new fixtures: `initiative-roster`,
