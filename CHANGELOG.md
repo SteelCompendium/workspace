@@ -8,6 +8,21 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the initiative tracker wears the stamina instruments, and the portrait
+  is the turn control (SC-183).** Every hero row and expanded enemy row now mounts the
+  real stamina bar — state word, big readout, temp plate, forged gauge — on a rebalanced
+  row (bigger portrait, the gauge and its numeral on one line); collapsed enemy cells get
+  a mini gauge under their numbers. The dedicated turn checkbox is gone from the screen:
+  **click a combatant's portrait to mark their turn taken**, which stamps a struck steel
+  seal into the portrait's corner and reads the whole row as spent — while every control
+  on that row stays fully usable, because the Director still edits Stamina out of turn.
+  WINDED/DYING moved into the conditions row as word-chips. Squads gained real support:
+  **multiple minion squads per group**, Stamina pools that resolve per squad, and a
+  captain badge that is itself the one-click control for promoting or relieving a captain
+  (GitHub #67). Two rules bugs fixed along the way — a squad pool no longer shows the
+  "winded" frame (minions can't be winded), and monsters show DEAD rather than "Dying"
+  (dying is hero-only). Print keeps the checkbox, since paper has no portrait to click.
+  Freeze baseline 196 → 210 (additions-only widening; no existing shot moved).
 - **DSE plugin: font sizes are a named scale you can tune, not scattered literals
   (SC-185, part 1).** The plugin's type sizes were 116 hand-written values across 30
   distinct numbers, so "a label" was a different size in every element. They now come
