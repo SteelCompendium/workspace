@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 81 -->
+<!-- next-id: 82 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1550,3 +1550,24 @@ for every combo that renders chrome, so it needs a sanctioned rebaseline. Worth 
 #79's larger vendoring effort, since it's the known instance and cheap.
 
 **Effort:** small (CSS + rebaseline); do not bundle with #79.
+
+## 81. `ReadingModeBlockHost.replaceSource` writes the file even when the body is unchanged (SC-198 investigation, 2026-08-25)
+
+**Identified:** SC-198 root-cause work, 2026-08-25.
+
+**What:** `ReadingModeBlockHost.replaceSource` (dse) calls `app.vault.process` unconditionally.
+When the serialized body is byte-identical to what's already there, that write still triggers
+Obsidian's full `setViewData → previewMode.set → renderer.set` teardown of the reading-mode
+preview.
+
+**Why:** every such write costs a whole-note re-render — scroll clamp, ~270ms blank flash, every
+`ds-*` block in the note rebuilt — for **no state change at all**. Measured during SC-198 against
+a live Obsidian 1.13.7: Obsidian provably no-ops an identical-content write at the disk layer, so
+skipping it when the body is unchanged is free and removes an entire class of spurious re-render.
+
+**Context:** this is the "freebie" isolated from SC-198's option C. It is independent of which
+scroll-preservation approach SC-198 ultimately takes (options B/D there) — worth taking either
+way. Full evidence and probe scripts: `.superpowers/sdd/sc198/root-cause.md`.
+
+**Effort:** trivial — one equality check before `vault.process`. If SC-198 lands option B, fold
+it in there and mark this done.
