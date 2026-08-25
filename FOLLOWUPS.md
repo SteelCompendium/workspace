@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 82 -->
+<!-- next-id: 84 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1571,3 +1571,41 @@ way. Full evidence and probe scripts: `.superpowers/sdd/sc198/root-cause.md`.
 
 **Effort:** trivial — one equality check before `vault.process`. If SC-198 lands option B, fold
 it in there and mark this done.
+
+## 82. `rule/downtime/crafting-project` + `research-project` duplicate 20 full project bodies already published as leaf pages (SC-201, 2026-08-25)
+
+**Identified:** SC-201 investigation, 2026-08-25.
+
+**What:** the two downtime rule pages inline **20 complete project bodies** that are already
+published as their own leaf pages elsewhere in Browse. The same content is rendered twice, in
+full, at two URLs.
+
+**Why:** it inflates two already-heavy pages (see ROADMAP #1 on page weight), and it means a
+reader can land on either copy with no signal that the other is canonical.
+
+**Context:** once downtime projects render as cards (SC-201), these pages should embed
+*preview* cards that link to the leaf page rather than duplicating the body — the card shape
+makes the preview form cheap. Do this after SC-201 lands, not before; the card renderer is the
+prerequisite.
+
+**Effort:** S once SC-201's `project_cards.go` exists.
+
+## 83. Weapon-enhancement table headings: missing "…Table" suffix and an "Enchantment" typo in the book source (SC-201, 2026-08-25)
+
+**Identified:** SC-201 investigation, 2026-08-25.
+
+**What:** two source inconsistencies in `steel-etl/input/heroes/Draw Steel Heroes.md`:
+- the 5th- and 9th-level weapon enhancement tables lack the `…Table` suffix that the other
+  **seven** enhancement tables carry;
+- the 5th-level weapon table's first column header reads **"Enchantment"**, not "Enhancement".
+
+**Why:** the missing suffix breaks the naming symmetry the other seven establish, and the
+column header is inconsistent with every other use of the term in the book.
+
+**Context — needs a fidelity call, don't just fix it.** Both are **verbatim from the printed
+book**. This project's standing posture is book-faithful sources, so "correct the typo" is a
+deliberate divergence, not an obvious cleanup. Decide whether MCDM's text is reproduced as
+printed (and the fix belongs in the renderer or a `corrections` overlay) or normalized at
+source. Whatever is chosen should be applied consistently to every similar case, not one-off.
+
+**Effort:** XS mechanically; the policy decision is the whole cost.
