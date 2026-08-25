@@ -1,6 +1,6 @@
 # Roadmap
 
-<!-- next-id: 20 -->
+<!-- next-id: 21 -->
 
 New features and larger planned / in-flight efforts across the workspace. Smaller
 in-scope tangents to clear before the next feature go in `FOLLOWUPS.md`, not here.
@@ -251,6 +251,14 @@ the squeeze"), no longer a hard technical block. Its own brainstorm/spec/plan wh
 **Status:** open — motivated by FOLLOWUPS #38 (Dragon's Fire), which was fixed by a source
 reorder instead. This is the general mechanism so a future case needn't reorder.
 
+> **2026-08-25 (SC-201):** the same defect class is still live for the *unannotated* case, and
+> it is not hypothetical — a parser probe proved **12 enhancement paragraphs are attributed to
+> the wrong section today** (`Stop Right There` swallows 8, `Nova` swallows 4). Distinct from
+> this item: there the entity IS annotated and needs its scope to *end*; in SC-201 an
+> unannotated blockquote heading opens a section at all, becoming a sibling of its owner.
+> `Dragon's Fire` — annotated `@type: ability` since the #38 reorder — is the working control
+> that proves the mechanism. See ROADMAP #20 and `.superpowers/sdd/sc201/investigation.md`.
+
 - **Identified:** 2026-07-23. When an `@type: ability` (or any structured entity) heading is
   followed by trailing prose that semantically belongs to its *parent* — e.g. the 8 armor
   enhancements printed after `###### Dragon's Fire` under `##### Imbue Armor` — that prose
@@ -292,3 +300,35 @@ before/after gate. Freeze (101) and parity (0/10) hold throughout. Coordinate wi
 is on that ticket). Together with SC-101/102/103, SC-106, SC-109/110/111 and SC-117 this
 defines "visual overhaul fully complete" = the 7.0.0 gate. No tags/releases ever without
 Scott's explicit go.
+
+## 20. Annotate the 28 unannotated granted abilities as `@type: ability`
+
+**Origin:** SC-201 investigation, 2026-08-25 (`.superpowers/sdd/sc201/investigation.md`).
+
+**What:** 28 blockquote abilities across the corpus (26 Heroes, 2 Beastheart) hang off owners
+whose body says `**Benefit:** You have the following ability.` but carry no `@type` annotation.
+They are perks, complications, titles, heroic-resource features and downtime-project
+enhancements. Because they are unannotated, `collectBlockquoteHeadings` promotes each to a
+section at the same heading level as its owner — so the ability becomes a *sibling* of the
+thing that grants it, and any content following it is attributed to the ability instead.
+
+**Why:** two consequences, one proven and one structural.
+- **Proven data bug:** where owner and ability land at the same heading level, following
+  content is mis-attributed. Measured at **12 enhancement paragraphs** in the weapon blocks
+  (`Stop Right There` +8, `Nova` +4) — wrong in `data/`, the JSON/YAML exports, and the plugin,
+  not just on the site. Elsewhere `FullBodySource()` saves the JSON but the grouping is still
+  lost visually.
+- **Structural:** annotated abilities become real entities everywhere — searchable, linkable,
+  renderable as ability cards. `Dragon's Fire` (annotated since FOLLOWUPS #38's source reorder)
+  is the working control: it swallows nothing and renders as a proper card.
+
+**Blocked on a decision:** minting SCC codes for these 28. They are currently `skipped` and
+never classified, so annotating them raises "do granted abilities get codes, and under which
+type?" — that is an SCC scheme call, not a mechanical edit. See `docs/scc-reference.md`.
+
+**Relationship to #18:** complementary, not duplicate. #18 ends an *annotated* entity's scope;
+this item is about entities that were never annotated. Fixing SC-201's parser rule (an
+unannotated blockquote heading no longer opens a section) addresses the mis-attribution without
+minting anything — annotation is the richer, later step.
+
+**Effort:** S for the source annotations; the SCC decision is the real cost.
