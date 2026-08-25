@@ -55,6 +55,16 @@ go under an *Internal* sub-heading.
   sizes — nothing moves until you move a slider. *Internal:* the rule that new CSS must
   use the scale is enforced by a build test, not just documented, and the remaining 106
   pre-scale declarations are inventoried for the round-2 sweep.
+- **DSE plugin: buttons and other controls are no longer oversized, and the type-scale
+  sweep continues (SC-185, part 2).** A bare button ("Reset Encounter State" and
+  friends) rendered about 23% larger than a native Obsidian button beside it — the
+  complaint that opened the ticket. `--dse-fs-control`'s default is now `0.85em`
+  (13.6px at a 16px note, within 0.6px of Obsidian's own 13px), so every
+  un-contextualised control shrinks to match. *Internal:* 44 more of round 1's
+  inventoried declarations were moved onto the named-role tokens — a pure rename, proven
+  byte-identical (freeze 210/210, shots byte-identical across two runs); 62 remain, of
+  which 8 are separate, deliberate scale systems and the rest are real rendering changes
+  queued for Scott's review.
 - **DSE plugin: one Conditions manager modal replaces the picker + Customize pair
   (SC-186).** A vertical list of the *active* conditions (duration/effect badges,
   inline cog editor, per-row delete) with an autocomplete "Add condition" input —
