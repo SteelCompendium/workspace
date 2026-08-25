@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 79 -->
+<!-- next-id: 81 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1501,3 +1501,52 @@ every slugify call site at once. Also parked here from the same review (INFO, un
 via normal UI): `ConditionsModal.emitChange()` clones entries, so reference-equality
 removal from a pre-modal icon closure can never match — a key/identity-based removal
 predicate is the real fix if it ever becomes reachable.
+
+## 79. The visual harness models NO Obsidian host CSS — an entire defect class is invisible to every gate (SC-189, 2026-08-25)
+
+**Identified:** SC-189 root-cause work, 2026-08-25.
+
+**What:** `visual-harness/` renders DSE markup against the plugin's own stylesheet and a small
+`vars.css`, with **none of Obsidian's own app CSS present**. Every screenshot the repo has ever
+produced therefore shows the plugin in a vacuum — a surface that inherits a host declaration we
+never re-ground looks correct in all 474 shots and wrong in a real vault.
+
+**Why:** this is not hypothetical. SC-189's four reported defects were one bug: a chrome-panel
+glyph is a real `<button>`, so Obsidian's `button:not(.clickable-icon) { box-shadow:
+var(--input-shadow) }` reached it — our rule re-grounded background, border, radius and colour
+but never `box-shadow`. Only Scott could see it; the freeze baseline, parity and every shot were
+green. **Any host property we don't explicitly re-ground is in this blind spot**, and the general
+case is untested even now.
+
+**Context:** SC-189 added `assertChromeHostLeak` (`visual-harness/shoot.mjs`, ~line 300), which
+injects Obsidian's real `button` declarations and pixel-compares the card's top border under the
+panel vs 40px away — can-fail proven (32 problems across 16 combos without the fix). That gate is
+**one property on one surface**. The real fix is to vendor a pinned snapshot of Obsidian's app
+CSS into the harness and render against it, so the host cascade is present everywhere by default.
+Note FOLLOWUPS #66 is the mirror-image gap (our `--dse-*` tokens are dead outside
+`[data-dse-element]`); together they bound how much of the real cascade the harness misrepresents.
+
+**Effort:** medium-to-large. Vendoring the CSS is easy; the hard part is that turning the host
+cascade on will move frozen bytes broadly and needs a sanctioned rebaseline — and will very
+likely surface more leaks of exactly SC-189's kind, which is the point.
+
+## 80. Chrome panel renders ~30px in a real vault vs 24px in the harness — every in-repo picture of it is 6px short (SC-189, 2026-08-25)
+
+**Identified:** SC-189 root-cause work, 2026-08-25.
+
+**What:** the chrome-panel rule re-grounds several button properties but never `height` (nor,
+before SC-189, `box-shadow`). Obsidian's own `button` sizing therefore still reaches it, and the
+panel measures **~30px tall in Scott's vault against 24px in the harness**.
+
+**Why:** it is a live 25% size error on a piece of chrome that appears on every element, and it
+means every screenshot in this repo, every design review done from those screenshots, and every
+spacing judgement made against them has been made against a panel 6px shorter than the one users
+see. Design decisions about adjacent spacing are being made on wrong pixels.
+
+**Context:** a direct consequence of #79 — found only because Scott compared his vault to a
+posted shot. Fixing the CSS (re-ground `height`, and audit the rest of the button box model:
+`padding`, `line-height`, `min-height`) is small and self-contained; it will move frozen bytes
+for every combo that renders chrome, so it needs a sanctioned rebaseline. Worth doing **before**
+#79's larger vendoring effort, since it's the known instance and cheap.
+
+**Effort:** small (CSS + rebaseline); do not bundle with #79.
