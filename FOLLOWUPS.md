@@ -1,6 +1,6 @@
 # Follow-ups
 
-<!-- next-id: 84 -->
+<!-- next-id: 85 -->
 
 In-scope tangents found while working — important to fix, but they'd derail the task
 at hand. Add a numbered `## N.` section below — **take N from the `next-id` counter
@@ -1615,3 +1615,28 @@ printed (and the fix belongs in the renderer or a `corrections` overlay) or norm
 source. Whatever is chosen should be applied consistently to every similar case, not one-off.
 
 **Effort:** XS mechanically; the policy decision is the whole cost.
+
+## 84. `ds-encounter` writes to disk on mount, with no user interaction (SC-198 LP probe, 2026-08-26)
+
+**Identified:** SC-198's Live Preview probe, 2026-08-26 — found incidentally, **not** an LP issue;
+it is present today in reading mode.
+
+**What:** rendering a `ds-encounter` block causes a write to the note file on **mount**, before
+any click. Every other element family writes only in response to a user action.
+
+**Why:** three consequences, all live.
+- Merely *opening* a note mutates it — the file's mtime changes, and any sync client
+  (Obsidian Sync, iCloud, git) sees a modification the user never made.
+- Given SC-198's root cause, that write triggers Obsidian's full preview teardown, so opening a
+  note containing a `ds-encounter` pays the ~270ms flash and (before the SC-198 fix) a scroll
+  clamp, for nothing.
+- It makes "the file changed" untrustworthy as a signal in any future echo-guard or
+  dirty-tracking work.
+
+**Context:** worth checking whether this is a deliberate normalisation-on-load (writing back a
+canonicalised body) or an accident. If deliberate, it should be conditional on the serialized
+body actually differing — noting that per FOLLOWUPS #81 an identical-content write is already a
+no-op inside Obsidian, so a body-equality check would make this genuinely free. Evidence:
+`.superpowers/sdd/sc198/lp-probe.md`.
+
+**Effort:** S to diagnose; the fix depends on whether the write is intentional.
