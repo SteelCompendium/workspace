@@ -8,6 +8,24 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: `taunted` is a real condition again (SC-197).** The plugin filed taunted
+  under its *pseudo*-conditions list — the bucket for things it draws with the same chip UI
+  but that aren't rules conditions (marked, hidden, winded, and so on). Nothing user-visible
+  changes today beyond taunted sorting with the other eight in the add-condition dropdown,
+  because every consumer already merged both lists. The point is forward-looking: anything
+  that treats "the conditions list" as authoritative was silently getting eight of nine, the
+  exact trap that would have dropped 16 abilities from SC-90's site filter.
+
+### Internal
+
+- **Parity gate now catches wrong-polarity backgrounds (SC-126, step 1).** The plugin/site
+  parity harness sampled `background-color` on both sides but never compared it, so an entire
+  defect class — a translucent *white* wash where the site uses translucent *black* — passed
+  the gate green across 13 declaration sites. A new `bg-polarity` rule flags opposite-family
+  backgrounds, proven against the real historical values from that defect (it goes red on them
+  and green on today's tree, and both are pinned as tests). Full value comparison remains
+  deliberately out of scope; it needs a tolerance model, since some pairs vary alpha by design.
+
 - **DSE plugin: "Flat List" feature style now matches the site (SC-188).** In flat mode
   the plugin still drew the action-type colored spine down each feature's left edge —
   a bar the v2 site never draws in that style, so the setting didn't produce the look it
@@ -27,6 +45,17 @@ go under an *Internal* sub-heading.
   always affected standalone Features were filed under Statblock display; they now have
   a **Feature display** page of their own (still part of the statblock preset, so
   nothing changes for existing vaults).
+- **Filter abilities by condition (SC-90).** The feature Search & Filter page gained a
+  **Condition** chip row — bleeding, dazed, frightened, grabbed, prone, restrained,
+  slowed, taunted, weakened — so "show me everything that deals with *prone*" is one
+  click (44 abilities), and it combines with the existing Type/Source/Level/Action/
+  Keyword facets and the any/all toggle (prone **and** slowed → 1). Every ability card
+  now chips the conditions it involves, so a filtered result shows on its face why it
+  matched. A condition counts when it appears in the ability's **rules text** —
+  whether the ability inflicts it, requires it, or removes it; flavor text doesn't
+  count, so Assassinate's "an already weakened foe" and Accelerate's "the world has
+  slowed down" stay out of those lists.
+
 - **DSE plugin: the initiative tracker wears the stamina instruments, and the portrait
   is the turn control (SC-183).** Every hero row and expanded enemy row now mounts the
   real stamina bar — state word, big readout, temp plate, forged gauge — on a rebalanced
