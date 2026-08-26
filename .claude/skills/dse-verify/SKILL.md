@@ -154,6 +154,28 @@ didn't mount) plus human review of the PNGs.
   `freeze-baseline.sha256.pre-<effort>-bak`, (3) applies the lines, (4) appends a dated
   entry to this file quoting the sanction. Widenings (additions-only) need no sanction —
   the orchestrator verifies additions-only by sorted-diff and applies at landing.
+  - **2026-08-26, SC-185 round 3 (six approved categories): 94 lines rebaselined, count
+    unchanged at 210 — APPLIED at landing.** Scott approved six of the eight font-scale
+    categories (A roll surfaces, B statblock display values, D notice/badge chrome, F
+    initiative cell readout, G stamina numeral derivation, H the snap/derive tail) and
+    declined C (stamina-editor modal) and E (sticky mini-header + char box). **His sanction,
+    SC-185 comment 2026-08-26, in direct reply to an ask that spelled out the cost — "The
+    freeze baseline moves for the set you pick … This is a **sanctioned rebaseline**, so it
+    needs your word":**
+
+    > "approved"
+
+    47 capture ids × 2 (steel-print twin + steel-realprint) = 94 lines. **Expected 49 pairs,
+    actual 47** — `statblock-kwusage-{grid,ledger}` are moved independently by BOTH category B
+    and category H, so the union of the per-category sets is 47, not the arithmetic sum. This
+    is exactly why a combined rebaseline must be generated from the real bytes of the combined
+    tree and never stitched from per-category files. Verified at apply time: the 94 failing
+    filenames were **identical** to the rebaseline's filename set (no collateral movement); the
+    baseline's filename set is unchanged before/after (hashes only, 0 added, 0 removed); and
+    `check-freeze.sh` returned `freeze OK (210/210)` afterwards. Determinism: 5 clean sweeps,
+    all byte-identical, plus one more after rebasing onto `origin/develop` (SC-197 + SC-126),
+    which left all 94 hashes valid — both are shot-neutral. Backup:
+    `freeze-baseline.sha256.pre-sc185r3-bak`.
 - **RETIREMENT — the fourth baseline operation (2026-08-11, SC-144).** Distinct from a
   widening (new names, additions-only), a sanctioned rebaseline (an approved change moves an
   existing frozen shot's bytes) and a capture-artifact correction (the harness was pinning

@@ -8,6 +8,18 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the font-size sweep, part 2 (SC-185).** Six of eight audited categories moved
+  onto the `--dse-fs-*` role scale, so text that was pinned to Obsidian's *interface* sliders
+  or to absolute `rem`/`px` now tracks the plugin's own type settings. Visible effects: the
+  roll bar and roll-card small print drop 16px → 12.8px (they had been inheriting an
+  interface size applied to note content); the statblock item value settles 30px → 28px; the
+  initiative cell readout lands on 13.6px. The stamina numeral now rides the Large-text knob
+  it had been ignoring, with no pixel change. Two categories were deliberately declined —
+  the stamina-editor modal (documented as interface furniture) and the statblock sticky
+  header (converting it collapsed the value/label hierarchy). Declarations on the role scale
+  rose 55 → 98 and the shrink-only allowlist fell 62 → 26. Freeze baseline: sanctioned
+  94-line rebaseline (47 capture pairs), count unchanged at 210.
+
 - **DSE plugin: `taunted` is a real condition again (SC-197).** The plugin filed taunted
   under its *pseudo*-conditions list — the bucket for things it draws with the same chip UI
   but that aren't rules conditions (marked, hidden, winded, and so on). Nothing user-visible
