@@ -1555,19 +1555,25 @@ for every combo that renders chrome, so it needs a sanctioned rebaseline. Worth 
 
 **Identified:** SC-198 root-cause work, 2026-08-25.
 
-**What:** `ReadingModeBlockHost.replaceSource` (dse) calls `app.vault.process` unconditionally.
-When the serialized body is byte-identical to what's already there, that write still triggers
-Obsidian's full `setViewData → previewMode.set → renderer.set` teardown of the reading-mode
-preview.
+**What:** `ReadingModeBlockHost.replaceSource` (dse) calls `app.vault.process` unconditionally,
+even when the serialized body is byte-identical to what is already on disk.
 
-**Why:** every such write costs a whole-note re-render — scroll clamp, ~270ms blank flash, every
-`ds-*` block in the note rebuilt — for **no state change at all**. Measured during SC-198 against
-a live Obsidian 1.13.7: Obsidian provably no-ops an identical-content write at the disk layer, so
-skipping it when the body is unchanged is free and removes an entire class of spurious re-render.
+**⚠️ CORRECTED 2026-08-26 — the original framing of this entry was wrong.** It claimed the
+redundant write "removes an entire class of spurious re-render." It does not. SC-198's own
+**experiment 5** proves the opposite: *"`vault.process` returning identical content triggers
+nothing at all — no `modify`, no rebuild, no scroll change. Obsidian is content-diffing; it is
+the change, not the write call, that costs us."* An independent second-opinion analysis on
+SC-198 (2026-08-26) caught the misreading.
 
-**Context:** this is the "freebie" isolated from SC-198's option C. It is independent of which
-scroll-preservation approach SC-198 ultimately takes (options B/D there) — worth taking either
-way. Full evidence and probe scripts: `.superpowers/sdd/sc198/root-cause.md`.
+**Why (real value: near zero).** Obsidian already no-ops the identical write internally, so
+skipping it saves one diff, not a re-render. It is still *correct* — a redundant disk call for a
+no-op is worth avoiding — but it fixes no user-visible symptom and it almost never fires for a
+real toggle. **Do not implement this expecting a jank win.** Left on the list only so the next
+person doesn't rediscover it and over-value it a second time.
+
+**Context:** this was filed as the "freebie" isolated from SC-198's option C, on a misreading of
+experiment 5 (see the correction above). Independent of whichever scroll approach SC-198 takes.
+Full evidence and probe scripts: `.superpowers/sdd/sc198/root-cause.md`.
 
 **Effort:** trivial — one equality check before `vault.process`. If SC-198 lands option B, fold
 it in there and mark this done.
