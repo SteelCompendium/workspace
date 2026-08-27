@@ -243,6 +243,16 @@ deepened a step, because on a near-white surface a light catch has to be carried
 not brightness; the cast shadow drops to 15% black, since 34% under a light card reads as
 grime rather than lift.
 
+**Depth — `tuck`, E3's one extension (Scott, SC-189 2026-08-27: "Lets go with the `tuck`
+design").** E3 says the panel *rests on* the element below; `tuck` adds that the card sits
+slightly **in front of** the panel. The card's top edge is lifted and casts a small shadow up
+onto the bottom of the plate, so the panel reads as a tab tucked *behind* the card rather than
+a second plate parked against it — occlusion, the one depth cue a reader resolves instantly,
+and the thing that was missing when the two read as coplanar. Authored as an **inset** on the
+panel's own bottom edge, never as a cast shadow on the card: an inset is clipped to the panel's
+border box, so it cannot reach the card's hairline, needs no stacking-order surgery, and leaves
+every card unchanged at rest. Retuned per scheme in E3's own ratio (55% black dark, 22% light).
+
 **Hover, mobile, print.**
 - Desktop: hidden until the cursor is over the element *or* the panel, `:focus-within` as the
   keyboard twin. No reserved space.

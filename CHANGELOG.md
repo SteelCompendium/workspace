@@ -93,6 +93,22 @@ go under an *Internal* sub-heading.
   "winded" frame (minions can't be winded), and monsters show DEAD rather than "Dying"
   (dying is hero-only). Print keeps the checkbox, since paper has no portrait to click.
   Freeze baseline 196 → 210 (additions-only widening; no existing shot moved).
+- **DSE plugin: the card's border no longer fades away at its top corners, and the element
+  menu panel is properly seated (SC-189).** Three separate defects, all found because the
+  reported symptom ("the panel feels detached, almost 1 pixel too low") kept surviving fixes.
+  The panel's glyphs are real buttons, so Obsidian's own button rule reached them: it painted a
+  five-layer plate shadow that spilled onto the card's top border, and it forced a 30px height
+  that made the panel a slab in every real vault while the in-repo screenshots showed 24px. Both
+  are now re-grounded, and the glyphs gained breathing room. Separately — and visible with the
+  panel not even shown — a statblock's or featureblock's header band rounded its top corners
+  tighter than the card itself, so the band painted straight over the card's 1px hairline for the
+  whole curve of each corner: the top edge and right edge read fine and the corner between them
+  dissolved. The band now derives the card's own radius and the hairline runs unbroken. The panel
+  also gained a subtle inset so the card reads as sitting slightly in front of it.
+  *Internal:* the visual battery now injects Obsidian's real button rule and measures the corner
+  arc against each card's own straight edges, on every family in both schemes — the previous
+  check sampled two points that were both on the straight edge, which is why this shipped three
+  times.
 - **DSE plugin: font sizes are a named scale you can tune, not scattered literals
   (SC-185, part 1).** The plugin's type sizes were 116 hand-written values across 30
   distinct numbers, so "a label" was a different size in every element. They now come
