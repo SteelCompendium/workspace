@@ -8,6 +8,16 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the note no longer jumps to the top when you click inside an element (SC-198).**
+  Clicking anything that changes a value — an action pip in a long initiative tracker, a stamina
+  control — made the note scroll back to its title. The cause was never the plugin's own
+  rendering: *any* write to a file makes Obsidian rebuild the whole reading-mode preview, which
+  collapses its height placeholder, and the browser then clamps the scroll position to zero. A
+  note dominated by a long tracker always clamped. The plugin now holds that placeholder's height
+  across its own writes, so the scroll position is **never lost** rather than lost and restored.
+  Measured at zero drift across single and repeated clicks. The brief flash on click and the loss
+  of keyboard focus are unchanged — those need Live Preview support, which is tracked separately.
+
 - **DSE plugin: the font-size sweep, part 2 (SC-185).** Six of eight audited categories moved
   onto the `--dse-fs-*` role scale, so text that was pinned to Obsidian's *interface* sliders
   or to absolute `rem`/`px` now tracks the plugin's own type settings. Visible effects: the
