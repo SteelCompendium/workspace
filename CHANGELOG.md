@@ -8,6 +8,25 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: buttons finally look the way the plugin designed them (SC-203).** In a real
+  vault, Obsidian's own `button` styling was overriding ours on **every** button — its rule is
+  more specific than the plugin's, which nothing had noticed because the screenshot harness
+  renders the plugin with none of Obsidian's CSS present. The visible cost: accent buttons like
+  **Roll** lost their accent fill and rendered as dark plates with a thin outline, "ghost"
+  buttons rendered as filled grey plates instead of transparent ones, every button's text
+  colour came from Obsidian rather than the Steel palette, and a forced height *crushed* the
+  taller controls — the initiative roster cell rendered at 30px instead of 108. All of it is now
+  re-grounded, and a new check asserts every button is unaffected by Obsidian's styling, so this
+  class of drift can't return unseen.
+- **DSE plugin: card borders no longer fade at their corners (SC-204).** A shared corner-radius
+  token is expressed in `em`, so it silently resolved to a different size for each element that
+  used it — anything sitting flush inside a rounded parent could round *differently* from the
+  parent and either paint over its border or expose the surface beneath. Two real cases: the
+  initiative turn button chewed its own hairline at all four corners, and the hero region strip
+  cut the corners off its own fill. Both fixed, the token is now documented as the chip/control
+  radius with plates naming their own, and a new geometric check covers every element in both
+  colour schemes.
+
 - **DSE plugin: the note no longer jumps to the top when you click inside an element (SC-198).**
   Clicking anything that changes a value — an action pip in a long initiative tracker, a stamina
   control — made the note scroll back to its title. The cause was never the plugin's own
