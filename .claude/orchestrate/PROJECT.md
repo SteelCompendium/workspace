@@ -205,3 +205,9 @@ Everything that matters is in the repo; a fresh machine needs:
 5. Regenerate the machine-local freeze baseline from a verified-clean tracked-branch checkout
    (`npm run shots`, then hash the frozen set) — `dse-verify` has the procedure and the
    current line count to sanity-check against (§8.6).
+6. Create a **Linear personal API key** and save it as the first line of
+   `~/.config/linear/api_key` (mode 600), or export `LINEAR_API_KEY` — the posting script
+   requires this; MCP auth does NOT cover the script (step 3 above restates the requirement,
+   this step is what actually creates the key on a fresh machine).
+7. Start dispatcher sessions on **Sonnet** (`/model sonnet`) — the skill asserts the model
+   but cannot set it.

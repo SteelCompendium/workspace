@@ -163,7 +163,7 @@ repo docs using the routing table below (collaboration preferences →
 | Change the SCC scheme / registry / linking | append a dated entry to [`docs/scc-log.md`](docs/scc-log.md) **and** update [`docs/scc-reference.md`](docs/scc-reference.md) + the SCC summary above |
 | Change the git remotes / branching workflow | [`docs/git-workflow.md`](docs/git-workflow.md) (and the must-obey callout above) |
 | Learn a working preference of Scott's or a cross-cutting collaboration convention | [`docs/working-preferences.md`](docs/working-preferences.md) |
-| Hit a small in-scope tangent (deferred bug/gap) | file a Linear **Backlog** ticket linking the parent ticket |
+| Hit a small in-scope tangent (deferred bug/gap) | file a Linear **Backlog** ticket linking the parent ticket (workers: report it to your ticket-owner, who files it — workers never touch the tracker) |
 | Plan a new feature or larger effort | a Linear **Backlog** ticket (or a Linear project for multi-ticket efforts) |
 | Ship a user-facing change (site feature/fix, API change) | a bullet under `## Unreleased` in [`CHANGELOG.md`](CHANGELOG.md); promote to a dated header at deploy |
 | Write a per-effort plan/spec | the sub-repo's `docs/superpowers/` if confined to one repo; the workspace `docs/superpowers/` if it spans repos or changes a workspace-level contract (SCC scheme, deploy flow, schemas) |

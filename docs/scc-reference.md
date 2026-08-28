@@ -116,7 +116,7 @@ Live in the `monster.companion.beastheart.*` family, mirroring the Monsters-book
 
 The advancement-features entity embeds its Level-3/6/10 features as a Forged Band card on
 its own page; compositing it onto the companion statblock page is pending (entity-embedding
-effort — tracked as a Linear Backlog ticket). In Browse the advancement page **flattens** to a sibling of its
+effort — deferred, no ticket filed yet — file a Linear Backlog ticket when picked up). In Browse the advancement page **flattens** to a sibling of its
 companion (`…/beastheart/<species>-advancement-features`, not a sub-folder) and the index
 pairs the two on one row (nav-only; SCC code/permalink unchanged —
 `flattenAdvancementFeaturesPath` / `buildAdvancementPairContent`).

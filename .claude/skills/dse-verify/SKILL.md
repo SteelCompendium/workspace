@@ -144,16 +144,17 @@ didn't mount) plus human review of the PNGs.
   a new/edited Steel CSS rule leaked into the print scheme. Fix it by narrowing the rule's
   selector scope (see "Steel scoping rule" below). **Never edit the baseline to accept the
   new bytes** — that defeats the entire check.
-- **Division of labor (standardized 2026-08-11 → 08-16): worktree agents NEVER edit the
-  shared baseline — only the orchestrator applies changes, at landing.** When a branch
-  legitimately moves frozen bytes, the agent's deliverable is a ready-to-apply hash file at
-  `.superpowers/sdd/<effort>/rebaseline.txt` (`<sha256>  <filename>` lines, verified
-  deterministic across 2 runs) plus before/after crops for the sanction ask. The
-  orchestrator then: (1) gets Scott's explicit sanction on the ticket (his "sanctioned" /
-  "good to go" quote is the record), (2) backs the baseline up to a dated
+- **Division of labor (standardized 2026-08-11 → 08-16; role mapping updated for v2,
+  2026-08-27): worktree agents NEVER edit the shared baseline — only the dispatcher applies
+  changes, at landing.** When a branch legitimately moves frozen bytes, the agent's
+  deliverable is a ready-to-apply hash file at `.superpowers/sdd/<effort>/rebaseline.txt`
+  (`<sha256>  <filename>` lines, verified deterministic across 2 runs) plus before/after
+  crops for the sanction ask. The **ticket-owner** then puts the sanction ask on the ticket
+  and (1) gets Scott's explicit sanction on the ticket (his "sanctioned" / "good to go" quote
+  is the record); at landing the **dispatcher** (2) backs the baseline up to a dated
   `freeze-baseline.sha256.pre-<effort>-bak`, (3) applies the lines, (4) appends a dated
   entry to this file quoting the sanction. Widenings (additions-only) need no sanction —
-  the orchestrator verifies additions-only by sorted-diff and applies at landing.
+  the dispatcher verifies additions-only by sorted-diff and applies at landing.
   - **2026-08-26, SC-185 round 3 (six approved categories): 94 lines rebaselined, count
     unchanged at 210 — APPLIED at landing.** Scott approved six of the eight font-scale
     categories (A roll surfaces, B statblock display values, D notice/badge chrome, F
@@ -626,15 +627,15 @@ declared finding, expect the run to go red until you delete its declaration, and
 `visual-harness/parity/README.md` in the same commit.
 
 If the DECLARED count or composition differs from this set, don't just accept a new number:
-either it's a regression (fix it) or a new legitimate deferral (file it under its own
-FOLLOWUPS number and add a `declaredDeferrals` entry citing it).
+either it's a regression (fix it) or a new legitimate deferral (file a Linear Backlog ticket
+and add a `declaredDeferrals` entry citing its SC-key).
 
 **`owns`** is the sibling mechanism: when the plugin collapses two site nodes into one, two
 pairs share the plugin selector and each declares which rules it is authoritative for. It can
 only **move** a rule — `compare.cjs` requires, for **every** plugin selector (shared or named
 by a single pair), that each rule be owned by exactly one pair, so nothing can be dropped or
 double-counted. The one way to drop a rule is an explicit `excludes: [{ rule, why }]` entry
-citing a FOLLOWUPS number / ticket, priced exactly like a declared deferral; the shipped map
+citing a Linear ticket's SC-key, priced exactly like a declared deferral; the shipped map
 uses none.
 
 > Until the SC-110 fix round that invariant ran **only on shared selectors**, so a pair naming

@@ -211,3 +211,11 @@ Detailed plan via the writing-plans skill after spec approval. Rough phases:
 4. Migrate FOLLOWUPS/ROADMAP to Linear; delete the files.
 5. Repo doc updates (§8).
 6. Shakedown: run the doc-prune ticket (§2 non-goals) under the new workflow.
+
+## Addendum — deltas at implementation (2026-08-27)
+
+- §3.1's comment-activity query was replaced by pure fan-out (Scott names tickets → those
+  owners; unnamed "comments added" → all active owners; owners self-determine novelty) — no
+  last-wake state exists.
+- §8's status-semantics ownership moved: `orchestration:ticket-owner` §8 is authoritative;
+  linear-flow keeps only screenshots/attachments/thin-ticket.

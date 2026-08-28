@@ -62,18 +62,22 @@ Scott's filter).
 
 ## Posting mechanics
 
-Comments are posted through the `orchestration` plugin's script,
-`${CLAUDE_PLUGIN_ROOT}/scripts/linear-post.py` — not a raw `mcp__linear__save_comment` call.
-It requires the traceability-footer flags (`--model`/`--role`/`--session`, optional
-`--worktree`) and refuses to post without them. The comment-style contract (what the text
-itself should read like) lives in `orchestration:ticket-owner`, not here — this skill owns
-only the Steel-Compendium-specific screenshot/attachment mechanics below.
+Comments are posted through the orchestration plugin's `scripts/linear-post.py` (the plugin
+skills carry the resolved path; installed under
+`~/.claude/plugins/cache/tski/orchestration/<version>/scripts/`) — not a raw
+`mcp__linear__save_comment` call. It requires the traceability-footer flags
+(`--model`/`--role`/`--session`, optional `--worktree`) and refuses to post without them. The
+comment-style contract (what the text itself should read like) lives in
+`orchestration:ticket-owner`, not here — this skill owns only the Steel-Compendium-specific
+screenshot/attachment mechanics below.
 
 ## Attachment mechanics
 
 Use the fully-qualified MCP tool names — `mcp__linear__prepare_attachment_upload` and
-`mcp__linear__create_attachment_from_upload` — as a fallback only if the plugin script is
-unavailable; the script above is the default path.
+`mcp__linear__create_attachment_from_upload` — for root-level attachment management (see
+below), and for labels via `mcp__linear__save_issue`. If the plugin script is unavailable or
+fails, **STOP and report** — never post around it with raw MCP comment calls (that drops the
+mandatory traceability footer).
 
 1. `mcp__linear__prepare_attachment_upload` → returns a pre-signed `uploadUrl` and a set of
    required headers. **This URL expires in 60 seconds.**

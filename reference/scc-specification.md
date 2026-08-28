@@ -465,7 +465,13 @@ they rarely bump. Separately, downstream tools needed a way to request alternate
 
 - Design spec: `steel-etl/docs/superpowers/specs/2026-06-09-scc-scheme-versioning-and-format-design.md`
 - Implementation plan: `steel-etl/docs/superpowers/plans/2026-06-09-scc-scheme-versioning.md`
-- Deferred follow-ups (bare→explicit `scc.v1:` restamp, `/scc.v1/` website alias, HTTP format entry point): workspace `FOLLOWUPS.md` §8.
+- The bare→explicit `scc.v1:` restamp was completed 2026-06-18 (all four book sources swept;
+  see `docs/scc-log.md`) — no longer a deferred item, despite the historical FOLLOWUPS #4
+  citation this doc used to carry (that item's own status line already read "done
+  2026-06-18," so the 2026-08-27 FOLLOWUPS→Linear migration correctly did not migrate it —
+  it had nothing left to carry forward).
+- Remaining reserved capabilities (`/scc.v1/` website alias, HTTP format entry point): not yet
+  ticketed — file a Linear Backlog ticket when picked up.
 
 **Implementation status**
 
@@ -477,5 +483,5 @@ they rarely bump. Separately, downstream tools needed a way to request alternate
 | `scheme_version` recorded in the registry | **Implemented** |
 | `scheme_version` surfaced in the published API (`index`/`scc`/`types.json` top-level + per-entry `resolve/*.json`) | **Implemented** |
 | Per-format content emission via `#format` / `Accept` / `?format=` | **Reserved** |
-| Explicit `/scc.v1/` website URL alias | **Reserved** |
-| Bare→explicit `scc.v1:` restamp of existing links | **Deferred** (FOLLOWUPS §8) |
+| Explicit `/scc.v1/` website URL alias | **Reserved** (not yet ticketed — file a Linear Backlog ticket when picked up) |
+| Bare→explicit `scc.v1:` restamp of existing links | **Implemented** (completed 2026-06-18; see `docs/scc-log.md`) |
