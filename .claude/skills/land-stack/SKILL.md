@@ -180,9 +180,9 @@ devbox run -- just wt-rm "$name"
 
 ### 7. Recovery — a push landed on the wrong branch (`draw-steel-elements` only)
 
-If the pre-flight check at step 1.0 was skipped and `wt-finish` pushed a feature branch
+If the pre-flight check `0)` in step 1 was skipped and `wt-finish` pushed a feature branch
 onto dse **`main`** (released-content-only, see `docs/git-workflow.md` → "branching
-model"), recover in this order. **Every recovery push is lease-guarded** —
+model"), recover in this order. **Every force push here is lease-guarded** —
 `--force-with-lease` refuses to clobber a ref that moved under you.
 
 ```bash
@@ -202,7 +202,7 @@ git -C draw-steel-elements push --force-with-lease origin <mike-tip-sha>:refs/he
 ```
 
 Then fix the cause so it cannot recur: `git -C "$wt" checkout origin/main -- .gitmodules`
-and commit it (superproject-only), per step 1.0.
+and commit it (superproject-only), per step 1's check `0)`.
 
 The 2026-08-16 incident this is drawn from — including the exact shas used
 (`main` → `0645aca`, gh-pages → mike tip `0b3752f`) and the SC-164 follow-on it
