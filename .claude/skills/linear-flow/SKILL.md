@@ -79,18 +79,19 @@ below), and for labels via `mcp__linear__save_issue`. If the plugin script is un
 fails, **STOP and report** — never post around it with raw MCP comment calls (that drops the
 mandatory traceability footer).
 
+**Inline images (the default)** need none of the manual loop below: the plugin's
+`linear-post.py` uploads every image, resolves `{{IMG:<basename>}}` placeholders in the
+comment body, and posts — one call, footer included. The manual prepare/PUT loop exists
+only for **root-level attachments** (durable reference material pinned to the issue, not a
+comment):
+
 1. `mcp__linear__prepare_attachment_upload` → returns a pre-signed `uploadUrl` and a set of
    required headers. **This URL expires in 60 seconds.**
 2. **Immediately** `curl -X PUT --data-binary @<file> <uploadUrl>`, passing **every** header
    the tool returned, **verbatim** (name and value unchanged — a pre-signed URL's signature is
    sensitive to the exact header set; dropping or altering one breaks the upload).
-3. Then EITHER of:
-   - **Inline (the default):** put `![<label>](assetUrl)` in a `mcp__linear__save_comment`
-     body. Linear recognizes the bare org assetUrl and rewrites it to a signed, rendered
-     image automatically — no extra call needed.
-   - **Root attachment (reference material):** `mcp__linear__create_attachment_from_upload`
-     with the `assetUrl` and a **title that names the state** — e.g.
-     `"Baseline — statblock steel-dark"`, `"Design reference — site head band"`.
+3. `mcp__linear__create_attachment_from_upload` with the `assetUrl` and a **title that names
+   the state** — e.g. `"Baseline — statblock steel-dark"`, `"Design reference — site head band"`.
 
 **One file at a time.** Never call `prepare_attachment_upload` for multiple files up front —
 by the time you get to the second PUT, its URL has expired. Prepare, PUT, create; then repeat
