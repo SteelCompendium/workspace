@@ -173,8 +173,8 @@ devbox run -- just wt-rm "$name"
 
 - **Linear:** move the issue(s) to Done via the `linear-flow` skill — attach before/after
   screenshots first if the change was visual.
-- **Docs:** update `docs/handoffs/HANDOFF.md` / `FOLLOWUPS.md` per the workspace CLAUDE.md
-  routing table if anything is still open or was learned.
+- **Docs:** update `docs/handoffs/HANDOFF.md` per the workspace CLAUDE.md routing table if
+  anything was learned; file a Linear Backlog ticket for anything still open.
 - **Push:** the ledger-preservation and any bookkeeping commits above still need
   `git push origin main`.
 

@@ -567,8 +567,9 @@ A `WARN` now means "the comparison did not happen" (a selector that never render
 unparseable value) and **fails the run** — before SC-110 it was printed and ignored, so a
 pair could go blind with the gate still green. The only escape is an explicit
 `declaredDeferrals` entry in `visual-harness/parity/selector-map.json`
-(`{ pair, rule, scheme?, why }`), which prints as `DECLARED` and must cite a workspace
-`FOLLOWUPS.md` number or a Linear ticket. `compare.cjs` refuses to run on a declaration that
+(`{ pair, rule, scheme?, why }`), which prints as `DECLARED` and must cite a Linear ticket
+(or, for entries predating the 2026-08-27 FOLLOWUPS→Linear migration, a historical
+`FOLLOWUPS #N`). `compare.cjs` refuses to run on a declaration that
 names a missing pair, an unknown rule, a **non-declarable** rule, a rule the pair doesn't own,
 or carries no citation; `diff.mjs` fails on a declaration that **matched nothing** (anti-rot).
 Unit-tested, can-fail proof included, in `test/unit/parity/compare.test.ts`.

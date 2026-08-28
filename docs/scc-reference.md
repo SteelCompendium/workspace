@@ -116,7 +116,7 @@ Live in the `monster.companion.beastheart.*` family, mirroring the Monsters-book
 
 The advancement-features entity embeds its Level-3/6/10 features as a Forged Band card on
 its own page; compositing it onto the companion statblock page is pending (entity-embedding
-effort — see `ROADMAP.md`). In Browse the advancement page **flattens** to a sibling of its
+effort — tracked as a Linear Backlog ticket). In Browse the advancement page **flattens** to a sibling of its
 companion (`…/beastheart/<species>-advancement-features`, not a sub-folder) and the index
 pairs the two on one row (nav-only; SCC code/permalink unchanged —
 `flattenAdvancementFeaturesPath` / `buildAdvancementPairContent`).
@@ -208,7 +208,7 @@ the plural group name ("Goblins") is preserved only as the page title.
 
 The heroes (~17,527 links), summoner (1,464), and monsters (5,948 — 4,759 cross-book to
 heroes + 1,189 internal) sources are all fully link-swept. The remaining sweep work
-(links *into* monster pages from other books) is tracked in `FOLLOWUPS.md`.
+(links *into* monster pages from other books) is tracked as SC-219.
 
 ## Printing provenance & code lifecycle
 

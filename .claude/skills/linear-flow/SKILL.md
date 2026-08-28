@@ -1,29 +1,18 @@
 ---
 name: linear-flow
-description: Use when creating, updating, or reviewing Linear issues for the Steel Compendium team — status semantics, the Needs Review convention, and attaching screenshots
+description: Use when creating, updating, or reviewing Linear issues for the Steel Compendium team — the thin-ticket convention and attaching screenshots
 ---
 
 # Linear Flow
 
 ## Overview
 
-The Steel Compendium team (`SC-*`) uses Linear statuses to mean specific, non-improvised
-things, and Scott reviews visual work **from screenshot attachments on the issue**, not from
-descriptions. Getting either wrong means Scott doesn't see the thing he needs to see, or a
-ticket sits invisible in the wrong bucket.
-
-## Status semantics
-
-| State | Means |
-|---|---|
-| **Todo** | Not yet started. Nothing is happening, nobody is waiting. |
-| **In Progress** + **`Needs Review`** label | **Needs Scott.** A decision, a taste check, a "can this close?" — anything requiring his eyes. **Both** the status and the label, always together. |
-| **Awaiting** | An **agent is actively working it**, *or* it's blocked on something **external** (upstream publish, third party, mirror). Never a parking spot for work that's merely blocked on other internal work — that's `Todo`. |
-| **Backlog** | Someday/maybe. |
-| **Done** / **Canceled** / **Duplicate** | Terminal. |
-
-When you need Scott's input, don't bury it in a report: set `In Progress` + `Needs Review`
-so it surfaces in his filter. A question he never sees is a blocked project.
+Scott reviews visual work **from screenshot attachments on the issue**, not from
+descriptions. Getting that wrong means Scott doesn't see the thing he needs to see. Status
+and label semantics (Todo / In Progress + `Needs Review` / Awaiting / Backlog / terminal)
+are owned by the `orchestration` plugin's `orchestration:ticket-owner` skill (§8) — read
+there, not here, for the authoritative table; this skill keeps only what's
+steel-compendium-specific: screenshot/attachment mechanics and the thin-ticket rule below.
 
 ### Thin-ticket rule
 
@@ -71,10 +60,20 @@ SC-131). Always pass the complete intended set (fetch current labels first if un
 re-verify labels after any save that matters (`Needs Review` disappearing = invisible to
 Scott's filter).
 
+## Posting mechanics
+
+Comments are posted through the `orchestration` plugin's script,
+`${CLAUDE_PLUGIN_ROOT}/scripts/linear-post.py` — not a raw `mcp__linear__save_comment` call.
+It requires the traceability-footer flags (`--model`/`--role`/`--session`, optional
+`--worktree`) and refuses to post without them. The comment-style contract (what the text
+itself should read like) lives in `orchestration:ticket-owner`, not here — this skill owns
+only the Steel-Compendium-specific screenshot/attachment mechanics below.
+
 ## Attachment mechanics
 
 Use the fully-qualified MCP tool names — `mcp__linear__prepare_attachment_upload` and
-`mcp__linear__create_attachment_from_upload`.
+`mcp__linear__create_attachment_from_upload` — as a fallback only if the plugin script is
+unavailable; the script above is the default path.
 
 1. `mcp__linear__prepare_attachment_upload` → returns a pre-signed `uploadUrl` and a set of
    required headers. **This URL expires in 60 seconds.**

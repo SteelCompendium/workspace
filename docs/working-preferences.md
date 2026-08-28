@@ -173,16 +173,30 @@ Rules that follow from this:
 - **If a ticket needs review but has a thin description** (old TaskNotes imports especially), **add a comment saying what he is actually being asked to look at** and where. "Needs Review" with no context just moves the confusion.
 - Filtering the `Needs Review` label should always give a complete, current list of what is waiting on him. Keep it honest — remove the label when the answer lands.
 
-## The orchestrator workflow (Scott's preferred mode, 2026-08-10)
+## The orchestration workflow (v2, 2026-08-27)
 
-Multi-ticket sessions run with **the top model as an orchestrator that implements nothing**:
-background agents in isolated worktrees do all code changes; the orchestrator dispatches,
-watches, reviews (independent adversarial review before any landing-bound merge), gates
-through Linear, and lands. Scott: *"This session with you as a sort of orchestrator that
-delegates off work is working really well. I would like to do work in this workflow more
-often."* The full operating rules, footgun index, and new-machine bootstrap live in the
-**`orchestrate` skill** (`.claude/skills/orchestrate/`). Entering the mode is a prompt away
-("orchestrate the open DSE tickets") — the skill makes it deterministic.
+Multi-ticket sessions run as three tiers: a **Sonnet dispatcher** (mechanics only — spawns
+ticket-owners, routes wakeups, serializes landings, never reads or writes Linear comment
+content); a **Fable ticket-owner per active ticket** (judgment — runs its own worker
+dispatch and review pipeline, and writes and posts every Scott-facing Linear comment
+itself, traceability footer included); and right-sized **Sonnet/Opus/Haiku workers** doing
+the implementation, exactly as before. Scott's flow: he reviews `In Progress` tickets in
+Linear, leaves comments, then tells the dispatcher "comments added" (in bulk or per-ticket)
+to wake the affected owners; he typically runs 1–5 tickets concurrently.
+
+The workflow ships as the portable **`orchestration` plugin** (skills
+`orchestration:orchestrate` for the dispatcher, `orchestration:ticket-owner` for the Fable
+role, plus the shared posting script) with this repo's specifics in the project adapter
+**`.claude/orchestrate/PROJECT.md`**.
+
+**Supersedes** the 2026-08-10 ("orchestrator workflow") and 2026-08-22 ("token economics")
+model below, in which a single Opus orchestrator both judged work and wrote every
+Scott-facing comment. That model's token economics held up, but the orchestrator's own two
+duties — judgment and communication — were its failure points: it missed things and
+self-corrected visibly mid-thread (SC-198), and its Linear comments were verbose and
+written in abstract vocabulary Scott found hard to parse. v2 splits those duties onto a
+dedicated Fable ticket-owner and demotes the top-tier role to pure mechanics. Full rationale
+and design: `docs/superpowers/specs/2026-08-27-orchestration-v2-design.md`.
 
 ## Parallel agents
 
@@ -229,14 +243,3 @@ products. The plugin touches the site in exactly one place: `v2/docs/stylesheets
 is the read-only source of brand `--sc-*` hex values for the plugin's "Steel" theme.
 Visual QA for plugin work happens in Obsidian, not on the v2 site.
 
-## Token economics: right-sized models, Linear stays Scott's UI (2026-08-22)
-
-Scott's directives, same day, in order: *"make sure work is done on subagents that are
-spun up with the right models to save tokens"*; the orchestrator itself should not run on
-Fable; and Linear must stay his review surface (screenshots, rich text, awaiting-filter)
-while the *machinery* around it stops burning tokens. The mechanics all live in the
-`orchestrate` skill (rules 3/3b): explicit `model` on every dispatch, Opus orchestrator,
-per-effort verbatim `decisions.md` ledgers instead of agents reading ticket threads,
-newest-first comment fetches, `scripts/linear-post.py` for image+comment posting, and
-orchestrator eyeballing only the deciding images. When in doubt, the cheaper model with a
-self-contained brief beats the bigger model with ambient context.

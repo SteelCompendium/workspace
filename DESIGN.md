@@ -36,7 +36,7 @@ Two non-negotiables drive every component:
   **only** as semantics — ability-type hues, power-roll tiers, statblock role colors —
   and always as a thin border, glyph, or gradient band, never a fill. Dark "slate" is
   the signature mode; light "default" is fully supported. (Alternate Parchment/Obsidian
-  themes exist but are hidden until fully baked — `FOLLOWUPS.md` #3.)
+  themes exist but are hidden until fully baked — SC-218.)
 - **Type.** Three commercial brand faces with **Source Serif 4** as the graceful
   fallback: **Beaufort W01 Heavy** for big UPPERCASE display (H1/H2 — "BROWSE RULES"),
   **Test Newzald** for subheads (H3–H6, Title Case), **Berlingske Slab Demibold** for
@@ -203,7 +203,9 @@ merely *embeds* cards (Read chapters) is a plain page.
 | **Element chrome panel** (plugin) — the standard hover-revealed menu panel + whole-element collapse every card-like DSE element carries. See "The element chrome panel" below for the form factor, geometry and rules. | `draw-steel-elements` `src/framework/chrome/` + the "Element chrome" block at the foot of `styles-source.css` | `draw-steel-elements/docs/superpowers/sc169-element-menu-panel-spec.md` |
 
 (`…` = `reference/design-system/handoff`.) Open design debts: statblock malice band +
-captain label (`FOLLOWUPS.md` #7), hidden theme/card-style controls (`FOLLOWUPS.md` #3).
+captain label (deferred; pre-migration `FOLLOWUPS.md` #7 — not carried into the 2026-08-27
+Linear migration, needs re-filing if still current), hidden theme/card-style controls
+(SC-218).
 
 ### The element chrome panel
 
@@ -318,7 +320,8 @@ controversy): users pick how dense/faithful the rendering is, **per part**.
   also bakes the default onto each grid as `data-sbprev-*` (the no-JS baseline);
   the global default lives in ONE place per layer — `settings-core.js` `SBPREV_DEFAULTS`,
   `overrides/main.html`, and steel-etl `sbPreviewDefaults` (keep them in sync). The
-  default-zone choice is pending a community poll ([`ROADMAP.md`](ROADMAP.md) #11).
+  default-zone choice is pending a community poll (was ROADMAP #11, resolved
+  2026-06-18 per `docs/roadmap-archive/2026-06-18-completed.md` — this prose may be stale).
 - **Hide drop caps** (`data-no-dropcap` on `<html>`, a Reading-group checkbox) is a single
   global boolean (absent ≡ shown) that suppresses the engraved `::first-letter` drop cap on
   lead trait cards (`.sc-trait--lead`, `steel-traits.css`). Like `data-compact`, only the

@@ -86,10 +86,8 @@ Pipeline details, data flow, and editable-vs-generated rules:
   generated files. You MUST read this.
 - [`DESIGN.md`](DESIGN.md) -- UI design language ("High-Fantasy Steel"): look, feel, tokens,
   component map, preference system. Read before any v2 look-and-feel work.
-- [`FOLLOWUPS.md`](FOLLOWUPS.md) -- In-scope tangents found mid-task, cleared before starting
-  a new feature (numbered `## N.` sections).
-- [`ROADMAP.md`](ROADMAP.md) -- New features and larger planned / in-flight efforts
-  (numbered `## N.` sections).
+- [`.claude/orchestrate/PROJECT.md`](.claude/orchestrate/PROJECT.md) -- project adapter for
+  the `orchestration` plugin (dispatcher + Fable ticket-owner).
 - [`docs/`](docs/index.md) -- Workspace-level docs (see [`docs/index.md`](docs/index.md)):
   `git-workflow.md`, `worktrees-and-submodules.md` (submodule + worktree cheatsheet),
   `scc-reference.md` (SCC current state), `scc-log.md` (dated SCC history),
@@ -121,14 +119,14 @@ Registry is **3,086 codes** across four books (heroes 1,952, beastheart 241, mon
 summoner 231). `feature` is the umbrella type; companions/fixtures/**retainers**/summoner
 statblocks all live in the `monster.*` family. Monsters-book retainers are
 `monster.retainer.statblock/<id>` with coded `advancement-features`/`role-advancement`
-container siblings (Plan 6, 2026-06-18; per-ability coding deferred — ROADMAP #15). The
+container siblings (Plan 6, 2026-06-18; per-ability coding deferred — SC-212). The
 summoner retainer (Devil Detective) is modeled like the Rival Summoner (2026-06-21):
 `monster.retainer.statblock/devil-detective` + a shared
 `monster.retainer.advancement-features/devil-detective`, with its summons nested as
 `monster.retainer.summoner.minion.statblock/<id>` (off the index); rival summons gained the
 same `.statblock` segment. The 4
 summoner fixtures' advancement members are coded `feature.fixture.<category>.<base>.level-N/<member>`
-(×12, 2026-06-19 — ROADMAP #16; parser-emitted coded children, no heading/cap change). The 4
+(×12, 2026-06-19 — SC-213; parser-emitted coded children, no heading/cap change). The 4
 Portfolio Champions gained `monster.champion.summoner.<circle>.advancement-features/<id>`
 container siblings (×4, 2026-08-08 — SC-138; members inline/uncoded, retainer model). The heroes book's one
 statblock (the Elementalist's Source of Earth summon) is
@@ -165,8 +163,8 @@ repo docs using the routing table below (collaboration preferences →
 | Change the SCC scheme / registry / linking | append a dated entry to [`docs/scc-log.md`](docs/scc-log.md) **and** update [`docs/scc-reference.md`](docs/scc-reference.md) + the SCC summary above |
 | Change the git remotes / branching workflow | [`docs/git-workflow.md`](docs/git-workflow.md) (and the must-obey callout above) |
 | Learn a working preference of Scott's or a cross-cutting collaboration convention | [`docs/working-preferences.md`](docs/working-preferences.md) |
-| Hit a small in-scope tangent (deferred bug/gap) | a numbered `## N.` section in [`FOLLOWUPS.md`](FOLLOWUPS.md); clear before the next feature |
-| Plan a new feature or larger effort | a numbered `## N.` section in [`ROADMAP.md`](ROADMAP.md) |
+| Hit a small in-scope tangent (deferred bug/gap) | file a Linear **Backlog** ticket linking the parent ticket |
+| Plan a new feature or larger effort | a Linear **Backlog** ticket (or a Linear project for multi-ticket efforts) |
 | Ship a user-facing change (site feature/fix, API change) | a bullet under `## Unreleased` in [`CHANGELOG.md`](CHANGELOG.md); promote to a dated header at deploy |
 | Write a per-effort plan/spec | the sub-repo's `docs/superpowers/` if confined to one repo; the workspace `docs/superpowers/` if it spans repos or changes a workspace-level contract (SCC scheme, deploy flow, schemas) |
 | Write a deep single-topic reference | the owning repo's `docs/` + its `docs/index.md` |
@@ -174,11 +172,11 @@ repo docs using the routing table below (collaboration preferences →
 | Pause mid-task / hand off | `docs/handoffs/HANDOFF.md` (the `creating-handoffs` skill owns this) |
 | Document a repeatable multi-step workflow with footguns (exact commands, gate semantics) | a repo-local skill in `.claude/skills/` |
 
-`FOLLOWUPS.md` / `ROADMAP.md` exist **only at the workspace root** — sub-repos must not grow
-their own. Historical (dated) docs stay where they were written; fix routing only going
-forward.
+Historical `FOLLOWUPS.md`/`ROADMAP.md` `#N` references resolve via
+`docs/{followups,roadmap}-archive/` (see the 2026-08-27 Linear-migration records) — both
+files are retired; live items are Linear tickets now.
 
-**Two structural rules keep this file from rotting:**
+**A structural rule keeps this file from rotting:**
 
 - **This file (and each sub-repo's CLAUDE.md) is a router: current state + pointers only,
   never dated history or deep detail.** "On <date> X changed…" belongs in the matching log
@@ -186,12 +184,6 @@ forward.
   `ARCHITECTURE.md`. If a section here needs a second dated sentence or a paragraph of
   mechanics, it has outgrown the router — move it out and leave a summary + pointer. (This
   file has twice grown a multi-thousand-character SCC history this way.)
-- **`FOLLOWUPS.md` / `ROADMAP.md` numbers are permanent IDs — never reused, never
-  renumbered.** Each new item takes its number from the `<!-- next-id: N -->` counter in the
-  file header (then increments it), never from "highest live item + 1". On a prune pass, move
-  completed items to the archive keeping their original number as a `(was #N)` handle and
-  leave survivors' numbers untouched (gaps like 1, 2, 5, 8 are expected). A `#N` reference
-  then resolves forever — either still live, or in the archive under `(was #N)`.
 
 Shipped history lives in [`CHANGELOG.md`](CHANGELOG.md) (added 2026-07-02; entries are
 headed by **deploy date** — this workspace has no release tags, so a "release" is a

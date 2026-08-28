@@ -153,8 +153,8 @@ Route each change to its repo, then integrate. **Generated output is committed b
    submodule push, `just sync` (or `git submodule update --remote <sub>`), then commit the
    moved pointer with the house pattern **`chore: bump <sub> to <short-sha> (<one-line what>)`**
    and push to `origin`. `wt-finish` and the `deploy*` recipes do this automatically for the
-   repos they touch. Workspace-only changes (docs, `justfile`, specs/plans, `ROADMAP.md`)
-   commit to the workspace repo the same way.
+   repos they touch. Workspace-only changes (docs, `justfile`, specs/plans) commit to the
+   workspace repo the same way.
 3. **Deploy = regenerate + commit generated output + bump pointers.** `just deploy` (or
    `deploy-v2` / `deploy-api`) **must run from a clean `main` checkout** — each recipe first
    calls `_require-clean` on its publish targets (`steel-etl` + `v2` / `steelCompendium.github.io`)
