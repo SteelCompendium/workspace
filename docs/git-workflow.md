@@ -59,11 +59,13 @@ just sync                                     # pull + move submodules to pinned
 After any pull/rebase that moves recorded pointers, `just sync` brings the submodule working
 trees in line with the recorded commits. Skipping this is the usual cause of a "dirty"
 submodule entry that looks like an accidental change. `just sync` leaves each submodule on its
-**tracked branch** (`main`, or `v3` for `data-sdk-npm` / `data-gen`) at the pinned commit —
-fast-forward only, never resetting — so you can edit immediately without the detached-HEAD
-footgun (uncommitted work isn't silently wiped by the next update, and commits land on a
+**tracked branch** (`main`, `develop` for `draw-steel-elements`, or `v3` for `data-sdk-npm` /
+`data-gen`) at the pinned commit — fast-forward only, never resetting — so you can edit
+immediately without the detached-HEAD footgun (uncommitted work isn't silently wiped by the
+next update, and commits land on a branch). The raw
+`git submodule update --init --recursive` still detaches at the pin; prefer `just sync`.
 
-### `draw-steel-elements` branching model (SC-163, 2026-08-16)
+### `draw-steel-elements` branching model (SC-163)
 
 The DSE plugin repo is the one submodule with a two-branch model, because its docs
 (README + `docs/`, deployed to gh-pages by its `ci.yml` **on pushes to `main`** via
@@ -72,32 +74,27 @@ The DSE plugin repo is the one submodule with a two-branch model, because its do
 - **`develop` is the mainline** — every feature branch, worktree landing, and pointer bump
   targets `develop` (`.gitmodules` `branch = develop` makes all the workspace machinery —
   `just sync`, `wt-finish`, `wt-status` — follow it automatically).
-- **`main` holds released content only.** It sits at the last released tag (reset to
-  `6.0.1` / `0645aca` at the model's introduction; the pre-reset 7.0.0 tip is preserved on
-  `develop` and on the `main-7.0-backup` branch). It advances ONLY at a release: Scott
-  fast-forwards `main` to the release sha on `develop`
+- **`main` holds released content only.** It sits at the last released tag (`6.0.1`/`0645aca`
+  since the model's introduction; the pre-reset 7.0.0 tip survives on `develop` and on the
+  `main-7.0-backup` branch) and advances ONLY at a release: Scott fast-forwards `main` to the
+  release sha on `develop`
   (`git push origin <release-sha>:refs/heads/main`), which also triggers the docs deploy —
   then tags (his action alone, never an agent's).
 - GitHub's default branch stays `main`, so the repo's rendered README/docs are release-true.
 - CI: `plugin-ci.yml` runs on pushes to `main` AND `develop` (+ all PRs); the docs-deploy
   `ci.yml` runs on both — `main` → mike `latest`, `develop` → mike `dev` (SC-164).
 
-**Two footguns of this model, both hit on 2026-08-16 (`land-stack` skill has the checks):**
+**Two footguns of this model — the `land-stack` skill carries the checks and the recovery
+commands:**
 
 1. **A worktree created BEFORE a tracked-branch change carries the OLD `.gitmodules`.**
-   `wt-finish` reads the tracked branch from the *worktree's* superproject file, so an
-   old worktree pushes to the old branch. This fast-forwarded dse `main` from 6.0.1 to a
-   7.0 sha (recovered with a lease-guarded `push 0645aca:refs/heads/main`). Sync a
-   worktree's `.gitmodules` from `origin/main` before its first landing.
-2. **Any push to dse `main` runs the ci.yml *at that sha*.** Restoring `main` to 6.0.1
-   re-ran the OLD `mkdocs gh-deploy --force`, which overwrote gh-pages and wiped the mike
-   layout (recovered with a lease-guarded push of the mike tip back to gh-pages). Until a
-   release moves `main` past SC-164, treat every push to `main` — including a restore — as
-   a gh-pages wipe, and restore gh-pages from the last mike commit afterward.
-
-
-branch). The raw `git submodule update --init --recursive` still detaches at the pin; prefer
-`just sync`.
+   `wt-finish` reads the tracked branch from the *worktree's* superproject file, so an old
+   worktree pushes to the old branch (this has already fast-forwarded dse `main` past a
+   release once). Sync a worktree's `.gitmodules` from `origin/main` before its first landing.
+2. **Any push to dse `main` runs `ci.yml` *at that sha*** — including a *restore*, which
+   re-runs the OLD `mkdocs gh-deploy --force` and overwrites gh-pages, wiping the mike
+   layout. Until a release moves `main` past SC-164, treat every push to `main` as a
+   gh-pages wipe and restore gh-pages from the last mike commit afterward.
 
 ## Edit in a worktree, not the shared main checkout
 
