@@ -84,8 +84,9 @@ The DSE plugin repo is the one submodule with a two-branch model, because its do
 - CI: `plugin-ci.yml` runs on pushes to `main` AND `develop` (+ all PRs); the docs-deploy
   `ci.yml` runs on both — `main` → mike `latest`, `develop` → mike `dev` (SC-164).
 
-**Two footguns of this model — the `land-stack` skill carries the checks and the recovery
-commands:**
+**Two footguns of this model — the `land-stack` skill carries the pre-flight check (§1.0)
+and the lease-guarded recovery commands (§7); the 2026-08-16 incident they came from is
+recorded in `docs/handoffs/HANDOFF.md`:**
 
 1. **A worktree created BEFORE a tracked-branch change carries the OLD `.gitmodules`.**
    `wt-finish` reads the tracked branch from the *worktree's* superproject file, so an old

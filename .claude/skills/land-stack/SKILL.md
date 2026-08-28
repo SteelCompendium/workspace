@@ -178,6 +178,36 @@ devbox run -- just wt-rm "$name"
 - **Push:** the ledger-preservation and any bookkeeping commits above still need
   `git push origin main`.
 
+### 7. Recovery — a push landed on the wrong branch (`draw-steel-elements` only)
+
+If the pre-flight check at step 1.0 was skipped and `wt-finish` pushed a feature branch
+onto dse **`main`** (released-content-only, see `docs/git-workflow.md` → "branching
+model"), recover in this order. **Every recovery push is lease-guarded** —
+`--force-with-lease` refuses to clobber a ref that moved under you.
+
+```bash
+# 1) Put dse main back on the last release sha (6.0.1 = 0645aca at the time of writing;
+#    read the real one off the release tag rather than trusting this number).
+git -C draw-steel-elements push --force-with-lease origin <release-sha>:refs/heads/main
+
+# 2) Land the work where it belonged.
+git -C draw-steel-elements push origin <branch>:refs/heads/develop
+
+# 3) ⚠️ SECOND-ORDER, ALWAYS: step 1 pushed to `main`, so it re-ran ci.yml AT THAT SHA.
+#    At any sha before SC-164 that is the OLD `mkdocs gh-deploy --force`, which
+#    overwrites gh-pages and wipes the mike layout (latest/dev/versions.json/redirects).
+#    Check, then force-restore gh-pages to the last mike commit:
+git -C draw-steel-elements log --oneline origin/gh-pages -3   # a lone mkdocs commit = wiped
+git -C draw-steel-elements push --force-with-lease origin <mike-tip-sha>:refs/heads/gh-pages
+```
+
+Then fix the cause so it cannot recur: `git -C "$wt" checkout origin/main -- .gitmodules`
+and commit it (superproject-only), per step 1.0.
+
+The 2026-08-16 incident this is drawn from — including the exact shas used
+(`main` → `0645aca`, gh-pages → mike tip `0b3752f`) and the SC-164 follow-on it
+uncovered — is recorded in `docs/handoffs/HANDOFF.md` (2026-08-17 entry).
+
 ## Quick reference
 
 | Step | Command | Fails/aborts on |
