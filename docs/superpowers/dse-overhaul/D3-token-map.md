@@ -143,7 +143,7 @@ below for the full rationale and migration).
 | `--dse-accent` | §1.2-D `accent` | `var(--interactive-accent)` | `#4db8c7` | `#2a7b88` | `#000` |
 | `--dse-accent-fg` | §1.2-C `text-on-accent` ⁷ | `var(--text-on-accent)` | `#0f1214` | `#fff` | `#fff` |
 | `--dse-focus-ring` | §1.2-B `border-focus` | `var(--interactive-accent)` | `#4db8c7` | `#2a7b88` | `#333` |
-| `--dse-select` | §1.2-E `selected` | `#D50000` | `#e0584b` | | `#000` |
+| `--dse-select` | §1.2-E `selected` | `#D50000` | `#e0584b` | `#bd392c` (SC-196) | `#000` |
 
 ⁷ The spec's Print column said `#000` for text-on-accent while also printing `accent` as
 `#000` (black-on-black). Corrected to `#fff`; moot in practice — accent-filled controls are
@@ -191,7 +191,7 @@ its own name rather than a redefinition.
 | `--dse-tier-low` | §1.2-H `tier-low` | `var(--text-normal)` | `var(--sc-tier-low, #e74c3c)` | `#c0392b` | `#c0392b` |
 | `--dse-tier-mid` | §1.2-H `tier-mid` | `var(--text-normal)` | `var(--sc-tier-mid, #f0b429)` | `#b9770e` | `#b9770e` |
 | `--dse-tier-high` | §1.2-H `tier-high` | `var(--text-normal)` | `var(--sc-tier-high, #4caf6a)` | `#1e8449` | `#1e8449` |
-| `--dse-tier-crit` | D2 extra (no site analog) ⁹ | `var(--text-normal)` | `#e0b050` (gold — **RESOLVED SC-106**) | | `#8a6a00` |
+| `--dse-tier-crit` | D2 extra (no site analog) ⁹ | `var(--text-normal)` | `#e0b050` (gold — **RESOLVED SC-106**) | `#66450a` (SC-196) | `#8a6a00` |
 | `--dse-badge-fg` | D2 extra (§2.8 badge-text hook) ¹⁰ | `var(--dse-fg)` | `#0f1214` | `#fff` | `#fff` |
 
 Tier badges are meaning-bearing → the Task-5 print rule adds `print-color-adjust: exact`
@@ -210,10 +210,10 @@ existing fills-not-text pattern (footnote 11 below).
 
 | Token | D3-spec concept | Legacy (verbatim) | Steel (dark) | Steel light | Print |
 |---|---|---|---|---|---|
-| `--dse-stamina-healthy` | §1.2-E `hp-healthy` | `limegreen` | `var(--sc-role-hexer, #5cc98a)` | | `#1a7a3a` |
-| `--dse-stamina-winded` | §1.2-E `hp-winded` | `yellow` | `#f0b429` | | `#8a6a00` |
-| `--dse-stamina-dying` | §1.2-E `hp-dying` | `red` | `#e74c3c` | | `#a11` |
-| `--dse-stamina-temp` | §1.2-E `hp-temp` (also the heal cue — no `healing` token, plan T3) ¹¹ | `deepskyblue` | `#7c5cd6` (**RESOLVED** 2026-07-19, plan 19 Task 6) | | `#555` |
+| `--dse-stamina-healthy` | §1.2-E `hp-healthy` | `limegreen` | `var(--sc-role-hexer, #5cc98a)` | `#147c40` (SC-196) | `#1a7a3a` |
+| `--dse-stamina-winded` | §1.2-E `hp-winded` | `yellow` | `#f0b429` | `#886106` (SC-196) | `#8a6a00` |
+| `--dse-stamina-dying` | §1.2-E `hp-dying` | `red` | `#e74c3c` | `#bb2d1f` (SC-196) | `#a11` |
+| `--dse-stamina-temp` | §1.2-E `hp-temp` (also the heal cue — no `healing` token, plan T3) ¹¹ | `deepskyblue` | `#7c5cd6` (**RESOLVED** 2026-07-19, plan 19 Task 6) | `#562ec5` (SC-196) | `#555` |
 | `--dse-stamina-track` | §1.2-E (bar track) | `var(--code-background)` | `rgba(220,226,230,0.06)` | `#eaeeef` | `#fff` |
 
 Bar fills are fills, not text — hues stay light/dark-stable (no contrast pressure).
@@ -233,11 +233,11 @@ stamina bar in the same visual context.
 
 | Token | D3-spec concept | Legacy (verbatim) | Steel (dark) | Steel light | Print |
 |---|---|---|---|---|---|
-| `--dse-turn-done` | §1.2-E `taken-turn` | `limegreen` | `var(--sc-role-hexer, #5cc98a)` | | `#1a7a3a` |
-| `--dse-malice` | §1.2-E `malice` (standalone — D2 has NO `role-malice`) | `red` | `#e0584b` | | `#a11` |
-| `--dse-vp` | D2 extra (victories / negotiation) ¹² | `orange` | `#e0b050` (gold — **RESOLVED SC-106**) | | `#8a6a00` |
-| `--dse-warn` | §1.2-E `warning` | `orange` | `#e8954a` | | `#8a5a00` |
-| `--dse-danger` | §1.2-E `damage` | `crimson` | `#e74c3c` | | `#a11` |
+| `--dse-turn-done` | §1.2-E `taken-turn` | `limegreen` | `var(--sc-role-hexer, #5cc98a)` | `#147c40` (SC-196) | `#1a7a3a` |
+| `--dse-malice` | §1.2-E `malice` (standalone — D2 has NO `role-malice`) | `red` | `#e0584b` | `#c83426` (SC-196) | `#a11` |
+| `--dse-vp` | D2 extra (victories / negotiation) ¹² | `orange` | `#e0b050` (gold — **RESOLVED SC-106**) | `#66450a` (SC-196) | `#8a6a00` |
+| `--dse-warn` | §1.2-E `warning` | `orange` | `#e8954a` | `#a34810` (SC-196) | `#8a5a00` |
+| `--dse-danger` | §1.2-E `damage` | `crimson` | `#e74c3c` | `#bb2d1f` (SC-196) | `#a11` |
 
 ¹² Legacy has `vp` and `warn` both `orange` (indistinguishable). Steel splits them: warnings
 keep the spec's support-orange `#e8954a`; victories go **gold**. **RESOLVED (SC-106,
@@ -738,3 +738,57 @@ ink-on-surface"). Tinting the plugin's badge TEXT to `var(--t)` would set it to 
 color as its own solid fill directly behind it — mathematically invisible, not a rendering
 nuance to visually confirm. Skipped; no code change. (Filed as an SC-121 audit lead per the
 SC-106 task brief, not implemented here.)
+
+## SC-196 amendment (2026-08-28 — the STATE palette gets a Steel light column)
+
+**Eleven "Steel light" cells were blank and are now filled** (`(SC-196)`-tagged in the
+tables above): `tier-crit`, `stamina-healthy`, `stamina-winded`, `stamina-dying`,
+`stamina-temp`, `turn-done`, `malice`, `vp`, `warn`, `danger`, `select`. Dark, Legacy and
+Print are **untouched** — every one of those columns still reads exactly as it did.
+
+**Why they were blank, and why that was wrong.** The map recorded these as light/dark-STABLE
+on the reasoning written into `styles-source.css` itself: they are *fills*, and a fill
+carries no contrast pressure. SC-196 measured that claim across every non-print harness
+capture — real ground pixels, ink composited at each node's cumulative `opacity` — and it
+does not hold. All eleven are **also** painted as text or as a meaning-bearing mark: the
+`winded`/`dying` words and the big stamina numerals, the initiative state chip, the malice
+readout, the montage and project outcome lines, the gauge graduations, the crit row's spine
+and badge frame, the initiative cell's selection ring. On a light ground the dark-tuned hue
+landed far under WCAG 2.1 — `--dse-stamina-winded` measured **1.55:1** as the word `winded`
+against a 4.5 bar; `--dse-stamina-dying` **1.27:1**; `--dse-tier-crit` **1.75:1** against the
+3.0 non-text bar. 52 failing light rows in all.
+
+**How the values were chosen.** Each keeps its hue and most of its chroma and moves only
+lightness, solved so the token clears its threshold (4.5 body text / 3.0 large text and
+non-text marks) against the **darkest ground it was actually measured on**, with SC-183's
+spent-row `opacity: .82` composited in. Two constraints beyond the per-token solve:
+
+- **Inter-token separation.** Solving each token against its own ground in isolation
+  collapsed co-located families into each other. Held now, and pinned:
+  `tier-crit` sits **2.36:1** from `tier-mid` (1.60 / 1.84 from `tier-low` / `-high`), so the
+  crit spine is again the one that stands apart by *lightness* — the channel that survives
+  for a colourblind reader; `warn` sits **1.44:1** from `vp`, which paint the same
+  `.dse-mt__outcome` class and share the `.dse-enc__summary` row.
+- **Ink that rides a fill.** `turn-done` and `select` are used as fills, so their inks were
+  solved with them: `--dse-surface` over the turn-taken marker (**4.94:1**), and
+  `--dse-accent-fg` over the active roll row (**5.55:1**, via a Steel-scoped light rule
+  beside the roll-result block — that row's `--dse-fg` ink was already failing at 3.68:1
+  before SC-196 touched anything).
+
+**`--dse-vp` and `--dse-tier-crit` are still ONE gold.** SC-106 made them a single value
+deliberately; the first SC-196 pass split them (`#845c0d` / `#a57517`) because it solved
+vp's 4.5 text bar and crit's 3.0 mark bar independently. That split was unintended and is
+undone: `#66450a` satisfies the stricter of the two, so the identity holds in light exactly
+as it does in dark. Same for the two other shared identities, which were preserved
+throughout: `stamina-dying` = `danger` = `#bb2d1f`, `stamina-healthy` = `turn-done` =
+`#147c40`.
+
+**These cells are gated.** `test/dom/framework/theme-steel.test.ts` pins the whole light
+block verbatim (45 tokens) and `test/dom/framework/lightContrast.test.ts` re-derives every
+ratio and separation from the declared values, so the sheet cannot drift from these numbers
+silently. The map itself is still ungated — comparing this column against the sheet is
+**SC-273**.
+
+**Still light/dark-STABLE, and correctly so:** the 12 role hues and `act-villain`. The site
+locks them scheme-invariant, and they are spine/crest ornament that never states a fact by
+colour alone.
