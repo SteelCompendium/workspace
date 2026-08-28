@@ -86,6 +86,14 @@ while silently discarding changes. Prefer a reusable framework-level affordance 
 one-element patch (DSE ships `data-dse-readonly` stamped by the pipeline when
 `!canPersist`, plus shared badge CSS).
 
+## Secrets: ask before touching (Scott's rule, 2026-08-28)
+
+Never move, copy, or re-home a secret/token/credential — even to a tool's documented
+location (e.g. extracting `LINEAR_API_KEY` from his dotfiles into
+`~/.config/linear/api_key`) — without asking first. Propose the exact command and let him
+run or approve it. Diagnosing where a secret lives and why it isn't visible is fine;
+relocating it is his call.
+
 ## Deploy & landing
 
 - Scott decides deploys (`just deploy*`) separately from landing source to `main` —
