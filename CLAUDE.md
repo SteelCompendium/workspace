@@ -116,23 +116,21 @@ Hierarchical classification used across all data repos: `source/type/item` (e.g.
 (`/scc/{code}/`), API keys, and cross-reference links. Scheme spec is **v1.1**.
 
 Registry is **3,086 codes** across four books (heroes 1,952, beastheart 241, monsters 662,
-summoner 231). `feature` is the umbrella type; companions/fixtures/**retainers**/summoner
-statblocks all live in the `monster.*` family. Monsters-book retainers are
-`monster.retainer.statblock/<id>` with coded `advancement-features`/`role-advancement`
-container siblings (Plan 6, 2026-06-18; per-ability coding deferred — SC-212). The
-summoner retainer (Devil Detective) is modeled like the Rival Summoner (2026-06-21):
-`monster.retainer.statblock/devil-detective` + a shared
-`monster.retainer.advancement-features/devil-detective`, with its summons nested as
-`monster.retainer.summoner.minion.statblock/<id>` (off the index); rival summons gained the
-same `.statblock` segment. The 4
-summoner fixtures' advancement members are coded `feature.fixture.<category>.<base>.level-N/<member>`
-(×12, 2026-06-19 — SC-213; parser-emitted coded children, no heading/cap change). The 4
-Portfolio Champions gained `monster.champion.summoner.<circle>.advancement-features/<id>`
-container siblings (×4, 2026-08-08 — SC-138; members inline/uncoded, retainer model). The heroes book's one
-statblock (the Elementalist's Source of Earth summon) is
-`monster.summon.elementalist.statblock/source-of-earth` (2026-08-21, SC-180). Gods and
-saints live in the `religion.*` family (`religion.god/<id>`, `religion.saint/<id>`;
-`religion.domain`/`order`/`pantheon` reserved).
+summoner 231). Three umbrella families carry most of the structure:
+
+- **`feature`** is the umbrella feature type (`feature.ability.*` / `feature.trait.*` /
+  plain `feature.*`).
+- **`monster.*`** holds every statblock-shaped entity — monsters, beastheart companions,
+  summoner fixtures/minions/champions/rivals, **retainers**, and the heroes book's one
+  class summon. The recurring shape is a coded base plus a coded **container** sibling
+  (`…advancement-features/<id>`, plus `monster.retainer.role-advancement/<role>`); fixture
+  advancement members are individually coded, other containers' members stay
+  inline/uncoded. Per-ability coding of statblock/featureblock abilities is deferred —
+  **SC-212**.
+- **`religion.*`** holds gods and saints (`religion.god/<id>`, `religion.saint/<id>`;
+  `religion.domain`/`order`/`pantheon` reserved).
+
+Where the rest lives:
 
 - **Current-state detail** (taxonomy, companion/fixture/summoner schemes, group landings,
   linking, printing-vs-version): [`docs/scc-reference.md`](docs/scc-reference.md).

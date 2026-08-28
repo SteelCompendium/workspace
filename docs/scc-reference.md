@@ -81,7 +81,7 @@ likely just noise. Decided 2026-06-18.
 
 ## Gods & Religion
 
-Gods and saints share a `religion.*` namespace (added 2026-06-18), paralleling `monster.*` /
+Gods and saints share a `religion.*` namespace, paralleling `monster.*` /
 `rule.*` — a namespace prefix spanning several distinct entity types:
 
 - `religion.god/<id>` — deities (Val, Cavall, Cyrvis, plus the collective `lords-of-hell`).
@@ -127,8 +127,8 @@ Mirror the companion scheme:
 
 - base: `monster.fixture.<element>.featureblock/<id>` (`type: featureblock`)
 - advancement-features: `monster.fixture.<element>.advancement-features/<id>` (Level-5/9 tiers)
-- advancement **members**: `feature.fixture.<element>.<base-id>.level-N/<member-id>` (×12,
-  2026-06-19) — each Level-5/9 advancement feature is individually coded with its own leaf
+- advancement **members**: `feature.fixture.<element>.<base-id>.level-N/<member-id>` (×12)
+  — each Level-5/9 advancement feature is individually coded with its own leaf
   page, mirroring `feature.companion.*`. Base-inclusive: `size-increase` repeats across all
   four fixtures but lives in four distinct `<element>.<base-id>` namespaces (no collision).
 
@@ -150,8 +150,8 @@ Portfolio minions/champions + the rival summoner live in the `monster.*` family 
 companions/fixtures — these are plain statblocks, no featureblock machinery:
 
 - minions: `monster.minion.summoner.<portfolio>.statblock/<id>`
-- champions: `monster.champion.summoner.<portfolio>.statblock/<id>`, each paired since
-  2026-08-08 (SC-138) with a coded **container** sibling
+- champions: `monster.champion.summoner.<portfolio>.statblock/<id>`, each paired (SC-138)
+  with a coded **container** sibling
   `monster.champion.summoner.<portfolio>.advancement-features/<id>` (×4) holding the
   Level-10 advancement the book prints inside the stat block. Members stay
   inline/uncoded (the retainer container model, not the fixtures' coded children). The
@@ -162,7 +162,7 @@ companions/fixtures — these are plain statblocks, no featureblock machinery:
   deliberately **excluded** from `buildAdvancementPairContent` — their base is a real
   statblock, so the bestiary group landing gives a richer preview card than the pair grid.
 
-**Heroes-book summon (2026-08-21, SC-180).** The heroes book's one statblock — the
+**Heroes-book summon (SC-180).** The heroes book's one statblock — the
 Elementalist's Source of Earth — is `mcdm.heroes.v1/monster.summon.elementalist.statblock/source-of-earth`,
 the first `monster.*` code outside the monsters/summoner/beastheart books. `summon` is a
 role branch in the established `monster.<role>.<class>` grammar; the source is authored to
@@ -180,11 +180,11 @@ Go-side mapping lives in `StatblockParser` (`switch domain`, mirroring the `@dom
 fixture` case; the rival split keys off `organization == Minion`); `isBestiaryGroupDir`
 recognizes the deeper `monster/<domain>/summoner/<portfolio>` group dir.
 
-**Retainers.** The **Monsters-book** retainers joined the `monster.*` family in Plan 6
-(2026-06-18): base `monster.retainer.statblock/<id>` (×21), plus coded **container** siblings
+**Retainers.** The **Monsters-book** retainers live in the `monster.*` family (Plan 6):
+base `monster.retainer.statblock/<id>` (×21), plus coded **container** siblings
 `monster.retainer.advancement-features/<id>` (×21) and `monster.retainer.role-advancement/<role>`
 (×9), members inline/uncoded — the same treatment fixtures got (5c). Per-ability coding is
-deferred (ROADMAP #15). The **Summoner-book** retainer folded in too (2026-06-21, reversing
+deferred — **SC-212**. The **Summoner-book** retainer folded in too (reversing
 Plan 6's "keep top-level") and is modeled like the Rival Summoner: the conjurer **Devil
 Detective** is `monster.retainer.statblock/devil-detective` with a shared
 `monster.retainer.advancement-features/devil-detective` featureblock; its summons
