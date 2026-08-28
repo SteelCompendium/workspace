@@ -115,3 +115,13 @@ pointer bumps deliberately uncommitted for landing):
 - draw-steel-elements: `5124ed9`, `16e25ff` (tracked branch: develop)
 
 Backlog tickets filed this effort: SC-265, SC-266, SC-267 (all link SC-264).
+
+## Landed & closed (2026-08-28)
+
+Dispatcher landed via land-stack: steel-etl `c7d6940` + v2 `9782209ec5` on `origin/main`,
+draw-steel-elements `16e25ff` on `origin/develop`, workspace superproject merge `6b7974d`
++ ledger-preservation commit `7a5367b`
+(`docs/superpowers/dse-overhaul/build-ledgers/sc264-docprune-ledger.md`). Clean
+fast-forwards; pre-existing dse vault dirt stash-wrapped and restored (unrelated);
+worktree torn down. Closing note posted via linear-post.py; SC-264 verified **Done**,
+labels empty. Effort complete.
