@@ -99,6 +99,40 @@ If you also want trimmed output for readability, redirect to a log file and `tai
 in a **separate** command after you've already checked the exit code — don't pipe the
 gate command itself.
 
+## In-run gates inside `npm run shots` (SC-205, 2026-08-28)
+
+`npm run shots` carries two loud in-run gates beyond the captures themselves. Both print an
+OK line on success; read the lines, don't infer from exit code alone.
+
+- **Host-copy pin** (`visual-harness/obsidian-host-pin.mjs` + `shoot.mjs`): verifies the
+  harness's Obsidian button model (`OBSIDIAN_HOST_BUTTON_CSS` in `shoot.mjs`) AND the
+  human-facing listing in `styles-source.css`'s host-rules comment against the newest
+  installed Obsidian asar (`~/.config/obsidian/obsidian-*.asar`; the `/opt` installer copy
+  is years stale and deliberately never used as a comparison source). Expected line:
+  `host-copy pin OK (6 button-reaching rules + 14 tokens × dark/light + the
+  styles-source.css listing … 21 further rules … excluded by documented ancestor scope, 0
+  unclassifiable …)`. On a machine with no asar at/above the pinned version (currently
+  1.13.7): **`host-copy pin PARTIAL` — expected, not a failure**; the in-repo
+  sheet-vs-model fence check still runs unconditionally, and the pin never compares
+  against an asar older than the pinned version. Real failures print
+  `HOST COPY DRIFTED` / `IN-REPO HOST-MODEL CHECK FAILED` with a drift-kind-specific
+  remedy — follow the printed remedy (an Obsidian self-update means re-extract and update
+  `PINNED_OBSIDIAN` + both copies; a sheet-listing drift means fix the comment/model, NOT
+  re-extract). Deferred parser-hardening edge cases: SC-276.
+- **Button host-leak sweep** (`assertBtnHostLeak` in `shoot.mjs`): computed-style
+  invariance of every gallery button kind with vs. without the injected host copy, now at
+  **3 states (rest / hover / focus-visible) × dark/light**. Expected line as of SC-205:
+  `button host-leak OK (111 button kinds × 3 states … = 666 comparisons …)` plus a printed
+  12-record exemption boundary (8 focus-visible disabled, 2 hover no-hit-point, 2
+  focus-visible `visibility: hidden`). Kind counts drift as fixtures/chrome grow — treat
+  them as "expect right now", and treat any per-record `matches(':focus-visible')` failure
+  or a new unexplained exemption as a real red, not noise.
+
+Battery numbers at SC-205 land-ready (dse branch `sc205-btn-host-leak`, 2026-08-28, base
+`16e25ff`): jest 3257 passed / 1 skipped / 185 suites; shots 474 PNGs, 0 FAIL; freeze
+210/210, 0 mismatches; parity 0 GAPs / 0 undeclared / 16 DECLARED. SC-205 moved zero
+pixels and zero frozen bytes; shots runtime grew ~+35 s (+11%) from the two state passes.
+
 ## Freeze semantics
 
 `check-freeze.sh` (`/home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh`)
