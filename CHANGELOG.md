@@ -8,6 +8,18 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: every display family now renders a full Steel card, not a prose wall
+  (SC-120).** Kit was the only family with a Steel composition; the other ten (class,
+  career, ancestry, culture, title, perk, complication, treasure, condition, rule) fell
+  back to a plain bold title, pill badges, and a loose label/value list. Each family now
+  renders its site counterpart's composition: crest + small-caps family label in the
+  head, stat-tile strips (class Basics/Potency, career's four-slot benefits row,
+  treasure's two-slot Project row), and structured bands (Benefit/Drawback,
+  Prerequisite/Effect, Skill Options, per-tier treasure level effects). Body lines a band
+  replaces are stripped by band-gated, segment-aware stripping that never deletes content
+  it cannot replace — which also fixes the treasure card's double-rendered Project
+  values. Base (non-Steel) renders stay byte-identical; all 24 frozen steel-print
+  hashes were individually approved and swapped at landing.
 - **DSE plugin: buttons finally look the way the plugin designed them (SC-203).** In a real
   vault, Obsidian's own `button` styling was overriding ours on **every** button — its rule is
   more specific than the plugin's, which nothing had noticed because the screenshot harness
