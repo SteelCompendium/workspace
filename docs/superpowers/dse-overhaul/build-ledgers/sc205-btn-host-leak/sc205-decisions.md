@@ -167,3 +167,9 @@ Repo: `draw-steel-elements`, tracked branch `develop`, base sha at cut: `16e25ff
   state on `draw-steel-elements` at session start (not this effort's doing) — land-stack's
   dirty check will surface it. At landing, copy this ledger + the r1–r6 reports to
   `docs/superpowers/dse-overhaul/build-ledgers/` before `just wt-rm`.
+  `docs/superpowers/dse-overhaul/build-ledgers/` before `just wt-rm`.
+- 2026-08-29: **LANDED.** dse origin/develop at `c09cf6f`; superproject merge `0afa5fb`,
+  pointer bump `8335166`; ledger preserved at
+  `docs/superpowers/dse-overhaul/build-ledgers/sc205-btn-host-leak/` (`3d02bbd`); worktree
+  removed. SC-205 flipped to **Done** (first save no-op'd silently; retry landed —
+  verified `completedAt` set). Effort closed.
