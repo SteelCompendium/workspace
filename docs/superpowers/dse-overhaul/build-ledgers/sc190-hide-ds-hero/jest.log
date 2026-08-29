@@ -1,0 +1,84 @@
+Info: New devbox available: 0.17.5 -> v0.18.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/workspace
+
+[notice] A new release of pip is available: 24.3.1 -> 26.2.1
+[notice] To update, run: pip install --upgrade pip
+FAIL dom test/dom/framework/token-coverage.test.ts
+  ● D3 Task 1: token reconciliation map covers the DSE_TOKEN_NAMES union › one map row per union token — no missing, no extra, no duplicates
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 14
+
+    - Array []
+    + Array [
+    +   "fs-small-scale",
+    +   "fs-large-scale",
+    +   "fs-control-scale",
+    +   "fs-heading",
+    +   "fs-subheading",
+    +   "fs-numeral",
+    +   "fs-body",
+    +   "fs-control",
+    +   "fs-secondary",
+    +   "fs-label",
+    +   "fs-caption",
+    +   "fs-micro",
+    + ]
+
+      79 | 		const dups = rows.filter((n) => (seen.has(n) ? true : (seen.add(n), false)));
+      80 |
+    > 81 | 		expect(missing).toEqual([]);
+         | 		                ^
+      82 | 		expect(extra).toEqual([]);
+      83 | 		expect(dups).toEqual([]);
+      84 | 		expect(rows.length).toBe(DSE_TOKEN_NAMES.length);
+
+      at Object.<anonymous> (test/dom/framework/token-coverage.test.ts:81:19)
+
+
+Summary of all failing tests
+FAIL test/dom/framework/token-coverage.test.ts
+  ● D3 Task 1: token reconciliation map covers the DSE_TOKEN_NAMES union › one map row per union token — no missing, no extra, no duplicates
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 14
+
+    - Array []
+    + Array [
+    +   "fs-small-scale",
+    +   "fs-large-scale",
+    +   "fs-control-scale",
+    +   "fs-heading",
+    +   "fs-subheading",
+    +   "fs-numeral",
+    +   "fs-body",
+    +   "fs-control",
+    +   "fs-secondary",
+    +   "fs-label",
+    +   "fs-caption",
+    +   "fs-micro",
+    + ]
+
+      79 | 		const dups = rows.filter((n) => (seen.has(n) ? true : (seen.add(n), false)));
+      80 |
+    > 81 | 		expect(missing).toEqual([]);
+         | 		                ^
+      82 | 		expect(extra).toEqual([]);
+      83 | 		expect(dups).toEqual([]);
+      84 | 		expect(rows.length).toBe(DSE_TOKEN_NAMES.length);
+
+      at Object.<anonymous> (test/dom/framework/token-coverage.test.ts:81:19)
+
+
+Test Suites: 1 failed, 1 skipped, 183 passed, 184 of 185 total
+Tests:       1 failed, 1 skipped, 3258 passed, 3260 total
+Snapshots:   3 passed, 3 total
+Time:        29.456 s, estimated 33 s
+Ran all test suites in 2 projects.
+Error: error running script "bash" in Devbox: exit status 1
+
+EXIT=1
