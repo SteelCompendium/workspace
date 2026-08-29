@@ -345,6 +345,29 @@ didn't mount) plus human review of the PNGs.
   `check-freeze.sh` → `freeze OK (101/101 …)`. During execution the expected result is a
   sole mismatch on that file (e.g. `100/101`, only that name); any other mismatch is still
   a leak to fix. Each rebaseline needs its own dated sign-off recorded here:
+  - **2026-08-29, SC-120 §D2 Steel compositions for the remaining display families
+    (worktree `sc120-d2-steel-compositions`, landed dse to develop): SANCTIONED 24-line
+    rebaseline (12 twin+realprint pairs), count unchanged at 210 — APPLIED at landing by
+    the dispatcher.** The effort built Steel compositions for twelve display families
+    across three batches — Batch C: ancestry, condition, perk (+ perk-narrow), rule;
+    Batch A: class, career; Batch B: treasure, title, complication (+
+    complication-edit-btn), culture — each necessarily moving that family's frozen
+    `*--steel-print.png`/`*--steel-realprint.png` pair for the same reason every prior
+    entry in this section does: print renders whatever DOM the active theme built, and a
+    Steel-only DOM rebuild cannot be branched around it. **Scott's sanction, in two
+    parts:** Batch C — SC-120 comment, 2026-08-29 01:16 UTC, replying to the Batch C
+    sanction ask verbatim: *"Looks great, go for it."* Batches A and B — SC-120 comment,
+    2026-08-29 11:20: *"All aproved."* Both asks named their families and carried
+    before/after crops; every "before" hash in `rebaseline.txt` was cross-checked against
+    the fix-round tables with zero novel values before the ask went out. Applied on the
+    REBASED landing tree (the branch was rebased onto `origin/develop` `6035d12` after
+    SC-190 landed in between; full battery re-run post-rebase: tsc/lint clean, jest
+    3394+1sk/3395, shots 0 FAIL deterministic across 2 runs, parity 0/0/16). Verified
+    before applying: the 24 mismatch names from a fresh `check-freeze.sh` run on the
+    rebased tree matched `rebaseline.txt`'s filename set exactly (diff empty both ways);
+    every hash byte-identical across the 2 shots runs. Backup:
+    `freeze-baseline.sha256.pre-sc120-bak`. Verified after: `freeze OK (210/210 …)`,
+    exit 0.
   - **2026-08-22, SC-152 sheet styling + characteristics unification (worktree
     `sc152-sheet-styling`, landed dse to develop): SANCTIONED 20-line rebaseline
     (10 twin+realprint pairs), count unchanged at 196 — APPLIED at landing by the
