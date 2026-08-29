@@ -1,0 +1,10 @@
+Info: New devbox available: 0.17.5 -> v0.18.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc205-btn-host-leak/draw-steel-elements
+PINNED_OBSIDIAN = 1.13.7
+
+[1] real machine (1.13.7 present): {"path":"/home/scott/.config/obsidian/obsidian-1.13.7.asar","version":"1.13.7","usable":true}
+[2] only obsidian-1.9.0.asar:       {"path":"/tmp/sc205-home-8lRsZx/.config/obsidian/obsidian-1.9.0.asar","version":"1.9.0","usable":false,"why":"the newest Obsidian installed here is 1.9.0, OLDER than the 1.13.7 the host copy was extracted from"}
+[3] no config asar (/opt fallback): {"path":"/opt/Obsidian/resources/obsidian.asar","version":"(unversioned installer asar)","usable":false,"why":"the only Obsidian here is the installer asar at /opt/Obsidian/resources/obsidian.asar, whose filename carries no version — it cannot be shown to be at least 1.13.7, and an installer copy is routinely years older than the self-updated one Obsidian actually runs"}
+
+compareVersions("1.14.0","1.13.7") = 1 (newer -> usable, stays a hard drift failure)
+corrupt asar readAsarFile -> null

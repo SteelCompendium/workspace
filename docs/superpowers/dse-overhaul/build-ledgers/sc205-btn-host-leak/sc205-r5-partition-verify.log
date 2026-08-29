@@ -1,0 +1,31 @@
+Info: New devbox available: 0.17.5 -> v0.18.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc205-btn-host-leak/draw-steel-elements
+== classifier on the R4-M2 cases ==
+  plain       subject="button"  scope=".markdown-rendered"
+  plain       subject="button"  scope=".view-content"
+  plain       subject="button"  scope=":is(.markdown-rendered)"
+  plain       subject="button"  scope=":is(.markdown-rendered, .markdown-preview-view)"
+  plain       subject="button:not(.clickable-icon, .mod-cta)"  scope=""
+  plain       subject="button:not(:is(.mod-cta))"  scope=""
+  plain       subject="button:not(.clickable-icon)"  scope=".setting-item:not(:is(.mod-toggle, .mod-navigable, .mod-action, .setting-item-heading)) .setting-item-control"
+  qualified   subject="button.mod-cta"  scope=""
+  qualified   subject="button.mod-loading::after"  scope=""
+  qualified   subject="button.copy-code-button:hover"  scope=".markdown-rendered"
+
+== real 1.13.7 app.css ==
+reaching: 7   excluded: 20   unaccounted: 0
+  R  @container (max-width: 400px) { .setting-item:not(:is(.mod-toggle, .mod-navigable, .mod-action, .setting-item-heading)) .setting-item-control button:not(.clickable-icon), .setting-item:not(:is(.mod-toggle, .mod-navigable, .mod-action, .setting-item-heading)) .setting-item-control input, .setting-item:not(:is(.mod-toggle, .mod-navigable, .mod-action, .setting-item-heading)) .setting-item-control select }
+  R  button
+  R  button:not(.clickable-icon)
+  R  @media (hover: hover) { button:hover }
+  R  button:focus-visible
+  R  button[disabled], button[aria-disabled="true"], button[disabled="true"]
+  R  @media (forced-colors: active) { button }
+  X  6×  Obsidian's bundled pdf.js viewer chrome — never inside a rendered note
+  X  1×  the core Bases toolbar's own form chrome, not note content
+  X  4×  core-UI surfaces (graph view, Publish, slides, the empty-canvas placeholder) that never contain a rendered note
+  X  2×  the vault chooser / first-run screens — no vault is open, so no plugin element exists
+  X  7×  mobile/tablet scopes; the plugin gallery and the modelled tokens are desktop-only (see the token block in shoot.mjs)
+
+== injected-drift check: does the idiomatic :is() case now register? ==
+  reaching: 1 [":is(.markdown-rendered, .markdown-preview-view) button"]

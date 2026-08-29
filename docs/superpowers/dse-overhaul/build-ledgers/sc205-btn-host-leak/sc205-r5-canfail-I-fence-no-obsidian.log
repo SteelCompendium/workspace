@@ -1,0 +1,146 @@
+Info: New devbox available: 0.17.5 -> v0.18.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc205-btn-host-leak/draw-steel-elements
+
+> draw-steel-elements@7.0.0 shots
+> npm run harness:build && node visual-harness/shoot.mjs --bg=dark
+
+
+> draw-steel-elements@7.0.0 harness:build
+> node visual-harness/esbuild.mjs
+
+
+  visual-harness/dist/harness.js     2.6mb ⚠️
+  visual-harness/dist/harness.css  314.0kb
+
+⚡ Done in 327ms
+  ok ancestry--steel-dark.png
+  ok career--steel-dark.png
+  ok characteristics--steel-dark.png
+  ok class--steel-dark.png
+  ok complication--steel-dark.png
+  ok condition--steel-dark.png
+  ok conditions--steel-dark.png
+  ok counter--steel-dark.png
+  ok culture--steel-dark.png
+  ok encounter--steel-dark.png
+  ok encounter-collapsed--steel-dark.png
+  ok feature--steel-dark.png
+  ok feature-spend--steel-dark.png
+  ok feature-villain--steel-dark.png
+  ok feature-collapsed--steel-dark.png
+  ok featureblock--steel-dark.png
+  ok featureblock-advancement--steel-dark.png
+  ok featureblock-stats--steel-dark.png
+  ok hero--steel-dark.png
+  ok hero-sparse--steel-dark.png
+  ok hero-collapsed--steel-dark.png
+  ok hero-tokens--steel-dark.png
+  ok heroic-resource--steel-dark.png
+  ok horizontal-rule--steel-dark.png
+  ok initiative--steel-dark.png
+  ok initiative-no-images--steel-dark.png
+  ok initiative-controls--steel-dark.png
+  ok initiative-fight--steel-dark.png
+  ok initiative-roster--steel-dark.png
+  ok initiative-squads--steel-dark.png
+  ok kit--steel-dark.png
+  ok kit-collapsed--steel-dark.png
+  ok montage--steel-dark.png
+  ok negotiation--steel-dark.png
+  ok negotiation-checked--steel-dark.png
+  ok party--steel-dark.png
+  ok perk--steel-dark.png
+  ok project--steel-dark.png
+  ok roll--steel-dark.png
+  ok rule--steel-dark.png
+  ok skills--steel-dark.png
+  ok skills-hero-picks--steel-dark.png
+  ok skills-ledger--steel-dark.png
+  ok skills-chips--steel-dark.png
+  ok skills-ledger-hidden--steel-dark.png
+  ok skills-chips-hidden--steel-dark.png
+  ok stamina-bar--steel-dark.png
+  ok stamina-bar-recoveries--steel-dark.png
+  ok stamina-bar-winded--steel-dark.png
+  ok stamina-bar-dying--steel-dark.png
+  ok stamina-bar-collapsed--steel-dark.png
+  ok stamina-bar-collapse-default--steel-dark.png
+  ok stamina-bar-not-collapsible--steel-dark.png
+  ok statblock--steel-dark.png
+  ok statblock-villain-corpus--steel-dark.png
+  ok statblock-roleless-corpus--steel-dark.png
+  ok statblock-stats-ledger--steel-dark.png
+  ok statblock-stats-gridc--steel-dark.png
+  ok statblock-featstyle-flat--steel-dark.png
+  ok statblock-columns-wide--steel-dark.png
+  ok statblock-with-captain--steel-dark.png
+  ok statblock-collapsed--steel-dark.png
+  ok surges--steel-dark.png
+  ok title--steel-dark.png
+  ok treasure--steel-dark.png
+  ok values-row--steel-dark.png
+  ok perk-narrow--steel-dark.png
+  ok stamina-rail--steel-dark.png
+  ok hero-narrow--steel-dark.png
+  ok encounter-narrow--steel-dark.png
+  ok initiative-narrow--steel-dark.png
+  ok initiative-no-images-narrow--steel-dark.png
+  ok initiative-controls-narrow--steel-dark.png
+  ok skills-narrow--steel-dark.png
+  ok skills-ledger-narrow--steel-dark.png
+  ok skills-chips-narrow--steel-dark.png
+  ok initiative-fight-500--steel-dark.png
+  ok initiative-fight-narrow--steel-dark.png
+  ok initiative-roster-500--steel-dark.png
+  ok initiative-roster-narrow--steel-dark.png
+  ok initiative-squads-500--steel-dark.png
+  ok negotiation-pr-checked--steel-dark.png
+  ok initiative-log-open--steel-dark.png
+  ok initiative-cell-selected--steel-dark.png
+  ok statblock-kwusage-text--steel-dark.png
+  ok statblock-kwusage-grid--steel-dark.png
+  ok statblock-kwusage-ledger--steel-dark.png
+  ok statblock-disttarget-text--steel-dark.png
+  ok statblock-disttarget-ledger--steel-dark.png
+  ok statblock-charline-two--steel-dark.png
+  ok statblock-charbox-on--steel-dark.png
+  ok statblock-charbox-onword--steel-dark.png
+  ok statblock-villain-banded--steel-dark.png
+  ok featureblock-featstyle-flat--steel-dark.png
+  ok featureblock-stats-ledger--steel-dark.png
+  ok complication-edit-btn--steel-dark.png
+  ok counter-edit-btn--steel-dark.png
+  ok statblock-edit-btn--steel-dark.png
+  ok horizontal-rule-edit-btn--steel-dark.png
+  ok initiative-mark-seal--steel-dark.png
+  ok initiative-portraits-off--steel-dark.png
+  ok statblock-sticky--steel-dark.png
+  ok statblock-sticky-unscrolled--steel-dark.png
+  ok statblock-sticky-nometa--steel-dark.png
+  ok statblock-sticky-off--steel-dark.png
+  ok statblock-sticky-narrow--steel-dark.png
+  ok chrome-hover-statblock--steel-dark.png
+  ok chrome-hover-hero--steel-dark.png
+  ok chrome-skills-menu--steel-dark.png
+  ok chrome-stacked-hover--steel-dark.png
+  ok chrome-collapsed-trio--steel-dark.png
+  ok chrome-mobile--steel-dark.png
+  ok chrome-placement-trio--steel-dark.png
+  ok chrome-border-winded--steel-dark.png
+  ok chrome-border-dying--steel-dark.png
+  ok chrome-legacy-keys--steel-dark.png
+  ok chrome-hover-card--steel-dark.png
+  ok chrome-collapsed-rollout--steel-dark.png
+  ok gallery--steel-dark.png
+
+chrome placement OK (7 element families: inset 10.00px from the card's right edge, 0 border overlap)
+
+chrome host-leak OK (18 family/scheme combos: chrome buttons carry no host box-shadow, the panel's box is unchanged by Obsidian's `button` rule, and the card's top border is continuous under the panel AND around the top-right arc beside it)
+
+IN-REPO HOST-MODEL CHECK FAILED — styles-source.css and visual-harness/shoot.mjs disagree about Obsidian's button rules, or about what the sweep may assume:
+  styles-source.css's [SC205-HOST-RULES] listing does not match the model:
+      sheet lists: button ; button:not(.clickable-icon) ; @media (hover: hover) { button:hover } ; button[disabled], button[aria-disabled="true"], button[disabled="true"] ; @media (forced-colors: active) { button }
+      model has:   button ; button:not(.clickable-icon) ; @media (hover: hover) { button:hover } ; button:focus-visible ; button[disabled], button[aria-disabled="true"], button[disabled="true"] ; @media (forced-colors: active) { button }
+Obsidian is NOT involved in this one and nothing needs re-extracting: both operands are in the repo, which is why this check runs on every machine, with or without a local Obsidian. Fix the sheet or the model so they match, in one commit.
+Error: error running script "bash" in Devbox: exit status 1
+
