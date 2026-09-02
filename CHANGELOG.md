@@ -20,6 +20,21 @@ go under an *Internal* sub-heading.
   it cannot replace — which also fixes the treasure card's double-rendered Project
   values. Base (non-Steel) renders stay byte-identical; all 24 frozen steel-print
   hashes were individually approved and swapped at landing.
+- **DSE plugin: the Draw Steel sidebar gets a fix round — pin/unpin from the chrome menu,
+  panel headers, an empty state, and layout that actually persists (SC-184).** The sidebar
+  shipped in 7.0.0 as a one-panel MVP: the only way to add a block was a cursor-gated
+  command invisible in Reading mode (the only mode elements render in), there was no way to
+  remove a single panel short of closing the whole leaf and losing every one, panels were an
+  unlabeled unseparated stack, and the ribbon icon opened straight into a blank, unexplained
+  div. All fixed: every chrome-bearing block's **⋯** menu now offers **Pin to sidebar** in a
+  note and **Unpin from sidebar** once it's there; each panel gets a header naming its
+  element and source note (clickable back to the note); a pinned/removed panel now actually
+  survives an Obsidian restart (`requestSaveLayout` was never called before); an empty
+  sidebar explains what it's for; and a broken panel (unknown element, deleted or renamed
+  note) gets a dismiss button instead of sitting there forever. The docs also drop the "your
+  tracker, but persistent" pitch in favor of the honest one — a GM dashboard assembled from
+  blocks that live in **different** notes — and now say plainly that a pinned note tab is
+  the better tool when everything you track already lives in one note.
 - **DSE plugin: buttons finally look the way the plugin designed them (SC-203).** In a real
   vault, Obsidian's own `button` styling was overriding ours on **every** button — its rule is
   more specific than the plugin's, which nothing had noticed because the screenshot harness
