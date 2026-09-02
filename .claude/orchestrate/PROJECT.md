@@ -209,7 +209,7 @@ Everything that matters is in the repo; a fresh machine needs:
    `~/.config/linear/api_key` (mode 600), or export `LINEAR_API_KEY` — the posting script
    requires this; MCP auth does NOT cover the script (step 3 above restates the requirement,
    this step is what actually creates the key on a fresh machine).
-7. Start dispatcher sessions on **Sonnet** at **low effort** (`/model sonnet`, `/effort low`)
-   — the skill asserts both but cannot set them. Safe only on plugin **0.2.0+**, where the
-   `orchestration:*` agent definitions carry their own model and effort; on older plugin
-   versions owners inherit the session's effort, so leave it at the default there.
+7. Start dispatcher sessions on **Sonnet** (`/model sonnet`) at the **default effort** —
+   the skill asserts the model but cannot set it. Don't lower the effort: landings are
+   where a hurried dispatcher does damage, and on plugin **0.2.0+** the session's level no
+   longer reaches the owners anyway (their agent definitions carry their own).
