@@ -1,0 +1,107 @@
+Info: New devbox available: 0.17.5 -> v0.18.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/workspace
+
+[notice] A new release of pip is available: 24.3.1 -> 26.2.1
+[notice] To update, run: pip install --upgrade pip
+
+> draw-steel-elements@7.0.0 obsidian-shots
+> node visual-harness/notes-gen.mjs && npm run build-no-check && node visual-harness/obsidian-camera.mjs
+
+wrote Harness/horizontal-rule.md (ds-hr)
+wrote Harness/skills.md (ds-skills)
+wrote Harness/stamina-bar.md (ds-stam)
+wrote Harness/negotiation.md (ds-nt)
+wrote Harness/initiative.md (ds-it)
+wrote Harness/feature.md (ds-ft)
+wrote Harness/featureblock.md (ds-fb)
+wrote Harness/statblock.md (ds-sb)
+wrote Harness/counter.md (ds-ct)
+wrote Harness/values-row.md (ds-vr)
+wrote Harness/characteristics.md (ds-char)
+wrote Harness/roll.md (ds-roll)
+wrote Harness/scc.md (ds-scc)
+wrote Harness/encounter.md (ds-encounter)
+wrote Harness/montage.md (ds-montage)
+wrote Harness/project.md (ds-project)
+wrote Harness/party.md (ds-party)
+wrote Harness/conditions.md (ds-conditions)
+wrote Harness/heroic-resource.md (ds-resource)
+wrote Harness/surges.md (ds-surges)
+wrote Harness/hero-tokens.md (ds-tokens)
+wrote Harness/hero.md (ds-hero)
+22 notes generated
+seeded 3 compendium fixture(s) into DS Compendium/
+wrote Harness/modal-stamina.md (stamina block WITH recoveries — Spend Recovery modal state)
+wrote Harness/canvas.canvas (2 interactive elements in canvas TEXT nodes — read-only quarantine)
+wrote Harness/statblock-villain-corpus.md (corpus-shaped villain statblock — cost + dash usage)
+wrote Harness/by-scc-kit.md (by-SCC ds-scc reference -> nested ds-feature recursion proof)
+wrote Harness/scc-demo.md (3 resolvable codes + 2 strict-body error cards)
+
+> draw-steel-elements@7.0.0 build-no-check
+> node esbuild.config.mjs production
+
+spawned obsidian pid=2027459 (udd=/tmp/claude-1000/dse-obsidian-camera/obsidian-harness-udd, port=9223, display=:1)
+attached: obsidian unknown, vault "demo-vault", window 1440x1053 (layout ready 2684ms after spawn)
+plugin loaded, frameworkV2 present
+  ok characteristics--obsidian-steel-dark.png (103181 bytes, clip 1020x113)
+  ok characteristics--obsidian-steel-light.png (80832 bytes, clip 1020x113)
+  ok conditions--obsidian-steel-dark.png (83714 bytes, clip 1020x104)
+  ok conditions--obsidian-steel-light.png (70470 bytes, clip 1020x104)
+  ok counter--obsidian-steel-dark.png (61976 bytes, clip 1020x82)
+  ok counter--obsidian-steel-light.png (49773 bytes, clip 1020x82)
+  ok encounter--obsidian-steel-dark.png (379650 bytes, clip 1020x405)
+  ok encounter--obsidian-steel-light.png (326252 bytes, clip 1020x405)
+  ok feature--obsidian-steel-dark.png (1290745 bytes, clip 1020x1199, emulated viewport)
+  ok feature--obsidian-steel-light.png (815183 bytes, clip 1020x1199, emulated viewport)
+  ok featureblock--obsidian-steel-dark.png (811414 bytes, clip 1020x832)
+  ok featureblock--obsidian-steel-light.png (790811 bytes, clip 1020x832)
+  ok hero--obsidian-steel-dark.png (1045946 bytes, clip 1020x1095, emulated viewport)
+  ok hero--obsidian-steel-light.png (782026 bytes, clip 1020x1095, emulated viewport)
+  ok hero-tokens--obsidian-steel-dark.png (74386 bytes, clip 1020x93)
+  ok hero-tokens--obsidian-steel-light.png (58871 bytes, clip 1020x93)
+  ok heroic-resource--obsidian-steel-dark.png (114940 bytes, clip 1020x116)
+  ok heroic-resource--obsidian-steel-light.png (97007 bytes, clip 1020x116)
+  ok horizontal-rule--obsidian-steel-dark.png (3103 bytes, clip 1020x23)
+  ok horizontal-rule--obsidian-steel-light.png (3130 bytes, clip 1020x23)
+  ok initiative--obsidian-steel-dark.png (650947 bytes, clip 1020x783)
+  ok initiative--obsidian-steel-light.png (591471 bytes, clip 1020x783)
+  ok montage--obsidian-steel-dark.png (255377 bytes, clip 1020x353)
+  ok montage--obsidian-steel-light.png (205260 bytes, clip 1020x353)
+  ok negotiation--obsidian-steel-dark.png (789040 bytes, clip 1020x1035, emulated viewport)
+  ok negotiation--obsidian-steel-light.png (720110 bytes, clip 1020x1035, emulated viewport)
+  ok party--obsidian-steel-dark.png (240208 bytes, clip 1020x455)
+  ok party--obsidian-steel-light.png (208750 bytes, clip 1020x455)
+  ok project--obsidian-steel-dark.png (327315 bytes, clip 1020x433)
+  ok project--obsidian-steel-light.png (270923 bytes, clip 1020x433)
+  ok roll--obsidian-steel-dark.png (226880 bytes, clip 1020x318)
+  ok roll--obsidian-steel-light.png (223815 bytes, clip 1020x318)
+  ok scc--obsidian-steel-dark.png (1261943 bytes, clip 1020x1146, emulated viewport)
+  ok scc--obsidian-steel-light.png (979984 bytes, clip 1020x1146, emulated viewport)
+  ok skills--obsidian-steel-dark.png (224775 bytes, clip 1020x714)
+  ok skills--obsidian-steel-light.png (224486 bytes, clip 1020x714)
+  ok stamina-bar--obsidian-steel-dark.png (23994 bytes, clip 1020x81)
+  ok stamina-bar--obsidian-steel-light.png (23118 bytes, clip 1020x81)
+  ok statblock--obsidian-steel-dark.png (2729909 bytes, clip 1020x3602, emulated viewport)
+  ok statblock--obsidian-steel-light.png (2155840 bytes, clip 1020x3602, emulated viewport)
+  ok surges--obsidian-steel-dark.png (84256 bytes, clip 1020x116)
+  ok surges--obsidian-steel-light.png (67499 bytes, clip 1020x116)
+  ok values-row--obsidian-steel-dark.png (99661 bytes, clip 1020x122)
+  ok values-row--obsidian-steel-light.png (91499 bytes, clip 1020x122)
+  ok statblock-villain-corpus--obsidian-steel-dark.png (1489275 bytes, clip 1020x1574, emulated viewport)
+  ok statblock-villain-corpus--obsidian-steel-light.png (1364230 bytes, clip 1020x1574, emulated viewport)
+  ok by-scc-kit--obsidian-recursion.png (1261943 bytes) — nested [data-dse-element="feature"] confirmed
+  ok initiative--obsidian-sidebar-steel-dark.png (379801 bytes, clip 300x1013) — sidebar leaf confirmed
+  ok initiative--obsidian-sidebar-steel-light.png (333167 bytes, clip 300x1013) — sidebar leaf confirmed
+  ok hero--obsidian-sidebar-steel-dark.png (323977 bytes, clip 300x1013) — sidebar leaf confirmed
+  ok statblock--obsidian-sidebar-steel-dark.png (347238 bytes, clip 300x1013) — sidebar leaf confirmed
+  ok scc--obsidian-sidebar-steel-dark.png (402426 bytes, clip 300x1013) — sidebar leaf confirmed
+  ok negotiation--obsidian-sidebar-steel-dark.png (397089 bytes, clip 300x1013) — sidebar leaf confirmed
+  ok modal-stamina--obsidian-steel-dark.png (71698 bytes, clip 560x282) — modal confirmed
+  ok modal-stamina-recovery--obsidian-steel-dark.png (71352 bytes, clip 560x282) — modal confirmed
+  ok modal-conditions--obsidian-steel-dark.png (193849 bytes, clip 480x505) — modal confirmed
+  ok modal-form--obsidian-steel-dark.png (242071 bytes, clip 560x848) — modal confirmed
+  ok settings--obsidian-steel-dark.png (105855 bytes, clip 950x2370) — settings popout confirmed
+  ok canvas--obsidian-readonly-steel-dark.png (71303 bytes, clip 740x216) — 2 canvas node(s), all data-dse-readonly
+quit cleanly in-app
+
+all 59 shots written to /home/scott/code/steelCompendium/worktrees/sc184-sidebar-investigation/draw-steel-elements/visual-harness/shots

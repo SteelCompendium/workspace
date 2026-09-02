@@ -1,0 +1,76 @@
+Info: New devbox available: 0.17.5 -> v0.18.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/workspace
+
+[notice] A new release of pip is available: 24.3.1 -> 26.2.1
+[notice] To update, run: pip install --upgrade pip
+
+> draw-steel-elements@7.0.0 parity
+> npm run harness:build && node visual-harness/parity/plugin-capture.mjs && node visual-harness/parity/diff.mjs
+
+
+> draw-steel-elements@7.0.0 harness:build
+> node visual-harness/esbuild.mjs
+
+
+  visual-harness/dist/harness.js     2.6mb ⚠️
+  visual-harness/dist/harness.css  315.9kb
+
+⚡ Done in 173ms
+sampled feature--dark (6 selectors)
+sampled statblock--dark (9 selectors)
+sampled featureblock--dark (5 selectors)
+sampled kit--dark (6 selectors)
+sampled condition--dark (2 selectors)
+sampled feature--light (6 selectors)
+sampled statblock--light (9 selectors)
+sampled featureblock--light (5 selectors)
+sampled kit--light (6 selectors)
+sampled condition--light (2 selectors)
+wrote plugin-inventory.json
+# Steel parity report
+
+Site baseline captured: 2026-08-07T15:27:00.158Z
+Plugin sampled: 2026-09-02T01:22:32.028Z
+
+**0 gap(s), 0 undeclared warning(s), 16 declared deferral(s).**
+
+Gate contract: exit 0 iff 0 gaps AND 0 undeclared warnings. A declared deferral is an
+explicit entry in selector-map.json `declaredDeferrals` citing its FOLLOWUPS/ticket number.
+
+Schemes compared: dark, light.
+
+## Declared deferrals — filed, rationale below (16)
+
+- **DECLARED** `section-tag` [dark] (.sc-ability__section-head .tag → .dse-section__title): font-size miss: site 18px, plugin 16px (tol 1.5px)
+  - _declared:_ FOLLOWUPS #51 -- the section title's TYPE SCALE, now honestly measured for the first time (SC-110 retargeted this rule off the site's text-less wrapper onto its real .tag). Site .tag is .9rem = 18px at the site's 20px rem base; the plugin authors 16px. One coherent decision with :line-height and :letter-spacing below -- a visible 12.5% enlargement of every Steel section title, i.e. a PIXEL decision for Scott, not an exact-value catch-up a gate ticket may make unilaterally.
+- **DECLARED** `section-tag` [dark] (.sc-ability__section-head .tag → .dse-section__title): line-height miss: site 30.6px, plugin 27.2px (tol 1.5px)
+  - _declared:_ FOLLOWUPS #51 -- a pure CONSEQUENCE of the :font-size entry above, not an independent miss. Both sides run the same 1.7 ratio (site 1.7 x 18px = 30.6px; plugin 1.7 x 16px = 27.2px, inherited from the Plan 21 card-root rule). Fixing font-size closes this row automatically; it is listed separately only because the gate reports per rule.
+- **DECLARED** `section-tag` [dark] (.sc-ability__section-head .tag → .dse-section__title): letter-spacing miss: site 1.8px, plugin 1.12px (tol 0.25px)
+  - _declared:_ FOLLOWUPS #51 (descends from #40) -- the plugin tracks its small-caps section title at 0.07em (1.12px); the site's .tag tracks .1em (1.8px). #40 deferred this against the WRAPPER's `normal`, arguing that matching it would strip a deliberate small-caps treatment -- retargeting onto the real .tag vindicates that reasoning and inverts the direction: the plugin under-tracks rather than over-tracks. The residual is part of the same type-scale decision as :font-size.
+- **DECLARED** `pr-chars` [dark] (.sc-ability__pr-head .chars → .dse-pr__head): ink miss: site color=rgb(205, 209, 212), plugin color=rgba(220, 226, 230, 0.95) (max channel 18 > 2, alpha 0.05 > 0.03 — either fires)
+  - _declared:_ FOLLOWUPS #40 / SC-110 -- DELIBERATE divergence, not a measurement artifact. The site splits its power-roll caption into .pre (dim metal, 'Power Roll +') and .chars (the bright roll readout); the plugin's .dse-pr__head is ONE node carrying the whole caption, painted at var(--dse-heading) so the line reads as a heading. That is brighter than the site's .chars in dark (220,226,230 @.95 vs 205,209,212) and darker in light (26,29,32 vs 95,104,109) -- more emphasis, both schemes, by design. Matching .chars exactly would de-emphasise the plugin's only power-roll heading. Changing it is a PIXEL decision for Scott, not a CSS catch-up.
+- **DECLARED** `statblock-wrap` [dark] (.sb-wrap → [data-dse-element='statblock']): margin-top miss: site 34px, plugin 8px (tol 1.5px)
+  - _declared:_ FOLLOWUPS #39 -- the site's statblock block rhythm is 34px (.sb-wrap margin: 1.7rem auto at the 20px rem base); the plugin's host carries the unscoped base's 0.5em = 8px. SC-110 fixed the half of #39 the gate owned (this pair did not exist, so the site's block margin was invisible to the contract); the residual 34-vs-8 is the real miss #39 recorded and it is a PIXEL decision. Plan 21 Task 2 set the precedent for closing it (it ported the site's 24px .sc-ability margin onto the feature host, Steel-scoped and screen-only, styles-source.css ~3497), but 26px of new air around every statblock and featureblock in an Obsidian note is Scott's call, not a gate ticket's.
+- **DECLARED** `statblock-wrap` [dark] (.sb-wrap → [data-dse-element='statblock']): margin-bottom miss: site 34px, plugin 8px (tol 1.5px)
+  - _declared:_ FOLLOWUPS #39 -- same finding as statblock-wrap:margin-top (site 34px, plugin 8px); listed separately only because the gate reports per rule.
+- **DECLARED** `featureblock-wrap` [dark] (.fb-wrap → [data-dse-element='featureblock']): margin-top miss: site 34px, plugin 8px (tol 1.5px)
+  - _declared:_ FOLLOWUPS #39 -- same finding as statblock-wrap:margin-top, on the featureblock family (site .fb-wrap margin: 1.7rem auto = 34px, steel-featureblock.css:41; plugin host 0.5em = 8px). This is the pair that replaces the old `featureblock:margin-*` deferral, which compared the site's margin:0 inner PLATE against the host and so demanded a shrink to 0 -- the opposite of the real miss.
+- **DECLARED** `featureblock-wrap` [dark] (.fb-wrap → [data-dse-element='featureblock']): margin-bottom miss: site 34px, plugin 8px (tol 1.5px)
+  - _declared:_ FOLLOWUPS #39 -- same finding as featureblock-wrap:margin-top (site 34px, plugin 8px); listed separately only because the gate reports per rule.
+- **DECLARED** `section-tag` [light] (.sc-ability__section-head .tag → .dse-section__title): font-size miss: site 18px, plugin 16px (tol 1.5px)
+  - _declared:_ FOLLOWUPS #51 -- the section title's TYPE SCALE, now honestly measured for the first time (SC-110 retargeted this rule off the site's text-less wrapper onto its real .tag). Site .tag is .9rem = 18px at the site's 20px rem base; the plugin authors 16px. One coherent decision with :line-height and :letter-spacing below -- a visible 12.5% enlargement of every Steel section title, i.e. a PIXEL decision for Scott, not an exact-value catch-up a gate ticket may make unilaterally.
+- **DECLARED** `section-tag` [light] (.sc-ability__section-head .tag → .dse-section__title): line-height miss: site 30.6px, plugin 27.2px (tol 1.5px)
+  - _declared:_ FOLLOWUPS #51 -- a pure CONSEQUENCE of the :font-size entry above, not an independent miss. Both sides run the same 1.7 ratio (site 1.7 x 18px = 30.6px; plugin 1.7 x 16px = 27.2px, inherited from the Plan 21 card-root rule). Fixing font-size closes this row automatically; it is listed separately only because the gate reports per rule.
+- **DECLARED** `section-tag` [light] (.sc-ability__section-head .tag → .dse-section__title): letter-spacing miss: site 1.8px, plugin 1.12px (tol 0.25px)
+  - _declared:_ FOLLOWUPS #51 (descends from #40) -- the plugin tracks its small-caps section title at 0.07em (1.12px); the site's .tag tracks .1em (1.8px). #40 deferred this against the WRAPPER's `normal`, arguing that matching it would strip a deliberate small-caps treatment -- retargeting onto the real .tag vindicates that reasoning and inverts the direction: the plugin under-tracks rather than over-tracks. The residual is part of the same type-scale decision as :font-size.
+- **DECLARED** `pr-chars` [light] (.sc-ability__pr-head .chars → .dse-pr__head): ink miss: site color=rgb(95, 104, 109), plugin color=rgb(26, 29, 32) (max channel 77 > 2, alpha 0.00 > 0.03 — either fires)
+  - _declared:_ FOLLOWUPS #40 / SC-110 -- DELIBERATE divergence, not a measurement artifact. The site splits its power-roll caption into .pre (dim metal, 'Power Roll +') and .chars (the bright roll readout); the plugin's .dse-pr__head is ONE node carrying the whole caption, painted at var(--dse-heading) so the line reads as a heading. That is brighter than the site's .chars in dark (220,226,230 @.95 vs 205,209,212) and darker in light (26,29,32 vs 95,104,109) -- more emphasis, both schemes, by design. Matching .chars exactly would de-emphasise the plugin's only power-roll heading. Changing it is a PIXEL decision for Scott, not a CSS catch-up.
+- **DECLARED** `statblock-wrap` [light] (.sb-wrap → [data-dse-element='statblock']): margin-top miss: site 34px, plugin 8px (tol 1.5px)
+  - _declared:_ FOLLOWUPS #39 -- the site's statblock block rhythm is 34px (.sb-wrap margin: 1.7rem auto at the 20px rem base); the plugin's host carries the unscoped base's 0.5em = 8px. SC-110 fixed the half of #39 the gate owned (this pair did not exist, so the site's block margin was invisible to the contract); the residual 34-vs-8 is the real miss #39 recorded and it is a PIXEL decision. Plan 21 Task 2 set the precedent for closing it (it ported the site's 24px .sc-ability margin onto the feature host, Steel-scoped and screen-only, styles-source.css ~3497), but 26px of new air around every statblock and featureblock in an Obsidian note is Scott's call, not a gate ticket's.
+- **DECLARED** `statblock-wrap` [light] (.sb-wrap → [data-dse-element='statblock']): margin-bottom miss: site 34px, plugin 8px (tol 1.5px)
+  - _declared:_ FOLLOWUPS #39 -- same finding as statblock-wrap:margin-top (site 34px, plugin 8px); listed separately only because the gate reports per rule.
+- **DECLARED** `featureblock-wrap` [light] (.fb-wrap → [data-dse-element='featureblock']): margin-top miss: site 34px, plugin 8px (tol 1.5px)
+  - _declared:_ FOLLOWUPS #39 -- same finding as statblock-wrap:margin-top, on the featureblock family (site .fb-wrap margin: 1.7rem auto = 34px, steel-featureblock.css:41; plugin host 0.5em = 8px). This is the pair that replaces the old `featureblock:margin-*` deferral, which compared the site's margin:0 inner PLATE against the host and so demanded a shrink to 0 -- the opposite of the real miss.
+- **DECLARED** `featureblock-wrap` [light] (.fb-wrap → [data-dse-element='featureblock']): margin-bottom miss: site 34px, plugin 8px (tol 1.5px)
+  - _declared:_ FOLLOWUPS #39 -- same finding as featureblock-wrap:margin-top (site 34px, plugin 8px); listed separately only because the gate reports per rule.
+
