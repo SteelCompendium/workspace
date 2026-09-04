@@ -8,6 +8,19 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **Site: kit Browse tiles show the right kind — Martial, Magic, or Psionic
+  (SC-116).** Every kit tile on the site's Browse kit index used to say "Martial
+  Kit" — a hidden bug, because the keyword sniff ran against a page body that no
+  longer carried the keyword line — and the tiles now read 21 Martial / 3 Magic /
+  1 Psionic, matching the kit detail pages (Battlemind is the Psionic one); and
+  the kit data files gain a `kit_type` field (Martial / Magic / Psionic) that the
+  DSE plugin and the API can read instead of re-deriving it.
+- **Site: kit Browse tiles show "—" for every absent bonus, matching the kit detail page and the DSE plugin (SC-119).** The Browse kit index tile rendered an absent bonus as "0" on its first stat row (Stamina / Speed / Stability / Disengage) but as "—" on its second (Melee and Ranged Dmg / Dist). Both rows now use the detail page's `kitBonus()` helper, so a kit with no bonus in a slot shows a dash everywhere — Boren's tile reads `— — — —` on both rows instead of `0 0 0 0` over `— — — —`.
+- **Site: kit Browse tiles show the full signature-ability card, not a one-line
+  summary (SC-115).** The Browse kit index tile now renders the kit's signature
+  ability as the full ability card (keywords, action, power-roll tiers, effects)
+  — the same card the kit detail page shows — instead of a one-line type + name;
+  tiles in a row therefore vary in height.
 - **DSE plugin: font sizes are a named scale you can tune, not scattered literals
   (SC-185, part 1).** The plugin's type sizes were 116 hand-written values across 30
   distinct numbers, so "a label" was a different size in every element. They now come
