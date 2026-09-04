@@ -157,7 +157,14 @@ The header is a **3-lane × 2-column grid** of six positionally-named slots:
   otherwise starves the name track (letter-per-line wrap), so the right slots re-place as
   lanes 4–6 *under* the left stack, left-aligned — one column, six lanes. CSS-only
   (`steel-cardhead.css` narrow-screen block; regression test
-  `v2/tests/e2e/cardhead-mobile.e2e.cjs`).
+  `v2/tests/e2e/cardhead-mobile.e2e.cjs`). The **same starvation happens at CONTAINER
+  width**, not just viewport width, wherever a `.sc-head` nests inside something narrower
+  than its native full-width home — e.g. the kit Browse tile's inline signature-ability
+  card (SC-115, `.sc-card__sig-card`), a ~20rem grid tile. The viewport media query can't
+  reach that case, so it gets the identical column-drop treatment scoped to the class
+  instead of the breakpoint (`steel-cardhead.css`, right after the phone block). Any future
+  nesting of a full `.sc-head` inside a narrower container should reach for the same
+  pattern.
 
 Built as one shared renderer (`renderCardHead`) + one CSS contract (`.sc-head`), so
 consistency is structural. **The top-center control strip** is the shared home for
