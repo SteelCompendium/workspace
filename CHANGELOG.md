@@ -23,6 +23,10 @@ go under an *Internal* sub-heading.
   one (it silently added whichever creature was printed first); and an embedded card
   no longer shows a copy-link that copies the *chapter's* permalink instead of
   nothing. Embedded cards carry no per-card page actions, by design.
+- **Compendium site: trait pages no longer show a duplicated title (SC-297).** Every
+  trait leaf page (e.g. "Glowing Recovery") showed both the page's own heading and
+  the card's identical name directly beneath it; trait pages now hide the redundant
+  heading the same way statblock, featureblock, ability, and kit pages already do.
 - **DSE plugin: every display family now renders a full Steel card, not a prose wall
   (SC-120).** Kit was the only family with a Steel composition; the other ten (class,
   career, ancestry, culture, title, perk, complication, treasure, condition, rule) fell
