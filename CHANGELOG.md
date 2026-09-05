@@ -8,6 +8,21 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **Compendium site: card page actions move into a hover-revealed chrome plate,
+  replacing the old floating top-center button strip (SC-297).** Copy-link, pin,
+  add-to-encounter, and MD/PNG export now live on one plate seated above the card's
+  top edge — the same geometry, material, and depth as the chrome panel DSE plugin
+  elements carry — on all five card families that host page actions: statblock,
+  featureblock, ability, trait, and kit. The plate is right-anchored and grows
+  right-to-left, hidden until the card is hovered or focused, always visible with
+  reserved space on touch/narrow screens, and absent in print. This also fixes the
+  ability card's controls colliding with the card name, a visible defect of the old
+  strip's mismatched anchoring.
+- **Compendium site: two Read-chapter bugs fixed (SC-297).** A chapter page that
+  embeds multiple statblocks no longer shows an "add to encounter" chip on the first
+  one (it silently added whichever creature was printed first); and an embedded card
+  no longer shows a copy-link that copies the *chapter's* permalink instead of
+  nothing. Embedded cards carry no per-card page actions, by design.
 - **DSE plugin: every display family now renders a full Steel card, not a prose wall
   (SC-120).** Kit was the only family with a Steel composition; the other ten (class,
   career, ancestry, culture, title, perk, complication, treasure, condition, rule) fell

@@ -167,20 +167,25 @@ The header is a **3-lane × 2-column grid** of six positionally-named slots:
   pattern.
 
 Built as one shared renderer (`renderCardHead`) + one CSS contract (`.sc-head`), so
-consistency is structural. **The top-center control strip** is the shared home for
-per-card page actions (copy-link ending `.1rem` left of the pin, pin at `+1.6rem`, encounter-add at
-`+3.4rem`, MD/PNG exports at `+5.2rem` — all mounted in the card HEAD, one aligned row), hover-revealed on the card — never place
-controls in the head grid's column 3 (they collide with the Level chip / role mini).
-One sanctioned exception: the statblock **level scaler** lives *inside* the Level chip
-itself (−/+ flank it, absolutely positioned + hover-revealed, so the untouched chip
-renders identically). The statblock head already embodies the model (`Level / Org+Role /
-EV` = right `eyebrow / primary / deck`).
+consistency is structural. **The card chrome plate** is the shared home for per-card
+page actions (copy-link, pin, add-to-encounter, MD/PNG export) on all five families
+that carry one — statblock, featureblock, ability, trait, kit: a hover-revealed plate
+seated outside the card's top edge, right-anchored and growing right-to-left, the same
+form the DSE plugin uses (`sc-chrome.js` + `steel-chrome.css`; see "The element chrome
+panel" below for the shared geometry/material/depth contract it ports verbatim) —
+never place controls in the head grid's column 3 (they collide with the Level chip /
+role mini). One sanctioned exception: the statblock **level scaler** lives *inside* the
+Level chip itself (−/+ flank it, absolutely positioned + hover-revealed, so the
+untouched chip renders identically) — now the only other hover-revealed control inside
+the card head. The statblock head already embodies the model (`Level / Org+Role / EV` =
+right `eyebrow / primary / deck`).
 
-**Plain (non-card) pages** get the strip's page-tier sibling instead: the **top-right
+**Plain (non-card) pages** get the plate's page-tier sibling instead: the **top-right
 page action strip** (`.sc-pageact`, `sc-pageact.js` + `steel-pageact.css`) — the same
 1.7rem boxed buttons (page permalink, pin), but **always visible** in the top-right of
 the content pane. "Card page" means the strict `h1+hr+card` adjacency; a page that
-merely *embeds* cards (Read chapters) is a plain page.
+merely *embeds* cards (Read chapters) is a plain page, and its embedded cards carry no
+plate of their own.
 
 ## Component systems (all shipped unless noted)
 
@@ -195,12 +200,12 @@ merely *embeds* cards (Read chapters) is a plain page.
 | Statblocks (build-time `.sb-wrap` HTML card — no JSON island since 2026-06-14, `steel-statblock.js` retired 2026-06-18; per-piece prefs + presets, CSS sticky mini-header) | `internal/site/statblock_page.go` + `statblock_card.go` → `steel-statblock.css` | `…/redesign/statblocks/README.md` — **the** spec, plus the `data-sb-featstyle` addendum (`v2/.repo-docs/plans/2026-06-12-statblock-feature-style.md`) |
 | Bestiary search & filter | `internal/site/bestiary_search.go` → `steel-bestiary-browser.js` + `steel-bestiary.css` | design spec in `steel-etl/docs/superpowers/specs/2026-06-10-bestiary-restructure-and-search-design.md` |
 | Class landing header (`.sc-classhead` 6-slot card — right rail carries book chip + primary-characteristics mini with its "primary characteristics" caption as the deck (one field: value over label), mirroring the statblock rail; in-card flavor paragraph; stamina/per-level/recoveries + potency strips as matched 3-column rows of centered value-over-label cells; skills footer; `.sc-classnav` H2 jump bar with the ten level headings collapsed into one "Level 1…10" group) | build-time `internal/site/class_page.go` (+ `internal/content/class.go` frontmatter emit) + `v2/docs/stylesheets/steel-class.css` | `docs/superpowers/plans/2026-07-01-p3-class-landing-header.md` |
-| "My Table" pinboard (Material pushpin — outline, filled when pinned; hover-revealed in the card top-center control strip; on plain pages always-visible in the top-right page action strip; `/pins/` board, localStorage, 200-item cap; named site sections expand inline as read-only excerpts with child headings and tables; compact board headings and an on-demand add-section form) | `v2/docs/javascripts/sc-pins-core.js`/`sc-pins.js`/`sc-pins-sections.js` + `steel-pins.css`; board page `static_content/docs/pins.md` | `docs/superpowers/plans/2026-07-01-p7-pinboard.md` |
+| "My Table" pinboard (Material pushpin — outline, filled when pinned; hover-revealed in the card chrome plate; on plain pages always-visible in the top-right page action strip; `/pins/` board, localStorage, 200-item cap; named site sections expand inline as read-only excerpts with child headings and tables; compact board headings and an on-demand add-section form) | `v2/docs/javascripts/sc-pins-core.js`/`sc-pins.js`/`sc-pins-sections.js` + `steel-pins.css`; board page `static_content/docs/pins.md` | `docs/superpowers/plans/2026-07-01-p7-pinboard.md` |
 | Page action strip (`.sc-pageact` — always-visible page permalink + pin, top-right of the content pane on plain pages; card pages keep the card strip) | `sc-pageact.js` (shared card-page discriminator + strip factory) + `steel-pageact.css`; buttons mounted by `scc-headerlinks.js` / `sc-pins.js` | — |
 | Chapter opening (centered book-style title + small-caps "book · Chapter N" eyebrow on `type: chapter` pages; the title stays a markdown h1 via attr_list, so nav/TOC/¶ survive) | steel-etl `internal/site/chapter_page.go` (after `injectH1`) + `steel-indexes.css` | — |
 | Encounter builder (EV budget tray on `/Bestiary/` + add-from-statblock chip; book bands Trivial→Extreme, minions-by-four, `?enc=` share links; whole header row = collapse toggle, ⋯ menu (clear / reset / session-close) hidden while collapsed; an empty tray still expands to the party inputs) | `sc-encounter-core.js`/`sc-encounter.js` + `steel-encounter.css`; "+" column + `window.SC_BESTIARY_ITEMS` seam in `steel-bestiary-browser.js` | `docs/superpowers/plans/2026-07-01-p8-encounter-builder.md` |
 | Click-to-roll power rolls (2d10 popover on `.sc-ability__pr-head`; edge/bane ±2, double = tier shift, natural 19–20 crit; tier-row highlight) | `sc-dice-core.js`/`sc-dice.js` + `steel-dice.css` | `docs/superpowers/plans/2026-07-01-p9-power-roll-dice.md` |
-| Card exports (hover MD/PNG chips in the top-center strip; source markdown rides a single-line `data-src` attr on a `sc-src` template — element content / multi-line attrs get markdown-mangled) | steel-etl `internal/site/export_src.go` (+ embed strip in `embed_cards.go`); `sc-export.js` + vendored `html-to-image` + `steel-export.css` | `docs/superpowers/plans/2026-07-01-p10-card-exports.md` |
+| Card exports (hover MD/PNG chips in the card chrome plate; source markdown rides a single-line `data-src` attr on a `sc-src` template — element content / multi-line attrs get markdown-mangled) | steel-etl `internal/site/export_src.go` (+ embed strip in `embed_cards.go`); `sc-export.js` + vendored `html-to-image` + `steel-export.css` | `docs/superpowers/plans/2026-07-01-p10-card-exports.md` |
 | Statblock level scaler (−/+ steppers living in the head's Level chip, hover-revealed like the control strip; book "Adjusting Monster Levels" formulas applied as deltas from printed values — EV/Stamina/damage/free strike, characteristics (±5 clamp), "Power Roll +N" bonuses (dice popover follows), and entity-aware potency rewrites in tier rows and effect prose; amber chip + dashed outline + banner-with-Reset while scaled; never persists) | `sc-scale-core.js`/`sc-scale.js` + `steel-scale.css` | `docs/superpowers/plans/2026-07-01-p11-statblock-scaler.md` |
 | Featureblocks (`.fb-wrap` Forged Band card — titled collection of Features under a loose-stat header; statblock-like in anatomy, not rigor; also renders Summoner **fixtures** (`monster.fixture.<element>.featureblock` + `…advancement-features`), **retainer** advancement / role-advancement as paired `monster.retainer.advancement-features/<id>` + `…role-advancement/<role>` cards (Plan 6 — Plan 4's `retainer_page.go` split retired), and beastheart **companion advancement-features** as a leveled-band card on `monster.companion.beastheart.advancement-features/<species>` pages) | build-time `internal/site/featureblock_page.go` + `v2/docs/stylesheets/steel-featureblock.css` | `docs/superpowers/specs/2026-06-12-featureblock-cards-design.md`, `…/2026-06-13-companion-restructure-advancement-featureblocks-design.md` |
 | Statblock preview cards (`.sb-prev` compact mini-statblock on index / group-landing pages — full header + toggleable defenses/secondary-stats/characteristics/feature-preview zones, whole-card link to the full page). Covers monster, summoner, and **beastheart companion** statblocks (companions via the `feature-group → sbIsland` adapter in `companion_statblock.go`, which also embeds the full `.sb-wrap` card on the companion's own page). | build-time `internal/site/statblock_preview.go` (+ `bestiary_cards.go`/`cards.go`/`advancement_pairs.go`/`companion_statblock.go` routing) → `steel-statblock.css` + `statblock-preview.js` | `docs/superpowers/plans/2026-06-15-statblock-preview-cards.md`, `…-companion-statblock-adapter.md` |
