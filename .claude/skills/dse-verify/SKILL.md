@@ -345,6 +345,29 @@ didn't mount) plus human review of the PNGs.
   `check-freeze.sh` → `freeze OK (101/101 …)`. During execution the expected result is a
   sole mismatch on that file (e.g. `100/101`, only that name); any other mismatch is still
   a leak to fix. Each rebaseline needs its own dated sign-off recorded here:
+  - **2026-09-04, SC-191 montage element overhaul (worktree `sc191-montage-overhaul`,
+    landed dse `c2a5cec` to develop): SANCTIONED 2-line rebaseline (1 twin+realprint pair)
+    + 14-line WIDENING (7 new capture ids × twin+realprint), 210 → 224 — APPLIED at
+    landing by the dispatcher.** The redesigned `ds-montage` element (board grid, log/roll
+    modal, collapsible strip + guide) necessarily moves `montage--steel-print.png` /
+    `-realprint.png` for the same reason every prior entry in this section does — print
+    renders whatever DOM the active theme built, and a Steel-only DOM rebuild cannot be
+    branched around it. **Scott's sanction: "Approved, lets land it" (SC-191 comment,
+    2026-09-04 13:55 UTC)**, against a self-contained ask carrying before/after crops (the
+    print card gaining visible gold ▲/▼ tier-pip triangles; a limit-ended montage's header
+    correctly reading "ROUND 1/2/3 DONE" instead of stale "IN PLAY"). Both fixes were the
+    subject of a review-2 FIX-ROUND (fix round 4) before the ask went out — the pip fill and
+    the round-header state bug were both caught and closed prior to landing, not shipped
+    then patched. The widening's 7 new capture ids: `montage-strip-pinned`,
+    `montage-guide-open`, `montage-mid`, `montage-old-shape`, `montage-failed`,
+    `montage-narrow`, `montage-done` — the redesign's own new fixture coverage, additions-
+    only (0 collisions with the pre-existing 210-line baseline, scripted check). Verified
+    before applying: the rebaseline+widening files were both generated from the final,
+    fully-reviewed tree (`c2a5cec`) and deterministic across the branch's own repeated
+    shots runs; every pair twin==realprint. Verified after applying, from a fresh
+    `npm run shots` regenerated on the landed worktree tip (`c2a5cec`, matching
+    `origin/develop`): `freeze OK (224/224 …)`, exit 0. Backup:
+    `freeze-baseline.sha256.pre-sc191-bak`.
   - **2026-08-29, SC-120 §D2 Steel compositions for the remaining display families
     (worktree `sc120-d2-steel-compositions`, landed dse to develop): SANCTIONED 24-line
     rebaseline (12 twin+realprint pairs), count unchanged at 210 — APPLIED at landing by
