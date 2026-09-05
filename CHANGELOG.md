@@ -8,8 +8,6 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
-- My Table: tuck the add-section form behind a button and reduce title/category headings to keep saved rules in view (SC-300).
-
 - **DSE plugin: every display family now renders a full Steel card, not a prose wall
   (SC-120).** Kit was the only family with a Steel composition; the other ten (class,
   career, ancestry, culture, title, perk, complication, treasure, condition, rule) fell
@@ -608,7 +606,9 @@ go under an *Internal* sub-heading.
   change — freeze and parity gates stayed green throughout. Groundwork only,
   for user-customizable fonts (SC-112).
 
-## 2026-09-05 — My Table section excerpts (SC-177)
+## 2026-09-05 — My Table improvements (SC-177, SC-300)
+
+- My Table: tuck the add-section form behind a button and reduce title/category headings to keep saved rules in view (SC-300).
 
 - My Table: save site headings under your own names and expand their content inline, including child subsections and tables; other web URLs remain links.
 
