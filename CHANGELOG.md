@@ -2,7 +2,10 @@
 
 This workspace has no version tags — a "release" here is a deploy of the live site
 (steelcompendium.io/v2) and/or the SCC API, so entries are headed by **deploy date**
-instead of a tag. New work lands under `## Unreleased` and is promoted to a dated
+instead of a tag. New work lands under `## Unreleased
+
+- My Table: add custom web or section links with your own display names; re-add a URL to rename it.
+` and is promoted to a dated
 header when it goes live. One bullet per user-facing change; internal/process changes
 go under an *Internal* sub-heading.
 
