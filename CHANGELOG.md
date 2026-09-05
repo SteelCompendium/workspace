@@ -2,10 +2,7 @@
 
 This workspace has no version tags — a "release" here is a deploy of the live site
 (steelcompendium.io/v2) and/or the SCC API, so entries are headed by **deploy date**
-instead of a tag. New work lands under `## Unreleased
-
-- My Table: save site headings under your own names and expand their content inline, including child subsections and tables; other web URLs remain links.
-` and is promoted to a dated
+instead of a tag. New work lands under `## Unreleased` and is promoted to a dated
 header when it goes live. One bullet per user-facing change; internal/process changes
 go under an *Internal* sub-heading.
 
@@ -608,6 +605,10 @@ go under an *Internal* sub-heading.
   Every consumer was re-pointed to its classified slot with zero rendering
   change — freeze and parity gates stayed green throughout. Groundwork only,
   for user-customizable fonts (SC-112).
+
+## 2026-09-05 — My Table section excerpts (SC-177)
+
+- My Table: save site headings under your own names and expand their content inline, including child subsections and tables; other web URLs remain links.
 
 ## 2026-08-21 — v2 site deploys (steel-etl 7bd5f54, 7ef2284)
 
