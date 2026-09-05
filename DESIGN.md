@@ -183,9 +183,11 @@ right `eyebrow / primary / deck`).
 **Plain (non-card) pages** get the plate's page-tier sibling instead: the **top-right
 page action strip** (`.sc-pageact`, `sc-pageact.js` + `steel-pageact.css`) — the same
 1.7rem boxed buttons (page permalink, pin), but **always visible** in the top-right of
-the content pane. "Card page" means the strict `h1+hr+card` adjacency; a page that
-merely *embeds* cards (Read chapters) is a plain page, and its embedded cards carry no
-plate of their own.
+the content pane. "Card page" means the `h1+hr+card` adjacency (`SCChrome`,
+`sc-chrome.js` — the single shared predicate every consumer resolves through), with one
+optional intervening `<p class="sb-backlink">` allowed on the statblock pages that carry
+one; a page that merely *embeds* cards (Read chapters) is a plain page, and its embedded
+cards carry no plate of their own.
 
 ## Component systems (all shipped unless noted)
 
@@ -211,7 +213,7 @@ plate of their own.
 | Statblock preview cards (`.sb-prev` compact mini-statblock on index / group-landing pages — full header + toggleable defenses/secondary-stats/characteristics/feature-preview zones, whole-card link to the full page). Covers monster, summoner, and **beastheart companion** statblocks (companions via the `feature-group → sbIsland` adapter in `companion_statblock.go`, which also embeds the full `.sb-wrap` card on the companion's own page). | build-time `internal/site/statblock_preview.go` (+ `bestiary_cards.go`/`cards.go`/`advancement_pairs.go`/`companion_statblock.go` routing) → `steel-statblock.css` + `statblock-preview.js` | `docs/superpowers/plans/2026-06-15-statblock-preview-cards.md`, `…-companion-statblock-adapter.md` |
 | Kit pages (unified `.sc-kit` forged plate — header + flavor + equipment box + all-8 fixed-slot bonus grid + a Signature Ability band; the signature-ability `.sc-ability` card is spliced beneath via the preserved `{data-scc}` marker and fused flush by CSS; reuses the preview card's `.sc-card__stats` grid) | build-time `internal/site/kit_page.go` + `v2/docs/stylesheets/steel-kit.css` | `docs/superpowers/specs/2026-06-23-kit-page-unified-card-design.md` |
 | Settings drawer (gear icon, live apply) | `settings-panel.js`/`settings-core.js` + `steel-settings.css` | `v2/.repo-docs/plans/2026-06-07-live-settings-panel.md` |
-| Card copy-link button (`.sc-copylink` — hover-revealed permalink-copy injected into statblock / featureblock / ability card pages, which hide their `<h1>` and thus the native ¶ permalink; copies the page's `/scc/<code>/` URL from `<meta name="scc-permalink">`; faint-persistent on touch, hidden in print — a new UI utility icon in the thin-line Material style, per Iconography) | `v2/docs/javascripts/scc-card-copy.js` (+ DOM-free `scc-card-copy-core.js`) + `v2/docs/stylesheets/steel-copylink.css` | `v2/.repo-docs/plans/2026-06-16-scc-card-copy-button.md` |
+| Card copy-link button (`.sc-copylink` — hover-revealed permalink-copy injected into the chrome plate on all five card families (statblock, featureblock, ability, trait, kit), which hide their `<h1>` and thus the native ¶ permalink; copies the page's `/scc/<code>/` URL from `<meta name="scc-permalink">`; faint-persistent on touch, hidden in print — a new UI utility icon in the thin-line Material style, per Iconography) | `v2/docs/javascripts/scc-card-copy.js` (+ DOM-free `scc-card-copy-core.js`) + `v2/docs/stylesheets/steel-copylink.css` | `v2/.repo-docs/plans/2026-06-16-scc-card-copy-button.md` |
 | **Card chrome plate** (site) — the shared home for per-card page actions (copy-link, pin, add-to-encounter, MD/PNG export) on all five families that carry one: statblock, featureblock, ability, trait, kit. Right-anchored and grows right-to-left; hover-revealed on desktop (`:focus-within` the keyboard twin), always visible with reserved top space on touch/narrow, absent in print; `SCChrome` is the single "is this a card page, and which element is the card" predicate every consumer resolves through (SC-297 round 4). The site's port of the plugin's element chrome panel below — same geometry/material/depth contract, no collapse toggle (Scott's ruling). | `v2/docs/javascripts/sc-chrome.js` + `v2/docs/stylesheets/steel-chrome.css` | — |
 | **Element chrome panel** (plugin) — the standard hover-revealed menu panel + whole-element collapse every card-like DSE element carries. See "The element chrome panel" below for the form factor, geometry and rules. | `draw-steel-elements` `src/framework/chrome/` + the "Element chrome" block at the foot of `styles-source.css` | `draw-steel-elements/docs/superpowers/sc169-element-menu-panel-spec.md` |
 

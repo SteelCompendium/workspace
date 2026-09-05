@@ -27,6 +27,11 @@ go under an *Internal* sub-heading.
   trait leaf page (e.g. "Glowing Recovery") showed both the page's own heading and
   the card's identical name directly beneath it; trait pages now hide the redundant
   heading the same way statblock, featureblock, ability, and kit pages already do.
+- **Compendium site: three retainer-minion statblock pages no longer show their
+  title twice (SC-297, SC-301).** `Razor`, `Gorrre`, and `Violent` (each summoned by
+  a Devil Detective) each printed their name once as the page heading and again on
+  the card immediately below it; they now hide the redundant heading like every
+  other statblock page.
 - **DSE plugin: every display family now renders a full Steel card, not a prose wall
   (SC-120).** Kit was the only family with a Steel composition; the other ten (class,
   career, ancestry, culture, title, perk, complication, treasure, condition, rule) fell
