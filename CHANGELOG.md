@@ -8,6 +8,8 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- My Table: tuck the add-section form behind a button and reduce title/category headings to keep saved rules in view (SC-300).
+
 - **DSE plugin: every display family now renders a full Steel card, not a prose wall
   (SC-120).** Kit was the only family with a Steel composition; the other ten (class,
   career, ancestry, culture, title, perk, complication, treasure, condition, rule) fell
