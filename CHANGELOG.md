@@ -35,6 +35,16 @@ go under an *Internal* sub-heading.
   tracker, but persistent" pitch in favor of the honest one — a GM dashboard assembled from
   blocks that live in **different** notes — and now say plainly that a pinned note tab is
   the better tool when everything you track already lives in one note.
+- **DSE plugin: the Montage Test tracker is now a working board (SC-191).** A full visual
+  overhaul of `ds-montage`: a grid of one row per hero and one column per round, a **Log
+  an action…** button (plus a per-row shortcut and a click on any cell) that opens a small
+  form to log or correct a hero's test — result, an optional skill, and a note, with a
+  live reminder of each difficulty's success threshold and, when rolling is on, a **Roll**
+  button that resolves the test for you. A collapsible cheat-sheet above the board and a
+  collapsible guide at the foot cover the test tiers and how a montage runs. The schema is
+  purely additive (`description`, `entries[]`) — an existing block renders unchanged, no
+  migration needed. See the [plugin's own changelog](draw-steel-elements/CHANGELOG.md) for
+  the full detail.
 - **DSE plugin: buttons finally look the way the plugin designed them (SC-203).** In a real
   vault, Obsidian's own `button` styling was overriding ours on **every** button — its rule is
   more specific than the plugin's, which nothing had noticed because the screenshot harness
