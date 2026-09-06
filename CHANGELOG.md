@@ -615,6 +615,8 @@ go under an *Internal* sub-heading.
 
 ## 2026-09-06 — Heroes errata, Free Strike page + site deploys (SC-304, SC-179; steel-etl 15f931b, feaf130)
 
+- **Downtime projects (SC-201):** Projects now have Steel Plate cards with requirement ledgers and separate enhancement panels. Granted abilities stay inside their enhancement; project requirements are also available in data exports.
+
 - **Site: the Free Strike page now shows the free strike abilities (SC-179).** Browse →
   Feature → Common → Main Actions → Free Strike explained the rule but never listed the
   two abilities you actually roll — the book prints *Melee/Ranged Weapon Free Strike* in
