@@ -8,6 +8,11 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **Search finds what you typed (SC-306).** Typing an item's exact name now
+  returns that page first (52% → 98.2% of unique titles on the bench). Container
+  pages no longer re-index the cards they embed, monster names are no longer
+  demoted, and the search ranking now runs in our own worker: all words
+  required, exact titles first, no stop-word stripping ("To the Death!" works).
 - **DSE conditions (SC-277):** Standard and custom conditions support saved icon choices with search and reset to default. Color swatches now display their colors in Obsidian.
 
 - **DSE plugin: every display family now renders a full Steel card, not a prose wall
