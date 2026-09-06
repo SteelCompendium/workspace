@@ -156,4 +156,6 @@ steel-etl does **not** depend on the SDK: it emits SDK-shaped JSON by convention
 
 **⚠️ Any schema change must be applied to BOTH copies in the same change.** They drifted during the 2026-06-07 feature/ability/trait refactor (only the SDK copy was updated first); see `steel-etl/docs/superpowers/specs/2026-06-07-feature-taxonomy-design.md`.
 
+**Downtime projects:** `project.go` promotes the four project requirements into optional string fields in all structured outputs; qualifiers and links remain intact. Both schema copies include `project.schema.json`. Untyped quoted H6+ headings stay in their owner’s body; only typed quoted entities open parser sections. Site project cards preserve grant ownership through nested ability cards (see `steel-etl/docs/site-builder.md` → “Downtime project cards”).
+
 **Card ⇄ data parity:** index-card fields scraped from the page body must also be promoted into frontmatter + both schema copies, or the site shows data the data repos lack. See `steel-etl/docs/card-data-parity.md` (precedent: the 2026-06-08 `flavor` + treasure `project_goal`/`project_roll_characteristic`/`echelon` sweep).
