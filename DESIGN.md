@@ -189,6 +189,7 @@ merely *embeds* cards (Read chapters) is a plain page.
 | Browse landing (heraldic crests) | `v2/static_content/docs/Browse/index.md` + `steel-redesign.css` | `…/v2-handoff/LANDING-INDEX-CARDS.md` |
 | Category index cards | `steel-etl/internal/site/cards.go` + `steel-redesign.css` | same + `…/v2-handoff/steel-etl/PATCH.md` |
 | Ability cards (raised steel plate, crest by action type, power-roll panel) | `steel-ability-cards.css/.js`, build-time `steel-etl/internal/site/ability_cards.go` | `…/v2-handoff/ABILITY-CARDS.md` |
+| Downtime project cards (Steel Plate, goal in the six-slot head, three-field ledger, named enhancement panels with inset “Grants ability” wells) | `internal/site/project_cards.go` + `steel-project.css` | `steel-etl/docs/site-builder.md` → Downtime project cards |
 | Trait cards (recessed "codex niche", colored spine, nesting) | `steel-traits.css/.js`, `internal/site/trait_cards.go` | `…/v2-handoff/TRAITS.md` |
 | Feature/treasure/rule index pages (folder cards, previews, search/filter — incl. the Condition facet, whose `.sc-prev__chip--cond` chips take the affliction accent `--sc-cond` so they read apart from the neutral keyword chips without breaking the chip row's rhythm) | `steel-indexes.css`, `steel-feature-browser.js`, `internal/site/feature_index.go`, `internal/site/conditions.go` | `…/v2-handoff/archive/FEATURE-INDEXES.md` |
 | ◆ steel rule + filigree blockquotes | `steel-redesign.css` | `…/v2-handoff/TITLES-RULES-QUOTES.md` (§4 masthead **parked**) |

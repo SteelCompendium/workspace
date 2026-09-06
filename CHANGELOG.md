@@ -8,6 +8,8 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- Downtime projects now have Steel Plate cards with requirement ledgers and separate enhancement panels. Granted abilities stay visibly inside their enhancement; project requirements are also available in data exports.
+
 - **DSE conditions (SC-277):** Standard and custom conditions support saved icon choices with search and reset to default. Color swatches now display their colors in Obsidian.
 
 - **DSE plugin: every display family now renders a full Steel card, not a prose wall
