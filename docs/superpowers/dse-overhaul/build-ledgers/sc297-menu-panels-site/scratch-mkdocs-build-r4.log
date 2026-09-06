@@ -1,0 +1,32 @@
+Info: New devbox available: 0.17.5 -> v0.18.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/workspace
+
+[notice] A new release of pip is available: 24.3.1 -> 26.2.1
+[notice] To update, run: pip install --upgrade pip
+
+[31m │  ⚠  Warning from the Material for MkDocs team[0m
+[31m │[0m
+[31m │[0m  MkDocs 2.0, the underlying framework of Material for MkDocs,
+[31m │[0m  will introduce backward-incompatible changes, including:
+[31m │[0m
+[31m │  × [0mAll plugins will stop working – the plugin system has been removed
+[31m │  × [0mAll theme overrides will break – the theming system has been rewritten
+[31m │  × [0mNo migration path exists – existing projects cannot be upgraded
+[31m │  × [0mClosed contribution model – community members can't report bugs
+[31m │  × [0mCurrently unlicensed – unsuitable for production use
+[31m │[0m
+[31m │[0m  Our full analysis:
+[31m │[0m
+[31m │[0m  [4mhttps://squidfunk.github.io/mkdocs-material/blog/2026/02/18/mkdocs-2.0/[0m
+[0m
+INFO    -  DeprecationWarning: warning_filter doesn't do anything since MkDocs 1.2 and will be removed soon. All messages on the `mkdocs` logger get counted automatically.
+  File "/home/scott/code/steelCompendium/workspace/.venv/lib/python3.12/site-packages/mkdocs_roamlinks_plugin/plugin.py", line 10, in <module>
+    log.addFilter(mkdocs.utils.warning_filter)
+  File "/home/scott/code/steelCompendium/workspace/.venv/lib/python3.12/site-packages/mkdocs/utils/__init__.py", line 403, in __getattr__
+    warnings.warn(
+
+INFO    -  Cleaning site directory
+INFO    -  Building documentation to directory: /home/scott/code/steelCompendium/worktrees/sc297-menu-panels-site/v2/site
+INFO    -  The following pages exist in the docs directory, but are not included in the "nav" configuration:
+  - preferences.md
+INFO    -  Documentation built in 208.51 seconds

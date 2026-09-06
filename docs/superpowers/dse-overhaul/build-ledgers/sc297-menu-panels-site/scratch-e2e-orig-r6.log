@@ -1,0 +1,187 @@
+Info: New devbox available: 0.17.5 -> v0.18.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/workspace
+
+[notice] A new release of pip is available: 24.3.1 -> 26.2.1
+[notice] To update, run: pip install --upgrade pip
+=== tests/e2e/cardhead-mobile.e2e.cjs ===
+PASS goblin-warrior name renders in ~2.0 line boxes (want ≤ 2.4)
+EXIT=0
+=== tests/e2e/featureblock.e2e.cjs ===
+PASS - malice: data-role=malice
+PASS - malice: card carries its own name (page H1 hidden)
+PASS - malice: head band tints toward the role color
+PASS - default: data-fb-featstyle=card
+PASS - card: 3px solid action-colored left border  (3px solid)
+PASS - card: tinted bg (dark rgba(0,0,0,.16))  (rgba(0, 0, 0, 0.16))
+PASS - card: no separator/watermark pseudo  (none)
+PASS - card/light: light tint (rgba(0,0,0,.022))  (rgba(0, 0, 0, 0.024))
+PASS - card: no hover lift  (none / none)
+PASS - flat: attribute flips
+PASS - flat: stored in prefs.featureblock.featstyle
+PASS - flat: separator pseudo visible (display/opacity/blend reclaimed)  (block/1/normal)
+PASS - flat: card chrome gone (no left border, no bg)  (none 0px rgba(0, 0, 0, 0))
+PASS - flat: FIRST feature shows no watermark (kill rule intact)  (none)
+PASS - terrain: data-role is the combat role (not malice)
+PASS - terrain: stats block present
+PASS - stats default grid → display:grid  (grid)
+PASS - stats ledger → display:flex (visible reflow)  (flex)
+
+ALL CHECKS PASSED
+EXIT=0
+=== tests/e2e/featureblock-fixture.e2e.cjs ===
+SCRIPT ERROR: page.waitForSelector: Timeout 30000ms exceeded.
+Call log:
+  [2m- waiting for locator('.fb-wrap') to be visible[22m
+
+    at /home/scott/code/steelCompendium/worktrees/sc297-menu-panels-site/v2/tests/e2e/featureblock-fixture.e2e.cjs:59:14
+EXIT=2
+=== tests/e2e/nav-drawer-keep.e2e.cjs ===
+PASS - mobile: drawer opens
+PASS - mobile: found a section nav link to drill into  (/Browse/ancestry/)
+PASS - mobile: navigated to the section  (/Browse/ancestry/)
+PASS - mobile: drawer STAYS OPEN after drilling in  (drawer.checked=true)
+PASS - desktop: keep-open flag NOT armed on nav click  (flag=null)
+
+ALL CHECKS PASSED
+EXIT=0
+=== tests/e2e/page-titles.e2e.cjs ===
+PASS Browse/class/fury/ h1 hidden (want hidden)
+PASS Read/heroes/classes/ h1 visible (want visible)
+PASS Browse/feature/ability/fury/level-1/brutal-slam/ h1 hidden (want hidden)
+PASS Browse/monster/goblin/goblin-warrior/ h1 hidden (want hidden)
+PASS Browse/kit/panther/ h1 hidden (want hidden)
+PASS Browse/monster/goblin/goblin-malice/ h1 hidden (want hidden)
+PASS Browse/monster/retainer/summoner/minion/razor/ h1 hidden (want hidden)
+PASS Browse/monster/retainer/summoner/minion/gorrre/ h1 hidden (want hidden)
+PASS Browse/monster/retainer/summoner/minion/violent/ h1 hidden (want hidden)
+page-titles e2e: all pass
+EXIT=0
+=== tests/e2e/settings-panel.e2e.cjs ===
+PASS - gear button injected
+PASS - drawer opens on gear click
+PASS - drawer slid on-screen
+PASS - scale: css var = 1.3  (1.3)
+PASS - scale: stored = 1.3  (1.3)
+PASS - scale: label = 130%  (130%)
+PASS - scale: body text grew  (16 -> 20.8)
+PASS - scale: resets back to baseline  (16 vs 16)
+PASS - width: css var = 60em  (60em)
+PASS - width: .md-grid max-width applied  (600px)
+PASS - width: stored = 60em  (60em)
+PASS - width: slider max is 300em  (300)
+PASS - width: 300em applies  (300em)
+PASS - width: full toggle => max-width none (full)  (none)
+PASS - width: full toggle removes stored width  (undefined)
+PASS - Esc closes drawer
+FAIL - card: css var = 0.7  (0.8)
+FAIL - card: stored = 0.7  (0.8)
+FAIL - card: label = 70%  (80%)
+PASS - card: height shrank ~0.7x  (685px -> 528px)
+PASS - card: inner text rendered smaller  (27px -> 21px (rendered))
+PASS - card: top-level trait zooms (0.7)  (topZoom=0.7)
+PASS - card: nested card does NOT compound (zoom 1)  (innerZoom=1)
+PASS - scrim click closes drawer
+PASS - persist: scale 1.2 re-applied after reload (no-flash early-apply)
+PASS - redirect page has Open-settings button
+PASS - redirect button opens drawer
+PASS - mobile: drawer opened
+PASS - mobile: drawer anchored to bottom  (top=152 h=692)
+PASS - mobile: drawer slid on-screen  (top=152)
+PASS - mobile: drawer full width
+
+3 CHECK(S) FAILED
+EXIT=1
+=== tests/e2e/statblock-band.e2e.cjs ===
+PASS - band border is not Material admonition blue (#448aff)  (rgba(95, 103, 108, 0.45))
+PASS - band font-size matches the feature list (no .64rem admonition shrink)  (16 vs 16)
+PASS - band head lays out as flex (crest · title · chevron rail)  (flex)
+PASS - band head has no Material icon padding (2rem reserved for the pencil)  (16px)
+PASS - no Material pencil ::before on the band head  (none)
+PASS - no Material chevron ::after on the band head (ours is the ▾ span)  (none)
+PASS - own chevron is pushed to the rail end (title flex:1 active)  (railGap=16.0 titleToChev=599.0)
+PASS - band body keeps no admonition :last-child margin  (0px)
+PASS - band collapses on summary click  ({"open":false,"bodyVisible":false,"chevTransform":"matrix(0, -1, 1, 0, 0, 0)"})
+PASS - chevron rotates when closed  (matrix(0, -1, 1, 0, 0, 0))
+PASS - found mixed-content chips to probe (Villain Action N / N Malice)  (["2 Malice","3 Malice","Villain Action 1","Villain Action 2","Villain Action 3","2-7+ Malice","5 Malice"])
+PASS - chip renders a visible space between link and value: "2 Malice"  (4.86px)
+PASS - chip renders a visible space between link and value: "3 Malice"  (4.86px)
+PASS - chip renders a visible space between link and value: "Villain Action 1"  (4.86px)
+PASS - chip renders a visible space between link and value: "Villain Action 2"  (4.86px)
+PASS - chip renders a visible space between link and value: "Villain Action 3"  (4.86px)
+PASS - chip renders a visible space between link and value: "2-7+ Malice"  (4.86px)
+PASS - chip renders a visible space between link and value: "5 Malice"  (4.86px)
+ALL PASS
+EXIT=0
+=== tests/e2e/statblock-featstyle.e2e.cjs ===
+PASS - default: data-sb-featstyle stamped as card
+PASS - card: 3px solid action-colored left border  (3px solid)
+PASS - card: tinted container background (dark scheme rgba(0,0,0,.16))  (rgba(0, 0, 0, 0.16))
+PASS - card: no separator/watermark pseudo  (none)
+PASS - card/light: light tint applies (rgba(0,0,0,.022))  (rgba(0, 0, 0, 0.024))
+PASS - card: no hover lift  (none / none)
+PASS - flat: attribute flips
+PASS - flat: stored in prefs.statblock.featstyle
+PASS - flat: preset re-derives to Custom
+PASS - flat: separator pseudo visible (display/opacity/blend reclaimed)  (block/1/normal)
+PASS - flat: card chrome gone (no left border, no bg)  (none 0px rgba(0, 0, 0, 0))
+PASS - flat: FIRST feature shows no watermark (kill rule intact)  (none)
+PASS - flat: band has 2+ features and second shows separator  ({"n":7,"beforeDisplay":"block"})
+PASS - preset: Sourcebook → flat
+PASS - preset: Steel Card → card
+PASS - migration: legacy non-crest prefs → flat
+PASS - migration: legacy crest prefs → card
+
+ALL CHECKS PASSED
+EXIT=0
+=== tests/e2e/pins-custom-links.e2e.cjs ===
+node:internal/modules/cjs/loader:1372
+  throw err;
+  ^
+
+Error: Cannot find module 'playwright-core'
+Require stack:
+- /home/scott/code/steelCompendium/worktrees/sc297-menu-panels-site/v2/tests/e2e/pins-custom-links.e2e.cjs
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1369:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Module._load (node:internal/modules/cjs/loader:1179:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1449:12)
+    at require (node:internal/modules/helpers:135:16)
+    at Object.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc297-menu-panels-site/v2/tests/e2e/pins-custom-links.e2e.cjs:3:22)
+    at Module._compile (node:internal/modules/cjs/loader:1692:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/home/scott/code/steelCompendium/worktrees/sc297-menu-panels-site/v2/tests/e2e/pins-custom-links.e2e.cjs'
+  ]
+}
+
+Node.js v24.4.1
+EXIT=1
+=== tests/e2e/pins-sections.e2e.cjs ===
+node:internal/modules/cjs/loader:1372
+  throw err;
+  ^
+
+Error: Cannot find module 'playwright-core'
+Require stack:
+- /home/scott/code/steelCompendium/worktrees/sc297-menu-panels-site/v2/tests/e2e/pins-sections.e2e.cjs
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1369:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Module._load (node:internal/modules/cjs/loader:1179:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1449:12)
+    at require (node:internal/modules/helpers:135:16)
+    at Object.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc297-menu-panels-site/v2/tests/e2e/pins-sections.e2e.cjs:3:20)
+    at Module._compile (node:internal/modules/cjs/loader:1692:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/home/scott/code/steelCompendium/worktrees/sc297-menu-panels-site/v2/tests/e2e/pins-sections.e2e.cjs'
+  ]
+}
+
+Node.js v24.4.1
+EXIT=1
