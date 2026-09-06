@@ -32,6 +32,8 @@ go under an *Internal* sub-heading.
   a Devil Detective) each printed their name once as the page heading and again on
   the card immediately below it; they now hide the redundant heading like every
   other statblock page.
+- **DSE conditions (SC-277):** Standard and custom conditions support saved icon choices with search and reset to default. Color swatches now display their colors in Obsidian.
+
 - **DSE plugin: every display family now renders a full Steel card, not a prose wall
   (SC-120).** Kit was the only family with a Steel composition; the other ten (class,
   career, ancestry, culture, title, perk, complication, treasure, condition, rule) fell
