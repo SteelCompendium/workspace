@@ -16,7 +16,7 @@ shim). 500 pages with a unique title were queried by their exact title.
 | Exact title typed | #1 | #2–3 | #4–10 | >10 |
 |---|---|---|---|---|
 | 500 unique-title Browse pages | 52% | 26% | 19% | 4% |
-| class abilities (`feature/ability/*`, n=100) | 45% | | | |
+| class abilities (`feature/ability/*`, n=100) | 46% | | | |
 | class features (`feature/<class>/level-N/*`) | ~10% | | | |
 
 Four root causes:
