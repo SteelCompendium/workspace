@@ -8,6 +8,30 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **Compendium site: card page actions move into a hover-revealed chrome plate,
+  replacing the old floating top-center button strip (SC-297).** Copy-link, pin,
+  add-to-encounter, and MD/PNG export now live on one plate seated above the card's
+  top edge — the same geometry, material, and depth as the chrome panel DSE plugin
+  elements carry — on all five card families that host page actions: statblock,
+  featureblock, ability, trait, and kit. The plate is right-anchored and grows
+  right-to-left, hidden until the card is hovered or focused, always visible with
+  reserved space on touch/narrow screens, and absent in print. This also fixes the
+  ability card's controls colliding with the card name, a visible defect of the old
+  strip's mismatched anchoring.
+- **Compendium site: two Read-chapter bugs fixed (SC-297).** A chapter page that
+  embeds multiple statblocks no longer shows an "add to encounter" chip on the first
+  one (it silently added whichever creature was printed first); and an embedded card
+  no longer shows a copy-link that copies the *chapter's* permalink instead of
+  nothing. Embedded cards carry no per-card page actions, by design.
+- **Compendium site: trait pages no longer show a duplicated title (SC-297).** Every
+  trait leaf page (e.g. "Glowing Recovery") showed both the page's own heading and
+  the card's identical name directly beneath it; trait pages now hide the redundant
+  heading the same way statblock, featureblock, ability, and kit pages already do.
+- **Compendium site: three retainer-minion statblock pages no longer show their
+  title twice (SC-297, SC-301).** `Razor`, `Gorrre`, and `Violent` (each summoned by
+  a Devil Detective) each printed their name once as the page heading and again on
+  the card immediately below it; they now hide the redundant heading like every
+  other statblock page.
 - **DSE plugin: every display family now renders a full Steel card, not a prose wall
   (SC-120).** Kit was the only family with a Steel composition; the other ten (class,
   career, ancestry, culture, title, perk, complication, treasure, condition, rule) fell
@@ -605,6 +629,12 @@ go under an *Internal* sub-heading.
   Every consumer was re-pointed to its classified slot with zero rendering
   change — freeze and parity gates stayed green throughout. Groundwork only,
   for user-customizable fonts (SC-112).
+
+## 2026-09-05 — My Table improvements (SC-177, SC-300)
+
+- My Table: tuck the add-section form behind a button and reduce title/category headings to keep saved rules in view (SC-300).
+
+- My Table: save site headings under your own names and expand their content inline, including child subsections and tables; other web URLs remain links.
 
 ## 2026-08-21 — v2 site deploys (steel-etl 7bd5f54, 7ef2284)
 
