@@ -93,3 +93,4 @@ Ruling: STOP before `wt-finish`. docs/git-workflow.md: "Pushing v2 main IS a dep
 Pending before pointer-bump commit: final fix-wave re-review verdict.
 Final fix wave: re-review clean (8/8 addressed). Final whole-branch review: satisfied with fixes.
 Landing: pointer bumps committed in the worktree superproject (steel-etl 5035174, v2 d0864cd); ledger preserved to docs/superpowers/dse-overhaul/build-ledgers/sc306-search-ledger.md. wt-finish NOT run — awaiting Scott (v2 push = live deploy of the worker; content regen needs `just deploy-v2`).
+Landed 2026-09-06: wt-finish pushed steel-etl 5035174, v2 d0864cd, workspace 63047b1; `just deploy-v2` regenerated content (v2 acca1a0, workspace 4e2063b). Scott's "deploy" ruling.
