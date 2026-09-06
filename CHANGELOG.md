@@ -8,6 +8,11 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **Compendium site: body text now uses Zilla Slab instead of Berlingske Slab.** The
+  licensed Berlingske Slab Demibold was hot-linked from a third-party font mirror; Zilla
+  Slab (OFL, Google Fonts) is the closest free slab and ships regular through bold with
+  italics, so emphasis and bold body text render in true faces instead of synthesized
+  ones. The Settings panel's "Text font" default is renamed to match.
 - **Compendium site: card page actions move into a hover-revealed chrome plate,
   replacing the old floating top-center button strip (SC-297).** Copy-link, pin,
   add-to-encounter, and MD/PNG export now live on one plate seated above the card's
