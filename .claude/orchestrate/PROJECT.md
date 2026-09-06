@@ -159,6 +159,10 @@ Each cost real time once. Every one belongs in the briefs it applies to.
    *inside* that tree, so the reflexive "clean the generated dirt" recipe reverts real work.
    Safe form, and the one briefs must specify:
    `git clean -fdq docs site && git checkout -- docs/Browse docs/Read docs/scc`
+   plus the two files `gen --all` writes *outside* those subtrees — `v2/docs/pins.md` and
+   `steelCompendium.github.io/docs/api/v1/{index,scc}.json` — which that form leaves dirty
+   (found on SC-179, 2026-09-06): `git -C v2 checkout -- docs/pins.md` and
+   `git -C steelCompendium.github.io checkout -- docs/api/v1/`.
    (restore only the genuinely generated subtrees; never blanket-checkout `docs/`).
 6. **The freeze baseline (`.superpowers/sdd/freeze-baseline.sha256`) is machine-local** —
    screenshot bytes are not portable across machines. On a new machine, regenerate it from a

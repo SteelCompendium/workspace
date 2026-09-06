@@ -8,15 +8,6 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
-- **Site: the Free Strike page now shows the free strike abilities (SC-179).** Browse →
-  Feature → Common → Main Actions → Free Strike explained the rule but never listed the
-  two abilities you actually roll — the book prints *Melee/Ranged Weapon Free Strike* in
-  Chapter 2 and the rule in Chapter 10, so nothing on the site connected them. The rule
-  page now ends with a **Free Strike Abilities** card grid linking straight to both.
-  Reported on Discord; the reporter couldn't find the abilities through search either,
-  so the book's universal actions and common ability cards (Free Strike, Charge, Grab,
-  Hide, Knockback, …) are now ranked with the rules glossary instead of tying with the
-  ~3,000 class-specific features they were buried under.
 - **DSE conditions (SC-277):** Standard and custom conditions support saved icon choices with search and reset to default. Color swatches now display their colors in Obsidian.
 
 - **DSE plugin: every display family now renders a full Steel card, not a prose wall
@@ -617,7 +608,17 @@ go under an *Internal* sub-heading.
   change — freeze and parity gates stayed green throughout. Groundwork only,
   for user-customizable fonts (SC-112).
 
-## 2026-09-06 — Heroes errata + site deploy (SC-304; steel-etl 15f931b)
+## 2026-09-06 — Heroes errata, Free Strike page + site deploys (SC-304, SC-179; steel-etl 15f931b, feaf130)
+
+- **Site: the Free Strike page now shows the free strike abilities (SC-179).** Browse →
+  Feature → Common → Main Actions → Free Strike explained the rule but never listed the
+  two abilities you actually roll — the book prints *Melee/Ranged Weapon Free Strike* in
+  Chapter 2 and the rule in Chapter 10, so nothing on the site connected them. The rule
+  page now ends with a **Free Strike Abilities** card grid linking straight to both.
+  Reported on Discord; the reporter couldn't find the abilities through search either,
+  so the book's universal actions and common ability cards (Free Strike, Charge, Grab,
+  Hide, Knockback, …) are now ranked with the rules glossary instead of tying with the
+  ~3,000 class-specific features they were buried under.
 
 - **Compendium site: body text now uses Zilla Slab instead of Berlingske Slab.** The
   licensed Berlingske Slab Demibold was hot-linked from a third-party font mirror; Zilla
