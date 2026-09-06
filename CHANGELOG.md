@@ -8,6 +8,11 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **Search finds what you typed (SC-306).** Typing an item's exact name now
+  returns that page first (52% → 98.2% of unique titles on the bench). Container
+  pages no longer re-index the cards they embed, monster names are no longer
+  demoted, and the search ranking now runs in our own worker: all words
+  required, exact titles first, no stop-word stripping ("To the Death!" works).
 - **DSE conditions (SC-277):** Standard and custom conditions support saved icon choices with search and reset to default. Color swatches now display their colors in Obsidian.
 
 - **DSE plugin: every display family now renders a full Steel card, not a prose wall
@@ -609,6 +614,8 @@ go under an *Internal* sub-heading.
   for user-customizable fonts (SC-112).
 
 ## 2026-09-06 — Heroes errata, Free Strike page + site deploys (SC-304, SC-179; steel-etl 15f931b, feaf130)
+
+- **Downtime projects (SC-201):** Projects now have Steel Plate cards with requirement ledgers and separate enhancement panels. Granted abilities stay inside their enhancement; project requirements are also available in data exports.
 
 - **Site: the Free Strike page now shows the free strike abilities (SC-179).** Browse →
   Feature → Common → Main Actions → Free Strike explained the rule but never listed the
