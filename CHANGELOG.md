@@ -8,6 +8,15 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **Monster abilities with more than one power-roll table now show every table (SC-308).**
+  The Wode Hag's villain action "Snackies for Sweeties" showed only one table, and it had
+  the PC's Agility-test outcomes for removing a pastry instead of the pie-explosion's
+  poison damage — the second, header-less tier list was silently overwriting the first.
+  Fixed for every affected ability (five found across the Monsters book): Snackies for
+  Sweeties (Wode Hag), Caustic Detonator (war dog), No Escape (cryptic), Overpower (Lord
+  Syuul), and Roll the Wheel (exploding mill wheel dynamic terrain). A header-less table
+  is now labeled from the characteristic test it follows (e.g. "Agility Test") when one
+  is named, or shown plainly when none is.
 - **DSE conditions (SC-277):** Standard and custom conditions support saved icon choices with search and reset to default. Color swatches now display their colors in Obsidian.
 
 - **DSE plugin: every display family now renders a full Steel card, not a prose wall
