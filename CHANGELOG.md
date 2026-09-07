@@ -16,7 +16,8 @@ go under an *Internal* sub-heading.
   Sweeties (Wode Hag), Caustic Detonator (war dog), No Escape (cryptic), Overpower (Lord
   Syuul), and Roll the Wheel (exploding mill wheel dynamic terrain). A header-less table
   is now labeled from the characteristic test it follows (e.g. "Agility Test") when one
-  is named, or shown plainly when none is.
+  is named, or shown plainly when none is. The site's dice roller now highlights the
+  rolled tier only in the table that was clicked, not in every table on the card.
 - **DSE conditions (SC-277):** Standard and custom conditions support saved icon choices with search and reset to default. Color swatches now display their colors in Obsidian.
 
 - **DSE plugin: every display family now renders a full Steel card, not a prose wall
