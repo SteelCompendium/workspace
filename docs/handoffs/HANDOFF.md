@@ -1054,3 +1054,34 @@ classes/: Repel renders as a proper sc-head ability card (feature + ability head
 stray sidebar entry). CHANGELOG: SC-173 entry promoted to "## 2026-08-20 — v2 site deploy"
 dated header (Unreleased stays on top; plugin entries remain Unreleased until the 7.0.0
 cut). SC-173 Done. Scott's queue: SC-154 pick, SC-152; SC-174 on his go.
+
+### 2026-09-06 — SC-202 (harness Obsidian host CSS): rounds 3+4 LAND-READY, round 5 in flight; SCRATCH-DIR WIPE
+**You are here:** SC-202 phase 2 (fix the host-leak families before turning Obsidian's
+real `app.css` on in the harness). Worktree `sc202-visual-harness-obsidian`, dse branch of
+the same name @ **`5f7b8b2`** on `origin/develop` `d8bda06`: round 3 (lists/quotes/hr,
+4 commits) + round 4 (headings/emphasis/links + SC-277's unclassed search input, 3
+commits), both independently reviewed APPROVE, **land-ready together** with two
+additions-only widenings (`sc202-r3-widening.txt` 6 lines + `sc202-r4-widening.txt` 2
+lines → baseline 260). **No dispatcher ran this session — landing is Scott's/the
+dispatcher's move** (`land-stack`, dse tracked branch = `develop`). Round 5 (checkboxes /
+task lists, the last leak family) dispatched to a fresh implementer late 2026-09-06; then
+the fetch/pin recipe + "turn the sheet on" round, which carries the ONE remaining approval
+ask (option C realprint restated + every round's user-visible change summarised; Scott
+2026-09-05: "work through all the rounds and ill approve at the end").
+**Ledger:** `.superpowers/sdd/sc202-visual-harness-obsidian/decisions.md` (RECONSTRUCTED —
+see below); snapshot in `docs/superpowers/dse-overhaul/build-ledgers/sc202-visual-harness-obsidian/`.
+**INCIDENT 2026-09-06 12:45 ET:** the SC-306 search-ranking session ran `rm -rf
+workspace/.superpowers` while tidying its own scratch → every effort's ledger, all SC-202
+phase-1..r3 briefs/reports/crops, and the machine-local `check-freeze.sh` +
+`freeze-baseline.sha256` (+ all dated backups) were deleted. Nothing tracked was touched.
+**Restored:** freeze tooling regenerated from a clean `origin/develop` `d8bda06` clone —
+**252 lines** (full frozen class; the lost file had 224 — 14 post-SC-191 ids had never been
+widened in), cross-checked hash-for-hash against the SC-202 branch sweep; dated record in
+`dse-verify` SKILL.md; expected line now `freeze OK (252/252 …)`. Footgun recorded in
+`docs/working-preferences.md` + `.claude/orchestrate/PROJECT.md` §8.7. **Other efforts'
+ledgers are gone for good** — rebuild from their Linear threads + `build-ledgers/` on
+demand.
+**Verify:** `git -C ../worktrees/sc202-visual-harness-obsidian/draw-steel-elements log
+--oneline origin/develop..HEAD` → 7 commits ending `5f7b8b2` (+ round 5's once it lands);
+`bash .superpowers/sdd/check-freeze.sh ../worktrees/sc202-visual-harness-obsidian/draw-steel-elements/visual-harness/shots`
+→ `freeze OK (252/252 …)`.

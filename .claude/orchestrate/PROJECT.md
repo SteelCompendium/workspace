@@ -168,6 +168,12 @@ Each cost real time once. Every one belongs in the briefs it applies to.
    screenshot bytes are not portable across machines. On a new machine, regenerate it from a
    clean tracked-branch checkout before trusting any freeze gate; procedure and the current
    line count are in `dse-verify`.
+7. **Never `rm -rf` the shared `.superpowers/` dir (2026-09-06: an SC-306 session did, and
+   deleted every effort's ledger plus the freeze tooling).** Delete only your own effort's
+   prefixed subdirectory. Briefs that tell a worker to tidy scratch must say this. If the
+   freeze tooling is gone, regenerate the FULL frozen class from a clean `origin/develop`
+   clone (the restore brief `sc202-brief-freeze-restore.md` is the worked example) and
+   cross-check against any surviving branch sweep before trusting it.
 
 **Provenance for two plugin-side footguns.** The plugin states these rules without ticket
 keys (they generalise); the evidence is this project's, and lives here:

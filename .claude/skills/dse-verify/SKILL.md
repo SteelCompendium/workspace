@@ -189,6 +189,26 @@ didn't mount) plus human review of the PNGs.
   `freeze-baseline.sha256.pre-<effort>-bak`, (3) applies the lines, (4) appends a dated
   entry to this file quoting the sanction. Widenings (additions-only) need no sanction —
   the dispatcher verifies additions-only by sorted-diff and applies at landing.
+  - **2026-09-06, RESTORE after the scratch-dir wipe: 224 → 252, regenerated (not a
+    rebaseline, not a sanction event).** An SC-306 session ran
+    `rm -rf workspace/.superpowers` at 12:45 ET, deleting `check-freeze.sh`,
+    `freeze-baseline.sha256` and every dated backup (plus every effort ledger). No copy
+    existed anywhere. The SC-202 owner regenerated both from a fresh clean clone of
+    `origin/develop` @ `d8bda06` (SC-277): two clean `npm run shots` sweeps byte-identical
+    (508 PNGs / 126 ids), full frozen class hashed = **252 lines** (126 ids × twin +
+    realprint, twin==realprint for all, 0 exclusions). Cross-checked before writing: all
+    252 pairs matched by hash the SC-202 r4 branch sweep that had produced
+    `freeze OK (224/224)` against the lost file that morning. The 28-line growth is the
+    additions-only widening for the 14 capture ids landed after SC-191 whose widenings
+    were never applied (their names cannot be listed — the old file is gone). Script
+    re-implemented to this file's contract (mandatory `<shots-dir>` arg; missing vs
+    mismatch distinguished; exit 0 on 0 mismatches, 1 on any mismatch, 2 on usage) and
+    proven four ways (clean clone 252/252; SC-202 worktree 252/252; 1 corrupted byte →
+    `FREEZE VIOLATED (1 checksum mismatches, 0 missing)` exit 1; 1 deleted file → `251/252
+    producible OK, 1 missing …` exit 0). Record: `.superpowers/sdd/RESTORE-2026-09-06.md`;
+    backup `freeze-baseline.sha256.restored-2026-09-06-bak`. **Expected line now:
+    `freeze OK (252/252 …)` on `origin/develop` `d8bda06`.** Pending additions-only
+    widenings at their landings: SC-202 r3 (6 lines) + r4 (2 lines) → 260.
   - **2026-08-26, SC-185 round 3 (six approved categories): 94 lines rebaselined, count
     unchanged at 210 — APPLIED at landing.** Scott approved six of the eight font-scale
     categories (A roll surfaces, B statblock display values, D notice/badge chrome, F

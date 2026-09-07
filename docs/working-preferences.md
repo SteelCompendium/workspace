@@ -234,6 +234,18 @@ A related hazard: an agent working in a worktree can still *leak edits into the 
 checkout* (plan 21's Task 5 caught and reverted exactly this). If you touch anything outside
 your worktree path, verify `git -C <main-checkout> status` is clean before reporting done.
 
+**Never `rm -rf` the shared `.superpowers/` dir — it is everyone's, not yours (learned
+2026-09-06, the hard way).** An SC-306 session, tidying its own scratch into its worktree,
+ran `rm -rf workspace/.superpowers` and deleted ~100 efforts' ledgers, every in-flight
+brief/report/crop, and the machine-local DSE freeze tooling (`check-freeze.sh`,
+`freeze-baseline.sha256` and all its dated backups) in one stroke. Nothing tracked was
+harmed; nothing gitignored was recoverable. Rules: (1) delete only your own effort's
+subdirectory, by its prefixed name, never the parent; (2) the freeze baseline + script are
+cross-effort infrastructure — regenerate per `dse-verify` if lost, never "clean up";
+(3) the `superpowers` plugin's subagent-driven-development skill and this project's
+orchestration adapter BOTH use `.superpowers/sdd/` — an agent following the plugin's
+"relocate scratch into the worktree" idea must move, not remove, and only its own subdir.
+
 ## The v2 site is a reference, not gospel (Scott, 2026-08-02)
 
 The v2 site is **MVP-state** — usable as the design reference for plugin parity work, but not
