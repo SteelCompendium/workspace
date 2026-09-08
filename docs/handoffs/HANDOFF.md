@@ -13,6 +13,22 @@
 >
 > **Release gate: 7.0.0 ships only when SC-97 (Steel UI parity) is complete.**
 
+
+### 2026-09-07 — SC-308 (Wode Hag "Snackies for Sweeties"): LANDED + DEPLOYED, Done
+Statblock/featureblock ability bodies now use the SDK's nested `effects[]` model in exact
+source order (a paragraph carries the tier table under it; no hoisting of the power roll
+above a preceding Trigger/Effect/Special; header-less test tables labeled from the bold
+test they follow). Folds SC-309 (statblock JSON/YAML carries every Effect/Special/Trigger/
+Malice paragraph). steel-etl `bdab23e`, data-sdk-npm v3 `69c8d49` (featureblock schema
+`effects`), v2 `09aabfe41f` (dice highlight scoped to the clicked table) → deployed
+2026-09-07 (v2 `4e18939`, API `98e0370`, data-unified `fb83a78` / v4.20260908021459).
+Ledger + final reviews preserved in `docs/superpowers/dse-overhaul/build-ledgers/sc308-*`.
+**Footgun added (adapter §8.8):** a worker ran `steel-etl site --config pipeline.yaml` and
+the builder wiped its cwd (no `docs_dir`); steel-etl `ff0614b` now refuses empty/cwd/`.git`
+docs_dir. Spin-offs: SC-310 (Heroes Divine Dragon, same bug in `ability.go`/`ability_cards.go`,
+Todo/High), SC-311 (unify the three duplicate feature parsers), SC-312 (164 pre-existing
+schema-validation failures: null keywords/weaknesses/immunities).
+
 ## 2026-08-02 session end — state snapshot
 **Landed to main today (all pushed):** the steel-body stack (SC-99 serif coherence all families ·
 SC-108 fixture coverage, freeze 98→101 · SC-104 modal theming) and the SC-105 pair (six-slot font

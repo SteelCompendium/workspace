@@ -175,6 +175,14 @@ Each cost real time once. Every one belongs in the briefs it applies to.
    clone (the restore brief `sc202-brief-freeze-restore.md` is the worked example) and
    cross-check against any surviving branch sweep before trusting it.
 
+8. **Never run `steel-etl site` with `pipeline.yaml` (2026-09-07, SC-308: it emptied a
+   worker's steel-etl working tree, losing a full round of uncommitted work).** The only
+   site config is `v2/site.yaml` (`./steel-etl site --config ../v2/site.yaml`). Without
+   `docs_dir`, the builder resolved its output to the cwd and `cleanDocsDir` wiped it.
+   steel-etl `ff0614b` now refuses an empty/cwd/`.git` `docs_dir`, but briefs must still
+   name the config explicitly — and workers must commit after every coherent step so
+   nothing sits uncommitted through a gate or build.
+
 **Provenance for two plugin-side footguns.** The plugin states these rules without ticket
 keys (they generalise); the evidence is this project's, and lives here:
 
