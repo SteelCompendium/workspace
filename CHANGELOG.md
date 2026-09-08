@@ -25,7 +25,10 @@ go under an *Internal* sub-heading.
   named, on every such table, not just a later one. The statblock JSON/YAML now also
   carries every Effect/Special/Trigger/Malice paragraph for every roll-bearing ability
   (previously dropped once tiers were present). The site's dice roller highlights the
-  rolled tier only in the table that was clicked, not in every table on the card.
+  rolled tier only in the table that was clicked, not in every table on the card. (The
+  underlying `power_roll` convenience field on featureblock/terrain data now holds the
+  FIRST tier list rather than the last — the ordered `effects` list is the source of
+  truth for a multi-roll feature either way.)
 - **DSE conditions (SC-277):** Standard and custom conditions support saved icon choices with search and reset to default. Color swatches now display their colors in Obsidian.
 
 - **DSE plugin: every display family now renders a full Steel card, not a prose wall
