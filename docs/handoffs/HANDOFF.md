@@ -1118,3 +1118,15 @@ reviewer probe mutation was left in the tree and restored by hash.
 --oneline origin/develop..HEAD` → 9 commits ending `189aaf1` (+6a's once it lands);
 `bash .superpowers/sdd/check-freeze.sh ../worktrees/sc202-visual-harness-obsidian/draw-steel-elements/visual-harness/shots`
 → `freeze OK (252/252 …)`.
+
+### 2026-09-08 — SC-202: round 6a (fetch/pin recipe) APPROVED; rounds 3+4+5+6a LAND-READY at dse `742bcd9` (+ worktree justfile `d85fc4e`); round 6b (sheet ON, screen combos) in flight
+Pin is **1.13.7 `f612f1e8…`** (the 2026-09-02 ruling's starting pin) — 1.14.0 is an
+Insider build with no public release asset; the drift line fires on this machine by
+design. `npm run host-css` / `just dse-host-css` fetch+verify the sheet into gitignored
+`visual-harness/dist/`; `shoot.mjs` ensures it in-process and hashes what it injects. 6b
+turns the sheet on for steel-dark/light only (0 frozen bytes move); 6c (brief drafted:
+`sc202-brief-r6c-realprint.md`) re-points realprint to Obsidian's real print conditions
+(option C) and ships the rebaseline file for the ONE remaining sanction ask (7 FINAL-ASK
+items in the ledger). Landing still the dispatcher's move (`land-stack`, widenings r3 6 +
+r4 2 → 260). **Verify:** `git -C ../worktrees/sc202-visual-harness-obsidian/draw-steel-elements
+log --oneline origin/develop..HEAD` → 11 commits ending `742bcd9` (+6b's).
