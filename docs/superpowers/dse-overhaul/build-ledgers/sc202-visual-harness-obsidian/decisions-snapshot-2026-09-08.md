@@ -117,6 +117,16 @@ point.
    control. No shipped content uses task lists today. Theme them later, or leave?
 7. (r5) A completed task item (`- [x]`) inside a plugin body shows no strikethrough or
    muting after the fix (Obsidian's `is-checked` styling was the leak). Acceptable?
+8. (r6b, honesty) The `font-family` comparison in three host-leak sweeps (inputs, table
+   cells, headings) was vacuous from round 1 through 6a (a cascade-order bug); fixed in
+   6b. Non-token leaks those rounds found still stand; token-valued colours were reported
+   at stale fake values. State plainly.
+9. (r6b, context) The machine's camera Obsidian runs a Chromium-106 Electron shell (no
+   `color-mix()`/`oklch()`), so Steel surfaces built on `color-mix` render their
+   `@supports` fallback there. The camera is ground truth for Obsidian's CSS, not for
+   Steel's modern-CSS surfaces; SC-122 already established old-shell users exist. Which
+   shell does Scott's own Obsidian run? (Affects whether the fallback branch is the one
+   he sees.)
 
 ## Effort state (condensed; pre-wipe detail lost)
 
@@ -400,3 +410,84 @@ point.
   at plugin `742bcd9`** (+ worktree superproject `d85fc4e`, justfile recipe) on
   `origin/develop` `8b65a14`. **Round 6b dispatched** (fresh implementer,
   `sc202-brief-r6b-sheet-on.md`).
+- **2026-09-08 ~03:00 ET — r6b implementer DONE: commit `a8bc607`** on `742bcd9`
+  (develop `8b65a14` unmoved). Real 1.13.7 sheet ON for steel-dark/light; **256 of 524
+  screen shots moved (131 dark + 125 light), 0 of 260 print/realprint**; two causes
+  claimed — (A) accepted `box-sizing`/`overflow-wrap` truth (e.g. `.dse-pr__badge` −8 px),
+  (B) `vars.css`'s stale 2026-07-10 fallback tokens superseded by the real sheet (21 of
+  ~47 had drifted) — **no genuine un-re-grounded host property found**, no `fix(theme)`
+  commit. **Deviation:** `vars.css` fakes reordered BEFORE the real sheet as a fallback
+  floor rather than deleted (deleting broke `assertChromeHostLeak` — dozens of plugin
+  declarations read Obsidian token names with no fallback); print path still reads the
+  fakes until 6c. **Claim to verify:** a `fontFamily` comparison in three sweeps had
+  been VACUOUS since r1 (cascade-order bug) — fixed here. Button/chrome sweeps left on
+  the sheet-less page "by design" — reviewer to judge. Drive-by: inline sweep host-pass
+  focus leftover. LOW-3b fold done. Battery: jest 3825/1sk; shots 524/0; `freeze OK
+  (252/252)`; 8 widening OK; parity 0/0/16 byte-identical. Camera spot-check:
+  `negotiation` ~4–5 % residual (font hinting); `hero`/`statblock` residual =
+  compendium-content divergence (harness has no synced compendium) → follow-up. **Owner
+  eyeballing: the statblock after/vault crops show DIFFERENT REGIONS** (power-roll block
+  vs head band) — not comparable; reviewer re-shoots matched regions. **r6b review
+  dispatched** (fresh reviewer, `sc202-brief-r6b-review.md`).
+- **2026-09-08 ~06:00 ET — r6b review of `a8bc607`: FIX-ROUND-NEEDED (2 HIGH / 4 MED / 3
+  LOW; `sc202-r6b-review.md`).** Battery + 256/0 moved byte-reproduced. **HIGH-1:**
+  `vars.css`'s `body.theme-dark|light` (0,1,1) outranks app.css → 11 dark / 8 light tokens
+  + 2 hybrids still the stale July fakes under the sheet (`--background-primary` `#1e1e1e`
+  vs vault `#1C1C1C`); validated fix `:where(body.theme-*)` → 0 fake-wins, 0 frozen bytes,
+  +139 screen shots. **HIGH-2:** genuine un-re-grounded leak — `.markdown-rendered p
+  { margin-block }` reaches `.dse-party__member-ref p` (sole cause of `party--steel-*`
+  moving); also `.markdown-rendered img` (9 portraits) and `caret-color` (~1,860 nodes,
+  r2's named deferral never censused). MED-1 button/chrome sweeps gate a sheet-less page;
+  MED-2 nothing verifies the browser applied Obsidian's sheet (emptied file → all green)
+  + `link.disabled` re-attach timing; MED-3 cause table wrong (matrix: sheet-only 74 /
+  wrapper+box-sizing-only 2 / both 180; sheet content touches 254/256); MED-4 matched
+  crops show after ≈ before, residual to vault unchanged; LOW-1 un-failable
+  box-sizing/overflow-wrap entries; LOW-2 captions describe unshipped regions; **LOW-3
+  the camera's Obsidian shell is Chromium 106 (no `color-mix()`/`oklch()`) — the
+  statblock head-band residual is the plugin's own `@supports` fallback, NOT a leak; the
+  camera cannot be ground truth for Steel's color-mix surfaces.** Item 5 confirmed:
+  `fontFamily` comparisons in the input (r1) / table (r2) / heading (r4) sweeps were
+  VACUOUS r1→r6a (token-valued comparisons only; non-token leaks stand) — goes in the
+  final ask's honesty section. **Owner rulings:** HIGH-1 → FIX (`:where()` floor; fakes
+  stay until 6c decides); HIGH-2 → FIX as a 7th "prose" family (p/img/inherited root
+  props incl. caret-color) with sweep + guard, own commit; MED-1 → FIX; MED-2 → FIX
+  (sentinel token + rule-count floor; recalc-safe toggle; emptied-sheet probe must fail);
+  MED-3 → report; MED-4/LOW-2 → re-shoot + honest captions after HIGH-1 (never claim
+  "after == vault"); LOW-1 → fold (absolute assertion); LOW-3 → RECORD → FINAL-ASK
+  context + note to SC-287 (camera Obsidian version/shell). **Fix round → r6b
+  implementer (resumed), `sc202-brief-r6b-fix.md`; scoped re-review → r6b reviewer.**
+- **2026-09-08 ~13:30 ET — r6b fix round DONE: `59cd766` (harness: `:where()` token
+  floor, button/chrome under the sheet, sentinel-verified toggle + an async-load race fix
+  in `entry.ts`, absolute box-model assertion) + `d0fed38` (theme: prose family —
+  `assertProseHostLeak`, 99 `<p>` / 9 `<img>` / caret-color at 33 roots, 0 diffs).**
+  Fake-wins 19 → 0; `party--steel-dark` AE vs `742bcd9` 350,232 px → **384 px (0.02 %)
+  residual, deterministic, on the Renown stepper's focus-ring outline — NOT byte-identical
+  as the acceptance test required; implementer attributes it (unconfirmed) to the token
+  floor's `--interactive-accent` hex→hsl change → reviewer rules.** Battery: jest
+  3830/1sk/200-of-201; shots 524/0, nine sweep lines OK; `freeze OK (252/252)`; 8
+  widening OK; 0/260 print moved; 187/524 screen moved vs `742bcd9`; parity 0/0/16.
+  Crops re-shot at matched regions, captions from measurement. **Scoped re-review
+  dispatched** to the r6b reviewer (`sc202-brief-r6b-rereview.md`).
+- **2026-09-08 ~15:30 ET — scoped re-review of `d0fed38`: APPROVE the code (0 HIGH / 1
+  MED / 4 LOW, all artifact/report).** HIGH-1 0 fake-wins / 0 hybrids (46 tokens
+  enumerated); HIGH-2 prose sweep can-fails naming the exact leaks; MED-1/2, LOW-1 closed
+  by execution (emptied sheet → `OBSIDIAN APP.CSS NOT APPLIED`, exit 1). **Party residual
+  RULED (a):** with the sheet emptied, `party--steel-*` are byte-identical to `742bcd9`
+  (the `<p>` fix is exact); the residual (dark 384 px, **light 19,860 px = 1.19 %,
+  under-reported**) is the true `--background-primary` (`#1e1e1e` → `#1C1C1C`) at the
+  shot edge + a sub-pixel repaint artefact of the page now laid out as a real reading
+  view — NOT the focus ring, NOT `--interactive-accent` (the implementer's attribution
+  was wrong and must not reach the ticket). **New, all folded into 6c:** MED-5
+  `sc202-r6b-statblock-after.png` not reproducible from `d0fed38` (caption "46.1 %" vs
+  measured 0.03 %) → use the reviewer's `sc202-r6brerev-statblock-after-reproducible.png`;
+  LOW-2a moved-count is 258 vs `742bcd9` (187 was vs `a8bc607`), 6 returned; LOW-2b
+  chrome/button sweeps never hit the sentinel → one-liner; LOW-2c `vars.css` comment
+  says (0,1,0), truth (0,0,0); LOW-2d six more inherited props reach plugin DOM
+  (`text-rendering`, `tab-size`, `user-select`, `-webkit-tap-highlight-color`,
+  `scrollbar-color`, `-webkit-app-region`) — re-grounding moves 0/524 → **re-ground anyway
+  (coincidence-is-not-a-guarantee) and sample**; LOW-2e §7's retracted text still present
+  → delete. Battery: jest 3830/1sk/200-of-201; shots 524/0, ten gate lines; `freeze OK
+  (252/252)`; 8 widening OK; parity 0/0/16. **ROUND 6b APPROVED → ROUNDS 3+4+5+6a+6b
+  LAND-READY at plugin `d0fed38`** (+ worktree justfile `d85fc4e`) on `develop`
+  `8b65a14`; 258 unfrozen screen shots moved (no sanction needed), 0 frozen. **Round 6c
+  dispatched** (fresh implementer, `sc202-brief-r6c-realprint.md` + the 6b folds).

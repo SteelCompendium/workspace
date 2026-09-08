@@ -1130,3 +1130,16 @@ turns the sheet on for steel-dark/light only (0 frozen bytes move); 6c (brief dr
 items in the ledger). Landing still the dispatcher's move (`land-stack`, widenings r3 6 +
 r4 2 → 260). **Verify:** `git -C ../worktrees/sc202-visual-harness-obsidian/draw-steel-elements
 log --oneline origin/develop..HEAD` → 11 commits ending `742bcd9` (+6b's).
+
+### 2026-09-08 — SC-202: round 6b (real app.css ON for screen combos) APPROVED; rounds 3–6b LAND-READY at dse `d0fed38`; round 6c (realprint option C + rebaseline) in flight
+The browser harness now renders steel-dark/light under Obsidian's pinned 1.13.7 `app.css`
+with the real reading-view DOM chain, a sentinel that proves the sheet was applied, seven
+host-leak families incl. a new "prose" one (p/img/caret + six inherited props), 258
+unfrozen screen shots moved (no sanction), 0 frozen. Findings worth knowing: the
+`font-family` comparison in three sweeps had been vacuous r1→6a (fixed); the camera's
+Obsidian shell is Chromium 106 (no `color-mix`) — noted on SC-287. 6c re-points print to
+Obsidian's real print conditions, replaces the twin==realprint byte rule with an
+enumerated-delta assertion, and ships `sc202-r6c-rebaseline.txt` for the ONE sanction ask
+(9 FINAL-ASK items in the ledger; draft at `sc202-comment-final-ask.md`). Landing still the
+dispatcher's move. **Verify:** `git -C ../worktrees/sc202-visual-harness-obsidian/draw-steel-elements
+log --oneline origin/develop..HEAD` → 14 commits ending `d0fed38` (+6c's).
