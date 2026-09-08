@@ -1085,3 +1085,20 @@ demand.
 --oneline origin/develop..HEAD` → 7 commits ending `5f7b8b2` (+ round 5's once it lands);
 `bash .superpowers/sdd/check-freeze.sh ../worktrees/sc202-visual-harness-obsidian/draw-steel-elements/visual-harness/shots`
 → `freeze OK (252/252 …)`.
+
+### 2026-09-07 — SC-202: round 5 APPROVED, all five leak families done; rounds 3+4+5 LAND-READY at dse `189aaf1`; round 6a (fetch/pin recipe) in flight
+Chain on `origin/develop` `8b65a14`: `51bfe7b 263f29f e48e761 36a01d3` (r3) `b86a3d4
+fc359ed 1dcf516` (r4) `fe69d37 189aaf1` (r5), fast-forward; widenings r3 (6) + r4 (2) →
+baseline 260 at landing (dispatcher's move via `land-stack`; none ran this session).
+Progress notes for r3+4 and r5 posted to SC-202 (no asks). FINAL-ASK list (7 items) in
+the ledger. Round 6 is split: **6a** fetch/pin recipe (pin decision: 1.14.0 `013ed841…`,
+what every round measured against — stated in the final ask); **6b** turn the sheet on +
+re-formulate the host-leak sweeps + residual blast radius → rebaseline file + crops;
+**6c** realprint option C. 6b/6c carry the ONE remaining sanction ask. Two worker stalls
+this session were the parked-on-background-job pattern (§4.1) — pid watchers resolved
+both; the owner's Claude Code process also restarted once (~19:40 ET) mid re-review, a
+reviewer probe mutation was left in the tree and restored by hash.
+**Verify:** `git -C ../worktrees/sc202-visual-harness-obsidian/draw-steel-elements log
+--oneline origin/develop..HEAD` → 9 commits ending `189aaf1` (+6a's once it lands);
+`bash .superpowers/sdd/check-freeze.sh ../worktrees/sc202-visual-harness-obsidian/draw-steel-elements/visual-harness/shots`
+→ `freeze OK (252/252 …)`.
