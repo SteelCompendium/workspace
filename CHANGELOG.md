@@ -8,6 +8,14 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **v2 site: the display heading face is now Forum (Google Fonts).** Big uppercase
+  H1/H2 headings previously used Beaufort W01 Heavy, loaded from a third-party font
+  mirror; they now use Forum, an OFL face served by Google Fonts, as the free stand-in
+  for the PDF's Beaufort. The Settings panel's heading-font choices list Forum in
+  Beaufort's place. Forum has a single 400 weight where Beaufort W01 Heavy was heavy
+  at 400, so the display role now asks for bold — statblock names, card names, band
+  titles and stat numerals keep the weight they had.
+
 - **DSE conditions (SC-277):** Standard and custom conditions support saved icon choices with search and reset to default. Color swatches now display their colors in Obsidian.
 
 - **DSE plugin: every display family now renders a full Steel card, not a prose wall

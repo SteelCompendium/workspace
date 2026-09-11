@@ -37,9 +37,12 @@ Two non-negotiables drive every component:
   and always as a thin border, glyph, or gradient band, never a fill. Dark "slate" is
   the signature mode; light "default" is fully supported. (Alternate Parchment/Obsidian
   themes exist but are hidden until fully baked — SC-218.)
-- **Type.** Two commercial brand faces with **Source Serif 4** as the graceful
-  fallback: **Beaufort W01 Heavy** for big UPPERCASE display (H1/H2 — "BROWSE RULES"),
-  **Test Newzald** for subheads (H3–H6, Title Case). Body is **Zilla Slab** (OFL, Google
+- **Type.** **Forum** (OFL, Google Fonts — the free stand-in for the PDF's Beaufort)
+  for big UPPERCASE display (H1/H2 — "BROWSE RULES"), with the commercial **Test
+  Newzald** for subheads (H3–H6, Title Case) and **Source Serif 4** as the graceful
+  fallback. Forum ships one 400 weight, so the display role asks for
+  `--md-large-header-weight: 700` (synthesized) to keep the presence Beaufort Heavy
+  had; every rule that sets `--md-large-header-font` sets that weight beside it. Body is **Zilla Slab** (OFL, Google
   Fonts — the free stand-in for the PDF's Berlingske Slab; line-height 1.7 for long reading). **JetBrains Mono** for code/IDs/numbers.
   Game Terms keep their Capitalization mid-sentence. **Fixed type scale:** Material's
   responsive root-font-size scaling (125% → 137.5% at ≥100em → 150% at ≥125em) is
