@@ -41,9 +41,17 @@ Two non-negotiables drive every component:
   for big UPPERCASE display (H1/H2 — "BROWSE RULES"), **Petrona** (OFL, Google Fonts —
   the free stand-in for the PDF's Newzald) for subheads (H3–H6, Title Case) and the
   small-caps labels, and **Source Serif 4** as the graceful fallback. No commercial
-  face is loaded any more; every default is OFL and served by Google Fonts. Forum ships one 400 weight, so the display role asks for
-  `--md-large-header-weight: 700` (synthesized) to keep the presence Beaufort Heavy
-  had; every rule that sets `--md-large-header-font` sets that weight beside it. Body is **Zilla Slab** (OFL, Google
+  face is loaded any more; every default is OFL and served by Google Fonts.
+  **Both roles carry more than a family.** Every rule that sets
+  `--md-large-header-font` also sets `--md-large-header-weight` (700, synthesized —
+  Forum ships one 400 weight where Beaufort Heavy was heavy at 400),
+  `--md-large-header-tracking` (2px, to open the uppercase settings) and
+  `--md-large-header-stroke` (2px, painted in `currentColor` so it matches whatever
+  color the element has). Likewise every rule that sets `--md-small-header-font` sets
+  `--md-small-header-weight` (a real 700 — Petrona is a variable family). Three rules
+  that deliberately neutralize a `<b>` back to 400 keep their override. Display sizes
+  were all raised by one unit in whatever unit they were declared in, so a display
+  rule and its size-only overrides must be bumped together. Body is **Zilla Slab** (OFL, Google
   Fonts — the free stand-in for the PDF's Berlingske Slab; line-height 1.7 for long reading). **JetBrains Mono** for code/IDs/numbers.
   Game Terms keep their Capitalization mid-sentence. **Fixed type scale:** Material's
   responsive root-font-size scaling (125% → 137.5% at ≥100em → 150% at ≥125em) is
