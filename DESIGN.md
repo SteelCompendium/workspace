@@ -43,15 +43,19 @@ Two non-negotiables drive every component:
   small-caps labels, and **Source Serif 4** as the graceful fallback. No commercial
   face is loaded any more; every default is OFL and served by Google Fonts.
   **Both roles carry more than a family.** Every rule that sets
-  `--md-large-header-font` also sets `--md-large-header-weight` (700, synthesized —
-  Forum ships one 400 weight where Beaufort Heavy was heavy at 400),
+  `--md-large-header-font` also sets `--md-large-header-weight`,
   `--md-large-header-tracking` (2px, to open the uppercase settings) and
   `--md-large-header-stroke` (2px, painted in `currentColor` so it matches whatever
-  color the element has). Likewise every rule that sets `--md-small-header-font` sets
-  `--md-small-header-weight` (a real 700 — Petrona is a variable family). Three rules
-  that deliberately neutralize a `<b>` back to 400 keep their override. Display sizes
-  were all raised by one unit in whatever unit they were declared in, so a display
-  rule and its size-only overrides must be bumped together. Body is **Zilla Slab** (OFL, Google
+  color the element has). **The display weight stays 400 on purpose:** Forum has no
+  bold cut, so asking for 700 gets a synthesized smear of the 400 outlines rather
+  than Forum bold. The bold look is the stroke — to make display type heavier, raise
+  the stroke, never the weight. Sizes are a **multiplier, not an offset**: display
+  sizes span 1.05rem to 5em, so every display `font-size` is written as
+  `calc(<base> * var(--md-large-header-scale))` (currently 1.2) and keeps its own
+  base, letting the role rescale in proportion from one number. Likewise every rule
+  that sets `--md-small-header-font` sets `--md-small-header-weight` — a real 700,
+  since Petrona is a variable family, so no stroke is needed there. Three rules that
+  deliberately neutralize a `<b>` back to 400 keep their override. Body is **Zilla Slab** (OFL, Google
   Fonts — the free stand-in for the PDF's Berlingske Slab; line-height 1.7 for long reading). **JetBrains Mono** for code/IDs/numbers.
   Game Terms keep their Capitalization mid-sentence. **Fixed type scale:** Material's
   responsive root-font-size scaling (125% → 137.5% at ≥100em → 150% at ≥125em) is
