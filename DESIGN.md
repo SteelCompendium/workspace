@@ -38,9 +38,10 @@ Two non-negotiables drive every component:
   the signature mode; light "default" is fully supported. (Alternate Parchment/Obsidian
   themes exist but are hidden until fully baked — SC-218.)
 - **Type.** **Forum** (OFL, Google Fonts — the free stand-in for the PDF's Beaufort)
-  for big UPPERCASE display (H1/H2 — "BROWSE RULES"), with the commercial **Test
-  Newzald** for subheads (H3–H6, Title Case) and **Source Serif 4** as the graceful
-  fallback. Forum ships one 400 weight, so the display role asks for
+  for big UPPERCASE display (H1/H2 — "BROWSE RULES"), **Petrona** (OFL, Google Fonts —
+  the free stand-in for the PDF's Newzald) for subheads (H3–H6, Title Case) and the
+  small-caps labels, and **Source Serif 4** as the graceful fallback. No commercial
+  face is loaded any more; every default is OFL and served by Google Fonts. Forum ships one 400 weight, so the display role asks for
   `--md-large-header-weight: 700` (synthesized) to keep the presence Beaufort Heavy
   had; every rule that sets `--md-large-header-font` sets that weight beside it. Body is **Zilla Slab** (OFL, Google
   Fonts — the free stand-in for the PDF's Berlingske Slab; line-height 1.7 for long reading). **JetBrains Mono** for code/IDs/numbers.

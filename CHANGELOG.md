@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **v2 site: the subhead face is now Petrona (Google Fonts).** H3 through H6 and the
+  small-caps labels on statblocks and cards used Test Newzald, loaded from a
+  third-party font mirror; they now use Petrona, an OFL variable serif served by
+  Google Fonts, as the free stand-in for the PDF's Newzald. With Forum already in
+  Beaufort's place, the site no longer loads any commercial face. The Settings
+  panel's heading-font choices list Petrona where they listed Test Newzald.
+
 - **v2 site: the display heading face is now Forum (Google Fonts).** Big uppercase
   H1/H2 headings previously used Beaufort W01 Heavy, loaded from a third-party font
   mirror; they now use Forum, an OFL face served by Google Fonts, as the free stand-in
