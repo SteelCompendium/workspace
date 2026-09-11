@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **v2 site: the display type got heavier and larger.** Everything set in Forum —
+  H1 and H2, statblock and card names, role lines, band titles, stat numerals, the
+  trait drop cap — is one unit larger, tracked out by 2px, and drawn with a 2px
+  outline in its own color. Everything set in Petrona — subheads and every
+  small-caps label — is now weight 700. Long names such as "Goblin Warrior" and the
+  home page H1 now wrap onto two lines at the larger size.
+
 - **v2 site: the subhead face is now Petrona (Google Fonts).** H3 through H6 and the
   small-caps labels on statblocks and cards used Test Newzald, loaded from a
   third-party font mirror; they now use Petrona, an OFL variable serif served by
