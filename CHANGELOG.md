@@ -8,6 +8,14 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **v2 site: the downtime project goal reads in the display face (SC-315).** On a
+  project card the goal numeral sat inside the head's display slot, inheriting its
+  size, tracking and outline, but was set in the code font — so "GOAL 3,000" read
+  as two different faces. It now uses the display face like the word beside it,
+  with tabular figures for the alignment the code font was there for. This was the
+  only place on the site where display-size text was not the display face; the
+  small code-font numerals on chips and badges are deliberate and unchanged.
+
 - **v2 site: the display type got heavier and larger.** Everything set in Forum —
   H1 and H2, statblock and card names, role lines, band titles, stat numerals, the
   trait drop cap — is 1.2x larger, tracked out by 2px, and drawn with a 2px outline
