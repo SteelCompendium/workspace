@@ -1143,3 +1143,20 @@ enumerated-delta assertion, and ships `sc202-r6c-rebaseline.txt` for the ONE san
 (9 FINAL-ASK items in the ledger; draft at `sc202-comment-final-ask.md`). Landing still the
 dispatcher's move. **Verify:** `git -C ../worktrees/sc202-visual-harness-obsidian/draw-steel-elements
 log --oneline origin/develop..HEAD` → 14 commits ending `d0fed38` (+6c's).
+
+### 2026-09-13 — SC-202: ALL ROUNDS DONE; whole branch LAND-READY at dse `e12c6bd` (18 commits on develop `8b65a14`) + worktree justfile `d85fc4e`; FINAL SANCTION ASK POSTED (In Progress + Needs Review)
+Round 6c (realprint = Obsidian's real print; twin-delta assertion with a measured 4-property
+allowed set + self-test) reviewed APPROVE 2026-09-13 after a rate-limit gap (09-09 → 09-13;
+develop unmoved). **Landing needs Scott's word on the ask, then the dispatcher applies
+`sc202-r6c-rebaseline.txt` (252 lines, full replacement) + `sc202-r6c-r{3,4}widening-update.txt`
+(8) → 260-line baseline** (dated backup + dse-verify record), lands via `land-stack`
+(dse tracked branch `develop`; the superproject pointer bump + the justfile commit), then
+SC-202 → Done. Eight design questions parked in the ask (silence = keep). Filed: SC-316
+(PDF blank first page + Read-only chip prints); SC-287 note (camera shell Chromium 106).
+**If Scott says "B"** (keep twin==realprint byte rule) or declines: 6c's realprint re-point
+is the only part to revisit; rounds 3–6b stand. **Verify:**
+`git -C ../worktrees/sc202-visual-harness-obsidian/draw-steel-elements log --oneline origin/develop..HEAD`
+→ 18 commits ending `e12c6bd`; `bash .superpowers/sdd/check-freeze.sh <worktree shots>` →
+`FREEZE VIOLATED (252 checksum mismatches, 0 missing)` (expected until the rebaseline is
+applied); `cd <worktree shots> && sha256sum -c .superpowers/sdd/sc202-visual-harness-obsidian/sc202-r6c-rebaseline.txt`
+→ 252 OK.
