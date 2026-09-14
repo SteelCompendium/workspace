@@ -10,15 +10,6 @@ go under an *Internal* sub-heading.
 
 - **Display headers: the outline now scales with size (SC-315).** The Forum display role painted a fixed 2px stroke on every header, from the page title down to 32px card heads, so card names and the goal numeral looked bloated. The stroke is now 0.02em, unchanged on the page title and a hairline on card heads and stat values.
 
-- **Site: an ability's cost/type line no longer competes with its name for size
-  (SC-115).** On every card that uses the shared ability header — the Browse kit
-  tile's signature ability, a class ability page, a kit detail page, an embedded
-  card — the small line in the top-right corner (a resource cost like "9 Ferocity",
-  "Free Strike", or "Signature") rendered nearly as large as the ability's own name.
-  It now matches the size of the small-caps subtitle line underneath the name (e.g.
-  "Fury" or "Shining Armor"), so it reads as a quiet detail instead of a second
-  heading.
-
 - **DSE conditions (SC-277):** Standard and custom conditions support saved icon choices with search and reset to default. Color swatches now display their colors in Obsidian.
 
 - **DSE plugin: every display family now renders a full Steel card, not a prose wall
@@ -618,6 +609,17 @@ go under an *Internal* sub-heading.
   Every consumer was re-pointed to its classified slot with zero rendering
   change — freeze and parity gates stayed green throughout. Groundwork only,
   for user-customizable fonts (SC-112).
+
+## 2026-09-14 — Ability cost / "Signature" line at subtitle size (SC-115; v2 2f4e8e2)
+
+- **Site: an ability's cost/type line no longer competes with its name for size
+  (SC-115).** On every card that uses the shared ability header — the Browse kit
+  tile's signature ability, a class ability page, a kit detail page, an embedded
+  card — the small line in the top-right corner (a resource cost like "9 Ferocity",
+  "Free Strike", or "Signature") rendered nearly as large as the ability's own name.
+  It now matches the size of the small-caps subtitle line underneath the name (e.g.
+  "Fury" or "Shining Armor"), so it reads as a quiet detail instead of a second
+  heading.
 
 ## 2026-09-13 — Heroes ability effects in source order + display/subhead fonts (SC-310, SC-315; steel-etl f90da5f)
 
