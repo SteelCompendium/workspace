@@ -129,6 +129,7 @@ monster.ogre.statblock
 | `feature.ability.{class}.level-{N}` | Class abilities at a level | `mcdm.heroes.v1/feature.ability.fury.level-1/brutal-slam` |
 | `feature.ability.{kit}` | Kit signature abilities | `mcdm.heroes.v1/feature.ability.panther/panther-strike` |
 | `feature.ability.common` | Common abilities (maneuvers, free strikes) | `mcdm.heroes.v1/feature.ability.common/grab` |
+| `feature.ability.treasure` | Abilities granted by a treasure rule page (e.g. an armor enhancement); flat, `granted_by` frontmatter link | `mcdm.heroes.v1/feature.ability.treasure/dragons-fire` |
 | `feature.trait.{class}.level-{N}` | Class traits at a level | `mcdm.heroes.v1/feature.trait.fury.level-1/growing-ferocity` |
 | `feature.trait.{class}.level-{N}.{kit}` | Kit-specific traits | `mcdm.heroes.v1/feature.trait.fury.level-1.boren/kit-bonuses` |
 | `ancestry` | Ancestries | `mcdm.heroes.v1/ancestry/dwarf` |
