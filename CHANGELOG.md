@@ -8,42 +8,6 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
-- **Heroes ability cards and data now keep every power roll in source order (SC-310):**
-  Divine Dragon shows both its breath and claw tables; abilities whose Effect precedes
-  the roll no longer show the roll first.
-
-- **v2 site: the downtime project goal reads in the display face (SC-315).** On a
-  project card the goal numeral sat inside the head's display slot, inheriting its
-  size, tracking and outline, but was set in the code font — so "GOAL 3,000" read
-  as two different faces. It now uses the display face like the word beside it,
-  with tabular figures for the alignment the code font was there for. This was the
-  only place on the site where display-size text was not the display face; the
-  small code-font numerals on chips and badges are deliberate and unchanged.
-
-- **v2 site: the display type got heavier and larger.** Everything set in Forum —
-  H1 and H2, statblock and card names, role lines, band titles, stat numerals, the
-  trait drop cap — is 1.2x larger, tracked out by 2px, and drawn with a 2px outline
-  in its own color. That outline is what makes the display type read bold: Forum has
-  no bold cut, so its weight stays at 400 rather than letting the browser synthesize
-  one. Everything set in Petrona — subheads and every small-caps label — is a real
-  weight 700. Long names such as "Goblin Warrior" and the home page H1 now wrap onto
-  two lines at the larger size.
-
-- **v2 site: the subhead face is now Petrona (Google Fonts).** H3 through H6 and the
-  small-caps labels on statblocks and cards used Test Newzald, loaded from a
-  third-party font mirror; they now use Petrona, an OFL variable serif served by
-  Google Fonts, as the free stand-in for the PDF's Newzald. With Forum already in
-  Beaufort's place, the site no longer loads any commercial face. The Settings
-  panel's heading-font choices list Petrona where they listed Test Newzald.
-
-- **v2 site: the display heading face is now Forum (Google Fonts).** Big uppercase
-  H1/H2 headings previously used Beaufort W01 Heavy, loaded from a third-party font
-  mirror; they now use Forum, an OFL face served by Google Fonts, as the free stand-in
-  for the PDF's Beaufort. The Settings panel's heading-font choices list Forum in
-  Beaufort's place. Forum has a single 400 weight where Beaufort W01 Heavy was heavy
-  at 400, so the display role now asks for bold — statblock names, card names, band
-  titles and stat numerals keep the weight they had.
-
 - **DSE conditions (SC-277):** Standard and custom conditions support saved icon choices with search and reset to default. Color swatches now display their colors in Obsidian.
 
 - **DSE plugin: every display family now renders a full Steel card, not a prose wall
@@ -643,6 +607,44 @@ go under an *Internal* sub-heading.
   Every consumer was re-pointed to its classified slot with zero rendering
   change — freeze and parity gates stayed green throughout. Groundwork only,
   for user-customizable fonts (SC-112).
+
+## 2026-09-13 — Heroes ability effects in source order + display/subhead fonts (SC-310, SC-315; steel-etl f90da5f)
+
+- **Heroes ability cards and data now keep every power roll in source order (SC-310):**
+  Divine Dragon shows both its breath and claw tables; abilities whose Effect precedes
+  the roll no longer show the roll first.
+
+- **v2 site: the downtime project goal reads in the display face (SC-315).** On a
+  project card the goal numeral sat inside the head's display slot, inheriting its
+  size, tracking and outline, but was set in the code font — so "GOAL 3,000" read
+  as two different faces. It now uses the display face like the word beside it,
+  with tabular figures for the alignment the code font was there for. This was the
+  only place on the site where display-size text was not the display face; the
+  small code-font numerals on chips and badges are deliberate and unchanged.
+
+- **v2 site: the display type got heavier and larger.** Everything set in Forum —
+  H1 and H2, statblock and card names, role lines, band titles, stat numerals, the
+  trait drop cap — is 1.2x larger, tracked out by 2px, and drawn with a 2px outline
+  in its own color. That outline is what makes the display type read bold: Forum has
+  no bold cut, so its weight stays at 400 rather than letting the browser synthesize
+  one. Everything set in Petrona — subheads and every small-caps label — is a real
+  weight 700. Long names such as "Goblin Warrior" and the home page H1 now wrap onto
+  two lines at the larger size.
+
+- **v2 site: the subhead face is now Petrona (Google Fonts).** H3 through H6 and the
+  small-caps labels on statblocks and cards used Test Newzald, loaded from a
+  third-party font mirror; they now use Petrona, an OFL variable serif served by
+  Google Fonts, as the free stand-in for the PDF's Newzald. With Forum already in
+  Beaufort's place, the site no longer loads any commercial face. The Settings
+  panel's heading-font choices list Petrona where they listed Test Newzald.
+
+- **v2 site: the display heading face is now Forum (Google Fonts).** Big uppercase
+  H1/H2 headings previously used Beaufort W01 Heavy, loaded from a third-party font
+  mirror; they now use Forum, an OFL face served by Google Fonts, as the free stand-in
+  for the PDF's Beaufort. The Settings panel's heading-font choices list Forum in
+  Beaufort's place. Forum has a single 400 weight where Beaufort W01 Heavy was heavy
+  at 400, so the display role now asks for bold — statblock names, card names, band
+  titles and stat numerals keep the weight they had.
 
 ## 2026-09-07 — Statblock abilities in exact book order + nested effects data (SC-308, SC-309; steel-etl bdab23e)
 
