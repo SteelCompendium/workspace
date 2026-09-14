@@ -149,6 +149,12 @@ go under an *Internal* sub-heading.
   whether the ability inflicts it, requires it, or removes it; flavor text doesn't
   count, so Assassinate's "an already weakened foe" and Accelerate's "the world has
   slowed down" stay out of those lists.
+- **Filter for signature abilities (SC-92).** The feature Search & Filter page gained a
+  **Cost** chip row — Signature, No cost, 1, 3, 5, 7, 9, 11 — so "show me every signature
+  ability" is one click (100 abilities), and it composes with the existing
+  Source/Level/Action/Keyword/Condition facets (e.g. "my Conduit's signature ability" → 8).
+  The chip is the same cost the card already shows in its head, so a filtered result reads
+  "Signature" on its face; no new UI element was needed there.
 
 - **DSE plugin: the initiative tracker wears the stamina instruments, and the portrait
   is the turn control (SC-183).** Every hero row and expanded enemy row now mounts the
