@@ -8,6 +8,10 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **Heroes ability cards and data now keep every power roll in source order (SC-310):**
+  Divine Dragon shows both its breath and claw tables; abilities whose Effect precedes
+  the roll no longer show the roll first.
+
 - **v2 site: the downtime project goal reads in the display face (SC-315).** On a
   project card the goal numeral sat inside the head's display slot, inheriting its
   size, tracking and outline, but was set in the code font — so "GOAL 3,000" read
