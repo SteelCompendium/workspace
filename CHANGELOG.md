@@ -8,6 +8,8 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **Display headers: the outline now scales with size (SC-315).** The Forum display role painted a fixed 2px stroke on every header, from the page title down to 32px card heads, so card names and the goal numeral looked bloated. The stroke is now 0.02em, unchanged on the page title and a hairline on card heads and stat values.
+
 - **DSE conditions (SC-277):** Standard and custom conditions support saved icon choices with search and reset to default. Color swatches now display their colors in Obsidian.
 
 - **DSE plugin: every display family now renders a full Steel card, not a prose wall
