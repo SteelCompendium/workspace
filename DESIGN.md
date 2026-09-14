@@ -37,7 +37,7 @@ Two non-negotiables drive every component:
   and always as a thin border, glyph, or gradient band, never a fill. Dark "slate" is
   the signature mode; light "default" is fully supported. (Alternate Parchment/Obsidian
   themes exist but are hidden until fully baked — SC-218.)
-- **Type.** **Forum** (OFL, Google Fonts — the free stand-in for the PDF's Beaufort)
+- **Type.** **Steel Forum** (the site's self-hosted OFL derivative of Forum and free stand-in for the PDF's Beaufort)
   for big UPPERCASE display (H1/H2 — "BROWSE RULES"), **Petrona** (OFL, Google Fonts —
   the free stand-in for the PDF's Newzald) for subheads (H3–H6, Title Case) and the
   small-caps labels, and **Source Serif 4** as the graceful fallback. No commercial
@@ -45,14 +45,11 @@ Two non-negotiables drive every component:
   **Both roles carry more than a family.** Every rule that sets
   `--md-large-header-font` also sets `--md-large-header-weight`,
   `--md-large-header-tracking` (2px, to open the uppercase settings) and
-  `--md-large-header-stroke` (0.02em, painted in `currentColor` so it matches whatever
-  color the element has). **The display weight stays 400 on purpose:** Forum has no
-  bold cut, so asking for 700 gets a synthesized smear of the 400 outlines rather
-  than Forum bold. The bold look is the stroke — to make display type heavier, raise
-  the stroke, never the weight. **The stroke is in em, never px:** the role spans the
-  ~96px page h1 down to 32px card heads, and a fixed 2px outline that firms up the
-  h1 bloats a card head (SC-315); in em it scales with each slot (~1.9px on the h1,
-  ~0.6px on a card head). Sizes are a **multiplier, not an offset**: display
+  `--md-large-header-stroke` (zero). **The display role uses Steel Forum's real 700
+  face:** its outlines are expanded by glyph class with counters retained, narrow
+  forms and punctuation corrected separately, and advances opened modestly. It replaces
+  the old CSS-stroked Forum 400 workaround; never add a stroke on top of the bold.
+  Sizes are a **multiplier, not an offset**: display
   sizes span 1.05rem to 5em, so every display `font-size` is written as
   `calc(<base> * var(--md-large-header-scale))` (currently 1.2) and keeps its own
   base, letting the role rescale in proportion from one number. Likewise every rule
