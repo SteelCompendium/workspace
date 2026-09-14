@@ -734,3 +734,41 @@ hoisted as usual). **Cost.** Registry **+1** (3,085 → 3,086):
 `mcdm.heroes.v1/monster.summon.elementalist.statblock/source-of-earth`. Purely additive —
 verified against the prior registry: nothing changed or removed. `gen --all`, `site`,
 `go test ./...`, `validate` all clean. (Linear SC-180.)
+
+## 2026-09-14 — `feature.ability.treasure` bucket: Dragon's Fire moved out of `common`
+
+Scott reported (ticket description): "In the site, 'Dragon's Fire' is listed under
+'common'. Im not sure where its supposed to go, but i doubt it goes there." Root cause:
+`steel-etl/input/heroes/Draw Steel Heroes.md` tags Dragon's Fire `<!-- @type: ability -->`
+directly under the `##### Imbue Armor` rule section (`<!-- @type: rule | @group: treasure |
+@id: enhancement -->`), granted by the 9th-level Dragon Soul II armor enhancement.
+`AbilityParser` only recognised class/kit/ancestry/treasure ancestors as an ability's
+parent — a `rule` ancestor wasn't one, so it fell to the flat `feature.ability.common`
+bucket alongside actual universal actions (Grab, Free Strike, the two weapon free
+strikes, claw-dirt, escape-grab, knockback).
+
+`AbilityParser` (`internal/content/ability.go`) now recognises a `rule` ancestor tagged
+`@group: treasure` as the ability's nearest recognised ancestor (when no closer
+class/kit/ancestry/treasure ancestor exists): the ability lands in a new flat
+`feature.ability.treasure` bucket, carrying the granting rule page as a `granted_by`
+frontmatter link — never path-nested, per this doc's "relationships are frontmatter
+links, never path nesting" rule. A `rule` ancestor with any OTHER group stays
+unrecognised (transparent), so every other groupless ability is unaffected.
+`FeatureParser` (`feature.go`) got the same generic carve-out for parity (flat
+`feature.treasure`, same `granted_by` link) — no corpus feature hits it today, but the
+gap was the same shape. New shared helper: `findTreasureRuleAncestor`
+(`internal/content/helpers.go`).
+
+Site: Browse now shows Features → Abilities → Treasure → Dragon's Fire; the Imbue Armor
+rule page still renders the ability card inline under Dragon Soul II via
+`granted_by`-independent subtree rendering (the card was already embedded by document
+position, not by the code). `searchBoostFor`'s `feature.ability.common` search-ranking
+boost no longer applies to Dragon's Fire (it's treasure-granted, not a universal action)
+— the bucket drops from 24 to 23 pages (`docs/site-builder.md` updated).
+
+**Cost.** Registry unchanged at 3,086 — a pure rename, not an addition. Exactly **one**
+code changed: `mcdm.heroes.v1/feature.ability.common/dragons-fire` →
+`mcdm.heroes.v1/feature.ability.treasure/dragons-fire`. Verified against the prior
+registry (diffed the full 3,086-code list before/after): no other code added, removed, or
+changed. `go build`/`go vet`/`go test -race` all green, `gen --all` + `site --config
+../v2/site.yaml` both exit 0. (Linear SC-323.)

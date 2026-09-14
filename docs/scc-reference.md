@@ -78,6 +78,10 @@ likely just noise. Decided 2026-06-18.
 - `feature.ability.<entity>…` — a feature with combat rigor (`ability`).
 - `feature.trait.<entity>…` — **narrow**: ancestry traits + monster statblock passives only.
 - `feature.<entity>…` — everything else (plain feature; hub-and-spoke).
+- `feature.ability.treasure/<id>` (and the mirrored plain-feature `feature.treasure/<id>`)
+  — abilities/features granted by a treasure rule page (e.g. an armor/weapon/implement
+  enhancement), flat, with a `granted_by` frontmatter link to the granting `rule.treasure/
+  <id>` code — never path-nested (SC-323).
 
 ## Gods & Religion
 
