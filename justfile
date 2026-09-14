@@ -15,6 +15,15 @@ org := "git@github.com:SteelCompendium"
 default:
 	just --list
 
+# SC-202 r6a: resolve draw-steel-elements/visual-harness's pinned Obsidian app.css (fetch +
+# verify against the committed version+sha256 pin, gitignored cache, offline fallback to the
+# installed Obsidian with a WARNING — see draw-steel-elements/visual-harness/README.md ->
+# "Obsidian app.css pin"). `npm run shots` already runs this itself via an npm `preshots`
+# hook; this recipe is for running it standalone, e.g. to pre-warm the cache before going
+# offline. Requires devbox's node/npm on PATH: `devbox run -- just dse-host-css`.
+dse-host-css:
+	cd "{{justfile_directory()}}/draw-steel-elements" && npm run host-css
+
 # On a fresh machine, prefer cloning with submodules directly:
 #   git clone --recurse-submodules git@github.com:SteelCompendium/workspace.git
 # Authored repos are submodules; the single published data repo is data-unified
