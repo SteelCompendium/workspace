@@ -1160,3 +1160,14 @@ is the only part to revisit; rounds 3–6b stand. **Verify:**
 `FREEZE VIOLATED (252 checksum mismatches, 0 missing)` (expected until the rebaseline is
 applied); `cd <worktree shots> && sha256sum -c .superpowers/sdd/sc202-visual-harness-obsidian/sc202-r6c-rebaseline.txt`
 → 252 OK.
+
+### 2026-09-14 — SC-202 LANDED + DONE (dse `develop` @ `e12c6bd`, workspace `76c4c9c`); sanctioned rebaseline 252 → 260 applied
+Scott: "Lets land this thing". The browser harness now renders under Obsidian's pinned
+real `app.css` (1.13.7, fetched + hash-verified, `npm run host-css`), with the real
+reading-view DOM chain, an applied-sheet sentinel, seven host-leak families, and print
+captures under Obsidian's real print conditions; `freeze OK (260/260)` is the expected
+line. Tickets from his ruling: SC-317 (external-link icon), SC-318 (heading sizes), SC-319
+(task-list checkbox theming); also SC-316 (PDF blank first page + Read-only chip) and a
+note on SC-287 (camera shell Chromium 106). Ledgers + all round reports/reviews preserved in
+`docs/superpowers/dse-overhaul/build-ledgers/sc202-visual-harness-obsidian/`. Worktree
+removed. NOTHING IN FLIGHT for SC-202.

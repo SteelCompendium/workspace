@@ -189,6 +189,28 @@ didn't mount) plus human review of the PNGs.
   `freeze-baseline.sha256.pre-<effort>-bak`, (3) applies the lines, (4) appends a dated
   entry to this file quoting the sanction. Widenings (additions-only) need no sanction —
   the dispatcher verifies additions-only by sorted-diff and applies at landing.
+  - **2026-09-14, SC-202 (Obsidian host CSS in the harness, worktree
+    `sc202-visual-harness-obsidian`, landed dse `develop` @ `e12c6bd`): SANCTIONED
+    full-set rebaseline 252 → 260 — every one of the 252 frozen lines moved once, plus the
+    pending round-3 (6) and round-4 (2) widening lines re-issued.** Cause: `--steel-
+    realprint` now renders under Obsidian's real print conditions (option C: pinned
+    1.13.7 `app.css` on, `body.theme-light` forced, `.print` container — black on white,
+    serif) and `--steel-print` (the in-app preview twin) renders under the real sheet;
+    the SC-170 twin==realprint byte rule is replaced by `assertPrintTwinDelta` (same DOM,
+    no horizontal/size drift, vertical drift < 24 px, only the measured reachable print
+    properties `color`/`fontFamily`/`webkitPrintColorAdjust`/`backgroundImage` + the
+    native-control widening may differ; self-test can-fails built in). **Scott's sanction,
+    SC-202 comment 2026-09-14, replying to the ask "Sanctioned = the dispatcher applies the
+    rebaseline at landing and lands the branch … 'sanctioned' is enough": "Lets land this
+    thing".** Deliverable `sc202-r6c-rebaseline.txt` (252) + `sc202-r6c-r{3,4}widening-
+    update.txt` (8), deterministic across three clean sweeps, independently re-verified by
+    the round-6c reviewer twice. Applied by the SC-202 ticket-owner (no dispatcher session):
+    backup `freeze-baseline.sha256.pre-sc202-bak`; verified after applying against the
+    landed worktree tree: `freeze OK (260/260 frozen print PNGs byte-identical — steel-print
+    twin + steel-realprint since SC-170)`, exit 0. **Expected line now: `freeze OK
+    (260/260 …)` on `origin/develop` `e12c6bd`.** Note for every future rebaseline: print
+    shots now depend on the pinned Obsidian sheet (`visual-harness/obsidian-app-css.pin.mjs`);
+    bumping that pin is itself a sanctioned-rebaseline event.
   - **2026-09-06, RESTORE after the scratch-dir wipe: 224 → 252, regenerated (not a
     rebaseline, not a sanction event).** An SC-306 session ran
     `rm -rf workspace/.superpowers` at 12:45 ET, deleting `check-freeze.sh`,
