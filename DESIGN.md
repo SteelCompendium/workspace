@@ -169,7 +169,12 @@ The header is a **3-lane × 2-column grid** of six positionally-named slots:
   previously reused the large-header recipe at a size that nearly matched the name, so an
   ability's cost or its "Signature" fallback read as a competing second heading instead of
   secondary metadata); chips read smaller still. Every slot is independently optional
-  (empty = a gap, by design).
+  (empty = a gap, by design). **One sanctioned exception**: the downtime project card's
+  goal numeral ("GOAL 3,000", `right-primary` on `.pj__head`) keeps the pre-SC-115 display
+  recipe via a higher-specificity override in `steel-project.css` — SC-315 had deliberately
+  put that value in the display face at full display size, the only place a *value* (not a
+  name/label) carries it, and the global `--mini` shrink would otherwise have silently
+  reversed that ruling.
 - **Fill guideline**: `left-eyebrow` = the kind-noun (the "…is a ___" phrase, specialized
   per family — Monster/Companion/…, Feature/Trait, Dynamic Terrain/Fixture/…); `left-deck` =
   provenance as `class · subclass`; `right-eyebrow` = Level; `right-primary` = the headline
