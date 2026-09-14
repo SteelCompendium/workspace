@@ -8,8 +8,6 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
-- **Dragon's Fire moves out of Common Abilities into a new Treasures bucket (SC-323).** The Dragon Soul II armor enhancement's granted ability was misclassified under Browse → Abilities → Common alongside universal actions like Grab and Free Strike. It now lives under Browse → Abilities → Treasures; its permalink changes from `…feature.ability.common/dragons-fire` to `…feature.ability.treasure/dragons-fire`.
-
 - **Display headers: the outline now scales with size (SC-315).** The Forum display role painted a fixed 2px stroke on every header, from the page title down to 32px card heads, so card names and the goal numeral looked bloated. The stroke is now 0.02em, unchanged on the page title and a hairline on card heads and stat values.
 
 - **DSE plugin: the light color scheme has its own, darker status colors, and three
@@ -610,6 +608,10 @@ go under an *Internal* sub-heading.
   Every consumer was re-pointed to its classified slot with zero rendering
   change — freeze and parity gates stayed green throughout. Groundwork only,
   for user-customizable fonts (SC-112).
+
+## 2026-09-14 — Dragon's Fire moves to a Treasures ability bucket (SC-323; steel-etl c4e0526, v2 1108492)
+
+- **Dragon's Fire moves out of Common Abilities into a new Treasures bucket (SC-323).** The Dragon Soul II armor enhancement's granted ability was misclassified under Browse → Abilities → Common alongside universal actions like Grab and Free Strike. It now lives under Browse → Abilities → Treasures; its permalink changes from `…feature.ability.common/dragons-fire` to `…feature.ability.treasure/dragons-fire`.
 
 ## 2026-09-14 — Ability cost / "Signature" line at subtitle size (SC-115; v2 2f4e8e2)
 
