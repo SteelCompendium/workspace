@@ -10,6 +10,18 @@ go under an *Internal* sub-heading.
 
 - **Display headers: the outline now scales with size (SC-315).** The Forum display role painted a fixed 2px stroke on every header, from the page title down to 32px card heads, so card names and the goal numeral looked bloated. The stroke is now 0.02em, unchanged on the page title and a hairline on card heads and stat values.
 
+- **DSE plugin: the light color scheme has its own, darker status colors, and three
+  color-only signals now show a hover tooltip (SC-196).** Every color-coded state —
+  Stamina healthy (green), winded (amber), dying (red), and temporary Stamina (purple);
+  the critical-hit power-roll badge (gold); malice and victory points
+  (gold); warnings (orange); and the initiative tracker's selection ring (red), plus the turn-done and danger accents that share those colors — used to
+  reuse the dark scheme's exact colors in light mode, where several were too pale to read
+  reliably against a white background. Light mode now has its own darker version of all
+  eleven, checked against the WCAG AA contrast minimum; the dark scheme is unchanged. Three
+  of those surfaces had no other way to tell the state apart by eye: hovering the `+N`
+  temporary-Stamina badge, a selected creature in the initiative tracker, or a rolled
+  power-roll result row now shows a tooltip naming what's highlighted, in words.
+
 - **DSE conditions (SC-277):** Standard and custom conditions support saved icon choices with search and reset to default. Color swatches now display their colors in Obsidian.
 
 - **DSE plugin: every display family now renders a full Steel card, not a prose wall
