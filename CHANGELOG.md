@@ -32,6 +32,14 @@ go under an *Internal* sub-heading.
   temporary-Stamina badge, a selected creature in the initiative tracker, or a rolled
   power-roll result row now shows a tooltip naming what's highlighted, in words.
 
+- **DSE Montage Test tracker: the quick-entry trio is back, and past rounds are now
+  editable from the board (SC-299).** An empty cell in the round currently in play once
+  again carries the three one-click buttons (log a success, a failure, or an assist with
+  no skill/note) that the settled design always called for; a spec omission had left the
+  board wired only to the full "Log an action…" sheet. An empty cell from an earlier round
+  is now a click target too, opening the same sheet pre-filled for that round, so a
+  Director who forgot to log a hero's test can add it after the fact instead of being
+  stuck.
 - **DSE conditions (SC-277):** Standard and custom conditions support saved icon choices with search and reset to default. Color swatches now display their colors in Obsidian.
 
 - **DSE plugin: every display family now renders a full Steel card, not a prose wall
