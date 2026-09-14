@@ -747,24 +747,38 @@ parent — a `rule` ancestor wasn't one, so it fell to the flat `feature.ability
 bucket alongside actual universal actions (Grab, Free Strike, the two weapon free
 strikes, claw-dirt, escape-grab, knockback).
 
-`AbilityParser` (`internal/content/ability.go`) now recognises a `rule` ancestor tagged
-`@group: treasure` as the ability's nearest recognised ancestor (when no closer
-class/kit/ancestry/treasure ancestor exists): the ability lands in a new flat
-`feature.ability.treasure` bucket, carrying the granting rule page as a `granted_by`
-frontmatter link — never path-nested, per this doc's "relationships are frontmatter
-links, never path nesting" rule. A `rule` ancestor with any OTHER group stays
-unrecognised (transparent), so every other groupless ability is unaffected.
-`FeatureParser` (`feature.go`) got the same generic carve-out for parity (flat
-`feature.treasure`, same `granted_by` link) — no corpus feature hits it today, but the
-gap was the same shape. New shared helper: `findTreasureRuleAncestor`
-(`internal/content/helpers.go`).
+`AbilityParser` (`internal/content/ability.go`) recognises a `rule` ancestor tagged
+`@group: treasure` as a treasure-granted ability's parent via a single **nearest-
+recognised-ancestor-wins** walk shared with class/kit/ancestry/treasure — whichever of
+those five is closest to the ability decides its bucket, so a treasure rule nested
+inside e.g. a class section would still correctly win the treasure bucket over the more
+distant class. The ability lands in a new flat `feature.ability.treasure` bucket,
+carrying the granting rule page as a `granted_by` frontmatter link — never path-nested,
+per this doc's "relationships are frontmatter links, never path nesting" rule. A `rule`
+ancestor with any OTHER group stays unrecognised (transparent), so every other
+groupless ability is unaffected. `FeatureParser` (`feature.go`) got the identical
+nearest-ancestor-wins carve-out (flat `feature.treasure`, same `granted_by` link,
+class/kit/ancestry/companion cleared when the treasure rule wins) via the shared
+`findTreasureRuleAncestor` helper (`internal/content/helpers.go`), which also recognises
+a `companion` ancestor (a `feature-group`'s `@companion` annotation) as a nearer stop —
+no corpus feature hits this carve-out today, but the two parsers now share one precedence
+rule instead of drifting. `granted_by` also reaches the JSON/YAML metadata (SDK
+transform allowlists) and the SCC API's `resolve/*.json` payload (a new `granted_by`
+field on `apiEntry`, omitted for every non-treasure-granted entry) — not markdown
+frontmatter alone.
 
-Site: Browse now shows Features → Abilities → Treasure → Dragon's Fire; the Imbue Armor
+Site: Browse now shows Features → Abilities → **Treasures** → Dragon's Fire (the bucket
+label parallels the existing "Kits" bucket — plural, not "Treasure"); the Imbue Armor
 rule page still renders the ability card inline under Dragon Soul II via
 `granted_by`-independent subtree rendering (the card was already embedded by document
-position, not by the code). `searchBoostFor`'s `feature.ability.common` search-ranking
-boost no longer applies to Dragon's Fire (it's treasure-granted, not a universal action)
-— the bucket drops from 24 to 23 pages (`docs/site-builder.md` updated).
+position, not by the code). The new bucket's leaf dirName ("treasure") collided with
+`richCardTypes`' "treasure" (the top-level treasure-ITEM type), so the site builder
+initially rendered the bucket index as treasure-chest item cards instead of ability
+preview cards — fixed by making `buildCardsContent` bail out for any `feature/**` leaf
+(`internal/site/cards.go`), so `buildFeatureIndexContent` always wins there.
+`searchBoostFor`'s `feature.ability.common` search-ranking boost no longer applies to
+Dragon's Fire (it's treasure-granted, not a universal action) — the bucket drops from 24
+to 23 pages (`docs/site-builder.md` updated).
 
 **Cost.** Registry unchanged at 3,086 — a pure rename, not an addition. Exactly **one**
 code changed: `mcdm.heroes.v1/feature.ability.common/dragons-fire` →

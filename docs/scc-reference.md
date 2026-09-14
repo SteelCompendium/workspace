@@ -81,7 +81,10 @@ likely just noise. Decided 2026-06-18.
 - `feature.ability.treasure/<id>` (and the mirrored plain-feature `feature.treasure/<id>`)
   — abilities/features granted by a treasure rule page (e.g. an armor/weapon/implement
   enhancement), flat, with a `granted_by` frontmatter link to the granting `rule.treasure/
-  <id>` code — never path-nested (SC-323).
+  <id>` code — never path-nested (SC-323). Nearest-recognised-ancestor-wins decides the
+  bucket, identically in both parsers: a treasure rule nested inside a class/kit/ancestry/
+  companion section still wins if it is nearer than that ancestor. Browse label:
+  **Treasures** (plural, parallels the "Kits" bucket) — Features → Abilities → Treasures.
 
 ## Gods & Religion
 
