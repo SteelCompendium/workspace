@@ -82,9 +82,15 @@ likely just noise. Decided 2026-06-18.
   — abilities/features granted by a treasure rule page (e.g. an armor/weapon/implement
   enhancement), flat, with a `granted_by` frontmatter link to the granting `rule.treasure/
   <id>` code — never path-nested (SC-323). Nearest-recognised-ancestor-wins decides the
-  bucket, identically in both parsers: a treasure rule nested inside a class/kit/ancestry/
-  companion section still wins if it is nearer than that ancestor. Browse label:
-  **Treasures** (plural, parallels the "Kits" bucket) — Features → Abilities → Treasures.
+  bucket in both parsers for class/kit/ancestry: a treasure rule nested inside a
+  class/kit/ancestry section still wins if it is nearer than that ancestor. The rule is
+  implemented twice — `AbilityParser`'s own inline walk (`internal/content/ability.go`)
+  and `FeatureParser` via the `findTreasureRuleAncestor` helper
+  (`internal/content/helpers.go`) — and only `FeatureParser`'s copy also stops on a
+  `companion` ancestor; `AbilityParser`'s separate, whole-tree companion lookup already
+  wins the path regardless of distance, independent of this precedence rule. Browse
+  label: **Treasures** (plural, parallels the "Kits" bucket) — Features → Abilities →
+  Treasures.
 
 ## Gods & Religion
 

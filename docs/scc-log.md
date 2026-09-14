@@ -756,13 +756,18 @@ distant class. The ability lands in a new flat `feature.ability.treasure` bucket
 carrying the granting rule page as a `granted_by` frontmatter link — never path-nested,
 per this doc's "relationships are frontmatter links, never path nesting" rule. A `rule`
 ancestor with any OTHER group stays unrecognised (transparent), so every other
-groupless ability is unaffected. `FeatureParser` (`feature.go`) got the identical
-nearest-ancestor-wins carve-out (flat `feature.treasure`, same `granted_by` link,
-class/kit/ancestry/companion cleared when the treasure rule wins) via the shared
-`findTreasureRuleAncestor` helper (`internal/content/helpers.go`), which also recognises
-a `companion` ancestor (a `feature-group`'s `@companion` annotation) as a nearer stop —
-no corpus feature hits this carve-out today, but the two parsers now share one precedence
-rule instead of drifting. `granted_by` also reaches the JSON/YAML metadata (SDK
+groupless ability is unaffected. `FeatureParser` (`feature.go`) got the same
+nearest-ancestor-wins precedence for class/kit/ancestry (flat `feature.treasure`, same
+`granted_by` link, class/kit/ancestry cleared when the treasure rule wins) — implemented
+separately from `AbilityParser`'s own inline walk, via its own
+`findTreasureRuleAncestor` helper (`internal/content/helpers.go`, `FeatureParser`'s only
+caller). Only `FeatureParser`'s copy also stops on a `companion` ancestor (a
+`feature-group`'s `@companion` annotation); `AbilityParser` has no `companion` case in
+its walk — its separate, whole-tree companion lookup already wins the ability's path
+regardless of distance, independent of this precedence rule. No corpus feature hits the
+carve-out today, but the two parsers' precedence rules for class/kit/ancestry no longer
+drift, even though the rule is implemented twice, not shared. `granted_by` also reaches
+the JSON/YAML metadata (SDK
 transform allowlists) and the SCC API's `resolve/*.json` payload (a new `granted_by`
 field on `apiEntry`, omitted for every non-treasure-granted entry) — not markdown
 frontmatter alone.
