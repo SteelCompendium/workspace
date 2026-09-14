@@ -8,11 +8,6 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
-- **Display headers now use a designed bold face (supersedes the SC-315 outline fix).** Steel Forum, a self-hosted OFL
-  derivative of Forum, adds a real 700 weight with corrected counters, narrow forms,
-  punctuation, and spacing. It replaces the painted-outline workaround, so headings
-  stay crisp and consistently weighted from page titles down to compact card labels.
-
 - **DSE plugin: the light color scheme has its own, darker status colors, and three
   color-only signals now show a hover tooltip (SC-196).** Every color-coded state —
   Stamina healthy (green), winded (amber), dying (red), and temporary Stamina (purple);
@@ -612,7 +607,12 @@ go under an *Internal* sub-heading.
   change — freeze and parity gates stayed green throughout. Groundwork only,
   for user-customizable fonts (SC-112).
 
-## 2026-09-14 — Ability cost / "Signature" line at subtitle size (SC-115; v2 2f4e8e2)
+## 2026-09-14 — Steel Forum bold + ability subtitle sizing (SC-115; v2 0393e79)
+
+- **Display headers now use a designed bold face (supersedes the SC-315 outline fix).** Steel Forum, a self-hosted OFL
+  derivative of Forum, adds a real 700 weight with corrected counters, narrow forms,
+  punctuation, and spacing. It replaces the painted-outline workaround, so headings
+  stay crisp and consistently weighted from page titles down to compact card labels.
 
 - **Site: an ability's cost/type line no longer competes with its name for size
   (SC-115).** On every card that uses the shared ability header — the Browse kit
