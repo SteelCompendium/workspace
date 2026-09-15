@@ -43,21 +43,29 @@ Two non-negotiables drive every component:
   small-caps labels, and **Source Serif 4** as the graceful fallback. No commercial
   face is loaded any more; every default is OFL and served by Google Fonts.
   **Both roles carry more than a family.** Every rule that sets
-  `--md-large-header-font` also sets `--md-large-header-weight` (700),
+  `--md-large-header-font` also sets `--md-large-header-weight` (900),
   `--md-large-header-tracking` (0) and `--md-large-header-stroke` (0).
   **The display weight is real (SC-325):** Cinzel is a variable family, 400–900, so
   the role has actual bold outlines. Its predecessor Forum had one 400 cut and faked
   bold with a text-stroke, which never settled — a fixed 2px outline firmed up the h1
   but bloated card heads, and moving it to 0.02em left it too thin to register on
   small slots. **To make display type heavier, raise the weight; the stroke stays 0**
-  unless a face without real weights ever comes back. Sizes are a **multiplier, not
-  an offset**: display sizes span 1.05rem to 5em, so every display `font-size` is
-  written as `calc(<base> * var(--md-large-header-scale))` (currently 0.95) and keeps
-  its own base, letting the role rescale in proportion from one number. **0.95 is not
-  arbitrary:** Cinzel sets ~20% wider than Forum at the same size, and 0.95 is the
-  largest value that reproduces the old line breaks exactly across 1280/1400/1600/1920
-  — at 1.0 the home h1 wraps at 1400px where it used to fit. Raising it trades wrapping
-  for cap height. **A size-only override rule must match its element's role:** several
+  unless a face without real weights ever comes back.
+  **Calibrate against Beaufort W01 Heavy, never against Forum.** Beaufort is the
+  commercial face this UI was designed around and the closest match to the MCDM book;
+  Forum was only ever a too-light stopgap, so matching it produced display type that
+  read thin. Beaufort Heavy is genuinely heavy — over "GOBLIN WARRIOR" at 100px it
+  covers 0.486 of its ink box against 0.205 for Cinzel 400. **Cinzel 900** reaches
+  0.449, within 8%; 700 sits 26% light. Sizes are a **multiplier, not an offset**:
+  display sizes span 1.05rem to 5em, so every display `font-size` is written as
+  `calc(<base> * var(--md-large-header-scale))` (currently 0.90) and keeps its own
+  base, letting the role rescale in proportion from one number. **0.90 restores
+  Beaufort's footprint:** Beaufort and Cinzel set nearly the same width per em at 400,
+  but Cinzel widens as it gets heavier (at 900, 12% wider than Beaufort), so it comes
+  back down. 0.90 lands within half a percent of Beaufort's advance and reproduces its
+  line breaks exactly across 1280/1400/1600/1920. **Scale and weight are coupled** — a
+  heavier cut of Cinzel is a wider cut, so changing one means re-measuring the other.
+  **A size-only override rule must match its element's role:** several
   rules size a head slot without naming a family, so they are invisible to a search for
   the family variable; if such an element moves to the subhead face, its size rule has
   to stop riding the display scale too. Likewise every rule
