@@ -37,25 +37,30 @@ Two non-negotiables drive every component:
   and always as a thin border, glyph, or gradient band, never a fill. Dark "slate" is
   the signature mode; light "default" is fully supported. (Alternate Parchment/Obsidian
   themes exist but are hidden until fully baked — SC-218.)
-- **Type.** **Forum** (OFL, Google Fonts — the free stand-in for the PDF's Beaufort)
+- **Type.** **Cinzel** (OFL, Google Fonts — the free stand-in for the PDF's Beaufort)
   for big UPPERCASE display (H1/H2 — "BROWSE RULES"), **Petrona** (OFL, Google Fonts —
   the free stand-in for the PDF's Newzald) for subheads (H3–H6, Title Case) and the
   small-caps labels, and **Source Serif 4** as the graceful fallback. No commercial
   face is loaded any more; every default is OFL and served by Google Fonts.
   **Both roles carry more than a family.** Every rule that sets
-  `--md-large-header-font` also sets `--md-large-header-weight`,
-  `--md-large-header-tracking` (2px, to open the uppercase settings) and
-  `--md-large-header-stroke` (0.02em, painted in `currentColor` so it matches whatever
-  color the element has). **The display weight stays 400 on purpose:** Forum has no
-  bold cut, so asking for 700 gets a synthesized smear of the 400 outlines rather
-  than Forum bold. The bold look is the stroke — to make display type heavier, raise
-  the stroke, never the weight. **The stroke is in em, never px:** the role spans the
-  ~96px page h1 down to 32px card heads, and a fixed 2px outline that firms up the
-  h1 bloats a card head (SC-315); in em it scales with each slot (~1.9px on the h1,
-  ~0.6px on a card head). Sizes are a **multiplier, not an offset**: display
-  sizes span 1.05rem to 5em, so every display `font-size` is written as
-  `calc(<base> * var(--md-large-header-scale))` (currently 1.2) and keeps its own
-  base, letting the role rescale in proportion from one number. Likewise every rule
+  `--md-large-header-font` also sets `--md-large-header-weight` (700),
+  `--md-large-header-tracking` (0) and `--md-large-header-stroke` (0).
+  **The display weight is real (SC-325):** Cinzel is a variable family, 400–900, so
+  the role has actual bold outlines. Its predecessor Forum had one 400 cut and faked
+  bold with a text-stroke, which never settled — a fixed 2px outline firmed up the h1
+  but bloated card heads, and moving it to 0.02em left it too thin to register on
+  small slots. **To make display type heavier, raise the weight; the stroke stays 0**
+  unless a face without real weights ever comes back. Sizes are a **multiplier, not
+  an offset**: display sizes span 1.05rem to 5em, so every display `font-size` is
+  written as `calc(<base> * var(--md-large-header-scale))` (currently 0.95) and keeps
+  its own base, letting the role rescale in proportion from one number. **0.95 is not
+  arbitrary:** Cinzel sets ~20% wider than Forum at the same size, and 0.95 is the
+  largest value that reproduces the old line breaks exactly across 1280/1400/1600/1920
+  — at 1.0 the home h1 wraps at 1400px where it used to fit. Raising it trades wrapping
+  for cap height. **A size-only override rule must match its element's role:** several
+  rules size a head slot without naming a family, so they are invisible to a search for
+  the family variable; if such an element moves to the subhead face, its size rule has
+  to stop riding the display scale too. Likewise every rule
   that sets `--md-small-header-font` sets `--md-small-header-weight` — a real 700,
   since Petrona is a variable family, so no stroke is needed there. Three rules that
   deliberately neutralize a `<b>` back to 400 keep their override. Body is **Zilla Slab** (OFL, Google
