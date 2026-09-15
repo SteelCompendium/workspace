@@ -8,6 +8,15 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **v2 site: the display face is now Cinzel, with a real bold (SC-325).** Forum had a
+  single 400 weight, so every heading's boldness was faked with an outline — and an
+  outline is the wrong tool, because one thickness never suits both a 96px page title
+  and a 25px band title. Cinzel is a variable family, so headings now use a genuine
+  700 and the outline is gone. Display sizes come down slightly (a 0.95 multiplier)
+  because Cinzel sets about 20% wider than Forum; that is the largest size that keeps
+  every heading breaking exactly where it does today. The Settings panel's
+  heading-font choices list Cinzel in Forum's place.
+
 - **Display headers: the outline now scales with size (SC-315).** The Forum display role painted a fixed 2px stroke on every header, from the page title down to 32px card heads, so card names and the goal numeral looked bloated. The stroke is now 0.02em, unchanged on the page title and a hairline on card heads and stat values.
 
 - **DSE plugin: the light color scheme has its own, darker status colors, and three
