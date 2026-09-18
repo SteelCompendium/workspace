@@ -137,12 +137,22 @@ Battery numbers at SC-126 step 2 land-ready (dse branch `sc126-parity-bg`, 2026-
 `96e2238` — rebased from `e12c6bd` onto `origin/develop` mid-round; SC-196 landed 6 commits
 in between, unrelated to this change) — **the "SC-205" figures above are stale by 68+ commits
 of unrelated feature work; verify against the current tree rather than trusting any row.**
-Measured before/after this round: tsc/lint clean both; jest 3836 (the `e12c6bd` baseline) ->
-**3879** passed / 1 skipped / **202 of 203 suites** (net **+43**: +9 are this round's new
-`bg-color` can-fail tests, the remaining +34 came in on the `origin/develop` rebase via
-SC-196's unrelated test additions); shots 524 PNGs, 0 FAIL, unchanged; freeze `260/260`,
-unchanged; parity **0 GAPs / 0 undeclared / 16 DECLARED / exit 0**, unchanged in composition
-— `bg-color` fires 0 rows on the real tree, so this landed as a pure tightening. Live-hole
+Measured across the `sc126-parity-bg` branch series (this ticket's own rule round plus its
+two review-fix rounds): tsc/lint clean throughout; jest 3836 (the `e12c6bd` baseline) ->
+**3889** passed / 1 skipped / **202 of 203 suites** (net **+53**: +19 are this ticket's own
+new tests — 9 in the rule round, 8 in the first review-fix round, 2 in the second — the
+remaining +34 came in on an `origin/develop` rebase mid-series via SC-196's unrelated test
+additions); shots 524 PNGs, 0 FAIL, unchanged; freeze `260/260`, unchanged; parity
+**0 GAPs / 0 undeclared / 16 DECLARED / exit 0**, unchanged in composition — `bg-color` fires
+0 rows on the real tree, so this series is a pure tightening. The first review-fix round
+additionally closed an `excludes` hole — a material rule (`bg`, `bg-polarity`, `bg-color`,
+`shadow`, `hairline-top`, `hairline-bottom`) can no longer be dropped from the contract via
+`excludes`, only via a sibling pair that measures it honestly — and re-shaped the `bg-color`
+GAP message to a per-axis verdict (each delta states its own true comparator and a `FIRES`
+marker only on the axis that fired, instead of printing both deltas against `> tol`
+unconditionally). The second review-fix round applied that same per-axis shape to rule 7
+(`ink`)'s GAP message, since its 16 declared rows are the only ones visible on a green run
+and one of them (`pr-chars` light) was printing a false `alpha 0.00 > 0.03`. Live-hole
 proof at landing: temporarily deleting `.dse-section`'s `background:
 var(--dse-surface-sunken)` in `styles-source.css` flipped the same run to `2 gap(s)` (the
 `section` pair, both schemes, rule `bg-color`) — a hole every rule before this round left
@@ -730,8 +740,7 @@ Geometry/typography/ink stay declarable because that is where genuine pixel deci
 (Conservative by design; relaxing it is a one-line change to `NON_DECLARABLE_CLASSES` in
 `compare.cjs`.)
 
-**`background-color` is now fully compared (SC-126 step 1 landed 2026-08-25 `1cef8ec`;
-step 2 is this branch, `sc126-parity-bg`, unlanded as of this writing).** The `bg`
+**`background-color` is fully compared (SC-126 steps 1 and 2).** The `bg`
 rule fires only when the site's `background-image` is non-flat and the plugin's is flat — it
 never reads `background-color` at all, which is the hole SC-117 slipped through (13
 declaration sites washed the wrong **polarity**, both schemes, every pair clean throughout
