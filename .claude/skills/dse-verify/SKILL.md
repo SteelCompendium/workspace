@@ -730,7 +730,8 @@ Geometry/typography/ink stay declarable because that is where genuine pixel deci
 (Conservative by design; relaxing it is a one-line change to `NON_DECLARABLE_CLASSES` in
 `compare.cjs`.)
 
-**`background-color` is now fully compared (SC-126 steps 1+2, landed 2026-09-13).** The `bg`
+**`background-color` is now fully compared (SC-126 step 1 landed 2026-08-25 `1cef8ec`;
+step 2 is this branch, `sc126-parity-bg`, unlanded as of this writing).** The `bg`
 rule fires only when the site's `background-image` is non-flat and the plugin's is flat — it
 never reads `background-color` at all, which is the hole SC-117 slipped through (13
 declaration sites washed the wrong **polarity**, both schemes, every pair clean throughout
