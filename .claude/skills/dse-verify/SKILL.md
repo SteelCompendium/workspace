@@ -133,7 +133,7 @@ Battery numbers at SC-205 land-ready (dse branch `sc205-btn-host-leak`, 2026-08-
 210/210, 0 mismatches; parity 0 GAPs / 0 undeclared / 16 DECLARED. SC-205 moved zero
 pixels and zero frozen bytes; shots runtime grew ~+35 s (+11%) from the two state passes.
 
-Battery numbers at SC-126 step 2 land-ready (dse branch `sc126-parity-bg`, 2026-09-17, base
+Battery numbers at SC-126 step 2 land-ready (dse branch `sc126-parity-bg`, 2026-09-18, base
 `96e2238` — rebased from `e12c6bd` onto `origin/develop` mid-round; SC-196 landed 6 commits
 in between, unrelated to this change) — **the "SC-205" figures above are stale by 68+ commits
 of unrelated feature work; verify against the current tree rather than trusting any row.**
@@ -755,7 +755,7 @@ byte-identical site-vs-plugin, both schemes — so it landed as a pure tightenin
 change, no declaration, no frozen bytes moved. Residual, deliberately out of scope for step
 2: `background-image` gradient hue/tint is still unasserted (SC-322), and the `card` pair's
 site selector has a capture-order hazard unrelated to this rule (SC-321). Full reasoning:
-`visual-harness/parity/README.md` → "Known limitation — `background-color` is now fully
+`visual-harness/parity/README.md` → "Known limitation — `background-color` is fully
 compared; the residual is `background-image`."
 
 The 8 declared entries (16 rows — each covers both schemes) are three findings:
