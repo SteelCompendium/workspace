@@ -14,6 +14,23 @@
 > **Release gate: 7.0.0 ships only when SC-97 (Steel UI parity) is complete.**
 
 
+### 2026-09-13 (overnight) — IN-FLIGHT: SC-299 / SC-126 / SC-92 (dispatcher session)
+Scott asked for three Todo tickets to be finished while he sleeps. Dispatcher (this session,
+scratchpad id `7694ddcf-550f-41a1-b639-c563d81974ca`) spawned one Fable ticket-owner each:
+
+| Ticket | Worktree | Ledger dir | Repos expected |
+|---|---|---|---|
+| SC-299 DSE Montage Card refinements (High) | `sc299-montage` | `.superpowers/sdd/sc299-montage/` | draw-steel-elements (→ `develop`) |
+| SC-126 Parity guard: background-color polarity check (Medium) | **LANDED 2026-09-18** — dse `develop` @ `5a5ed49`, workspace `72dd3c8`; ledger preserved at `build-ledgers/sc126-*`; worktree removed. Ticket In Progress + Needs Review (non-blocking veto on `bg-color` being non-declarable). Spin-offs SC-321, SC-322. | — | — |
+| SC-92 Feature filter: signature abilities | **DONE 2026-09-14** (landed + deployed by a later owner session: v2 `b9a37c0`, workspace `8e043f1`; ledger at `build-ledgers/sc92-*`) | — | — |
+
+Landing order: serialized by the dispatcher via `land-stack` as each owner reports
+land-ready; the two dse branches rebase onto `origin/develop` in turn. Main checkout carried
+Scott's live vault dirt (`demo-vault/Welcome.md` + `compendium-manifest.json`) — stash-wrap
+per land-stack §2c. Stale worktrees pre-existing this session (not ours, left alone):
+sc115-evidence, sc155-featureblock-type, sc191-montage-design, sc196-light-contrast, sc-201,
+sc201-finish, sc201-project-cards, sc-277, sc-300, sc315-stroke.
+
 ### 2026-09-07 — SC-308 (Wode Hag "Snackies for Sweeties"): LANDED + DEPLOYED, Done
 Statblock/featureblock ability bodies now use the SDK's nested `effects[]` model in exact
 source order (a paragraph carries the tier table under it; no hoisting of the power roll
