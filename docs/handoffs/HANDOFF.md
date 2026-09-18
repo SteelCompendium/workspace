@@ -20,12 +20,11 @@ scratchpad id `7694ddcf-550f-41a1-b639-c563d81974ca`) spawned one Fable ticket-o
 
 | Ticket | Worktree | Ledger dir | Repos expected |
 |---|---|---|---|
-| SC-299 DSE Montage Card refinements (High) | `sc299-montage` | `.superpowers/sdd/sc299-montage/` | draw-steel-elements (→ `develop`) |
+| SC-299 DSE Montage Card refinements (High) | **LANDED 2026-09-18** — dse `develop` @ `d124cc3` (14 commits on `5a5ed49`), workspace `c97ec08`; ledger md preserved at `build-ledgers/sc299-montage/` (gate logs + evidence PNGs dropped; evidence is on the ticket); worktree removed. Ticket In Progress + Needs Review (one batched, reversible ask: one-tap buttons log with no skill/note; only earlier-round empty cells editable). Spin-offs SC-326, SC-327. | — | — |
 | SC-126 Parity guard: background-color polarity check (Medium) | **LANDED 2026-09-18** — dse `develop` @ `5a5ed49`, workspace `72dd3c8`; ledger preserved at `build-ledgers/sc126-*`; worktree removed. Ticket In Progress + Needs Review (non-blocking veto on `bg-color` being non-declarable). Spin-offs SC-321, SC-322. | — | — |
 | SC-92 Feature filter: signature abilities | **DONE 2026-09-14** (landed + deployed by a later owner session: v2 `b9a37c0`, workspace `8e043f1`; ledger at `build-ledgers/sc92-*`) | — | — |
 
-Landing order: serialized by the dispatcher via `land-stack` as each owner reports
-land-ready; the two dse branches rebase onto `origin/develop` in turn. Main checkout carried
+All three landed (SC-92 09-14, SC-126 + SC-299 09-18); nothing in flight from this wave. Open for Scott: the SC-126 veto ask and the SC-299 batched ask, both Needs Review. Main checkout carried
 Scott's live vault dirt (`demo-vault/Welcome.md` + `compendium-manifest.json`) — stash-wrap
 per land-stack §2c. Stale worktrees pre-existing this session (not ours, left alone):
 sc115-evidence, sc155-featureblock-type, sc191-montage-design, sc196-light-contrast, sc-201,

@@ -1,0 +1,3 @@
+Land-ready. The harness-only fix round is done and independently re-reviewed with no findings, so the branch is ready to land once the two scoping questions in the comment above are answered.
+
+Final shas: dse `sc299-montage` @ `d124cc3` (on `origin/develop` `5a5ed49`), workspace @ `bf4f2c3` (on `origin/main` `8685b65`). Gates unchanged: jest 3902 passed / 1 skipped; shots 0 FAIL with the new touch-containment gate green; freeze 260/260 (no rebaseline); parity 0 GAPs / 0 undeclared / 16 DECLARED. Follow-ups filed: SC-326 (board clips at high round counts, pre-existing) and one for a load-flaky sidebar test the review tripped over.
