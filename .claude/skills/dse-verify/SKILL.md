@@ -133,6 +133,21 @@ Battery numbers at SC-205 land-ready (dse branch `sc205-btn-host-leak`, 2026-08-
 210/210, 0 mismatches; parity 0 GAPs / 0 undeclared / 16 DECLARED. SC-205 moved zero
 pixels and zero frozen bytes; shots runtime grew ~+35 s (+11%) from the two state passes.
 
+Battery numbers at SC-126 step 2 land-ready (dse branch `sc126-parity-bg`, 2026-09-17, base
+`96e2238` — rebased from `e12c6bd` onto `origin/develop` mid-round; SC-196 landed 6 commits
+in between, unrelated to this change) — **the "SC-205" figures above are stale by 68+ commits
+of unrelated feature work; verify against the current tree rather than trusting any row.**
+Measured before/after this round: tsc/lint clean both; jest 3836 (the `e12c6bd` baseline) ->
+**3879** passed / 1 skipped / **202 of 203 suites** (net **+43**: +9 are this round's new
+`bg-color` can-fail tests, the remaining +34 came in on the `origin/develop` rebase via
+SC-196's unrelated test additions); shots 524 PNGs, 0 FAIL, unchanged; freeze `260/260`,
+unchanged; parity **0 GAPs / 0 undeclared / 16 DECLARED / exit 0**, unchanged in composition
+— `bg-color` fires 0 rows on the real tree, so this landed as a pure tightening. Live-hole
+proof at landing: temporarily deleting `.dse-section`'s `background:
+var(--dse-surface-sunken)` in `styles-source.css` flipped the same run to `2 gap(s)` (the
+`section` pair, both schemes, rule `bg-color`) — a hole every rule before this round left
+silent — then reverted byte-clean (`git diff` empty) before the gate was re-measured green.
+
 ## Freeze semantics
 
 `check-freeze.sh` (`/home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh`)
@@ -702,7 +717,7 @@ whether a divergence in it can ever be excused:
 
 | Class | Rules | Declarable? |
 |---|---|---|
-| **material** | `bg`, `shadow`, `hairline-top`, `hairline-bottom` | **NEVER** — a hard contract error |
+| **material** | `bg`, `bg-polarity`, `bg-color`, `shadow`, `hairline-top`, `hairline-bottom` | **NEVER** — a hard contract error |
 | geometry | `padding-*`, `margin-top`, `margin-bottom` | yes |
 | typography | `font-size`, `line-height`, `body-font`, `letter-spacing` | yes |
 | ink | `ink` | yes |
@@ -715,18 +730,23 @@ Geometry/typography/ink stay declarable because that is where genuine pixel deci
 (Conservative by design; relaxing it is a one-line change to `NON_DECLARABLE_CLASSES` in
 `compare.cjs`.)
 
-**Known limitation (SC-117 fix wave M4) — `background-color` is sampled but never compared.**
-The `bg` rule (`compare.cjs:323-324`) fires only when the site's `background-image` is
-non-flat and the plugin's is flat — it never reads `background-color`, even though
-`background-color` is already captured into both inventories for every mapped pair, both
-schemes. SC-117 washed 13 declaration sites the wrong **polarity** (translucent white where
-the site sits on translucent black) and every pair passed clean throughout, because neither
-side's `background-image` was `none`. `bg` stays `material` (never declarable), so closing
-this only ever tightens the gate. Future fix, as its own ticket: a polarity-only check first
-(site translucent-black vs. plugin translucent-white/opaque) — cheap, near-noise-free, would
-have caught SC-117 on day one; a full `background-color` comparison is separately-scoped,
-larger work. Full reasoning: `visual-harness/parity/README.md` → "Known limitation —
-`background-color` is sampled but never compared."
+**`background-color` is now fully compared (SC-126 steps 1+2, landed 2026-09-13).** The `bg`
+rule fires only when the site's `background-image` is non-flat and the plugin's is flat — it
+never reads `background-color` at all, which is the hole SC-117 slipped through (13
+declaration sites washed the wrong **polarity**, both schemes, every pair clean throughout
+because neither side's `background-image` was `none`). Two more rules close it: `bg-polarity`
+(step 1) buckets each side's `background-color` into black/white/unclassified and fires on
+opposite buckets; `bg-color` (step 2) compares the actual value on a ground-independent
+premultiplied deposit+alpha model (`BG_ALPHA_TOL = 0.01`, `BG_DEPOSIT_TOL = 2`, either axis
+fires), closing the live hole `bg-polarity` couldn't — a wash that vanishes entirely (alpha 0
+sends `bg-polarity` silent too). Both stay `material` (never declarable). On the real
+committed inventories `bg-color` fires **0 rows** — every mapped pair's `background-color` is
+byte-identical site-vs-plugin, both schemes — so it landed as a pure tightening: no CSS
+change, no declaration, no frozen bytes moved. Residual, deliberately out of scope for step
+2: `background-image` gradient hue/tint is still unasserted (SC-322), and the `card` pair's
+site selector has a capture-order hazard unrelated to this rule (SC-321). Full reasoning:
+`visual-harness/parity/README.md` → "Known limitation — `background-color` is now fully
+compared; the residual is `background-image`."
 
 The 8 declared entries (16 rows — each covers both schemes) are three findings:
 - **FOLLOWUPS #39** (8 rows) — `statblock-wrap` / `featureblock-wrap` `margin-top`/`-bottom`:
