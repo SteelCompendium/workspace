@@ -74,8 +74,8 @@ The DSE plugin repo is the one submodule with a two-branch model, because its do
 - **`develop` is the mainline** — every feature branch, worktree landing, and pointer bump
   targets `develop` (`.gitmodules` `branch = develop` makes all the workspace machinery —
   `just sync`, `wt-finish`, `wt-status` — follow it automatically).
-- **`main` holds released content only.** It sits at the last released tag (`6.0.1`/`0645aca`
-  since the model's introduction; the pre-reset 7.0.0 tip survives on `develop` and on the
+- **`main` holds released content only.** It sits at the last released tag (`6.0.2`/`e38d4de`,
+  a hotfix cut from `main` — not from `develop` — so `develop` must port it: SC-328; the pre-reset 7.0.0 tip survives on `develop` and on the
   `main-7.0-backup` branch) and advances ONLY at a release: Scott fast-forwards `main` to the
   release sha on `develop`
   (`git push origin <release-sha>:refs/heads/main`), which also triggers the docs deploy —
