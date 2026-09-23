@@ -145,6 +145,35 @@ Annotated source (hand-edited)
 | `steel-etl/classification.json` | Generated, gitignored | No |
 | `steel-etl/output/` | Generated, gitignored | No |
 
+## Licensed fonts: one host for the whole domain
+
+The body face, **Berlingske Slab**, is a commercial Playtype web font (SC-320). Every
+other face is OFL and comes from Google Fonts. The license allows self-hosting only,
+under 250,000 pageviews a month, and forbids making the files downloadable anywhere
+else. Since every repo here is public, the rules are:
+
+- **Source of truth:** the private repo `SteelCompendium/licensed-fonts`
+  (`web/berlingske-slab/*.woff2`, plus the license certificate, which must never be
+  published because it holds Scott's address).
+- **One host:** the root site (`steelCompendium.github.io`) serves the files at
+  **`/fonts/licensed/berlingske-slab/`** (SC-335). Its CI checks out the private repo
+  with a read-only deploy key (repo secret `LICENSED_FONTS_DEPLOY_KEY`), copies only the
+  `.woff2` files into `docs/fonts/licensed/` (gitignored), deploys through a GitHub
+  Pages **artifact** (never `gh-deploy`, which would commit them to the public
+  `gh-pages` branch), then deletes the artifact.
+- **Every other site on the domain** (v2, a future v3, the legacy site) points its
+  `@font-face` rules at that root-relative path and needs **no secret, no private
+  checkout and no special deploy**. Same domain and host, so it is still self-hosting.
+  Copy the six `@font-face` rules from `v2/docs/stylesheets/custom_font.css`.
+- **Never** commit the files to a public repo, serve them from a CDN, subset or modify
+  them, or bundle them in the DSE plugin or a PDF. Both the root and v2 CI refuse to
+  deploy if a licensed font file is tracked.
+- **Local preview:** `just fonts` in the root repo (and in v2, for its local fallback
+  copy) clones the private repo; without access, body text falls back to Zilla Slab.
+
+Full EULA quotes and rejected alternatives:
+`v2/.repo-docs/decisions/2026-09-23-licensed-berlingske-slab.md`.
+
 ## Schemas: two hand-synced copies (footgun)
 
 The JSON schemas for the output format exist in **two places** and are **not** linked by any build dependency:
