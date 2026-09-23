@@ -32,6 +32,21 @@ go under an *Internal* sub-heading.
   temporary-Stamina badge, a selected creature in the initiative tracker, or a rolled
   power-roll result row now shows a tooltip naming what's highlighted, in words.
 
+- **DSE Montage Test tracker cleanup (SC-334).** The "Log an action…" form is down to
+  Result, Skill and Note: the hero and round come from the cell (or button) that opened
+  it and are named in its title, so the form can no longer silently move an entry to a
+  different hero or round; the "success starts at" tier reminder and the Roll row are gone
+  (the Test tiers strip above the board still has the tiers). The form no longer clips its
+  right edge behind a sideways scrollbar, and "Set limits…" no longer cuts off the focus
+  ring on its first field. A new **Back to round N** button steps the montage back to the
+  previous round without removing anything logged — also offered when a montage ran out of
+  rounds, never once a limit is reached. "Log an action…" greys out once every hero has
+  acted in the round in play, instead of quietly logging a second, invisible action for the
+  first hero. In the outcome band, filled failure slots are now red, with the same light
+  gradient as the filled success slots; the last slot of each track no longer wears a
+  bright white end-cap; and a montage that ran out of rounds no longer reports one more
+  "round used" than it has.
+
 - **DSE Montage Test tracker: the quick-entry trio is back, and past rounds are now
   editable from the board (SC-299).** An empty cell in the round currently in play once
   again carries the three one-click buttons (log a success, a failure, or an assist with
