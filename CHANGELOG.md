@@ -8,6 +8,14 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **v2 site: body text is Berlingske Slab again, now properly licensed (SC-320).**
+  Berlingske Slab is the Draw Steel book's own body face. The site used it until
+  2026-09-06 from an unlicensed copy, then switched to the free Zilla Slab. It is back
+  under a paid Playtype web license, served from the site itself, and this time with
+  real bold and italic cuts instead of browser-faked ones. Zilla Slab stays available
+  under Settings → Fonts. Readers who had saved the old default in Settings before
+  2026-09-06, and have been seeing Georgia since, get Berlingske back automatically.
+
 - **v2 site: the display face is now Cinzel, at the weight the design always wanted
   (SC-325).** Forum had a single 400 weight, so every heading's boldness was faked
   with an outline — and an outline is the wrong tool, because one thickness never

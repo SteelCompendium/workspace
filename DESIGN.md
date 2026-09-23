@@ -40,8 +40,8 @@ Two non-negotiables drive every component:
 - **Type.** **Cinzel** (OFL, Google Fonts — the free stand-in for the PDF's Beaufort)
   for big UPPERCASE display (H1/H2 — "BROWSE RULES"), **Petrona** (OFL, Google Fonts —
   the free stand-in for the PDF's Newzald) for subheads (H3–H6, Title Case) and the
-  small-caps labels, and **Source Serif 4** as the graceful fallback. No commercial
-  face is loaded any more; every default is OFL and served by Google Fonts.
+  small-caps labels, and **Source Serif 4** as the graceful fallback. The heading faces
+  are OFL and served by Google Fonts; the one commercial face is the body (below).
   **Both roles carry more than a family.** Every rule that sets
   `--md-large-header-font` also sets `--md-large-header-weight` (900),
   `--md-large-header-tracking` (0) and `--md-large-header-stroke` (0).
@@ -71,8 +71,14 @@ Two non-negotiables drive every component:
   to stop riding the display scale too. Likewise every rule
   that sets `--md-small-header-font` sets `--md-small-header-weight` — a real 700,
   since Petrona is a variable family, so no stroke is needed there. Three rules that
-  deliberately neutralize a `<b>` back to 400 keep their override. Body is **Zilla Slab** (OFL, Google
-  Fonts — the free stand-in for the PDF's Berlingske Slab; line-height 1.7 for long reading). **JetBrains Mono** for code/IDs/numbers.
+  deliberately neutralize a `<b>` back to 400 keep their override. Body is **Berlingske Slab**,
+  the PDF's own body face, **licensed from Playtype (SC-320) and self-hosted** — line-height
+  1.7 for long reading. Only the Demibold, Bold and Extrabold cuts (+ italics) are licensed:
+  **Demibold is the normal weight** (as it was when this UI was designed), Bold is 600,
+  Extrabold is bold (700+). **Zilla Slab** (OFL) is the fallback when the licensed files are
+  absent and a Settings option. The font files never go in git and the DSE plugin can never
+  bundle them — rules in `v2/.repo-docs/decisions/2026-09-23-licensed-berlingske-slab.md`.
+  **JetBrains Mono** for code/IDs/numbers.
   Game Terms keep their Capitalization mid-sentence. **Fixed type scale:** Material's
   responsive root-font-size scaling (125% → 137.5% at ≥100em → 150% at ≥125em) is
   pinned to the 125% base at every width (`extra.css`), so type and rem-based layouts
