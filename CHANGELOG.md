@@ -8,14 +8,6 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
-- **v2 site: body text is Berlingske Slab again, now properly licensed (SC-320).**
-  Berlingske Slab is the Draw Steel book's own body face. The site used it until
-  2026-09-06 from an unlicensed copy, then switched to the free Zilla Slab. It is back
-  under a paid Playtype web license, served from the site itself, and this time with
-  real bold and italic cuts instead of browser-faked ones. Zilla Slab stays available
-  under Settings → Fonts. Readers who had saved the old default in Settings before
-  2026-09-06, and have been seeing Georgia since, get Berlingske back automatically.
-
 - **v2 site: the display face is now Cinzel, at the weight the design always wanted
   (SC-325).** Forum had a single 400 weight, so every heading's boldness was faked
   with an outline — and an outline is the wrong tool, because one thickness never
@@ -634,6 +626,18 @@ go under an *Internal* sub-heading.
   Every consumer was re-pointed to its classified slot with zero rendering
   change — freeze and parity gates stayed green throughout. Groundwork only,
   for user-customizable fonts (SC-112).
+
+## 2026-09-23 — Body text is licensed Berlingske Slab again (SC-320; v2 8f98bcd)
+
+- **v2 site: body text is Berlingske Slab again, now properly licensed (SC-320).**
+  Berlingske Slab is the Draw Steel book's own body face. The site used it until
+  2026-09-06 from an unlicensed copy, then switched to the free Zilla Slab. It is back
+  under a paid Playtype web license, served from the site itself, and this time with
+  real bold and italic cuts instead of browser-faked ones. Zilla Slab stays available
+  under Settings → Fonts. Saved font choices that no longer exist are cleared: readers
+  who saved the old default before 2026-09-06 (and have been seeing Georgia since) get
+  Berlingske back, and retired heading picks (Beaufort, Newzald, Forum) fall back to
+  today's defaults.
 
 ## 2026-09-14 — Cost / Signature filter on the feature Search & Filter page (SC-92; v2 b9a37c0)
 
