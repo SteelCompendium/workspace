@@ -126,7 +126,7 @@ deploy:
     git push origin HEAD:main
 
     # 3. Stamp the steel-etl pipeline version into mkdocs.yml extra.* fields.
-    # mkdocs.yml is committed below so CI's `mkdocs gh-deploy` (which builds the
+    # mkdocs.yml is committed below so CI's `mkdocs build` (which builds the
     # committed tree, not this working copy) sees the etl stamp; CI fills
     # extra.site_* from $GITHUB_SHA just before deploy.
     cd "$root/v2"
@@ -256,7 +256,7 @@ deploy-v2:
     etl_date="$(date +%Y-%m-%d)"
 
     # 2. Stamp the steel-etl pipeline version into mkdocs.yml extra.* fields.
-    # mkdocs.yml is committed below so CI's `mkdocs gh-deploy` (which builds the
+    # mkdocs.yml is committed below so CI's `mkdocs build` (which builds the
     # committed tree, not this working copy) sees the etl stamp; CI fills
     # extra.site_* from $GITHUB_SHA just before deploy.
     cd "$root/v2"
