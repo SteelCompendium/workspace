@@ -651,6 +651,14 @@ go under an *Internal* sub-heading.
   subheads and JetBrains Mono for code. Bold text on the page now actually renders
   bold. The legacy site (steelcompendium.io/compendium) is not yet fixed.
 
+### Internal
+
+- **One host for the licensed fonts (SC-335).** The root site now serves Berlingske Slab
+  for the whole domain at `/fonts/licensed/berlingske-slab/`. v2 loads it from there,
+  and a future v3 only needs to copy v2's six `@font-face` rules: no secret, no private
+  checkout, no special deploy. The root site deploys through GitHub Actions now, as v2
+  does. Rules: `ARCHITECTURE.md` → "Licensed fonts".
+
 ## 2026-09-23 — Body text is licensed Berlingske Slab again (SC-320; v2 8f98bcd)
 
 - **v2 site: body text is Berlingske Slab again, now properly licensed (SC-320).**
