@@ -42,9 +42,10 @@ go under an *Internal* sub-heading.
   previous round without removing anything logged — also offered when a montage ran out of
   rounds, never once a limit is reached. "Log an action…" greys out once every hero has
   acted in the round in play, instead of quietly logging a second, invisible action for the
-  first hero. In the outcome band, filled failure slots are now solid red like the filled
-  success slots, the last slot of each track no longer wears a bright white end-cap, and a
-  montage that ran out of rounds no longer reports one more "round used" than it has.
+  first hero. In the outcome band, filled failure slots are now red, with the same light
+  gradient as the filled success slots; the last slot of each track no longer wears a
+  bright white end-cap; and a montage that ran out of rounds no longer reports one more
+  "round used" than it has.
 
 - **DSE Montage Test tracker: the quick-entry trio is back, and past rounds are now
   editable from the board (SC-299).** An empty cell in the round currently in play once
