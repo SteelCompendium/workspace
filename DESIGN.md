@@ -77,7 +77,8 @@ Two non-negotiables drive every component:
   **Demibold is the normal weight** (as it was when this UI was designed), Bold is 600,
   Extrabold is bold (700+). **Zilla Slab** (OFL) is the fallback when the licensed files are
   absent and a Settings option. The font files never go in git and the DSE plugin can never
-  bundle them — rules in `v2/.repo-docs/decisions/2026-09-23-licensed-berlingske-slab.md`.
+  bundle them. The root site hosts them for the whole domain at `/fonts/licensed/` (SC-335) —
+  rules in `ARCHITECTURE.md` → "Licensed fonts".
   **JetBrains Mono** for code/IDs/numbers.
   Game Terms keep their Capitalization mid-sentence. **Fixed type scale:** Material's
   responsive root-font-size scaling (125% → 137.5% at ≥100em → 150% at ≥125em) is

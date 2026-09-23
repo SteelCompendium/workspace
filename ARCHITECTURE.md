@@ -101,7 +101,7 @@ Key operations:
 
 ### 3. Commit and push
 
-The v2 repo is committed with the steel-etl SHA in the commit message and pushed. The v2 CI (`v2/.github/workflows/ci.yml`) runs `mkdocs build` and publishes through a GitHub Pages artifact — not `gh-deploy`, because the built site carries the licensed Berlingske Slab web fonts, which are fetched at build time from the private `SteelCompendium/licensed-fonts` repo and must never land in a public git branch (`v2/.repo-docs/decisions/2026-09-23-licensed-berlingske-slab.md`).
+The v2 repo is committed with the steel-etl SHA in the commit message and pushed. The v2 CI (`v2/.github/workflows/ci.yml`) runs `mkdocs build` and publishes through a GitHub Pages artifact (Pages source "GitHub Actions"). The licensed body font is not part of the v2 build; the root site hosts it (see "Licensed fonts" below).
 
 ### 4. Commit and push the data repo
 
