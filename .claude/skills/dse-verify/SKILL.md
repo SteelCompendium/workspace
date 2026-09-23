@@ -158,6 +158,27 @@ var(--dse-surface-sunken)` in `styles-source.css` flipped the same run to `2 gap
 `section` pair, both schemes, rule `bg-color`) — a hole every rule before this round left
 silent — then reverted byte-clean (`git diff` empty) before the gate was re-measured green.
 
+## Modal checks inside the real-Obsidian camera (SC-334, 2026-09-23)
+
+Every `MODAL_SHOTS` capture in `visual-harness/obsidian-camera.mjs` (step 3e — now six:
+stamina, stamina-recovery, conditions, form, `modal-montage-edit`, `modal-montage-limits`)
+also FAILS the capture on:
+
+- `MODAL BODY SCROLLS SIDEWAYS` — `.dse-modal__body` `scrollWidth > clientWidth`, naming the
+  offending elements and their px past the body's content edge (SC-334's clipped montage
+  form: SC-202 GROUP 1's `box-sizing: content-box` had overridden a field's own
+  `width: 100%; box-sizing: border-box`).
+- `FOCUS RING CLIPPED BY THE MODAL BODY` — the auto-focused field's outline ring (width +
+  offset) extends past the body's scroll box; the body's `padding: 4px; margin: -4px` is
+  what gives it room. Skipped (printed, not failed) when the focused control draws no
+  outline — `modal-montage-edit` skips today because its focused `.dse-optchip` has no
+  plugin ring (SC-338).
+
+The ok line reads `modal confirmed; no sideways scroll; focus ring inside the body (…)`.
+Run the camera on a PRIVATE Xvfb + port (`DSE_CAMERA_DISPLAY`, `DSE_CAMERA_PORT`), never
+Scott's `:1`. Battery at SC-334 landing (dse `e4bcd0f`): jest 3919 passed / 1 skipped /
+202 of 203 suites; shots 524, 0 FAIL; freeze 260/260; parity 0 / 0 / 16 DECLARED.
+
 ## Freeze semantics
 
 `check-freeze.sh` (`/home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh`)
