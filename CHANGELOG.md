@@ -627,6 +627,15 @@ go under an *Internal* sub-heading.
   change — freeze and parity gates stayed green throughout. Groundwork only,
   for user-customizable fonts (SC-112).
 
+## 2026-09-23 — Root landing page uses the v2 site's fonts (SC-335)
+
+- **steelcompendium.io: same fonts as the v2 site (SC-335).** The root landing page
+  was still loading unlicensed copies of Berlingske Slab, Newzald and Beaufort from a
+  third-party font site. It now uses the v2 faces: licensed Berlingske Slab for body
+  text (loaded from the v2 site's own copy), Cinzel for big headings, Petrona for
+  subheads and JetBrains Mono for code. Bold text on the page now actually renders
+  bold. The legacy site (steelcompendium.io/compendium) is not yet fixed.
+
 ## 2026-09-23 — Body text is licensed Berlingske Slab again (SC-320; v2 8f98bcd)
 
 - **v2 site: body text is Berlingske Slab again, now properly licensed (SC-320).**
