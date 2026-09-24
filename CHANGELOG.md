@@ -8,6 +8,16 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the Sync and Check-for-updates buttons now show when a compendium
+  operation is running (SC-243).** Previously both stayed clickable through a whole
+  sync, so a double-click (or the command palette, or the "sync anyway"/"sync after
+  migrating" choices) could start a second run underneath the first. The Settings
+  Compendium row now disables both buttons the moment Sync or Check for updates is
+  clicked — Sync reads "Syncing…", Check reads "Checking…" — and a second request
+  from any entry point while one is in flight is refused with a Notice instead of
+  starting. The buttons re-enable live if the settings window is left open through a
+  sync, with no need to close and reopen it.
+
 - **v2 site: the display face is now Cinzel, at the weight the design always wanted
   (SC-325).** Forum had a single 400 weight, so every heading's boldness was faked
   with an outline — and an outline is the wrong tool, because one thickness never
