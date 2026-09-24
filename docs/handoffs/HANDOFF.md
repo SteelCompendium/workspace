@@ -27,7 +27,7 @@ first. No tags/releases, never DSE `main`, no `just deploy*`, no un-sanctioned r
 
 | Ticket | Worktree | Ledger dir | Status |
 |---|---|---|---|
-| SC-328 | `sc328-fflate` | `.superpowers/sdd/sc328-fflate/` | **Needs Review** — dse `db2a206`, review-approved; awaiting Scott's sanction of a 16-line freeze rebaseline (`rebaseline.txt` in the ledger; dispatcher applies at landing per dse-verify). Branch carries merge commits (6.0.2 hotfix merge-forward) — land WITHOUT a flattening rebase. SC-243 waits on this landing. |
+| SC-328 | — | `build-ledgers/sc328-fflate/` | **LANDED** dse develop `c524fd2`, workspace `70ce86b`; Scott sanctioned (comment `afd0e15a`) → 16-line rebaseline applied (260/260, backup `.pre-sc328-bak`, record in dse-verify); worktree removed. SC-243 now unblocked (queued for next free slot). |
 | SC-241 | — | `build-ledgers/sc241-minion-heal/` | **LANDED** dse develop `46c0c4c`, workspace `afacc53`; worktree removed |
 | SC-240 | — | `build-ledgers/sc240-scc-ref-error/` | **LANDED** dse develop `f6fb208`, workspace `7fb9d6d`; worktree removed |
 | SC-288 | — | `build-ledgers/sc288-sidebar-stuck/` | **LANDED** dse develop `3b25127`, workspace `6dc0dfe`; worktree removed |

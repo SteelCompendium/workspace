@@ -246,6 +246,21 @@ didn't mount) plus human review of the PNGs.
   `freeze-baseline.sha256.pre-<effort>-bak`, (3) applies the lines, (4) appends a dated
   entry to this file quoting the sanction. Widenings (additions-only) need no sanction —
   the dispatcher verifies additions-only by sorted-diff and applies at landing.
+  - **2026-09-24, SC-328 (JSZip → fflate + 6.0.2 hotfix merged forward, worktree
+    `sc328-fflate`, landed dse `develop` @ `c524fd2`): SANCTIONED 16-line rebaseline,
+    count unchanged 260 → 260.** Cause: the 6.0.2 merge-forward brings three skills
+    (Carpentry and Cooking under Crafting, Strategy under Lore), which moves the Skills print
+    captures — 8 twin+realprint pairs: `skills`, `skills-narrow`, `skills-chips`,
+    `skills-chips-narrow`, `skills-ledger`, `skills-ledger-narrow`, `skills-hero-picks`,
+    `chrome-skills-menu`. Reviewer-verified: with only those three skills reverted, all 260
+    matched byte-for-byte. **Scott's sanction, SC-328 comment `afd0e15a` 2026-09-24 11:44 UTC:
+    "sanctioned".** Deliverable `.superpowers/sdd/sc328-fflate/rebaseline.txt` (16 lines,
+    unchanged across the final develop merge). Applied by the dispatcher after landing:
+    backup `freeze-baseline.sha256.pre-sc328-bak`, in-place hash replacement (original line
+    order kept; the diff is exactly 16 lines). Verified against the landed tree's shots:
+    `freeze OK (260/260 …)`, exit 0. **Expected line now: `freeze OK (260/260 …)` on
+    `origin/develop` `c524fd2`.** Known blind spot filed as SC-349: the Skills captures stop
+    at 2400 px, so the lower skill list isn't byte-covered.
   - **2026-09-14, SC-202 (Obsidian host CSS in the harness, worktree
     `sc202-visual-harness-obsidian`, landed dse `develop` @ `e12c6bd`): SANCTIONED
     full-set rebaseline 252 → 260 — every one of the 252 frozen lines moved once, plus the
