@@ -32,7 +32,8 @@ first. No tags/releases, never DSE `main`, no `just deploy*`, no un-sanctioned r
 | SC-240 | — | `build-ledgers/sc240-scc-ref-error/` | **LANDED** dse develop `f6fb208`, workspace `7fb9d6d`; worktree removed |
 | SC-288 | — | `build-ledgers/sc288-sidebar-stuck/` | **LANDED** dse develop `3b25127`, workspace `6dc0dfe`; worktree removed |
 | SC-282 | `sc282-sidebar-rename` | `.superpowers/sdd/sc282-sidebar-rename/` | in flight |
-| SC-230 | `sc230-modal-text-size` | `.superpowers/sdd/sc230-modal-text-size/` | in flight |
+| SC-230 | `sc230-modal-text-size` | `.superpowers/sdd/sc230-modal-text-size/` | **Needs Review**: dse `0dbab59`, review-approved, gates green, freeze 260/260. Scott must decide (1) whether the fixed modal looks right at 140%, and (2) whether the modal title scales (option A, on the branch) or stays at Obsidian's size (option B, a small removal round). A + looks-right = land-ready after a rebase. |
+| SC-243 | `sc243-sync-busy` | `.superpowers/sdd/sc243-sync-busy/` | in flight |
 
 Both owners were killed by the session usage limit ~23:30 and resumed via SendMessage at the
 02:00 reset (ledgers + worktrees survived intact). Killed again ~04:15 (SC-288, SC-230),
