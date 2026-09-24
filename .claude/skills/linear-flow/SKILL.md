@@ -60,6 +60,15 @@ SC-131). Always pass the complete intended set (fetch current labels first if un
 re-verify labels after any save that matters (`Needs Review` disappearing = invisible to
 Scott's filter).
 
+**Pass label IDs, not names.** On 2026-09-23 (SC-341), passing the label name
+`"Needs Review"` failed silently in both `addLabels` and `labels`. The call returned
+success and the label set didn't change. Passing the label UUIDs worked on the first try.
+Look up the IDs with `mcp__linear__list_issue_labels` (`team: "Steel Compendium"`). Filtering
+by `name` there also came back empty for a label that exists, so list them all instead. As of
+that date: `Needs Review` = `c6c20e5e-822e-4d9a-9328-7536023c962f`, `Bug` =
+`3eb2047c-ad74-4887-86ba-70cafa243d8d`, `Compendium` = `c53f8158-d4eb-4660-b774-693816c5e83e`.
+Always check the returned `labels` array. Don't trust the call's success.
+
 ## Posting mechanics
 
 Comments are posted through the orchestration plugin's `scripts/linear-post.py` (the plugin

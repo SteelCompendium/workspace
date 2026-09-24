@@ -14,6 +14,31 @@
 > **Release gate: 7.0.0 ships only when SC-97 (Steel UI parity) is complete.**
 
 
+### 2026-09-23 (overnight) — IN-FLIGHT: DSE 7.0.0 queue (dispatcher session)
+Dispatcher session `a56f19e1-5165-4bc8-92ee-d6eeff34f029` (Opus 5.5; owners spawned as
+`orchestration:ticket-owner` on **Opus 5.5 per Scott**, not Fable). **2 owners in flight at a
+time.** Queue order: SC-328 → SC-241 → SC-240 → SC-243 (after SC-328 lands) → SC-288 →
+SC-282 (after SC-288 lands) → SC-230 → SC-338 → SC-272 → SC-236 → SC-255 → SC-231 → SC-284 →
+SC-232+SC-235 (one wave, as a pair) → SC-318 → SC-317. **Do not start:** SC-340, SC-343,
+SC-331 (other sessions own them), SC-336, SC-339, SC-290, SC-260 (folded into that work).
+A slot frees on LAND-READY or PARKED-NEEDS-REVIEW. Land only LAND-READY with no open Scott
+ask, via land-stack, one at a time; `ps aux | grep -E "wt-finish|land-stack|just deploy"`
+first. No tags/releases, never DSE `main`, no `just deploy*`, no un-sanctioned rebaseline.
+
+| Ticket | Worktree | Ledger dir | Status |
+|---|---|---|---|
+| SC-328 | `sc328-fflate` | `.superpowers/sdd/sc328-fflate/` | **Needs Review** — dse `db2a206`, review-approved; awaiting Scott's sanction of a 16-line freeze rebaseline (`rebaseline.txt` in the ledger; dispatcher applies at landing per dse-verify). Branch carries merge commits (6.0.2 hotfix merge-forward) — land WITHOUT a flattening rebase. SC-243 waits on this landing. |
+| SC-241 | — | `build-ledgers/sc241-minion-heal/` | **LANDED** dse develop `46c0c4c`, workspace `afacc53`; worktree removed |
+| SC-240 | — | `build-ledgers/sc240-scc-ref-error/` | **LANDED** dse develop `f6fb208`, workspace `7fb9d6d`; worktree removed |
+| SC-288 | `sc288-sidebar-stuck` | `.superpowers/sdd/sc288-sidebar-stuck/` | in flight |
+| SC-230 | `sc230-modal-text-size` | `.superpowers/sdd/sc230-modal-text-size/` | in flight |
+
+Both owners were killed by the session usage limit ~23:30 and resumed via SendMessage at the
+02:00 reset (ledgers + worktrees survived intact). A one-shot backup-resume cron is set in
+this session for 05:13 EDT.
+Main checkout dse carries Scott's live vault dirt (`demo-vault/Welcome.md`, `justfile`,
+`compendium-manifest.json`, `demo-vault/montage 1.md`) — stash-wrap per land-stack §2c.
+
 ### 2026-09-13 (overnight) — IN-FLIGHT: SC-299 / SC-126 / SC-92 (dispatcher session)
 Scott asked for three Todo tickets to be finished while he sleeps. Dispatcher (this session,
 scratchpad id `7694ddcf-550f-41a1-b639-c563d81974ca`) spawned one Fable ticket-owner each:

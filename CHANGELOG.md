@@ -642,6 +642,15 @@ go under an *Internal* sub-heading.
   change — freeze and parity gates stayed green throughout. Groundwork only,
   for user-customizable fonts (SC-112).
 
+## 2026-09-23 — Scorpion Tail maneuver renders as an ability card (SC-341; steel-etl ff9c15f, v2 072f14f)
+
+- **Scorpion Tails: the Scorpion Tail maneuver now renders as an ability card (SC-341).**
+  The beastheart leveled weapon's embedded maneuver had been scrambled at extraction —
+  its header row flattened to "Melee, Strike Maneuver o Melee 2 x One creature" and its
+  effect cut off mid-sentence ("3 + your"). It now shows the book's keywords, action
+  type, distance, target, and full effect ("3 + your Might score") on both the Browse
+  and Read pages.
+
 ## 2026-09-23 — Root landing page uses the v2 site's fonts (SC-335)
 
 - **steelcompendium.io: same fonts as the v2 site (SC-335).** The root landing page
