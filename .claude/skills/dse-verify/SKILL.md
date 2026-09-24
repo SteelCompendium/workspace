@@ -882,14 +882,17 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 ## Current expected numbers (drift — verify against current main)
 
 **CURRENT — SC-343, the stale-write guard (branch `sc343-stale-write-guard`, 2026-09-24,
-based on dse `develop` `0c132d8`, landed at `b6d360c`).** Measured at the landing commit,
-full battery in the new order (Lifecycle now step 4, after jest and before shots):
+based on dse `develop` `0c132d8`, pre-landing rebase re-measured at `48ac20c`).** The base
+moved to `f6fb208` (SC-241 + SC-240 initiative fixes landed on `develop` in between; neither
+touches `src/framework/host/`) when the branch was rebased for landing. Measured at
+`48ac20c`, full battery in the new order (Lifecycle now step 4, after jest and before
+shots):
 
-| Gate | Before (base `0c132d8`) | After (`b6d360c`) |
+| Gate | Before (base `0c132d8`) | After (`48ac20c`) |
 |---|---|---|
 | `npm run tsc` | clean | clean |
 | `npm run lint` | clean, exit 0 | clean, exit 0 |
-| `npx jest` | 3925 passed / 1 skipped / 202 of 203 suites / 3 snapshots | **3957 passed / 1 skipped / 204 of 205 suites / 3 snapshots** (net **+32**: T1 5, T2 9, T3 11, T4 2, final review 5) |
+| `npx jest` | 3925 passed / 1 skipped / 202 of 203 suites / 3 snapshots | **3969 passed / 1 skipped / 204 of 205 suites / 3 snapshots** |
 | `npm run obsidian-lifecycle` | did not exist | **`OBSIDIAN-LIFECYCLE done: 6/6 ok, 0 failed`, exit 0** (`G-S7a`, `G-S7b`, `G-S6a`, `G-S6b`, `G-S6u`, `G-S5n`) |
 | `npm run shots` | 524, 0 FAIL | **unchanged — 524, 0 FAIL** |
 | `check-freeze.sh` | `freeze OK (260/260 …)`, exit 0 | **unchanged — `freeze OK (260/260 …)`, exit 0** |

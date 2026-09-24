@@ -17,7 +17,11 @@ baked into the framework instead of copy-pasted into 11 processors.
 > write path (§4.2) now validates `getSectionInfo`'s range against the live content, locates a
 > block by its last known body when the range is stale or gone, and drops an unplaceable write
 > with an Obsidian Notice; `canPersist` (§3.4/§4.4) survives a vanished section only for a host
-> whose section resolved at least once; `BlockHost.notePersistIntent?()` is new (§3.4).
+> whose section resolved at least once; `BlockHost.notePersistIntent?()` is new (§3.4). Hover
+> popovers resolve their section and persist normally (measured on Obsidian 1.14.2,
+> 2026-09-24); the §3.4 `canPersist` doc and §4.4 lists that call hover non-persistable are
+> superseded on that point — print/export, canvas and blocks nested in another view's
+> `MarkdownRenderer.render` stay read-only.
 
 ---
 
