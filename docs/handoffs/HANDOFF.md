@@ -34,7 +34,8 @@ first. No tags/releases, never DSE `main`, no `just deploy*`, no un-sanctioned r
 | SC-282 | — | `build-ledgers/sc282-sidebar-rename/` | **LANDED** dse develop `6c4f6aa`, workspace `218726e`; worktree removed. Spin-off SC-354 (sidebar listener leak, Backlog). |
 | SC-338 | `sc338-chip-focus` | `.superpowers/sdd/sc338-chip-focus/` | in flight |
 | SC-230 | `sc230-modal-text-size` | `.superpowers/sdd/sc230-modal-text-size/` | **Needs Review**: dse `0dbab59`, review-approved, gates green, freeze 260/260. Scott must decide (1) whether the fixed modal looks right at 140%, and (2) whether the modal title scales (option A, on the branch) or stays at Obsidian's size (option B, a small removal round). A + looks-right = land-ready after a rebase. |
-| SC-243 | `sc243-sync-busy` | `.superpowers/sdd/sc243-sync-busy/` | in flight |
+| SC-243 | `sc243-sync-busy` | `.superpowers/sdd/sc243-sync-busy/` | **Needs Review**: dse `2dad7d8`, review-approved, gates green, freeze 260/260. Scott picks the busy-button look: A (as shown; the row grows 16px while syncing), B (fixed-width Sync button, one CSS round) or C (disable only, no label swap). A = land as-is. Spin-offs SC-357/358/359. |
+| SC-272 | `sc272-rule-eyebrow` | `.superpowers/sdd/sc272-rule-eyebrow/` | in flight |
 
 Both owners were killed by the session usage limit ~23:30 and resumed via SendMessage at the
 02:00 reset (ledgers + worktrees survived intact). Killed again ~04:15 (SC-288, SC-230),
