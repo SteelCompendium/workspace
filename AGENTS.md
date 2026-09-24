@@ -115,7 +115,7 @@ Hierarchical classification used across all data repos: `source/type/item` (e.g.
 `mcdm.heroes.v1/feature.ability.fury.level-1/gouge`). Codes are website permalinks
 (`/scc/{code}/`), API keys, and cross-reference links. Scheme spec is **v1.1**.
 
-Registry is **3,086 codes** across four books (heroes 1,952, beastheart 241, monsters 662,
+Registry is **3,096 codes** across four books (heroes 1,962, beastheart 241, monsters 662,
 summoner 231). Three umbrella families carry most of the structure:
 
 - **`feature`** is the umbrella feature type (`feature.ability.*` / `feature.trait.*` /

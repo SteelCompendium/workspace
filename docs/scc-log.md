@@ -791,3 +791,15 @@ code changed: `mcdm.heroes.v1/feature.ability.common/dragons-fire` →
 registry (diffed the full 3,086-code list before/after): no other code added, removed, or
 changed. `go build`/`go vet`/`go test -race` all green, `gen --all` + `site --config
 ../v2/site.yaml` both exit 0. (Linear SC-323.)
+
+## 2026-09-23 — ten Heroes rule pages (SC-329)
+
+Minted `rule.*` codes for ten rules sections that had no Browse page, found while fixing
+search coverage of book text: `rule.combat/movement` (umbrella over the `movement/*`
+entries, like `rule.combat/condition`), `rule.combat/end-of-combat`,
+`rule.combat/stacking-effects`, `rule.combat/ending-effects`, `rule.test/hide-and-sneak`,
+`rule.test/assist-a-test`, `rule.dice/multiple-targets`, `rule.negotiation/argument`,
+`rule.negotiation/offer`, `rule.negotiation/opening`. The book's explicit "see Hide and
+Sneak" (×4) and "See Making Arguments below" cross-references now link to them. Registry
+3,096 codes (heroes 1,962). See
+`docs/superpowers/specs/2026-09-23-book-search-gap-fill-design.md`.
