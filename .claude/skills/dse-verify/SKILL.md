@@ -151,8 +151,8 @@ OK line on success; read the lines, don't infer from exit code alone.
   `button host-leak OK (111 button kinds × 3 states … = 666 comparisons …)`; **re-measured
   2026-09-24 (SC-338): 114 kinds / 684 comparisons — pre-existing drift from unrelated
   landings since SC-205, not caused by SC-338 (SC-338 never touches the gallery/harness DOM
-  composition; `.dse-optchip`/`.dse-swatch` are modal-only and never mount there — see the
-  SC-338 note below)**, plus a printed 12-record exemption boundary (8 focus-visible
+  composition; `.dse-optchip` is modal-only and never mounts there — see the SC-338 note
+  below)**, plus a printed 12-record exemption boundary (8 focus-visible
   disabled, 2 hover no-hit-point, 2 focus-visible `visibility: hidden`). Kind counts drift
   as fixtures/chrome grow — treat them as "expect right now", and treat any per-record
   `matches(':focus-visible')` failure or a new unexplained exemption as a real red, not
@@ -228,14 +228,23 @@ not caused by SC-338); freeze `260/260`, exit 0; parity `0 gap(s), 0 undeclared,
 declared`, exit 0; real-Obsidian camera `modal-montage-edit` prints the ring-checked ok
 line (was skipping).
 
-**Battery at SC-338 round 2** (dse `1170822`, same base): tsc/lint clean; jest 3997 passed
-/ 1 skipped / 3998 total / 206 of 207 suites (unchanged again — the swatch guard
-extensions also extend existing `test()` bodies); obsidian-lifecycle 6/6; shots 524 PNGs,
-0 FAIL, host-leak `114 … 684` (unchanged — `.dse-swatch` still never mounts in the
-browser gallery, same as `.dse-optchip`); freeze `260/260`; parity `0/0/16`; real-Obsidian
-camera: `modal-montage-edit` ring-checked ok, `modal-montage-limits` ok. `.dse-swatch`
-joins the same two rules `.dse-optchip` uses, for the same reason — see the round's report
-for the full evidence and the pressed-swatch cascade proof.
+**Battery at SC-338 round 2** (dse `1170822`, same base): identical shape to round 1's
+numbers. Round 2 also folded `.dse-swatch` (Conditions "Color" row) into the same two
+rules `.dse-optchip` uses — **REVERTED in round 3**: the swatch's own pressed-state
+`outline: 2px solid var(--dse-accent)` is the kit ring's exact geometry and (per theme)
+colour, so the addition made a focused UNPRESSED swatch indistinguishable from a PRESSED
+one, and pressed+focused stayed visually identical to pressed+unfocused — worse than
+before the fold, caught on the round-2 evidence grid. Swatch focus design is SC-361
+(Backlog). **SC-338 is `.dse-optchip` only from round 3 on.**
+
+**Battery at SC-338 round 3** (dse `a756ec1`, same base `6c4f6aa`): the `.dse-swatch`
+CSS (both hunks) and both guard-test assertions pulled back out — `git diff 7177033 --
+test/dom/kit/kit-index.test.ts test/dom/theme/hostRegrounding.test.ts` is empty (byte-
+identical to round 1). tsc/lint clean; jest 3997 passed / 1 skipped / 3998 total / 206 of
+207 suites (no flake this run); obsidian-lifecycle 6/6; shots 524
+PNGs, 0 FAIL, host-leak `114 … 684` (unchanged — `.dse-optchip` still never mounts in the
+browser gallery); freeze `260/260`; parity `0/0/16`; real-Obsidian camera:
+`modal-montage-edit` ring-checked ok, `modal-montage-limits` ok.
 
 ## Freeze semantics
 
