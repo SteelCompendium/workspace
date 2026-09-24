@@ -13,7 +13,8 @@ go under an *Internal* sub-heading.
   Movement — never showed up in search, because the Books tab was excluded to avoid
   duplicate results. Search now includes every book section that has no Browse page of
   its own (labeled with its book, e.g. "Combat · Draw Steel: Heroes") and still skips the
-  ones that do, so nothing appears twice. Ten rules sections also got their own Browse
+  ones that do, so nothing appears twice (a few Monsters-book echelon introductions are
+  still only on the Books tab — SC-345). Ten rules sections also got their own Browse
   pages: Movement, Hide and Sneak, Assist a Test, End of Combat, Stacking Unique Effects,
   Ending Effects, Roll Against Multiple Creatures, Making Arguments, NPC Response and
   Offer, and Opening a Negotiation.

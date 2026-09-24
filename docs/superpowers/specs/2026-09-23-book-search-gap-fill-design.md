@@ -36,8 +36,9 @@ the Part B code list and ids). Implementation plan follows this spec's review:
 Two complementary parts; both approved.
 
 - **Part A — search gap-fill:** index the Read (book) sections that no Browse page covers,
-  and only those. Fixes the whole class: every word of every book becomes findable, with
-  no duplicate results.
+  and only those. Fixes the whole class: nearly every word of every book becomes findable
+  with no duplicate results (a covered container page's own intro prose is the exception —
+  deferred to Backlog SC-345).
 - **Part B — rule pages:** mint `rule.*` codes for ten high-value Heroes rules sections, so
   they get Browse pages, permalinks, SCC API entries and inbound links.
 
@@ -114,8 +115,12 @@ Consequences, by design:
 
 ### Ranking and result labels (v2 search worker)
 
-- Read sections rank at the default boost (1), below `rule` / `movement` / `condition`
-  pages (3), so a Browse page wins any tie with book text.
+- Read sections rank at the default boost 1 — below boosted Browse pages
+  (`rule`/`movement`/`condition` 3, `class` 4, …) but level with unboosted Browse pages
+  such as section landing/index pages, so a handful of exact-title lookups
+  (Environmental Hazards, Power Fixtures, Titles, Artifact, Ancestries) now rank their
+  Browse landing #2 behind the same-named book intro; sweep 98.0% → 97.0%, gate ≥95%
+  passes.
 - Book results are labeled with their book, because chapter titles collide across books
   (every book has an "Introduction"). In `sc-search-core.js`, when building a result group
   whose page location starts with `Read/<folder>/`, the page-level doc's title becomes
