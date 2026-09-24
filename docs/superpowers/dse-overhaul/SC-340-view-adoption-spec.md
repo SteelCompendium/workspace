@@ -107,8 +107,8 @@ Verbatim from the SC-340 decisions ledger.
   r2 runs). SC-343 refuses that copy's writes. SC-340 never adopts it (§6.2), and does
   not try to fix the leak.
 - **ds-conditions' existing close-deferral** (`src/elements/conditions/panel.ts`
-  ~:155–183, SC-186). It keeps working unchanged. Whether to return it to live persist is
-  open question Q3.
+  ~:155–183, SC-186). It keeps working unchanged. Returning it to live persist is
+  follow-up **SC-344** (Backlog, blocked by SC-340).
 
 ## 4. The Obsidian behaviour this relies on
 
@@ -174,6 +174,16 @@ block") no longer holds for reading mode. The block's render child now only sign
 registry.
 
 Non-reading hosts (sidebar, and a future Live Preview) keep `host.addChild(view)`.
+
+**Invariant: nothing an adopted view depends on may be a child of the old render child.**
+The old render child is unloaded about 50 ms after an adoption, and its children go with
+it. This holds today:
+- `pipeline.ts:682` (`host.addChild(view)`) is the only `host.addChild` call in `src/`.
+- Nested markdown renders parent themselves to the view (`view.ts:234`,
+  `MarkdownRenderer.render(…, this)`), not to the host.
+
+The build keeps it true with a jest test that fails if `host.addChild` is called for
+anything but a non-reading host's view.
 
 ### 6.2 Claim at processor time
 
@@ -272,7 +282,8 @@ Every unload path, measured in r2 S6 unless noted:
 | Detach the leaf that embeds B, write pending in the embed | embed render child unloads | release → flush | lands in B |
 | An embed inside a leaf that navigates away | embed render child is **not** unloaded until the leaf detaches (r1 E4b) | not released until then (this already happens today) | no loss; view lingers |
 | Leaked detached embed copy | never unloaded while the leaf lives | never claimed (no rebuild ever carries its `docId`); its writes are refused by SC-343 | 0 claims; guard refused the stale write |
-| Canvas, hover, print hosts | `canPersist` is false and they never write | owned and released like any other view; no ticket is ever recorded | not exercised by the spike; the gate adds hover (§10.2) |
+| Canvas, hover, print hosts | `canPersist` is false and they never write | owned and released like any other view; no ticket is ever recorded; stay read-only for life (§6.5 item 4) | not exercised by the spike; the gate adds hover (§10.2) |
+| Block nested inside another view (`ds-scc` card, `ds-party` `hero_ref`) | its render child is added to the outer view's `MarkdownRenderer.render` component, so it is a descendant of the outer view | released when the outer view unloads; carried along unchanged when the outer view is adopted; never claimed itself (read-only, so no tickets) | not exercised by the spike; the gate adds one nested `ds-scc` card inside an adopted block (§10.2) |
 
 ### 6.5 Durable locate and the stale-position guard (SC-343), plus the position refresh
 
@@ -290,8 +301,19 @@ in `ReadingModeBlockHost`:
    body equals `lastKnownBody`, reusing `listFences` / `findFenceByBody` in
    `src/framework/sidebar/anchor.ts`. Choose the one nearest `lastKnownLineStart`. No
    match drops the write (§8).
-4. **`canPersist`.** True when the section resolves, *or* when a durable identity exists.
-   The durable case is what makes the flush after navigate-away possible.
+4. **`canPersist`.** True when the section resolves now, *or* when this host's section
+   **resolved at least once** and a durable identity exists. The durable case is what
+   makes the flush after navigate-away possible.
+   - "Resolved at least once" is required, not optional. Every host gets a
+     `lastKnownBody` from its mount `source`, so a durable identity alone would make
+     every host writable.
+   - That would include hover popovers, print/export, and blocks nested inside another
+     view's `MarkdownRenderer.render` (for example a `ds-scc` card's nested block, or a
+     `ds-party` member's `hero_ref`). Those are read-only today because their section
+     never resolves (F1 §4.4; `BlockHost.ts` `canPersist` doc).
+   - A nested block's durable locate could then write its body into the note wherever the
+     same text happens to appear. A host whose section never resolved stays read-only for
+     its whole life.
 5. **Position refresh at `persist()`.** `ElementView.persist()` calls a host hook
    (proposed `cx.host.notePersistIntent?.()`), which refreshes `lastKnownLineStart` while
    the section is still live.
@@ -300,7 +322,7 @@ in `ReadingModeBlockHost`:
    - With it, the result was correct at 4- and 16-line shifts.
 
 If SC-343 lands narrower (only item 2, say), the missing items become step 1 of the
-SC-340 build. Open question Q1 asks where item 5 belongs.
+SC-340 build. **Item 5 lands in SC-343** (owner decision, §13 Q1).
 
 ### 6.6 Kill switch
 
@@ -362,11 +384,13 @@ F1 amendments:
   section path while sections still resolve (r2 S6 e: lands, 0 errors). A write that
   resolves after unload still lands, because `vault.process` belongs to the app, not the
   plugin.
-- **The leaked embed copy's write.** SC-343 refuses it as a durable miss. With a Notice,
-  a user could see one message for a write they never made. That is acceptable, because
-  it is rare and the dropped body is always a stale copy. Suppress the Notice when the
-  host's root has been detached for more than 5 s and holds no focus, which marks it as a
-  leaked copy.
+- **The leaked embed copy's write.** SC-343 refuses it as a durable miss. No special
+  case is added for it.
+  - The copy is detached and invisible, so no user action reaches it. The spike could
+    only trigger its write by script.
+  - A heuristic to hide its Notice ("root detached for more than 5 s") would also hide
+    real misses from off-screen blocks, which are detached too (B10).
+  - If it ever writes, the user sees one Notice for a write that was correctly refused.
 - **Adoption failure mid-way** (an exception in `rebind` or the move). The processor
   catches it, releases the entry, and falls through to `pipeline.run`, so the block
   still renders.
@@ -473,7 +497,7 @@ false order, and is fixed in the same commit, with the count recorded in the pla
 | G-S3 | S3 + S3b | text, focus and caret survive; 0 keystrokes lost across the adoption |
 | G-S4 | S4 | pane + embed and two panes: writer-only adoption; the other instance fresh with the new data; 1 write per click; leaked embed copy never claimed |
 | G-S5 | S5 | external edit and undo-like revert → fresh view, old view released |
-| G-S6 | S6 | every §6.4 path: pending write lands; live-view count = rendered blocks (leaked copies excluded); 0 orphaned modals; note integrity |
+| G-S6 | S6 | every §6.4 path: pending write lands; live-view count = rendered blocks (leaked copies excluded); 0 orphaned modals; note integrity. New (not in the spike): a hover popover of a DSE block renders read-only (`canPersist` false, no write affordances), and a nested `ds-scc` card inside an adopted block is still mounted and read-only after the adoption |
 | G-S7 | S7 | identical twin blocks with lines shifted: the write lands in the right twin, both through the section path and through the durable path |
 | G-S8 | S8 | tall scrolled tracker: `scrollTop` held (pin on, as shipped) |
 
@@ -501,7 +525,7 @@ The new order is: tsc → lint → jest → **obsidian-lifecycle** → shots →
 
 1. **SC-343** lands first, standalone: the durable identity, the stale-position guard,
    the durable locate, and `canPersist` over the durable identity. It also carries the
-   persist-time refresh if Q1 is answered that way. It gets its own spec or plan and its
+   persist-time refresh (§13 Q1). It gets its own spec or plan and its
    own review.
 2. **SC-340**, in plan-able steps. Headlines only; the implementation plan is a separate
    document.
@@ -543,24 +567,27 @@ The new order is: tsc → lint → jest → **obsidian-lifecycle** → shots →
     dialogs, focus and typed text survive a write); the write path locates a block by its
     body when its position has moved."
 
-## 13. Open questions for Scott
+## 13. Questions
 
-- **Q1. Does the persist-time position refresh (§6.5 item 5) land in SC-343 or in
-  SC-340?**
-  *Recommendation: SC-343.* It protects the durable locate SC-343 introduces. Without it,
-  SC-343's durable path can pick the wrong one of two identical blocks. SC-343 alone would
-  then also fix SC-336 (navigate-away) before SC-340 lands.
-- **Q2. When a write is dropped because its block changed on disk first, show an Obsidian
-  Notice or only log to the console?**
-  *Recommendation: a Notice*, rate-limited to one per note per 5 s and suppressed for
-  leaked embed copies (§8). A dropped write is lost user data, and the console is
-  invisible to users.
-- **Q3. Return ds-conditions (`conditions/panel.ts` ~:155–183) from "persist on dialog
-  close" to live persist, now that adoption keeps its dialog open?**
-  *Recommendation: not in SC-340.* It works and has its own tests. File a small follow-up
-  so the two condition dialogs behave the same, and decide it after SC-340 has run in
-  Scott's vault for a while.
-- **Q4. Kill-switch form: a hidden `data.json` key (proposed), a visible Advanced
-  setting, or none?**
-  *Recommendation: the hidden key.* It allows an off switch without a release and without
-  adding UI.
+**Open for Scott**
+
+- **Q2. When a pending save is dropped, show an Obsidian Notice or only log to the
+  console?** A save is dropped when its block changed or vanished on disk first, for
+  example sync or a hand edit landing within the 400 ms save delay.
+  *Recommendation: a Notice*, at most one per note per 5 s, plus a `console.warn` (§8).
+  A dropped save is lost user data, and users never see the console. Proposed text:
+  "Draw Steel Elements: a change to a block in <note> was not saved — the block changed
+  on disk first." SC-343 builds this message, so the answer is needed before SC-343.
+
+**Decided by the owner (technical; say if you disagree)**
+
+- **Q1. The persist-time position refresh (§6.5 item 5) lands in SC-343, not SC-340.**
+  It protects the body search that SC-343 introduces. Without it, that search can write
+  to the wrong one of two identical blocks. With it, SC-343 alone also fixes SC-336
+  (navigate-away) before SC-340 lands.
+- **Q3. ds-conditions keeps its "save on dialog close" behaviour in SC-340.** Returning
+  it to live saving is follow-up **SC-344**, to decide after SC-340 has run in Scott's
+  vault for a while.
+- **Q4. The kill switch is a hidden `viewAdoption` key in `data.json`** (§6.6). It
+  allows an off switch without a release, and without adding a setting every user has to
+  understand.
