@@ -27,10 +27,11 @@ first. No tags/releases, never DSE `main`, no `just deploy*`, no un-sanctioned r
 
 | Ticket | Worktree | Ledger dir | Status |
 |---|---|---|---|
-| SC-328 | `sc328-fflate` | `.superpowers/sdd/sc328-fflate/` | in flight (in review; owner expects to park Needs Review on a 16-line freeze-rebaseline sanction) |
+| SC-328 | `sc328-fflate` | `.superpowers/sdd/sc328-fflate/` | **Needs Review** — dse `db2a206`, review-approved; awaiting Scott's sanction of a 16-line freeze rebaseline (`rebaseline.txt` in the ledger; dispatcher applies at landing per dse-verify). Branch carries merge commits (6.0.2 hotfix merge-forward) — land WITHOUT a flattening rebase. SC-243 waits on this landing. |
 | SC-241 | — | `build-ledgers/sc241-minion-heal/` | **LANDED** dse develop `46c0c4c`, workspace `afacc53`; worktree removed |
 | SC-240 | — | `build-ledgers/sc240-scc-ref-error/` | **LANDED** dse develop `f6fb208`, workspace `7fb9d6d`; worktree removed |
 | SC-288 | `sc288-sidebar-stuck` | `.superpowers/sdd/sc288-sidebar-stuck/` | in flight |
+| SC-230 | `sc230-modal-text-size` | `.superpowers/sdd/sc230-modal-text-size/` | in flight |
 
 Both owners were killed by the session usage limit ~23:30 and resumed via SendMessage at the
 02:00 reset (ledgers + worktrees survived intact). A one-shot backup-resume cron is set in
