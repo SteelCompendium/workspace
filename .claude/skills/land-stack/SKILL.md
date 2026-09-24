@@ -80,6 +80,15 @@ comm -12 \
 # Empty = clean merge, no output expected from wt-finish's merge step.
 # Non-empty = expect a conflict in those files — read both sides before landing
 # (usually a single-hunk CHANGELOG reconcile: keep both additions).
+#    ⚠️ The `comm` above ignores the gitlink itself. If origin/main's pin for $sub moved
+#    after the env was cut (another effort landed first), the superproject merge is a
+#    TWO-SIDED gitlink merge, and git can only fast-forward it if the MAIN checkout's $sub
+#    already has the branch's commits. It doesn't (the fetch above ran before wt-finish's
+#    push) → `CONFLICT (submodule) … (commits not present)` (hit on SC-240, 2026-09-24).
+#    Prevent it: pull the branch's commits into the main checkout's submodule first.
+git -C "$sub" fetch "$wt/$sub" "$name"
+#    Recovery if it already fired: `git merge --abort`, pop the vault stash (§2c),
+#    `git -C "$sub" fetch origin`, re-stash, re-run wt-finish (its push step is a no-op).
 ```
 
 **CHANGELOG conflicts are the routine case, not a surprise.** Nearly every dse landing
