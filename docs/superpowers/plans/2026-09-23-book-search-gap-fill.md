@@ -1064,12 +1064,13 @@ In `v2/tests/search/bench.cjs`, append to the `NAMED` array:
 After the `NAMED` array add:
 
 ```js
-// SC-329 no-duplicate guard: a heading Browse already carries must not ALSO
-// surface from Read. Queries are exact titles of covered Read headings, so a
-// leaked copy would rank near the top (title tier 100).
+// SC-329 no-duplicate guard: a heading Browse already carries must not ALSO be
+// indexed from Read. Each query is the exact title of a covered Read heading;
+// its own Read anchor must not appear anywhere in the results, while its Read
+// page must still be indexed (so the guard cannot pass vacuously).
 const ABSENT = [
-  { q: "can't cut corners", prefix: "Read/", top: 10 },
-  { q: "size and space", prefix: "Read/", top: 10 },
+  { q: "can't cut corners", loc: "Read/heroes/combat/#cant-cut-corners", page: "Read/heroes/combat/" },
+  { q: "size and space", loc: "Read/heroes/combat/#size-and-space", page: "Read/heroes/combat/" },
 ];
 ```
 
@@ -1078,9 +1079,11 @@ In `main()`, directly after the named-queries `for` loop (before `if (GATE)`), a
 ```js
   for (const a of ABSENT) {
     const items = await query(a.q);
-    const leaked = items.slice(0, a.top).map(pageOf).filter((p) => p.startsWith(a.prefix));
-    namedOK = namedOK && leaked.length === 0;
-    console.log(`  ${leaked.length ? "LEAK" : "ok  "} "${a.q}" → no ${a.prefix} in top ${a.top}${leaked.length ? ": " + leaked.join(", ") : ""}`);
+    const leaked = items.some((g) => g.some((d) => d.location === a.loc));
+    const pageIndexed = idx.docs.some((d) => d.location === a.page);
+    const ok = !leaked && pageIndexed;
+    namedOK = namedOK && ok;
+    console.log(`  ${ok ? "ok  " : leaked ? "LEAK" : "NOPAGE"} "${a.q}" → ${a.loc} ${leaked ? "present" : "absent"}; ${a.page} ${pageIndexed ? "indexed" : "NOT indexed"}`);
   }
 ```
 

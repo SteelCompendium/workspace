@@ -194,9 +194,11 @@ those need narrower sub-headings.
     Part B).
   - An uncovered book section is found, e.g. "your first session" →
     `Read/heroes/making-a-hero/#your-first-session` in the top 3.
-  - No-duplicate guard: exact titles of covered Read headings ("can't cut corners",
-    "size and space") return no `Read/` location in the top 10 — a leaked copy would
-    rank near the top on its exact title, so the guard cannot pass by accident.
+  - No-duplicate guard: for exact titles of covered Read headings ("can't cut corners",
+    "size and space"), the heading's own Read anchor (e.g. `Read/heroes/combat/#size-and-space`)
+    appears nowhere in the results, while its Read page is indexed. (A coarser "no Read/
+    page in the top 10" check fails on legitimate uncovered text that shares words — e.g.
+    "Space Gods of the Timescape".)
   - All existing named cases and the `--gate` sweep threshold still pass.
 - **Node test** for the book-label table ↔ `site.yaml` sync.
 - `steel-etl validate --scc-stable`; `go test ./...`; `just build` + `just search-bench
