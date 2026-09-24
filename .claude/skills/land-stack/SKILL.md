@@ -55,7 +55,9 @@ git -C "$wt/$sub" fetch origin
 #    OLD branch and wt-finish will push there. This pushed a 7.0 branch onto dse `main`
 #    (released-only, pinned at 6.0.1) on 2026-08-16 — recovered, but it fired the old
 #    docs workflow, which wiped the mike gh-pages layout. CHECK EVERY TIME:
-git -C "$wt" config -f "$wt/.gitmodules" "submodule.$sub.branch"   # must equal $tracked
+git config -f "$wt/.gitmodules" "submodule.$sub.branch"   # must equal $tracked
+#    (NO `-C "$wt"` here: with a RELATIVE $wt, -C changes directory first and "$wt/.gitmodules"
+#    then resolves to nothing — the check silently prints EMPTY. Hit on SC-343, 2026-09-24.)
 #    If it doesn't: git -C "$wt" checkout origin/main -- .gitmodules && commit it (superproject-only).
 
 # a) Is the submodule push a fast-forward? (local branch must contain origin's tip)
@@ -80,6 +82,16 @@ comm -12 \
 # Empty = clean merge, no output expected from wt-finish's merge step.
 # Non-empty = expect a conflict in those files — read both sides before landing
 # (usually a single-hunk CHANGELOG reconcile: keep both additions).
+#    ⚠️ The `comm` above ignores the gitlink itself. If origin/main's pin for $sub moved
+#    after the env was cut (another effort landed first), the superproject merge is a
+#    TWO-SIDED gitlink merge, and git can only fast-forward it if the MAIN checkout's $sub
+#    already has the branch's commits. It doesn't (the fetch above ran before wt-finish's
+#    push) → `CONFLICT (submodule) … (commits not present)` (hit on SC-240, 2026-09-24).
+#    Prevent it: pull the branch's commits into the main checkout's submodule first.
+git -C "$sub" fetch "$(cd "$wt/$sub" && pwd)" "$name"   # ABSOLUTE path: -C "$sub" re-roots a relative $wt
+git -C "$sub" cat-file -t "$(git -C "$wt/$sub" rev-parse "$name")"   # must print `commit`
+#    Recovery if it already fired: `git merge --abort`, pop the vault stash (§2c),
+#    `git -C "$sub" fetch origin`, re-stash, re-run wt-finish (its push step is a no-op).
 ```
 
 **CHANGELOG conflicts are the routine case, not a surprise.** Nearly every dse landing

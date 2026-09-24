@@ -8,10 +8,11 @@ description: Use when verifying, testing, or gating any change to the draw-steel
 ## Overview
 
 `draw-steel-elements` (the DSE Obsidian plugin) gates every change through a fixed battery
-of checks: type-check, unit tests, visual shots, a byte-level freeze check, and a CSS/DOM
-parity check against the live v2 site. All commands run through devbox and have specific
-footguns that silently produce false-green results if you get the shape wrong. This skill
-is the command reference — read it before running (or reporting on) any of these gates.
+of checks: type-check, lint, unit tests, the real-Obsidian lifecycle gate, visual shots, a
+byte-level freeze check, and a CSS/DOM parity check against the live v2 site. All commands
+run through devbox and have specific footguns that silently produce false-green results if
+you get the shape wrong. This skill is the command reference — read it before running (or
+reporting on) any of these gates.
 
 **Never edit `draw-steel-elements/` from the shared main workspace checkout.** Do this work
 in an isolated worktree (`just wt-new <name>`) per the workspace CLAUDE.md.
@@ -26,16 +27,26 @@ absolute paths — devbox ignores your shell's `cd`.
 | 1. Type-check | `npm run tsc` | clean (no output) |
 | 2. Lint | `npm run lint` | clean (no output), exit 0 — gated in CI as of SC-136/FOLLOWUPS #61 |
 | 3. Unit tests | `npx jest` | all suites/tests green |
-| 4. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
-| 5. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
-| 6. Parity (LAST) | `npm run parity` | `0 GAPs`, `0 undeclared WARNs`, exactly the documented declared-deferral set, exit 0 |
-| 7. Obsidian shots (only if a display is available) | `npm run obsidian-shots` | regenerates ground-truth PNGs from a real spawned Obsidian |
+| 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 6/6 ok, 0 failed`, exit 0 (~1.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
+| 5. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
+| 6. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
+| 7. Parity (LAST) | `npm run parity` | `0 GAPs`, `0 undeclared WARNs`, exactly the documented declared-deferral set, exit 0 |
+| 8. Obsidian shots (only if a display is available) | `npm run obsidian-shots` | regenerates ground-truth PNGs from a real spawned Obsidian |
 
 Run parity last: it rebuilds the harness bundle itself (`harness:build` is a
 `predependency` step inside `npm run parity`), so running it after the freeze check keeps
 freeze's PNG comparison isolated from parity's own rebuild. `obsidian-shots` needs a real
 display (`DISPLAY=:1` by default) and the system Obsidian binary — skip it in headless
 environments, don't fake it.
+
+**Lifecycle gate (SC-343, spec SC-340 §10.2).** `visual-harness/obsidian-lifecycle.mjs` drives a real
+Obsidian through the block write lifecycle jest cannot reproduce (section re-draw and unload). One
+`OBSIDIAN-LIFECYCLE <id> ok (…)` line per scenario; a failure prints `… FAIL: <assertion> [shot <path>]`
+and exits 1. `--only=<id,…>` reruns a subset (an id it doesn't recognize — even mixed with valid ones —
+is a usage error, exit 2, never a silent skip). SC-343's scenarios: `G-S7a`/`G-S7b` (identical twins,
+section and durable path), `G-S6a` (navigate-away flush, SC-336), `G-S6b` (leaf close), `G-S6u`
+(unterminated fence at EOF, located again by body on the durable path), `G-S5n` (dropped-write Notice
++ rate limit). Mandatory — unlike `obsidian-shots` it needs no real display.
 
 ### Devbox wrapping (every command above)
 
@@ -870,7 +881,36 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — SC-144, the legacy-theme removal (branch `sc144-legacy-removal`, 2026-08-11,
+**CURRENT — SC-343, the stale-write guard (branch `sc343-stale-write-guard`, 2026-09-24,
+based on dse `develop` `0c132d8`, pre-landing rebase re-measured at `48ac20c`).** The base
+moved to `f6fb208` (SC-241 + SC-240 initiative fixes landed on `develop` in between; neither
+touches `src/framework/host/`) when the branch was rebased for landing. Measured at
+`48ac20c`, full battery in the new order (Lifecycle now step 4, after jest and before
+shots):
+
+| Gate | Before (base `0c132d8`) | After (`48ac20c`) |
+|---|---|---|
+| `npm run tsc` | clean | clean |
+| `npm run lint` | clean, exit 0 | clean, exit 0 |
+| `npx jest` | 3925 passed / 1 skipped / 202 of 203 suites / 3 snapshots | **3969 passed / 1 skipped / 204 of 205 suites / 3 snapshots** |
+| `npm run obsidian-lifecycle` | did not exist | **`OBSIDIAN-LIFECYCLE done: 6/6 ok, 0 failed`, exit 0** (`G-S7a`, `G-S7b`, `G-S6a`, `G-S6b`, `G-S6u`, `G-S5n`) |
+| `npm run shots` | 524, 0 FAIL | **unchanged — 524, 0 FAIL** |
+| `check-freeze.sh` | `freeze OK (260/260 …)`, exit 0 | **unchanged — `freeze OK (260/260 …)`, exit 0** |
+| `npm run parity` | 0 GAPs / 0 undeclared / 16 DECLARED / exit 0 | **unchanged** |
+
+The lifecycle gate is real-Obsidian-headless (own Xvfb `:160–:199`, own CDP port 9262,
+scratch vault) and is mandatory, unlike `obsidian-shots` — see "The battery, in order"
+above. `Cdp.connect()` falls back to the `ws` package on Node < 22 (native `WebSocket` on
+22+); this landing measured on Node 20.11.1, so the fallback path is what ran. On success
+it deletes its own per-run temp dir; it keeps (and prints the path of) that temp dir only
+when a run leaves a FAIL screenshot behind. It exits 2 — not 1 — for an environment problem
+(no Xvfb/asar/binary, the CDP port already busy), on SIGINT/SIGTERM, and when `--only`
+names no scenario id that exists; only a genuine scenario assertion failure exits 1. Its
+Notice capture records every plugin-authored Obsidian Notice except the host's own "Update
+Available" banner, so a future scenario asserting zero Notices sees any other plugin's
+chrome too, not just DSE's.
+
+**As of SC-144, the legacy-theme removal (branch `sc144-legacy-removal`, 2026-08-11,
 based on dse main `20a78e2` = post-SC-149).** Measured at the landing commit, full battery
 in order:
 
