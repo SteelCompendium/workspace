@@ -8,10 +8,11 @@ description: Use when verifying, testing, or gating any change to the draw-steel
 ## Overview
 
 `draw-steel-elements` (the DSE Obsidian plugin) gates every change through a fixed battery
-of checks: type-check, unit tests, visual shots, a byte-level freeze check, and a CSS/DOM
-parity check against the live v2 site. All commands run through devbox and have specific
-footguns that silently produce false-green results if you get the shape wrong. This skill
-is the command reference — read it before running (or reporting on) any of these gates.
+of checks: type-check, lint, unit tests, the real-Obsidian lifecycle gate, visual shots, a
+byte-level freeze check, and a CSS/DOM parity check against the live v2 site. All commands
+run through devbox and have specific footguns that silently produce false-green results if
+you get the shape wrong. This skill is the command reference — read it before running (or
+reporting on) any of these gates.
 
 **Never edit `draw-steel-elements/` from the shared main workspace checkout.** Do this work
 in an isolated worktree (`just wt-new <name>`) per the workspace CLAUDE.md.
@@ -26,7 +27,7 @@ absolute paths — devbox ignores your shell's `cd`.
 | 1. Type-check | `npm run tsc` | clean (no output) |
 | 2. Lint | `npm run lint` | clean (no output), exit 0 — gated in CI as of SC-136/FOLLOWUPS #61 |
 | 3. Unit tests | `npx jest` | all suites/tests green |
-| 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 5/5 ok, 0 failed`, exit 0 (~1.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
+| 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 6/6 ok, 0 failed`, exit 0 (~1.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
 | 5. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
 | 6. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
 | 7. Parity (LAST) | `npm run parity` | `0 GAPs`, `0 undeclared WARNs`, exactly the documented declared-deferral set, exit 0 |
@@ -41,9 +42,11 @@ environments, don't fake it.
 **Lifecycle gate (SC-343, spec SC-340 §10.2).** `visual-harness/obsidian-lifecycle.mjs` drives a real
 Obsidian through the block write lifecycle jest cannot reproduce (section re-draw and unload). One
 `OBSIDIAN-LIFECYCLE <id> ok (…)` line per scenario; a failure prints `… FAIL: <assertion> [shot <path>]`
-and exits 1. `--only=<id,…>` reruns a subset. SC-343's scenarios: `G-S7a`/`G-S7b` (identical twins,
-section and durable path), `G-S6a` (navigate-away flush, SC-336), `G-S6b` (leaf close), `G-S5n`
-(dropped-write Notice + rate limit). Mandatory — unlike `obsidian-shots` it needs no real display.
+and exits 1. `--only=<id,…>` reruns a subset (an id it doesn't recognize — even mixed with valid ones —
+is a usage error, exit 2, never a silent skip). SC-343's scenarios: `G-S7a`/`G-S7b` (identical twins,
+section and durable path), `G-S6a` (navigate-away flush, SC-336), `G-S6b` (leaf close), `G-S6u`
+(unterminated fence at EOF, located again by body on the durable path), `G-S5n` (dropped-write Notice
++ rate limit). Mandatory — unlike `obsidian-shots` it needs no real display.
 
 ### Devbox wrapping (every command above)
 
@@ -886,8 +889,8 @@ full battery in the new order (Lifecycle now step 4, after jest and before shots
 |---|---|---|
 | `npm run tsc` | clean | clean |
 | `npm run lint` | clean, exit 0 | clean, exit 0 |
-| `npx jest` | 3925 passed / 1 skipped / 202 of 203 suites / 3 snapshots | **3952 passed / 1 skipped / 204 of 205 suites / 3 snapshots** (net **+27**: T1 5, T2 9, T3 11, T4 2) |
-| `npm run obsidian-lifecycle` | did not exist | **`OBSIDIAN-LIFECYCLE done: 5/5 ok, 0 failed`, exit 0** (`G-S7a`, `G-S7b`, `G-S6a`, `G-S6b`, `G-S5n`) |
+| `npx jest` | 3925 passed / 1 skipped / 202 of 203 suites / 3 snapshots | **3957 passed / 1 skipped / 204 of 205 suites / 3 snapshots** (net **+32**: T1 5, T2 9, T3 11, T4 2, final review 5) |
+| `npm run obsidian-lifecycle` | did not exist | **`OBSIDIAN-LIFECYCLE done: 6/6 ok, 0 failed`, exit 0** (`G-S7a`, `G-S7b`, `G-S6a`, `G-S6b`, `G-S6u`, `G-S5n`) |
 | `npm run shots` | 524, 0 FAIL | **unchanged — 524, 0 FAIL** |
 | `check-freeze.sh` | `freeze OK (260/260 …)`, exit 0 | **unchanged — `freeze OK (260/260 …)`, exit 0** |
 | `npm run parity` | 0 GAPs / 0 undeclared / 16 DECLARED / exit 0 | **unchanged** |
