@@ -13,6 +13,12 @@ single declarative element registry + one mode-agnostic render pipeline
 (theming, preferences, reference/SCC resolution) and lifecycle-correct Obsidian plumbing
 baked into the framework instead of copy-pasted into 11 processors.
 
+> **Amended 2026-09-23 by SC-343** (spec: `SC-340-view-adoption-spec.md` §6.5): the reading-mode
+> write path (§4.2) now validates `getSectionInfo`'s range against the live content, locates a
+> block by its last known body when the range is stale or gone, and drops an unplaceable write
+> with an Obsidian Notice; `canPersist` (§3.4/§4.4) survives a vanished section only for a host
+> whose section resolved at least once; `BlockHost.notePersistIntent?()` is new (§3.4).
+
 ---
 
 ## 1. As-is analysis
@@ -438,6 +444,8 @@ export interface BlockHost {
   replaceSource(newSource: string): Promise<boolean>;
   /** Best-effort stable key for session state (§4.3). */
   blockKey(): string;
+  /** SC-343: refresh a cached position before a write is scheduled. */
+  notePersistIntent?(): void;
 }
 ```
 
@@ -627,7 +635,10 @@ today's "note is the database" contract.
      flush in the view's `onunload` (so closing the note or switching files never drops a
      click) — see OD-4;
    - reading mode implementation uses `Vault.process` (atomic) and splices exactly the
-     lines from `getBlockInfo()`, preserving the original fence characters and alias.
+     lines from `getBlockInfo()`, preserving the original fence characters and alias —
+     SC-343: only when the live content at that range still holds the last known body;
+     otherwise the block is found by that body nearest its last known line, and a write
+     with no match is dropped with a Notice (one per note per 5 s).
 3. The file change makes Obsidian re-run the postprocessor: old view auto-unloads, new
    pipeline run parses the just-written YAML. This echo rebuild is **accepted** (it is
    today's behavior and guarantees view ≡ document). The debounce collapses click storms
