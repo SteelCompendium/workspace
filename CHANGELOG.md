@@ -8,16 +8,6 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
-- **v2 site: search now reaches the book text itself (SC-329).** Rules that only lived in
-  a book chapter — like "you can move freely through an ally's space…" under Combat ›
-  Movement — never showed up in search, because the Books tab was excluded to avoid
-  duplicate results. Search now includes every book section that has no Browse page of
-  its own (labeled with its book, e.g. "Combat · Draw Steel: Heroes") and still skips the
-  ones that do, so nothing appears twice (a few Monsters-book echelon introductions are
-  still only on the Books tab — SC-345). Ten rules sections also got their own Browse
-  pages: Movement, Hide and Sneak, Assist a Test, End of Combat, Stacking Unique Effects,
-  Ending Effects, Roll Against Multiple Creatures, Making Arguments, NPC Response and
-  Offer, and Opening a Negotiation.
 - **v2 site: the display face is now Cinzel, at the weight the design always wanted
   (SC-325).** Forum had a single 400 weight, so every heading's boldness was faked
   with an outline — and an outline is the wrong tool, because one thickness never
@@ -651,6 +641,19 @@ go under an *Internal* sub-heading.
   Every consumer was re-pointed to its classified slot with zero rendering
   change — freeze and parity gates stayed green throughout. Groundwork only,
   for user-customizable fonts (SC-112).
+
+## 2026-09-24 — Search reaches the book text; ten new rule pages (SC-329; steel-etl 88aec3b, v2 3bfe2ce)
+
+- **v2 site: search now reaches the book text itself (SC-329).** Rules that only lived in
+  a book chapter — like "you can move freely through an ally's space…" under Combat ›
+  Movement — never showed up in search, because the Books tab was excluded to avoid
+  duplicate results. Search now includes every book section that has no Browse page of
+  its own (labeled with its book, e.g. "Combat · Draw Steel: Heroes") and still skips the
+  ones that do, so nothing appears twice (a few Monsters-book echelon introductions are
+  still only on the Books tab — SC-345). Ten rules sections also got their own Browse
+  pages: Movement, Hide and Sneak, Assist a Test, End of Combat, Stacking Unique Effects,
+  Ending Effects, Roll Against Multiple Creatures, Making Arguments, NPC Response and
+  Offer, and Opening a Negotiation.
 
 ## 2026-09-23 — Scorpion Tail maneuver renders as an ability card (SC-341; steel-etl ff9c15f, v2 072f14f)
 
