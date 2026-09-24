@@ -59,11 +59,11 @@ likely just noise. Decided 2026-06-18.
 
 ## Registry
 
-3,086 codes across four books (exact as of 2026-08-21):
+3,096 codes across four books (exact as of 2026-09-23):
 
 | Book | Codes |
 |------|------:|
-| heroes | 1,952 |
+| heroes | 1,962 |
 | beastheart | 241 |
 | monsters | 662 |
 | summoner | 231 |
