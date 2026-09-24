@@ -30,12 +30,14 @@ first. No tags/releases, never DSE `main`, no `just deploy*`, no un-sanctioned r
 | SC-328 | `sc328-fflate` | `.superpowers/sdd/sc328-fflate/` | **Needs Review** — dse `db2a206`, review-approved; awaiting Scott's sanction of a 16-line freeze rebaseline (`rebaseline.txt` in the ledger; dispatcher applies at landing per dse-verify). Branch carries merge commits (6.0.2 hotfix merge-forward) — land WITHOUT a flattening rebase. SC-243 waits on this landing. |
 | SC-241 | — | `build-ledgers/sc241-minion-heal/` | **LANDED** dse develop `46c0c4c`, workspace `afacc53`; worktree removed |
 | SC-240 | — | `build-ledgers/sc240-scc-ref-error/` | **LANDED** dse develop `f6fb208`, workspace `7fb9d6d`; worktree removed |
-| SC-288 | `sc288-sidebar-stuck` | `.superpowers/sdd/sc288-sidebar-stuck/` | in flight |
+| SC-288 | — | `build-ledgers/sc288-sidebar-stuck/` | **LANDED** dse develop `3b25127`, workspace `6dc0dfe`; worktree removed |
+| SC-282 | `sc282-sidebar-rename` | `.superpowers/sdd/sc282-sidebar-rename/` | in flight |
 | SC-230 | `sc230-modal-text-size` | `.superpowers/sdd/sc230-modal-text-size/` | in flight |
 
 Both owners were killed by the session usage limit ~23:30 and resumed via SendMessage at the
-02:00 reset (ledgers + worktrees survived intact). A one-shot backup-resume cron is set in
-this session for 05:13 EDT.
+02:00 reset (ledgers + worktrees survived intact). Killed again ~04:15 (SC-288, SC-230),
+resumed at the 07:00 reset. No wakeups remain scheduled. SC-343 landed from another session
+meanwhile (dse `48ac20c`). SC-328's branch will need develop merged in before it lands.
 Main checkout dse carries Scott's live vault dirt (`demo-vault/Welcome.md`, `justfile`,
 `compendium-manifest.json`, `demo-vault/montage 1.md`) — stash-wrap per land-stack §2c.
 
