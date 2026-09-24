@@ -18,6 +18,14 @@ go under an *Internal* sub-heading.
   starting. The buttons re-enable live if the settings window is left open through a
   sync, with no need to close and reopen it.
 
+- **DSE plugin: option chips in the montage and conditions dialogs now show a visible
+  keyboard focus ring (SC-338).** The Result chips on the "Log an action…" form and the
+  icon/duration/effect choices in the Conditions dialog are the one control family that
+  never joined the plugin's shared focus ring: a pressed chip showed no focus indicator
+  at all, and an unpressed one only got Obsidian's own faint grey ring. Both states now
+  draw the same outlined ring every other DSE control uses, with the pressed chip's own
+  bevel look untouched.
+
 - **v2 site: the display face is now Cinzel, at the weight the design always wanted
   (SC-325).** Forum had a single 400 weight, so every heading's boldness was faked
   with an outline — and an outline is the wrong tool, because one thickness never

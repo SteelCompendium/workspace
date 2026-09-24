@@ -197,13 +197,21 @@ also FAILS the capture on:
 - `FOCUS RING CLIPPED BY THE MODAL BODY` — the auto-focused field's outline ring (width +
   offset) extends past the body's scroll box; the body's `padding: 4px; margin: -4px` is
   what gives it room. Skipped (printed, not failed) when the focused control draws no
-  outline — `modal-montage-edit` skips today because its focused `.dse-optchip` has no
-  plugin ring (SC-338).
+  outline. **SC-338 (2026-09-24): `.dse-optchip` joined the shared kit ring, so
+  `modal-montage-edit` no longer skips — its auto-focused Result chip now carries a real
+  outline and the check runs for real, printing the ok line like every other MODAL_SHOTS
+  capture.** The skip check itself is still generic (any focused control with no outline
+  is skipped, not just this one) and stays in the code for the next control that ships
+  without a ring.
 
 The ok line reads `modal confirmed; no sideways scroll; focus ring inside the body (…)`.
 Run the camera on a PRIVATE Xvfb + port (`DSE_CAMERA_DISPLAY`, `DSE_CAMERA_PORT`), never
 Scott's `:1`. Battery at SC-334 landing (dse `e4bcd0f`): jest 3919 passed / 1 skipped /
-202 of 203 suites; shots 524, 0 FAIL; freeze 260/260; parity 0 / 0 / 16 DECLARED.
+202 of 203 suites; shots 524, 0 FAIL; freeze 260/260; parity 0 / 0 / 16 DECLARED. Battery
+at SC-338 round 1 (dse branch `sc338-chip-focus`, base `origin/develop` `6c4f6aa`): jest
+3997 passed / 1 skipped / 206 of 207 suites (unchanged from base — the round's two new
+assertions extend existing `test()` bodies rather than adding new ones); shots/freeze/
+parity as measured that round (see the round's report for the exact lines).
 
 ## Freeze semantics
 
