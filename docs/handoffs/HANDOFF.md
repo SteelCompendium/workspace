@@ -28,8 +28,12 @@ first. No tags/releases, never DSE `main`, no `just deploy*`, no un-sanctioned r
 | Ticket | Worktree | Ledger dir | Status |
 |---|---|---|---|
 | SC-328 | `sc328-fflate` | `.superpowers/sdd/sc328-fflate/` | in flight |
-| SC-241 | `sc241-minion-heal` | `.superpowers/sdd/sc241-minion-heal/` | in flight |
+| SC-241 | — | `build-ledgers/sc241-minion-heal/` | **LANDED** dse develop `46c0c4c`, workspace `afacc53`; worktree removed |
+| SC-240 | `sc240-scc-ref-error` | `.superpowers/sdd/sc240-scc-ref-error/` | in flight |
 
+Both owners were killed by the session usage limit ~23:30 and resumed via SendMessage at the
+02:00 reset (ledgers + worktrees survived intact). A one-shot backup-resume cron is set in
+this session for 05:13 EDT.
 Main checkout dse carries Scott's live vault dirt (`demo-vault/Welcome.md`, `justfile`,
 `compendium-manifest.json`, `demo-vault/montage 1.md`) — stash-wrap per land-stack §2c.
 
