@@ -88,7 +88,8 @@ comm -12 \
 #    already has the branch's commits. It doesn't (the fetch above ran before wt-finish's
 #    push) → `CONFLICT (submodule) … (commits not present)` (hit on SC-240, 2026-09-24).
 #    Prevent it: pull the branch's commits into the main checkout's submodule first.
-git -C "$sub" fetch "$wt/$sub" "$name"
+git -C "$sub" fetch "$(cd "$wt/$sub" && pwd)" "$name"   # ABSOLUTE path: -C "$sub" re-roots a relative $wt
+git -C "$sub" cat-file -t "$(git -C "$wt/$sub" rev-parse "$name")"   # must print `commit`
 #    Recovery if it already fired: `git merge --abort`, pop the vault stash (§2c),
 #    `git -C "$sub" fetch origin`, re-stash, re-run wt-finish (its push step is a no-op).
 ```
