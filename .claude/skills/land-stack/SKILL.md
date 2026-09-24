@@ -55,7 +55,9 @@ git -C "$wt/$sub" fetch origin
 #    OLD branch and wt-finish will push there. This pushed a 7.0 branch onto dse `main`
 #    (released-only, pinned at 6.0.1) on 2026-08-16 — recovered, but it fired the old
 #    docs workflow, which wiped the mike gh-pages layout. CHECK EVERY TIME:
-git -C "$wt" config -f "$wt/.gitmodules" "submodule.$sub.branch"   # must equal $tracked
+git config -f "$wt/.gitmodules" "submodule.$sub.branch"   # must equal $tracked
+#    (NO `-C "$wt"` here: with a RELATIVE $wt, -C changes directory first and "$wt/.gitmodules"
+#    then resolves to nothing — the check silently prints EMPTY. Hit on SC-343, 2026-09-24.)
 #    If it doesn't: git -C "$wt" checkout origin/main -- .gitmodules && commit it (superproject-only).
 
 # a) Is the submodule push a fast-forward? (local branch must contain origin's tip)
