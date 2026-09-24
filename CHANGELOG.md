@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **Scorpion Tails: the Scorpion Tail maneuver now renders as an ability card (SC-341).**
+  The beastheart leveled weapon's embedded maneuver had been scrambled at extraction —
+  its header row flattened to "Melee, Strike Maneuver o Melee 2 x One creature" and its
+  effect cut off mid-sentence ("3 + your"). It now shows the book's keywords, action
+  type, distance, target, and full effect ("3 + your Might score") on both the Browse
+  and Read pages.
+
 - **v2 site: the display face is now Cinzel, at the weight the design always wanted
   (SC-325).** Forum had a single 400 weight, so every heading's boldness was faked
   with an outline — and an outline is the wrong tool, because one thickness never
