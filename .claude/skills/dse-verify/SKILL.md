@@ -148,11 +148,15 @@ OK line on success; read the lines, don't infer from exit code alone.
 - **Button host-leak sweep** (`assertBtnHostLeak` in `shoot.mjs`): computed-style
   invariance of every gallery button kind with vs. without the injected host copy, now at
   **3 states (rest / hover / focus-visible) × dark/light**. Expected line as of SC-205:
-  `button host-leak OK (111 button kinds × 3 states … = 666 comparisons …)` plus a printed
-  12-record exemption boundary (8 focus-visible disabled, 2 hover no-hit-point, 2
-  focus-visible `visibility: hidden`). Kind counts drift as fixtures/chrome grow — treat
-  them as "expect right now", and treat any per-record `matches(':focus-visible')` failure
-  or a new unexplained exemption as a real red, not noise.
+  `button host-leak OK (111 button kinds × 3 states … = 666 comparisons …)`; **re-measured
+  2026-09-24 (SC-338): 114 kinds / 684 comparisons — pre-existing drift from unrelated
+  landings since SC-205, not caused by SC-338 (SC-338 never touches the gallery/harness DOM
+  composition; `.dse-optchip`/`.dse-swatch` are modal-only and never mount there — see the
+  SC-338 note below)**, plus a printed 12-record exemption boundary (8 focus-visible
+  disabled, 2 hover no-hit-point, 2 focus-visible `visibility: hidden`). Kind counts drift
+  as fixtures/chrome grow — treat them as "expect right now", and treat any per-record
+  `matches(':focus-visible')` failure or a new unexplained exemption as a real red, not
+  noise.
 
 Battery numbers at SC-205 land-ready (dse branch `sc205-btn-host-leak`, 2026-08-28, base
 `16e25ff`): jest 3257 passed / 1 skipped / 185 suites; shots 474 PNGs, 0 FAIL; freeze
@@ -202,16 +206,36 @@ also FAILS the capture on:
   outline and the check runs for real, printing the ok line like every other MODAL_SHOTS
   capture.** The skip check itself is still generic (any focused control with no outline
   is skipped, not just this one) and stays in the code for the next control that ships
-  without a ring.
+  without a ring. **Correction (SC-338 r1 review, LOW-2): the focused Success chip on
+  `modal-montage-edit` sits 46.0px / 62.8px inside the body's scroll-box edges — real
+  geometric slack, not a close fit against the 4px padding.** The check is proven live
+  (`outline-offset: 50px !important` on the chip → `FAIL … cut off on top 6.0px`; 40px
+  still passes), so it is not a no-op, but `modal-montage-edit` does not exercise the
+  padding margin — that is `modal-montage-limits`'s job (padding zeroed →
+  `FAIL … input.dse-mt__sheet-input … cut off on top 4.0px, right 4.0px`; restored → ok).
 
 The ok line reads `modal confirmed; no sideways scroll; focus ring inside the body (…)`.
 Run the camera on a PRIVATE Xvfb + port (`DSE_CAMERA_DISPLAY`, `DSE_CAMERA_PORT`), never
 Scott's `:1`. Battery at SC-334 landing (dse `e4bcd0f`): jest 3919 passed / 1 skipped /
-202 of 203 suites; shots 524, 0 FAIL; freeze 260/260; parity 0 / 0 / 16 DECLARED. Battery
-at SC-338 round 1 (dse branch `sc338-chip-focus`, base `origin/develop` `6c4f6aa`): jest
-3997 passed / 1 skipped / 206 of 207 suites (unchanged from base — the round's two new
-assertions extend existing `test()` bodies rather than adding new ones); shots/freeze/
-parity as measured that round (see the round's report for the exact lines).
+202 of 203 suites; shots 524, 0 FAIL; freeze 260/260; parity 0 / 0 / 16 DECLARED.
+
+**Battery at SC-338 round 1** (dse `7177033`, base `origin/develop` `6c4f6aa`): tsc/lint
+clean; jest 3997 passed / 1 skipped / 3998 total / 206 of 207 suites (unchanged from
+base — the round's two new assertions extend existing `test()` bodies rather than adding
+new ones); obsidian-lifecycle 6/6; shots 524 PNGs, 0 FAIL, host-copy pin OK, button
+host-leak `114 button kinds × 3 states × dark/light = 684 comparisons` (see above — drift,
+not caused by SC-338); freeze `260/260`, exit 0; parity `0 gap(s), 0 undeclared, 16
+declared`, exit 0; real-Obsidian camera `modal-montage-edit` prints the ring-checked ok
+line (was skipping).
+
+**Battery at SC-338 round 2** (dse `1170822`, same base): tsc/lint clean; jest 3997 passed
+/ 1 skipped / 3998 total / 206 of 207 suites (unchanged again — the swatch guard
+extensions also extend existing `test()` bodies); obsidian-lifecycle 6/6; shots 524 PNGs,
+0 FAIL, host-leak `114 … 684` (unchanged — `.dse-swatch` still never mounts in the
+browser gallery, same as `.dse-optchip`); freeze `260/260`; parity `0/0/16`; real-Obsidian
+camera: `modal-montage-edit` ring-checked ok, `modal-montage-limits` ok. `.dse-swatch`
+joins the same two rules `.dse-optchip` uses, for the same reason — see the round's report
+for the full evidence and the pressed-swatch cascade proof.
 
 ## Freeze semantics
 
