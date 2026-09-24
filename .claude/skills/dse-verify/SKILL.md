@@ -219,31 +219,11 @@ Run the camera on a PRIVATE Xvfb + port (`DSE_CAMERA_DISPLAY`, `DSE_CAMERA_PORT`
 Scott's `:1`. Battery at SC-334 landing (dse `e4bcd0f`): jest 3919 passed / 1 skipped /
 202 of 203 suites; shots 524, 0 FAIL; freeze 260/260; parity 0 / 0 / 16 DECLARED.
 
-**Battery at SC-338 round 1** (dse `7177033`, base `origin/develop` `6c4f6aa`): tsc/lint
-clean; jest 3997 passed / 1 skipped / 3998 total / 206 of 207 suites (unchanged from
-base — the round's two new assertions extend existing `test()` bodies rather than adding
-new ones); obsidian-lifecycle 6/6; shots 524 PNGs, 0 FAIL, host-copy pin OK, button
-host-leak `114 button kinds × 3 states × dark/light = 684 comparisons` (see above — drift,
-not caused by SC-338); freeze `260/260`, exit 0; parity `0 gap(s), 0 undeclared, 16
-declared`, exit 0; real-Obsidian camera `modal-montage-edit` prints the ring-checked ok
-line (was skipping).
-
-**Battery at SC-338 round 2** (dse `1170822`, same base): identical shape to round 1's
-numbers. Round 2 also folded `.dse-swatch` (Conditions "Color" row) into the same two
-rules `.dse-optchip` uses — **REVERTED in round 3**: the swatch's own pressed-state
-`outline: 2px solid var(--dse-accent)` is the kit ring's exact geometry and (per theme)
-colour, so the addition made a focused UNPRESSED swatch indistinguishable from a PRESSED
-one, and pressed+focused stayed visually identical to pressed+unfocused — worse than
-before the fold, caught on the round-2 evidence grid. Swatch focus design is SC-361
-(Backlog). **SC-338 is `.dse-optchip` only from round 3 on.**
-
-**Battery at SC-338 round 3** (dse `a756ec1`, same base `6c4f6aa`): the `.dse-swatch`
-CSS (both hunks) and both guard-test assertions pulled back out — `git diff 7177033 --
-test/dom/kit/kit-index.test.ts test/dom/theme/hostRegrounding.test.ts` is empty (byte-
-identical to round 1). tsc/lint clean; jest 3997 passed / 1 skipped / 3998 total / 206 of
-207 suites (no flake this run); obsidian-lifecycle 6/6; shots 524
-PNGs, 0 FAIL, host-leak `114 … 684` (unchanged — `.dse-optchip` still never mounts in the
-browser gallery); freeze `260/260`; parity `0/0/16`; real-Obsidian camera:
+**Battery at SC-338** (dse `c19069a`, base `origin/develop` `6c4f6aa`): tsc/lint clean;
+jest 3997 passed / 1 skipped / 3998 total / 206 of 207 suites; obsidian-lifecycle 6/6;
+shots 524 PNGs, 0 FAIL, host-copy pin OK, button host-leak `114 button kinds × 3 states ×
+dark/light = 684 comparisons` (see above — drift, not caused by SC-338); freeze `260/260`,
+exit 0; parity `0 gap(s), 0 undeclared, 16 declared`, exit 0; real-Obsidian camera:
 `modal-montage-edit` ring-checked ok, `modal-montage-limits` ok.
 
 ## Freeze semantics
