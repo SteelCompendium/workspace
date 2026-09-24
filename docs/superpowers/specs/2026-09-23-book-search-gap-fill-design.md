@@ -194,8 +194,9 @@ those need narrower sub-headings.
     Part B).
   - An uncovered book section is found, e.g. "your first session" →
     `Read/heroes/making-a-hero/#your-first-session` in the top 3.
-  - No-duplicate guard: "burrow" (a covered section) returns no `Read/` location in the
-    top 10.
+  - No-duplicate guard: exact titles of covered Read headings ("can't cut corners",
+    "size and space") return no `Read/` location in the top 10 — a leaked copy would
+    rank near the top on its exact title, so the guard cannot pass by accident.
   - All existing named cases and the `--gate` sweep threshold still pass.
 - **Node test** for the book-label table ↔ `site.yaml` sync.
 - `steel-etl validate --scc-stable`; `go test ./...`; `just build` + `just search-bench
