@@ -183,6 +183,14 @@ Each cost real time once. Every one belongs in the briefs it applies to.
    name the config explicitly — and workers must commit after every coherent step so
    nothing sits uncommitted through a gate or build.
 
+9. **Never `pkill`/`killall` by a bare command pattern (2026-09-24, SC-338).** A worker ran
+   `pkill -9 -f "npm run shots"` and `pkill -9 -f chrome-headless-shell` to clear its own
+   hung run and killed SC-243's concurrent, legitimate shots run in another worktree. Every
+   concurrent effort runs the same gate commands, so a pattern like that matches all of them.
+   Kill only by PID, and only a PID whose command line contains **your own worktree path**
+   (`pgrep -af "worktrees/<name>/"`, then check each line before killing it). Put this rule
+   in every brief that runs `shots`, `parity` or `obsidian-*`.
+
 **Provenance for two plugin-side footguns.** The plugin states these rules without ticket
 keys (they generalise); the evidence is this project's, and lives here:
 
