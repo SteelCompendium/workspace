@@ -39,8 +39,14 @@ first. No tags/releases, never DSE `main`, no `just deploy*`, no un-sanctioned r
 | SC-272 | `sc272-rule-eyebrow` | `.superpowers/sdd/sc272-rule-eyebrow/` | **Needs Review**: dse `5293604`, review-approved, gates green, freeze 260/260. Scott checks the by-SCC rule-card eyebrow (group name instead of RULE) and picks (1) plural group names that match the site (on the branch; lands as-is) or (2) singular in both the plugin and the site (small plugin round plus a new steel-etl ticket). Spin-off SC-362. |
 | SC-255 | `sc255-skills-collapse` | `.superpowers/sdd/sc255-skills-collapse/` | **Needs Review**: dse `4ff0b88`, review-approved, gates green. Scott checks the Skills card without its "Skill List" header and sanctions a 20-line Skills print rebaseline (`rebaseline.txt` in the ledger); one "sanctioned" on SC-255 (ask comment `15a5f267`) covers both. Spin-off SC-364. |
 | SC-236 | `sc236-feature-example` | `.superpowers/sdd/sc236-feature-example/` | **Needs Review**: dse `5cd09e1` (option A built), review-approved, gates green. Scott picks A (drop the `ability_type` line; only the VILLAIN ACTION chip goes) or B (a genuine villain action; new round). A also needs a written "sanctioned" for an 8-line print rebaseline (`rebaseline.txt` in the ledger: feature, feature-collapsed, feature-spend, chrome-collapsed-rollout, twin and realprint). The pointer bump is uncommitted in the worktree. |
-| SC-231 | `sc231-keyword-chips` | `.superpowers/sdd/sc231-keyword-chips/` | in flight |
+| SC-231 | `sc231-keyword-chips` | `.superpowers/sdd/sc231-keyword-chips/` | **Needs Review**: dse `a6fce4a` (on develop `619c4bd`), review-approved, gates green. Scott approves the one-chip-per-keyword look and sanctions a 55-line print rebaseline (sub-pixel anti-aliasing shift from splitting the text run; `rebaseline.txt` in the ledger). The comment also offers three pre-existing site differences as optional tickets. |
 | SC-284 | `sc284-cardhead-narrow` | `.superpowers/sdd/sc284-cardhead-narrow/` | in flight |
+| SC-317 | `sc317-extlink-icon` | `.superpowers/sdd/sc317-extlink-icon/` | in flight. It started ahead of the SC-232+SC-235 pair, which needs two free slots at once; the pair starts when both SC-284 and SC-317 free their slots. SC-318 comes last, since it overlaps the pair's type-scale area. |
+
+**develop moved (another session):** SC-340 landed → dse develop `619c4bd`. Every parked branch
+above that was measured on `6c4f6aa` needs a rebase and a fresh battery when Scott answers; its owner does
+that on wake. The weekly usage limit hit ~04:35 on 09-25 (reset 07:00; nothing resumed until
+10:05).
 
 Both owners were killed by the session usage limit ~23:30 and resumed via SendMessage at the
 02:00 reset (ledgers + worktrees survived intact). Killed again ~04:15 (SC-288, SC-230),
