@@ -23,6 +23,12 @@ baked into the framework instead of copy-pasted into 11 processors.
 > superseded on that point — print/export, canvas and blocks nested in another view's
 > `MarkdownRenderer.render` stay read-only.
 
+> **Amended by SC-340** (spec `SC-340-view-adoption-spec.md`): reading-mode views are owned
+> by the plugin-scoped `ViewRegistry` (§2.4 steps 4–6, §4.5); an echo rebuild of the view's
+> own write ADOPTS the live view instead of building a fresh one (§2.4 step 5, §4.2 step 3 —
+> view ≡ document still holds: a claim requires the new section's body to equal the body the
+> view wrote); `ReadingModeBlockHost.rebind()` (§3.4).
+
 ---
 
 ## 1. As-is analysis
@@ -252,7 +258,9 @@ parse ──▶ validate ──▶ resolve refs ──▶ create view ──▶ 
    `Component` lifecycle to the block; `view.mount(rootEl, model)` builds DOM. The
    pipeline applies the click shield (unless `def.noClickShield`), theme stamping and
    pref reflection to the root before `onMount` runs, so CSS attributes are present at
-   first paint.
+   first paint. **SC-340:** `host.addChild(view)` is used only for non-reading hosts —
+   a reading-mode view is instead `own()`ed by the plugin-scoped `ViewRegistry`, which
+   can outlive this one render pass (see the amendment above).
 5. **update** — two triggers:
    - *Internal mutation* (persisted/interactive): the view mutates the model, calls its
      targeted DOM updates, then `this.persist()`.
@@ -260,7 +268,11 @@ parse ──▶ validate ──▶ resolve refs ──▶ create view ──▶ 
      mode re-runs the postprocessor → old `MarkdownRenderChild` unloads (auto-teardown),
      new pipeline run mounts a fresh view. `onUpdate` exists so an LP host (and any
      future same-DOM refresh) can hand a changed model to a *live* view without rebuild;
-     the default implementation is teardown-and-remount of children.
+     the default implementation is teardown-and-remount of children. **SC-340:** when the
+     external change IS the view's own recent write (§4.2 step 3), the new section's
+     processor claims the registry's live view and ADOPTS it (moves it into the new,
+     still-detached section synchronously) instead of building a fresh one — open
+     dialogs, focus and in-progress typing survive.
 6. **teardown** — `Component.onunload` cascades: DOM listeners (`registerDomEvent`),
    intervals (`registerInterval`), pref/theme subscriptions (`register`), child views,
    markdown render children. Views must not hold references outside their subtree; the
@@ -452,6 +464,11 @@ export interface BlockHost {
   notePersistIntent?(): void;
 }
 ```
+
+**SC-340:** `ReadingModeBlockHost` additionally exposes `rebind(el, ctx)` (re-points the
+host at the section that adopted its view — see the amendment above) and the registry
+bookkeeping `own()` reads (`docId`, `sourcePath`, `renderChildGone`, `renderChildLoaded`,
+`lastKnownLineStart`, `attachEntry`).
 
 `ReadingModeBlockHost` construction (pipeline-internal):
 `new ReadingModeBlockHost(plugin, el, ctx, alias)` — wraps
@@ -647,7 +664,11 @@ today's "note is the database" contract.
    pipeline run parses the just-written YAML. This echo rebuild is **accepted** (it is
    today's behavior and guarantees view ≡ document). The debounce collapses click storms
    (e.g. malice `+1` ×5) into one write/rebuild. Views must therefore keep *pending* model
-   state authoritative until flush — the pipeline never mutates a mounted view.
+   state authoritative until flush — the pipeline never mutates a mounted view. **SC-340:**
+   "old view auto-unloads" no longer means destroyed — a reading-mode echo of the view's
+   OWN write instead ADOPTS the live view into the new section (view ≡ document still
+   holds: the claim requires the new section's body to equal the body just written); a
+   genuinely external change still tears down and rebuilds fresh.
 4. Session UI state (selected tab/cell) is re-hydrated from `SessionStore` on the rebuild,
    which is how e.g. `selectedInstanceKey` stops needing to be *persisted* state (today it
    is written into the YAML purely to survive the echo rebuild — with `SessionStore` it
@@ -690,6 +711,11 @@ enough for tab/collapse/selection; never used for document state.
 - No view references stored on the plugin; no plugin-as-component for `MarkdownRenderer`.
 - Popout safety: no bare `window`/`document`; the view's `win` getter is the source of
   truth; DOM `instanceof` checks use Obsidian's cross-window-safe helpers.
+- **SC-340:** a reading-mode view's teardown is now two-staged — the render child that
+  built it unloading is a no-op once the view has been adopted by a later section; the
+  CURRENT render child's unload (or plugin unload) is what actually releases it (flush,
+  then unload). Nothing an adopted view depends on may be a child of the OLD render
+  child (spec §6.1) — `host.addChild(view)` stays for non-reading hosts only (§2.4 step 4).
 
 ---
 

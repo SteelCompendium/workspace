@@ -27,7 +27,7 @@ absolute paths — devbox ignores your shell's `cd`.
 | 1. Type-check | `npm run tsc` | clean (no output) |
 | 2. Lint | `npm run lint` | clean (no output), exit 0 — gated in CI as of SC-136/FOLLOWUPS #61 |
 | 3. Unit tests | `npx jest` | all suites/tests green |
-| 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 6/6 ok, 0 failed`, exit 0 (~1.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
+| 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 19/19 ok, 0 failed`, exit 0 (~5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
 | 5. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
 | 6. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
 | 7. Parity (LAST) | `npm run parity` | `0 GAPs`, `0 undeclared WARNs`, exactly the documented declared-deferral set, exit 0 |
@@ -39,14 +39,29 @@ freeze's PNG comparison isolated from parity's own rebuild. `obsidian-shots` nee
 display (`DISPLAY=:1` by default) and the system Obsidian binary — skip it in headless
 environments, don't fake it.
 
-**Lifecycle gate (SC-343, spec SC-340 §10.2).** `visual-harness/obsidian-lifecycle.mjs` drives a real
-Obsidian through the block write lifecycle jest cannot reproduce (section re-draw and unload). One
-`OBSIDIAN-LIFECYCLE <id> ok (…)` line per scenario; a failure prints `… FAIL: <assertion> [shot <path>]`
-and exits 1. `--only=<id,…>` reruns a subset (an id it doesn't recognize — even mixed with valid ones —
-is a usage error, exit 2, never a silent skip). SC-343's scenarios: `G-S7a`/`G-S7b` (identical twins,
-section and durable path), `G-S6a` (navigate-away flush, SC-336), `G-S6b` (leaf close), `G-S6u`
-(unterminated fence at EOF, located again by body on the durable path), `G-S5n` (dropped-write Notice
-+ rate limit). Mandatory — unlike `obsidian-shots` it needs no real display.
+**Lifecycle gate (SC-343 + SC-340, spec SC-340 §10.2).** `visual-harness/obsidian-lifecycle.mjs`
+drives a real Obsidian through the block write lifecycle jest cannot reproduce (section re-draw and
+unload, and — since SC-340 — view ADOPTION across that re-draw). One `OBSIDIAN-LIFECYCLE <id> ok (…)`
+line per scenario; a failure prints `… FAIL: <assertion> [shot <path>]` and exits 1. `--only=<id,…>`
+reruns a subset (an id it doesn't recognize — even mixed with valid ones — is a usage error, exit 2,
+never a silent skip). SC-343's 6 scenarios: `G-S7a`/`G-S7b` (identical twins, section and durable
+path), `G-S6a` (navigate-away flush, SC-336), `G-S6b` (leaf close), `G-S6u` (unterminated fence at
+EOF, located again by body on the durable path), `G-S5n` (dropped-write Notice + rate limit). SC-340
+adds 13 more: `G-S1` (ConditionsModal open across 5 live writes + the minion pool modal), `G-S2`
+(stamina modal survives the selection write at 150/380 ms), `G-S3` (fast typing into a plain input,
+and a half-typed EDITABLE stepper draft, both survive the adoption blur — committed only by a later
+real blur), `G-S4` (pane+embed / two panes: writer-only adoption, a leaked copy never claimed), `G-S5`
+(external edit / revert always rebuilds fresh, never adopts), `G-S6c` (Reading↔Live Preview/Source
+with a pending write — same-leaf round trip, Live Preview then raw Source, methodology note in
+the scenario), `G-S6d`
+(`previewMode.rerender`), `G-S6e` (plugin disable/enable), `G-S6f` (embed leaf detach), `G-S6g`
+(hover popovers ARE writable in Obsidian 1.14.2 — measured, supersedes the original read-only
+assumption), `G-S6h` (a nested read-only `ds-counter` survives its parent's adoption), `G-S6i` (fast
+navigation across several notes leaves no leak), `G-S8` (scrollTop pin survives a tracker's own
+write). Mandatory — unlike `obsidian-shots` it needs no real display. Set your own
+`DSE_LIFECYCLE_PORT` (e.g. `DSE_LIFECYCLE_PORT=9285 npm run obsidian-lifecycle`) when another
+session may already be running this gate on the default port 9262 — a busy port makes your
+run exit 2, not a code failure.
 
 ### Devbox wrapping (every command above)
 
@@ -896,7 +911,46 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — SC-343, the stale-write guard (branch `sc343-stale-write-guard`, 2026-09-24,
+**CURRENT — SC-340, view adoption (branch `sc340-view-adoption`, 2026-09-24, based on dse
+`develop`/`sc343-stale-write-guard` `48ac20c`, Task 0; landing measured after the pre-landing
+`git rebase origin/develop`, onto `develop` `6c4f6aa` — SC-328's fflate swap, 6.0.2 hotfix
+merge-forward, SC-288 and SC-282 sidebar fixes).** Task 0 (`48ac20c`) is SC-343's own landing
+point — see its entry below. Full battery, same order (tsc → lint → jest → lifecycle → shots
+→ freeze → parity):
+
+| Gate | Task 0 (`48ac20c`) | Task 8 landing (rebased onto `6c4f6aa`) |
+|---|---|---|
+| `npm run tsc` | clean | clean |
+| `npm run lint` | clean, exit 0 | clean, exit 0 |
+| `npx jest` | 3969 passed / 1 skipped / 204 of 205 suites / 3 snapshots | **4038 passed / 1 skipped / 208 of 209 suites / 3 snapshots** at the landing head `619c4bd` (Tasks 1–7's own coverage plus what `develop` gained since Task 0, plus 2 from the final review's fix wave; Task 8 itself added none — it only extends the lifecycle gate) |
+| `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 6/6 ok, 0 failed`, exit 0 (SC-343's 6) | **`OBSIDIAN-LIFECYCLE done: 19/19 ok, 0 failed`, exit 0** (SC-343's 6 + SC-340's 13 — see the lifecycle-gate paragraph above for the full id list; reproduced clean twice) |
+| `npm run shots` | 524, 0 FAIL | **unchanged — 524, 0 FAIL** |
+| `check-freeze.sh` | `freeze OK (260/260 …)`, exit 0 | **unchanged — `freeze OK (260/260 …)`, exit 0** (see the freeze note below for the mid-task detour: it read `FREEZE VIOLATED` before the rebase, for reasons unrelated to SC-340) |
+| `npm run parity` | 0 GAPs / 0 undeclared / 16 DECLARED / exit 0 | **unchanged** |
+
+View adoption itself (Tasks 1–7) is ON by default (`viewAdoption !== false`) and does not
+touch any rendered DOM byte, so shots/freeze/parity are unchanged from Task 0 — only jest
+(new unit coverage, Tasks 1–7, plus `develop`'s own growth) and the lifecycle gate (13 new
+scenarios, Task 8) moved. The hidden kill switch (`"viewAdoption": false` in `data.json`)
+proves the gate discriminates: with it set, `G-S1`/`G-S2`/`G-S3` all FAIL (modal closed /
+typed text lost / not adopted) — reconfirmed at the rebased head.
+
+**Freeze note (historical): a pre-landing base drift, not an SC-340 regression — resolved by
+the rebase.** Before this branch's pre-landing rebase (while still based on `48ac20c`),
+`check-freeze.sh` read `FREEZE VIOLATED (16 checksum mismatches, 0 missing)`, all
+`skills-*`/`chrome-skills-menu--steel-{print,realprint}.png`. Traced (Task 8 review I-3): the
+"Add missing Crafting/Lore skills" fix (`ae86693`/`f860156`, a 3-line `SkillsSchema.yaml`
+addition) had reached `develop` via **SC-328**'s own sanctioned merge-forward (`b69ec1a`,
+"merge 6.0.2 hotfix forward into develop") AFTER this branch's base (`48ac20c`) but BEFORE
+the shared `freeze-baseline.sha256` was rebaselined for SC-328 — so this branch's still-old
+`SkillsSchema.yaml` mismatched the newer baseline. No product defect and no manual port was
+needed: the routine pre-landing `git rebase origin/develop` carried the branch onto the tree
+the baseline already reflected, and `check-freeze.sh` reads clean (260/260) at the rebased
+head, confirmed above. SC-340 itself makes zero `src/` changes (Tasks 1–7 are
+framework/host-only; Task 8 is this harness file plus docs) and never touches
+`SkillsSchema.yaml` — the drift was never caused by, nor fixed by, any SC-340 task.
+
+**As of SC-343, the stale-write guard (branch `sc343-stale-write-guard`, 2026-09-24,
 based on dse `develop` `0c132d8`, pre-landing rebase re-measured at `48ac20c`).** The base
 moved to `f6fb208` (SC-241 + SC-240 initiative fixes landed on `develop` in between; neither
 touches `src/framework/host/`) when the branch was rebased for landing. Measured at
