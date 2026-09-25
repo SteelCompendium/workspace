@@ -922,7 +922,7 @@ point — see its entry below. Full battery, same order (tsc → lint → jest �
 |---|---|---|
 | `npm run tsc` | clean | clean |
 | `npm run lint` | clean, exit 0 | clean, exit 0 |
-| `npx jest` | 3969 passed / 1 skipped / 204 of 205 suites / 3 snapshots | **4036 passed / 1 skipped / 208 of 209 suites / 3 snapshots** (Tasks 1–7's own coverage plus what `develop` gained since Task 0; Task 8 itself added none — it only extends the lifecycle gate) |
+| `npx jest` | 3969 passed / 1 skipped / 204 of 205 suites / 3 snapshots | **4038 passed / 1 skipped / 208 of 209 suites / 3 snapshots** at the landing head `619c4bd` (Tasks 1–7's own coverage plus what `develop` gained since Task 0, plus 2 from the final review's fix wave; Task 8 itself added none — it only extends the lifecycle gate) |
 | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 6/6 ok, 0 failed`, exit 0 (SC-343's 6) | **`OBSIDIAN-LIFECYCLE done: 19/19 ok, 0 failed`, exit 0** (SC-343's 6 + SC-340's 13 — see the lifecycle-gate paragraph above for the full id list; reproduced clean twice) |
 | `npm run shots` | 524, 0 FAIL | **unchanged — 524, 0 FAIL** |
 | `check-freeze.sh` | `freeze OK (260/260 …)`, exit 0 | **unchanged — `freeze OK (260/260 …)`, exit 0** (see the freeze note below for the mid-task detour: it read `FREEZE VIOLATED` before the rebase, for reasons unrelated to SC-340) |
