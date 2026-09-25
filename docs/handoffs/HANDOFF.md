@@ -27,15 +27,25 @@ first. No tags/releases, never DSE `main`, no `just deploy*`, no un-sanctioned r
 
 | Ticket | Worktree | Ledger dir | Status |
 |---|---|---|---|
-| SC-328 | `sc328-fflate` | `.superpowers/sdd/sc328-fflate/` | **Needs Review** — dse `db2a206`, review-approved; awaiting Scott's sanction of a 16-line freeze rebaseline (`rebaseline.txt` in the ledger; dispatcher applies at landing per dse-verify). Branch carries merge commits (6.0.2 hotfix merge-forward) — land WITHOUT a flattening rebase. SC-243 waits on this landing. |
+| SC-328 | — | `build-ledgers/sc328-fflate/` | **LANDED** dse develop `c524fd2`, workspace `70ce86b`; Scott sanctioned (comment `afd0e15a`) → 16-line rebaseline applied (260/260, backup `.pre-sc328-bak`, record in dse-verify); worktree removed. SC-243 now unblocked (queued for next free slot). |
 | SC-241 | — | `build-ledgers/sc241-minion-heal/` | **LANDED** dse develop `46c0c4c`, workspace `afacc53`; worktree removed |
 | SC-240 | — | `build-ledgers/sc240-scc-ref-error/` | **LANDED** dse develop `f6fb208`, workspace `7fb9d6d`; worktree removed |
-| SC-288 | `sc288-sidebar-stuck` | `.superpowers/sdd/sc288-sidebar-stuck/` | in flight |
-| SC-230 | `sc230-modal-text-size` | `.superpowers/sdd/sc230-modal-text-size/` | in flight |
+| SC-288 | — | `build-ledgers/sc288-sidebar-stuck/` | **LANDED** dse develop `3b25127`, workspace `6dc0dfe`; worktree removed |
+| SC-282 | — | `build-ledgers/sc282-sidebar-rename/` | **LANDED** dse develop `6c4f6aa`, workspace `218726e`; worktree removed. Spin-off SC-354 (sidebar listener leak, Backlog). |
+| SC-338 | `sc338-chip-focus` | `.superpowers/sdd/sc338-chip-focus/` | **Needs Review**: dse `c3d36c5`, review-approved, gates green, freeze 260/260. Scott decides (1) whether the chip focus ring looks right, and (2) whether unselected chips losing Obsidian's resting drop shadow is OK (or limit it to focus, a one-line change). Both OK = land as-is. The pointer bump is uncommitted in the worktree (dispatcher commits at landing). Spin-offs SC-356/360/361. |
+| SC-236 | `sc236-feature-example` | `.superpowers/sdd/sc236-feature-example/` | in flight |
+| SC-230 | `sc230-modal-text-size` | `.superpowers/sdd/sc230-modal-text-size/` | **Needs Review**: dse `0dbab59`, review-approved, gates green, freeze 260/260. Scott must decide (1) whether the fixed modal looks right at 140%, and (2) whether the modal title scales (option A, on the branch) or stays at Obsidian's size (option B, a small removal round). A + looks-right = land-ready after a rebase. |
+| SC-243 | `sc243-sync-busy` | `.superpowers/sdd/sc243-sync-busy/` | **Needs Review**: dse `2dad7d8`, review-approved, gates green, freeze 260/260. Scott picks the busy-button look: A (as shown; the row grows 16px while syncing), B (fixed-width Sync button, one CSS round) or C (disable only, no label swap). A = land as-is. Spin-offs SC-357/358/359. |
+| SC-272 | `sc272-rule-eyebrow` | `.superpowers/sdd/sc272-rule-eyebrow/` | **Needs Review**: dse `5293604`, review-approved, gates green, freeze 260/260. Scott checks the by-SCC rule-card eyebrow (group name instead of RULE) and picks (1) plural group names that match the site (on the branch; lands as-is) or (2) singular in both the plugin and the site (small plugin round plus a new steel-etl ticket). Spin-off SC-362. |
+| SC-255 | `sc255-skills-collapse` | `.superpowers/sdd/sc255-skills-collapse/` | **Needs Review**: dse `4ff0b88`, review-approved, gates green. Scott checks the Skills card without its "Skill List" header and sanctions a 20-line Skills print rebaseline (`rebaseline.txt` in the ledger); one "sanctioned" on SC-255 (ask comment `15a5f267`) covers both. Spin-off SC-364. |
+| SC-236 | `sc236-feature-example` | `.superpowers/sdd/sc236-feature-example/` | **Needs Review**: dse `5cd09e1` (option A built), review-approved, gates green. Scott picks A (drop the `ability_type` line; only the VILLAIN ACTION chip goes) or B (a genuine villain action; new round). A also needs a written "sanctioned" for an 8-line print rebaseline (`rebaseline.txt` in the ledger: feature, feature-collapsed, feature-spend, chrome-collapsed-rollout, twin and realprint). The pointer bump is uncommitted in the worktree. |
+| SC-231 | `sc231-keyword-chips` | `.superpowers/sdd/sc231-keyword-chips/` | in flight |
+| SC-284 | `sc284-cardhead-narrow` | `.superpowers/sdd/sc284-cardhead-narrow/` | in flight |
 
 Both owners were killed by the session usage limit ~23:30 and resumed via SendMessage at the
-02:00 reset (ledgers + worktrees survived intact). A one-shot backup-resume cron is set in
-this session for 05:13 EDT.
+02:00 reset (ledgers + worktrees survived intact). Killed again ~04:15 (SC-288, SC-230),
+resumed at the 07:00 reset. No wakeups remain scheduled. SC-343 landed from another session
+meanwhile (dse `48ac20c`). SC-328's branch will need develop merged in before it lands.
 Main checkout dse carries Scott's live vault dirt (`demo-vault/Welcome.md`, `justfile`,
 `compendium-manifest.json`, `demo-vault/montage 1.md`) — stash-wrap per land-stack §2c.
 
