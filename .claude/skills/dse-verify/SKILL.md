@@ -893,40 +893,43 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 ## Current expected numbers (drift — verify against current main)
 
 **CURRENT — SC-340, view adoption (branch `sc340-view-adoption`, 2026-09-24, based on dse
-`develop`/`sc343-stale-write-guard` `48ac20c`, Task 0; landing measured at `5827b29` +
-Task 8's own commits).** Task 0 (`48ac20c`) is SC-343's own landing point — see its entry
-below. Full battery, same order (tsc → lint → jest → lifecycle → shots → freeze → parity):
+`develop`/`sc343-stale-write-guard` `48ac20c`, Task 0; landing measured after the pre-landing
+`git rebase origin/develop`, onto `develop` `6c4f6aa` — SC-328's fflate swap, 6.0.2 hotfix
+merge-forward, SC-288 and SC-282 sidebar fixes).** Task 0 (`48ac20c`) is SC-343's own landing
+point — see its entry below. Full battery, same order (tsc → lint → jest → lifecycle → shots
+→ freeze → parity):
 
-| Gate | Task 0 (`48ac20c`) | Task 8 landing |
+| Gate | Task 0 (`48ac20c`) | Task 8 landing (rebased onto `6c4f6aa`) |
 |---|---|---|
 | `npm run tsc` | clean | clean |
 | `npm run lint` | clean, exit 0 | clean, exit 0 |
-| `npx jest` | 3969 passed / 1 skipped / 204 of 205 suites / 3 snapshots | **4008 passed / 1 skipped / 206 of 207 suites / 3 snapshots** (Tasks 1–7's own coverage; Task 8 added none — it only extends the lifecycle gate) |
-| `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 6/6 ok, 0 failed`, exit 0 (SC-343's 6) | **`OBSIDIAN-LIFECYCLE done: 19/19 ok, 0 failed`, exit 0** (SC-343's 6 + SC-340's 13 — see the lifecycle-gate paragraph above for the full id list) |
+| `npx jest` | 3969 passed / 1 skipped / 204 of 205 suites / 3 snapshots | **4036 passed / 1 skipped / 208 of 209 suites / 3 snapshots** (Tasks 1–7's own coverage plus what `develop` gained since Task 0; Task 8 itself added none — it only extends the lifecycle gate) |
+| `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 6/6 ok, 0 failed`, exit 0 (SC-343's 6) | **`OBSIDIAN-LIFECYCLE done: 19/19 ok, 0 failed`, exit 0** (SC-343's 6 + SC-340's 13 — see the lifecycle-gate paragraph above for the full id list; reproduced clean twice) |
 | `npm run shots` | 524, 0 FAIL | **unchanged — 524, 0 FAIL** |
-| `check-freeze.sh` | `freeze OK (260/260 …)`, exit 0 | **`FREEZE VIOLATED (16 checksum mismatches, 0 missing)`, exit 1 — all 16 are `skills-*`/`chrome-skills-menu--steel-{print,realprint}.png`; see below** |
+| `check-freeze.sh` | `freeze OK (260/260 …)`, exit 0 | **unchanged — `freeze OK (260/260 …)`, exit 0** (see the freeze note below for the mid-task detour: it read `FREEZE VIOLATED` before the rebase, for reasons unrelated to SC-340) |
 | `npm run parity` | 0 GAPs / 0 undeclared / 16 DECLARED / exit 0 | **unchanged** |
 
 View adoption itself (Tasks 1–7) is ON by default (`viewAdoption !== false`) and does not
-touch any rendered DOM byte, so shots/parity are unchanged from Task 0 — only jest (new unit
-coverage, Tasks 1–7) and the lifecycle gate (13 new scenarios, Task 8) moved. The hidden kill
-switch (`"viewAdoption": false` in `data.json`) proves the gate discriminates: with it set,
-`G-S1`/`G-S2`/`G-S3` all FAIL (modal closed / typed text lost / not adopted).
+touch any rendered DOM byte, so shots/freeze/parity are unchanged from Task 0 — only jest
+(new unit coverage, Tasks 1–7, plus `develop`'s own growth) and the lifecycle gate (13 new
+scenarios, Task 8) moved. The hidden kill switch (`"viewAdoption": false` in `data.json`)
+proves the gate discriminates: with it set, `G-S1`/`G-S2`/`G-S3` all FAIL (modal closed /
+typed text lost / not adopted) — reconfirmed at the rebased head.
 
-**Freeze: pre-landing base drift, not an SC-340 regression — resolved by the rebase.**
-(Corrected 2026-09-24, Task 8 review I-3; an earlier revision of this note misdiagnosed the
-cause and prescribed a manual port that turned out to be unnecessary.) Traced: the "Add
-missing Crafting/Lore skills" fix (`ae86693`/`f860156`, 3-line `SkillsSchema.yaml` addition)
-reached `develop` via **SC-328**'s own sanctioned merge-forward (`b69ec1a`, "merge 6.0.2
-hotfix forward into develop") — `git merge-base --is-ancestor f860156 origin/develop` is
-true. SC-328 landed on `develop` (now `6c4f6aa`) AFTER this branch's base (`48ac20c`), which
-is why `src/model/schemas/SkillsSchema.yaml` on this branch still lacked those three skills
-and every `skills-*`/`chrome-skills-menu--steel-{print,realprint}.png` shot mismatched the
-shared `freeze-baseline.sha256` (rebaselined for SC-328). No product defect, and no manual
-port needed: the routine pre-landing `git rebase origin/develop` carries the branch onto the
-tree the baseline already reflects, which resolves this by construction. SC-340 itself makes
-zero `src/` changes (Tasks 1–7 are framework/host-only; Task 8 is this harness file plus
-docs) and never touches `SkillsSchema.yaml`.
+**Freeze note (historical): a pre-landing base drift, not an SC-340 regression — resolved by
+the rebase.** Before this branch's pre-landing rebase (while still based on `48ac20c`),
+`check-freeze.sh` read `FREEZE VIOLATED (16 checksum mismatches, 0 missing)`, all
+`skills-*`/`chrome-skills-menu--steel-{print,realprint}.png`. Traced (Task 8 review I-3): the
+"Add missing Crafting/Lore skills" fix (`ae86693`/`f860156`, a 3-line `SkillsSchema.yaml`
+addition) had reached `develop` via **SC-328**'s own sanctioned merge-forward (`b69ec1a`,
+"merge 6.0.2 hotfix forward into develop") AFTER this branch's base (`48ac20c`) but BEFORE
+the shared `freeze-baseline.sha256` was rebaselined for SC-328 — so this branch's still-old
+`SkillsSchema.yaml` mismatched the newer baseline. No product defect and no manual port was
+needed: the routine pre-landing `git rebase origin/develop` carried the branch onto the tree
+the baseline already reflected, and `check-freeze.sh` reads clean (260/260) at the rebased
+head, confirmed above. SC-340 itself makes zero `src/` changes (Tasks 1–7 are
+framework/host-only; Task 8 is this harness file plus docs) and never touches
+`SkillsSchema.yaml` — the drift was never caused by, nor fixed by, any SC-340 task.
 
 **As of SC-343, the stale-write guard (branch `sc343-stale-write-guard`, 2026-09-24,
 based on dse `develop` `0c132d8`, pre-landing rebase re-measured at `48ac20c`).** The base
