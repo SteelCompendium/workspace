@@ -52,12 +52,16 @@ adds 13 more: `G-S1` (ConditionsModal open across 5 live writes + the minion poo
 and a half-typed EDITABLE stepper draft, both survive the adoption blur — committed only by a later
 real blur), `G-S4` (pane+embed / two panes: writer-only adoption, a leaked copy never claimed), `G-S5`
 (external edit / revert always rebuilds fresh, never adopts), `G-S6c` (Reading↔Live Preview/Source
-with a pending write — own leaf per variant, methodology note in the scenario), `G-S6d`
+with a pending write — same-leaf round trip, Live Preview then raw Source, methodology note in
+the scenario), `G-S6d`
 (`previewMode.rerender`), `G-S6e` (plugin disable/enable), `G-S6f` (embed leaf detach), `G-S6g`
 (hover popovers ARE writable in Obsidian 1.14.2 — measured, supersedes the original read-only
 assumption), `G-S6h` (a nested read-only `ds-counter` survives its parent's adoption), `G-S6i` (fast
 navigation across several notes leaves no leak), `G-S8` (scrollTop pin survives a tracker's own
-write). Mandatory — unlike `obsidian-shots` it needs no real display.
+write). Mandatory — unlike `obsidian-shots` it needs no real display. Set your own
+`DSE_LIFECYCLE_PORT` (e.g. `DSE_LIFECYCLE_PORT=9285 npm run obsidian-lifecycle`) when another
+session may already be running this gate on the default port 9262 — a busy port makes your
+run exit 2, not a code failure.
 
 ### Devbox wrapping (every command above)
 
