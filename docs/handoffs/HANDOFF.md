@@ -44,6 +44,19 @@ first. No tags/releases, never DSE `main`, no `just deploy*`, no un-sanctioned r
 | SC-232 | `sc232-cardname-scale` | `.superpowers/sdd/sc232-cardname-scale/` | in flight. First half of the SC-232+SC-235 pair; SC-235 starts at the next free slot. |
 | SC-317 | `sc317-extlink-icon` | `.superpowers/sdd/sc317-extlink-icon/` | in flight. It started ahead of the SC-232+SC-235 pair. SC-232 took SC-284's slot, and SC-235 takes SC-317's slot when it frees. SC-318 comes last, since it overlaps the pair's type-scale area. |
 
+**2026-09-25 15:30: Scott is away all weekend.** He moved SC-243, SC-230, SC-272, SC-236, SC-255,
+SC-231 and SC-284 from Needs Review to **Ready for Agent**. SC-338 is still Needs Review. The
+label query also returned SC-279 (Todo, not in this queue, so don't start it) and SC-297/120/190 (Done,
+stale labels). **Handbacks go ahead of new tickets**, in queue order: SC-243 → SC-230 → SC-272 →
+SC-236 → SC-255 → SC-231 → SC-284. Each takes the next free slot, and SC-235 and SC-318 wait until they're drained.
+Still 2 slots. Wake each owner with "<KEY> has new comments; fetch newest-first". The owner
+confirms any sanction on the ticket, rebases onto current develop, recomputes rebaseline.txt if
+the moved set changed, re-runs the battery, and reports LAND-READY with the sanction comment id.
+**Model:** owners are spawned with `model: opus`, and the API reports claude-opus-5-5. The
+"fable" Scott saw comes from the ticket-owner skill's posting example (`--model fable` in the
+Linear footer). Every owner is told to post with `--model opus-5.5`. An hourly
+recurring cron (`:17`) in this session resumes owners killed by usage limits.
+
 **develop moved (another session):** SC-340 landed → dse develop `619c4bd`. Every parked branch
 above that was measured on `6c4f6aa` needs a rebase and a fresh battery when Scott answers; its owner does
 that on wake. The weekly usage limit hit ~04:35 on 09-25 (reset 07:00; nothing resumed until
