@@ -94,6 +94,10 @@ go under an *Internal* sub-heading.
   and its cost now reads beside the name. The book's own "Signature Ability"
   wording is shortened to "Signature" to match.
 
+- **DSE plugin: print preview is readable in a dark-theme vault (SC-127).** It now draws
+  its own white page with black text, like the PDF export, instead of inheriting your
+  Obsidian theme's dark colors.
+
 - **v2 site: the display face is now Cinzel, at the weight the design always wanted
   (SC-325).** Forum had a single 400 weight, so every heading's boldness was faked
   with an outline — and an outline is the wrong tool, because one thickness never

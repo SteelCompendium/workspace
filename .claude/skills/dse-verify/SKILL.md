@@ -832,7 +832,10 @@ didn't mount) plus human review of the PNGs.
       dark-on-dark look of the `steel-print` captures is a longstanding **harness capture
       artifact** (print tokens over the DARK scheme), shared by both halves of every pair —
       a separate follow-up will re-capture print over the light scheme, which will be its
-      own deliberate all-print-lines re-pin, not part of this sanction.
+      own deliberate all-print-lines re-pin, not part of this sanction. **Superseded
+      2026-09-23, SC-127:** it was a real product bug (the print preview in a dark vault),
+      fixed by the preview drawing its own paper; the twin stays captured over the dark
+      scheme as that bug's regression gate.
     - Applied procedure: `npm run shots` re-run at the exact landing commit (post-rebase onto
       the SC-117 fix wave), baseline backed up to
       `freeze-baseline.sha256.pre-plan25-landing-bak`, exactly those 5 `<hash>  <name>` lines
