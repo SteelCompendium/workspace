@@ -16,6 +16,35 @@ implementation plan are both approved.
 
 ---
 
+## Implementation notes (2026-09-24)
+
+SC-340 landed (Tasks 0–8); the real-Obsidian gate (§10.2) grew from 6 to 19 scenarios.
+Four points below turned out to differ from this draft once built and measured — targeted
+corrections follow inline at each one, not a rewrite:
+
+- **§6.4 callback order.** The unload steps list "flush" (3) before "other registered
+  callbacks, e.g. `activeModal.close()`" (4), which reads as flush-then-close. Registered
+  callbacks actually run **LIFO**: the flush (registered first, at mount) runs AFTER a
+  modal's close (registered later, when the modal opened) — not before.
+- **§6.4 "Canvas, hover, print hosts" row.** Hover popovers resolve their section and
+  persist normally (measured on Obsidian 1.14.2, both before and after SC-340) — corrected
+  below; canvas and print/export stay read-only.
+- **§6.2 `docId` collision guard.** Implemented by POSITION (same `docId` + `sourcePath` +
+  live line, each side refreshed via `getBlockInfo()` at claim time), not by comparing
+  preview containers as drafted — the new `el` is detached at processor time, so it has no
+  preview container to compare yet. An instance whose current render child never loaded is
+  excluded (it is not a real second instance of anything on screen). Claims pick the
+  NEWEST matching ticket (unchanged from the draft).
+- **§9.1 stepper blur guard.** `if (!el.isConnected) return;` does not catch the adoption
+  blur: a real-Chromium probe (headless 149) showed `blur`/`change`/`focusout` fire
+  SYNCHRONOUSLY during the DOM move itself, while the moved node is STILL CONNECTED —
+  `isConnected` only distinguishes this reliably in jsdom, not in a real browser. The
+  shipped guard instead marks the moving root `data-dse-moving` for the exact duration of
+  the move (`adoptView.ts`'s `MOVING_ATTR`); the stepper's blur handler checks
+  `el.closest('[data-dse-moving]')` — corrected below.
+
+---
+
 ## 1. Problem
 
 A DSE block saves its changes by rewriting its own fenced block in the note.
@@ -210,11 +239,15 @@ writes in r2 S4.
 **More than one candidate.** It was never seen (0 ambiguous in r2). The entry with the
 newest ticket wins, and the registry counts the event.
 
-**`docId` collision guard (B4).** At `own()` time the registry records the view's
-preview container: the root's closest `.markdown-preview-view` or `.markdown-embed`. If
-two live entries share a `docId` but have different preview containers, the registry
-marks that `docId` unsafe. From then on it refuses every claim for that `docId`, until
-the entries release. Those blocks fall back to fresh views, as today.
+**`docId` collision guard (B4).** *(Corrected 2026-09-24 — see "Implementation notes"
+above.)* At claim time, once a candidate is chosen, the registry compares its POSITION —
+`getBlockInfo()`'s live `lineStart` (falling back to the cached `lastKnownLineStart`) —
+against every OTHER live entry sharing the same `docId` and `sourcePath` whose current
+render child has actually loaded (an entry whose render child never loaded is not a real
+second instance of anything on screen, and is skipped). A same-line match marks the claim
+a collision and refuses it; that block falls back to a fresh view, as today. (The new `el`
+is detached at processor time, so comparing preview containers — the draft's original
+plan — isn't available yet at claim time.)
 
 **Adopt.** On a hit:
 
@@ -263,9 +296,12 @@ releases on a timer, so there is no grace window.
 
 1. Refresh the durable position while the section may still resolve.
 2. `registry.release(entry)`: mark it released, then `registry.removeChild(view)`.
-3. The view's registered `flushPersist` writes any pending body through
-   `replaceSource`. If the section is gone, that uses the durable locate from SC-343.
-4. The view's other registered callbacks run (for example `activeModal.close()`).
+3. Every registered callback then runs — **LIFO**, not in the order they were added
+   *(corrected 2026-09-24 — see "Implementation notes" above)*: a modal opened AFTER
+   mount (`activeModal.close()`) is registered later, so it closes BEFORE the view's
+   `flushPersist` (registered first, at mount) writes any pending body through
+   `replaceSource`. If the section is gone, that write uses the durable locate from
+   SC-343.
 
 Every unload path, measured in r2 S6 unless noted:
 
@@ -282,7 +318,8 @@ Every unload path, measured in r2 S6 unless noted:
 | Detach the leaf that embeds B, write pending in the embed | embed render child unloads | release → flush | lands in B |
 | An embed inside a leaf that navigates away | embed render child is **not** unloaded until the leaf detaches (r1 E4b) | not released until then (this already happens today) | no loss; view lingers |
 | Leaked detached embed copy | never unloaded while the leaf lives | never claimed (no rebuild ever carries its `docId`); its writes are refused by SC-343 | 0 claims; guard refused the stale write |
-| Canvas, hover, print hosts | `canPersist` is false and they never write | owned and released like any other view; no ticket is ever recorded; stay read-only for life (§6.5 item 4) | not exercised by the spike; the gate adds hover (§10.2) |
+| Canvas, print hosts | `canPersist` is false and they never write | owned and released like any other view; no ticket is ever recorded; stay read-only for life (§6.5 item 4) | not exercised by the spike; the gate adds hover (§10.2) |
+| Hover popover | *(corrected 2026-09-24 — see "Implementation notes" above)* a popover's section resolves and `canPersist` is true — it is writable, not read-only as originally assumed | owned and released like any other view; a click writes the correct note/block through the normal claim/flush path | measured on Obsidian 1.14.2 (SC-343 final review and this gate's `G-S6g`) |
 | Block nested inside another view (`ds-scc` card, `ds-party` `hero_ref`) | its render child is added to the outer view's `MarkdownRenderer.render` component, so it is a descendant of the outer view | released when the outer view unloads; carried along unchanged when the outer view is adopted; never claimed itself (read-only, so no tickets) | not exercised by the spike; the gate adds one nested `ds-scc` card inside an adopted block (§10.2) |
 
 ### 6.5 Durable locate and the stale-position guard (SC-343), plus the position refresh
@@ -307,10 +344,13 @@ in `ReadingModeBlockHost`:
    - "Resolved at least once" is required, not optional. Every host gets a
      `lastKnownBody` from its mount `source`, so a durable identity alone would make
      every host writable.
-   - That would include hover popovers, print/export, and blocks nested inside another
-     view's `MarkdownRenderer.render` (for example a `ds-scc` card's nested block, or a
+   - That would include print/export and blocks nested inside another view's
+     `MarkdownRenderer.render` (for example a `ds-scc` card's nested block, or a
      `ds-party` member's `hero_ref`). Those are read-only today because their section
-     never resolves (F1 §4.4; `BlockHost.ts` `canPersist` doc).
+     never resolves (F1 §4.4; `BlockHost.ts` `canPersist` doc). *(Corrected 2026-09-24 —
+     see "Implementation notes" above: a hover popover's section DOES resolve, measured on
+     Obsidian 1.14.2, so it is not in this list — it persists like any other reading-mode
+     view.)*
    - A nested block's durable locate could then write its body into the note wherever the
      same text happens to appear. A host whose section never resolved stays read-only for
      its whole life.
@@ -406,7 +446,7 @@ outside the root.
 
 | Handler | Fires on adoption? | Required treatment |
 |---|---|---|
-| `src/framework/kit/stepper.ts:187`: `registerDomEvent(el, 'blur', () => commitDraft())` on the editable stepper input. It is used with `editable` by `counter/view.ts:50`, `tokens/view.ts:32`, `surges/panel.ts:51`, `resource/panel.ts:54`, `party/view.ts:126` and `:182`, and by the roll bar (`kit/rollBar.ts:75`). | **Yes.** It commits a half-typed draft and triggers another persist. | Ignore a blur while the input is disconnected: `if (!el.isConnected) return;` at the top of the handler. A removal blur always happens after the node has left the document. Add a jest test that removes and re-inserts the input and asserts that `onChange` was not called. |
+| `src/framework/kit/stepper.ts:187`: `registerDomEvent(el, 'blur', () => commitDraft())` on the editable stepper input. It is used with `editable` by `counter/view.ts:50`, `tokens/view.ts:32`, `surges/panel.ts:51`, `resource/panel.ts:54`, `party/view.ts:126` and `:182`, and by the roll bar (`kit/rollBar.ts:75`). | **Yes.** It commits a half-typed draft and triggers another persist. | *(Corrected 2026-09-24 — see "Implementation notes" above.)* `if (!el.isConnected) return;` does NOT catch it: a real-Chromium probe (headless 149) showed the blur fires DURING the move itself, while the node is still connected — `isConnected` only distinguishes this in jsdom. The shipped guard instead marks the moving root `data-dse-moving` for the exact duration of the move and has the handler check `el.closest('[data-dse-moving]')`, keeping the disconnected check as a second, redundant guard for the reverse ordering. A jest test drives the real-Chromium ordering directly (mocks `appendChild` to fire the blur where Chromium does) and asserts the half-typed draft is not committed, then that a later real blur does commit it. |
 | `negotiation/MotivationsPitfallsView.ts:44` and `ArgumentView.ts:63` (checkbox `change`) | No. Checkboxes fire `change` only on toggle. | None. |
 | `views/MinionStaminaPoolModal.ts:165` (checkbox `change`) and `views/ConditionsModal.ts:393` (color `change`) | No. They are inside a modal, outside the root. | None. |
 | Initiative malice quick-add inputs (`initiative/view.ts` ~:408–420) | `change` fires, but nothing listens. They are read on "Add". | None. The r2 S3/S3b text survived intact (0 of 310 keystrokes lost). |
@@ -497,7 +537,7 @@ false order, and is fixed in the same commit, with the count recorded in the pla
 | G-S3 | S3 + S3b | text, focus and caret survive; 0 keystrokes lost across the adoption |
 | G-S4 | S4 | pane + embed and two panes: writer-only adoption; the other instance fresh with the new data; 1 write per click; leaked embed copy never claimed |
 | G-S5 | S5 | external edit and undo-like revert → fresh view, old view released |
-| G-S6 | S6 | every §6.4 path: pending write lands; live-view count = rendered blocks (leaked copies excluded); 0 orphaned modals; note integrity. New (not in the spike): a hover popover of a DSE block renders read-only (`canPersist` false, no write affordances), and a nested `ds-scc` card inside an adopted block is still mounted and read-only after the adoption |
+| G-S6 | S6 | every §6.4 path: pending write lands; live-view count = rendered blocks (leaked copies excluded); 0 orphaned modals; note integrity. New (not in the spike): a hover popover of a DSE block is WRITABLE — a click writes the correct note/block *(corrected 2026-09-24, was drafted as read-only — see "Implementation notes" above; landed as gate scenario `G-S6g`)* — and a nested `ds-scc` card inside an adopted block is still mounted and read-only after the adoption |
 | G-S7 | S7 | identical twin blocks with lines shifted: the write lands in the right twin, both through the section path and through the durable path |
 | G-S8 | S8 | tall scrolled tracker: `scrollTop` held (pin on, as shipped) |
 
