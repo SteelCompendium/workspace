@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: external links now carry an arrow icon (SC-317).** Any plugin link
+  that leaves the vault — an SCC link falling back to steelcompendium.io, the "not
+  installed locally" reference card's link, a plain external link in card prose —
+  now shows Obsidian's own external-link arrow, drawn by the plugin itself so it
+  follows the link's teal-cyan color (and hover color) in both light and dark. Screen
+  only; print is unaffected.
+
 - **DSE plugin: the Sync and Check-for-updates buttons now show when a compendium
   operation is running (SC-243).** Previously both stayed clickable through a whole
   sync, so a double-click (or the command palette, or the "sync anyway"/"sync after
