@@ -904,14 +904,28 @@ below. Full battery, same order (tsc → lint → jest → lifecycle → shots �
 | `npx jest` | 3969 passed / 1 skipped / 204 of 205 suites / 3 snapshots | **4008 passed / 1 skipped / 206 of 207 suites / 3 snapshots** (Tasks 1–7's own coverage; Task 8 added none — it only extends the lifecycle gate) |
 | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 6/6 ok, 0 failed`, exit 0 (SC-343's 6) | **`OBSIDIAN-LIFECYCLE done: 19/19 ok, 0 failed`, exit 0** (SC-343's 6 + SC-340's 13 — see the lifecycle-gate paragraph above for the full id list) |
 | `npm run shots` | 524, 0 FAIL | **unchanged — 524, 0 FAIL** |
-| `check-freeze.sh` | `freeze OK (260/260 …)`, exit 0 | **unchanged — `freeze OK (260/260 …)`, exit 0** |
+| `check-freeze.sh` | `freeze OK (260/260 …)`, exit 0 | **`FREEZE VIOLATED (16 checksum mismatches, 0 missing)`, exit 1 — all 16 are `skills-*`/`chrome-skills-menu--steel-{print,realprint}.png`; see below** |
 | `npm run parity` | 0 GAPs / 0 undeclared / 16 DECLARED / exit 0 | **unchanged** |
 
 View adoption itself (Tasks 1–7) is ON by default (`viewAdoption !== false`) and does not
-touch any rendered DOM byte, so shots/freeze/parity are unchanged from Task 0 — only jest
-(new unit coverage, Tasks 1–7) and the lifecycle gate (13 new scenarios, Task 8) moved. The
-hidden kill switch (`"viewAdoption": false` in `data.json`) proves the gate discriminates:
-with it set, `G-S1`/`G-S2`/`G-S3` all FAIL (modal closed / typed text lost / not adopted).
+touch any rendered DOM byte, so shots/parity are unchanged from Task 0 — only jest (new unit
+coverage, Tasks 1–7) and the lifecycle gate (13 new scenarios, Task 8) moved. The hidden kill
+switch (`"viewAdoption": false` in `data.json`) proves the gate discriminates: with it set,
+`G-S1`/`G-S2`/`G-S3` all FAIL (modal closed / typed text lost / not adopted).
+
+**Freeze: pre-existing branch drift, not an SC-340 regression.** Traced (Task 8): `origin/main`
+(NOT `develop`) carries `f860156` "Add missing Crafting/Lore skills (Carpentry, Cooking,
+Strategy)", merged 2026-09-10 into the released line only — `git merge-base --is-ancestor
+f860156 HEAD` is false on this branch, and `src/model/schemas/SkillsSchema.yaml` here has
+none of those three skills. The shared `freeze-baseline.sha256` (workspace
+`.superpowers/sdd/`, last touched 2026-09-24 08:01, hours before this measurement) was
+regenerated from a tree that DOES have them, so every `skills-*` print/realprint shot (row
+count is content-length-sensitive) mismatches. SC-340 makes zero `src/` changes (Tasks 1–7 are framework/host-only; Task 8 is
+this harness file plus docs) and this branch never touched `SkillsSchema.yaml`, so this is
+a `develop`-vs-`main` skills-data gap the branch inherited at its base, not something any
+SC-340 task introduced. Owner action, not a worker fix: port `f860156`'s 3-line schema
+change to `develop` (or rebase this landing onto a `develop` that already has it) before
+trusting `check-freeze.sh` clean on this branch.
 
 **As of SC-343, the stale-write guard (branch `sc343-stale-write-guard`, 2026-09-24,
 based on dse `develop` `0c132d8`, pre-landing rebase re-measured at `48ac20c`).** The base
