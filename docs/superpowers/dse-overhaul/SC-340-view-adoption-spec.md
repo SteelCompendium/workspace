@@ -318,7 +318,7 @@ Every unload path, measured in r2 S6 unless noted:
 | Detach the leaf that embeds B, write pending in the embed | embed render child unloads | release → flush | lands in B |
 | An embed inside a leaf that navigates away | embed render child is **not** unloaded until the leaf detaches (r1 E4b) | not released until then (this already happens today) | no loss; view lingers |
 | Leaked detached embed copy | never unloaded while the leaf lives | never claimed (no rebuild ever carries its `docId`); its writes are refused by SC-343 | 0 claims; guard refused the stale write |
-| Canvas, print hosts | `canPersist` is false and they never write | owned and released like any other view; no ticket is ever recorded; stay read-only for life (§6.5 item 4) | not exercised by the spike; the gate adds hover (§10.2) |
+| Canvas, print hosts | `canPersist` is false and they never write | owned and released like any other view; no ticket is ever recorded; stay read-only for life (§6.5 item 4) | not exercised by the spike or the gate |
 | Hover popover | *(corrected 2026-09-24 — see "Implementation notes" above)* a popover's section resolves and `canPersist` is true — it is writable, not read-only as originally assumed | owned and released like any other view; a click writes the correct note/block through the normal claim/flush path | measured on Obsidian 1.14.2 (SC-343 final review and this gate's `G-S6g`) |
 | Block nested inside another view (`ds-scc` card, `ds-party` `hero_ref`) | its render child is added to the outer view's `MarkdownRenderer.render` component, so it is a descendant of the outer view | released when the outer view unloads; carried along unchanged when the outer view is adopted; never claimed itself (read-only, so no tickets) | not exercised by the spike; the gate adds one nested `ds-scc` card inside an adopted block (§10.2) |
 
@@ -544,7 +544,11 @@ false order, and is fixed in the same commit, with the count recorded in the pla
 - **Every scenario also checks:** 0 page errors, and note integrity (every fence closed,
   block count unchanged, no stray text outside fences).
 - **Pass lines:** one `OBSIDIAN-LIFECYCLE <id> ok (<key numbers>)` line per scenario,
-  then `OBSIDIAN-LIFECYCLE done: 8/8 ok, 0 failed`. The process exits 0.
+  then `OBSIDIAN-LIFECYCLE done: 19/19 ok, 0 failed`
+  *(corrected 2026-09-24: SC-343 landed 6 of its own scenarios first, not folded into this
+  count as originally drafted; SC-340's 13 (S1–S8 above, several since split into
+  addendum-folded sub-cases) bring the gate to 6 + 13 = 19 total — see "Implementation
+  notes" above)*. The process exits 0.
 - **Failure:** a line naming the scenario, the assertion and the measured value, then
   exit 1.
 - **Runtime:** about 4 minutes. The r2 probe ran S1–S8 in about 3.5 minutes plus about
@@ -595,7 +599,8 @@ The new order is: tsc → lint → jest → **obsidian-lifecycle** → shots →
   reading mode now adopts its own echo.
 - **The dse-verify skill** (`.claude/skills/dse-verify/SKILL.md`):
   - the battery table gains step 4 `npm run obsidian-lifecycle` (expects
-    `8/8 ok, 0 failed`, exit 0, about 4 minutes);
+    `19/19 ok, 0 failed` *(corrected 2026-09-24 — see the `G-S6` row note above)*, exit 0,
+    about 5 minutes);
   - the run-order paragraph;
   - the new jest total in "Current expected numbers".
 - **Workspace `ARCHITECTURE.md`:** no change. It does not describe the DSE write path.

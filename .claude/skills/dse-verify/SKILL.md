@@ -913,19 +913,20 @@ coverage, Tasks 1–7) and the lifecycle gate (13 new scenarios, Task 8) moved. 
 switch (`"viewAdoption": false` in `data.json`) proves the gate discriminates: with it set,
 `G-S1`/`G-S2`/`G-S3` all FAIL (modal closed / typed text lost / not adopted).
 
-**Freeze: pre-existing branch drift, not an SC-340 regression.** Traced (Task 8): `origin/main`
-(NOT `develop`) carries `f860156` "Add missing Crafting/Lore skills (Carpentry, Cooking,
-Strategy)", merged 2026-09-10 into the released line only — `git merge-base --is-ancestor
-f860156 HEAD` is false on this branch, and `src/model/schemas/SkillsSchema.yaml` here has
-none of those three skills. The shared `freeze-baseline.sha256` (workspace
-`.superpowers/sdd/`, last touched 2026-09-24 08:01, hours before this measurement) was
-regenerated from a tree that DOES have them, so every `skills-*` print/realprint shot (row
-count is content-length-sensitive) mismatches. SC-340 makes zero `src/` changes (Tasks 1–7 are framework/host-only; Task 8 is
-this harness file plus docs) and this branch never touched `SkillsSchema.yaml`, so this is
-a `develop`-vs-`main` skills-data gap the branch inherited at its base, not something any
-SC-340 task introduced. Owner action, not a worker fix: port `f860156`'s 3-line schema
-change to `develop` (or rebase this landing onto a `develop` that already has it) before
-trusting `check-freeze.sh` clean on this branch.
+**Freeze: pre-landing base drift, not an SC-340 regression — resolved by the rebase.**
+(Corrected 2026-09-24, Task 8 review I-3; an earlier revision of this note misdiagnosed the
+cause and prescribed a manual port that turned out to be unnecessary.) Traced: the "Add
+missing Crafting/Lore skills" fix (`ae86693`/`f860156`, 3-line `SkillsSchema.yaml` addition)
+reached `develop` via **SC-328**'s own sanctioned merge-forward (`b69ec1a`, "merge 6.0.2
+hotfix forward into develop") — `git merge-base --is-ancestor f860156 origin/develop` is
+true. SC-328 landed on `develop` (now `6c4f6aa`) AFTER this branch's base (`48ac20c`), which
+is why `src/model/schemas/SkillsSchema.yaml` on this branch still lacked those three skills
+and every `skills-*`/`chrome-skills-menu--steel-{print,realprint}.png` shot mismatched the
+shared `freeze-baseline.sha256` (rebaselined for SC-328). No product defect, and no manual
+port needed: the routine pre-landing `git rebase origin/develop` carries the branch onto the
+tree the baseline already reflects, which resolves this by construction. SC-340 itself makes
+zero `src/` changes (Tasks 1–7 are framework/host-only; Task 8 is this harness file plus
+docs) and never touches `SkillsSchema.yaml`.
 
 **As of SC-343, the stale-write guard (branch `sc343-stale-write-guard`, 2026-09-24,
 based on dse `develop` `0c132d8`, pre-landing rebase re-measured at `48ac20c`).** The base
