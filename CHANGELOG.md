@@ -59,6 +59,18 @@ go under an *Internal* sub-heading.
   480px wide or less) names step back down to today's shared 20px, so a
   narrow pane never reads worse than before.
 
+- **DSE plugin: card heads now show their provenance and kind-noun, matching the
+  site (SC-232).** A trait or ability card's head was missing its lower-left
+  provenance line — e.g. the "Determination" trait never showed "Human" — even
+  though the synced entity already carried the field; the head simply never read
+  it. Traits and class features now show ancestry/class/kit (+ subclass); abilities
+  show class (+ subclass), falling back to a kit's name for a kit's own signature
+  ability. A plain class feature's left-eyebrow now correctly reads "Feature"
+  instead of "Trait". A featureblock's left-eyebrow now reads its real kind
+  ("Malice", "Fixture", "Dynamic Terrain", "Advancement") when the synced entity
+  carries one, instead of falling silent. Print-neutral: no frozen card moves,
+  since none of them carries this data yet.
+
 - **v2 site: the display face is now Cinzel, at the weight the design always wanted
   (SC-325).** Forum had a single 400 weight, so every heading's boldness was faked
   with an outline — and an outline is the wrong tool, because one thickness never
