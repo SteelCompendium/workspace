@@ -55,9 +55,9 @@ go under an *Internal* sub-heading.
   per-family scale (the site gives a statblock name nearly twice the
   plugin's size). Names now match the live site's computed pixels exactly
   for each family: generic 27px, ability card 33.3px, statblock 41.4px,
-  featureblock 37.8px, project 28.8px. At a narrow pane width the bigger
-  names can wrap onto more lines than before; a size step-down for narrow
-  panes is still in progress.
+  featureblock 37.8px, project 28.8px. At a narrow pane width (a card head
+  480px wide or less) names step back down to today's shared 20px, so a
+  narrow pane never reads worse than before.
 
 - **v2 site: the display face is now Cinzel, at the weight the design always wanted
   (SC-325).** Forum had a single 400 weight, so every heading's boldness was faked
