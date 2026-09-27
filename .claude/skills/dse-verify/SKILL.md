@@ -261,6 +261,27 @@ didn't mount) plus human review of the PNGs.
   `freeze-baseline.sha256.pre-<effort>-bak`, (3) applies the lines, (4) appends a dated
   entry to this file quoting the sanction. Widenings (additions-only) need no sanction —
   the dispatcher verifies additions-only by sorted-diff and applies at landing.
+  - **2026-09-27, SC-231 (one chip per keyword in the Steel feature/statblock keyword cells;
+    worktree `sc231-keyword-chips`, landed dse `develop` @ `272c444`): SANCTIONED 55-line
+    rebaseline, count unchanged 260 → 260, across 28 capture ids.** The ids: `feature`,
+    `feature-collapsed`, `feature-spend`, `feature-list`, `chrome-collapsed-rollout`,
+    `chrome-collapsed-trio`, `chrome-placement-trio`, `chrome-hover-statblock`, and 20
+    `statblock*` ids. **Cause (a new mechanism worth knowing):** splitting a rendered text
+    run into more than one text node shifts Chromium's sub-pixel glyph anti-aliasing. The
+    first letter after each ", " moves by a sub-pixel amount, about 33×22 px boxes with
+    ~325 px changed, and the prints read identically. The reviewer swept five alternative
+    split layouts; every text-splitting layout moves the same prints. 8 of the 55 (the SC-236
+    feature fixtures) were recomputed after rebasing over SC-236 and show the same glyph
+    shift only. **Sanction wording (recorded exactly):** the ask said a "sanctioned, looks
+    good" reply covers both the look and the 55 lines. Scott replied (comment `fb3a9458`,
+    2026-09-25 18:31 UTC) "this looks good." and moved the ticket to Ready for Agent. That is not the
+    literal word. It was read as covering both, the same reading as SC-236 and SC-255. **If
+    Scott disagrees, restore the backup below and revert the SC-231 commits.** Deliverable
+    `.superpowers/sdd/sc231-keyword-chips/rebaseline.txt` (55 lines, 2 matching clean runs).
+    Applied by the dispatcher after landing: backup `freeze-baseline.sha256.pre-sc231-bak`,
+    in-place (diff exactly 55 lines). Verified against the landed tree's shots:
+    `freeze OK (260/260 …)`, exit 0. **Expected line now: `freeze OK (260/260 …)` on
+    `origin/develop` `272c444`.**
   - **2026-09-27, SC-255 (ds-skills drops its own whole-element "Skill List" collapse header;
     worktree `sc255-skills-collapse`, landed dse `develop` @ `b029baa`): SANCTIONED
     20-line rebaseline, count unchanged 260 → 260.** Cause: the header is removed from every
