@@ -67,6 +67,8 @@ recurring cron (`:17`) in this session resumes owners killed by usage limits.
 (r4 fix, with uncommitted edits in its dse tree) on Fri ~17:15. Nothing ran again until Sun
 08:10, when both were resumed. The hourly cron was still registered but produced nothing in that window.
 
+**Sun 16:10–18:10:** a usage limit killed SC-232 (r9, with rebaseline.txt now drafted) and SC-318 (r3 review); both were resumed at 18:11.
+
 **develop moved (another session):** SC-340 landed → dse develop `619c4bd`. Every parked branch
 above that was measured on `6c4f6aa` needs a rebase and a fresh battery when Scott answers; its owner does
 that on wake. The weekly usage limit hit ~04:35 on 09-25 (reset 07:00; nothing resumed until
