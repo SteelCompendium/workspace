@@ -57,6 +57,10 @@ the moved set changed, re-runs the battery, and reports LAND-READY with the sanc
 Linear footer). Every owner is told to post with `--model opus-5.5`. An hourly
 recurring cron (`:17`) in this session resumes owners killed by usage limits.
 
+**Gap, Fri 17:15 → Sun 08:10:** a usage limit killed SC-243 (the handback, just woken) and SC-232
+(r4 fix, with uncommitted edits in its dse tree) on Fri ~17:15. Nothing ran again until Sun
+08:10, when both were resumed. The hourly cron was still registered but produced nothing in that window.
+
 **develop moved (another session):** SC-340 landed → dse develop `619c4bd`. Every parked branch
 above that was measured on `6c4f6aa` needs a rebase and a fresh battery when Scott answers; its owner does
 that on wake. The weekly usage limit hit ~04:35 on 09-25 (reset 07:00; nothing resumed until
