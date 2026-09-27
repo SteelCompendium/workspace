@@ -686,11 +686,39 @@ Union 76 → 88; `STEEL_INVARIANT`/`THEME_INVARIANT` 8 → 20, `PRINT_INVARIANT`
 | `--dse-fs-subheading` | SC-185 role: band / group title | `calc(1.15em * var(--dse-fs-large-scale))` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
 | `--dse-fs-numeral` | SC-185 role: display stat VALUE | `calc(1.75em * var(--dse-fs-large-scale))` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
 | `--dse-fs-body` | SC-185 role: the element's reading size (= the host note's) | `1em` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
-| `--dse-fs-control` | SC-185 role: button / stepper / tab / collapse-header text | `calc(1em * var(--dse-fs-control-scale))` | = Legacy (theme-invariant) | | = Legacy (consumer print-excluded) |
+| `--dse-fs-control` | SC-185 role: button / stepper / tab / collapse-header text | `calc(0.85em * var(--dse-fs-control-scale))` | = Legacy (theme-invariant) | | = Legacy (consumer print-excluded) |
 | `--dse-fs-secondary` | SC-185 role: supporting prose, dense tables | `calc(0.9em * var(--dse-fs-small-scale))` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
 | `--dse-fs-label` | SC-185 role: field labels, eyebrows, decks, chips | `calc(0.85em * var(--dse-fs-small-scale))` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
 | `--dse-fs-caption` | SC-185 role: hints, log lines, small badges | `calc(0.8em * var(--dse-fs-small-scale))` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
 | `--dse-fs-micro` | SC-185 role: tallies, tags, superscript markers | `calc(0.7em * var(--dse-fs-small-scale))` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
+
+(2026-09-27, SC-318 side finding LOW, folded: `--dse-fs-control`'s Legacy column above was
+`calc(1em * var(--dse-fs-control-scale))` — drifted from the CSS/`BASE_MAP`, both of which
+have always used `0.85em` (SC-185 round 2, C-1's retune). `token-coverage.test.ts` checks
+token NAMES only, so nothing caught it. Corrected to `0.85em`, no code change.)
+
+### SC-318: THE HEADING SCALE (h1-h6 inside plugin cards)
+
+Six more tokens, minted 2026-09-27 (SC-318 round 2) — Obsidian's OWN `h1`-`h6` ratios
+(`--h1-size`…`--h6-size`, `r1-survey/obsidian-installed-app.css`), not a tenth+ role: GROUP 1
+(`styles-source.css`, "SC-202 r4 — HEADING + EMPHASIS + LINK HOST RE-GROUNDING", screen-only)
+used to restate the browser UA's own bare-heading ratios (`2em`…`0.67em`) instead — correct
+"zero plugin opinion" in the abstract, but print (GROUP 1 is print-excluded) was already
+showing Obsidian's REAL scale all along, so SCREEN was the one place a card's own headings
+disagreed with a real vault note. These tokens carry that real scale instead, so SCREEN ==
+PRINT == a real vault at default text size (measured, `sc318-r2-implement-report.md`). Same
+`--dse-fs-large-scale` knob as `--dse-fs-heading`/`--dse-fs-subheading` above. Union 88 → 94;
+`STEEL_INVARIANT`/`THEME_INVARIANT` 20 → 26, `PRINT_INVARIANT` 34 → 40 (print-invariant BY
+DESIGN, same reasoning as the nine roles: GROUP 1's consumer rule is itself print-excluded).
+
+| Token | D3-spec concept | Legacy (verbatim) | Steel (dark) | Steel light | Print |
+|---|---|---|---|---|---|
+| `--dse-fs-h1` | SC-318: h1 (Obsidian's own `--h1-size` ratio) | `calc(1.618em * var(--dse-fs-large-scale))` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
+| `--dse-fs-h2` | SC-318: h2 (Obsidian's own `--h2-size` ratio) | `calc(1.462em * var(--dse-fs-large-scale))` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
+| `--dse-fs-h3` | SC-318: h3 (Obsidian's own `--h3-size` ratio) | `calc(1.318em * var(--dse-fs-large-scale))` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
+| `--dse-fs-h4` | SC-318: h4 (Obsidian's own `--h4-size` ratio) | `calc(1.188em * var(--dse-fs-large-scale))` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
+| `--dse-fs-h5` | SC-318: h5 (Obsidian's own `--h5-size` ratio) | `calc(1.076em * var(--dse-fs-large-scale))` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
+| `--dse-fs-h6` | SC-318: h6 (Obsidian's own `--h6-size` ratio, = body) | `calc(1em * var(--dse-fs-large-scale))` | = Legacy (theme-invariant) | | = Legacy (print-invariant by design) |
 
 ## SC-106 amendment (2026-08-03 — provisional Steel hue resolution)
 
