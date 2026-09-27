@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: headings inside a card's markdown body are back to Obsidian's own
+  heading sizes (SC-318).** A `######` heading no longer renders smaller than body
+  text, the hero's CHARACTERISTICS region title is back to its pre-regression size,
+  and a `###` heading gets its full top spacing back after a paragraph — screen now
+  matches what print/export and a real Obsidian note already showed all along.
+
 - **DSE plugin: external links now carry an arrow icon (SC-317).** Any plugin link
   that leaves the vault — an SCC link falling back to steelcompendium.io, the "not
   installed locally" reference card's link, a plain external link in card prose —
