@@ -21,9 +21,10 @@ go under an *Internal* sub-heading.
   signature ability computed 16px / 1.12px letter-spacing against the site's
   18px / 1.8px on the same surface; both now compute 18px / 1.8px. The rendered
   letters still read taller than the site's, though — the site fakes its small
-  caps (its font has no real small-caps glyphs), the plugin's are real, so real
-  capitals read bigger at the same computed size. The title's line-height and
-  the Obsidian text-size slider still scale it the same way as before.
+  caps (the browser shrinks capitals to 70%), while the plugin's are real
+  small-cap letters, so they render about 2px (roughly 25%) taller at the same
+  computed size. The title's line-height and the Obsidian text-size slider
+  still scale it the same way as before.
 
 - **DSE plugin: the Sync and Check-for-updates buttons now show when a compendium
   operation is running (SC-243).** Previously both stayed clickable through a whole
