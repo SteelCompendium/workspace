@@ -219,12 +219,18 @@ Run the camera on a PRIVATE Xvfb + port (`DSE_CAMERA_DISPLAY`, `DSE_CAMERA_PORT`
 Scott's `:1`. Battery at SC-334 landing (dse `e4bcd0f`): jest 3919 passed / 1 skipped /
 202 of 203 suites; shots 524, 0 FAIL; freeze 260/260; parity 0 / 0 / 16 DECLARED.
 
-**Battery at SC-338** (dse `c19069a`, base `origin/develop` `6c4f6aa`): tsc/lint clean;
-jest 3997 passed / 1 skipped / 3998 total / 206 of 207 suites; obsidian-lifecycle 6/6;
-shots 524 PNGs, 0 FAIL, host-copy pin OK, button host-leak `114 button kinds × 3 states ×
-dark/light = 684 comparisons` (see above — drift, not caused by SC-338); freeze `260/260`,
-exit 0; parity `0 gap(s), 0 undeclared, 16 declared`, exit 0; real-Obsidian camera:
-`modal-montage-edit` ring-checked ok, `modal-montage-limits` ok.
+**Battery at SC-338** (dse `afd6ae3`, base `origin/develop` `825ea51` — rebased 2026-09-27
+from `6c4f6aa`; no code change, comment-only re-point of the two `~:NNNNN` pointers that
+moved with the rebase): tsc/lint clean; jest 4112 passed / 1 skipped / 4113 total / 211 of
+212 suites (base grew from unrelated landings since `6c4f6aa`; SC-338 itself adds no new
+`test()` blocks); obsidian-lifecycle `19/19 ok, 0 failed`; shots 532 PNGs, 0 FAIL,
+host-copy pin OK, button host-leak `114 button kinds × 3 states × dark/light = 684
+comparisons` (unchanged — still drift from before SC-338, not caused by it); freeze
+`260/260`, exit 0 (the baseline itself moved under others' sanctioned landings between
+rounds; SC-338 moves 0 of it); parity `0 gap(s), 0 undeclared, 16 declared`, exit 0;
+real-Obsidian camera: `modal-montage-edit` ring-checked ok, `modal-montage-limits` ok. The
+focused-chip crop is byte-identical (md5) to the one captured at the first landing — the
+rebase moved zero chip pixels.
 
 ## Freeze semantics
 
