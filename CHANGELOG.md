@@ -64,21 +64,20 @@ go under an *Internal* sub-heading.
   lower-left provenance line — e.g. the "Determination" trait never showed "Human"
   — even though the synced entity already carried the field; the head simply
   never read it. Traits and class features now show ancestry/class/kit (+
-  subclass); abilities show class (+ subclass), falling back to a kit's name for
-  a kit's own signature ability (inline or synced). A plain class feature's
-  left-eyebrow now correctly reads "Feature" instead of "Trait". A featureblock's
-  left-eyebrow now reads its real kind ("Malice", "Fixture", "Dynamic Terrain",
-  "Advancement") when the synced entity carries one, instead of falling silent.
-  A statblock's left-eyebrow now reads its real kind ("Monster", "Companion",
-  "Retainer", "Summon") instead of always showing its keywords, which moved to
-  their own provenance line under the name. An ability or trait's cost, usage and
-  level now read where the site puts them — cost (or a kit signature's
-  "Signature" label) beside the name, level as its own chip, usage as its own
-  chip — instead of a single mixed cost/type chip pair; the book's own
-  "Signature Ability" wording is shortened to "Signature" to match. The first
-  half of this work (provenance, kind-nouns) was print-neutral; this half moves
-  bytes in the frozen print captures — pending Scott's sanction before it lands
-  on `develop`.
+  subclass); abilities show class (+ subclass), falling back to a kit's own name
+  for a kit's own inline signature ability (a synced kit's nested signature
+  ability doesn't carry its kit's name yet — filed as a follow-up). A plain class
+  feature's left-eyebrow now correctly reads "Feature" instead of "Trait". A
+  malice featureblock's left-eyebrow now reads "Malice" when the synced entity
+  carries that kind, instead of falling silent. A statblock's left-eyebrow now
+  reads its real kind ("Monster", "Companion", "Retainer", "Summon") instead of
+  always showing its keywords, which moved to their own provenance line under the
+  name. A standalone ability or kit signature ability's cost, level and usage now
+  read where the site puts them — cost (or "Signature" for a kit's own signature
+  ability) beside the name, level as its own chip, usage as its own chip —
+  instead of a single mixed cost/type chip pair; a statblock or featureblock
+  ability keeps today's layout, matching the site. The book's own "Signature
+  Ability" wording is shortened to "Signature" to match.
 
 - **v2 site: the display face is now Cinzel, at the weight the design always wanted
   (SC-325).** Forum had a single 400 weight, so every heading's boldness was faked
