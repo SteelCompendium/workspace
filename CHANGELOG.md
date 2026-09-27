@@ -59,17 +59,26 @@ go under an *Internal* sub-heading.
   480px wide or less) names step back down to today's shared 20px, so a
   narrow pane never reads worse than before.
 
-- **DSE plugin: card heads now show their provenance and kind-noun, matching the
-  site (SC-232).** A trait or ability card's head was missing its lower-left
-  provenance line — e.g. the "Determination" trait never showed "Human" — even
-  though the synced entity already carried the field; the head simply never read
-  it. Traits and class features now show ancestry/class/kit (+ subclass); abilities
-  show class (+ subclass), falling back to a kit's name for a kit's own signature
-  ability. A plain class feature's left-eyebrow now correctly reads "Feature"
-  instead of "Trait". A featureblock's left-eyebrow now reads its real kind
-  ("Malice", "Fixture", "Dynamic Terrain", "Advancement") when the synced entity
-  carries one, instead of falling silent. Print-neutral: no frozen card moves,
-  since none of them carries this data yet.
+- **DSE plugin: card heads now show their provenance, kind-noun, level and usage,
+  matching the site (SC-232).** A trait or ability card's head was missing its
+  lower-left provenance line — e.g. the "Determination" trait never showed "Human"
+  — even though the synced entity already carried the field; the head simply
+  never read it. Traits and class features now show ancestry/class/kit (+
+  subclass); abilities show class (+ subclass), falling back to a kit's name for
+  a kit's own signature ability (inline or synced). A plain class feature's
+  left-eyebrow now correctly reads "Feature" instead of "Trait". A featureblock's
+  left-eyebrow now reads its real kind ("Malice", "Fixture", "Dynamic Terrain",
+  "Advancement") when the synced entity carries one, instead of falling silent.
+  A statblock's left-eyebrow now reads its real kind ("Monster", "Companion",
+  "Retainer", "Summon") instead of always showing its keywords, which moved to
+  their own provenance line under the name. An ability or trait's cost, usage and
+  level now read where the site puts them — cost (or a kit signature's
+  "Signature" label) beside the name, level as its own chip, usage as its own
+  chip — instead of a single mixed cost/type chip pair; the book's own
+  "Signature Ability" wording is shortened to "Signature" to match. The first
+  half of this work (provenance, kind-nouns) was print-neutral; this half moves
+  bytes in the frozen print captures — pending Scott's sanction before it lands
+  on `develop`.
 
 - **v2 site: the display face is now Cinzel, at the weight the design always wanted
   (SC-325).** Forum had a single 400 weight, so every heading's boldness was faked
