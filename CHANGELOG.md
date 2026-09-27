@@ -48,6 +48,17 @@ go under an *Internal* sub-heading.
   button — they never asked for that plate in the first place, and this makes them
   consistent with the rest of the plugin.
 
+- **DSE plugin: card-head names read at the site's own size, per family
+  (SC-232).** Every card name — a kit head, a standalone ability card, a
+  statblock band, a featureblock band, the GM project tracker — used to
+  share one 20px rule regardless of family, well under the site's own
+  per-family scale (the site gives a statblock name nearly twice the
+  plugin's size). Names now match the live site's computed pixels exactly
+  for each family: generic 27px, ability card 33.3px, statblock 41.4px,
+  featureblock 37.8px, project 28.8px. At a narrow pane width the bigger
+  names can wrap onto more lines than before; a size step-down for narrow
+  panes is still in progress.
+
 - **v2 site: the display face is now Cinzel, at the weight the design always wanted
   (SC-325).** Forum had a single 400 weight, so every heading's boldness was faked
   with an outline — and an outline is the wrong tool, because one thickness never
