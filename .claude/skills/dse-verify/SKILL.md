@@ -261,6 +261,23 @@ didn't mount) plus human review of the PNGs.
   `freeze-baseline.sha256.pre-<effort>-bak`, (3) applies the lines, (4) appends a dated
   entry to this file quoting the sanction. Widenings (additions-only) need no sanction —
   the dispatcher verifies additions-only by sorted-diff and applies at landing.
+  - **2026-09-27, SC-255 (ds-skills drops its own whole-element "Skill List" collapse header;
+    worktree `sc255-skills-collapse`, landed dse `develop` @ `b029baa`): SANCTIONED
+    20-line rebaseline, count unchanged 260 → 260.** Cause: the header is removed from every
+    Skills capture — 10 ids, twin + realprint each: `skills`, `skills-narrow`, `skills-chips`,
+    `skills-chips-narrow`, `skills-chips-hidden`, `skills-ledger`, `skills-ledger-narrow`,
+    `skills-ledger-hidden`, `skills-hero-picks`, `chrome-skills-menu`. **Sanction wording
+    (recorded exactly):** the ask (`15a5f267`) said "Reply "sanctioned" to approve both, or
+    tell me what to change". Both = the look and the 20 lines. Scott replied (comment
+    `ec5cf1c9`, 2026-09-25 18:34 UTC) "this looks good." and moved the ticket to Ready for
+    Agent. That is not the literal word. It was read as approval of both, because the ask gave
+    only two outcomes and he requested no change. **If Scott disagrees, restore the backup
+    below and revert `b029baa`'s SC-255 commits.** Deliverable
+    `.superpowers/sdd/sc255-skills-collapse/rebaseline.txt` (20 lines, recomputed after the
+    rebase onto `ade5064`, byte-identical to the approved set, 2 matching runs). Applied by the
+    dispatcher after landing: backup `freeze-baseline.sha256.pre-sc255-bak`, in-place (diff
+    exactly 20 lines). Verified against the landed tree's shots: `freeze OK (260/260 …)`,
+    exit 0. **Expected line now: `freeze OK (260/260 …)` on `origin/develop` `b029baa`.**
   - **2026-09-27, SC-236 (the ds-feature `example.yaml` drops its contradictory `ability_type:
     Villain Action 1` line, "option A"; worktree `sc236-feature-example`, landed dse `develop` @
     `ade5064`): SANCTIONED 8-line rebaseline, count unchanged 260 → 260.** Cause: removing
