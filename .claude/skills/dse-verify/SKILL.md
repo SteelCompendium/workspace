@@ -261,6 +261,19 @@ didn't mount) plus human review of the PNGs.
   `freeze-baseline.sha256.pre-<effort>-bak`, (3) applies the lines, (4) appends a dated
   entry to this file quoting the sanction. Widenings (additions-only) need no sanction —
   the dispatcher verifies additions-only by sorted-diff and applies at landing.
+  - **2026-09-27, SC-284 (card header narrow/sidebar form: `.dse-head` becomes a size
+    container, and at ≤480px the right-hand items stack under the name; worktree
+    `sc284-cardhead-narrow`, landed dse `develop` @ `825ea51`): SANCTIONED 6-line rebaseline,
+    count unchanged 260 → 260.** Cause: three frozen print captures are taken at 300px, so their
+    headers now stack: `encounter-narrow`, `montage-narrow`, `statblock-sticky-narrow` (twin +
+    realprint each). **Scott's sanction, SC-284 comment `4bf8299f` 2026-09-25 18:30 UTC:
+    "1. thats fine 2. sanctioned".** Deliverable `.superpowers/sdd/sc284-cardhead-narrow/
+    rebaseline.txt` (6 lines). It was recomputed after rebasing over SC-236/255/231, and the
+    hashes are identical to the sanctioned set. Applied by the dispatcher after landing: backup
+    `freeze-baseline.sha256.pre-sc284-bak`, in-place (the diff is exactly 6 lines). Verified
+    against the landed tree's shots: `freeze OK (260/260 …)`, exit 0. **Expected line now:
+    `freeze OK (260/260 …)` on `origin/develop` `825ea51`.** Note: SC-232 (parked) also
+    declares `container-name: dse-head` and drops its duplicate when it lands.
   - **2026-09-27, SC-231 (one chip per keyword in the Steel feature/statblock keyword cells;
     worktree `sc231-keyword-chips`, landed dse `develop` @ `272c444`): SANCTIONED 55-line
     rebaseline, count unchanged 260 → 260, across 28 capture ids.** The ids: `feature`,
