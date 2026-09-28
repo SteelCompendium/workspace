@@ -288,6 +288,17 @@ didn't mount) plus human review of the PNGs.
   `freeze-baseline.sha256.pre-<effort>-bak`, (3) applies the lines, (4) appends a dated
   entry to this file quoting the sanction. Widenings (additions-only) need no sanction —
   the dispatcher verifies additions-only by sorted-diff and applies at landing.
+  - **2026-09-28, SC-318 (heading sizes inside cards, option A: restores Obsidian's heading
+    scale on screen; worktree `sc318-card-headings`, landed dse `develop` @ `dfb7395`):
+    WIDENING, additions-only, 260 → 262.** New capture id `perk-headings` (an h1–h6 ladder
+    plus a blockquote-h6 fixture), twin + realprint. The sorted diff shows 0 removed and 2 added, and
+    neither name collides with an existing line. Scott also wrote it out, although a widening doesn't need
+    sanction: SC-318 comment `8ee73a15` (2026-09-28 00:23 UTC) says "Option A is good.
+    Sanctioned". The hashes held across two clean runs at the final tip and are identical to the
+    pre-rebase round-2 hashes. Applied by the dispatcher after landing: backup
+    `freeze-baseline.sha256.pre-sc318-bak`, appended the 2 lines. Verified against the
+    landed tree's shots: `freeze OK (262/262 …)`, exit 0. **Expected line now:
+    `freeze OK (262/262 …)` on `origin/develop` `dfb7395`.**
   - **2026-09-27, SC-284 (card header narrow/sidebar form: `.dse-head` becomes a size
     container, and at ≤480px the right-hand items stack under the name; worktree
     `sc284-cardhead-narrow`, landed dse `develop` @ `825ea51`): SANCTIONED 6-line rebaseline,
@@ -1010,7 +1021,16 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — SC-340, view adoption (branch `sc340-view-adoption`, 2026-09-24, based on dse
+**CURRENT — dse `develop` @ `dfb7395` (2026-09-28, after the 09-24→09-28 dispatcher wave:
+SC-243, SC-230, SC-272, SC-236, SC-255, SC-231, SC-284, SC-338, SC-317, SC-235, SC-318):**
+tsc/lint clean · jest **4147 passed / 1 skipped** · lifecycle **19/19** · shots **536**, 0 FAIL
+(SC-318 added the `perk-headings` capture) · freeze **`freeze OK (262/262 …)`** · parity
+**0 GAPs / 0 undeclared / 14 DECLARED**. Freeze moved 260 → 262 only by SC-318's additions-only
+widening. The sanctioned rebaselines recorded above (SC-236 8, SC-255 20, SC-231 55, SC-284 6)
+replaced hashes and kept the count. SC-232, when it lands, changes parity (adds its `ink` rows) and
+reconciles on rebase. The SC-340 block below is the previous snapshot.
+
+**PREVIOUS — SC-340, view adoption (branch `sc340-view-adoption`, 2026-09-24, based on dse
 `develop`/`sc343-stale-write-guard` `48ac20c`, Task 0; landing measured after the pre-landing
 `git rebase origin/develop`, onto `develop` `6c4f6aa` — SC-328's fflate swap, 6.0.2 hotfix
 merge-forward, SC-288 and SC-282 sidebar fixes).** Task 0 (`48ac20c`) is SC-343's own landing

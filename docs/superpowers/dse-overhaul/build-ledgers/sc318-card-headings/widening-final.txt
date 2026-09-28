@@ -1,0 +1,18 @@
+SC-318 final round (r7) — widening re-verification at the rebased tip
+(dse `dfb7395`, rebased onto origin/develop `6dca388` / SC-235; superproject `e205a42`,
+rebased onto origin/main `fa0fcb7`)
+
+New capture id `perk-headings` (the h1-h6 ladder + blockquote-h6 fixture, visual-harness/
+entry.ts). Additions-only — 0 collisions with the existing 260-line baseline. Two
+frozen-class lines would be added at landing:
+
+30c1a61b35ddd4ac9f57d32a37512a1976fe611f4e4af271241c904d40528287  perk-headings--steel-print.png
+007c274765cbcc059fdc7ad7618c240b80cfb697aa851a6451fc6c61d25b5c8b  perk-headings--steel-realprint.png
+
+Re-verified across TWO clean `npm run shots` runs at the final rebased tip (r7-logs/
+sc318-r7-shots-run1.log, sc318-r7-shots-run2.log): both runs' hashes are identical to each
+other (r7-logs/sc318-r7-widening-run1.sha256, sc318-r7-widening-run2.sha256, diff empty)
+and byte-identical to the round-2 `widening.txt` hashes recorded before the SC-235 rebase —
+the rebase moved zero pixels of this fixture. Still NOT applied; freeze-baseline.sha256
+untouched. Landing-ready deliverable for the "sanctioned" widening apply (Scott ruling 1,
+comment 8ee73a15).
