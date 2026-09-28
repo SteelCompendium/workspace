@@ -15,16 +15,16 @@ go under an *Internal* sub-heading.
   follows the link's teal-cyan color (and hover color) in both light and dark. Screen
   only; print is unaffected.
 
-- **DSE plugin: Steel section titles ("Effect"/"Trigger"/"Special"/…) now compute
-  the site's font-size and letter-spacing (SC-235).** The boxed panel header on
+- **DSE plugin: Steel section titles ("Effect"/"Trigger"/"Special"/…) are now 15px
+  with wider letter spacing, so their letters match the site's height (SC-235).**
+  The site fakes its small caps (the browser shrinks capitals to 70%), while the
+  plugin's are real small-cap letters, so at the site's own 18px the plugin's
+  letters rendered about 2px (roughly 25%) taller. The boxed panel header on
   ability/feature cards, a statblock's nested features, featureblock and a kit's
-  signature ability computed 16px / 1.12px letter-spacing against the site's
-  18px / 1.8px on the same surface; both now compute 18px / 1.8px. The rendered
-  letters still read taller than the site's, though — the site fakes its small
-  caps (the browser shrinks capitals to 70%), while the plugin's are real
-  small-cap letters, so they render about 2px (roughly 25%) taller at the same
-  computed size. The title's line-height and the Obsidian text-size slider
-  still scale it the same way as before.
+  signature ability is now 15px (was 16px) with 1.8px letter-spacing (was
+  1.12px), which renders the same letter height as the site. The title's
+  line-height and the Obsidian text-size slider still scale it the same way as
+  before.
 
 - **DSE plugin: the Sync and Check-for-updates buttons now show when a compendium
   operation is running (SC-243).** Previously both stayed clickable through a whole
