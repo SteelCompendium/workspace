@@ -866,7 +866,11 @@ mapped selectors. **The gate contract is a biconditional (SC-110):**
 
 > **exit 0 ⟺ 0 GAPs AND 0 undeclared WARNs.**
 
-Expected clean result today: **0 GAPs / 0 undeclared WARNs / 16 DECLARED rows / exit 0**.
+Expected clean result today: **0 GAPs / 0 undeclared WARNs / 14 DECLARED rows / exit 0**
+(16 → 14 when SC-235 landed on dse `6dca388`, 2026-09-28. Section-title letter spacing now
+matches the site, so that declaration is gone. The font-size and line-height rows are
+re-declared and now cite SC-235: the site fakes small caps, so its computed px understate what
+you see. SC-232, if it lands, adds its `ink` rows on top; it reconciles on rebase.)
 
 A `WARN` now means "the comparison did not happen" (a selector that never rendered, an
 unparseable value) and **fails the run** — before SC-110 it was printed and ignored, so a
