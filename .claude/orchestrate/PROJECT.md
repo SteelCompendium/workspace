@@ -191,6 +191,15 @@ Each cost real time once. Every one belongs in the briefs it applies to.
    (`pgrep -af "worktrees/<name>/"`, then check each line before killing it). Put this rule
    in every brief that runs `shots`, `parity` or `obsidian-*`.
 
+10. **A failed `cd` puts a worker's git commands in the MAIN checkout (2026-09-28, SC-318).**
+   A worker's `cd` into its scratch clone failed. The chained `git remote set-url` and
+   `git reset --hard origin/develop` then ran in the shared main checkout, where they
+   re-pointed the superproject's origin at the DSE repo and reset it to a DSE commit. The
+   worker restored it (verified: origin, HEAD, submodules and Scott's vault dirt intact), but
+   a push would have been catastrophic. Briefs must require **`git -C <absolute path>`**
+   for every git command, never `cd X; git …`. Scratch clones are made with
+   `git clone`/`git worktree add` into an absolute path and are never re-pointed.
+
 **Provenance for two plugin-side footguns.** The plugin states these rules without ticket
 keys (they generalise); the evidence is this project's, and lives here:
 
