@@ -69,6 +69,8 @@ recurring cron (`:17`) in this session resumes owners killed by usage limits.
 
 **Sun 16:10–18:10:** a usage limit killed SC-232 (r9, with rebaseline.txt now drafted) and SC-318 (r3 review); both were resumed at 18:11.
 
+**Sun ~21:10 → Mon 07:39:** a usage limit killed SC-232 (round 10 finishing) and SC-235 (round 6 option B done, r7 re-review running). Nothing ran overnight; both were resumed Mon 07:39. SC-318 (handback) is still queued for the next free slot.
+
 **develop moved (another session):** SC-340 landed → dse develop `619c4bd`. Every parked branch
 above that was measured on `6c4f6aa` needs a rebase and a fresh battery when Scott answers; its owner does
 that on wake. The weekly usage limit hit ~04:35 on 09-25 (reset 07:00; nothing resumed until
