@@ -76,8 +76,9 @@ go under an *Internal* sub-heading.
   read where the site puts them — cost (or "Signature" for a kit's own signature
   ability) beside the name, level as its own chip, usage as its own chip —
   instead of a single mixed cost/type chip pair; a statblock or featureblock
-  ability keeps today's layout, matching the site. The book's own "Signature
-  Ability" wording is shortened to "Signature" to match.
+  ability keeps its action type in the keyword band (the site's own placement),
+  and its cost now reads beside the name. The book's own "Signature Ability"
+  wording is shortened to "Signature" to match.
 
 - **v2 site: the display face is now Cinzel, at the weight the design always wanted
   (SC-325).** Forum had a single 400 weight, so every heading's boldness was faked
