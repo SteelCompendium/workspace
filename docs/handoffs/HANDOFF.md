@@ -14,74 +14,67 @@
 > **Release gate: 7.0.0 ships only when SC-97 (Steel UI parity) is complete.**
 
 
-### 2026-09-23 (overnight) — IN-FLIGHT: DSE 7.0.0 queue (dispatcher session)
-Dispatcher session `a56f19e1-5165-4bc8-92ee-d6eeff34f029` (Opus 5.5; owners spawned as
-`orchestration:ticket-owner` on **Opus 5.5 per Scott**, not Fable). **2 owners in flight at a
-time.** Queue order: SC-328 → SC-241 → SC-240 → SC-243 (after SC-328 lands) → SC-288 →
-SC-282 (after SC-288 lands) → SC-230 → SC-338 → SC-272 → SC-236 → SC-255 → SC-231 → SC-284 →
-SC-232+SC-235 (one wave, as a pair) → SC-318 → SC-317. **Do not start:** SC-340, SC-343,
-SC-331 (other sessions own them), SC-336, SC-339, SC-290, SC-260 (folded into that work).
-A slot frees on LAND-READY or PARKED-NEEDS-REVIEW. Land only LAND-READY with no open Scott
-ask, via land-stack, one at a time; `ps aux | grep -E "wt-finish|land-stack|just deploy"`
-first. No tags/releases, never DSE `main`, no `just deploy*`, no un-sanctioned rebaseline.
+### 2026-09-23 → 09-28 — DSE 7.0.0 queue (dispatcher session): QUEUE DRAINED, 1 ticket waiting on Scott
+Dispatcher session `a56f19e1-5165-4bc8-92ee-d6eeff34f029` (Opus 5.5). Owners were spawned as
+`orchestration:ticket-owner` with `model: opus` (Opus 5.5, per Scott) and post with `--model opus-5.5`.
+The "fable" in older Linear footers comes from the skill's posting example. 2 owners in flight at a time.
+Out of scope: SC-340, SC-343 and SC-331, which other sessions owned (SC-343 and SC-340 have since
+landed), and SC-336, SC-339, SC-290 and SC-260, which were folded into that work.
 
-| Ticket | Worktree | Ledger dir | Status |
-|---|---|---|---|
-| SC-328 | — | `build-ledgers/sc328-fflate/` | **LANDED** dse develop `c524fd2`, workspace `70ce86b`; Scott sanctioned (comment `afd0e15a`) → 16-line rebaseline applied (260/260, backup `.pre-sc328-bak`, record in dse-verify); worktree removed. SC-243 now unblocked (queued for next free slot). |
-| SC-241 | — | `build-ledgers/sc241-minion-heal/` | **LANDED** dse develop `46c0c4c`, workspace `afacc53`; worktree removed |
-| SC-240 | — | `build-ledgers/sc240-scc-ref-error/` | **LANDED** dse develop `f6fb208`, workspace `7fb9d6d`; worktree removed |
-| SC-288 | — | `build-ledgers/sc288-sidebar-stuck/` | **LANDED** dse develop `3b25127`, workspace `6dc0dfe`; worktree removed |
-| SC-282 | — | `build-ledgers/sc282-sidebar-rename/` | **LANDED** dse develop `6c4f6aa`, workspace `218726e`; worktree removed. Spin-off SC-354 (sidebar listener leak, Backlog). |
-| SC-338 | — | `build-ledgers/sc338-chip-focus/` | **LANDED** dse develop `afd6ae3`, workspace `f2140b2` (Scott "1. yes / 2. yes"); no rebaseline; worktree removed. Spin-offs SC-356/360/361. |
-| SC-236 | `sc236-feature-example` | `.superpowers/sdd/sc236-feature-example/` | in flight |
-| SC-230 | — | `build-ledgers/sc230-modal-text-size/` | **LANDED** dse develop `1adfe29`, workspace `52ae8e0` (Scott: "option A is good"); worktree removed. Spin-off SC-355. |
-| SC-272 | — | `build-ledgers/sc272-rule-eyebrow/` | **LANDED** dse develop `36635e9`, workspace `49b38c8` (Scott chose singular; site follow-up filed as SC-369); worktree removed. |
-| SC-236 | — | `build-ledgers/sc236-feature-example/` | **LANDED** dse develop `ade5064`, workspace `2f658ef`; 8-line rebaseline applied (260/260, backup `.pre-sc236-bak`). **Sanction caveat:** Scott wrote "Option A is good" (comment `b4241ded`), not the literal "sanctioned" the ask requested; the owner read it as the sanction and posted that reading. The record in dse-verify quotes it exactly, and the backup lets it be undone. Worktree removed. |
-| SC-243 | — | `build-ledgers/sc243-sync-busy/` | **LANDED** dse develop `e9bc15e`, workspace `1e828b2` (Scott: "Option A is fine"); worktree removed. Spin-offs SC-357/358/359. |
-| SC-272 | `sc272-rule-eyebrow` | `.superpowers/sdd/sc272-rule-eyebrow/` | **Needs Review**: dse `5293604`, review-approved, gates green, freeze 260/260. Scott checks the by-SCC rule-card eyebrow (group name instead of RULE) and picks (1) plural group names that match the site (on the branch; lands as-is) or (2) singular in both the plugin and the site (small plugin round plus a new steel-etl ticket). Spin-off SC-362. |
-| SC-255 | — | `build-ledgers/sc255-skills-collapse/` | **LANDED** dse develop `b029baa`, workspace `1172c3c`; 20-line rebaseline applied (260/260, backup `.pre-sc255-bak`). **Sanction caveat:** Scott wrote "this looks good." (`ec5cf1c9`), not the literal "sanctioned"; the wording is quoted in dse-verify. Worktree removed. Spin-off SC-364. |
-| SC-236 | `sc236-feature-example` | `.superpowers/sdd/sc236-feature-example/` | **Needs Review**: dse `5cd09e1` (option A built), review-approved, gates green. Scott picks A (drop the `ability_type` line; only the VILLAIN ACTION chip goes) or B (a genuine villain action; new round). A also needs a written "sanctioned" for an 8-line print rebaseline (`rebaseline.txt` in the ledger: feature, feature-collapsed, feature-spend, chrome-collapsed-rollout, twin and realprint). The pointer bump is uncommitted in the worktree. |
-| SC-231 | — | `build-ledgers/sc231-keyword-chips/` | **LANDED** dse develop `272c444`, workspace `63dea11`; 55-line rebaseline applied (260/260, backup `.pre-sc231-bak`). **Sanction caveat:** Scott wrote "this looks good." (`fb3a9458`), not the literal "sanctioned"; the wording is quoted in dse-verify. Worktree removed. |
-| SC-235 | — | `build-ledgers/sc235-section-title-scale/` | **LANDED** dse develop `6dca388`, workspace `ff2f08f` (Scott chose B, 15px: "Recommended approach is good."); no rebaseline; parity is now 14 declared (dse-verify updated); worktree removed. |
-**2026-09-27 13:25:** Scott also moved **SC-338, SC-232 and SC-317** to Ready for Agent. These handbacks go ahead of SC-318, in queue order SC-338 → SC-232 → SC-317. SC-338 took the idle slot. SC-232 lands in sequence with SC-235 because of the parity-count conflict.
+**Final roster (Mon 2026-09-28 ~09:00).** dse `develop` is at `dfb7395`. No tags, no DSE `main`
+change, no deploy. dse-verify's current expected numbers: freeze **262/262**, parity **14 declared**,
+lifecycle 19, jest 4147.
 
-| SC-318 | — | `build-ledgers/sc318-card-headings/` | **LANDED** dse develop `dfb7395`, workspace `6857acc` (Scott: "Option A is good. Sanctioned", `8ee73a15`); 2-line widening applied, freeze now **262** (backup `.pre-sc318-bak`); worktree removed. Spin-off SC-372. **Incident:** a worker's failed `cd` ran `git remote set-url` + `reset --hard` in the main checkout. It restored itself, the dispatcher verified everything intact, and this is now adapter footgun §8.10. |
-| SC-284 | — | `build-ledgers/sc284-cardhead-narrow/` | **LANDED** dse develop `825ea51`, workspace `a2356f8`; 6-line rebaseline applied (260/260, backup `.pre-sc284-bak`), with Scott's literal "sanctioned" (`4bf8299f`). Worktree removed. |
-| SC-232 | `sc232-cardname-scale` | `.superpowers/sdd/sc232-cardname-scale/` | **Ready for Agent handback woken** (running beside its pair SC-235) (was Needs Review): dse `bd2087e` (on `b029baa`), re-review LAND-READY-AS-PROPOSAL, gates green, freeze 260/260, no rebaseline. Scott picks the Steel card-name size: A (match the site per family, 27–41.4px; on the branch), B (one shared 27px), or leave. **At landing:** dse-verify's parity count becomes 26 DECLARED (SC-368 rows); `.dse-head` duplicates SC-284's container, so drop one copy; land in sequence with SC-235 (parity-count conflict). The superproject has 2 CHANGELOG commits and the pointer is not bumped. Spin-offs SC-367, SC-368. |
-| SC-317 | — | `build-ledgers/sc317-extlink-icon/` | **LANDED** dse develop `5a20d5f`, workspace `7329c9b` (Scott "looks good"); no rebaseline; worktree removed. Spin-off SC-366. |
+| Ticket | Result | dse develop | workspace | Freeze / sanction |
+|---|---|---|---|---|
+| SC-328 | landed | `c524fd2` | `70ce86b` | 16-line rebaseline, Scott "sanctioned" (`afd0e15a`) |
+| SC-241 | landed | `46c0c4c` | `afacc53` | — |
+| SC-240 | landed | `f6fb208` | `7fb9d6d` | — |
+| SC-288 | landed | `3b25127` | `6dc0dfe` | — |
+| SC-282 | landed | `6c4f6aa` | `218726e` | — |
+| SC-243 | landed | `e9bc15e` | `1e828b2` | — (Scott: "Option A is fine") |
+| SC-230 | landed | `1adfe29` | `52ae8e0` | — (Scott: "option A is good") |
+| SC-272 | landed | `36635e9` | `49b38c8` | — (singular labels; site follow-up SC-369) |
+| SC-236 | landed | `ade5064` | `2f658ef` | 8-line rebaseline on **"Option A is good"** (`b4241ded`), not the literal word ⚠ |
+| SC-255 | landed | `b029baa` | `1172c3c` | 20-line rebaseline on **"this looks good."** (`ec5cf1c9`), not the literal word ⚠ |
+| SC-231 | landed | `272c444` | `63dea11` | 55-line rebaseline on **"this looks good."** (`fb3a9458`), not the literal word ⚠ |
+| SC-284 | landed | `825ea51` | `a2356f8` | 6-line rebaseline, Scott "sanctioned" (`4bf8299f`) |
+| SC-338 | landed | `afd6ae3` | `f2140b2` | — (Scott: "1. yes / 2. yes") |
+| SC-317 | landed | `5a20d5f` | `7329c9b` | — (Scott: "looks good") |
+| SC-235 | landed | `6dca388` | `ff2f08f` | — (option B, 15px; parity 16 → 14) |
+| SC-318 | landed | `dfb7395` | `6857acc` | 2-line widening 260 → 262, Scott "Sanctioned" (`8ee73a15`) |
+| **SC-232** | **Needs Review** | branch `9ded832` (on `dfb7395`) | wt branch `9ba7798` | 78-line rebaseline pending a **literal "sanctioned"** |
 
-**2026-09-25 15:30: Scott is away all weekend.** He moved SC-243, SC-230, SC-272, SC-236, SC-255,
-SC-231 and SC-284 from Needs Review to **Ready for Agent**. SC-338 is still Needs Review. The
-label query also returned SC-279 (Todo, not in this queue, so don't start it) and SC-297/120/190 (Done,
-stale labels). **Handbacks go ahead of new tickets**, in queue order: SC-243 → SC-230 → SC-272 →
-SC-236 → SC-255 → SC-231 → SC-284. Each takes the next free slot, and SC-235 and SC-318 wait until they're drained.
-Still 2 slots. Wake each owner with "<KEY> has new comments; fetch newest-first". The owner
-confirms any sanction on the ticket, rebases onto current develop, recomputes rebaseline.txt if
-the moved set changed, re-runs the battery, and reports LAND-READY with the sanction comment id.
-**Model:** owners are spawned with `model: opus`, and the API reports claude-opus-5-5. The
-"fable" Scott saw comes from the ticket-owner skill's posting example (`--model fable` in the
-Linear footer). Every owner is told to post with `--model opus-5.5`. An hourly
-recurring cron (`:17`) in this session resumes owners killed by usage limits.
+⚠ For each of these three, the dse-verify record quotes Scott's exact words, and the undo is a
+`.superpowers/sdd/freeze-baseline.sha256.pre-<effort>-bak` backup plus a revert of that effort's commits.
 
-**Gap, Fri 17:15 → Sun 08:10:** a usage limit killed SC-243 (the handback, just woken) and SC-232
-(r4 fix, with uncommitted edits in its dse tree) on Fri ~17:15. Nothing ran again until Sun
-08:10, when both were resumed. The hourly cron was still registered but produced nothing in that window.
+**SC-232, the only open ticket** (worktree `sc232-cardname-scale`, ledger
+`.superpowers/sdd/sc232-cardname-scale/`). Its second ask is on the ticket and needs three replies:
+1. the card-name size: A, B, leave, or "A plus 6%";
+2. whether the new header slots are right (ancestry, class or kit line; kind-noun eyebrow; Level chip; cost/Signature; "Signature Ability" → "Signature");
+3. the literal word "sanctioned" for the 78-line print rebaseline (`rebaseline.txt` plus `rebaseline-map.md` in the ledger).
 
-**Sun 16:10–18:10:** a usage limit killed SC-232 (r9, with rebaseline.txt now drafted) and SC-318 (r3 review); both were resumed at 18:11.
+The review returned LAND-READY-AS-PROPOSAL. Gates: jest 4218, lifecycle 19/19, shots 544, parity 24
+declared, and freeze passes 262/262 once the 78 lines are applied. **At landing:** apply the 78 lines
+(the count stays 262) and set dse-verify's parity count to 24. The superproject diff is CHANGELOG only,
+and the pointer is not bumped. The spin-off tickets are SC-367/368/370/371/373/374/375.
 
-**Sun ~21:10 → Mon 07:39:** a usage limit killed SC-232 (round 10 finishing) and SC-235 (round 6 option B done, r7 re-review running). Nothing ran overnight; both were resumed Mon 07:39. SC-318 (handback) is still queued for the next free slot.
+**How to resume.** When Scott hands a ticket back (Ready for Agent label), SendMessage its owner
+"<KEY> has new comments; fetch newest-first". If "No transcript found", spawn a fresh
+`orchestration:ticket-owner` (model opus) briefed from the ledger dir. Land via land-stack. The
+main checkout's dse carries Scott's live vault dirt (`demo-vault/Welcome.md`, `justfile`,
+`compendium-manifest.json`, `demo-vault/montage 1.md`), so stash-wrap it for every landing.
 
-**develop moved (another session):** SC-340 landed → dse develop `619c4bd`. Every parked branch
-above that was measured on `6c4f6aa` needs a rebase and a fresh battery when Scott answers; its owner does
-that on wake. The weekly usage limit hit ~04:35 on 09-25 (reset 07:00; nothing resumed until
-10:05).
+**Lessons recorded in the repo this wave:**
+- land-stack pre-fetch step (a two-sided gitlink merge needs the branch commits in the main
+  checkout's submodule, fetched by absolute path);
+- adapter footgun §8.9 (never pkill by pattern);
+- adapter footgun §8.10 (a failed `cd` put a worker's git ops in the main checkout; always
+  `git -C <abs path>`);
+- dse-verify dated records for each rebaseline and widening.
 
-Both owners were killed by the session usage limit ~23:30 and resumed via SendMessage at the
-02:00 reset (ledgers + worktrees survived intact). Killed again ~04:15 (SC-288, SC-230),
-resumed at the 07:00 reset. No wakeups remain scheduled. SC-343 landed from another session
-meanwhile (dse `48ac20c`). SC-328's branch will need develop merged in before it lands.
-Main checkout dse carries Scott's live vault dirt (`demo-vault/Welcome.md`, `justfile`,
-`compendium-manifest.json`, `demo-vault/montage 1.md`) — stash-wrap per land-stack §2c.
+**Gaps:** usage limits (session and one weekly) repeatedly killed the owners, and the longest
+idle stretches were Fri 17:15 → Sun 08:10 and Sun 21:10 → Mon 07:39. Owners resumed cleanly from their ledgers every time.
 
 ### 2026-09-13 (overnight) — IN-FLIGHT: SC-299 / SC-126 / SC-92 (dispatcher session)
 Scott asked for three Todo tickets to be finished while he sleeps. Dispatcher (this session,
