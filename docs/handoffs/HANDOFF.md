@@ -14,16 +14,16 @@
 > **Release gate: 7.0.0 ships only when SC-97 (Steel UI parity) is complete.**
 
 
-### 2026-09-23 → 09-28 — DSE 7.0.0 queue (dispatcher session): QUEUE DRAINED, 1 ticket waiting on Scott
+### 2026-09-23 → 09-29 — DSE 7.0.0 queue (dispatcher session): COMPLETE, all 17 tickets landed
 Dispatcher session `a56f19e1-5165-4bc8-92ee-d6eeff34f029` (Opus 5.5). Owners were spawned as
 `orchestration:ticket-owner` with `model: opus` (Opus 5.5, per Scott) and post with `--model opus-5.5`.
 The "fable" in older Linear footers comes from the skill's posting example. 2 owners in flight at a time.
 Out of scope: SC-340, SC-343 and SC-331, which other sessions owned (SC-343 and SC-340 have since
 landed), and SC-336, SC-339, SC-290 and SC-260, which were folded into that work.
 
-**Final roster (Mon 2026-09-28 ~09:00).** dse `develop` is at `dfb7395`. No tags, no DSE `main`
-change, no deploy. dse-verify's current expected numbers: freeze **262/262**, parity **14 declared**,
-lifecycle 19, jest 4147.
+**Final roster (Tue 2026-09-29).** dse `develop` is at `9ded832`. No tags, no DSE `main`
+change, no deploy. dse-verify's current expected numbers: freeze **262/262**, parity **24 declared**,
+lifecycle 19, jest 4218.
 
 | Ticket | Result | dse develop | workspace | Freeze / sanction |
 |---|---|---|---|---|
@@ -43,21 +43,12 @@ lifecycle 19, jest 4147.
 | SC-317 | landed | `5a20d5f` | `7329c9b` | — (Scott: "looks good") |
 | SC-235 | landed | `6dca388` | `ff2f08f` | — (option B, 15px; parity 16 → 14) |
 | SC-318 | landed | `dfb7395` | `6857acc` | 2-line widening 260 → 262, Scott "Sanctioned" (`8ee73a15`) |
-| **SC-232** | **Needs Review** | branch `9ded832` (on `dfb7395`) | wt branch `9ba7798` | 78-line rebaseline pending a **literal "sanctioned"** |
+| SC-232 | landed | `9ded832` | `43ea28a` | 78-line rebaseline, Scott "1. A / 2. ok / 3. sanctioned" (`bd88a398`); parity 14 → 24 |
 
 ⚠ For each of these three, the dse-verify record quotes Scott's exact words, and the undo is a
 `.superpowers/sdd/freeze-baseline.sha256.pre-<effort>-bak` backup plus a revert of that effort's commits.
 
-**SC-232, the only open ticket** (worktree `sc232-cardname-scale`, ledger
-`.superpowers/sdd/sc232-cardname-scale/`). Its second ask is on the ticket and needs three replies:
-1. the card-name size: A, B, leave, or "A plus 6%";
-2. whether the new header slots are right (ancestry, class or kit line; kind-noun eyebrow; Level chip; cost/Signature; "Signature Ability" → "Signature");
-3. the literal word "sanctioned" for the 78-line print rebaseline (`rebaseline.txt` plus `rebaseline-map.md` in the ledger).
-
-The review returned LAND-READY-AS-PROPOSAL. Gates: jest 4218, lifecycle 19/19, shots 544, parity 24
-declared, and freeze passes 262/262 once the 78 lines are applied. **At landing:** apply the 78 lines
-(the count stays 262) and set dse-verify's parity count to 24. The superproject diff is CHANGELOG only,
-and the pointer is not bumped. The spin-off tickets are SC-367/368/370/371/373/374/375.
+**SC-232** landed 2026-09-29 (option A card-name sizes plus the new header slots). Its ledger and rebaseline map are preserved at `build-ledgers/sc232-cardname-scale/`, and its worktree is removed. Spin-offs: SC-367/368/370/371/373/374/375.
 
 **How to resume.** When Scott hands a ticket back (Ready for Agent label), SendMessage its owner
 "<KEY> has new comments; fetch newest-first". If "No transcript found", spawn a fresh

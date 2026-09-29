@@ -288,6 +288,21 @@ didn't mount) plus human review of the PNGs.
   `freeze-baseline.sha256.pre-<effort>-bak`, (3) applies the lines, (4) appends a dated
   entry to this file quoting the sanction. Widenings (additions-only) need no sanction —
   the dispatcher verifies additions-only by sorted-diff and applies at landing.
+  - **2026-09-29, SC-232 (Steel card-name type scale, option A: each family matches the site,
+    27–41.4px, and heads ≤480px keep 20px; also fills the card-head slots the site fills: the
+    ancestry/class/kit line, kind-noun eyebrow, Level chip, cost/"Signature", action type;
+    worktree `sc232-cardname-scale`, landed dse `develop` @ `9ded832`): SANCTIONED 78-line
+    rebaseline, count unchanged 262 → 262, across 39 capture ids.** Cause: the head-slot
+    content renders in print, so every card family's print head moves. The ids: `feature*`
+    (feature, -collapsed, -list, -spend), `featureblock*` (featureblock, -featstyle-flat, -stats,
+    -stats-ledger), `kit`, `kit-collapsed`, the `chrome-*` hover/placement/rollout captures,
+    and 24 `statblock*` ids. **Scott's sanction, SC-232 comment `bd88a398` 2026-09-29: "1. A /
+    2. ok / 3. sanctioned".** Deliverable `.superpowers/sdd/sc232-cardname-scale/rebaseline.txt`
+    (78 lines, with a per-line explanation in `rebaseline-map.md`). The hashes were byte-identical
+    across two shots runs and reproduced by the independent reviewer. Applied by the dispatcher after
+    landing: backup `freeze-baseline.sha256.pre-sc232-bak`, in-place (diff exactly 78 lines).
+    Verified against the landed tree's shots: `freeze OK (262/262 …)`, exit 0. **Expected line
+    now: `freeze OK (262/262 …)` on `origin/develop` `9ded832`.** Parity 14 → 24 declared.
   - **2026-09-28, SC-318 (heading sizes inside cards, option A: restores Obsidian's heading
     scale on screen; worktree `sc318-card-headings`, landed dse `develop` @ `dfb7395`):
     WIDENING, additions-only, 260 → 262.** New capture id `perk-headings` (an h1–h6 ladder
@@ -877,11 +892,12 @@ mapped selectors. **The gate contract is a biconditional (SC-110):**
 
 > **exit 0 ⟺ 0 GAPs AND 0 undeclared WARNs.**
 
-Expected clean result today: **0 GAPs / 0 undeclared WARNs / 14 DECLARED rows / exit 0**
-(16 → 14 when SC-235 landed on dse `6dca388`, 2026-09-28. Section-title letter spacing now
-matches the site, so that declaration is gone. The font-size and line-height rows are
-re-declared and now cite SC-235: the site fakes small caps, so its computed px understate what
-you see. SC-232, if it lands, adds its `ink` rows on top; it reconciles on rebase.)
+Expected clean result today: **0 GAPs / 0 undeclared WARNs / 24 DECLARED rows / exit 0**
+(14 → 24 when SC-232 landed on dse `9ded832`, 2026-09-29. It adds the card-name `ink` rows, which
+are parked under SC-368, the name-colour gap. Earlier, 16 → 14 when SC-235 landed on `6dca388`,
+2026-09-28. Section-title letter spacing then matched the site, so that declaration went. The
+font-size and line-height rows were re-declared and now cite SC-235: the site fakes small caps,
+so its computed px understate what you see.)
 
 A `WARN` now means "the comparison did not happen" (a selector that never rendered, an
 unparseable value) and **fails the run** — before SC-110 it was printed and ignored, so a
@@ -1021,14 +1037,18 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `dfb7395` (2026-09-28, after the 09-24→09-28 dispatcher wave:
+**CURRENT — dse `develop` @ `9ded832` (2026-09-29; SC-232 landed on top of the 09-24→09-28
+dispatcher wave):** tsc/lint clean · jest **4218 passed / 1 skipped** · lifecycle **19/19** ·
+shots **544**, 0 FAIL · freeze **`freeze OK (262/262 …)`** · parity **0 GAPs / 0 undeclared /
+24 DECLARED**. SC-232's 78-line rebaseline replaced hashes; the count stays 262.
+
+**PREVIOUS — dse `develop` @ `dfb7395` (2026-09-28, after the 09-24→09-28 dispatcher wave:
 SC-243, SC-230, SC-272, SC-236, SC-255, SC-231, SC-284, SC-338, SC-317, SC-235, SC-318):**
 tsc/lint clean · jest **4147 passed / 1 skipped** · lifecycle **19/19** · shots **536**, 0 FAIL
 (SC-318 added the `perk-headings` capture) · freeze **`freeze OK (262/262 …)`** · parity
 **0 GAPs / 0 undeclared / 14 DECLARED**. Freeze moved 260 → 262 only by SC-318's additions-only
 widening. The sanctioned rebaselines recorded above (SC-236 8, SC-255 20, SC-231 55, SC-284 6)
-replaced hashes and kept the count. SC-232, when it lands, changes parity (adds its `ink` rows) and
-reconciles on rebase. The SC-340 block below is the previous snapshot.
+replaced hashes and kept the count. The SC-340 block below is the snapshot before that.
 
 **PREVIOUS — SC-340, view adoption (branch `sc340-view-adoption`, 2026-09-24, based on dse
 `develop`/`sc343-stale-write-guard` `48ac20c`, Task 0; landing measured after the pre-landing
