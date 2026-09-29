@@ -48,6 +48,38 @@ go under an *Internal* sub-heading.
   button — they never asked for that plate in the first place, and this makes them
   consistent with the rest of the plugin.
 
+- **DSE plugin: card-head names read at the site's own size, per family
+  (SC-232).** Every card name — a kit head, a standalone ability card, a
+  statblock band, a featureblock band, the GM project tracker — used to
+  share one 20px rule regardless of family, well under the site's own
+  per-family scale (the site gives a statblock name nearly twice the
+  plugin's size). Names now match the live site's computed pixels exactly
+  for each family: generic 27px, ability card 33.3px, statblock 41.4px,
+  featureblock 37.8px, project 28.8px. At a narrow pane width (a card head
+  480px wide or less) names step back down to today's shared 20px, so a
+  narrow pane never reads worse than before.
+
+- **DSE plugin: card heads now show their provenance, kind-noun, level and usage,
+  matching the site (SC-232).** A trait or ability card's head was missing its
+  lower-left provenance line — e.g. the "Determination" trait never showed "Human"
+  — even though the synced entity already carried the field; the head simply
+  never read it. Traits and class features now show ancestry/class/kit (+
+  subclass); abilities show class (+ subclass), falling back to a kit's own name
+  for a kit's own inline signature ability (a synced kit's nested signature
+  ability doesn't carry its kit's name yet — filed as a follow-up). A plain class
+  feature's left-eyebrow now correctly reads "Feature" instead of "Trait". A
+  malice featureblock's left-eyebrow now reads "Malice" when the synced entity
+  carries that kind, instead of falling silent. A statblock's left-eyebrow now
+  reads its real kind ("Monster", "Companion", "Retainer", "Summon") instead of
+  always showing its keywords, which moved to their own provenance line under the
+  name. A standalone ability or kit signature ability's cost, level and usage now
+  read where the site puts them — cost (or "Signature" for a kit's own signature
+  ability) beside the name, level as its own chip, usage as its own chip —
+  instead of a single mixed cost/type chip pair; a statblock or featureblock
+  ability keeps its action type in the keyword band (the site's own placement),
+  and its cost now reads beside the name. The book's own "Signature Ability"
+  wording is shortened to "Signature" to match.
+
 - **v2 site: the display face is now Cinzel, at the weight the design always wanted
   (SC-325).** Forum had a single 400 weight, so every heading's boldness was faked
   with an outline — and an outline is the wrong tool, because one thickness never
