@@ -63,3 +63,4 @@ No Scott comments on the thread as of 2026-09-24.
 - r2 re-review (B): LAND, 0 B/H/M, 3 LOW, 3 INFO. Rulings (owner, 2026-09-24): FOLD all three into r3 (implementer A) — LOW-A commit probe Q1 as a test pinning the loaded-leaf skip (registration.ts:136); LOW-B console.error in the view.ts:308-310 catch so write failures stay visible; LOW-C 3-line stable-blockKey assertion. INFO items: no action. r3 delta re-review: reviewer B.
 - r3 fix (A): DSE 6c4f6aa (5dd14e4 fix, 6c4f6aa test) on c524fd2. jest 3997/1/3998 (206/207), lifecycle 6/6, shots 524/0 FAIL, freeze 260/260, parity 0/0/16. r3 delta re-review (B) dispatched.
 - r3 re-review (B): LAND, 0 findings above INFO. Owner: LAND-READY at 6c4f6aa on c524fd2.
+- 2026-09-24: LANDED by dispatcher — dse develop 6c4f6aa, workspace main 218726e; ticket flipped Done.

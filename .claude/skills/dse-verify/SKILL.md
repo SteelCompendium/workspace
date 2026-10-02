@@ -341,8 +341,8 @@ didn't mount) plus human review of the PNGs.
     shift only. **Sanction wording (recorded exactly):** the ask said a "sanctioned, looks
     good" reply covers both the look and the 55 lines. Scott replied (comment `fb3a9458`,
     2026-09-25 18:31 UTC) "this looks good." and moved the ticket to Ready for Agent. That is not the
-    literal word. It was read as covering both, the same reading as SC-236 and SC-255. **If
-    Scott disagrees, restore the backup below and revert the SC-231 commits.** Deliverable
+    literal word. It was read as covering both, the same reading as SC-236 and SC-255. **Scott
+    confirmed it on 2026-10-02 in the dispatcher session with "sanctioned".** Deliverable
     `.superpowers/sdd/sc231-keyword-chips/rebaseline.txt` (55 lines, 2 matching clean runs).
     Applied by the dispatcher after landing: backup `freeze-baseline.sha256.pre-sc231-bak`,
     in-place (diff exactly 55 lines). Verified against the landed tree's shots:
@@ -358,8 +358,8 @@ didn't mount) plus human review of the PNGs.
     tell me what to change". Both = the look and the 20 lines. Scott replied (comment
     `ec5cf1c9`, 2026-09-25 18:34 UTC) "this looks good." and moved the ticket to Ready for
     Agent. That is not the literal word. It was read as approval of both, because the ask gave
-    only two outcomes and he requested no change. **If Scott disagrees, restore the backup
-    below and revert `b029baa`'s SC-255 commits.** Deliverable
+    only two outcomes and he requested no change. **Scott confirmed it on 2026-10-02 in the
+    dispatcher session with "sanctioned".** Deliverable
     `.superpowers/sdd/sc255-skills-collapse/rebaseline.txt` (20 lines, recomputed after the
     rebase onto `ade5064`, byte-identical to the approved set, 2 matching runs). Applied by the
     dispatcher after landing: backup `freeze-baseline.sha256.pre-sc255-bak`, in-place (diff
@@ -375,8 +375,8 @@ didn't mount) plus human review of the PNGs.
     (comment `b4241ded`, 2026-09-25 18:41 UTC): "Option A is good." Then he moved the ticket
     to Ready for Agent. The ticket-owner read that as the sanction, because option A cannot
     land without these 8 lines. It posted that reading on the ticket, inviting objection
-    before landing. The dispatcher applied it on that basis. **If Scott disagrees, restore
-    the backup below and revert `ade5064`.** Deliverable
+    before landing. The dispatcher applied it on that basis. **Scott confirmed it on 2026-10-02 in
+    the dispatcher session with "sanctioned", so this is now a full sanction.** Deliverable
     `.superpowers/sdd/sc236-feature-example/rebaseline.txt` (8 lines, unchanged across the
     rebase). Applied by the dispatcher after landing: backup
     `freeze-baseline.sha256.pre-sc236-bak`, in-place replacement (the diff is exactly 8

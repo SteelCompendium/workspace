@@ -35,9 +35,9 @@ lifecycle 19, jest 4218.
 | SC-243 | landed | `e9bc15e` | `1e828b2` | — (Scott: "Option A is fine") |
 | SC-230 | landed | `1adfe29` | `52ae8e0` | — (Scott: "option A is good") |
 | SC-272 | landed | `36635e9` | `49b38c8` | — (singular labels; site follow-up SC-369) |
-| SC-236 | landed | `ade5064` | `2f658ef` | 8-line rebaseline on **"Option A is good"** (`b4241ded`), not the literal word ⚠ |
-| SC-255 | landed | `b029baa` | `1172c3c` | 20-line rebaseline on **"this looks good."** (`ec5cf1c9`), not the literal word ⚠ |
-| SC-231 | landed | `272c444` | `63dea11` | 55-line rebaseline on **"this looks good."** (`fb3a9458`), not the literal word ⚠ |
+| SC-236 | landed | `ade5064` | `2f658ef` | 8-line rebaseline on **"Option A is good"** (`b4241ded`), confirmed "sanctioned" by Scott 2026-10-02 |
+| SC-255 | landed | `b029baa` | `1172c3c` | 20-line rebaseline on **"this looks good."** (`ec5cf1c9`), confirmed "sanctioned" by Scott 2026-10-02 |
+| SC-231 | landed | `272c444` | `63dea11` | 55-line rebaseline on **"this looks good."** (`fb3a9458`), confirmed "sanctioned" by Scott 2026-10-02 |
 | SC-284 | landed | `825ea51` | `a2356f8` | 6-line rebaseline, Scott "sanctioned" (`4bf8299f`) |
 | SC-338 | landed | `afd6ae3` | `f2140b2` | — (Scott: "1. yes / 2. yes") |
 | SC-317 | landed | `5a20d5f` | `7329c9b` | — (Scott: "looks good") |
@@ -45,8 +45,9 @@ lifecycle 19, jest 4218.
 | SC-318 | landed | `dfb7395` | `6857acc` | 2-line widening 260 → 262, Scott "Sanctioned" (`8ee73a15`) |
 | SC-232 | landed | `9ded832` | `43ea28a` | 78-line rebaseline, Scott "1. A / 2. ok / 3. sanctioned" (`bd88a398`); parity 14 → 24 |
 
-⚠ For each of these three, the dse-verify record quotes Scott's exact words, and the undo is a
-`.superpowers/sdd/freeze-baseline.sha256.pre-<effort>-bak` backup plus a revert of that effort's commits.
+Scott confirmed all three rebaselines (SC-236, SC-255, SC-231) with "sanctioned" on 2026-10-02.
+The effort scratch dirs were cleaned the same day. The ledgers live in `build-ledgers/`, and the
+`.pre-*-bak` baselines are kept.
 
 **SC-232** landed 2026-09-29 (option A card-name sizes plus the new header slots). Its ledger and rebaseline map are preserved at `build-ledgers/sc232-cardname-scale/`, and its worktree is removed. Spin-offs: SC-367/368/370/371/373/374/375.
 
