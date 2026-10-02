@@ -29,6 +29,13 @@ go under an *Internal* sub-heading.
   "Uncovering Motivations" in two; it now follows the Starting Stats paragraph that
   refers to it, and that sentence reads whole again.
 
+- **DSE plugin: initiative tracker tweaks (SC-377).** The tracker can be named (a `name:`
+  field or click the title to edit). Reset turns / Reset encounter state moved into the
+  tracker's menu panel, and the round label + Advance round sit on the Heroes heading line.
+  The Malice pool is an always-visible stepper, its quick-add submits on Enter and flags a
+  missing field, and heroes and enemy groups share one seal-style turn mark. Typing into any
+  in-card field (quick-add, counter, party award) now works with a plain mouse click.
+
 - **DSE plugin: headings inside a card's markdown body are back to Obsidian's own
   heading sizes (SC-318).** A `######` heading no longer renders smaller than body
   text, the hero's CHARACTERISTICS region title is back to its pre-regression size,

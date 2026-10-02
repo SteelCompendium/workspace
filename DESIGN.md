@@ -422,3 +422,12 @@ controversy): users pick how dense/faithful the rendering is, **per part**.
 8. **Update this file** when the design language changes (new component system, new
    tokens, a changed rule) — current state + pointers only; effort history goes in
    the plan/spec docs and `reference/design-system/` stays a frozen archive.
+9. **One mark per state, on every side; adjusters are always visible** (Scott's SC-377
+   brief, 2026-10-02). The initiative tracker's turn mark is the **seal**, used identically on
+   heroes and enemy groups: an empty engraved ring (not acted) → a struck steel disc bearing the
+   ◆ (acted) → a ghosted disc on hover. Ring vs seal is a shape difference, never a hue one
+   (Scott is colourblind), and green is not a turn colour. A numeric adjuster (Malice, surges,
+   counters) is the standard Steel kit stepper — bevelled ± framing a sunken well — always
+   visible; no hover-reveal and no bare-glyph variants. Destructive/corrective per-element
+   actions (e.g. the tracker's *Reset turns* and *Reset encounter state*) are chrome-panel items,
+   not in-card button bars.
