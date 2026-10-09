@@ -358,3 +358,8 @@ dispatcher; six days elapsed).
   lines regenerated from sweep B, byte-identical to the sanctioned file. I-1:
   `sc127-r13-unbaselined-ids.sha256` (4 ids × twin+realprint). Reported land-ready to the
   dispatcher.
+- **2026-10-09 — LANDED by the dispatcher.** dse `origin/develop` `1ac4e5a`; workspace
+  `origin/main` merge `11e8604` (+ dated rebaseline record `38174e1`); baseline re-pinned
+  (131 twin / 0 realprint, backup `freeze-baseline.sha256.pre-sc127-bak`), `freeze OK
+  (262/262)`; worktree removed; ledger preserved to `build-ledgers/sc127-print-preview/`
+  (`8238c69`). Not deployed, not tagged. Landed note posted; SC-127 → Done.
