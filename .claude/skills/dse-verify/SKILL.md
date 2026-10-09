@@ -1037,7 +1037,13 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `9ded832` (2026-09-29; SC-232 landed on top of the 09-24→09-28
+**CURRENT — dse `develop` @ `8a256c5` (2026-10-08; SC-378 landed):** tsc/lint clean · jest
+**4219 passed / 1 skipped** · lifecycle **19/19** · shots **544**, 0 FAIL · freeze **`freeze OK
+(262/262 …)`** · parity **0 GAPs / 0 undeclared / 24 DECLARED**. SC-378 added one jest test and
+moved no frozen bytes. Its fix is screen-only: the power-roll outcome `<p>` margin that SC-202's
+prose re-grounding had overridden.
+
+**PREVIOUS — dse `develop` @ `9ded832` (2026-09-29; SC-232 landed on top of the 09-24→09-28
 dispatcher wave):** tsc/lint clean · jest **4218 passed / 1 skipped** · lifecycle **19/19** ·
 shots **544**, 0 FAIL · freeze **`freeze OK (262/262 …)`** · parity **0 GAPs / 0 undeclared /
 24 DECLARED**. SC-232's 78-line rebaseline replaced hashes; the count stays 262.
