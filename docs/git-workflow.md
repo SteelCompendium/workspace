@@ -193,3 +193,12 @@ activated shell: `devbox run -- bash -c 'cd <workspace> && git checkout -- devbo
 
 **If the v2 remote advanced under a deploy of generated artifacts:** don't 3-way merge
 regenerated `docs/` — `git reset --hard origin/main`, regenerate fresh, then commit.
+
+**If v2 CI's "Deploy to GitHub Pages" step fails** (e.g. `No artifacts named "github-pages"`
+— a GitHub race right after a successful upload): a plain `gh run rerun --failed` fails
+again with `Multiple artifacts named "github-pages"`, because the earlier attempt's artifact
+stays attached to the run (ci.yml has no `workflow_dispatch` to start a fresh run). Delete the
+run's artifacts first, then re-run:
+`gh api repos/SteelCompendium/v2/actions/runs/<run>/artifacts -q '.artifacts[].id'` →
+`gh api -X DELETE repos/SteelCompendium/v2/actions/artifacts/<id>` for each →
+`gh run rerun <run> --repo SteelCompendium/v2 --failed`.
