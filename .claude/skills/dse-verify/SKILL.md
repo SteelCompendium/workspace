@@ -288,6 +288,28 @@ didn't mount) plus human review of the PNGs.
   `freeze-baseline.sha256.pre-<effort>-bak`, (3) applies the lines, (4) appends a dated
   entry to this file quoting the sanction. Widenings (additions-only) need no sanction —
   the dispatcher verifies additions-only by sorted-diff and applies at landing.
+  - **2026-10-08, SC-127 (Print preview in a dark-theme vault draws its own light paper:
+    a white page with black ink regardless of vault theme, plus a generated light-theme
+    island of the Obsidian host tokens; worktree `sc127-print-preview`, landed dse `develop`
+    @ `1ac4e5a`): SANCTIONED 131-line rebaseline, count unchanged 262 → 262 — every
+    `*--steel-print.png` twin line moved once, 0 `*--steel-realprint.png` lines moved.**
+    Cause: the twin is captured over the DARK vault scheme and now paints the paper; the
+    realprint class already rendered under forced `theme-light`, and the paper is
+    `@media screen` only, so paper bytes are untouched. **Scott's sanction, SC-127 comment
+    `da76ab81` 2026-10-02 16:15 UTC, replying to the ask "Approve: re-pin all 131
+    dark-theme print-preview shots … every one of the 131 real-print shots … is
+    byte-identical": "approved".** Deliverable `.superpowers/sdd/sc127/sc127-rebaseline.txt`
+    (131 lines, twin-only), regenerated from the rebased landing tree and deterministic
+    across two clean sweeps; the independent reviewer reproduced the hashes. Applied by the
+    dispatcher at landing: backup `freeze-baseline.sha256.pre-sc127-bak`, in place — 131
+    lines changed, name set unchanged, 0 realprint lines changed. Verified against the
+    landing tree's shots: `freeze OK (262/262 …)`, exit 0. **Expected line now:
+    `freeze OK (262/262 …)` on `origin/develop` `1ac4e5a`.** Landing note: four capture
+    ids on the tree are not yet in the baseline (`feature-ability-provenance`,
+    `feature-trait-provenance`, `featureblock-narrow`, `statblock-narrow`); their twins move
+    with SC-127, so any pending widening for them must use post-SC-127 hashes (listed in
+    `.superpowers/sdd/sc127/sc127-r13-unbaselined-ids.sha256`), or freeze goes red on those
+    four.
   - **2026-09-29, SC-232 (Steel card-name type scale, option A: each family matches the site,
     27–41.4px, and heads ≤480px keep 20px; also fills the card-head slots the site fills: the
     ancestry/class/kit line, kind-noun eyebrow, Level chip, cost/"Signature", action type;
@@ -832,7 +854,10 @@ didn't mount) plus human review of the PNGs.
       dark-on-dark look of the `steel-print` captures is a longstanding **harness capture
       artifact** (print tokens over the DARK scheme), shared by both halves of every pair —
       a separate follow-up will re-capture print over the light scheme, which will be its
-      own deliberate all-print-lines re-pin, not part of this sanction.
+      own deliberate all-print-lines re-pin, not part of this sanction. **Superseded
+      2026-09-23, SC-127:** it was a real product bug (the print preview in a dark vault),
+      fixed by the preview drawing its own paper; the twin stays captured over the dark
+      scheme as that bug's regression gate.
     - Applied procedure: `npm run shots` re-run at the exact landing commit (post-rebase onto
       the SC-117 fix wave), baseline backed up to
       `freeze-baseline.sha256.pre-plan25-landing-bak`, exactly those 5 `<hash>  <name>` lines
@@ -1037,7 +1062,14 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `8a256c5` (2026-10-08; SC-378 landed):** tsc/lint clean · jest
+**CURRENT — dse `develop` @ `1ac4e5a` (2026-10-08; SC-127 landed):** tsc/lint clean · jest
+**4254 passed / 1 skipped / 214 of 215 suites** · shots **544**, 0 FAIL, with the in-run
+`SC-127 light island OK` at the default and a non-default accent and `print-twin delta OK`
+across 135 ids · freeze **`freeze OK (262/262 …)`** after the sanctioned 131-line twin
+rebaseline above · parity **0 GAPs / 0 undeclared / 24 DECLARED**. Measured by the SC-127
+fixer at the landing tree; lifecycle not re-run.
+
+**PREVIOUS — dse `develop` @ `8a256c5` (2026-10-08; SC-378 landed):** tsc/lint clean · jest
 **4219 passed / 1 skipped** · lifecycle **19/19** · shots **544**, 0 FAIL · freeze **`freeze OK
 (262/262 …)`** · parity **0 GAPs / 0 undeclared / 24 DECLARED**. SC-378 added one jest test and
 moved no frozen bytes. Its fix is screen-only: the power-roll outcome `<p>` margin that SC-202's
