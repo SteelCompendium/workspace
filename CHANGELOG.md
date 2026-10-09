@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the negotiation tracker is redesigned in the Steel style (SC-379).** Patience
+  runs across and Interest runs down, both as numbered seals with the current value in solid
+  teal; the tracker now says when the negotiation is over (final offer, deal, or hostile) and
+  stops offering Complete Argument; tier results update the moment you pick a motivation or
+  modifier; Motivations are marked spent from their card; argument results can no longer push
+  Interest or Patience outside 0–5.
+
 - **DSE plugin: power-roll tier rows are compact again (SC-378).** Each tier row
   (ability cards, statblocks, featureblocks, kits, negotiation, `ds-roll`) is back to
   about 50px for a one-line outcome, the same as the site, down from about 82px.
