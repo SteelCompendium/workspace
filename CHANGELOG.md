@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: power-roll tier rows are compact again (SC-378).** Each tier row
+  (ability cards, statblocks, featureblocks, kits, negotiation, `ds-roll`) is back to
+  about 50px for a one-line outcome, the same as the site, down from about 82px.
+  SC-202's paragraph-spacing reset had added a full line of space above and below each
+  outcome's text. Screen only; print was never affected.
+
 - **DSE plugin: headings inside a card's markdown body are back to Obsidian's own
   heading sizes (SC-318).** A `######` heading no longer renders smaller than body
   text, the hero's CHARACTERISTICS region title is back to its pre-regression size,
