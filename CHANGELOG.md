@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the negotiation tracker is redesigned in the Steel style (SC-379).** Patience
+  runs across and Interest runs down, both as numbered seals with the current value in solid
+  teal; the tracker now says when the negotiation is over (final offer, deal, or hostile) and
+  stops offering Complete Argument; tier results update the moment you pick a motivation or
+  modifier; Motivations are marked spent from their card; argument results can no longer push
+  Interest or Patience outside 0–5.
+
 - **DSE plugin: headings inside a card's markdown body are back to Obsidian's own
   heading sizes (SC-318).** A `######` heading no longer renders smaller than body
   text, the hero's CHARACTERISTICS region title is back to its pre-regression size,
