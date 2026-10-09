@@ -14,6 +14,14 @@ go under an *Internal* sub-heading.
   SC-202's paragraph-spacing reset had added a full line of space above and below each
   outcome's text. Screen only; print was never affected.
 
+- **Site: Revenant purchased traits and the Negotiation Starting Attitudes table are back
+  where the book puts them (SC-385).** On the Revenant ancestry page, "Purchased Revenant
+  Traits" and the five traits under it were nested inside the Tough But Withered signature
+  trait; they now sit beside the two signature traits like every other ancestry. In the
+  Negotiation chapter, the Starting Attitudes table had split the first sentence of
+  "Uncovering Motivations" in two; it now follows the Starting Stats paragraph that
+  refers to it, and that sentence reads whole again.
+
 - **DSE plugin: headings inside a card's markdown body are back to Obsidian's own
   heading sizes (SC-318).** A `######` heading no longer renders smaller than body
   text, the hero's CHARACTERISTICS region title is back to its pre-regression size,
