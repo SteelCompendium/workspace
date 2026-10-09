@@ -100,6 +100,16 @@ standard resolution is **keep both sides' bullets** (strip the conflict markers,
 every addition, keep the header once) — never pick a side. Verify the merged file reads
 sanely before committing the resolution.
 
+**⚠️ While resolving, `git add` ONLY the conflicted file — never the submodule path
+(hit on SC-379, 2026-10-09).** A conflicted `wt-finish` merge leaves `MM <sub>`: the
+INDEX already holds the branch's new pin (git printed "Fast-forwarding submodule … to
+<sha>"), but the main checkout's submodule WORKING TREE is still at the old pin. `git add
+<sub>` re-stages the working tree and silently reverts the pin to the old sha — the merge
+commit then lands and pushes with the branch's submodule work un-pinned. Resolve with
+`git add CHANGELOG.md && git commit --no-edit` only, then confirm with
+`git ls-tree HEAD <sub>` BEFORE pushing. Recovery if it already pushed: fetch + ff the
+submodule to the pushed tip, `git add <sub>`, commit a `chore: bump` and push.
+
 ### 2. Cleanliness — `wt-finish` hard-aborts if EITHER tree has any porcelain output
 
 Two recurring trips, both silent until `wt-finish` refuses to run:

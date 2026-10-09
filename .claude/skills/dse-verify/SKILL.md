@@ -288,6 +288,25 @@ didn't mount) plus human review of the PNGs.
   `freeze-baseline.sha256.pre-<effort>-bak`, (3) applies the lines, (4) appends a dated
   entry to this file quoting the sanction. Widenings (additions-only) need no sanction —
   the dispatcher verifies additions-only by sorted-diff and applies at landing.
+  - **2026-10-09, SC-379 (negotiation tracker rebuilt in Steel — "A1 gauges, buttons in the
+    tab": Patience on a horizontal rail and Interest on a vertical rail of the same numbered
+    seals via the new kit `track()` part, appeal chips in the argument tab, "Mark spent" cards,
+    the "Final offer" band; worktree `sc379-negotiation`, landed dse `develop` @ `e0ee273`):
+    SANCTIONED 6-line rebaseline + 6-line WIDENING, 262 → 268.** The rebaseline: `negotiation`,
+    `negotiation-checked`, `negotiation-pr-checked` × twin + realprint — the only element whose
+    print moves (byte comparison of a clean `1ac4e5a` sweep vs the branch: exactly 6 moved;
+    reproduced by the independent reviewer). The widening: `negotiation-appeal`,
+    `negotiation-ended`, `negotiation-narrow` × twin + realprint, 0 collisions. **Scott's
+    sanction, SC-379 comment `f997cf3b` 2026-10-09 12:46 UTC: "approved"** — replying to an ask
+    whose two outcomes were approve (land + apply the lines) / decline; read as covering both
+    the look and the lines, the SC-236/SC-255/SC-231 reading. Deliverables
+    `.superpowers/sdd/sc379-negotiation/{rebaseline,widening}.txt` (identical across two clean
+    runs). Applied by the SC-379 ticket-owner (no dispatcher session, on Scott's "land it"):
+    backup `freeze-baseline.sha256.pre-sc379-bak`, 6 in place + 6 appended (diff exactly 18
+    lines). Verified against the landed tree's shots: `freeze OK (268/268 …)`, exit 0.
+    **Expected line now: `freeze OK (268/268 …)` on `origin/develop` `e0ee273`.** Note: the
+    `negotiation-ended`/`-narrow` captures are cut by the harness's 1200 px viewport below the
+    band (SC-349); the pinned bytes cover what the viewport captures.
   - **2026-10-08, SC-127 (Print preview in a dark-theme vault draws its own light paper:
     a white page with black ink regardless of vault theme, plus a generated light-theme
     island of the Obsidian host tokens; worktree `sc127-print-preview`, landed dse `develop`
@@ -1062,7 +1081,16 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `1ac4e5a` (2026-10-08; SC-127 landed):** tsc/lint clean · jest
+**CURRENT — dse `develop` @ `e0ee273` (2026-10-09; SC-379 landed):** tsc/lint clean · jest
+**4309 passed / 1 skipped / 215 of 216 suites** · lifecycle **19/19** · shots **556**, 0 FAIL
+(SC-379 added `negotiation-appeal`, `negotiation-ended`, `negotiation-narrow`; host-leak 114
+kinds / 684 comparisons; print-twin delta OK across 138 ids) · freeze **`freeze OK (268/268 …)`**
+after the sanctioned 6-line rebaseline + 6-line widening above · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. One known timing flake under load: `sidebarEncounterHandoff`
+"persists the id it minted" (8 s under load, green on re-run) — same class as the
+settings-tab timeouts above.
+
+**PREVIOUS — dse `develop` @ `1ac4e5a` (2026-10-08; SC-127 landed):** tsc/lint clean · jest
 **4254 passed / 1 skipped / 214 of 215 suites** · shots **544**, 0 FAIL, with the in-run
 `SC-127 light island OK` at the default and a non-default accent and `print-twin delta OK`
 across 135 ids · freeze **`freeze OK (262/262 …)`** after the sanctioned 131-line twin
