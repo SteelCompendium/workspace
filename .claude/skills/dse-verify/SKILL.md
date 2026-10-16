@@ -329,6 +329,26 @@ didn't mount) plus human review of the PNGs.
     with SC-127, so any pending widening for them must use post-SC-127 hashes (listed in
     `.superpowers/sdd/sc127/sc127-r13-unbaselined-ids.sha256`), or freeze goes red on those
     four.
+  - **2026-10-16, SC-377 (Initiative tweaks: resets in the chrome panel, round label +
+    Advance round on the Heroes line, Malice-only bar, editable `name` title; worktree
+    `sc377-initiative-tweaks`, landed dse `develop` @ `9ad919d`): SANCTIONED 38-line
+    rebaseline + 6-line WIDENING, 268 → 274.** The 38: every `initiative*` id (19 ids ×
+    twin + realprint). Cause: the Heroes `<h3>` is wrapped in a flex heading line that
+    prints "Round N", the action bar is gone, the Malice bar re-flows, and the example
+    fixture gained a name. **Scott's sanction, SC-377 comment `5bb62f58` 2026-10-09:
+    "everything else is approved"** — replying to an ask whose third numbered item was
+    the 38-line sanction with the print crops attached; read as the sanction, same as
+    SC-236/SC-255/SC-231. The hashes were recomputed on the rebased landing tree
+    (`e0ee273`, after SC-127's twin rebaseline): 19 twin hashes changed value for the same
+    look, every realprint hash unchanged; reviewer reproduced across 2 clean runs, and a
+    detached `e0ee273` run read `freeze OK (268/268)` (base clean). The widening's 3 ids:
+    `initiative-named`, `initiative-named-narrow`, `chrome-initiative-menu` (0 collisions).
+    Applied by the ticket-owner at landing (Scott: "land it"): backup
+    `freeze-baseline.sha256.pre-sc377-bak`, 38 in-place replacements + 6 appended, 0
+    duplicate names. Verified against the landed tree's shots: `freeze OK (274/274 …)`,
+    exit 0. **Expected line now: `freeze OK (274/274 …)` on `origin/develop` `9ad919d`.**
+    Known still-unfrozen ids (SC-381): `feature-ability-provenance`,
+    `feature-trait-provenance`, `featureblock-narrow`, `statblock-narrow`.
   - **2026-09-29, SC-232 (Steel card-name type scale, option A: each family matches the site,
     27–41.4px, and heads ≤480px keep 20px; also fills the card-head slots the site fills: the
     ancestry/class/kit line, kind-noun eyebrow, Level chip, cost/"Signature", action type;
@@ -1081,7 +1101,19 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `e0ee273` (2026-10-09; SC-379 landed):** tsc/lint clean · jest
+**CURRENT — dse `develop` @ `9ad919d` (2026-10-16; SC-377 landed on `e0ee273`):** tsc/lint
+clean · jest **4367 passed / 1 skipped / 215 of 216 suites** · lifecycle **25/25** (19 + SC-377's
+G-S9a–f real-click scenarios) · shots **568**, 0 FAIL (SC-377 added `initiative-named`,
+`initiative-named-narrow`, `chrome-initiative-menu`; two new in-run gates: `title line stable
+OK (52 comparisons)` and `turn mark parity OK (20 comparisons)`; button host-leak 112 kinds /
+672, input host-leak 14 kinds / 164; print-twin delta OK across 141 ids) · freeze **`freeze OK
+(274/274 …)`** after the sanctioned 38-line rebaseline + 6-line widening above · parity **0 GAPs
+/ 0 undeclared / 24 DECLARED**. Known flake: `sidebarInitiative` "SC-288 r2" goes red in
+~3% of runs — SC-383, a pre-existing product bug (unquoted `_dse_anchor` ids that look
+numeric), not load and not the branch. The `sidebarEncounterHandoff` flake below was fixed
+in SC-377 (the test now accepts a quoted anchor).
+
+**PREVIOUS — dse `develop` @ `e0ee273` (2026-10-09; SC-379 landed):** tsc/lint clean · jest
 **4309 passed / 1 skipped / 215 of 216 suites** · lifecycle **19/19** · shots **556**, 0 FAIL
 (SC-379 added `negotiation-appeal`, `negotiation-ended`, `negotiation-narrow`; host-leak 114
 kinds / 684 comparisons; print-twin delta OK across 138 ids) · freeze **`freeze OK (268/268 …)`**
