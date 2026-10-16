@@ -14,6 +14,24 @@
 > **Release gate: 7.0.0 ships only when SC-97 (Steel UI parity) is complete.**
 
 
+### 2026-10-16 — DSE 7.0.0 release gating wave (dispatcher session): IN FLIGHT
+Dispatcher session `ccf88852-abad-4ff1-b77d-d01d75c79d94` (running on Fable, not Sonnet — Scott did not
+switch it). Owners spawned as `orchestration:ticket-owner` with `model: opus` (Opus 5.5, per Scott).
+Decision record: `draw-steel-elements/docs/superpowers/dse-7.0.0-release-audit.md` (landed, dse develop
+`f8693b5`, workspace `efb1ba4`). Deferred work carries the Linear label **`Deferred from 7.0.0`**.
+
+| Ticket | Owner worktree | Ledger | State |
+|---|---|---|---|
+| SC-406 (experimental switch, hide deferred surfaces, drop legacy sync command) | `sc406-gating` | `.superpowers/sdd/sc406-gating/` | in flight |
+| SC-372 (text-scale prefs inert — token block declared on `:root`) | `sc372-textscale` | `.superpowers/sdd/sc372-textscale/` | in flight |
+| SC-279 (roll UI/UX cleanup) | `sc279-roll-ux` | `.superpowers/sdd/sc279-roll-ux/` | in flight |
+| SC-407 (docs/CHANGELOG/README prune) | — | — | queued until SC-406 lands |
+
+Landing order: whichever is land-ready first; one at a time via `land-stack`; dse tracked branch is
+`develop`. Grooming note for Scott: SC-326 (montage board clip) should join the DSE 7.0.0 project now
+that montage ships.
+
+
 ### 2026-09-23 → 09-29 — DSE 7.0.0 queue (dispatcher session): COMPLETE, all 17 tickets landed
 Dispatcher session `a56f19e1-5165-4bc8-92ee-d6eeff34f029` (Opus 5.5). Owners were spawned as
 `orchestration:ticket-owner` with `model: opus` (Opus 5.5, per Scott) and post with `--model opus-5.5`.
