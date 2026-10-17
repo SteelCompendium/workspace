@@ -24,8 +24,8 @@ Decision record: `draw-steel-elements/docs/superpowers/dse-7.0.0-release-audit.m
 |---|---|---|---|
 | SC-406 (experimental switch, hide deferred surfaces, drop legacy sync command) | `sc406-gating` (removed) | preserved: `docs/superpowers/dse-overhaul/build-ledgers/sc406-gating*` | **landed** dse develop `05a6ff3`, workspace `0254b68`; no freeze change (274/274), jest 4429 |
 | SC-372 (text-scale prefs inert — token block declared on `:root`) | `sc372-textscale` | `.superpowers/sdd/sc372-textscale/` | in flight |
-| SC-279 (roll UI/UX cleanup) | `sc279-roll-ux` | `.superpowers/sdd/sc279-roll-ux/` | in flight |
-| SC-407 (docs/CHANGELOG/README prune) | `sc407-docs-prune` | `.superpowers/sdd/sc407-docs-prune/` | in flight (spawned after SC-406 landed) |
+| SC-279 (roll UI/UX cleanup) | `sc279-roll-ux` | `.superpowers/sdd/sc279-roll-ux/` | built+reviewed, rebased on `05a6ff3`; parked on Scott (Q1–Q4 + freeze approval A1, `sc279-rebaseline.txt` applies at landing); filed SC-409, SC-410 |
+| SC-407 (docs/CHANGELOG/README prune) | `sc407-docs-prune` (removed) | preserved: `docs/superpowers/dse-overhaul/build-ledgers/sc407-docs-prune*` | **landed** dse develop `a337460`, workspace `c8648d5`; no freeze change (274/274), jest 4432; restore map in audit doc §11a |
 
 Landing order: whichever is land-ready first; one at a time via `land-stack`; dse tracked branch is
 `develop`. SC-372 and SC-279 owners were told to rebase onto `05a6ff3` before reporting land-ready. Grooming note for Scott: SC-326 (montage board clip) should join the DSE 7.0.0 project now
