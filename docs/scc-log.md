@@ -808,7 +808,7 @@ Sneak" (×4) and "See Making Arguments below" cross-references now link to them.
 
 The 14 `monster.companion.beastheart.statblock/<species>` containers changed **type**
 from `feature-group` to `statblock` in every output format (json/yaml/md/md-linked/
-md-dse/md-dse-linked/clean). **No SCC code or permalink changed** — registry unchanged at
+md-dse/md-dse-linked). **No SCC code or permalink changed** — registry unchanged at
 3,096 codes (heroes 1,962, beastheart 241, monsters 662, summoner 231); a full
 before/after registry diff shows 0 added, 0 removed, and `validate --scc-stable` passes.
 Motivation: the Draw Steel Elements plugin's `ds-scc` block picks its renderer by entity
@@ -828,3 +828,6 @@ byte-identically (companion page keyed on the SCC code, bestiary still excludes
 companions) — spec 2026-06-13 §5/§9.1 ("identity-only change; render path unchanged") is
 superseded for the data layer. Current state: [`scc-reference.md`](scc-reference.md) →
 Companions.
+
+SCC API: the 14 `resolve/*.json` and `scc.json` entries flip `type`; `types.json` drops
+the `feature-group` bucket (its 14 entries join `statblock`).

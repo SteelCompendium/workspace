@@ -126,9 +126,9 @@ Live in the `monster.companion.beastheart.*` family, mirroring the Monsters-book
 - container: `monster.companion.beastheart.statblock/<species>` — a real `type: statblock`
   in every output format (SC-390; it was `type: feature-group` until 2026-10-17). Its
   stats come from the shared monster grid parser (`organization: Companion`, no role/EV,
-  `stamina: "= yours"`, `free_strike: "1 + M"` as text, `skills[]`), and its md-dse / json
-  / yaml `ds-sb` block carries the companion's **Level 1 base abilities/features** (the
-  coded members below) as `features[]`, in book order. Annotated
+  `stamina: "= yours"`, `free_strike: "1 + M"` as text, `skills[]`), and its json/yaml
+  `features[]` and md-dse `ds-sb` block carry the companion's **Level 1 base
+  abilities/features** (the coded members below), in book order. Annotated
   `@type: statblock | @companion: <species> | @level: 1`; parsed by `StatblockParser`'s
   companion branch (`parseCompanionStatblock`); members attached by the pipeline
   (`attachCompanionMembers` → `ParsedContent.Members`).
