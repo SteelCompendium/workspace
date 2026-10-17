@@ -27,8 +27,8 @@ absolute paths — devbox ignores your shell's `cd`.
 | 1. Type-check | `npm run tsc` | clean (no output) |
 | 2. Lint | `npm run lint` | clean (no output), exit 0 — gated in CI as of SC-136/FOLLOWUPS #61 |
 | 3. Unit tests | `npx jest` | all suites/tests green |
-| 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 19/19 ok, 0 failed`, exit 0 (~5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
-| 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs`, exit 0 (~35 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
+| 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 25/25 ok, 0 failed`, exit 0 (~4.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
+| 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `61/69 ok, 0 failed, 8 known-bug, coverage: 47/47 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
 | 5. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
 | 6. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
 | 7. Parity (LAST) | `npm run parity` | `0 GAPs`, `0 undeclared WARNs`, exactly the documented declared-deferral set, exit 0 |
@@ -1126,7 +1126,14 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `9ad919d` (2026-10-16; SC-377 landed on `e0ee273`):** tsc/lint
+**CURRENT — dse `sc408-functest` (2026-10-17; the SC-408 functional-test pilot after review fix round F1, not yet landed):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4666 passed / 1 skipped / 224 of 225
+suites** · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 61/69 ok, 0 failed, 8 known-bug, coverage:
+47/47 pairs`** (about 36 s on 4 shards; 25 back-to-back full runs green; the 8 known bugs are SC-426,
+SC-427 x3, SC-428 x2, SC-430, SC-431) · shots **568**, 0 FAIL · freeze **274/274** · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Lint now covers `e2e/` too.
+
+**PREVIOUS — dse `develop` @ `9ad919d` (2026-10-16; SC-377 landed on `e0ee273`):** tsc/lint
 clean · jest **4367 passed / 1 skipped / 215 of 216 suites** · lifecycle **25/25** (19 + SC-377's
 G-S9a–f real-click scenarios) · shots **568**, 0 FAIL (SC-377 added `initiative-named`,
 `initiative-named-narrow`, `chrome-initiative-menu`; two new in-run gates: `title line stable
