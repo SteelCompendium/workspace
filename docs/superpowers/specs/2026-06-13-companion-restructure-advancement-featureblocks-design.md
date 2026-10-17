@@ -90,6 +90,7 @@ A new container kind, **`advancement-features`**, holding the leveled advancemen
 ## 9. Resolved decisions (locked 2026-06-13)
 
 1. **Companion render path:** keep current markdown stat-grid rendering (identity-only change). Build-time-HTML conversion deferred to ROADMAP (§8, §10).
+   > **Superseded 2026-10-17 (SC-390) for the data layer:** companions are now `type: statblock` with structured stats and a `ds-sb` block in every format (codes unchanged; the site render path is unchanged). See `docs/scc-log.md` (2026-10-17) and `docs/scc-reference.md` → Companions.
 2. **Advancement header authoring level:** **H5 child** of the companion — separate entity + own page + inline on-page card, no embedding dependency (§3).
 3. **Fixtures:** restructured to match companions (`monster.fixture.<element>.featureblock/<id>` + `…advancement-features/<id>`, `type: featureblock`); kept-kind scheme; champion/minion/rival restructure deferred (§4, §8).
 4. **Schema discriminator:** reuse **`type: featureblock`** for the advancement-features container (and the restructured fixture base); covered by `featureblock.schema.json`.

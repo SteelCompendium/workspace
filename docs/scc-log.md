@@ -803,3 +803,28 @@ entries, like `rule.combat/condition`), `rule.combat/end-of-combat`,
 Sneak" (×4) and "See Making Arguments below" cross-references now link to them. Registry
 3,096 codes (heroes 1,962). See
 `docs/superpowers/specs/2026-09-23-book-search-gap-fill-design.md`.
+
+## 2026-10-17 — beastheart companions become `type: statblock` (SC-390)
+
+The 14 `monster.companion.beastheart.statblock/<species>` containers changed **type**
+from `feature-group` to `statblock` in every output format (json/yaml/md/md-linked/
+md-dse/md-dse-linked/clean). **No SCC code or permalink changed** — registry unchanged at
+3,096 codes (heroes 1,962, beastheart 241, monsters 662, summoner 231); a full
+before/after registry diff shows 0 added, 0 removed, and `validate --scc-stable` passes.
+Motivation: the Draw Steel Elements plugin's `ds-scc` block picks its renderer by entity
+type and had none for `feature-group` ("has no renderer"), while a `statblock` has a
+card; every other `monster.*` statblock-shaped entity (retainers, minions, champions,
+rivals) was already `type: statblock`.
+
+The companion now carries structured stats (`size`, `speed`, `stamina: "= yours"`,
+`stability`, `free_strike: "1 + M"`, `movement`, `skills[]`, `immunities`, the five
+characteristics, `keywords`, `level`, `organization: Companion`) and a `ds-sb` whose
+`features[]` is its coded Level-1 members; the advancement-features container stays its
+own `ds-fb` entity. Annotation `@type: feature-group` → `@type: statblock` (14 lines in
+the Beastheart source); `FeatureGroupParser` lost its companion branch in favour of
+`StatblockParser`'s. Shared schema (`statblock.schema.json`, both copies): `free_strike`
+integer → integer|string, new optional `skills[]` (data-sdk-npm 3.1.0). The site renders
+byte-identically (companion page keyed on the SCC code, bestiary still excludes
+companions) — spec 2026-06-13 §5/§9.1 ("identity-only change; render path unchanged") is
+superseded for the data layer. Current state: [`scc-reference.md`](scc-reference.md) →
+Companions.

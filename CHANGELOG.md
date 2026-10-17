@@ -8,6 +8,14 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **Beastheart companions now render in the DSE plugin (SC-390).** The 14 companions
+  (Panther, Drake, and the rest) are real statblocks in the data instead of generic
+  feature groups, so `ds-scc` references such as
+  `mcdm.beastheart.v1/monster.companion.beastheart.statblock/panther` render the plugin's
+  statblock card (stats, Level 1 abilities) instead of "has no renderer". Codes and
+  permalinks are unchanged and the website looks the same. The shared statblock schema
+  gains optional `skills` and allows text Free Strike (`1 + M`); data-sdk-npm 3.1.0 follows.
+  You see the Panther after the next data deploy and a compendium re-sync in Obsidian.
 
 - **DSE plugin: the negotiation tracker is redesigned in the Steel style (SC-379).** Patience
   runs across and Interest runs down, both as numbered seals with the current value in solid
