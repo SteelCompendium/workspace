@@ -435,6 +435,7 @@ controversy): users pick how dense/faithful the rendering is, **per part**.
    Edges, Banes) sit behind a *click* disclosure — a kit `collapsible()` titled "Modifiers",
    collapsed by default — because most readers never need them. That is allowed only because
    the header always states in words every modifier that differs from its default, plus the
-   characteristic ("Reason 0, skill +2, 1 edge"), so nothing is hidden state, and because it is a click, never a hover-reveal. Its **Reset modifiers**
-   (text + icon, disabled at the defaults) is a form reset of ephemeral roll inputs, not an
-   element-state action, so it stays beside the fields rather than in the chrome panel.
+   characteristic ("Reason 0, skill +2, 1 edge"), so nothing is hidden state, and because it
+   is a click, never a hover-reveal. Its **Reset modifiers** (text + icon, disabled at the
+   defaults) is a form reset of ephemeral roll inputs, not an element-state action, so it
+   stays beside the fields rather than in the chrome panel.
