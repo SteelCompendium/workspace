@@ -688,9 +688,12 @@ Three properties matter for this map:
    and modals each own their scale. Values in the table below are unchanged; at default prefs
    every role computes what it always did (0 frozen bytes moved). Guarded by
    `test/unit/build/scaleTokenScope.test.ts` (structure) and the `text scale OK` in-run gate of
-   `npm run shots` (behaviour, real Chromium). Known property, not changed here: roles are `em`
-   ratios, so a role nested inside another consumer of the same knob compounds the multiplier
-   (a `.dse-pr__badge-text` inside a `.dse-pr__badge` is 1.44× at 120%).
+   `npm run shots` (behaviour, real Chromium). Roles are `em` ratios, so a role nested inside another
+   consumer of the same knob would apply the multiplier twice (`.dse-pr__badge-text` inside
+   `.dse-pr__badge` was 1.44× at 120%); a small registry rule in `styles-source.css`
+   ("SC-372: EACH TEXT-SIZE KNOB APPLIES ONCE") re-declares the knob's roles as plain `em`
+   ratios inside each registered outer consumer, and the `text scale once OK` sweep in
+   `npm run shots` enforces it. Token values here are unchanged.
 
 Union 76 → 88; `STEEL_INVARIANT`/`THEME_INVARIANT` 8 → 20, `PRINT_INVARIANT` 22 → 34.
 
