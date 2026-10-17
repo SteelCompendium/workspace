@@ -134,7 +134,11 @@ Each cost real time once. Every one belongs in the briefs it applies to.
    `cd`, so always wrap: `devbox run -- bash -c 'cd <repo> && <cmd>'`. Devbox's `sh` wrapper
    **eats `$?` / `$PIPESTATUS`**, and piping a gate (`| tail`) eats failures outright.
    Run gates via wrapper script *files* that capture the code, or bare commands with output
-   redirected to files.
+   redirected to files. Devbox also resolves its **project** from the CALLER's cwd (an upward
+   search for `devbox.json`), not from the `bash -c 'cd …'` target: launched from inside
+   `draw-steel-elements/` you get the plugin's devbox (which, since SC-411, carries
+   `nodejs@24`), from elsewhere the workspace's — use `devbox run -c <dir> -- …` to pick one
+   explicitly.
 2. **`npm ci` after any rebase that changed `package.json`'s obsidian version** — stale
    `node_modules` produce phantom `tsc` errors.
 3. **A brief that names a WORKSPACE-level file sends the agent to the shared main
