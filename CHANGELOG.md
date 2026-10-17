@@ -8,7 +8,6 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
-- **Compendium: book-text fixes from a 6.0.2 plugin bug report (SC-416).** Hexer retainer's Take Root and Undead Servitor's Death to Death are now Level 7 (a mangled source heading had tagged them Level 4); Talent's Psi Boost spends clarity, not discipline, and links to Talent's own ability; the Troubadour advancement table reads `Signature, 3, 5, 7, 9` at 7th and `5, 9` for 8th-level class-act abilities; Gnoll Gnasher shows `EV -` and "Horrific Feast"; Dwarf Mortar's advancement abilities are ordered 4/7/10 with the Pacifier Shell "(save ends)" paren closed; Hobgoblin Flameslinger's duplicated stats row is gone; two Conduit domain-table rows now link to Conduit's own codes. Reaches plugin users on the next data-unified release.
 
 - **DSE plugin: the negotiation tracker is redesigned in the Steel style (SC-379).** Patience
   runs across and Interest runs down, both as numbered seals with the current value in solid
@@ -739,6 +738,10 @@ go under an *Internal* sub-heading.
   Every consumer was re-pointed to its classified slot with zero rendering
   change — freeze and parity gates stayed green throughout. Groundwork only,
   for user-customizable fonts (SC-112).
+
+## 2026-10-17 — Book-text fixes from a 6.0.2 plugin bug report; data-unified release v4.20261017150517 (SC-416; steel-etl b155140, v2 b7dcce5af3)
+
+- **Compendium: book-text fixes from a 6.0.2 plugin bug report (SC-416).** Hexer retainer's Take Root and Undead Servitor's Death to Death are now Level 7 (a mangled source heading had tagged them Level 4); Talent's Psi Boost spends clarity, not discipline, and links to Talent's own ability; the Troubadour advancement table reads `Signature, 3, 5, 7, 9` at 7th and `5, 9` for 8th-level class-act abilities; Gnoll Gnasher shows `EV -` and "Horrific Feast"; Dwarf Mortar's advancement abilities are ordered 4/7/10 with the Pacifier Shell "(save ends)" paren closed; Hobgoblin Flameslinger's duplicated stats row is gone; two Conduit domain-table rows now link to Conduit's own codes. Reaches plugin users on the next data-unified release.
 
 ## 2026-10-09 — Revenant purchased traits and Negotiation attitudes table back in place (SC-385; steel-etl 0c74f4f, v2 3aacc9a)
 
