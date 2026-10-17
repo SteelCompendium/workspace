@@ -28,6 +28,7 @@ absolute paths — devbox ignores your shell's `cd`.
 | 2. Lint | `npm run lint` | clean (no output), exit 0 — gated in CI as of SC-136/FOLLOWUPS #61 |
 | 3. Unit tests | `npx jest` | all suites/tests green |
 | 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 19/19 ok, 0 failed`, exit 0 (~5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
+| 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs`, exit 0 (~35 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
 | 5. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
 | 6. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
 | 7. Parity (LAST) | `npm run parity` | `0 GAPs`, `0 undeclared WARNs`, exactly the documented declared-deferral set, exit 0 |
@@ -62,6 +63,30 @@ write). Mandatory — unlike `obsidian-shots` it needs no real display. Set your
 `DSE_LIFECYCLE_PORT` (e.g. `DSE_LIFECYCLE_PORT=9285 npm run obsidian-lifecycle`) when another
 session may already be running this gate on the default port 9262 — a busy port makes your
 run exit 2, not a code failure.
+
+**e2e gate (SC-408; `draw-steel-elements/e2e/`, full guide `e2e/README.md`).** Functional tests of the
+shipped UI in a real Obsidian, with real pointer/key input, asserting the NOTE FILE and the DOM (WebdriverIO +
+`wdio-obsidian-service` behind a DSE-owned driver). Pilot surfaces: the StaminaEditModal, ds-stamina-bar
+(Recoveries strip, Catch Breath, popover, undo toast) and initiative's stamina entry points. Mandatory for any
+change to their `src/` interactive code; `--element=<dir>` / `--only=<ID,…>` are for iteration.
+- **Never `--headed` on `:1` from an agent.** Agent shells export `DISPLAY=:1`, which is the person's REAL
+  screen, and wdio's own `autoXvfb` only helps when `DISPLAY` is unset. `run.mjs` therefore always starts a
+  private Xvfb (`:200–:239`) and passes `DISPLAY` explicitly; `--headed` opts onto a real display
+  (`DSE_E2E_HEADED_DISPLAY`, default `:1`) — prove the headed path against your own throwaway Xvfb instead.
+- **Cache:** `${XDG_CACHE_HOME:-~/.cache}/dse-e2e-obsidian` (override `OBSIDIAN_CACHE`), shared across worktrees,
+  ~1 GB per version set (pinned = app 1.14.4 + installer 1.14.4; `--obsidian=installed` = `/usr/bin/obsidian`).
+  The first run of a new version downloads; copy the dir (`cp -a`) rather than re-downloading.
+- **Coverage gate.** A FULL run (no `--only`/`--element`) exits 1 if any manifest (control, kind) pair in
+  `e2e/manifest/*.ts` was driven by zero tests (it lists them) or a driven pair is in no manifest. A new control on
+  a pilot surface needs a `data-dse-control` id (kit `control` option) AND a manifest row AND a scenario; the jsdom
+  census (`test/dom/e2eCensus.test.ts`) and the real-Obsidian census (`e2e/specs/_census.e2e.ts`) fail first.
+- **Known-bug rule.** A reproduced product bug is NOT fixed in the e2e change: encode the correct behaviour in
+  `knownBug('SC-nnn', '[ID] …', fn)` (e2e) or `test.failing` (jest). It passes while the bug exists and FAILS
+  once fixed ("known bug SC-nnn appears fixed — remove the marker") — delete the marker with the fix. Open design
+  questions are pinned as current behaviour with the title suffix `[current behaviour — ruling pending …]`.
+- No retries, ever: a flake is a bug in the test or the product. Read the failure bundle in
+  `e2e/.out/<run>/<test-id>/` (screenshot, DOM, note diff, page events); copy it out before the 12-run retention
+  prunes it.
 
 ### Devbox wrapping (every command above)
 
