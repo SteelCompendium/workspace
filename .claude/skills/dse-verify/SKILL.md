@@ -8,8 +8,8 @@ description: Use when verifying, testing, or gating any change to the draw-steel
 ## Overview
 
 `draw-steel-elements` (the DSE Obsidian plugin) gates every change through a fixed battery
-of checks: type-check, lint, unit tests, the real-Obsidian lifecycle gate, visual shots, a
-byte-level freeze check, and a CSS/DOM parity check against the live v2 site. All commands
+of checks: type-check, lint, unit tests, the real-Obsidian lifecycle gate, the real-Obsidian e2e
+functional gate (`npm run e2e`, required to land any change), visual shots, a byte-level freeze check, and a CSS/DOM parity check against the live v2 site. All commands
 run through devbox and have specific footguns that silently produce false-green results if
 you get the shape wrong. This skill is the command reference — read it before running (or
 reporting on) any of these gates.
@@ -27,7 +27,8 @@ absolute paths — devbox ignores your shell's `cd`.
 | 1. Type-check | `npm run tsc` | clean (no output) |
 | 2. Lint | `npm run lint` | clean (no output), exit 0 — gated in CI as of SC-136/FOLLOWUPS #61 |
 | 3. Unit tests | `npx jest` | all suites/tests green |
-| 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 19/19 ok, 0 failed`, exit 0 (~5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
+| 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 25/25 ok, 0 failed`, exit 0 (~4.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
+| 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `59/71 ok, 0 failed, 12 known-bug, coverage: 47/47 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
 | 5. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
 | 6. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
 | 7. Parity (LAST) | `npm run parity` | `0 GAPs`, `0 undeclared WARNs`, exactly the documented declared-deferral set, exit 0 |
@@ -62,6 +63,34 @@ write). Mandatory — unlike `obsidian-shots` it needs no real display. Set your
 `DSE_LIFECYCLE_PORT` (e.g. `DSE_LIFECYCLE_PORT=9285 npm run obsidian-lifecycle`) when another
 session may already be running this gate on the default port 9262 — a busy port makes your
 run exit 2, not a code failure.
+
+**e2e gate (SC-408; `draw-steel-elements/e2e/`, full guide `e2e/README.md`).** Functional tests of the
+shipped UI in a real Obsidian, with real pointer/key input, asserting the NOTE FILE and the DOM (WebdriverIO +
+`wdio-obsidian-service` behind a DSE-owned driver). Pilot surfaces: the StaminaEditModal, ds-stamina-bar
+(Recoveries strip, Catch Breath, popover, undo toast) and initiative's stamina entry points. **`npm run e2e` is REQUIRED to land ANY `draw-steel-elements` change, not only
+changes to the pilot surfaces' interactive code** (Scott, SC-408, 2026-10-18: "make it required to land
+future changes"). A landing without a green full run (0 failed, coverage Y/Y) is not a landing.
+`--element=<dir>` / `--only=<ID,…>` are for iteration only.
+- **Never `--headed` on `:1` from an agent.** Agent shells export `DISPLAY=:1`, which is the person's REAL
+  screen, and wdio's own `autoXvfb` only helps when `DISPLAY` is unset. `run.mjs` therefore always starts a
+  private Xvfb (`:200–:239`) and passes `DISPLAY` explicitly; `--headed` opts onto a real display
+  (`DSE_E2E_HEADED_DISPLAY`, default `:1`) — prove the headed path against your own throwaway Xvfb instead.
+- **Cache:** `${XDG_CACHE_HOME:-~/.cache}/dse-e2e-obsidian` (override `OBSIDIAN_CACHE`), shared across worktrees,
+  ~1 GB per version set (pinned = app 1.14.4 + installer 1.14.4; `--obsidian=installed` = `/usr/bin/obsidian`).
+  The first run of a new version downloads; copy the dir (`cp -a`) rather than re-downloading.
+- **Coverage gate.** A FULL run (no `--only`/`--element`) exits 1 if any manifest (control, kind) pair in
+  `e2e/manifest/*.ts` was driven by zero tests (it lists them) or a driven pair is in no manifest. A new control on
+  a pilot surface needs a `data-dse-control` id (kit `control` option) AND a manifest row AND a scenario; the jsdom
+  census (`test/dom/e2eCensus.test.ts`) and the real-Obsidian census (`e2e/specs/_census.e2e.ts`) fail first.
+- **Known-bug rule.** A reproduced product bug is NOT fixed in the e2e change: encode the correct behaviour in
+  `knownBug('SC-nnn', '[ID] …', fn)` (e2e) or `test.failing` (jest). It passes while the bug exists and FAILS
+  once fixed ("known bug SC-nnn appears fixed — remove the marker") — delete the marker with the fix. Behaviour a ticket
+  has ruled will CHANGE (but not yet designed) is pinned as a plain test with the title suffix
+  `[current behaviour — SC-nnn will …]` (e.g. `SC-432 will relabel + confirm`); the fixer rewrites it. The older
+  `[… ruling pending …]` wording is retired.
+- No retries, ever: a flake is a bug in the test or the product. Read the failure bundle in
+  `e2e/.out/<run>/<test-id>/` (screenshot, DOM, note diff, page events); copy it out before the 12-run retention
+  prunes it.
 
 ### Devbox wrapping (every command above)
 
@@ -1126,7 +1155,17 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `566888a` + SC-423 branch `sc423-portrait-frame` @ `f3585f0`
+**CURRENT — dse `develop` @ `1640ed0` (2026-10-18; SC-408 landed — functional e2e pilot, e2e now required to land):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4725 passed / 1 skipped / 226 of 227
+suites** (the 4721 of the SC-408 branch on `e9502a8` + SC-423's 4) · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 59/71 ok,
+0 failed, 12 known-bug, coverage: 47/47 pairs`** (3 consecutive full runs at `--shards=4`, about 32-33 s of spec time each; the 12
+known bugs are SC-426, SC-427 x3, SC-428 x2, SC-430, SC-431, SC-432, SC-433 x3 — each is a `knownBug` / `test.failing`
+marker that must be removed by the ticket that fixes it) · shots **572**, 0 FAIL, with the in-run line `portrait mark parity OK
+(… 6 comparisons …)` beside `turn mark parity OK (20 comparisons)` · freeze **`freeze OK (276/276 …)`** · parity **0 GAPs / 0
+undeclared / 24 DECLARED** · `npm run docs-shots -- --only=initiative-tracker.gif --check-stable` → `stable`. Lint covers
+`e2e/` too. Gate exit codes were read through a script file (see "THE exit-code footgun").
+
+**PREVIOUS — dse `develop` @ `566888a` + SC-423 branch `sc423-portrait-frame` @ `f3585f0`
 (2026-10-18; SC-411 landed on `566888a`, SC-423 measured at its land-ready head):** tsc/lint
 clean · jest **4505 passed / 1 skipped / 222 of 223 suites** (SC-411 +43 tests / +2 suites,
 SC-423 +4) · lifecycle **25/25** (measured at SC-423's pre-rebase head 379a5a5; SC-411 touched
