@@ -8,8 +8,8 @@ description: Use when verifying, testing, or gating any change to the draw-steel
 ## Overview
 
 `draw-steel-elements` (the DSE Obsidian plugin) gates every change through a fixed battery
-of checks: type-check, lint, unit tests, the real-Obsidian lifecycle gate, visual shots, a
-byte-level freeze check, and a CSS/DOM parity check against the live v2 site. All commands
+of checks: type-check, lint, unit tests, the real-Obsidian lifecycle gate, the real-Obsidian e2e
+functional gate (`npm run e2e`, required to land any change), visual shots, a byte-level freeze check, and a CSS/DOM parity check against the live v2 site. All commands
 run through devbox and have specific footguns that silently produce false-green results if
 you get the shape wrong. This skill is the command reference — read it before running (or
 reporting on) any of these gates.
@@ -84,8 +84,10 @@ future changes"). A landing without a green full run (0 failed, coverage Y/Y) is
   census (`test/dom/e2eCensus.test.ts`) and the real-Obsidian census (`e2e/specs/_census.e2e.ts`) fail first.
 - **Known-bug rule.** A reproduced product bug is NOT fixed in the e2e change: encode the correct behaviour in
   `knownBug('SC-nnn', '[ID] …', fn)` (e2e) or `test.failing` (jest). It passes while the bug exists and FAILS
-  once fixed ("known bug SC-nnn appears fixed — remove the marker") — delete the marker with the fix. Open design
-  questions are pinned as current behaviour with the title suffix `[current behaviour — ruling pending …]`.
+  once fixed ("known bug SC-nnn appears fixed — remove the marker") — delete the marker with the fix. Behaviour a ticket
+  has ruled will CHANGE (but not yet designed) is pinned as a plain test with the title suffix
+  `[current behaviour — SC-nnn will …]` (e.g. `SC-432 will relabel + confirm`); the fixer rewrites it. The older
+  `[… ruling pending …]` wording is retired.
 - No retries, ever: a flake is a bug in the test or the product. Read the failure bundle in
   `e2e/.out/<run>/<test-id>/` (screenshot, DOM, note diff, page events); copy it out before the 12-run retention
   prunes it.
