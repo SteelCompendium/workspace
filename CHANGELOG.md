@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: clicking a hero's portrait in the initiative tracker now shows the acted
+  frame immediately (SC-423).** The 2px light-grey metal frame used to appear only after
+  something else re-rendered the tracker (adding a Malice log entry, for example); the seal
+  badge showed at once but the frame did not. Un-clicking clears it at once too. The
+  in-place repaint now stamps the same pressed state a full rebuild does, and the frame's
+  CSS no longer depends on it. The initiative docs GIF is regenerated.
+
 - **Beastheart companions now render in the DSE plugin (SC-390).** The 14 companions
   (Panther, Drake, and the rest) are real statblocks in the data instead of generic
   feature groups, so `ds-scc` references such as

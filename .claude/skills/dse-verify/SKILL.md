@@ -106,9 +106,16 @@ A pipe or a trailing command can silently turn a real failure into an apparent s
 - `cmd; echo done` has the same effect: `echo`'s exit status (0) becomes the new `$?`.
 - `devbox run -- bash -c "cmd; echo X=\$?"` (DOUBLE quotes) reported `X=0` for a jest run
   with 6 real failures (SC-165 review, 2026-08-16) — the escaped `\$?` is expanded by the
-  outer shell/devbox wrapper before bash ever sees it. Never trust an echoed `$?` through
-  double quotes; read the tool's own textual summary (jest's "Tests:" line, `freeze OK`,
-  parity's counts) as the truth, or use single quotes with the gate command LAST.
+  outer shell/devbox wrapper before bash ever sees it.
+- **SINGLE quotes do not save you either (SC-423 review, 2026-10-18).**
+  `devbox run -- bash -c 'cmd; echo EXIT=$?'` printed `EXIT=0` for a jest run with 3 real
+  failures, and `devbox run -- bash -c 'false; echo EXIT=$?'` prints `EXIT=0` too — the
+  wrapper expands `$?` before bash runs the string regardless of quoting. Never trust an
+  echoed `$?` inside a `bash -c` string, in any quoting. Either (a) make the gate the LAST
+  command and read `devbox run`'s own exit status, (b) read the tool's own textual summary
+  (jest's "Tests:" line, `freeze OK`, parity's counts) as the truth, or (c) run the gate
+  through a **script file** that captures the code itself — `rc=$?` inside a file run as
+  `devbox run -- bash /abs/path/gate.sh` reported the real `1`.
 
 **Rule: whichever command's pass/fail you actually need, make it the LAST thing evaluated in
 the `bash -c '...'` string** — no `| tail`, no `; echo`, nothing chained after it:
@@ -1119,7 +1126,18 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `9ad919d` (2026-10-16; SC-377 landed on `e0ee273`):** tsc/lint
+**CURRENT — dse `develop` @ `566888a` + SC-423 branch `sc423-portrait-frame` @ `f3585f0`
+(2026-10-18; SC-411 landed on `566888a`, SC-423 measured at its land-ready head):** tsc/lint
+clean · jest **4505 passed / 1 skipped / 222 of 223 suites** (SC-411 +43 tests / +2 suites,
+SC-423 +4) · lifecycle **25/25** (measured at SC-423's pre-rebase head 379a5a5; SC-411 touched
+no src/) · shots **572**, 0 FAIL (SC-390 added 4; SC-423 adds no PNGs but a new in-run gate
+`portrait mark parity OK (… 6 comparisons …)` beside `turn mark parity OK (20 comparisons)`)
+· freeze **`freeze OK (276/276 …)`** · parity **0 GAPs / 0 undeclared / 24 DECLARED** ·
+`npm run docs-shots -- --only=initiative-tracker.gif --check-stable` → `stable`. Gate exit
+codes this round were read through a script file (see "THE exit-code footgun": an echoed
+`$?` inside `bash -c` is a false green under devbox in any quoting).
+
+**PREVIOUS — dse `develop` @ `9ad919d` (2026-10-16; SC-377 landed on `e0ee273`):** tsc/lint
 clean · jest **4367 passed / 1 skipped / 215 of 216 suites** · lifecycle **25/25** (19 + SC-377's
 G-S9a–f real-click scenarios) · shots **568**, 0 FAIL (SC-377 added `initiative-named`,
 `initiative-named-narrow`, `chrome-initiative-menu`; two new in-run gates: `title line stable
