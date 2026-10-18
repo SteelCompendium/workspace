@@ -69,9 +69,12 @@ the two-commit rule: commit inside the submodule, then commit the superproject p
 ## 4. Gates
 
 - **`draw-steel-elements` → the `dse-verify` skill** (`.claude/skills/dse-verify/SKILL.md`).
-  It owns the whole battery in order (tsc, lint, jest, shots, freeze check, parity last,
-  optional obsidian-shots), the devbox command shapes, the freeze/parity rules, and the
-  **current expected numbers**. Briefs must point at it *and* state the numbers current at
+  It owns the whole battery in order (tsc, lint, jest, lifecycle `npm run obsidian-lifecycle`,
+  e2e `npm run e2e`, shots, freeze check, parity last, optional obsidian-shots), the devbox
+  command shapes, the freeze/parity rules, and the **current expected numbers**. **Lifecycle
+  and e2e are required to land every `draw-steel-elements` change** (e2e: Scott, SC-408,
+  2026-10-18, "make it required to land future changes"); a full e2e run must end `0 failed`
+  with `coverage: Y/Y pairs`. Briefs must point at it *and* state the numbers current at
   dispatch — read them out of the skill at dispatch time; they move (baseline line counts,
   declared-deferral set).
 - **Everything else** gates through the sub-repo's own `CLAUDE.md` / `just` recipes. The dev

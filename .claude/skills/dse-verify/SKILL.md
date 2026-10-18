@@ -28,7 +28,7 @@ absolute paths — devbox ignores your shell's `cd`.
 | 2. Lint | `npm run lint` | clean (no output), exit 0 — gated in CI as of SC-136/FOLLOWUPS #61 |
 | 3. Unit tests | `npx jest` | all suites/tests green |
 | 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 25/25 ok, 0 failed`, exit 0 (~4.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
-| 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `61/69 ok, 0 failed, 8 known-bug, coverage: 47/47 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
+| 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `59/71 ok, 0 failed, 12 known-bug, coverage: 47/47 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
 | 5. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
 | 6. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
 | 7. Parity (LAST) | `npm run parity` | `0 GAPs`, `0 undeclared WARNs`, exactly the documented declared-deferral set, exit 0 |
@@ -67,8 +67,10 @@ run exit 2, not a code failure.
 **e2e gate (SC-408; `draw-steel-elements/e2e/`, full guide `e2e/README.md`).** Functional tests of the
 shipped UI in a real Obsidian, with real pointer/key input, asserting the NOTE FILE and the DOM (WebdriverIO +
 `wdio-obsidian-service` behind a DSE-owned driver). Pilot surfaces: the StaminaEditModal, ds-stamina-bar
-(Recoveries strip, Catch Breath, popover, undo toast) and initiative's stamina entry points. Mandatory for any
-change to their `src/` interactive code; `--element=<dir>` / `--only=<ID,…>` are for iteration.
+(Recoveries strip, Catch Breath, popover, undo toast) and initiative's stamina entry points. **`npm run e2e` is REQUIRED to land ANY `draw-steel-elements` change, not only
+changes to the pilot surfaces' interactive code** (Scott, SC-408, 2026-10-18: "make it required to land
+future changes"). A landing without a green full run (0 failed, coverage Y/Y) is not a landing.
+`--element=<dir>` / `--only=<ID,…>` are for iteration only.
 - **Never `--headed` on `:1` from an agent.** Agent shells export `DISPLAY=:1`, which is the person's REAL
   screen, and wdio's own `autoXvfb` only helps when `DISPLAY` is unset. `run.mjs` therefore always starts a
   private Xvfb (`:200–:239`) and passes `DISPLAY` explicitly; `--headed` opts onto a real display
@@ -1127,10 +1129,11 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 ## Current expected numbers (drift — verify against current main)
 
 **CURRENT — dse `sc408-functest` (2026-10-17; the SC-408 functional-test pilot after review fix round F1, not yet landed):**
-tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4666 passed / 1 skipped / 224 of 225
-suites** · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 61/69 ok, 0 failed, 8 known-bug, coverage:
-47/47 pairs`** (about 36 s on 4 shards; 25 back-to-back full runs green; the 8 known bugs are SC-426,
-SC-427 x3, SC-428 x2, SC-430, SC-431) · shots **568**, 0 FAIL · freeze **274/274** · parity **0 GAPs / 0
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4720 passed / 1 skipped / 226 of 227
+suites** (rebased onto `develop` @ `566888a`) · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 59/71 ok,
+0 failed, 12 known-bug, coverage: 47/47 pairs`** (about 36-43 s on 4 shards depending on host load; the 12
+known bugs are SC-426, SC-427 x3, SC-428 x2, SC-430, SC-431, SC-432, SC-433 x3 — each is a `knownBug` / `test.failing`
+marker that must be removed by the ticket that fixes it) · shots **568**, 0 FAIL · freeze **274/274** · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Lint now covers `e2e/` too.
 
 **PREVIOUS — dse `develop` @ `9ad919d` (2026-10-16; SC-377 landed on `e0ee273`):** tsc/lint
