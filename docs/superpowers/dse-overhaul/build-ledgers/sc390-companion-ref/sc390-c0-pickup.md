@@ -1,0 +1,3 @@
+Picked this up. The cause is on the data side, not just the plugin: every beastheart companion statblock (all 14, not only Panther) ships in the synced compendium as `type: feature-group` with a plain markdown stat table and no `ds-*` block, so `ds-scc` has no renderer to hand it to. The v2 site works around this with a site-only table parser; the plugin has no equivalent.
+
+A survey round is running now to pin the fix shape (most likely: steel-etl emits companions as a real `ds-statblock` block and the plugin maps the type) and to check whether any other compendium types hit the same "has no renderer" card. I'll post one consolidated ask with a recommendation when it reports.

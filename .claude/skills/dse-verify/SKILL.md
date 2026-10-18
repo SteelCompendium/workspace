@@ -288,6 +288,24 @@ didn't mount) plus human review of the PNGs.
   `freeze-baseline.sha256.pre-<effort>-bak`, (3) applies the lines, (4) appends a dated
   entry to this file quoting the sanction. Widenings (additions-only) need no sanction —
   the dispatcher verifies additions-only by sorted-diff and applies at landing.
+  - **2026-10-18, SC-390 (beastheart companions become `type: statblock` in the data, so a
+    `ds-scc` companion reference renders the statblock card; the card gains a Skills cell and
+    omits the EV chip when `ev` is empty/whitespace/null; worktree `sc390-companion-ref`, landed
+    dse `develop` @ `135716d`): SANCTIONED 2-line rebaseline + 2-line WIDENING, 274 → 276.**
+    The rebaseline: `statblock-roleless-corpus` × steel-print twin + realprint — the only
+    frozen prints that move, because that fixture's champion carries `ev: ""` and the empty
+    "EV" chip under its role chip disappears (the keyword line tightens by a few px; nothing
+    else moves; crops `sc390-r1b-ev-before.png` / `-after.png` in the ledger). Reproduced
+    across 2 clean runs on three successive `develop` bases (a337460, 0ecb90e, be4f002) and
+    by the independent reviewer; a detached `be4f002` run read `freeze OK (274/274)`. The
+    widening: `statblock-companion-corpus` (the real Panther, print twin + realprint), 0
+    collisions. **Scott's sanction, in-session 2026-10-18: "sanctioned. land it."** —
+    replying to the SC-390 evidence comment whose ask was the 2-line sanction with the EV
+    crops attached. Applied by the ticket-owner at landing on that instruction: backup
+    `freeze-baseline.sha256.pre-sc390-bak`, 2 in-place replacements + 2 appended, 0 duplicate
+    names (diff exactly 6 lines). Verified against the landed tree's shots:
+    `freeze OK (276/276 …)`, exit 0. **Expected line now: `freeze OK (276/276 …)` on
+    `origin/develop` `135716d`.**
   - **2026-10-09, SC-379 (negotiation tracker rebuilt in Steel — "A1 gauges, buttons in the
     tab": Patience on a horizontal rail and Interest on a vertical rail of the same numbered
     seals via the new kit `track()` part, appeal chips in the argument tab, "Mark spent" cards,
@@ -1107,7 +1125,7 @@ G-S9a–f real-click scenarios) · shots **568**, 0 FAIL (SC-377 added `initiati
 `initiative-named-narrow`, `chrome-initiative-menu`; two new in-run gates: `title line stable
 OK (52 comparisons)` and `turn mark parity OK (20 comparisons)`; button host-leak 112 kinds /
 672, input host-leak 14 kinds / 164; print-twin delta OK across 141 ids) · freeze **`freeze OK
-(274/274 …)`** after the sanctioned 38-line rebaseline + 6-line widening above · parity **0 GAPs
+(276/276 …)`** after SC-390's sanctioned 2-line rebaseline + 2-line widening above · parity **0 GAPs
 / 0 undeclared / 24 DECLARED**. Known flake: `sidebarInitiative` "SC-288 r2" goes red in
 ~3% of runs — SC-383, a pre-existing product bug (unquoted `_dse_anchor` ids that look
 numeric), not load and not the branch. The `sidebarEncounterHandoff` flake below was fixed
