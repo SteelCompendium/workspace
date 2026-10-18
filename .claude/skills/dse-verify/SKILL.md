@@ -1128,7 +1128,7 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `sc408-functest` (2026-10-17; the SC-408 functional-test pilot after review fix round F1, not yet landed):**
+**CURRENT — dse `sc408-functest` (2026-10-18; the SC-408 functional-test pilot after review fix rounds F1 and F2, not yet landed):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4720 passed / 1 skipped / 226 of 227
 suites** (rebased onto `develop` @ `566888a`) · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 59/71 ok,
 0 failed, 12 known-bug, coverage: 47/47 pairs`** (about 36-43 s on 4 shards depending on host load; the 12
