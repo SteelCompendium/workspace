@@ -135,9 +135,16 @@ A pipe or a trailing command can silently turn a real failure into an apparent s
 - `cmd; echo done` has the same effect: `echo`'s exit status (0) becomes the new `$?`.
 - `devbox run -- bash -c "cmd; echo X=\$?"` (DOUBLE quotes) reported `X=0` for a jest run
   with 6 real failures (SC-165 review, 2026-08-16) — the escaped `\$?` is expanded by the
-  outer shell/devbox wrapper before bash ever sees it. Never trust an echoed `$?` through
-  double quotes; read the tool's own textual summary (jest's "Tests:" line, `freeze OK`,
-  parity's counts) as the truth, or use single quotes with the gate command LAST.
+  outer shell/devbox wrapper before bash ever sees it.
+- **SINGLE quotes do not save you either (SC-423 review, 2026-10-18).**
+  `devbox run -- bash -c 'cmd; echo EXIT=$?'` printed `EXIT=0` for a jest run with 3 real
+  failures, and `devbox run -- bash -c 'false; echo EXIT=$?'` prints `EXIT=0` too — the
+  wrapper expands `$?` before bash runs the string regardless of quoting. Never trust an
+  echoed `$?` inside a `bash -c` string, in any quoting. Either (a) make the gate the LAST
+  command and read `devbox run`'s own exit status, (b) read the tool's own textual summary
+  (jest's "Tests:" line, `freeze OK`, parity's counts) as the truth, or (c) run the gate
+  through a **script file** that captures the code itself — `rc=$?` inside a file run as
+  `devbox run -- bash /abs/path/gate.sh` reported the real `1`.
 
 **Rule: whichever command's pass/fail you actually need, make it the LAST thing evaluated in
 the `bash -c '...'` string** — no `| tail`, no `; echo`, nothing chained after it:
@@ -317,6 +324,24 @@ didn't mount) plus human review of the PNGs.
   `freeze-baseline.sha256.pre-<effort>-bak`, (3) applies the lines, (4) appends a dated
   entry to this file quoting the sanction. Widenings (additions-only) need no sanction —
   the dispatcher verifies additions-only by sorted-diff and applies at landing.
+  - **2026-10-18, SC-390 (beastheart companions become `type: statblock` in the data, so a
+    `ds-scc` companion reference renders the statblock card; the card gains a Skills cell and
+    omits the EV chip when `ev` is empty/whitespace/null; worktree `sc390-companion-ref`, landed
+    dse `develop` @ `135716d`): SANCTIONED 2-line rebaseline + 2-line WIDENING, 274 → 276.**
+    The rebaseline: `statblock-roleless-corpus` × steel-print twin + realprint — the only
+    frozen prints that move, because that fixture's champion carries `ev: ""` and the empty
+    "EV" chip under its role chip disappears (the keyword line tightens by a few px; nothing
+    else moves; crops `sc390-r1b-ev-before.png` / `-after.png` in the ledger). Reproduced
+    across 2 clean runs on three successive `develop` bases (a337460, 0ecb90e, be4f002) and
+    by the independent reviewer; a detached `be4f002` run read `freeze OK (274/274)`. The
+    widening: `statblock-companion-corpus` (the real Panther, print twin + realprint), 0
+    collisions. **Scott's sanction, in-session 2026-10-18: "sanctioned. land it."** —
+    replying to the SC-390 evidence comment whose ask was the 2-line sanction with the EV
+    crops attached. Applied by the ticket-owner at landing on that instruction: backup
+    `freeze-baseline.sha256.pre-sc390-bak`, 2 in-place replacements + 2 appended, 0 duplicate
+    names (diff exactly 6 lines). Verified against the landed tree's shots:
+    `freeze OK (276/276 …)`, exit 0. **Expected line now: `freeze OK (276/276 …)` on
+    `origin/develop` `135716d`.**
   - **2026-10-09, SC-379 (negotiation tracker rebuilt in Steel — "A1 gauges, buttons in the
     tab": Patience on a horizontal rail and Interest on a vertical rail of the same numbered
     seals via the new kit `track()` part, appeal chips in the argument tab, "Mark spent" cards,
@@ -1130,13 +1155,26 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `sc408-functest` (2026-10-18; the SC-408 functional-test pilot after review fix rounds F1 and F2, not yet landed):**
-tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4721 passed / 1 skipped / 226 of 227
-suites** (rebased onto `develop` @ `e9502a8`) · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 59/71 ok,
-0 failed, 12 known-bug, coverage: 47/47 pairs`** (about 36-43 s on 4 shards depending on host load; the 12
+**CURRENT — dse `develop` @ `1640ed0` (2026-10-18; SC-408 landed — functional e2e pilot, e2e now required to land):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4725 passed / 1 skipped / 226 of 227
+suites** (the 4721 of the SC-408 branch on `e9502a8` + SC-423's 4) · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 59/71 ok,
+0 failed, 12 known-bug, coverage: 47/47 pairs`** (3 consecutive full runs at `--shards=4`, about 32-33 s of spec time each; the 12
 known bugs are SC-426, SC-427 x3, SC-428 x2, SC-430, SC-431, SC-432, SC-433 x3 — each is a `knownBug` / `test.failing`
-marker that must be removed by the ticket that fixes it) · shots **572**, 0 FAIL · freeze **276/276** (the +4 / +2 are SC-390 / SC-411's on `develop`) · parity **0 GAPs / 0
-undeclared / 24 DECLARED**. Lint now covers `e2e/` too.
+marker that must be removed by the ticket that fixes it) · shots **572**, 0 FAIL, with the in-run line `portrait mark parity OK
+(… 6 comparisons …)` beside `turn mark parity OK (20 comparisons)` · freeze **`freeze OK (276/276 …)`** · parity **0 GAPs / 0
+undeclared / 24 DECLARED** · `npm run docs-shots -- --only=initiative-tracker.gif --check-stable` → `stable`. Lint covers
+`e2e/` too. Gate exit codes were read through a script file (see "THE exit-code footgun").
+
+**PREVIOUS — dse `develop` @ `566888a` + SC-423 branch `sc423-portrait-frame` @ `f3585f0`
+(2026-10-18; SC-411 landed on `566888a`, SC-423 measured at its land-ready head):** tsc/lint
+clean · jest **4505 passed / 1 skipped / 222 of 223 suites** (SC-411 +43 tests / +2 suites,
+SC-423 +4) · lifecycle **25/25** (measured at SC-423's pre-rebase head 379a5a5; SC-411 touched
+no src/) · shots **572**, 0 FAIL (SC-390 added 4; SC-423 adds no PNGs but a new in-run gate
+`portrait mark parity OK (… 6 comparisons …)` beside `turn mark parity OK (20 comparisons)`)
+· freeze **`freeze OK (276/276 …)`** · parity **0 GAPs / 0 undeclared / 24 DECLARED** ·
+`npm run docs-shots -- --only=initiative-tracker.gif --check-stable` → `stable`. Gate exit
+codes this round were read through a script file (see "THE exit-code footgun": an echoed
+`$?` inside `bash -c` is a false green under devbox in any quoting).
 
 **PREVIOUS — dse `develop` @ `9ad919d` (2026-10-16; SC-377 landed on `e0ee273`):** tsc/lint
 clean · jest **4367 passed / 1 skipped / 215 of 216 suites** · lifecycle **25/25** (19 + SC-377's
@@ -1144,7 +1182,7 @@ G-S9a–f real-click scenarios) · shots **568**, 0 FAIL (SC-377 added `initiati
 `initiative-named-narrow`, `chrome-initiative-menu`; two new in-run gates: `title line stable
 OK (52 comparisons)` and `turn mark parity OK (20 comparisons)`; button host-leak 112 kinds /
 672, input host-leak 14 kinds / 164; print-twin delta OK across 141 ids) · freeze **`freeze OK
-(274/274 …)`** after the sanctioned 38-line rebaseline + 6-line widening above · parity **0 GAPs
+(276/276 …)`** after SC-390's sanctioned 2-line rebaseline + 2-line widening above · parity **0 GAPs
 / 0 undeclared / 24 DECLARED**. Known flake: `sidebarInitiative` "SC-288 r2" goes red in
 ~3% of runs — SC-383, a pre-existing product bug (unquoted `_dse_anchor` ids that look
 numeric), not load and not the branch. The `sidebarEncounterHandoff` flake below was fixed

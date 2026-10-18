@@ -1,0 +1,1 @@
+Follow-up to the ask above: the plugin branch is now rebased onto today's `develop` tip (be4f002, after SC-417) at `135716d`. Every gate re-ran unchanged except jest, which grew by SC-417's own tests. The two sanctioned hash lines did not change. Still waiting only on your "sanctioned" above.

@@ -123,13 +123,22 @@ distinct from the `religion.saint/<id>` *instances*. Browse groups the tree unde
 
 Live in the `monster.companion.beastheart.*` family, mirroring the Monsters-book Rivals:
 
-- container: `monster.companion.beastheart.statblock/<species>`
+- container: `monster.companion.beastheart.statblock/<species>` — a real `type: statblock`
+  in every output format (SC-390; it was `type: feature-group` until 2026-10-17). Its
+  stats come from the shared monster grid parser (`organization: Companion`, no role/EV,
+  `stamina: "= yours"`, `free_strike: "1 + M"` as text, `skills[]`), and its json/yaml
+  `features[]` and md-dse `ds-sb` block carry the companion's **Level 1 base
+  abilities/features** (the coded members below), in book order. Annotated
+  `@type: statblock | @companion: <species> | @level: 1`; parsed by `StatblockParser`'s
+  companion branch (`parseCompanionStatblock`); members attached by the pipeline
+  (`attachCompanionMembers` → `ParsedContent.Members`).
 - members: `feature[.ability].companion.beastheart.<species>.level-N/<id>`
 - advancement-features: `monster.companion.beastheart.advancement-features/<species>`
 
 The advancement-features entity embeds its Level-3/6/10 features as a Forged Band card on
-its own page; compositing it onto the companion statblock page is pending (entity-embedding
-effort — deferred, no ticket filed yet — file a Linear Backlog ticket when picked up). In Browse the advancement page **flattens** to a sibling of its
+its own page and is deliberately **not** folded into the statblock's `features[]`;
+compositing it onto the companion statblock page is pending (site: already paired on the
+index; plugin side: SC-392). In Browse the advancement page **flattens** to a sibling of its
 companion (`…/beastheart/<species>-advancement-features`, not a sub-folder) and the index
 pairs the two on one row (nav-only; SCC code/permalink unchanged —
 `flattenAdvancementFeaturesPath` / `buildAdvancementPairContent`).

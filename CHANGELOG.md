@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: clicking a hero's portrait in the initiative tracker now shows the acted
+  frame immediately (SC-423).** The 2px light-grey metal frame used to appear only after
+  something else re-rendered the tracker (adding a Malice log entry, for example); the seal
+  badge showed at once but the frame did not. Un-clicking clears it at once too. The
+  in-place repaint now stamps the same pressed state a full rebuild does, and the frame's
+  CSS no longer depends on it. The initiative docs GIF is regenerated.
 
 - **DSE plugin: the negotiation tracker is redesigned in the Steel style (SC-379).** Patience
   runs across and Interest runs down, both as numbered seals with the current value in solid
@@ -738,6 +744,17 @@ go under an *Internal* sub-heading.
   Every consumer was re-pointed to its classified slot with zero rendering
   change — freeze and parity gates stayed green throughout. Groundwork only,
   for user-customizable fonts (SC-112).
+
+## 2026-10-18 — Beastheart companions are statblocks; data-unified release v4.20261018225007 (SC-390; steel-etl 1b57338, v2 0b9571dbd3)
+
+- **Beastheart companions now render in the DSE plugin (SC-390).** The 14 companions
+  (Panther, Drake, and the rest) are real statblocks in the data instead of generic
+  feature groups, so `ds-scc` references such as
+  `mcdm.beastheart.v1/monster.companion.beastheart.statblock/panther` render the plugin's
+  statblock card (stats, Level 1 abilities) instead of "has no renderer". Codes and
+  permalinks are unchanged and the website looks the same. The shared statblock schema
+  gains optional `skills` and allows text Free Strike (`1 + M`); data-sdk-npm 3.1.0 follows.
+  The data is live with this deploy; the plugin side ships with the next plugin release, after which a compendium re-sync in Obsidian shows the Panther.
 
 ## 2026-10-17 — Book-text fixes from a 6.0.2 plugin bug report; data-unified release v4.20261017150517 (SC-416; steel-etl b155140, v2 b7dcce5af3)
 
