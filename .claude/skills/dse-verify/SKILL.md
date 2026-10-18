@@ -1131,8 +1131,8 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 ## Current expected numbers (drift — verify against current main)
 
 **CURRENT — dse `sc408-functest` (2026-10-18; the SC-408 functional-test pilot after review fix rounds F1 and F2, not yet landed):**
-tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4720 passed / 1 skipped / 226 of 227
-suites** (rebased onto `develop` @ `566888a`) · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 59/71 ok,
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4721 passed / 1 skipped / 226 of 227
+suites** (rebased onto `develop` @ `e9502a8`) · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 59/71 ok,
 0 failed, 12 known-bug, coverage: 47/47 pairs`** (about 36-43 s on 4 shards depending on host load; the 12
 known bugs are SC-426, SC-427 x3, SC-428 x2, SC-430, SC-431, SC-432, SC-433 x3 — each is a `knownBug` / `test.failing`
 marker that must be removed by the ticket that fixes it) · shots **572**, 0 FAIL · freeze **276/276** (the +4 / +2 are SC-390 / SC-411's on `develop`) · parity **0 GAPs / 0
