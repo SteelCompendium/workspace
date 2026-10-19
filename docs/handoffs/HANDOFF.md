@@ -14,7 +14,7 @@
 > **Release gate: 7.0.0 ships only when SC-97 (Steel UI parity) is complete.**
 
 
-### 2026-10-16 — DSE 7.0.0 release gating wave (dispatcher session): IN FLIGHT
+### 2026-10-16 → 10-18 — DSE 7.0.0 release gating wave (dispatcher session): 3 of 4 LANDED, SC-279 parked on Scott
 Dispatcher session `ccf88852-abad-4ff1-b77d-d01d75c79d94` (running on Fable, not Sonnet — Scott did not
 switch it). Owners spawned as `orchestration:ticket-owner` with `model: opus` (Opus 5.5, per Scott).
 Decision record: `draw-steel-elements/docs/superpowers/dse-7.0.0-release-audit.md` (landed, dse develop
@@ -28,7 +28,20 @@ Decision record: `draw-steel-elements/docs/superpowers/dse-7.0.0-release-audit.m
 | SC-407 (docs/CHANGELOG/README prune) | `sc407-docs-prune` (removed) | preserved: `docs/superpowers/dse-overhaul/build-ledgers/sc407-docs-prune*` | **landed** dse develop `a337460`, workspace `c8648d5`; no freeze change (274/274), jest 4432; restore map in audit doc §11a |
 
 Landing order: whichever is land-ready first; one at a time via `land-stack`; dse tracked branch is
-`develop`. SC-372 and SC-279 owners were told to rebase onto `05a6ff3` before reporting land-ready. Grooming note for Scott: SC-326 (montage board clip) should join the DSE 7.0.0 project now
+`develop`. SC-372 and SC-279 owners were told to rebase onto `05a6ff3` before reporting land-ready.
+
+**Session closed 2026-10-18 with SC-279 still open.** dse `develop` is at `0d69ec9` (SC-372 `1a4c6d3`
++ Scott's `just build` recipe committed directly on his instruction); workspace main `0e46e1b`. SC-407
+and SC-372 are Done; SC-406 is landed but stays `Needs Review` until Scott answers "close?" and the
+optional placeholder-card prefix question. **To resume SC-279 in a new session:** spawn a fresh
+`orchestration:ticket-owner` (Scott asked for `model: opus`) briefed with ticket SC-279, the adapter,
+ledger `.superpowers/sdd/sc279-roll-ux/` (machine-local, this machine) and worktree `sc279-roll-ux`
+(already exists — do NOT `wt-new`; dse branch `sc279-roll-ux`, superproject branch `sc279-roll-ux`,
+both unpushed). Its pending round: Scott's Q1–Q4 answers + freeze approval A1, rebase onto
+`origin/develop`, CHANGELOG/docs reconcile against SC-407's prune, full battery incl. e2e, re-review.
+At landing the dispatcher applies `sc279-rebaseline.txt` (2 roll print lines; regenerate if SC-372
+moved them) and re-bumps the superproject pointer. Also open: SC-11 release checklist should gain
+"date the `## 7.0.0 (unreleased)` CHANGELOG header"; grooming note SC-326 → DSE 7.0.0 project. Grooming note for Scott: SC-326 (montage board clip) should join the DSE 7.0.0 project now
 that montage ships.
 
 
