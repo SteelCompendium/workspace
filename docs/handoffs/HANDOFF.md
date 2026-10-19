@@ -14,6 +14,20 @@
 > **Release gate: 7.0.0 ships only when SC-97 (Steel UI parity) is complete.**
 
 
+### 2026-10-19 — DSE 7.0.0 backlog bug wave (dispatcher session `be71a0a9-199f-4e14-967b-191935312b05`)
+Scott: "work through the backlog/todo tickets you can (bugs, etc.), 2–3 at a time; Opus for most,
+Fable if a ticket needs it". Dispatcher on Opus 5.5. Owners spawned as `orchestration:ticket-owner`
+with `model: opus`, posting `--model opus-5.5`. Stamina-modal bugs (SC-427/430/431/432/433, SC-428)
+touch the same surface — run them **one at a time** to avoid rebase conflicts.
+
+| Ticket | Worktree | Ledger | State |
+|---|---|---|---|
+| SC-430 (stamina modal: first Apply click swallowed) | `sc430-apply-click` | `.superpowers/sdd/sc430-apply-click/` | owner spawned |
+| SC-393 (EncounterData max_stamina NaN for text stamina) | `sc393-stamina-nan` | `.superpowers/sdd/sc393-stamina-nan/` | owner spawned |
+| SC-324 (kit icon buttons drop mount-time tooltip) | `sc324-kit-tooltip` | `.superpowers/sdd/sc324-kit-tooltip/` | owner spawned |
+
+Still parked from the prior wave: SC-279 and SC-406 carry `Ready for Agent` (not resumed this session yet).
+
 ### 2026-10-16 → 10-18 — DSE 7.0.0 release gating wave (dispatcher session): 3 of 4 LANDED, SC-279 parked on Scott
 Dispatcher session `ccf88852-abad-4ff1-b77d-d01d75c79d94` (running on Fable, not Sonnet — Scott did not
 switch it). Owners spawned as `orchestration:ticket-owner` with `model: opus` (Opus 5.5, per Scott).
