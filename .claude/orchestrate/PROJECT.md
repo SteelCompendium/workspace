@@ -88,6 +88,10 @@ the two-commit rule: commit inside the submodule, then commit the superproject p
 - Run it **from the main checkout only**, **one effort at a time**, by the **dispatcher**.
 - The main checkout must be clean when landing starts; `.superpowers/` scratch is gitignored
   but stray generated files are not.
+- **The main checkout's dse dirt is expected — owners need not report it.** A modified
+  `demo-vault/Welcome.md` plus untracked `compendium-manifest.json` / `demo-vault/*.md` is Scott's
+  live vault; the dispatcher stash-wraps it at every landing (`land-stack` §2c), which also
+  refreshes its mtimes. Say so in briefs so workers don't flag it as foreign changes.
 
 ## 6. Ledgers, scratch, handoff
 
