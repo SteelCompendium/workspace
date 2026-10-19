@@ -24,7 +24,8 @@ touch the same surface — run them **one at a time** to avoid rebase conflicts.
 |---|---|---|---|
 | SC-430 (stamina modal: first Apply click swallowed) | `sc430-apply-click` (removed) | preserved: `build-ledgers/sc430-apply-click*` | **landed** dse develop `7644fb3`, workspace `4a7b18d`; e2e 61/72, 11 known-bug |
 | SC-393 (EncounterData max_stamina NaN for text stamina) | `sc393-stamina-nan` | `.superpowers/sdd/sc393-stamina-nan/` | survey done, parked on Scott (5 questions); no code yet; filed SC-452 |
-| SC-290 (write-back drops fence info string) | `sc290-info-string` | `.superpowers/sdd/sc290-info-string/` | implementing |
+| SC-290 (write-back drops fence info string) | `sc290-info-string` (removed) | preserved: `build-ledgers/sc290-info-string*` | **landed** dse develop `c78a06b`, workspace `e827b13`; jest 4787, e2e 63/73; filed SC-453–457 |
+| SC-429 (minion pool modal bugs) | `sc429-minion-pool` | `.superpowers/sdd/sc429-minion-pool/` | running |
 | SC-428 (Catch Breath at full Stamina) | `sc428-catch-breath` | `.superpowers/sdd/sc428-catch-breath/` | owner spawned |
 | SC-324 (kit icon buttons drop mount-time tooltip) | `sc324-kit-tooltip` (removed) | preserved: `build-ledgers/sc324-kit-tooltip*` | **landed** dse develop `f8e050f`, workspace `14f4e13`; jest 4767 |
 | SC-426 (initiative detail row stale after grid-cell stamina edit) | `sc426-detail-stamina` (removed) | preserved: `build-ledgers/sc426-detail-stamina*` | **landed** dse develop `a89ffd9`, workspace `6f27ee8`; e2e 62/72, 10 known-bug |

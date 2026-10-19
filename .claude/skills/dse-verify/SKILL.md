@@ -28,7 +28,7 @@ absolute paths — devbox ignores your shell's `cd`.
 | 2. Lint | `npm run lint` | clean (no output), exit 0 — gated in CI as of SC-136/FOLLOWUPS #61 |
 | 3. Unit tests | `npx jest` | all suites/tests green |
 | 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 25/25 ok, 0 failed`, exit 0 (~4.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
-| 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `62/72 ok, 0 failed, 10 known-bug, coverage: 47/47 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
+| 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `63/73 ok, 0 failed, 10 known-bug, coverage: 47/47 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
 | 5. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
 | 6. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
 | 7. Parity (LAST) | `npm run parity` | `0 GAPs`, `0 undeclared WARNs`, exactly the documented declared-deferral set, exit 0 |
@@ -1155,7 +1155,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `a89ffd9` (2026-10-19; SC-426 landed — roster-cell Stamina edit refreshes the initiative detail row):**
+**CURRENT — dse `develop` @ `c78a06b` (2026-10-19; SC-290 landed — write-back keeps a fence's full info string via `src/framework/host/fenceLine.ts`):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4787 passed / 1 skipped / 227 of 228 suites** (a89ffd9's 4769 + SC-290's 18) · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 63/73 ok,
+0 failed, 10 known-bug, coverage: 47/47 pairs`** (new `RECOV-I01`) · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-290 ticket-owner at the land-ready head; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `a89ffd9` (2026-10-19; SC-426 landed — roster-cell Stamina edit refreshes the initiative detail row):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4769 passed / 1 skipped / 227 of 228 suites** · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 62/72 ok,
 0 failed, 10 known-bug, coverage: 47/47 pairs`** (SC-426's known-bug marker removed) · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-426 ticket-owner and its independent reviewer at `0d1c0cf` (`a89ffd9` is comment + CHANGELOG only; tsc/lint re-run clean); the dispatcher relayed, not re-ran.
