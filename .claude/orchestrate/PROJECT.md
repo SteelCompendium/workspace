@@ -211,6 +211,13 @@ Each cost real time once. Every one belongs in the briefs it applies to.
    for every git command, never `cd X; git …`. Scratch clones are made with
    `git clone`/`git worktree add` into an absolute path and are never re-pointed.
 
+11. **Never `rm -rf` a shared `/tmp` glob (2026-10-19, SC-453).** An implementer ran
+   `rm -rf /tmp/dse-obsidian-lifecycle-*` to tidy its own lifecycle scratch. Every concurrent
+   effort's lifecycle vault matches that glob, so it could delete another run's vault
+   mid-gate, which then fails with a missing vault rather than a code fault. Same rule as
+   footgun 9: delete only a path you created and recorded, never a pattern. Briefs that
+   run `obsidian-lifecycle` or `e2e` must say this.
+
 **Provenance for two plugin-side footguns.** The plugin states these rules without ticket
 keys (they generalise); the evidence is this project's, and lives here:
 
