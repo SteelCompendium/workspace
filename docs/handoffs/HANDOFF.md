@@ -22,8 +22,10 @@ touch the same surface — run them **one at a time** to avoid rebase conflicts.
 
 | Ticket | Worktree | Ledger | State |
 |---|---|---|---|
-| SC-430 (stamina modal: first Apply click swallowed) | `sc430-apply-click` | `.superpowers/sdd/sc430-apply-click/` | owner spawned |
-| SC-393 (EncounterData max_stamina NaN for text stamina) | `sc393-stamina-nan` | `.superpowers/sdd/sc393-stamina-nan/` | owner spawned |
+| SC-430 (stamina modal: first Apply click swallowed) | `sc430-apply-click` (removed) | preserved: `build-ledgers/sc430-apply-click*` | **landed** dse develop `7644fb3`, workspace `4a7b18d`; e2e 61/72, 11 known-bug |
+| SC-393 (EncounterData max_stamina NaN for text stamina) | `sc393-stamina-nan` | `.superpowers/sdd/sc393-stamina-nan/` | survey done, parked on Scott (5 questions); no code yet; filed SC-452 |
+| SC-290 (write-back drops fence info string) | `sc290-info-string` | `.superpowers/sdd/sc290-info-string/` | implementing |
+| SC-428 (Catch Breath at full Stamina) | `sc428-catch-breath` | `.superpowers/sdd/sc428-catch-breath/` | owner spawned |
 | SC-324 (kit icon buttons drop mount-time tooltip) | `sc324-kit-tooltip` | `.superpowers/sdd/sc324-kit-tooltip/` | owner spawned |
 
 Still parked from the prior wave: SC-279 and SC-406 carry `Ready for Agent` (not resumed this session yet).
