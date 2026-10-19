@@ -674,6 +674,26 @@ Three properties matter for this map:
    consumer rules ARE print-excluded because they are a whole-element zoom. The `control`
    role is the one whose consumer rule is itself print-excluded (controls are screen
    chrome), so it cannot reach paper either way.
+4. **The scale-dependent roles are declared per stamped root, not on `:root` alone
+   (SC-372, 2026-10-16).** Every role above except `body` is `calc(<r>em * var(--dse-fs-*-scale))`
+   (plus the six `h1`–`h6` tokens below), and a `var()` inside a custom property substitutes at
+   computed-value time on the element the property is *declared* on. Declared only on `:root`,
+   the multiplier resolved at `<html>` — always the default `1` — so the inline stamp the
+   prefs seam writes on an element root (`reflect()`) or a `DseModal` dialog (`reflectCss()`)
+   never reached any role: all three knobs were inert (card name 20px at 80%, 100% and 120%).
+   The 14 scale-dependent declarations now live in ONE rule whose selector list is `:root,
+   :is([data-dse-element], .dse-modal)` — `:root` so unstamped contexts keep the default, the
+   `:is()` so the multiplier resolves where it is stamped. The three `*-scale` multipliers and
+   `--dse-fs-body` stay on plain `:root`. Per root, deliberately not on `<html>`: popout windows
+   and modals each own their scale. Values in the table below are unchanged; at default prefs
+   every role computes what it always did (0 frozen bytes moved). Guarded by
+   `test/unit/build/scaleTokenScope.test.ts` (structure) and the `text scale OK` in-run gate of
+   `npm run shots` (behaviour, real Chromium). Roles are `em` ratios, so a role nested inside another
+   consumer of the same knob would apply the multiplier twice (`.dse-pr__badge-text` inside
+   `.dse-pr__badge` was 1.44× at 120%); a small registry rule in `styles-source.css`
+   ("SC-372: EACH TEXT-SIZE KNOB APPLIES ONCE") re-declares the knob's roles as plain `em`
+   ratios inside each registered outer consumer, and the `text scale once OK` sweep in
+   `npm run shots` enforces it. Token values here are unchanged.
 
 Union 76 → 88; `STEEL_INVARIANT`/`THEME_INVARIANT` 8 → 20, `PRINT_INVARIANT` 22 → 34.
 
