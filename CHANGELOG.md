@@ -8,6 +8,14 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: hovering a button now shows its explanation, not just its name (SC-324).**
+  The hero Respite button, negotiation Complete Argument, the compendium migration's Sync
+  without moving, a save-ends condition's Roll save and the initiative Advance round (with its
+  Malice gain) each had hover text that was silently discarded, so the hover repeated the
+  label. Each now has one full label (the name first, then what it does) that both the hover
+  and screen readers use. Spend Recovery and the read-only Catch Breath keep their names when
+  they show why they are disabled.
+
 - **DSE plugin: clicking a hero's portrait in the initiative tracker now shows the acted
   frame immediately (SC-423).** The 2px light-grey metal frame used to appear only after
   something else re-rendered the tracker (adding a Malice log entry, for example); the seal

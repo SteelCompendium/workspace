@@ -96,10 +96,12 @@ F1 explicitly asked D2 to own this primitive so "new elements get it for free."
 - **Purpose:** an icon and/or text button that is a real `<button>`. Used for malice ±, stamina ±,
   condition add/remove, turn indicator, counter ±, negotiation completes, modal actions, card
   copy-link, collapse toggles (via `collapsible`).
-- **API:** `iconButton(parent, { icon?, label, text?, variant?, pressed?, disabled?, tooltip?, onClick }, owner)`
+- **API:** `iconButton(parent, { icon?, label, text?, variant?, pressed?, disabled?, control?, onClick }, owner)`
   — `icon` = a Lucide name for `setIcon`; `label` = **required** `aria-label` (icon-only) or accessible
-  name; `variant` ∈ `default | accent | ghost | danger`; `pressed?` renders `aria-pressed` (toggles);
-  `tooltip` calls the kit `tooltip()` (native `setTooltip`).
+  name; `variant` ∈ `default | accent | ghost | danger`; `pressed?` renders `aria-pressed` (toggles).
+  **There is no separate `tooltip` option (SC-324):** Obsidian renders the hover tooltip from the
+  element's `aria-label`, so `label` is both the accessible name and the hover text — put the full
+  string there (lead with what the button does, then any explanation). `setLabel()` updates both.
 - **A11y:** native `<button>` (keyboard + Enter/Space free), `aria-label`, `:focus-visible` ring,
   **min 44×44 px hit area** via padding while the glyph stays small, real `disabled` property (fixes
   CB-8 — the "disabled" class alone let Enter through), `aria-pressed` for stateful toggles.
@@ -164,6 +166,9 @@ F1 explicitly asked D2 to own this primitive so "new elements get it for free."
   tooltip DOM (native handles positioning, delay, keyboard focus, and popout window correctly).
 - **API:** `tooltip(el, text, { placement? })`. Used everywhere `title=`/`el.title` is today (which
   gives no keyboard/AT exposure).
+  `setTooltip` only writes `aria-label` (plus placement/class attributes when options are passed);
+  the hover renderer reads that attribute back, so tooltip text and accessible name are one string.
+  `iconButton` therefore takes no `tooltip` option — its `label` is the hover text (SC-324).
 - **A11y:** `setTooltip` is focus-triggerable and AT-visible; where a control's *only* label is a
   tooltip, callers must **also** pass an `aria-label` (kit `iconButton` enforces this).
 - **Tokens:** styled by Obsidian; DSE adds none.
