@@ -26,7 +26,8 @@ touch the same surface — run them **one at a time** to avoid rebase conflicts.
 | SC-393 (EncounterData max_stamina NaN for text stamina) | `sc393-stamina-nan` | `.superpowers/sdd/sc393-stamina-nan/` | survey done, parked on Scott (5 questions); no code yet; filed SC-452 |
 | SC-290 (write-back drops fence info string) | `sc290-info-string` (removed) | preserved: `build-ledgers/sc290-info-string*` | **landed** dse develop `c78a06b`, workspace `e827b13`; jest 4787, e2e 63/73; filed SC-453–457 |
 | SC-429 (minion pool modal bugs) | `sc429-minion-pool` (removed) | preserved: `build-ledgers/sc429-minion-pool*` | **landed** dse develop `8ab5e91`, workspace `0188a5d`; jest 4806 |
-| SC-260 (replaceSource writes unchanged body) | `sc260-noop-write` | `.superpowers/sdd/sc260-noop-write/` | running |
+| SC-260 (replaceSource writes unchanged body) | `sc260-noop-write` (removed) | preserved: `build-ledgers/sc260-noop-write*` | **landed** dse develop `f818002`, workspace `0eda112`; jest 4810; filed SC-459 |
+| SC-450 (aria-pressed / data-pressed drift audit) | `sc450-aria-pressed` | `.superpowers/sdd/sc450-aria-pressed/` | running |
 | SC-428 (Catch Breath at full Stamina) | `sc428-catch-breath` | `.superpowers/sdd/sc428-catch-breath/` | owner spawned |
 | SC-324 (kit icon buttons drop mount-time tooltip) | `sc324-kit-tooltip` (removed) | preserved: `build-ledgers/sc324-kit-tooltip*` | **landed** dse develop `f8e050f`, workspace `14f4e13`; jest 4767 |
 | SC-426 (initiative detail row stale after grid-cell stamina edit) | `sc426-detail-stamina` (removed) | preserved: `build-ledgers/sc426-detail-stamina*` | **landed** dse develop `a89ffd9`, workspace `6f27ee8`; e2e 62/72, 10 known-bug |

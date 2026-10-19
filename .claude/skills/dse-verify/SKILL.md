@@ -1155,7 +1155,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `8ab5e91` (2026-10-19; SC-429 landed — minion pool modal: auto-ticks revert, focus on the damage box, minion count capped at living, idle info line hidden):**
+**CURRENT — dse `develop` @ `f818002` (2026-10-19; SC-260 landed — preview scroll pin taken only when `replaceSource` changes the file; a pin failure cannot abort the write):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4810 passed / 1 skipped / 227 of 228 suites** (8ab5e91's 4806 + SC-260's 4) · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 63/73 ok,
+0 failed, 10 known-bug, coverage: 47/47 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-260 ticket-owner at the land-ready head; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `8ab5e91` (2026-10-19; SC-429 landed — minion pool modal: auto-ticks revert, focus on the damage box, minion count capped at living, idle info line hidden):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4806 passed / 1 skipped / 227 of 228 suites** (c78a06b's 4787 + SC-429's 19) · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 63/73 ok,
 0 failed, 10 known-bug, coverage: 47/47 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-429 ticket-owner at the land-ready head; the dispatcher relayed, not re-ran.
