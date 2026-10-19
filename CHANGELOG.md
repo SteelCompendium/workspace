@@ -15,8 +15,10 @@ go under an *Internal* sub-heading.
   gained). The field now snaps to the allowed range when you commit it, the button states the real
   change (also while you are still typing), and the + / - buttons stop at the limits. A
   hand-edited Stamina that is already out of range no longer flips the controls: Damage never
-  heals, Healing never damages, Kill never says "Gain". An exponent in the Apply box such as
-  "1e3" now counts as 1000 instead of 1, and Reset puts the Apply box back to 0.
+  heals, Healing never damages, Kill and Full Heal never say "Gain" / "Lose" the wrong way round,
+  and applying only a Temp Stamina change no longer quietly rewrites an out-of-range Stamina. An
+  exponent in the Apply box such as "1e3" now counts as 1000 instead of 1 (also in the initiative
+  minion Stamina window's damage and minion-count boxes), and Reset puts the Apply box back to 0.
 
 - **DSE plugin: hovering a button now shows its explanation, not just its name (SC-324).**
   The hero Respite button, negotiation Complete Argument, the compendium migration's Sync
