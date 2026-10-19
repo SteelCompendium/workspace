@@ -1155,7 +1155,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `1640ed0` (2026-10-18; SC-408 landed — functional e2e pilot, e2e now required to land):**
+**CURRENT — dse `develop` @ `1a4c6d3` (2026-10-18; SC-372 landed — per-root `--dse-fs-*` declaration so the Small/Large/Control text-size prefs apply; each knob applies once):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4732 passed / 1 skipped / 227 of 228 suites** (1640ed0's 4725 + SC-372's 7) · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 59/71 ok,
+0 failed, 12 known-bug, coverage: 47/47 pairs`** · shots **572**, 0 FAIL, with two NEW in-run lines `text scale OK (1146 comparisons)` and `text scale once OK (102969 comparisons over 199 loads)` beside `portrait mark parity OK (… 6 comparisons …)` and `turn mark parity OK (20 comparisons)` · freeze **`freeze OK (276/276 …)`** (no rebaseline, no widening) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-372 ticket-owner and its independent reviewer at the land-ready head (6737031; 1a4c6d3 is a CHANGELOG-only follow-up); the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `1640ed0` (2026-10-18; SC-408 landed — functional e2e pilot, e2e now required to land):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4725 passed / 1 skipped / 226 of 227
 suites** (the 4721 of the SC-408 branch on `e9502a8` + SC-423's 4) · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 59/71 ok,
 0 failed, 12 known-bug, coverage: 47/47 pairs`** (3 consecutive full runs at `--shards=4`, about 32-33 s of spec time each; the 12
