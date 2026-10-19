@@ -28,7 +28,7 @@ absolute paths — devbox ignores your shell's `cd`.
 | 2. Lint | `npm run lint` | clean (no output), exit 0 — gated in CI as of SC-136/FOLLOWUPS #61 |
 | 3. Unit tests | `npx jest` | all suites/tests green |
 | 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 25/25 ok, 0 failed`, exit 0 (~4.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
-| 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `59/71 ok, 0 failed, 12 known-bug, coverage: 47/47 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
+| 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `61/72 ok, 0 failed, 11 known-bug, coverage: 47/47 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
 | 5. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
 | 6. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
 | 7. Parity (LAST) | `npm run parity` | `0 GAPs`, `0 undeclared WARNs`, exactly the documented declared-deferral set, exit 0 |
@@ -1155,7 +1155,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `1a4c6d3` (2026-10-18; SC-372 landed — per-root `--dse-fs-*` declaration so the Small/Large/Control text-size prefs apply; each knob applies once):**
+**CURRENT — dse `develop` @ `7644fb3` (2026-10-19; SC-430 landed — stamina + minion-pool modal Apply follows a half-typed draft so the first click lands):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4761 passed / 1 skipped / 227 of 228 suites** · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 61/72 ok,
+0 failed, 11 known-bug, coverage: 47/47 pairs`** (SC-430's `[STAM-S13]` known-bug marker removed; new `[STAM-S13c]` scenario) · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-430 ticket-owner and its independent reviewer at the land-ready head (shots/freeze/parity measured at `e3d4158`; later commits do not change first paint); the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `1a4c6d3` (2026-10-18; SC-372 landed — per-root `--dse-fs-*` declaration so the Small/Large/Control text-size prefs apply; each knob applies once):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4732 passed / 1 skipped / 227 of 228 suites** (1640ed0's 4725 + SC-372's 7) · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 59/71 ok,
 0 failed, 12 known-bug, coverage: 47/47 pairs`** · shots **572**, 0 FAIL, with two NEW in-run lines `text scale OK (1146 comparisons)` and `text scale once OK (102969 comparisons over 199 loads)` beside `portrait mark parity OK (… 6 comparisons …)` and `turn mark parity OK (20 comparisons)` · freeze **`freeze OK (276/276 …)`** (no rebaseline, no widening) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-372 ticket-owner and its independent reviewer at the land-ready head (6737031; 1a4c6d3 is a CHANGELOG-only follow-up); the dispatcher relayed, not re-ran.
