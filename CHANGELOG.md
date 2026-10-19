@@ -22,7 +22,9 @@ go under an *Internal* sub-heading.
   disabled with a reason tooltip on the Stamina bar and hero sheet, and the Recoveries popover's
   "Catch breath" button is disabled with a reason in the same cases (plus no Recoveries / Dying).
   The Stamina editor's Spend Recovery says "Recovery value is 0" when that is the reason. After
-  clicking a marker the arrow keys and Escape now work from the row, with no Tab first.
+  clicking a marker the arrow keys and Escape now work from the row, with no Tab first. A mouse
+  click draws no focus ring; keyboard Catch Breath and the popover's Catch breath keep focus on
+  the row. A hero with an unresolved class says "Max Stamina unknown", not "Recovery value is 0".
 
 - **DSE plugin: clicking a hero's portrait in the initiative tracker now shows the acted
   frame immediately (SC-423).** The 2px light-grey metal frame used to appear only after
