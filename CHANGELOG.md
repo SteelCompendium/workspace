@@ -16,6 +16,14 @@ go under an *Internal* sub-heading.
   and screen readers use. Spend Recovery and the read-only Catch Breath keep their names when
   they show why they are disabled.
 
+- **DSE plugin: Catch Breath no longer spends a Recovery for nothing, and a Recoveries marker
+  click keeps keyboard focus (SC-428).** At full Stamina (or a recovery value of 0, max Stamina
+  2 or less) Catch Breath stayed enabled and a click spent a Recovery for +0 Stamina; it is now
+  disabled with a reason tooltip on the Stamina bar and hero sheet, and the Recoveries popover's
+  "Catch breath" button is disabled with a reason in the same cases (plus no Recoveries / Dying).
+  The Stamina editor's Spend Recovery says "Recovery value is 0" when that is the reason. After
+  clicking a marker the arrow keys and Escape now work from the row, with no Tab first.
+
 - **DSE plugin: clicking a hero's portrait in the initiative tracker now shows the acted
   frame immediately (SC-423).** The 2px light-grey metal frame used to appear only after
   something else re-rendered the tracker (adding a Malice log entry, for example); the seal
