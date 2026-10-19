@@ -27,7 +27,7 @@ touch the same surface — run them **one at a time** to avoid rebase conflicts.
 | SC-290 (write-back drops fence info string) | `sc290-info-string` | `.superpowers/sdd/sc290-info-string/` | implementing |
 | SC-428 (Catch Breath at full Stamina) | `sc428-catch-breath` | `.superpowers/sdd/sc428-catch-breath/` | owner spawned |
 | SC-324 (kit icon buttons drop mount-time tooltip) | `sc324-kit-tooltip` (removed) | preserved: `build-ledgers/sc324-kit-tooltip*` | **landed** dse develop `f8e050f`, workspace `14f4e13`; jest 4767 |
-| SC-426 (initiative detail row stale after grid-cell stamina edit) | `sc426-detail-stamina` | `.superpowers/sdd/sc426-detail-stamina/` | owner spawned |
+| SC-426 (initiative detail row stale after grid-cell stamina edit) | `sc426-detail-stamina` (removed) | preserved: `build-ledgers/sc426-detail-stamina*` | **landed** dse develop `a89ffd9`, workspace `6f27ee8`; e2e 62/72, 10 known-bug |
 
 Still parked from the prior wave: SC-279 and SC-406 carry `Ready for Agent` (not resumed this session yet).
 
