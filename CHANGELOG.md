@@ -9,6 +9,14 @@ go under an *Internal* sub-heading.
 ## Unreleased
 
 - Fixed: notes with Windows (CRLF) line endings now work with the Draw Steel sidebar (pinned blocks could not be found, so edits never saved), and DSE saves no longer leave a CRLF note with mixed line endings. (SC-453)
+- **DSE plugin: the Stamina editor's Apply button now says exactly what it will apply (SC-427).**
+  Typing a Stamina value above max or below the lowest allowed (with max 20 and 10 current, typing
+  30) used to make the button promise more than it did ("Gain 20 Stamina" while only 10 was
+  gained). The field now snaps to the allowed range when you commit it, the button states the real
+  change (also while you are still typing), and the + / - buttons stop at the limits. A
+  hand-edited Stamina that is already out of range no longer flips the controls: Damage never
+  heals, Healing never damages, Kill never says "Gain". An exponent in the Apply box such as
+  "1e3" now counts as 1000 instead of 1, and Reset puts the Apply box back to 0.
 
 - **DSE plugin: hovering a button now shows its explanation, not just its name (SC-324).**
   The hero Respite button, negotiation Complete Argument, the compendium migration's Sync
