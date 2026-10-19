@@ -1155,7 +1155,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `9ed8dc6` (2026-10-19; SC-428 landed — Catch Breath disabled at full Stamina / zero recovery value, popover button really disabled, shared name-first reasons, Recoveries marker keeps keyboard focus):**
+**CURRENT — dse `develop` @ `c616e22` (2026-10-19; SC-450 landed — one `setPressedState` writes `aria-pressed` + `data-pressed` together; AST jest guard; new shots in-run gate):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4849 passed / 1 skipped / 228 of 229 suites** (new suite `test/unit/build/ariaPressedWriters.test.ts`) · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 68/76 ok,
+0 failed, 8 known-bug, coverage: 51/51 pairs`** · shots **572**, 0 FAIL, with the NEW in-run line `pressed toggle parity OK (96 comparisons across 8 sites x dark/light x rest/hover/focus-visible)` · freeze **`freeze OK (276/276 …)`** (no rebaseline; 572/572 PNGs byte-identical) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-450 ticket-owner at the land-ready head; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `9ed8dc6` (2026-10-19; SC-428 landed — Catch Breath disabled at full Stamina / zero recovery value, popover button really disabled, shared name-first reasons, Recoveries marker keeps keyboard focus):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4840 passed / 1 skipped / 227 of 228 suites** · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 68/76 ok,
 0 failed, 8 known-bug, coverage: 51/51 pairs`** (SC-428's 2 known-bug markers removed) · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-428 ticket-owner at `e7d869c` (`9ed8dc6` is a test retitle only; that file re-run 35/35); the dispatcher relayed, not re-ran.

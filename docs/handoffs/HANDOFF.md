@@ -27,7 +27,8 @@ touch the same surface — run them **one at a time** to avoid rebase conflicts.
 | SC-290 (write-back drops fence info string) | `sc290-info-string` (removed) | preserved: `build-ledgers/sc290-info-string*` | **landed** dse develop `c78a06b`, workspace `e827b13`; jest 4787, e2e 63/73; filed SC-453–457 |
 | SC-429 (minion pool modal bugs) | `sc429-minion-pool` (removed) | preserved: `build-ledgers/sc429-minion-pool*` | **landed** dse develop `8ab5e91`, workspace `0188a5d`; jest 4806 |
 | SC-260 (replaceSource writes unchanged body) | `sc260-noop-write` (removed) | preserved: `build-ledgers/sc260-noop-write*` | **landed** dse develop `f818002`, workspace `0eda112`; jest 4810; filed SC-459 |
-| SC-450 (aria-pressed / data-pressed drift audit) | `sc450-aria-pressed` | `.superpowers/sdd/sc450-aria-pressed/` | running |
+| SC-450 (aria-pressed / data-pressed drift audit) | `sc450-aria-pressed` (removed) | preserved: `build-ledgers/sc450-aria-pressed*` | **landed** dse develop `c616e22`, workspace `4e652d5`; jest 4849 / 228 suites; new shots gate |
+| SC-427 (stamina modal Apply label / 1e3 / Reset) | `sc427-apply-label` | `.superpowers/sdd/sc427-apply-label/` | running |
 | SC-428 (Catch Breath at full Stamina) | `sc428-catch-breath` (removed) | preserved: `build-ledgers/sc428-catch-breath*` | **landed** dse develop `9ed8dc6`, workspace `7122648`; e2e 68/76, 8 known-bug; filed SC-458 |
 | SC-453 (CRLF notes: sidebar can't find blocks, mixed endings) | `sc453-crlf` | `.superpowers/sdd/sc453-crlf/` | in review |
 | SC-324 (kit icon buttons drop mount-time tooltip) | `sc324-kit-tooltip` (removed) | preserved: `build-ledgers/sc324-kit-tooltip*` | **landed** dse develop `f8e050f`, workspace `14f4e13`; jest 4767 |
