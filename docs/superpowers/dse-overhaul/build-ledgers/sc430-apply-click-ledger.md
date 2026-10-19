@@ -44,3 +44,4 @@ Standing rule that applies (Scott, SC-408, 2026-10-18): e2e "make it required to
 - R2 result: 7644fb3 (963a408 pool info text follows draft; 7644fb3 S13c rewrite + comments). jest 4761/1 skipped/227 of 228; lifecycle 25/25; e2e 61/72 ok, 0 failed, 11 known-bug, 47/47. Controls: S13c and P1 FAIL with src reverted.
 - R2 scoped re-review dispatched to a4ef1e805ac79b66c.
 - R2 re-review: LAND-READY at 7644fb3 (2026-10-19). Land-ready reported to dispatcher.
+- LANDED 2026-10-19: dse origin/develop 7644fb3, workspace main 4a7b18d + 77c8c16. Ticket flipped to Done.

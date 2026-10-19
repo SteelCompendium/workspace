@@ -1155,7 +1155,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `7644fb3` (2026-10-19; SC-430 landed — stamina + minion-pool modal Apply follows a half-typed draft so the first click lands):**
+**CURRENT — dse `develop` @ `f8e050f` (2026-10-19; SC-324 landed — iconButton `label` is the hover tooltip; the discarded `tooltip` option is gone):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4767 passed / 1 skipped / 227 of 228 suites** (7644fb3's 4761 + SC-324's 6) · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 61/72 ok,
+0 failed, 11 known-bug, coverage: 47/47 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-324 ticket-owner at the rebased land-ready head; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `7644fb3` (2026-10-19; SC-430 landed — stamina + minion-pool modal Apply follows a half-typed draft so the first click lands):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4761 passed / 1 skipped / 227 of 228 suites** · lifecycle **25/25** · e2e **`OBSIDIAN-E2E done: 61/72 ok,
 0 failed, 11 known-bug, coverage: 47/47 pairs`** (SC-430's `[STAM-S13]` known-bug marker removed; new `[STAM-S13c]` scenario) · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-430 ticket-owner and its independent reviewer at the land-ready head (shots/freeze/parity measured at `e3d4158`; later commits do not change first paint); the dispatcher relayed, not re-ran.
