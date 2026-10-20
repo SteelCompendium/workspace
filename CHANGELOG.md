@@ -8,6 +8,8 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- Fixed: Draw Steel blocks inside a callout or quote now save their changes (Reading view, Live Preview callouts, and the sidebar); a block that can't be saved (one inside a list item) now says so with a notice instead of failing silently. (SC-455)
+
 - Fixed: notes with Windows (CRLF) line endings now work with the Draw Steel sidebar (pinned blocks could not be found, so edits never saved), and DSE saves no longer leave a CRLF note with mixed line endings. (SC-453)
 
 - **DSE plugin: the Stamina editor's Apply button now says exactly what it will apply (SC-427).**
