@@ -125,6 +125,11 @@ those suites, check `/proc/loadavg` and re-run before believing it** — and nev
 fix round "address" it. Prefer to run the full battery when load is low; tsc/lint/shots/
 freeze/parity are not load-sensitive in the same way.
 
+Also load-sensitive (SC-360, 2026-10-19): the **first** test in
+`test/dom/views/sidebarInitiative.test.ts` can exceed the 5s timeout on a cold ts-jest compile at
+1-min load 40+. Same rule — check load, re-run. (Its *other* historical flake, the r2 undo test, was
+a real bug — numeric-looking anchor ids — fixed by SC-360; a red there is no longer load.)
+
 ### THE exit-code footgun
 
 A pipe or a trailing command can silently turn a real failure into an apparent success:
@@ -1155,7 +1160,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `d58cf6a` (2026-10-19; SC-427 landed — Stamina editor clamps typed/stepped values, Apply label states the saved change, "1e3" reads as 1000, Reset clears the Apply box):**
+**CURRENT — dse `develop` @ `7817133` (2026-10-19; SC-360 landed — sidebar anchor ids always read as YAML strings; readers accept any scalar token; encounter builder shares the generator):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5013 passed / 1 skipped / 229 of 230 suites** (d58cf6a's 4950 + SC-360's 63) · lifecycle **26/26** · e2e **`OBSIDIAN-E2E done: 71/76 ok,
+0 failed, 5 known-bug, coverage: 51/51 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** · parity **0 GAPs / 0
+undeclared / 24 DECLARED** (shots/freeze/parity measured at `8c39741`, before later non-rendering fix rounds). Numbers as reported by the SC-360 ticket-owner (gates at `9cae8d3`; `7817133` is CHANGELOG-only); the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `d58cf6a` (2026-10-19; SC-427 landed — Stamina editor clamps typed/stepped values, Apply label states the saved change, "1e3" reads as 1000, Reset clears the Apply box):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **4950 passed / 1 skipped / 229 of 230 suites** · lifecycle **26/26** · e2e **`OBSIDIAN-E2E done: 71/76 ok,
 0 failed, 5 known-bug, coverage: 51/51 pairs`** (SC-427's 3 known-bug markers removed: STAM-S08, D09, F06) · shots **572**, 0 FAIL, with `pressed toggle parity OK (96 comparisons …)` · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-427 ticket-owner at the land-ready head; the dispatcher relayed, not re-ran.

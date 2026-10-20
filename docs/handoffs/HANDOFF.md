@@ -30,7 +30,8 @@ touch the same surface — run them **one at a time** to avoid rebase conflicts.
 | SC-450 (aria-pressed / data-pressed drift audit) | `sc450-aria-pressed` (removed) | preserved: `build-ledgers/sc450-aria-pressed*` | **landed** dse develop `c616e22`, workspace `4e652d5`; jest 4849 / 228 suites; new shots gate |
 | SC-427 (stamina modal Apply label / 1e3 / Reset) | `sc427-apply-label` (removed) | preserved: `build-ledgers/sc427-apply-label*` | **landed** dse develop `d58cf6a`, workspace `04882a0`; jest 4950, e2e 71/76, 5 known-bug; closes half of SC-425 |
 | SC-455 (block in callout/blockquote: click does nothing) | `sc455-callout-write` | `.superpowers/sdd/sc455-callout-write/` | running |
-| SC-360 (flaky sidebarInitiative jest test) | `sc360-flaky-undo` | `.superpowers/sdd/sc360-flaky-undo/` | review (dse head `b1f15d9`); overlaps SC-453's anchor-id YAML workaround — both owners told |
+| SC-360 (flaky sidebarInitiative jest test) | `sc360-flaky-undo` (removed) | preserved: `build-ledgers/sc360-flaky-undo*` | **landed** dse develop `7817133`, workspace `502d471`; jest 5013; also fixes SC-383 (Backlog, linked — close on Scott's say) |
+| SC-431 (stamina modal: Escape in a field closes the modal) | `sc431-escape-field` | `.superpowers/sdd/sc431-escape-field/` | running |
 | SC-428 (Catch Breath at full Stamina) | `sc428-catch-breath` (removed) | preserved: `build-ledgers/sc428-catch-breath*` | **landed** dse develop `9ed8dc6`, workspace `7122648`; e2e 68/76, 8 known-bug; filed SC-458 |
 | SC-453 (CRLF notes: sidebar can't find blocks, mixed endings) | `sc453-crlf` (removed) | preserved: `build-ledgers/sc453-crlf*` | **landed** dse develop `6bcf9c8`, workspace `af3b960`; jest 4908 / 229 suites, lifecycle 26/26; filed SC-460 |
 | SC-324 (kit icon buttons drop mount-time tooltip) | `sc324-kit-tooltip` (removed) | preserved: `build-ledgers/sc324-kit-tooltip*` | **landed** dse develop `f8e050f`, workspace `14f4e13`; jest 4767 |
