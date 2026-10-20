@@ -1160,7 +1160,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `ab34293` (2026-10-20; SC-431 landed — Escape in a half-typed stepper field cancels only the draft, a second Escape closes; same for the Conditions add dropdown via the `escapeConsumer` registry):**
+**CURRENT — dse `develop` @ `71ac43a` (2026-10-20; SC-454 landed — dead `src/utils/CodeBlocks.ts` and its 5-test suite deleted; the minion pool modal test saves via `replaceFenceBody`; built `main.js` byte-identical to `ab34293`):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5257 passed / 1 skipped / 229 of 230 suites** (ab34293's 5262 minus the 5 deleted tests) · lifecycle **27/27** · e2e **`OBSIDIAN-E2E done: 83/87 ok,
+0 failed, 4 known-bug, coverage: 57/57 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED** (shots/freeze/parity at `68e3f1e`; `main.js` sha256 identical at base, `68e3f1e` and `71ac43a`). Numbers as reported by the SC-454 ticket-owner; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `ab34293` (2026-10-20; SC-431 landed — Escape in a half-typed stepper field cancels only the draft, a second Escape closes; same for the Conditions add dropdown via the `escapeConsumer` registry):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5262 passed / 1 skipped / 230 of 231 suites** · lifecycle **27/27** · e2e **`OBSIDIAN-E2E done: 83/87 ok,
 0 failed, 4 known-bug, coverage: 57/57 pairs`** (STAM-S06 known-bug removed; new STAM-T12, COND-E01) · shots **572**, 0 FAIL, with `pressed toggle parity OK (96 comparisons …)` · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-431 ticket-owner at the rebased land-ready head; the dispatcher relayed, not re-ran.
