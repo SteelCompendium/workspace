@@ -26,7 +26,7 @@ absolute paths — devbox ignores your shell's `cd`.
 |---|---|---|
 | 1. Type-check | `npm run tsc` | clean (no output) |
 | 2. Lint | `npm run lint` | clean (no output), exit 0 — gated in CI as of SC-136/FOLLOWUPS #61 |
-| 3. Unit tests | `npx jest` | all suites/tests green |
+| 3. Unit tests | `npx jest` | all suites/tests green. On a fresh worktree jest reads one fewer passed and **2 skipped** until `npm run shots` has cached `visual-harness/dist/obsidian-app.css` (the `printTwinDeltaAllowedSet` test skips without it) — compare against CURRENT only after a shots run (SC-364 owner, 2026-10-20) |
 | 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 27/27 ok, 0 failed` (SC-453 added G-S10, SC-455 G-S11), exit 0 (~4.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
 | 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `83/87 ok, 0 failed, 4 known-bug, coverage: 57/57 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
 | 5. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
@@ -193,7 +193,8 @@ OK line on success; read the lines, don't infer from exit code alone.
   2026-09-24 (SC-338): 114 kinds / 684 comparisons — pre-existing drift from unrelated
   landings since SC-205, not caused by SC-338 (SC-338 never touches the gallery/harness DOM
   composition; `.dse-optchip` is modal-only and never mounts there — see the SC-338 note
-  below)**, plus a printed 12-record exemption boundary (8 focus-visible
+  below)**; **112 kinds / 672 comparisons as of 2026-10-20 (SC-364 owner re-measure; see
+  CURRENT)**, plus a printed 12-record exemption boundary (8 focus-visible
   disabled, 2 hover no-hit-point, 2 focus-visible `visibility: hidden`). Kind counts drift
   as fixtures/chrome grow — treat them as "expect right now", and treat any per-record
   `matches(':focus-visible')` failure or a new unexplained exemption as a real red, not
@@ -1160,7 +1161,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `71ac43a` (2026-10-20; SC-454 landed — dead `src/utils/CodeBlocks.ts` and its 5-test suite deleted; the minion pool modal test saves via `replaceFenceBody`; built `main.js` byte-identical to `ab34293`):**
+**CURRENT — dse `develop` @ `188755b` (2026-10-20; SC-364 landed — dead `resolveCollapsePrefs` and the ComponentWrapper `declaredCollapsePrefs` side channel deleted; built `main.js` byte-identical across the branch):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5257 passed / 1 skipped / 229 of 230 suites** (unchanged) · lifecycle **27/27** · e2e **`OBSIDIAN-E2E done: 83/87 ok,
+0 failed, 4 known-bug, coverage: 57/57 pairs`** · shots **572**, 0 FAIL (button host-leak 112 kinds / 672) · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED** (full battery at `a22300d`; later two commits comment-only, tsc/lint/jest re-run at `188755b`). Numbers as reported by the SC-364 ticket-owner; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `71ac43a` (2026-10-20; SC-454 landed — dead `src/utils/CodeBlocks.ts` and its 5-test suite deleted; the minion pool modal test saves via `replaceFenceBody`; built `main.js` byte-identical to `ab34293`):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5257 passed / 1 skipped / 229 of 230 suites** (ab34293's 5262 minus the 5 deleted tests) · lifecycle **27/27** · e2e **`OBSIDIAN-E2E done: 83/87 ok,
 0 failed, 4 known-bug, coverage: 57/57 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED** (shots/freeze/parity at `68e3f1e`; `main.js` sha256 identical at base, `68e3f1e` and `71ac43a`). Numbers as reported by the SC-454 ticket-owner; the dispatcher relayed, not re-ran.
