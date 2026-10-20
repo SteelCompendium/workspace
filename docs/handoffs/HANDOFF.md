@@ -29,15 +29,16 @@ touch the same surface — run them **one at a time** to avoid rebase conflicts.
 | SC-260 (replaceSource writes unchanged body) | `sc260-noop-write` (removed) | preserved: `build-ledgers/sc260-noop-write*` | **landed** dse develop `f818002`, workspace `0eda112`; jest 4810; filed SC-459 |
 | SC-450 (aria-pressed / data-pressed drift audit) | `sc450-aria-pressed` (removed) | preserved: `build-ledgers/sc450-aria-pressed*` | **landed** dse develop `c616e22`, workspace `4e652d5`; jest 4849 / 228 suites; new shots gate |
 | SC-427 (stamina modal Apply label / 1e3 / Reset) | `sc427-apply-label` (removed) | preserved: `build-ledgers/sc427-apply-label*` | **landed** dse develop `d58cf6a`, workspace `04882a0`; jest 4950, e2e 71/76, 5 known-bug; closes half of SC-425 |
-| SC-455 (block in callout/blockquote: click does nothing) | `sc455-callout-write` | `.superpowers/sdd/sc455-callout-write/` | running |
+| SC-455 (block in callout/blockquote: click does nothing) | `sc455-callout-write` | `.superpowers/sdd/sc455-callout-write/` | in review (dse head `e4f60eb`, base `6bcf9c8`) |
 | SC-360 (flaky sidebarInitiative jest test) | `sc360-flaky-undo` (removed) | preserved: `build-ledgers/sc360-flaky-undo*` | **landed** dse develop `7817133`, workspace `502d471`; jest 5013; also fixes SC-383 (Backlog, linked — close on Scott's say) |
-| SC-431 (stamina modal: Escape in a field closes the modal) | `sc431-escape-field` | `.superpowers/sdd/sc431-escape-field/` | running |
+| SC-431 (stamina modal: Escape in a field closes the modal) | `sc431-escape-field` | `.superpowers/sdd/sc431-escape-field/` | r1 reviewed (dse head `56c83b8`, base `d58cf6a`) |
+| SC-422 (text-size prefs miss surfaces outside an element root) | `sc422-textscale-surfaces` | `.superpowers/sdd/sc422-textscale-surfaces/` | just started (worktree only) |
 | SC-428 (Catch Breath at full Stamina) | `sc428-catch-breath` (removed) | preserved: `build-ledgers/sc428-catch-breath*` | **landed** dse develop `9ed8dc6`, workspace `7122648`; e2e 68/76, 8 known-bug; filed SC-458 |
 | SC-453 (CRLF notes: sidebar can't find blocks, mixed endings) | `sc453-crlf` (removed) | preserved: `build-ledgers/sc453-crlf*` | **landed** dse develop `6bcf9c8`, workspace `af3b960`; jest 4908 / 229 suites, lifecycle 26/26; filed SC-460 |
 | SC-324 (kit icon buttons drop mount-time tooltip) | `sc324-kit-tooltip` (removed) | preserved: `build-ledgers/sc324-kit-tooltip*` | **landed** dse develop `f8e050f`, workspace `14f4e13`; jest 4767 |
 | SC-426 (initiative detail row stale after grid-cell stamina edit) | `sc426-detail-stamina` (removed) | preserved: `build-ledgers/sc426-detail-stamina*` | **landed** dse develop `a89ffd9`, workspace `6f27ee8`; e2e 62/72, 10 known-bug |
 
-**Process exited once (2026-10-19 evening); all three owners resumed via SendMessage — transcripts survived.** Next stamina-modal tickets after SC-427: SC-431, SC-432, SC-433 (one at a time). Other queued bugs: SC-455, SC-457 (write-back, after SC-453), SC-454, SC-458, SC-459, SC-364, SC-422, SC-361, SC-326.
+**2026-10-20 ~11:00: all three owners killed by an Opus weekly-limit 429 ("resets Oct 23, 7am ET"); resumed via SendMessage.** **Process exited once (2026-10-19 evening); all three owners resumed via SendMessage — transcripts survived.** Next stamina-modal tickets after SC-427: SC-431, SC-432, SC-433 (one at a time). Other queued bugs: SC-455, SC-457 (write-back, after SC-453), SC-454, SC-458, SC-459, SC-364, SC-422, SC-361, SC-326.
 
 Still parked from the prior wave: SC-279 and SC-406 carry `Ready for Agent` (not resumed this session yet).
 
