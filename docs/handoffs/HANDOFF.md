@@ -28,7 +28,8 @@ touch the same surface — run them **one at a time** to avoid rebase conflicts.
 | SC-429 (minion pool modal bugs) | `sc429-minion-pool` (removed) | preserved: `build-ledgers/sc429-minion-pool*` | **landed** dse develop `8ab5e91`, workspace `0188a5d`; jest 4806 |
 | SC-260 (replaceSource writes unchanged body) | `sc260-noop-write` (removed) | preserved: `build-ledgers/sc260-noop-write*` | **landed** dse develop `f818002`, workspace `0eda112`; jest 4810; filed SC-459 |
 | SC-450 (aria-pressed / data-pressed drift audit) | `sc450-aria-pressed` (removed) | preserved: `build-ledgers/sc450-aria-pressed*` | **landed** dse develop `c616e22`, workspace `4e652d5`; jest 4849 / 228 suites; new shots gate |
-| SC-427 (stamina modal Apply label / 1e3 / Reset) | `sc427-apply-label` | `.superpowers/sdd/sc427-apply-label/` | fix round r2 (dse head `943fc47`) |
+| SC-427 (stamina modal Apply label / 1e3 / Reset) | `sc427-apply-label` (removed) | preserved: `build-ledgers/sc427-apply-label*` | **landed** dse develop `d58cf6a`, workspace `04882a0`; jest 4950, e2e 71/76, 5 known-bug; closes half of SC-425 |
+| SC-455 (block in callout/blockquote: click does nothing) | `sc455-callout-write` | `.superpowers/sdd/sc455-callout-write/` | running |
 | SC-360 (flaky sidebarInitiative jest test) | `sc360-flaky-undo` | `.superpowers/sdd/sc360-flaky-undo/` | review (dse head `b1f15d9`); overlaps SC-453's anchor-id YAML workaround — both owners told |
 | SC-428 (Catch Breath at full Stamina) | `sc428-catch-breath` (removed) | preserved: `build-ledgers/sc428-catch-breath*` | **landed** dse develop `9ed8dc6`, workspace `7122648`; e2e 68/76, 8 known-bug; filed SC-458 |
 | SC-453 (CRLF notes: sidebar can't find blocks, mixed endings) | `sc453-crlf` (removed) | preserved: `build-ledgers/sc453-crlf*` | **landed** dse develop `6bcf9c8`, workspace `af3b960`; jest 4908 / 229 suites, lifecycle 26/26; filed SC-460 |

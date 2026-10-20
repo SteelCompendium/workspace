@@ -56,3 +56,4 @@ dse base: `develop` @ f818002 (dse-verify CURRENT row, 2026-10-19).
   - INFO-4 (`SidebarBlockHost.ts:68` field doc still says "exact body") -> drop; cosmetic, not worth another battery run.
   - INFO-5 (R1 evidence paths lost in the restart) -> no action; the re-review regenerated everything as rr2-*.
 - 2026-10-19: LAND-READY reported to the dispatcher: dse sc453-crlf @ 6bcf9c8 on c616e22.
+- 2026-10-20: LANDED (dse develop 6bcf9c8, workspace af3b960). Ticket flipped to Done.
