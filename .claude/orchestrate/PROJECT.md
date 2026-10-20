@@ -218,6 +218,14 @@ Each cost real time once. Every one belongs in the briefs it applies to.
    footgun 9: delete only a path you created and recorded, never a pattern. Briefs that
    run `obsidian-lifecycle` or `e2e` must say this.
 
+12. **The session scratchpad is shared by every agent: never use a generic script name
+   there (2026-10-20, SC-422/SC-432).** Owners and workers inherit the dispatcher's
+   scratchpad directory. Two reviewers both wrote `<scratchpad>/gate.sh`; the SC-432
+   reviewer's copy replaced the SC-422 reviewer's, so SC-422's e2e run went into the
+   sc432 worktree and wrote over the SC-432 reviewer's e2e log. Briefs must require a
+   private subfolder named for the ticket, role and agent (e.g.
+   `<scratchpad>/sc422-r2-<agentId>/`) and uniquely named scripts and logs inside it.
+
 **Provenance for two plugin-side footguns.** The plugin states these rules without ticket
 keys (they generalise); the evidence is this project's, and lives here:
 
