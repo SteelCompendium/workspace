@@ -8,6 +8,8 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- Fixed: notes with Windows (CRLF) line endings now work with the Draw Steel sidebar (pinned blocks could not be found, so edits never saved), and DSE saves no longer leave a CRLF note with mixed line endings. (SC-453)
+
 - **DSE plugin: hovering a button now shows its explanation, not just its name (SC-324).**
   The hero Respite button, negotiation Complete Argument, the compendium migration's Sync
   without moving, a save-ends condition's Roll save and the initiative Advance round (with its
