@@ -28,11 +28,14 @@ touch the same surface — run them **one at a time** to avoid rebase conflicts.
 | SC-429 (minion pool modal bugs) | `sc429-minion-pool` (removed) | preserved: `build-ledgers/sc429-minion-pool*` | **landed** dse develop `8ab5e91`, workspace `0188a5d`; jest 4806 |
 | SC-260 (replaceSource writes unchanged body) | `sc260-noop-write` (removed) | preserved: `build-ledgers/sc260-noop-write*` | **landed** dse develop `f818002`, workspace `0eda112`; jest 4810; filed SC-459 |
 | SC-450 (aria-pressed / data-pressed drift audit) | `sc450-aria-pressed` (removed) | preserved: `build-ledgers/sc450-aria-pressed*` | **landed** dse develop `c616e22`, workspace `4e652d5`; jest 4849 / 228 suites; new shots gate |
-| SC-427 (stamina modal Apply label / 1e3 / Reset) | `sc427-apply-label` | `.superpowers/sdd/sc427-apply-label/` | running |
+| SC-427 (stamina modal Apply label / 1e3 / Reset) | `sc427-apply-label` | `.superpowers/sdd/sc427-apply-label/` | fix round r2 (dse head `943fc47`) |
+| SC-360 (flaky sidebarInitiative jest test) | `sc360-flaky-undo` | `.superpowers/sdd/sc360-flaky-undo/` | review (dse head `b1f15d9`); overlaps SC-453's anchor-id YAML workaround — both owners told |
 | SC-428 (Catch Breath at full Stamina) | `sc428-catch-breath` (removed) | preserved: `build-ledgers/sc428-catch-breath*` | **landed** dse develop `9ed8dc6`, workspace `7122648`; e2e 68/76, 8 known-bug; filed SC-458 |
-| SC-453 (CRLF notes: sidebar can't find blocks, mixed endings) | `sc453-crlf` | `.superpowers/sdd/sc453-crlf/` | in review |
+| SC-453 (CRLF notes: sidebar can't find blocks, mixed endings) | `sc453-crlf` | `.superpowers/sdd/sc453-crlf/` | fix round re-review → rebase onto `c616e22` (dse head `52c9414`) |
 | SC-324 (kit icon buttons drop mount-time tooltip) | `sc324-kit-tooltip` (removed) | preserved: `build-ledgers/sc324-kit-tooltip*` | **landed** dse develop `f8e050f`, workspace `14f4e13`; jest 4767 |
 | SC-426 (initiative detail row stale after grid-cell stamina edit) | `sc426-detail-stamina` (removed) | preserved: `build-ledgers/sc426-detail-stamina*` | **landed** dse develop `a89ffd9`, workspace `6f27ee8`; e2e 62/72, 10 known-bug |
+
+**Process exited once (2026-10-19 evening); all three owners resumed via SendMessage — transcripts survived.** Next stamina-modal tickets after SC-427: SC-431, SC-432, SC-433 (one at a time). Other queued bugs: SC-455, SC-457 (write-back, after SC-453), SC-454, SC-458, SC-459, SC-364, SC-422, SC-361, SC-326.
 
 Still parked from the prior wave: SC-279 and SC-406 carry `Ready for Agent` (not resumed this session yet).
 
