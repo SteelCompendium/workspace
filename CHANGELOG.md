@@ -12,11 +12,13 @@ go under an *Internal* sub-heading.
 
 - Fixed: notes with Windows (CRLF) line endings now work with the Draw Steel sidebar (pinned blocks could not be found, so edits never saved), and DSE saves no longer leave a CRLF note with mixed line endings. (SC-453)
 
-- **DSE plugin: pressing Escape while typing in the Stamina editor now only cancels the typing (SC-431).**
-  In the Stamina and Temporary Stamina fields, Escape used to close the whole editor and throw away
-  every pending change (a Damage you had just pressed, for example). Now the first Escape puts the
-  field back to its last value and leaves the editor open with your other changes intact; a second
-  Escape closes it. The same applies to the number fields in the initiative minion Stamina window.
+- **DSE plugin: Escape now backs out of the one thing you are in before it closes the window (SC-431).**
+  In the Stamina and Temporary Stamina fields of the Stamina editor, Escape used to close the whole
+  editor and throw away every pending change (a Damage you had just pressed, for example). Now the
+  first Escape puts the field back to its last value and leaves the editor open with your other
+  changes intact; a second Escape closes it. The same applies to the pool Stamina field in the
+  initiative minion Stamina window, and to the Conditions window's "Add condition" dropdown (the
+  first Escape closes just the dropdown instead of the whole window).
 
 - **DSE plugin: the Stamina editor's Apply button now says exactly what it will apply (SC-427).**
   Typing a Stamina value above max or below the lowest allowed (with max 20 and 10 current, typing
