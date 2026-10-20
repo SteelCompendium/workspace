@@ -66,3 +66,4 @@ SC-290 review INFO-3 (verbatim): "`OPEN_FENCE` is anchored at column 0, so `> ``
   - INFO-3 (tab case in blockPrefix.ts:90 untested) -> DROP: test nit.
   - INFO-4 (stale FENCE_LINE comment ReadingModeBlockHost.ts:154) -> DROP: cosmetic; pass to the dispatcher as an optional one-line touch-up.
 - 2026-10-20: LAND-READY reported to the dispatcher: dse sc455-callout-write @ b6b08f3 on 7817133; superproject sc455-callout-write @ 5cbae52 (CHANGELOG only).
+- 2026-10-20: LANDED (dse develop b6b08f3, workspace 8bc5338 + 8969a34 ledger/dse-verify). Ticket flipped to Done.
