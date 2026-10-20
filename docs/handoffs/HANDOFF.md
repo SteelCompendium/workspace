@@ -31,7 +31,7 @@ touch the same surface — run them **one at a time** to avoid rebase conflicts.
 | SC-427 (stamina modal Apply label / 1e3 / Reset) | `sc427-apply-label` | `.superpowers/sdd/sc427-apply-label/` | fix round r2 (dse head `943fc47`) |
 | SC-360 (flaky sidebarInitiative jest test) | `sc360-flaky-undo` | `.superpowers/sdd/sc360-flaky-undo/` | review (dse head `b1f15d9`); overlaps SC-453's anchor-id YAML workaround — both owners told |
 | SC-428 (Catch Breath at full Stamina) | `sc428-catch-breath` (removed) | preserved: `build-ledgers/sc428-catch-breath*` | **landed** dse develop `9ed8dc6`, workspace `7122648`; e2e 68/76, 8 known-bug; filed SC-458 |
-| SC-453 (CRLF notes: sidebar can't find blocks, mixed endings) | `sc453-crlf` | `.superpowers/sdd/sc453-crlf/` | fix round re-review → rebase onto `c616e22` (dse head `52c9414`) |
+| SC-453 (CRLF notes: sidebar can't find blocks, mixed endings) | `sc453-crlf` (removed) | preserved: `build-ledgers/sc453-crlf*` | **landed** dse develop `6bcf9c8`, workspace `af3b960`; jest 4908 / 229 suites, lifecycle 26/26; filed SC-460 |
 | SC-324 (kit icon buttons drop mount-time tooltip) | `sc324-kit-tooltip` (removed) | preserved: `build-ledgers/sc324-kit-tooltip*` | **landed** dse develop `f8e050f`, workspace `14f4e13`; jest 4767 |
 | SC-426 (initiative detail row stale after grid-cell stamina edit) | `sc426-detail-stamina` (removed) | preserved: `build-ledgers/sc426-detail-stamina*` | **landed** dse develop `a89ffd9`, workspace `6f27ee8`; e2e 62/72, 10 known-bug |
 
