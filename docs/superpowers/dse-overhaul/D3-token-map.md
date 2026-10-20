@@ -682,8 +682,12 @@ Three properties matter for this map:
    prefs seam writes on an element root (`reflect()`) or a `DseModal` dialog (`reflectCss()`)
    never reached any role: all three knobs were inert (card name 20px at 80%, 100% and 120%).
    The 14 scale-dependent declarations now live in ONE rule whose selector list is `:root,
-   :is([data-dse-element], .dse-modal)` — `:root` so unstamped contexts keep the default, the
-   `:is()` so the multiplier resolves where it is stamped. The three `*-scale` multipliers and
+   :is([data-dse-element], .dse-modal, .dse-fs-root)` — `:root` so unstamped contexts keep the
+   default, the `:is()` so the multiplier resolves where it is stamped. The third member,
+   `.dse-fs-root` (SC-422), marks plugin CHROME outside any element root or `DseModal` that still
+   reads the roles — the Compendium search modal, the settings preview panel, the sidebar
+   container — each stamped by `stampTextScaleRoot()` (`src/framework/kit/textScaleRoot.ts`) with
+   a `Component` owner; those surfaces follow the Small text size like text inside a card. The three `*-scale` multipliers and
    `--dse-fs-body` stay on plain `:root`. Per root, deliberately not on `<html>`: popout windows
    and modals each own their scale. Values in the table below are unchanged; at default prefs
    every role computes what it always did (0 frozen bytes moved). Guarded by
