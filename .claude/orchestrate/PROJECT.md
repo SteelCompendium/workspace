@@ -201,6 +201,10 @@ Each cost real time once. Every one belongs in the briefs it applies to.
    Kill only by PID, and only a PID whose command line contains **your own worktree path**
    (`pgrep -af "worktrees/<name>/"`, then check each line before killing it). Put this rule
    in every brief that runs `shots`, `parity` or `obsidian-*`.
+   **Gap (2026-10-21, SC-466):** the shots run's `node visual-harness/shoot.mjs` process has
+   no worktree path in its command line, so `pgrep -af` cannot pick it out. To check a PID's
+   owner, read `readlink /proc/<pid>/cwd` (it must be inside your worktree) or walk to its
+   parent `devbox run -c <your worktree path>`.
 
 10. **A failed `cd` puts a worker's git commands in the MAIN checkout (2026-09-28, SC-318).**
    A worker's `cd` into its scratch clone failed. The chained `git remote set-url` and
@@ -237,6 +241,9 @@ Each cost real time once. Every one belongs in the briefs it applies to.
    `SendMessage` it to resume from its transcript and re-run the step another way. Briefs
    should say: `devbox run -c <abs path>`, never `cd` inside a compound command, the Write tool
    for scratch files, and no glob `rm`.
+   **Exit codes under this pattern (SC-466):** `devbox run -c <path> -- bash -c '…; echo rc=$? > f'`
+   always records 0, even on a real failure (footgun 1). Record exit codes from a script file run
+   through devbox (`devbox run -c <path> -- bash <script>`), and read each gate's summary line.
 
 **Provenance for two plugin-side footguns.** The plugin states these rules without ticket
 keys (they generalise); the evidence is this project's, and lives here:

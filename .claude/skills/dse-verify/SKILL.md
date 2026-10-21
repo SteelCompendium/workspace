@@ -28,7 +28,7 @@ absolute paths — devbox ignores your shell's `cd`.
 | 2. Lint | `npm run lint` | clean (no output), exit 0 — gated in CI as of SC-136/FOLLOWUPS #61 |
 | 3. Unit tests | `npx jest` | all suites/tests green. On a fresh worktree jest reads one fewer passed and **2 skipped** until `npm run shots` has cached `visual-harness/dist/obsidian-app.css` (the `printTwinDeltaAllowedSet` test skips without it) — compare against CURRENT only after a shots run (SC-364 owner, 2026-10-20) |
 | 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 30/30 ok, 0 failed` (SC-453 added G-S10, SC-455 G-S11, SC-460 G-S12, SC-326 G-S13, SC-470 G-S15; G-S14/G-S16 reserved for SC-457/SC-471), exit 0 (~4.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
-| 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `88/92 ok, 0 failed, 4 known-bug, coverage: 64/64 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
+| 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `89/93 ok, 0 failed, 4 known-bug, coverage: 64/64 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
 | 5. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
 | 6. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
 | 7. Parity (LAST) | `npm run parity` | `0 GAPs`, `0 undeclared WARNs`, exactly the documented declared-deferral set, exit 0 |
@@ -1160,7 +1160,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `1c271b5` (2026-10-21; SC-470 landed — the scroll pin covers every open Reading view of a note, not just the pane that clicked: another pane, a popout and an outside write (Sync, git, another plugin) no longer jump the note to the top; new lifecycle G-S15):**
+**CURRENT — dse `develop` @ `08206e3` (2026-10-21; SC-466 landed — a write to a legacy `ds-stamina-bar` block keeps only the keys the user declared (no default keys added); a fully-declared block writes byte-identical; new e2e STAM-W11):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5446 passed / 1 skipped / 232 of 233 suites** · lifecycle **30/30** · e2e **`OBSIDIAN-E2E done: 89/93 ok,
+0 failed, 4 known-bug, coverage: 64/64 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-466 ticket-owner (implementer's post-rebase run at `08206e3`); the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `1c271b5` (2026-10-21; SC-470 landed — the scroll pin covers every open Reading view of a note, not just the pane that clicked: another pane, a popout and an outside write (Sync, git, another plugin) no longer jump the note to the top; new lifecycle G-S15):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5428 passed / 1 skipped / 231 of 232 suites** · lifecycle **30/30** (G-S13 + new G-S15) · e2e **`OBSIDIAN-E2E done: 88/92 ok,
 0 failed, 4 known-bug, coverage: 64/64 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED** (shots/freeze/parity from the fix round; the re-review's changes were src/test only). Numbers as reported by the SC-470 ticket-owner at `1c271b5`; the dispatcher relayed, not re-ran.
