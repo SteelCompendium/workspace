@@ -8,6 +8,11 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the "View on steelcompendium.io" link in the not-installed card now uses the plugin's teal-cyan link colour (SC-366).**
+  When a referenced compendium entry is not installed locally, the card's link (and its external-link
+  arrow) used to show in Obsidian's own purple-blue link colour; it now matches every other plugin
+  link. Print is unchanged.
+
 - Fixed: Draw Steel blocks inside a callout or quote now save their changes (Reading view, Live Preview callouts, and the sidebar); a block that can't be saved (one inside a list item) now says so with a notice instead of failing silently. (SC-455)
 
 - Fixed: notes with Windows (CRLF) line endings now work with the Draw Steel sidebar (pinned blocks could not be found, so edits never saved), and DSE saves no longer leave a CRLF note with mixed line endings. (SC-453)
