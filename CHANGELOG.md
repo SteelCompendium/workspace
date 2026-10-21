@@ -13,6 +13,13 @@ go under an *Internal* sub-heading.
   backticks as the block's type, find no such type and offer nothing. It now reads only the first word, as the
   rest of the plugin does.
 
+- **DSE plugin: a long Montage Test no longer cuts off its later rounds and the Tally (SC-326).**
+  With many rounds (or on a touch screen, where the round columns are wider) the board grew wider than
+  the card and the right-hand rounds and the Tally were clipped with no way to reach them. The board now
+  scrolls sideways inside its frame (Shift + mouse wheel, trackpad, touch, or Tab to a control), keeps
+  the Tally readable at the end, and stays where you scrolled it when you log a result or end a round,
+  instead of jumping back to round 1. A board that fits looks exactly as before.
+
 - **DSE plugin: in the Conditions window, clicking a row's cog or a colour swatch while the "Add condition" dropdown is open now works (SC-474).**
   The dropdown used to collapse as soon as the mouse button went down, which shrank and re-centred the
   window under the pointer, so the click often landed on nothing. It now collapses when the click
