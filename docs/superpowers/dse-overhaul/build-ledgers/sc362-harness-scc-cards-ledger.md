@@ -122,3 +122,6 @@ dse `bc4a0c5` (fixes) on `aff5034` (impl) on `08206e3`. Superproject `f029e59` =
 e2e 89/93 0 failed 4 known-bug 64/64, shots 580 0 FAIL, freeze 276/276 x2, parity 0/0/24.
 Widening `sc362-widening.txt` 4 lines (unchanged hashes), 276 → 280, additions-only.
 LAND-READY. Ask to Scott: eyeball the two new by-SCC cards (they become frozen).
+
+### LANDED 2026-10-21
+dse develop bc4a0c5, workspace merge d5f77e1, freeze 276 -> 280 (dispatcher). Ticket left In Progress + Needs Review for the non-blocking cards-look-right ask; Scott closes.
