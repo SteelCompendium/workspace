@@ -27,7 +27,7 @@ absolute paths — devbox ignores your shell's `cd`.
 | 1. Type-check | `npm run tsc` | clean (no output) |
 | 2. Lint | `npm run lint` | clean (no output), exit 0 — gated in CI as of SC-136/FOLLOWUPS #61 |
 | 3. Unit tests | `npx jest` | all suites/tests green. On a fresh worktree jest reads one fewer passed and **2 skipped** until `npm run shots` has cached `visual-harness/dist/obsidian-app.css` (the `printTwinDeltaAllowedSet` test skips without it) — compare against CURRENT only after a shots run (SC-364 owner, 2026-10-20) |
-| 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 30/30 ok, 0 failed` (SC-453 added G-S10, SC-455 G-S11, SC-460 G-S12, SC-326 G-S13, SC-470 G-S15; G-S14/G-S16 reserved for SC-457/SC-471), exit 0 (~4.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
+| 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 31/31 ok, 0 failed` (SC-453 added G-S10, SC-455 G-S11, SC-460 G-S12, SC-326 G-S13, SC-457 G-S14 — a fence with whitespace before the language still saves after the note changed around it, SC-470 G-S15; G-S16 reserved for SC-471), exit 0 (~4.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
 | 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `89/93 ok, 0 failed, 4 known-bug, coverage: 64/64 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
 | 5. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
 | 6. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
@@ -58,7 +58,7 @@ the scenario), `G-S6d`
 (`previewMode.rerender`), `G-S6e` (plugin disable/enable), `G-S6f` (embed leaf detach), `G-S6g`
 (hover popovers ARE writable in Obsidian 1.14.2 — measured, supersedes the original read-only
 assumption), `G-S6h` (a nested read-only `ds-counter` survives its parent's adoption), `G-S6i` (fast
-navigation across several notes leaves no leak), `G-S8` (SC-198 scroll pin, two phases since SC-459: adoption on — scrollTop holds; adoption off — the tracker is redrawn, `data-dse-scroll-pin` is on the scroller when the sizer collapses, scrollTop held; FAILs with the pin's style rule never inserted), `G-S13` (SC-326 montage board keeps its sideways scroll across a write), `G-S15` (SC-470 every Reading view of the note — another pane, a popout, an outside write such as Sync — keeps its scroll position on a tracker write). Mandatory — unlike `obsidian-shots` it needs no real display. Set your own
+navigation across several notes leaves no leak), `G-S8` (SC-198 scroll pin, two phases since SC-459: adoption on — scrollTop holds; adoption off — the tracker is redrawn, `data-dse-scroll-pin` is on the scroller when the sizer collapses, scrollTop held; FAILs with the pin's style rule never inserted), `G-S13` (SC-326 montage board keeps its sideways scroll across a write), `G-S15` (SC-470 every Reading view of the note — another pane, a popout, an outside write such as Sync — keeps its scroll position on a tracker write), `G-S14` (SC-457: a fence written with whitespace before the language, ```` ``` ds-counter ````, still saves after the note changed around it — skip leading spaces/tabs, the name ends at the first whitespace of any kind). Mandatory — unlike `obsidian-shots` it needs no real display. Set your own
 `DSE_LIFECYCLE_PORT` (e.g. `DSE_LIFECYCLE_PORT=9285 npm run obsidian-lifecycle`) when another
 session may already be running this gate on the default port 9262 — a busy port makes your
 run exit 2, not a code failure.
@@ -1169,7 +1169,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `bc4a0c5` (2026-10-21; SC-362 landed — the shots harness renders by-SCC display cards (new fixtures `rule-by-scc`, `condition-by-scc`); an unresolved by-SCC card now fails the run; freeze WIDENED 276 → 280):**
+**CURRENT — dse `develop` @ `772c3cd` (2026-10-21; SC-457 landed — one shared rule `fenceLanguage` in `src/framework/host/blockPrefix.ts` for every save path, the sidebar and autocomplete (skip leading spaces/tabs; name ends at the first whitespace); a block with whitespace before its name keeps saving and can be pinned; new lifecycle G-S14):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5536 passed / 1 skipped / 233 of 234 suites** · lifecycle **31/31** · e2e **`OBSIDIAN-E2E done: 89/93 ok,
+0 failed, 4 known-bug, coverage: 64/64 pairs`** · shots **580**, 0 FAIL · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-457 ticket-owner at `772c3cd` (reviewer r5 re-ran tsc/lint/jest/lifecycle/e2e); the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `bc4a0c5` (2026-10-21; SC-362 landed — the shots harness renders by-SCC display cards (new fixtures `rule-by-scc`, `condition-by-scc`); an unresolved by-SCC card now fails the run; freeze WIDENED 276 → 280):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5457 passed / 1 skipped / 232 of 233 suites** · lifecycle **30/30** · e2e **`OBSIDIAN-E2E done: 89/93 ok,
 0 failed, 4 known-bug, coverage: 64/64 pairs`** · shots **580** (572 + 8 new), 0 FAIL · freeze **`freeze OK (280/280 …)`** (widened; a branch older than `bc4a0c5` reads `276/280 producible OK, 4 missing`) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-362 ticket-owner at `bc4a0c5`; the dispatcher relayed, not re-ran.
