@@ -60,3 +60,9 @@ None yet. The ticket body (filed by the SC-299 owner) asks: "decide the right be
 - 2026-10-21: rereview1 verdict **LAND-READY** at `c8880db`. Reviewer's own press concern refuted (framework click shield cancels mousedown/pointerdown, so a press never moves focus). LOW (lifecycle header "SC-326 appends G-S13 (29 total)" violates superproject `2d4ece3` rule "Owners must not put a fixed total in a scenario header"): **FOLD** into the final rebase round — delete "(29 total)". INFOs (commit msgs say G-S12; SC-299 gate hard-codes track list at shoot.mjs:956; 0.28px padding past frame at 12 rounds): **DROP** — no defect / invisible.
 - r5 (final): implementer — rebase onto latest develop (≥ `aaa88b7`), delete "(29 total)", superproject onto latest origin/main, full battery once.
 - 2026-10-21: r5 DONE — dse `0ce76dd` on develop `aaa88b7`; superproject `58a1df5` on main `e0d3f47`. Delta vs reviewed `c8880db` = one comment line (owner-verified; range-diff commits 1–5 `=`). Battery green: jest 5408/1/231 of 232, lifecycle 29/29, e2e 88/92 4kb 64/64, shots 572 0 FAIL, freeze 276/276, parity 0/0/24. Land-ready comment posted (In Progress + Needs Review; ask = pinned name column follow-up, non-blocking). Reported LAND-READY to dispatcher.
+
+## Scott rulings
+
+- 2026-10-21 12:45Z (Scott, verbatim): "Pinning the hero column on the left is a great idea
+This ticket can land and close"
+  → SC-326 → Done (Ready for Agent + Needs Review removed). Pinned hero-name column filed as **SC-490** (Backlog, related to SC-326; not implemented here); supersedes owner decision 4's "asked of Scott" status.
