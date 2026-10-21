@@ -13,6 +13,12 @@ go under an *Internal* sub-heading.
   arriving from Sync, git or another plugin. Every open Reading view of the note now keeps its scroll position.
   Setting and releasing that hold is also much cheaper, so large tracker notes stutter less after a click.
 
+- **DSE plugin: changing Stamina on an older Stamina Bar block no longer adds lines you never wrote (SC-466).**
+  A `ds-stamina` / `ds-stamina-bar` block that held only its stamina numbers used to gain `collapsible`,
+  `collapse_default`, `temp_stamina`, `height` and `style` lines the first time you applied Damage, Healing,
+  Catch Breath or a Recovery change. A write now changes only the fields it touched; anything you did write,
+  including `collapse_default: true`, is kept as before.
+
 - **DSE plugin: key and value suggestions now appear inside a code block opened with extra words after its type (SC-476).**
   In a block opened with ```` ```ds-stamina-bar extra ````, the suggester used to read the whole line after the
   backticks as the block's type, find no such type and offer nothing. It now reads only the first word, as the
