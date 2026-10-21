@@ -58,8 +58,7 @@ the scenario), `G-S6d`
 (`previewMode.rerender`), `G-S6e` (plugin disable/enable), `G-S6f` (embed leaf detach), `G-S6g`
 (hover popovers ARE writable in Obsidian 1.14.2 — measured, supersedes the original read-only
 assumption), `G-S6h` (a nested read-only `ds-counter` survives its parent's adoption), `G-S6i` (fast
-navigation across several notes leaves no leak), `G-S8` (scrollTop pin survives a tracker's own
-write). Mandatory — unlike `obsidian-shots` it needs no real display. Set your own
+navigation across several notes leaves no leak), `G-S8` (SC-198 scroll pin, two phases since SC-459: adoption on — scrollTop holds; adoption off — the tracker is redrawn, `data-dse-scroll-pin` is on the scroller when the sizer collapses, scrollTop held; FAILs with the pin disabled). Mandatory — unlike `obsidian-shots` it needs no real display. Set your own
 `DSE_LIFECYCLE_PORT` (e.g. `DSE_LIFECYCLE_PORT=9285 npm run obsidian-lifecycle`) when another
 session may already be running this gate on the default port 9262 — a busy port makes your
 run exit 2, not a code failure.
@@ -1161,7 +1160,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `84636a9` (2026-10-21; SC-460 landed — a stray carriage return above a block no longer stops Reading-view, Live Preview, sidebar or encounter-builder edits from saving; new lifecycle scenario G-S12):**
+**CURRENT — dse `develop` @ `0267b8a` (2026-10-21; SC-459 landed — lifecycle G-S8 now runs adoption on and off and FAILs with the SC-198 scroll pin disabled; only `obsidian-lifecycle.mjs` G-S8 and a `previewScrollPin.ts` header comment changed; built `main.js`/`styles.css` byte-identical to `84636a9`):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5329 passed / 1 skipped / 230 of 231 suites** (unchanged; a fresh worktree without the shots cache reads 5328 / 2) · lifecycle **28/28** · e2e **`OBSIDIAN-E2E done: 83/87 ok,
+0 failed, 4 known-bug, coverage: 57/57 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** · parity **0 GAPs / 0
+undeclared / 24 DECLARED** (shots/freeze/parity carried from `84636a9`: build byte-identical). Numbers as reported by the SC-459 ticket-owner; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `84636a9` (2026-10-21; SC-460 landed — a stray carriage return above a block no longer stops Reading-view, Live Preview, sidebar or encounter-builder edits from saving; new lifecycle scenario G-S12):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5329 passed / 1 skipped / 230 of 231 suites** (ba20072's 5260 + 69) · lifecycle **28/28** (new G-S12) · e2e **`OBSIDIAN-E2E done: 83/87 ok,
 0 failed, 4 known-bug, coverage: 57/57 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED** (tsc/lint/jest/lifecycle/e2e re-run by the reviewer at `84636a9`; shots/freeze/parity from the implementer). Numbers as reported by the SC-460 ticket-owner; the dispatcher relayed, not re-ran.
