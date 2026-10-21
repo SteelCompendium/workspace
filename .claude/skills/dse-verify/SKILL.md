@@ -1169,7 +1169,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `772c3cd` (2026-10-21; SC-457 landed — one shared rule `fenceLanguage` in `src/framework/host/blockPrefix.ts` for every save path, the sidebar and autocomplete (skip leading spaces/tabs; name ends at the first whitespace); a block with whitespace before its name keeps saving and can be pinned; new lifecycle G-S14):**
+**CURRENT — dse `develop` @ `8d075db` (2026-10-21; SC-422 landed — Small/Large/Control text-size prefs now reach plugin surfaces outside an element root: Compendium search rows + empty-index hint, settings preview caption, experimental sidebar header + empty message; each root stamped exactly once):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5552 passed / 1 skipped / 234 of 235 suites** · lifecycle **31/31** · e2e **`OBSIDIAN-E2E done: 89/93 ok,
+0 failed, 4 known-bug, coverage: 64/64 pairs`** · shots **580**, 0 FAIL, with `pressed toggle parity OK (96 …)`, `text scale OK (1626 comparisons: … on 5 chrome surfaces …)` and `text scale once OK (104184 comparisons over 208 loads … 5 chrome surfaces included …)` · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-422 ticket-owner at `8d075db`; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `772c3cd` (2026-10-21; SC-457 landed — one shared rule `fenceLanguage` in `src/framework/host/blockPrefix.ts` for every save path, the sidebar and autocomplete (skip leading spaces/tabs; name ends at the first whitespace); a block with whitespace before its name keeps saving and can be pinned; new lifecycle G-S14):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5536 passed / 1 skipped / 233 of 234 suites** · lifecycle **31/31** · e2e **`OBSIDIAN-E2E done: 89/93 ok,
 0 failed, 4 known-bug, coverage: 64/64 pairs`** · shots **580**, 0 FAIL · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-457 ticket-owner at `772c3cd` (reviewer r5 re-ran tsc/lint/jest/lifecycle/e2e); the dispatcher relayed, not re-ran.
