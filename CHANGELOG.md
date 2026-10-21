@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: in the Conditions window, choosing a colour, duration or effect with the keyboard keeps focus where you were (SC-468).**
+  Pressing Enter or Space on a colour swatch, a duration chip or an effect chip used to send focus
+  back to that condition's cog button, so you had to Tab all the way back to the next option. Focus
+  now stays on the option you just chose (a custom colour stays on the custom colour field). Picking
+  with the mouse shows no extra focus ring.
+
 - Edits in Reading view now save in notes that contain a stray carriage-return character above the block (SC-460); the sidebar also pins the right block in such notes. Nothing outside the block is changed.
 
 - **DSE plugin: the "View on steelcompendium.io" link in the not-installed card now uses the plugin's teal-cyan link colour (SC-366).**
