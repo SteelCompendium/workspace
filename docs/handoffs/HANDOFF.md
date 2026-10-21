@@ -23,7 +23,7 @@ touch the same surface — run them **one at a time** to avoid rebase conflicts.
 | Ticket | Worktree | Ledger | State |
 |---|---|---|---|
 | SC-430 (stamina modal: first Apply click swallowed) | `sc430-apply-click` (removed) | preserved: `build-ledgers/sc430-apply-click*` | **landed** dse develop `7644fb3`, workspace `4a7b18d`; e2e 61/72, 11 known-bug |
-| SC-393 (EncounterData max_stamina NaN for text stamina) | `sc393-stamina-nan` | `.superpowers/sdd/sc393-stamina-nan/` | survey done, parked on Scott (5 questions); no code yet; filed SC-452 |
+| SC-393 (EncounterData max_stamina NaN for text stamina) | `sc393-stamina-nan` | `.superpowers/sdd/sc393-stamina-nan/` | **parked on Scott again (round 2)**: 7-item approval ask (or "go with the recommendations") after the hero-side/enemy-side statblock survey; worktree reset to dse `772c3cd`, no code; filed SC-452 |
 | SC-290 (write-back drops fence info string) | `sc290-info-string` (removed) | preserved: `build-ledgers/sc290-info-string*` | **landed** dse develop `c78a06b`, workspace `e827b13`; jest 4787, e2e 63/73; filed SC-453–457 |
 | SC-429 (minion pool modal bugs) | `sc429-minion-pool` (removed) | preserved: `build-ledgers/sc429-minion-pool*` | **landed** dse develop `8ab5e91`, workspace `0188a5d`; jest 4806 |
 | SC-260 (replaceSource writes unchanged body) | `sc260-noop-write` (removed) | preserved: `build-ledgers/sc260-noop-write*` | **landed** dse develop `f818002`, workspace `0eda112`; jest 4810; filed SC-459 |
