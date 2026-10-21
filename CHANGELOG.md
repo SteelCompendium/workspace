@@ -42,6 +42,8 @@ go under an *Internal* sub-heading.
   now stays on the option you just chose (a custom colour stays on the custom colour field). Picking
   with the mouse shows no extra focus ring.
 
+- Fixed: a Draw Steel block whose opening line has a space (or several, or a tab) before the block name ("``` ds-counter") now saves a click made just before you leave the note (switching notes or closing the tab): such a block used to lose it, with a "not saved" notice. "Pin to sidebar" also works on these blocks now. The space before the block name is kept. (SC-457)
+
 - Edits in Reading view now save in notes that contain a stray carriage-return character above the block (SC-460); the sidebar also pins the right block in such notes. Nothing outside the block is changed.
 
 - **DSE plugin: the "View on steelcompendium.io" link in the not-installed card now uses the plugin's teal-cyan link colour (SC-366).**
