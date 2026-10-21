@@ -1169,7 +1169,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `95981f1` (2026-10-21; SC-432 landed — Spend Recovery is disabled for creatures ("Creatures have no Recoveries"); a hero with no Recoveries pool sees "Heal Recovery Value" and a first-press confirmation; heroes with a pool unchanged):**
+**CURRENT — dse `develop` @ `8d890f9` (2026-10-21; SC-366 follow-up landed — the not-installed and notice ds-scc cards (`.dse-ref-notice`) lose the decorative left stripe banned by DESIGN.md rule 7; plain 1px border on all sides):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5585 passed / 1 skipped / 234 of 235 suites** · lifecycle **31/31** · e2e **`OBSIDIAN-E2E done: 95/98 ok,
+0 failed, 3 known-bug, coverage: 66/66 pairs`** · shots **580**, 0 FAIL · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-366 ticket-owner at `8d890f9`; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `95981f1` (2026-10-21; SC-432 landed — Spend Recovery is disabled for creatures ("Creatures have no Recoveries"); a hero with no Recoveries pool sees "Heal Recovery Value" and a first-press confirmation; heroes with a pool unchanged):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5582 passed / 1 skipped / 234 of 235 suites** · lifecycle **31/31** (one rc-2 environment race under load on the first attempt; re-run green) · e2e **`OBSIDIAN-E2E done: 95/98 ok,
 0 failed, 3 known-bug, coverage: 66/66 pairs`** (all 3 known-bug are SC-433) · shots **580**, 0 FAIL, with both text-scale OK lines · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-432 ticket-owner at `95981f1`; the dispatcher relayed, not re-ran.

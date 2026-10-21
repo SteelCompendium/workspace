@@ -36,3 +36,32 @@ Ticket description (Scott-filed, 2026-10, from SC-317), verbatim ask:
 - 2026-10-21: dispatcher blocked landing for a missing CHANGELOG bullet; chore worker (a46d5a4cd6ad48d65) adding owner-written bullet under ## Unreleased in the worktree superproject (pointer left unstaged, no push).
 - CHANGELOG commit: superproject e117f47 (worktree sc366-notinstalled-link), pointer unstaged, not pushed.
 - 2026-10-21 LANDED: dse develop ba20072, workspace merge 0fac4d4 (CHANGELOG e117f47). Ticket kept In Progress + Needs Review: Scott's look check and stripe question still open; landed-notice comment posted.
+
+## Follow-up: the left stripe (2026-10-21)
+
+Scott ruling, 2026-10-21 (comment 87f8b5fb), verbatim:
+> "Colors look good.  For the left-stripe,  i thought those were banned in the design.  Can we get those removed?"
+
+~~Owner: "stripe teal" offered as an option~~ superseded by Scott's ruling above — neither "close" nor "stripe teal"; REMOVE the stripe.
+
+Owner decisions:
+- The ban is DESIGN.md rule 7 (SC-132, 2026-08-10): "No decorative colored left-borders ... banned for new work ... Existing components that ship one today may stay for now but **will be replaced**". Scott is asking that this one be replaced now.
+- Scope: `.dse-ref-notice`'s `border-left: 3px solid var(--color-blue)` (styles-source.css ~495 on develop bc4a0c5). That class is shared by BOTH ds-scc degrade cards (the not-installed card `.dse-ref-web-card` and the `renderRefNotice` notice card), so both lose the stripe. Replacement per rule 7's "borders-all-around": the card keeps its existing 1px `--background-modifier-border` on all four sides and its `--background-secondary` ground — no new accent device. Update the SC-149 CSS comment that justifies the "informational blue accent".
+- Out of scope: other left-stripes still on develop (`.dse-error-card` red stripe ~416; role/tier/act stripes ~3009, 3524, 5211, 7018, 9891). They fall under rule 7's "will be replaced" and are named to Scott in the land-ready comment, not touched here.
+- Worktree: `sc366-stripe-remove` (dispatcher suggested `sc366-stripe-teal` for the teal outcome; renamed to match the ruling), off dse develop bc4a0c5.
+- Baselines (dispatcher, 2026-10-21): jest 5457 / 1 skipped / 232 of 233, lifecycle 30/30, e2e 89/93 with 4 known-bug and 64/64, shots 580, freeze 280/280, parity 0/0/24.
+- stripe r1 impl: orchestration:implementer (agent adaa2c090ad9cfdc5), brief sc366-brief-stripe-impl-r1.md, worktree sc366-stripe-remove @ bc4a0c5. Ticket -> Awaiting, labels [DSE Plugin] (Ready for Agent removed). Reviewer must be a different identity (prior reviewer ae7523fd8f89310a8 is eligible: did not author this).
+- 2026-10-21: dse develop moved bc4a0c5 -> 772c3cd (SC-457). Implementer told to rebase + full battery. New baselines: jest 5536 / 1 skipped / 233 of 234, lifecycle 31/31, e2e 89/93 4 known-bug 64/64, shots 580, freeze 280/280, parity 0/0/24.
+- stripe r1 impl result: dse e025dd2 (on 772c3cd), superproject CHANGELOG 82382a2. Battery: jest 5538/1/233 of 234, lifecycle 31/31, e2e 89/93 0 failed 4 kb 64/64, shots 580 0 FAIL, freeze 280/280, parity 0/0/24. Owner eyeballed sc366-stripe-after-notinstalled-light.png: uniform 1px border, no stripe, teal link intact.
+- stripe review: resumed reviewer ae7523fd8f89310a8 (not the author).
+- 2026-10-21 ~19:08Z: owner + reviewer killed by session-limit 429; reviewer resumed after reset with state-check. dse develop now 8d075db — land-ready must be on 8d075db+. Plan: reviewer finishes checks 1-5 on e025dd2 (no gates); then implementer adaa2c090ad9cfdc5 rebases onto 8d075db + full battery; then reviewer scoped confirm (jest+parity+range-diff).
+- stripe review r1: APPROVE, 0 HIGH/MED, 1 LOW, 3 INFO (report sc366-report-stripe-review-r1.md). Owner rulings:
+  - LOW-1 (stripe test misses inset box-shadow / ::before bar): FOLD into rebase round — also reject `box-shadow: inset` and pseudo-element rules on the card roots. Keep it small; skip 4-value border-width and gradients.
+  - INFO-2 (CHANGELOG "Print is unchanged." now contradicts; line too long): FOLD — owner-written reworded bullet in the r2 message.
+  - INFO-1 (illustrative hint in notice crop): DROP — border evidence unaffected; Scott comment doesn't claim the hint text.
+  - INFO-3: no action.
+- stripe r2: resume implementer adaa2c090ad9cfdc5: rebase onto 8d075db + LOW-1 + INFO-2 + full battery. Then scoped confirm by reviewer ae7523fd8f89310a8.
+- 2026-10-21: develop moved 8d075db -> 95981f1 (SC-432). Implementer retargeted: dse rebase onto 95981f1 + superproject rebase onto origin/main. Baselines: jest 5582/1/234 of 235, lifecycle 31/31, e2e 95/98 0 failed 3 known-bug 66/66, shots 580, freeze 280/280, parity 0/0/24.
+- stripe r2 impl result: dse 8d890f9 (89087cf stripe + 8d890f9 LOW-1 test checks) on develop 95981f1; superproject 76c24a2 (284e5e4 + 76c24a2) on origin/main 383ec3f. Battery: tsc/lint clean, jest 5585/1/234 of 235, lifecycle 31/31, e2e 95/98 0 failed 3 kb 66/66, shots 580 0 FAIL, freeze 280/280, parity 0/0/24. Scoped confirm -> reviewer ae7523fd8f89310a8.
+- stripe scoped confirm: APPROVE, 0 HIGH/MED/LOW, INFO-4 (pseudo check also trips on descendant ::after rules) -> DROP, loud failure, none exist today.
+- LAND-READY (stripe): dse sc366-stripe-remove @ 8d890f9 on develop 95981f1; superproject 76c24a2 on origin/main 383ec3f. Ask posted to Scott (can it close; offer ticket for remaining left stripes).
