@@ -1160,7 +1160,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `3480231` (2026-10-21; SC-468 landed — a keyboard pick of a colour/duration/effect in the Conditions window keeps focus on the picked option; new e2e COND-E02 (keyboard) and COND-E03 (mouse)):**
+**CURRENT — dse `develop` @ `c03db7a` (2026-10-21; SC-456 landed — the e2e note-integrity check compares every fence's full opening/closing lines byte for byte, reading fences with the plugin's own parser; test-only, built `main.js`/`styles.css` byte-identical to `3480231`):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5374 passed / 1 skipped / 231 of 232 suites** (inferred: measured 5373 / 2 on a fresh worktree without the shots cache; +38 tests, +1 suite) · lifecycle **28/28** · e2e **`OBSIDIAN-E2E done: 85/89 ok,
+0 failed, 4 known-bug, coverage: 63/63 pairs`** (under the stricter check) · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** · parity **0 GAPs / 0
+undeclared / 24 DECLARED** (shots/freeze/parity carried from `3480231`: build byte-identical). Numbers as reported by the SC-456 ticket-owner; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `3480231` (2026-10-21; SC-468 landed — a keyboard pick of a colour/duration/effect in the Conditions window keeps focus on the picked option; new e2e COND-E02 (keyboard) and COND-E03 (mouse)):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5336 passed / 1 skipped / 230 of 231 suites** · lifecycle **28/28** · e2e **`OBSIDIAN-E2E done: 85/89 ok,
 0 failed, 4 known-bug, coverage: 63/63 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-468 ticket-owner at `3480231`; the dispatcher relayed, not re-ran.
