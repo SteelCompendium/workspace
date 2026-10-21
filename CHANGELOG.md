@@ -8,6 +8,15 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: Spend Recovery no longer heals for free (SC-432).**
+  In the Stamina editor, Spend Recovery used to heal one Recovery's worth every press for
+  creatures and for heroes whose block tracks no Recoveries, without spending anything. Now it is
+  disabled for creatures (hover it: "Creatures have no Recoveries"). For a hero with no Recoveries
+  pool (a standalone stamina bar without `recoveries_max`, and every hero in the initiative
+  tracker) the button is renamed "Heal Recovery Value", and its first press in an editor window
+  asks you to confirm that it heals one Recovery's worth and spends no Recovery; Cancel (or Escape)
+  changes nothing. A hero with a Recoveries pool works exactly as before.
+
 - **DSE plugin: a Reading view no longer jumps to the top when a tracker in it changes from another pane, a popout, or an outside edit such as Sync (SC-470).**
   Clicking a tracker in one pane used to throw a second pane on the same note back to the top, and so did an edit
   arriving from Sync, git or another plugin. Every open Reading view of the note now keeps its scroll position.
