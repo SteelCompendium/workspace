@@ -73,6 +73,8 @@ go under an *Internal* sub-heading.
   arriving from Sync, git or another plugin. Every open Reading view of the note now keeps its scroll position.
   Setting and releasing that hold is also much cheaper, so large tracker notes stutter less after a click.
 
+- **DSE plugin: Live Preview no longer jumps when a tracker in the note changes from another pane, a popout, your own click, or an outside write such as Sync, git or another plugin (SC-478).**
+
 - **DSE plugin: changing Stamina on an older Stamina Bar block no longer adds lines you never wrote (SC-466).**
   A `ds-stamina` / `ds-stamina-bar` block that held only its stamina numbers used to gain `collapsible`,
   `collapse_default`, `temp_stamina`, `height` and `style` lines the first time you applied Damage, Healing,
