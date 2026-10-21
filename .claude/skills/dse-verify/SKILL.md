@@ -28,7 +28,7 @@ absolute paths — devbox ignores your shell's `cd`.
 | 2. Lint | `npm run lint` | clean (no output), exit 0 — gated in CI as of SC-136/FOLLOWUPS #61 |
 | 3. Unit tests | `npx jest` | all suites/tests green. On a fresh worktree jest reads one fewer passed and **2 skipped** until `npm run shots` has cached `visual-harness/dist/obsidian-app.css` (the `printTwinDeltaAllowedSet` test skips without it) — compare against CURRENT only after a shots run (SC-364 owner, 2026-10-20) |
 | 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 28/28 ok, 0 failed` (SC-453 added G-S10, SC-455 G-S11, SC-460 G-S12), exit 0 (~4.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
-| 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `85/89 ok, 0 failed, 4 known-bug, coverage: 63/63 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
+| 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `88/92 ok, 0 failed, 4 known-bug, coverage: 64/64 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
 | 5. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
 | 6. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
 | 7. Parity (LAST) | `npm run parity` | `0 GAPs`, `0 undeclared WARNs`, exactly the documented declared-deferral set, exit 0 |
@@ -1160,7 +1160,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `c03db7a` (2026-10-21; SC-456 landed — the e2e note-integrity check compares every fence's full opening/closing lines byte for byte, reading fences with the plugin's own parser; test-only, built `main.js`/`styles.css` byte-identical to `3480231`):**
+**CURRENT — dse `develop` @ `e31e1a0` (2026-10-21; SC-474 landed — with the Conditions "Add condition" dropdown open, a click on a row's cog, swatch, duration or effect chip lands (dropdown closes on click, not on pointer-down); new e2e COND-E04/E05/E06 and control id `cond.icon-search`):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5384 passed / 1 skipped / 231 of 232 suites** · lifecycle **28/28** · e2e **`OBSIDIAN-E2E done: 88/92 ok,
+0 failed, 4 known-bug, coverage: 64/64 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-474 ticket-owner at `e31e1a0`; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `c03db7a` (2026-10-21; SC-456 landed — the e2e note-integrity check compares every fence's full opening/closing lines byte for byte, reading fences with the plugin's own parser; test-only, built `main.js`/`styles.css` byte-identical to `3480231`):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5374 passed / 1 skipped / 231 of 232 suites** (inferred: measured 5373 / 2 on a fresh worktree without the shots cache; +38 tests, +1 suite) · lifecycle **28/28** · e2e **`OBSIDIAN-E2E done: 85/89 ok,
 0 failed, 4 known-bug, coverage: 63/63 pairs`** (under the stricter check) · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** · parity **0 GAPs / 0
 undeclared / 24 DECLARED** (shots/freeze/parity carried from `3480231`: build byte-identical). Numbers as reported by the SC-456 ticket-owner; the dispatcher relayed, not re-ran.
