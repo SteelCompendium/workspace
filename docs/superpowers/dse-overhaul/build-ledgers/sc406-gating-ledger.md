@@ -64,3 +64,11 @@ Owner: Fable ticket-owner. Workers never call the tracker.
 - 2026-10-16 fix1 scoped re-review (r1 reviewer, Opus) on 05a6ff3: LAND-READY. 0 CRIT/HIGH/MED/LOW, 4 INFO; 9/9 mutations red; ON state byte-identical to develop (jest probe + real Obsidian). Gates: jest 4429/1/218 of 219; lifecycle 25/25; shots 568 0 FAIL; freeze 274/274; parity 0/0/24. Report: sc406-fix1-rereview.md.
 - Owner ruling on fix1 INFO 1-4 → DROP all: key order in data.json prefs is cosmetic; camera restore/SIGINT edge cases are dev tooling only; unquoted `on` matches develop.
 - LAND-READY: dse branch `sc406-gating` @ 05a6ff3 (7 commits over f8693b5). No freeze rebaseline needed.
+- 2026-10-16 LANDED by dispatcher: dse develop 05a6ff3, workspace main 0254b68 (merge) / 596edd0 (ledger preserved). Ticket left In Progress + Needs Review pending Scott's close/taste answer.
+
+### 2026-10-17 — Scott's ruling on the land-ready / landed ask (comment ce7f0ef7, 14:45Z)
+
+> close
+
+- Read as: the ticket closes as landed; the optional "Draw Steel Elements:" placeholder-card prefix (INFO-4) is NOT wanted. That item stays dropped and needs no follow-up worktree.
+- 2026-10-21 (owner, session be71a0a9): ticket flipped In Progress → Done; `Ready for Agent` removed (labels now DSE Plugin, Feature). No code change, no worktree created.
