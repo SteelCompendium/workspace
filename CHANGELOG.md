@@ -17,6 +17,11 @@ go under an *Internal* sub-heading.
   asks you to confirm that it heals one Recovery's worth and spends no Recovery; Cancel (or Escape)
   changes nothing. A hero with a Recoveries pool works exactly as before.
 
+- **DSE plugin: saving the block edit form no longer adds fields you never touched (SC-483).**
+  With authoring controls on, opening the form on a block that left out a dropdown field, such as a Stamina Bar
+  without `style`, and saving used to write that field with its first option (`style: default`). A dropdown you
+  never changed is now left out of the saved block; one you change, or that the block already had, is written as before.
+
 - **DSE plugin: a Reading view no longer jumps to the top when a tracker in it changes from another pane, a popout, or an outside edit such as Sync (SC-470).**
   Clicking a tracker in one pane used to throw a second pane on the same note back to the top, and so did an edit
   arriving from Sync, git or another plugin. Every open Reading view of the note now keeps its scroll position.
