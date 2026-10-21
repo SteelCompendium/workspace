@@ -8,6 +8,8 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- Edits in Reading view now save in notes that contain a stray carriage-return character above the block (SC-460); the sidebar also pins the right block in such notes. Nothing outside the block is changed.
+
 - **DSE plugin: the "View on steelcompendium.io" link in the not-installed card now uses the plugin's teal-cyan link colour (SC-366).**
   When a referenced compendium entry is not installed locally, the card's link (and its external-link
   arrow) used to show in Obsidian's own purple-blue link colour; it now matches every other plugin
