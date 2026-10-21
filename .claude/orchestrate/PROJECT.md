@@ -226,6 +226,18 @@ Each cost real time once. Every one belongs in the briefs it applies to.
    private subfolder named for the ticket, role and agent (e.g.
    `<scratchpad>/sc422-r2-<agentId>/`) and uniquely named scripts and logs inside it.
 
+13. **A background worker can hang for hours on one Bash call that has no process behind
+   it (2026-10-21, SC-326/456/457/471).** Four workers each sat 1–4 hours on a Bash
+   tool_use with no tool_result and no live process, most likely blocked on a permission
+   prompt nobody was there to answer. The calls were a compound `cd X && devbox run -- bash -c
+   "cd Y && …"`, a heredoc write into scratch, `rm -f $S/*.rc` (a glob delete) and a `cp` into
+   scratch. Their owners waited for a completion that never came. To spot it: the worker's
+   transcript ends in a `tool_use`, there is no matching process (`ps` grep by worktree name),
+   and the timestamp is long past any gate's runtime. To fix it: `TaskStop` the worker, then
+   `SendMessage` it to resume from its transcript and re-run the step another way. Briefs
+   should say: `devbox run -c <abs path>`, never `cd` inside a compound command, the Write tool
+   for scratch files, and no glob `rm`.
+
 **Provenance for two plugin-side footguns.** The plugin states these rules without ticket
 keys (they generalise); the evidence is this project's, and lives here:
 
