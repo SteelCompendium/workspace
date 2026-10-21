@@ -244,6 +244,12 @@ Each cost real time once. Every one belongs in the briefs it applies to.
    **Exit codes under this pattern (SC-466):** `devbox run -c <path> -- bash -c '…; echo rc=$? > f'`
    always records 0, even on a real failure (footgun 1). Record exit codes from a script file run
    through devbox (`devbox run -c <path> -- bash <script>`), and read each gate's summary line.
+   **Background gates stall workers too (2026-10-21, SC-482, three times; SC-422/SC-466 once each):**
+   a worker that starts a gate with `run_in_background` and then waits for its completion notice
+   can wait forever, because the notice never wakes it. Briefs should say to run each gate as one
+   blocking foreground call (split lifecycle/e2e/shots into separate calls to stay under the
+   10-minute tool timeout), with no background jobs or monitors. If a gate must run in the
+   background, the worker should poll the gate's own log or exit-code file, not wait for a notice.
 
 **Provenance for two plugin-side footguns.** The plugin states these rules without ticket
 keys (they generalise); the evidence is this project's, and lives here:
