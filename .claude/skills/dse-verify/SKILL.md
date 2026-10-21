@@ -27,7 +27,7 @@ absolute paths — devbox ignores your shell's `cd`.
 | 1. Type-check | `npm run tsc` | clean (no output) |
 | 2. Lint | `npm run lint` | clean (no output), exit 0 — gated in CI as of SC-136/FOLLOWUPS #61 |
 | 3. Unit tests | `npx jest` | all suites/tests green. On a fresh worktree jest reads one fewer passed and **2 skipped** until `npm run shots` has cached `visual-harness/dist/obsidian-app.css` (the `printTwinDeltaAllowedSet` test skips without it) — compare against CURRENT only after a shots run (SC-364 owner, 2026-10-20) |
-| 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 27/27 ok, 0 failed` (SC-453 added G-S10, SC-455 G-S11), exit 0 (~4.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
+| 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 28/28 ok, 0 failed` (SC-453 added G-S10, SC-455 G-S11, SC-460 G-S12), exit 0 (~4.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
 | 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `83/87 ok, 0 failed, 4 known-bug, coverage: 57/57 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
 | 5. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
 | 6. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
@@ -1161,7 +1161,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `ba20072` (2026-10-21; SC-366 landed — the not-installed card's "View on steelcompendium.io" link uses the plugin's teal-cyan `--dse-accent` (steel theme, screen only); new jsdom pin `test/dom/theme/notInstalledLinkColour.test.ts`):**
+**CURRENT — dse `develop` @ `84636a9` (2026-10-21; SC-460 landed — a stray carriage return above a block no longer stops Reading-view, Live Preview, sidebar or encounter-builder edits from saving; new lifecycle scenario G-S12):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5329 passed / 1 skipped / 230 of 231 suites** (ba20072's 5260 + 69) · lifecycle **28/28** (new G-S12) · e2e **`OBSIDIAN-E2E done: 83/87 ok,
+0 failed, 4 known-bug, coverage: 57/57 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED** (tsc/lint/jest/lifecycle/e2e re-run by the reviewer at `84636a9`; shots/freeze/parity from the implementer). Numbers as reported by the SC-460 ticket-owner; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `ba20072` (2026-10-21; SC-366 landed — the not-installed card's "View on steelcompendium.io" link uses the plugin's teal-cyan `--dse-accent` (steel theme, screen only); new jsdom pin `test/dom/theme/notInstalledLinkColour.test.ts`):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5260 passed / 1 skipped / 230 of 231 suites** (188755b's 5257 + 3) · lifecycle **27/27** · e2e **`OBSIDIAN-E2E done: 83/87 ok,
 0 failed, 4 known-bug, coverage: 57/57 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline — no shot covers the card, SC-469) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-366 ticket-owner (reviewer re-ran the full battery in r1, jest+parity after r2); the dispatcher relayed, not re-ran.
