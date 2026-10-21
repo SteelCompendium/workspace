@@ -27,7 +27,7 @@ absolute paths — devbox ignores your shell's `cd`.
 | 1. Type-check | `npm run tsc` | clean (no output) |
 | 2. Lint | `npm run lint` | clean (no output), exit 0 — gated in CI as of SC-136/FOLLOWUPS #61 |
 | 3. Unit tests | `npx jest` | all suites/tests green. On a fresh worktree jest reads one fewer passed and **2 skipped** until `npm run shots` has cached `visual-harness/dist/obsidian-app.css` (the `printTwinDeltaAllowedSet` test skips without it) — compare against CURRENT only after a shots run (SC-364 owner, 2026-10-20) |
-| 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 28/28 ok, 0 failed` (SC-453 added G-S10, SC-455 G-S11, SC-460 G-S12), exit 0 (~4.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
+| 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 29/29 ok, 0 failed` (SC-453 added G-S10, SC-455 G-S11, SC-460 G-S12, SC-326 G-S13), exit 0 (~4.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
 | 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `88/92 ok, 0 failed, 4 known-bug, coverage: 64/64 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
 | 5. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
 | 6. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
@@ -1160,7 +1160,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `aaa88b7` (2026-10-21; SC-476 landed — in-fence autocomplete reads a block's type as the first info word (```` ```ds-x extra ```` gets suggestions); mixed-case and backtick-in-info opening lines are not treated as DSE blocks; `src/authoring/fenceScan.ts` carries a local copy of SC-457's `fenceLanguage` rule until SC-457 lands):**
+**CURRENT — dse `develop` @ `0ce76dd` (2026-10-21; SC-326 landed — a long montage scrolls sideways inside its board instead of clipping later rounds and the Tally; scroll position survives a write; Tab scrolls a partly hidden cell into view; new lifecycle G-S13 and shots in-run check `montage board scroll OK (…)`):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5408 passed / 1 skipped / 231 of 232 suites** · lifecycle **29/29** (new G-S13) · e2e **`OBSIDIAN-E2E done: 88/92 ok,
+0 failed, 4 known-bug, coverage: 64/64 pairs`** · shots **572**, 0 FAIL, with `montage board scroll OK (14 rounds x 900px pane …)` · freeze **`freeze OK (276/276 …)`** (no rebaseline; all 572 PNGs byte-identical) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-326 ticket-owner at `0ce76dd`; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `aaa88b7` (2026-10-21; SC-476 landed — in-fence autocomplete reads a block's type as the first info word (```` ```ds-x extra ```` gets suggestions); mixed-case and backtick-in-info opening lines are not treated as DSE blocks; `src/authoring/fenceScan.ts` carries a local copy of SC-457's `fenceLanguage` rule until SC-457 lands):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5399 passed / 1 skipped / 231 of 232 suites** · lifecycle **28/28** · e2e **`OBSIDIAN-E2E done: 88/92 ok,
 0 failed, 4 known-bug, coverage: 64/64 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-476 ticket-owner at `aaa88b7`; the dispatcher relayed, not re-ran.
