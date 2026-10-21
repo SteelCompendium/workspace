@@ -58,7 +58,7 @@ go under an *Internal* sub-heading.
 - **DSE plugin: the "View on steelcompendium.io" link in the not-installed card now uses the plugin's teal-cyan link colour (SC-366).**
   When a referenced compendium entry is not installed locally, the card's link (and its external-link
   arrow) used to show in Obsidian's own purple-blue link colour; it now matches every other plugin
-  link. Print is unchanged.
+  link. Print is unchanged. The card's blue left stripe is also gone, from this card and from the other compendium-reference notice card; both now have a plain border all round.
 
 - Fixed: Draw Steel blocks inside a callout or quote now save their changes (Reading view, Live Preview callouts, and the sidebar); a block that can't be saved (one inside a list item) now says so with a notice instead of failing silently. (SC-455)
 
