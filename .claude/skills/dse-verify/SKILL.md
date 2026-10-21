@@ -1160,7 +1160,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `e31e1a0` (2026-10-21; SC-474 landed — with the Conditions "Add condition" dropdown open, a click on a row's cog, swatch, duration or effect chip lands (dropdown closes on click, not on pointer-down); new e2e COND-E04/E05/E06 and control id `cond.icon-search`):**
+**CURRENT — dse `develop` @ `aaa88b7` (2026-10-21; SC-476 landed — in-fence autocomplete reads a block's type as the first info word (```` ```ds-x extra ```` gets suggestions); mixed-case and backtick-in-info opening lines are not treated as DSE blocks; `src/authoring/fenceScan.ts` carries a local copy of SC-457's `fenceLanguage` rule until SC-457 lands):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5399 passed / 1 skipped / 231 of 232 suites** · lifecycle **28/28** · e2e **`OBSIDIAN-E2E done: 88/92 ok,
+0 failed, 4 known-bug, coverage: 64/64 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-476 ticket-owner at `aaa88b7`; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `e31e1a0` (2026-10-21; SC-474 landed — with the Conditions "Add condition" dropdown open, a click on a row's cog, swatch, duration or effect chip lands (dropdown closes on click, not on pointer-down); new e2e COND-E04/E05/E06 and control id `cond.icon-search`):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5384 passed / 1 skipped / 231 of 232 suites** · lifecycle **28/28** · e2e **`OBSIDIAN-E2E done: 88/92 ok,
 0 failed, 4 known-bug, coverage: 64/64 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-474 ticket-owner at `e31e1a0`; the dispatcher relayed, not re-ran.
