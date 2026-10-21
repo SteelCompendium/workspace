@@ -1,0 +1,32 @@
+# SC-470 r4 — fix round + rebase (implementer)
+
+Your final text goes to the ticket-owner, not a human. **Workers never call the tracker.**
+
+## 1. Context
+- Ledger (source of truth): `/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc470-scroll-pin-panes/decisions.md` — read "Owner rulings on r3 findings (2026-10-21)" and the 0ce76dd dispatcher entry.
+- Review: `sc470-r3-review-report.md` in the same dir (findings HIGH-1, MEDIUM-1, MEDIUM-2, LOW-1, LOW-2 with file:line and probe data; r3's probe `sc470-r3-probe.mjs.txt` + `sc470-r3-run.sh` reproduce HIGH-1 / MEDIUM-1 / MEDIUM-2 live — reuse them for your proof).
+- Worktree `/home/scott/code/steelCompendium/worktrees/sc470-scroll-pin-panes`, dse branch `sc470-scroll-pin-panes` at `03e589c` (on `aaa88b7`).
+
+## 2. Task
+1. **Rebase** dse onto `origin/develop` = `0ce76dd` (`git -C <dse abs> fetch origin`, rebase). SC-326 landed G-S13 in `visual-harness/obsidian-lifecycle.mjs` (header line + end of `SCENARIOS`) and a montage scroll-preserve path: on conflict keep SC-326's G-S13 and all its edits intact, re-apply only SC-470's G-S15 hunks. If `origin/develop` moved further, rebase onto that and report the sha. Rebase the superproject branch onto `origin/main` too (`git -C /home/scott/code/steelCompendium/worktrees/sc470-scroll-pin-panes fetch origin` + rebase; keep our CHANGELOG bullet at the top of `## Unreleased`). `npm ci` if `package.json` changed.
+2. **Fixes** — the owner rulings, verbatim from the ledger:
+
+> - **HIGH-1** (descendant selector also matches an embed's nested `.markdown-preview-sizer`: embed grew 535 -> 4024 px, on-screen text moved 3489 px for the whole pin; `>` keeps it 535 px and G-S8/G-S15 pass 2/2) → FOLD: child combinator `>` in `pinRule` + header comment; jest test that a nested sizer does not match.
+> - **MEDIUM-1** (re-pin "raise on growth" never fires live — the `!important` pin replaces Obsidian's inline min-height, so scrollHeight-minus-padding always equals the pinned px; Obsidian wanted 5901/7101 px, pin held 5565 px for up to 12 s while autosaving) → FOLD, make the pin a true FLOOR: rule px = max(captured px, the sizer's latest inline `min-height` that Obsidian writes), kept current while pinned by a MutationObserver on the pinned scroller (subtree, `attributeFilter: ['style']`, plus childList for a replaced sizer), disconnected at release/TTL/`releaseAll`; never lowers. A re-pin applies the same max (captured px, inline min-height, scrollHeight minus padding). If the observer proves unworkable, fall back to r3's option (a) at re-pin only and say why.
+> - **MEDIUM-2** (a popout closed while pinned: its TTL timer never fires, the Map entry holds detached DOM until unload) → FOLD: on every pin call, sweep entries whose scroller is disconnected or whose window is closed; also release on the workspace `window-close` event (registered via `plugin.registerEvent`).
+> - **LOW-1** (comment says pin ids are unique across plugin instances; they restart at 1 after disable/enable) → FOLD: correct the comment (no id-scheme change needed; every rule is removed on unload).
+> - **LOW-2** (old "no ratchet" jest test now only checks padding arithmetic) → FOLD with MEDIUM-1: tests drive the re-pin and the floor the way the browser behaves (inline min-height overridden by the rule; Obsidian writing a larger / collapsed inline min-height while pinned).
+
+   Notes: the observer must use the scroller's own window's `MutationObserver` (popout-safe), must not react to its own `<style>`/attribute writes in a loop, and updating the rule means rewriting the existing per-pin `<style>`'s text (cheap) — measure set/clear + one floor update with r1/r3's cost probe and report ms. Keep `PIN_TTL_MS` and the TTL mechanism unchanged (SC-472), and keep `ReadingModeBlockHost.ts` untouched.
+3. **Live proof** with r3's probe on your build (revert after): HIGH-1 embed stays its own height during a pin; MEDIUM-1 a pinned view whose sizer Obsidian grows (autosave-style writes appending text) raises the floor within a frame or two and never drops below scrollTop+clientHeight; MEDIUM-2 closing a popout while pinned leaves 0 Map entries / no timers, and a later pin call sweeps any leftover.
+4. Update the `previewScrollPin.ts` header for the floor + child combinator + popout cleanup. Commit each fix coherently, messages prefixed `fix(SC-470):` / `test(SC-470):`, no AI/co-author trailers.
+
+## 3. Gates — full dse-verify battery at `0ce76dd`
+tsc (incl. e2e) and lint clean · jest **5408 / 1 skipped / 231 of 232** at base (fresh worktree w/o shots cache 5407 / 2) plus SC-470's tests · lifecycle **30/30** (SC-326's G-S13 + our G-S15) · e2e **`88/92 ok, 0 failed, 4 known-bug, coverage: 64/64 pairs`** · shots 572, 0 FAIL · freeze 276/276 · parity 0 GAPs / 0 undeclared / 24 DECLARED.
+Discrimination (`--only=G-S8,G-S15`, 2/2 each): base `0ce76dd` → G-S15 FAIL; yours → both ok; yours with the `<style>` append disabled → both FAIL. Revert every mutation; `git status --porcelain` clean.
+
+## 4. Footguns (unchanged from r2 — all still apply)
+Private scratch subfolder `/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc470-r4-impl/` (scripts via the Write tool). `devbox run -c <dse abs> -- …` or wrapper script files; never `cd` in a compound command; `git -C <abs>` always. No glob `rm` (incl. `/tmp/dse-obsidian-lifecycle-*`); exact paths only; never `rm -rf` under `.superpowers/`. Kill only by PID whose command line contains `worktrees/sc470-scroll-pin-panes/`. Own `DSE_LIFECYCLE_PORT` (9371); never Xvfb `:1`. Gates with exit codes recorded to per-run files and output redirected to logs. **Foreground every gate** (shots may exceed 600 s — use a long timeout; if it is forced to background, wait on its PID with a foreground `while kill -0` loop, never on a notification). Never key a wait on a scratch filename. You cannot `SendMessage` me — end with `STATUS: NEEDS_CONTEXT` if blocked. If the report write is blocked, return it inline. Main checkout dse dirt is Scott's vault — ignore.
+
+## 5. Output / return
+`/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc470-scroll-pin-panes/sc470-r4-fix-report.md`, opening with a ≤10-line executive summary. Final text: STATUS, dse head + base sha, superproject sha, per-finding fix (file:line), live-proof numbers, cost ms, every gate line, discrimination counts, tree state, absolute paths of all artifacts. `Drive-by fixes:` / `Follow-ups:` lists.
