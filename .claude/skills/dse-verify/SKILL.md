@@ -28,7 +28,7 @@ absolute paths — devbox ignores your shell's `cd`.
 | 2. Lint | `npm run lint` | clean (no output), exit 0 — gated in CI as of SC-136/FOLLOWUPS #61 |
 | 3. Unit tests | `npx jest` | all suites/tests green. On a fresh worktree jest reads one fewer passed and **2 skipped** until `npm run shots` has cached `visual-harness/dist/obsidian-app.css` (the `printTwinDeltaAllowedSet` test skips without it) — compare against CURRENT only after a shots run (SC-364 owner, 2026-10-20) |
 | 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 28/28 ok, 0 failed` (SC-453 added G-S10, SC-455 G-S11, SC-460 G-S12), exit 0 (~4.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
-| 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `83/87 ok, 0 failed, 4 known-bug, coverage: 57/57 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
+| 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `85/89 ok, 0 failed, 4 known-bug, coverage: 63/63 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
 | 5. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
 | 6. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
 | 7. Parity (LAST) | `npm run parity` | `0 GAPs`, `0 undeclared WARNs`, exactly the documented declared-deferral set, exit 0 |
@@ -1160,7 +1160,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `0267b8a` (2026-10-21; SC-459 landed — lifecycle G-S8 now runs adoption on and off and FAILs with the SC-198 scroll pin disabled; only `obsidian-lifecycle.mjs` G-S8 and a `previewScrollPin.ts` header comment changed; built `main.js`/`styles.css` byte-identical to `84636a9`):**
+**CURRENT — dse `develop` @ `3480231` (2026-10-21; SC-468 landed — a keyboard pick of a colour/duration/effect in the Conditions window keeps focus on the picked option; new e2e COND-E02 (keyboard) and COND-E03 (mouse)):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5336 passed / 1 skipped / 230 of 231 suites** · lifecycle **28/28** · e2e **`OBSIDIAN-E2E done: 85/89 ok,
+0 failed, 4 known-bug, coverage: 63/63 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-468 ticket-owner at `3480231`; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `0267b8a` (2026-10-21; SC-459 landed — lifecycle G-S8 now runs adoption on and off and FAILs with the SC-198 scroll pin disabled; only `obsidian-lifecycle.mjs` G-S8 and a `previewScrollPin.ts` header comment changed; built `main.js`/`styles.css` byte-identical to `84636a9`):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5329 passed / 1 skipped / 230 of 231 suites** (unchanged; a fresh worktree without the shots cache reads 5328 / 2) · lifecycle **28/28** · e2e **`OBSIDIAN-E2E done: 83/87 ok,
 0 failed, 4 known-bug, coverage: 57/57 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** · parity **0 GAPs / 0
 undeclared / 24 DECLARED** (shots/freeze/parity carried from `84636a9`: build byte-identical). Numbers as reported by the SC-459 ticket-owner; the dispatcher relayed, not re-ran.
