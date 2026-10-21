@@ -35,3 +35,4 @@ Ticket description (Scott-filed, 2026-10, from SC-317), verbatim ask:
 - LAND-READY: dse sc366-notinstalled-link @ ba20072 (base develop 188755b). Ask posted to Scott (link look + whether blue left stripe should go teal).
 - 2026-10-21: dispatcher blocked landing for a missing CHANGELOG bullet; chore worker (a46d5a4cd6ad48d65) adding owner-written bullet under ## Unreleased in the worktree superproject (pointer left unstaged, no push).
 - CHANGELOG commit: superproject e117f47 (worktree sc366-notinstalled-link), pointer unstaged, not pushed.
+- 2026-10-21 LANDED: dse develop ba20072, workspace merge 0fac4d4 (CHANGELOG e117f47). Ticket kept In Progress + Needs Review: Scott's look check and stripe question still open; landed-notice comment posted.
