@@ -191,13 +191,44 @@ OK line on success; read the lines, don't infer from exit code alone.
   `button host-leak OK (111 button kinds × 3 states … = 666 comparisons …)`; **re-measured
   2026-09-24 (SC-338): 114 kinds / 684 comparisons — pre-existing drift from unrelated
   landings since SC-205, not caused by SC-338 (SC-338 never touches the gallery/harness DOM
-  composition; `.dse-optchip` is modal-only and never mounts there — see the SC-338 note
+  composition; the modal chips never mount there — the in-note negotiation chips
+  `.dse-nt__chip` DO wear `.dse-optchip` and are in the gallery — see the SC-338 note
   below)**; **112 kinds / 672 comparisons as of 2026-10-20 (SC-364 owner re-measure; see
-  CURRENT)**, plus a printed 12-record exemption boundary (8 focus-visible
-  disabled, 2 hover no-hit-point, 2 focus-visible `visibility: hidden`). Kind counts drift
+  CURRENT)**, plus a printed **10-record** exemption boundary (8 focus-visible
+  disabled, 2 hover no-hit-point — measured 2026-10-21, SC-356; the older "12-record"
+  figure with 2 `visibility: hidden` records was stale). Kind counts drift
   as fixtures/chrome grow — treat them as "expect right now", and treat any per-record
   `matches(':focus-visible')` failure or a new unexplained exemption as a real red, not
   noise.
+  **Modal pass (SC-356, `assertModalBtnHostLeak`, runs right after the gallery line):** the
+  gallery never mounts a modal, so buttons that exist only inside one (the modal
+  `.dse-optchip` chips, `.dse-swatch`, the icon choices) were invisible to the sweep. The pass
+  opens 10 scenarios over 9 `Modal` classes (ConditionsModal with the editor open and a swatch
+  pressed, LogActionModal new + edit, MontageAddHeroModal, MontageSetLimitsModal,
+  StaminaEditModal, FreeHealConfirmModal (SC-432: swept as the topmost dialog, opened over the
+  Stamina modal), MinionStaminaPoolModal, ResetEncounterModal, FormModal), tags every button
+  under `.dse-modal` and runs the same with-vs-without-host comparison at the same 3 states ×
+  dark/light by the same helpers. Expected as of SC-356: `modal button host-leak OK (10 modal
+  scenarios over 9 modal classes, 38 button kinds × 3 states … = 228 comparisons …)`, then
+  `100 property difference(s) ALLOWLISTED as known leaks owned by another ticket (SC-361:
+  .dse-swatch, 10 properties)`, a `not openable in the harness (3 …)` line
+  (CompendiumSearchModal, LegacyCompendiumModal, CompendiumMigrationModal — opened only
+  from the command palette / `main.ts` onload flows; `assertModalRegistry` scans `src/` and
+  fails on any NEW `Modal` subclass — direct or transitive (X extends Y extends DseModal) —
+  or inline `new Modal(…)` that is neither swept nor declared, or a declared one that grows
+  its own `<button>` in the same file; it does not follow button helpers across files), and its own 6-record exemption boundary (6 focus-visible
+  disabled). A scenario whose modal does not open, opens the wrong one or lacks its expected
+  controls FAILS as "the check would be blind" — never a silent skip. **The SC-361 allowlist
+  is the boundary to watch:** `HOSTLEAK_KNOWN_LEAKS` holds one narrow entry (ConditionsModal,
+  class list exactly `dse-swatch`, 10 properties) for the swatch's leaks — size, plate
+  shadow, ink, font, focus ring — whose focus design is parked as SC-361; the pass also
+  fails if a listed property stops leaking, so SC-361 landing its design forces the entry's
+  removal. `tagButtons` now keys on `aria-pressed` too (pressed vs idle chips are separate
+  kinds); the gallery mounts only unpressed toggles, so its count did not move (112 / 672).
+  The option chips' look (plugin fill + idle ink, height following Obsidian's
+  `--input-height`, `display: inline-flex`) is pinned in `test/dom/theme/hostRegrounding.test.ts`,
+  which also pins that the in-note `.dse-nt__chip`'s own (0,3,0) rule keeps winning over that
+  unscoped block.
 
 Battery numbers at SC-205 land-ready (dse branch `sc205-btn-host-leak`, 2026-08-28, base
 `16e25ff`): jest 3257 passed / 1 skipped / 185 suites; shots 474 PNGs, 0 FAIL; freeze

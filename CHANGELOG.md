@@ -22,6 +22,12 @@ go under an *Internal* sub-heading.
   without `style`, and saving used to write that field with its first option (`style: default`). A dropdown you
   never changed is now left out of the saved block; one you change, or that the block already had, is written as before.
 
+- **DSE plugin: the option chips in the Conditions modal and the Log-an-action form now use the plugin's own fill and text color, and keep their height (SC-356).**
+  The Duration, Effect and icon chips in the Conditions modal and the Result chips in the Log-an-action form
+  were painted with Obsidian's button gray and text color instead of the plugin's. They now match the rest
+  of the plugin's controls. The chips are the same height as before, and still follow Obsidian's button height
+  on a phone, so nothing gets harder to tap.
+
 - **DSE plugin: a Reading view no longer jumps to the top when a tracker in it changes from another pane, a popout, or an outside edit such as Sync (SC-470).**
   Clicking a tracker in one pane used to throw a second pane on the same note back to the top, and so did an edit
   arriving from Sync, git or another plugin. Every open Reading view of the note now keeps its scroll position.
