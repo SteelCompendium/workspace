@@ -8,6 +8,11 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: in the Conditions window, clicking a row's cog or a colour swatch while the "Add condition" dropdown is open now works (SC-474).**
+  The dropdown used to collapse as soon as the mouse button went down, which shrank and re-centred the
+  window under the pointer, so the click often landed on nothing. It now collapses when the click
+  completes, after the cog or swatch has been pressed.
+
 - **DSE plugin: in the Conditions window, choosing a colour, duration or effect with the keyboard keeps focus where you were (SC-468).**
   Pressing Enter or Space on a colour swatch, a duration chip or an effect chip used to send focus
   back to that condition's cog button, so you had to Tab all the way back to the next option. Focus
