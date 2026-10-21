@@ -8,6 +8,11 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: a Reading view no longer jumps to the top when a tracker in it changes from another pane, a popout, or an outside edit such as Sync (SC-470).**
+  Clicking a tracker in one pane used to throw a second pane on the same note back to the top, and so did an edit
+  arriving from Sync, git or another plugin. Every open Reading view of the note now keeps its scroll position.
+  Setting and releasing that hold is also much cheaper, so large tracker notes stutter less after a click.
+
 - **DSE plugin: key and value suggestions now appear inside a code block opened with extra words after its type (SC-476).**
   In a block opened with ```` ```ds-stamina-bar extra ````, the suggester used to read the whole line after the
   backticks as the block's type, find no such type and offer nothing. It now reads only the first word, as the
