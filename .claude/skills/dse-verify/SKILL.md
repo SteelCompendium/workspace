@@ -329,6 +329,15 @@ didn't mount) plus human review of the PNGs.
   `freeze-baseline.sha256.pre-<effort>-bak`, (3) applies the lines, (4) appends a dated
   entry to this file quoting the sanction. Widenings (additions-only) need no sanction —
   the dispatcher verifies additions-only by sorted-diff and applies at landing.
+  - **2026-10-21, SC-362 (the browser shots harness can render by-SCC display cards via a per-fixture
+    compendium mode; worktree `sc362-harness-scc-cards`, landed dse `develop` @ `bc4a0c5`): 4-line
+    WIDENING, additions-only, 276 → 280.** New capture ids `rule-by-scc` ("Combat" label,
+    "Opportunity Attacks") and `condition-by-scc` (Bleeding), each print twin + realprint; 0 name
+    collisions, 0 existing lines changed (sorted-diff checked by the dispatcher). Hashes stable
+    across rebases `0ce76dd` → `08206e3` per the owner. Applied by the dispatcher at landing:
+    backup `freeze-baseline.sha256.pre-sc362-bak`, 4 lines appended from
+    `.superpowers/sdd/sc362-harness-scc-cards/sc362-widening.txt`. No sanction needed (widening);
+    Scott was still asked on the ticket to confirm the two new cards look right.
   - **2026-10-18, SC-390 (beastheart companions become `type: statblock` in the data, so a
     `ds-scc` companion reference renders the statblock card; the card gains a Skills cell and
     omits the EV chip when `ev` is empty/whitespace/null; worktree `sc390-companion-ref`, landed
@@ -1160,7 +1169,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `08206e3` (2026-10-21; SC-466 landed — a write to a legacy `ds-stamina-bar` block keeps only the keys the user declared (no default keys added); a fully-declared block writes byte-identical; new e2e STAM-W11):**
+**CURRENT — dse `develop` @ `bc4a0c5` (2026-10-21; SC-362 landed — the shots harness renders by-SCC display cards (new fixtures `rule-by-scc`, `condition-by-scc`); an unresolved by-SCC card now fails the run; freeze WIDENED 276 → 280):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5457 passed / 1 skipped / 232 of 233 suites** · lifecycle **30/30** · e2e **`OBSIDIAN-E2E done: 89/93 ok,
+0 failed, 4 known-bug, coverage: 64/64 pairs`** · shots **580** (572 + 8 new), 0 FAIL · freeze **`freeze OK (280/280 …)`** (widened; a branch older than `bc4a0c5` reads `276/280 producible OK, 4 missing`) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-362 ticket-owner at `bc4a0c5`; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `08206e3` (2026-10-21; SC-466 landed — a write to a legacy `ds-stamina-bar` block keeps only the keys the user declared (no default keys added); a fully-declared block writes byte-identical; new e2e STAM-W11):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5446 passed / 1 skipped / 232 of 233 suites** · lifecycle **30/30** · e2e **`OBSIDIAN-E2E done: 89/93 ok,
 0 failed, 4 known-bug, coverage: 64/64 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-466 ticket-owner (implementer's post-rebase run at `08206e3`); the dispatcher relayed, not re-ran.
