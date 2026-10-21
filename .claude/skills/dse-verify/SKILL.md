@@ -1161,7 +1161,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `188755b` (2026-10-20; SC-364 landed — dead `resolveCollapsePrefs` and the ComponentWrapper `declaredCollapsePrefs` side channel deleted; built `main.js` byte-identical across the branch):**
+**CURRENT — dse `develop` @ `ba20072` (2026-10-21; SC-366 landed — the not-installed card's "View on steelcompendium.io" link uses the plugin's teal-cyan `--dse-accent` (steel theme, screen only); new jsdom pin `test/dom/theme/notInstalledLinkColour.test.ts`):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5260 passed / 1 skipped / 230 of 231 suites** (188755b's 5257 + 3) · lifecycle **27/27** · e2e **`OBSIDIAN-E2E done: 83/87 ok,
+0 failed, 4 known-bug, coverage: 57/57 pairs`** · shots **572**, 0 FAIL · freeze **`freeze OK (276/276 …)`** (no rebaseline — no shot covers the card, SC-469) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-366 ticket-owner (reviewer re-ran the full battery in r1, jest+parity after r2); the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `188755b` (2026-10-20; SC-364 landed — dead `resolveCollapsePrefs` and the ComponentWrapper `declaredCollapsePrefs` side channel deleted; built `main.js` byte-identical across the branch):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5257 passed / 1 skipped / 229 of 230 suites** (unchanged) · lifecycle **27/27** · e2e **`OBSIDIAN-E2E done: 83/87 ok,
 0 failed, 4 known-bug, coverage: 57/57 pairs`** · shots **572**, 0 FAIL (button host-leak 112 kinds / 672) · freeze **`freeze OK (276/276 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED** (full battery at `a22300d`; later two commits comment-only, tsc/lint/jest re-run at `188755b`). Numbers as reported by the SC-364 ticket-owner; the dispatcher relayed, not re-ran.
