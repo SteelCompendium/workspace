@@ -8,6 +8,11 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: key and value suggestions now appear inside a code block opened with extra words after its type (SC-476).**
+  In a block opened with ```` ```ds-stamina-bar extra ````, the suggester used to read the whole line after the
+  backticks as the block's type, find no such type and offer nothing. It now reads only the first word, as the
+  rest of the plugin does.
+
 - **DSE plugin: in the Conditions window, clicking a row's cog or a colour swatch while the "Add condition" dropdown is open now works (SC-474).**
   The dropdown used to collapse as soon as the mouse button went down, which shrank and re-centred the
   window under the pointer, so the click often landed on nothing. It now collapses when the click
