@@ -1200,7 +1200,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `ea56712` (2026-10-22; SC-356 landed — the button host-leak sweep gains a modal pass (10 scenarios / 9 modal classes); a new plugin modal must be opened or declared unreachable; option chips take Scott's A30 look (plugin fill, 30px desktop, Obsidian control height on phones)):**
+**CURRENT — dse `develop` @ `3973b56` (2026-10-22; SC-482 landed — counter, project, montage, party, encounter and negotiation writes add no default keys the user never wrote (shared `src/elements/shared/undeclaredDefaults.ts`, also used by stamina-bar); fully-declared blocks save byte-identical):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5696 passed / 1 skipped / 238 of 239 suites** · lifecycle **31/31** · e2e **`OBSIDIAN-E2E done: 95/98 ok,
+0 failed, 3 known-bug, coverage: 66/66 pairs`** · shots **580**, 0 FAIL, both text-scale lines + the modal host-leak line · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED** (lifecycle/e2e/shots/freeze/parity at `5e9a852`; `3973b56` adds one test file). Numbers as reported by the SC-482 ticket-owner; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `ea56712` (2026-10-22; SC-356 landed — the button host-leak sweep gains a modal pass (10 scenarios / 9 modal classes); a new plugin modal must be opened or declared unreachable; option chips take Scott's A30 look (plugin fill, 30px desktop, Obsidian control height on phones)):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5607 passed / 1 skipped / 234 of 235 suites** · lifecycle **31/31** · e2e **`OBSIDIAN-E2E done: 95/98 ok,
 0 failed, 3 known-bug, coverage: 66/66 pairs`** · shots **580**, 0 FAIL, with `button host-leak OK (112 … 672 …)`, `modal button host-leak OK (10 modal scenarios over 9 modal classes, 38 button kinds … 228 …)`, `100 … ALLOWLISTED … (SC-361 …)` (goes away when SC-361 lands) and both text-scale lines · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-356 ticket-owner at `ea56712`; the dispatcher relayed, not re-ran.
