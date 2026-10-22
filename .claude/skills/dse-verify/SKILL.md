@@ -28,7 +28,7 @@ absolute paths — devbox ignores your shell's `cd`.
 | 2. Lint | `npm run lint` | clean (no output), exit 0 — gated in CI as of SC-136/FOLLOWUPS #61 |
 | 3. Unit tests | `npx jest` | all suites/tests green. On a fresh worktree jest reads one fewer passed and **2 skipped** until `npm run shots` has cached `visual-harness/dist/obsidian-app.css` (the `printTwinDeltaAllowedSet` test skips without it) — compare against CURRENT only after a shots run (SC-364 owner, 2026-10-20) |
 | 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 31/31 ok, 0 failed` (SC-453 added G-S10, SC-455 G-S11, SC-460 G-S12, SC-326 G-S13, SC-457 G-S14 — a fence with whitespace before the language still saves after the note changed around it, SC-470 G-S15; G-S16 reserved for SC-471), exit 0 (~4.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
-| 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `95/98 ok, 0 failed, 3 known-bug, coverage: 66/66 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
+| 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `96/99 ok, 0 failed, 3 known-bug, coverage: 66/66 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
 | 5. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
 | 6. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
 | 7. Parity (LAST) | `npm run parity` | `0 GAPs`, `0 undeclared WARNs`, exactly the documented declared-deferral set, exit 0 |
@@ -209,21 +209,20 @@ OK line on success; read the lines, don't infer from exit code alone.
   Stamina modal), MinionStaminaPoolModal, ResetEncounterModal, FormModal), tags every button
   under `.dse-modal` and runs the same with-vs-without-host comparison at the same 3 states ×
   dark/light by the same helpers. Expected as of SC-356: `modal button host-leak OK (10 modal
-  scenarios over 9 modal classes, 38 button kinds × 3 states … = 228 comparisons …)`, then
-  `100 property difference(s) ALLOWLISTED as known leaks owned by another ticket (SC-361:
-  .dse-swatch, 10 properties)`, a `not openable in the harness (3 …)` line
+  scenarios over 9 modal classes, 38 button kinds × 3 states … = 228 comparisons …)` with
+  **no** `ALLOWLISTED` line since SC-361 landed (2026-10-22; before it, a `100 property difference(s)
+  ALLOWLISTED … (SC-361: .dse-swatch, 10 properties)` line followed), a `not openable in the harness (3 …)` line
   (CompendiumSearchModal, LegacyCompendiumModal, CompendiumMigrationModal — opened only
   from the command palette / `main.ts` onload flows; `assertModalRegistry` scans `src/` and
   fails on any NEW `Modal` subclass — direct or transitive (X extends Y extends DseModal) —
   or inline `new Modal(…)` that is neither swept nor declared, or a declared one that grows
   its own `<button>` in the same file; it does not follow button helpers across files), and its own 6-record exemption boundary (6 focus-visible
   disabled). A scenario whose modal does not open, opens the wrong one or lacks its expected
-  controls FAILS as "the check would be blind" — never a silent skip. **The SC-361 allowlist
-  is the boundary to watch:** `HOSTLEAK_KNOWN_LEAKS` holds one narrow entry (ConditionsModal,
-  class list exactly `dse-swatch`, 10 properties) for the swatch's leaks — size, plate
-  shadow, ink, font, focus ring — whose focus design is parked as SC-361; the pass also
-  fails if a listed property stops leaking, so SC-361 landing its design forces the entry's
-  removal. `tagButtons` now keys on `aria-pressed` too (pressed vs idle chips are separate
+  controls FAILS as "the check would be blind" — never a silent skip. **`HOSTLEAK_KNOWN_LEAKS`
+  has been EMPTY since SC-361 (2026-10-22)** — the swatch is now host-invariant; the mechanism is kept
+  (a narrow per-modal, exact-class-list, per-property entry naming the owning ticket; the pass
+  fails if a listed property stops leaking, forcing the entry's removal). Any new entry is the
+  boundary to watch. `tagButtons` now keys on `aria-pressed` too (pressed vs idle chips are separate
   kinds); the gallery mounts only unpressed toggles, so its count did not move (112 / 672).
   The option chips' look (plugin fill + idle ink, height following Obsidian's
   `--input-height`, `display: inline-flex`) is pinned in `test/dom/theme/hostRegrounding.test.ts`,
@@ -1200,7 +1199,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `3973b56` (2026-10-22; SC-482 landed — counter, project, montage, party, encounter and negotiation writes add no default keys the user never wrote (shared `src/elements/shared/undeclaredDefaults.ts`, also used by stamina-bar); fully-declared blocks save byte-identical):**
+**CURRENT — dse `develop` @ `424f47b` (2026-10-22; SC-361 landed — Conditions colour swatches: selected = white check mark inside (custom-colour swatch fills with its colour when selected), keyboard focus = the standard teal ring; all six swatches one size; swatch host-invariant so `HOSTLEAK_KNOWN_LEAKS` is empty; folds in SC-473; new e2e COND-E07):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5703 passed / 1 skipped / 238 of 239 suites** · lifecycle **31/31** · e2e **`OBSIDIAN-E2E done: 96/99 ok,
+0 failed, 3 known-bug, coverage: 66/66 pairs`** · shots **580**, 0 FAIL, with `button host-leak OK (112 … 672 …)`, `modal button host-leak OK (10 … 9 … 38 … 228 …)` and **no ALLOWLISTED line**, new `pipette selected look OK (…)`, `pressed toggle parity OK (96 …)` and both text-scale lines · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-361 ticket-owner at `424f47b` (reviewer re-ran the battery at the reviewed head; rebase range-diff identical); the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `3973b56` (2026-10-22; SC-482 landed — counter, project, montage, party, encounter and negotiation writes add no default keys the user never wrote (shared `src/elements/shared/undeclaredDefaults.ts`, also used by stamina-bar); fully-declared blocks save byte-identical):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5696 passed / 1 skipped / 238 of 239 suites** · lifecycle **31/31** · e2e **`OBSIDIAN-E2E done: 95/98 ok,
 0 failed, 3 known-bug, coverage: 66/66 pairs`** · shots **580**, 0 FAIL, both text-scale lines + the modal host-leak line · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED** (lifecycle/e2e/shots/freeze/parity at `5e9a852`; `3973b56` adds one test file). Numbers as reported by the SC-482 ticket-owner; the dispatcher relayed, not re-ran.
