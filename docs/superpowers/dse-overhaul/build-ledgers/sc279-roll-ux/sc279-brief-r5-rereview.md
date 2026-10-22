@@ -1,0 +1,6 @@
+# SC-279 round 5 — scoped re-review of the fix delta (reviewer, resume)
+
+Read: ledger "r3 review rulings", your own `sc279-r3-review.md`, the fix report `sc279-r4-fix.md` (all in `/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc279-roll-ux/`).
+Scope: ONLY the delta from DSE `24e5a1e` (and superproject `218031b`) to the r4 heads named in `sc279-r4-fix.md` (if the branch was rebased, diff against the rebased equivalent / use `git range-diff`). Not a fresh full pass.
+Verify each FOLD finding is fixed — re-run YOUR r3 probes for HIGH-1, MEDIUM-1, LOW-3, LOW-4 (they're in `sc279-r3-probe*.mjs`) — and that the new tests would fail on the old code (revert-probe at least HIGH-1's test). Re-run the battery (dse-verify, parity last) and confirm numbers + that freeze moves only the same 2 roll print lines and `sc279-rebaseline.txt` matches. Eyeball `sc279-r4-evidence/` for LOW-1/2/3. Check nothing OUT OF SCOPE crept in (tick glyph, SC-409 harness fix, Reroll, gating).
+Report `sc279-r5-rereview.md` (≤10-line exec summary; verdict APPROVE / FIX-REQUIRED; findings by severity with file:line). Final text: raw facts + paths. Same footguns as r3 (never commit, never Linear, foreground gates, files not streams, `git -C`, PID-only kills within `worktrees/sc279-roll-ux/`, never edit freeze-baseline.sha256, NEEDS_CONTEXT instead of messaging).

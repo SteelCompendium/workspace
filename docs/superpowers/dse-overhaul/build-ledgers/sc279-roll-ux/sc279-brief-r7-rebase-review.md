@@ -1,0 +1,8 @@
+# SC-279 round 7 — scoped re-review of the rebase (reviewer, resume)
+Read `sc279-r6-rebase.md` (same dir). DSE branch rebased onto origin/develop `05a6ff3` (SC-406), head `ae0efd8`; superproject head `41d9a0f`.
+1. `git range-diff` the old series (base f8693b5, head 12aad64 — use reflog/ORIG_HEAD or the r6 report's sha list if the old objects are still reachable; objects persist in the object store) vs the new series (05a6ff3..ae0efd8). Confirm the only semantic differences are: the CHANGELOG conflict resolution (both SC-406 and SC-279 bullets present, correct section), the new villain-band test, and nothing lost in the auto-merged `styles-source.css` / `visual-harness/entry.ts` (check SC-406's hunks and ours both survive).
+2. Under SC-406 gating, confirm ds-roll still renders the strip in the harness (`setExperimental(true)` at entry.ts:103) and that with the experimental switch OFF ds-roll is gated as SC-406 intends (our branch must not have un-gated it).
+3. Re-run the full dse-verify battery, parity last; confirm numbers and that freeze moves exactly the same 2 roll print lines matching `sc279-rebaseline.txt`.
+4. Revert-probe the new villain-band test once.
+5. DESIGN.md (superproject 41d9a0f): wrapped wording still says the header lists non-default modifiers plus the characteristic.
+Report `sc279-r7-rebase-review.md` (≤10-line exec summary, verdict APPROVE / FIX-REQUIRED). Same footguns as r3/r5 (never commit, never Linear, foreground gates, files not streams, `git -C`, PID-only kills within `worktrees/sc279-roll-ux/`, never edit freeze-baseline.sha256, NEEDS_CONTEXT instead of messaging).

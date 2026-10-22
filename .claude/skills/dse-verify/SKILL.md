@@ -359,6 +359,15 @@ didn't mount) plus human review of the PNGs.
   `freeze-baseline.sha256.pre-<effort>-bak`, (3) applies the lines, (4) appends a dated
   entry to this file quoting the sanction. Widenings (additions-only) need no sanction —
   the dispatcher verifies additions-only by sorted-diff and applies at landing.
+  - **2026-10-22, SC-279 (roll strip cleanup: one-line collapsed roll strip with labelled controls,
+    the strip no longer prints; worktree `sc279-roll-ux`, landed dse `develop` @ `c0e761b`): SANCTIONED
+    2-line rebaseline, 280 → 280.** `roll--steel-print.png` and `roll--steel-realprint.png` — the only
+    frozen prints that move (the roll strip leaves print). Regenerated on the final base `e4c5cf6`;
+    the owner's substitution check read `280/280 OK` with the two lines swapped into a copy.
+    **Scott's sanction, SC-279 comment f4f19ba6 (2026-10-17T14:44Z): "approved"** — replying to the
+    2026-10-16 consolidated ask whose item A1 was the 2-line print rebaseline. Applied by the
+    dispatcher at landing: backup `freeze-baseline.sha256.pre-sc279-bak`, 2 in-place replacements from
+    `.superpowers/sdd/sc279-roll-ux/sc279-rebaseline.txt`, count unchanged at 280.
   - **2026-10-21, SC-362 (the browser shots harness can render by-SCC display cards via a per-fixture
     compendium mode; worktree `sc362-harness-scc-cards`, landed dse `develop` @ `bc4a0c5`): 4-line
     WIDENING, additions-only, 276 → 280.** New capture ids `rule-by-scc` ("Combat" label,
@@ -1199,7 +1208,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `e4c5cf6` (2026-10-22; SC-433 landed — the Stamina modal's Temporary Stamina field is a direct edit: "−" and a lower typed value lower temp (floor 0, "−" disabled at 0); a stored negative temp counts as 0; the last 3 e2e known-bug tests now pass):**
+**CURRENT — dse `develop` @ `c0e761b` (2026-10-22; SC-279 landed — roll strip: one-line collapsed row with labelled controls, the card's first dice click still rolls, statblock/featureblock abilities no longer share roll settings, the strip no longer prints; DESIGN.md rule 9 carve-out; freeze REBASELINED (2 roll print lines, sanctioned)):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5737 passed / 1 skipped / 238 of 239 suites** · lifecycle **31/31** · e2e **`OBSIDIAN-E2E done: 101/101 ok,
+0 failed, 0 known-bug, coverage: 66/66 pairs`** · shots **592**, 0 FAIL (`text scale once OK (107256 …)`) · freeze **`freeze OK (280/280 …)`** after the rebaseline (a branch older than `c0e761b` reads `FREEZE VIOLATED (2 …)` on the two roll lines) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-279 ticket-owner at `c0e761b`; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `e4c5cf6` (2026-10-22; SC-433 landed — the Stamina modal's Temporary Stamina field is a direct edit: "−" and a lower typed value lower temp (floor 0, "−" disabled at 0); a stored negative temp counts as 0; the last 3 e2e known-bug tests now pass):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5711 passed / 1 skipped / 238 of 239 suites** · lifecycle **31/31** · e2e **`OBSIDIAN-E2E done: 101/101 ok,
 0 failed, 0 known-bug, coverage: 66/66 pairs`** (**no known-bug left**) · shots **580**, 0 FAIL, no ALLOWLISTED line · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-433 ticket-owner at `e4c5cf6` (reviewer re-ran tsc/lint/jest/e2e); the dispatcher relayed, not re-ran.
