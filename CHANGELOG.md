@@ -28,6 +28,13 @@ go under an *Internal* sub-heading.
   of the plugin's controls. The chips are the same height as before, and still follow Obsidian's button height
   on a phone, so nothing gets harder to tap.
 
+- **DSE plugin: counters, projects, montages, parties, encounters and negotiations no longer add lines you never wrote when the plugin saves a change (SC-482).**
+  A counter holding only a name and a value used to gain `min_value: 0`, `value_height: 3` and `name_height: 1`
+  the first time you pressed + or -, a montage gained `successes: 0` and `current_round: 1`, a project
+  `current_respite: 1`, a party `members: []`, a negotiation its `currentArgument` and `i5`..`i0` lines, and an
+  encounter gained `party: {}` just from being viewed. A save now changes only the fields it touched; anything you
+  did write is kept as before.
+
 - **DSE plugin: a Reading view no longer jumps to the top when a tracker in it changes from another pane, a popout, or an outside edit such as Sync (SC-470).**
   Clicking a tracker in one pane used to throw a second pane on the same note back to the top, and so did an edit
   arriving from Sync, git or another plugin. Every open Reading view of the note now keeps its scroll position.
