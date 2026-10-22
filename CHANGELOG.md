@@ -15,6 +15,12 @@ go under an *Internal* sub-heading.
   too, and when a color that isn't one of the five presets is chosen it fills with that color and shows the check.
   The swatches also drop Obsidian's grey button shadow and all draw at one size.
 
+- **DSE plugin: the Temporary Stamina "−" button and a lower typed value now lower temp (SC-433).**
+  In the Stamina editor, the Temporary Stamina field is now edited directly, the same as the Stamina
+  field. "−" takes one off, "+" adds one, and a typed number sets temp to exactly that number (a
+  negative number becomes 0). Before, "−" and a lower typed number did nothing, so a mistyped 50
+  instead of 5 could not be fixed after Apply. Damage, Kill and Full Heal still use up temp as before.
+
 - **DSE plugin: Spend Recovery no longer heals for free (SC-432).**
   In the Stamina editor, Spend Recovery used to heal one Recovery's worth every press for
   creatures and for heroes whose block tracks no Recoveries, without spending anything. Now it is
