@@ -1,0 +1,5 @@
+1:  a77dd13 = 1:  dc8cec8 test(SC-477): pin the durable unterminated-fence write to the in-place output (red on base: trailing newline dropped)
+2:  97f7473 = 2:  b10ae6f fix(SC-477): a durable write to an unterminated trailing fence keeps the note's trailing newline(s)
+3:  910a38b = 3:  159c937 test(SC-477): G-S6u proves real Obsidian keeps the trailing newline on a durable write; changelog
+4:  4ab4d8b = 4:  dc5c197 test(SC-477): in-place write must keep the tail too - real Obsidian section range in jest, lifecycle G-S28 (red on base)
+5:  c692849 = 5:  6a4c0a1 fix(SC-477): the in-place write to an unterminated trailing fence also keeps the note's trailing newline(s)

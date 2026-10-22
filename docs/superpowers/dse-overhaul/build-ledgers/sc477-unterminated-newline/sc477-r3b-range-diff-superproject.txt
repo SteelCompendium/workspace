@@ -1,0 +1,39 @@
+1:  4ea76d1 ! 1:  fe3fead chore: bump draw-steel-elements (SC-477: durable unterminated-fence write keeps the note's trailing newline); changelog
+    @@ Commit message
+     
+      ## CHANGELOG.md ##
+     @@ CHANGELOG.md: go under an *Internal* sub-heading.
+    - 
+    - ## Unreleased
+    +   longer print. Also fixed: abilities in one statblock or featureblock shared their roll settings, so an
+    +   edge set on one was used for the next; each ability now keeps its own.
+      
+     +- **DSE plugin: a block with no closing ``` at the end of a note no longer loses the note's final newline (SC-477).**
+     +  If a block was never closed (nothing after it but the end of the note) and you changed it and then switched to
+    @@ CHANGELOG.md: go under an *Internal* sub-heading.
+     
+      ## draw-steel-elements ##
+     @@
+    --Subproject commit e4c5cf6a69174f105a4de38907d772057eb71e7d
+    -+Subproject commit 910a38b0a04eb688e4d6cda3602cf3edb4038e92
+    +-Subproject commit e8f6a14fb7d76315977f2218169bb7d56dcec716
+    ++Subproject commit d152ea4e64f2db12344e31d04dcf652e330a3f62
+2:  376eb7a ! 2:  7d468ed chore: bump draw-steel-elements (SC-477 r2: in-place and durable unterminated-fence writes both keep the note's trailing newline); changelog
+    @@ Commit message
+     
+      ## CHANGELOG.md ##
+     @@ CHANGELOG.md: go under an *Internal* sub-heading.
+    - ## Unreleased
+    +   edge set on one was used for the next; each ability now keeps its own.
+      
+      - **DSE plugin: a block with no closing ``` at the end of a note no longer loses the note's final newline (SC-477).**
+     -  If a block was never closed (nothing after it but the end of the note) and you changed it and then switched to
+    @@ CHANGELOG.md: go under an *Internal* sub-heading.
+      
+      - **DSE plugin: the Conditions window's color swatches now show which one is chosen and which one the keyboard is on (SC-361, SC-473).**
+        The chosen swatch gets a white check mark inside it (with a thin dark outline, so it reads on every color), and the
+    -
+    - ## draw-steel-elements ##
+    -@@
+    --Subproject commit 910a38b0a04eb688e4d6cda3602cf3edb4038e92
+    -+Subproject commit c692849e11afa1f08c411faedb866e6271bed8ed
