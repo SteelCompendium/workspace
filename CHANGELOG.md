@@ -24,9 +24,9 @@ go under an *Internal* sub-heading.
   edge set on one was used for the next; each ability now keeps its own.
 
 - **DSE plugin: a block with no closing ``` at the end of a note no longer loses the note's final newline (SC-477).**
-  If a block was never closed (nothing after it but the end of the note) and you changed it and then switched to
-  another note before it saved, the save added the closing ``` but deleted the newline (or blank lines) that ended
-  the note. It now keeps them, exactly as a save while the note is still on screen already did.
+  If a block was never closed (nothing after it but the end of the note), saving a change added the closing ```
+  but deleted the newline (or blank lines) that ended the note, whether you stayed on the note or switched to
+  another one before it saved. Both saves now keep them.
 
 - **DSE plugin: the Conditions window's color swatches now show which one is chosen and which one the keyboard is on (SC-361, SC-473).**
   The chosen swatch gets a white check mark inside it (with a thin dark outline, so it reads on every color), and the
