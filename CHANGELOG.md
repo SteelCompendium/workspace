@@ -23,6 +23,11 @@ go under an *Internal* sub-heading.
   longer print. Also fixed: abilities in one statblock or featureblock shared their roll settings, so an
   edge set on one was used for the next; each ability now keeps its own.
 
+- **DSE plugin: a block with no closing ``` at the end of a note no longer loses the note's final newline (SC-477).**
+  If a block was never closed (nothing after it but the end of the note) and you changed it and then switched to
+  another note before it saved, the save added the closing ``` but deleted the newline (or blank lines) that ended
+  the note. It now keeps them, exactly as a save while the note is still on screen already did.
+
 - **DSE plugin: the Conditions window's color swatches now show which one is chosen and which one the keyboard is on (SC-361, SC-473).**
   The chosen swatch gets a white check mark inside it (with a thin dark outline, so it reads on every color), and the
   teal focus ring, the same one the rest of the plugin uses, now shows which swatch the keyboard is on. A swatch can
