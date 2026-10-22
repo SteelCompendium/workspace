@@ -16,10 +16,11 @@ go under an *Internal* sub-heading.
   kept as before. A hero or creature written as just a `statblock:` keeps following that statblock instead of
   copying its name, Stamina and image into the block on the first click.
 
-- **DSE plugin: the Edit pencil on a Stamina bar opens only the edit form (SC-492).**
-  With the experimental authoring controls on, clicking the pencil in a Stamina bar's menu panel opened the
-  edit form and, on top of it, the Stamina window. The same happened with the panel's collapse button. The
-  panel's buttons now do only their own job; clicking anywhere else on the bar still opens the Stamina window.
+- **DSE plugin: the buttons in a Stamina bar's menu panel no longer also open the Stamina window (SC-492).**
+  Clicking the panel's collapse button used to open the Stamina window as well as collapsing the bar. With the
+  experimental authoring controls on, clicking the Edit pencil in that panel opened the edit form and, on top of it, the
+  Stamina window. The panel's buttons now do only their own job; clicking anywhere else on the bar still opens the
+  Stamina window.
 
 - **DSE plugin: keyboard focus now stays in the Stamina window when a heal fills Stamina (SC-465).**
   In the Stamina editor, pressing Spend Recovery (or Heal Recovery Value, after you confirm) with the keyboard
