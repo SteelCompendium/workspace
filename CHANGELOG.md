@@ -10,7 +10,7 @@ go under an *Internal* sub-heading.
 
 - **DSE plugin: keyboard focus now stays in the Stamina window when a heal fills Stamina (SC-465).**
   In the Stamina editor, pressing Spend Recovery (or Heal Recovery Value, after you confirm) with the keyboard
-  could heal you to full and turn the button off while you were on it. Focus then fell out of the window, and
+  could heal you to full, or use your last Recovery, and turn the button off while you were on it. Focus then fell out of the window, and
   the next Tab started again from the top of the page. Focus now moves to the next button in the window
   (Reset), with the usual focus outline when you used the keyboard, so Tab carries on from there.
 
