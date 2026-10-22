@@ -56,8 +56,7 @@ go under an *Internal* sub-heading.
   block that has neither. It now starts on a first entry labelled "Default (…)" naming the value the block uses
   (for example "Default (ledger)", or "Default (test)" for `roll: Might test`, which follows the roll as you edit it;
   "Default (none)" when there is no value). Nothing is filled in for you, so the live preview matches exactly what
-  Save writes. Choosing "Default" again removes that line from the block. A dropdown line left empty (`style:`)
-  counts as left out.
+  Save writes. Choosing "Default" again removes that line from the block.
 
 - **DSE plugin: saving the block edit form no longer adds fields you never touched (SC-483).**
   With authoring controls on, opening the form on a block that left out a dropdown field, such as a Stamina Bar
