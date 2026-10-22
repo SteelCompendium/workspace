@@ -141,3 +141,5 @@ Label `Ready for Agent` set by Scott. Owner reading (2026-10-21, ticket-owner se
 - 2026-10-22: land-ready comment posted to SC-279 (state stays Awaiting until landed). LAND-READY reported to dispatcher. Landing notes: apply `sc279-rebaseline.txt` (A1 sanctioned 2026-10-17, "approved") with dated backup + dse-verify record; superproject pointer must equal landed DSE sha; copy this ledger to build-ledgers/ before wt-rm.
 ## STATE: LAND-READY — owner stops here; dispatcher lands.
 - 2026-10-22 dispatcher request: workspace CHANGELOG `## Unreleased` bullet for SC-279. Owner wrote the text (`sc279-workspace-changelog-bullet.md`); chore worker committed it: super `b6fde5b` (CHANGELOG.md only, +9) on 42116f9 / main acaa6f4. DSE untouched → no battery rerun. Land-ready super sha = b6fde5b.
+- 2026-10-22 LANDED (dispatcher): dse develop c0e761b, workspace merge 6d89ada; rebaseline applied (backup freeze-baseline.sha256.pre-sc279-bak), freeze 280/280. Owner posted landed comment and flipped SC-279 → Done (labels DSE Plugin, Bug; verified). Q4 reading left open for Scott in the comment.
+## STATE: DONE.
