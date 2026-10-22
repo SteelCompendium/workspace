@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the Conditions window's color swatches now show which one is chosen and which one the keyboard is on (SC-361, SC-473).**
+  The chosen swatch gets a white check mark inside it (with a thin dark outline, so it reads on every color), and the
+  teal focus ring, the same one the rest of the plugin uses, now shows which swatch the keyboard is on. A swatch can
+  show both at once, and the two no longer look alike. The custom-color (eyedropper) swatch now shows keyboard focus
+  too, and when a color that isn't one of the five presets is chosen it fills with that color and shows the check.
+  The swatches also drop Obsidian's grey button shadow and all draw at one size.
+
 - **DSE plugin: Spend Recovery no longer heals for free (SC-432).**
   In the Stamina editor, Spend Recovery used to heal one Recovery's worth every press for
   creatures and for heroes whose block tracks no Recoveries, without spending anything. Now it is
