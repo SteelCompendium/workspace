@@ -50,6 +50,15 @@ go under an *Internal* sub-heading.
   asks you to confirm that it heals one Recovery's worth and spends no Recovery; Cancel (or Escape)
   changes nothing. A hero with a Recoveries pool works exactly as before.
 
+- **DSE plugin: the block edit form's dropdowns show the value the block really uses (SC-488).**
+  With authoring controls on (experimental), a dropdown whose field the block leaves out used to show its first
+  option, such as `list` for a Skills block that actually renders as `ledger`, or `power-roll` and `easy` for a Roll
+  block that has neither. It now starts on a first entry labelled "Default (…)" naming the value the block uses
+  (for example "Default (ledger)", or "Default (test)" for `roll: Might test`, which follows the roll as you edit it;
+  "Default (none)" when there is no value). Nothing is filled in for you, so the live preview matches exactly what
+  Save writes. Choosing "Default" again removes that line from the block. A dropdown line left empty (`style:`)
+  counts as left out.
+
 - **DSE plugin: saving the block edit form no longer adds fields you never touched (SC-483).**
   With authoring controls on, opening the form on a block that left out a dropdown field, such as a Stamina Bar
   without `style`, and saving used to write that field with its first option (`style: default`). A dropdown you
