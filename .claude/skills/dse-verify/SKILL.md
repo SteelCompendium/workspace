@@ -1169,7 +1169,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `8d890f9` (2026-10-21; SC-366 follow-up landed — the not-installed and notice ds-scc cards (`.dse-ref-notice`) lose the decorative left stripe banned by DESIGN.md rule 7; plain 1px border on all sides):**
+**CURRENT — dse `develop` @ `54f8f88` (2026-10-21; SC-483 landed — the block edit form's Save (authoring controls, experimental) omits an untouched select whose field was absent from the block; skills no longer gains `style: list`, roll no longer gains `mode`/`difficulty`; an empty roll saves an empty body):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5601 passed / 1 skipped / 234 of 235 suites** · lifecycle **31/31** · e2e **`OBSIDIAN-E2E done: 95/98 ok,
+0 failed, 3 known-bug, coverage: 66/66 pairs`** · shots **580**, 0 FAIL, both text-scale lines · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-483 ticket-owner at `54f8f88`; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `8d890f9` (2026-10-21; SC-366 follow-up landed — the not-installed and notice ds-scc cards (`.dse-ref-notice`) lose the decorative left stripe banned by DESIGN.md rule 7; plain 1px border on all sides):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5585 passed / 1 skipped / 234 of 235 suites** · lifecycle **31/31** · e2e **`OBSIDIAN-E2E done: 95/98 ok,
 0 failed, 3 known-bug, coverage: 66/66 pairs`** · shots **580**, 0 FAIL · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-366 ticket-owner at `8d890f9`; the dispatcher relayed, not re-ran.
