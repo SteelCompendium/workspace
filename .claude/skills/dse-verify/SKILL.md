@@ -1220,7 +1220,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `2c61511` (2026-10-23; SC-478 landed — Live Preview panes keep their reading position when a tracker in the note changes, from another pane, a popout, the pane's own click or an outside edit (Sync, git, another plugin); new lifecycle G-S18):**
+**CURRENT — dse `develop` @ `0dff966` (2026-10-23; SC-488 landed — the block edit form's dropdowns (experimental authoring controls) show the value the block really uses, e.g. skills Style "Default (ledger)", roll Mode "Default (test)"):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5812 passed / 1 skipped / 239 of 240 suites** · lifecycle **33/33** · e2e **`OBSIDIAN-E2E done: 104/104 ok,
+0 failed, 0 known-bug, coverage: 69/69 pairs`** · shots **592**, 0 FAIL, all in-run lines as at `907f55c` (incl. `text scale once OK (107256 … 214 loads …)`) · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-488 ticket-owner at `0dff966`; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `2c61511` (2026-10-23; SC-478 landed — Live Preview panes keep their reading position when a tracker in the note changes, from another pane, a popout, the pane's own click or an outside edit (Sync, git, another plugin); new lifecycle G-S18):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5797 passed / 1 skipped / 239 of 240 suites** · lifecycle **33/33** (new G-S18; run on Obsidian 1.15.0) · e2e **`OBSIDIAN-E2E done: 104/104 ok,
 0 failed, 0 known-bug, coverage: 69/69 pairs`** · shots **592**, 0 FAIL, with `host-copy pin OK (… 1.15.0 …)`, `button host-leak OK (113 … 678 …)`, `modal button host-leak OK (10 … 228 …)`, `text scale OK (1626 …)`, `text scale once OK (107256 comparisons over 214 loads …)` and the expected `OBSIDIAN APP.CSS PIN DRIFT` warning · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED** (lifecycle/e2e last run on `d152ea4`; SC-497's pin is shots-only). Numbers as reported by the SC-478 ticket-owner at `2c61511`; the dispatcher relayed, not re-ran.
