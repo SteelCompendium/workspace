@@ -53,6 +53,7 @@ go under an *Internal* sub-heading.
   The type now ends at the first character other than a letter (A to Z), digit, `-`, `_`, `/`, `+` or `#`, which is how
   Live Preview reads it, so those blocks pin and save like any other. (Reading view shows such a fence as plain
   code, as before.) The notice also spells out invisible characters, for example `ds-counter<U+200B>`.
+  A fence with a backtick on its opening line is not a block in either view and is now left alone too.
 
 - **DSE plugin: keyboard focus now stays in the Stamina window when a heal fills Stamina (SC-465).**
   In the Stamina editor, pressing Spend Recovery (or Heal Recovery Value, after you confirm) with the keyboard
