@@ -250,6 +250,11 @@ Each cost real time once. Every one belongs in the briefs it applies to.
    blocking foreground call (split lifecycle/e2e/shots into separate calls to stay under the
    10-minute tool timeout), with no background jobs or monitors. If a gate must run in the
    background, the worker should poll the gate's own log or exit-code file, not wait for a notice.
+   **`rm` with a shell-variable target is always held (2026-10-22/23, dispatcher + SC-489):** Claude
+   Code's built-in safety check refuses or prompts on any `rm` whose path is a variable expansion
+   (`rm -f $S/$g.rc`, `rm -f $B/$N/x`), even inside a gate loop. In a background worker that prompt is
+   never answered, so the call hangs. Briefs: no `rm` with variables. Write logs and exit codes to fresh,
+   uniquely named files, overwrite with `>`, or use a literal absolute path or `"${S:?}"/file`.
 
 **Provenance for two plugin-side footguns.** The plugin states these rules without ticket
 keys (they generalise); the evidence is this project's, and lives here:
