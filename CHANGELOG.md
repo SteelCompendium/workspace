@@ -43,6 +43,14 @@ go under an *Internal* sub-heading.
   Stamina window. The panel's buttons now do only their own job; clicking anywhere else on the bar still opens the
   Stamina window.
 
+- **DSE plugin: "Pin to sidebar" no longer leaves a dead anchor in your note for a block the sidebar cannot show (SC-487).**
+  Pinning a block whose type the sidebar cannot show (for example a code block that is not a Draw Steel
+  element) used to write a `_dse_anchor` line into the note, show an "unavailable" card in the sidebar and lose any
+  save made from it. Pinning now changes nothing in the note and shows one notice saying the block cannot be
+  sent to the sidebar. Also fixed: a block such as ```` ```ds-counter ```` followed by an invisible zero-width space
+  (Live Preview draws it as the block) could not be pinned; the zero-width space now ends the block's type,
+  so it pins and saves like any other. (Reading view shows that fence as plain code, as before.)
+
 - **DSE plugin: keyboard focus now stays in the Stamina window when a heal fills Stamina (SC-465).**
   In the Stamina editor, pressing Spend Recovery (or Heal Recovery Value, after you confirm) with the keyboard
   could heal you to full, or use your last Recovery, and turn the button off while you were on it. Focus then fell out of the window, and
