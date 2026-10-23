@@ -1220,7 +1220,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `9f08f06` (2026-10-23; SC-492 landed — the stamina bar ignores clicks from its own menu-panel buttons, so Edit, Collapse (released plugin) and Pin to sidebar no longer also open the Stamina modal; new lifecycle G-S32):**
+**CURRENT — dse `develop` @ `66f474b` (2026-10-23; SC-489 landed — the block edit form's Save no longer lowercases or trims values the user did not edit (`Climb` stays `Climb`; `style: Chips`/`Sheet` keep their capitals)):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5859 passed / 1 skipped / 241 of 242 suites** · lifecycle **34/34** · e2e **`OBSIDIAN-E2E done: 108/108 ok,
+0 failed, 0 known-bug, coverage: 69/69 pairs`** · shots **592**, 0 FAIL, all in-run lines as at `907f55c` · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-489 ticket-owner at `66f474b`; the dispatcher relayed, not re-ran. Known load flake: `test/dom/elements/initiative-default-keys.test.ts:459` can time out at high load (SC-506).
+
+**PREVIOUS — dse `develop` @ `9f08f06` (2026-10-23; SC-492 landed — the stamina bar ignores clicks from its own menu-panel buttons, so Edit, Collapse (released plugin) and Pin to sidebar no longer also open the Stamina modal; new lifecycle G-S32):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5847 passed / 1 skipped / 241 of 242 suites** · lifecycle **34/34** (new G-S32) · e2e **`OBSIDIAN-E2E done: 108/108 ok,
 0 failed, 0 known-bug, coverage: 69/69 pairs`** · shots **592**, 0 FAIL, all in-run lines as at `907f55c` · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-492 ticket-owner at `9f08f06`; the dispatcher relayed, not re-ran.
