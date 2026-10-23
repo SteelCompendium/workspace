@@ -1220,7 +1220,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `b624eef` (2026-10-23; SC-498 landed — the stamina bar is one Tab stop; Enter/Space open the Stamina modal and focus returns to the bar; 2px shared focus outline; chrome buttons' Enter/Space do only their own job; new lifecycle G-S36):**
+**CURRENT — dse `develop` @ `a993a60` (2026-10-23; SC-487 landed — DSE reads a block's name with Obsidian's Live Preview rule (letters, digits, `_ / + # -`); `~~~` fences follow Reading view; Pin to sidebar works with a zero-width space after the name; for a type the sidebar can't open, Pin writes nothing and shows one Notice; new lifecycle G-S33):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5958 passed / 1 skipped** · lifecycle **36/36** (new G-S33) · e2e **`OBSIDIAN-E2E done: 114/114 ok,
+0 failed, 0 known-bug, coverage: 79/79 pairs`** · shots **592**, 0 FAIL · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-487 ticket-owner at `a993a60`; the dispatcher relayed, not re-ran. **SC-471 (parked) must handle the new `'unregistered'` result in its `sendFromCommand` and update the ```` ```js ```` command test when it lands.**
+
+**PREVIOUS — dse `develop` @ `b624eef` (2026-10-23; SC-498 landed — the stamina bar is one Tab stop; Enter/Space open the Stamina modal and focus returns to the bar; 2px shared focus outline; chrome buttons' Enter/Space do only their own job; new lifecycle G-S36):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5889 passed / 1 skipped / 241 of 242 suites** · lifecycle **35/35** (new G-S36) · e2e **`OBSIDIAN-E2E done: 114/114 ok,
 0 failed, 0 known-bug, coverage: 79/79 pairs`** · shots **592**, 0 FAIL · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-498 ticket-owner at `b624eef`; the dispatcher relayed, not re-ran.
