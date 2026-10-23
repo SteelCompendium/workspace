@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the stamina bar can be opened from the keyboard (SC-498).**
+  Tab now stops on the bar (in the Stamina Bar element and on the hero sheet), a teal outline shows it has focus,
+  and Enter or Space opens the Stamina window, the same as a click. The Edit pencil, Collapse and Pin buttons in
+  the bar's menu keep doing only their own job when pressed from the keyboard. A read-only bar (print, canvas)
+  is not a tab stop.
+
 - **DSE plugin: the block edit form no longer rewrites what you wrote when you save (SC-489).**
   The block edit form (experimental authoring controls) used to save a lowercased, trimmed copy of some values
   even when you had not touched them: `Climb` in a skills block became `climb`, and `style: Chips` or a Stamina
