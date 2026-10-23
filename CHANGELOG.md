@@ -23,6 +23,13 @@ go under an *Internal* sub-heading.
   kept as before. A hero or creature written as just a `statblock:` keeps following that statblock instead of
   copying its name, Stamina and image into the block on the first click.
 
+- **DSE plugin: the − / + steppers keep keyboard focus when a press reaches the lowest or highest value (SC-495).**
+  Steppers (Temporary Stamina, Stamina, counters, tokens, Surges and the like) turn the − button off at the
+  lowest value and the + button off at the highest. If you were on that button, focus used to fall out of the
+  page and the next Tab started again from the top. Focus now moves to the number beside the button (with the
+  usual focus outline when you used the keyboard), so Tab carries on from there. A stepper that only displays its
+  number (the initiative Malice, the roll controls) gets the same, without making the number a Tab stop.
+
 - **DSE plugin: the buttons in a Stamina bar's menu panel no longer also open the Stamina window (SC-492).**
   Clicking the panel's collapse button used to open the Stamina window as well as collapsing the bar. With the
   experimental authoring controls on, clicking the Edit pencil in that panel opened the edit form and, on top of it, the
