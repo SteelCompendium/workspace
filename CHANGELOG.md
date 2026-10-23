@@ -8,6 +8,14 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the initiative tracker no longer adds keys you never wrote when you click in it (SC-485).**
+  A tracker with a hero and an enemy group used to gain `isHero`, `conditions: []`, `current_stamina`,
+  `temp_stamina`, `has_taken_turn`, `is_squad`, a full `instances` list for every creature and a `malice` line
+  the first time you toggled a turn or changed Stamina. Values the tracker fills in for you now stay out of the
+  note until they change; damaging one creature writes that group's instance list, and everything you wrote is
+  kept as before. A hero or creature written as just a `statblock:` keeps following that statblock instead of
+  copying its name, Stamina and image into the block on the first click.
+
 - **DSE plugin: keyboard focus now stays in the Stamina window when a heal fills Stamina (SC-465).**
   In the Stamina editor, pressing Spend Recovery (or Heal Recovery Value, after you confirm) with the keyboard
   could heal you to full, or use your last Recovery, and turn the button off while you were on it. Focus then fell out of the window, and
