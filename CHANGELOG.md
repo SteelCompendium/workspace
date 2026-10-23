@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the block edit form no longer rewrites what you wrote when you save (SC-489).**
+  The block edit form (experimental authoring controls) used to save a lowercased, trimmed copy of some values
+  even when you had not touched them: `Climb` in a skills block became `climb`, and `style: Chips` or a Stamina
+  bar's `style: Sheet` became `chips` and `sheet`. Save now keeps what you wrote and changes only what you
+  edited. A dropdown whose value is written in a different case, like `style: Chips`, now opens on the matching
+  option instead of blank.
+
 - **DSE plugin: the initiative tracker no longer adds keys you never wrote when you click in it (SC-485).**
   A tracker with a hero and an enemy group used to gain `isHero`, `conditions: []`, `current_stamina`,
   `temp_stamina`, `has_taken_turn`, `is_squad`, a full `instances` list for every creature and a `malice` line
