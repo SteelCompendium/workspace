@@ -28,7 +28,7 @@ absolute paths — devbox ignores your shell's `cd`.
 | 2. Lint | `npm run lint` | clean (no output), exit 0 — gated in CI as of SC-136/FOLLOWUPS #61 |
 | 3. Unit tests | `npx jest` | all suites/tests green. On a fresh worktree jest reads one fewer passed and **2 skipped** until `npm run shots` has cached `visual-harness/dist/obsidian-app.css` (the `printTwinDeltaAllowedSet` test skips without it) — compare against CURRENT only after a shots run (SC-364 owner, 2026-10-20) |
 | 4. Lifecycle (real Obsidian, headless) | `npm run obsidian-lifecycle` | `OBSIDIAN-LIFECYCLE done: 34/34 ok, 0 failed` (SC-453 added G-S10, SC-455 G-S11, SC-460 G-S12, SC-326 G-S13, SC-457 G-S14 — a fence with whitespace before the language still saves after the note changed around it, SC-470 G-S15, SC-478 G-S18 — Live Preview keeps its reading position when a tracker is redrawn (adds about 1 minute), SC-477 G-S28 — an unterminated trailing fence's write keeps the note's final newline, SC-492 G-S32 — the stamina bar's menu buttons (Edit, Collapse, Pin) do not also open the Stamina modal; G-S16 reserved for SC-471), exit 0 (~4.5 min). Builds `main.js` itself, so it runs AFTER jest; own Xvfb `:160–:199`, CDP port 9262, scratch vault — never `:1`. Exit 2 = environment (no Xvfb/asar/binary, port busy), not a code failure |
-| 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `108/108 ok, 0 failed, 0 known-bug, coverage: 69/69 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
+| 4b. e2e (real Obsidian, headless) | `npm run e2e` | `OBSIDIAN-E2E done: N/M ok, 0 failed, K known-bug, coverage: Y/Y pairs` (today `114/114 ok, 0 failed, 0 known-bug, coverage: 79/79 pairs`), exit 0 (~36 s on 4 shards). Builds `main.js` itself, so it runs after lifecycle and jest; own Xvfb `:200–:239` — never `:1`. Exit 1 = a test failed OR the coverage gate failed; exit 2 = usage/environment |
 | 5. Visual shots | `npm run shots` | regenerates `visual-harness/shots/` |
 | 6. Freeze check | `bash /home/scott/code/steelCompendium/workspace/.superpowers/sdd/check-freeze.sh <repo>/draw-steel-elements/visual-harness/shots` | all producible shots byte-identical, **0 FAILED** checksums — see "Current expected numbers" below for today's baseline size vs. how many of its lines a given branch can produce |
 | 7. Parity (LAST) | `npm run parity` | `0 GAPs`, `0 undeclared WARNs`, exactly the documented declared-deferral set, exit 0 |
@@ -1220,7 +1220,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `66f474b` (2026-10-23; SC-489 landed — the block edit form's Save no longer lowercases or trims values the user did not edit (`Climb` stays `Climb`; `style: Chips`/`Sheet` keep their capitals)):**
+**CURRENT — dse `develop` @ `c98bd82` (2026-10-23; SC-495 landed — the shared stepper keeps keyboard focus when "−" or "+" disables itself at its limit: focus moves to the number beside it, with the focus outline; mouse/touch unchanged):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5872 passed / 1 skipped / 241 of 242 suites** · lifecycle **34/34** · e2e **`OBSIDIAN-E2E done: 114/114 ok,
+0 failed, 0 known-bug, coverage: 79/79 pairs`** · shots **592**, 0 FAIL · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-495 ticket-owner at `c98bd82`; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `66f474b` (2026-10-23; SC-489 landed — the block edit form's Save no longer lowercases or trims values the user did not edit (`Climb` stays `Climb`; `style: Chips`/`Sheet` keep their capitals)):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **5859 passed / 1 skipped / 241 of 242 suites** · lifecycle **34/34** · e2e **`OBSIDIAN-E2E done: 108/108 ok,
 0 failed, 0 known-bug, coverage: 69/69 pairs`** · shots **592**, 0 FAIL, all in-run lines as at `907f55c` · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-489 ticket-owner at `66f474b`; the dispatcher relayed, not re-ran. Known load flake: `test/dom/elements/initiative-default-keys.test.ts:459` can time out at high load (SC-506).
