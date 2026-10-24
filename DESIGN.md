@@ -335,8 +335,10 @@ every card unchanged at rest. Retuned per scheme in E3's own ratio (55% black da
   elements moved zero frozen print shots.
 - Live Preview (SC-502): Obsidian clips the CodeMirror widget a block is drawn in, which cut the
   overhanging panel off (never painted, never clickable). One rule in the "Element chrome" section of
-  `styles-source.css` lifts the clip for widgets holding a chrome block and re-opens only a 64px strip
-  above them, so the panel sits where it does in Reading view; the panel stays revealed while the pointer
+  `styles-source.css` lifts the clip for widgets holding a chrome block (keeping them a block formatting
+  context, `display: flow-root`, so the block's own margins stay inside the widget and CodeMirror measures
+  the right height) and re-opens only a 96px strip above them, so the panel sits where it does in Reading
+  view; the panel stays revealed while the pointer
   is over the widget (Obsidian's own `</>` button included), and the collapsed one-liner keeps 36px clear
   on its right so its Expand sits beside that button, not under it.
 
