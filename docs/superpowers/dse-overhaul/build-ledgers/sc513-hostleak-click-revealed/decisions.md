@@ -95,3 +95,6 @@ Unlike SC-501's collapsed Modifiers section, these are not hidden. They are not 
 ## LAND-READY (2026-10-24)
 - dse branch sc513-hostleak-click-revealed @ ed368f6 (324a68d, ed368f6) on develop c558759, ancestor verified. Superproject worktree branch at origin/main b35d9eb, only dirt ` M draw-steel-elements` (pointer bump at landing).
 - No widening, no rebaseline, no CHANGELOG (harness-only). dse-verify edits: sc513-dse-verify-proposal.md. Backlog filed: SC-526 (popover CSS + D mount), SC-527 (state-only kinds).
+
+## DONE (2026-10-24)
+- Landed by dispatcher: dse develop ff to ed368f6; workspace main 8e3c56c (pointer bump f88465c); docs 59d4f43 applied sc513-dse-verify-proposal.md and preserved this ledger at docs/superpowers/dse-overhaul/build-ledgers/sc513-hostleak-click-revealed/. Worktree removed. Ticket -> Done. Follow-ups open: SC-526, SC-527.
