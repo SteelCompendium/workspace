@@ -15,6 +15,12 @@ go under an *Internal* sub-heading.
   leaves it on the Pin button, each with the focus outline. This applies to every element with the hover menu, not
   only the stamina bar. Clicking with the mouse behaves as before.
 
+- **DSE plugin: the block edit form's Save now redraws the card right away (SC-509).**
+  The block edit form (experimental authoring controls) wrote your change to the note, but in Reading view and in
+  the sidebar the card kept showing the old content until you left the note and came back. The card now redraws
+  with the saved content as soon as you press Save. Buttons you press on the card itself still update it in place,
+  as before.
+
 - **DSE plugin: saving the block edit form no longer drops a block's `collapsed:` line (SC-494).**
   The block edit form (experimental authoring controls) used to write the block back without its
   `collapsed: true` / `collapsed: false` line (and, on blocks such as Skills, Conditions and Surges, showed a schema error
