@@ -13,7 +13,7 @@ go under an *Internal* sub-heading.
   box one character at a time could leave the preview on "Reference file (Ref.m) not found", or on a mix of earlier
   and current results, even though the finished text was fine. The preview now always shows the text currently in
   the box. Saving was never affected. A reference the element cannot read no longer raises an error in the
-  background either; the preview just stays blank for it.
+  background either; the preview shows the same "failed to render" message the block itself would show.
 
 - **DSE plugin: in Reading view and the sidebar, the block edit form opened right after a click on the card now includes that click (SC-519).**
   With experimental authoring controls on, pressing the pencil within a moment of a button on the card (for
