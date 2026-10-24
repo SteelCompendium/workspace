@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: in Reading view and the sidebar, the block edit form opened right after a click on the card now includes that click (SC-519).**
+  With experimental authoring controls on, pressing the pencil within a moment of a button on the card (for
+  example Increase on a counter) opened the edit form with the content from before that click, and Save then wrote
+  it back, so the click was undone without any message. The form now waits for the click to be saved first and
+  starts from what the card shows. In the sidebar the form also started from the content the panel was first built
+  with, even long after a click; it now starts from the current content. (Live Preview is not covered by this fix.)
+
 - **DSE plugin: keyboard Collapse, Expand and Pin no longer drop you out of the block (SC-505).**
   Pressing Enter on an element's Collapse button used to throw keyboard focus to the page, so the next Tab started
   again from the top of the note; Expand on the collapsed one-line bar and Pin to sidebar did the same. Now Collapse
