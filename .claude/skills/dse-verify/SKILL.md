@@ -203,10 +203,18 @@ OK line on success; read the lines, don't infer from exit code alone.
   composition; the modal chips never mount there — the in-note negotiation chips
   `.dse-nt__chip` DO wear `.dse-optchip` and are in the gallery — see the SC-338 note
   below)**; **112 kinds / 672 comparisons as of 2026-10-20 (SC-364 owner re-measure; see
-  CURRENT)**; **113 kinds / 678 comparisons with a 20-record boundary as of `d152ea4`** (10
-  focus-visible disabled, 6 hover zero-sized, 2 hover no hit point, 2 focus-visible no box; measured 2026-10-23
-  by SC-497, identical on base `d152ea4` under 1.14.4, so it predates SC-497 — the 10 new records are
-  unexplained, SC-501 tracks confirming them). Earlier: a printed **10-record** exemption boundary (8 focus-visible
+  CURRENT)**; **113 kinds / 678 comparisons with a 12-record boundary as of SC-501 (`054c9c5`)**:
+  10× focus-visible `disabled` (montage, negotiation, party stepper, roll stepper and roll Reset
+  disabled kinds, ×2 schemes) and 2× hover no hit point (`initiative|dse-btn.dse-init__stamina`,
+  ×2). Since SC-501 the printed boundary lists the kind keys under each reason (modal keys carry their scenario, e.g. `@StaminaEditModal`), so compare kinds,
+  not just counts. **SC-279's roll strip starts its "Modifiers" disclosure collapsed
+  (`rollBar.ts:112`)**, which hid its steppers and Reset (0×0) and grew the boundary to 20 records
+  (6 hover zero-sized + 2 focus-visible no box were hidden buttons, not legitimate skips; SC-497
+  first measured it on `d152ea4`). SC-501 makes the button, input and checkbox sweeps open that
+  disclosure with a real click on every dark/light load and FAIL if any roll panel stays hidden; the input and checkbox sweeps also FAIL on any tagged node with no box (they used to compare it at 0×0 and print OK).
+  A new collapsed-by-default disclosure in the gallery will show up the same way — as "zero-sized"
+  / "no box" records naming its kinds — and wants the same treatment, never a wider boundary.
+  Earlier: a printed **10-record** exemption boundary (8 focus-visible
   disabled, 2 hover no-hit-point — measured 2026-10-21, SC-356; the older "12-record"
   figure with 2 `visibility: hidden` records was stale). Kind counts drift
   as fixtures/chrome grow — treat them as "expect right now", and treat any per-record
@@ -1220,7 +1228,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `efc17de` (2026-10-23; SC-493 landed — the block edit form refuses Save on an emptied raw-YAML box for blocks that can't be empty (counter, negotiation, party, encounter, values row, characteristics, ds-scc), with an inline message; montage/project still save empty; shared `src/framework/blockBody.ts` reads block text for pipeline and form):**
+**CURRENT — dse `develop` @ `054c9c5` (2026-10-23; SC-501 landed — the shots host-leak sweeps open the roll strip's collapsed Modifiers disclosure before checking, so its steppers and Reset are compared instead of skipped; the gallery boundary prints the kinds under each reason; harness-only, no pixel or frozen-byte change):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **6003 passed / 1 skipped / 242 of 243 suites** · lifecycle **36/36** · e2e **`OBSIDIAN-E2E done: 114/114 ok,
+0 failed, 0 known-bug, coverage: 79/79 pairs`** · shots **592**, 0 FAIL, with `button host-leak OK (113 … 678 …)` (12-record boundary, kinds listed), `modal button host-leak OK (10 … 9 … 38 … 228 …)` (6-record boundary, listed ×2 each @MinionStaminaPoolModal, @MontageAddHeroModal, @StaminaEditModal), input `164` and checkbox `60` comparisons, and the expected `OBSIDIAN APP.CSS PIN DRIFT` warning · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-501 ticket-owner at `054c9c5`; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `efc17de` (2026-10-23; SC-493 landed — the block edit form refuses Save on an emptied raw-YAML box for blocks that can't be empty (counter, negotiation, party, encounter, values row, characteristics, ds-scc), with an inline message; montage/project still save empty; shared `src/framework/blockBody.ts` reads block text for pipeline and form):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **6003 passed / 1 skipped / 242 of 243 suites** · lifecycle **36/36** · e2e **`OBSIDIAN-E2E done: 114/114 ok,
 0 failed, 0 known-bug, coverage: 79/79 pairs`** · shots **592**, 0 FAIL · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-493 ticket-owner at `efc17de`; the dispatcher relayed, not re-ran.
