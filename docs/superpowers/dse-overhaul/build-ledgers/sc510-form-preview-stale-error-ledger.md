@@ -1,0 +1,66 @@
+# SC-510 decisions ledger — Block edit form preview can show a stale error while typing a reference (e.g. "Reference file (Ref.m) not found")
+
+Owner: ticket-owner (Opus 5.5, posts with `--model opus-5.5`). Session be71a0a9-199f-4e14-967b-191935312b05.
+Worktree: /home/scott/code/steelCompendium/worktrees/sc510-form-preview-stale-error (branch `sc510-form-preview-stale-error` in every submodule). Cut at dse develop 253aa5f, superproject origin/main 104dd85.
+
+## Ticket facts (from the description, 2026-10-24)
+- Origin: SC-493 r1 review LOW-3 (docs/superpowers/dse-overhaul/build-ledgers/sc493-form-empty-yaml/sc493-r1-review-report.md, jest probe).
+- Repro: "in the block edit form on a feature or statblock, type `@Ref.md` into the YAML box one character at a time (Ref.md exists)."
+- What happens: "the preview ends showing \"Reference file (Ref.m) not found\". Saving still writes and renders the right block. A self-referencing `@Note.md` produces 12 unhandled promise rejections (YAMLParseError from RefUnwrapView.onMount)."
+- Why (ticket): "every keystroke mounts the preview into the same element with `void view.mount(previewEl, model)` (`src/authoring/FormModal.ts` renderPreview). A mount still running from an earlier keystroke writes into the element after it was cleared. Mount rejections are not handled."
+- Expected (ticket): "the preview always shows the current box text. Suggested fix: mount each preview into a fresh child element that is dropped on the next keystroke, and catch mount rejections."
+- Reviewer's suggested fix (SC-493 LOW-3): "mount each preview into a fresh child `div` and detach it on the next revalidate. Add `.catch(() => {})` on `view.mount`."
+- SC-493 review also noted: "At base the same race is reachable through a bare SCC-code body."
+
+## Dispatcher constraints (2026-10-24)
+- Only FormModal ticket in flight. Authoring controls are experimental.
+- A new lifecycle scenario uses id G-S46.
+- Owner reports land-ready to the dispatcher and stops; the dispatcher lands.
+
+## Baselines at 253aa5f (dse-verify CURRENT)
+tsc (incl. -p e2e)/lint (incl. e2e/) clean · jest 6074 passed / 1 skipped / 245 of 246 suites (after shots) · lifecycle 38/38 · e2e 123/123 ok, 0 failed, 0 known-bug, coverage 87/87 · shots 592, 0 FAIL · freeze 280/280 · parity 0 GAPs / 0 undeclared / 24 DECLARED.
+
+## Scott rulings
+(none yet — no comments on the ticket)
+
+## Owner decisions
+- D0 (2026-10-24). Reproduce first: red jest test through the real FormModal + a real ref-resolving element (feature or statblock with `@path`, plus ds-scc bare code if reachable) typed one character at a time. If it does not reproduce, stop and return evidence.
+- D1 (2026-10-24). Fix shape = the ticket's suggestion: each renderPreview mounts into a fresh child element of `.dse-form__preview` (the preview host's `containerEl` is that child too), the previous child is detached on the next render, and `view.mount` rejections are caught (no unhandled rejection). A stale mount that finishes late may write only into its own detached child. Not a Scott ask (experimental controls; ticket's own fix).
+- D2. Scope: src/authoring/FormModal.ts + tests (+ CSS only if a `.dse-form__preview` child selector needs it). Off limits: element code, src/framework/host/, the save path. SC-523/SC-524 are separate tickets.
+- D3. Tests: red commit first, then fix. Lifecycle scenario only if jest cannot reach the real path (then G-S46).
+- D4. CHANGELOG bullet under `## Unreleased` in the worktree superproject.
+
+## Rounds
+- 2026-10-24 worktree created (wt-new). Ticket Backlog -> Awaiting.
+- 2026-10-24 r1 (impl, implementer A, agent a294c30627ede52b9): dispatched, brief sc510-brief-r1-impl.md. Review -> fresh reviewer B (not A).
+- 2026-10-24 r1 DONE (A): dse 47892bb red (13/17 fail on 253aa5f: feature/statblock stale "Reference file (Ref.m) not found", out-of-order lookups, clear-to-invalid resurrects, ds-scc kit card resurrected under its notice, 5 unhandled rejections per unreadable referenced block), be35c6a fix (fresh `div.dse-form__preview-slot` per render = host containerEl + mount root; `.catch(() => {})`; badge stays on `.dse-form__preview`; no CSS). Superproject dca5433 CHANGELOG on 104dd85, pointer unbumped. Gates on be35c6a: tsc/lint clean; jest 6091 / 1 / 246 of 247 (after shots); lifecycle 38/38; e2e 123/123, 0 known-bug, 87/87; shots 592 0 FAIL; freeze 280/280; parity 0/0/24. No G-S46. Ticket's "@Note.md -> 12 rejections" not reproduced as stated (the lookup error is caught in RefUnwrapView); the rejection class is reproduced via an unreadable referenced block. A's gate logs sit in the ledger dir under generic names (tsc.log, jestfull1.log, …) — this effort's, not to be confused with others'.
+- 2026-10-24 owner rulings on r1 follow-ups (pending reviewer evidence):
+  - FU-1 "Reference nesting too deep" in the preview when the same reference is retyped while an earlier mount of it is pending (IN_FLIGHT_REFS keyed on the constant preview blockKey `…::form-preview`): same symptom class as the ticket (preview shows an error that is not about the current text). HOLD for the r2 review: reviewer measures whether a person can reach it in real Obsidian and prescribes the smallest fix that keeps D2 (e.g. does the unloaded view release its in-flight entry; what a per-render blockKey would actually reset in a read-only preview). Owner rules fold/file after.
+  - FU-2 a rejected mount shows a blank box with the Read-only badge and no message: HOLD for the r2 review — reviewer reports what the real card shows for the same body and prescribes the smallest consistent preview behavior; owner rules after. No new UI invented.
+- 2026-10-24 r2 (independent review, reviewer B, agent a5d1545ae9fe01532, fresh identity): brief sc510-brief-r2-review.md at dse be35c6a / superproject dca5433.
+- 2026-10-24 dispatcher: dse origin/develop 253aa5f -> f89f69f (SC-512, harness-only: visual-harness/entry.ts + shoot.mjs; button host-leak sweep now 114/684). New baselines: jest 6078 / 1 / 245 of 246; lifecycle 38/38; e2e 123/123, 87/87; shots 592; freeze 280/280; parity 0/0/24. Land-ready must be on f89f69f (or newer), superproject rebased onto origin/main. Owner: B keeps reviewing be35c6a on 253aa5f (told by SendMessage; asked for a merge-tree conflict check vs f89f69f). Rebase goes into the fix round (A), battery once on the rebased tip: expect jest 6078+17 = 6095 / 1 / 246 of 247 (plus any fix-round tests), lifecycle 38/38.
+- 2026-10-24 r2 review DONE (B): LAND-READY at be35c6a. 0 HIGH / 0 MEDIUM / 1 LOW / 4 INFO. Red 13/17 on 253aa5f, 17/17 HEAD. Mutants 9: 8 killed, M2 (host containerEl left as previewEl) survives. merge-tree be35c6a vs f89f69f: 0 conflicts, no shared files. Battery at be35c6a identical to r1 (jest 6091/1/246 of 247; lifecycle 38/38; e2e 123/123 87/87; shots 592; freeze 280/280; parity 0/0/24). Real Obsidian: final preview after real-key typing shows Ref.md (sc510-r2-shot-head-ref-natural.png); base race needs held lookups released newest first; HEAD clean under the same hold. Self-ref `@Note.md`: 0 rejections on base and HEAD in real Obsidian (ticket claim not reproduced).
+- 2026-10-24 owner rulings on r2:
+  - LOW-1 (D1's containerEl rule untested; M2 survives): FOLD. Reviewer's fix verbatim: "one assertion in the test's `createView` wrapper that `cx.host.containerEl` is the mounted slot inside `.dse-form__preview`."
+  - INFO-1 / FU-1 ("Reference nesting too deep" on retyping the same reference while its lookup runs; pre-existing; reached only at ~7 ms key gaps): FILED SC-525 (Backlog, Low, related SC-510/SC-404) with the reviewer's C3 owner-aware guard. OUT OF SCOPE. C1 (per-render blockKey) rejected — resets preview session state per keystroke.
+  - INFO-2 / FU-2 (a rejected preview mount shows nothing; the real card shows "Feature: failed to render (render) / …"): FOLD reviewer's C2 — the preview shows the same error card the real card shows for that body. Only the CURRENT slot's rejection may touch `.dse-form__preview` (badge); a stale slot's rejection draws only into its own detached slot. Prefer a pure-move extraction of `renderErrorCard` out of pipeline.ts (re-exported from pipeline so callers are unchanged) over a new pipeline<->FormModal import cycle, if it is a pure move; otherwise import from `@/framework/pipeline` and say why.
+  - INFO-3 (ticket's self-ref rejection claim not reproduced): no code action; say so in the land-ready comment.
+  - INFO-4: no action.
+- 2026-10-24 r3 (fix round, implementer A resumed — author; scoped re-review -> B): brief sc510-brief-r3-fix.md. Includes rebase onto f89f69f + superproject onto origin/main.
+- 2026-10-24 owner eyeballed sc510-r2-shot-head-ref-natural.png: EDIT FEATURE dialog, YAML box "@Ref.md", preview below shows the REF STRIKE card (5 Malice, Melee 1, trigger + effect) with the Read-only badge; no error text. Use in the land-ready comment.
+- 2026-10-24 r3 DONE (A): dse rebased onto f89f69f (0 conflicts): r1 commits now below 7bab707; 7bab707 red (2 fail: preview error card = real card, feature + statblock), 8cda8a2 pure-move extraction (renderErrorCard, ElementStageError, ErrorStage, isValidationResult -> src/framework/errorCard.ts; pipeline re-exports; drive-by: unused ValidationResult import dropped), 2d01bd8 fix (current-slot-only `.catch` -> renderErrorCard; badge removed while the current slot shows the error card, set again on the next valid render). Superproject 088bbc9 on origin/main 27f4c8c (CHANGELOG reworded), pointer unbumped. M2 now killed (2 new containerEl tests). Gates on 2d01bd8: tsc/lint clean; jest 6099/1/246 of 247 (6078+21); lifecycle 38/38; e2e 123/123, 0 known-bug, 87/87; shots 592 0 FAIL (host-leak 114/684); freeze 280/280; parity 0/0/24. Badge choice: owner ACCEPTS (matches the r3 brief's SC-493 MEDIUM-1 reasoning). Diff vs f89f69f: 4 files +442/-71.
+- 2026-10-24 r4 (scoped re-review of be35c6a..2d01bd8 delta, reviewer B resumed — not the author): brief sc510-brief-r4-rereview.md.
+- 2026-10-24 ~12:00Z: owner + reviewer B killed by session-limit 429 mid-r4 (tsc/lint/jest done). 13:11Z: dse tree clean at 2d01bd8, no live process; develop still f89f69f. B resumed via SendMessage to finish r4.
+- 2026-10-24 r4 re-review DONE (B): LAND-READY at 2d01bd8 on f89f69f. 0 HIGH / 0 MEDIUM / 1 LOW / 3 INFO. range-diff r1 commits `=` (47892bb->550827d, be35c6a->51f24b6). Pure move verified (bodies identical; errorCard.ts type-only imports, no cycle). Mutants 7: 5 killed, R2 (error card into previewEl instead of slot) survives, R5 equivalent. Real Obsidian 1.15.0: `SC510-R4 ok (sameAsCard=true badgeOnError=null badgeAfterValid=true/true ref=true rejections=0/0/0/0)`. Gates on 2d01bd8: B re-ran tsc/lint/jest 6099/1/246 of 247/e2e 123/123 87/87/freeze 280/280; lifecycle 38/38, shots 592 (114/684), parity 0/0/24 from A's r3 logs, tied by time.
+- 2026-10-24 owner rulings on r4:
+  - LOW-1 (R2 survives: nothing checks the error card sits inside the current slot): FOLD. Reviewer's fix verbatim: "one assertion at :276: `expect(form.preview.querySelector(':scope > .dse-form__preview-slot > .dse-error-card')).toBe(card);`". Test-only; A adds it (r5), runs the file + full jest + tsc/lint; B confirms R2 now red.
+  - INFO-1 (R5 equivalent): DROP — keep the reset.
+  - INFO-2 (error cards RefUnwrapView draws inside a successful mount — "not found", "Failed to parse YAML" — keep the Read-only badge over their text in the preview; unchanged since before SC-510): DROP — the form's look is SC-404 (redesign before re-exposing), same as SC-493 INFO-2; the text stays readable below the badge per the r4 shots.
+  - INFO-3 (initiative-default-keys timeout under load 21; SC-506 known flake; passed on re-run): DROP.
+- 2026-10-24 r5 (test-only fold, implementer A resumed).
+- 2026-10-24 r5 DONE (A): dse 08c086c (one test-only commit on 2d01bd8: the reviewer's assertion verbatim at formModalStalePreview.test.ts:277, describe.each covers feature + statblock). R2 mutant: `Tests: 2 failed, 19 passed, 21 total` (Received: null at :277). Gates on 08c086c: tsc/lint rc 0; jest 6099 / 1 / 246 of 247.
+- Owner (2026-10-24): ~~B confirms R2 now red~~ superseded by: owner verified the r5 delta directly — a single test-file line, the reviewer's own prescribed text verbatim, plus A's R2 mutant log showing the kill; no runtime code changed, so no further reviewer round.
+- 2026-10-24: superproject origin/main moved 27f4c8c -> a9c391c (handoff-only). Chore rebase of the superproject CHANGELOG commits dispatched (chore agent ad1a4ac8f2b0ef3bd).
+- 2026-10-24 chore DONE: superproject CHANGELOG commits rebased onto origin/main a9c391c -> 8e051ee, 0e53ae2; pointer unbumped; no conflicts.
+- 2026-10-24: LAND-READY. dse sc510-form-preview-stale-error @ 08c086c on develop f89f69f; superproject @ 0e53ae2 on main a9c391c (pointer unbumped). CURRENT for dse-verify: jest 6099 / 1 / 246 of 247; lifecycle 38/38 (no new scenario; G-S46 unused); e2e 123/123, 0 known-bug, 87/87; shots 592 (host-leak 114/684); freeze 280/280 (no rebaseline); parity 0/0/24. At landing: preserve this ledger dir to docs/superpowers/dse-overhaul/build-ledgers/sc510-form-preview-stale-error/.
+- 2026-10-24: land-ready comment posted to SC-510 (2 screenshots, no ask). State stays Awaiting; landing is the dispatcher's. Reported land-ready to the dispatcher.

@@ -1228,7 +1228,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `f89f69f` (2026-10-24; SC-512 landed — the button host-leak sweep also compares the roll strip's Reset while it is enabled, via a sweep-only second roll strip (`galleryExtra=roll`); harness-only, no user-visible change, no pixel or frozen-byte change):**
+**CURRENT — dse `develop` @ `08c086c` (2026-10-24; SC-510 landed — the block edit form's preview always shows what is in the YAML box (no stale "Reference file … not found" while typing); an undrawable preview shows the same "failed to render" card as the block; `renderErrorCard` moved unchanged to `src/framework/errorCard.ts`, still re-exported by `pipeline.ts`):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **6099 passed / 1 skipped / 246 of 247 suites** · lifecycle **38/38** · e2e **`OBSIDIAN-E2E done: 123/123 ok,
+0 failed, 0 known-bug, coverage: 87/87 pairs`** · shots **592**, 0 FAIL, host-leak 114/684 · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED** (lifecycle/shots/parity at `2d01bd8`; `08c086c` adds one test line). Numbers as reported by the SC-510 ticket-owner; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `f89f69f` (2026-10-24; SC-512 landed — the button host-leak sweep also compares the roll strip's Reset while it is enabled, via a sweep-only second roll strip (`galleryExtra=roll`); harness-only, no user-visible change, no pixel or frozen-byte change):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **6078 passed / 1 skipped / 245 of 246 suites** · lifecycle **38/38** · e2e **`OBSIDIAN-E2E done: 123/123 ok,
 0 failed, 0 known-bug, coverage: 87/87 pairs`** · shots **592**, 0 FAIL, with `button host-leak OK (114 … 684 …)` (12-record boundary unchanged), modal `228`, input `164`, checkbox `60` · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-512 ticket-owner at `f89f69f`; the dispatcher relayed, not re-ran. Known shots flake under heavy load: the montage board mouse-wheel check (SC-521).
