@@ -1,0 +1,8 @@
+# SC-505 r4 scoped re-review brief (reviewer B, resumed)
+
+- Read the ledger's r3-re-review rulings and `/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc505-collapse-pin-focus/sc505-r4-fix-report.md`.
+- Scope: the r4 commits only (LOW-C, LOW-D, LOW-E), plus the rebase onto 38f94f4+ (SC-500: initiative control ids + e2e manifest): check the range-diff and every hand-merge (types.ts ChromeMenuItem `control?` + widened onClick, e2eCensus.test.ts, e2e manifest/census/driver incl. SC-500 `dse.hover`). Confirm mountChrome.ts `pushItem` still passes the click event to item.onClick (keyboard detection) AND keeps SC-500 `control: item.control`, and that SC-500 initiative chrome items (init.reset-encounter) still get their ids.
+- Verify: RV-P19 now keeps focus where the user put it (bar 2's Pin) after the outside edit; RV-P07B, P13, P16, P17A/B and a real Pin's rebuild sequence still pass; K9 and K10 mutations now go red; K2 simplification is behaviour-neutral; lint is silent.
+- Gates on head: tsc, lint (expect 0 warnings), jest, e2e full, lifecycle. Expected: jest 6052 (6027 + branch 25) / 1 / 244 of 245; e2e 123+ ok, 0 failed, 0 known-bug, coverage 87/87 (82 base + 5); lifecycle 36/36.
+- Same rules as before (no commits to the branch, throwaway worktree, new private scratch folder `sc505-r4-rereview-<4 chars>/`, fresh log names, no rm with variable targets, no glob rm, no background gates).
+- Report `/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc505-collapse-pin-focus/sc505-r4-rereview-report.md`, ≤10-line summary first. Return raw facts + artifact paths.
