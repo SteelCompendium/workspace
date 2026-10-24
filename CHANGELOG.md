@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: saving the block edit form no longer drops a block's `collapsed:` line (SC-494).**
+  The block edit form (experimental authoring controls) used to write the block back without its
+  `collapsed: true` / `collapsed: false` line (and, on blocks such as Skills, Conditions and Surges, showed a schema error
+  with Save switched off), so a block you had set to start collapsed came back expanded. Save now keeps
+  `collapsed:`, `collapsible:` and `collapse_default:`, and a Save with no changes writes the block unchanged,
+  except that collapse lines placed below other settings move to the top of the block.
+
 - **DSE plugin: emptying the YAML box in the block edit form no longer saves a broken block (SC-493).**
   For a block the form edits as raw YAML (for example Counter, Negotiation, Party, Encounter, Values row,
   Characteristics), clearing the box and pressing Save used to write an empty block that then showed an error
