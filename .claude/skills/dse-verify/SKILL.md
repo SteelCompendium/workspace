@@ -1228,7 +1228,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `054c9c5` (2026-10-23; SC-501 landed — the shots host-leak sweeps open the roll strip's collapsed Modifiers disclosure before checking, so its steppers and Reset are compared instead of skipped; the gallery boundary prints the kinds under each reason; harness-only, no pixel or frozen-byte change):**
+**CURRENT — dse `develop` @ `7046eb0` (2026-10-24; SC-494 landed — the block edit form's Save keeps the block's `collapsed:` line; one shared helper `withReservedKeys` (`src/framework/chrome/collapsedKey.ts`) now orders reserved keys on every block write-back in `pipeline.ts` (388-case byte comparison unchanged)):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **6026 passed / 1 skipped / 243 of 244 suites** · lifecycle **36/36** · e2e **`OBSIDIAN-E2E done: 114/114 ok,
+0 failed, 0 known-bug, coverage: 79/79 pairs`** · shots **592**, 0 FAIL, in-run lines as at `054c9c5` · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-494 ticket-owner at `7046eb0`; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `054c9c5` (2026-10-23; SC-501 landed — the shots host-leak sweeps open the roll strip's collapsed Modifiers disclosure before checking, so its steppers and Reset are compared instead of skipped; the gallery boundary prints the kinds under each reason; harness-only, no pixel or frozen-byte change):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **6003 passed / 1 skipped / 242 of 243 suites** · lifecycle **36/36** · e2e **`OBSIDIAN-E2E done: 114/114 ok,
 0 failed, 0 known-bug, coverage: 79/79 pairs`** · shots **592**, 0 FAIL, with `button host-leak OK (113 … 678 …)` (12-record boundary, kinds listed), `modal button host-leak OK (10 … 9 … 38 … 228 …)` (6-record boundary, listed ×2 each @MinionStaminaPoolModal, @MontageAddHeroModal, @StaminaEditModal), input `164` and checkbox `60` comparisons, and the expected `OBSIDIAN APP.CSS PIN DRIFT` warning · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-501 ticket-owner at `054c9c5`; the dispatcher relayed, not re-ran.
