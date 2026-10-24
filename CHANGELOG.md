@@ -26,8 +26,10 @@ go under an *Internal* sub-heading.
   In Live Preview, a mouse click on the menu above a block (Collapse, Pin to sidebar, the experimental Edit pencil)
   did nothing and moved the editor cursor to the line above the block: Obsidian cut the menu off at the block's top
   edge, so it was never drawn there. The menu now shows above the block when you hover it, the same place as in
-  Reading view, and its buttons work with the mouse. The Expand button on the collapsed one-line bar is not
-  covered by this: Obsidian's own `</>` button still sits over it in Live Preview.
+  Reading view, its buttons work with the mouse, and it stays up while the pointer passes over Obsidian's own `</>`
+  button on the way to Collapse. On the collapsed one-line bar, Expand now sits just left of that `</>` button
+  (it used to be underneath it, so clicking it opened the block's source instead of expanding); the `</>` button
+  works as before.
 
 - **DSE plugin: keyboard Collapse, Expand and Pin no longer drop you out of the block (SC-505).**
   Pressing Enter on an element's Collapse button used to throw keyboard focus to the page, so the next Tab started
