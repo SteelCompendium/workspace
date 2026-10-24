@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the block edit form's preview no longer shows a stale error while you type a reference (SC-510).**
+  With experimental authoring controls on, typing a reference such as `@Ref.md` into a feature or statblock's YAML
+  box one character at a time could leave the preview on "Reference file (Ref.m) not found", or on a mix of earlier
+  and current results, even though the finished text was fine. The preview now always shows the text currently in
+  the box. Saving was never affected. A reference the element cannot read no longer raises an error in the
+  background either; the preview just stays blank for it.
+
 - **DSE plugin: in Reading view and the sidebar, the block edit form opened right after a click on the card now includes that click (SC-519).**
   With experimental authoring controls on, pressing the pencil within a moment of a button on the card (for
   example Increase on a counter) opened the edit form with the content from before that click, and Save then wrote
