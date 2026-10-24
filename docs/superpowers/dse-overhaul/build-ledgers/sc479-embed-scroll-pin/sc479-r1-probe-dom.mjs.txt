@@ -1,0 +1,40 @@
+// ===== SC-479 r1 PROBE: DOM structure of an embedded tracker in a Reading view =====
+SCENARIOS.push({
+	id: 'P479-DOM',
+	async run(t) {
+		const res = {};
+		for (const rel of ['SC479/EmbA.md', 'SC479/EmbAS.md', 'SC479/EmbAH.md', 'SC479/EmbAN.md']) {
+			await t.open(rel);
+			await t.sleep(1500);
+			// scroll so the embed is in view, wait for the tracker to draw
+			for (let i = 0; i < 20; i++) {
+				const found = await t.ev(`(() => { const s = app.workspace.getMostRecentLeaf().view.containerEl.querySelector('.markdown-reading-view > .markdown-preview-view'); const e = s.querySelector('.internal-embed'); if (e) { e.scrollIntoView({ block: 'start' }); return true; } s.scrollTop += 700; return false; })()`);
+				await t.sleep(400);
+				if (found) break;
+			}
+			await t.sleep(1500);
+			res[rel] = await t.ev(`(() => {
+				const leaf = app.workspace.getMostRecentLeaf(); const v = leaf.view;
+				const outer = v.containerEl.querySelector('.markdown-reading-view > .markdown-preview-view');
+				const prevCont = v.previewMode && v.previewMode.containerEl;
+				const root = outer.querySelector('[data-dse-element="initiative"]');
+				const chain = [];
+				for (let el = root; el && el !== document.body; el = el.parentElement) {
+					const cs = getComputedStyle(el);
+					if (el.classList.contains('markdown-preview-view') || el.classList.contains('markdown-preview-sizer') || el.classList.contains('internal-embed') || el.classList.contains('markdown-embed') || el.classList.contains('markdown-embed-content') || el.classList.contains('markdown-preview-section') || el.classList.contains('markdown-reading-view') || el === root)
+						chain.push({ cls: el.className.slice(0, 120), tag: el.tagName, src: el.getAttribute('src'), maxH: cs.maxHeight, ovY: cs.overflowY, st: el.scrollTop, sh: el.scrollHeight, ch: el.clientHeight, mhInline: el.style.minHeight || null, h: Math.round(el.getBoundingClientRect().height) });
+				}
+				const embeds = Array.from(outer.querySelectorAll('.internal-embed')).map((e) => ({ src: e.getAttribute('src'), alt: e.getAttribute('alt'), cls: e.className, hasInnerPreview: !!e.querySelector('.markdown-preview-view'), innerSizers: e.querySelectorAll('.markdown-preview-sizer').length, dse: e.querySelectorAll('[data-dse-element]').length, h: Math.round(e.getBoundingClientRect().height), keys: Object.keys(e).filter((k) => !k.startsWith('__')).slice(0, 20) }));
+				// the embed child component, if reachable via the preview renderer
+				const r = v.previewMode && v.previewMode.renderer;
+				const secs = r && r.sections ? r.sections.length : null;
+				const embSec = r && r.sections ? r.sections.filter((s) => s.el && s.el.querySelector('.internal-embed')).map((s) => ({ height: s.height, computed: s.computed, rendered: s.rendered, html: (s.html || '').slice(0, 80), lineStart: s.lineStart, children: (s.children||[]).length })) : null;
+				const fileOf = (e) => { try { const lp = e.getAttribute('src').split('#')[0]; const f = app.metadataCache.getFirstLinkpathDest(lp, v.file.path); return f ? f.path : null; } catch (err) { return 'ERR ' + err; } };
+				return { prevContCls: prevCont && prevCont.className, outerSt: outer.scrollTop, outerSh: outer.scrollHeight, outerCh: outer.clientHeight, outerSizerMh: outer.querySelector(':scope > .markdown-preview-sizer')?.style.minHeight, chain, embeds: embeds.map((e, i) => Object.assign(e, { file: fileOf(outer.querySelectorAll('.internal-embed')[i]) })), sections: secs, embSec, closestFromRoot: root ? (root.closest('.markdown-preview-view') === outer ? 'outer' : 'inner') : 'noroot', pinnable: root ? Array.from((function* () { for (let el = root.parentElement; el; el = el.parentElement) if (el.classList && el.classList.contains('markdown-preview-view')) yield el; })()).map((el) => ({ isOuter: el === outer, st: el.scrollTop, sh: el.scrollHeight, ch: el.clientHeight })) : null };
+			})()`);
+		}
+		p479Write(`DOM-${P479_VAR}`, res);
+		return JSON.stringify(res).slice(0, 6000);
+	},
+});
+// ===== end SC-479 r1 PROBE DOM =====

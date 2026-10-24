@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+"""SC-479 r1: one TSV row per probe case rep (every P479-REPRO JSON), the frame-trace summary.
+usage: python3 -I s479-summ.py <out dir> <tsv path>"""
+import json, os, sys
+
+out_dir, tsv = sys.argv[1], sys.argv[2]
+SHA = {'stock': '7046eb0', 'stock2': 'c2758a2', 'proto': 'proto@7046eb0'}
+cols = ['file', 'dse', 'run', 'kase', 'rep', 'adopt', 'variant_note', 'st0', 'stMin', 'stMax', 'stEnd', 'max0', 'sh0', 'shMin', 'mh0', 'mhMin',
+        'embH0', 'embHMin', 'imh0', 'imhMin', 'anchor0', 'anchorMin', 'anchorMax', 'topLine0', 'topLineEnd', 'pinFrames', 'rootDiscMs', 'landed', 'B_st0', 'B_stMin', 'B_pinFrames']
+rows = []
+for f in sorted(os.listdir(out_dir)):
+    if not (f.startswith('sc479-r1-REPRO-') and f.endswith('.json')) or '-try' in f:
+        continue
+    var = f[len('sc479-r1-REPRO-'):-5]
+    bundle = var.split('-')[0]
+    for r in json.load(open(os.path.join(out_dir, f))):
+        if 'error' in r:
+            rows.append([f, SHA.get(bundle, bundle), var, r['kase'], r['rep'], r['adopt'], 'ERROR ' + r['error'][:80]] + [''] * (len(cols) - 7))
+            continue
+        a = r['summ']['A']; b = r['summ'].get('B') or {}
+        note = []
+        if r.get('anchorMode') and r['anchorMode'] != 'auto': note.append('anchor=' + r['anchorMode'])
+        if r.get('emuPin'): note.append('emuPin=' + str(r['emuPin']))
+        if r.get('thr') and r['thr'] > 1: note.append('cpu x' + str(r['thr']))
+        rows.append([f, SHA.get(bundle, bundle), var, r['kase'], r['rep'], r['adopt'], ' '.join(note), a.get('st0'), a.get('stMin'), a.get('stMax'), a.get('stEnd'),
+                     r['park'].get('max'), a.get('sh0'), a.get('shMin'), a.get('mh0'), a.get('mhMin'), a.get('embH0'), a.get('embHMin'), a.get('imh0'), a.get('imhMin'),
+                     a.get('anchor0'), a.get('anchorMin'), a.get('anchorMax'), a.get('topLine0', ''), a.get('topLineEnd', ''), a.get('pinFrames'), a.get('rootDisc'), r.get('landed'),
+                     b.get('st0', ''), b.get('stMin', ''), b.get('pinFrames', '')])
+with open(tsv, 'w') as o:
+    o.write('\t'.join(cols) + '\n')
+    for row in rows:
+        o.write('\t'.join('' if v is None else str(v) for v in row) + '\n')
+moved = [r for r in rows if r[7] not in ('', None) and r[8] not in ('', None) and r[7] != r[8]]
+print(f'{len(rows)} rows; scrollTop moved in {len(moved)}:')
+for r in moved:
+    print('  ', r[1], r[2], r[3], r[4], r[5], r[6], f'{r[7]}->{r[8]}')

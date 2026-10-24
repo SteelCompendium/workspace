@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# SC-479 r3: experimental variant (scratch copy only): the host pin's anchoring stop on the EMBEDS inside the host, not the host scroller.
+set -u
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc479-r3-a49fb648
+D=/home/scott/code/steelCompendium/worktrees/sc479-embed-scroll-pin/draw-steel-elements
+PIN=src/framework/host/previewScrollPin.ts
+mkdir -p "$S/src/alt-embanchor" "$S/bundles/alt-embanchor"
+git -C "$D" archive 84ba65a | tar -x -C "$S/src/alt-embanchor"
+ln -sfn "$D/node_modules" "$S/src/alt-embanchor/node_modules"
+python3 -I - "$S/src/alt-embanchor/$PIN" <<'PY'
+import sys
+p = sys.argv[1]; s = open(p).read()
+old = 'export const anchorRule = (id: string): string => `.markdown-preview-view[${PIN_ATTR}="${id}"] { overflow-anchor: none !important; }`;'
+assert s.count(old) == 1
+s = s.replace(old, 'export const anchorRule = (id: string): string => `.markdown-preview-view[${PIN_ATTR}="${id}"] .internal-embed { overflow-anchor: none !important; }`;')
+open(p, 'w').write(s)
+PY
+( cd "$S/src/alt-embanchor" && node esbuild.config.mjs production ) > "$S/build-alt-embanchor.log" 2>&1
+rc=$?
+cp "$S/src/alt-embanchor/main.js" "$S/src/alt-embanchor/styles.css" "$S/src/alt-embanchor/manifest.json" "$S/bundles/alt-embanchor/"
+echo "alt-embanchor rc=$rc main.js $(sha256sum < "$S/bundles/alt-embanchor/main.js" | cut -c1-12)" >> "$S/bundles.sums"
+exit $rc

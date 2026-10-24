@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# SC-479 r3 discrimination: r3-disc.sh <variant> <run-tag> [only-ids]; in-tree harness (unmodified) against bundles/<variant>.
+set -u
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc479-r3-a49fb648
+D=/home/scott/code/steelCompendium/worktrees/sc479-embed-scroll-pin/draw-steel-elements
+V=$1; R=$2; ONLY=${3:-G-S8,G-S15,G-S18,G-S42}
+mkdir -p "$S/tmp"
+LOG="$S/disc-$V-$R.log"
+start=$(date +%s)
+DSE_LIFECYCLE_PORT=9493 DSE_LIFECYCLE_BUNDLE="$S/bundles/$V" node "$D/visual-harness/obsidian-lifecycle.mjs" --only="$ONLY" > "$LOG" 2>&1
+rc=$?
+echo "rc=$rc secs=$(( $(date +%s) - start ))" >> "$LOG"
+echo "$V $R rc=$rc :: $(grep -E 'OBSIDIAN-LIFECYCLE (G-|done)' "$LOG" | cut -c1-70 | tr '\n' '|')" >> "$S/disc-summary.log"
+exit $rc

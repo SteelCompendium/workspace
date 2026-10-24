@@ -1,0 +1,24 @@
+FAIL dom test/dom/framework/previewScrollPin.test.ts
+  ● SC-470: PreviewScrollPin.pinReadingViewsOf › leaves alone: another note, a Live Preview/Source view, a view without a DSE block, a deferred view
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      484 | 		const deferred = { leaf: { view: {} } };
+      485 | 		new PreviewScrollPin().pinReadingViewsOf(workspaceOf(other, source, plain, deferred), 'Note.md');
+    > 486 | 		for (const l of [other, source, plain]) expect(isPinned(l.scroller)).toBe(false);
+          | 		                                                                     ^
+      487 | 	});
+      488 |
+      489 | 	test('keeps every pin() fail-safe: not scrolled, or a document that does not scroll, is never pinned', () => {
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:486:72)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 45 passed, 46 total
+Snapshots:   0 total
+Time:        1.927 s
+Ran all test suites matching test/dom/framework/previewScrollPin.test.ts.
+rc=1

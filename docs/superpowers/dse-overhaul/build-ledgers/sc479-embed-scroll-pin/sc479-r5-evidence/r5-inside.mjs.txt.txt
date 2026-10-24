@@ -1,0 +1,68 @@
+// ===== SC-479 r5 PROBE: a reader parked INSIDE a tall embed, below the hero list (scratch harness copy only) =====
+const R5B = 'R3/r5trk.md';
+Object.assign(FIXTURES, {
+	// a 20-hero tracker followed by 25 paragraphs: the embed is tall (under the 4000px embed cap) and has text BELOW the hero list
+	[R5B]: `# r5trk\n\nI-TOP\n\n${R3_TRK(r3names(20))}\n\n${r3paras(25, 'I-POST')}\n`,
+	'R3/r5host.md': `# r5host\n\n${r3paras(30, 'H-PRE')}\n\n![[r5trk]]\n\n${r3paras(80, 'H-POST')}\n`,
+});
+SCENARIOS.push({
+	id: 'R5-INSIDE',
+	async run(t) {
+		await t.ev(R3_PAGE);
+		const A = 'window.__r3A';
+		const out = [];
+		const writers = {
+			addHero: async () => {
+				r3v++;
+				await t.edit(R5B, `c.replace('enemy_groups: []', ${JSON.stringify(`  - name: "Added ${r3v}"\n    max_stamina: 30\nenemy_groups: []`)})`);
+			},
+			removeHero: async () => {
+				const names = t.read(R5B).match(/ {2}- name: "[^"]+"\n {4}max_stamina: 30\n/g) ?? [];
+				await t.edit(R5B, `c.replace(${JSON.stringify(names.at(-1))}, '')`);
+			},
+			process: async () => {
+				r3v++;
+				await t.edit(R5B, `c.replace(/ {2}value: \\d+/, '  value: ${r3v}')`);
+			},
+		};
+		for (const [w, mode, off] of [['addHero', 'inside', 150], ['removeHero', 'inside', 150], ['process', 'inside', 150], ['addHero', 'inside', 500], ['removeHero', 'inside', 500], ['addHero', 'below', 100], ['removeHero', 'below', 100], ['process', 'below', 100], ['addHero', 'inside', 150], ['removeHero', 'inside', 150], ['addHero', 'below', 100], ['removeHero', 'below', 100]]) {
+			const id = `${mode.toUpperCase()}-${w}-${off}-${out.length}`;
+			try {
+				r3v++;
+				await t.ev(`(async () => { await app.vault.modify(app.vault.getAbstractFileByPath(${JSON.stringify(R5B)}), ${JSON.stringify(FIXTURES[R5B])}.replace('  value: 1', '  value: ${r3v}')); })()`);
+				await t.sleep(1000);
+				await t.open('R3/r5host.md');
+				await t.ev(`(() => { window.__r3A = app.workspace.getMostRecentLeaf(); return true; })()`);
+				// seek the embed, then park the viewport top `off` px below the tracker's bottom (inside the embed, in the I-POST text)
+				await t.ev(`(() => { ${r3S(A)}.scrollTop = 0; return true; })()`);
+				for (let i = 0; i < 60 && !(await t.ev(`!!window.__r3emb(${r3S(A)})`)); i++) {
+					await t.ev(`(() => { const s = ${r3S(A)}; s.scrollTop += Math.round(s.clientHeight * 0.6); return true; })()`);
+					await t.sleep(200);
+				}
+				await t.waitFor(`(() => { const e = window.__r3emb(${r3S(A)}); return !!e && e.querySelectorAll('button.dse-init__portrait-toggle').length === 20; })()`, `${id}: the embed shows the 20-hero fixture`, 10000);
+				let geo = null;
+				for (let i = 0; i < 3; i++) {
+					geo = await t.ev(`(() => { const s = ${r3S(A)}; const e = window.__r3emb(s); if (!e) return null; const trk = e.querySelector('[data-dse-element="initiative"]'); const sr = s.getBoundingClientRect(); s.scrollTop = (${JSON.stringify(mode)} === 'below' ? e : trk).getBoundingClientRect().bottom - sr.top + s.scrollTop + ${off}; const er = e.getBoundingClientRect(); return { st: Math.round(s.scrollTop), embTop: Math.round(er.top - sr.top), embBottom: Math.round(er.bottom - sr.top), clientH: s.clientHeight, embH: Math.round(er.height) }; })()`);
+					await t.sleep(450);
+				}
+				t.expect(geo && geo.embTop < 0 && (mode === 'below' ? geo.embBottom < 0 : geo.embBottom > 0), `${id}: not parked ${mode} the embed: ${JSON.stringify(geo)}`);
+				// reference: the first fully visible I-POST paragraph, tracked by its text (the embed's paragraphs may be re-rendered)
+				await t.ev(`(() => { const s = ${r3S(A)}; const sr = s.getBoundingClientRect(); const p = Array.from(s.querySelectorAll('p')).find((x) => { const r = x.getBoundingClientRect(); return /I-POST|H-POST/.test(x.textContent) && r.top >= sr.top && r.bottom <= sr.bottom; }); window.__r5refText = p ? p.textContent : null; return true; })()`);
+				const refText = await t.ev('window.__r5refText');
+				t.expect(!!refText, `${id}: no visible I-POST paragraph`);
+				await t.ev(`(() => { const s = ${r3S(A)}; window.__r3tag(s); const find = () => Array.from(s.querySelectorAll('p')).find((x) => x.isConnected && x.textContent === window.__r5refText) || null; const t0 = performance.now(); const sr0 = s.getBoundingClientRect(); const r0 = find(); const ref0 = Math.round(r0.getBoundingClientRect().top - sr0.top); const st0 = Math.round(s.scrollTop); const e0 = window.__r3emb(s); const h0 = Math.round(e0.getBoundingClientRect().height); const frames = []; let pinSeen = false, pinOnAt = 0, gone = 0; window.__r5p = new Promise((resolve) => { const tick = () => { const now = performance.now() - t0; const sr = s.getBoundingClientRect(); const r = find(); const e = window.__r3emb(s); const pin = s.hasAttribute('data-dse-scroll-pin'); frames.push({ ms: Math.round(now), st: Math.round(s.scrollTop), ref: r ? Math.round(r.getBoundingClientRect().top - sr.top) : null, h: e ? Math.round(e.getBoundingClientRect().height) : null, pin }); if (pin) { if (!pinSeen) pinOnAt = now; pinSeen = true; gone = 0; } else if (pinSeen) gone++; if (gone < 10 && now < (pinSeen ? Math.min(pinOnAt + 4500, 12000) : 5000)) requestAnimationFrame(tick); else { const refs = frames.map((f) => f.ref).filter((x) => x !== null); const last = frames[frames.length - 1]; resolve({ ref0, st0, h0, refEnd: last.ref, refMin: Math.min(...refs), refMax: Math.max(...refs), refLostFrames: frames.filter((f) => f.ref === null).length, stEnd: last.st, stMin: Math.min(...frames.map((f) => f.st)), stMax: Math.max(...frames.map((f) => f.st)), hEnd: last.h, pinFrames: frames.filter((f) => f.pin).length, nFrames: frames.length, frames }); } }; requestAnimationFrame(tick); }); return true; })()`);
+				await writers[w]();
+				const m = await t.ev('window.__r5p');
+				const redrawn = await t.ev(`!Array.from(${r3S(A)}.querySelectorAll('[data-dse-element]')).some((x) => x.isConnected && x.__r3tagged)`);
+				r3Write(id, { id, geo, refText, redrawn, ...m });
+				out.push(`${id}: geo ${JSON.stringify(geo)}; embed ${m.h0} -> ${m.hEnd}; redrawn=${redrawn}; scrollTop ${m.st0} -> end ${m.stEnd} (min ${m.stMin} max ${m.stMax}); text "${refText}" ${m.ref0} -> end ${m.refEnd} (min ${m.refMin} max ${m.refMax}, lost ${m.refLostFrames}f); pin ${m.pinFrames}/${m.nFrames}f`);
+			} catch (e) {
+				out.push(`${id}: ERROR ${e instanceof Error ? e.message : String(e)}`);
+			}
+		}
+		await t.reset(R5B);
+		for (const l of out) console.log(`R5 ${l}`);
+		return `${out.length} cases`;
+	},
+});
+// ===== end SC-479 r5 PROBE =====

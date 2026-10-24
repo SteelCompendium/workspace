@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# r5 experimental variant (scratch only): the host pin's anchoring stop on the DSE roots inside the host's embeds only.
+set -u
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc479-r5-a49fb648
+D=/home/scott/code/steelCompendium/worktrees/sc479-embed-scroll-pin/draw-steel-elements
+PIN=src/framework/host/previewScrollPin.ts
+mkdir -p "$S/src/alt-dseroot" "$S/bundles/alt-dseroot"
+git -C "$D" archive e6b02ca | tar -x -C "$S/src/alt-dseroot"
+ln -sfn "$D/node_modules" "$S/src/alt-dseroot/node_modules"
+python3 -I - "$S/src/alt-dseroot/$PIN" <<'PY'
+import sys
+p = sys.argv[1]; s = open(p).read()
+old = '.internal-embed { overflow-anchor: none !important; }`;'
+assert s.count(old) == 1
+open(p, 'w').write(s.replace(old, '.internal-embed [data-dse-element] { overflow-anchor: none !important; }`;'))
+PY
+( cd "$S/src/alt-dseroot" && node esbuild.config.mjs production ) > "$S/build-alt-dseroot.log" 2>&1
+rc=$?
+cp "$S/src/alt-dseroot/main.js" "$S/src/alt-dseroot/styles.css" "$S/src/alt-dseroot/manifest.json" "$S/bundles/alt-dseroot/"
+echo "alt-dseroot rc=$rc main.js $(sha256sum < "$S/bundles/alt-dseroot/main.js" | cut -c1-12)" >> "$S/bundles.sums"
+exit $rc

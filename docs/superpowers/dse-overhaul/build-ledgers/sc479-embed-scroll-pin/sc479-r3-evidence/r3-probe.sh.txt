@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# SC-479 r3 probe runner: r3-probe.sh <variant> <only-ids> <tag>. Scratch harness copy with probes injected; tree never edited.
+set -u
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc479-r3-a49fb648
+D=/home/scott/code/steelCompendium/worktrees/sc479-embed-scroll-pin/draw-steel-elements
+V=$1; ONLY=$2; TAG=$3
+H=$S/r3-harness-$TAG-$V.mjs
+node "$S/r3-mkharness.cjs" "$D/visual-harness/obsidian-lifecycle.mjs" "$H" "$S/r3-probe.mjs.txt" > "$S/r3-mk-$TAG-$V.log" 2>&1 || exit 9
+node --check "$H" >> "$S/r3-mk-$TAG-$V.log" 2>&1 || exit 8
+LOG="$S/probe-$TAG-$V.log"
+mkdir -p "$S/out"
+start=$(date +%s)
+R3_END="${R3_END:-}" R3_REPO="$D" R3_OUT="$S/out" R3_VARIANT="$V-$TAG" DSE_LIFECYCLE_PORT=9493 DSE_LIFECYCLE_BUNDLE="$S/bundles/$V" node "$H" --only="$ONLY" > "$LOG" 2>&1
+rc=$?
+echo "rc=$rc secs=$(( $(date +%s) - start ))" >> "$LOG"
+echo "porcelain-after: [$(git -C "$D" status --porcelain | tr '\n' ' ')] head: $(git -C "$D" rev-parse --short HEAD)" >> "$LOG"
+exit $rc

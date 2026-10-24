@@ -1,0 +1,267 @@
+// ===== SC-479 r1 PROBE: does a write to an embedded note B clamp / move the host note A? =====
+// Env: P479_CASES (comma list of writer:park[:shape]), P479_REPS (2), P479_ADOPT (on|off), P479_DUR (ms, 3500).
+//   writer: own (click in A's embedded tracker) | pane (click in a second Reading pane showing B) | process | nodefs | lpprocess (A in Live Preview)
+//   park:   above | in | below | end
+//   shape:  B (EmbB, tall tracker note: fillers + 25-hero tracker + fillers; default) | S (EmbS, the tracker alone) | H (A embeds EmbS#EmbS) | N (A embeds EmbN which embeds EmbS)
+const P479_SHAPES = {
+	B: { a: 'SC479/EmbA.md', b: 'SC479/EmbB.md' },
+	S: { a: 'SC479/EmbAS.md', b: 'SC479/EmbS.md' },
+	H: { a: 'SC479/EmbAH.md', b: 'SC479/EmbS.md' },
+	N: { a: 'SC479/EmbAN.md', b: 'SC479/EmbS.md' },
+	E: { a: 'SC479/EmbAE.md', b: 'SC479/EmbS.md' },
+	C: { a: 'SC479/EmbAC.md', b: 'SC479/EmbS.md' },
+};
+const P479_SEQ = { n: 100 };
+const P479_INSTALL = `(() => {
+  if (window.__p479) return true;
+  const P = window.__p479 = { frame: 0, events: [] };
+  const loop = () => { P.frame++; requestAnimationFrame(loop); }; requestAnimationFrame(loop);
+  P.outerOf = (leaf) => leaf.view.containerEl.querySelector('.markdown-reading-view > .markdown-preview-view');
+  P.lpOf = (leaf) => leaf.view.containerEl.querySelector('.markdown-source-view .cm-scroller');
+  // the top-level embed of A (the first .internal-embed that is not inside another embed)
+  P.embOf = (scroller) => Array.from(scroller.querySelectorAll('.internal-embed.markdown-embed')).find((e) => !e.parentElement.closest('.internal-embed')) || null;
+  P.snap = (leaf, tg) => {
+    const lp = leaf.view.getMode() !== 'preview';
+    const s = lp ? P.lpOf(leaf) : P.outerOf(leaf);
+    if (!s) return { none: true };
+    const sr = s.getBoundingClientRect();
+    const z = lp ? null : s.querySelector(':scope > .markdown-preview-sizer');
+    const emb = P.embOf(s);
+    const ec = emb && emb.querySelector(':scope > .markdown-embed-content');
+    const inner = ec && ec.querySelector(':scope > .markdown-preview-view');
+    const isz = inner && inner.querySelector(':scope > .markdown-preview-sizer');
+    const o = { st: Math.round(s.scrollTop), sh: s.scrollHeight, mh: z ? parseFloat(z.style.minHeight) : null,
+      embH: emb ? Math.round(emb.getBoundingClientRect().height) : null, embTop: emb ? Math.round(emb.getBoundingClientRect().top - sr.top) : null,
+      ecSt: ec ? Math.round(ec.scrollTop) : null, ecSh: ec ? ec.scrollHeight : null, imh: isz ? parseFloat(isz.style.minHeight) : null,
+      cmh: z ? parseFloat(getComputedStyle(z).minHeight) : null, szH: z ? Math.round(z.getBoundingClientRect().height) : null, pin: s.hasAttribute('data-dse-scroll-pin') || s.hasAttribute('data-p479-pin'), pinIn: !!(s.querySelector('[data-dse-scroll-pin]')) };
+    if (tg) {
+      o.rootConn = tg.root ? tg.root.isConnected : null; o.embSame = tg.emb ? tg.emb.isConnected : null; o.iszSame = tg.isz ? tg.isz.isConnected : null; o.szSame = tg.sz ? tg.sz.isConnected : null;
+      o.anchor = tg.anchor && tg.anchor.isConnected ? Math.round(tg.anchor.getBoundingClientRect().top - sr.top) : null;
+      if (lp) { try { const cm = leaf.view.editor.cm; const y = cm.scrollDOM.getBoundingClientRect().top - cm.documentTop; const b = cm.lineBlockAtHeight(Math.max(0, y)); o.topLine = cm.state.doc.lineAt(b.from).number; o.topOff = Math.round(y - b.top); } catch (e) { o.topLine = 'ERR'; } }
+    }
+    return o;
+  };
+  app.vault.on('modify', (f) => { const r = P.cur; P.events.push({ t: r ? Math.round(performance.now() - r.t0) : null, frame: P.frame, path: f.path, A: r && r.leaves.A ? P.snap(r.leaves.A, r.tags.A) : null }); });
+  /** tag A's (and B's) current embed / tracker / sizers / an anchor paragraph that is visible and outside the embed */
+  P.tagOf = (leaf) => {
+    const lp = leaf.view.getMode() !== 'preview';
+    const s = lp ? P.lpOf(leaf) : P.outerOf(leaf); const sr = s.getBoundingClientRect();
+    const emb = P.embOf(s);
+    const ec = emb && emb.querySelector(':scope > .markdown-embed-content');
+    const inner = ec && ec.querySelector(':scope > .markdown-preview-view');
+    const isz = inner && inner.querySelector(':scope > .markdown-preview-sizer');
+    const root = (emb || s).querySelector('[data-dse-element]');
+    const cand = Array.from(s.querySelectorAll(lp ? '.cm-line' : 'p')).filter((p) => !p.closest('.internal-embed') && !p.closest('[data-dse-element]'));
+    const anchor = cand.find((p) => { const r = p.getBoundingClientRect(); return r.top >= sr.top && r.bottom <= sr.bottom; }) || null;
+    return { emb, isz, root, sz: lp ? null : s.querySelector(':scope > .markdown-preview-sizer'), anchor, anchorText: anchor ? anchor.textContent.slice(0, 40) : null, embConnected0: !!(emb && emb.isConnected) };
+  };
+  P.rec = (names, durMs, action) => new Promise((resolve) => {
+    const t0 = performance.now(); const leaves = {}; const tags = {};
+    for (const n of names) { leaves[n] = window['__p479' + n]; tags[n] = P.tagOf(leaves[n]); }
+    const r = P.cur = { t0, leaves, tags }; const ev0 = P.events.length;
+    const series = []; const mos = []; const firsts = {};
+    for (const n of names) {
+      const leaf = leaves[n]; const tg = tags[n]; const lp = leaf.view.getMode() !== 'preview'; const s = lp ? P.lpOf(leaf) : P.outerOf(leaf);
+      const f = firsts[n] = { embHMO: null, shMO: null, stMO: null, rootDisc: null, embDisc: null, iszDisc: null, szDisc: null, mhMinMO: Infinity, imhMinMO: Infinity, stMinScroll: s.scrollTop, pinOuterT: null, pinInnerT: null };
+      s.addEventListener('scroll', () => { f.stMinScroll = Math.min(f.stMinScroll, s.scrollTop); });
+      const mo = new MutationObserver((recs) => {
+        const now = Math.round(performance.now() - t0);
+        if (P.timeline) { const emb0 = P.embOf(s); const iz = emb0 && emb0.querySelector('.markdown-embed-content > .markdown-preview-view > .markdown-preview-sizer'); (f.tl = f.tl || []).push({ t: now, st: Math.round(s.scrollTop), sh: s.scrollHeight, embH: emb0 ? Math.round(emb0.getBoundingClientRect().height) : null, iszH: iz ? Math.round(iz.getBoundingClientRect().height) : null, n: recs.length, what: recs.slice(0, 4).map((r) => r.type[0] + ':' + ((r.target.className || r.target.nodeName) + '').slice(0, 40) + (r.addedNodes.length ? '+' + r.addedNodes.length : '') + (r.removedNodes.length ? '-' + r.removedNodes.length : '')).join(' ; ') }); }
+        if (tg.root && !tg.root.isConnected && f.rootDisc === null) f.rootDisc = now;
+        if (tg.emb && !tg.emb.isConnected && f.embDisc === null) f.embDisc = now;
+        if (tg.isz && !tg.isz.isConnected && f.iszDisc === null) f.iszDisc = now;
+        if (tg.sz && !tg.sz.isConnected && f.szDisc === null) f.szDisc = now;
+        const z = lp ? null : s.querySelector(':scope > .markdown-preview-sizer'); const mh = z ? parseFloat(z.style.minHeight) : NaN; if (!Number.isNaN(mh) && mh < f.mhMinMO) { f.mhMinMO = mh; f.mhMinRaw = z.style.minHeight; f.mhMinT = now; }
+        const emb = P.embOf(s); const isz = emb && emb.querySelector(':scope > .markdown-embed-content > .markdown-preview-view > .markdown-preview-sizer'); const imh = isz ? parseFloat(isz.style.minHeight) : NaN; if (!Number.isNaN(imh) && imh < f.imhMinMO) { f.imhMinMO = imh; f.imhMinT = now; }
+        if (P.moLayout) { const eh = emb ? emb.getBoundingClientRect().height : NaN; if (!Number.isNaN(eh) && (f.embHMO === null || eh < f.embHMO)) { f.embHMO = Math.round(eh); f.embHMOT = now; } if (f.shMO === null || s.scrollHeight < f.shMO) f.shMO = s.scrollHeight; if (f.stMO === null || s.scrollTop < f.stMO) f.stMO = Math.round(s.scrollTop); const isec = emb && emb.querySelector('.markdown-embed-content > .markdown-preview-view > .markdown-preview-sizer'); if (isec) { const ih = isec.getBoundingClientRect().height; if (f.iszHMO === undefined || ih < f.iszHMO) { f.iszHMO = Math.round(ih); f.iszKids = isec.children.length; } } f.moCalls = (f.moCalls || 0) + 1; }
+        if (s.hasAttribute('data-dse-scroll-pin') && f.pinOuterT === null) f.pinOuterT = now;
+        if (s.querySelector('[data-dse-scroll-pin]') && f.pinInnerT === null) f.pinInnerT = now;
+      });
+      mo.observe(s, { attributes: true, attributeFilter: ['style', 'data-dse-scroll-pin', 'class'], childList: true, subtree: true });
+      mos.push(mo);
+    }
+    const snapAll = () => { const o = { t: Math.round(performance.now() - t0), f: P.frame }; for (const n of names) o[n] = P.snap(leaves[n], tags[n]); return o; };
+    series.push(snapAll());
+    const meta = { actionT: null, actionDoneT: null, actionErr: null };
+    const tick = () => { series.push(snapAll()); if (performance.now() - t0 < durMs) requestAnimationFrame(tick); else { mos.forEach((m) => m.disconnect()); P.cur = null; for (const n of names) for (const k of Object.keys(firsts[n])) if (firsts[n][k] === Infinity) firsts[n][k] = null; resolve({ names, series, firsts, tagInfo: Object.fromEntries(names.map((n) => [n, { anchorText: tags[n].anchorText, embConnected0: tags[n].embConnected0, hasRoot: !!tags[n].root }])), events: P.events.slice(ev0), meta }); } };
+    requestAnimationFrame(tick);
+    if (action) { meta.actionT = Math.round(performance.now() - t0); try { const p = action(); if (p && p.then) p.then(() => { meta.actionDoneT = Math.round(performance.now() - t0); }, (e) => { meta.actionErr = String(e); }); } catch (e) { meta.actionErr = String(e); } }
+  });
+  return true;
+})()`;
+
+/** Scroll leaf L (Reading or LP) until A's embed is drawn, then park it. Returns the parked position. */
+async function p479Park(t, L, where) {
+	const sc = `(window.__p479${L}.view.getMode() === 'preview' ? window.__p479.outerOf(window.__p479${L}) : window.__p479.lpOf(window.__p479${L}))`;
+	await t.ev(`(() => { const s = ${sc}; s.scrollTop = 0; return true; })()`);
+	await t.sleep(400);
+	let found = false;
+	for (let i = 0; i < 40 && !found; i++) {
+		found = await t.ev(`(() => { const s = ${sc}; const e = Array.from(s.querySelectorAll('.internal-embed')).find((x) => !x.parentElement.closest('.internal-embed')); if (e) { e.scrollIntoView({ block: 'start' }); return true; } s.scrollTop += 400; return false; })()`);
+		await t.sleep(350);
+	}
+	for (let i = 0; i < 30; i++) {
+		if (await t.ev(`(() => { const s = ${sc}; const e = window.__p479.embOf(s); return !!(e && e.querySelector('[data-dse-element]')); })()`)) break;
+		await t.sleep(200);
+	}
+	await t.sleep(600);
+	const pos = `(() => { const s = ${sc}; const e = window.__p479.embOf(s); const sr = s.getBoundingClientRect(); const max = s.scrollHeight - s.clientHeight; if (!e) return { err: 'no embed' }; const er = e.getBoundingClientRect(); const top = er.top - sr.top + s.scrollTop; return { top: Math.round(top), h: Math.round(er.height), max, ch: s.clientHeight }; })()`;
+	for (let i = 0; i < 5; i++) {
+		const p = await t.ev(pos);
+		if (p.err) {
+			if (where === 'end') await t.ev(`(() => { const s = ${sc}; s.scrollTop = s.scrollHeight; return true; })()`);
+			await t.sleep(400);
+			continue;
+		}
+		const target = where === 'above' ? Math.max(200, p.top - p.ch - 600) : where === 'in' ? p.top + 1500 : where === 'below' ? p.top + p.h + 400 : p.max + 100000;
+		await t.ev(`(() => { const s = ${sc}; s.scrollTop = ${target}; return true; })()`);
+		await t.sleep(450);
+	}
+	await t.sleep(400);
+	const end = await t.ev(`(() => { const s = ${sc}; const e = window.__p479.embOf(s); const sr = s.getBoundingClientRect(); return { st: Math.round(s.scrollTop), sh: s.scrollHeight, ch: s.clientHeight, max: s.scrollHeight - s.clientHeight, embTop: e ? Math.round(e.getBoundingClientRect().top - sr.top) : null, embH: e ? Math.round(e.getBoundingClientRect().height) : null }; })()`);
+	return Object.assign({ embStart: await t.ev(pos) }, end);
+}
+const P479_CLICK = (L, where) => `() => { const s = window.__p479.outerOf(window.__p479${L}); const sr = s.getBoundingClientRect(); const scope = ${JSON.stringify(L)} === 'A' ? window.__p479.embOf(s) : s; const all = Array.from(scope.querySelectorAll('button.dse-init__portrait-toggle')); const b = all.find((x) => { const r = x.getBoundingClientRect(); return r.top > sr.top + 100 && r.bottom < sr.bottom - 100; }) || all[0]; if (!b) throw new Error('no toggle in ' + ${JSON.stringify(L)}); window.__p479.clickedVisible = (() => { const r = b.getBoundingClientRect(); return r.top > sr.top && r.bottom < sr.bottom; })(); b.click(); }`;
+
+function p479Summ(r) {
+	const o = { actionT: r.meta.actionT, actionDoneT: r.meta.actionDoneT, actionErr: r.meta.actionErr, modify: r.events.map((e) => `${e.path}@${e.t}ms/f${e.frame}${e.A ? ` A:st=${e.A.st},embH=${e.A.embH},imh=${e.A.imh},root=${e.A.rootConn}` : ''}`) };
+	for (const n of r.names) {
+		const f = r.series.map((x) => x[n]).filter((x) => x && !x.none);
+		const num = (k) => f.map((x) => x[k]).filter((v) => typeof v === 'number' && !Number.isNaN(v));
+		const mn = (k) => { const a = num(k); return a.length ? Math.min(...a) : null; };
+		const mx = (k) => { const a = num(k); return a.length ? Math.max(...a) : null; };
+		const fr = r.firsts[n];
+		const a0 = f[0]?.anchor ?? null;
+		o[n] = {
+			st0: f[0]?.st, stMin: Math.min(mn('st'), Math.round(fr.stMinScroll)), stMax: mx('st'), stEnd: f.at(-1)?.st,
+			sh0: f[0]?.sh, shMin: mn('sh'), shEnd: f.at(-1)?.sh,
+			mh0: f[0]?.mh, mhMin: Math.min(mn('mh') ?? Infinity, fr.mhMinMO ?? Infinity), mhEnd: f.at(-1)?.mh,
+			embH0: f[0]?.embH, embHMin: mn('embH'), embHEnd: f.at(-1)?.embH,
+			imh0: f[0]?.imh, imhMin: Math.min(mn('imh') ?? Infinity, fr.imhMinMO ?? Infinity), imhEnd: f.at(-1)?.imh,
+			ecSt0: f[0]?.ecSt, ecStMin: mn('ecSt'),
+			anchor0: a0, anchorMin: mn('anchor'), anchorMax: mx('anchor'), anchorEnd: f.at(-1)?.anchor ?? null,
+			topLine0: f[0]?.topLine, topLineEnd: f.at(-1)?.topLine, topLines: [...new Set(f.map((x) => x.topLine).filter((v) => v !== undefined))].slice(0, 8),
+			pinFrames: f.filter((x) => x.pin).length, pinInnerFrames: f.filter((x) => x.pinIn).length, pinOuterT: fr.pinOuterT, pinInnerT: fr.pinInnerT,
+			mhMinT: fr.mhMinT, mhMinRaw: fr.mhMinRaw, imhMinT: fr.imhMinT, rootDisc: fr.rootDisc, embDisc: fr.embDisc, iszDisc: fr.iszDisc, szDisc: fr.szDisc,
+			tag: r.tagInfo[n], frames: f.length, tl: fr.tl, iszHMO: fr.iszHMO, iszKids: fr.iszKids, embHMO: fr.embHMO, embHMOT: fr.embHMOT, shMO: fr.shMO, stMO: fr.stMO, moCalls: fr.moCalls,
+		};
+		for (const k of ['mhMin', 'imhMin']) if (o[n][k] === Infinity) o[n][k] = null;
+	}
+	return o;
+}
+const p479Line = (row) => {
+	const s = row.summ;
+	const leaf = (n) => { const x = s[n]; if (!x) return `${n}[none]`; return `${n}[st ${x.st0}->min ${x.stMin} max ${x.stMax} end ${x.stEnd}; sh ${x.sh0}->min ${x.shMin}; mh ${x.mh0}->${x.mhMin}; embH ${x.embH0}->min ${x.embHMin} end ${x.embHEnd}; imh ${x.imh0}->${x.imhMin}; anchor ${x.anchor0}->[${x.anchorMin},${x.anchorMax}] end ${x.anchorEnd}${x.topLine0 !== undefined ? `; topLine ${x.topLine0}->${x.topLineEnd} ${JSON.stringify(x.topLines)}` : ''}; pin ${x.pinFrames}/${x.pinInnerFrames};${x.moCalls ? ` MOlayout embH ${x.embHMO}@${x.embHMOT} iszH ${x.iszHMO}(${x.iszKids} kids) sh ${x.shMO} st ${x.stMO} (${x.moCalls} cb);` : ''} disc root ${x.rootDisc} emb ${x.embDisc} isz ${x.iszDisc} sz ${x.szDisc}; embAtStart ${x.tag.embConnected0}]`; };
+	return `${row.kase}#${row.rep} adopt=${row.adopt}${row.thr > 1 ? ' thr=' + row.thr : ''}${row.anchorMode !== 'auto' ? ' anchor=' + row.anchorMode : ''}${row.emuPin ? ' emuPin(' + row.emuPin + ')=' + row.emuPinPx : ''} park=${JSON.stringify({ st: row.park.st, max: row.park.max, embTop: row.park.embStart?.top, embH: row.park.embStart?.h })}: ${row.names.map(leaf).join(' ')} act ${s.actionT}->${s.actionDoneT}${s.actionErr ? ' ERR ' + s.actionErr : ''} landed ${row.landed} prep ${row.prepV}/${row.prepShown} case ${row.caseV}/${row.shownAfter} clickedVisible ${row.clickedVisible} modify ${JSON.stringify(s.modify)}`;
+};
+
+async function p479Case(t, kase, rep, adopt) {
+	const [writer, park, shapeKey = 'B'] = kase.split(':');
+	const shape = P479_SHAPES[shapeKey];
+	const dur = Number(process.env.P479_DUR ?? 3500);
+	await t.open(shape.a);
+	await t.reset(shape.b);
+	await t.ev(`(() => { window.__p479A = app.workspace.getMostRecentLeaf(); window.__p479B = null; return true; })()`);
+	if (writer === 'lpprocess') {
+		await t.ev(`(async () => { await window.__p479A.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(shape.a)}, mode: 'source', source: false }, active: true }); window.__p479A.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+		await t.sleep(1500);
+	}
+	const names = ['A'];
+	if (writer === 'pane') {
+		await t.ev(`(async () => { const b = app.workspace.getLeaf('split', 'vertical'); window.__p479B = b; await b.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(shape.b)}, mode: 'preview' }, active: false }); app.workspace.setActiveLeaf(window.__p479A, { focus: true }); return true; })()`);
+		await t.sleep(1500);
+		names.push('B');
+	}
+	// prep: give B a malice value no embed has shown yet, and wait until A's embed shows it (Obsidian's embed skips a
+	// redraw when the content equals what it last rendered — measured: a 1 -> 2 write after a 2 -> 1 reset did not redraw)
+	const prepV = ++P479_SEQ.n;
+	await t.edit(shape.b, `c.replace(/  value: \\d+/, '  value: ${prepV}')`);
+	const shownExpr = `(() => { const l = window.__p479A; const s = l.view.getMode() === 'preview' ? window.__p479.outerOf(l) : window.__p479.lpOf(l); const e = s && window.__p479.embOf(s); const m = e && e.querySelector('.dse-init__malice-num, .dse-init__malice-value'); return m ? m.textContent : null; })()`;
+	const parkA = await p479Park(t, 'A', park);
+	let prepShown = null;
+	for (let i = 0; i < 25; i++) {
+		prepShown = await t.ev(shownExpr);
+		if (prepShown && prepShown.includes(String(prepV))) break;
+		await t.sleep(200);
+	}
+	const caseV = ++P479_SEQ.n;
+	if (writer === 'pane') {
+		// park B 1500px into its tracker (G-S8's position) so the click is a visible one
+		for (let i = 0; i < 4; i++) {
+			await t.ev(`(() => { const s = window.__p479.outerOf(window.__p479B); const r = s.querySelector('${TRACKER}'); if (r) s.scrollTop = r.getBoundingClientRect().top - s.getBoundingClientRect().top + s.scrollTop + 1500; return true; })()`);
+			await t.sleep(400);
+		}
+	}
+	const relB = JSON.stringify(shape.b);
+	let r;
+	const recExpr = (action, d = dur) => `window.__p479.rec(${JSON.stringify(names)}, ${d}, ${action})`;
+	const shotP = async (when) => { const sh = await t.cdp.call('Page.captureScreenshot', { format: 'png' }); fs.mkdirSync(P479_OUT, { recursive: true }); const f = path.join(P479_OUT, `sc479-r1-shot-${P479_VAR}-${kase.replace(/:/g, '-')}-${adopt}-${when}.png`); fs.writeFileSync(f, Buffer.from(sh.data, 'base64')); return f; };
+	const shots = {};
+	if (process.env.P479_SHOT === '1' && rep === 0) shots.before = await shotP('before');
+	await t.ev('window.__p479.clickedVisible = null');
+	// mechanism probes: P479_ANCHOR=none turns scroll anchoring off on A's scroller; P479_EMUPIN=1 pins A's outer sizer
+	// (the SC-198 rule shape, child combinator) from a page-side vault 'modify' listener for 2500 ms, as the fix would.
+	await t.ev(`(() => { const l = window.__p479A; const s = l.view.getMode() === 'preview' ? window.__p479.outerOf(l) : window.__p479.lpOf(l); s.style.overflowAnchor = ${JSON.stringify(process.env.P479_ANCHOR === 'none' ? 'none' : '')}; for (const e of s.querySelectorAll('.internal-embed')) e.style.overflowAnchor = ${JSON.stringify(process.env.P479_ANCHOR === 'embed' ? 'none' : '')}; window.__p479.emuPin = ${process.env.P479_EMUPIN === '1'}; window.__p479.emuInner = ${process.env.P479_EMUPIN === 'inner' || process.env.P479_EMUPIN === 'embed'}; window.__p479.emuEmbed = ${process.env.P479_EMUPIN === 'embed'}; window.__p479.emuPinPx = null; return true; })()`);
+	await t.ev(`(() => { const P = window.__p479; if (P.emuInstalled) return true; P.emuInstalled = true; app.vault.on('modify', (file) => { if (P.emuInner) { let k = 0; for (const leaf of app.workspace.getLeavesOfType('markdown')) { const v = leaf.view; const host = v.containerEl; for (const e of host.querySelectorAll('.internal-embed.markdown-embed')) { const src = (e.getAttribute('src') || '').split('#')[0]; const f = v.file && app.metadataCache.getFirstLinkpathDest(src, v.file.path); if (!f || f.path !== file.path) continue; const inner = P.emuEmbed ? e : e.querySelector(':scope > .markdown-embed-content > .markdown-preview-view'); const z = P.emuEmbed ? e : inner && inner.querySelector(':scope > .markdown-preview-sizer'); if (!z) continue; const cs = getComputedStyle(z); const px = P.emuEmbed ? Math.round(z.getBoundingClientRect().height - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - parseFloat(cs.borderTopWidth) - parseFloat(cs.borderBottomWidth)) : Math.round(z.getBoundingClientRect().height); if (!(px > 0)) continue; const id = 'i' + (++k) + '-' + Date.now(); const st = document.createElement('style'); st.textContent = P.emuEmbed ? '.internal-embed[data-p479-pin="' + id + '"] { min-height: ' + px + 'px !important; }' : '.markdown-preview-view[data-p479-pin="' + id + '"] > .markdown-preview-sizer { min-height: ' + px + 'px !important; }'; document.head.appendChild(st); inner.setAttribute('data-p479-pin', id); P.emuPinPx = (P.emuPinPx ? P.emuPinPx + ',' : '') + px; setTimeout(() => { inner.removeAttribute('data-p479-pin'); st.remove(); }, 2500); } } return; } if (!P.emuPin) return; const s = P.outerOf(window.__p479A); if (!s || s.scrollTop <= 0) return; const px = s.scrollHeight; const st = document.createElement('style'); st.textContent = '.markdown-preview-view[data-p479-pin="1"] > .markdown-preview-sizer { min-height: ' + px + 'px !important; }'; document.head.appendChild(st); s.setAttribute('data-p479-pin', '1'); P.emuPinPx = px; setTimeout(() => { s.removeAttribute('data-p479-pin'); st.remove(); }, 2500); }); return true; })()`);
+	if (process.env.P479_TRACESET === '1') await t.ev(`(() => { const P = window.__p479; const l = window.__p479A; const s = l.view.getMode() === 'preview' ? P.outerOf(l) : P.lpOf(l); P.sets = []; const t0 = performance.now(); const d = Object.getOwnPropertyDescriptor(Element.prototype, 'scrollTop'); if (!P.origST) P.origST = d; Object.defineProperty(s, 'scrollTop', { configurable: true, get() { return d.get.call(this); }, set(v) { P.sets.push({ t: Math.round(performance.now() - t0), v, from: Math.round(d.get.call(this)), stack: new Error().stack.split('\\n').slice(2, 9).map((x) => x.trim()).join(' | ') }); d.set.call(this, v); } }); for (const m of ['scrollTo', 'scrollBy', 'scrollIntoView']) { const o = Element.prototype[m]; if (!P['orig_' + m]) P['orig_' + m] = o; Element.prototype[m] = function (...a) { if (s.contains(this)) P.sets.push({ t: Math.round(performance.now() - t0), m, on: this === s ? 'scroller' : (this.className || this.tagName).toString().slice(0, 60), args: JSON.stringify(a).slice(0, 80), stack: new Error().stack.split('\\n').slice(2, 9).map((x) => x.trim()).join(' | ') }); return o.apply(this, a); }; } const of = HTMLElement.prototype.focus; if (!P.orig_focus) P.orig_focus = of; HTMLElement.prototype.focus = function (...a) { if (s.contains(this)) P.sets.push({ t: Math.round(performance.now() - t0), m: 'focus', on: (this.className || this.tagName).toString().slice(0, 60), args: JSON.stringify(a).slice(0, 80), stBefore: Math.round(d.get.call(s)) }); const r = of.apply(this, a); if (s.contains(this)) P.sets.push({ t: Math.round(performance.now() - t0), m: 'focus-after', stAfter: Math.round(d.get.call(s)) }); return r; }; P.traceScroller = s; return true; })()`);
+	const thr = Number(process.env.P479_THROTTLE ?? 1);
+	if (thr > 1) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: thr });
+	if (writer === 'own') r = await t.ev(recExpr(P479_CLICK('A', park)));
+	else if (writer === 'pane') r = await t.ev(recExpr(P479_CLICK('B', park)));
+	else if (writer === 'process' || writer === 'lpprocess') r = await t.ev(recExpr(`() => app.vault.process(app.vault.getAbstractFileByPath(${relB}), (c) => c.replace(/  value: \\d+/, '  value: ${caseV}'))`));
+	else if (writer === 'nodefs') {
+		await t.ev(`(() => { window.__p479pending = ${recExpr('null', dur + 300)}; return true; })()`);
+		await sleep(60);
+		fs.writeFileSync(path.join(vault, shape.b), t.read(shape.b).replace(/ {2}value: \d+/, `  value: ${caseV}`));
+		r = await t.ev('window.__p479pending');
+	} else throw new Error(`unknown writer ${writer}`);
+	if (thr > 1) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: 1 });
+	let sets = null;
+	if (process.env.P479_TRACESET === '1') sets = await t.ev(`(() => { const P = window.__p479; delete P.traceScroller.scrollTop; for (const m of ['scrollTo', 'scrollBy', 'scrollIntoView']) Element.prototype[m] = P['orig_' + m]; HTMLElement.prototype.focus = P.orig_focus; return P.sets; })()`);
+	const clickedVisible = await t.ev('window.__p479.clickedVisible');
+	const dbg = await t.ev(`({ errs: __lc.errs.slice(-4).map((x) => x.text.slice(0, 300)), notices: __lc.notices.slice(-3).map((x) => x.text.slice(0, 200)), turns: (${JSON.stringify(shape.b)} && 0) })`);
+	await t.sleep(400);
+	const disk = t.read(shape.b);
+	const landed = writer === 'own' || writer === 'pane' ? /has_taken_turn: true/.test(disk) : disk.includes(`  value: ${caseV}`);
+	const shownAfter = await t.ev(shownExpr);
+	const row = { kase, rep, adopt, thr, sets, anchorMode: process.env.P479_ANCHOR ?? 'auto', emuPin: process.env.P479_EMUPIN ?? null, emuPinPx: await t.ev('window.__p479.emuPinPx ?? null'), writer, park: parkA, names, landed, prepV, prepShown, caseV, shownAfter, clickedVisible, dbg, diskTurns: (disk.match(/has_taken_turn: true/g) || []).length, summ: p479Summ(r), raw: r };
+	if (process.env.P479_SHOT === '1' && rep === 0) { shots.after = await shotP('after'); row.shots = shots; }
+	return row;
+}
+
+SCENARIOS.push({
+	id: 'P479-REPRO',
+	async run(t) {
+		await t.ev(P479_INSTALL);
+		await t.ev(`window.__p479.moLayout = ${process.env.P479_MOLAYOUT === '1'}`);
+		await t.ev(`window.__p479.timeline = ${process.env.P479_TIMELINE === '1'}`);
+		const adopt = process.env.P479_ADOPT ?? 'on';
+		const reps = Number(process.env.P479_REPS ?? 2);
+		const cases = (process.env.P479_CASES ?? 'process:below').split(',');
+		const prev = await t.ev(`${t.reg}.enabled`);
+		const rows = [];
+		try {
+			await t.ev(`${t.reg}.enabled = ${adopt === 'on' ? 'true' : 'false'}`);
+			for (const kase of cases) {
+				for (let rep = 0; rep < reps; rep++) {
+					try {
+						rows.push(await p479Case(t, kase, rep, adopt));
+					} catch (e) {
+						rows.push({ kase, rep, adopt, error: String((e && e.stack) || e) });
+					} finally {
+						await t.ev(`(() => { if (window.__p479B) { try { window.__p479B.detach(); } catch (e) {} window.__p479B = null; } return true; })()`);
+						for (const sh of new Set(Object.values(P479_SHAPES).map((x) => x.b))) if (t.read(sh) !== FIXTURES[sh]) await t.reset(sh);
+						await t.sleep(300);
+					}
+				}
+			}
+		} finally {
+			await t.ev(`${t.reg}.enabled = ${JSON.stringify(prev)}`);
+			const a = await t.ev(`app.workspace.getMostRecentLeaf().view.getMode()`);
+			if (a !== 'preview') await t.open('Lifecycle/other.md');
+		}
+		p479Write(`REPRO-${P479_VAR}-${adopt}`, rows);
+		return '\n  ' + rows.map((r) => (r.error ? `${r.kase}#${r.rep}: ERROR ${r.error.split('\n').slice(0, 2).join(' / ')}` : p479Line(r))).join('\n  ');
+	},
+});
+// ===== end SC-479 r1 PROBE REPRO =====

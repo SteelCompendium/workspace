@@ -1,0 +1,8 @@
+1:  88d200a = 1:  4cdb306 fix(SC-479): a Reading-view host note keeps its scroll position when a tracker in a note it embeds is written
+2:  c3de06c = 2:  6680934 fix(SC-479): resolve each nested embed's link from the note that writes it
+3:  b73c454 = 3:  c5c1506 docs(SC-479): previewScrollPin header - embed mechanism, measurements, nested links, the accepted anchoring risk, SC-522
+4:  ca01a96 = 4:  a73ed68 test(SC-479): G-S42 header count and the no-timed-delay note
+5:  5b3b778 = 5:  7d4bd23 fix(SC-479): the host pin's anchoring stop goes on the host's embeds, not its scroller
+6:  e6b02ca = 6:  ed9a632 test(SC-479): G-S42 phase (e) - a tall host parked below the embed keeps its on-screen text when the write grows the embed; the second pane waits for the tracker instead of sleeping
+-:  ------- > 7:  aabb828 fix(SC-479): gate the host pin's embed anchoring stop by where the reader is
+-:  ------- > 8:  71437da test(SC-479): G-S42 phase (f) - a reader inside a tall embed below its tracker keeps the text still when a hero is added

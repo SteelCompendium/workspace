@@ -1,0 +1,17 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :160, port 9493, 4 scenario(s)
+R3 NEST R3N/Host.md: scrollTop 1079; embeds [{"src":"R3N/X/Mid","parentSrc":null,"text":["XHero"],"hasDse":true},{"src":"Trk","parentSrc":"R3N/X/Mid","text":["XHero"],"hasDse":true}]; resolve(inner) fromMid=R3N/X/Trk.md fromHost=R3N/Trk.md; pinned on write to {"R3N/X/Trk.md":true,"R3N/Y/Trk.md":false,"R3N/Trk.md":false}
+R3 NEST R3N/Host2.md: scrollTop 1079; embeds [{"src":"R3N/X/Mid2","parentSrc":null,"text":["XRelHero"],"hasDse":true},{"src":"./Rel","parentSrc":"R3N/X/Mid2","text":["XRelHero"],"hasDse":true}]; resolve(inner) fromMid=R3N/X/Rel.md fromHost=R3N/Rel.md; pinned on write to {"R3N/X/Rel.md":true,"R3N/Rel.md":false}
+R3 NEST R3N/Host3.md: scrollTop 1079; embeds [{"src":"R3N/X/Mid3","parentSrc":null,"text":["YHero"],"hasDse":true},{"src":"../Y/Trk","parentSrc":"R3N/X/Mid3","text":["YHero"],"hasDse":true}]; resolve(inner) fromMid=R3N/Y/Trk.md fromHost=R3N/Y/Trk.md; pinned on write to {"R3N/X/Trk.md":false,"R3N/Y/Trk.md":true,"R3N/Trk.md":false}
+OBSIDIAN-LIFECYCLE R3-NEST ok (3 cases)
+R3 INT other-note: write to B pinned it 0x; write to its own embedded note pinned it 1x {"id":"4","text":".markdown-preview-view[data-dse-scroll-pin=\"4\"] > .markdown-preview-sizer { min-height: Npx !important; }\n.markdown-preview-view[data-dse-scroll-pin=\"4\"] { overflow-anchor: none !important; }"}
+R3 INT host+own-view: host st 3574 -> 3574/3574; host pins [{"id":"5","text":".markdown-preview-view[data-dse-scroll-pin=\"5\"] > .markdown-preview-sizer { min-height: Npx !important; }\n.markdown-preview-view[data-dse-scroll-pin=\"5\"] { overflow-anchor: none !important; }"}]; B view pins [{"id":"6","text":".markdown-preview-view[data-dse-scroll-pin=\"6\"] > .markdown-preview-sizer { min-height: Npx !important; }"}]; nstMax 2; styles [".markdown-preview-view[data-dse-scroll-pin=\"5\"] > .markdown-preview-sizer { min-height: Npx !important; }\n.markdown-preview-view[data-dse-scroll-pin=\"5\"] { overflow-anchor: none !important; }",".markdown-preview-view[data-dse-scroll-pin=\"6\"] > .markdown-preview-sizer { min-height: Npx !important; }"]
+R3 INT TTL: during {"pin":true,"oa":"none","nst":1}; released after ~2575ms; after {"oa":"auto","nst":0,"attr":null}; pins.size 0
+R3 INT popout: popout scrollTop 3013; while pinned {"sameDoc":false,"pin":true,"oa":"none","popStyles":2,"mainStyles":1}; pins.size before close 2, 1s after close 1, +3s 0; main doc pin styles 0
+OBSIDIAN-LIFECYCLE R3-INT ok (4 cases)
+OBSIDIAN-LIFECYCLE R3-COST FAIL: timed out waiting for R3/r3tall.md rendered with a DSE block [shot /tmp/dse-obsidian-lifecycle-tlO1CP/shots/R3-COST-FAIL.png]
+R3 UNLOAD during {"pin":true,"oa":"none","nst":1}; right after disablePlugin {"pin":false,"oa":"auto","nst":0}
+OBSIDIAN-LIFECYCLE R3-UNLOAD ok (UNLOAD during {"pin":true,"oa":"none","nst":1}; right after disablePlugin {"pin":false,"oa":"auto","nst":0})
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-tlO1CP
+OBSIDIAN-LIFECYCLE done: 3/4 ok, 1 failed
+rc=1 secs=100
+porcelain-after: [] head: 84ba65a

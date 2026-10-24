@@ -1,0 +1,23 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :162, port 9493, 2 scenario(s)
+R3 FORM-repark-end-0: landed=true pending=null stAfterPencil=0 redrawn=true st 2887/2887 -> min 0 max 2887 end 0; ref 438 -> 3325 (min 438 max 3325); pin 0f atRedraw=false oa  after auto; emb0 3190 embMax 3190
+R3 FORM-repark-in-1: landed=true pending=null stAfterPencil=0 redrawn=true st 1619/2887 -> min 1619 max 1619 end 1619; ref null -> null (min null max null); pin 0f atRedraw=false oa  after auto; emb0 3190 embMax 3190
+R3 FORM-pending-click-then-repark-end-2: landed=true pending=true stAfterPencil=0 redrawn=true st 2887/2887 -> min 0 max 2887 end 0; ref 438 -> 3325 (min 438 max 3325); pin 0f atRedraw=false oa  after auto; emb0 3190 embMax 3190
+R3 FORM-repark-end-3: landed=true pending=null stAfterPencil=0 redrawn=true st 2887/2887 -> min 0 max 2887 end 0; ref 438 -> 3325 (min 438 max 3325); pin 0f atRedraw=false oa  after auto; emb0 3190 embMax 3190
+R3 FORM-repark-in-4: landed=true pending=null stAfterPencil=0 redrawn=true st 1619/2887 -> min 1619 max 1619 end 1619; ref null -> null (min null max null); pin 0f atRedraw=false oa  after auto; emb0 3190 embMax 3190
+R3 FORM-pending-click-then-repark-end-5: landed=true pending=true stAfterPencil=0 redrawn=true st 2887/2887 -> min 0 max 2887 end 0; ref 438 -> 3325 (min 438 max 3325); pin 0f atRedraw=false oa  after auto; emb0 3190 embMax 3190
+OBSIDIAN-LIFECYCLE R3-FORM ok (6 cases)
+R3 SHIFT-tall-below-addHero: redrawn=null st 400 -> min 400 max 400 end 400; ref 39 -> end 39 (min 39 max 39); pin 0f oa ; emb0  embEnd ;
+R3 SHIFT-tall-below-removeHero: redrawn=true st 6869 -> min 6759 max 6869 end 6759; ref 16 -> end 16 (min 16 max 16); pin 0f oa ; emb0 3190 embEnd 3080;
+R3 SHIFT-tall-below-process(no height change): redrawn=true st 6869 -> min 6869 max 6869 end 6869; ref 16 -> end 16 (min 16 max 16); pin 0f oa ; emb0 3190 embEnd 3190;
+R3 SHIFT-tall-in-addHero: redrawn=true st 4779 -> min 4779 max 4779 end 4779; ref null -> end null (min null max null); pin 0f oa ; emb0 3190 embEnd 3299;
+R3 SHIFT-tall-below-process+pad200above: redrawn=true st 6869 -> min 6869 max 6869 end 6869; ref 16 -> end 16 (min 16 max 16); pin 0f oa ; emb0 3190 embEnd 3190;
+R3 SHIFT-tall-below-NOWRITE+pad200above: redrawn=false st 6869 -> min 6869 max 7069 end 7069; ref 16 -> end 16 (min 16 max 16); pin 0f oa ; emb0 3190 embEnd 3190; during@407ms pinned=false oa=auto padded A-POST filler 8.: ref 16 -> 16, st 6869 -> 7069
+R3 SHIFT-call-below-process+calloutToggle: redrawn=true st 4010 -> min 4010 max 4010 end 4010; ref 16 -> end 16 (min 16 max 16); pin 0f oa ; emb0 3190 embEnd 3190;
+R3 SHIFT-call-below-NOWRITE+calloutToggle: redrawn=false st 4010 -> min 4010 max 4010 end 4010; ref 16 -> end 16 (min 16 max 16); pin 0f oa ; emb0 3190 embEnd 3190; during@408ms pinned=false oa=auto no callout rendered: ref 16 -> 16, st 4010 -> 4010
+R3 SHIFT-call-callabove-process+calloutToggle: redrawn=true st 4010 -> min 4010 max 4010 end 4010; ref 16 -> end 16 (min 16 max 16); pin 0f oa ; emb0 3190 embEnd 3190;
+R3 SHIFT-call-callabove-NOWRITE+calloutToggle: redrawn=false st 4010 -> min 4010 max 4010 end 4010; ref 16 -> end 16 (min 16 max 16); pin 0f oa ; emb0 3190 embEnd 3190; during@400ms pinned=false oa=auto no callout rendered: ref 16 -> 16, st 4010 -> 4010
+R3 SHIFT-call-callabove-addHero: redrawn=true st 4010 -> min 4010 max 4120 end 4120; ref 16 -> end 16 (min 16 max 16); pin 0f oa ; emb0 3190 embEnd 3299;
+OBSIDIAN-LIFECYCLE R3-SHIFT ok (11 cases)
+OBSIDIAN-LIFECYCLE done: 2/2 ok, 0 failed
+rc=0 secs=156
+porcelain-after: [] head: 84ba65a

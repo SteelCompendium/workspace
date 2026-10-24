@@ -1,0 +1,23 @@
+FAIL dom test/dom/framework/previewScrollPin.test.ts
+  ● SC-479: embeds pin the host note's scroller › an own pin that meets a host pin the gate refuses does not gain the stop either (gate on the upgrade path)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      777 | 		pin.pin(embed.querySelector<HTMLElement>('[data-dse-element]')!); // a host pin, viewport inside the embed off its roots
+      778 | 		expect(isPinned(scroller)).toBe(true);
+    > 779 | 		expect(anchorStopped(scroller)).toBe(false);
+          | 		                                ^
+      780 | 	});
+      781 |
+      782 | 	test('a pin that is first a note\'s own and then also a host pin gains the anchoring stop, keeps its id and height, and releases on the TTL', () => {
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:779:35)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 50 passed, 51 total
+Snapshots:   0 total
+Time:        2.009 s
+Ran all test suites matching test/dom/framework/previewScrollPin.test.ts.

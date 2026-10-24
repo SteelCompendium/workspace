@@ -1,0 +1,506 @@
+// ===== SC-479 r3 PROBES (scratch harness copy only; never in the tree) =====
+const R3_OUT = process.env.R3_OUT ?? work;
+const R3_VAR = process.env.R3_VARIANT ?? 'unknown';
+function r3Write(id, data) {
+	fs.mkdirSync(R3_OUT, { recursive: true });
+	fs.writeFileSync(path.join(R3_OUT, `r3-${R3_VAR}-${id}.json`), JSON.stringify(data, null, 1));
+}
+const R3_TRK = (names, malice = 1) => fence('ds-initiative', ['heroes:', ...names.map(HERO).flat(), 'enemy_groups: []', 'malice:', `  value: ${malice}`]);
+const r3names = (n, p = 'Hero') => Array.from({ length: n }, (_, i) => `${p} ${String(i + 1).padStart(2, '0')}`);
+const r3paras = (n, p) => Array.from({ length: n }, (_, i) => `${p} filler ${i}.`).join('\n\n');
+const R3B = 'R3/r3trk.md';
+Object.assign(FIXTURES, {
+	[R3B]: `# r3trk\n\nS-TOP\n\n${R3_TRK(r3names(25))}\n\nS-BOTTOM\n`,
+	'R3/r3trkO.md': `# r3trkO\n\nO-TOP\n\n${R3_TRK(r3names(25, 'Other'))}\n\nO-BOTTOM\n`,
+	'R3/r3plain.md': `# r3plain\n\n${r3paras(20, 'P')}\n`,
+	'R3/r3host.md': '# r3host\n\nC-TOP\n\n![[r3trk]]\n\nC-BOTTOM\n',
+	'R3/r3host2x.md': '# r3host2x\n\nC-TOP\n\n![[r3trk]]\n\nC-MID\n\n![[r3trk]]\n\nC-BOTTOM\n',
+	'R3/r3hostP.md': '# r3hostP\n\nC-TOP\n\n![[r3plain]]\n\n![[r3trk]]\n\nC-BOTTOM\n',
+	'R3/r3hostO.md': '# r3hostO\n\nC-TOP\n\n![[r3trkO]]\n\nC-BOTTOM\n',
+	'R3/r3tall.md': `# r3tall\n\n${r3paras(80, 'A-PRE')}\n\n![[r3trk]]\n\n${r3paras(80, 'A-POST')}\n`,
+	'R3/r3call.md': `# r3call\n\n${r3paras(6, 'Q-PRE')}\n\n> [!note]- Fold me\n${Array.from({ length: 30 }, (_, i) => `> fold line ${i}`).join('\n>\n')}\n\nQ-MID\n\n![[r3trk]]\n\n${r3paras(40, 'Q-POST')}\n`,
+	// nested: an ambiguous basename and a relative link written in the MIDDLE note
+	'R3N/X/Trk.md': `# Trk X\n\n${R3_TRK(r3names(3, 'XHero'))}\n`,
+	'R3N/Y/Trk.md': `# Trk Y\n\n${R3_TRK(r3names(3, 'YHero'))}\n`,
+	'R3N/Trk.md': `# Trk root\n\n${R3_TRK(r3names(3, 'RootHero'))}\n`,
+	'R3N/X/Mid.md': '# Mid\n\nMID-TOP\n\n![[Trk]]\n\nMID-BOTTOM\n',
+	'R3N/X/Rel.md': `# Rel X\n\n${R3_TRK(r3names(3, 'XRelHero'))}\n`,
+	'R3N/Rel.md': `# Rel root\n\n${R3_TRK(r3names(3, 'RootRelHero'))}\n`,
+	'R3N/X/Mid2.md': '# Mid2\n\nMID2-TOP\n\n![[./Rel]]\n\nMID2-BOTTOM\n',
+	'R3N/X/Mid3.md': '# Mid3\n\nMID3-TOP\n\n![[../Y/Trk]]\n\nMID3-BOTTOM\n',
+	'R3N/Host.md': `# NHost\n\n${r3paras(30, 'N-PRE')}\n\n![[R3N/X/Mid]]\n\n${r3paras(30, 'N-POST')}\n`,
+	'R3N/Host2.md': `# NHost2\n\n${r3paras(30, 'N-PRE')}\n\n![[R3N/X/Mid2]]\n\n${r3paras(30, 'N-POST')}\n`,
+	'R3N/Host3.md': `# NHost3\n\n${r3paras(30, 'N-PRE')}\n\n![[R3N/X/Mid3]]\n\n${r3paras(30, 'N-POST')}\n`,
+});
+
+// Page-side recorder: per rAF frame, the scroller's scrollTop, pin attr, computed overflow-anchor, a reference element's
+// on-screen top, every embed's height, the pin <style> count. `window.__r3during(s)` (optional) runs once, `duringMs`
+// after the pin was first seen (or after start when `noPinDuring`).
+const R3_PAGE = `(() => {
+  window.__r3S = (leaf) => leaf.view.containerEl.querySelector('.markdown-reading-view > .markdown-preview-view');
+  window.__r3vis = (s) => { const sr = s.getBoundingClientRect(); return Array.from(s.querySelectorAll(':scope > .markdown-preview-sizer > div > p')).find((p) => { const r = p.getBoundingClientRect(); return r.top >= sr.top && r.bottom <= sr.bottom; }) || null; };
+  window.__r3emb = (s) => Array.from(s.querySelectorAll(':scope > .markdown-preview-sizer .internal-embed')).find((e) => e.querySelector('[data-dse-element]') && e.isConnected) || null;
+  window.__r3tag = (s) => { const r = Array.from(s.querySelectorAll('[data-dse-element]')).filter((x) => x.isConnected); r.forEach((x) => { x.__r3tagged = true; }); return r.length; };
+  window.__r3rec = (s, o = {}) => new Promise((resolve) => {
+    const doc = s.ownerDocument; const win = doc.defaultView;
+    const t0 = performance.now(); const frames = [];
+    const refEl = o.ref || null;
+    const tagged = Array.from(s.querySelectorAll('[data-dse-element]')).filter((x) => x.__r3tagged);
+    let pinSeen = false, pinOnAt = null, goneFrames = 0, pinAtRedraw = null, duringDone = false, during = null;
+    const st0 = s.scrollTop, max0 = s.scrollHeight - s.clientHeight;
+    const sr0 = s.getBoundingClientRect();
+    const ref0 = refEl ? refEl.getBoundingClientRect().top - sr0.top : null;
+    const emb0 = Array.from(s.querySelectorAll('.internal-embed')).map((e) => Math.round(e.getBoundingClientRect().height));
+    let stMin = st0, stMax = st0;
+    const onScroll = () => { stMin = Math.min(stMin, s.scrollTop); stMax = Math.max(stMax, s.scrollTop); };
+    s.addEventListener('scroll', onScroll);
+    const styles = new Set();
+    const mo = new win.MutationObserver(() => { if (pinAtRedraw === null && tagged.length && tagged.some((x) => !x.isConnected)) pinAtRedraw = s.hasAttribute('data-dse-scroll-pin'); });
+    mo.observe(s, { childList: true, subtree: true });
+    const tick = () => {
+      const now = performance.now() - t0;
+      const pin = s.hasAttribute('data-dse-scroll-pin');
+      const sr = s.getBoundingClientRect();
+      const sts = Array.from(doc.querySelectorAll('style[data-dse-scroll-pin-style]'));
+      sts.forEach((x) => styles.add(x.textContent.replace(/\\d+px/, 'Npx')));
+      const f = { ms: Math.round(now), st: Math.round(s.scrollTop), pin, oa: win.getComputedStyle(s).overflowAnchor, sh: s.scrollHeight, nst: sts.length };
+      if (refEl) f.ref = refEl.isConnected ? Math.round(refEl.getBoundingClientRect().top - sr.top) : null;
+      f.emb = Array.from(s.querySelectorAll('.internal-embed')).map((e) => Math.round(e.getBoundingClientRect().height));
+      frames.push(f);
+      stMin = Math.min(stMin, s.scrollTop); stMax = Math.max(stMax, s.scrollTop);
+      if (pin) { if (!pinSeen) pinOnAt = now; pinSeen = true; goneFrames = 0; } else if (pinSeen) goneFrames++;
+      if (!duringDone && window.__r3during && ((pinSeen && now - pinOnAt >= (o.duringMs ?? 300)) || (o.noPinDuring && now >= (o.duringMs ?? 300)))) {
+        duringDone = true;
+        const before = refEl && refEl.isConnected ? refEl.getBoundingClientRect().top - sr.top : null;
+        const stB = s.scrollTop;
+        let res = null; try { res = window.__r3during(s); } catch (e) { res = 'during threw ' + e; }
+        during = { atMs: Math.round(now), pinned: pin, oa: f.oa, refBefore: before === null ? null : Math.round(before), stBefore: Math.round(stB), res };
+        win.requestAnimationFrame(() => { const sr2 = s.getBoundingClientRect(); during.refNextFrame = refEl && refEl.isConnected ? Math.round(refEl.getBoundingClientRect().top - sr2.top) : null; during.stNextFrame = Math.round(s.scrollTop); });
+      }
+      const cap = pinSeen ? Math.min(pinOnAt + (o.pinCap ?? 4500), 12000) : (o.noPinCap ?? 5000);
+      if (goneFrames < 10 && now < cap) win.requestAnimationFrame(tick);
+      else {
+        mo.disconnect(); s.removeEventListener('scroll', onScroll);
+        const last = frames[frames.length - 1] || {};
+        const refs = frames.map((x) => x.ref).filter((x) => typeof x === 'number');
+        const embMax = emb0.map((_, i) => Math.max(...frames.map((x) => x.emb[i] ?? 0)));
+        resolve({ st0: Math.round(st0), max0: Math.round(max0), ref0: ref0 === null ? null : Math.round(ref0), refEnd: last.ref ?? null, refMin: refs.length ? Math.min(...refs) : null, refMax: refs.length ? Math.max(...refs) : null, stMin: Math.round(stMin), stMax: Math.round(stMax), stEnd: last.st, pinSeen, pinAtRedraw, released: pinSeen && goneFrames >= 10, nFrames: frames.length, pinFrames: frames.filter((x) => x.pin).length, oaWhilePinned: Array.from(new Set(frames.filter((x) => x.pin).map((x) => x.oa))), oaAfter: last.oa, redrawn: tagged.length ? tagged.every((x) => !x.isConnected) : null, emb0, embMax, embEnd: last.emb, nstMax: Math.max(...frames.map((x) => x.nst)), nstEnd: last.nst, styles: Array.from(styles), during, frames });
+      }
+    };
+    win.requestAnimationFrame(tick);
+  });
+  return true;
+})()`;
+
+let r3v = 100; // malice values never shown before (r1: a write back to an earlier value may not redraw the embed)
+const r3S = (leaf) => `window.__r3S(${leaf})`;
+const r3sum = (m) => {
+	const c = { ...m };
+	delete c.frames;
+	return c;
+};
+async function r3open(t, rel, leafVar = '__r3A', needDse = true) {
+	await t.open(rel);
+	await t.ev(`(() => { window.${leafVar} = app.workspace.getMostRecentLeaf(); return true; })()`);
+	await t.waitFor(`!!${r3S('window.' + leafVar)}`, `${rel} rendered`);
+	if (needDse) await r3seek(t, 'window.' + leafVar);
+}
+async function r3seek(t, leaf) {
+	await t.ev(`(() => { ${r3S(leaf)}.scrollTop = 0; return true; })()`);
+	await t.sleep(300);
+	for (let i = 0; i < 60; i++) {
+		if (await t.ev(`!!window.__r3emb(${r3S(leaf)})`)) return;
+		await t.ev(`(() => { const s = ${r3S(leaf)}; s.scrollTop += Math.round(s.clientHeight * 0.6); return true; })()`);
+		await t.sleep(200);
+	}
+	throw new Error('the embed never rendered while seeking');
+}
+async function r3park(t, leaf, how) {
+	if (typeof how === 'string' && how !== 'end') await r3seek(t, leaf);
+	for (let i = 0; i < 3; i++) {
+		await t.ev(`(() => { const s = ${r3S(leaf)}; const e = window.__r3emb(s); const sr = s.getBoundingClientRect(); const top = e ? e.getBoundingClientRect().top - sr.top + s.scrollTop : 0; const bot = e ? e.getBoundingClientRect().bottom - sr.top + s.scrollTop : 0; const how = ${JSON.stringify(how)}; if (how === 'end') s.scrollTop = s.scrollHeight; else if (how === 'below') s.scrollTop = bot + 400; else if (how === 'in') s.scrollTop = top + 1500; else if (how === 'embtop') s.scrollTop = Math.max(1, top - 100); else if (how === 'callabove') { const c = s.querySelector('.callout'); if (c) s.scrollTop = c.getBoundingClientRect().bottom - sr.top + s.scrollTop + 50; } else if (typeof how === 'number') s.scrollTop = how; return true; })()`);
+		await t.sleep(450);
+	}
+}
+async function r3noPin(t, leaf) {
+	await t.waitFor(`!${r3S(leaf)}.hasAttribute('data-dse-scroll-pin')`, 'no pin held before the case', 8000);
+}
+/** A fresh B: a malice value no embed has shown, and wait for the host's embed to show it. */
+async function r3freshB(t, leaf) {
+	r3v++;
+	await t.edit(R3B, `c.replace(/ {2}value: \\d+/, '  value: ${r3v}')`);
+	await t.sleep(1200);
+	await r3noPin(t, leaf);
+}
+const r3record = (t, leaf, opts = '{}') => t.ev(`(() => { const s = ${r3S(leaf)}; window.__r3tag(s); const o = ${opts}; o.ref = o.ref === 'vis' ? window.__r3vis(s) : o.ref; window.__r3p = window.__r3rec(s, o); return true; })()`);
+const r3clickToggle = (t, leaf) => t.ev(`(() => { const s = ${r3S(leaf)}; const sr = s.getBoundingClientRect(); const all = Array.from(s.querySelectorAll('button.dse-init__portrait-toggle')); const b = all.find((x) => { const r = x.getBoundingClientRect(); return r.top > sr.top + 20 && r.bottom < sr.bottom - 20; }); if (!b) return 'no visible toggle of ' + all.length; b.click(); return true; })()`);
+const r3writers = {
+	process: async (t) => {
+		r3v++;
+		await t.edit(R3B, `c.replace(/ {2}value: \\d+/, '  value: ${r3v}')`);
+		return `value: ${r3v}`;
+	},
+	nodefs: async (t) => {
+		r3v++;
+		fs.writeFileSync(path.join(vault, R3B), t.read(R3B).replace(/ {2}value: \d+/, `  value: ${r3v}`));
+		return `value: ${r3v}`;
+	},
+	addHero: async (t) => {
+		r3v++;
+		await t.edit(R3B, `c.replace('enemy_groups: []', ${JSON.stringify(`  - name: "Added ${r3v}"\n    max_stamina: 30\nenemy_groups: []`)})`);
+		return `Added ${r3v}`;
+	},
+	removeHero: async (t) => {
+		const names = (t.read(R3B).match(/ {2}- name: "[^"]+"\n {4}max_stamina: 30\n/g) ?? []);
+		const last = names.at(-1);
+		await t.edit(R3B, `c.replace(${JSON.stringify(last)}, '')`);
+		return null;
+	},
+};
+
+SCENARIOS.push(
+	{
+		// r3: the r1 "end" geometry matrix with per-frame data (process, nodefs, own adoption on/off, pane), plus heights.
+		id: 'R3-END',
+		async run(t) {
+			await t.ev(R3_PAGE);
+			const out = [];
+			const A = 'window.__r3A';
+			for (const [hostRel, park] of [['R3/r3host.md', 'end'], ['R3/r3hostP.md', 'end'], ['R3/r3host2x.md', 'end'], ['R3/r3tall.md', 'below'], ['R3/r3tall.md', 'in']].filter(([h, p]) => !process.env.R3_END || process.env.R3_END.split(',').includes(`${h}:${p}`))) {
+				for (const w of ['process', 'nodefs', 'own-off', 'own-on', 'pane']) {
+					const id = `END-${hostRel.split('/')[1].replace('.md', '')}-${park}-${w}`;
+					try {
+						await r3open(t, hostRel);
+						await r3freshB(t, A);
+						let paneB = null;
+						if (w === 'pane') {
+							await t.ev(`(async () => { const b = app.workspace.getLeaf('split', 'vertical'); window.__r3B = b; await b.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(R3B)}, mode: 'preview' }, active: false }); app.workspace.setActiveLeaf(window.__r3A, { focus: true }); return true; })()`);
+							await t.waitFor(`!!${r3S('window.__r3B')}?.querySelector('[data-dse-element]')`, 'pane B rendered');
+							await t.sleep(800);
+							paneB = 'window.__r3B';
+						}
+						await r3park(t, A, park);
+						const prevEnabled = await t.ev(`${t.reg}.enabled`);
+						if (w === 'own-off') await t.ev(`${t.reg}.enabled = false`);
+						const before = t.read(R3B);
+						await r3record(t, A, `{ ref: 'vis' }`);
+						let wres;
+						try {
+							if (w === 'process' || w === 'nodefs') wres = await r3writers[w](t);
+							else if (w === 'pane') wres = await r3clickToggle(t, paneB);
+							else wres = await r3clickToggle(t, A);
+							var m = await t.ev('window.__r3p');
+						} finally {
+							await t.ev(`${t.reg}.enabled = ${JSON.stringify(prevEnabled)}`);
+							if (paneB) await t.ev(`(() => { if (window.__r3B) window.__r3B.detach(); window.__r3B = null; return true; })()`);
+						}
+						const landed = t.read(R3B) !== before;
+						r3Write(id, { id, landed, wres, ...m });
+						out.push(`${id}: landed=${landed} redrawn=${m.redrawn} st ${m.st0}/${m.max0} -> min ${m.stMin} max ${m.stMax} end ${m.stEnd}; ref ${m.ref0} -> ${m.refEnd} (min ${m.refMin} max ${m.refMax}); pin ${m.pinFrames}f atRedraw=${m.pinAtRedraw} oa ${m.oaWhilePinned.join('/')} after ${m.oaAfter}; emb0 ${m.emb0.join(',')} embMax ${m.embMax.join(',')} embEnd ${(m.embEnd ?? []).join(',')}; nstMax ${m.nstMax} nstEnd ${m.nstEnd}`);
+					} catch (e) {
+						out.push(`${id}: ERROR ${e instanceof Error ? e.message : String(e)}`);
+					}
+				}
+			}
+			for (const l of out) console.log(`R3 ${l}`);
+			return `${out.length} cases`;
+		},
+	},
+	{
+		// r3 (a): block edit form Save from inside the embedded tracker, Reading-view host on the "end" geometry.
+		id: 'R3-FORM',
+		async run(t) {
+			await t.ev(R3_PAGE);
+			const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+			const { FORM, SAVE, clickPencil, waitFormOpen } = formKit(t);
+			await t.ev(`(() => { const st = document.createElement('style'); st.id = 'lc-r3-notice'; st.textContent = '.notice-container { display: none !important; }'; document.head.appendChild(st); return true; })()`);
+			await t.ev(`${prefs}.set('authoringControls', true)`);
+			const out = [];
+			const A = 'window.__r3A';
+			for (const variant of ['repark-end', 'repark-in', 'pending-click-then-repark-end', 'repark-end', 'repark-in', 'pending-click-then-repark-end']) {
+				const id = `FORM-${variant}-${out.length}`;
+				try {
+					await r3open(t, 'R3/r3host.md');
+					await r3freshB(t, A);
+					await r3park(t, A, 0); // the pencil's realClick scrollIntoView must be a no-op (a scroll under the hover hides the chrome)
+					const root = `window.__r3emb(${r3S(A)}).querySelector('[data-dse-element="initiative"]')`;
+					let pend = null;
+					if (variant.startsWith('pending')) pend = await r3clickToggle(t, A);
+					await clickPencil(id, root);
+					try {
+						await waitFormOpen(id);
+					} catch (e) {
+						const dbg = await t.ev(`JSON.stringify({ modals: Array.from(document.querySelectorAll('.modal-container')).map((m) => m.className + ' :: ' + (m.querySelector('.modal')?.className ?? '') + ' :: ' + m.textContent.slice(0, 120)), pencils: Array.from(document.querySelectorAll('.dse-chrome button[aria-label^="Edit "]')).map((b) => b.getAttribute('aria-label') + '@' + Math.round(b.getBoundingClientRect().top)), st: ${r3S(A)}.scrollTop })`);
+						let shot = '';
+						try { shot = await t.shot(id + '-noform'); } catch {}
+						throw new Error(e.message + ' ' + dbg + ' shot ' + shot);
+					}
+					const stAfterPencil = await t.ev(`${r3S(A)}.scrollTop`);
+					await r3park(t, A, variant.includes('repark-end') ? 'end' : 'in');
+					const raw = await t.ev(`!!${FORM}.querySelector('textarea.dse-form__raw')`);
+					let edited;
+					r3v++;
+					if (raw) edited = await t.ev(`(() => { const ta = ${FORM}.querySelector('textarea.dse-form__raw'); const was = ta.value; ta.value = ta.value.replace(/ {2}value: \\d+/, '  value: ${r3v}'); ta.dispatchEvent(new Event('input', { bubbles: true })); return was !== ta.value; })()`);
+					else edited = await t.ev(`Array.from(${FORM}.querySelectorAll('.setting-item-name')).map((n) => n.textContent).join('|')`);
+					t.expect(edited === true, `${id}: could not edit the form: ${edited}`);
+					await t.waitFor(`!!(${SAVE}) && !(${SAVE}).disabled`, `${id}: Save enabled`);
+					const before = t.read(R3B);
+					await r3record(t, A, `{ ref: 'vis' }`);
+					await t.realClick(SAVE);
+					await t.waitFor(`!document.querySelector('.modal-container .dse-modal')`, `${id}: form closed`);
+					const m = await t.ev('window.__r3p');
+					const landed = t.read(R3B) !== before && t.read(R3B).includes(`value: ${r3v}`);
+					r3Write(id, { id, landed, pend, stAfterPencil, ...m });
+					out.push(`${id}: landed=${landed} pending=${pend} stAfterPencil=${stAfterPencil} redrawn=${m.redrawn} st ${m.st0}/${m.max0} -> min ${m.stMin} max ${m.stMax} end ${m.stEnd}; ref ${m.ref0} -> ${m.refEnd} (min ${m.refMin} max ${m.refMax}); pin ${m.pinFrames}f atRedraw=${m.pinAtRedraw} oa ${m.oaWhilePinned.join('/')} after ${m.oaAfter}; emb0 ${m.emb0.join(',')} embMax ${m.embMax.join(',')}`);
+				} catch (e) {
+					out.push(`${id}: ERROR ${e instanceof Error ? e.message : String(e)}`);
+					await t.ev(`(() => { document.querySelectorAll('.modal-container .modal-close-button').forEach((b) => b.click()); return true; })()`);
+				}
+			}
+			await t.ev(`${prefs}.set('authoringControls', false)`);
+			await t.ev(`document.getElementById('lc-r3-notice')?.remove()`);
+			for (const l of out) console.log(`R3 ${l}`);
+			return `${out.length} cases`;
+		},
+	},
+	{
+		// r3 (b) Risk 2: content above the viewport changes height while a host pin (anchoring off) is held.
+		id: 'R3-SHIFT',
+		async run(t) {
+			await t.ev(R3_PAGE);
+			const out = [];
+			const A = 'window.__r3A';
+			const cases = [
+				// [label, host, park, writer or null (no write), during-mutation or null]
+				['tall-below-addHero', 'R3/r3tall.md', 'below', 'addHero', null],
+				['tall-below-removeHero', 'R3/r3tall.md', 'below', 'removeHero', null],
+				['tall-below-process(no height change)', 'R3/r3tall.md', 'below', 'process', null],
+				['tall-in-addHero', 'R3/r3tall.md', 'in', 'addHero', null],
+				['tall-below-process+pad200above', 'R3/r3tall.md', 'below', 'process', 'pad'],
+				['tall-below-NOWRITE+pad200above', 'R3/r3tall.md', 'below', null, 'pad'],
+				['call-below-process+calloutToggle', 'R3/r3call.md', 'below', 'process', 'callout'],
+				['call-below-NOWRITE+calloutToggle', 'R3/r3call.md', 'below', null, 'callout'],
+				['call-callabove-process+calloutToggle', 'R3/r3call.md', 'callabove', 'process', 'callout'],
+				['call-callabove-NOWRITE+calloutToggle', 'R3/r3call.md', 'callabove', null, 'callout'],
+				['call-callabove-addHero', 'R3/r3call.md', 'callabove', 'addHero', null],
+			];
+			for (const [label, hostRel, park, writer, mut] of cases) {
+				const id = `SHIFT-${label}`;
+				try {
+					await t.reset(R3B);
+					await r3open(t, hostRel);
+					await r3freshB(t, A);
+					await r3park(t, A, park);
+					if (mut === 'pad') {
+						await t.ev(`(() => { window.__r3during = (s) => { const sr = s.getBoundingClientRect(); const ps = Array.from(s.querySelectorAll(':scope > .markdown-preview-sizer > div > p')).filter((p) => p.getBoundingClientRect().bottom < sr.top); const p = ps.at(-1); if (!p) return 'no rendered p above the viewport'; p.style.paddingTop = '200px'; return 'padded ' + p.textContent.slice(0, 24); }; return true; })()`);
+					} else if (mut === 'callout') {
+						await t.ev(`(() => { window.__r3during = (s) => { const sr = s.getBoundingClientRect(); const c = s.querySelector('.callout.is-collapsible'); if (!c) return 'no callout rendered'; const r = c.getBoundingClientRect(); const where = r.bottom < sr.top ? 'above' : r.top > sr.bottom ? 'below' : 'in view'; c.querySelector('.callout-title').click(); return 'toggled callout (' + where + ', was ' + (c.classList.contains('is-collapsed') ? 'open' : 'collapsed') + ')'; }; return true; })()`);
+					} else await t.ev(`(() => { window.__r3during = null; return true; })()`);
+					await r3record(t, A, `{ ref: 'vis', noPinDuring: ${writer === null}, duringMs: 400, noPinCap: 2500 }`);
+					const wres = writer ? await r3writers[writer](t) : null;
+					const m = await t.ev('window.__r3p');
+					await t.ev(`(() => { window.__r3during = null; return true; })()`);
+					r3Write(id, { id, wres, ...m });
+					const dd = m.during ? ` during@${m.during.atMs}ms pinned=${m.during.pinned} oa=${m.during.oa} ${m.during.res}: ref ${m.during.refBefore} -> ${m.during.refNextFrame}, st ${m.during.stBefore} -> ${m.during.stNextFrame}` : '';
+					out.push(`${id}: redrawn=${m.redrawn} st ${m.st0} -> min ${m.stMin} max ${m.stMax} end ${m.stEnd}; ref ${m.ref0} -> end ${m.refEnd} (min ${m.refMin} max ${m.refMax}); pin ${m.pinFrames}f oa ${m.oaWhilePinned.join('/')}; emb0 ${m.emb0.join(',')} embEnd ${(m.embEnd ?? []).join(',')};${dd}`);
+				} catch (e) {
+					out.push(`${id}: ERROR ${e instanceof Error ? e.message : String(e)}`);
+				}
+			}
+			await t.reset(R3B);
+			for (const l of out) console.log(`R3 ${l}`);
+			return `${out.length} cases`;
+		},
+	},
+	{
+		// r3 (c): nested-embed resolution with an ambiguous basename / relative links in the middle note.
+		id: 'R3-NEST',
+		async run(t) {
+			await t.ev(R3_PAGE);
+			const out = [];
+			const A = 'window.__r3A';
+			for (const [hostRel, midRel, cands] of [
+				['R3N/Host.md', 'R3N/X/Mid.md', ['R3N/X/Trk.md', 'R3N/Y/Trk.md', 'R3N/Trk.md']],
+				['R3N/Host2.md', 'R3N/X/Mid2.md', ['R3N/X/Rel.md', 'R3N/Rel.md']],
+				['R3N/Host3.md', 'R3N/X/Mid3.md', ['R3N/X/Trk.md', 'R3N/Y/Trk.md', 'R3N/Trk.md']],
+			]) {
+				try {
+					await r3open(t, hostRel, '__r3A', false);
+					await t.sleep(800);
+					await t.ev(`(() => { const s = ${r3S(A)}; const e = s.querySelector('.internal-embed'); const sr = s.getBoundingClientRect(); s.scrollTop = e.getBoundingClientRect().top - sr.top + s.scrollTop - 200; return true; })()`);
+					await t.sleep(900);
+					const dom = await t.ev(`(() => { const s = ${r3S(A)}; const embs = Array.from(s.querySelectorAll('.internal-embed[src]')); return { scrollTop: s.scrollTop, embeds: embs.map((e) => ({ src: e.getAttribute('src'), parentSrc: e.parentElement.closest('.internal-embed[src]')?.getAttribute('src') ?? null, text: (e.querySelector('[data-dse-element]')?.textContent ?? '').match(/(X|Y|Root|XRel|RootRel)Hero/g)?.slice(0, 1) ?? null, hasDse: !!e.querySelector('[data-dse-element]') })) }; })()`);
+					const inner = dom.embeds.find((e) => e.parentSrc);
+					const res = await t.ev(`(() => { const r = (l, s) => app.metadataCache.getFirstLinkpathDest(l, s)?.path ?? null; return { fromMid: r(${JSON.stringify(inner?.src ?? '')}.split('#')[0], ${JSON.stringify(midRel)}), fromHost: r(${JSON.stringify(inner?.src ?? '')}.split('#')[0], ${JSON.stringify(hostRel)}) }; })()`);
+					const pinned = {};
+					for (const c of cands) {
+						await r3noPin(t, A);
+						await t.ev(`(() => { const s = ${r3S(A)}; window.__r3pinSeen = false; const mo = new MutationObserver(() => { if (s.hasAttribute('data-dse-scroll-pin')) window.__r3pinSeen = true; }); mo.observe(s, { attributes: true, attributeFilter: ['data-dse-scroll-pin'] }); window.__r3mo = mo; return true; })()`);
+						r3v++;
+						await t.edit(c, `c.replace(/ {2}value: \\d+/, '  value: ${r3v}')`);
+						await t.sleep(1200);
+						pinned[c] = await t.ev(`(() => { window.__r3mo.disconnect(); return window.__r3pinSeen; })()`);
+					}
+					const rec = { hostRel, midRel, dom, res, pinned };
+					r3Write(`NEST-${hostRel.replace(/\W/g, '_')}`, rec);
+					out.push(`NEST ${hostRel}: scrollTop ${dom.scrollTop}; embeds ${JSON.stringify(dom.embeds)}; resolve(inner) fromMid=${res.fromMid} fromHost=${res.fromHost}; pinned on write to ${JSON.stringify(pinned)}`);
+				} catch (e) {
+					out.push(`NEST ${hostRel}: ERROR ${e instanceof Error ? e.message : String(e)}`);
+				}
+			}
+			for (const l of out) console.log(`R3 ${l}`);
+			return `${out.length} cases`;
+		},
+	},
+	{
+		// r3 (4): integrity - other note's embed not pinned; host + B's own view; popout closed while pinned; TTL release.
+		id: 'R3-INT',
+		async run(t) {
+			await t.ev(R3_PAGE);
+			const out = [];
+			const A = 'window.__r3A';
+			const pinsSize = `(() => { const e = ${t.reg}.liveEntries().find((x) => x.host && x.host.scrollPin); return e ? e.host.scrollPin.pins.size : 'no live host'; })()`;
+			const watch = (leaf, name) => t.ev(`(() => { const s = ${r3S(leaf)}; window['__r3seen_${name}'] = []; const mo = new MutationObserver(() => { if (s.hasAttribute('data-dse-scroll-pin')) { const id = s.getAttribute('data-dse-scroll-pin'); const st = s.ownerDocument.querySelector('style[data-dse-scroll-pin-style="' + id + '"]'); window['__r3seen_${name}'].push({ id, text: st ? st.textContent.replace(/\\d+px/, 'Npx') : null }); } }); mo.observe(s, { attributes: true, attributeFilter: ['data-dse-scroll-pin'] }); window['__r3mo_${name}'] = mo; return true; })()`);
+			const seen = (name) => t.ev(`(() => { window['__r3mo_${name}'].disconnect(); return window['__r3seen_${name}']; })()`);
+			// (vi) a view that embeds a DIFFERENT note: not pinned on a write to B; pinned on a write to its own embed (control)
+			try {
+				await r3open(t, 'R3/r3hostO.md');
+				await r3park(t, A, 'end');
+				await watch(A, 'o1');
+				await r3writers.process(t);
+				await t.sleep(1500);
+				const s1 = await seen('o1');
+				await r3noPin(t, A);
+				await watch(A, 'o2');
+				r3v++;
+				await t.edit('R3/r3trkO.md', `c.replace(/ {2}value: \\d+/, '  value: ${r3v}')`);
+				await t.sleep(1500);
+				const s2 = await seen('o2');
+				out.push(`INT other-note: write to B pinned it ${s1.length}x; write to its own embedded note pinned it ${s2.length}x ${JSON.stringify(s2[0] ?? null)}`);
+			} catch (e) {
+				out.push(`INT other-note: ERROR ${e.message}`);
+			}
+			// (iii) host + B's own view open elsewhere
+			try {
+				await r3open(t, 'R3/r3host.md');
+				await r3freshB(t, A);
+				await t.ev(`(async () => { const b = app.workspace.getLeaf('split', 'vertical'); window.__r3B = b; await b.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(R3B)}, mode: 'preview' }, active: false }); app.workspace.setActiveLeaf(window.__r3A, { focus: true }); return true; })()`);
+				await t.waitFor(`!!${r3S('window.__r3B')}?.querySelector('[data-dse-element]')`, 'pane B rendered');
+				await t.sleep(800);
+				await r3park(t, 'window.__r3B', 'in');
+				await r3park(t, A, 'end');
+				await watch(A, 'ha');
+				await watch('window.__r3B', 'hb');
+				await r3record(t, A, `{ ref: 'vis' }`);
+				await r3writers.process(t);
+				const m = await t.ev('window.__r3p');
+				const sa = await seen('ha');
+				const sb = await seen('hb');
+				out.push(`INT host+own-view: host st ${m.st0} -> ${m.stMin}/${m.stMax}; host pins ${JSON.stringify(sa)}; B view pins ${JSON.stringify(sb)}; nstMax ${m.nstMax}; styles ${JSON.stringify(m.styles)}`);
+			} catch (e) {
+				out.push(`INT host+own-view: ERROR ${e.message}`);
+			} finally {
+				await t.ev(`(() => { if (window.__r3B) window.__r3B.detach(); window.__r3B = null; return true; })()`);
+			}
+			// (v) TTL release removes the anchoring rule
+			try {
+				await r3open(t, 'R3/r3host.md');
+				await r3freshB(t, A);
+				await r3park(t, A, 'end');
+				await r3writers.process(t);
+				const at0 = Date.now();
+				const during = await t.ev(`(() => { const s = ${r3S(A)}; return { pin: s.hasAttribute('data-dse-scroll-pin'), oa: getComputedStyle(s).overflowAnchor, nst: document.querySelectorAll('style[data-dse-scroll-pin-style]').length }; })()`);
+				await t.waitFor(`!${r3S(A)}.hasAttribute('data-dse-scroll-pin')`, 'TTL release', 8000);
+				const ms = Date.now() - at0;
+				const after = await t.ev(`(() => { const s = ${r3S(A)}; return { oa: getComputedStyle(s).overflowAnchor, nst: document.querySelectorAll('style[data-dse-scroll-pin-style]').length, attr: s.getAttribute('data-dse-scroll-pin') }; })()`);
+				out.push(`INT TTL: during ${JSON.stringify(during)}; released after ~${ms}ms; after ${JSON.stringify(after)}; pins.size ${await t.ev(pinsSize)}`);
+			} catch (e) {
+				out.push(`INT TTL: ERROR ${e.message}`);
+			}
+			// (iv) a popout host closed while pinned
+			try {
+				await r3open(t, 'R3/r3host.md');
+				await t.ev(`(async () => { const leaf = app.workspace.openPopoutLeaf({ size: { width: 900, height: 800 } }); window.__r3P = leaf; await leaf.setViewState({ type: 'markdown', state: { file: 'R3/r3host.md', mode: 'preview' }, active: true }); return true; })()`);
+				await t.waitFor(`!!window.__r3P.view?.file && !!${r3S('window.__r3P')}?.querySelector('[data-dse-element]')`, 'popout host rendered', 20000);
+				await t.sleep(1200);
+				await r3park(t, 'window.__r3P', 'end');
+				const pst = await t.ev(`${r3S('window.__r3P')}.scrollTop`);
+				await r3writers.process(t);
+				const styleInfo = `(() => { const s = ${r3S('window.__r3P')}; const d = s.ownerDocument; const ids = (doc) => Array.from(doc.querySelectorAll('style[data-dse-scroll-pin-style]')).map((x) => x.getAttribute('data-dse-scroll-pin-style')); const mainAttr = Array.from(document.querySelectorAll('[data-dse-scroll-pin]')).map((x) => x.getAttribute('data-dse-scroll-pin')); return { popAttr: s.getAttribute('data-dse-scroll-pin'), popIds: ids(d), mainIds: ids(document), mainAttr }; })()`;
+				const info1 = await t.ev(styleInfo);
+				await t.waitFor(`!${r3S('window.__r3P')}.hasAttribute('data-dse-scroll-pin')`, 'popout TTL release', 8000);
+				await t.sleep(300);
+				const info2 = await t.ev(styleInfo);
+				out.push(`INT popout styles: while pinned ${JSON.stringify(info1)}; after TTL release ${JSON.stringify(info2)}`);
+				await r3writers.process(t);
+				const inPop = await t.ev(`(() => { const s = ${r3S('window.__r3P')}; const d = s.ownerDocument; return { sameDoc: d === document, pin: s.hasAttribute('data-dse-scroll-pin'), oa: d.defaultView.getComputedStyle(s).overflowAnchor, popStyles: d.querySelectorAll('style[data-dse-scroll-pin-style]').length, mainStyles: document.querySelectorAll('style[data-dse-scroll-pin-style]').length }; })()`);
+				const sizeBefore = await t.ev(pinsSize);
+				await t.ev(`(() => { window.__r3P.view.containerEl.ownerDocument.defaultView.close(); return true; })()`);
+				await t.sleep(1000);
+				const sizeAfterClose = await t.ev(pinsSize);
+				const mainStyles = await t.ev(`document.querySelectorAll('style[data-dse-scroll-pin-style]').length`);
+				await t.sleep(3000);
+				const sizeLater = await t.ev(pinsSize);
+				out.push(`INT popout: popout scrollTop ${pst}; while pinned ${JSON.stringify(inPop)}; pins.size before close ${sizeBefore}, 1s after close ${sizeAfterClose}, +3s ${sizeLater}; main doc pin styles ${mainStyles}`);
+			} catch (e) {
+				out.push(`INT popout: ERROR ${e.message}`);
+			}
+			for (const l of out) console.log(`R3 ${l}`);
+			return `${out.length} cases`;
+		},
+	},
+	{
+		// r3 (4): cost of the per-view embed scan on a vault write with many Reading views open.
+		id: 'R3-COST',
+		async run(t) {
+			await t.ev(R3_PAGE);
+			const notes = ['R3/r3tall.md', 'R3/r3host.md', 'R3/r3hostP.md', 'R3/r3host2x.md', 'R3/r3call.md', 'R3N/Host.md', 'Lifecycle/tall.md', 'R3/r3tall.md', 'R3/r3host.md', 'R3/r3hostP.md', 'R3/r3hostO.md', 'R3N/Host2.md'];
+			await r3open(t, 'R3/r3tall.md', '__r3A', false);
+			await t.ev(`(async () => { window.__r3L = []; const names = ${JSON.stringify(notes)}; for (let i = 0; i < names.length; i++) { const l = app.workspace.getLeaf(i % 3 === 0 ? 'split' : 'tab'); window.__r3L.push(l); await l.setViewState({ type: 'markdown', state: { file: names[i], mode: 'preview' }, active: true }); if (l.loadIfDeferred) await l.loadIfDeferred(); } return true; })()`);
+			await t.sleep(3000);
+			// visit every leaf once so each Reading view has rendered
+			await t.ev(`(async () => { for (const l of window.__r3L) { app.workspace.setActiveLeaf(l, { focus: false }); await new Promise((r) => setTimeout(r, 250)); const s = window.__r3S(l); if (s) s.scrollTop = Math.max(1, (s.scrollHeight - s.clientHeight) / 2); await new Promise((r) => setTimeout(r, 250)); } return true; })()`);
+			await t.sleep(1500);
+			const res = await t.ev(`(() => {
+				const views = app.workspace.getLeavesOfType('markdown').map((l) => l.view);
+				const reading = views.filter((v) => v.file && v.getMode && v.getMode() === 'preview');
+				const embedsTotal = reading.reduce((n, v) => n + (v.previewMode?.containerEl?.querySelectorAll('.internal-embed[src]').length ?? 0), 0);
+				const nodesTotal = reading.reduce((n, v) => n + (v.previewMode?.containerEl?.querySelectorAll('*').length ?? 0), 0);
+				const hs = (app.vault._ && app.vault._.modify) || [];
+				const h = hs.find((x) => String(x.fn).includes('pinReadingViewsOf'));
+				if (!h) return { err: 'no modify handler found', n: hs.length };
+				const time = (p, reps) => { const d = []; for (let i = 0; i < reps; i++) { const a = performance.now(); h.fn.call(h.ctx, { path: p }); d.push(performance.now() - a); } d.sort((x, y) => x - y); return { reps, median: +d[Math.floor(reps / 2)].toFixed(3), p95: +d[Math.floor(reps * 0.95)].toFixed(3), max: +d[reps - 1].toFixed(3) }; };
+				return { leaves: views.length, reading: reading.length, embedsTotal, nodesTotal, unrelated: time('Lifecycle/other.md', 300) };
+			})()`);
+			const pinCall = await t.ev(`(() => { const h = app.vault._.modify.find((x) => String(x.fn).includes('pinReadingViewsOf')); const a = performance.now(); h.fn.call(h.ctx, { path: ${JSON.stringify(R3B)} }); const ms = performance.now() - a; return { ms: +ms.toFixed(3), pinnedNow: document.querySelectorAll('[data-dse-scroll-pin]').length }; })()`);
+			await t.sleep(3500);
+			await t.ev(`(() => { for (const l of window.__r3L) l.detach(); window.__r3L = []; return true; })()`);
+			const line = `COST ${JSON.stringify(res)}; one call for B's path (pins every host): ${JSON.stringify(pinCall)}`;
+			r3Write('COST', { res, pinCall });
+			console.log(`R3 ${line}`);
+			return line;
+		},
+	},
+	{
+		// r3 (4): plugin unload while a host pin is held removes the anchoring rule (releaseAll).
+		id: 'R3-UNLOAD',
+		async run(t) {
+			await t.ev(R3_PAGE);
+			const A = 'window.__r3A';
+			await r3open(t, 'R3/r3host.md');
+			await r3freshB(t, A);
+			await r3park(t, A, 'end');
+			await r3writers.process(t);
+			const during = await t.ev(`(() => { const s = ${r3S(A)}; return { pin: s.hasAttribute('data-dse-scroll-pin'), oa: getComputedStyle(s).overflowAnchor, nst: document.querySelectorAll('style[data-dse-scroll-pin-style]').length }; })()`);
+			await t.ev(`(async () => { await app.plugins.disablePlugin('draw-steel-elements'); })()`);
+			const after = await t.ev(`(() => { const s = ${r3S(A)}; return { pin: s.hasAttribute('data-dse-scroll-pin'), oa: getComputedStyle(s).overflowAnchor, nst: document.querySelectorAll('style[data-dse-scroll-pin-style]').length }; })()`);
+			await t.ev(`(async () => { await app.plugins.enablePlugin('draw-steel-elements'); })()`);
+			await t.sleep(2500);
+			await t.ev(PAGE_HELPERS);
+			const line = `UNLOAD during ${JSON.stringify(during)}; right after disablePlugin ${JSON.stringify(after)}`;
+			console.log(`R3 ${line}`);
+			return line;
+		},
+	},
+);
+// ===== end SC-479 r3 PROBES =====

@@ -1,0 +1,43 @@
+// ===== SC-479 r1 COST probe: what does a host pin cost, and what does the embed scan cost per modify? =====
+// (1) P470-COST's method on a scrolled host scroller: the first forced layout after setting / clearing each kind of
+//     pin, 3 reps: the SC-470 sizer rule alone vs the SC-479 host rule (sizer + overflow-anchor: none).
+// (2) The scan `pinReadingViewsOf` now runs over EVERY Reading view on EVERY modify: querySelectorAll('.internal-embed[src]')
+//     + a DSE check + link resolution, timed page-side on hosts of different sizes, 20 reps.
+SCENARIOS.push({
+	id: 'P479-COST',
+	async run(t) {
+		const res = {};
+		for (const rel of ['SC479/EmbA.md', 'SC479/EmbAC.md', 'Lifecycle/tall.md']) {
+			await t.open(rel);
+			await t.sleep(1200);
+			const sc = `app.workspace.getMostRecentLeaf().view.containerEl.querySelector('.markdown-reading-view > .markdown-preview-view')`;
+			// draw the embed (if any) and park mid-note
+			for (let i = 0; i < 20; i++) {
+				const found = await t.ev(`(() => { const s = ${sc}; const e = s.querySelector('.internal-embed [data-dse-element]') || (!s.querySelector('.internal-embed') && s.querySelector('[data-dse-element]')); if (e) return true; s.scrollTop += 500; return false; })()`);
+				await t.sleep(300);
+				if (found) break;
+			}
+			await t.ev(`(() => { const s = ${sc}; s.scrollTop = Math.max(1, Math.round((s.scrollHeight - s.clientHeight) / 2)); return true; })()`);
+			await t.sleep(1200);
+			const kinds = {
+				baseline: `() => {}`,
+				sizerRule: `(s) => { const st = s.ownerDocument.createElement('style'); st.id = 'p479st'; st.textContent = '.markdown-preview-view[data-p479-pin="1"] > .markdown-preview-sizer { min-height: ' + s.scrollHeight + 'px !important; }'; s.ownerDocument.head.appendChild(st); s.setAttribute('data-p479-pin', '1'); }`,
+				hostRule: `(s) => { const st = s.ownerDocument.createElement('style'); st.id = 'p479st'; st.textContent = '.markdown-preview-view[data-p479-pin="1"] > .markdown-preview-sizer { min-height: ' + s.scrollHeight + 'px !important; }\\n.markdown-preview-view[data-p479-pin="1"] { overflow-anchor: none !important; }'; s.ownerDocument.head.appendChild(st); s.setAttribute('data-p479-pin', '1'); }`,
+			};
+			const r = { nodes: await t.ev(`${sc}.querySelectorAll('*').length`), embeds: await t.ev(`${sc}.querySelectorAll('.internal-embed[src]').length`) };
+			for (const [k, fn] of Object.entries(kinds)) {
+				r[k] = [];
+				for (let i = 0; i < 3; i++) {
+					r[k].push(await t.ev(`(() => { const s = ${sc}; void s.scrollHeight; (${fn})(s); const t0 = performance.now(); void s.scrollHeight; const dt = performance.now() - t0; const held = getComputedStyle(s.querySelector(':scope > .markdown-preview-sizer')).minHeight; const anc = getComputedStyle(s).overflowAnchor; s.removeAttribute('data-p479-pin'); document.getElementById('p479st')?.remove(); const t1 = performance.now(); void s.scrollHeight; const dr = performance.now() - t1; return Math.round(dt * 10) / 10 + '+' + Math.round(dr * 10) / 10 + '(' + held + ',' + anc + ')'; })()`));
+					await t.sleep(300);
+				}
+			}
+			// (2) the scan, as pinReadingViewsOf does it, for a path that is NOT embedded (the common case: every modify)
+			r.scanMs = await t.ev(`(() => { const s = ${sc}; const v = app.workspace.getMostRecentLeaf().view; const out = []; for (let k = 0; k < 20; k++) { const t0 = performance.now(); let hit = false; for (const e of Array.from(s.querySelectorAll('.internal-embed[src]'))) { if (!e.querySelector('[data-dse-element]')) continue; const lp = (e.getAttribute('src') || '').split('#')[0]; const f = lp && app.metadataCache.getFirstLinkpathDest(lp, v.file.path); if (f && f.path === 'Nope/none.md') hit = true; } out.push(performance.now() - t0); } out.sort((a, b) => a - b); return { median: Math.round(out[10] * 1000) / 1000, max: Math.round(out[19] * 1000) / 1000 }; })()`);
+			res[rel] = r;
+		}
+		p479Write(`COST-${P479_VAR}`, res);
+		return JSON.stringify(res);
+	},
+});
+// ===== end SC-479 r1 COST probe =====

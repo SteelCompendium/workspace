@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# SC-479 r3: build bundle variants from SCRATCH copies of the dse source (git archive); the worktree is never touched.
+# usage: r3-build.sh
+set -u
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc479-r3-a49fb648
+D=/home/scott/code/steelCompendium/worktrees/sc479-embed-scroll-pin/draw-steel-elements
+PIN=src/framework/host/previewScrollPin.ts
+mk() { # mk <name> <sha>
+  mkdir -p "$S/src/$1" "$S/bundles/$1"
+  git -C "$D" archive "$2" | tar -x -C "$S/src/$1"
+  ln -sfn "$D/node_modules" "$S/src/$1/node_modules"
+}
+build() { # build <name>
+  ( cd "$S/src/$1" && node esbuild.config.mjs production ) > "$S/build-$1.log" 2>&1
+  local rc=$?
+  cp "$S/src/$1/main.js" "$S/src/$1/styles.css" "$S/src/$1/manifest.json" "$S/bundles/$1/"
+  echo "$1 rc=$rc main.js $(sha256sum < "$S/bundles/$1/main.js" | cut -c1-12) styles.css $(sha256sum < "$S/bundles/$1/styles.css" | cut -c1-12)" >> "$S/bundles.sums"
+}
+: > "$S/bundles.sums"
+mk head 84ba65a; build head
+mk base 253aa5f; build base
+mk ctl-noanchor 84ba65a
+python3 -I - "$S/src/ctl-noanchor/$PIN" <<'EOF'
+import sys
+p = sys.argv[1]; s = open(p).read()
+old = "held.host ? `${pinRule(held.id, held.px)}\\n${anchorRule(held.id)}` : pinRule(held.id, held.px)"
+assert s.count(old) == 1
+open(p, 'w').write(s.replace(old, "pinRule(held.id, held.px)", 1))
+EOF
+build ctl-noanchor
+mk ctl-nohost 84ba65a
+python3 -I - "$S/src/ctl-nohost/$PIN" <<'EOF'
+import sys
+p = sys.argv[1]; s = open(p).read()
+a = "if (!own && !resolveLink) continue;"
+b = "for (let up = inner.parentElement?.closest<HTMLElement>('.markdown-preview-view'); up; up = up.parentElement?.closest<HTMLElement>('.markdown-preview-view')) scroller = up;"
+assert s.count(a) == 1 and s.count(b) == 1
+open(p, 'w').write(s.replace(a, "if (!own) continue;", 1).replace(b, "", 1))
+EOF
+build ctl-nohost
+git -C "$D" status --porcelain > "$S/build-porcelain-after.txt"

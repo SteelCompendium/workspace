@@ -1,0 +1,15 @@
+// SC-479 r1: build a SCRATCH copy of the in-tree lifecycle harness with probe blocks injected before main().
+// usage: node s479-mkharness.cjs <in-tree harness> <out file> <probe block file>...
+// The copy resolves `repo` (demo-vault) from $R3_REPO so it can live outside the tree; the tree is never edited.
+const fs = require('fs');
+const [src, out, ...blocks] = process.argv.slice(2);
+let s = fs.readFileSync(src, 'utf8');
+const repoLine = 'const repo = path.dirname(dir);';
+if (!s.includes(repoLine)) { console.error('repo line not found'); process.exit(3); }
+s = s.replace(repoLine, 'const repo = process.env.R3_REPO ?? path.dirname(dir);');
+const anchor = '\nasync function main() {';
+if (!s.includes(anchor)) { console.error('main anchor not found'); process.exit(3); }
+const blk = blocks.map((b) => fs.readFileSync(b, 'utf8')).join('\n');
+s = s.replace(anchor, '\n' + blk + '\n' + anchor);
+fs.writeFileSync(out, s);
+console.log(`wrote ${out} (${s.length} bytes, ${blocks.length} block(s))`);

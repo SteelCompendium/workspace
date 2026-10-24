@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# r3-gate.sh <name>: one gate in the worktree; log + rc to scratch
+set -u
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc479-r3-a49fb648
+D=/home/scott/code/steelCompendium/worktrees/sc479-embed-scroll-pin/draw-steel-elements
+cd "$D" || exit 9
+case "$1" in
+  tsc) npm run tsc > "$S/gate-tsc.log" 2>&1 ;;
+  lint) npm run lint > "$S/gate-lint.log" 2>&1 ;;
+  jest) rm -f "$D/main.js" "$D/styles.css"; npx jest > "$S/gate-jest.log" 2>&1 ;;
+  lifecycle) DSE_LIFECYCLE_PORT=9493 npm run obsidian-lifecycle > "$S/gate-lifecycle.log" 2>&1 ;;
+  *) exit 7 ;;
+esac
+rc=$?
+echo "rc=$rc" >> "$S/gate-$1.log"
+exit $rc

@@ -1,0 +1,98 @@
+// ===== SC-479 r7 PROBES (scratch harness copy only) =====
+Object.assign(FIXTURES, {
+	// a host that is little more than the tall embed: Obsidian's sizer estimate (line based) runs far under the real height
+	'R3/r7host.md': '# r7host\n\nPRE\n\n![[r5trk]]\n\nPOST\n',
+});
+async function r7freshLong(t) {
+	r3v++;
+	await t.ev(`(async () => { await app.vault.modify(app.vault.getAbstractFileByPath(${JSON.stringify(R5B)}), ${JSON.stringify(FIXTURES[R5B])}.replace('  value: 1', '  value: ${r3v}')); })()`);
+	await t.sleep(1000);
+}
+async function r7openSeek(t, hostRel) {
+	await t.open(hostRel);
+	await t.ev(`(() => { window.__r3A = app.workspace.getMostRecentLeaf(); ${r3S('window.__r3A')}.scrollTop = 0; return true; })()`);
+	for (let i = 0; i < 60 && !(await t.ev(`!!window.__r3emb(${r3S('window.__r3A')})`)); i++) {
+		await t.ev(`(() => { const s = ${r3S('window.__r3A')}; s.scrollTop += Math.round(s.clientHeight * 0.6); return true; })()`);
+		await t.sleep(200);
+	}
+	await t.waitFor(`(() => { const e = window.__r3emb(${r3S('window.__r3A')}); return !!e && e.querySelectorAll('button.dse-init__portrait-toggle').length === 20; })()`, `${hostRel}: the embed shows the 20-hero fixture`, 10000);
+}
+/** park: 'inside' = viewport top `off` px under the tracker; 'trk' = viewport top `off` px under the tracker's top (tracker on screen). */
+async function r7park(t, mode, off) {
+	let geo = null;
+	for (let i = 0; i < 3; i++) {
+		geo = await t.ev(`(() => { const s = ${r3S('window.__r3A')}; const e = window.__r3emb(s); if (!e) return null; const trk = e.querySelector('[data-dse-element="initiative"]'); const sr = s.getBoundingClientRect(); const tr = trk.getBoundingClientRect(); s.scrollTop = (${JSON.stringify(mode)} === 'trk' ? tr.top : tr.bottom) - sr.top + s.scrollTop + ${off}; const er = e.getBoundingClientRect(); const sz = s.querySelector(':scope > .markdown-preview-sizer'); return { st: Math.round(s.scrollTop), maxSt: s.scrollHeight - s.clientHeight, sh: s.scrollHeight, sizerInlineMH: sz ? parseFloat(sz.style.minHeight) : null, sizerH: sz ? Math.round(sz.getBoundingClientRect().height) : null, embTop: Math.round(er.top - sr.top), embBottom: Math.round(er.bottom - sr.top), trkTop: Math.round(trk.getBoundingClientRect().top - sr.top), trkBottom: Math.round(trk.getBoundingClientRect().bottom - sr.top) }; })()`);
+		await t.sleep(450);
+	}
+	return geo;
+}
+SCENARIOS.push(
+	{
+		// r7 item 4: INSIDE geometry on a host whose Obsidian sizer estimate runs under the real height
+		id: 'R7-EST',
+		async run(t) {
+			await t.ev(R3_PAGE);
+			const out = [];
+			for (const [hostRel, w, off] of [['R3/r7host.md', 'process', 150], ['R3/r7host.md', 'addHero', 150], ['R3/r7host.md', 'process', 500], ['R3/r7host.md', 'addHero', 500], ['R3/r7host.md', 'removeHero', 150], ['R3/r7host.md', 'process', 150], ['R3/r7host.md', 'addHero', 150]]) {
+				const id = `EST-${w}-${off}-${out.length}`;
+				try {
+					await r7freshLong(t);
+					await r7openSeek(t, hostRel);
+					const geo = await r7park(t, 'inside', off);
+					t.expect(geo && geo.embTop < 0 && geo.embBottom > 0 && geo.trkBottom < 0, `${id}: not inside the embed below the tracker: ${JSON.stringify(geo)}`);
+					await t.ev(`(() => { const s = ${r3S('window.__r3A')}; const sr = s.getBoundingClientRect(); const p = Array.from(s.querySelectorAll('p')).find((x) => { const r = x.getBoundingClientRect(); return /I-POST|POST/.test(x.textContent) && r.top >= sr.top && r.bottom <= sr.bottom; }); window.__r5refText = p ? p.textContent : null; window.__r3tag(s); return true; })()`);
+					const refText = await t.ev('window.__r5refText');
+					t.expect(!!refText, `${id}: no visible reference paragraph`);
+					await t.ev(`(() => { const s = ${r3S('window.__r3A')}; const find = () => Array.from(s.querySelectorAll('p')).find((x) => x.isConnected && x.textContent === window.__r5refText) || null; const t0 = performance.now(); const sr0 = s.getBoundingClientRect(); const ref0 = Math.round(find().getBoundingClientRect().top - sr0.top); const st0 = Math.round(s.scrollTop); const h0 = Math.round(window.__r3emb(s).getBoundingClientRect().height); const frames = []; let stMinEv = st0; const onScroll = () => { stMinEv = Math.min(stMinEv, s.scrollTop); }; s.addEventListener('scroll', onScroll); let pinSeen = false, pinOnAt = 0, gone = 0; window.__r5p = new Promise((resolve) => { const tick = () => { const now = performance.now() - t0; const sr = s.getBoundingClientRect(); const r = find(); const e = window.__r3emb(s); const pin = s.hasAttribute('data-dse-scroll-pin'); const st = s.ownerDocument.querySelector('style[data-dse-scroll-pin-style="' + s.getAttribute('data-dse-scroll-pin') + '"]'); frames.push({ ms: Math.round(now), st: Math.round(s.scrollTop), ref: r ? Math.round(r.getBoundingClientRect().top - sr.top) : null, h: e ? Math.round(e.getBoundingClientRect().height) : null, pin, stop: st ? /internal-embed/.test(st.textContent) : null }); if (pin) { if (!pinSeen) pinOnAt = now; pinSeen = true; gone = 0; } else if (pinSeen) gone++; if (gone < 10 && now < (pinSeen ? Math.min(pinOnAt + 4500, 12000) : 5000)) requestAnimationFrame(tick); else { s.removeEventListener('scroll', onScroll); const refs = frames.map((f) => f.ref).filter((x) => x !== null); const last = frames[frames.length - 1]; resolve({ ref0, st0, h0, refEnd: last.ref, refMin: Math.min(...refs), refMax: Math.max(...refs), refLostFrames: frames.filter((f) => f.ref === null).length, stEnd: last.st, stMin: Math.min(stMinEv, ...frames.map((f) => f.st)), stMax: Math.max(...frames.map((f) => f.st)), hEnd: last.h, pinFrames: frames.filter((f) => f.pin).length, stopFrames: frames.filter((f) => f.stop).length, nFrames: frames.length, frames }); } }; requestAnimationFrame(tick); }); return true; })()`);
+					if (w === 'process') { r3v++; await t.edit(R5B, `c.replace(/ {2}value: \\d+/, '  value: ${r3v}')`); }
+					else if (w === 'addHero') { r3v++; await t.edit(R5B, `c.replace('enemy_groups: []', ${JSON.stringify(`  - name: "Added ${r3v}"\n    max_stamina: 30\nenemy_groups: []`)})`); }
+					else { const names = t.read(R5B).match(/ {2}- name: "[^"]+"\n {4}max_stamina: 30\n/g) ?? []; await t.edit(R5B, `c.replace(${JSON.stringify(names.at(-1))}, '')`); }
+					const m = await t.ev('window.__r5p');
+					const redrawn = await t.ev(`!Array.from(${r3S('window.__r3A')}.querySelectorAll('[data-dse-element]')).some((x) => x.isConnected && x.__r3tagged)`);
+					r3Write(id, { id, geo, refText, redrawn, ...m });
+					out.push(`${id}: geo ${JSON.stringify(geo)}; redrawn=${redrawn}; embed ${m.h0} -> ${m.hEnd}; scrollTop ${m.st0} -> end ${m.stEnd} (min ${m.stMin} max ${m.stMax}); text "${refText}" ${m.ref0} -> end ${m.refEnd} (min ${m.refMin} max ${m.refMax}, lost ${m.refLostFrames}f); pin ${m.pinFrames}/${m.nFrames}f, embed stop ${m.stopFrames}f`);
+				} catch (e) {
+					out.push(`${id}: ERROR ${e instanceof Error ? e.message : String(e)}`);
+				}
+			}
+			for (const l of out) console.log(`R7 ${l}`);
+			return `${out.length} cases`;
+		},
+	},
+	{
+		// r7 item 2: an existing pin is never downgraded; a pin without the stop is upgraded when a re-pin wants it
+		id: 'R7-REPIN',
+		async run(t) {
+			await t.ev(R3_PAGE);
+			const out = [];
+			const styleOf = `(() => { const s = ${r3S('window.__r3A')}; const id = s.getAttribute('data-dse-scroll-pin'); const st = id && s.ownerDocument.querySelector('style[data-dse-scroll-pin-style="' + id + '"]'); return { id, stop: st ? /internal-embed/.test(st.textContent) : null, n: s.ownerDocument.querySelectorAll('style[data-dse-scroll-pin-style]').length }; })()`;
+			for (const [first, second] of [[['trk', 150], ['inside', 150]], [['inside', 150], ['trk', 150]]]) {
+				const id = `REPIN-${first[0]}-then-${second[0]}`;
+				try {
+					await r7freshLong(t);
+					await r7openSeek(t, 'R3/r5host.md');
+					await t.waitFor(`!${r3S('window.__r3A')}.hasAttribute('data-dse-scroll-pin')`, 'no pin before', 8000);
+					const g1 = await r7park(t, first[0], first[1]);
+					r3v++;
+					await t.edit(R5B, `c.replace(/ {2}value: \\d+/, '  value: ${r3v}')`);
+					const s1 = await t.ev(styleOf);
+					await t.sleep(400);
+					// move the reader while the pin is held (one scrollTop set, no settle loop: the pin's TTL is running)
+					const g2 = await t.ev(`(() => { const s = ${r3S('window.__r3A')}; const e = window.__r3emb(s); const trk = e.querySelector('[data-dse-element="initiative"]'); const sr = s.getBoundingClientRect(); const tr = trk.getBoundingClientRect(); s.scrollTop = (${JSON.stringify(second[0])} === 'trk' ? tr.top : tr.bottom) - sr.top + s.scrollTop + ${second[1]}; const t2 = trk.getBoundingClientRect(); return { st: Math.round(s.scrollTop), trkTop: Math.round(t2.top - sr.top), trkBottom: Math.round(t2.bottom - sr.top) }; })()`);
+					await t.sleep(150);
+					r3v++;
+					await t.edit(R5B, `c.replace(/ {2}value: \\d+/, '  value: ${r3v}')`);
+					const s2 = await t.ev(styleOf);
+					await t.waitFor(`!${r3S('window.__r3A')}.hasAttribute('data-dse-scroll-pin')`, 'pin released', 9000);
+					const s3 = await t.ev(styleOf);
+					out.push(`${id}: first park ${JSON.stringify(g1)} -> pin ${JSON.stringify(s1)}; moved ${JSON.stringify(g2)} -> re-pin ${JSON.stringify(s2)}; after release ${JSON.stringify(s3)}`);
+				} catch (e) {
+					out.push(`${id}: ERROR ${e instanceof Error ? e.message : String(e)}`);
+				}
+			}
+			for (const l of out) console.log(`R7 ${l}`);
+			return `${out.length} cases`;
+		},
+	},
+);
+// ===== end SC-479 r7 PROBES =====

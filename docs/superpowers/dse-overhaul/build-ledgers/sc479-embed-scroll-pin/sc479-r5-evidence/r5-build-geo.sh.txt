@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# r5 experimental variant (scratch only): the host pin's anchoring stop on the DSE roots inside the host's embeds only.
+set -u
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc479-r5-a49fb648
+D=/home/scott/code/steelCompendium/worktrees/sc479-embed-scroll-pin/draw-steel-elements
+PIN=src/framework/host/previewScrollPin.ts
+mkdir -p "$S/src/alt-geo" "$S/bundles/alt-geo"
+git -C "$D" archive e6b02ca | tar -x -C "$S/src/alt-geo"
+ln -sfn "$D/node_modules" "$S/src/alt-geo/node_modules"
+python3 -I - "$S/src/alt-geo/$PIN" <<'PY'
+import sys
+p = sys.argv[1]; s = open(p).read()
+old = "\tprivate pinScroller(scroller: HTMLElement, host = false): void {\n\t\tconst doc = scroller.ownerDocument;\n\t\tconst win = doc.defaultView;\n\t\tif (!win || !doc.head) return;\n"
+assert s.count(old) == 1
+add = old + "\t\t// r5 experiment: the embed anchoring stop only when a DSE root inside an embed intersects the viewport\n\t\tif (host) { const sr = scroller.getBoundingClientRect(); host = Array.from(scroller.querySelectorAll('.internal-embed [data-dse-element]')).some((r) => { const rr = r.getBoundingClientRect(); return rr.bottom > sr.top && rr.top < sr.bottom; }); }\n"
+open(p, 'w').write(s.replace(old, add))
+PY
+( cd "$S/src/alt-geo" && node esbuild.config.mjs production ) > "$S/build-alt-geo.log" 2>&1
+rc=$?
+cp "$S/src/alt-geo/main.js" "$S/src/alt-geo/styles.css" "$S/src/alt-geo/manifest.json" "$S/bundles/alt-geo/"
+echo "alt-geo rc=$rc main.js $(sha256sum < "$S/bundles/alt-geo/main.js" | cut -c1-12)" >> "$S/bundles.sums"
+exit $rc

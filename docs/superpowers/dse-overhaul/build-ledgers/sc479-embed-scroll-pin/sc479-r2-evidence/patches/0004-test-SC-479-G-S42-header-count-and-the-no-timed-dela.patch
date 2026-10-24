@@ -1,0 +1,38 @@
+From 84ba65ac9b068a117f15e0ff70e9fa4bec81bb44 Mon Sep 17 00:00:00 2001
+From: Scott Tomaszewski <scottTomaszewski@gmail.com>
+Date: Sat, 24 Oct 2026 05:03:02 -0400
+Subject: [PATCH 4/4] test(SC-479): G-S42 header count and the no-timed-delay
+ note
+
+---
+ visual-harness/obsidian-lifecycle.mjs | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/visual-harness/obsidian-lifecycle.mjs b/visual-harness/obsidian-lifecycle.mjs
+index d2bfc38..194888e 100644
+--- a/visual-harness/obsidian-lifecycle.mjs
++++ b/visual-harness/obsidian-lifecycle.mjs
+@@ -70,7 +70,7 @@
+ // SC-519 appends G-S45 (38 scenarios in all; the id was assigned by the dispatcher): the block edit form opened inside the ~400 ms write
+ // debounce of an in-card click starts from what the card shows - Reading view, then the sidebar panel. The plugin's own debounce timer
+ // is held at a hook (not a timed race) so the note file is provably still old when the pencil is clicked; Save unchanged must keep the click.
+-// SC-479 appends G-S42 (38 scenarios in all with SC-509's G-S40): a tracker in note B embedded in a Reading view of note A parked at its end keeps A's scroll position
++// SC-479 appends G-S42 (39 scenarios in all with SC-519's G-S45; the id was assigned by the dispatcher): a tracker in note B embedded in a Reading view of note A parked at its end keeps A's scroll position
+ // when B is written (in-app, on disk, from another pane, and the embed's own write with adoption off).
+ //
+ // Usage: npm run obsidian-lifecycle   (builds the plugin first)
+@@ -2757,8 +2757,9 @@ const SCENARIOS = [
+ 		// landed; a tracker is drawn in the embed; anti-vacuity - the embedded tracker was redrawn (a fresh root) and A
+ 		// was parked at its end; `data-dse-scroll-pin` was on A's scroller when the embedded tracker was replaced;
+ 		// scrollTop identical in every frame through the pin's release + 10 frames; the pin was seen released. Every
+-		// phase runs even after one fails. No timed delay decides anything: the redraw follows `modify` synchronously
+-		// enough that no hold is needed, and the recorder samples every frame until the release.
++		// phase runs even after one fails. No timed delay decides an outcome: the recorder starts before each write
++		// and samples every frame until the pin is released, wherever Obsidian's redraw lands inside that window (it never
++		// has to win a race), and the sleeps only let the parked scroll position settle, as in G-S15.
+ 		id: 'G-S42',
+ 		async run(t) {
+ 			const host = 'Lifecycle/embhost.md';
+-- 
+2.34.1
+

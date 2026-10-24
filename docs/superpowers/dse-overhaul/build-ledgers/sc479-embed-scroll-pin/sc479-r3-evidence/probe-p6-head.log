@@ -1,0 +1,16 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :162, port 9493, 1 scenario(s)
+R3 SHIFT-tall-below-addHero: redrawn=null st 400 -> min 400 max 400 end 400; ref 39 -> end 39 (min 39 max 39); pin 0f oa ; emb0  embEnd ;
+R3 SHIFT-tall-below-removeHero: redrawn=true st 6869 -> min 6869 max 6869 end 6869; ref 16 -> end -94 (min -94 max 16); pin 112f oa none; emb0 3190 embEnd 3080;
+R3 SHIFT-tall-below-process(no height change): redrawn=true st 6869 -> min 6869 max 6869 end 6869; ref 16 -> end 16 (min 16 max 16); pin 108f oa none; emb0 3190 embEnd 3190;
+R3 SHIFT-tall-in-addHero: redrawn=true st 4779 -> min 4779 max 4779 end 4779; ref null -> end null (min null max null); pin 69f oa none; emb0 3190 embEnd 3299;
+R3 SHIFT-tall-below-process+pad200above: redrawn=true st 6869 -> min 6869 max 6869 end 6869; ref 16 -> end 216 (min 16 max 216); pin 109f oa none; emb0 3190 embEnd 3190; during@722ms pinned=true oa=none padded A-POST filler 8.: ref 16 -> 216, st 6869 -> 6869
+R3 SHIFT-tall-below-NOWRITE+pad200above: redrawn=false st 6869 -> min 6869 max 7069 end 7069; ref 176 -> end 176 (min 176 max 176); pin 0f oa ; emb0 3190 embEnd 3190; during@415ms pinned=false oa=auto padded A-POST filler 7.: ref 176 -> 176, st 6869 -> 7069
+R3 SHIFT-call-below-process+calloutToggle: redrawn=true st 4010 -> min 4010 max 4010 end 4010; ref 16 -> end 16 (min 16 max 16); pin 106f oa none; emb0 3190 embEnd 3190; during@770ms pinned=true oa=none no callout rendered: ref 16 -> 16, st 4010 -> 4010
+R3 SHIFT-call-below-NOWRITE+calloutToggle: redrawn=false st 4010 -> min 4010 max 4010 end 4010; ref 16 -> end 16 (min 16 max 16); pin 0f oa ; emb0 3190 embEnd 3190; during@414ms pinned=false oa=auto no callout rendered: ref 16 -> 16, st 4010 -> 4010
+R3 SHIFT-call-callabove-process+calloutToggle: redrawn=true st 4010 -> min 4010 max 4010 end 4010; ref 16 -> end 16 (min 16 max 16); pin 101f oa none; emb0 3190 embEnd 3190; during@791ms pinned=true oa=none no callout rendered: ref 16 -> 16, st 4010 -> 4010
+R3 SHIFT-call-callabove-NOWRITE+calloutToggle: redrawn=false st 4010 -> min 4010 max 4010 end 4010; ref 16 -> end 16 (min 16 max 16); pin 0f oa ; emb0 3190 embEnd 3190; during@403ms pinned=false oa=auto no callout rendered: ref 16 -> 16, st 4010 -> 4010
+R3 SHIFT-call-callabove-addHero: redrawn=true st 4010 -> min 4010 max 4010 end 4010; ref 16 -> end 126 (min 16 max 126); pin 104f oa none; emb0 3190 embEnd 3299;
+OBSIDIAN-LIFECYCLE R3-SHIFT ok (11 cases)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 secs=99
+porcelain-after: [] head: 84ba65a

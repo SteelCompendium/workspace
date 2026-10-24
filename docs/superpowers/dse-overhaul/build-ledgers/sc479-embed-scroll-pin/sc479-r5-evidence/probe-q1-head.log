@@ -1,0 +1,24 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :160, port 9493, 2 scenario(s)
+R3 SHIFT-tall-below-addHero: redrawn=null st 400 -> min 400 max 400 end 400; ref 39 -> end 39 (min 39 max 39); pin 0f oa ; emb0  embEnd ;
+R3 SHIFT-tall-below-removeHero: redrawn=null st 400 -> min 400 max 400 end 400; ref 39 -> end 39 (min 39 max 39); pin 0f oa ; emb0  embEnd ;
+R3 SHIFT-tall-below-process(no height change): redrawn=null st 400 -> min 400 max 400 end 400; ref 39 -> end 39 (min 39 max 39); pin 0f oa ; emb0  embEnd ;
+R3 SHIFT-tall-in-addHero: redrawn=true st 4779 -> min 4779 max 4779 end 4779; ref null -> end null (min null max null); pin 68f oa auto; emb0 3190 embEnd 3299;
+R3 SHIFT-tall-below-process+pad200above: redrawn=true st 6869 -> min 6869 max 7069 end 7069; ref 16 -> end 16 (min 16 max 16); pin 102f oa auto; emb0 3190 embEnd 3190; during@796ms pinned=true oa=auto padded A-POST filler 8.: ref 16 -> 16, st 6869 -> 7069
+R3 SHIFT-tall-below-NOWRITE+pad200above: redrawn=false st 6869 -> min 6869 max 6869 end 6869; ref 176 -> end 376 (min 176 max 376); pin 0f oa ; emb0 3190 embEnd 3190; during@406ms pinned=false oa=auto padded A-POST filler 7.: ref 176 -> 376, st 6869 -> 6869
+R3 SHIFT-call-below-process+calloutToggle: redrawn=true st 4010 -> min 4010 max 4010 end 4010; ref 16 -> end 16 (min 16 max 16); pin 99f oa auto; emb0 3190 embEnd 3190; during@849ms pinned=true oa=auto no callout rendered: ref 16 -> 16, st 4010 -> 4010
+R3 SHIFT-call-below-NOWRITE+calloutToggle: redrawn=false st 4010 -> min 4010 max 4010 end 4010; ref 16 -> end 16 (min 16 max 16); pin 0f oa ; emb0 3190 embEnd 3190; during@403ms pinned=false oa=auto no callout rendered: ref 16 -> 16, st 4010 -> 4010
+R3 SHIFT-call-callabove-process+calloutToggle: redrawn=true st 413 -> min 413 max 1481 end 1481; ref null -> end null (min null max null); pin 43f oa auto; emb0 3190 embEnd 3190; during@1390ms pinned=true oa=auto toggled callout (above, was open): ref null -> null, st 413 -> 413
+R3 SHIFT-call-callabove-NOWRITE+calloutToggle: redrawn=false st 1629 -> min 413 max 1629 end 413; ref null -> end null (min null max null); pin 0f oa ; emb0 3190 embEnd 3190; during@403ms pinned=false oa=auto toggled callout (above, was collapsed): ref null -> null, st 1629 -> 1629
+R3 SHIFT-call-callabove-addHero: redrawn=true st 413 -> min 413 max 413 end 413; ref null -> end null (min null max null); pin 80f oa auto; emb0 3190 embEnd 3299;
+OBSIDIAN-LIFECYCLE R3-SHIFT ok (11 cases)
+R5 INSIDE-addHero-150-0: geo {"st":4031,"embTop":-2752,"embBottom":850,"clientH":1021,"embH":3602}; embed 3602 -> 3712; redrawn=true; scrollTop 4031 -> end 4031 (min 4031 max 4031); text "I-POST filler 4." 26 -> end 136 (min 26 max 136, lost 0f); pin 109/121f
+R5 INSIDE-removeHero-150-1: geo {"st":4140,"embTop":-2861,"embBottom":851,"clientH":1021,"embH":3712}; embed 3712 -> 3493; redrawn=true; scrollTop 4140 -> end 4140 (min 4140 max 4140); text "I-POST filler 4." 27 -> end -192 (min -192 max 27, lost 0f); pin 114/126f
+R5 INSIDE-process-150-2: geo {"st":3921,"embTop":-2642,"embBottom":851,"clientH":1021,"embH":3493}; embed 3493 -> 3602; redrawn=true; scrollTop 3921 -> end 3921 (min 3921 max 3921); text "I-POST filler 4." 27 -> end 136 (min 27 max 136, lost 0f); pin 117/128f
+R5 INSIDE-addHero-500-3: geo {"st":4381,"embTop":-3102,"embBottom":500,"clientH":1021,"embH":3602}; embed 3602 -> 3712; redrawn=true; scrollTop 4381 -> end 4381 (min 4381 max 4381); text "I-POST filler 13." 36 -> end 146 (min 36 max 146, lost 0f); pin 115/126f
+R5 INSIDE-removeHero-500-4: geo {"st":4490,"embTop":-3211,"embBottom":501,"clientH":1021,"embH":3712}; embed 3712 -> 3493; redrawn=true; scrollTop 4490 -> end 4490 (min 4490 max 4490); text "I-POST filler 13." 37 -> end -182 (min -182 max 37, lost 0f); pin 112/123f
+R5 INSIDE-addHero-150-5: geo {"st":3921,"embTop":-2642,"embBottom":851,"clientH":1021,"embH":3493}; embed 3493 -> 3712; redrawn=true; scrollTop 3921 -> end 3921 (min 3921 max 3921); text "I-POST filler 4." 27 -> end 246 (min 27 max 246, lost 0f); pin 101/113f
+R5 INSIDE-removeHero-150-6: geo {"st":4140,"embTop":-2861,"embBottom":851,"clientH":1021,"embH":3712}; embed 3712 -> 3493; redrawn=true; scrollTop 4140 -> end 4140 (min 4140 max 4140); text "I-POST filler 4." 27 -> end -192 (min -192 max 27, lost 0f); pin 117/129f
+OBSIDIAN-LIFECYCLE R5-INSIDE ok (7 cases)
+OBSIDIAN-LIFECYCLE done: 2/2 ok, 0 failed
+rc=0 secs=156
+porcelain-after: [] head: e6b02ca

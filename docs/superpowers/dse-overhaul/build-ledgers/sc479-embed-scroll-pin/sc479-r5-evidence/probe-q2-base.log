@@ -1,0 +1,24 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9493, 2 scenario(s)
+R3 SHIFT-tall-below-addHero: redrawn=null st 5991 -> min 5991 max 5991 end 5991; ref 8 -> end 8 (min 8 max 8); pin 0f oa ; emb0  embEnd ;
+R3 SHIFT-tall-below-removeHero: redrawn=null st 5991 -> min 5991 max 5991 end 5991; ref 8 -> end 8 (min 8 max 8); pin 0f oa ; emb0  embEnd ;
+R3 SHIFT-tall-below-process(no height change): redrawn=null st 5991 -> min 5991 max 5991 end 5991; ref 8 -> end 8 (min 8 max 8); pin 0f oa ; emb0  embEnd ;
+R3 SHIFT-tall-in-addHero: redrawn=null st 4779 -> min 4779 max 4779 end 4779; ref 20 -> end 20 (min 20 max 20); pin 0f oa ; emb0  embEnd ;
+R3 SHIFT-tall-below-process+pad200above: redrawn=null st 5991 -> min 5991 max 5991 end 5991; ref 8 -> end 8 (min 8 max 8); pin 0f oa ; emb0  embEnd ;
+R3 SHIFT-tall-below-NOWRITE+pad200above: redrawn=null st 5991 -> min 5991 max 5991 end 5991; ref 8 -> end 208 (min 8 max 208); pin 0f oa ; emb0  embEnd ; during@402ms pinned=false oa=auto padded A-POST filler 66.: ref 8 -> 208, st 5991 -> 5991
+R3 SHIFT-call-below-process+calloutToggle: redrawn=true st 4010 -> min 4010 max 4010 end 4010; ref 16 -> end 16 (min 16 max 16); pin 0f oa ; emb0 3190 embEnd 3190;
+R3 SHIFT-call-below-NOWRITE+calloutToggle: redrawn=false st 4010 -> min 4010 max 4010 end 4010; ref 16 -> end 16 (min 16 max 16); pin 0f oa ; emb0 3190 embEnd 3190; during@405ms pinned=false oa=auto no callout rendered: ref 16 -> 16, st 4010 -> 4010
+R3 SHIFT-call-callabove-process+calloutToggle: redrawn=true st 413 -> min 413 max 413 end 413; ref null -> end null (min null max null); pin 0f oa ; emb0 3190 embEnd 3190;
+R3 SHIFT-call-callabove-NOWRITE+calloutToggle: redrawn=false st 413 -> min 413 max 1629 end 1629; ref null -> end null (min null max null); pin 0f oa ; emb0 3190 embEnd 3190; during@414ms pinned=false oa=auto toggled callout (above, was open): ref null -> null, st 413 -> 413
+R3 SHIFT-call-callabove-addHero: redrawn=true st 1629 -> min 1629 max 1629 end 1629; ref null -> end null (min null max null); pin 0f oa ; emb0 3190 embEnd 3299;
+OBSIDIAN-LIFECYCLE R3-SHIFT ok (11 cases)
+R5 INSIDE-addHero-150-0: geo {"st":4031,"embTop":-2752,"embBottom":850,"clientH":1021,"embH":3602}; embed 3602 -> 3712; redrawn=true; scrollTop 4031 -> end 4141 (min 4031 max 4141); text "I-POST filler 4." 26 -> end 26 (min 26 max 26, lost 0f); pin 0/265f
+R5 INSIDE-removeHero-150-1: geo {"st":4031,"embTop":-2752,"embBottom":850,"clientH":1021,"embH":3602}; embed 3602 -> 3493; redrawn=true; scrollTop 4031 -> end 3922 (min 3922 max 4031); text "I-POST filler 4." 26 -> end 26 (min 26 max 26, lost 0f); pin 0/265f
+R5 INSIDE-process-150-2: geo {"st":4031,"embTop":-2752,"embBottom":850,"clientH":1021,"embH":3602}; embed 3602 -> 3602; redrawn=true; scrollTop 4031 -> end 4031 (min 4031 max 4031); text "I-POST filler 4." 26 -> end 26 (min 26 max 26, lost 0f); pin 0/263f
+R5 INSIDE-addHero-500-3: geo {"st":4381,"embTop":-3102,"embBottom":500,"clientH":1021,"embH":3602}; embed 3602 -> 3712; redrawn=true; scrollTop 4381 -> end 4491 (min 4381 max 4491); text "I-POST filler 13." 36 -> end 36 (min 36 max 36, lost 0f); pin 0/256f
+R5 INSIDE-removeHero-500-4: geo {"st":4381,"embTop":-3102,"embBottom":500,"clientH":1021,"embH":3602}; embed 3602 -> 3493; redrawn=true; scrollTop 4381 -> end 4272 (min 4272 max 4381); text "I-POST filler 13." 36 -> end 36 (min 36 max 36, lost 0f); pin 0/262f
+R5 INSIDE-addHero-150-5: geo {"st":4031,"embTop":-2752,"embBottom":850,"clientH":1021,"embH":3602}; embed 3602 -> 3712; redrawn=true; scrollTop 4031 -> end 4141 (min 4031 max 4141); text "I-POST filler 4." 26 -> end 26 (min 26 max 26, lost 0f); pin 0/238f
+R5 INSIDE-removeHero-150-6: geo {"st":4031,"embTop":-2752,"embBottom":850,"clientH":1021,"embH":3602}; embed 3602 -> 3493; redrawn=true; scrollTop 4031 -> end 3922 (min 3922 max 4031); text "I-POST filler 4." 26 -> end 26 (min 26 max 26, lost 0f); pin 0/250f
+OBSIDIAN-LIFECYCLE R5-INSIDE ok (7 cases)
+OBSIDIAN-LIFECYCLE done: 2/2 ok, 0 failed
+rc=0 secs=160
+porcelain-after: [] head: e6b02ca

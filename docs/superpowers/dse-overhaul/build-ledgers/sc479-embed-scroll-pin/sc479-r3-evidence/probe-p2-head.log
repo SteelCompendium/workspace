@@ -1,0 +1,12 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :160, port 9493, 2 scenario(s)
+R3 INT other-note: write to B pinned it 0x; write to its own embedded note pinned it 1x {"id":"1","text":".markdown-preview-view[data-dse-scroll-pin=\"1\"] > .markdown-preview-sizer { min-height: Npx !important; }\n.markdown-preview-view[data-dse-scroll-pin=\"1\"] { overflow-anchor: none !important; }"}
+R3 INT host+own-view: host st 3574 -> 3574/3574; host pins [{"id":"2","text":".markdown-preview-view[data-dse-scroll-pin=\"2\"] > .markdown-preview-sizer { min-height: Npx !important; }\n.markdown-preview-view[data-dse-scroll-pin=\"2\"] { overflow-anchor: none !important; }"}]; B view pins [{"id":"3","text":".markdown-preview-view[data-dse-scroll-pin=\"3\"] > .markdown-preview-sizer { min-height: Npx !important; }"}]; nstMax 2; styles [".markdown-preview-view[data-dse-scroll-pin=\"2\"] > .markdown-preview-sizer { min-height: Npx !important; }\n.markdown-preview-view[data-dse-scroll-pin=\"2\"] { overflow-anchor: none !important; }",".markdown-preview-view[data-dse-scroll-pin=\"3\"] > .markdown-preview-sizer { min-height: Npx !important; }"]
+R3 INT TTL: during {"pin":true,"oa":"none","nst":1}; released after ~2561ms; after {"oa":"auto","nst":0,"attr":null}; pins.size 0
+R3 INT popout styles: while pinned {"popAttr":"7","popIds":["7","6"],"mainIds":["6"],"mainAttr":["6"]}; after TTL release {"popAttr":null,"popIds":[],"mainIds":[],"mainAttr":[]}
+R3 INT popout: popout scrollTop 3013; while pinned {"sameDoc":false,"pin":true,"oa":"none","popStyles":2,"mainStyles":1}; pins.size before close 2, 1s after close 1, +3s 0; main doc pin styles 1
+OBSIDIAN-LIFECYCLE R3-INT ok (5 cases)
+R3 COST {"leaves":13,"reading":13,"embedsTotal":6,"nodesTotal":6145,"unrelated":{"reps":300,"median":0.2,"p95":0.6,"max":5.4}}; one call for B's path (pins every host): {"ms":11,"pinnedNow":2}
+OBSIDIAN-LIFECYCLE R3-COST ok (COST {"leaves":13,"reading":13,"embedsTotal":6,"nodesTotal":6145,"unrelated":{"reps":300,"median":0.2,"p95":0.6,"max":5.4}}; one call for B's path (pins every host): {"ms":11,"pinnedNow":2})
+OBSIDIAN-LIFECYCLE done: 2/2 ok, 0 failed
+rc=0 secs=75
+porcelain-after: [] head: 84ba65a

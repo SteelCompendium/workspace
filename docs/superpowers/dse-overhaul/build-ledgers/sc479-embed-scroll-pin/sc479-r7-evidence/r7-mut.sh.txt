@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# r7-mut.sh: 2 gate-branch mutations (r6 G2, G4), each in its own scratch copy of 71437da; jest previewScrollPin.test.ts
+set -u
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc479-r7-a49fb648
+D=/home/scott/code/steelCompendium/worktrees/sc479-embed-scroll-pin/draw-steel-elements
+PIN=src/framework/host/previewScrollPin.ts
+: > "$S/mut-summary.log"
+for M in none G2 G4; do
+  mkdir -p "$S/src/mut-$M"
+  git -C "$D" archive 71437da | tar -x -C "$S/src/mut-$M"
+  ln -sfn "$D/node_modules" "$S/src/mut-$M/node_modules"
+  python3 -I - "$S/src/mut-$M/$PIN" "$M" <<'PY'
+import sys
+p, m = sys.argv[1], sys.argv[2]; s = open(p).read()
+muts = {
+ 'G2': ("\treturn !Array.from(scroller.querySelectorAll('.internal-embed')).some((embed) => embed.querySelector('[data-dse-element]') && onScreen(embed)); // (ii) / (iii)",
+        "\treturn false; // r7 mutation G2: branch (ii) dropped"),
+ 'G4': ("if (host && !existing.host && embedStopWanted(scroller)) {", "if (host && !existing.host) {"),
+}
+if m in muts:
+    a, b = muts[m]
+    assert s.count(a) == 1, m
+    s = s.replace(a, b)
+open(p, 'w').write(s)
+PY
+  ( cd "$S/src/mut-$M" && rm -f main.js styles.css main.css && npx jest test/dom/framework/previewScrollPin.test.ts ) > "$S/jest-mut-$M.log" 2>&1
+  echo "$M rc=$? :: $(grep -E '^Tests:' "$S/jest-mut-$M.log") :: $(grep -E '^  ● ' "$S/jest-mut-$M.log" | head -6 | tr '\n' '|')" >> "$S/mut-summary.log"
+done

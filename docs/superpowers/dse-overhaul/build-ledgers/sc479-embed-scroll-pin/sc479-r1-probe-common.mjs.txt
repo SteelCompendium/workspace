@@ -1,0 +1,26 @@
+// ===== SC-479 r1 PROBE common (scratch harness copy only; never in the tree) =====
+const P479_OUT = process.env.P479_OUT ?? work;
+const P479_VAR = process.env.P479_VARIANT ?? 'unknown';
+const P479_TRK = fence('ds-initiative', ['heroes:', ...Array.from({ length: 25 }, (_, i) => HERO(`Hero ${String(i + 1).padStart(2, '0')}`)).flat(), 'enemy_groups: []', 'malice:', '  value: 1']);
+const P479_B = `# EmbB\n\n${Array.from({ length: 30 }, (_, i) => `B-PRE filler ${i}.`).join('\n\n')}\n\n${P479_TRK}\n\n${Array.from({ length: 30 }, (_, i) => `B-POST filler ${i}.`).join('\n\n')}\n`;
+const P479_A = (link) => `# EmbA\n\n${Array.from({ length: 80 }, (_, i) => `A-PRE filler ${i}.`).join('\n\n')}\n\n${link}\n\n${Array.from({ length: 80 }, (_, i) => `A-POST filler ${i}.`).join('\n\n')}\n`;
+Object.assign(FIXTURES, {
+	'SC479/EmbB.md': P479_B,
+	'SC479/EmbA.md': P479_A('![[EmbB]]'),
+	// short-tracker B: the tracker alone (fits the embed without an inner scrollbar if the embed has a max-height)
+	'SC479/EmbS.md': `# EmbS\n\nS-TOP\n\n${P479_TRK}\n\nS-BOTTOM\n`,
+	'SC479/EmbAS.md': P479_A('![[EmbS]]'),
+	// heading embed and nested embed (A -> N -> S)
+	'SC479/EmbAH.md': P479_A('![[EmbS#EmbS]]'),
+	'SC479/EmbN.md': `# EmbN\n\nN-TOP\n\n![[EmbS]]\n\nN-BOTTOM\n`,
+	'SC479/EmbAN.md': P479_A('![[EmbN]]'),
+	// scenario-C host: A is (almost) one tall embed
+	'SC479/EmbAC.md': '# EmbAC\n\nC-TOP\n\n![[EmbS]]\n\nC-BOTTOM\n',
+	// the embed near the END of A (3 short paragraphs after it): at max scroll the embed is in view
+	'SC479/EmbAE.md': `# EmbAE\n\n${Array.from({ length: 80 }, (_, i) => `A-PRE filler ${i}.`).join('\n\n')}\n\n![[EmbS]]\n\nA-END 1.\n\nA-END 2.\n\nA-END 3.\n`,
+});
+function p479Write(id, data) {
+	fs.mkdirSync(P479_OUT, { recursive: true });
+	fs.writeFileSync(path.join(P479_OUT, `sc479-r1-${id}.json`), JSON.stringify(data, null, 1));
+}
+// ===== end SC-479 r1 PROBE common =====

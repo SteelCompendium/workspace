@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# r5-gate.sh <name>: one gate in the worktree; log + rc to scratch
+set -u
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc479-r7-a49fb648
+D=/home/scott/code/steelCompendium/worktrees/sc479-embed-scroll-pin/draw-steel-elements
+cd "$D" || exit 9
+H1=G-S7a,G-S7b,G-S6a,G-S6b,G-S6u,G-S28,G-S5n,G-S1,G-S2,G-S3,G-S4,G-S5,G-S6c,G-S6d,G-S6e,G-S6f,G-S6g,G-S6h,G-S6i,G-S8
+H2=G-S9a,G-S9b,G-S9d,G-S9e,G-S9f,G-S9c,G-S10,G-S11,G-S12,G-S13,G-S15,G-S14,G-S18,G-S32,G-S36,G-S33,G-S40,G-S45,G-S44,G-S42
+case "$1" in
+  tsc) npm run tsc > "$S/gate-tsc.log" 2>&1 ;;
+  lint) npm run lint > "$S/gate-lint.log" 2>&1 ;;
+  jest) rm -f "$D/main.js" "$D/styles.css"; npx jest > "$S/gate-jest.log" 2>&1 ;;
+  lc1) npm run build-no-check > "$S/gate-lc-build.log" 2>&1 && DSE_LIFECYCLE_PORT=9493 node visual-harness/obsidian-lifecycle.mjs --only=$H1 > "$S/gate-lc1.log" 2>&1 ;;
+  lc2) DSE_LIFECYCLE_PORT=9493 node visual-harness/obsidian-lifecycle.mjs --only=$H2 > "$S/gate-lc2.log" 2>&1 ;;
+  *) exit 7 ;;
+esac
+rc=$?
+echo "rc=$rc" >> "$S/gate-$1.log"
+exit $rc

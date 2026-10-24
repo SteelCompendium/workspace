@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# SC-479 r5: bundles from SCRATCH copies (git archive); the worktree is never touched.
+set -u
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc479-r5-a49fb648
+D=/home/scott/code/steelCompendium/worktrees/sc479-embed-scroll-pin/draw-steel-elements
+PIN=src/framework/host/previewScrollPin.ts
+mk() { mkdir -p "$S/src/$1" "$S/bundles/$1"; git -C "$D" archive "$2" | tar -x -C "$S/src/$1"; ln -sfn "$D/node_modules" "$S/src/$1/node_modules"; }
+build() {
+  ( cd "$S/src/$1" && node esbuild.config.mjs production ) > "$S/build-$1.log" 2>&1
+  local rc=$?
+  cp "$S/src/$1/main.js" "$S/src/$1/styles.css" "$S/src/$1/manifest.json" "$S/bundles/$1/"
+  echo "$1 rc=$rc main.js $(sha256sum < "$S/bundles/$1/main.js" | cut -c1-12) styles.css $(sha256sum < "$S/bundles/$1/styles.css" | cut -c1-12)" >> "$S/bundles.sums"
+}
+: > "$S/bundles.sums"
+mk head e6b02ca; build head
+mk base c558759; build base
+mk ctl-scroller e6b02ca
+python3 -I - "$S/src/ctl-scroller/$PIN" <<'EOF'
+import sys
+p = sys.argv[1]; s = open(p).read()
+old = 'export const anchorRule = (id: string): string => `.markdown-preview-view[${PIN_ATTR}="${id}"] .internal-embed { overflow-anchor: none !important; }`;'
+assert s.count(old) == 1
+open(p, 'w').write(s.replace(old, 'export const anchorRule = (id: string): string => `.markdown-preview-view[${PIN_ATTR}="${id}"] { overflow-anchor: none !important; }`;'))
+EOF
+build ctl-scroller
+git -C "$D" status --porcelain > "$S/build-porcelain-after.txt"

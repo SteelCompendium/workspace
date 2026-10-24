@@ -1,0 +1,108 @@
+FAIL dom test/dom/framework/previewScrollPin.test.ts
+  ● SC-479: embeds pin the host note's scroller › a Reading view of another note that embeds a DSE block from the written note is pinned, at its own height, with anchoring stopped
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      580 | 		new PreviewScrollPin().pinReadingViewsOf(workspaceOf(a), 'B.md', resolve);
+      581 | 		expect(pinnedPx(a.scroller)).toBe('4883px');
+    > 582 | 		expect(anchorStopped(a.scroller)).toBe(true);
+          | 		                                  ^
+      583 | 		const id = a.scroller.getAttribute(PIN_ATTR)!;
+      584 | 		expect(pinStyle(a.scroller)!.textContent).toBe(`${pinRule(id, 4883)}\n${anchorRule(id)}`);
+      585 | 		expect(anchorRule(id)).toBe(`.markdown-preview-view[${PIN_ATTR}="${id}"] .internal-embed { overflow-anchor: none !important; }`);
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:582:37)
+
+  ● SC-479: embeds pin the host note's scroller › the writer pin inside an embed pins the OUTERMOST Reading scroller (the host), as a host pin
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      681 | 		expect(isPinned(innerView)).toBe(false);
+      682 | 		expect(pinnedPx(scroller)).toBe('4883px');
+    > 683 | 		expect(anchorStopped(scroller)).toBe(true);
+          | 		                                ^
+      684 | 	});
+      685 |
+      686 | 	test('the writer pin reaches the host scroller through two levels of embeds', () => {
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:683:35)
+
+  ● SC-479: embeds pin the host note's scroller › the writer pin reaches the host scroller through two levels of embeds
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      689 | 		new PreviewScrollPin().pin(innerDse);
+      690 | 		expect(pinnedPx(scroller)).toBe('4883px');
+    > 691 | 		expect(anchorStopped(scroller)).toBe(true);
+          | 		                                ^
+      692 | 		expect(allPinStyles()).toBe(1);
+      693 | 	});
+      694 |
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:691:35)
+
+  ● SC-479: embeds pin the host note's scroller › a host pin's anchoring stop survives the floor being raised, and goes with the pin on release() and releaseAll()
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      701 | 		await flushObservers();
+      702 | 		expect(pinnedPx(first.scroller)).toBe('6100px');
+    > 703 | 		expect(anchorStopped(first.scroller)).toBe(true);
+          | 		                                      ^
+      704 | 		expect(scrollerAnchorOff(first.scroller)).toBe(false);
+      705 | 		pin.release(first.scroller);
+      706 | 		expect(isPinned(first.scroller)).toBe(false);
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:703:41)
+
+  ● SC-479: embeds pin the host note's scroller › the embed anchoring stop is applied when no DSE-bearing embed is on screen, e.g. the reader is below the embed (gate branch ii)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      739 | 		const a = gatedHost([-3190, -100], [-3000, -200]); // the embed ends 100px above the viewport
+      740 | 		expect(isPinned(a.scroller)).toBe(true);
+    > 741 | 		expect(anchorStopped(a.scroller)).toBe(true);
+          | 		                                  ^
+      742 | 	});
+      743 |
+      744 | 	test('the embed anchoring stop is NOT applied when the viewport is inside a DSE-bearing embed but off its DSE roots; the sizer pin still is (gate branch iii)', () => {
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:741:37)
+
+  ● SC-479: embeds pin the host note's scroller › a pin that is first a note's own and then also a host pin gains the anchoring stop, keeps its id and height, and releases on the TTL
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      793 | 			pin.pin(embed.querySelector<HTMLElement>('[data-dse-element]')!);
+      794 | 			expect(scroller.getAttribute(PIN_ATTR)).toBe(id);
+    > 795 | 			expect(anchorStopped(scroller)).toBe(true);
+          | 			                                ^
+      796 | 			expect(pinnedPx(scroller)).toBe('4883px');
+      797 | 			expect(allPinStyles()).toBe(1);
+      798 | 			jest.advanceTimersByTime(TTL);
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:795:36)
+
+Test Suites: 1 failed, 1 total
+Tests:       6 failed, 45 passed, 51 total
+Snapshots:   0 total
+Time:        1.827 s
+Ran all test suites matching test/dom/framework/previewScrollPin.test.ts.

@@ -1,0 +1,51 @@
+build stock rc=0 head=7046eb0
+stock: sha=c66a33d9cb66/ad50afa51918
+build proto rc=0 head=7046eb0
+ src/framework/host/previewScrollPin.ts      |  84 +++++++++++++++---
+ src/framework/registerFrameworkElements.ts  |   6 +-
+ test/dom/framework/previewScrollPin.test.ts | 133 +++++++++++++++++++++++++++-
+ visual-harness/obsidian-lifecycle.mjs       | 124 ++++++++++++++++++++++++++
+ 4 files changed, 332 insertions(+), 15 deletions(-)
+proto: sha=80d35209b532/ad50afa51918
+ctl-nohost mutations: 1 1
+build ctl-nohost rc=0 head=7046eb0
+ src/framework/host/previewScrollPin.ts      |  84 +++++++++++++++---
+ src/framework/registerFrameworkElements.ts  |   6 +-
+ test/dom/framework/previewScrollPin.test.ts | 133 +++++++++++++++++++++++++++-
+ visual-harness/obsidian-lifecycle.mjs       | 124 ++++++++++++++++++++++++++
+ 4 files changed, 332 insertions(+), 15 deletions(-)
+ctl-nohost: sha=c03402b29cff/ad50afa51918
+ctl-noanchor mutations: 1 anchor-in-ruleText=0
+build ctl-noanchor rc=0 head=7046eb0
+ src/framework/host/previewScrollPin.ts      |  84 +++++++++++++++---
+ src/framework/registerFrameworkElements.ts  |   6 +-
+ test/dom/framework/previewScrollPin.test.ts | 133 +++++++++++++++++++++++++++-
+ visual-harness/obsidian-lifecycle.mjs       | 124 ++++++++++++++++++++++++++
+ 4 files changed, 332 insertions(+), 15 deletions(-)
+ctl-noanchor: sha=28215febdb25/ad50afa51918
+build stock2 rc=0 head=c2758a2
+stock2: sha=ad2fec1cb367/ad50afa51918
+=== rebuilt on c2758a2 ===
+build proto rc=0 head=c2758a2
+ src/framework/host/previewScrollPin.ts      |  84 +++++++++++++++---
+ src/framework/registerFrameworkElements.ts  |   6 +-
+ test/dom/framework/previewScrollPin.test.ts | 133 +++++++++++++++++++++++++++-
+ visual-harness/obsidian-lifecycle.mjs       | 127 ++++++++++++++++++++++++++
+ 4 files changed, 335 insertions(+), 15 deletions(-)
+proto: sha=e0d207884e68/ad50afa51918
+ctl-nohost mutations: 1 1
+build ctl-nohost rc=0 head=c2758a2
+ src/framework/host/previewScrollPin.ts      |  84 +++++++++++++++---
+ src/framework/registerFrameworkElements.ts  |   6 +-
+ test/dom/framework/previewScrollPin.test.ts | 133 +++++++++++++++++++++++++++-
+ visual-harness/obsidian-lifecycle.mjs       | 127 ++++++++++++++++++++++++++
+ 4 files changed, 335 insertions(+), 15 deletions(-)
+ctl-nohost: sha=e6a8e0162d83/ad50afa51918
+ctl-noanchor mutations: 1 anchor-in-ruleText=0
+build ctl-noanchor rc=0 head=c2758a2
+ src/framework/host/previewScrollPin.ts      |  84 +++++++++++++++---
+ src/framework/registerFrameworkElements.ts  |   6 +-
+ test/dom/framework/previewScrollPin.test.ts | 133 +++++++++++++++++++++++++++-
+ visual-harness/obsidian-lifecycle.mjs       | 127 ++++++++++++++++++++++++++
+ 4 files changed, 335 insertions(+), 15 deletions(-)
+ctl-noanchor: sha=e33a16ed92e9/ad50afa51918

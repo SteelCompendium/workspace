@@ -1,0 +1,47 @@
+1:  710e812 ! 1:  88d200a fix(SC-479): a Reading-view host note keeps its scroll position when a tracker in a note it embeds is written
+    @@ test/dom/framework/previewScrollPin.test.ts: describe('SC-470: PreviewScrollPin.
+     
+      ## visual-harness/obsidian-lifecycle.mjs ##
+     @@
+    - // SC-519 appends G-S45 (38 scenarios in all; the id was assigned by the dispatcher): the block edit form opened inside the ~400 ms write
+    - // debounce of an in-card click starts from what the card shows - Reading view, then the sidebar panel. The plugin's own debounce timer
+    - // is held at a hook (not a timed race) so the note file is provably still old when the pencil is clicked; Save unchanged must keep the click.
+    + // SC-502 r2 adds to it: the panel stays revealed while the pointer crosses Obsidian's own `</>` edit-block button on the way up to Collapse,
+    + // a real click on the collapsed one-liner's Expand expands the block, and a real click on `</>` still enters the block's source.
+    + // (r3) CodeMirror's height for the widget equals its on-screen height for a counter, a feature (margins 24px) and a statblock (8px).
+     +// SC-479 appends G-S42 (38 scenarios in all with SC-509's G-S40): a tracker in note B embedded in a Reading view of note A parked at its end keeps A's scroll position
+     +// when B is written (in-app, on disk, from another pane, and the embed's own write with adoption off).
+      //
+    @@ visual-harness/obsidian-lifecycle.mjs: Object.assign(FIXTURES, {
+     +});
+      // SC-487: a zero-width space right after the name. Live Preview ends the name there and renders the block; Reading view shows plain code.
+      const ZWSP = String.fromCharCode(0x200b);
+    - Object.assign(FIXTURES, {
+    + // SC-502: a note per element for the Live Preview chrome-panel click scenario (G-S44). The line directly above each fence is text,
+     @@ visual-harness/obsidian-lifecycle.mjs: const SCENARIOS = [
+    - 			return `opening the block edit form flushes a pending in-card write first (the debounce timer held, the note still old when the pencil was clicked): ${facts.join('; ')}; the note outside the block untouched; no Notice, no page error`;
+    + 			return `Live Preview, real mouse: ${facts.join('; ')}; no page errors`;
+      		},
+      	},
+     +	{
+2:  f0b8b8e = 2:  c3de06c fix(SC-479): resolve each nested embed's link from the note that writes it
+3:  6692113 = 3:  b73c454 docs(SC-479): previewScrollPin header - embed mechanism, measurements, nested links, the accepted anchoring risk, SC-522
+4:  84ba65a ! 4:  ca01a96 test(SC-479): G-S42 header count and the no-timed-delay note
+    @@ Commit message
+     
+      ## visual-harness/obsidian-lifecycle.mjs ##
+     @@
+    - // SC-519 appends G-S45 (38 scenarios in all; the id was assigned by the dispatcher): the block edit form opened inside the ~400 ms write
+    - // debounce of an in-card click starts from what the card shows - Reading view, then the sidebar panel. The plugin's own debounce timer
+    - // is held at a hook (not a timed race) so the note file is provably still old when the pencil is clicked; Save unchanged must keep the click.
+    + // SC-502 r2 adds to it: the panel stays revealed while the pointer crosses Obsidian's own `</>` edit-block button on the way up to Collapse,
+    + // a real click on the collapsed one-liner's Expand expands the block, and a real click on `</>` still enters the block's source.
+    + // (r3) CodeMirror's height for the widget equals its on-screen height for a counter, a feature (margins 24px) and a statblock (8px).
+     -// SC-479 appends G-S42 (38 scenarios in all with SC-509's G-S40): a tracker in note B embedded in a Reading view of note A parked at its end keeps A's scroll position
+    -+// SC-479 appends G-S42 (39 scenarios in all with SC-519's G-S45; the id was assigned by the dispatcher): a tracker in note B embedded in a Reading view of note A parked at its end keeps A's scroll position
+    ++// SC-479 appends G-S42 (40 scenarios in all with SC-502's G-S44 and SC-519's G-S45; the id was assigned by the dispatcher): a tracker in note B embedded in a Reading view of note A parked at its end keeps A's scroll position
+      // when B is written (in-app, on disk, from another pane, and the embed's own write with adoption off).
+      //
+      // Usage: npm run obsidian-lifecycle   (builds the plugin first)
+-:  ------- > 5:  5b3b778 fix(SC-479): the host pin's anchoring stop goes on the host's embeds, not its scroller
+-:  ------- > 6:  e6b02ca test(SC-479): G-S42 phase (e) - a tall host parked below the embed keeps its on-screen text when the write grows the embed; the second pane waits for the tracker instead of sleeping

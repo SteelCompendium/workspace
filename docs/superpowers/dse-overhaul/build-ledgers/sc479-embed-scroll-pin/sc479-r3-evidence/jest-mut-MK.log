@@ -1,0 +1,24 @@
+FAIL dom test/dom/framework/previewScrollPin.test.ts
+  ● SC-479: embeds pin the host note's scroller › leaves alone: an embed of another note, an embed without a DSE block, no resolver, a host that is not scrolled
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      648 | 		const pin = new PreviewScrollPin();
+      649 | 		pin.pinReadingViewsOf(workspaceOf(other, plain, top), 'B.md', resolve);
+    > 650 | 		for (const l of [other, plain, top]) expect(isPinned(l.scroller)).toBe(false);
+          | 		                                                                  ^
+      651 | 		const noResolver = hostLeaf('A4.md');
+      652 | 		addEmbed(noResolver.scroller, 'B');
+      653 | 		pin.pinReadingViewsOf(workspaceOf(noResolver), 'B.md');
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:650:69)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 45 passed, 46 total
+Snapshots:   0 total
+Time:        2.168 s
+Ran all test suites matching test/dom/framework/previewScrollPin.test.ts.
+rc=1

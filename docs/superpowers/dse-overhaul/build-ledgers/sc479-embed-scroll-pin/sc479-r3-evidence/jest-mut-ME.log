@@ -1,0 +1,24 @@
+FAIL dom test/dom/framework/previewScrollPin.test.ts
+  ● SC-479: embeds pin the host note's scroller › the writer pin reaches the host scroller through two levels of embeds
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "4883px"
+    Received: ""
+
+      682 | 		const innerDse = addNestedEmbed(addEmbed(scroller, 'N', { dse: false }), 'B').querySelector<HTMLElement>('[data-dse-element]')!;
+      683 | 		new PreviewScrollPin().pin(innerDse);
+    > 684 | 		expect(pinnedPx(scroller)).toBe('4883px');
+          | 		                           ^
+      685 | 		expect(anchorStopped(scroller)).toBe(true);
+      686 | 		expect(allPinStyles()).toBe(1);
+      687 | 	});
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:684:30)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 45 passed, 46 total
+Snapshots:   0 total
+Time:        2.181 s
+Ran all test suites matching test/dom/framework/previewScrollPin.test.ts.
+rc=1

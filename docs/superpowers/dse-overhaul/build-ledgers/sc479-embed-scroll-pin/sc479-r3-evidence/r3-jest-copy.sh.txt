@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# r3-jest-copy.sh <srcdir-name> <log-tag>: jest previewScrollPin + register-framework-elements suites in a scratch source copy
+set -u
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc479-r3-a49fb648
+cd "$S/src/$1" || exit 9
+rm -f main.js styles.css main.css
+npx jest test/dom/framework/previewScrollPin.test.ts > "$S/jest-$2.log" 2>&1
+rc=$?
+echo "rc=$rc" >> "$S/jest-$2.log"
+exit $rc

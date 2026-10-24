@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# r3-mut.sh: 3 guard mutations, each in its own scratch copy of 84ba65a; jest previewScrollPin.test.ts per mutation
+set -u
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc479-r3-a49fb648
+D=/home/scott/code/steelCompendium/worktrees/sc479-embed-scroll-pin/draw-steel-elements
+PIN=src/framework/host/previewScrollPin.ts
+: > "$S/mut-summary.log"
+for M in MA ME MK; do
+  mkdir -p "$S/src/mut-$M"
+  git -C "$D" archive 84ba65a | tar -x -C "$S/src/mut-$M"
+  ln -sfn "$D/node_modules" "$S/src/mut-$M/node_modules"
+  python3 -I - "$S/src/mut-$M/$PIN" "$M" <<'PY'
+import sys
+p, m = sys.argv[1], sys.argv[2]; s = open(p).read()
+muts = {
+ 'MA': ("if (!view.file || view.getMode?.() !== 'preview') continue;", "if (!view.file) continue;"),
+ 'ME': ("for (let up = inner.parentElement?.closest<HTMLElement>('.markdown-preview-view'); up; up = up.parentElement?.closest<HTMLElement>('.markdown-preview-view')) scroller = up;",
+        "const up1 = inner.parentElement?.closest<HTMLElement>('.markdown-preview-view'); if (up1) scroller = up1;"),
+ 'MK': ("if (embed.querySelector('[data-dse-element]') && resolved(embed) === path) return true;", "if (resolved(embed) === path) return true;"),
+}
+a, b = muts[m]
+assert s.count(a) == 1, m
+open(p, 'w').write(s.replace(a, b))
+PY
+  bash "$S/r3-jest-copy.sh" "mut-$M" "mut-$M"
+  echo "$M rc=$? :: $(grep -E '^Tests:' "$S/jest-mut-$M.log") :: $(grep -E '^  ● ' "$S/jest-mut-$M.log" | head -5 | tr '\n' '|')" >> "$S/mut-summary.log"
+done

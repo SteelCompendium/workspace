@@ -1,0 +1,24 @@
+M01 no host pins at all (views of another note skipped): KILLED | 9 failed, 42 passed, 51 total
+M02 every other Reading view is pinned (embed test dropped): KILLED | 4 failed, 47 passed, 51 total
+M03 subpath not stripped: KILLED | 1 failed, 50 passed, 51 total
+M04 nested embeds not reached: KILLED | 3 failed, 48 passed, 51 total
+M05 nested embed resolved from the host path: KILLED | 1 failed, 50 passed, 51 total
+M06 writer pin takes the innermost scroller: KILLED | 3 failed, 48 passed, 51 total
+M07 writer pin through the embed is not a host pin: KILLED | 3 failed, 48 passed, 51 total
+M08 anchoring stop on every pin: KILLED | 5 failed, 46 passed, 51 total
+M09 anchoring stop never written: KILLED | 8 failed, 43 passed, 51 total
+M10 own pin upgraded to host keeps the sizer-only rule: KILLED | 1 failed, 50 passed, 51 total
+M11 floor raise drops the anchoring stop: KILLED | 1 failed, 50 passed, 51 total
+M12 sizer rule child combinator -> descendant: KILLED | 2 failed, 49 passed, 51 total
+M13 unresolved enclosing embed has no fallback: KILLED | 1 failed, 50 passed, 51 total
+M14 non-DSE embed counts: KILLED | 1 failed, 50 passed, 51 total
+M15 resolver not passed by registerFrameworkElements: KILLED | 1 failed, 50 passed, 51 total
+M16 release() leaves the style behind: KILLED | 11 failed, 40 passed, 51 total
+M17 releaseAll() does nothing: KILLED | 6 failed, 45 passed, 51 total
+M19 anchoring stop back on the scroller (r3 HIGH-1): KILLED | 8 failed, 43 passed, 51 total
+G1 gate branch (i) removed (a DSE root on screen no longer wants the stop): KILLED | 2 failed, 49 passed, 51 total
+G2 gate branch (ii) removed (no embed on screen -> no stop): KILLED | 6 failed, 45 passed, 51 total
+G3 gate branch (iii) removed (inside an embed off its roots still stops): KILLED | 2 failed, 49 passed, 51 total
+G4 gate not applied when upgrading an own pin: KILLED | 1 failed, 50 passed, 51 total
+G5 gate not applied on a new host pin: KILLED | 1 failed, 50 passed, 51 total
+M18 TTL does not release a re-pinned host: KILLED | 4 failed, 47 passed, 51 total
