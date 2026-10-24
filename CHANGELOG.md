@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: keyboard Collapse, Expand and Pin no longer drop you out of the block (SC-505).**
+  Pressing Enter on an element's Collapse button used to throw keyboard focus to the page, so the next Tab started
+  again from the top of the note; Expand on the collapsed one-line bar and Pin to sidebar did the same. Now Collapse
+  moves focus to the one-line bar's Expand button, Expand moves it back to the Collapse button, and Pin to sidebar
+  leaves it on the Pin button, each with the focus outline. This applies to every element with the hover menu, not
+  only the stamina bar. Clicking with the mouse behaves as before.
+
 - **DSE plugin: saving the block edit form no longer drops a block's `collapsed:` line (SC-494).**
   The block edit form (experimental authoring controls) used to write the block back without its
   `collapsed: true` / `collapsed: false` line (and, on blocks such as Skills, Conditions and Surges, showed a schema error
