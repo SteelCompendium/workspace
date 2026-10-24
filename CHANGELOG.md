@@ -8,6 +8,11 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: a Reading-view note no longer jumps to the top when a tracker in a note it embeds changes (SC-479).**
+  With `![[Tracker note]]` in a note you are reading, a change to the tracker (from another pane or an outside edit)
+  could throw the embedding note back to its title when the embed filled most of the page and you were scrolled to
+  its end. The embedding note now keeps its scroll position. Live Preview is not covered yet (SC-522).
+
 - **DSE plugin: the block edit form's preview no longer shows a stale error while you type a reference (SC-510).**
   With experimental authoring controls on, typing a reference such as `@Ref.md` into a feature or statblock's YAML
   box one character at a time could leave the preview on "Reference file (Ref.m) not found", or on a mix of earlier
