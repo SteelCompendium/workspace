@@ -333,6 +333,14 @@ every card unchanged at rest. Retuned per scheme in E3's own ratio (55% black da
   collapse rules carry the same exclusion, so **a collapsed element prints in full** — the same
   answer print rule 3 already gives the kit collapsible. Proven in bytes: the rollout to 31
   elements moved zero frozen print shots.
+- Live Preview (SC-502): Obsidian clips the CodeMirror widget a block is drawn in, which cut the
+  overhanging panel off (never painted, never clickable). One rule in the "Element chrome" section of
+  `styles-source.css` lifts the clip for widgets holding a chrome block (keeping them a block formatting
+  context, `display: flow-root`, so the block's own margins stay inside the widget and CodeMirror measures
+  the right height) and re-opens only a 96px strip above them, so the panel sits where it does in Reading
+  view; the panel stays revealed while the pointer
+  is over the widget (Obsidian's own `</>` button included), and the collapsed one-liner keeps 36px clear
+  on its right so its Expand sits beside that button, not under it.
 
 **The collapsed one-liner.** Collapse is by attribute (`data-dse-collapsed="on"`), never by
 unmounting, so expanding is instant and no state is lost. The folded form is one line in a
