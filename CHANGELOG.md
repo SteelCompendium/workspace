@@ -146,6 +146,15 @@ go under an *Internal* sub-heading.
   could throw the embedding note back to its title when the embed filled most of the page and you were scrolled to
   its end. The embedding note now keeps its scroll position. (Live Preview: see SC-522 above.)
 
+- **DSE plugin: the hover menu of a block at the top of a callout can be clicked (SC-520).**
+  When a block (a stamina bar, a counter, a statblock, ...) is the first thing inside a `> [!note]` callout, the
+  hover menu above it (Collapse, Pin to sidebar, the experimental Edit pencil) sits over the callout's title row,
+  and Obsidian cut it off there in Live Preview and in Reading view: it was never drawn, and a mouse click on the
+  spot landed on the callout title instead (in Live Preview that turned the callout into its source text; on a
+  foldable callout it folded it). The menu now shows above the block when you hover it, its buttons work with
+  the mouse, and clicking one no longer opens the callout's source. The callout's own title, fold arrow and
+  `</>` button work as before. Blocks with text above them in the callout were not affected.
+
 - **DSE plugin: the block edit form's preview no longer shows a stale error while you type a reference (SC-510).**
   With experimental authoring controls on, typing a reference such as `@Ref.md` into a feature or statblock's YAML
   box one character at a time could leave the preview on "Reference file (Ref.m) not found", or on a mix of earlier

@@ -341,6 +341,12 @@ every card unchanged at rest. Retuned per scheme in E3's own ratio (55% black da
   view; the panel stays revealed while the pointer
   is over the widget (Obsidian's own `</>` button included), and the collapsed one-liner keeps 36px clear
   on its right so its Expand sits beside that button, not under it.
+- Callouts (SC-520): a block that is the first thing in a `> [!note]` callout has its panel over the
+  callout's title row, and Obsidian's `.callout-content { overflow-x: auto }` clipped it in Live Preview
+  and Reading view alike. One more rule in the same section lifts that clip (`overflow: visible` +
+  `display: flow-root`, only for a callout holding a Steel screen chrome block, so no pixel moves);
+  and `mountChrome` default-prevents a click on the panel and on the one-liner, because Obsidian's
+  callout widget enters its source on any click that is not (the shield only covers pointerdown).
 
 **The collapsed one-liner.** Collapse is by attribute (`data-dse-collapsed="on"`), never by
 unmounting, so expanding is instant and no state is lost. The folded form is one line in a
