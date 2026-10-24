@@ -206,7 +206,7 @@ OK line on success; read the lines, don't infer from exit code alone.
   CURRENT)**; **113 kinds / 678 comparisons with a 12-record boundary as of SC-501 (`054c9c5`)**:
   10× focus-visible `disabled` (montage, negotiation, party stepper, roll stepper and roll Reset
   disabled kinds, ×2 schemes) and 2× hover no hit point (`initiative|dse-btn.dse-init__stamina`,
-  ×2). Since SC-501 the printed boundary lists the kind keys under each reason (modal keys carry their scenario, e.g. `@StaminaEditModal`), so compare kinds,
+  ×2). **114 kinds / 684 comparisons, same 12-record boundary, as of SC-512 (`f89f69f`)** — the 113 measured at `c2758a2` plus one kind; it only coincides with the stale SC-338 figure above. The new kind is the ENABLED roll Reset, `roll|dse-btn.dse-btn--ghost.dse-rollbar__reset` (the disabled kind is still compared). Reset is disabled while a strip sits at its authored values (`rollBar.ts:263`), so the button sweep's URL alone adds `galleryExtra=roll`: `entry.ts` appends a second roll strip (`data-dse-harness-extra="roll"`), and the sweep real-clicks its Edges "+" on every dark/light load after opening Modifiers. It FAILs if that strip does not end with exactly one enabled, boxed Reset, if the first strip's Reset is not still disabled, or if the enabled key was not tagged. No capture sends `galleryExtra`, so no shot or frozen byte moves. Since SC-501 the printed boundary lists the kind keys under each reason (modal keys carry their scenario, e.g. `@StaminaEditModal`), so compare kinds,
   not just counts. **SC-279's roll strip starts its "Modifiers" disclosure collapsed
   (`rollBar.ts:112`)**, which hid its steppers and Reset (0×0) and grew the boundary to 20 records
   (6 hover zero-sized + 2 focus-visible no box were hidden buttons, not legitimate skips; SC-497
@@ -1228,7 +1228,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `253aa5f` (2026-10-24; SC-519 landed — the block edit form includes a click made just before it opened (pending card write), so Save no longer undoes it; Reading view + sidebar (Live Preview: SC-523); new lifecycle G-S45):**
+**CURRENT — dse `develop` @ `f89f69f` (2026-10-24; SC-512 landed — the button host-leak sweep also compares the roll strip's Reset while it is enabled, via a sweep-only second roll strip (`galleryExtra=roll`); harness-only, no user-visible change, no pixel or frozen-byte change):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **6078 passed / 1 skipped / 245 of 246 suites** · lifecycle **38/38** · e2e **`OBSIDIAN-E2E done: 123/123 ok,
+0 failed, 0 known-bug, coverage: 87/87 pairs`** · shots **592**, 0 FAIL, with `button host-leak OK (114 … 684 …)` (12-record boundary unchanged), modal `228`, input `164`, checkbox `60` · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-512 ticket-owner at `f89f69f`; the dispatcher relayed, not re-ran. Known shots flake under heavy load: the montage board mouse-wheel check (SC-521).
+
+**PREVIOUS — dse `develop` @ `253aa5f` (2026-10-24; SC-519 landed — the block edit form includes a click made just before it opened (pending card write), so Save no longer undoes it; Reading view + sidebar (Live Preview: SC-523); new lifecycle G-S45):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **6074 passed / 1 skipped / 245 of 246 suites** · lifecycle **38/38** (new G-S45) · e2e **`OBSIDIAN-E2E done: 123/123 ok,
 0 failed, 0 known-bug, coverage: 87/87 pairs`** · shots **592**, 0 FAIL · freeze **`freeze OK (280/280 …)`** (no rebaseline; shots/freeze at `1e97599`) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-519 ticket-owner at `253aa5f`; the dispatcher relayed, not re-ran.
