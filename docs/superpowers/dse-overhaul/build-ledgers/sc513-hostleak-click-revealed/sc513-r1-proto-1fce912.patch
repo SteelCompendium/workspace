@@ -1,0 +1,312 @@
+From 1fce9126244f67c687966b7a9aea1f98e356e1ff Mon Sep 17 00:00:00 2001
+From: Scott Tomaszewski <scottTomaszewski@gmail.com>
+Date: Sat, 24 Oct 2026 07:11:59 -0400
+Subject: [PATCH] SC-513 r1 PROTOTYPE (survey, not for landing): sweeps mount
+ click-created controls by real click
+
+---
+ visual-harness/entry.ts  |  31 +++++++
+ visual-harness/shoot.mjs | 176 ++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 203 insertions(+), 4 deletions(-)
+
+diff --git a/visual-harness/entry.ts b/visual-harness/entry.ts
+index af15655..6e7908d 100644
+--- a/visual-harness/entry.ts
++++ b/visual-harness/entry.ts
+@@ -2168,6 +2168,12 @@ export function makeHarnessHost(
+  * hand-built copy of it.
+  */
+ function probeSource(id: string, fixtureName: string): string | undefined {
++	// SC-513 - a gate-only hero whose abilities RESOLVE. The gallery's own hero (heroDefault) lists
++	// SCC codes that the harness cannot resolve (no compendium), so its rows render as issue rows with
++	// no expand toggle and the click-to-mount ability body is unreachable. Same hero, with the two
++	// refs swapped for inline abilities: the feature example (a power roll, so a rolling sweep can also
++	// launch its strip) and a signature strike. Sent only by the host-leak sweeps via `galleryExtra`.
++	if (id === 'hero' && fixtureName === 'probe-inline-abilities') return heroInlineAbilities();
+ 	const m = /^probe-rounds-(\d+)$/.exec(fixtureName);
+ 	if (id !== 'montage' || !m) return undefined;
+ 	const rounds = Math.max(2, Number(m[1]));
+@@ -2194,6 +2200,31 @@ function probeSource(id: string, fixtureName: string): string | undefined {
+ 	return lines.join('\n');
+ }
+ 
++/** SC-513 - heroDefault with its two unresolvable SCC ability refs replaced by inline abilities. */
++function heroInlineAbilities(): string {
++	const indent = (yaml: string): string =>
++		yaml
++			.trimEnd()
++			.split('\n')
++			.map((line, i) => (i === 0 ? `  - ${line}` : `    ${line}`))
++			.join('\n');
++	const strike = [
++		'name: Brutal Strike',
++		'usage: Main action',
++		'distance: Melee 1',
++		'target: One creature',
++		'effects:',
++		'  - roll: Power Roll + Might',
++		'    tier1: 3 damage',
++		'    tier2: 6 damage',
++		'    tier3: 9 damage',
++	].join('\n');
++	const inline = `abilities:\n${indent(featureDefault)}\n${indent(strike)}\n`;
++	const out = heroDefault.replace(/^abilities:.*\n(?:\s+- scc[^\n]*\n)+/m, inline);
++	if (out === heroDefault) throw new Error('SC-513: heroDefault abilities block not found');
++	return out;
++}
++
+ async function mountOne(
+ 	pipeline: ElementPipeline,
+ 	registry: ElementRegistry,
+diff --git a/visual-harness/shoot.mjs b/visual-harness/shoot.mjs
+index 542e2df..3e834a9 100644
+--- a/visual-harness/shoot.mjs
++++ b/visual-harness/shoot.mjs
+@@ -2548,7 +2548,7 @@ async function assertBtnHostLeak(page) {
+ 	const acc = newBtnSweepAcc();
+ 	let kindCount = 0;
+ 	for (const bg of ['dark', 'light']) {
+-		const query = new URLSearchParams({
++		const query = new URLSearchParams(withSc513Mounts({
+ 			gallery: '1',
+ 			theme: 'steel',
+ 			bg,
+@@ -2557,7 +2557,7 @@ async function assertBtnHostLeak(page) {
+ 			// SC-512 - a SECOND roll strip, appended after every gallery section, whose modifier is
+ 			// changed below so its Reset is enabled. This sweep only: no capture URL sends it.
+ 			galleryExtra: 'roll',
+-		});
++		}));
+ 		await loadBtnHostLeakPage(page, query);
+ 		// SC-202 r6c fold (review LOW-2b): verify the requested `sheet: '1'` actually
+ 		// loaded (the MED-2 sentinel) before disabling it for the bare pass — this sweep
+@@ -2572,6 +2572,8 @@ async function assertBtnHostLeak(page) {
+ 		await openRollModifiersForSweep(page, bg, acc.problems);
+ 		// SC-512 - and change a modifier on the extra strip by a real click, so its Reset is ENABLED.
+ 		await changeExtraRollModifierForSweep(page, bg, acc.problems);
++		// SC-513 - and mount every click-created control by a real click (see `mountClickRevealedForSweep`).
++		await mountClickRevealedForSweep(page, bg, acc.problems, { popover: true });
+ 		const keys = await page.evaluate(tagButtons);
+ 		if (keys.length < 20) {
+ 			acc.problems.push(`${bg}: only ${keys.length} buttons found in the gallery — the sweep is blind`);
+@@ -2584,6 +2586,7 @@ async function assertBtnHostLeak(page) {
+ 				acc.problems.push(`${bg}: the sweep tagged no \`${want}\` button — the roll Reset would go unchecked in that state`);
+ 			}
+ 		}
++		assertSc513Tagged(keys, 'button', bg, acc.problems);
+ 		kindCount = keys.length;
+ 		await sweepTaggedButtons(page, bg, keys.length, acc);
+ 	}
+@@ -2728,6 +2731,163 @@ async function changeExtraRollModifierForSweep(page, bg, problems) {
+ 	}
+ }
+ 
++/** SC-513 (r1 PROTOTYPE) - the controls that are NOT in the gallery DOM at load and are created by a
++ *  user's click. "Mount the chrome, don't exempt it" (SC-205): the host-leak sweeps (button, input,
++ *  checkbox) mount each one by a REAL click on its own trigger, in the sweep's own page load only.
++ *  No capture URL sends these params, so no shot and no frozen byte moves.
++ *
++ *  Two of the triggers are missing from the plain gallery, so the sweeps' URL adds:
++ *    - `rollingEnabled:true` (default off): the ability Roll button (`.dse-roll-btn`) exists only with it;
++ *    - `staminaRecoveryPopover:true` (default off): the Recoveries marker click opens the ALT popover
++ *      instead of committing. Neither pref changes a single kind key at load except the three launch
++ *      buttons (measured), and neither touches what an existing kind's first node is.
++ *    - `galleryExtra` sections appended AFTER every gallery section (so first-node-per-kind tagging still
++ *      lands on the original sections; a statblock strip mounted in the gallery's own statblock moved
++ *      `statblock|dse-collapse__header` off "Villain Actions" - measured), whose controls are clicked:
++ *      `feature`, `featureblock`, `statblock` and `hero:probe-inline-abilities` (a gate-only hero whose
++ *      abilities resolve - the gallery hero's SCC refs do not, so it has no expand toggle at all).
++ *  Every mount asserts it produced what it should (named problem, never a skip). */
++const SC513_EXTRA = ['feature', 'featureblock', 'statblock', 'hero:probe-inline-abilities'];
++const SC513_PREFS = ['rollingEnabled:true', 'staminaRecoveryPopover:true'];
++
++/** Kind keys each mount must add, in the sweeps' own spelling (`tagButtons` / `tagInputs` / `tagCheckboxes`). */
++const SC513_EXPECT = {
++	button: [
++		// ds-roll result card (Roll on the extra strip)
++		'roll|dse-btn',
++		'roll|dse-btn.dse-btn--ghost',
++		// ability roll strip + result card, per element
++		...['feature', 'featureblock', 'statblock'].flatMap((el) => [
++			`${el}|dse-btn.dse-btn--ghost.dse-btn--icon.dse-roll-btn`,
++			`${el}|dse-btn.dse-btn--accent`,
++			`${el}|dse-btn.dse-btn--icon.dse-stepper__btn`,
++			`${el}|dse-btn.dse-btn--icon.dse-stepper__btn|disabled`,
++			`${el}|dse-btn.dse-btn--ghost.dse-rollbar__reset|disabled`,
++			`${el}|dse-btn`,
++			`${el}|dse-btn.dse-btn--ghost`,
++		]),
++		'feature|dse-collapse__header',
++		'featureblock|dse-collapse__header',
++		// hero ability body (toggle) and its roll strip
++		'hero|dse-btn.dse-btn--ghost.dse-btn--icon.dse-hero__ability-toggle',
++		'hero|dse-btn.dse-btn--ghost.dse-btn--icon.dse-roll-btn',
++		'hero|dse-btn.dse-btn--accent',
++		'hero|dse-collapse__header',
++		'hero|dse-btn.dse-btn--icon.dse-stepper__btn|disabled',
++		'hero|dse-btn.dse-btn--ghost.dse-rollbar__reset|disabled',
++		// Recoveries ALT popover
++		'hero|dse-stamina-rec__pop-btn',
++		'hero|dse-stamina-rec__pop-cb',
++	],
++	input: ['feature|dse-stepper__input'],
++	checkbox: ['feature|(no class)', 'featureblock|(no class)', 'statblock|(no class)', 'hero|(no class)'],
++};
++
++/** SC-513 - add the sweep-only params to a sweep's query (keeps any galleryExtra / prefs it already sends). */
++function withSc513Mounts(params) {
++	const extra = [params.galleryExtra, ...SC513_EXTRA].filter(Boolean).join(',');
++	const prefs = [params.prefs, ...SC513_PREFS].filter(Boolean).join(',');
++	return { ...params, galleryExtra: extra, prefs };
++}
++
++/** SC-513 - name every expected key the sweep did not tag. */
++function assertSc513Tagged(keys, kind, bg, problems) {
++	for (const want of SC513_EXPECT[kind]) {
++		if (!keys.includes(want)) {
++			problems.push(`${bg}: the sweep tagged no \`${want}\` ${kind} — a click-mounted control (SC-513) would go unchecked`);
++		}
++	}
++}
++
++/** SC-513 - mount every click-created control by a real click. `popover` (button sweep only) opens the
++ *  Recoveries ALT popover LAST: it closes on any later click outside it, and the sweep's state passes
++ *  never click. Call after `openRollModifiersForSweep` on EVERY sweep load; never from a capture. */
++async function mountClickRevealedForSweep(page, bg, problems, { popover = false } = {}) {
++	const sec = (id) => `[data-dse-harness-extra="${id}"]`;
++	const waitFor = async (fn, arg, what) => {
++		try {
++			await page.waitForFunction(fn, arg, { timeout: 5000 });
++			return true;
++		} catch {
++			problems.push(`${bg}: ${what}`);
++			return false;
++		}
++	};
++	// (1) ds-roll result card: Roll on the EXTRA roll strip (the gallery's own strip stays un-rolled).
++	const rollBtn = page.locator(`${sec('roll')} .dse-rollbar button[aria-label="Roll"]`);
++	if ((await rollBtn.count()) !== 1) problems.push(`${bg}: expected one Roll on the extra roll strip, found ${await rollBtn.count()} — its result card cannot be mounted`);
++	else {
++		await rollBtn.click();
++		await waitFor(
++			(s) => { const c = document.querySelectorAll(`${s} .dse-rollcard`); return c.length === 1 && c[0].querySelectorAll('button').length === 2; },
++			sec('roll'),
++			'clicking Roll on the extra roll strip mounted no result card with Reroll + Clear',
++		);
++	}
++	// (2) the ability roll strip: the first Roll launch of each appended feature / featureblock / statblock.
++	for (const el of ['feature', 'featureblock', 'statblock']) {
++		const launch = page.locator(`${sec(el)} .dse-roll-btn`);
++		const n = await launch.count();
++		if (n < 1) {
++			problems.push(`${bg}: no ability Roll button (.dse-roll-btn) in the extra ${el} section — rollingEnabled did not reach it, its roll strip cannot be mounted`);
++			continue;
++		}
++		await launch.first().click();
++		await waitFor(
++			(s) => document.querySelectorAll(`${s} .dse-rollbar`).length === 1 && document.querySelectorAll(`${s} .dse-rollcard`).length === 1,
++			sec(el),
++			`clicking the first ${el} ability Roll mounted no roll strip + result card (expected exactly one of each)`,
++		);
++	}
++	// (3) hero ability bodies: every expand toggle of the probe hero, then the first Roll inside a body.
++	const toggles = page.locator(`${sec('hero')} .dse-hero__ability-toggle`);
++	const nt = await toggles.count();
++	if (nt < 1) problems.push(`${bg}: the probe hero (galleryExtra hero:probe-inline-abilities) has no ability expand toggle — its ability bodies cannot be mounted`);
++	for (let k = 0; k < nt; k += 1) await toggles.nth(k).click();
++	if (nt > 0) {
++		const ok = await waitFor(
++			(s) => { const b = [...document.querySelectorAll(`${s} .dse-hero__ability-body`)]; return b.length > 0 && b.every((x) => !x.hidden && x.childElementCount > 0 && x.getClientRects().length > 0); },
++			sec('hero'),
++			`expanding the probe hero's ${nt} abilities left a body hidden, empty or box-less`,
++		);
++		if (ok) {
++			const inner = page.locator(`${sec('hero')} .dse-hero__ability-body .dse-roll-btn`);
++			if ((await inner.count()) < 1) problems.push(`${bg}: no ability Roll button inside the probe hero's ability bodies — its roll strip cannot be mounted`);
++			else {
++				await inner.first().click();
++				await waitFor(
++					(s) => document.querySelectorAll(`${s} .dse-hero__ability-body .dse-rollbar`).length === 1,
++					sec('hero'),
++					'clicking Roll inside a hero ability body mounted no roll strip',
++				);
++			}
++		}
++	}
++	// (4) open the newly mounted strips' collapsed Modifiers disclosures (same reason as SC-501).
++	const extraNonRoll = SC513_EXTRA.map((t) => sec(t.split(':')[0])).join(', ');
++	const header = page.locator(`:is(${extraNonRoll}) .dse-rollbar__mods > .dse-collapse__header[aria-expanded="false"]`);
++	const toOpen = await header.count();
++	for (let k = 0; k < toOpen; k += 1) await header.first().click();
++	const hidden = await page.evaluate(
++		() => [...document.querySelectorAll('.dse-rollbar__panel')].filter((p) => p.hasAttribute('hidden') || p.getClientRects().length === 0).length,
++	);
++	if (hidden) problems.push(`${bg}: ${hidden} roll strip Modifiers panel(s) still hidden after the SC-513 mounts — their steppers, checkboxes and Reset would be swept with no box`);
++	// (5) LAST: the Recoveries ALT popover on the gallery's own hero (the only marker row in the gallery).
++	if (popover) {
++		const pips = page.locator('.dse-harness-section:not([data-dse-harness-extra]) [data-dse-element="hero"] .dse-stamina-rec__pips');
++		if ((await pips.count()) !== 1) problems.push(`${bg}: expected one Recoveries marker row on the gallery hero, found ${await pips.count()}`);
++		else {
++			await pips.click();
++			await waitFor(
++				() => { const p = document.querySelectorAll('.dse-stamina-rec__pop'); return p.length === 1 && [...p[0].querySelectorAll('button')].filter((b) => b.getClientRects().length > 0).length === 3; },
++				null,
++				'clicking the hero Recoveries markers (staminaRecoveryPopover on) opened no popover with its three buttons',
++			);
++		}
++	}
++	await page.mouse.move(0, 0);
++}
++
+ /** SC-501 FU-1 — every node an input/checkbox sweep tagged must HAVE A BOX when it is compared. The
+  *  button sweep proves each exemption per record and prints the boundary; the input and checkbox
+  *  sweeps have no exemption mechanism, so a tagged node that was hidden (a collapsed disclosure, a
+@@ -4303,7 +4463,8 @@ async function assertInputHostLeak(page) {
+ 		// in the real `.markdown-preview-view.markdown-rendered` ancestor. Disabling the
+ 		// link right after navigation (below) is what makes the FIRST sample genuinely
+ 		// bare, now that "no host CSS at all" is no longer this page's default state.
+-		const query = new URLSearchParams({ gallery: '1', theme: 'steel', bg, sheet: '1' });
++		// SC-513 - plus the sweep-only extras + prefs that let the click-created controls be mounted.
++		const query = new URLSearchParams(withSc513Mounts({ gallery: '1', theme: 'steel', bg, sheet: '1', galleryExtra: 'roll' }));
+ 		await page.emulateMedia({ media: 'screen' });
+ 		await page.goto(`${pageUrl}?${query}`);
+ 		await page.waitForFunction(() => window.__dseHarnessDone !== undefined, null, { timeout: 60000 });
+@@ -4326,8 +4487,11 @@ async function assertInputHostLeak(page) {
+ 		if (!titleOpened) problems.push(`${bg}: the initiative title editor could not be opened for the sweep`);
+ 		// SC-501 - the roll strip's stepper input lives in its collapsed Modifiers disclosure (SC-279).
+ 		await openRollModifiersForSweep(page, bg, problems);
++		// SC-513 - mount the click-created controls (the feature roll strip's characteristic input).
++		await mountClickRevealedForSweep(page, bg, problems);
+ 		const keys = await page.evaluate(tagInputs);
+ 		await assertTaggedHaveBox(page, 'data-dse-inputleak', bg, 'input', problems);
++		assertSc513Tagged(keys, 'input', bg, problems);
+ 		if (keys.length < 5) {
+ 			problems.push(`${bg}: only ${keys.length} inputs found in the gallery — the sweep is blind`);
+ 			continue;
+@@ -6182,7 +6346,8 @@ async function assertCheckboxHostLeak(page) {
+ 
+ 	for (const bg of ['dark', 'light']) {
+ 		// SC-202 r6b: `sheet: '1'` — see `assertInputHostLeak`'s own comment.
+-		const query = new URLSearchParams({ gallery: '1', theme: 'steel', bg, sheet: '1' });
++		// SC-513 - plus the sweep-only extras + prefs that let the click-created controls be mounted.
++		const query = new URLSearchParams(withSc513Mounts({ gallery: '1', theme: 'steel', bg, sheet: '1', galleryExtra: 'roll' }));
+ 		await page.emulateMedia({ media: 'screen' });
+ 		await page.goto(`${pageUrl}?${query}`);
+ 		await page.waitForFunction(() => window.__dseHarnessDone !== undefined, null, { timeout: 60000 });
+@@ -6191,10 +6356,13 @@ async function assertCheckboxHostLeak(page) {
+ 		// SC-501 - the roll strip's Skill / Main-action checkboxes live in its collapsed Modifiers
+ 		// disclosure (SC-279); open it by a real click before tagging.
+ 		await openRollModifiersForSweep(page, bg, problems);
++		// SC-513 - mount the click-created controls (the ability roll strips' Skill / Main-action boxes).
++		await mountClickRevealedForSweep(page, bg, problems);
+ 
+ 		// ---- (a) plugin-authored checkbox, bare ----
+ 		const keys = await page.evaluate(tagCheckboxes);
+ 		await assertTaggedHaveBox(page, 'data-dse-cbleak', bg, 'checkbox', problems);
++		assertSc513Tagged(keys, 'checkbox', bg, problems);
+ 		if (keys.length < 1) {
+ 			problems.push(`${bg}: 0 plugin-authored checkboxes found in the gallery — the sweep is blind`);
+ 		}
+-- 
+2.34.1
+
