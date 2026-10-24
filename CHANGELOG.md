@@ -22,6 +22,13 @@ go under an *Internal* sub-heading.
   starts from what the card shows. In the sidebar the form also started from the content the panel was first built
   with, even long after a click; it now starts from the current content. (Live Preview is not covered by this fix.)
 
+- **DSE plugin: the hover menu above an element can be clicked in Live Preview (SC-502).**
+  In Live Preview, a mouse click on the menu above a block (Collapse, Pin to sidebar, the experimental Edit pencil)
+  did nothing and moved the editor cursor to the line above the block: Obsidian cut the menu off at the block's top
+  edge, so it was never drawn there. The menu now shows above the block when you hover it, the same place as in
+  Reading view, and its buttons work with the mouse. The Expand button on the collapsed one-line bar is not
+  covered by this: Obsidian's own `</>` button still sits over it in Live Preview.
+
 - **DSE plugin: keyboard Collapse, Expand and Pin no longer drop you out of the block (SC-505).**
   Pressing Enter on an element's Collapse button used to throw keyboard focus to the page, so the next Tab started
   again from the top of the note; Expand on the collapsed one-line bar and Pin to sidebar did the same. Now Collapse
