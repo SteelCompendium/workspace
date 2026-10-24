@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: after Save in a block's edit form, keyboard focus returns to the card's Edit button instead of jumping to the top of the page (SC-518).**
+  With experimental authoring controls on, Tab to a card's Edit button, press Enter, change a field and press Save:
+  the card is redrawn with the new content, and keyboard focus used to be lost (the next Tab started again from
+  the top of the page). Focus now goes back to the redrawn card's Edit button, with the keyboard focus ring, in
+  Reading view, the sidebar and Live Preview. If you opened the form with the mouse, focus returns to the button
+  without a ring. Cancel and Escape are unchanged.
+
 - **DSE plugin: a Reading-view note no longer jumps to the top when a tracker in a note it embeds changes (SC-479).**
   With `![[Tracker note]]` in a note you are reading, a change to the tracker (from another pane or an outside edit)
   could throw the embedding note back to its title when the embed filled most of the page and you were scrolled to
