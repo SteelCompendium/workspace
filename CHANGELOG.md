@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: emptying the YAML box in the block edit form no longer saves a broken block (SC-493).**
+  For a block the form edits as raw YAML (for example Counter, Negotiation, Party, Encounter, Values row,
+  Characteristics), clearing the box and pressing Save used to write an empty block that then showed an error
+  card. The form now says "This block can't be empty. Add at least one setting, or press Cancel." and keeps Save
+  off while the box is empty; Montage and Project, which accept an empty body, still save it.
+
 - **DSE plugin: the stamina bar can be opened from the keyboard (SC-498).**
   Tab now stops on the bar (in the Stamina Bar element and on the hero sheet), a teal outline shows it has focus,
   and Enter or Space opens the Stamina window, the same as a click. The Edit pencil, Collapse and Pin buttons in
