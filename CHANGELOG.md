@@ -152,8 +152,11 @@ go under an *Internal* sub-heading.
   and Obsidian cut it off there in Live Preview and in Reading view: it was never drawn, and a mouse click on the
   spot landed on the callout title instead (in Live Preview that turned the callout into its source text; on a
   foldable callout it folded it). The menu now shows above the block when you hover it, its buttons work with
-  the mouse, and clicking one no longer opens the callout's source. The callout's own title, fold arrow and
-  `</>` button work as before. Blocks with text above them in the callout were not affected.
+  the mouse, and clicking one no longer opens the callout's source. In Live Preview the menu sits a little
+  further left in such a callout, so Obsidian's own `</>` button no longer covers the Collapse button. The
+  callout's own title, fold arrow and `</>` button work as before. If the same callout also holds something wider
+  than it (a wide table), the whole callout scrolls sideways, title included, instead of only its body.
+  Blocks with text above them in the callout were not affected.
 
 - **DSE plugin: the block edit form's preview no longer shows a stale error while you type a reference (SC-510).**
   With experimental authoring controls on, typing a reference such as `@Ref.md` into a feature or statblock's YAML
