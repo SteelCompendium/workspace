@@ -108,3 +108,6 @@ Resume point:
 ## LAND-READY (2026-10-29)
 - dse branch sc527-hostleak-state-kinds @ 4f73043 (c39e314, 48f6671, 4f73043) on develop 9be397e, ancestor verified, tree clean. Superproject worktree at origin/main 90f93611, only dirt ` M draw-steel-elements` (pointer bump at landing).
 - No widening, no rebaseline, no CHANGELOG (harness-only). dse-verify edits: sc527-dse-verify-proposal.md. Backlog filed: SC-530 (aria-checked key gap). Local branch sc527-r1-proto (b33616d) is survey-only, must not land.
+
+## DONE (2026-10-29)
+- Landed by the dispatcher: dse develop ff to 4f73043; workspace main 1fab455f (pointer bump 78c696c0); docs 8386d41d applied sc527-dse-verify-proposal.md (host-leak bullet, SC-530 open key gap, CURRENT @ 4f73043) and preserved this ledger at docs/superpowers/dse-overhaul/build-ledgers/sc527-hostleak-state-kinds/. Worktree removed; sc527-r1-proto not pushed. Ticket -> Done with closing comment.
