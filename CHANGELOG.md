@@ -15,6 +15,14 @@ go under an *Internal* sub-heading.
   referenced card. A card in the sidebar that redraws while its lookup is running also shows one card, not the
   card under a stale error.
 
+- **DSE plugin: with two identical blocks in a note, editing one no longer makes the other disappear, show the wrong number, or write into the first block (SC-481).**
+  Put two blocks with exactly the same text in one note (two identical counters, say), open it in Reading view or
+  Live Preview, and click a control in the upper one. The lower block could vanish until you reopened the note,
+  show the upper one's new value, and a click on it then changed the upper block instead of the lower one. After
+  a Save in the block's edit form the same click also undid the edit you had just saved. Each block now keeps
+  its own card, its own value, and its clicks and saves go to its own block. Three identical blocks, identical
+  montages, and the view adoption setting turned off are covered too.
+
 - **DSE plugin: after Save in a block's edit form, keyboard focus returns to the card's Edit button instead of jumping to the top of the page (SC-518).**
   With experimental authoring controls on, Tab to a card's Edit button, press Enter, change a field and press Save:
   the card is redrawn with the new content, and keyboard focus used to be lost (the next Tab started again from
