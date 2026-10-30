@@ -1,0 +1,38 @@
+applied M1
+M1 rc=1 Tests:       8 failed, 30 passed, 38 total
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › montage (raw box): a keyboard-opened form -> the new root's pencil has focus, with the keyboard ring
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › stamina-bar (typed fields): a keyboard-opened form -> the new root's pencil has focus, with the keyboard ring
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › roll (no chrome panel, card-corner pencil): a keyboard-opened form -> the new root's pencil has focus, with the keyboard ring
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › the new section already in the document when its processor runs: the pencil is focused as soon as it exists
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › a mouse-opened form -> the pencil is focused WITHOUT the keyboard ring (no focusVisible)
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › hint scoped to the edited block: two same-kind blocks -> focus goes to the edited one, never its twin
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › one-shot: after the focus landed and the user moved on, a later redraw of the block moves nothing
+  ● SC-518: sidebar -- Save from the panel's pencil hands focus to the panel's new pencil › a keyboard-opened form from the panel: after Save the redrawn panel's pencil has focus
+applied M2
+M2 rc=1 Tests:       2 failed, 36 passed, 38 total
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › roll (no chrome panel, card-corner pencil): a keyboard-opened form -> the new root's pencil has focus, with the keyboard ring
+  ● SC-518: the redrawn card is searched for the control that opened the form › a control that is no chrome item is found by its name; a nested card's same-named button is not taken
+applied M3
+M3 rc=1 Tests:       1 failed, 37 passed, 38 total
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › a mouse-opened form -> the pencil is focused WITHOUT the keyboard ring (no focusVisible)
+applied M4
+M4 rc=1 Tests:       1 failed, 37 passed, 38 total
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › roll (no chrome panel, card-corner pencil): a keyboard-opened form -> the new root's pencil has focus, with the keyboard ring
+applied M5
+M5 rc=1 Tests:       1 failed, 37 passed, 38 total
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › Save with nothing changed writes nothing and arms nothing: a later redraw takes no focus
+applied M6
+M6 rc=0 Tests:       38 passed, 38 total
+applied M7
+M7 rc=1 Tests:       3 failed, 35 passed, 38 total
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › hint scoped to the edited block: two same-kind blocks -> focus goes to the edited one, never its twin
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › twin redrawn only (the edited block's section is not rebuilt): the twin is never focused
+  ● SC-518: the redrawn card is searched for the control that opened the form › a control that is no chrome item is found by its name; a nested card's same-named button is not taken
+applied M8
+M8 rc=1 Tests:       1 failed, 37 passed, 38 total
+  ● SC-518: the redrawn card is searched for the control that opened the form › a control that is no chrome item is found by its name; a nested card's same-named button is not taken
+applied M9
+M9 rc=0 Tests:       38 passed, 38 total
+applied M10
+M10 rc=1 Tests:       1 failed, 37 passed, 38 total
+  ● D7 Task 9: "Edit definition" (recon delta 5) — reuses D9's openFormEditor, gated on authoringControls › SC-518: the form is handed the button that opened it, and whether the press came from the keyboard

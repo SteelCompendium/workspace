@@ -1,0 +1,46 @@
+file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1/head/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got object and undefined)
+    at findDriftedTokens (file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1/head/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1/head/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1/head/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got undefined and object)
+    at findDriftedTokens (file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1/head/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1/head/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1/head/visual-harness/obsidian-light-island.mjs:245
+			throw new TypeError(`findDriftedTokens: "${t}" is missing from ${!(t in oursMap) ? 'oursMap' : 'targetMap'}`);
+			      ^
+
+TypeError: findDriftedTokens: "--b" is missing from oursMap
+    at findDriftedTokens (file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1/head/visual-harness/obsidian-light-island.mjs:245:10)
+    at file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1/head/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+
+Test Suites: 1 skipped, 248 passed, 248 of 249 total
+Tests:       3 skipped, 6128 passed, 6131 total
+Snapshots:   3 passed, 3 total
+Time:        108.353 s, estimated 159 s
+Ran all test suites in 2 projects.

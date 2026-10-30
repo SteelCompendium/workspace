@@ -1,0 +1,35 @@
+import sys
+S = '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1'
+M = S + '/mut'
+FH = M + '/src/framework/chrome/focusHandoff.ts'
+FM = M + '/src/authoring/FormModal.ts'
+PL = M + '/src/framework/pipeline.ts'
+MUTS = {
+    # M1: Save never arms the hand-off
+    'M1': (FM, "if (this.opener && key !== null) armFormFocus(key, this.opener);", "/* M1 */"),
+    # M2: the claim ignores the opener's name (always the chrome edit item / card)
+    'M2': (FH, "b.getAttribute('aria-label') === req.label && b.closest('[data-dse-element]') === root", "false"),
+    # M3: the ring is always forced (mouse opens get focusVisible too)
+    'M3': (FH, "el.focus(ring ? HANDOFF_FOCUS : { preventScroll: true });", "el.focus(HANDOFF_FOCUS);"),
+    # M4: no claim for elements without a chrome panel
+    'M4': (PL, "if (!def.chrome) claimChromeFocus(() => host.blockKey(), root);", "/* M4 */"),
+    # M5: a no-op Save arms too
+    'M5': (FM, "const key = this.opener && body !== this.source ? this.cx.host.blockKey() : null;", "const key = this.opener ? this.cx.host.blockKey() : null;"),
+    # M6: a failed write does not disarm
+    'M6': (FM, "if (key !== null) settleChromeFocus(key, null, ok);", "if (key !== null) settleChromeFocus(key, null, true);"),
+    # M7: the claim ignores which block asked (any live request is taken)
+    'M7': (FH, "\t\tconst key = blockKey();\n\t\tconst req = liveRequest(key);", "\t\tconst key = [...requests.keys()][0] ?? blockKey();\n\t\tconst req = liveRequest(key);"),
+    # M8: a nested element's same-named button may be taken
+    'M8': (FH, "b.getAttribute('aria-label') === req.label && b.closest('[data-dse-element]') === root", "b.getAttribute('aria-label') === req.label"),
+    # M9: the opener is read too late (after the pending write flush) -> null currentTarget
+    'M9': (PL, "\t\t\t\tconst opener = formOpenerOf(evt);\n\t\t\t\tview.openAfterPendingWrite(() => openFormEditor(view, cx, def, currentBody(), this.deps.validation, opener));",
+           "\t\t\t\tview.openAfterPendingWrite(() => openFormEditor(view, cx, def, currentBody(), this.deps.validation, formOpenerOf(evt)));"),
+    # M10: the hero passes no opener
+    'M10': (M + '/src/elements/hero/view.ts', "onClick: (evt) => this.editDefinition(formOpenerOf(evt)),", "onClick: () => this.editDefinition(null),"),
+}
+k = sys.argv[1]
+f, old, new = MUTS[k]
+src = open(f).read()
+assert src.count(old) == 1, (k, src.count(old))
+open(f, 'w').write(src.replace(old, new))
+print('applied', k)

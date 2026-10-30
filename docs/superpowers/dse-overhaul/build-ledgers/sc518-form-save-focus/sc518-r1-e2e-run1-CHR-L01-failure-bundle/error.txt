@@ -1,0 +1,6 @@
+failure: [CHR-L01] a real mouse click on Collapse in Live Preview collapses the block, a real click on Expand expands it, and the editor cursor stays where it was
+
+Error: timed out waiting for the chrome panel to stay revealed with the pointer on Collapse
+    at async Object.waitFor (/home/scott/code/steelCompendium/worktrees/sc518-form-save-focus/draw-steel-elements/e2e/driver/page.ts:22:2)
+    at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc518-form-save-focus/draw-steel-elements/e2e/specs/stamina-bar/chrome-live-preview.e2e.ts:50:3)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc518-form-save-focus/draw-steel-elements/e2e/driver/session.ts:42:5)

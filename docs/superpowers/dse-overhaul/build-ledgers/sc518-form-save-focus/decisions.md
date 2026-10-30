@@ -1,0 +1,72 @@
+# SC-518 decisions ledger — Block edit form: after Save, keyboard focus lands on the page body instead of the card
+
+Owner: ticket-owner (Opus 5.5, posts with `--model opus-5.5`). Session be71a0a9-199f-4e14-967b-191935312b05.
+Worktree: /home/scott/code/steelCompendium/worktrees/sc518-form-save-focus (branch `sc518-form-save-focus` in every submodule). Cut at dse develop c558759, superproject b35d9eb.
+
+## Ticket facts (from the description, 2026-10-24)
+- Found by SC-509 r3 review LOW-1 in real Obsidian 1.15.0 (authoring controls on, Reading view).
+- Repro: "Tab to a card's pencil, press Enter, change a field, press Save."
+- What happens: "focus lands on `<body>`. Before SC-509 it went back to the pencil."
+- Why: "SC-509 makes Save redraw the card, so the old root that held the pencil is detached. `FormModal`'s close returns focus to that detached opener (`src/authoring/FormModal.ts` ~464-465; the write is in `src/framework/host/ReadingModeBlockHost.ts` ~578)."
+- Expected: "after Save, focus goes to the redrawn card's pencil (or the card), the same as SC-465/SC-495 do for disabled controls."
+- Reviewer's prescribed fix (sc509-r3-review-report.md LOW-1): "after a non-view write's rebuild, put focus back on the re-mounted card. For example, FormModal records the block key and its opener before closing, and the pipeline's mount focuses that key's root or pencil once if a pending restore hint matches. Alternatively accept and document it."
+
+## Dispatcher constraints (2026-10-24)
+- Authoring controls are experimental.
+- A new lifecycle scenario uses id G-S50.
+- Owner reports land-ready to the dispatcher and stops; the dispatcher lands.
+- Baselines (dse-verify CURRENT @ c558759): jest 6105 passed / 1 skipped / 247 of 248 suites · lifecycle 39/39 · e2e 124/124, 0 failed, 0 known-bug, coverage 87/87 · shots 592, 0 FAIL, button host-leak 114/684 · freeze 280/280 · parity 0/0/24.
+
+## Scott rulings
+(none yet)
+
+## Rounds
+- 2026-10-24 owner spec (r1): measure Reading / sidebar / Live Preview focus outcome on c558759 first; one shared mechanism restores focus to the redrawn card's opener control (fallback pencil, then card); keyboard ring shown, mouse as pre-SC-509 base; one-shot, block-scoped hint; Cancel unchanged; twins don't cross-talk. FormModal.ts/pipeline.ts may change (SC-494 landed). Live Preview: fix only if the shared mechanism covers it, else Follow-up.
+- 2026-10-24 r1 (impl, implementer B1, agent a7a6eb68144e5cfbd): dispatched, brief sc518-brief-r1-impl.md. Ticket Backlog -> Awaiting.
+- 2026-10-24 dispatcher: dse develop c558759 → ed368f6 (SC-513 landed, harness-only: shots host-leak sweeps mount click-revealed controls). New baselines at ed368f6: jest 6112 passed / 1 skipped / 247 of 248 · lifecycle 39/39 · e2e 124/124, 0 known-bug, coverage 87/87 · shots 592, 0 FAIL, button host-leak 145/870 (28-record boundary), modal 228, input 15 kinds/176, checkbox 7 kinds/116, prose 106 [212] · freeze 280/280 · parity 0/0/24. "Rebase onto origin/develop before reporting land-ready."
+- 2026-10-24 r1 DONE (B1, agent a7a6eb68144e5cfbd): rebased onto dse ed368f6. dse commits: red 958932e, fix 88ced3f, G-S50 6386a8f (HEAD). Superproject CHANGELOG 76d68d5.
+  - Measured on c558759 (real Obsidian, G-S50 as probe): focus on <body> after Save in Reading montage (kbd), Reading stamina (kbd), Reading montage (mouse), sidebar montage (kbd; sidebar redraws in place, same root, new chrome panel), Live Preview stamina (kbd). Cancel keeps focus + ring on the pencil.
+  - Fix: Save arms a one-shot, block-keyed focus request before the write; rebuilt card claims it (chromeless roll claims from the pipeline). Target: opener's accessible name, then Edit pencil, then card. Keyboard ring restored; mouse plain focus. Hero "Edit definition" passes its opener. No-op Save arms nothing; failed write disarms.
+  - Red: jest 7 failed / 6 pin tests pass on c558759; G-S50 fails on c558759 bundle (5 of 6 phases on body).
+  - Gates on 6386a8f: tsc/lint clean; jest 6130 / 1 skipped / 248 of 249; lifecycle 40/40; e2e 124/124, 0 known-bug, 87/87; shots 592, 0 FAIL, host-leak 145/870, modal 228, input 15/176, checkbox 7/116, prose 106 [212]; freeze 280/280; parity 0/0/24.
+  - e2e flake: first run (pre-rebase c558759 tree) 123/124, CHR-L01 timed out waiting for the panel reveal at load ~9; clean on re-runs.
+- 2026-10-24 owner rulings on r1 follow-ups:
+  - FU1 (mouse path not exercised in sidebar / Live Preview), FU2 (form opened during a pending in-card write, then Saved), FU3 (hero path not exercised in real Obsidian): FOLD into the r2 review as real-Obsidian probes. Ticket only if broken.
+  - FU4 dse-verify CURRENT (lifecycle 40, G-S50): dispatcher bookkeeping at landing; name it in the land-ready report.
+  - CHR-L01 load flake: FILED SC-529 (Backlog, Low, related SC-518/SC-502). Out of scope.
+- 2026-10-24 r2 (independent review, reviewer C1, fresh identity): dispatched, brief sc518-brief-r2-review.md.
+- 2026-10-24 ~18:10Z: reviewer C1 killed by session-limit 429 mid-probe; dispatcher resumed C1 after the reset (owner told not to resume or re-spawn). Owner waits for C1's notice or its report file sc518-r2-review-report.md.
+- 2026-10-24 r2 review (C1, agent a0ed66a88a622aea3): report sc518-r2-review-report.md written (gates section still pending at 18:25Z). Verdict NOT LAND-READY: 0 HIGH / 1 MEDIUM / 3 LOW / 4 INFO. Red/green re-run holds (jest 12 failed on base source; G-S50 fails on ed368f6 bundle 5 of 6). Real-Obsidian probes: FU1 (mouse sidebar / Live Preview) same as base; FU2 (pending in-card write) keyboard fixed, the click is kept; FU3 hero Reading kbd/mouse + LP kbd fixed. One-shot holds (tab away, click text, late outside edit, switch notes, close before redraw). Scroll unchanged. Note bytes equal base.
+- 2026-10-24 owner rulings on r2:
+  - MEDIUM-1 (identical twins, edit the UPPER one: Obsidian reuses the old upper section element at the twin's position, so the opener stays connected inside the lower card; modal close focuses it and the claim backs off; focus + ring end on the unedited twin): FOLD into r3. Implement C1's prescribed fix (record `opener` in the request; the claim may take focus from its own stale opener when `doc.activeElement === req.opener && !root.contains(req.opener)`), plus a jest case that keeps the old upper root connected in the twin's place, plus a G-S50 twin phase (identical twins, edit the upper one; assert focus is in the edited card, not the twin).
+  - LOW-1 (mouse: a pointer press never focuses the pencil; if focus was on <body>, HEAD's claim now forces focus onto the pencil and the hover panel stays revealed; pre-SC-509 and base leave <body>; Save and Cancel disagree): FOLD into r3. Implement C1's prescribed fix: `formOpenerOf` records `hadFocus` (activeElement === pressed at press time); `armFormFocus` arms only when `hadFocus`. G-S50 phase 2 then asserts focus is where it was before the open and the panel hides when the mouse leaves. Rationale: match pre-SC-509 mouse behaviour (owner spec said "Mouse: match what base did before SC-509").
+  - LOW-2 (SC-519 pending-write path untested; mutation M9 survives): FOLD into r3 as a jest case (in-card Increase still in its debounce, keyboard pencil press, field edit, Save, new pencil focused). G-S50 phase for it: not required.
+  - LOW-3 (failed-write disarm untested; mutation M6 survives): FOLD into r3 (failed-Save test rebuilds the block afterwards with focus on <body>; assert focus does not move).
+  - INFO-1 (some cases first committed in the fix commit; all red on base): DROP, red proof holds.
+  - INFO-2 (focusVisible option does not decide the ring in Obsidian's Chromium; G-S50 cannot catch M3, jest does): DROP, jest covers it.
+  - INFO-3 (form re-serializes counter/hero on Save, same as base): DROP, pre-existing Save semantics, out of scope.
+  - INFO-4 (code quality good): no action.
+- 2026-10-24 r3 (fix round, B1 resumed): brief sc518-brief-r3-fix.md. Scoped re-review of the r3 delta goes to C1 (did not author it).
+- 2026-10-24 C1 r2 completion relayed by the dispatcher (C1 was resumed by the dispatcher). Battery section filled; one jest timeout at initiative-default-keys is known flake SC-506. C1 noted B1's in-flight r3 work (4d5e27d + uncommitted lifecycle harness) appeared in the review tree during its run — that is the r3 fix round, unreviewed; goes to the r4 scoped re-review.
+- 2026-10-24 dispatcher: dse develop ed368f6 → 71437da (SC-479 landed: touches the Reading-view scroll pin previewScrollPin.ts, adds lifecycle G-S42). New baselines at 71437da: jest 6127 passed / 1 skipped / 247 of 248 · lifecycle 40/40 (full run ~14 min: run as two `--only` halves of 20 to fit a 600 s call) · e2e 124/124, 0 known-bug, 87/87 · shots 592, 0 FAIL, host-leak 145/870, modal 228, input 15/176, checkbox 7/116, prose 106 [212] · freeze 280/280 · parity 0/0/24. "Rebase onto origin/develop before reporting land-ready; your lifecycle count will be 40 + yours." → SC-518 expected lifecycle 41/41.
+  - Owner note: SC-479 changes the scroll pin; SC-518's focus() after the redraw could interact with it. r3 must re-check scroll stays put after a keyboard Save on the rebased HEAD (C1's tall-note probe: scrollTop unchanged).
+- 2026-10-24 19:04Z **Paused by Scott** (relayed by the dispatcher: "PAUSE requested by Scott … Do not dispatch any new worker and post nothing to Linear."). The dispatcher told B1 (agent a7a6eb68144e5cfbd) to stop at a safe point and write a "PAUSED — partial" report (expected at sc518-r3-fix-report.md).
+  - Resume point: worktree /home/scott/code/steelCompendium/worktrees/sc518-form-save-focus, plugin branch `sc518-form-save-focus`, already rebased onto dse 71437da. HEAD 9be397e at 19:04Z (clean tree): 49c7ccf fix, ace522b G-S50 (r1, rebased), 61f0956 r3 tests (red), 17553f7 r3 fix MEDIUM-1 + LOW-1, 1260447 G-S50 twin + mouse phases, 9be397e G-S50 tall-note scroll phase. Superproject CHANGELOG 76d68d5 (check its rebase state on resume).
+  - Left: B1 finishes r3 — verify mutation checks (M6, M9, stale-opener clause, hadFocus gate), check CHANGELOG wording, run the full battery on the rebased HEAD (expected: jest 6127 + new / 1 skipped / 248 of 249; lifecycle 41/41 in two `--only` halves; e2e 124/124 87/87; shots 592 host-leak 145/870; freeze 280/280; parity 0/0/24), write sc518-r3-fix-report.md. Then resume C1 (a0ed66a88a622aea3) with brief sc518-brief-r4-rereview.md (scoped re-review of 6386a8f-equivalent..HEAD + range-diff; incl. the tall-note scroll probe). Then land-ready report to the dispatcher (name FU4: dse-verify CURRENT lifecycle 41 + G-S50 line) and the Linear land-ready comment (`--model opus-5.5`).
+  - Resume method: SendMessage B1 first; on "No transcript found", dispatch a fresh orchestration:implementer from sc518-brief-r3-fix.md + this ledger + its partial report.
+- 2026-10-24 B1 PAUSED (partial) notice received; report sc518-r3-fix-report.md marked "PAUSED — partial". Tree clean, no processes. Base 71437da, HEAD 9be397e: r1 rebased 4e8d1a4 red / 49c7ccf fix / ace522b G-S50; r3 61f0956 tests / 17553f7 fix MEDIUM-1+LOW-1 / 1260447 G-S50 twin+mouse / 9be397e G-S50 tall-note. Superproject 76d68d5 + 259ff49 (CHANGELOG reworded: no mouse promise).
+  - Mutations each caught by exactly 1 of 41 cases: no stale-opener clause (MEDIUM-1 twin), no hadFocus gate (LOW-1 mouse), M9 (LOW-2), M6 (LOW-3). G-S50 fails on ed368f6 and 6386a8f bundles, passes on HEAD; tall note scrollTop 2794 -> 2794, card top 163.7 -> 163.7.
+  - Gates done on 9be397e: tsc/lint rc 0; jest pre-shots 6148 passed / 1 skipped / 248 of 249; lifecycle 20/20 + 21/21 = 41/41; e2e 124/124, 0 known-bug, 87/87.
+  - Left on resume: B1 runs shots, freeze, jest after shots, parity on 9be397e and finalizes the report (expected shots 592 0 FAIL host-leak 145/870 modal 228 input 15/176 checkbox 7/116 prose 106 [212]; freeze 280/280; parity 0/0/24). Then C1 r4 scoped re-review (brief sc518-brief-r4-rereview.md; delta = range-diff of r3 commits 61f0956..9be397e on 71437da). Then land-ready.
+  - B1 follow-up "tall-note scroll check has no negative control": owner ruling DROP (it pins equality within 1 px on a value that does not move on base either; C1 re-probes scroll in r4).
+  - Still paused. No dispatch, no Linear post.
+- 2026-10-29 Pause lifted by Scott (relayed by the dispatcher). The dispatcher resumed B1 (a7a6eb68144e5cfbd) to finish r3 (shots, freeze, jest after shots, parity on 9be397e, final report); owner told not to resume or re-spawn it. dse develop still 71437da. Owner waits for B1's notice (or the finalized sc518-r3-fix-report.md), then resumes C1 for r4.
+- 2026-10-29 r3 DONE (B1; notice relayed by the dispatcher): dse 9be397e on 71437da, superproject 259ff49. Full battery green on 9be397e: tsc/lint rc 0; jest 6148 / 1 skipped / 248 of 249; lifecycle 41/41 (halves 20+21); e2e 124/124, 0 known-bug, 87/87; shots 592, 0 FAIL, host-leak 145/870; freeze 280/280; parity 0/0/24.
+- 2026-10-29 r4 (scoped re-review, C1 resumed): brief sc518-brief-r4-rereview.md.
+- 2026-10-29 r4 scoped re-review DONE (C1): LAND-READY at dse 9be397e on 71437da, superproject 259ff49. Range-diff r1 commits equivalent (`=`,`=`,`!` context-only from G-S42). MEDIUM-1, LOW-1 (now matches pre-SC-509 a0365a4 exactly), LOW-2, LOW-3 confirmed fixed in real Obsidian + mutations (MA, MB, MD, M9, M6 caught). Keyboard paths, one-shot, scroll (1594->1594; G-S50 2794->2794) hold. 0 HIGH/MEDIUM/LOW, 2 INFO. C1 re-ran tsc/lint/jest (6145+3 location skips = 6148/1)/G-S50; spot-checked B1's post-9be397e logs.
+- 2026-10-29 owner rulings on r4:
+  - INFO-1 (lifecycle harness comments at :79/:84 still say "40 scenarios"; now 41): DROP — comment-only count that drifts with every scenario; not worth another battery cycle.
+  - INFO-2 (`!root.contains(req.opener)` redundant after the earlier return; harmless): DROP.
+  - Owner check: dse origin/develop still 71437da (branch fast-forwards). Superproject branch is cut at b35d9eb, behind origin/main ca6be094 → r5: B1 rebases the superproject's two CHANGELOG commits onto origin/main (keep every bullet), no pointer bump.
+- 2026-10-29 r5 DONE (B1): superproject rebased onto origin/main ca6be094: e3f0b10f (SC-518 bullet), adf89546 (r3 wording). CHANGELOG conflict with the SC-479 bullet resolved keeping both. Plugin 9be397e clean; pointer not bumped.
+- 2026-10-29 LAND-READY reported to the dispatcher: dse 9be397e on develop 71437da; superproject adf89546 on main ca6be094. Land-ready comment posted on SC-518.

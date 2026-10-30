@@ -1,0 +1,145 @@
+Info: New devbox available: 0.17.5 -> v0.18.4. Please run `devbox version update`.
+Info: Running script "npx" on /home/scott/code/steelCompendium/worktrees/sc518-form-save-focus/draw-steel-elements
+  console.warn
+    Draw Steel Elements: dropped a write to Note.md — the block was not found by its last known body.
+
+      33 |  */
+      34 | export function notifyDroppedWrite(sourcePath: string, noteName: string, now: number = Date.now()): boolean {
+    > 35 | 	console.warn(
+         | 	        ^
+      36 | 		`Draw Steel Elements: dropped a write to ${sourcePath} — the block was not found by its last known body.`,
+      37 | 	);
+      38 | 	const previous = lastShownAt.get(sourcePath);
+
+      at notifyDroppedWrite (src/framework/host/droppedWriteNotice.ts:35:10)
+      at ReadingModeBlockHost.replaceSource (src/framework/host/ReadingModeBlockHost.ts:641:34)
+      at FormModal.save (src/authoring/FormModal.ts:483:14)
+      at Object.<anonymous> (test/dom/framework/formSaveFocus.test.ts:317:3)
+
+FAIL dom test/dom/framework/formSaveFocus.test.ts (9.553 s)
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › montage (raw box): a keyboard-opened form -> the new root's pencil has focus, with the keyboard ring
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "button[Edit Montage Test tracker]"
+    Received: "<body>"
+
+      164 | 		expect(rootOf(ctx2)).not.toBe(rootOf(ctx1));
+      165 | 		expect(rootOf(ctx1).isConnected).toBe(false);
+    > 166 | 		expect(who(document.activeElement)).toBe(who(pencilOf(ctx2)));
+          | 		                                    ^
+      167 | 		expect(focused(pencilOf(ctx2))).toBe(true);
+      168 | 		expect(rootOf(ctx2).contains(document.activeElement)).toBe(true);
+      169 | 		const onNew = focusCalls.filter((f) => f.el === pencilOf(ctx2));
+
+      at test/dom/framework/formSaveFocus.test.ts:166:39
+
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › stamina-bar (typed fields): a keyboard-opened form -> the new root's pencil has focus, with the keyboard ring
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "button[Edit Stamina bar]"
+    Received: "<body>"
+
+      164 | 		expect(rootOf(ctx2)).not.toBe(rootOf(ctx1));
+      165 | 		expect(rootOf(ctx1).isConnected).toBe(false);
+    > 166 | 		expect(who(document.activeElement)).toBe(who(pencilOf(ctx2)));
+          | 		                                    ^
+      167 | 		expect(focused(pencilOf(ctx2))).toBe(true);
+      168 | 		expect(rootOf(ctx2).contains(document.activeElement)).toBe(true);
+      169 | 		const onNew = focusCalls.filter((f) => f.el === pencilOf(ctx2));
+
+      at test/dom/framework/formSaveFocus.test.ts:166:39
+
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › the new section already in the document when its processor runs: the pencil is focused as soon as it exists
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "button[Edit Montage Test tracker]"
+    Received: "<body>"
+
+      184 | 		await flush();
+      185 |
+    > 186 | 		expect(who(document.activeElement)).toBe(who(pencilOf(ctx2)));
+          | 		                                    ^
+      187 | 		expect(focused(pencilOf(ctx2))).toBe(true);
+      188 | 	});
+      189 |
+
+      at Object.<anonymous> (test/dom/framework/formSaveFocus.test.ts:186:39)
+
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › a mouse-opened form -> the pencil is focused WITHOUT the keyboard ring (no focusVisible)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "button[Edit Montage Test tracker]"
+    Received: "<body>"
+
+      198 | 		const ctx2 = await rebuild(c.alias, ctx1);
+      199 |
+    > 200 | 		expect(who(document.activeElement)).toBe(who(pencilOf(ctx2)));
+          | 		                                    ^
+      201 | 		expect(focused(pencilOf(ctx2))).toBe(true);
+      202 | 		const onNew = focusCalls.filter((f) => f.el === pencilOf(ctx2));
+      203 | 		expect(onNew).toEqual([{ el: pencilOf(ctx2), opts: { preventScroll: true } }]);
+
+      at Object.<anonymous> (test/dom/framework/formSaveFocus.test.ts:200:39)
+
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › hint scoped to the edited block: two same-kind blocks -> focus goes to the edited one, never its twin
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "button[Edit Counter]"
+    Received: "<body>"
+
+      220 | 		const a2 = await rebuild('ds-counter', a1, 0);
+      221 |
+    > 222 | 		expect(who(document.activeElement)).toBe(who(pencilOf(a2)));
+          | 		                                    ^
+      223 | 		expect(focused(pencilOf(a2))).toBe(true);
+      224 | 		expect(focused(pencilOf(b2))).toBe(false);
+      225 | 	});
+
+      at Object.<anonymous> (test/dom/framework/formSaveFocus.test.ts:222:39)
+
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › one-shot: after the focus landed and the user moved on, a later redraw of the block moves nothing
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "button[Edit Montage Test tracker]"
+    Received: "<body>"
+
+      250 | 		await flush();
+      251 | 		const ctx2 = await rebuild(c.alias, ctx1);
+    > 252 | 		expect(who(document.activeElement)).toBe(who(pencilOf(ctx2)));
+          | 		                                    ^
+      253 | 		expect(focused(pencilOf(ctx2))).toBe(true);
+      254 |
+      255 | 		const elsewhere = document.body.appendChild(document.createElement('button')); // the user Tabs to another control
+
+      at Object.<anonymous> (test/dom/framework/formSaveFocus.test.ts:252:39)
+
+  ● SC-518: sidebar -- Save from the panel's pencil hands focus to the panel's new pencil › a keyboard-opened form from the panel: after Save the redrawn panel's pencil has focus
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "button[Edit Counter]"
+    Received: "<body>"
+
+      396 | 		const newPencil = root2.querySelector<HTMLElement>(PENCIL)!;
+      397 | 		expect(newPencil).not.toBe(oldPencil);
+    > 398 | 		expect(who(document.activeElement)).toBe(who(newPencil));
+          | 		                                    ^
+      399 | 		expect(focused(newPencil)).toBe(true);
+      400 | 	});
+      401 | });
+
+      at Object.<anonymous> (test/dom/framework/formSaveFocus.test.ts:398:39)
+
+Test Suites: 1 failed, 1 total
+Tests:       7 failed, 6 passed, 13 total
+Snapshots:   0 total
+Time:        10.9 s
+Ran all test suites matching test/dom/framework/formSaveFocus.test.ts.
+Error: error running script "npx" in Devbox: exit status 1
+

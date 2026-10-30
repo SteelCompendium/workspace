@@ -1,0 +1,46 @@
+Info: New devbox available: 0.17.5 -> v0.18.4. Please run `devbox version update`.
+Info: Running script "npx" on /home/scott/code/steelCompendium/worktrees/sc518-form-save-focus/draw-steel-elements
+FAIL dom test/dom/framework/formSaveFocus.test.ts (7.435 s)
+  ● Console
+
+    console.warn
+      Draw Steel Elements: dropped a write to Note.md — the block was not found by its last known body.
+
+      33 |  */
+      34 | export function notifyDroppedWrite(sourcePath: string, noteName: string, now: number = Date.now()): boolean {
+    > 35 | 	console.warn(
+         | 	        ^
+      36 | 		`Draw Steel Elements: dropped a write to ${sourcePath} — the block was not found by its last known body.`,
+      37 | 	);
+      38 | 	const previous = lastShownAt.get(sourcePath);
+
+      at notifyDroppedWrite (src/framework/host/droppedWriteNotice.ts:35:10)
+      at ReadingModeBlockHost.replaceSource (src/framework/host/ReadingModeBlockHost.ts:641:34)
+      at FormModal.save (src/authoring/FormModal.ts:494:14)
+      at Object.<anonymous> (test/dom/framework/formSaveFocus.test.ts:406:3)
+
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › SC-518 r3 LOW-2: the form opened inside an in-card write's debounce (the opener is read at the click, before the flush) -> the new pencil is focused after Save
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "button[Edit Counter]"
+    Received: "<body>"
+
+      319 |
+      320 | 			expect(rootOf(ctx3)).not.toBe(root1);
+    > 321 | 			expect(who(document.activeElement)).toBe(who(pencilOf(ctx3)));
+          | 			                                    ^
+      322 | 			expect(focused(pencilOf(ctx3))).toBe(true);
+      323 | 			expect(focusCalls.filter((f) => f.el === pencilOf(ctx3))).toEqual([{ el: pencilOf(ctx3), opts: { preventScroll: true, focusVisible: true } }]);
+      324 | 			expect(app.vault.getContent('Note.md')).toContain('current_value: 4');
+
+      at Object.<anonymous> (test/dom/framework/formSaveFocus.test.ts:321:40)
+
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 failed, 40 passed, 41 total
+Snapshots:   0 total
+Time:        10.78 s
+Ran all test suites matching test/dom/framework/formSaveFocus.test.ts|test/dom/elements/heroSheet.test.ts.
+Error: error running script "npx" in Devbox: exit status 1
+

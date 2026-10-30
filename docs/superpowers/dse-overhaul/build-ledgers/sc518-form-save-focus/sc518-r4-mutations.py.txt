@@ -1,0 +1,27 @@
+import sys
+S = '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1'
+M = S + '/mut'
+FH = M + '/src/framework/chrome/focusHandoff.ts'
+FM = M + '/src/authoring/FormModal.ts'
+PL = M + '/src/framework/pipeline.ts'
+MUTS = {
+    # M6: a failed write does not disarm
+    'M6': (FM, "if (key !== null) settleChromeFocus(key, null, ok);", "if (key !== null) settleChromeFocus(key, null, true);"),
+    # M9: the opener is read after the pending-write flush
+    'M9': (PL, "\t\t\t\tconst opener = formOpenerOf(evt);\n\t\t\t\tview.openAfterPendingWrite(() => openFormEditor(view, cx, def, currentBody(), this.deps.validation, opener));",
+           "\t\t\t\tview.openAfterPendingWrite(() => openFormEditor(view, cx, def, currentBody(), this.deps.validation, formOpenerOf(evt)));"),
+    # MA: no stale-opener clause (MEDIUM-1)
+    'MA': (FH, "if (!focusIsFree(doc) && !staleOpener) return;", "if (!focusIsFree(doc)) return;"),
+    # MB: no hadFocus gate (LOW-1)
+    'MB': (FH, "if (!opener.hadFocus) return;", "/* MB */"),
+    # MC: stale-opener clause without the "not inside this root" guard
+    'MC': (FH, "doc.activeElement === req.opener && !root.contains(req.opener);", "doc.activeElement === req.opener;"),
+    # MD: hadFocus always true
+    'MD': (FH, "hadFocus: pressed.ownerDocument.activeElement === pressed }", "hadFocus: true }"),
+}
+k = sys.argv[1]
+f, old, new = MUTS[k]
+src = open(f).read()
+assert src.count(old) == 1, (k, src.count(old))
+open(f, 'w').write(src.replace(old, new))
+print('applied', k)

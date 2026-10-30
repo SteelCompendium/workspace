@@ -1,0 +1,87 @@
+
+> draw-steel-elements@7.0.0 parity
+> npm run harness:build && node visual-harness/parity/plugin-capture.mjs && node visual-harness/parity/diff.mjs
+
+
+> draw-steel-elements@7.0.0 harness:build
+> node visual-harness/esbuild.mjs
+
+
+  visual-harness/dist/harness.js     2.8mb ⚠️
+  visual-harness/dist/harness.css  419.4kb
+
+⚡ Done in 320ms
+sampled feature--dark (8 selectors)
+sampled statblock--dark (10 selectors)
+sampled featureblock--dark (6 selectors)
+sampled kit--dark (9 selectors)
+sampled condition--dark (2 selectors)
+sampled feature--light (8 selectors)
+sampled statblock--light (10 selectors)
+sampled featureblock--light (6 selectors)
+sampled kit--light (9 selectors)
+sampled condition--light (2 selectors)
+wrote plugin-inventory.json
+# Steel parity report
+
+Site baseline captured: 2026-09-25T21:11:35.775Z
+Plugin sampled: 2026-10-24T16:33:22.838Z
+
+**0 gap(s), 0 undeclared warning(s), 24 declared deferral(s).**
+
+Gate contract: exit 0 iff 0 gaps AND 0 undeclared warnings. A declared deferral is an
+explicit entry in selector-map.json `declaredDeferrals` citing its FOLLOWUPS/ticket number.
+
+Schemes compared: dark, light.
+
+## Declared deferrals — filed, rationale below (24)
+
+- **DECLARED** `section-tag` [dark] (.sc-ability__section-head .tag → .dse-section__title): font-size miss: site 18px, plugin 15px (tol 1.5px)
+  - _declared:_ SC-235 -- DELIBERATE divergence, option B (Scott's ruling, comment 00d1a795, 2026-09-28). The site's Petrona has no small-caps glyphs at all, so the browser SYNTHESIZES small caps by shrinking capitals to 70% (its computed 18px renders as 8px of ink); the plugin's Source Serif 4 Bold has REAL smcp glyphs, which render taller per unit font-size than a synthesized cap does. Option A (18px, matching the site's COMPUTED value) put real smcp glyphs at a size chosen for fake ones, rendering about 25% taller than the site. 15px of real smcp renders the site's own 8px of ink -- this pair's computed font-size now targets the RENDERED match, not the computed one, and 15px vs the site's 18px is the deliberate, measured consequence, not a miss to close.
+- **DECLARED** `section-tag` [dark] (.sc-ability__section-head .tag → .dse-section__title): line-height miss: site 30.6px, plugin 25.5px (tol 1.5px)
+  - _declared:_ SC-235 -- a pure CONSEQUENCE of the :font-size entry above, not an independent miss. Both sides run the same 1.7 ratio (site 1.7 x 18px = 30.6px; plugin 1.7 x 15px = 25.5px, inherited from the Plan 21 card-root rule). It is listed separately only because the gate reports per rule.
+- **DECLARED** `pr-chars` [dark] (.sc-ability__pr-head .chars → .dse-pr__head): ink miss: site color=rgb(205, 209, 212), plugin color=rgba(220, 226, 230, 0.95) (max channel 18.000 > 2 FIRES; alpha 0.050 > 0.03 FIRES)
+  - _declared:_ FOLLOWUPS #40 / SC-110 -- DELIBERATE divergence, not a measurement artifact. The site splits its power-roll caption into .pre (dim metal, 'Power Roll +') and .chars (the bright roll readout); the plugin's .dse-pr__head is ONE node carrying the whole caption, painted at var(--dse-heading) so the line reads as a heading. That is brighter than the site's .chars in dark (220,226,230 @.95 vs 205,209,212) and darker in light (26,29,32 vs 95,104,109) -- more emphasis, both schemes, by design. Matching .chars exactly would de-emphasise the plugin's only power-roll heading. Changing it is a PIXEL decision for Scott, not a CSS catch-up.
+- **DECLARED** `statblock-wrap` [dark] (.sb-wrap → [data-dse-element='statblock']): margin-top miss: site 34px, plugin 8px (tol 1.5px)
+  - _declared:_ FOLLOWUPS #39 -- the site's statblock block rhythm is 34px (.sb-wrap margin: 1.7rem auto at the 20px rem base); the plugin's host carries the unscoped base's 0.5em = 8px. SC-110 fixed the half of #39 the gate owned (this pair did not exist, so the site's block margin was invisible to the contract); the residual 34-vs-8 is the real miss #39 recorded and it is a PIXEL decision. Plan 21 Task 2 set the precedent for closing it (it ported the site's 24px .sc-ability margin onto the feature host, Steel-scoped and screen-only, styles-source.css ~3497), but 26px of new air around every statblock and featureblock in an Obsidian note is Scott's call, not a gate ticket's.
+- **DECLARED** `statblock-wrap` [dark] (.sb-wrap → [data-dse-element='statblock']): margin-bottom miss: site 34px, plugin 8px (tol 1.5px)
+  - _declared:_ FOLLOWUPS #39 -- same finding as statblock-wrap:margin-top (site 34px, plugin 8px); listed separately only because the gate reports per rule.
+- **DECLARED** `featureblock-wrap` [dark] (.fb-wrap → [data-dse-element='featureblock']): margin-top miss: site 34px, plugin 8px (tol 1.5px)
+  - _declared:_ FOLLOWUPS #39 -- same finding as statblock-wrap:margin-top, on the featureblock family (site .fb-wrap margin: 1.7rem auto = 34px, steel-featureblock.css:41; plugin host 0.5em = 8px). This is the pair that replaces the old `featureblock:margin-*` deferral, which compared the site's margin:0 inner PLATE against the host and so demanded a shrink to 0 -- the opposite of the real miss.
+- **DECLARED** `featureblock-wrap` [dark] (.fb-wrap → [data-dse-element='featureblock']): margin-bottom miss: site 34px, plugin 8px (tol 1.5px)
+  - _declared:_ FOLLOWUPS #39 -- same finding as featureblock-wrap:margin-top (site 34px, plugin 8px); listed separately only because the gate reports per rule.
+- **DECLARED** `name-generic` [dark] (.sc-kit__head .sc-head__left-primary → [data-dse-element='kit'] > .dse-card > .dse-head > .dse-head__primary--left): ink miss: site color=rgba(220, 226, 230, 0.88), plugin color=rgba(220, 226, 230, 0.95) (max channel 0.000 ≤ 2; alpha 0.070 > 0.03 FIRES)
+  - _declared:_ SC-368 -- newly VISIBLE now that a name pair exists at all (no pair mapped .dse-head__primary--left before SC-232), not introduced by SC-232's font-size/line-height rule (color was never touched). The site's generic name (kit/trait/ancestry/class/rule heads) paints at the page's default body ink (rgba(220,226,230,.88)); the plugin paints every family's name at one shared --dse-heading accent (rgba(220,226,230,.95)) -- alpha only, off by 0.07 (tol 0.03). Out of SC-232's scope (a color decision, not the type-scale this ticket's table asks for). SC-367 is sizes only (crest/eyebrow/right-rail); this ink finding is filed separately as SC-368 (owner ruling, round 2).
+- **DECLARED** `name-ability` [dark] (.sc-ability > .sc-head .sc-head__left-primary → [data-dse-element='feature'] > .dse-feature:not([data-dse-act='trait']) > .dse-head > .dse-head__primary--left): ink miss: site color=rgb(205, 209, 212), plugin color=rgba(220, 226, 230, 0.95) (max channel 18.000 > 2 FIRES; alpha 0.050 > 0.03 FIRES)
+  - _declared:_ SC-368 -- same finding as name-generic:ink[dark], the family-scoped case: the site paints the ability/statblock/featureblock name at a dimmer --sc-steel-lighter accent (rgb(205,209,212), opaque) than the plugin's --dse-heading (rgba(220,226,230,.95)) -- both channel (18) and alpha (0.05) exceed tolerance. Not introduced by SC-232 (color untouched); newly visible because no pair mapped the name node before this ticket.
+- **DECLARED** `name-statblock` [dark] (.sb__head .sc-head__left-primary → .dse-sb > .dse-head > .dse-head__primary--left): ink miss: site color=rgb(205, 209, 212), plugin color=rgba(220, 226, 230, 0.95) (max channel 18.000 > 2 FIRES; alpha 0.050 > 0.03 FIRES)
+  - _declared:_ SC-368 -- same finding as name-ability:ink[dark] (statblock band, site rgb(205,209,212) vs plugin rgba(220,226,230,.95)).
+- **DECLARED** `name-featureblock` [dark] (.fb__head .sc-head__left-primary → .dse-fb > .dse-head > .dse-head__primary--left): ink miss: site color=rgb(205, 209, 212), plugin color=rgba(220, 226, 230, 0.95) (max channel 18.000 > 2 FIRES; alpha 0.050 > 0.03 FIRES)
+  - _declared:_ SC-368 -- same finding as name-ability:ink[dark] (featureblock band, site rgb(205,209,212) vs plugin rgba(220,226,230,.95)).
+- **DECLARED** `name-kit-signature` [dark] (.sc-embed .sc-ability > .sc-head .sc-head__left-primary → [data-dse-element='kit'] .dse-card__band .dse-feature > .dse-head > .dse-head__primary--left): ink miss: site color=rgb(205, 209, 212), plugin color=rgba(220, 226, 230, 0.95) (max channel 18.000 > 2 FIRES; alpha 0.050 > 0.03 FIRES)
+  - _declared:_ SC-368 -- same finding as name-ability:ink[dark] (the kit's inline signature ability is the ability-card family; site rgb(205,209,212) vs plugin rgba(220,226,230,.95)). Added when round-3 review MEDIUM-1's fix mapped this node for the first time.
+- **DECLARED** `section-tag` [light] (.sc-ability__section-head .tag → .dse-section__title): font-size miss: site 18px, plugin 15px (tol 1.5px)
+  - _declared:_ SC-235 -- DELIBERATE divergence, option B (Scott's ruling, comment 00d1a795, 2026-09-28). The site's Petrona has no small-caps glyphs at all, so the browser SYNTHESIZES small caps by shrinking capitals to 70% (its computed 18px renders as 8px of ink); the plugin's Source Serif 4 Bold has REAL smcp glyphs, which render taller per unit font-size than a synthesized cap does. Option A (18px, matching the site's COMPUTED value) put real smcp glyphs at a size chosen for fake ones, rendering about 25% taller than the site. 15px of real smcp renders the site's own 8px of ink -- this pair's computed font-size now targets the RENDERED match, not the computed one, and 15px vs the site's 18px is the deliberate, measured consequence, not a miss to close.
+- **DECLARED** `section-tag` [light] (.sc-ability__section-head .tag → .dse-section__title): line-height miss: site 30.6px, plugin 25.5px (tol 1.5px)
+  - _declared:_ SC-235 -- a pure CONSEQUENCE of the :font-size entry above, not an independent miss. Both sides run the same 1.7 ratio (site 1.7 x 18px = 30.6px; plugin 1.7 x 15px = 25.5px, inherited from the Plan 21 card-root rule). It is listed separately only because the gate reports per rule.
+- **DECLARED** `pr-chars` [light] (.sc-ability__pr-head .chars → .dse-pr__head): ink miss: site color=rgb(95, 104, 109), plugin color=rgb(26, 29, 32) (max channel 77.000 > 2 FIRES; alpha 0.000 ≤ 0.03)
+  - _declared:_ FOLLOWUPS #40 / SC-110 -- DELIBERATE divergence, not a measurement artifact. The site splits its power-roll caption into .pre (dim metal, 'Power Roll +') and .chars (the bright roll readout); the plugin's .dse-pr__head is ONE node carrying the whole caption, painted at var(--dse-heading) so the line reads as a heading. That is brighter than the site's .chars in dark (220,226,230 @.95 vs 205,209,212) and darker in light (26,29,32 vs 95,104,109) -- more emphasis, both schemes, by design. Matching .chars exactly would de-emphasise the plugin's only power-roll heading. Changing it is a PIXEL decision for Scott, not a CSS catch-up.
+- **DECLARED** `statblock-wrap` [light] (.sb-wrap → [data-dse-element='statblock']): margin-top miss: site 34px, plugin 8px (tol 1.5px)
+  - _declared:_ FOLLOWUPS #39 -- the site's statblock block rhythm is 34px (.sb-wrap margin: 1.7rem auto at the 20px rem base); the plugin's host carries the unscoped base's 0.5em = 8px. SC-110 fixed the half of #39 the gate owned (this pair did not exist, so the site's block margin was invisible to the contract); the residual 34-vs-8 is the real miss #39 recorded and it is a PIXEL decision. Plan 21 Task 2 set the precedent for closing it (it ported the site's 24px .sc-ability margin onto the feature host, Steel-scoped and screen-only, styles-source.css ~3497), but 26px of new air around every statblock and featureblock in an Obsidian note is Scott's call, not a gate ticket's.
+- **DECLARED** `statblock-wrap` [light] (.sb-wrap → [data-dse-element='statblock']): margin-bottom miss: site 34px, plugin 8px (tol 1.5px)
+  - _declared:_ FOLLOWUPS #39 -- same finding as statblock-wrap:margin-top (site 34px, plugin 8px); listed separately only because the gate reports per rule.
+- **DECLARED** `featureblock-wrap` [light] (.fb-wrap → [data-dse-element='featureblock']): margin-top miss: site 34px, plugin 8px (tol 1.5px)
+  - _declared:_ FOLLOWUPS #39 -- same finding as statblock-wrap:margin-top, on the featureblock family (site .fb-wrap margin: 1.7rem auto = 34px, steel-featureblock.css:41; plugin host 0.5em = 8px). This is the pair that replaces the old `featureblock:margin-*` deferral, which compared the site's margin:0 inner PLATE against the host and so demanded a shrink to 0 -- the opposite of the real miss.
+- **DECLARED** `featureblock-wrap` [light] (.fb-wrap → [data-dse-element='featureblock']): margin-bottom miss: site 34px, plugin 8px (tol 1.5px)
+  - _declared:_ FOLLOWUPS #39 -- same finding as featureblock-wrap:margin-top (site 34px, plugin 8px); listed separately only because the gate reports per rule.
+- **DECLARED** `name-generic` [light] (.sc-kit__head .sc-head__left-primary → [data-dse-element='kit'] > .dse-card > .dse-head > .dse-head__primary--left): ink miss: site color=rgb(44, 46, 48), plugin color=rgb(26, 29, 32) (max channel 18.000 > 2 FIRES; alpha 0.000 ≤ 0.03)
+  - _declared:_ SC-368 -- the light-scheme twin of name-generic:ink[dark]: site rgb(44,46,48) (page default body ink) vs plugin rgb(26,29,32) (the shared --dse-heading accent, channel delta 18 > tol 2).
+- **DECLARED** `name-ability` [light] (.sc-ability > .sc-head .sc-head__left-primary → [data-dse-element='feature'] > .dse-feature:not([data-dse-act='trait']) > .dse-head > .dse-head__primary--left): ink miss: site color=rgb(95, 104, 109), plugin color=rgb(26, 29, 32) (max channel 77.000 > 2 FIRES; alpha 0.000 ≤ 0.03)
+  - _declared:_ SC-368 -- the light-scheme twin of name-ability:ink[dark]: site rgb(95,104,109) (--sc-steel-lighter) vs plugin rgb(26,29,32) (channel delta 77 > tol 2).
+- **DECLARED** `name-statblock` [light] (.sb__head .sc-head__left-primary → .dse-sb > .dse-head > .dse-head__primary--left): ink miss: site color=rgb(95, 104, 109), plugin color=rgb(26, 29, 32) (max channel 77.000 > 2 FIRES; alpha 0.000 ≤ 0.03)
+  - _declared:_ SC-368 -- same finding as name-ability:ink[light] (statblock band, site rgb(95,104,109) vs plugin rgb(26,29,32)).
+- **DECLARED** `name-featureblock` [light] (.fb__head .sc-head__left-primary → .dse-fb > .dse-head > .dse-head__primary--left): ink miss: site color=rgb(95, 104, 109), plugin color=rgb(26, 29, 32) (max channel 77.000 > 2 FIRES; alpha 0.000 ≤ 0.03)
+  - _declared:_ SC-368 -- same finding as name-ability:ink[light] (featureblock band, site rgb(95,104,109) vs plugin rgb(26,29,32)).
+- **DECLARED** `name-kit-signature` [light] (.sc-embed .sc-ability > .sc-head .sc-head__left-primary → [data-dse-element='kit'] .dse-card__band .dse-feature > .dse-head > .dse-head__primary--left): ink miss: site color=rgb(95, 104, 109), plugin color=rgb(26, 29, 32) (max channel 77.000 > 2 FIRES; alpha 0.000 ≤ 0.03)
+  - _declared:_ SC-368 -- the light-scheme twin (site rgb(95,104,109) vs plugin rgb(26,29,32)).
+

@@ -1,0 +1,23 @@
+1:  958932e = 1:  4e8d1a4 test(SC-518): after a form Save redraws the card, focus goes to the redrawn card's Edit pencil (red against c558759: 7 fail, 6 pin tests pass)
+2:  88ced3f = 2:  49c7ccf fix(SC-518): after a block edit form's Save redraws the card, focus goes to the redrawn card's Edit pencil
+3:  6386a8f ! 3:  ace522b test(SC-518): lifecycle G-S50 - focus is on the redrawn card's Edit pencil after a form Save (Reading view, sidebar, Live Preview; keyboard, mouse, Cancel)
+    @@ Commit message
+     
+      ## visual-harness/obsidian-lifecycle.mjs ##
+     @@
+    - // a real click on the collapsed one-liner's Expand expands the block, and a real click on `</>` still enters the block's source.
+    - // (r3) CodeMirror's height for the widget equals its on-screen height for a counter, a feature (margins 24px) and a statblock (8px).
+    + // BELOW the embed does not move when the write changes the embed's height (phase (e): adding a hero), nor does the text of a reader parked
+    + // INSIDE a tall embed below its tracker (phase (f): adding a hero).
+      //
+     +// SC-518 appends G-S50 (40 scenarios in all; the id was assigned by the dispatcher): after the block edit form's Save redraws the card, keyboard focus
+     +// is on the redrawn card's Edit pencil (it fell to <body> once SC-509 made Save redraw). Real keys (CDP Tab / Enter): Tab to the pencil, Enter,
+    @@ visual-harness/obsidian-lifecycle.mjs
+      //        node visual-harness/obsidian-lifecycle.mjs [--only=G-S7a,G-S6a]
+      // Env:   XVFB_BIN, DSE_LIFECYCLE_BIN (default /usr/bin/obsidian), DSE_LIFECYCLE_PORT (9262),
+     @@ visual-harness/obsidian-lifecycle.mjs: const SCENARIOS = [
+    - 			return `Live Preview, real mouse: ${facts.join('; ')}; no page errors`;
+    + 			return out.join('; ');
+      		},
+      	},
+     +	{

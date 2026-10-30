@@ -1,0 +1,23 @@
+Info: New devbox available: 0.17.5 -> v0.18.4. Please run `devbox version update`.
+Info: Running script "npx" on /home/scott/code/steelCompendium/worktrees/sc518-form-save-focus/draw-steel-elements
+  console.warn
+    Draw Steel Elements: dropped a write to Note.md — the block was not found by its last known body.
+
+      33 |  */
+      34 | export function notifyDroppedWrite(sourcePath: string, noteName: string, now: number = Date.now()): boolean {
+    > 35 | 	console.warn(
+         | 	        ^
+      36 | 		`Draw Steel Elements: dropped a write to ${sourcePath} — the block was not found by its last known body.`,
+      37 | 	);
+      38 | 	const previous = lastShownAt.get(sourcePath);
+
+      at notifyDroppedWrite (src/framework/host/droppedWriteNotice.ts:35:10)
+      at ReadingModeBlockHost.replaceSource (src/framework/host/ReadingModeBlockHost.ts:641:34)
+      at FormModal.save (src/authoring/FormModal.ts:493:14)
+      at Object.<anonymous> (test/dom/framework/formSaveFocus.test.ts:326:3)
+
+Test Suites: 1 passed, 1 total
+Tests:       17 passed, 17 total
+Snapshots:   0 total
+Time:        2.668 s, estimated 3 s
+Ran all test suites matching test/dom/framework/formSaveFocus.test.ts.

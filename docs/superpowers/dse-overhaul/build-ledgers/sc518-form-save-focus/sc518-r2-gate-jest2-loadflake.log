@@ -1,0 +1,82 @@
+file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1/head/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got object and undefined)
+    at findDriftedTokens (file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1/head/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1/head/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1/head/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got undefined and object)
+    at findDriftedTokens (file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1/head/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1/head/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1/head/visual-harness/obsidian-light-island.mjs:245
+			throw new TypeError(`findDriftedTokens: "${t}" is missing from ${!(t in oursMap) ? 'oursMap' : 'targetMap'}`);
+			      ^
+
+TypeError: findDriftedTokens: "--b" is missing from oursMap
+    at findDriftedTokens (file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1/head/visual-harness/obsidian-light-island.mjs:245:10)
+    at file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1/head/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+FAIL dom test/dom/elements/initiative-default-keys.test.ts (58.643 s)
+  ● SC-485: the squad pool unit (pool + captain-bonus trio are written all-or-nothing) › pool back at its parse value but the captain trio changed: promoting a captain after a pool hit still writes the whole unit, and a reload reads what the user saw
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      457 |         squad_role: attached`;
+      458 |
+    > 459 | 	test('pool back at its parse value but the captain trio changed: promoting a captain after a pool hit still writes the whole unit, and a reload reads what the user saw', async () => {
+          | 	^
+      460 | 		const live = await drive(ATTACHED_ONLY, async (root) => {
+      461 | 			// Pool 12, 4 damage + one dead minion = 8 with 2 alive; promoting the Ogre then folds in 2 x 2 = 4: 12 again,
+      462 | 			// the parse-time value, while the trio (max, active, n) is new.
+
+      at test/dom/elements/initiative-default-keys.test.ts:459:2
+      at Object.<anonymous> (test/dom/elements/initiative-default-keys.test.ts:346:1)
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+
+Summary of all failing tests
+FAIL test/dom/elements/initiative-default-keys.test.ts (58.643 s)
+  ● SC-485: the squad pool unit (pool + captain-bonus trio are written all-or-nothing) › pool back at its parse value but the captain trio changed: promoting a captain after a pool hit still writes the whole unit, and a reload reads what the user saw
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      457 |         squad_role: attached`;
+      458 |
+    > 459 | 	test('pool back at its parse value but the captain trio changed: promoting a captain after a pool hit still writes the whole unit, and a reload reads what the user saw', async () => {
+          | 	^
+      460 | 		const live = await drive(ATTACHED_ONLY, async (root) => {
+      461 | 			// Pool 12, 4 damage + one dead minion = 8 with 2 alive; promoting the Ogre then folds in 2 x 2 = 4: 12 again,
+      462 | 			// the parse-time value, while the trio (max, active, n) is new.
+
+      at test/dom/elements/initiative-default-keys.test.ts:459:2
+      at Object.<anonymous> (test/dom/elements/initiative-default-keys.test.ts:346:1)
+
+
+Test Suites: 1 failed, 1 skipped, 247 passed, 248 of 249 total
+Tests:       1 failed, 3 skipped, 6127 passed, 6131 total
+Snapshots:   3 passed, 3 total
+Time:        160.873 s
+Ran all test suites in 2 projects.

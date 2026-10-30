@@ -1,0 +1,223 @@
+FAIL dom test/dom/framework/formSaveFocus.test.ts
+  ● Console
+
+    console.warn
+      Draw Steel Elements: dropped a write to Note.md — the block was not found by its last known body.
+
+      33 |  */
+      34 | export function notifyDroppedWrite(sourcePath: string, noteName: string, now: number = Date.now()): boolean {
+    > 35 | 	console.warn(
+         | 	        ^
+      36 | 		`Draw Steel Elements: dropped a write to ${sourcePath} — the block was not found by its last known body.`,
+      37 | 	);
+      38 | 	const previous = lastShownAt.get(sourcePath);
+
+      at notifyDroppedWrite (src/framework/host/droppedWriteNotice.ts:35:10)
+      at ReadingModeBlockHost.replaceSource (src/framework/host/ReadingModeBlockHost.ts:641:34)
+      at FormModal.save (src/authoring/FormModal.ts:483:14)
+      at Object.<anonymous> (test/dom/framework/formSaveFocus.test.ts:326:3)
+
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › montage (raw box): a keyboard-opened form -> the new root's pencil has focus, with the keyboard ring
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "button[Edit Montage Test tracker]"
+    Received: "<body>"
+
+      173 | 		expect(rootOf(ctx2)).not.toBe(rootOf(ctx1));
+      174 | 		expect(rootOf(ctx1).isConnected).toBe(false);
+    > 175 | 		expect(who(document.activeElement)).toBe(who(pencilOf(ctx2)));
+          | 		                                    ^
+      176 | 		expect(focused(pencilOf(ctx2))).toBe(true);
+      177 | 		expect(rootOf(ctx2).contains(document.activeElement)).toBe(true);
+      178 | 		const onNew = focusCalls.filter((f) => f.el === pencilOf(ctx2));
+
+      at test/dom/framework/formSaveFocus.test.ts:175:39
+
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › stamina-bar (typed fields): a keyboard-opened form -> the new root's pencil has focus, with the keyboard ring
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "button[Edit Stamina bar]"
+    Received: "<body>"
+
+      173 | 		expect(rootOf(ctx2)).not.toBe(rootOf(ctx1));
+      174 | 		expect(rootOf(ctx1).isConnected).toBe(false);
+    > 175 | 		expect(who(document.activeElement)).toBe(who(pencilOf(ctx2)));
+          | 		                                    ^
+      176 | 		expect(focused(pencilOf(ctx2))).toBe(true);
+      177 | 		expect(rootOf(ctx2).contains(document.activeElement)).toBe(true);
+      178 | 		const onNew = focusCalls.filter((f) => f.el === pencilOf(ctx2));
+
+      at test/dom/framework/formSaveFocus.test.ts:175:39
+
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › roll (no chrome panel, card-corner pencil): a keyboard-opened form -> the new root's pencil has focus, with the keyboard ring
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "button[Edit Roll]"
+    Received: "<body>"
+
+      173 | 		expect(rootOf(ctx2)).not.toBe(rootOf(ctx1));
+      174 | 		expect(rootOf(ctx1).isConnected).toBe(false);
+    > 175 | 		expect(who(document.activeElement)).toBe(who(pencilOf(ctx2)));
+          | 		                                    ^
+      176 | 		expect(focused(pencilOf(ctx2))).toBe(true);
+      177 | 		expect(rootOf(ctx2).contains(document.activeElement)).toBe(true);
+      178 | 		const onNew = focusCalls.filter((f) => f.el === pencilOf(ctx2));
+
+      at test/dom/framework/formSaveFocus.test.ts:175:39
+
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › the new section already in the document when its processor runs: the pencil is focused as soon as it exists
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "button[Edit Montage Test tracker]"
+    Received: "<body>"
+
+      193 | 		await flush();
+      194 |
+    > 195 | 		expect(who(document.activeElement)).toBe(who(pencilOf(ctx2)));
+          | 		                                    ^
+      196 | 		expect(focused(pencilOf(ctx2))).toBe(true);
+      197 | 	});
+      198 |
+
+      at Object.<anonymous> (test/dom/framework/formSaveFocus.test.ts:195:39)
+
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › a mouse-opened form -> the pencil is focused WITHOUT the keyboard ring (no focusVisible)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "button[Edit Montage Test tracker]"
+    Received: "<body>"
+
+      207 | 		const ctx2 = await rebuild(c.alias, ctx1);
+      208 |
+    > 209 | 		expect(who(document.activeElement)).toBe(who(pencilOf(ctx2)));
+          | 		                                    ^
+      210 | 		expect(focused(pencilOf(ctx2))).toBe(true);
+      211 | 		const onNew = focusCalls.filter((f) => f.el === pencilOf(ctx2));
+      212 | 		expect(onNew).toEqual([{ el: pencilOf(ctx2), opts: { preventScroll: true } }]);
+
+      at Object.<anonymous> (test/dom/framework/formSaveFocus.test.ts:209:39)
+
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › hint scoped to the edited block: two same-kind blocks -> focus goes to the edited one, never its twin
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "button[Edit Counter]"
+    Received: "<body>"
+
+      229 | 		const a2 = await rebuild('ds-counter', a1, 0);
+      230 |
+    > 231 | 		expect(who(document.activeElement)).toBe(who(pencilOf(a2)));
+          | 		                                    ^
+      232 | 		expect(focused(pencilOf(a2))).toBe(true);
+      233 | 		expect(focused(pencilOf(b2))).toBe(false);
+      234 | 	});
+
+      at Object.<anonymous> (test/dom/framework/formSaveFocus.test.ts:231:39)
+
+  ● SC-518: Reading view -- Save hands focus to the redrawn card's Edit pencil › one-shot: after the focus landed and the user moved on, a later redraw of the block moves nothing
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "button[Edit Montage Test tracker]"
+    Received: "<body>"
+
+      259 | 		await flush();
+      260 | 		const ctx2 = await rebuild(c.alias, ctx1);
+    > 261 | 		expect(who(document.activeElement)).toBe(who(pencilOf(ctx2)));
+          | 		                                    ^
+      262 | 		expect(focused(pencilOf(ctx2))).toBe(true);
+      263 |
+      264 | 		const elsewhere = document.body.appendChild(document.createElement('button')); // the user Tabs to another control
+
+      at Object.<anonymous> (test/dom/framework/formSaveFocus.test.ts:261:39)
+
+  ● SC-518: sidebar -- Save from the panel's pencil hands focus to the panel's new pencil › a keyboard-opened form from the panel: after Save the redrawn panel's pencil has focus
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "button[Edit Counter]"
+    Received: "<body>"
+
+      405 | 		const newPencil = root2.querySelector<HTMLElement>(PENCIL)!;
+      406 | 		expect(newPencil).not.toBe(oldPencil);
+    > 407 | 		expect(who(document.activeElement)).toBe(who(newPencil));
+          | 		                                    ^
+      408 | 		expect(focused(newPencil)).toBe(true);
+      409 | 	});
+      410 | });
+
+      at Object.<anonymous> (test/dom/framework/formSaveFocus.test.ts:407:39)
+
+  ● SC-518: the redrawn card is searched for the control that opened the form › a control that is no chrome item is found by its name; a nested card's same-named button is not taken
+
+    TypeError: (0 , focusHandoff_1.armFormFocus) is not a function
+
+      430 | 	const arm = (keyboard: boolean): void => {
+      431 | 		const old = el(document.body, 'button', { 'aria-label': 'Edit definition' });
+    > 432 | 		armFormFocus(KEY, { pressed: old, keyboard });
+          | 		            ^
+      433 | 		old.remove();
+      434 | 	};
+      435 | 	afterEach(() => disarmChromeFocus(KEY));
+
+      at arm (test/dom/framework/formSaveFocus.test.ts:432:15)
+      at Object.<anonymous> (test/dom/framework/formSaveFocus.test.ts:438:3)
+
+  ● SC-518: the redrawn card is searched for the control that opened the form › its replacement is gone (the card has only the Edit pencil): the pencil takes focus
+
+    TypeError: (0 , focusHandoff_1.armFormFocus) is not a function
+
+      430 | 	const arm = (keyboard: boolean): void => {
+      431 | 		const old = el(document.body, 'button', { 'aria-label': 'Edit definition' });
+    > 432 | 		armFormFocus(KEY, { pressed: old, keyboard });
+          | 		            ^
+      433 | 		old.remove();
+      434 | 	};
+      435 | 	afterEach(() => disarmChromeFocus(KEY));
+
+      at arm (test/dom/framework/formSaveFocus.test.ts:432:15)
+      at Object.<anonymous> (test/dom/framework/formSaveFocus.test.ts:446:3)
+
+  ● SC-518: the redrawn card is searched for the control that opened the form › no control at all: the card itself takes focus (not a new tab stop), never <body>
+
+    TypeError: (0 , focusHandoff_1.armFormFocus) is not a function
+
+      430 | 	const arm = (keyboard: boolean): void => {
+      431 | 		const old = el(document.body, 'button', { 'aria-label': 'Edit definition' });
+    > 432 | 		armFormFocus(KEY, { pressed: old, keyboard });
+          | 		            ^
+      433 | 		old.remove();
+      434 | 	};
+      435 | 	afterEach(() => disarmChromeFocus(KEY));
+
+      at arm (test/dom/framework/formSaveFocus.test.ts:432:15)
+      at Object.<anonymous> (test/dom/framework/formSaveFocus.test.ts:453:3)
+
+FAIL dom test/dom/elements/heroSheet.test.ts (5.356 s)
+  ● D7 Task 9: "Edit definition" (recon delta 5) — reuses D9's openFormEditor, gated on authoringControls › SC-518: the form is handed the button that opened it, and whether the press came from the keyboard
+
+    expect(received).toEqual(expected) // deep equality
+
+    Expected: {"keyboard": true, "pressed": <button aria-label="Edit definition" class="dse-btn dse-btn--ghost dse-btn--icon" type="button"><span class="dse-btn__icon" data-icon="settings" /></button>}
+    Received: undefined
+
+      424 |
+      425 | 		const calls = jest.mocked(openFormEditor).mock.calls;
+    > 426 | 		expect(calls[0][5]).toEqual({ pressed: btn, keyboard: true });
+          | 		                    ^
+      427 | 		expect(calls[1][5]).toEqual({ pressed: btn, keyboard: false });
+      428 | 	});
+      429 |
+
+      at Object.<anonymous> (test/dom/elements/heroSheet.test.ts:426:23)
+
+Test Suites: 2 failed, 2 total
+Tests:       12 failed, 26 passed, 38 total
+Snapshots:   0 total
+Time:        6.631 s
+Ran all test suites matching test/dom/framework/formSaveFocus.test.ts|test/dom/elements/heroSheet.test.ts.

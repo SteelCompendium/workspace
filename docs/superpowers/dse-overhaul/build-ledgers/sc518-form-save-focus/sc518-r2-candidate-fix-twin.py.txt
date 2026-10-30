@@ -1,0 +1,13 @@
+S = '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc518-r2-review-C1'
+FH = S + '/mut/src/framework/chrome/focusHandoff.ts'
+src = open(FH).read()
+reps = [
+    ("\tours: WeakSet<Element>;\n}", "\tours: WeakSet<Element>;\n\topener?: Element;\n}"),
+    ("\t\tscope: scopeOf(opener.pressed),\n\t\tours,\n\t});", "\t\tscope: scopeOf(opener.pressed),\n\t\tours,\n\t\topener: opener.pressed,\n\t});"),
+    ("\t\tif (!focusIsFree(doc)) return;", "\t\tconst staleOpener = req.label !== null && !!req.opener && doc.activeElement === req.opener && !root.contains(req.opener);\n\t\tif (!focusIsFree(doc) && !staleOpener) return;"),
+]
+for a, b in reps:
+    assert src.count(a) == 1, a
+    src = src.replace(a, b)
+open(FH, 'w').write(src)
+print('candidate fix applied')
