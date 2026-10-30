@@ -350,7 +350,7 @@ every card unchanged at rest. Retuned per scheme in E3's own ratio (55% black da
   same callout (a table, a long code line) still scrolls, at the cost that the callout's title scrolls with
   it; and in Live Preview the panel keeps 36px clear of the widget's right edge (`--dse-chrome-inset: 24px`)
   so Obsidian's own `</>` button does not cover Collapse. At rest a callout looks as before, except that the
-  card's drop shadow is no longer cut at the content box (at most 5/255 of a colour step) and a callout that
+  card's drop shadow is no longer cut at the content box (up to 9/255 of a colour step, card shadow only) and a callout that
   held wide content has no scrollbar of its own any more (the callout scrolls instead). `mountChrome` also
   default-prevents a click on the panel and on the one-liner, because Obsidian's callout widget enters its
   source on any click that is not (the shield only covers pointerdown).
