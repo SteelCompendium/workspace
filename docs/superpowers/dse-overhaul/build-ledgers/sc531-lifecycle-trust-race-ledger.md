@@ -58,3 +58,6 @@ Evidence: `.superpowers/sdd/sc479-embed-scroll-pin/sc479-r7-evidence/gate-lc2-at
   is not worth a re-review. INFO-4 — done (this entry).
 - LAND-READY (2026-10-29): dse branch `sc531-lifecycle-trust-race` @ `4deb8cf` on develop `4f73043`; superproject
   pointer not bumped (the land-stack procedure does it).
+- DONE (2026-10-29): landed by the dispatcher — dse develop fast-forwarded to `4deb8cf`; workspace main `584bf24d`
+  (pointer bump `69a5d2e0`); docs `37201d48` (CURRENT entry at `4deb8cf`, numbers carried; ledger preserved at
+  `docs/superpowers/dse-overhaul/build-ledgers/sc531-lifecycle-trust-race/`). Worktree removed. Ticket -> Done.
