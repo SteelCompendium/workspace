@@ -41,6 +41,15 @@ go under an *Internal* sub-heading.
   montages, blocks inside a callout or a quote, and the view adoption setting turned off are covered too.
   (Identical blocks in two separate callouts are not covered in Live Preview yet.)
 
+- **DSE plugin: a Live Preview note no longer jumps when a tracker in a note it embeds changes or is clicked (SC-522).**
+  With `![[Tracker note]]` in a note open in Live Preview, a change to the tracker (from another pane, an outside
+  edit, or the edit form) could throw the embedding note elsewhere when you were scrolled near the end or below the
+  embed (for example from the end of the note up into the middle of it), and a click on a control in the embedded
+  tracker scrolled the note to the top of the embed. The embedding note now keeps its scroll position and the text on
+  screen in both cases. One visible change inside Live Preview embeds: clicking a tracker card in the embed no longer
+  selects the embed (the cursor does not move onto it and the selected-embed outline does not appear); clicking the
+  rest of the embed still does. Reading view and trackers placed directly in a Live Preview note are unchanged.
+
 - **DSE plugin: after Save in a block's edit form, keyboard focus returns to the card's Edit button instead of jumping to the top of the page (SC-518).**
   With experimental authoring controls on, Tab to a card's Edit button, press Enter, change a field and press Save:
   the card is redrawn with the new content, and keyboard focus used to be lost (the next Tab started again from
@@ -51,7 +60,7 @@ go under an *Internal* sub-heading.
 - **DSE plugin: a Reading-view note no longer jumps to the top when a tracker in a note it embeds changes (SC-479).**
   With `![[Tracker note]]` in a note you are reading, a change to the tracker (from another pane or an outside edit)
   could throw the embedding note back to its title when the embed filled most of the page and you were scrolled to
-  its end. The embedding note now keeps its scroll position. Live Preview is not covered yet (SC-522).
+  its end. The embedding note now keeps its scroll position. (Live Preview: see SC-522 above.)
 
 - **DSE plugin: the block edit form's preview no longer shows a stale error while you type a reference (SC-510).**
   With experimental authoring controls on, typing a reference such as `@Ref.md` into a feature or statblock's YAML
