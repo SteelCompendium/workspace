@@ -136,3 +136,7 @@ untouched under `DISPLAY=:1`; pointer 0,0 in 130/130 samples; 20 failure-mode ca
 Plugin branch `sc539-e2e-chrf02-flake` @ `88cb7db9` (commits `c34f6904`, `88cb7db9`) on dse develop `ad018cda`. r5 verdict LAND.
 Gates at 88cb7db9: tsc+lint clean; jest 6244/2 (fresh shape of 6245/1); lifecycle 45/45 (21+16+8); e2e 124/124, 87/87 x2; main.js/styles.css byte-identical to ad018cda (shots/freeze/parity carry).
 No new dependency; CHANGELOG: none (not user-facing). dse-verify text: sc539-dse-verify-proposal.md (not applied). Filed: SC-546.
+
+## DONE (2026-11-02)
+
+Landed by the dispatcher: dse develop fast-forwarded to `88cb7db9`; workspace main `80a3bc8a` (pointer bump `a46f44f4`); docs commit `272378e9` applied `sc539-dse-verify-proposal.md` and preserved this ledger to `docs/superpowers/dse-overhaul/build-ledgers/sc539-e2e-chrf02-flake/`. Worktree removed. SC-539 flipped to Done with a closing comment. Follow-up filed: SC-546. SC-529/SC-534 (same cause) left to their owners/dispatcher.
