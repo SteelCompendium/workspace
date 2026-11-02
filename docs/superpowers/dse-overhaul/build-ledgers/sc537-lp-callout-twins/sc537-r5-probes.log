@@ -1,0 +1,86 @@
+# SC-537 r5 probe runs (R537 probe in a scratch copy of the aca83702 lifecycle harness; real Obsidian 1.15.0 LP). h*/c-head/cb-head = aca83702 (sha256 aa4efdf6...), c-4e3de39c/cb-4e3de39c = r2 HEAD 4e3de39c (402aedb1...), c-88cb7db9/cb-88cb7db9/b* = develop 88cb7db9 without SC-537 (a37fbb6f...), m6 = aca83702 with the selectionSet term removed. JSON: /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc537-r5-review-a1c8475e199b5ef3f/runs/<run>/r537.json
+######## probe run h01
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :162, port 9539, 1 scenario(s)
+R537 far: clean
+R537 far-nopark: clean
+R537 far-up-from-low: clean
+R537 far-form: clean
+R537 raw-lower-100: clean
+R537 seq2-01: clean
+R537 far-frames: {"problems":["1 scroll jump(s) [[3,600,573]]"],"patch":"patched","down":{"frames":49,"bad":[],"nBad":0,"jumps":[[3,600,573]],"nJumps":1},"reused":["R32(Twin=6)"],"disk":[6,6],"errors":[]}
+R537 many-scroll: {"problems":["down: 2 scroll jump(s) [[3,800,773],[40,8173,8254]]","up: 2 scroll jump(s) [[77,136,162],[78,-38,0]]"],"patch":"already","down":{"frames":79,"bad":[],"nBad":0,"jumps":[[3,800,773],[40,8173,8254]],"nJumps":2},"up":{"frames":79,"bad":[],"nBad":0,"jumps":[[77,136,162],[78,-38,0]],"nJumps":2},"walk":{"steps":363,"bad":[],"nBad":0},"passes":{"passes":438,"entriesPerPass":4,"n":438,"mean":0.2973,"p50":0.3,"p95":0.5,"max":1.3},"reused":[],"errors":[]}
+R537 many-write: {"problems":[],"patch":"already","down1":{"frames":79,"bad":[],"nBad":0,"jumps":[[2,600,573]],"nJumps":1},"reused1":["R76(Twin=6)"],"disk2":[5,5,5,5,5,5,5,5,5,5,5,5,5,5,6,6,5,5,5,5,5,5,5,5,5,5,5,5,5,5],"down2":{"frames":79,"bad":[],"nBad":0,"jumps":[[2,600,573]],"nJumps":1},"walk2":{"steps":242,"bad":[],"nBad":0},"reused":["R76(Twin=6)","R78(Twin=6)"],"errors":[]}
+OBSIDIAN-LIFECYCLE R537 ok (cases far,far-nopark,far-up-from-low,far-form,raw-lower-100,seq2-01,far-frames,many-scroll,many-write)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=121s
+######## probe run c-head
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 cost-big: {"problems":[],"patch":"no entry","judged":{"live":0,"inEditorDom":0,"inCalloutWidget":0,"docChars":5109,"docLines":443},"cost":{"typing":{"n":200,"mean":1.64,"p50":1.6,"p95":2.9,"max":4.1},"typingPasses":{"passes":0},"cursor":{"lines":[1,41],"n":100,"mean":1.076,"p50":1,"p95":1.9,"max":2.7},"cursorPasses":{"passes":0},"scrollFrames":{"endScrollTop":4773,"n":120,"mean":28.2425,"p50":23.8,"p95":38.9,"max":410.9},"scrollPasses":{"passes":0}},"reused":[],"errors":[]}
+R537 cost-large: {"problems":[],"patch":"patched","judged":{"live":24,"inEditorDom":14,"inCalloutWidget":14,"docChars":125619,"docLines":3003},"cost":{"typing":{"n":200,"mean":3.7975,"p50":3.3,"p95":6,"max":33.8},"typingPasses":{"passes":200,"entriesPerPass":14,"n":200,"mean":1.2925,"p50":1,"p95":2.3,"max":31.5},"cursor":{"lines":[715,851],"n":100,"mean":7.895,"p50":6,"p95":17.9,"max":35.5},"cursorPasses":{"passes":100,"entriesPerPass":14,"n":100,"mean":2.402,"p50":2.2,"p95":4,"max":5.7},"scrollFrames":{"endScrollTop":17973,"n":150,"mean":26.7,"p50":18.4,"p95":69.6,"max":156.8},"scrollPasses":{"passes":32,"entriesPerPass":11,"n":32,"mean":1.4531,"p50":1.5,"p95":2.1,"max":2.4}},"reused":[],"errors":[]}
+OBSIDIAN-LIFECYCLE R537 ok (cases cost-big,cost-large)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=27s
+######## probe run c-4e3de39c
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 cost-big: {"problems":[],"patch":"no entry","judged":{"live":0,"inEditorDom":0,"inCalloutWidget":0,"docChars":5109,"docLines":443},"cost":{"typing":{"n":200,"mean":2.074,"p50":1.8,"p95":4.6,"max":6.5},"typingPasses":{"passes":0},"cursor":{"lines":[1,41],"n":100,"mean":1.123,"p50":1,"p95":2.2,"max":3},"cursorPasses":{"passes":0},"scrollFrames":{"endScrollTop":4773,"n":120,"mean":22.355,"p50":17.4,"p95":30,"max":340},"scrollPasses":{"passes":0}},"reused":[],"errors":[]}
+R537 cost-large: {"problems":[],"patch":"patched","judged":{"live":24,"inEditorDom":14,"inCalloutWidget":14,"docChars":125619,"docLines":3003},"cost":{"typing":{"n":200,"mean":5.0945,"p50":5,"p95":7.1,"max":21.1},"typingPasses":{"passes":200,"entriesPerPass":14,"n":200,"mean":1.764,"p50":1.7,"p95":3.3,"max":6.1},"cursor":{"lines":[715,851],"n":100,"mean":4.174,"p50":2.7,"p95":11.8,"max":22.3},"cursorPasses":{"passes":0},"scrollFrames":{"endScrollTop":17973,"n":150,"mean":25.8267,"p50":19.2,"p95":61.2,"max":181.4},"scrollPasses":{"passes":0}},"reused":[],"errors":[]}
+OBSIDIAN-LIFECYCLE R537 ok (cases cost-big,cost-large)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=27s
+######## probe run c-88cb7db9
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 cost-big: {"problems":[],"patch":"no entry","judged":{"live":0,"inEditorDom":0,"inCalloutWidget":0,"docChars":5109,"docLines":443},"cost":{"typing":{"n":200,"mean":1.6525,"p50":1.4,"p95":2.8,"max":8.7},"typingPasses":{"passes":0},"cursor":{"lines":[1,41],"n":100,"mean":1.525,"p50":1.3,"p95":3,"max":3.5},"cursorPasses":{"passes":0},"scrollFrames":{"endScrollTop":4773,"n":120,"mean":24.2208,"p50":17.2,"p95":37.7,"max":427.3},"scrollPasses":{"passes":0}},"reused":[],"errors":[]}
+R537 cost-large: {"problems":[],"patch":"patched","judged":{"live":24,"inEditorDom":14,"inCalloutWidget":14,"docChars":125619,"docLines":3003},"cost":{"typing":{"n":200,"mean":2.381,"p50":2,"p95":4.2,"max":6.1},"typingPasses":{"passes":0},"cursor":{"lines":[715,851],"n":100,"mean":4.479,"p50":2.9,"p95":11.4,"max":23.5},"cursorPasses":{"passes":0},"scrollFrames":{"endScrollTop":17973,"n":150,"mean":28.6473,"p50":19.5,"p95":71.8,"max":164.6},"scrollPasses":{"passes":0}},"reused":[],"errors":[]}
+OBSIDIAN-LIFECYCLE R537 ok (cases cost-big,cost-large)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=26s
+######## probe run cb-head
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 cost-big: {"problems":[],"patch":"patched","judged":{"live":40,"inEditorDom":40,"inCalloutWidget":40,"docChars":5109,"docLines":443},"cost":{"typing":{"n":200,"mean":9.305,"p50":8.6,"p95":13.5,"max":16.1},"typingPasses":{"passes":200,"entriesPerPass":40,"n":200,"mean":7.806,"p50":7.2,"p95":11.2,"max":13.9},"cursor":{"lines":[41,362],"n":100,"mean":8.268,"p50":8.7,"p95":15.5,"max":54.7},"cursorPasses":{"passes":42,"entriesPerPass":40,"n":42,"mean":9.4714,"p50":9.4,"p95":12.2,"max":12.8},"scrollFrames":{"endScrollTop":4773,"n":120,"mean":24.7167,"p50":22.9,"p95":41.7,"max":154.7},"scrollPasses":{"passes":66,"entriesPerPass":40,"n":66,"mean":8.497,"p50":7.2,"p95":13.1,"max":20.8}},"reused":[],"errors":[]}
+OBSIDIAN-LIFECYCLE R537 ok (cases cost-big)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=18s
+######## probe run cb-4e3de39c
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 cost-big: {"problems":[],"patch":"patched","judged":{"live":40,"inEditorDom":40,"inCalloutWidget":40,"docChars":5109,"docLines":443},"cost":{"typing":{"n":200,"mean":19.44,"p50":17.7,"p95":27.6,"max":39.2},"typingPasses":{"passes":200,"entriesPerPass":40,"n":200,"mean":17.9965,"p50":16.5,"p95":26.3,"max":36.7},"cursor":{"lines":[41,362],"n":100,"mean":3.376,"p50":2.4,"p95":12.3,"max":41.9},"cursorPasses":{"passes":0},"scrollFrames":{"endScrollTop":4773,"n":120,"mean":20.235,"p50":17,"p95":35.3,"max":142.8},"scrollPasses":{"passes":0}},"reused":[],"errors":[]}
+OBSIDIAN-LIFECYCLE R537 ok (cases cost-big)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=19s
+######## probe run cb-88cb7db9
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 cost-big: {"problems":[],"patch":"patched","judged":{"live":40,"inEditorDom":40,"inCalloutWidget":40,"docChars":5109,"docLines":443},"cost":{"typing":{"n":200,"mean":1.35,"p50":1.1,"p95":2.6,"max":4.8},"typingPasses":{"passes":0},"cursor":{"lines":[41,362],"n":100,"mean":2.942,"p50":2.1,"p95":10.1,"max":34},"cursorPasses":{"passes":0},"scrollFrames":{"endScrollTop":4773,"n":120,"mean":19.7408,"p50":17,"p95":29.6,"max":139.4},"scrollPasses":{"passes":0}},"reused":[],"errors":[]}
+OBSIDIAN-LIFECYCLE R537 ok (cases cost-big)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=16s
+######## probe run b02
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 many-scroll: {"problems":["down: 1 scroll jump(s) [[3,800,773]]","up: 2 scroll jump(s) [[75,536,562],[78,-38,0]]"],"patch":"patched","down":{"frames":79,"bad":[],"nBad":0,"jumps":[[3,800,773]],"nJumps":1},"up":{"frames":79,"bad":[],"nBad":0,"jumps":[[75,536,562],[78,-38,0]],"nJumps":2},"walk":{"steps":363,"bad":[],"nBad":0},"passes":{"passes":0},"reused":[],"errors":[]}
+R537 far-frames: {"problems":["10 frame(s) with a card that differs from disk [{\"frame\":39,\"block\":1,\"rid\":\"R36\",\"value\":6,\"disk\":5},{\"frame\":40,\"block\":1,\"rid\":\"R36\",\"value\":6,\"disk\":5},{\"frame\":41,\"block\":1,\"rid\":\"R36\",\"value\":6,\"disk\":5}]","1 scroll jump(s) [[3,600,573]]","lower + gave [7,5]"],"patch":"already","down":{"frames":49,"bad":[{"frame":39,"block":1,"rid":"R36","value":6,"disk":5},{"frame":40,"block":1,"rid":"R36","value":6,"disk":5},{"frame":41,"block":1,"rid":"R36","value":6,"disk":5},{"frame":42,"block":1,"rid":"R36","value":6,"disk":5},{"frame":43,"block":1,"rid":"R36","value":6,"disk":5},{"frame":44,"block":1,"rid":"R36","value":6,"disk":5},{"frame":45,"block":1,"rid":"R36","value":6,"disk":5},{"frame":46,"block":1,"rid":"R36","value":6,"disk":5},{"frame":47,"block":1,"rid":"R36","value":6,"disk":5},{"frame":48,"block":1,"rid":"R36","value":6,"disk":5}],"nBad":10,"jumps":[[3,600,573]],"nJumps":1},"reused":[],"disk":[7,5],"errors":[]}
+OBSIDIAN-LIFECYCLE R537 ok (cases many-scroll,far-frames)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=35s
+######## probe run m6
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 raw-lower-100: clean
+R537 far: clean
+R537 seq2-01: clean
+OBSIDIAN-LIFECYCLE R537 ok (cases raw-lower-100,far,seq2-01)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=43s
+######## probe run h03
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 scroll-real: {"rec":{"frames":171,"scrollTop":[1850,1850],"lowerTop":[349,390],"lowerH":[127,127],"missing":0,"nChanges":2},"disk":[6,5]}
+R537 scroll-stop: {"rec":{"frames":170,"scrollTop":[1850,1850],"lowerTop":[349,349],"lowerH":[127,127],"missing":0,"nChanges":1},"disk":[6,5]}
+R537 panes-lplp: clean
+R537 type-value-back: clean
+R537 undo: clean
+OBSIDIAN-LIFECYCLE R537 ok (cases scroll-real,scroll-stop,panes-lplp,type-value-back,undo)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=101s
+######## probe run b03
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 scroll-real: {"rec":{"frames":172,"scrollTop":[1850,1850],"lowerTop":[349,390],"lowerH":[127,127],"missing":0,"nChanges":3},"disk":[6,5]}
+R537 scroll-stop: {"rec":{"frames":171,"scrollTop":[1850,1850],"lowerTop":[349,349],"lowerH":[127,127],"missing":0,"nChanges":2},"disk":[6,5]}
+OBSIDIAN-LIFECYCLE R537 ok (cases scroll-real,scroll-stop)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=28s

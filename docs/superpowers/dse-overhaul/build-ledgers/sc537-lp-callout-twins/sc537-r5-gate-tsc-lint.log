@@ -1,0 +1,14 @@
+aca83702 docs(SC-537 r4): architecture row - the pass also runs on scroll and selection updates
+
+> draw-steel-elements@7.0.0 tsc
+> tsc --noEmit && tsc --noEmit -p e2e
+
+tsc rc=0
+tsc-e2e rc=0
+
+> draw-steel-elements@7.0.0 lint
+> eslint src main.ts e2e
+
+(node:1167831) ESLintIgnoreWarning: The ".eslintignore" file is no longer supported. Switch to using the "ignores" property in "eslint.config.js": https://eslint.org/docs/latest/use/configure/migration-guide#ignoring-files
+(Use `node --trace-warnings ...` to show where the warning was created)
+lint rc=0

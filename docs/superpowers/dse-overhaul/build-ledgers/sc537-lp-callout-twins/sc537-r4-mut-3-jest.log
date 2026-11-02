@@ -1,0 +1,41 @@
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-481 r4: a writer whose rebuild is still to come is not mistaken for a reused element › pane B's rebuild runs before pane A's: the writer in A keeps its view and is adopted by its own rebuild
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      382 |
+      383 | 		await draw('doc-B'); // pane B's rebuild comes first
+    > 384 | 		expect(registry.liveEntries().some((e) => e.root === writerRoot)).toBe(true);
+          | 		                                                                  ^
+      385 | 		expect(writerRoot!.isConnected || paneA.el.contains(writerRoot)).toBe(true);
+      386 |
+      387 | 		at.delete(paneA.el);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:384:69)
+
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › an element still on the line the view's last write landed at is its own block, waiting for the editor to catch up: not redrawn
+
+    expect(received).toBeNull()
+
+    Received: "reused-by-twin"
+
+      629 | 		await t.update();
+      630 |
+    > 631 | 		expect(writer.releasedBy).toBeNull();
+          | 		                          ^
+      632 | 		expect(shown(upper.els[0])).toBe('Twin=6');
+      633 | 	});
+      634 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:631:29)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 25 passed, 27 total
+Snapshots:   0 total
+Time:        2.725 s
+Ran all test suites matching test/dom/framework/twin-reuse.test.ts.
+rc=1
+tree-clean-check-done

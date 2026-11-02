@@ -1,0 +1,62 @@
+# SC-537 r2 — implement Option A (editor-driven Live Preview reconcile) + G-S57 + jest, full battery
+
+You are the implementer for ticket SC-537. Your final text goes to the ticket-owner, not a human.
+**Workers never call the tracker** (Linear) — not to read history, not to post. Everything you need is in files.
+
+## 1. Context loading
+- Ledger first: `/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc537-lp-callout-twins/decisions.md` — ticket facts, r1 results and the owner rulings (authoritative).
+- The design you implement: `/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc537-lp-callout-twins/sc537-r1-diag-report.md` — §1 measurements (the base numbers G-S57 must fail with), §2 mechanism, §3 "Option A" (where it changes, prototype, risks, Gate, Jest, mutants). The in-page prototype is `installProto`/`protoPass` in `/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc537-r1-diag-w537a/p537-instr.js`; that folder's `p537-scenario.mjs` / `harness-p537.mjs` show how the scenarios were driven in real Obsidian (read-only for you; copy what you need).
+- Parent fix for the code you extend: `/home/scott/code/steelCompendium/workspace/docs/superpowers/dse-overhaul/build-ledgers/sc481-twin-block-vanish/sc481-r4-fix-report.md` (fenceOnElement, reusedBlockBody, reconcile, G-S53, the twin-reuse.test.ts infra).
+- Gate skill: `/home/scott/code/steelCompendium/workspace/.claude/skills/dse-verify/SKILL.md` — read it fully before running anything.
+- Plugin guidance: `/home/scott/code/steelCompendium/worktrees/sc537-lp-callout-twins/draw-steel-elements/AGENTS.md` (if present) and `.repo-docs/architecture.md`.
+- **Worktree:** `/home/scott/code/steelCompendium/worktrees/sc537-lp-callout-twins`, plugin at `.../draw-steel-elements`, branch `sc537-lp-callout-twins`, based on dse `458abe3` (= origin/develop at dispatch). Before starting: `git -C <plugin abs path> fetch origin` and `git -C <plugin abs path> rebase origin/develop` (expected: already up to date at 458abe3). Superproject branch `sc537-lp-callout-twins` at `367015f3` (= origin/main at dispatch). Verify `git -C <abs path> log --oneline -1` in both before any write.
+- Never work in `/home/scott/code/steelCompendium/workspace/` (the shared main checkout). Its dse dirt (modified `demo-vault/Welcome.md`, untracked `compendium-manifest.json` / `demo-vault/*.md`) is Scott's live vault — expected, ignore it. **The workspace-level file you edit (`CHANGELOG.md`) lives in YOUR worktree's superproject at `/home/scott/code/steelCompendium/worktrees/sc537-lp-callout-twins/CHANGELOG.md` — never under `/home/scott/code/steelCompendium/workspace/`.**
+
+## 2. The task
+Ticket, verbatim: "in Live Preview, put two identical callouts in one note, each holding the same `ds-counter` block at 5. Click + in the upper one. Disk becomes [6,5], which is correct. The lower callout now shows 6 instead of 5. Clicking + in the lower callout writes the UPPER block (disk [7,5])."
+
+Owner rulings, verbatim from the ledger:
+- "Adopt Option A. Option B (MutationObserver) rejected (no advantage, noisy). Option C (write-time refuse) DROPPED: A fixes the writes in every measured case, and C would change SC-343 relocation and decide among equal bodies by refusing (SC-480 territory, parked on Scott). Option D (private API) rejected."
+- "Gate: new lifecycle scenario G-S57 in the FIRST half (halves 22 + 21), phases (a)-(f) as in the report §3 Option A "Gate"; must FAIL on the 458abe3 bundle with the §1 numbers. Jest per the report (incl. mutants 1-3 red)."
+- "§2.5 click-opens-source: FILED SC-540 (Backlog, Bug, DSE Plugin, DSE 7.0.0, related SC-537 + SC-520). OUT OF SCOPE for SC-537 — do not touch the click shield."
+- "CHANGELOG: remove the SC-481 bullet's parenthetical "(Identical blocks in two separate callouts are not covered in Live Preview yet.)" and add an SC-537 bullet under ## Unreleased (user-facing, plain words, mention the form edit could be erased)."
+
+Implement Option A as the report §3 describes:
+1. `ReadingModeBlockHost.ts`: `fenceOnElement` takes the section to judge (default `ctx.getSectionInfo(el)`); `reusedBlockBody` uses the editor's callout section (`livePreviewCalloutWidget()` / `livePreviewCalloutSection()`, already present) when `getSectionInfo` is null and the host is in an LP callout widget. Keep the `lastWriteLine` skip and the ordinal rule. Prefer reading lines from the update's `state.doc` over `editor.getValue()` per host.
+2. `remountReused.ts`: `reconcile(sourcePath, within?: HTMLElement)` — when called from the editor, judge only entries whose root is inside that editor's DOM. Reading-view and other-pane entries stay judged only at processor time, as today. `remountVacated` unchanged.
+3. New `src/framework/host/livePreviewReconcile.ts`: `EditorView.updateListener` (or a ViewPlugin) that on `docChanged` gets the file path from `editorInfoField` (public, obsidian.d.ts) and runs the scoped reconcile. Return early cheaply when the editor holds no DSE callout entry (this runs on every keystroke).
+4. `registerFrameworkElements.ts`: one `plugin.registerEditorExtension(...)` line. **Overlap:** SC-522 (another effort, running) edits `livePreviewScrollHold.ts` and has wiring in this same file at about `:63-68`. Do NOT touch `livePreviewScrollHold.ts`; keep your change in `registerFrameworkElements.ts` to the one registration line (plus an import), placed apart from the `lpHold` lines. Do NOT touch the click shield (`pipeline.ts` `armClickShield`) or any callout chrome CSS / chrome click handler (SC-520, SC-540).
+5. Jest in `test/dom/framework/twin-reuse.test.ts` (or a sibling file reusing its infra), per report §3 "Jest": the positive case (fake `cm` with `dom`, `posAtDOM`, `state.doc`; two hosts in `.cm-embed-block.cm-callout` with `getSectionInfo` null; upper widget element moved to the lower line, text [A',A]; listener update → `reused-by-twin` release, fresh host body A in the same element, its write lands on the lower fence), the negatives (element still on `lastWriteLine`; `docChanged: false`; entry outside `view.dom`; plain LP widget; two blocks per callout chosen by ordinal), and a form-Save-then-lower-click case (names stay [Edited, Twin]). Write the tests first and show them red on 458abe3 source.
+6. Mutants (revert each, tree clean after): (1) `reusedBlockBody` without the LP section; (2) the listener scoped to all paths, not to the editor; (3) no `lastWriteLine` skip. Each must turn at least one jest case red; record counts.
+7. Lifecycle **G-S57** in `visual-harness/obsidian-lifecycle.mjs`, in the FIRST half, real mouse clicks, cards read after parking the cursor (report §2.5 — a click in a callout opens it as source; that is SC-540, not yours). Phases (a)-(f) exactly as report §3 "Gate", including the anti-vacuity check (the upper widget DOM tagged before the click sits in the lower slot afterwards, and a `reused-by-twin` release is recorded). New fixtures as needed (reuse `Lifecycle/twin-callouts.md` where it fits; add e.g. `Lifecycle/twin-callouts-3.md`, `-xy.md`, `-nested.md` — whatever the harness convention is). **Red/green:** run G-S57 against a 458abe3 bundle and record that it FAILS with the §1 numbers ([7,5]; names [Twin, Twin]; [7,5,5]; [7,3,5,3]; nested [7,5]), then PASSES on HEAD.
+8. Docs: `.repo-docs/architecture.md` rows for the new file/hook (as SC-481 did). Superproject `CHANGELOG.md` per the ruling above (your worktree's copy). Record the lifecycle half split change (22 + 21) wherever the harness or dse-verify's `--only` lists need it in the plugin; do NOT edit `dse-verify/SKILL.md` (dispatcher bookkeeping — just report the new numbers).
+
+Commit after every coherent step (tests red, fix, G-S57, docs) on branch `sc537-lp-callout-twins` in the plugin; CHANGELOG commit in the superproject branch (no submodule pointer bump). Commit messages: no AI attribution, no Co-Authored-By lines.
+
+## 3. Gates (dse-verify battery, in order, on your final HEAD)
+Expected at 458abe3 (CURRENT) and what yours should read:
+- tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean.
+- jest: base 6201 passed / 1 skipped / 249 of 250 suites → yours 6201 + N new / 1 skipped (250 of 251 if you add a suite). On a fresh worktree jest shows one fewer / 2 skipped until shots has cached `visual-harness/dist/obsidian-app.css` — compare after shots.
+- lifecycle: 42/42 → **43/43**, run as two `--only` halves (22 + 21), one blocking foreground call each.
+- e2e: `OBSIDIAN-E2E done: 124/124 ok, 0 failed, 0 known-bug, coverage: 87/87 pairs` (known flake CHR-F02, SC-539: re-run once if it alone fails, report both runs).
+- shots: 592, 0 FAIL, button host-leak 157/942 (34-record boundary), modal 228, input 15/176, checkbox 7/116, prose 106 [212]. Shots can exceed 600 s under load: if a foreground run is killed near 600 s, run it in the background writing to a fresh unique log and poll THAT log's own `rc=` line (never wait for a notification).
+- freeze: `freeze OK (280/280 …)`, no rebaseline (no CSS change expected — if any frozen byte moves, STOP and report).
+- parity: 0 GAPs / 0 undeclared / 24 DECLARED.
+
+## 4. Report
+Write `/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc537-lp-callout-twins/sc537-r2-impl-report.md`, opening with a **≤10-line executive summary** (verdict, plugin + superproject shas, red→green summary, gate numbers, deviations). Gate logs as `sc537-r2-gate-*.log` and mutant logs as `sc537-r2-mut-*.log` in the same ledger dir. One Live Preview screenshot after the fix (two callouts, upper then lower click, cards [6,6]), named `sc537-r2-…png` in the ledger dir. List `Drive-by fixes:` (only obviously-correct, local, baseline-neutral) and `Follow-ups:` (left alone) separately.
+
+## 5. Return contract
+Final text: raw facts, no prose — STATUS (DONE / DONE_WITH_CONCERNS / NEEDS_CONTEXT / BLOCKED), shas, measured gate numbers, red/green and mutant counts, deviations from the report's design, and the **absolute path of every evidence artifact**.
+
+## Footguns (all apply)
+- If the report-file write is blocked by your harness, return the report inline.
+- Never key a wait-loop on a scratch filename or its contents — the scratch dir is pre-populated across sessions and branches, and a stale log will match. Read the process's own output, or write to a per-run unique path.
+- Redirect long-running output to a file rather than streaming it — the 600 s stream watchdog kills silent agents.
+- Run each gate as ONE blocking foreground Bash call (lifecycle = two `--only` halves, separate calls; e2e and shots separate calls). No `run_in_background`, no Monitor, no background jobs — the only exception is shots after a killed foreground run, polled via its own unique log as above.
+- Devbox: `devbox run -c /home/scott/code/steelCompendium/worktrees/sc537-lp-callout-twins/draw-steel-elements -- bash <script file>`. Never `cd X && …` compound commands; never `cd` inside a compound command; use `git -C <abs path>` for every git command. Devbox eats `$?` — record exit codes from inside a script file, and read each gate's own summary line.
+- Scratch: your private folder `/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc537-r2-impl-<your agentId>/`, uniquely named scripts and logs. Use the Write tool for scratch files (no heredocs). No `rm` with a shell-variable target and no glob `rm` (both hang on a permission prompt nobody answers); overwrite with `>` or use fresh unique names.
+- Never `pkill`/`killall` by pattern; kill only a PID you started, whose cwd (`readlink /proc/<pid>/cwd`) or command line is inside your worktree or scratch folder. Never `rm -rf` a shared `/tmp` glob (e.g. `/tmp/dse-obsidian-lifecycle-*`) — delete only paths you created and recorded. Never touch the shared `.superpowers/` dir beyond writing your own `sc537-` files; never `rm -rf` it.
+- Use a unique `DSE_LIFECYCLE_PORT` (e.g. 9538) for probes/red-green runs if the harness allows.
+- Run `npm ci` in the plugin if `node_modules` is missing or `package.json` changed on rebase.
+- You cannot `SendMessage` me — a depth-2 agent cannot address its parent, and `to: 'main'` routes to the top-level dispatcher, not me. If you need input mid-task, end your turn with STATUS: NEEDS_CONTEXT and the question in your report. If you ever do send a message anyway, its FIRST WORD must be `SC-537:`.

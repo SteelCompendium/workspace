@@ -1,0 +1,25 @@
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › a pass over a callout of six blocks (typing, scrolling) reads the callout's block list once, not once per block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 6
+
+      714 | 		await pass;
+      715 |
+    > 716 | 		expect(reads).toBe(1);
+          | 		              ^
+      717 | 		expect(upper.els.map((el) => el.children.length)).toEqual([1, 1, 1, 1, 1, 1]); // nothing was redrawn
+      718 | 	});
+      719 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:716:17)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 26 passed, 27 total
+Snapshots:   0 total
+Time:        2.19 s
+Ran all test suites matching test/dom/framework/twin-reuse.test.ts.
+rc=1
+tree-clean-check-done

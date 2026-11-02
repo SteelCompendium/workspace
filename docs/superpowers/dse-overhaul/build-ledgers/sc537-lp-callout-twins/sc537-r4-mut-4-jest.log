@@ -1,0 +1,42 @@
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › a twin callout that was off screen when the write landed: the update that scrolls it into the editor (no text change) redraws it
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "reused-by-twin"
+    Received: null
+
+      681 | 		await t.update({ docChanged: false, viewportChanged: true });
+      682 |
+    > 683 | 		expect(writer.releasedBy).toBe('reused-by-twin');
+          | 		                          ^
+      684 | 		expect(shown(upper.els[0])).toBe('Twin=5');
+      685 | 		await t.increase(upper.els[0]);
+      686 | 		expect(t.values()).toEqual([6, 6]); // not [7, 5]
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:683:29)
+
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › a twin callout that was raw source (cursor inside) when the write landed: the selection-only update that draws it again redraws it
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "reused-by-twin"
+    Received: null
+
+      697 | 		await t.update({ docChanged: false, selectionSet: true });
+      698 |
+    > 699 | 		expect(writer.releasedBy).toBe('reused-by-twin');
+          | 		                          ^
+      700 | 		expect(shown(upper.els[0])).toBe('Twin=5');
+      701 | 		await t.increase(upper.els[0]);
+      702 | 		expect(t.values()).toEqual([6, 6]);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:699:29)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 25 passed, 27 total
+Snapshots:   0 total
+Time:        2.311 s, estimated 3 s
+Ran all test suites matching test/dom/framework/twin-reuse.test.ts.
+rc=1
+tree-clean-check-done

@@ -1,0 +1,133 @@
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › the UPPER callout clicked: the editor update redraws the widget Obsidian handed to the lower slot from the lower block, and its click writes the lower block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "reused-by-twin"
+    Received: null
+
+      578 | 		await t.update();
+      579 |
+    > 580 | 		expect(writer.releasedBy).toBe('reused-by-twin');
+          | 		                          ^
+      581 | 		expect(upper.els[0].children).toHaveLength(1); // a fresh card in the same element
+      582 | 		expect(shown(upper.els[0])).toBe('Twin=5');
+      583 | 		await t.increase(upper.els[0]);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:580:29)
+
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › a write that is not the view's own (the edit form's Save) on the upper callout: a click on the lower one does not erase the edit
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   "Edited",
+    +   "Twin",
+        "Twin",
+      ]
+
+      597 | 		expect(shown(upper.els[0])).toBe('Twin=5');
+      598 | 		await t.increase(upper.els[0]);
+    > 599 | 		expect(t.names()).toEqual(['Edited', 'Twin']); // the edit is still there
+          | 		                  ^
+      600 | 		expect(t.values()).toEqual([5, 6]);
+      601 | 	});
+      602 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:599:21)
+
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › two blocks per callout: the redraw picks each by its place in the callout, and only the block whose body differs is redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "reused-by-twin"
+    Received: null
+
+      612 | 		await t.update();
+      613 |
+    > 614 | 		expect(writerX.releasedBy).toBe('reused-by-twin');
+          | 		                           ^
+      615 | 		expect(writerY.releasedBy).toBeNull(); // Y never changed: its view still matches the lower Y
+      616 | 		expect(upper.els.map(shown)).toEqual(['X=5', 'Y=3']);
+      617 | 		await t.increase(upper.els[0]);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:614:30)
+
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › an update that changed no text, or one from another editor: nothing is redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "reused-by-twin"
+    Received: null
+
+      647 |
+      648 | 		await t.update(); // the editor it is drawn in
+    > 649 | 		expect(writer.releasedBy).toBe('reused-by-twin');
+          | 		                          ^
+      650 | 	});
+      651 |
+      652 | 	test('a plain Live Preview widget is not judged by the editor pass (the processor-time check keeps that case)', async () => {
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:649:29)
+
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › a twin callout that was off screen when the write landed: the update that scrolls it into the editor (no text change) redraws it
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "reused-by-twin"
+    Received: null
+
+      681 | 		await t.update({ docChanged: false, viewportChanged: true });
+      682 |
+    > 683 | 		expect(writer.releasedBy).toBe('reused-by-twin');
+          | 		                          ^
+      684 | 		expect(shown(upper.els[0])).toBe('Twin=5');
+      685 | 		await t.increase(upper.els[0]);
+      686 | 		expect(t.values()).toEqual([6, 6]); // not [7, 5]
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:683:29)
+
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › a twin callout that was raw source (cursor inside) when the write landed: the selection-only update that draws it again redraws it
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "reused-by-twin"
+    Received: null
+
+      697 | 		await t.update({ docChanged: false, selectionSet: true });
+      698 |
+    > 699 | 		expect(writer.releasedBy).toBe('reused-by-twin');
+          | 		                          ^
+      700 | 		expect(shown(upper.els[0])).toBe('Twin=5');
+      701 | 		await t.increase(upper.els[0]);
+      702 | 		expect(t.values()).toEqual([6, 6]);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:699:29)
+
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › a pass over a callout of six blocks (typing, scrolling) reads the callout's block list once, not once per block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+      714 | 		await pass;
+      715 |
+    > 716 | 		expect(reads).toBe(1);
+          | 		              ^
+      717 | 		expect(upper.els.map((el) => el.children.length)).toEqual([1, 1, 1, 1, 1, 1]); // nothing was redrawn
+      718 | 	});
+      719 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:716:17)
+
+Test Suites: 1 failed, 1 total
+Tests:       7 failed, 20 passed, 27 total
+Snapshots:   0 total
+Time:        2.637 s
+Ran all test suites matching test/dom/framework/twin-reuse.test.ts.
+rc=1
+tree-clean-check-done

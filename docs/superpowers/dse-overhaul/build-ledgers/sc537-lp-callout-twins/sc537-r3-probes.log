@@ -1,0 +1,157 @@
+# SC-537 r3 probe runs (R537 scenario injected into a scratch copy of the HEAD lifecycle harness; real Obsidian 1.15.0 LP). h* = HEAD 4e3de39c bundle (sha256 402aedb1...), b* = f81a277 bundle (753da90d...), f* = HEAD + reviewer candidate guard (docChanged || viewportChanged || selectionSet). Full JSON per run: /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc537-r3-review-rv3/runs/<run>/r537.json
+######## probe run h01
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 seq2-01: clean
+R537 far: PROBLEMS :: step 1 scroll to block 1: A card of block 1 (R8) shows 6, disk 5 | step 2 check: A card of block 1 (R8) shows 6, disk 5 | step 3 click A1: disk [7,5] want [6,6] | step 5 check: disk [7,5] want [6,6] | step 7 check: disk [7,5] want [6,6]
+R537 far-nopark: PROBLEMS :: step 1 scroll to block 1: A card of block 1 (R12) shows 6, disk 5 | step 2 check: A card of block 1 (R12) shows 6, disk 5 | step 3 click A1: disk [7,5] want [6,6] | step 5 check: disk [7,5] want [6,6]
+R537 far-up-from-low: PROBLEMS :: step 3 scroll to block 1: A card of block 1 (R13) shows 6, disk 5 | step 4 check: A card of block 1 (R13) shows 6, disk 5 | step 5 click A1: disk [7,5] want [6,6]
+OBSIDIAN-LIFECYCLE R537 ok (cases seq2-01,far,far-nopark,far-up-from-low)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=66s
+######## probe run h02
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :160, port 9539, 1 scenario(s)
+R537 seq2-10: clean
+R537 seq2-0011: clean
+R537 seq2-0101: clean
+R537 seq2-1100: clean
+R537 seq3-012: clean
+R537 seq3-021: clean
+R537 seq3-102: clean
+R537 seq3-120: clean
+R537 seq3-201: clean
+R537 seq3-210: clean
+R537 xy-1320: clean
+R537 xy-002: clean
+R537 nested-10: clean
+R537 nested-001: clean
+R537 cross-01: PROBLEMS :: text outside the quotes changed
+R537 cross-001: PROBLEMS :: text outside the quotes changed
+R537 cross2-01: PROBLEMS :: text outside the quotes changed
+R537 cross2-10: PROBLEMS :: text outside the quotes changed
+OBSIDIAN-LIFECYCLE R537 ok (cases seq2-10,seq2-0011,seq2-0101,seq2-1100,seq3-012,seq3-021,seq3-102,seq3-120,seq3-201,seq3-210,xy-1320,xy-002,nested-10,nested-001,cross-01,cross-001,cross2-01,cross2-10)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=260s
+######## probe run h03
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :160, port 9539, 1 scenario(s)
+R537 fast-01-100: clean
+R537 fast-10-100: clean
+R537 fast-01-450: clean
+R537 fast-01-700: clean
+R537 fast-010-150: clean
+R537 fast3-012-120: PROBLEMS :: step 0 fast [["A",0],["A",1],["A",2]] gap 120 ok [true,true,true]: disk [6,5,7] want [6,6,6] | step 1 click A2: disk [6,5,8] want [6,6,7]
+R537 form-up-form-low: clean
+R537 form-low-click-up: clean
+R537 form-up-click-up: clean
+R537 form-up-nopark-click-low: clean
+R537 panes-lplp: clean
+R537 panes-lprv: clean
+R537 panes-lplp-fast: clean
+OBSIDIAN-LIFECYCLE R537 ok (cases fast-01-100,fast-10-100,fast-01-450,fast-01-700,fast-010-150,fast3-012-120,form-up-form-low,form-low-click-up,form-up-click-up,form-up-nopark-click-low,panes-lplp,panes-lprv,panes-lplp-fast)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=216s
+######## probe run h04
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 fast3-012-120: PROBLEMS :: step 0 fast [["A",0],["A",1],["A",2]] gap 120 ok [true,true,true]: disk [6,5,7] want [6,6,6] | step 1 click A2: disk [6,5,8] want [6,6,7]
+R537 fast3-012-120b: PROBLEMS :: step 0 fast [["A",0],["A",1],["A",2]] gap 120 ok [true,true,true]: disk [6,5,7] want [6,6,6]
+R537 fast3-01-120: PROBLEMS :: step 0 fast [["A",0],["A",1]] gap 120 ok [true,true]: disk [6,5,6] want [6,6,5] | step 0 fast [["A",0],["A",1]] gap 120 ok [true,true]: A card of block 1 (R20) shows 6, disk 5 | step 1 click A2: disk [6,5,7] want [6,6,6]
+R537 fast3-01-120b: PROBLEMS :: step 0 fast [["A",0],["A",1]] gap 120 ok [true,true]: disk [6,5,6] want [6,6,5] | step 0 fast [["A",0],["A",1]] gap 120 ok [true,true]: A card of block 1 (R27) shows 6, disk 5
+R537 fast3-12-120: clean
+R537 fast2-01-0: clean
+OBSIDIAN-LIFECYCLE R537 ok (cases fast3-012-120,fast3-012-120b,fast3-01-120,fast3-01-120b,fast3-12-120,fast2-01-0)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=92s
+######## probe run b04
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 fast3-012-120: PROBLEMS :: step 0 fast [["A",0],["A",1],["A",2]] gap 120 ok [true,true,true]: disk [6,5,7] want [6,6,6] | step 0 fast [["A",0],["A",1],["A",2]] gap 120 ok [true,true,true]: A card of block 1 (R1) shows 6, disk 5 | step 1 click A2: disk [6,5,8] want [6,6,7] | step 1 click A2: A card of block 1 (R1) shows 6, disk 5
+R537 fast3-012-120b: PROBLEMS :: step 0 fast [["A",0],["A",1],["A",2]] gap 120 ok [true,true,true]: disk [6,5,7] want [6,6,6] | step 0 fast [["A",0],["A",1],["A",2]] gap 120 ok [true,true,true]: A card of block 1 (R10) shows 6, disk 5
+R537 fast3-01-120: PROBLEMS :: step 0 fast [["A",0],["A",1]] gap 120 ok [true,true]: disk [6,5,6] want [6,6,5] | step 0 fast [["A",0],["A",1]] gap 120 ok [true,true]: A card of block 1 (R18) shows 6, disk 5 | step 1 click A2: disk [6,5,7] want [6,6,6] | step 1 click A2: A card of block 1 (R18) shows 6, disk 5
+R537 fast3-01-120b: PROBLEMS :: step 0 fast [["A",0],["A",1]] gap 120 ok [true,true]: disk [6,5,6] want [6,6,5] | step 0 fast [["A",0],["A",1]] gap 120 ok [true,true]: A card of block 1 (R27) shows 6, disk 5
+R537 fast3-12-120: clean
+R537 fast2-01-0: clean
+OBSIDIAN-LIFECYCLE R537 ok (cases fast3-012-120,fast3-012-120b,fast3-01-120,fast3-01-120b,fast3-12-120,fast2-01-0)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=92s
+######## probe run h05
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 raw-lower-100: PROBLEMS :: step 0 click + 0, then title of callout 1 after 100 ms (ok true true): A card of block 1 (R1) shows 6, disk 5 | step 1 check: A card of block 1 (R1) shows 6, disk 5 | step 2 click A1: disk [7,5] want [6,6] | step 2 click A1: A card of block 1 (R1) shows 7, disk 5
+R537 raw-lower-1500: clean
+R537 undo: clean
+R537 type-header: clean
+R537 type-value-back: clean
+R537 type-during-write: PROBLEMS :: notices ["“Lifecycle/twin-callouts.md” has been modified externally, merging changes automatically."]
+R537 newline-during-write: PROBLEMS :: notices ["“Lifecycle/twin-callouts.md” has been modified externally, merging changes automatically."]
+R537 newline-after-write: PROBLEMS :: step 0 click A0: A 1 cards for 2 blocks
+R537 nondse: clean
+OBSIDIAN-LIFECYCLE R537 ok (cases raw-lower-100,raw-lower-1500,undo,type-header,type-value-back,type-during-write,newline-during-write,newline-after-write,nondse)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=157s
+######## probe run h06
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 perf: {"judgedMid":{"live":24,"inEditorDom":14,"inCalloutWidget":14,"docChars":125619,"docLines":3003},"listenerMid":{"listener":true,"n":300,"mean":1.0637,"p50":0.8,"p95":2.4,"max":5,"releases":0},"typingAbove":{"n":200,"mean":9.547,"p50":8.9,"p95":14.2,"max":19.5},"typingEnd":{"n":200,"mean":2.777,"p50":2.5,"p95":4.1,"max":5.6},"releases":0,"problems":[]}
+R537 perf-big: {"judgedMid":{"live":40,"inEditorDom":40,"inCalloutWidget":40,"docChars":5109,"docLines":443},"listenerMid":{"listener":true,"n":300,"mean":16.351,"p50":15.7,"p95":19.6,"max":49.4,"releases":0},"typingAbove":{"n":200,"mean":31.497,"p50":29.6,"p95":41,"max":89.4},"typingEnd":{"n":200,"mean":17.318,"p50":16.6,"p95":21.3,"max":31.9},"releases":0,"problems":[]}
+R537 scroll-real: {"rec":{"frames":176,"scrollTop":[1850,1850],"lowerTop":[349,390],"lowerH":[127,127],"missing":0,"nChanges":2},"disk":[6,5]}
+R537 scroll-stop: {"rec":{"frames":174,"scrollTop":[1850,1850],"lowerTop":[349,349],"lowerH":[127,127],"missing":0,"nChanges":1},"disk":[6,5]}
+OBSIDIAN-LIFECYCLE R537 ok (cases perf,perf-big,scroll-real,scroll-stop)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=61s
+######## probe run b06
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 perf: {"judgedMid":{"live":24,"inEditorDom":14,"inCalloutWidget":14,"docChars":125619,"docLines":3003},"listenerMid":{"listener":false},"typingAbove":{"n":200,"mean":8.458,"p50":7.8,"p95":12.6,"max":20.9},"typingEnd":{"n":200,"mean":1.563,"p50":1.5,"p95":2.1,"max":2.7},"releases":0,"problems":[]}
+R537 perf-big: {"judgedMid":{"live":40,"inEditorDom":40,"inCalloutWidget":40,"docChars":5109,"docLines":443},"listenerMid":{"listener":false},"typingAbove":{"n":200,"mean":32.296,"p50":29.8,"p95":48.2,"max":123.2},"typingEnd":{"n":200,"mean":1.109,"p50":1,"p95":1.8,"max":4.8},"releases":0,"problems":[]}
+R537 scroll-real: {"rec":{"frames":177,"scrollTop":[1850,1850],"lowerTop":[349,390],"lowerH":[127,127],"missing":0,"nChanges":3},"disk":[6,5]}
+R537 scroll-stop: {"rec":{"frames":173,"scrollTop":[1850,1850],"lowerTop":[349,349],"lowerH":[127,127],"missing":0,"nChanges":2},"disk":[6,5]}
+R537 type-during-write: PROBLEMS :: step 0 click 0 then typed "Z" (ok true): A card of block 1 (R8315) shows 6, disk 5 | step 1 save: A card of block 1 (R8315) shows 6, disk 5 | step 2 check: A card of block 1 (R8315) shows 6, disk 5 | step 3 click A1: disk [7,5] want [6,6] | step 3 click A1: A card of block 1 (R8315) shows 7, disk 5 | step 4 click A0: disk [8,5] want [7,6]
+R537 newline-during-write: PROBLEMS :: step 0 click 0 then typed "\nNEWLINE" (ok true): A card of block 1 (R8322) shows 6, disk 5 | step 1 save: A card of block 1 (R8322) shows 6, disk 5 | step 2 check: A card of block 1 (R8322) shows 6, disk 5 | step 3 click A1: disk [7,5] want [6,6] | step 3 click A1: A card of block 1 (R8322) shows 7, disk 5 | step 4 click A0: disk [8,5] want [7,6]
+R537 raw-lower-100: PROBLEMS :: step 0 click + 0, then title of callout 1 after 100 ms (ok true true): A card of block 1 (R8329) shows 6, disk 5 | step 1 check: A card of block 1 (R8329) shows 6, disk 5 | step 2 click A1: disk [7,5] want [6,6] | step 2 click A1: A card of block 1 (R8329) shows 7, disk 5
+R537 far: PROBLEMS :: step 1 scroll to block 1: A card of block 1 (R8335) shows 6, disk 5 | step 2 check: A card of block 1 (R8335) shows 6, disk 5 | step 3 click A1: disk [7,5] want [6,6] | step 5 check: disk [7,5] want [6,6] | step 7 check: disk [7,5] want [6,6]
+OBSIDIAN-LIFECYCLE R537 ok (cases perf,perf-big,scroll-real,scroll-stop,type-during-write,newline-during-write,raw-lower-100,far)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=137s
+######## probe run h07
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 perf: {"judgedMid":{"live":24,"inEditorDom":14,"inCalloutWidget":14,"docChars":125619,"docLines":3003},"listenerMid":{"listener":true,"n":300,"mean":1.1737,"p50":0.9,"p95":2.6,"max":5.8,"releases":0},"profile":{"widget":0.05,"gsi":0,"section":0.095,"ordinal":0.52,"full":0.625,"split":0.435,"entries":14},"typingAbove":{"n":200,"mean":10.366,"p50":9.7,"p95":14.5,"max":22.3},"typingEnd":{"n":200,"mean":3.56,"p50":3.2,"p95":5.7,"max":7.5},"releases":0,"problems":[]}
+R537 perf-big: {"judgedMid":{"live":40,"inEditorDom":40,"inCalloutWidget":40,"docChars":5109,"docLines":443},"listenerMid":{"listener":true,"n":300,"mean":18.3737,"p50":16.8,"p95":26.7,"max":61,"releases":0},"profile":{"widget":0.115,"gsi":0.035,"section":0.48,"ordinal":11.695,"full":18.42,"split":0.02,"entries":40},"typingAbove":{"n":200,"mean":33.916,"p50":31.8,"p95":46.5,"max":100.5},"typingEnd":{"n":200,"mean":21.2685,"p50":19.1,"p95":35.4,"max":42.9},"releases":0,"problems":[]}
+OBSIDIAN-LIFECYCLE R537 ok (cases perf,perf-big)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=44s
+######## probe run f08
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :160, port 9539, 1 scenario(s)
+R537 far: clean
+R537 far-nopark: clean
+R537 far-up-from-low: clean
+R537 raw-lower-100: clean
+R537 seq2-01: clean
+R537 fast3-01-120: PROBLEMS :: step 0 fast [["A",0],["A",1]] gap 120 ok [true,true]: disk [6,5,6] want [6,6,5] | step 1 click A2: disk [6,5,7] want [6,6,6]
+R537 type-value-back: clean
+R537 perf: {"judgedMid":{"live":24,"inEditorDom":14,"inCalloutWidget":14,"docChars":125619,"docLines":3003},"listenerMid":{"listener":true,"n":300,"mean":2.2307,"p50":1.9,"p95":4.2,"max":14.9,"releases":0},"profile":{"widget":0.09,"gsi":0.01,"section":0.125,"ordinal":0.775,"full":1,"split":0.555,"entries":14},"typingAbove":{"n":200,"mean":18.1015,"p50":17.8,"p95":25.3,"max":58.9},"typingEnd":{"n":200,"mean":5.825,"p50":5.7,"p95":8.3,"max":11.1},"releases":7,"problems":[]}
+R537 perf-big: {"judgedMid":{"live":40,"inEditorDom":40,"inCalloutWidget":40,"docChars":5109,"docLines":443},"listenerMid":{"listener":true,"n":300,"mean":34.3047,"p50":34.6,"p95":44.8,"max":55.8,"releases":0},"profile":{"widget":0.26,"gsi":0.035,"section":0.81,"ordinal":19.86,"full":33.625,"split":0.045,"entries":40},"typingAbove":{"n":200,"mean":49.423,"p50":48.7,"p95":66.3,"max":101.8},"typingEnd":{"n":200,"mean":28.7685,"p50":28.1,"p95":42.1,"max":48.4},"releases":7,"problems":[]}
+OBSIDIAN-LIFECYCLE R537 ok (cases far,far-nopark,far-up-from-low,raw-lower-100,seq2-01,fast3-01-120,type-value-back,perf,perf-big)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=158s
+######## probe run h09
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 far: PROBLEMS :: step 1 scroll to block 1: A card of block 1 (R1) shows 6, disk 5 | step 2 check: A card of block 1 (R1) shows 6, disk 5 | step 3 click A1: disk [7,5] want [6,6] | step 5 check: disk [7,5] want [6,6] | step 7 check: disk [7,5] want [6,6]
+R537 far-plain: PROBLEMS :: text outside the quotes changed
+R537 raw-lower-100: PROBLEMS :: step 0 click + 0, then title of callout 1 after 100 ms (ok true true): A card of block 1 (R10) shows 6, disk 5 | step 1 check: A card of block 1 (R10) shows 6, disk 5 | step 2 click A1: disk [7,5] want [6,6] | step 2 click A1: A card of block 1 (R10) shows 7, disk 5
+R537 unload: {"before":1,"afterDisable":0,"afterEnable":1,"problems":["after re-enable click 0: disk [5,5] want [6,5]","after re-enable click 1: disk [5,5] want [6,6]"]}
+OBSIDIAN-LIFECYCLE R537 ok (cases far,far-plain,raw-lower-100,unload)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=77s
+######## probe run b09
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 unload: {"before":0,"afterDisable":0,"afterEnable":0,"problems":["after re-enable click 0: disk [5,5] want [6,5]","after re-enable click 1: disk [5,5] want [6,6]","listener counts 0/0/0, want 1/0/1"]}
+OBSIDIAN-LIFECYCLE R537 ok (cases unload)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=32s
+######## probe run h10
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 far-form: PROBLEMS :: step 3 click A1: disk [6,5] want [5,6] | step 3 click A1: names ["Twin","Twin"] want ["Edited","Twin"] | step 5 check: disk [6,5] want [5,6] | step 5 check: names ["Twin","Twin"] want ["Edited","Twin"]
+OBSIDIAN-LIFECYCLE R537 ok (cases far-form)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=22s
+######## probe run f10
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9539, 1 scenario(s)
+R537 far-form: clean
+OBSIDIAN-LIFECYCLE R537 ok (cases far-form)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=17s

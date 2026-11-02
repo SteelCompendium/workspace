@@ -1,0 +1,115 @@
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › the UPPER callout clicked: the editor update redraws the widget Obsidian handed to the lower slot from the lower block, and its click writes the lower block
+
+    no editor update listener was registered
+
+      546 | 		/** One editor update, as CodeMirror calls its listeners; then the redraws it starts finish. */
+      547 | 		async function update(over: { docChanged?: boolean; view?: unknown } = {}): Promise<void> {
+    > 548 | 			if (!listener) throw new Error('no editor update listener was registered');
+          | 			                     ^
+      549 | 			listener.value({ docChanged: over.docChanged ?? true, view: over.view ?? cm, state: cm.state });
+      550 | 			await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS);
+      551 | 		}
+
+      at Object.update (test/dom/framework/twin-reuse.test.ts:548:25)
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:578:11)
+
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › a write that is not the view's own (the edit form's Save) on the upper callout: a click on the lower one does not erase the edit
+
+    no editor update listener was registered
+
+      546 | 		/** One editor update, as CodeMirror calls its listeners; then the redraws it starts finish. */
+      547 | 		async function update(over: { docChanged?: boolean; view?: unknown } = {}): Promise<void> {
+    > 548 | 			if (!listener) throw new Error('no editor update listener was registered');
+          | 			                     ^
+      549 | 			listener.value({ docChanged: over.docChanged ?? true, view: over.view ?? cm, state: cm.state });
+      550 | 			await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS);
+      551 | 		}
+
+      at Object.update (test/dom/framework/twin-reuse.test.ts:548:25)
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:595:11)
+
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › two blocks per callout: the redraw picks each by its place in the callout, and only the block whose body differs is redrawn
+
+    no editor update listener was registered
+
+      546 | 		/** One editor update, as CodeMirror calls its listeners; then the redraws it starts finish. */
+      547 | 		async function update(over: { docChanged?: boolean; view?: unknown } = {}): Promise<void> {
+    > 548 | 			if (!listener) throw new Error('no editor update listener was registered');
+          | 			                     ^
+      549 | 			listener.value({ docChanged: over.docChanged ?? true, view: over.view ?? cm, state: cm.state });
+      550 | 			await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS);
+      551 | 		}
+
+      at Object.update (test/dom/framework/twin-reuse.test.ts:548:25)
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:612:11)
+
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › an element still on the line the view's last write landed at is its own block, waiting for the editor to catch up: not redrawn
+
+    no editor update listener was registered
+
+      546 | 		/** One editor update, as CodeMirror calls its listeners; then the redraws it starts finish. */
+      547 | 		async function update(over: { docChanged?: boolean; view?: unknown } = {}): Promise<void> {
+    > 548 | 			if (!listener) throw new Error('no editor update listener was registered');
+          | 			                     ^
+      549 | 			listener.value({ docChanged: over.docChanged ?? true, view: over.view ?? cm, state: cm.state });
+      550 | 			await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS);
+      551 | 		}
+
+      at Object.update (test/dom/framework/twin-reuse.test.ts:548:25)
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:629:11)
+
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › an update that changed no text, one from another editor, or one that is not for a note: nothing is redrawn
+
+    no editor update listener was registered
+
+      546 | 		/** One editor update, as CodeMirror calls its listeners; then the redraws it starts finish. */
+      547 | 		async function update(over: { docChanged?: boolean; view?: unknown } = {}): Promise<void> {
+    > 548 | 			if (!listener) throw new Error('no editor update listener was registered');
+          | 			                     ^
+      549 | 			listener.value({ docChanged: over.docChanged ?? true, view: over.view ?? cm, state: cm.state });
+      550 | 			await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS);
+      551 | 		}
+
+      at Object.update (test/dom/framework/twin-reuse.test.ts:548:25)
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:643:11)
+
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › a plain Live Preview widget is not judged by the editor pass (the processor-time check keeps that case)
+
+    no editor update listener was registered
+
+      546 | 		/** One editor update, as CodeMirror calls its listeners; then the redraws it starts finish. */
+      547 | 		async function update(over: { docChanged?: boolean; view?: unknown } = {}): Promise<void> {
+    > 548 | 			if (!listener) throw new Error('no editor update listener was registered');
+          | 			                     ^
+      549 | 			listener.value({ docChanged: over.docChanged ?? true, view: over.view ?? cm, state: cm.state });
+      550 | 			await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS);
+      551 | 		}
+
+      at Object.update (test/dom/framework/twin-reuse.test.ts:548:25)
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:663:11)
+
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › registerFrameworkElements registers the update listener with the editor
+
+    expect(received).resolves.toBeUndefined()
+
+    Received promise rejected instead of resolved
+    Rejected to value: [Error: no editor update listener was registered]
+
+      669 | 	test('registerFrameworkElements registers the update listener with the editor', async () => {
+      670 | 		const t = await lp(noteOf(quoted('callout', 'Twin', 5)));
+    > 671 | 		await expect(t.update()).resolves.toBeUndefined(); // throws when no listener was registered
+          | 		      ^
+      672 | 	});
+      673 | });
+      674 |
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:671:9)
+
+Test Suites: 1 failed, 1 total
+Tests:       7 failed, 17 passed, 24 total
+Snapshots:   0 total
+Time:        3.247 s
+Ran all test suites matching test/dom/framework/twin-reuse.test.ts.
+rc=1
