@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: turning Draw Steel Elements off and back on no longer leaves cards in Live Preview callouts and embeds unclickable (SC-545).**
+  With a note open in Live Preview, turning the plugin off and on in Community plugins left the cards inside a
+  `> [!note]` callout, or inside a note embedded with `![[note]]`, on screen but dead: a click on + saved nothing and
+  no error showed. The cards are now redrawn when the plugin is back on, so the click saves. A note whose callout
+  was changed while the plugin was off (a click's save still pending when you turned it off) or that was opened while
+  the plugin was off is redrawn as a whole once the plugin is on, which clears that note's undo history.
+
 - **DSE plugin: in Live Preview, typing and scrolling in a note with a callout holding many blocks is no longer slowed by the identical-callout check (SC-547).**
   Since SC-537 the plugin checks, after every edit, scroll and cursor move, whether a callout's cards still sit on
   their own blocks. For a callout holding many blocks (forty counters, say) that check re-read the whole callout once
