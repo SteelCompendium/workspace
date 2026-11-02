@@ -134,3 +134,10 @@ byte-identical to dabfb518 (shots/freeze/parity carry). Scope fold beyond the di
 click → default click, and `ClickOptions.cdp` removed from `e2e/driver/dse.ts` (owner rulings D and LOW-3). No new
 dependency; CHANGELOG: none (test-only). dse-verify text: sc534-dse-verify-proposal.md (not applied). No tickets filed.
 SC-529 set Duplicate of SC-534. No overlap with SC-546 (`e2e/run.mjs` untouched).
+
+## DONE (2026-11-02)
+
+Landed by the dispatcher: dse develop fast-forwarded to `eaf64ba6`; workspace main `f34fe648` (pointer bump `33ea9821`);
+docs commit `78bd9cee` applied `sc534-dse-verify-proposal.md` (SC-539 bullet confirmation + spec rule, new CURRENT) and
+preserved this ledger to `docs/superpowers/dse-overhaul/build-ledgers/sc534-e2e-chrl01-flake/`. Worktree removed.
+SC-534 flipped to Done with a closing comment. SC-529 Duplicate of SC-534. No follow-up tickets.
