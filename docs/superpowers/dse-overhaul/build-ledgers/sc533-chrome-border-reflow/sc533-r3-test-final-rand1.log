@@ -1,0 +1,25 @@
+FAIL dom test/dom/framework/chromeRound2.test.ts
+  ● SC-533 — frame-border vars are published in one batched animation frame › unloading the only pending owner cancels the frame: nothing is read at all
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 0
+
+      214 | 		only.owner.load();
+      215 | 		only.owner.unload();
+    > 216 | 		expect(cancel).toHaveBeenCalledTimes(1);
+          | 		               ^
+      217 | 		await nextFrame();
+      218 | 		expect(log).toEqual([]);
+      219 | 	});
+
+      at Object.<anonymous> (test/dom/framework/chromeRound2.test.ts:216:18)
+
+Seed:        1
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 45 passed, 46 total
+Snapshots:   0 total
+Time:        2.239 s
+Ran all test suites matching test/dom/framework/chromeRound2.test.ts.
+rand 1 rc=1

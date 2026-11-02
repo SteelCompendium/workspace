@@ -1,0 +1,48 @@
+// ===== SC-533 r3 PROBE P533Z (scratch only): mechanism of the never-written panels; needs probe-r3x first and the finalx2 bundle =====
+SCENARIOS.push({
+	id: 'P533Z',
+	async run(t) {
+		const rep = { tag: R3X_TAG, variant: await t.ev('globalThis.__sc533variant'), load: fs.readFileSync('/proc/loadavg', 'utf8').trim() };
+		const LEAF = 'app.workspace.getMostRecentLeaf()';
+		const errMark = await t.mark();
+		await t.ev(R3X_INSTALL);
+		await t.ev(`(async () => { const f = app.vault.getAbstractFileByPath(${JSON.stringify(R3X_NOTE)}); if (f) await app.vault.modify(f, ${JSON.stringify(R3X_TEXT)}); else await app.vault.create(${JSON.stringify(R3X_NOTE)}, ${JSON.stringify(R3X_TEXT)}); return true; })()`);
+		const RUN = (scopeExpr, scrollerSel) => `(async () => {
+			const L = window.__r3; const scope = ${scopeExpr}; const sc = scope.querySelector(${JSON.stringify(scrollerSel)}) ?? scope;
+			const nameOf = (p) => { const root = p.closest('[data-dse-element]'); return root ? root.getAttribute('data-dse-element') + ':' + (root.textContent || '').replace(/\\s+/g, ' ').slice(0, 14) : '?'; };
+			const log = () => (globalThis.__sc533log || []);
+			const atOpen = log().map((r) => ({ name: nameOf(r.panelEl), connAtQueue: r.connAtQueue, connAtFlush: r.connAtFlush, flushed: r.tFlush > 0, gap: r.tFlush > 0 ? +(r.tFlush - r.tQueue).toFixed(1) : null, connNow: r.panelEl.isConnected }));
+			const badSeen = new Map();
+			const sample = () => {
+				for (const p of scope.querySelectorAll('.dse-chrome')) {
+					if (!p.isConnected) continue;
+					const g = L.geo({ querySelectorAll: () => [p] })[0];
+					const r = p.getBoundingClientRect(); const sr = sc.getBoundingClientRect();
+					if (!(r.bottom > sr.top && r.top < sr.bottom) || g.varOk) continue;
+					if (badSeen.has(p)) continue;
+					const recs = log().filter((x) => x.panelEl === p).map((x) => ({ connAtQueue: x.connAtQueue, connAtFlush: x.connAtFlush, flushed: x.tFlush > 0 }));
+					badSeen.set(p, { name: nameOf(p), ct: g.ct, bt: g.bt, inset: g.insetR, gap: g.gapTop, recs });
+				}
+			};
+			sc.scrollTop = 0; await new Promise((r) => setTimeout(r, 400));
+			for (let i = 0; i < 400; i++) { sample(); const b = sc.scrollTop; sc.scrollTop = b + 150; await new Promise((r) => setTimeout(r, 150)); if (sc.scrollTop === b) break; }
+			sample();
+			return { atOpen, bad: Array.from(badSeen.values()), logLen: log().length };
+		})()`;
+		await t.ev(`(async () => { const leaf = ${LEAF}; await leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(R3X_NOTE)}, mode: 'source', source: false }, active: true }); leaf.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+		await t.sleep(1800);
+		rep.LP = await t.ev(RUN(`(${LEAF}.view.containerEl.querySelector('.markdown-source-view'))`, '.cm-scroller'));
+		await t.ev(`(async () => { await ${LEAF}.setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true }); globalThis.__sc533log = []; return true; })()`);
+		await t.sleep(600);
+		await t.open(R3X_NOTE);
+		await t.sleep(1500);
+		rep.R = await t.ev(RUN(`(${LEAF}.view.containerEl.querySelector('.markdown-reading-view'))`, '.markdown-preview-view'));
+		await t.ev(`(async () => { await ${LEAF}.setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true }); return true; })()`);
+		rep.errors = await t.errorsSince(errMark);
+		fs.mkdirSync(R3X_OUT, { recursive: true });
+		const f = path.join(R3X_OUT, `r3z-${R3X_TAG}.json`);
+		fs.writeFileSync(f, JSON.stringify(rep, null, 1));
+		return `report -> ${f}; errors ${rep.errors.length}`;
+	},
+});
+// ===== end SC-533 r3 PROBE Z =====

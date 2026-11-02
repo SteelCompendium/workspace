@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# SC-533 r3 runner (copy of r2's): run.sh <tag> <scene R|LP> <variants csv> <rounds> <reps> [round offset] [scenario id] [probe files...]
+# One real Obsidian session (own Xvfb :160-:199 chosen by the harness, CDP port 9551).
+set -u
+TAG=$1; SCENE=$2; VARS=$3; ROUNDS=$4; REPS=$5; ROFF=${6:-0}; SCN=${7:-P533}
+shift 7 2>/dev/null || shift $#
+R3=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc533-r3-2128bb62
+REPO=$R3/src
+H=$REPO/visual-harness/r3-harness-$TAG-$SCENE.mjs
+LOG=$R3/run-$TAG-$SCENE.log
+PORT=9551
+BUNDLE=${R3_BUNDLE:-$R3/bundles/stock}
+PROBES="$R3/probe-p533.mjs.txt"
+if [ "$#" -gt 0 ]; then PROBES="$*"; fi
+if ss -ltnH | awk '{print $4}' | grep -q ":$PORT\$"; then echo "port $PORT busy"; exit 8; fi
+node "$R3/mkharness.cjs" "$REPO/visual-harness/obsidian-lifecycle.mjs" "$H" $PROBES > "$R3/mk-$TAG-$SCENE.log" 2>&1 || { echo "mk-failed"; cat "$R3/mk-$TAG-$SCENE.log"; exit 9; }
+echo "uptime-start: $(uptime)" > "$LOG"
+env S533_REPO="$REPO" P533_OUT="$R3/out" P533_TAG="$TAG" P533_SCENE="$SCENE" P533_BUNDLES="$R3/bundles" P533_VARIANTS="$VARS" P533_ROUNDS="$ROUNDS" P533_REPS="$REPS" P533_ROFF="$ROFF" \
+  XVFB_BIN=/home/scott/code/steelCompendium/workspace/draw-steel-elements/.devbox/nix/profile/default/bin/Xvfb \
+  DSE_LIFECYCLE_PORT=$PORT DSE_LIFECYCLE_BUNDLE="$BUNDLE" timeout 580 node "$H" --only=$SCN >> "$LOG" 2>&1
+rc=$?
+echo "rc=$rc" >> "$LOG"
+echo "uptime-end: $(uptime)" >> "$LOG"
+echo "porcelain-after: [$(git -C /home/scott/code/steelCompendium/worktrees/sc533-chrome-border-reflow/draw-steel-elements status --porcelain | tr '\n' ' ')] head: $(git -C /home/scott/code/steelCompendium/worktrees/sc533-chrome-border-reflow/draw-steel-elements rev-parse --short HEAD)" >> "$LOG"
+grep -E "OBSIDIAN-LIFECYCLE|uptime|rc=|porcelain|R3X" "$LOG" | cut -c1-1500
+echo "log=$LOG"
+exit $rc

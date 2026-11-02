@@ -1,0 +1,134 @@
+FAIL dom test/dom/framework/chromeRound2.test.ts
+  ● SC-169 R2 §1 — one placement geometry for every element › mountChrome republishes the anchor border widths CSS cannot read, on the panel, a frame later (SC-533)
+
+    expect(received).toMatch(expected)
+
+    Expected pattern: /^\d/
+    Received string:  ""
+
+      113 | 			// the point — the property being written at all is: without it the panel is offset
+      114 | 			// from the anchor's padding box while the reader measures its border box.
+    > 115 | 			expect(panel.style.getPropertyValue('--dse-chrome-frame-border-top')).toMatch(/^\d/);
+          | 			                                                                      ^
+      116 | 			expect(panel.style.getPropertyValue('--dse-chrome-frame-border-right')).toMatch(/^\d/);
+      117 | 			expect(anchor.style.getPropertyValue('--dse-chrome-frame-border-top')).toBe('');
+      118 | 		} finally {
+
+      at Object.<anonymous> (test/dom/framework/chromeRound2.test.ts:115:74)
+
+  ● SC-533 — frame-border vars are published in one batched animation frame › mounting reads nothing and writes nothing; the next frame puts the vars on the panel, not the anchor
+
+    TypeError: Cannot read properties of undefined (reading 'has')
+
+      217 | 		const log = spyOrder();
+      218 | 		const { anchor, panel } = mount(3);
+    > 219 | 		expect(log).toEqual([]);
+          | 		            ^
+      220 | 		expect(panel.style.getPropertyValue(TOP)).toBe('');
+      221 | 		await nextFrame();
+      222 | 		expect(log.filter((e) => e.kind === 'read' && e.el === anchor)).toHaveLength(2);
+
+      at Object.<anonymous> (test/dom/framework/chromeRound2.test.ts:219:15)
+
+  ● SC-533 — frame-border vars are published in one batched animation frame › two mounts in one task share one frame, and every read happens before any write
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 0
+
+      232 | 		const one = mount(2);
+      233 | 		const two = mount(5);
+    > 234 | 		expect(frames).toHaveBeenCalledTimes(1);
+          | 		               ^
+      235 | 		await nextFrame();
+      236 | 		expect(order(log, one.anchor, two.anchor)).toBe('RRRRWWWW');
+      237 | 		expect(one.panel.style.getPropertyValue(TOP)).toBe('2px');
+
+      at Object.<anonymous> (test/dom/framework/chromeRound2.test.ts:234:18)
+
+  ● SC-533 — frame-border vars are published in one batched animation frame › a panel out of the document at the frame is not read then; the observer hands it its vars once its anchor intersects
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "3px"
+    Received: ""
+
+      250 | 		// The connected panel is published at the frame; the two detached ones are not read, not written, and parked.
+      251 | 		expect(log.filter((e) => e.el === out1.anchor || e.el === out2.anchor)).toEqual([]);
+    > 252 | 		expect(kept.panel.style.getPropertyValue(TOP)).toBe('3px');
+          | 		                                               ^
+      253 | 		expect(out1.panel.style.getPropertyValue(TOP)).toBe('');
+      254 | 		expect(ios).toHaveLength(1);
+      255 | 		expect([...ios[0].observed]).toEqual([out1.anchor, out2.anchor]);
+
+      at Object.<anonymous> (test/dom/framework/chromeRound2.test.ts:252:50)
+
+  ● SC-533 — frame-border vars are published in one batched animation frame › a parked panel stays parked while its anchor is not intersecting, or while the panel is still out of the document
+
+    TypeError: Cannot read properties of undefined (reading 'report')
+
+      273 | 		await nextFrame();
+      274 | 		const log = spyOrder();
+    > 275 | 		ios[0].report([out.anchor, false]);
+          | 		       ^
+      276 | 		ios[0].report([out.anchor, true]); // intersecting but the panel is not in the document: nothing to measure
+      277 | 		expect(log).toEqual([]);
+      278 | 		expect([...ios[0].observed]).toEqual([out.anchor]);
+
+      at Object.<anonymous> (test/dom/framework/chromeRound2.test.ts:275:10)
+
+  ● SC-533 — frame-border vars are published in one batched animation frame › unloading a parked owner unobserves its anchor; a stale report then reads and writes nothing
+
+    TypeError: Cannot read properties of undefined (reading 'observed')
+
+      290 | 		other.anchor.remove();
+      291 | 		await nextFrame();
+    > 292 | 		expect([...ios[0].observed]).toEqual([gone.anchor, other.anchor]);
+          | 		                  ^
+      293 | 		gone.owner.unload();
+      294 | 		expect([...ios[0].observed]).toEqual([other.anchor]);
+      295 | 		const log = spyOrder();
+
+      at Object.<anonymous> (test/dom/framework/chromeRound2.test.ts:292:21)
+
+  ● SC-533 — frame-border vars are published in one batched animation frame › without IntersectionObserver a panel out of the document, or whose owner unloaded before the frame, gets no read and no write
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "4px"
+    Received: ""
+
+      313 | 		expect(gone.panel.style.getPropertyValue(TOP)).toBe('');
+      314 | 		expect(unloaded.panel.style.getPropertyValue(TOP)).toBe('');
+    > 315 | 		expect(kept.panel.style.getPropertyValue(TOP)).toBe('4px');
+          | 		                                               ^
+      316 | 	});
+      317 |
+      318 | 	test('unloading the only pending owner cancels the frame: nothing is read at all', async () => {
+
+      at Object.<anonymous> (test/dom/framework/chromeRound2.test.ts:315:50)
+
+  ● SC-533 — frame-border vars are published in one batched animation frame › unloading the only pending owner cancels the frame: nothing is read at all
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 0
+
+      321 | 		const only = mount(4);
+      322 | 		only.owner.unload();
+    > 323 | 		expect(cancel).toHaveBeenCalledTimes(1);
+          | 		               ^
+      324 | 		await nextFrame();
+      325 | 		expect(log).toEqual([]);
+      326 | 	});
+
+      at Object.<anonymous> (test/dom/framework/chromeRound2.test.ts:323:18)
+
+Test Suites: 1 failed, 1 total
+Tests:       8 failed, 41 passed, 49 total
+Snapshots:   0 total
+Time:        2.25 s
+Ran all test suites matching test/dom/framework/chromeRound2.test.ts.
+stock rc=1

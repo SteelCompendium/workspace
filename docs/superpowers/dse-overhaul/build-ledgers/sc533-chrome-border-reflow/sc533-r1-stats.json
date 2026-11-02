@@ -1,0 +1,1397 @@
+{
+ "main": {
+  "R": {
+   "stock": {
+    "tRaf": {
+     "n": 12,
+     "med": 827.2,
+     "p90": 860.0,
+     "iqr": 47.3,
+     "min": 793,
+     "max": 893.8
+    },
+    "tPost": {
+     "n": 12,
+     "med": 833.8,
+     "p90": 865.2,
+     "iqr": 46.8,
+     "min": 797.9,
+     "max": 898.9
+    },
+    "warmup_tPost": {
+     "n": 4,
+     "med": 869.7,
+     "p90": 884.2,
+     "iqr": 30.3,
+     "min": 833,
+     "max": 885.6
+    }
+   },
+   "instr": {
+    "tRaf": {
+     "n": 12,
+     "med": 834.9,
+     "p90": 911.8,
+     "iqr": 54.5,
+     "min": 799.9,
+     "max": 950.6
+    },
+    "tPost": {
+     "n": 12,
+     "med": 839.6,
+     "p90": 917.6,
+     "iqr": 54.6,
+     "min": 804.8,
+     "max": 956
+    },
+    "warmup_tPost": {
+     "n": 4,
+     "med": 873.6,
+     "p90": 918.0,
+     "iqr": 61.5,
+     "min": 841.9,
+     "max": 925.4
+    },
+    "mounts_per_draw": [
+     "1"
+    ],
+    "calls_per_draw": [
+     "2"
+    ],
+    "call1_Top": {
+     "n": 12,
+     "med": 193.0,
+     "p90": 204.0,
+     "iqr": 17.2,
+     "min": 176.1,
+     "max": 205.1
+    },
+    "call2_Right": {
+     "n": 12,
+     "med": 177.7,
+     "p90": 192.5,
+     "iqr": 9.0,
+     "min": 162.4,
+     "max": 210.6
+    },
+    "sum": {
+     "n": 12,
+     "med": 369.1,
+     "p90": 396.3,
+     "iqr": 29.9,
+     "min": 338.6,
+     "max": 412.5
+    },
+    "call2_over_call1_med": 0.93,
+    "conn": [
+     "11"
+    ],
+    "inFound": [
+     "11"
+    ],
+    "border_px": [
+     "1"
+    ],
+    "mount_at_med": 33.5
+   },
+   "stub": {
+    "tRaf": {
+     "n": 12,
+     "med": 496.0,
+     "p90": 523.4,
+     "iqr": 33.4,
+     "min": 462.9,
+     "max": 533.6
+    },
+    "tPost": {
+     "n": 12,
+     "med": 500.7,
+     "p90": 528.1,
+     "iqr": 33.1,
+     "min": 466.9,
+     "max": 538.4
+    },
+    "warmup_tPost": {
+     "n": 4,
+     "med": 498.9,
+     "p90": 521.2,
+     "iqr": 20.7,
+     "min": 481.3,
+     "max": 528.3
+    }
+   },
+   "batched": {
+    "tRaf": {
+     "n": 12,
+     "med": 654.3,
+     "p90": 751.0,
+     "iqr": 69.8,
+     "min": 633.7,
+     "max": 780.6
+    },
+    "tPost": {
+     "n": 12,
+     "med": 659.5,
+     "p90": 756.5,
+     "iqr": 70.9,
+     "min": 638.6,
+     "max": 787.7
+    },
+    "warmup_tPost": {
+     "n": 4,
+     "med": 684.6,
+     "p90": 737.4,
+     "iqr": 51.2,
+     "min": 658.3,
+     "max": 752.1
+    }
+   },
+   "verdict_tRaf": {
+    "stock_minus_stub": 331.2,
+    "pct": 40.0,
+    "spread_maxIQR": 47.3,
+    "REAL": true
+   },
+   "batched_tRaf": {
+    "stock_minus_batched": 172.9,
+    "batched_minus_stub": 158.3
+   },
+   "verdict_tPost": {
+    "stock_minus_stub": 333.1,
+    "pct": 39.9,
+    "spread_maxIQR": 46.8,
+    "REAL": true
+   },
+   "batched_tPost": {
+    "stock_minus_batched": 174.3,
+    "batched_minus_stub": 158.8
+   },
+   "paired_stock_minus_stub_tPost": {
+    "n": 4,
+    "med": 342.1,
+    "min": 312.3,
+    "max": 353.6,
+    "all": [
+     353.6,
+     312.3,
+     344.3,
+     340.0
+    ]
+   }
+  },
+  "LP": {
+   "stock": {
+    "tRaf": {
+     "n": 12,
+     "med": 926.4,
+     "p90": 1219.9,
+     "iqr": 195.8,
+     "min": 784.1,
+     "max": 1399.2
+    },
+    "tPost": {
+     "n": 12,
+     "med": 932.8,
+     "p90": 1229.8,
+     "iqr": 204.9,
+     "min": 789.9,
+     "max": 1411.7
+    },
+    "warmup_tPost": {
+     "n": 4,
+     "med": 876.1,
+     "p90": 1099.6,
+     "iqr": 133.9,
+     "min": 811.5,
+     "max": 1183.7
+    }
+   },
+   "instr": {
+    "tRaf": {
+     "n": 12,
+     "med": 907.8,
+     "p90": 974.5,
+     "iqr": 106.1,
+     "min": 772.2,
+     "max": 1066
+    },
+    "tPost": {
+     "n": 12,
+     "med": 915.0,
+     "p90": 991.9,
+     "iqr": 109.9,
+     "min": 778.7,
+     "max": 1074.4
+    },
+    "warmup_tPost": {
+     "n": 4,
+     "med": 926.0,
+     "p90": 991.1,
+     "iqr": 106.9,
+     "min": 852.8,
+     "max": 998.9
+    },
+    "mounts_per_draw": [
+     "1"
+    ],
+    "calls_per_draw": [
+     "2"
+    ],
+    "call1_Top": {
+     "n": 12,
+     "med": 204.7,
+     "p90": 227.9,
+     "iqr": 30.2,
+     "min": 178,
+     "max": 228.8
+    },
+    "call2_Right": {
+     "n": 12,
+     "med": 188.9,
+     "p90": 222.2,
+     "iqr": 25.1,
+     "min": 165,
+     "max": 224.7
+    },
+    "sum": {
+     "n": 12,
+     "med": 398.4,
+     "p90": 449.9,
+     "iqr": 43.8,
+     "min": 344.4,
+     "max": 452.8
+    },
+    "call2_over_call1_med": 0.942,
+    "conn": [
+     "11"
+    ],
+    "inFound": [
+     "11"
+    ],
+    "border_px": [
+     "1"
+    ],
+    "mount_at_med": 52.9
+   },
+   "stub": {
+    "tRaf": {
+     "n": 12,
+     "med": 547.0,
+     "p90": 670.7,
+     "iqr": 92.5,
+     "min": 490.9,
+     "max": 819.1
+    },
+    "tPost": {
+     "n": 12,
+     "med": 553.5,
+     "p90": 677.0,
+     "iqr": 93.1,
+     "min": 494.6,
+     "max": 828.9
+    },
+    "warmup_tPost": {
+     "n": 4,
+     "med": 632.5,
+     "p90": 701.6,
+     "iqr": 92.7,
+     "min": 529.6,
+     "max": 718.2
+    }
+   },
+   "batched": {
+    "tRaf": {
+     "n": 12,
+     "med": 763.0,
+     "p90": 857.0,
+     "iqr": 132.2,
+     "min": 615.4,
+     "max": 870.9
+    },
+    "tPost": {
+     "n": 12,
+     "med": 773.1,
+     "p90": 873.6,
+     "iqr": 135.7,
+     "min": 620.1,
+     "max": 878.6
+    },
+    "warmup_tPost": {
+     "n": 4,
+     "med": 690.2,
+     "p90": 744.2,
+     "iqr": 74.7,
+     "min": 635.3,
+     "max": 754.5
+    }
+   },
+   "verdict_tRaf": {
+    "stock_minus_stub": 379.4,
+    "pct": 41.0,
+    "spread_maxIQR": 195.8,
+    "REAL": true
+   },
+   "batched_tRaf": {
+    "stock_minus_batched": 163.4,
+    "batched_minus_stub": 216.0
+   },
+   "verdict_tPost": {
+    "stock_minus_stub": 379.3,
+    "pct": 40.7,
+    "spread_maxIQR": 204.9,
+    "REAL": true
+   },
+   "batched_tPost": {
+    "stock_minus_batched": 159.7,
+    "batched_minus_stub": 219.6
+   },
+   "paired_stock_minus_stub_tPost": {
+    "n": 4,
+    "med": 346.0,
+    "min": 235.1,
+    "max": 694.1,
+    "all": [
+     417.6,
+     694.1,
+     235.1,
+     274.4
+    ]
+   }
+  },
+  "E": {
+   "stock": {
+    "tRaf": {
+     "n": 24,
+     "med": 967.0,
+     "p90": 1689.9,
+     "iqr": 623.6,
+     "min": 807.4,
+     "max": 1751.9
+    },
+    "tPost": {
+     "n": 24,
+     "med": 973.1,
+     "p90": 1700.6,
+     "iqr": 626.4,
+     "min": 812.3,
+     "max": 1777.2
+    },
+    "warmup_tPost": {
+     "n": 8,
+     "med": 923.3,
+     "p90": 1604.6,
+     "iqr": 223.2,
+     "min": 803.1,
+     "max": 1833.1
+    }
+   },
+   "instr": {
+    "tRaf": {
+     "n": 24,
+     "med": 915.7,
+     "p90": 1545.5,
+     "iqr": 115.5,
+     "min": 783.2,
+     "max": 1847.7
+    },
+    "tPost": {
+     "n": 24,
+     "med": 927.9,
+     "p90": 1556.4,
+     "iqr": 113.8,
+     "min": 788,
+     "max": 1863.1
+    },
+    "warmup_tPost": {
+     "n": 8,
+     "med": 913.2,
+     "p90": 1099.5,
+     "iqr": 36.2,
+     "min": 819.4,
+     "max": 1486.2
+    },
+    "mounts_per_draw": [
+     "1"
+    ],
+    "calls_per_draw": [
+     "2"
+    ],
+    "call1_Top": {
+     "n": 24,
+     "med": 203.7,
+     "p90": 355.0,
+     "iqr": 23.0,
+     "min": 176.1,
+     "max": 459.1
+    },
+    "call2_Right": {
+     "n": 24,
+     "med": 190.6,
+     "p90": 310.3,
+     "iqr": 24.9,
+     "min": 165.3,
+     "max": 385
+    },
+    "sum": {
+     "n": 24,
+     "med": 390.6,
+     "p90": 671.3,
+     "iqr": 43.3,
+     "min": 341.4,
+     "max": 813.9
+    },
+    "call2_over_call1_med": 0.92,
+    "conn": [
+     "11"
+    ],
+    "inFound": [
+     "11"
+    ],
+    "border_px": [
+     "1"
+    ],
+    "mount_at_med": 42.9
+   },
+   "stub": {
+    "tRaf": {
+     "n": 24,
+     "med": 590.6,
+     "p90": 1017.7,
+     "iqr": 195.4,
+     "min": 473.2,
+     "max": 1213.2
+    },
+    "tPost": {
+     "n": 24,
+     "med": 595.7,
+     "p90": 1026.6,
+     "iqr": 195.5,
+     "min": 477.1,
+     "max": 1228.5
+    },
+    "warmup_tPost": {
+     "n": 8,
+     "med": 558.4,
+     "p90": 1155.2,
+     "iqr": 294.3,
+     "min": 485.3,
+     "max": 1265.1
+    }
+   },
+   "batched": {
+    "tRaf": {
+     "n": 24,
+     "med": 771.8,
+     "p90": 1234.4,
+     "iqr": 399.4,
+     "min": 628.7,
+     "max": 1448
+    },
+    "tPost": {
+     "n": 24,
+     "med": 777.1,
+     "p90": 1266.4,
+     "iqr": 403.2,
+     "min": 633,
+     "max": 1464.4
+    },
+    "warmup_tPost": {
+     "n": 8,
+     "med": 821.1,
+     "p90": 1115.4,
+     "iqr": 213.0,
+     "min": 682.6,
+     "max": 1217.7
+    }
+   },
+   "verdict_tRaf": {
+    "stock_minus_stub": 376.4,
+    "pct": 38.9,
+    "spread_maxIQR": 623.6,
+    "REAL": false
+   },
+   "batched_tRaf": {
+    "stock_minus_batched": 195.2,
+    "batched_minus_stub": 181.2
+   },
+   "verdict_tPost": {
+    "stock_minus_stub": 377.4,
+    "pct": 38.8,
+    "spread_maxIQR": 626.4,
+    "REAL": false
+   },
+   "batched_tPost": {
+    "stock_minus_batched": 196.0,
+    "batched_minus_stub": 181.4
+   },
+   "paired_stock_minus_stub_tPost": {
+    "n": 8,
+    "med": 367.9,
+    "min": 227.9,
+    "max": 1121.3,
+    "all": [
+     393.2,
+     1121.3,
+     227.9,
+     320.6,
+     1059,
+     242.0,
+     342.7,
+     404.9
+    ]
+   }
+  },
+  "ELP": {
+   "stock": {
+    "tRaf": {
+     "n": 12,
+     "med": 866.0,
+     "p90": 893.2,
+     "iqr": 37.5,
+     "min": 823.6,
+     "max": 933.6
+    },
+    "tPost": {
+     "n": 12,
+     "med": 873.2,
+     "p90": 898.4,
+     "iqr": 37.7,
+     "min": 829.5,
+     "max": 940.8
+    },
+    "warmup_tPost": {
+     "n": 4,
+     "med": 877.0,
+     "p90": 895.0,
+     "iqr": 17.4,
+     "min": 857.5,
+     "max": 900.8
+    }
+   },
+   "instr": {
+    "tRaf": {
+     "n": 12,
+     "med": 849.6,
+     "p90": 899.2,
+     "iqr": 39.5,
+     "min": 821.8,
+     "max": 918.2
+    },
+    "tPost": {
+     "n": 12,
+     "med": 858.5,
+     "p90": 905.3,
+     "iqr": 41.6,
+     "min": 827.8,
+     "max": 925.1
+    },
+    "warmup_tPost": {
+     "n": 4,
+     "med": 866.2,
+     "p90": 882.2,
+     "iqr": 13.1,
+     "min": 851,
+     "max": 888
+    },
+    "mounts_per_draw": [
+     "1"
+    ],
+    "calls_per_draw": [
+     "2"
+    ],
+    "call1_Top": {
+     "n": 12,
+     "med": 189.3,
+     "p90": 205.9,
+     "iqr": 8.8,
+     "min": 179,
+     "max": 213.7
+    },
+    "call2_Right": {
+     "n": 12,
+     "med": 175.7,
+     "p90": 182.7,
+     "iqr": 4.9,
+     "min": 170.4,
+     "max": 204.3
+    },
+    "sum": {
+     "n": 12,
+     "med": 364.6,
+     "p90": 390.3,
+     "iqr": 22.1,
+     "min": 350.6,
+     "max": 396.8
+    },
+    "call2_over_call1_med": 0.926,
+    "conn": [
+     "11"
+    ],
+    "inFound": [
+     "11"
+    ],
+    "border_px": [
+     "1"
+    ],
+    "mount_at_med": 52.0
+   },
+   "stub": {
+    "tRaf": {
+     "n": 12,
+     "med": 525.9,
+     "p90": 553.8,
+     "iqr": 35.5,
+     "min": 488.6,
+     "max": 560.5
+    },
+    "tPost": {
+     "n": 12,
+     "med": 531.2,
+     "p90": 561.5,
+     "iqr": 35.2,
+     "min": 494.4,
+     "max": 567.3
+    },
+    "warmup_tPost": {
+     "n": 4,
+     "med": 521.7,
+     "p90": 524.7,
+     "iqr": 4.8,
+     "min": 517.6,
+     "max": 525.2
+    }
+   },
+   "batched": {
+    "tRaf": {
+     "n": 12,
+     "med": 701.0,
+     "p90": 740.2,
+     "iqr": 46.2,
+     "min": 648.2,
+     "max": 744.6
+    },
+    "tPost": {
+     "n": 12,
+     "med": 706.5,
+     "p90": 745.0,
+     "iqr": 51.4,
+     "min": 654,
+     "max": 751.4
+    },
+    "warmup_tPost": {
+     "n": 4,
+     "med": 717.4,
+     "p90": 747.5,
+     "iqr": 27.1,
+     "min": 691.7,
+     "max": 757.4
+    }
+   },
+   "verdict_tRaf": {
+    "stock_minus_stub": 340.1,
+    "pct": 39.3,
+    "spread_maxIQR": 37.5,
+    "REAL": true
+   },
+   "batched_tRaf": {
+    "stock_minus_batched": 165.0,
+    "batched_minus_stub": 175.1
+   },
+   "verdict_tPost": {
+    "stock_minus_stub": 342.0,
+    "pct": 39.2,
+    "spread_maxIQR": 37.7,
+    "REAL": true
+   },
+   "batched_tPost": {
+    "stock_minus_batched": 166.7,
+    "batched_minus_stub": 175.3
+   },
+   "paired_stock_minus_stub_tPost": {
+    "n": 4,
+    "med": 348.7,
+    "min": 322.7,
+    "max": 360.9,
+    "all": [
+     353.4,
+     360.9,
+     344.0,
+     322.7
+    ]
+   }
+  }
+ },
+ "with_aborted": {
+  "R": {
+   "stock": {
+    "tRaf": {
+     "n": 12,
+     "med": 827.2,
+     "p90": 860.0,
+     "iqr": 47.3,
+     "min": 793,
+     "max": 893.8
+    },
+    "tPost": {
+     "n": 12,
+     "med": 833.8,
+     "p90": 865.2,
+     "iqr": 46.8,
+     "min": 797.9,
+     "max": 898.9
+    },
+    "warmup_tPost": {
+     "n": 4,
+     "med": 869.7,
+     "p90": 884.2,
+     "iqr": 30.3,
+     "min": 833,
+     "max": 885.6
+    }
+   },
+   "instr": {
+    "tRaf": {
+     "n": 12,
+     "med": 834.9,
+     "p90": 911.8,
+     "iqr": 54.5,
+     "min": 799.9,
+     "max": 950.6
+    },
+    "tPost": {
+     "n": 12,
+     "med": 839.6,
+     "p90": 917.6,
+     "iqr": 54.6,
+     "min": 804.8,
+     "max": 956
+    },
+    "warmup_tPost": {
+     "n": 4,
+     "med": 873.6,
+     "p90": 918.0,
+     "iqr": 61.5,
+     "min": 841.9,
+     "max": 925.4
+    },
+    "mounts_per_draw": [
+     "1"
+    ],
+    "calls_per_draw": [
+     "2"
+    ],
+    "call1_Top": {
+     "n": 12,
+     "med": 193.0,
+     "p90": 204.0,
+     "iqr": 17.2,
+     "min": 176.1,
+     "max": 205.1
+    },
+    "call2_Right": {
+     "n": 12,
+     "med": 177.7,
+     "p90": 192.5,
+     "iqr": 9.0,
+     "min": 162.4,
+     "max": 210.6
+    },
+    "sum": {
+     "n": 12,
+     "med": 369.1,
+     "p90": 396.3,
+     "iqr": 29.9,
+     "min": 338.6,
+     "max": 412.5
+    },
+    "call2_over_call1_med": 0.93,
+    "conn": [
+     "11"
+    ],
+    "inFound": [
+     "11"
+    ],
+    "border_px": [
+     "1"
+    ],
+    "mount_at_med": 33.5
+   },
+   "stub": {
+    "tRaf": {
+     "n": 12,
+     "med": 496.0,
+     "p90": 523.4,
+     "iqr": 33.4,
+     "min": 462.9,
+     "max": 533.6
+    },
+    "tPost": {
+     "n": 12,
+     "med": 500.7,
+     "p90": 528.1,
+     "iqr": 33.1,
+     "min": 466.9,
+     "max": 538.4
+    },
+    "warmup_tPost": {
+     "n": 4,
+     "med": 498.9,
+     "p90": 521.2,
+     "iqr": 20.7,
+     "min": 481.3,
+     "max": 528.3
+    }
+   },
+   "batched": {
+    "tRaf": {
+     "n": 12,
+     "med": 654.3,
+     "p90": 751.0,
+     "iqr": 69.8,
+     "min": 633.7,
+     "max": 780.6
+    },
+    "tPost": {
+     "n": 12,
+     "med": 659.5,
+     "p90": 756.5,
+     "iqr": 70.9,
+     "min": 638.6,
+     "max": 787.7
+    },
+    "warmup_tPost": {
+     "n": 4,
+     "med": 684.6,
+     "p90": 737.4,
+     "iqr": 51.2,
+     "min": 658.3,
+     "max": 752.1
+    }
+   },
+   "verdict_tRaf": {
+    "stock_minus_stub": 331.2,
+    "pct": 40.0,
+    "spread_maxIQR": 47.3,
+    "REAL": true
+   },
+   "batched_tRaf": {
+    "stock_minus_batched": 172.9,
+    "batched_minus_stub": 158.3
+   },
+   "verdict_tPost": {
+    "stock_minus_stub": 333.1,
+    "pct": 39.9,
+    "spread_maxIQR": 46.8,
+    "REAL": true
+   },
+   "batched_tPost": {
+    "stock_minus_batched": 174.3,
+    "batched_minus_stub": 158.8
+   }
+  },
+  "LP": {
+   "stock": {
+    "tRaf": {
+     "n": 21,
+     "med": 869.6,
+     "p90": 1174.7,
+     "iqr": 184.4,
+     "min": 784.1,
+     "max": 1399.2
+    },
+    "tPost": {
+     "n": 21,
+     "med": 877.7,
+     "p90": 1183.5,
+     "iqr": 190.9,
+     "min": 789.9,
+     "max": 1411.7
+    },
+    "warmup_tPost": {
+     "n": 7,
+     "med": 848.9,
+     "p90": 1121.3,
+     "iqr": 169.8,
+     "min": 790.8,
+     "max": 1183.7
+    }
+   },
+   "instr": {
+    "tRaf": {
+     "n": 18,
+     "med": 856.5,
+     "p90": 972.5,
+     "iqr": 90.2,
+     "min": 772.2,
+     "max": 1066
+    },
+    "tPost": {
+     "n": 18,
+     "med": 867.5,
+     "p90": 989.2,
+     "iqr": 87.9,
+     "min": 778.7,
+     "max": 1074.4
+    },
+    "warmup_tPost": {
+     "n": 6,
+     "med": 866.0,
+     "p90": 985.9,
+     "iqr": 113.2,
+     "min": 820.5,
+     "max": 998.9
+    },
+    "mounts_per_draw": [
+     "1"
+    ],
+    "calls_per_draw": [
+     "2"
+    ],
+    "call1_Top": {
+     "n": 18,
+     "med": 198.3,
+     "p90": 227.4,
+     "iqr": 21.0,
+     "min": 178,
+     "max": 228.8
+    },
+    "call2_Right": {
+     "n": 18,
+     "med": 183.8,
+     "p90": 211.8,
+     "iqr": 20.6,
+     "min": 165,
+     "max": 224.7
+    },
+    "sum": {
+     "n": 18,
+     "med": 381.5,
+     "p90": 433.2,
+     "iqr": 37.5,
+     "min": 344.4,
+     "max": 452.8
+    },
+    "call2_over_call1_med": 0.932,
+    "conn": [
+     "",
+     "11"
+    ],
+    "inFound": [
+     "",
+     "11"
+    ],
+    "border_px": [
+     "",
+     "1"
+    ],
+    "mount_at_med": 52.9
+   },
+   "stub": {
+    "tRaf": {
+     "n": 18,
+     "med": 533.0,
+     "p90": 654.2,
+     "iqr": 53.6,
+     "min": 480.1,
+     "max": 819.1
+    },
+    "tPost": {
+     "n": 18,
+     "med": 539.4,
+     "p90": 661.1,
+     "iqr": 58.2,
+     "min": 484.7,
+     "max": 828.9
+    },
+    "warmup_tPost": {
+     "n": 6,
+     "med": 565.9,
+     "p90": 690.5,
+     "iqr": 139.0,
+     "min": 490.3,
+     "max": 718.2
+    }
+   },
+   "batched": {
+    "tRaf": {
+     "n": 18,
+     "med": 763.0,
+     "p90": 1634.5,
+     "iqr": 149.8,
+     "min": 615.4,
+     "max": 1694.1
+    },
+    "tPost": {
+     "n": 18,
+     "med": 773.1,
+     "p90": 1650.5,
+     "iqr": 151.8,
+     "min": 620.1,
+     "max": 1708.8
+    },
+    "warmup_tPost": {
+     "n": 6,
+     "med": 690.5,
+     "p90": 1187.6,
+     "iqr": 85.5,
+     "min": 635.3,
+     "max": 1620.7
+    }
+   },
+   "verdict_tRaf": {
+    "stock_minus_stub": 336.6,
+    "pct": 38.7,
+    "spread_maxIQR": 184.4,
+    "REAL": true
+   },
+   "batched_tRaf": {
+    "stock_minus_batched": 106.6,
+    "batched_minus_stub": 230.0
+   },
+   "verdict_tPost": {
+    "stock_minus_stub": 338.3,
+    "pct": 38.5,
+    "spread_maxIQR": 190.9,
+    "REAL": true
+   },
+   "batched_tPost": {
+    "stock_minus_batched": 104.6,
+    "batched_minus_stub": 233.7
+   }
+  },
+  "E": {
+   "stock": {
+    "tRaf": {
+     "n": 24,
+     "med": 967.0,
+     "p90": 1689.9,
+     "iqr": 623.6,
+     "min": 807.4,
+     "max": 1751.9
+    },
+    "tPost": {
+     "n": 24,
+     "med": 973.1,
+     "p90": 1700.6,
+     "iqr": 626.4,
+     "min": 812.3,
+     "max": 1777.2
+    },
+    "warmup_tPost": {
+     "n": 8,
+     "med": 923.3,
+     "p90": 1604.6,
+     "iqr": 223.2,
+     "min": 803.1,
+     "max": 1833.1
+    }
+   },
+   "instr": {
+    "tRaf": {
+     "n": 24,
+     "med": 915.7,
+     "p90": 1545.5,
+     "iqr": 115.5,
+     "min": 783.2,
+     "max": 1847.7
+    },
+    "tPost": {
+     "n": 24,
+     "med": 927.9,
+     "p90": 1556.4,
+     "iqr": 113.8,
+     "min": 788,
+     "max": 1863.1
+    },
+    "warmup_tPost": {
+     "n": 8,
+     "med": 913.2,
+     "p90": 1099.5,
+     "iqr": 36.2,
+     "min": 819.4,
+     "max": 1486.2
+    },
+    "mounts_per_draw": [
+     "1"
+    ],
+    "calls_per_draw": [
+     "2"
+    ],
+    "call1_Top": {
+     "n": 24,
+     "med": 203.7,
+     "p90": 355.0,
+     "iqr": 23.0,
+     "min": 176.1,
+     "max": 459.1
+    },
+    "call2_Right": {
+     "n": 24,
+     "med": 190.6,
+     "p90": 310.3,
+     "iqr": 24.9,
+     "min": 165.3,
+     "max": 385
+    },
+    "sum": {
+     "n": 24,
+     "med": 390.6,
+     "p90": 671.3,
+     "iqr": 43.3,
+     "min": 341.4,
+     "max": 813.9
+    },
+    "call2_over_call1_med": 0.92,
+    "conn": [
+     "11"
+    ],
+    "inFound": [
+     "11"
+    ],
+    "border_px": [
+     "1"
+    ],
+    "mount_at_med": 42.9
+   },
+   "stub": {
+    "tRaf": {
+     "n": 24,
+     "med": 590.6,
+     "p90": 1017.7,
+     "iqr": 195.4,
+     "min": 473.2,
+     "max": 1213.2
+    },
+    "tPost": {
+     "n": 24,
+     "med": 595.7,
+     "p90": 1026.6,
+     "iqr": 195.5,
+     "min": 477.1,
+     "max": 1228.5
+    },
+    "warmup_tPost": {
+     "n": 8,
+     "med": 558.4,
+     "p90": 1155.2,
+     "iqr": 294.3,
+     "min": 485.3,
+     "max": 1265.1
+    }
+   },
+   "batched": {
+    "tRaf": {
+     "n": 24,
+     "med": 771.8,
+     "p90": 1234.4,
+     "iqr": 399.4,
+     "min": 628.7,
+     "max": 1448
+    },
+    "tPost": {
+     "n": 24,
+     "med": 777.1,
+     "p90": 1266.4,
+     "iqr": 403.2,
+     "min": 633,
+     "max": 1464.4
+    },
+    "warmup_tPost": {
+     "n": 8,
+     "med": 821.1,
+     "p90": 1115.4,
+     "iqr": 213.0,
+     "min": 682.6,
+     "max": 1217.7
+    }
+   },
+   "verdict_tRaf": {
+    "stock_minus_stub": 376.4,
+    "pct": 38.9,
+    "spread_maxIQR": 623.6,
+    "REAL": false
+   },
+   "batched_tRaf": {
+    "stock_minus_batched": 195.2,
+    "batched_minus_stub": 181.2
+   },
+   "verdict_tPost": {
+    "stock_minus_stub": 377.4,
+    "pct": 38.8,
+    "spread_maxIQR": 626.4,
+    "REAL": false
+   },
+   "batched_tPost": {
+    "stock_minus_batched": 196.0,
+    "batched_minus_stub": 181.4
+   }
+  },
+  "ELP": {
+   "stock": {
+    "tRaf": {
+     "n": 12,
+     "med": 866.0,
+     "p90": 893.2,
+     "iqr": 37.5,
+     "min": 823.6,
+     "max": 933.6
+    },
+    "tPost": {
+     "n": 12,
+     "med": 873.2,
+     "p90": 898.4,
+     "iqr": 37.7,
+     "min": 829.5,
+     "max": 940.8
+    },
+    "warmup_tPost": {
+     "n": 4,
+     "med": 877.0,
+     "p90": 895.0,
+     "iqr": 17.4,
+     "min": 857.5,
+     "max": 900.8
+    }
+   },
+   "instr": {
+    "tRaf": {
+     "n": 12,
+     "med": 849.6,
+     "p90": 899.2,
+     "iqr": 39.5,
+     "min": 821.8,
+     "max": 918.2
+    },
+    "tPost": {
+     "n": 12,
+     "med": 858.5,
+     "p90": 905.3,
+     "iqr": 41.6,
+     "min": 827.8,
+     "max": 925.1
+    },
+    "warmup_tPost": {
+     "n": 4,
+     "med": 866.2,
+     "p90": 882.2,
+     "iqr": 13.1,
+     "min": 851,
+     "max": 888
+    },
+    "mounts_per_draw": [
+     "1"
+    ],
+    "calls_per_draw": [
+     "2"
+    ],
+    "call1_Top": {
+     "n": 12,
+     "med": 189.3,
+     "p90": 205.9,
+     "iqr": 8.8,
+     "min": 179,
+     "max": 213.7
+    },
+    "call2_Right": {
+     "n": 12,
+     "med": 175.7,
+     "p90": 182.7,
+     "iqr": 4.9,
+     "min": 170.4,
+     "max": 204.3
+    },
+    "sum": {
+     "n": 12,
+     "med": 364.6,
+     "p90": 390.3,
+     "iqr": 22.1,
+     "min": 350.6,
+     "max": 396.8
+    },
+    "call2_over_call1_med": 0.926,
+    "conn": [
+     "11"
+    ],
+    "inFound": [
+     "11"
+    ],
+    "border_px": [
+     "1"
+    ],
+    "mount_at_med": 52.0
+   },
+   "stub": {
+    "tRaf": {
+     "n": 12,
+     "med": 525.9,
+     "p90": 553.8,
+     "iqr": 35.5,
+     "min": 488.6,
+     "max": 560.5
+    },
+    "tPost": {
+     "n": 12,
+     "med": 531.2,
+     "p90": 561.5,
+     "iqr": 35.2,
+     "min": 494.4,
+     "max": 567.3
+    },
+    "warmup_tPost": {
+     "n": 4,
+     "med": 521.7,
+     "p90": 524.7,
+     "iqr": 4.8,
+     "min": 517.6,
+     "max": 525.2
+    }
+   },
+   "batched": {
+    "tRaf": {
+     "n": 12,
+     "med": 701.0,
+     "p90": 740.2,
+     "iqr": 46.2,
+     "min": 648.2,
+     "max": 744.6
+    },
+    "tPost": {
+     "n": 12,
+     "med": 706.5,
+     "p90": 745.0,
+     "iqr": 51.4,
+     "min": 654,
+     "max": 751.4
+    },
+    "warmup_tPost": {
+     "n": 4,
+     "med": 717.4,
+     "p90": 747.5,
+     "iqr": 27.1,
+     "min": 691.7,
+     "max": 757.4
+    }
+   },
+   "verdict_tRaf": {
+    "stock_minus_stub": 340.1,
+    "pct": 39.3,
+    "spread_maxIQR": 37.5,
+    "REAL": true
+   },
+   "batched_tRaf": {
+    "stock_minus_batched": 165.0,
+    "batched_minus_stub": 175.1
+   },
+   "verdict_tPost": {
+    "stock_minus_stub": 342.0,
+    "pct": 39.2,
+    "spread_maxIQR": 37.7,
+    "REAL": true
+   },
+   "batched_tPost": {
+    "stock_minus_batched": 166.7,
+    "batched_minus_stub": 175.3
+   }
+  }
+ }
+}

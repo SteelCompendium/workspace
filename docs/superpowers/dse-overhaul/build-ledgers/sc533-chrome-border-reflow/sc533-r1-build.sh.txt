@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# SC-533 r1: build stock / instr / stub bundles from the scratch export of 4deb8cf.
+# The scratch src tree's mountChrome.ts is swapped per variant and restored to stock after each build.
+set -u
+SC=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc533-r1-6813ca20
+T=$SC/src-4deb8cf
+F=$T/src/framework/chrome/mountChrome.ts
+mkdir -p "$SC/variants-src" "$SC/bundles"
+[ -f "$SC/variants-src/stock-mountChrome.ts" ] || cp "$F" "$SC/variants-src/stock-mountChrome.ts"
+python3 "$SC/mkvariants.py" "$SC/variants-src/stock-mountChrome.ts" "$SC/variants-src"
+for V in stock instr stub batched; do
+  if [ "$V" = stock ]; then cp "$SC/variants-src/stock-mountChrome.ts" "$F"; else cp "$SC/variants-src/$V/mountChrome.ts" "$F"; fi
+  ( cd "$T" && node esbuild.config.mjs production ) > "$SC/build-$V.log" 2>&1
+  echo "build $V rc=$?"
+  mkdir -p "$SC/bundles/$V"
+  cp "$T/main.js" "$T/styles.css" "$T/manifest.json" "$SC/bundles/$V/"
+  # variant marker so the in-session swap can be verified (identical one-statement suffix on every variant)
+  printf '\n;globalThis.__sc533variant = "%s";\n' "$V" >> "$SC/bundles/$V/main.js"
+  diff -u "$SC/variants-src/stock-mountChrome.ts" "$F" > "$SC/sc533-r1-variant-$V.patch"
+done
+cp "$SC/variants-src/stock-mountChrome.ts" "$F"
+sha256sum "$SC"/bundles/*/main.js "$SC"/bundles/*/styles.css | sed "s#$SC/##"
+grep -c "usedBorderPxInner\|__sc533" "$SC"/bundles/*/main.js

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# usage: lc-run.sh <bundle name | default> <log> <only ids>
+S=$(cat /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc533-r4-path.txt)
+NAME=$1; LOG=$2; ONLY=$3
+cd /home/scott/code/steelCompendium/worktrees/sc533-chrome-border-reflow/draw-steel-elements
+export DSE_LIFECYCLE_PORT=9545
+export XVFB_BIN=/home/scott/code/steelCompendium/workspace/draw-steel-elements/.devbox/nix/profile/default/bin/Xvfb
+if [ "$NAME" != default ]; then export DSE_LIFECYCLE_BUNDLE=$S/bundles/$NAME; fi
+timeout 560 node visual-harness/obsidian-lifecycle.mjs --only=$ONLY > "$LOG" 2>&1
+echo "rc=$?" >> "$LOG"

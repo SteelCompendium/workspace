@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -u
+S=$(cat /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc533-r4-path.txt)
+E=$S/exp-stub
+mkdir -p "$E" "$S/bundles/stub"
+git -C /home/scott/code/steelCompendium/worktrees/sc533-chrome-border-reflow/draw-steel-elements archive 458abe3 | tar -x -C "$E"
+ln -s /home/scott/code/steelCompendium/worktrees/sc533-chrome-border-reflow/draw-steel-elements/node_modules "$E/node_modules"
+python3 - "$E/src/framework/chrome/mountChrome.ts" <<'PY'
+import sys
+p=sys.argv[1]; s=open(p).read()
+old="""function usedBorderPx(el: HTMLElement, side: 'Top' | 'Right'): number {
+	const win = el.ownerDocument?.defaultView;
+	if (!win) return 0;
+	const raw = win.getComputedStyle(el)[`border${side}Width` as 'borderTopWidth'];
+	const n = Number.parseFloat(raw ?? '');
+	return Number.isFinite(n) ? n : 0;
+}"""
+new="""function usedBorderPx(el: HTMLElement, side: 'Top' | 'Right'): number {
+	void el;
+	void side;
+	return 0;
+}"""
+assert s.count(old)==1
+open(p,'w').write(s.replace(old,new))
+PY
+( cd "$E" && node esbuild.config.mjs production ) > "$S/build-stub.log" 2>&1
+echo "build stub rc=$?"
+cp "$E/main.js" "$E/styles.css" "$E/manifest.json" "$S/bundles/stub/"
+for V in stock stub final; do printf '\n;globalThis.__sc533variant = "%s";\n' "$V" >> "$S/bundles/$V/main.js"; done
+sha256sum "$S"/bundles/*/main.js "$S"/bundles/*/styles.css

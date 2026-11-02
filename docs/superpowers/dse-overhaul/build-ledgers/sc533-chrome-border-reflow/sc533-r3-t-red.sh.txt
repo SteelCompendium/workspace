@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# SC-533 r3: red/green of chromeRound2.test.ts against stock / a94995e / final mountChrome, plus order robustness.
+set -u
+R3=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc533-r3-2128bb62
+F=$R3/src/src/framework/chrome/mountChrome.ts
+T=test/dom/framework/chromeRound2.test.ts
+cd "$R3/src"
+for V in final stock a94995e; do
+  cp "$R3/variants/$V.ts" "$F"
+  npx jest "$T" > "$R3/t-$V.log" 2>&1
+  echo "$V rc=$?" >> "$R3/t-$V.log"
+  echo "== $V"; grep -E "^Tests:|✕|rc=" "$R3/t-$V.log"
+done
+cp "$R3/variants/final.ts" "$F"
+npx jest "$T" -t 'SC-533' > "$R3/t-final-isolated.log" 2>&1
+echo "isolated rc=$?" >> "$R3/t-final-isolated.log"
+echo "== isolated"; grep -E "^Tests:|✕|rc=" "$R3/t-final-isolated.log"
+for S in 1 2 3 4 5 6 7 8; do
+  npx jest "$T" --randomize --seed=$S > "$R3/t-final-rand$S.log" 2>&1
+  echo "rand $S rc=$?" >> "$R3/t-final-rand$S.log"
+  echo "== rand $S"; grep -E "^Tests:|✕|rc=" "$R3/t-final-rand$S.log"
+done
+cmp "$R3/variants/final.ts" "$F" && echo "restored final"

@@ -1,0 +1,15 @@
+--- a/src/framework/chrome/mountChrome.ts
++++ b/src/framework/chrome/mountChrome.ts
+@@ -166,9 +166,9 @@
+ 	// …and republish the anchor's own border widths so the sheet can offset the panel from
+ 	// the frame's BORDER box rather than its padding box (see FRAME_BORDER_VARS). The only
+ 	// sanctioned `.style` use in this codebase is `setProperty('--dse-*', …)` (SC-5).
+-	for (const [side, prop] of Object.entries(FRAME_BORDER_VARS) as ['Top' | 'Right', string][]) {
+-		anchor.style.setProperty(prop, `${usedBorderPx(anchor, side)}px`);
+-	}
++	const sc533sides = Object.entries(FRAME_BORDER_VARS) as ['Top' | 'Right', string][];
++	const sc533widths = sc533sides.map(([side]) => usedBorderPx(anchor, side));
++	sc533sides.forEach(([, prop], i) => anchor.style.setProperty(prop, `${sc533widths[i]}px`));
+ 	if (isChromeMobile()) root.setAttribute('data-dse-chrome-mobile', 'on');
+ 
+ 	// ------------------------------------------------------------- the collapsed form

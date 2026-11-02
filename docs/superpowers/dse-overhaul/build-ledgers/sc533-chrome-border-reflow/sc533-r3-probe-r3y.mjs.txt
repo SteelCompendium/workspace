@@ -1,0 +1,83 @@
+// ===== SC-533 r3 FUNCTIONAL PROBE P533Y (scratch harness copy only) =====
+// Needs probe-r3x.mjs.txt injected first (R3X_INSTALL, R3X_NOTE, R3X_TEXT, R3X_SB, r3xGeoSummary).
+// Y1/Y3: slow scroll through the note in Reading view / Live Preview, sampling every connected panel's vars + geometry
+// at each step (lazy section / viewport widget builds). Y2: re-render + move the leaf to a popout in ONE task.
+SCENARIOS.push({
+	id: 'P533Y',
+	async run(t) {
+		const rep = { tag: R3X_TAG, variant: await t.ev('globalThis.__sc533variant'), load: fs.readFileSync('/proc/loadavg', 'utf8').trim() };
+		const step = (m) => console.log(`R3Y-step ${new Date().toISOString()} ${m}`);
+		const LEAF = 'app.workspace.getMostRecentLeaf()';
+		const errMark = await t.mark();
+		await t.ev(R3X_INSTALL);
+		await t.ev(`(async () => { const f = app.vault.getAbstractFileByPath(${JSON.stringify(R3X_NOTE)}); if (f) await app.vault.modify(f, ${JSON.stringify(R3X_TEXT)}); else await app.vault.create(${JSON.stringify(R3X_NOTE)}, ${JSON.stringify(R3X_TEXT)}); return true; })()`);
+		const SAMPLE = (scopeExpr, scrollerSel, stepPx, waitMs) => `(async () => {
+			const L = window.__r3; const m = L.mark(); const scope = ${scopeExpr}; const sc = scope.querySelector(${JSON.stringify(scrollerSel)}) ?? scope;
+			const seen = new Map(); const bad = []; let steps = 0;
+			const sample = () => {
+				for (const p of scope.querySelectorAll('.dse-chrome')) {
+					if (!p.isConnected) continue;
+					const g = L.geo({ querySelectorAll: () => [p] })[0];
+					const root = p.closest('[data-dse-element]');
+					const name = (root.getAttribute('data-dse-element') || '') + ':' + (root.textContent || '').replace(/\\s+/g, ' ').slice(0, 24);
+					const r = p.getBoundingClientRect(); const sr = sc.getBoundingClientRect();
+					const vis = r.bottom > sr.top && r.top < sr.bottom;
+					const ok = g ? g.varOk : null;
+					if (!seen.has(name)) seen.set(name, { firstVisOk: null, everBadVisible: 0, samples: 0 });
+					const s = seen.get(name); s.samples++;
+					if (vis && s.firstVisOk === null) s.firstVisOk = ok;
+					if (vis && ok === false) { s.everBadVisible++; if (bad.length < 10) bad.push({ name, ct: g.ct, bt: g.bt, inset: g.insetR, gap: g.gapTop, step: steps }); }
+				}
+			};
+			sc.scrollTop = 0; await new Promise((r) => setTimeout(r, 400));
+			for (;;) { sample(); steps++; const before = sc.scrollTop; sc.scrollTop = before + ${stepPx}; await new Promise((r) => setTimeout(r, ${waitMs})); if (sc.scrollTop === before) break; if (steps > 400) break; }
+			sample();
+			for (let i = 0; i < 400 && sc.scrollTop > 0; i++) { sc.scrollTop = Math.max(0, sc.scrollTop - ${stepPx}); await new Promise((r) => setTimeout(r, ${waitMs})); sample(); }
+			const fl = L.flushes(m);
+			return { steps, names: Array.from(seen.entries()), bad, flushes: fl.length, flushInRaf: fl.filter((f) => f.inRaf).length, flushEntries: fl.map((f) => f.entries), outside: L.outside(m) };
+		})()`;
+
+		step('Y1 R scroll');
+		await t.open(R3X_NOTE);
+		await t.sleep(1500);
+		rep.Y1 = await t.ev(SAMPLE(`(${LEAF}.view.containerEl.querySelector('.markdown-reading-view'))`, '.markdown-preview-view', 150, 150));
+
+		step('Y3 LP scroll');
+		await t.ev(`(async () => { const leaf = ${LEAF}; await leaf.setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true }); return true; })()`);
+		await t.sleep(400);
+		await t.ev(`(async () => { const leaf = ${LEAF}; await leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(R3X_NOTE)}, mode: 'source', source: false }, active: true }); leaf.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+		await t.sleep(1800);
+		rep.Y3 = await t.ev(SAMPLE(`(${LEAF}.view.containerEl.querySelector('.markdown-source-view'))`, '.cm-scroller', 150, 150));
+		await t.ev(`(async () => { await ${LEAF}.setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true }); return true; })()`);
+		await t.sleep(400);
+
+		step('Y2 move to popout');
+		await t.open(R3X_NOTE);
+		await t.sleep(1200);
+		rep.Y2 = await t.ev(`(async () => {
+			const leaf = ${LEAF}; const ML = window.__r3; const mm = ML.mark();
+			leaf.view.previewMode.rerender(true);
+			let nl = app.workspace.moveLeafToPopout ? app.workspace.moveLeafToPopout(leaf) : null;
+			if (nl && typeof nl.then === 'function') nl = await nl;
+			if (nl && !nl.view) nl = leaf;
+			if (!nl) return { moved: false };
+			await new Promise((r) => setTimeout(r, 2500));
+			const pw = nl.view.containerEl.win;
+			const scope = nl.view.containerEl.querySelector('.markdown-reading-view');
+			window.__r3install(pw, 'pop');
+			const g = pw.__r3.geo(scope);
+			const res = { moved: true, sameLeaf: nl === leaf, otherWindow: pw !== window, mainFlushes: ML.flushes(mm), geo: g, q: globalThis.__sc533q ? globalThis.__sc533q.size : null };
+			nl.detach();
+			await new Promise((r) => setTimeout(r, 1000));
+			res.qAfterClose = globalThis.__sc533q ? globalThis.__sc533q.size : null;
+			return res;
+		})()`);
+		if (rep.Y2.geo) rep.Y2.geo = r3xGeoSummary(rep.Y2.geo);
+		rep.errors = await t.errorsSince(errMark);
+		fs.mkdirSync(R3X_OUT, { recursive: true });
+		const f = path.join(R3X_OUT, `r3y-${R3X_TAG}.json`);
+		fs.writeFileSync(f, JSON.stringify(rep, null, 1));
+		return `report -> ${f}; errors ${rep.errors.length}`;
+	},
+});
+// ===== end SC-533 r3 PROBE Y =====

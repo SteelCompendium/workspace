@@ -1,0 +1,53 @@
+FAIL dom test/dom/framework/chromeRound2.test.ts
+  ● SC-533 — frame-border vars are published in one batched animation frame › a panel out of the document at the frame is not read then; the observer hands it its vars once its anchor intersects
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      252 | 		expect(kept.panel.style.getPropertyValue(TOP)).toBe('3px');
+      253 | 		expect(out1.panel.style.getPropertyValue(TOP)).toBe('');
+    > 254 | 		expect(ios).toHaveLength(1);
+          | 		            ^
+      255 | 		expect([...ios[0].observed]).toEqual([out1.anchor, out2.anchor]);
+      256 | 		expect(ios[0].init?.root ?? null).toBeNull();
+      257 | 		// CodeMirror / Obsidian put the same DOM back; the observer reports both: all reads, then all writes, then unobserve.
+
+      at Object.<anonymous> (test/dom/framework/chromeRound2.test.ts:254:15)
+
+  ● SC-533 — frame-border vars are published in one batched animation frame › a parked panel stays parked while its anchor is not intersecting, or while the panel is still out of the document
+
+    TypeError: Cannot read properties of undefined (reading 'report')
+
+      273 | 		await nextFrame();
+      274 | 		const log = spyOrder();
+    > 275 | 		ios[0].report([out.anchor, false]);
+          | 		       ^
+      276 | 		ios[0].report([out.anchor, true]); // intersecting but the panel is not in the document: nothing to measure
+      277 | 		expect(log).toEqual([]);
+      278 | 		expect([...ios[0].observed]).toEqual([out.anchor]);
+
+      at Object.<anonymous> (test/dom/framework/chromeRound2.test.ts:275:10)
+
+  ● SC-533 — frame-border vars are published in one batched animation frame › unloading a parked owner unobserves its anchor; a stale report then reads and writes nothing
+
+    TypeError: Cannot read properties of undefined (reading 'observed')
+
+      290 | 		other.anchor.remove();
+      291 | 		await nextFrame();
+    > 292 | 		expect([...ios[0].observed]).toEqual([gone.anchor, other.anchor]);
+          | 		                  ^
+      293 | 		gone.owner.unload();
+      294 | 		expect([...ios[0].observed]).toEqual([other.anchor]);
+      295 | 		const log = spyOrder();
+
+      at Object.<anonymous> (test/dom/framework/chromeRound2.test.ts:292:21)
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 46 passed, 49 total
+Snapshots:   0 total
+Time:        2.097 s
+Ran all test suites matching test/dom/framework/chromeRound2.test.ts.
+rc=1

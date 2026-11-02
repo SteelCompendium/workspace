@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+# SC-533 r1: write the instr/stub variants of mountChrome.ts into scratch copies (never the worktree).
+# usage: mkvariants.py <stock mountChrome.ts> <out dir>
+import sys, pathlib
+src = pathlib.Path(sys.argv[1]).read_text()
+out = pathlib.Path(sys.argv[2])
+
+FN_OLD = """function usedBorderPx(el: HTMLElement, side: 'Top' | 'Right'): number {
+	const win = el.ownerDocument?.defaultView;
+	if (!win) return 0;
+	const raw = win.getComputedStyle(el)[`border${side}Width` as 'borderTopWidth'];
+	const n = Number.parseFloat(raw ?? '');
+	return Number.isFinite(n) ? n : 0;
+}"""
+assert src.count(FN_OLD) == 1, 'usedBorderPx body not found'
+
+MC_OLD = """export function mountChrome<M>(opts: MountChromeOptions<M>, owner: Component): ChromeHandle | undefined {
+	const { root, chrome, ctx, persist } = opts;"""
+assert src.count(MC_OLD) == 1, 'mountChrome head not found'
+
+# instr: timing counters only. performance.now() + isConnected + an array push: no style/layout read.
+FN_INSTR = """function usedBorderPx(el: HTMLElement, side: 'Top' | 'Right'): number {
+	const sc533t0 = performance.now();
+	const r = usedBorderPxInner(el, side);
+	const sc533t1 = performance.now();
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const sc533 = (globalThis as any).__sc533;
+	if (sc533) sc533.u.push([sc533t0, sc533t1 - sc533t0, side, el.isConnected ? 1 : 0, r, el]);
+	return r;
+}
+function usedBorderPxInner(el: HTMLElement, side: 'Top' | 'Right'): number {
+	const win = el.ownerDocument?.defaultView;
+	if (!win) return 0;
+	const raw = win.getComputedStyle(el)[`border${side}Width` as 'borderTopWidth'];
+	const n = Number.parseFloat(raw ?? '');
+	return Number.isFinite(n) ? n : 0;
+}"""
+MC_INSTR = """export function mountChrome<M>(opts: MountChromeOptions<M>, owner: Component): ChromeHandle | undefined {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const sc533m = (globalThis as any).__sc533;
+	if (sc533m) sc533m.m.push([performance.now(), opts.root.getAttribute('data-dse-element'), opts.root.isConnected ? 1 : 0, opts.root]);
+	const { root, chrome, ctx, persist } = opts;"""
+
+# stub: return 0 without reading (geometry wrong; timing only).
+FN_STUB = """function usedBorderPx(el: HTMLElement, side: 'Top' | 'Right'): number {
+	void el;
+	void side;
+	return 0;
+}"""
+
+# batched: every read for the anchor before any write (read Top and Right, then set both).
+LOOP_OLD = """	for (const [side, prop] of Object.entries(FRAME_BORDER_VARS) as ['Top' | 'Right', string][]) {
+		anchor.style.setProperty(prop, `${usedBorderPx(anchor, side)}px`);
+	}"""
+assert src.count(LOOP_OLD) == 1, 'border loop not found'
+LOOP_BATCHED = """	const sc533sides = Object.entries(FRAME_BORDER_VARS) as ['Top' | 'Right', string][];
+	const sc533widths = sc533sides.map(([side]) => usedBorderPx(anchor, side));
+	sc533sides.forEach(([, prop], i) => anchor.style.setProperty(prop, `${sc533widths[i]}px`));"""
+(out / 'batched').mkdir(parents=True, exist_ok=True)
+(out / 'batched' / 'mountChrome.ts').write_text(src.replace(LOOP_OLD, LOOP_BATCHED))
+
+(out / 'instr').mkdir(parents=True, exist_ok=True)
+(out / 'stub').mkdir(parents=True, exist_ok=True)
+(out / 'instr' / 'mountChrome.ts').write_text(src.replace(FN_OLD, FN_INSTR).replace(MC_OLD, MC_INSTR))
+(out / 'stub' / 'mountChrome.ts').write_text(src.replace(FN_OLD, FN_STUB))
+print('ok')

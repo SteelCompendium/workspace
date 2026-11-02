@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# SC-533 r5: chromeRound2.test.ts on final / old74 / stock mountChrome, plus randomized orders on final.
+set -u
+R5=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc533-r5-db8b2294
+F=$R5/src/src/framework/chrome/mountChrome.ts
+T=test/dom/framework/chromeRound2.test.ts
+cd "$R5/src"
+for V in final old74 stock; do
+  cp "$R5/variants/$V.ts" "$F"
+  npx jest "$T" > "$R5/t-$V.log" 2>&1
+  echo "$V rc=$?" >> "$R5/t-$V.log"
+  echo "== $V"; grep -E "^Tests:|rc=" "$R5/t-$V.log"; grep -E "●.*›" "$R5/t-$V.log" | sort -u | cut -c1-200
+done
+cp "$R5/variants/final.ts" "$F"
+for S in 1 2 5 8 13 21 34 99; do
+  npx jest "$T" --randomize --seed=$S > "$R5/t-final-rand$S.log" 2>&1
+  echo "rand $S rc=$? $(grep -E '^Tests:' "$R5/t-final-rand$S.log")"
+done
+cmp "$R5/variants/final.ts" "$F" && echo "restored final"

@@ -1,0 +1,21 @@
+uptime-start:  00:13:40  up 10 days  6:54,  1 user,  load average: 12.88, 7.74, 5.44
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :160, port 9537, 1 scenario(s)
+P533-step 2026-10-30T04:13:42.862Z swap stock: disable
+P533-step 2026-10-30T04:13:42.871Z swap stock: enable
+P533-step 2026-10-30T04:13:43.099Z swap stock: loaded
+P533-step 2026-10-30T04:13:43.898Z open: other.md
+P533-step 2026-10-30T04:13:44.369Z open: scene
+P533-step 2026-10-30T04:13:45.414Z open: wait rendered
+P533 LP r0 stock k0 (warmup): found=48.8 raf=785.2 post=790.8 raf2=792.2 proc=2.6 mounts=0 calls=0
+P533 LP r0 stock k1: found=52.7 raf=805.3 post=812.1 raf2=814.1 proc=3.9 mounts=0 calls=0
+P533 LP r0 stock k2: found=49.2 raf=830.5 post=836.3 raf2=838.9 proc=2.5 mounts=0 calls=0
+P533 LP r0 stock k3: found=53.2 raf=856.7 post=862.2 raf2=863.7 proc=1.8 mounts=0 calls=0
+P533-step 2026-10-30T04:13:57.814Z swap instr: disable
+P533-step 2026-10-30T04:13:57.961Z swap instr: enable
+P533-step 2026-10-30T04:14:29.285Z swap instr: enable did not settle: {"en":"pending","marker":"instr","loaded":true,"enabled":["draw-steel-elements"],"modals":[]}
+OBSIDIAN-LIFECYCLE P533 FAIL: Runtime.evaluate: timed out after 30000 ms [shot /tmp/dse-obsidian-lifecycle-hxXak2/shots/P533-FAIL.png]
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-hxXak2
+OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+rc=1
+uptime-end:  00:14:32  up 10 days  6:55,  1 user,  load average: 7.69, 7.07, 5.33
+porcelain-after: [] head: 4deb8cf

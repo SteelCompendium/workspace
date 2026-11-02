@@ -1,0 +1,24 @@
+uptime-start:  00:07:04  up 10 days  6:48,  1 user,  load average: 0.89, 2.40, 3.94
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :162, port 9537, 1 scenario(s)
+P533 LP r0 stock k0 (warmup): found=57 raf=826 post=831.9 raf2=833.2 proc=4 mounts=0 calls=0
+P533 LP r0 stock k1: found=50.9 raf=862.6 post=869.9 raf2=872.2 proc=2.2 mounts=0 calls=0
+P533 LP r0 stock k2: found=50.2 raf=824.3 post=832.8 raf2=834.3 proc=2.2 mounts=0 calls=0
+P533 LP r0 stock k3: found=48.9 raf=869.6 post=877.7 raf2=879.4 proc=1.4 mounts=0 calls=0
+P533 LP r0 instr k0 (warmup): found=40.6 raf=814.7 post=820.5 raf2=821.7 proc=2.3 mounts=1 calls=2 dt=184/174.6
+P533 LP r0 instr k1: found=44 raf=806.5 post=815.8 raf2=817.2 proc=1.6 mounts=1 calls=2 dt=187.3/174.2
+P533 LP r0 instr k2: found=38.6 raf=825.7 post=832.4 raf2=834.8 proc=2.4 mounts=1 calls=2 dt=192.5/177.4
+P533 LP r0 instr k3: found=42.7 raf=861.1 post=873.9 raf2=876.2 proc=1.9 mounts=1 calls=2 dt=201.1/181.5
+P533 LP r0 stub k0 (warmup): found=49.1 raf=486.1 post=490.3 raf2=492.5 proc=3.9 mounts=0 calls=0
+P533 LP r0 stub k1: found=47.7 raf=492 post=497.2 raf2=498.8 proc=3 mounts=0 calls=0
+P533 LP r0 stub k2: found=43.4 raf=510.9 post=520.3 raf2=521.6 proc=2.2 mounts=0 calls=0
+P533 LP r0 stub k3: found=40 raf=480.1 post=484.7 raf2=486.7 proc=1.9 mounts=0 calls=0
+P533 LP r0 batched k0 (warmup): found=46.6 raf=655.1 post=660.8 raf2=662 proc=2.5 mounts=0 calls=0
+P533 LP r0 batched k1: found=58.6 raf=706.5 post=725.7 raf2=727.7 proc=1.6 mounts=0 calls=0
+P533 LP r0 batched k2: found=49.3 raf=671.2 post=676.5 raf2=677.8 proc=1.8 mounts=0 calls=0
+P533 LP r0 batched k3: found=61.1 raf=703.9 post=718.8 raf2=720.6 proc=23.8 mounts=0 calls=0
+OBSIDIAN-LIFECYCLE P533 FAIL: Runtime.evaluate: timed out after 30000 ms [shot /tmp/dse-obsidian-lifecycle-3xv1xN/shots/P533-FAIL.png]
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-3xv1xN
+OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+rc=1
+uptime-end:  00:09:37  up 10 days  6:50,  1 user,  load average: 2.93, 2.37, 3.67
+porcelain-after: [] head: 4deb8cf

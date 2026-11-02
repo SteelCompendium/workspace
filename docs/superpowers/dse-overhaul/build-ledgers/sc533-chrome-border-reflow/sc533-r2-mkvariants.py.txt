@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+# SC-533 r2: write scratch variants of mountChrome.ts. usage: mkvariants.py <stock.ts> <fix.ts> <out dir>
+import sys, pathlib
+stock = pathlib.Path(sys.argv[1]).read_text()
+fix = pathlib.Path(sys.argv[2]).read_text()
+out = pathlib.Path(sys.argv[3])
+FN_OLD = """function usedBorderPx(el: HTMLElement, side: 'Top' | 'Right'): number {
+	const win = el.ownerDocument?.defaultView;
+	if (!win) return 0;
+	const raw = win.getComputedStyle(el)[`border${side}Width` as 'borderTopWidth'];
+	const n = Number.parseFloat(raw ?? '');
+	return Number.isFinite(n) ? n : 0;
+}"""
+MC_OLD = """export function mountChrome<M>(opts: MountChromeOptions<M>, owner: Component): ChromeHandle | undefined {
+	const { root, chrome, ctx, persist } = opts;"""
+for name, src in (('stock', stock), ('fix', fix)):
+    assert src.count(FN_OLD) == 1 and src.count(MC_OLD) == 1, name
+FN_INSTR = """function usedBorderPx(el: HTMLElement, side: 'Top' | 'Right'): number {
+	const sc533t0 = performance.now();
+	const r = usedBorderPxInner(el, side);
+	const sc533t1 = performance.now();
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const sc533 = (globalThis as any).__sc533;
+	if (sc533) sc533.u.push([sc533t0, sc533t1 - sc533t0, side, el.isConnected ? 1 : 0, r, el]);
+	return r;
+}
+function usedBorderPxInner(el: HTMLElement, side: 'Top' | 'Right'): number {
+	const win = el.ownerDocument?.defaultView;
+	if (!win) return 0;
+	const raw = win.getComputedStyle(el)[`border${side}Width` as 'borderTopWidth'];
+	const n = Number.parseFloat(raw ?? '');
+	return Number.isFinite(n) ? n : 0;
+}"""
+MC_INSTR = """export function mountChrome<M>(opts: MountChromeOptions<M>, owner: Component): ChromeHandle | undefined {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const sc533m = (globalThis as any).__sc533;
+	if (sc533m) sc533m.m.push([performance.now(), opts.root.getAttribute('data-dse-element'), opts.root.isConnected ? 1 : 0, opts.root]);
+	const { root, chrome, ctx, persist } = opts;"""
+FN_STUB = """function usedBorderPx(el: HTMLElement, side: 'Top' | 'Right'): number {
+	void el;
+	void side;
+	return 0;
+}"""
+variants = {
+    'stock': stock,
+    'fix': fix,
+    'stub': stock.replace(FN_OLD, FN_STUB),
+    'fixinstr': fix.replace(FN_OLD, FN_INSTR).replace(MC_OLD, MC_INSTR),
+}
+
+# deferred (scratch only, NOT committed): read both borders in the next animation frame after mount, then write on the panel.
+READ_OLD = """	const frameBorderPx = {
+		Top: usedBorderPx(anchor, 'Top'),
+		Right: usedBorderPx(anchor, 'Right'),
+	};
+"""
+WRITE_OLD = """	for (const [side, prop] of Object.entries(FRAME_BORDER_VARS) as ['Top' | 'Right', string][]) {
+		panelEl.style.setProperty(prop, `${frameBorderPx[side]}px`);
+	}
+"""
+assert fix.count(READ_OLD) == 1 and fix.count(WRITE_OLD) == 1
+WRITE_DEFERRED = """	requestAnimationFrame(() => {
+		const px = { Top: usedBorderPx(anchor, 'Top'), Right: usedBorderPx(anchor, 'Right') };
+		for (const [side, prop] of Object.entries(FRAME_BORDER_VARS) as ['Top' | 'Right', string][]) {
+			panelEl.style.setProperty(prop, `${px[side]}px`);
+		}
+	});
+"""
+variants['deferred'] = fix.replace(READ_OLD, '').replace(WRITE_OLD, WRITE_DEFERRED)
+for k, v in variants.items():
+    (out / k).mkdir(parents=True, exist_ok=True)
+    (out / k / 'mountChrome.ts').write_text(v)
+print('ok')

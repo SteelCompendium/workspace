@@ -1,0 +1,93 @@
+#!/usr/bin/env python3
+# SC-533 r1: aggregate the raw P533 draws -> CSV (every draw, warm-ups and aborted sessions included, flagged) + stats.
+import json, glob, os, re, statistics, csv, sys
+SC = '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc533-r1-6813ca20'
+OUT = sys.argv[1]
+rows = []
+complete = [('a', 'R'), ('b', 'R'), ('a4', 'LP'), ('b', 'LP'), ('a', 'E'), ('b', 'E'), ('c', 'E'), ('d', 'E'), ('a', 'ELP'), ('b', 'ELP')]
+for tag, scene in complete:
+    d = json.load(open(f'{SC}/out/sc533-r1-raw-{tag}-{scene}.json'))
+    for r in d['reps']:
+        calls = r['calls']
+        rows.append(dict(session=f'{tag}-{scene}', status='complete', scene=scene, seq=r['seq'], round=r['round'], variant=r['variant'],
+                         warmup=int(r['warmup']), k=r['k'], tFound=r['tFound'], tRaf=r['tRaf'], tPost=r['tPost'], tRaf2=r['tRaf2'], tProc=r['tProc'],
+                         timedOut=int(r['timedOut']), mounts=len(r['mounts']) if r['variant'] == 'instr' else '',
+                         calls=len(calls) if r['variant'] == 'instr' else '',
+                         call1_side=calls[0]['side'] if calls else '', call1_ms=calls[0]['dt'] if calls else '',
+                         call2_side=calls[1]['side'] if len(calls) > 1 else '', call2_ms=calls[1]['dt'] if len(calls) > 1 else '',
+                         calls_conn=''.join(str(c['conn']) for c in calls), calls_inFound=''.join(str(int(c['inFound'])) for c in calls),
+                         mount_at=r['mounts'][0]['at'] if r['mounts'] else '', border_px=calls[0]['v'] if calls else '', load=r['load']))
+# aborted LP sessions (a, a2, a3): rows only in the console log (no JSON written before the abort)
+pat = re.compile(r'^P533 (\w+) r(\d+) (\w+) k(\d+)( \(warmup\))?: found=(\S+) raf=(\S+) post=(\S+) raf2=(\S+) proc=(\S+) mounts=(\d+) calls=(\d+)(?: dt=(\S+))?')
+for tag in ['a', 'a2', 'a3']:
+    for i, line in enumerate(open(f'{SC}/run-{tag}-LP.log')):
+        m = pat.match(line.strip())
+        if not m: continue
+        sc, rnd, v, k, wu, fo, ra, po, r2, pr, mo, ca, dt = m.groups()
+        dts = dt.split('/') if dt else []
+        rows.append(dict(session=f'{tag}-LP', status='aborted', scene=sc, seq=i, round=int(rnd), variant=v, warmup=int(bool(wu)), k=int(k),
+                         tFound=float(fo), tRaf=float(ra), tPost=float(po), tRaf2=float(r2), tProc=float(pr), timedOut=0,
+                         mounts=int(mo) if v == 'instr' else '', calls=int(ca) if v == 'instr' else '',
+                         call1_side='Top' if dts else '', call1_ms=float(dts[0]) if dts else '', call2_side='Right' if len(dts) > 1 else '',
+                         call2_ms=float(dts[1]) if len(dts) > 1 else '', calls_conn='', calls_inFound='', mount_at='', border_px='', load=''))
+with open(f'{OUT}/sc533-r1-raw-draws.csv', 'w', newline='') as f:
+    w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+    w.writeheader(); w.writerows(rows)
+
+def q(xs, p):
+    xs = sorted(xs); n = len(xs)
+    if n == 1: return xs[0]
+    pos = (n - 1) * p; lo = int(pos); hi = min(lo + 1, n - 1)
+    return xs[lo] + (xs[hi] - xs[lo]) * (pos - lo)
+def st(xs):
+    return dict(n=len(xs), med=round(statistics.median(xs), 1), p90=round(q(xs, .9), 1), iqr=round(q(xs, .75) - q(xs, .25), 1), min=round(min(xs), 1), max=round(max(xs), 1))
+
+res = {}
+for include_aborted in (False, True):
+    key = 'with_aborted' if include_aborted else 'main'
+    res[key] = {}
+    for scene in ['R', 'LP', 'E', 'ELP']:
+        sres = res[key][scene] = {}
+        for v in ['stock', 'instr', 'stub', 'batched']:
+            sel = [r for r in rows if r['scene'] == scene and r['variant'] == v and not r['warmup'] and not r['timedOut'] and (include_aborted or r['status'] == 'complete')]
+            if not sel: continue
+            e = dict(tRaf=st([r['tRaf'] for r in sel]), tPost=st([r['tPost'] for r in sel]))
+            wu = [r for r in rows if r['scene'] == scene and r['variant'] == v and r['warmup'] and (include_aborted or r['status'] == 'complete')]
+            e['warmup_tPost'] = st([r['tPost'] for r in wu]) if wu else None
+            if v == 'instr':
+                e['mounts_per_draw'] = sorted(set(str(r['mounts']) for r in sel))
+                e['calls_per_draw'] = sorted(set(str(r['calls']) for r in sel))
+                e['call1_Top'] = st([r['call1_ms'] for r in sel]); e['call2_Right'] = st([r['call2_ms'] for r in sel])
+                e['sum'] = st([r['call1_ms'] + r['call2_ms'] for r in sel])
+                e['call2_over_call1_med'] = round(statistics.median([r['call2_ms'] / r['call1_ms'] for r in sel]), 3)
+                e['conn'] = sorted(set(str(r['calls_conn']) for r in sel)); e['inFound'] = sorted(set(str(r['calls_inFound']) for r in sel))
+                e['border_px'] = sorted(set(str(r['border_px']) for r in sel))
+                e['mount_at_med'] = round(statistics.median([r['mount_at'] for r in sel if r['mount_at'] != '']), 1) if any(r['mount_at'] != '' for r in sel) else None
+            sres[v] = e
+        for metric in ['tRaf', 'tPost']:
+            s, u = sres['stock'][metric], sres['stub'][metric]
+            d = s['med'] - u['med']; spread = max(s['iqr'], u['iqr'])
+            sres[f'verdict_{metric}'] = dict(stock_minus_stub=round(d, 1), pct=round(100 * d / s['med'], 1), spread_maxIQR=spread,
+                                            REAL=bool(d > spread and (d >= 50 or d / s['med'] >= .10)))
+            if 'batched' in sres:
+                b = sres['batched'][metric]
+                sres[f'batched_{metric}'] = dict(stock_minus_batched=round(s['med'] - b['med'], 1), batched_minus_stub=round(b['med'] - u['med'], 1))
+# paired: per (session, round) visit, median(stock visit) - median(stub visit); the two visits are minutes apart at most
+for scene in ['R', 'LP', 'E', 'ELP']:
+    diffs = []
+    for sess in sorted(set(r['session'] for r in rows if r['scene'] == scene and r['status'] == 'complete')):
+        for rnd in sorted(set(r['round'] for r in rows if r['session'] == sess)):
+            vis = lambda v: [r['tPost'] for r in rows if r['session'] == sess and r['round'] == rnd and r['variant'] == v and not r['warmup']]
+            a, b = vis('stock'), vis('stub')
+            if a and b: diffs.append(round(statistics.median(a) - statistics.median(b), 1))
+    res['main'][scene]['paired_stock_minus_stub_tPost'] = dict(n=len(diffs), med=round(statistics.median(diffs), 1), min=min(diffs), max=max(diffs), all=diffs)
+json.dump(res, open(f'{OUT}/sc533-r1-stats.json', 'w'), indent=1)
+for scene in ['R', 'LP', 'E', 'ELP']:
+    m = res['main'][scene]
+    print(scene, {v: (m[v]['tRaf']['med'], m[v]['tRaf']['p90'], m[v]['tRaf']['iqr'], m[v]['tPost']['med'], m[v]['tPost']['p90'], m[v]['tPost']['iqr'], m[v]['tRaf']['n']) for v in ['stock', 'instr', 'stub', 'batched']})
+    print('  verdict', m['verdict_tRaf'], m['verdict_tPost'], m['batched_tPost'])
+    i = m['instr']; print('  instr', i['mounts_per_draw'], i['calls_per_draw'], 'Top', i['call1_Top'], 'Right', i['call2_Right'], 'sum', i['sum'], 'ratio', i['call2_over_call1_med'], i['conn'], i['inFound'], i['border_px'], 'mount_at', i['mount_at_med'])
+    print('  paired', res['main'][scene]['paired_stock_minus_stub_tPost'])
+    wa = res['with_aborted'][scene]
+    print('  with aborted:', wa['verdict_tPost'], {v: (wa[v]['tPost']['n'], wa[v]['tPost']['med']) for v in ['stock', 'stub']})
+print('rows', len(rows), 'aborted rows', sum(1 for r in rows if r['status'] == 'aborted'), 'timedOut', sum(r['timedOut'] for r in rows))

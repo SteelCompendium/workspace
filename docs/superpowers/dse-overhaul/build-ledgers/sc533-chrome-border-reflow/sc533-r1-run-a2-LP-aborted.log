@@ -1,0 +1,46 @@
+uptime-start:  00:10:03  up 10 days  6:51,  1 user,  load average: 4.10, 2.69, 3.75
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9537, 1 scenario(s)
+P533-step 2026-10-30T04:10:06.546Z swap stock: disable
+P533-step 2026-10-30T04:10:06.568Z swap stock: enable
+P533-step 2026-10-30T04:10:07.673Z open: other.md
+P533-step 2026-10-30T04:10:08.187Z open: scene
+P533-step 2026-10-30T04:10:09.661Z open: wait rendered
+P533 LP r0 stock k0 (warmup): found=95.4 raf=1068.2 post=1079.7 raf2=1082.6 proc=5.3 mounts=0 calls=0
+P533 LP r0 stock k1: found=62.7 raf=1174.7 post=1183.5 raf2=1185 proc=3.2 mounts=0 calls=0
+P533 LP r0 stock k2: found=70.7 raf=997.9 post=1009.1 raf2=1012 proc=1.9 mounts=0 calls=0
+P533 LP r0 stock k3: found=55.3 raf=1014.4 post=1023.6 raf2=1026 proc=2.2 mounts=0 calls=0
+P533-step 2026-10-30T04:10:23.194Z swap instr: disable
+P533-step 2026-10-30T04:10:23.347Z swap instr: enable
+P533-step 2026-10-30T04:10:51.985Z open: other.md
+P533-step 2026-10-30T04:10:53.273Z open: scene
+P533-step 2026-10-30T04:10:54.112Z open: wait rendered
+P533 LP r0 instr k0 (warmup): found=41.2 raf=825.2 post=830.8 raf2=832.2 proc=2.6 mounts=1 calls=2 dt=192.8/182.8
+P533 LP r0 instr k1: found=45 raf=840.1 post=848.1 raf2=851.7 proc=2.2 mounts=1 calls=2 dt=192.8/176.9
+P533 LP r0 instr k2: found=41.5 raf=883 post=889.2 raf2=890.7 proc=2.2 mounts=1 calls=2 dt=208.7/193.2
+P533 LP r0 instr k3: found=43.5 raf=852 post=861.2 raf2=862.5 proc=1.4 mounts=1 calls=2 dt=195.5/184.8
+P533-step 2026-10-30T04:11:06.617Z swap stub: disable
+P533-step 2026-10-30T04:11:07.557Z swap stub: enable
+P533-step 2026-10-30T04:11:15.497Z open: other.md
+P533-step 2026-10-30T04:11:16.348Z open: scene
+P533-step 2026-10-30T04:11:16.804Z open: wait rendered
+P533 LP r0 stub k0 (warmup): found=45.2 raf=498.2 post=501.8 raf2=504.1 proc=4.8 mounts=0 calls=0
+P533 LP r0 stub k1: found=39.8 raf=506.6 post=516.1 raf2=518.7 proc=2 mounts=0 calls=0
+P533 LP r0 stub k2: found=46.2 raf=526.7 post=530.9 raf2=533 proc=2.8 mounts=0 calls=0
+P533 LP r0 stub k3: found=45 raf=539.4 post=547.9 raf2=549.4 proc=1.8 mounts=0 calls=0
+P533-step 2026-10-30T04:11:27.974Z swap batched: disable
+P533-step 2026-10-30T04:11:28.173Z swap batched: enable
+P533-step 2026-10-30T04:11:55.149Z open: other.md
+P533-step 2026-10-30T04:11:56.905Z open: scene
+P533-step 2026-10-30T04:11:58.391Z open: wait rendered
+P533 LP r0 batched k0 (warmup): found=106.7 raf=1591.4 post=1620.7 raf2=1624.1 proc=4.9 mounts=0 calls=0
+P533 LP r0 batched k1: found=120.6 raf=1694.1 post=1708.8 raf2=1712.1 proc=7.8 mounts=0 calls=0
+P533 LP r0 batched k2: found=110.4 raf=1649.9 post=1663.2 raf2=1666.1 proc=5.9 mounts=0 calls=0
+P533 LP r0 batched k3: found=126.7 raf=1627.9 post=1645 raf2=1659.4 proc=6.8 mounts=0 calls=0
+P533-step 2026-10-30T04:12:14.723Z swap instr: disable
+P533-step 2026-10-30T04:12:15.077Z swap instr: enable
+OBSIDIAN-LIFECYCLE P533 FAIL: Runtime.evaluate: timed out after 30000 ms [shot /tmp/dse-obsidian-lifecycle-L11ejy/shots/P533-FAIL.png]
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-L11ejy
+OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+rc=1
+uptime-end:  00:13:17  up 10 days  6:54,  1 user,  load average: 18.51, 8.23, 5.53
+porcelain-after: [] head: 4deb8cf

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# SC-533 r1: export 4deb8cf into a scratch src tree (no git metadata touched) and npm ci there.
+set -u
+SC=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc533-r1-6813ca20
+D=/home/scott/code/steelCompendium/worktrees/sc533-chrome-border-reflow/draw-steel-elements
+mkdir -p "$SC/src-4deb8cf"
+git -C "$D" archive 4deb8cf | tar -x -C "$SC/src-4deb8cf"
+echo "archive rc=$?"
+npm --prefix "$SC/src-4deb8cf" ci --no-audit --no-fund > "$SC/npm-ci.log" 2>&1
+echo "npm ci rc=$?"
+tail -5 "$SC/npm-ci.log"
+node --version

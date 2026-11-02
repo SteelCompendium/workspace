@@ -1,0 +1,41 @@
+FAIL dom test/dom/framework/chromeRound2.test.ts
+  ● SC-169 R2 §1 — one placement geometry for every element › mountChrome republishes the anchor border widths CSS cannot read, on the panel (SC-533)
+
+    expect(received).toMatch(expected)
+
+    Expected pattern: /^\d/
+    Received string:  ""
+
+      105 | 		// the point — the property being written at all is: without it the panel is offset
+      106 | 		// from the anchor's padding box while the reader measures its border box.
+    > 107 | 		expect(panel.style.getPropertyValue('--dse-chrome-frame-border-top')).toMatch(/^\d/);
+          | 		                                                                      ^
+      108 | 		expect(panel.style.getPropertyValue('--dse-chrome-frame-border-right')).toMatch(/^\d/);
+      109 | 	});
+      110 |
+
+      at Object.<anonymous> (test/dom/framework/chromeRound2.test.ts:107:73)
+
+  ● SC-169 R2 §1 — one placement geometry for every element › SC-533: both border reads happen before the first var write, and the anchor carries no var
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 1
+    Received:   2
+
+      142 | 		expect(firstWrite).toBeGreaterThan(-1);
+      143 | 		const lastAnchorRead = log.map((e) => e.kind === 'read' && e.el === anchor).lastIndexOf(true);
+    > 144 | 		expect(lastAnchorRead).toBeLessThan(firstWrite);
+          | 		                       ^
+      145 | 		const writes = log.filter((e) => e.kind === 'write');
+      146 | 		expect(writes.map((e) => e.prop).sort()).toEqual(
+      147 | 			['--dse-chrome-frame-border-right', '--dse-chrome-frame-border-top'],
+
+      at Object.<anonymous> (test/dom/framework/chromeRound2.test.ts:144:26)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 41 skipped, 43 total
+Snapshots:   0 total
+Time:        1.432 s, estimated 4 s
+Ran all test suites matching test/dom/framework/chromeRound2.test.ts with tests matching "SC-533|republishes".
+rc=1

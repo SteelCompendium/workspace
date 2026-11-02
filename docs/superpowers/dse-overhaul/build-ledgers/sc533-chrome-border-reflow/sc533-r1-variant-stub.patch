@@ -1,0 +1,17 @@
+--- a/src/framework/chrome/mountChrome.ts
++++ b/src/framework/chrome/mountChrome.ts
+@@ -91,11 +91,9 @@
+ 
+ /** The used `border-*-width` of `el`, in CSS px; 0 for a detached/unstyled node. */
+ function usedBorderPx(el: HTMLElement, side: 'Top' | 'Right'): number {
+-	const win = el.ownerDocument?.defaultView;
+-	if (!win) return 0;
+-	const raw = win.getComputedStyle(el)[`border${side}Width` as 'borderTopWidth'];
+-	const n = Number.parseFloat(raw ?? '');
+-	return Number.isFinite(n) ? n : 0;
++	void el;
++	void side;
++	return 0;
+ }
+ 
+ export interface MountChromeOptions<M> {

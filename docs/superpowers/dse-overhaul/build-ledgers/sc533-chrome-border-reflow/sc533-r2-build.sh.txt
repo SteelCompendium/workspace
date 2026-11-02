@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# SC-533 r2: build stock / fix / stub / fixinstr bundles from the scratch export (never the worktree).
+set -u
+SC=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc533-r2-7dca00e8
+D=/home/scott/code/steelCompendium/worktrees/sc533-chrome-border-reflow/draw-steel-elements
+T=$SC/src
+F=$T/src/framework/chrome/mountChrome.ts
+mkdir -p "$SC/variants-src" "$SC/bundles"
+git -C "$D" show 4deb8cf:src/framework/chrome/mountChrome.ts > "$SC/variants-src/stock-mountChrome.ts"
+git -C "$D" show HEAD:src/framework/chrome/mountChrome.ts > "$SC/variants-src/fix-mountChrome.ts"
+python3 "$SC/mkvariants.py" "$SC/variants-src/stock-mountChrome.ts" "$SC/variants-src/fix-mountChrome.ts" "$SC/variants-src"
+for V in stock fix stub fixinstr deferred; do
+  cp "$SC/variants-src/$V/mountChrome.ts" "$F"
+  ( cd "$T" && node esbuild.config.mjs production ) > "$SC/build-$V.log" 2>&1
+  echo "build $V rc=$?"
+  mkdir -p "$SC/bundles/$V"
+  cp "$T/main.js" "$T/styles.css" "$T/manifest.json" "$SC/bundles/$V/"
+  printf '\n;globalThis.__sc533variant = "%s";\n' "$V" >> "$SC/bundles/$V/main.js"
+  diff -u "$SC/variants-src/stock-mountChrome.ts" "$F" > "$SC/sc533-r2-variant-$V.patch"
+done
+cp "$SC/variants-src/stock-mountChrome.ts" "$F"
+sha256sum "$SC"/bundles/*/main.js "$SC"/bundles/*/styles.css | sed "s#$SC/##"

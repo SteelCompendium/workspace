@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# SC-533 r3: build stock / final / stub bundles from MY scratch export of 98ca88e (never the worktree).
+# finalx = final + one line exposing the module-level queue Map on globalThis (probe-only).
+set -u
+R3=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc533-r3-2128bb62
+T=$R3/src
+F=$T/src/framework/chrome/mountChrome.ts
+mkdir -p "$R3/bundles"
+# stub = stock with usedBorderPx returning 0 (identical to r2's stub definition)
+python3 - "$R3/variants/stock.ts" "$R3/variants/stub.ts" <<'PY'
+import sys
+s = open(sys.argv[1]).read()
+old = """	const win = el.ownerDocument?.defaultView;
+	if (!win) return 0;
+	const raw = win.getComputedStyle(el)[`border${side}Width` as 'borderTopWidth'];
+	const n = Number.parseFloat(raw ?? '');
+	return Number.isFinite(n) ? n : 0;
+}"""
+assert s.count(old) == 1
+open(sys.argv[2], 'w').write(s.replace(old, "\tvoid el;\n\tvoid side;\n\treturn 0;\n}"))
+PY
+python3 - "$R3/variants/final.ts" "$R3/variants/finalx.ts" <<'PY'
+import sys
+s = open(sys.argv[1]).read()
+old = "const pendingFrameBorders = new Map<Window, { entries: Set<PendingFrameBorders>; frame: number }>();"
+assert s.count(old) == 1
+open(sys.argv[2], 'w').write(s.replace(old, old + "\n// eslint-disable-next-line @typescript-eslint/no-explicit-any\n(globalThis as any).__sc533q = pendingFrameBorders;"))
+PY
+cd "$T"
+for V in stock final stub finalx; do
+  cp "$R3/variants/$V.ts" "$F"
+  node esbuild.config.mjs production > "$R3/build-$V.log" 2>&1
+  echo "build $V rc=$?"
+  mkdir -p "$R3/bundles/$V"
+  cp "$T/main.js" "$T/styles.css" "$T/manifest.json" "$R3/bundles/$V/"
+  printf '\n;globalThis.__sc533variant = "%s";\n' "$V" >> "$R3/bundles/$V/main.js"
+done
+cp "$R3/variants/final.ts" "$F"
+cmp "$R3/variants/final.ts" "$F" && echo "export restored to final"
+sha256sum "$R3"/bundles/*/main.js "$R3"/bundles/*/styles.css | sed "s#$R3/##"
+grep -c "flushFrameBorders" "$R3/bundles/final/main.js" "$R3/bundles/stock/main.js"

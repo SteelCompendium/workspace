@@ -1,0 +1,49 @@
+#!/usr/bin/env python3
+# SC-533 r3: aggregate sessions e,f (R) and e,f,g,h (LP); pooled, paired per visit, and a quiet-visit subset (visit load1 < 5).
+import json, statistics, csv, sys, collections
+R3 = '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc533-r3-2128bb62'
+SESS = {'R': 'ef', 'LP': 'efghij'}
+rows = []
+meta = {}
+for scene, tags in SESS.items():
+    for tag in tags:
+        d = json.load(open(f'{R3}/out/sc533-r2-raw-{tag}-{scene}.json'))
+        meta[f'{tag}-{scene}'] = dict(loadStart=d['meta']['loadStart'], loadEnd=d['meta']['loadEnd'], roff=d['meta']['roff'], obsidian=d['meta']['obsidian'])
+        for r in d['reps']:
+            rows.append(dict(session=f'{tag}-{scene}', scene=scene, seq=r['seq'], round=r['round'], variant=r['variant'], warmup=int(r['warmup']), k=r['k'],
+                             tFound=r['tFound'], tRaf=r['tRaf'], tPost=r['tPost'], tRaf2=r['tRaf2'], tProc=r['tProc'], timedOut=int(r['timedOut']),
+                             load1=float(r['load'].split()[0])))
+with open(f'{R3}/sc533-r3-raw-draws.csv', 'w', newline='') as f:
+    w = csv.DictWriter(f, fieldnames=list(rows[0].keys())); w.writeheader(); w.writerows(rows)
+
+def q(xs, p):
+    xs = sorted(xs); pos = (len(xs) - 1) * p; lo = int(pos); hi = min(lo + 1, len(xs) - 1)
+    return xs[lo] + (xs[hi] - xs[lo]) * (pos - lo)
+def st(xs):
+    if not xs: return None
+    return dict(n=len(xs), med=round(statistics.median(xs), 1), p90=round(q(xs, .9), 1), iqr=round(q(xs, .75) - q(xs, .25), 1))
+V = ['stock', 'final', 'stub']
+res = {'meta': meta}
+for scene in SESS:
+    sel = [r for r in rows if r['scene'] == scene and not r['timedOut'] and not r['warmup']]
+    for label, pred in [('all', lambda r: True), ('quiet_load1_lt5', lambda r: r['load1'] < 5)]:
+        m = res[f'{scene}-{label}'] = {}
+        s2 = [r for r in sel if pred(r)]
+        for v in V:
+            t = [r for r in s2 if r['variant'] == v]
+            m[v] = dict(tRaf=st([r['tRaf'] for r in t]), tPost=st([r['tPost'] for r in t]), postMinusRaf=st([r['tPost'] - r['tRaf'] for r in t]), tFound=st([r['tFound'] for r in t]))
+        u = m['stub']['tPost']['med']; bar = max(50, .1 * u); dd = m['final']['tPost']['med'] - u
+        m['bar'] = dict(stub_med=u, bar_ms=round(bar, 1), final_minus_stub_med=round(dd, 1), PASS=bool(dd <= bar))
+    vis = collections.defaultdict(list)
+    for r in sel: vis[(r['session'], r['round'], r['variant'])].append(r['tPost'])
+    keys = sorted(set((s, rd) for s, rd, _ in vis))
+    for a, b in [('final', 'stub'), ('stock', 'final')]:
+        diffs = [round(statistics.median(vis[(s, rd, a)]) - statistics.median(vis[(s, rd, b)]), 1) for s, rd in keys]
+        res[f'{scene}-paired_{a}_minus_{b}'] = dict(n=len(diffs), med=round(statistics.median(diffs), 1), all=diffs)
+json.dump(res, open(f'{R3}/sc533-r3-stats.json', 'w'), indent=1)
+for k, v in res.items():
+    if k == 'meta': print('meta', json.dumps(v)); continue
+    if 'paired' in k: print(k, v); continue
+    for vv in V: print(k, vv, 'tPost', v[vv]['tPost'], 'tRaf', v[vv]['tRaf'], 'post-raf', v[vv]['postMinusRaf'], 'tFound', v[vv]['tFound'])
+    print(k, 'bar', v['bar'])
+print('rows', len(rows), 'timedOut', sum(r['timedOut'] for r in rows))

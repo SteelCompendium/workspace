@@ -1,0 +1,89 @@
+FAIL dom test/dom/framework/chromeRound2.test.ts
+  ● SC-169 R2 §1 — one placement geometry for every element › mountChrome republishes the anchor border widths CSS cannot read, on the panel, a frame later (SC-533)
+
+    expect(received).toMatch(expected)
+
+    Expected pattern: /^\d/
+    Received string:  ""
+
+      113 | 			// the point — the property being written at all is: without it the panel is offset
+      114 | 			// from the anchor's padding box while the reader measures its border box.
+    > 115 | 			expect(panel.style.getPropertyValue('--dse-chrome-frame-border-top')).toMatch(/^\d/);
+          | 			                                                                      ^
+      116 | 			expect(panel.style.getPropertyValue('--dse-chrome-frame-border-right')).toMatch(/^\d/);
+      117 | 			expect(anchor.style.getPropertyValue('--dse-chrome-frame-border-top')).toBe('');
+      118 | 		} finally {
+
+      at Object.<anonymous> (test/dom/framework/chromeRound2.test.ts:115:74)
+
+  ● SC-533 — frame-border vars are published in one batched animation frame › mounting reads nothing and writes nothing; the next frame puts the vars on the panel, not the anchor
+
+    TypeError: Cannot read properties of undefined (reading 'has')
+
+      169 | 		const log = spyOrder();
+      170 | 		const { anchor, panel } = mount(3);
+    > 171 | 		expect(log).toEqual([]);
+          | 		            ^
+      172 | 		expect(panel.style.getPropertyValue(TOP)).toBe('');
+      173 | 		await nextFrame();
+      174 | 		expect(log.filter((e) => e.kind === 'read' && e.el === anchor)).toHaveLength(2);
+
+      at Object.<anonymous> (test/dom/framework/chromeRound2.test.ts:171:15)
+
+  ● SC-533 — frame-border vars are published in one batched animation frame › two mounts in one task share one frame, and every read happens before any write
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 0
+
+      184 | 		const one = mount(2);
+      185 | 		const two = mount(5);
+    > 186 | 		expect(frames).toHaveBeenCalledTimes(1);
+          | 		               ^
+      187 | 		await nextFrame();
+      188 | 		const kinds = log.filter((e) => e.kind === 'write' || e.el === one.anchor || e.el === two.anchor).map((e) => e.kind);
+      189 | 		expect(kinds).toEqual(['read', 'read', 'read', 'read', 'write', 'write', 'write', 'write']);
+
+      at Object.<anonymous> (test/dom/framework/chromeRound2.test.ts:186:18)
+
+  ● SC-533 — frame-border vars are published in one batched animation frame › a panel that left the document, or whose owner unloaded, is skipped: no read, no write
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "4px"
+    Received: ""
+
+      205 | 		expect(gone.panel.style.getPropertyValue(TOP)).toBe('');
+      206 | 		expect(unloaded.panel.style.getPropertyValue(TOP)).toBe('');
+    > 207 | 		expect(kept.panel.style.getPropertyValue(TOP)).toBe('4px');
+          | 		                                               ^
+      208 | 	});
+      209 |
+      210 | 	test('unloading the only pending owner cancels the frame: nothing is read at all', async () => {
+
+      at Object.<anonymous> (test/dom/framework/chromeRound2.test.ts:207:50)
+
+  ● SC-533 — frame-border vars are published in one batched animation frame › unloading the only pending owner cancels the frame: nothing is read at all
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 0
+
+      214 | 		only.owner.load();
+      215 | 		only.owner.unload();
+    > 216 | 		expect(cancel).toHaveBeenCalledTimes(1);
+          | 		               ^
+      217 | 		await nextFrame();
+      218 | 		expect(log).toEqual([]);
+      219 | 	});
+
+      at Object.<anonymous> (test/dom/framework/chromeRound2.test.ts:216:18)
+
+Test Suites: 1 failed, 1 total
+Tests:       5 failed, 41 passed, 46 total
+Snapshots:   0 total
+Time:        2.134 s, estimated 5 s
+Ran all test suites matching test/dom/framework/chromeRound2.test.ts.
+stock rc=1

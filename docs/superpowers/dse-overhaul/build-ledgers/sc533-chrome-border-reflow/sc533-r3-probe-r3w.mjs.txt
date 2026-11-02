@@ -1,0 +1,43 @@
+// ===== SC-533 r3 PROBE P533W (scratch only): hovered-panel crops in Live Preview after scrolling to blocks below the first viewport =====
+SCENARIOS.push({
+	id: 'P533W',
+	async run(t) {
+		const rep = { tag: R3X_TAG, variant: await t.ev('globalThis.__sc533variant'), shots: [] };
+		const LEAF = 'app.workspace.getMostRecentLeaf()';
+		const SS = `(${LEAF}.view.containerEl.querySelector('.markdown-source-view'))`;
+		await t.ev(R3X_INSTALL);
+		await t.ev(`(async () => { const f = app.vault.getAbstractFileByPath(${JSON.stringify(R3X_NOTE)}); if (f) await app.vault.modify(f, ${JSON.stringify(R3X_TEXT)}); else await app.vault.create(${JSON.stringify(R3X_NOTE)}, ${JSON.stringify(R3X_TEXT)}); return true; })()`);
+		await t.ev(`(async () => { const leaf = ${LEAF}; await leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(R3X_NOTE)}, mode: 'source', source: false }, active: true }); leaf.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+		await t.sleep(1800);
+		for (const target of ['SB Four', 'Heroes', 'SB One']) {
+			// scroll in steps until the target's panel is well inside the viewport
+			const ok = await t.ev(`(async () => {
+				const scope = ${SS}; const sc = scope.querySelector('.cm-scroller');
+				const find = () => Array.from(scope.querySelectorAll('.dse-chrome')).find((p) => p.isConnected && (p.closest('[data-dse-element]').textContent || '').includes(${JSON.stringify(target)}));
+				for (let i = 0; i < 200; i++) {
+					const p = find();
+					if (p) { const r = p.getBoundingClientRect(); const sr = sc.getBoundingClientRect(); if (r.top > sr.top + 120 && r.bottom < sr.bottom - 300) return true; if (r.top <= sr.top + 120) { sc.scrollTop -= 60; await new Promise((x) => setTimeout(x, 120)); continue; } }
+					sc.scrollTop += 120; await new Promise((x) => setTimeout(x, 150));
+				}
+				return false;
+			})()`);
+			if (!ok) { rep.shots.push({ target, ok: false }); continue; }
+			const pt = await t.ev(`(() => { const p = Array.from(${SS}.querySelectorAll('.dse-chrome')).find((p) => p.isConnected && (p.closest('[data-dse-element]').textContent || '').includes(${JSON.stringify(target)})); const a = p.parentElement.getBoundingClientRect(); return { x: a.left + 80, y: a.top + 50 }; })()`);
+			await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: pt.x, y: pt.y });
+			await t.sleep(500);
+			const g = await t.ev(`(() => { const L = window.__r3; const p = Array.from(${SS}.querySelectorAll('.dse-chrome')).find((p) => p.isConnected && (p.closest('[data-dse-element]').textContent || '').includes(${JSON.stringify(target)})); const g = L.geo({ querySelectorAll: () => [p] })[0]; const r = p.getBoundingClientRect(); g.op = L.gcs(p).opacity; g.rect = { l: r.left, t: r.top, r: r.right, b: r.bottom }; g.clip = { x: Math.max(0, r.right - 200), y: Math.max(0, r.top - 30), width: 240, height: r.height + 70 }; return g; })()`);
+			const shot = await t.cdp.call('Page.captureScreenshot', { format: 'png', clip: { ...g.clip, scale: 4 } });
+			const f = path.join(R3X_OUT, `sc533-r3-crop-${R3X_TAG}-${target.replace(/\s+/g, '')}.png`);
+			fs.mkdirSync(R3X_OUT, { recursive: true });
+			fs.writeFileSync(f, Buffer.from(shot.data, 'base64'));
+			rep.shots.push({ target, ok: true, file: f, ct: g.ct, bt: g.bt, insetR: g.insetR, gapTop: g.gapTop, op: g.op });
+			await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 5, y: 5 });
+			await t.sleep(200);
+		}
+		await t.ev(`(async () => { await ${LEAF}.setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true }); return true; })()`);
+		const f = path.join(R3X_OUT, `r3w-${R3X_TAG}.json`);
+		fs.writeFileSync(f, JSON.stringify(rep, null, 1));
+		return `report -> ${f} ${JSON.stringify(rep.shots.map((s) => [s.target, s.ct, s.insetR, s.gapTop, s.op]))}`;
+	},
+});
+// ===== end SC-533 r3 PROBE W =====

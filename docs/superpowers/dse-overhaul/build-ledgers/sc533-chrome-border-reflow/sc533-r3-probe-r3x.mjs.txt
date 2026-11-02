@@ -1,0 +1,339 @@
+// ===== SC-533 r3 FUNCTIONAL PROBE P533X (scratch harness copy only; never in the tree) =====
+// Exercises the deferred frame-border flush in real Obsidian: batching/order, rAF-nesting (painted fallback frames),
+// geometry of every connected panel, adoption (SC-340) after in-card writes, a hovered panel at redraw, a held rAF
+// (hidden-window simulation) and a real BrowserWindow hide, popout windows (own rAF, same-task mounts in two windows,
+// cross-document adoption, close-before-frame), and unload-before-frame. Writes a JSON report to $P533_OUT/r3x-<tag>.json.
+const R3X_OUT = process.env.P533_OUT;
+const R3X_TAG = process.env.P533_TAG ?? 'x';
+const R3X_NOTE = 'Lifecycle/r3many.md';
+const R3X_SB = (name) => fence('ds-statblock', ['type: statblock', `name: ${name}`, 'stamina: "10"']);
+const R3X_FILL = (p, n) => Array.from({ length: n }, (_, i) => `${p} filler ${i}.`).join('\n\n');
+const R3X_TEXT = [
+	'# r3many', 'TOP', R3X_SB('SB One'), 'P1', R3X_SB('SB Two'), 'P2', COUNTER(5, 'C1'), R3X_SB('SB Three'),
+	fence('ds-stamina-bar', ['max_stamina: 20', 'current_stamina: 15', 'temp_stamina: 5']), INIT('Init Ida'), R3X_SB('SB Four'),
+	R3X_FILL('MID', 120), R3X_SB('SB Five'), COUNTER(7, 'C2'), R3X_SB('SB Six'), R3X_FILL('END', 40),
+].join('\n\n') + '\n';
+
+const R3X_INSTALL = `(() => {
+	window.__r3install = (w, tag) => {
+		if (w.__r3) return true;
+		const L = (w.__r3 = { tag, reqs: [], log: [], depth: 0, cur: null, seq: 0, hold: false, held: [] });
+		const rRaf = w.requestAnimationFrame.bind(w);
+		const rCaf = w.cancelAnimationFrame.bind(w);
+		w.requestAnimationFrame = function (cb) {
+			const stack = new Error().stack || '';
+			const plugin = stack.includes('plugin:draw-steel-elements');
+			const rec = { id: ++L.seq, at: performance.now(), inRaf: L.depth > 0, plugin, ran: null, reads: 0, writes: 0, cancelled: false, held: false, h: 0 };
+			L.reqs.push(rec);
+			if (L.reqs.length > 40000) L.reqs.splice(0, 20000);
+			const run = (ts) => { L.depth++; const prev = L.cur; L.cur = rec; rec.ran = performance.now(); try { return cb(ts); } finally { L.cur = prev; L.depth--; } };
+			if (L.hold && plugin) { rec.held = true; rec.h = -rec.id; L.held.push({ fake: rec.h, run, rec }); return rec.h; }
+			rec.h = rRaf(run);
+			return rec.h;
+		};
+		w.cancelAnimationFrame = function (h) {
+			if (h < 0) { const i = L.held.findIndex((x) => x.fake === h); if (i >= 0) { L.held[i].rec.cancelled = true; L.held.splice(i, 1); } return undefined; }
+			for (let i = L.reqs.length - 1; i >= 0; i--) if (L.reqs[i].h === h) { L.reqs[i].cancelled = true; break; }
+			return rCaf(h);
+		};
+		L.release = () => { const hs = L.held.splice(0); for (const x of hs) { x.rec.held = 'released'; rRaf(x.run); } return hs.length; };
+		const rGcs = w.getComputedStyle;
+		L.gcs = (el) => rGcs.call(w, el);
+		w.getComputedStyle = function (el, p) {
+			if (el && el.classList && el.classList.contains('dse-chrome-anchor')) { L.log.push(['R', performance.now(), L.cur ? L.cur.id : 0, el.isConnected ? 1 : 0]); if (L.cur) L.cur.reads++; }
+			return rGcs.call(this, el, p);
+		};
+		const proto = w.CSSStyleDeclaration.prototype;
+		const rSet = proto.setProperty;
+		proto.setProperty = function (prop, v, pr) {
+			if (typeof prop === 'string' && prop.startsWith('--dse-chrome-frame-border')) { L.log.push(['W', performance.now(), L.cur ? L.cur.id : 0, v]); if (L.cur) L.cur.writes++; }
+			return rSet.call(this, prop, v, pr);
+		};
+		L.mark = () => ({ r: L.seq, l: L.log.length });
+		/** Plugin rAF flushes since mark m: reads/writes, inRaf, order (all R before W). */
+		L.flushes = (m) => L.reqs.filter((r) => r.id > m.r && r.plugin && (r.reads > 0 || r.writes > 0)).map((r) => {
+			const seq = L.log.filter((e) => e[2] === r.id).map((e) => e[0]).join('');
+			return { id: r.id, inRaf: r.inRaf, wait: r.ran === null ? null : +(r.ran - r.at).toFixed(1), reads: r.reads, writes: r.writes, entries: r.writes / 2, orderOk: /^R*W*$/.test(seq), held: r.held };
+		});
+		L.pluginReqs = (m) => L.reqs.filter((r) => r.id > m.r && r.plugin).length;
+		/** Every anchor read/write since mark that happened OUTSIDE a rAF callback (i.e. in a mount task). */
+		L.outside = (m) => L.log.slice(m.l).filter((e) => e[2] === 0).length;
+		/** Geometry + vars of every connected, displayed panel under scope. */
+		L.geo = (scope) => Array.from(scope.querySelectorAll('.dse-chrome')).filter((p) => p.isConnected).map((p) => {
+			const a = p.parentElement;
+			const cs = L.gcs(a);
+			const pcs = L.gcs(p);
+			const pr = p.getBoundingClientRect();
+			const ar = a.getBoundingClientRect();
+			const bt = parseFloat(cs.borderTopWidth) || 0;
+			const br = parseFloat(cs.borderRightWidth) || 0;
+			const ct = pcs.getPropertyValue('--dse-chrome-frame-border-top').trim();
+			const cr = pcs.getPropertyValue('--dse-chrome-frame-border-right').trim();
+			const shown = pcs.display !== 'none' && pr.width > 0;
+			const varOk = (bt === 0 ? ct === '' || ct === '0px' : ct === bt + 'px') && (br === 0 ? cr === '' || cr === '0px' : cr === br + 'px');
+			return { el: p.closest('[data-dse-element]')?.getAttribute('data-dse-element'), bt, br, ct, cr, inline: p.style.getPropertyValue('--dse-chrome-frame-border-top'), anchorInline: a.style.getPropertyValue('--dse-chrome-frame-border-top'), shown, insetR: +(ar.right - pr.right).toFixed(2), gapTop: +(ar.top - pr.bottom).toFixed(2), varOk };
+		});
+		return true;
+	};
+	return window.__r3install(window, 'main');
+})()`;
+
+const r3xGeoSummary = (g) => ({
+	panels: g.length,
+	framed: g.filter((x) => x.bt > 0 || x.br > 0).length,
+	varBad: g.filter((x) => !x.varOk).map((x) => `${x.el}:bt${x.bt}/ct'${x.ct}'`),
+	geoBad: g.filter((x) => x.shown && (Math.abs(x.gapTop) > 0.01 || Math.abs(x.insetR - 10) > 0.01)).map((x) => `${x.el}:inset${x.insetR}/gap${x.gapTop}`),
+	anchorInline: g.filter((x) => x.anchorInline !== '').length,
+	insets: [...new Set(g.filter((x) => x.shown).map((x) => x.insetR))],
+});
+
+SCENARIOS.push({
+	id: 'P533X',
+	async run(t) {
+		const rep = { tag: R3X_TAG, variant: await t.ev('globalThis.__sc533variant'), obsidian: await t.ev('require("electron").ipcRenderer.sendSync("version")'), load: fs.readFileSync('/proc/loadavg', 'utf8').trim() };
+		const step = (m) => console.log(`R3X-step ${new Date().toISOString()} ${m}`);
+		const LEAF = 'app.workspace.getMostRecentLeaf()';
+		const RS = `(${LEAF}.view.containerEl.querySelector('.markdown-reading-view'))`;
+		const SS = `(${LEAF}.view.containerEl.querySelector('.markdown-source-view'))`;
+		const errMark = await t.mark();
+		await t.ev(R3X_INSTALL);
+		await t.ev(`(async () => { const f = app.vault.getAbstractFileByPath(${JSON.stringify(R3X_NOTE)}); if (f) await app.vault.modify(f, ${JSON.stringify(R3X_TEXT)}); else await app.vault.create(${JSON.stringify(R3X_NOTE)}, ${JSON.stringify(R3X_TEXT)}); return true; })()`);
+		const M = () => t.ev('JSON.stringify(window.__r3.mark())');
+		const since = async (m, scopeExpr) => t.ev(`(() => { const L = window.__r3; const m = ${m}; const g = ${scopeExpr} ? L.geo(${scopeExpr}) : []; return { flushes: L.flushes(m), pluginReqs: L.pluginReqs(m), outside: L.outside(m), geo: g, q: globalThis.__sc533q ? Array.from(globalThis.__sc533q.entries()).map(([w, v]) => ({ main: w === window, n: v.entries.size })) : null }; })()`);
+		const flushSum = (fl) => ({ n: fl.length, inRaf: fl.filter((f) => f.inRaf).length, maxEntries: Math.max(0, ...fl.map((f) => f.entries)), entries: fl.reduce((s, f) => s + f.entries, 0), orderBad: fl.filter((f) => !f.orderOk).length, waits: fl.map((f) => f.wait) });
+
+		// ---- A. Reading view: first render, then a same-task re-render of every block
+		step('A open R');
+		let m = await M();
+		await t.open(R3X_NOTE);
+		await t.sleep(1500);
+		let s = await since(m, RS);
+		rep.A_open = { flush: flushSum(s.flushes), outside: s.outside, geo: r3xGeoSummary(s.geo), q: s.q };
+		m = await M();
+		await t.ev(`(() => { ${LEAF}.view.previewMode.rerender(true); return true; })()`);
+		await t.sleep(1500);
+		s = await since(m, RS);
+		rep.A_rerender = { flush: flushSum(s.flushes), outside: s.outside, geo: r3xGeoSummary(s.geo), q: s.q, perFlush: s.flushes.map((f) => f.entries) };
+		// scroll the reading view top->bottom->top in steps (lazy section render)
+		m = await M();
+		await t.ev(`new Promise((res) => { const sc = ${RS}.querySelector('.markdown-preview-view') ?? ${RS}; let y = 0; const tick = () => { y += 250; sc.scrollTop = y; if (y < sc.scrollHeight) setTimeout(() => requestAnimationFrame(tick), 30); else res(true); }; tick(); })`);
+		await t.sleep(800);
+		const geoBottomR = r3xGeoSummary((await since(m, RS)).geo);
+		await t.ev(`(() => { const sc = ${RS}.querySelector('.markdown-preview-view') ?? ${RS}; sc.scrollTop = 0; return true; })()`);
+		await t.sleep(800);
+		s = await since(m, RS);
+		rep.A_scroll = { flush: flushSum(s.flushes), outside: s.outside, geoBottom: geoBottomR, geoTop: r3xGeoSummary(s.geo) };
+
+		// ---- E. adoption after in-card writes (counter Increase, tracker round advance), Reading view
+		step('E adoption');
+		m = await M();
+		const stats0 = await t.stats();
+		for (let i = 0; i < 4; i++) {
+			await t.clickIncrease(0);
+			await t.sleep(900);
+			await t.ev(`(() => { const b = ${t.root(TRACKER)}?.querySelector('.dse-init__round-advance'); if (b) b.click(); return !!b; })()`);
+			await t.sleep(900);
+		}
+		await t.sleep(800);
+		s = await since(m, RS);
+		rep.E_adopt = { flush: flushSum(s.flushes), outside: s.outside, geo: r3xGeoSummary(s.geo), statsBefore: stats0, statsAfter: await t.stats() };
+
+		// ---- F. a HOVERED tracker panel at a redraw: fallback geometry at insertion vs after the flush
+		step('F hover redraw');
+		const F = [];
+		for (let i = 0; i < 4; i++) {
+			const pt = await t.ev(`(() => { const r = ${t.root(TRACKER)}; r.scrollIntoView({ block: 'center' }); const b = r.getBoundingClientRect(); return { x: b.left + b.width / 2, y: b.top + 40 }; })()`);
+			await t.sleep(200);
+			await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: pt.x, y: pt.y });
+			await t.sleep(200);
+			m = await M();
+			const r = await t.ev(`(async () => {
+				const L = window.__r3; const scope = ${RS}; const SEL = '[data-dse-element="initiative"]';
+				const old = new Set(Array.from(scope.querySelectorAll(SEL)));
+				const meas = (p) => { const a = p.parentElement; const pr = p.getBoundingClientRect(); const ar = a.getBoundingClientRect(); return { insetR: +(ar.right - pr.right).toFixed(2), gapTop: +(ar.top - pr.bottom).toFixed(2), v: p.style.getPropertyValue('--dse-chrome-frame-border-top'), op: L.gcs(p).opacity, hov: p.parentElement.closest('[data-dse-chrome]').matches(':hover') }; };
+				const got = new Promise((res) => {
+					const mo = new MutationObserver(() => {
+						const root = Array.from(scope.querySelectorAll(SEL)).find((x) => x.isConnected && !old.has(x) && x.querySelector('.dse-chrome'));
+						if (!root) return;
+						mo.disconnect();
+						const p = root.querySelector('.dse-chrome');
+						const first = { ...meas(p), inRaf: L.depth > 0 };
+						requestAnimationFrame(() => { const f1 = meas(p); requestAnimationFrame(() => res({ first, f1, f2: meas(p) })); });
+					});
+					mo.observe(scope, { childList: true, subtree: true });
+					setTimeout(() => { mo.disconnect(); res(null); }, 8000);
+				});
+				const file = app.vault.getAbstractFileByPath(${JSON.stringify(R3X_NOTE)});
+				await app.vault.process(file, (c) => c.replace(/malice:\\n  value: (\\d+)/, (mm, v) => 'malice:\\n  value: ' + (Number(v) + 1)));
+				return await got;
+			})()`);
+			await t.sleep(600);
+			s = await since(m, null);
+			F.push({ r, flush: flushSum(s.flushes) });
+		}
+		rep.F_hover = F;
+		await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 5, y: 5 });
+
+		// ---- G. held plugin rAF (hidden-window simulation): N tracker draws, queue size each time, then release
+		step('G hold');
+		m = await M();
+		await t.ev('(() => { window.__r3.hold = true; return true; })()');
+		const G = [];
+		for (let i = 0; i < 8; i++) {
+			await t.ev(`(async () => { const file = app.vault.getAbstractFileByPath(${JSON.stringify(R3X_NOTE)}); await app.vault.process(file, (c) => c.replace(/malice:\\n  value: (\\d+)/, (mm, v) => 'malice:\\n  value: ' + (Number(v) + 1))); return true; })()`);
+			await t.sleep(700);
+			G.push(await t.ev(`(() => { const q = globalThis.__sc533q; const e = q && q.get(window); return { held: window.__r3.held.length, qn: e ? e.entries.size : 0, qLive: e ? Array.from(e.entries).filter((x) => x.panelEl.isConnected).length : 0, panels: ${RS}.querySelectorAll('.dse-chrome').length }; })()`));
+		}
+		const releasedN = await t.ev('(() => { window.__r3.hold = false; return window.__r3.release(); })()');
+		await t.sleep(600);
+		s = await since(m, RS);
+		rep.G_hold = { perDraw: G, released: releasedN, flush: flushSum(s.flushes), outside: s.outside, geo: r3xGeoSummary(s.geo), qAfter: s.q };
+
+		// ---- G2. real window hide (BrowserWindow.hide via @electron/remote, if reachable)
+		step('G2 real hide');
+		rep.G2_hide = await t.ev(`(async () => {
+			let rem = null; try { rem = require('@electron/remote'); } catch (e) { try { rem = require('electron').remote; } catch (e2) { rem = null; } }
+			if (!rem) return { reachable: false };
+			const bw = rem.getCurrentWindow();
+			const rafFires = () => new Promise((res) => { let fired = false; const id = requestAnimationFrame(() => { fired = true; }); setTimeout(() => { if (!fired) cancelAnimationFrame(id); res(fired); }, 700); });
+			const before = { vis: document.visibilityState, raf: await rafFires() };
+			bw.hide();
+			await new Promise((r) => setTimeout(r, 800));
+			const hidden = { vis: document.visibilityState, raf: await rafFires(), isVisible: bw.isVisible() };
+			const qs = [];
+			for (let i = 0; i < 4; i++) {
+				const file = app.vault.getAbstractFileByPath(${JSON.stringify(R3X_NOTE)});
+				await app.vault.process(file, (c) => c.replace(/malice:\\n  value: (\\d+)/, (mm, v) => 'malice:\\n  value: ' + (Number(v) + 1)));
+				await new Promise((r) => setTimeout(r, 900));
+				const q = globalThis.__sc533q; const e = q && q.get(window);
+				qs.push(e ? e.entries.size : 0);
+			}
+			bw.show();
+			await new Promise((r) => setTimeout(r, 1200));
+			const after = { vis: document.visibilityState, raf: await rafFires(), q: globalThis.__sc533q ? globalThis.__sc533q.size : null };
+			return { reachable: true, before, hidden, qs, after };
+		})()`);
+		await t.sleep(800);
+		s = await since(m, RS);
+		rep.G2_geo = r3xGeoSummary(s.geo);
+
+		// ---- D. Live Preview: open, scroll through (viewport-driven widget builds), geometry
+		step('D LP');
+		m = await M();
+		await t.ev(`(async () => { const leaf = ${LEAF}; await leaf.setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true }); return true; })()`);
+		await t.sleep(400);
+		await t.ev(`(async () => { const leaf = ${LEAF}; await leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(R3X_NOTE)}, mode: 'source', source: false }, active: true }); leaf.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+		await t.sleep(1800);
+		s = await since(m, SS);
+		rep.D_open = { flush: flushSum(s.flushes), outside: s.outside, geo: r3xGeoSummary(s.geo) };
+		m = await M();
+		await t.ev(`new Promise((res) => { const sc = ${SS}.querySelector('.cm-scroller'); let y = 0; const tick = () => { y += 200; sc.scrollTop = y; if (y < sc.scrollHeight) requestAnimationFrame(() => requestAnimationFrame(tick)); else res(true); }; tick(); })`);
+		await t.sleep(800);
+		const geoBottomLP = r3xGeoSummary((await since(m, SS)).geo);
+		await t.ev(`new Promise((res) => { const sc = ${SS}.querySelector('.cm-scroller'); const tick = () => { sc.scrollTop = Math.max(0, sc.scrollTop - 200); if (sc.scrollTop > 0) requestAnimationFrame(() => requestAnimationFrame(tick)); else res(true); }; tick(); })`);
+		await t.sleep(800);
+		s = await since(m, SS);
+		rep.D_scroll = { flush: flushSum(s.flushes), outside: s.outside, geoBottom: geoBottomLP, geoTop: r3xGeoSummary(s.geo) };
+		// park on a Reading-view note before anything else (SC-535)
+		await t.ev(`(async () => { await ${LEAF}.setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true }); return true; })()`);
+		await t.sleep(400);
+
+		// ---- I. unload before the frame: hold, re-render, switch the leaf away (views unload), release
+		step('I unload-before-frame');
+		await t.open(R3X_NOTE);
+		await t.sleep(1000);
+		m = await M();
+		rep.I_unload = await t.ev(`(async () => {
+			const L = window.__r3; L.hold = true;
+			${LEAF}.view.previewMode.rerender(true);
+			await new Promise((r) => setTimeout(r, 600));
+			const q = globalThis.__sc533q; const before = { held: L.held.length, qn: q && q.get(window) ? q.get(window).entries.size : 0 };
+			await ${LEAF}.setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true });
+			await new Promise((r) => setTimeout(r, 600));
+			const after = { held: L.held.length, qn: q && q.get(window) ? q.get(window).entries.size : 0, qHasMain: !!(q && q.has(window)) };
+			L.hold = false; const rel = L.release();
+			await new Promise((r) => setTimeout(r, 300));
+			return { before, after, released: rel };
+		})()`);
+		s = await since(m, null);
+		rep.I_unload.flush = flushSum(s.flushes);
+		rep.I_unload.cancelledHeld = await t.ev(`window.__r3.reqs.filter((r) => r.id > ${JSON.parse(m).r} && r.plugin && r.cancelled).length`);
+
+		// ---- H. popout windows
+		step('H popout');
+		await t.open(R3X_NOTE);
+		await t.sleep(800);
+		rep.H = await t.ev(`(async () => {
+			const out = {};
+			const main = ${LEAF};
+			const pl = app.workspace.openPopoutLeaf();
+			await pl.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(R3X_NOTE)}, mode: 'preview' }, active: false });
+			await new Promise((r) => setTimeout(r, 2500));
+			const pw = pl.view.containerEl.win;
+			out.popoutIsOtherWindow = pw !== window;
+			window.__r3install(pw, 'pop');
+			const PL = pw.__r3, ML = window.__r3;
+			const pscope = () => pl.view.containerEl.querySelector('.markdown-reading-view');
+			const mscope = () => main.view.containerEl.querySelector('.markdown-reading-view');
+			// H1: re-render the popout alone
+			let pm = PL.mark(), mm = ML.mark();
+			pl.view.previewMode.rerender(true);
+			await new Promise((r) => setTimeout(r, 1500));
+			out.H1 = { popFlushes: PL.flushes(pm), mainFlushes: ML.flushes(mm), popGeo: PL.geo(pscope()) };
+			// H2: both windows re-rendered in ONE task
+			pm = PL.mark(); mm = ML.mark();
+			main.view.previewMode.rerender(true); pl.view.previewMode.rerender(true);
+			await new Promise((r) => setTimeout(r, 1500));
+			out.H2 = { popFlushes: PL.flushes(pm), mainFlushes: ML.flushes(mm), popGeo: PL.geo(pscope()), mainGeo: ML.geo(mscope()) };
+			try {
+			// H3: cross-document: render into a MAIN-document detached div, move it into the popout before any frame
+			pm = PL.mark(); mm = ML.mark();
+			const { MarkdownRenderer, Component } = require('obsidian');
+			const comp = new Component(); comp.load();
+			const d = document.createElement('div');
+			const md = ${JSON.stringify(R3X_SB('SB Cross'))};
+			const p = MarkdownRenderer.render(app, md, d, ${JSON.stringify(R3X_NOTE)}, comp);
+			const syncPanel = !!d.querySelector('.dse-chrome');
+			pw.document.body.appendChild(d);
+			await p;
+			const afterAwaitPanel = !!d.querySelector('.dse-chrome');
+			await new Promise((r) => setTimeout(r, 800));
+			const panel = d.querySelector('.dse-chrome');
+			out.H3 = { syncPanel, afterAwaitPanel, ownerIsPop: d.ownerDocument === pw.document, panelVar: panel ? panel.style.getPropertyValue('--dse-chrome-frame-border-top') : null, popFlushes: PL.flushes(pm), mainFlushes: ML.flushes(mm), geo: PL.geo(d) };
+			// H3b: same, but the move happens only AFTER the render promise settles
+			pm = PL.mark(); mm = ML.mark();
+			const d2 = document.createElement('div');
+			document.body.appendChild(d2);
+			await MarkdownRenderer.render(app, ${JSON.stringify(R3X_SB('SB Cross2'))}, d2, ${JSON.stringify(R3X_NOTE)}, comp);
+			pw.document.body.appendChild(d2);
+			await new Promise((r) => setTimeout(r, 800));
+			out.H3b = { popFlushes: PL.flushes(pm), mainFlushes: ML.flushes(mm), geo: PL.geo(d2) };
+			comp.unload(); d.remove(); d2.remove();
+			} catch (e) { out.H3err = String(e && e.stack || e); }
+			// H4: close the popout right after a re-render in the same task (before its frame)
+			mm = ML.mark();
+			const errs0 = window.__lc.errs.length;
+			pl.view.previewMode.rerender(true);
+			pl.detach();
+			await new Promise((r) => setTimeout(r, 1500));
+			const q = globalThis.__sc533q;
+			out.H4 = { qSize: q ? q.size : null, qHasPop: q ? q.has(pw) : null, popClosed: pw.closed, errs: window.__lc.errs.slice(errs0).map((e) => e.text).slice(0, 5) };
+			return out;
+		})()`);
+		const sumH = (fl) => flushSum(fl);
+		for (const k of ['H1', 'H2', 'H3', 'H3b']) {
+			const h = rep.H[k];
+			for (const f of ['popFlushes', 'mainFlushes']) if (h && h[f]) h[f] = sumH(h[f]);
+			for (const f of ['popGeo', 'mainGeo', 'geo']) if (h && h[f]) h[f] = r3xGeoSummary(h[f]);
+		}
+		await t.sleep(500);
+		rep.qFinal = await t.ev('globalThis.__sc533q ? Array.from(globalThis.__sc533q.entries()).map(([w, v]) => ({ main: w === window, n: v.entries.size })) : null');
+		rep.errors = await t.errorsSince(errMark);
+		fs.mkdirSync(R3X_OUT, { recursive: true });
+		const f = path.join(R3X_OUT, `r3x-${R3X_TAG}.json`);
+		fs.writeFileSync(f, JSON.stringify(rep, null, 1));
+		console.log(`R3X ${JSON.stringify(rep)}`);
+		return `report -> ${f}; errors ${rep.errors.length}`;
+	},
+});
+// ===== end SC-533 r3 PROBE =====

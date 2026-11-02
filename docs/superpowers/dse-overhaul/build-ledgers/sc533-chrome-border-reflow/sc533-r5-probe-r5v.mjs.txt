@@ -1,0 +1,212 @@
+// ===== SC-533 r5 PROBE P533V (scratch only; needs probe-r3x first and the finalx bundle exposing __sc533q / __sc533p) =====
+// The IntersectionObserver hand-off: parked-state accounting (no leak, no stale entries) across re-mount, adoption, never-intersecting,
+// navigation away, popouts (own observer, close), moveLeafToPopout with parked entries; first-visible-frame timing (does rootMargin pre-fire
+// inside Obsidian's scrollers?); a collapsed block below the fold expanded by a click.
+const R5V_NOTE = 'Lifecycle/r5park.md';
+const R5V_SBC = (name) => fence('ds-statblock', ['type: statblock', `name: ${name}`, 'stamina: "10"', 'collapsed: true']);
+const R5V_TEXT = [
+	'# r5park', 'TOP', R3X_SB('SB One'), 'P1', R3X_SB('SB Two'), 'P2', COUNTER(5, 'C1'), R3X_SB('SB Three'),
+	fence('ds-stamina-bar', ['max_stamina: 20', 'current_stamina: 15', 'temp_stamina: 5']), INIT('Init Ida'), R3X_SB('SB Four'),
+	R3X_FILL('MID', 120), R3X_SB('SB Five'), COUNTER(7, 'C2'), R5V_SBC('SB Folded'), R3X_SB('SB Six'), R3X_FILL('END', 40),
+].join('\n\n') + '\n';
+
+SCENARIOS.push({
+	id: 'P533V',
+	async run(t) {
+		const rep = { tag: R3X_TAG, variant: await t.ev('globalThis.__sc533variant'), load: fs.readFileSync('/proc/loadavg', 'utf8').trim() };
+		const step = (m) => console.log(`R5V-step ${new Date().toISOString()} ${m}`);
+		const LEAF = 'app.workspace.getMostRecentLeaf()';
+		const errMark = await t.mark();
+		await t.ev(R3X_INSTALL);
+		await t.ev(`(async () => { const f = app.vault.getAbstractFileByPath(${JSON.stringify(R5V_NOTE)}); if (f) await app.vault.modify(f, ${JSON.stringify(R5V_TEXT)}); else await app.vault.create(${JSON.stringify(R5V_NOTE)}, ${JSON.stringify(R5V_TEXT)}); return true; })()`);
+		// page helpers: parked-state snapshot, geometry of a named block in a scope, scroll a scope's scroller until a named block is centred
+		await t.ev(`(() => {
+			window.__r5 = {};
+			const nameOf = (el) => { const r = el.closest('[data-dse-element]'); return r ? r.getAttribute('data-dse-element') + ':' + (r.textContent || '').replace(/\\s+/g, ' ').slice(0, 14) : '?'; };
+			__r5.nameOf = nameOf;
+			__r5.parked = () => { const p = globalThis.__sc533p; if (!p) return null; return Array.from(p.entries()).map(([w, v]) => ({ main: w === window, closed: !!w.closed, anchors: v.byAnchor.size, entries: Array.from(v.byAnchor.values()).reduce((s, x) => s + x.size, 0), names: Array.from(v.byAnchor.keys()).map(nameOf), anchorConn: Array.from(v.byAnchor.keys()).filter((a) => a.isConnected).length, panelsConn: Array.from(v.byAnchor.values()).flatMap((x) => Array.from(x)).filter((e) => e.panelEl.isConnected).length, staleEntries: Array.from(v.byAnchor.values()).flatMap((x) => Array.from(x)).filter((e) => e.panelEl.parentElement !== e.anchor).length })); };
+			__r5.queue = () => { const q = globalThis.__sc533q; return q ? Array.from(q.values()).reduce((s, v) => s + v.entries.size, 0) : null; };
+			__r5.geoOf = (scope, txt) => { const out = []; for (const p of scope.querySelectorAll('.dse-chrome')) { if (!p.isConnected) continue; const n = nameOf(p); if (!n.includes(txt)) continue; const a = p.parentElement; const pr = p.getBoundingClientRect(); const ar = a.getBoundingClientRect(); out.push({ n, v: p.style.getPropertyValue('--dse-chrome-frame-border-top'), inset: +(ar.right - pr.right).toFixed(2), gap: +(ar.top - pr.bottom).toFixed(2), shown: pr.width > 0 }); } return out; };
+			__r5.scrollTo = async (scope, scrollerSel, txt) => { const sc = scope.querySelector(scrollerSel) ?? scope; for (let i = 0; i < 300; i++) { const p = Array.from(scope.querySelectorAll('.dse-chrome')).find((x) => x.isConnected && nameOf(x).includes(txt)); if (p) { const r = p.parentElement.getBoundingClientRect(); const s = sc.getBoundingClientRect(); if (r.top > s.top + 100 && r.top < s.bottom - 200) return true; } const b = sc.scrollTop; sc.scrollTop = b + 120; await new Promise((x) => setTimeout(x, 120)); if (sc.scrollTop === b) return false; } return false; };
+			return true;
+		})()`);
+		const RS = (leaf = LEAF) => `(${leaf}.view.containerEl.querySelector('.markdown-reading-view'))`;
+
+		// V1 + V4: open Reading view; what is parked; never-intersecting anchors; navigate away -> nothing parked, nothing queued
+		step('V1 open');
+		await t.open(R5V_NOTE);
+		await t.sleep(1500);
+		rep.V1_open = { parked: await t.ev('__r5.parked()'), queue: await t.ev('__r5.queue()') };
+		await t.open('Lifecycle/other.md');
+		await t.sleep(600);
+		rep.V4_awayNeverIntersected = { parked: await t.ev('__r5.parked()'), queue: await t.ev('__r5.queue()') };
+
+		// V2: external re-mounts of parked blocks (C2 below the fold) x5: parked counts must stay constant, no stale entries
+		step('V2 remount while parked');
+		await t.open(R5V_NOTE);
+		await t.sleep(1500);
+		const V2 = [await t.ev('__r5.parked()')];
+		for (let i = 0; i < 5; i++) {
+			await t.ev(`(async () => { const f = app.vault.getAbstractFileByPath(${JSON.stringify(R5V_NOTE)}); await app.vault.process(f, (c) => c.replace(/name: C2\\ncurrent_value: (\\d+)/, (m, v) => 'name: C2\\ncurrent_value: ' + (Number(v) + 1))); return true; })()`);
+			await t.sleep(900);
+			V2.push(await t.ev('__r5.parked()'));
+		}
+		rep.V2_remount = V2;
+		rep.V2_c2_text_check = await t.ev(`app.vault.getAbstractFileByPath(${JSON.stringify(R5V_NOTE)}) ? true : false`);
+		await t.ev(`__r5.scrollTo(${RS()}, '.markdown-preview-view', 'C2')`);
+		await t.sleep(400);
+		rep.V2_c2_geo = await t.ev(`__r5.geoOf(${RS()}, 'C2')`);
+		rep.V2_after_scroll_parked = await t.ev('__r5.parked()');
+
+		// V3: adoption while parked: pane B (split) scrolled to C2 writes via its own Increase; pane A (top) keeps C2 parked
+		step('V3 adoption while parked');
+		await t.open(R5V_NOTE);
+		await t.sleep(1200);
+		rep.V3 = await t.ev(`(async () => {
+			const A = ${LEAF};
+			const B = app.workspace.createLeafBySplit(A, 'vertical');
+			await B.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(R5V_NOTE)}, mode: 'preview' }, active: false });
+			await new Promise((r) => setTimeout(r, 1500));
+			const bScope = B.view.containerEl.querySelector('.markdown-reading-view');
+			const aScope = A.view.containerEl.querySelector('.markdown-reading-view');
+			await __r5.scrollTo(bScope, '.markdown-preview-view', 'C2');
+			await new Promise((r) => setTimeout(r, 400));
+			const before = __r5.parked();
+			const stats0 = Object.assign({}, app.plugins.plugins['draw-steel-elements'].viewRegistry.stats);
+			const root = Array.from(bScope.querySelectorAll('[data-dse-element="counter"]')).find((r) => r.isConnected && (r.textContent || '').includes('C2'));
+			const btn = root && root.querySelector('button[aria-label^="Increase"]');
+			if (btn) btn.click();
+			await new Promise((r) => setTimeout(r, 1500));
+			const after = __r5.parked();
+			const stats1 = Object.assign({}, app.plugins.plugins['draw-steel-elements'].viewRegistry.stats);
+			const bGeo = __r5.geoOf(bScope, 'C2');
+			await __r5.scrollTo(aScope, '.markdown-preview-view', 'C2');
+			await new Promise((r) => setTimeout(r, 400));
+			const aGeo = __r5.geoOf(aScope, 'C2');
+			const aGeoFive = __r5.geoOf(aScope, 'SB Five');
+			B.detach();
+			await new Promise((r) => setTimeout(r, 600));
+			return { clicked: !!btn, before, after, stats0, stats1, bGeo, aGeo, aGeoFive, parkedAfterDetachB: __r5.parked() };
+		})()`);
+
+		// V7: first frame visibility vs var set, slow scroll (40 px per frame), Reading view and Live Preview
+		const FIRSTFRAME = (scopeExpr, scrollerSel) => `(async () => {
+			const scope = ${scopeExpr}; const sc = scope.querySelector(${JSON.stringify(scrollerSel)}) ?? scope;
+			sc.scrollTop = 0; await new Promise((r) => setTimeout(r, 500));
+			const seen = new Map(); let frame = 0;
+			await new Promise((res) => {
+				const tick = () => {
+					frame++;
+					for (const p of scope.querySelectorAll('.dse-chrome')) {
+						if (!p.isConnected) continue;
+						const a = p.parentElement; const ar = a.getBoundingClientRect(); const pr = p.getBoundingClientRect(); const s = sc.getBoundingClientRect();
+						const visible = pr.bottom > s.top && pr.top < s.bottom && pr.width > 0;
+						const n = __r5.nameOf(p) + '#' + (seen.size);
+						let rec = null; for (const [k, v] of seen) if (v.p === p) rec = v;
+						if (!rec) { rec = { p, name: __r5.nameOf(p), firstVisible: null, firstVar: null, badVisibleFrames: 0 }; seen.set(n, rec); }
+						const hasVar = p.style.getPropertyValue('--dse-chrome-frame-border-top') !== '';
+						if (hasVar && rec.firstVar === null) rec.firstVar = frame;
+						if (visible && rec.firstVisible === null) rec.firstVisible = frame;
+						if (visible && !hasVar && parseFloat(getComputedStyle(a).borderTopWidth) > 0) rec.badVisibleFrames++;
+					}
+					const b = sc.scrollTop; sc.scrollTop = b + 40;
+					if (sc.scrollTop === b || frame > 3000) res(); else requestAnimationFrame(tick);
+				};
+				requestAnimationFrame(tick);
+			});
+			return Array.from(seen.values()).map((r) => ({ name: r.name, firstVisible: r.firstVisible, firstVar: r.firstVar, badVisibleFrames: r.badVisibleFrames }));
+		})()`;
+		step('V7 first frame R');
+		await t.open('Lifecycle/other.md');
+		await t.sleep(400);
+		await t.open(R5V_NOTE);
+		await t.sleep(1500);
+		rep.V7_R = await t.ev(FIRSTFRAME(RS(), '.markdown-preview-view'));
+		step('V7 first frame LP');
+		await t.ev(`(async () => { const leaf = ${LEAF}; await leaf.setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true }); return true; })()`);
+		await t.sleep(400);
+		await t.ev(`(async () => { const leaf = ${LEAF}; await leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(R5V_NOTE)}, mode: 'source', source: false }, active: true }); leaf.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+		await t.sleep(1800);
+		rep.V7_LP = await t.ev(FIRSTFRAME(`(${LEAF}.view.containerEl.querySelector('.markdown-source-view'))`, '.cm-scroller'));
+		rep.V7_LP_parkedAtEnd = await t.ev('__r5.parked()');
+		await t.ev(`(async () => { await ${LEAF}.setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true }); return true; })()`);
+		await t.sleep(600);
+		rep.V7_LP_parkedAfterAway = await t.ev('__r5.parked()');
+
+		// V8: collapsed statblock below the fold: expand it by a click, geometry per frame afterwards
+		step('V8 collapsed expand');
+		await t.open(R5V_NOTE);
+		await t.sleep(1500);
+		rep.V8 = await t.ev(`(async () => {
+			const scope = ${RS()}; const sc = scope.querySelector('.markdown-preview-view');
+			for (let i = 0; i < 300; i++) { const r = Array.from(scope.querySelectorAll('[data-dse-element="statblock"]')).find((x) => x.isConnected && (x.textContent || '').includes('SB Folded')); if (r) { const b = r.getBoundingClientRect(); const s = sc.getBoundingClientRect(); if (b.top > s.top + 150 && b.top < s.bottom - 300) break; } sc.scrollTop += 120; await new Promise((x) => setTimeout(x, 120)); }
+			const root = Array.from(scope.querySelectorAll('[data-dse-element="statblock"]')).find((x) => x.isConnected && (x.textContent || '').includes('SB Folded'));
+			if (!root) return { found: false };
+			const p = root.querySelector('.dse-chrome'); const a = p.parentElement;
+			const parkedBefore = __r5.parked();
+			const isParked = !!globalThis.__sc533p && Array.from(globalThis.__sc533p.values()).some((v) => v.byAnchor.has(a));
+			const collapsed = root.getAttribute('data-dse-collapsed');
+			const anchorDisplay = getComputedStyle(a).display;
+			const meas = () => { const pr = p.getBoundingClientRect(); const ar = a.getBoundingClientRect(); return { v: p.style.getPropertyValue('--dse-chrome-frame-border-top'), inset: +(ar.right - pr.right).toFixed(2), gap: +(ar.top - pr.bottom).toFixed(2) }; };
+			const exp = root.querySelector('[data-dse-chrome-item="expand"]');
+			exp.click();
+			const f = [meas()];
+			for (let i = 0; i < 4; i++) { await new Promise((r) => requestAnimationFrame(() => r())); f.push(meas()); }
+			await new Promise((r) => setTimeout(r, 200)); f.push(meas());
+			return { found: true, collapsed, anchorIsRoot: a === root, anchorDisplay, isParked, parkedBefore, frames: f, parkedAfter: __r5.parked() };
+		})()`);
+
+		// V5 + V6: popouts
+		step('V5 popout');
+		await t.open('Lifecycle/other.md');
+		await t.sleep(400);
+		rep.V5 = await t.ev(`(async () => {
+			const pl = app.workspace.openPopoutLeaf();
+			await pl.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(R5V_NOTE)}, mode: 'preview' }, active: false });
+			await new Promise((r) => setTimeout(r, 2500));
+			const pw = pl.view.containerEl.win;
+			const scope = pl.view.containerEl.querySelector('.markdown-reading-view');
+			const parkedOpen = __r5.parked();
+			const sc = scope.querySelector('.markdown-preview-view');
+			const bad = []; const seen = new Set();
+			for (let i = 0; i < 300; i++) {
+				for (const p of scope.querySelectorAll('.dse-chrome')) { if (!p.isConnected) continue; const a = p.parentElement; const s = sc.getBoundingClientRect(); const ar = a.getBoundingClientRect(); if (ar.bottom <= s.top || ar.top >= s.bottom) continue; const pr = p.getBoundingClientRect(); if (pr.width === 0) continue; const n = __r5.nameOf(p); seen.add(n); const inset = +(ar.right - pr.right).toFixed(2), gap = +(ar.top - pr.bottom).toFixed(2); if (inset !== 10 || gap !== 0) bad.push({ n, inset, gap, v: p.style.getPropertyValue('--dse-chrome-frame-border-top') }); }
+				const b = sc.scrollTop; sc.scrollTop = b + 150; await new Promise((x) => setTimeout(x, 150)); if (sc.scrollTop === b) break;
+			}
+			const parkedEnd = __r5.parked();
+			pl.detach();
+			await new Promise((r) => setTimeout(r, 1200));
+			return { otherWindow: pw !== window, parkedOpen, seen: Array.from(seen), bad: bad.slice(0, 8), badCount: bad.length, parkedEnd, parkedAfterClose: __r5.parked(), pwClosed: pw.closed };
+		})()`);
+		step('V6 moveLeafToPopout with parked entries');
+		await t.open(R5V_NOTE);
+		await t.sleep(1500);
+		rep.V6 = await t.ev(`(async () => {
+			const leaf = ${LEAF};
+			const parkedBefore = __r5.parked();
+			let nl = app.workspace.moveLeafToPopout(leaf);
+			if (nl && typeof nl.then === 'function') nl = await nl;
+			if (!nl || !nl.view) nl = leaf;
+			await new Promise((r) => setTimeout(r, 2500));
+			const pw = nl.view.containerEl.win;
+			const scope = nl.view.containerEl.querySelector('.markdown-reading-view');
+			const parkedAfterMove = __r5.parked();
+			const sc = scope.querySelector('.markdown-preview-view');
+			const bad = []; const seen = new Set();
+			for (let i = 0; i < 300; i++) {
+				for (const p of scope.querySelectorAll('.dse-chrome')) { if (!p.isConnected) continue; const a = p.parentElement; const s = sc.getBoundingClientRect(); const ar = a.getBoundingClientRect(); if (ar.bottom <= s.top || ar.top >= s.bottom) continue; const pr = p.getBoundingClientRect(); if (pr.width === 0) continue; const n = __r5.nameOf(p); seen.add(n); const inset = +(ar.right - pr.right).toFixed(2), gap = +(ar.top - pr.bottom).toFixed(2); if (inset !== 10 || gap !== 0) bad.push({ n, inset, gap, v: p.style.getPropertyValue('--dse-chrome-frame-border-top'), doc: p.ownerDocument === pw.document ? 'pop' : 'main' }); }
+				const b = sc.scrollTop; sc.scrollTop = b + 150; await new Promise((x) => setTimeout(x, 150)); if (sc.scrollTop === b) break;
+			}
+			const parkedEnd = __r5.parked();
+			nl.detach();
+			await new Promise((r) => setTimeout(r, 1200));
+			return { otherWindow: pw !== window, parkedBefore, parkedAfterMove, seen: Array.from(seen), bad: bad.slice(0, 8), badCount: bad.length, parkedEnd, parkedAfterClose: __r5.parked() };
+		})()`);
+		rep.errors = await t.errorsSince(errMark);
+		fs.mkdirSync(R3X_OUT, { recursive: true });
+		const f = path.join(R3X_OUT, `r5v-${R3X_TAG}.json`);
+		fs.writeFileSync(f, JSON.stringify(rep, null, 1));
+		return `report -> ${f}; errors ${rep.errors.length}`;
+	},
+});
+// ===== end SC-533 r5 PROBE V =====

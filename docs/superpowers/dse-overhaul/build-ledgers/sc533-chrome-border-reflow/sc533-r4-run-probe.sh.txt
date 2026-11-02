@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# usage: run-probe.sh <tag> <bundle name> : runs P533Y (r3 HIGH-1 probe: slow scroll in Reading view and Live Preview, every connected panel's vars + geometry)
+set -u
+TAG=$1; BN=$2
+S=$(cat /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc533-r4-path.txt)
+REPO=$S/exp-final
+H=$S/harness-probe-$TAG.mjs
+LOG=$S/run-probe-$TAG.log
+PORT=9549
+if ss -ltnH | awk '{print $4}' | grep -q ":$PORT\$"; then echo "port $PORT busy"; exit 8; fi
+node "$S/mkharness.cjs" "$REPO/visual-harness/obsidian-lifecycle.mjs" "$H" "$S/probe-r3x.mjs.txt" "$S/probe-r3y.mjs.txt" > "$S/mk-probe-$TAG.log" 2>&1 || { echo mk-failed; exit 9; }
+echo "uptime-start: $(uptime)" > "$LOG"
+env S533_REPO="$REPO" P533_OUT="$S/out" P533_TAG="$TAG" \
+  XVFB_BIN=/home/scott/code/steelCompendium/workspace/draw-steel-elements/.devbox/nix/profile/default/bin/Xvfb \
+  DSE_LIFECYCLE_PORT=$PORT DSE_LIFECYCLE_BUNDLE="$S/bundles/$BN" timeout 580 node "$H" --only=P533Y >> "$LOG" 2>&1
+echo "rc=$?" >> "$LOG"
+echo "uptime-end: $(uptime)" >> "$LOG"
+grep -E "OBSIDIAN-LIFECYCLE|rc=" "$LOG" | cut -c1-600

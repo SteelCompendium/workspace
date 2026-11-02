@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# SC-533 r5: run lifecycle G-S54 from the 9c8cad5 export against bundle <variant>; log -> gs54-<variant>-<n>.log
+set -u
+V=$1; N=$2
+R5=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc533-r5-db8b2294
+LOG=$R5/gs54-$V-$N.log
+PORT=9561
+if ss -ltnH | awk '{print $4}' | grep -q ":$PORT\$"; then echo "port $PORT busy"; exit 8; fi
+echo "start $(date -Is) load $(cat /proc/loadavg)" > "$LOG"
+XVFB_BIN=/home/scott/code/steelCompendium/workspace/draw-steel-elements/.devbox/nix/profile/default/bin/Xvfb \
+  DSE_LIFECYCLE_PORT=$PORT DSE_LIFECYCLE_BUNDLE="$R5/bundles/$V" timeout 580 node "$R5/src/visual-harness/obsidian-lifecycle.mjs" --only=G-S54 >> "$LOG" 2>&1
+echo "rc=$?" >> "$LOG"
+echo "porcelain-after: [$(git -C /home/scott/code/steelCompendium/worktrees/sc533-chrome-border-reflow/draw-steel-elements status --porcelain | tr '\n' ' ')]" >> "$LOG"
+grep -E "OBSIDIAN-LIFECYCLE|rc=|porcelain" "$LOG" | cut -c1-2500

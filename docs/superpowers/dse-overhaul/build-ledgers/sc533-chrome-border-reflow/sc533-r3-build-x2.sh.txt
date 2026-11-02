@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# SC-533 r3: finalx2 = final + probe-only logging of every queued entry (connected at queue time / at flush) on globalThis.
+set -u
+R3=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc533-r3-2128bb62
+T=$R3/src
+F=$T/src/framework/chrome/mountChrome.ts
+python3 - "$R3/variants/finalx.ts" "$R3/variants/finalx2.ts" <<'PY'
+import sys
+s = open(sys.argv[1]).read()
+a = "\tqueue.entries.add(entry);\n"
+assert s.count(a) == 1
+s = s.replace(a, a + "\t// eslint-disable-next-line @typescript-eslint/no-explicit-any\n\t{ const g = globalThis as any; (g.__sc533log ??= []).push({ panelEl, anchor, connAtQueue: panelEl.isConnected, tQueue: performance.now(), connAtFlush: null as boolean | null, tFlush: 0 }); }\n")
+b = "\tconst live = [...queue.entries].filter((e) => e.panelEl.isConnected);\n"
+assert s.count(b) == 1
+s = s.replace(b, "\t// eslint-disable-next-line @typescript-eslint/no-explicit-any\n\t{ const g = globalThis as any; for (const e of queue.entries) for (const r of g.__sc533log ?? []) if (r.panelEl === e.panelEl && r.tFlush === 0) { r.connAtFlush = e.panelEl.isConnected; r.tFlush = performance.now(); } }\n" + b)
+open(sys.argv[2], 'w').write(s)
+PY
+cd "$T"
+cp "$R3/variants/finalx2.ts" "$F"
+node esbuild.config.mjs production > "$R3/build-finalx2.log" 2>&1
+echo "build finalx2 rc=$?"
+mkdir -p "$R3/bundles/finalx2"
+cp "$T/main.js" "$T/styles.css" "$T/manifest.json" "$R3/bundles/finalx2/"
+printf '\n;globalThis.__sc533variant = "%s";\n' finalx2 >> "$R3/bundles/finalx2/main.js"
+cp "$R3/variants/final.ts" "$F"
+cmp "$R3/variants/final.ts" "$F" && echo "export restored to final"
+grep -c "__sc533log" "$R3/bundles/finalx2/main.js"

@@ -1,0 +1,50 @@
+// ===== SC-533 r5 PROBE P533V6 (scratch only; needs probe-r3x + probe-r5v first, finalx bundle) =====
+// moveLeafToPopout while blocks are parked in the MAIN window's observer: scroll the popout to each parked block, measure.
+SCENARIOS.push({
+	id: 'P533V6',
+	async run(t) {
+		const rep = { tag: R3X_TAG, variant: await t.ev('globalThis.__sc533variant') };
+		const LEAF = 'app.workspace.getMostRecentLeaf()';
+		const errMark = await t.mark();
+		await t.ev(R3X_INSTALL);
+		await t.ev(`(async () => { const f = app.vault.getAbstractFileByPath(${JSON.stringify(R5V_NOTE)}); if (f) await app.vault.modify(f, ${JSON.stringify(R5V_TEXT)}); else await app.vault.create(${JSON.stringify(R5V_NOTE)}, ${JSON.stringify(R5V_TEXT)}); return true; })()`);
+		await t.open(R5V_NOTE);
+		await t.sleep(1500);
+		rep.res = await t.ev(`(async () => {
+			const nameOf = (el) => { const r = el.closest('[data-dse-element]'); return r ? r.getAttribute('data-dse-element') + ':' + (r.textContent || '').replace(/\\s+/g, ' ').slice(0, 14) : '?'; };
+			const P = () => { const p = globalThis.__sc533p; return p ? Array.from(p.entries()).map(([w, v]) => ({ main: w === window, entries: Array.from(v.byAnchor.values()).flatMap((s) => Array.from(s)).map((e) => ({ n: nameOf(e.panelEl), conn: e.panelEl.isConnected, doc: e.panelEl.ownerDocument === document ? 'main' : 'other' })) })) : null; };
+			const leaf = ${LEAF};
+			const parkedBefore = P();
+			let nl = app.workspace.moveLeafToPopout(leaf);
+			if (nl && typeof nl.then === 'function') nl = await nl;
+			if (!nl || !nl.view) nl = leaf;
+			await new Promise((r) => setTimeout(r, 3000));
+			const pw = nl.view.containerEl.win;
+			const scope = nl.view.containerEl.querySelector('.markdown-reading-view');
+			const sc = scope.querySelector('.markdown-preview-view');
+			const geo = [];
+			for (const txt of ['SB Five', 'C2', 'SB Six']) {
+				let found = false;
+				for (let i = 0; i < 400; i++) {
+					const p = Array.from(scope.querySelectorAll('.dse-chrome')).find((x) => x.isConnected && nameOf(x).includes(txt));
+					if (p) { const r = p.parentElement.getBoundingClientRect(); const s = sc.getBoundingClientRect(); if (r.top > s.top + 100 && r.top < s.bottom - 150) { found = true; break; } }
+					const b = sc.scrollTop; sc.scrollTop = b + 100; await new Promise((x) => setTimeout(x, 100)); if (sc.scrollTop === b) break;
+				}
+				await new Promise((x) => setTimeout(x, 800));
+				const p = Array.from(scope.querySelectorAll('.dse-chrome')).find((x) => x.isConnected && nameOf(x).includes(txt));
+				if (!p) { geo.push({ txt, found: false, scrollTop: sc.scrollTop, scrollHeight: sc.scrollHeight, clientHeight: sc.clientHeight }); continue; }
+				const a = p.parentElement; const pr = p.getBoundingClientRect(); const ar = a.getBoundingClientRect();
+				geo.push({ txt, found, doc: p.ownerDocument === pw.document ? 'pop' : 'main', v: p.style.getPropertyValue('--dse-chrome-frame-border-top'), inset: +(ar.right - pr.right).toFixed(2), gap: +(ar.top - pr.bottom).toFixed(2), bt: parseFloat(pw.getComputedStyle(a).borderTopWidth) });
+			}
+			const parkedEnd = P();
+			nl.detach();
+			await new Promise((r) => setTimeout(r, 1200));
+			return { otherWindow: pw !== window, parkedBefore, geo, parkedEnd, parkedAfterClose: P() };
+		})()`);
+		rep.errors = await t.errorsSince(errMark);
+		const f = path.join(R3X_OUT, `r5v6-${R3X_TAG}.json`);
+		fs.writeFileSync(f, JSON.stringify(rep, null, 1));
+		return `report -> ${f}; ${JSON.stringify(rep.res.geo)}`;
+	},
+});
+// ===== end SC-533 r5 PROBE V6 =====

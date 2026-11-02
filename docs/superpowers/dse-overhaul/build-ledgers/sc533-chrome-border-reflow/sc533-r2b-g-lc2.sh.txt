@@ -1,0 +1,5 @@
+#!/bin/bash
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc533-r2-7dca00e8
+cd /home/scott/code/steelCompendium/worktrees/sc533-chrome-border-reflow/draw-steel-elements
+DSE_LIFECYCLE_PORT=9543 npm run obsidian-lifecycle -- --only=G-S9a,G-S9b,G-S9d,G-S9e,G-S9f,G-S9c,G-S10,G-S11,G-S12,G-S13,G-S15,G-S14,G-S18,G-S32,G-S36,G-S33,G-S40,G-S45,G-S44,G-S42,G-S50 > $S/g-lc2.log 2>&1
+echo "lc2 rc=$?" >> $S/g-lc2.log

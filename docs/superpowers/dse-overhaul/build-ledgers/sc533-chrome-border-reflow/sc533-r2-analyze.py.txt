@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+# SC-533 r2: aggregate raw P533 draws -> CSV + stats. usage: analyze.py <out dir for csv/json>
+import json, statistics, csv, sys
+SC = '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc533-r2-7dca00e8'
+OUT = sys.argv[1]
+sessions = [('a', 'R'), ('b', 'R'), ('a', 'LP'), ('b', 'LP'), ('i', 'R'), ('i', 'LP')]
+rows, meta = [], {}
+for tag, scene in sessions:
+    d = json.load(open(f'{SC}/out/sc533-r2-raw-{tag}-{scene}.json'))
+    meta[f'{tag}-{scene}'] = d['meta']
+    for r in d['reps']:
+        calls = r['calls']
+        rows.append(dict(session=f'{tag}-{scene}', scene=scene, seq=r['seq'], round=r['round'], variant=r['variant'], warmup=int(r['warmup']), k=r['k'],
+                         tFound=r['tFound'], tRaf=r['tRaf'], tPost=r['tPost'], tRaf2=r['tRaf2'], tProc=r['tProc'], timedOut=int(r['timedOut']),
+                         calls=len(calls) if r['variant'] == 'fixinstr' else '', mounts=len(r['mounts']) if r['variant'] == 'fixinstr' else '',
+                         call1_side=calls[0]['side'] if calls else '', call1_ms=calls[0]['dt'] if calls else '',
+                         call2_side=calls[1]['side'] if len(calls) > 1 else '', call2_ms=calls[1]['dt'] if len(calls) > 1 else '',
+                         border_px=calls[0]['v'] if calls else '', load=r['load']))
+with open(f'{OUT}/sc533-r2-raw-draws.csv', 'w', newline='') as f:
+    w = csv.DictWriter(f, fieldnames=list(rows[0].keys())); w.writeheader(); w.writerows(rows)
+def q(xs, p):
+    xs = sorted(xs); n = len(xs)
+    pos = (n - 1) * p; lo = int(pos); hi = min(lo + 1, n - 1)
+    return xs[lo] + (xs[hi] - xs[lo]) * (pos - lo)
+def st(xs):
+    return dict(n=len(xs), med=round(statistics.median(xs), 1), p90=round(q(xs, .9), 1), iqr=round(q(xs, .75) - q(xs, .25), 1), min=round(min(xs), 1), max=round(max(xs), 1))
+res = {'meta': {k: dict(loadStart=v['loadStart'], loadEnd=v['loadEnd'], obsidian=v['obsidian'], rounds=v['rounds'], reps=v['reps'], roff=v['roff']) for k, v in meta.items()}}
+VARS = ['stock', 'fix', 'stub', 'deferred']
+for scene in ['R', 'LP']:
+    sres = res[scene] = {}
+    main = [r for r in rows if r['scene'] == scene and r['session'][0] in 'ab' and not r['timedOut']]
+    for v in VARS:
+        sel = [r for r in main if r['variant'] == v and not r['warmup']]
+        sres[v] = dict(tRaf=st([r['tRaf'] for r in sel]), tPost=st([r['tPost'] for r in sel]))
+        wu = [r for r in main if r['variant'] == v and r['warmup']]
+        sres[v]['warmup_tPost'] = st([r['tPost'] for r in wu])
+    # paired by visit (session, round): median of the visit's timed draws
+    def visit(sess, rnd, v):
+        return [r['tPost'] for r in main if r['session'] == sess and r['round'] == rnd and r['variant'] == v and not r['warmup']]
+    keys = sorted(set((r['session'], r['round']) for r in main))
+    for a, b in [('fix', 'stub'), ('stock', 'fix'), ('stock', 'stub'), ('deferred', 'stub'), ('fix', 'deferred')]:
+        diffs = [round(statistics.median(visit(s, rd, a)) - statistics.median(visit(s, rd, b)), 1) for s, rd in keys]
+        sres[f'paired_{a}_minus_{b}_tPost'] = dict(n=len(diffs), med=round(statistics.median(diffs), 1), min=min(diffs), max=max(diffs), all=diffs)
+    s, f_, u, dfr = (sres[v]['tPost']['med'] for v in ['stock', 'fix', 'stub', 'deferred'])
+    bar = max(50, 0.10 * u)
+    sres['bar'] = dict(stub_med=u, bar_ms=round(bar, 1), fix_minus_stub_med=round(f_ - u, 1), PASS_fix=bool(f_ - u <= bar),
+                       deferred_minus_stub_med=round(dfr - u, 1), PASS_deferred=bool(dfr - u <= bar))
+    ins = [r for r in rows if r['scene'] == scene and r['session'][0] == 'i' and not r['warmup']]
+    sres['fixinstr'] = dict(tRaf=st([r['tRaf'] for r in ins]), tPost=st([r['tPost'] for r in ins]),
+                            calls_per_draw=sorted(set(str(r['calls']) for r in ins)), mounts_per_draw=sorted(set(str(r['mounts']) for r in ins)),
+                            call1_Top=st([r['call1_ms'] for r in ins]), call2_Right=st([r['call2_ms'] for r in ins]),
+                            sum=st([r['call1_ms'] + r['call2_ms'] for r in ins]), border_px=sorted(set(str(r['border_px']) for r in ins)))
+json.dump(res, open(f'{OUT}/sc533-r2-stats.json', 'w'), indent=1)
+print(json.dumps(res['meta'], indent=0))
+for scene in ['R', 'LP']:
+    m = res[scene]
+    for v in VARS:
+        print(scene, v, 'tRaf', m[v]['tRaf'], 'tPost', m[v]['tPost'])
+    for k in m:
+        if k.startswith('paired') or k == 'bar': print(scene, k, m[k])
+    print(scene, 'fixinstr', m['fixinstr'])
+print('rows', len(rows), 'timedOut', sum(r['timedOut'] for r in rows))

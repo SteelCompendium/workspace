@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# SC-533 r5: scratch export of 9c8cad5, npm ci, bundles: final (9c8cad5), finalx (exposes queue + parked maps), old74 (74a8e27 mountChrome), stock (458abe3 mountChrome)
+set -u
+R5=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc533-r5-db8b2294
+D=/home/scott/code/steelCompendium/worktrees/sc533-chrome-border-reflow/draw-steel-elements
+mkdir -p "$R5/src" "$R5/variants" "$R5/bundles"
+git -C "$D" archive 9c8cad5 | tar -x -C "$R5/src"
+echo "archive rc=$?"
+cd "$R5/src"
+npm ci > "$R5/npmci.log" 2>&1
+echo "npmci rc=$?"
+F=$R5/src/src/framework/chrome/mountChrome.ts
+git -C "$D" show 9c8cad5:src/framework/chrome/mountChrome.ts > "$R5/variants/final.ts"
+git -C "$D" show 74a8e27:src/framework/chrome/mountChrome.ts > "$R5/variants/old74.ts"
+git -C "$D" show 458abe3:src/framework/chrome/mountChrome.ts > "$R5/variants/stock.ts"
+python3 - "$R5/variants/final.ts" "$R5/variants/finalx.ts" <<'PY'
+import sys
+s = open(sys.argv[1]).read()
+a = "const parkedFrameBorders = new Map<"
+assert s.count(a) == 1
+i = s.index(a); j = s.index(">();", i) + len(">();")
+s = s[:j] + "\n// eslint-disable-next-line @typescript-eslint/no-explicit-any\n(globalThis as any).__sc533q = pendingFrameBorders;\n// eslint-disable-next-line @typescript-eslint/no-explicit-any\n(globalThis as any).__sc533p = parkedFrameBorders;" + s[j:]
+open(sys.argv[2], 'w').write(s)
+PY
+for V in final finalx old74 stock; do
+  cp "$R5/variants/$V.ts" "$F"
+  node esbuild.config.mjs production > "$R5/build-$V.log" 2>&1
+  echo "build $V rc=$?"
+  mkdir -p "$R5/bundles/$V"
+  cp main.js styles.css manifest.json "$R5/bundles/$V/"
+  printf '\n;globalThis.__sc533variant = "%s";\n' "$V" >> "$R5/bundles/$V/main.js"
+done
+cp "$R5/variants/final.ts" "$F"
+cmp "$R5/variants/final.ts" "$F" && echo "export restored to final"
+grep -c "__sc533p" "$R5/bundles/finalx/main.js"
+sha256sum "$R5"/bundles/*/main.js | sed "s#$R5/##"

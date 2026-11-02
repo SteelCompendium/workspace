@@ -1,0 +1,139 @@
+// ===== SC-533 r2 PROBE (scratch harness copy only; never in the tree) =====
+// One scenario, P533: for one scene (R | LP | E | ELP), interleave plugin bundle variants inside ONE Obsidian session
+// (disable plugin -> copy the variant's main.js -> enable), open the scene fresh, one warm-up draw, then REPS timed draws.
+// A draw = app.vault.process bumping `malice: value` in Lifecycle/embtracker.md. No CDP Profiler/Tracing domain is used.
+const P533_OUT = process.env.P533_OUT;
+const P533_TAG = process.env.P533_TAG ?? 'untagged';
+const P533_SCENE = process.env.P533_SCENE ?? 'R';
+const P533_BUNDLES = process.env.P533_BUNDLES;
+const P533_VARIANTS = (process.env.P533_VARIANTS ?? 'stock,stub').split(',');
+const P533_ROUNDS = Number(process.env.P533_ROUNDS ?? 4);
+const P533_REPS = Number(process.env.P533_REPS ?? 3);
+const P533_ROFF = Number(process.env.P533_ROFF ?? 0);
+const P533_SCENES = {
+	R: { rel: 'Lifecycle/embtracker.md', state: { mode: 'preview' }, scope: '.markdown-reading-view' },
+	LP: { rel: 'Lifecycle/embtracker.md', state: { mode: 'source', source: false }, scope: '.markdown-source-view' },
+	E: { rel: 'Lifecycle/embhost.md', state: { mode: 'preview' }, scope: '.markdown-reading-view' },
+	ELP: { rel: 'Lifecycle/embhost.md', state: { mode: 'source', source: false }, scope: '.markdown-source-view' },
+};
+const P533_TARGET = 'Lifecycle/embtracker.md';
+const p533Load = () => fs.readFileSync('/proc/loadavg', 'utf8').trim();
+
+const p533Step = (m) => console.log(`P533-step ${new Date().toISOString()} ${m}`);
+async function p533Swap(t, v) {
+	// park the leaf on a plain Reading view note first: a swap while a Live Preview editor showed the tracker once left
+	// enablePlugin's promise unsettled (r1 attempts a/a2/a3 on LP)
+	p533Step(`swap ${v}: park on other.md`);
+	await t.ev(`(async () => { await app.workspace.getMostRecentLeaf().setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true }); })()`);
+	await t.sleep(400);
+	p533Step(`swap ${v}: disable`);
+	const pdir = path.join(vault, '.obsidian', 'plugins', 'draw-steel-elements');
+	await t.ev(`(async () => { await app.plugins.disablePlugin('draw-steel-elements'); globalThis.__sc533variant = null; return true; })()`);
+	for (const f of ['main.js', 'styles.css', 'manifest.json']) fs.copyFileSync(path.join(P533_BUNDLES, v, f), path.join(pdir, f));
+	p533Step(`swap ${v}: enable`);
+	// fire-and-forget + poll (an awaited enablePlugin once never settled within CDP's 30 s in Live Preview)
+	await t.ev(`(() => { window.__p533en = 'pending'; app.plugins.enablePlugin('draw-steel-elements').then(() => { window.__p533en = 'done'; }, (e) => { window.__p533en = 'err: ' + e; }); return true; })()`);
+	try {
+		await t.waitFor(`!!app.plugins.plugins['draw-steel-elements'] && globalThis.__sc533variant === ${JSON.stringify(v)} && window.__p533en === 'done'`, `variant ${v} loaded`, 20000);
+	} catch (e) {
+		const diag = await t.ev(`JSON.stringify({ en: window.__p533en, marker: globalThis.__sc533variant, loaded: !!app.plugins.plugins['draw-steel-elements'], enabled: Array.from(app.plugins.enabledPlugins || []), modals: Array.from(document.querySelectorAll('.modal-container')).map((m) => m.textContent.slice(0, 120)) })`);
+		p533Step(`swap ${v}: enable did not settle: ${diag}`);
+		throw e;
+	}
+	p533Step(`swap ${v}: loaded`);
+	await t.sleep(800);
+}
+
+async function p533Open(t, sc) {
+	p533Step('open: other.md');
+	// via another note, so the scene note's view is built fresh in the wanted mode
+	await t.ev(`(async () => { await app.workspace.getMostRecentLeaf().setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true }); })()`);
+	await t.sleep(400);
+	p533Step('open: scene');
+	await t.ev(`(async () => { const leaf = app.workspace.getMostRecentLeaf(); await leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(sc.rel)}, ...${JSON.stringify(sc.state)} }, active: true }); if (${JSON.stringify(sc.state.mode)} === 'source') leaf.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+	p533Step('open: wait rendered');
+	await t.waitFor(`(() => { const s = app.workspace.getMostRecentLeaf().view.containerEl.querySelector(${JSON.stringify(sc.scope)}); return !!s && Array.from(s.querySelectorAll('[data-dse-element="initiative"]')).some((r) => r.isConnected && r.children.length > 0); })()`, `scene ${P533_SCENE} rendered`, 20000);
+	await t.sleep(1500);
+}
+
+const P533_DRAW = (sc) => `(async () => {
+	const leaf = app.workspace.getMostRecentLeaf();
+	const scope = leaf.view.containerEl.querySelector(${JSON.stringify(sc.scope)});
+	const SEL = '[data-dse-element="initiative"]';
+	const old = new Set(Array.from(document.querySelectorAll(SEL)));
+	const g = (globalThis.__sc533 = { u: [], m: [] });
+	let t0 = 0, tFound = null, tRaf = null, tPost = null, tRaf2 = null, tProc = null, found = null, timedOut = false;
+	const done = new Promise((res) => {
+		const check = () => {
+			if (found) return;
+			const r = Array.from(scope.querySelectorAll(SEL)).find((x) => x.isConnected && !old.has(x) && x.children.length > 0);
+			if (!r) return;
+			tFound = performance.now();
+			found = r;
+			mo.disconnect();
+			requestAnimationFrame(() => {
+				tRaf = performance.now();
+				const ch = new MessageChannel();
+				ch.port1.onmessage = () => { tPost = performance.now(); };
+				ch.port2.postMessage(0);
+				requestAnimationFrame(() => { tRaf2 = performance.now(); setTimeout(res, 0); });
+			});
+		};
+		const mo = new MutationObserver(check);
+		mo.observe(scope, { childList: true, subtree: true });
+		setTimeout(() => { timedOut = true; mo.disconnect(); res(); }, 15000);
+	});
+	const file = app.vault.getAbstractFileByPath(${JSON.stringify(P533_TARGET)});
+	t0 = performance.now();
+	const p = app.vault.process(file, (c) => c.replace(/malice:\\n  value: (\\d+)/, (m, v) => 'malice:\\n  value: ' + (Number(v) + 1)));
+	p.then(() => { tProc = performance.now(); });
+	await done;
+	await p;
+	await new Promise((r) => setTimeout(r, 1500)); // late mounts are still counted
+	const inScope = (el) => !!el && scope.contains(el);
+	const rel = (x) => (x === null ? null : +(x - t0).toFixed(2));
+	return {
+		timedOut,
+		tFound: rel(tFound), tRaf: rel(tRaf), tPost: rel(tPost), tRaf2: rel(tRaf2), tProc: rel(tProc),
+		foundHasChrome: found ? found.hasAttribute('data-dse-chrome') : null,
+		rootsNow: Array.from(scope.querySelectorAll(SEL)).filter((r) => r.isConnected).length,
+		mounts: g.m.map(([ts, el, conn, root]) => ({ at: rel(ts), el, conn, inScope: inScope(root), isFound: root === found, connNow: root.isConnected })),
+		calls: g.u.map(([ts, dt, side, conn, v, el]) => ({ at: rel(ts), dt: +dt.toFixed(3), side, conn, v, inScope: inScope(el), inFound: !!found && found.contains(el) })),
+	};
+})()`;
+
+SCENARIOS.push({
+	id: 'P533',
+	async run(t) {
+		const sc = P533_SCENES[P533_SCENE];
+		if (!sc) throw new Error(`unknown scene ${P533_SCENE}`);
+		const meta = { roff: P533_ROFF, tag: P533_TAG, scene: P533_SCENE, variants: P533_VARIANTS, rounds: P533_ROUNDS, reps: P533_REPS, loadStart: p533Load(), obsidian: await t.ev('require("electron").ipcRenderer.sendSync("version")'), startedAt: new Date().toISOString() };
+		const reps = [];
+		let seq = 0;
+		for (let round = 0; round < P533_ROUNDS; round++) {
+			const order = P533_VARIANTS.map((_, i) => P533_VARIANTS[(i + round + P533_ROFF) % P533_VARIANTS.length]);
+			for (const v of order) {
+				await p533Swap(t, v);
+				await p533Open(t, sc);
+				const loadVisit = p533Load();
+				for (let k = 0; k <= P533_REPS; k++) {
+					const r = await t.ev(P533_DRAW(sc));
+					reps.push({ seq: seq++, round: round + P533_ROFF, variant: v, warmup: k === 0, k, load: loadVisit, ...r });
+					console.log(`P533 ${P533_SCENE} r${round} ${v} k${k}${k === 0 ? ' (warmup)' : ''}: found=${r.tFound} raf=${r.tRaf} post=${r.tPost} raf2=${r.tRaf2} proc=${r.tProc} mounts=${r.mounts.length} calls=${r.calls.length}${r.calls.length ? ' dt=' + r.calls.map((c) => c.dt).join('/') : ''}${r.timedOut ? ' TIMEOUT' : ''}`);
+					await t.sleep(300);
+				}
+				// incremental dump after every visit, so an aborted session keeps what it measured
+				fs.mkdirSync(P533_OUT, { recursive: true });
+				fs.writeFileSync(path.join(P533_OUT, `sc533-r2-raw-${P533_TAG}-${P533_SCENE}.partial.json`), JSON.stringify({ meta, reps }, null, 1));
+			}
+		}
+		meta.loadEnd = p533Load();
+		meta.endedAt = new Date().toISOString();
+		fs.mkdirSync(P533_OUT, { recursive: true });
+		const f = path.join(P533_OUT, `sc533-r2-raw-${P533_TAG}-${P533_SCENE}.json`);
+		fs.writeFileSync(f, JSON.stringify({ meta, reps }, null, 1));
+		const errs = await t.ev('__lc.errs.map((x) => x.text).slice(0, 5)');
+		return `${reps.length} draws -> ${f}; load ${meta.loadStart} -> ${meta.loadEnd}; page errors: ${JSON.stringify(errs)}`;
+	},
+});
+// ===== end SC-533 r2 PROBE =====

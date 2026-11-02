@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# usage: mkbundle.sh <name> <commit>   -- export <commit> of the worktree dse into the scratch dir and build main.js/styles.css/manifest.json into bundles/<name>
+set -u
+S=$(cat /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc533-r4-path.txt)
+D=/home/scott/code/steelCompendium/worktrees/sc533-chrome-border-reflow/draw-steel-elements
+NAME=$1; REV=$2
+E=$S/exp-$NAME
+mkdir -p "$E" "$S/bundles/$NAME"
+git -C "$D" archive "$REV" | tar -x -C "$E"
+ln -s "$D/node_modules" "$E/node_modules"
+( cd "$E" && node esbuild.config.mjs production ) > "$S/build-$NAME.log" 2>&1
+echo "build $NAME ($REV) rc=$?"
+cp "$E/main.js" "$E/styles.css" "$E/manifest.json" "$S/bundles/$NAME/"
+sha256sum "$S/bundles/$NAME/main.js"
