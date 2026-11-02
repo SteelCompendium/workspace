@@ -1,0 +1,113 @@
+diff --git a/e2e/driver/dse.ts b/e2e/driver/dse.ts
+index d31918bb..930fb21c 100644
+--- a/e2e/driver/dse.ts
++++ b/e2e/driver/dse.ts
+@@ -317,7 +317,15 @@ async function cdpClick(el: El, opts: ClickOptions): Promise<void> {
+  * never papered over; only a non-interactable-geometry error falls back to the CDP path.
+  * `{ cdp: true }` forces the CDP path; `{ inset }` clicks the control's own edge, not its label.
+  */
++let lastHovered539: El | null = null; // SC539-PROBE candidate B (temporary)
+ async function click(el: El, opts: ClickOptions = {}): Promise<void> {
++	if (process.env.SC539_REHOVER && lastHovered539) {
++		const h = lastHovered539;
++		let n = 0;
++		await browser.waitUntil(async () => { if (await el.isDisplayed()) return true; n++; await h.moveTo(); return false; }, { timeout: 8000, interval: 50, timeoutMsg: 'B: still not displayed' });
++		if (n) console.log(`SC539-REHOVER re-hovered ${n}x before click`);
++	}
++	lastHovered539 = null;
+ 	await el.waitForDisplayed({ timeout: 8000 });
+ 	const enabled = await el.isEnabled();
+ 	await beforeAction(el);
+@@ -358,6 +366,7 @@ async function type(el: El, text: string, opts: { replace?: boolean } = {}): Pro
+ async function hover(el: El): Promise<void> {
+ 	await el.waitForDisplayed({ timeout: 8000 });
+ 	await el.moveTo();
++	lastHovered539 = el;
+ }
+ 
+ /** Real double-click (two press/release pairs, so the browser fires `dblclick`). */
+diff --git a/e2e/driver/session.ts b/e2e/driver/session.ts
+index 6d15c032..96e1b1e7 100644
+--- a/e2e/driver/session.ts
++++ b/e2e/driver/session.ts
+@@ -11,12 +11,59 @@ import { invariantProblems } from './invariants';
+ import { ev, waitFor } from './page';
+ import { enableFocusEmulation, installRecorders, mark, setWindowSize } from './recorders';
+ import { appendRunLine, errText, resetTestState, state, testIdOf } from './state';
++import { execSync, spawn, type ChildProcess } from 'node:child_process';
++
++// SC539-PROBE (temporary): SC539_CHURN_MS=<n> maps/unmaps a full-screen foreign X window (another X client, like a
++// parallel shard's Obsidian) every n ms for the whole session, the way a shard's window start/stop does in a full run.
++let churnChild: ChildProcess | null = null;
++let churnTimer: ReturnType<typeof setInterval> | null = null;
++let churnFlips = 0;
++async function startChurn(): Promise<void> {
++	if (process.env.SC539_PARK) {
++		// candidate fix A1: park the REAL X pointer outside every Obsidian window (windows sit at +288+200, 1440x1100)
++		console.log(`SC539-PARK ${execSync('xdotool mousemove 0 0 && xdotool getmouselocation', { env: process.env, encoding: 'utf8' }).trim()} pid ${process.pid}`);
++	}
++	const ms = Number(process.env.SC539_CHURN_MS ?? 0);
++	if (!ms) return;
++	churnChild = spawn('xlogo', ['-geometry', '1600x1200+0+0', '-name', `churn${process.pid}`], { env: process.env, stdio: 'ignore' });
++	let id = '';
++	for (let i = 0; i < 100 && !id; i++) {
++		try {
++			id = execSync(`xdotool search --name '^churn${process.pid}$' | head -1`, { env: process.env, encoding: 'utf8' }).trim();
++		} catch {
++			/* not yet */
++		}
++		if (!id) await new Promise((r) => setTimeout(r, 50));
++	}
++	let mapped = true;
++	churnTimer = setInterval(() => {
++		try {
++			execSync(`xdotool ${mapped ? 'windowunmap' : 'windowmap'} ${id}`, { env: process.env, stdio: 'ignore' });
++			mapped = !mapped;
++			churnFlips++;
++		} catch {
++			/* probe only */
++		}
++	}, ms);
++	console.log(`SC539-CHURN on: every ${ms} ms, window ${id}, pid ${process.pid}`);
++}
++after(() => {
++	if (churnTimer) clearInterval(churnTimer);
++	if (churnChild) churnChild.kill();
++	if (churnChild) console.log(`SC539-CHURN off: ${churnFlips} flips, pid ${process.pid}`);
++});
+ 
+ before(async function () {
+ 	this.timeout(120_000);
+ 	await waitFor(`!!(window.app && app.plugins && app.plugins.plugins && app.plugins.plugins['draw-steel-elements'])`, 'the DSE plugin to load', 60_000);
+ 	await enableFocusEmulation();
+ 	await installRecorders();
++	// SC539-PROBE (temporary): count real X-pointer crossings (the window lost / regained the pointer: relatedTarget null on the root).
++	await ev(`(() => { window.__x539 = { leave: 0, enter: 0, last: null }; const t0 = performance.now();
++		document.documentElement.addEventListener('mouseleave', (e) => { if (e.isTrusted) { window.__x539.leave++; window.__x539.last = 'leave@' + e.clientX + ',' + e.clientY + '+' + Math.round(performance.now() - t0); } });
++		document.documentElement.addEventListener('mouseenter', (e) => { if (e.isTrusted) { window.__x539.enter++; window.__x539.last = 'enter@' + e.clientX + ',' + e.clientY + '+' + Math.round(performance.now() - t0); } });
++		return true; })()`);
++	await startChurn();
+ 	// Shipped specs run the real 7.0.0 product: the experimental gate must be OFF.
+ 	const experimental = await ev<boolean>(`app.plugins.plugins['draw-steel-elements'].settings?.experimental === true`);
+ 	if (experimental) throw new Error('the experimental gate is ON in a shipped-spec session (data.json must not set it)');
+@@ -33,6 +80,7 @@ beforeEach(async function () {
+ 	const test = this.currentTest;
+ 	if (!test) return;
+ 	resetTestState(test.title);
++	await ev(`(() => { if (window.__x539) { window.__x539.leave = 0; window.__x539.enter = 0; window.__x539.last = null; } return true; })()`);
+ 	state.mark = await mark();
+ 	const body = test.fn;
+ 	if (typeof body === 'function' && body.length === 0) {
+@@ -70,6 +118,12 @@ afterEach(async function () {
+ 			/* never mask the failure with an artifact error */
+ 		}
+ 	}
++	try {
++		const x = await ev<{ leave: number; enter: number; last: string | null }>(`window.__x539 || null`);
++		console.log(`SC539-XING ${testIdOf(test.title)} ${test.state} leave=${x?.leave} enter=${x?.enter} last=${x?.last} t=${Date.now()} pid=${process.pid}`);
++	} catch {
++		/* probe only */
++	}
+ 	appendRunLine('results', {
+ 		id: testIdOf(test.title),
+ 		title: test.title,

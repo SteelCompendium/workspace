@@ -1,0 +1,112 @@
+load-before: 4.45 5.45 4.91 3/3187 923546
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E WARN pointer NOT parked: SC539 TEMP base behaviour — hover tests may flake (SC-539)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :200 (private Xvfb); 3 spec file(s), 1 shard(s); only CHR-F02,CHR-F03,CHR-L01,INIT-DEF-E04; run 20261102-091956-6240
+
+Execution of 3 workers started at 2026-11-02T09:19:58.126Z
+
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/initiative/default-keys.e2e.ts
+[0-0] SC539-CHURN on: every 150 ms, window 10485763, pid 923627
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 923627
+[0-0] Error in "initiative: a write adds no default key the user never wrote.[INIT-DEF-E04] Reset encounter on an untouched block writes back only the source keys (Malice back to 0)"
+Error: element ("[data-dse-control="init.reset-encounter"]") still not displayed after 8000ms
+    at process.processTimers (node:internal/timers:538:9)
+    at async Object.click (/home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/driver/dse.ts:329:2)
+[0-0] SC539-XING INIT-DEF-E04 failed leave=30 enter=30 last=leave@512,400+9036 t=1793611210912 pid=923627
+[0-0] SC539-CHURN off: 60 flips, pid 923627
+[0-0] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/initiative/default-keys.e2e.ts
+[0-1] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/chrome-focus.e2e.ts
+[0-1] SC539-CHURN on: every 150 ms, window 10485763, pid 924460
+[0-1] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 924460
+[0-1] Error in "stamina bar chrome: keyboard focus follows Collapse and Expand (SC-505).[CHR-F02] Enter on Expand (reached by keyboard) expands the block and focus lands on the restored Collapse button (ring shown, panel shown)"
+Error: element ("[data-dse-control="chrome.collapse"]") still not displayed after 8000ms
+    at async Object.click (/home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/driver/dse.ts:329:2)
+    at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/specs/stamina-bar/chrome-focus.e2e.ts:69:3)
+[0-1] SC539-XING CHR-F02 failed leave=29 enter=30 last=enter@512,400+8764 t=1793611222853 pid=924460
+[0-1] Error in "stamina bar chrome: keyboard focus follows Collapse and Expand (SC-505).[CHR-F03] a MOUSE click on Collapse and on Expand moves focus nowhere new (no hand-off into the block)"
+Error: element ("[data-dse-control="chrome.collapse"]") still not displayed after 8000ms
+    at async Object.click (/home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/driver/dse.ts:329:2)
+    at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/specs/stamina-bar/chrome-focus.e2e.ts:85:3)
+[0-1] SC539-XING CHR-F03 failed leave=28 enter=28 last=enter@512,400+17294 t=1793611231389 pid=924460
+[0-1] SC539-CHURN off: 115 flips, pid 924460
+[0-1] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/chrome-focus.e2e.ts
+[0-2] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/chrome-live-preview.e2e.ts
+[0-2] SC539-CHURN on: every 150 ms, window 10485763, pid 925098
+[0-2] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 925098
+[0-2] Error in "stamina bar chrome: the panel is clickable in Live Preview (SC-502).[CHR-L01] a real mouse click on Collapse in Live Preview collapses the block, a real click on Expand expands it, and the editor cursor stays where it was"
+Error: timed out waiting for the chrome panel to stay revealed with the pointer on Collapse
+    at async Object.waitFor (/home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/driver/page.ts:22:2)
+    at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/specs/stamina-bar/chrome-live-preview.e2e.ts:50:3)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/driver/session.ts:90:5)
+[0-2] SC539-XING CHR-L01 failed leave=53 enter=53 last=leave@512,400+15970 t=1793611250419 pid=925098
+[0-2] SC539-CHURN off: 106 flips, pid 925098
+[0-2] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/chrome-live-preview.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: 264cdfc730fbf985b63f39ce47a5f16b
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/initiative/default-keys.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] initiative: a write adds no default key the user never wrote
+[chrome 150.0.7871.250 linux #0-0]    ✖ [INIT-DEF-E04] Reset encounter on an untouched block writes back only the source keys (Malice back to 0)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1 failing (9.1s)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1) initiative: a write adds no default key the user never wrote [INIT-DEF-E04] Reset encounter on an untouched block writes back only the source keys (Malice back to 0)
+[chrome 150.0.7871.250 linux #0-0] element ("[data-dse-control="init.reset-encounter"]") still not displayed after 8000ms
+[chrome 150.0.7871.250 linux #0-0] Error: element ("[data-dse-control="init.reset-encounter"]") still not displayed after 8000ms
+[chrome 150.0.7871.250 linux #0-0]     at process.processTimers (node:internal/timers:538:9)
+[chrome 150.0.7871.250 linux #0-0]     at async Object.click (/home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/driver/dse.ts:329:2)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-1] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-1] Session ID: 6c929616858294ef6e10479ce713f350
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] » e2e/specs/stamina-bar/chrome-focus.e2e.ts
+[chrome 150.0.7871.250 linux #0-1] stamina bar chrome: keyboard focus follows Collapse and Expand (SC-505)
+[chrome 150.0.7871.250 linux #0-1]    ✖ [CHR-F02] Enter on Expand (reached by keyboard) expands the block and focus lands on the restored Collapse button (ring shown, panel shown)
+[chrome 150.0.7871.250 linux #0-1]    ✖ [CHR-F03] a MOUSE click on Collapse and on Expand moves focus nowhere new (no hand-off into the block)
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] 2 failing (17.4s)
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] 1) stamina bar chrome: keyboard focus follows Collapse and Expand (SC-505) [CHR-F02] Enter on Expand (reached by keyboard) expands the block and focus lands on the restored Collapse button (ring shown, panel shown)
+[chrome 150.0.7871.250 linux #0-1] element ("[data-dse-control="chrome.collapse"]") still not displayed after 8000ms
+[chrome 150.0.7871.250 linux #0-1] Error: element ("[data-dse-control="chrome.collapse"]") still not displayed after 8000ms
+[chrome 150.0.7871.250 linux #0-1]     at async Object.click (/home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/driver/dse.ts:329:2)
+[chrome 150.0.7871.250 linux #0-1]     at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/specs/stamina-bar/chrome-focus.e2e.ts:69:3)
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] 2) stamina bar chrome: keyboard focus follows Collapse and Expand (SC-505) [CHR-F03] a MOUSE click on Collapse and on Expand moves focus nowhere new (no hand-off into the block)
+[chrome 150.0.7871.250 linux #0-1] element ("[data-dse-control="chrome.collapse"]") still not displayed after 8000ms
+[chrome 150.0.7871.250 linux #0-1] Error: element ("[data-dse-control="chrome.collapse"]") still not displayed after 8000ms
+[chrome 150.0.7871.250 linux #0-1]     at async Object.click (/home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/driver/dse.ts:329:2)
+[chrome 150.0.7871.250 linux #0-1]     at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/specs/stamina-bar/chrome-focus.e2e.ts:85:3)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-2] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-2] Session ID: 6e1bfc96454663bbb8f4302783be0450
+[chrome 150.0.7871.250 linux #0-2]
+[chrome 150.0.7871.250 linux #0-2] » e2e/specs/stamina-bar/chrome-live-preview.e2e.ts
+[chrome 150.0.7871.250 linux #0-2] stamina bar chrome: the panel is clickable in Live Preview (SC-502)
+[chrome 150.0.7871.250 linux #0-2]    ✖ [CHR-L01] a real mouse click on Collapse in Live Preview collapses the block, a real click on Expand expands it, and the editor cursor stays where it was
+[chrome 150.0.7871.250 linux #0-2]
+[chrome 150.0.7871.250 linux #0-2] 1 failing (16s)
+[chrome 150.0.7871.250 linux #0-2]
+[chrome 150.0.7871.250 linux #0-2] 1) stamina bar chrome: the panel is clickable in Live Preview (SC-502) [CHR-L01] a real mouse click on Collapse in Live Preview collapses the block, a real click on Expand expands it, and the editor cursor stays where it was
+[chrome 150.0.7871.250 linux #0-2] timed out waiting for the chrome panel to stay revealed with the pointer on Collapse
+[chrome 150.0.7871.250 linux #0-2] Error: timed out waiting for the chrome panel to stay revealed with the pointer on Collapse
+[chrome 150.0.7871.250 linux #0-2]     at async Object.waitFor (/home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/driver/page.ts:22:2)
+[chrome 150.0.7871.250 linux #0-2]     at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/specs/stamina-bar/chrome-live-preview.e2e.ts:50:3)
+[chrome 150.0.7871.250 linux #0-2]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/driver/session.ts:90:5)
+
+
+Spec Files:	 0 passed, 3 failed, 3 total (100% completed) in 00:00:52  
+
+OBSIDIAN-E2E INIT-DEF-E04 FAIL: element ("[data-dse-control="init.reset-encounter"]") still not displayed after 8000ms [bundle /home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/.out/20261102-091956-6240/INIT-DEF-E04]
+OBSIDIAN-E2E CHR-F02 FAIL: element ("[data-dse-control="chrome.collapse"]") still not displayed after 8000ms [bundle /home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/.out/20261102-091956-6240/CHR-F02]
+OBSIDIAN-E2E CHR-F03 FAIL: element ("[data-dse-control="chrome.collapse"]") still not displayed after 8000ms [bundle /home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/.out/20261102-091956-6240/CHR-F03]
+OBSIDIAN-E2E CHR-L01 FAIL: timed out waiting for the chrome panel to stay revealed with the pointer on Collapse [bundle /home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/.out/20261102-091956-6240/CHR-L01]
+OBSIDIAN-E2E done: 0/4 ok, 4 failed, 0 known-bug, coverage: 0/87 pairs (partial run: gate skipped)
+OBSIDIAN-E2E WARN pointer NOT parked: SC539 TEMP base behaviour — hover tests may flake (SC-539)
+OBSIDIAN-E2E coverage driven: 0 (control, kind) pair(s) -> /home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 87 manifest pair(s) not exercised in this selection
+load-after: 3.83 5.10 4.82 2/3296 926089
+RC=1

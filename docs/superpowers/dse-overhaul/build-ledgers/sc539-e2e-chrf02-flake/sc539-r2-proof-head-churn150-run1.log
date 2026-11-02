@@ -1,0 +1,69 @@
+load-before: 3.96 5.68 4.93 7/3303 920081
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :200 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :200 (private Xvfb); 3 spec file(s), 1 shard(s); only CHR-F02,CHR-F03,CHR-L01,INIT-DEF-E04; run 20261102-091848-9b81
+
+Execution of 3 workers started at 2026-11-02T09:18:50.767Z
+
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/initiative/default-keys.e2e.ts
+[0-0] SC539-CHURN on: every 150 ms, window 12582915, pid 920221
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 920221
+[0-0] SC539-XING INIT-DEF-E04 passed leave=0 enter=1 last=enter@886,586+512 t=1793611135535 pid=920221
+[0-0] SC539-CHURN off: 9 flips, pid 920221
+[0-0] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/initiative/default-keys.e2e.ts
+[0-1] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/chrome-focus.e2e.ts
+[0-1] SC539-CHURN on: every 150 ms, window 12582915, pid 920424
+[0-1] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 920424
+[0-1] SC539-XING CHR-F02 passed leave=0 enter=1 last=enter@886,282+504 t=1793611139952 pid=920424
+[0-1] SC539-XING CHR-F03 passed leave=0 enter=0 last=null t=1793611140523 pid=920424
+[0-1] SC539-CHURN off: 9 flips, pid 920424
+[0-1] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/chrome-focus.e2e.ts
+[0-2] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/chrome-live-preview.e2e.ts
+[0-2] SC539-CHURN on: every 150 ms, window 12582915, pid 920667
+[0-2] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 920667
+[0-2] SC539-XING CHR-L01 passed leave=0 enter=1 last=enter@886,314+525 t=1793611144824 pid=920667
+[0-2] SC539-CHURN off: 6 flips, pid 920667
+[0-2] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/chrome-live-preview.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: 997f7b6d2581a4a5553332fbfcbd7ba2
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/initiative/default-keys.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] initiative: a write adds no default key the user never wrote
+[chrome 150.0.7871.250 linux #0-0]    ✓ [INIT-DEF-E04] Reset encounter on an untouched block writes back only the source keys (Malice back to 0)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1 passing (1.5s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-1] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-1] Session ID: d9b0035ed2fb6be17b3aee5e138e9de7
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] » e2e/specs/stamina-bar/chrome-focus.e2e.ts
+[chrome 150.0.7871.250 linux #0-1] stamina bar chrome: keyboard focus follows Collapse and Expand (SC-505)
+[chrome 150.0.7871.250 linux #0-1]    ✓ [CHR-F02] Enter on Expand (reached by keyboard) expands the block and focus lands on the restored Collapse button (ring shown, panel shown)
+[chrome 150.0.7871.250 linux #0-1]    ✓ [CHR-F03] a MOUSE click on Collapse and on Expand moves focus nowhere new (no hand-off into the block)
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] 2 passing (1.5s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-2] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-2] Session ID: 9413b2f7cff13d6b5320a9533f062220
+[chrome 150.0.7871.250 linux #0-2]
+[chrome 150.0.7871.250 linux #0-2] » e2e/specs/stamina-bar/chrome-live-preview.e2e.ts
+[chrome 150.0.7871.250 linux #0-2] stamina bar chrome: the panel is clickable in Live Preview (SC-502)
+[chrome 150.0.7871.250 linux #0-2]    ✓ [CHR-L01] a real mouse click on Collapse in Live Preview collapses the block, a real click on Expand expands it, and the editor cursor stays where it was
+[chrome 150.0.7871.250 linux #0-2]
+[chrome 150.0.7871.250 linux #0-2] 1 passing (1s)
+
+
+Spec Files:	 3 passed, 3 total (100% completed) in 00:00:14  
+
+OBSIDIAN-E2E INIT-DEF-E04 ok (1340 ms)
+OBSIDIAN-E2E CHR-F02 ok (768 ms)
+OBSIDIAN-E2E CHR-F03 ok (556 ms)
+OBSIDIAN-E2E CHR-L01 ok (919 ms)
+OBSIDIAN-E2E done: 4/4 ok, 0 failed, 0 known-bug, coverage: 5/87 pairs (partial run: gate skipped)
+OBSIDIAN-E2E coverage driven: 5 (control, kind) pair(s) -> /home/scott/code/steelCompendium/worktrees/sc539-e2e-chrf02-flake/draw-steel-elements/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 82 manifest pair(s) not exercised in this selection
+load-after: 3.84 5.54 4.90 3/3304 920901
+RC=0

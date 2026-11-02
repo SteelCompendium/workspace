@@ -1,0 +1,7 @@
+load-before: 1.76 3.52 3.91 1/3054 996896
+
+> draw-steel-elements@7.0.0 tsc
+> tsc --noEmit && tsc --noEmit -p e2e
+
+load-after: 1.96 3.50 3.90 1/3060 997049
+RC=0

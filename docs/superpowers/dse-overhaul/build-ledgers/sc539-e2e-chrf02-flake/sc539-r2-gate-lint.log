@@ -1,0 +1,9 @@
+load-before: 3.53 4.69 4.70 3/3288 929181
+
+> draw-steel-elements@7.0.0 lint
+> eslint src main.ts e2e
+
+(node:929193) ESLintIgnoreWarning: The ".eslintignore" file is no longer supported. Switch to using the "ignores" property in "eslint.config.js": https://eslint.org/docs/latest/use/configure/migration-guide#ignoring-files
+(Use `node --trace-warnings ...` to show where the warning was created)
+load-after: 3.73 4.68 4.70 3/3274 929444
+RC=0
