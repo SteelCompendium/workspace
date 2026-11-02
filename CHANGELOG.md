@@ -8,6 +8,14 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: pressing Enter on "Unpin from sidebar" no longer drops keyboard focus to the page (SC-511).**
+  With the keyboard, unpinning a block from the Draw Steel sidebar removed the panel and left focus on the page
+  body, so you had to Tab in from the top again. Focus now goes to the pinned block that took its place (the link
+  to its note at the top of the panel), or to the block above if you unpinned the last one, or to the "No pinned
+  blocks" message if none is left. The same applies to the "Remove panel" button on an unavailable panel. A mouse
+  click works as before, and focus you had already moved elsewhere is left alone. The note link and the message now
+  show a focus ring in your theme's accent colour when focused.
+
 - **DSE plugin: a reference that points back to itself now shows one "Reference loop" card instead of nesting forever, and a note open in two panes no longer shows a false "Reference nesting too deep" (SC-536).**
   A card whose text holds a reference back to itself (a feature whose effect shows `@Self.md`, or two notes that
   show each other) used to open card inside card without end in Reading view and Live Preview, until Obsidian
