@@ -32,6 +32,16 @@ go under an *Internal* sub-heading.
   referenced card. A card in the sidebar that redraws while its lookup is running also shows one card, not the
   card under a stale error.
 
+- **DSE plugin: in Live Preview, with two identical callouts in a note, a click in one no longer changes the other callout's number or its block (SC-537).**
+  Put two callouts with exactly the same text in one note, each holding the same block (two `ds-counter` blocks at 5,
+  say), and click + in the upper one in Live Preview. The note was right (6 and 5), but the lower callout then showed
+  6, and a click on it changed the upper block instead of the lower one. If you had saved an edit in the upper block's
+  edit form first (with experimental authoring controls on), that click also erased your edit. Each callout now keeps
+  its own card and value, and its clicks and saves go to its own block. This holds when the two callouts are far apart
+  in the note (the lower one off screen when you click, shown correctly when you scroll to it), when you click the
+  other callout's title straight after the +, for three identical callouts, for callouts holding two blocks, and for
+  callouts inside callouts.
+
 - **DSE plugin: with two identical blocks in a note, editing one no longer makes the other disappear, show the wrong number, or write into the first block (SC-481).**
   Put two blocks with exactly the same text in one note (two identical counters, say), open it in Reading view or
   Live Preview, and click a control in the upper one. The lower block could vanish until you reopened the note,
@@ -39,7 +49,6 @@ go under an *Internal* sub-heading.
   a Save in the block's edit form the same click also undid the edit you had just saved. Each block now keeps
   its own card, its own value, and its clicks and saves go to its own block. Three identical blocks, identical
   montages, blocks inside a callout or a quote, and the view adoption setting turned off are covered too.
-  (Identical blocks in two separate callouts are not covered in Live Preview yet.)
 
 - **DSE plugin: a Live Preview note no longer jumps when a tracker in a note it embeds changes or is clicked (SC-522).**
   With `![[Tracker note]]` in a note open in Live Preview, a change to the tracker (from another pane, an outside
