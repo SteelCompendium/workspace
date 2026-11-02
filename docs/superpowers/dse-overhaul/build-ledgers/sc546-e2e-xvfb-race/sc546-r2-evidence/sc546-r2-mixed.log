@@ -1,0 +1,104 @@
+== M1: new-style (-displayfd) holds :5370, then an old-style Xvfb :5370 starts
+  holder fd="5370\n" socket=true lock=false
+  old-style second: exited code=1 in 7 ms stderr="_XSERVTransMakeAllCOTSServerListeners: server already running / (EE) Cannot establish any listening sockets - Make sure an X server isn't already running(EE)"; after: socket=true lock=false
+  after both gone: socket=false lock=false
+== M2: old-style holds :5371, then a new-style (-displayfd) Xvfb :5371 starts
+  holder socket=true lock=true lockText="   1430281\n"
+  new-style second: exited code=1 in 7 ms fd="" stderr="_XSERVTransMakeAllCOTSServerListeners: server already running / (EE) Cannot establish any listening sockets - Make sure an X server isn't already running(EE)"
+  after both gone: socket=false lock=false
+== M3: SIGKILLed new-style on :5372 (stale socket, no lock); then old-style and new-style start there directly
+  after SIGKILL: socket=true lock=false
+  old-style on stale socket: up (alive after 1000 ms); socket=true lock=true lockText="   1430288\n"
+  new-style on stale socket: up (alive after 1000 ms) fd="5372\n"
+  end: socket=false lock=false
+== M4: SIGKILLed old-style on :5373 (stale lock + socket); then new-style starts there directly
+  after SIGKILL: socket=true lock=true lockText="   1430483\n"
+  new-style: up (alive after 1000 ms) fd="5373\n"
+  end: socket=false lock=true lockText="   1430483\n"
+  removed stale /tmp/.X5373-lock (probe cleanup)
+  old-e2e vs new round 1: old-e2e=:5360@110ms alive=true listen=2 | new=:5361@89ms alive=true listen=2
+  old-e2e vs new round 2: old-e2e=:5361@215ms alive=true listen=2 | new=:5360@55ms alive=true listen=2
+  old-e2e vs new round 3: old-e2e=:5360@107ms alive=true listen=2 | new=:5361@62ms alive=true listen=2
+  old-e2e vs new round 4: old-e2e=:5360@108ms alive=true listen=2 | new=:5361@100ms alive=true listen=2
+  old-e2e vs new round 5: old-e2e=:5361@209ms alive=true listen=2 | new=:5360@47ms alive=true listen=2
+  old-e2e vs new round 6: old-e2e=:5360@104ms alive=true listen=2 | new=:5361@57ms alive=true listen=2
+  old-e2e vs new round 7: old-e2e=:5360@110ms alive=true listen=2 | new=:5361@89ms alive=true listen=2
+  old-e2e vs new round 8: old-e2e=:5360@103ms alive=true listen=2 | new=:5361@60ms alive=true listen=2
+  old-e2e vs new round 9: old-e2e=:5361@214ms alive=true listen=2 | new=:5360@50ms alive=true listen=2
+  old-e2e vs new round 10: old-e2e=:5360@113ms alive=true listen=2 | new=:5361@79ms alive=true listen=2
+  old-e2e vs new round 11: old-e2e=:5361@208ms alive=true listen=2 | new=:5360@37ms alive=true listen=2
+  old-e2e vs new round 12: old-e2e=:5360@105ms alive=true listen=2 | new=:5361@73ms alive=true listen=2
+  old-e2e vs new round 13: old-e2e=:5360@105ms alive=true listen=2 | new=:5361@65ms alive=true listen=2
+  old-e2e vs new round 14: old-e2e=:5361@212ms alive=true listen=2 | new=:5360@50ms alive=true listen=2
+  old-e2e vs new round 15: old-e2e=:5361@207ms alive=true listen=2 | new=:5360@49ms alive=true listen=2
+  old-e2e vs new round 16: old-e2e=:5361@209ms alive=true listen=2 | new=:5360@41ms alive=true listen=2
+  old-e2e vs new round 17: old-e2e=:5361@208ms alive=true listen=2 | new=:5360@46ms alive=true listen=2
+  old-e2e vs new round 18: old-e2e=:5361@212ms alive=true listen=2 | new=:5360@48ms alive=true listen=2
+  old-e2e vs new round 19: old-e2e=:5361@205ms alive=true listen=2 | new=:5360@28ms alive=true listen=2
+  old-e2e vs new round 20: old-e2e=:5361@206ms alive=true listen=2 | new=:5360@28ms alive=true listen=2
+SUMMARY old-e2e vs new: rounds=20 shared=0 adopter(s)=[] staleLocksRemovedAfterRounds=0
+  old-lc vs new round 1: old-lc=:5360@253ms alive=false listen=0 | new=:5360@28ms alive=true listen=2  <== SHARED
+  old-lc vs new round 2: old-lc=:5360@256ms alive=false listen=0 | new=:5360@34ms alive=true listen=2  <== SHARED
+  old-lc vs new round 3: old-lc=:5360@255ms alive=false listen=0 | new=:5360@31ms alive=true listen=2  <== SHARED
+  old-lc vs new round 4: old-lc=:5360@253ms alive=true listen=2 | new=:5361@42ms alive=true listen=2
+  old-lc vs new round 5: old-lc=:5360@253ms alive=false listen=0 | new=:5360@26ms alive=true listen=2  <== SHARED
+  old-lc vs new round 6: old-lc=:5360@253ms alive=false listen=0 | new=:5360@25ms alive=true listen=2  <== SHARED
+  old-lc vs new round 7: old-lc=:5360@256ms alive=false listen=0 | new=:5360@45ms alive=true listen=2  <== SHARED
+  old-lc vs new round 8: old-lc=:5360@253ms alive=false listen=0 | new=:5360@31ms alive=true listen=2  <== SHARED
+  old-lc vs new round 9: old-lc=:5360@253ms alive=false listen=0 | new=:5360@26ms alive=true listen=2  <== SHARED
+  old-lc vs new round 10: old-lc=:5360@253ms alive=true listen=2 | new=:5361@36ms alive=true listen=2
+  old-lc vs new round 11: old-lc=:5360@253ms alive=false listen=0 | new=:5360@28ms alive=true listen=2  <== SHARED
+  old-lc vs new round 12: old-lc=:5360@252ms alive=false listen=0 | new=:5360@25ms alive=true listen=2  <== SHARED
+  old-lc vs new round 13: old-lc=:5360@253ms alive=false listen=0 | new=:5360@26ms alive=true listen=2  <== SHARED
+  old-lc vs new round 14: old-lc=:5360@256ms alive=false listen=0 | new=:5360@29ms alive=true listen=2  <== SHARED
+  old-lc vs new round 15: old-lc=:5360@257ms alive=false listen=0 | new=:5360@34ms alive=true listen=2  <== SHARED
+  old-lc vs new round 16: old-lc=:5360@254ms alive=true listen=2 | new=:5361@35ms alive=true listen=2
+  old-lc vs new round 17: old-lc=:5360@255ms alive=true listen=2 | new=:5361@43ms alive=true listen=2
+  old-lc vs new round 18: old-lc=:5360@253ms alive=false listen=0 | new=:5360@45ms alive=true listen=2  <== SHARED
+  old-lc vs new round 19: old-lc=:5360@253ms alive=false listen=0 | new=:5360@26ms alive=true listen=2  <== SHARED
+  old-lc vs new round 20: old-lc=:5360@252ms alive=false listen=0 | new=:5360@33ms alive=true listen=2  <== SHARED
+SUMMARY old-lc vs new: rounds=20 shared=16 adopter(s)=["old-lc","old-lc","old-lc","old-lc","old-lc","old-lc","old-lc","old-lc","old-lc","old-lc","old-lc","old-lc","old-lc","old-lc","old-lc","old-lc"] staleLocksRemovedAfterRounds=0
+  new vs new round 1: new=:5361@58ms alive=true listen=2 | new=:5360@43ms alive=true listen=2
+  new vs new round 2: new=:5360@39ms alive=true listen=2 | new=:5361@48ms alive=true listen=2
+  new vs new round 3: new=:5361@41ms alive=true listen=2 | new=:5360@27ms alive=true listen=2
+  new vs new round 4: new=:5361@68ms alive=true listen=2 | new=:5360@54ms alive=true listen=2
+  new vs new round 5: new=:5360@29ms alive=true listen=2 | new=:5361@38ms alive=true listen=2
+  new vs new round 6: new=:5360@40ms alive=true listen=2 | new=:5361@51ms alive=true listen=2
+  new vs new round 7: new=:5361@42ms alive=true listen=2 | new=:5360@29ms alive=true listen=2
+  new vs new round 8: new=:5360@29ms alive=true listen=2 | new=:5361@35ms alive=true listen=2
+  new vs new round 9: new=:5360@29ms alive=true listen=2 | new=:5361@39ms alive=true listen=2
+  new vs new round 10: new=:5361@45ms alive=true listen=2 | new=:5360@36ms alive=true listen=2
+  new vs new round 11: new=:5360@39ms alive=true listen=2 | new=:5361@51ms alive=true listen=2
+  new vs new round 12: new=:5360@42ms alive=true listen=2 | new=:5361@53ms alive=true listen=2
+  new vs new round 13: new=:5361@54ms alive=true listen=2 | new=:5360@39ms alive=true listen=2
+  new vs new round 14: new=:5360@36ms alive=true listen=2 | new=:5361@53ms alive=true listen=2
+  new vs new round 15: new=:5361@55ms alive=true listen=2 | new=:5360@44ms alive=true listen=2
+  new vs new round 16: new=:5361@56ms alive=true listen=2 | new=:5360@47ms alive=true listen=2
+  new vs new round 17: new=:5360@32ms alive=true listen=2 | new=:5361@42ms alive=true listen=2
+  new vs new round 18: new=:5361@59ms alive=true listen=2 | new=:5360@46ms alive=true listen=2
+  new vs new round 19: new=:5360@46ms alive=true listen=2 | new=:5361@57ms alive=true listen=2
+  new vs new round 20: new=:5360@50ms alive=true listen=2 | new=:5361@59ms alive=true listen=2
+SUMMARY new vs new: rounds=20 shared=0 adopter(s)=[] staleLocksRemovedAfterRounds=0
+  old-e2e vs old-lc round 1: old-e2e=:5360@111ms alive=false listen=0 | old-lc=:5360@262ms alive=true listen=2  <== SHARED
+  old-e2e vs old-lc round 2: old-e2e=:5360@110ms alive=true listen=2 | old-lc=:5360@259ms alive=false listen=0  <== SHARED
+  old-e2e vs old-lc round 3: old-e2e=:5360@117ms alive=true listen=2 | old-lc=:5360@266ms alive=false listen=0  <== SHARED
+  old-e2e vs old-lc round 4: old-e2e=:5361@218ms alive=true listen=2 | old-lc=:5360@259ms alive=true listen=2
+  old-e2e vs old-lc round 5: old-e2e=:5360@118ms alive=false listen=0 | old-lc=:5360@269ms alive=true listen=2  <== SHARED
+  old-e2e vs old-lc round 6: old-e2e=:5361@219ms alive=true listen=2 | old-lc=:5360@260ms alive=true listen=2
+  old-e2e vs old-lc round 7: old-e2e=:5360@110ms alive=false listen=0 | old-lc=:5360@262ms alive=true listen=2  <== SHARED
+  old-e2e vs old-lc round 8: old-e2e=:5361@232ms alive=true listen=2 | old-lc=:5360@266ms alive=true listen=2
+  old-e2e vs old-lc round 9: old-e2e=:5360@113ms alive=true listen=2 | old-lc=:5360@262ms alive=false listen=0  <== SHARED
+  old-e2e vs old-lc round 10: old-e2e=:5361@229ms alive=true listen=2 | old-lc=:5360@268ms alive=true listen=2
+  old-e2e vs old-lc round 11: old-e2e=:5361@218ms alive=true listen=2 | old-lc=:5360@266ms alive=true listen=2
+  old-e2e vs old-lc round 12: old-e2e=:5360@105ms alive=true listen=2 | old-lc=:5360@257ms alive=false listen=0  <== SHARED
+  old-e2e vs old-lc round 13: old-e2e=:5361@217ms alive=true listen=2 | old-lc=:5360@261ms alive=true listen=2
+  old-e2e vs old-lc round 14: old-e2e=:5360@113ms alive=true listen=2 | old-lc=:5360@259ms alive=false listen=0  <== SHARED
+  old-e2e vs old-lc round 15: old-e2e=:5360@112ms alive=true listen=2 | old-lc=:5360@268ms alive=false listen=0  <== SHARED
+  old-e2e vs old-lc round 16: old-e2e=:5361@213ms alive=true listen=2 | old-lc=:5360@258ms alive=true listen=2
+  old-e2e vs old-lc round 17: old-e2e=:5361@217ms alive=true listen=2 | old-lc=:5360@263ms alive=true listen=2
+  old-e2e vs old-lc round 18: old-e2e=:5360@120ms alive=true listen=2 | old-lc=:5360@268ms alive=false listen=0  <== SHARED
+  old-e2e vs old-lc round 19: old-e2e=:5360@106ms alive=true listen=2 | old-lc=:5360@260ms alive=false listen=0  <== SHARED
+  old-e2e vs old-lc round 20: old-e2e=:5361@221ms alive=true listen=2 | old-lc=:5360@258ms alive=true listen=2
+SUMMARY old-e2e vs old-lc: rounds=20 shared=11 adopter(s)=["old-e2e","old-lc","old-lc","old-e2e","old-e2e","old-lc","old-lc","old-lc","old-lc","old-lc","old-lc"] staleLocksRemovedAfterRounds=0
+END leftover sockets=[] locks=[]
+rc=0

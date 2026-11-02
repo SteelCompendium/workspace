@@ -1,0 +1,19 @@
+pwd=/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements
+tmp dirs before: 0
+sleep30 before: 0
+X11-unix X530x before: 0
+run 1 rc=0 ms=2540 Tests:       6 passed, 6 total
+run 2 rc=0 ms=2222 Tests:       6 passed, 6 total
+run 3 rc=0 ms=2276 Tests:       6 passed, 6 total
+run 4 rc=0 ms=2295 Tests:       6 passed, 6 total
+run 5 rc=0 ms=2524 Tests:       6 passed, 6 total
+--- 6 parallel copies (load)
+par 5 rc=0 Tests:       6 passed, 6 total
+par 6 rc=0 Tests:       6 passed, 6 total
+par 3 rc=0 Tests:       6 passed, 6 total
+par 4 rc=0 Tests:       6 passed, 6 total
+par 2 rc=0 Tests:       6 passed, 6 total
+par 1 rc=0 Tests:       6 passed, 6 total
+tmp dirs after: 0
+sleep30 after: 0
+X11-unix X530x after: 0

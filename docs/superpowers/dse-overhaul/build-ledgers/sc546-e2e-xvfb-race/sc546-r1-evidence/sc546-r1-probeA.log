@@ -1,0 +1,31 @@
+bin /home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/.devbox/nix/profile/default/bin/Xvfb
+version stderr: Unrecognized option: -version | use: X [:<display>] [option] | -a #                   default pointer acceleration (factor)
+--- 1. lone start :5300
+ fdData "5300\n" tFd ms 29 exited? null pid 1225112
+ lock exists false content null size null mode null
+ socket exists true
+--- 2. second Xvfb on held :5300
+ fdData "" tExit ms 7 code 1 sig null
+ stderr: _XSERVTransMakeAllCOTSServerListeners: server already running | (EE)  | Fatal server error: | (EE) Cannot establish any listening sockets - Make sure an X server isn't already running(EE)
+ first still alive true lock content now (no lock file) socket true
+--- 3. SIGTERM first: exit code 0 sig null lock exists false socket exists false
+--- 4. :5301 fdData "5301\n" tFd 31
+ after SIGKILL: lock false socket true
+--- 5. start on stale leftovers :5301: fdData "5301\n" tFd 38 exited null code undefined stderr The XKEYBOARD keymap compiler (xkbcomp) reports:
+> Warning:          Multiple symbols for level 1/group 1 on key <FK23>
+>                   Using F23, ignoring XF86TouchpadOff
+> Warning:          Symb
+ after SIGTERM: lock false socket false
+--- 6. simultaneous x2 on :5302
+ #1 pid 1225317 fdData "5302\n" tFd 31 exited null code undefined stderr "The XKEYBOARD keymap compiler (xkbcomp) reports:\n> Warning:          Multiple symbols for level 1/group 1 on key <FK23>\n"
+ #2 pid 1225318 fdData "" tFd null exited 6 code 1 stderr "_XSERVTransSocketUNIXCreateListener: ...SocketCreateListener() failed\n_XSERVTransMakeAllCOTSServerListeners: server alre"
+ lock content (no lock file)
+ after: lock false socket false
+--- 7. control, NO -displayfd, :5303: lock "   1225410\n" mode 444 socket true pid 1225410
+--- 8. -displayfd Xvfb on :5303 held by old-style Xvfb: fdData "" exit 7 code 1 stderr "_XSERVTransSocketUNIXCreateListener: ...SocketCreateListener() failed\n_XSERVTransMakeAllCOTSServerListeners: server already running\n(EE) \nFatal server error:\n(E"
+ old-style after SIGTERM: lock false socket false
+--- 9. old-style Xvfb on :5304 held by -displayfd Xvfb: h fd "5304\n" | old-style exit 6 code 1 stderr "_XSERVTransSocketUNIXCreateListener: ...SocketCreateListener() failed\n_XSERVTransMakeAllCOTSServerListeners: server already running\n(EE) \nFatal server error:\n(E"
+ after: lock false socket false
+--- 10. fd write latency ms x10 26,32,28,31,25,25,26,29,25,27 values "5305\n"
+ leftovers: lock false socket false
+rc=0

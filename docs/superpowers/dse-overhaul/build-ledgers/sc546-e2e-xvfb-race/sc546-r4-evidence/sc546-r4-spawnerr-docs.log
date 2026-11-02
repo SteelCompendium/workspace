@@ -1,0 +1,19 @@
+docs-shots: 0 browser + 1 obsidian image(s) → docs/Media
+could not execute /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc546-r4-rereview/sc546-r4-noexec-xvfb: EACCES
+
+Xvfb is unavailable, so the Obsidian half of the docs shots cannot run headlessly.
+
+  Fix (preferred, one time):   cd . && devbox install
+     (visual-harness needs the `xvfb` package that devbox.json already lists)
+
+  Fallback — use your own display instead. Obsidian must not already be running,
+  because the camera spawns its own instance:
+
+     1. Quit Obsidian completely (File → Quit; check the tray icon).
+     2. DSE_DOCS_DISPLAY=:1 DSE_DOCS_NO_XVFB=1 npm run docs-shots
+
+  A window will open, do things by itself for a minute or two, and close again.
+  Do not click in it while it runs.
+
+1 docs image(s) failed:
+  (obsidian shots): Xvfb unavailable — see the note above

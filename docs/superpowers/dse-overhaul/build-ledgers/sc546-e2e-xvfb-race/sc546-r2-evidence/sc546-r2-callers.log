@@ -1,0 +1,21 @@
+== E1 e2e, XVFB_BIN=fake that always exits 1 (every number lost)
+  wall_ms=729 OBSIDIAN-E2E environment: no free X display in :5340-:5379 rc=2 
+  leftovers: sockets=[] locks=[] xvfb=[] sleep60=[] treeProcs=[0]
+== E2 e2e, XVFB_BIN=existing non-executable file (EACCES on spawn)
+  wall_ms=30584 OBSIDIAN-E2E environment: no free X display in :5340-:5379 rc=2 
+  leftovers: sockets=[] locks=[] xvfb=[] sleep60=[] treeProcs=[0]
+== E3 e2e, XVFB_BIN=hang (never writes the fd); SIGTERM the runner while it waits
+  runner=1493704 hung-xvfb(sleep)=1493758
+  runner rc=2  OBSIDIAN-E2E environment: received SIGTERM, cleaning up 
+  hung child still alive? no
+  leftovers: sockets=[] locks=[] xvfb=[] sleep60=[1493842 ] treeProcs=[0]
+== E4 e2e, real Xvfb; SIGINT mid-run (after the wdio start line)
+  runner=1493870 xvfb=1493927 display :5340
+  runner rc=2  OBSIDIAN-E2E environment: received SIGINT, cleaning up 
+  xvfb still alive? no
+  leftovers: sockets=[] locks=[] xvfb=[] sleep60=[1493842 ] treeProcs=[0]
+== E5 e2e, real Xvfb; SIGTERM right after the display line (pointer park / wdio spawn window)
+  runner=1494121 xvfb=1494182 rc=2  OBSIDIAN-E2E pointer parked at 0,0 on :5340 (outside every window) OBSIDIAN-E2E environment: received SIGTERM, cleaning up 
+  xvfb still alive? no
+  leftovers: sockets=[] locks=[] xvfb=[] sleep60=[1493842 ] treeProcs=[0]
+== end E

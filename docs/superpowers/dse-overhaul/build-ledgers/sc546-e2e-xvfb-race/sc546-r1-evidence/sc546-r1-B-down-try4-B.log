@@ -1,0 +1,385 @@
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :5300 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :5300 (private Xvfb); 7 spec file(s), 1 shard(s); run 20261102-133110-72e9
+
+Execution of 7 workers started at 2026-11-02T13:31:51.618Z
+
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/chrome-focus.e2e.ts
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 1323283
+[0-0] 2026-11-02T13:31:56.301Z WARN chromedriver: [1793626316.301][SEVERE]: Unable to receive message from renderer
+[0-0] 2026-11-02T13:31:56.307Z ERROR webdriver: WebDriverError: invalid session id: session deleted as the browser has closed the connection
+[0-0] from disconnected: Unable to receive message from renderer
+[0-0]   (Session info: chrome=150.0.7871.250) when running "chromium/send_command_and_get_result" with method "POST"
+[0-0] invalid session id in "stamina bar chrome: keyboard focus stays on Pin to sidebar across the redraw (SC-505)."before all" hook: wrappedHook for "[CHR-F05] Tab straight to Pin + Enter on a fresh note: the pin writes the note once and focus is on the (new) Pin button with the ring""
+invalid session id: WebDriverError: invalid session id: session deleted as the browser has closed the connection
+from disconnected: Unable to receive message from renderer
+  (Session info: chrome=150.0.7871.250) when running "chromium/send_command_and_get_result" with method "POST"
+    at async ev (/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc546-r1-impl/sc546-r1-tree2/e2e/driver/page.ts:8:13)
+    at async Object.setPrefs (/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc546-r1-impl/sc546-r1-tree2/e2e/driver/dse.ts:480:2)
+[0-0] 2026-11-02T13:31:56.323Z ERROR webdriver: WebDriverError: invalid session id when running "chromium/send_command_and_get_result" with method "POST"
+[0-0] invalid session id in "stamina bar chrome: keyboard focus stays on Pin to sidebar across the redraw (SC-505)."after all" hook: wrappedHook for "[CHR-F04] Tab to Pin + Enter: the pin writes the note, the block redraws, and focus is on the (new) Pin button with the ring""
+invalid session id: WebDriverError: invalid session id when running "chromium/send_command_and_get_result" with method "POST"
+    at async ev (/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc546-r1-impl/sc546-r1-tree2/e2e/driver/page.ts:8:13)
+    at async closeModals (/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc546-r1-impl/sc546-r1-tree2/e2e/driver/cleanup.ts:8:2)
+    at async closeEverything (/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc546-r1-impl/sc546-r1-tree2/e2e/driver/cleanup.ts:52:2)
+    at async Object.setPrefs (/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc546-r1-impl/sc546-r1-tree2/e2e/driver/dse.ts:479:2)
+[0-0] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/chrome-focus.e2e.ts
+[0-1] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/chrome-live-preview.e2e.ts
+[0-1] 2026-11-02T13:31:58.074Z WARN webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:33449/session" with method "POST"
+[0-1] 2026-11-02T13:31:58.735Z WARN webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:33449/session" with method "POST"
+[0-1] 2026-11-02T13:31:59.895Z WARN webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:33449/session" with method "POST"
+[0-1] 2026-11-02T13:32:00.054Z ERROR webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:33449/session" with method "POST"
+[0-1] 2026-11-02T13:32:00.054Z ERROR webdriver: session not created: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:33449/session" with method "POST"
+[0-1]     at FetchRequest._request (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:2316:19)
+[0-1]     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[0-1]     at async startWebDriverSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1376:16)
+[0-1]     at async _WebDriver.newSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1805:41)
+[0-1]     at async remote (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriverio/build/node.js:10947:20)
+[0-1]     at async Runner._startSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:886:24)
+[0-1]     at async Runner._initSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:860:22)
+[0-1]     at async Runner.run (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:749:16)
+[0-1] 2026-11-02T13:32:00.093Z ERROR @wdio/runner: Error: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:33449/session" with method "POST"
+[0-1]     at startWebDriverSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1380:11)
+[0-1]     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[0-1]     at async _WebDriver.newSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1805:41)
+[0-1]     at async remote (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriverio/build/node.js:10947:20)
+[0-1]     at async Runner._startSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:886:24)
+[0-1]     at async Runner._initSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:860:22)
+[0-1]     at async Runner.run (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:749:16)
+[0-1] 2026-11-02T13:32:00.107Z ERROR @wdio/utils:shim: TypeError: Cannot read properties of undefined (reading 'requestedCapabilities')
+[0-1]     at ObsidianWorkerService.after (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/wdio-obsidian-service/src/service.ts:787:70)
+[0-1]     at <anonymous> (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/utils/build/index.js:1063:22)
+[0-1]     at new Promise (<anonymous>)
+[0-1]     at <anonymous> (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/utils/build/index.js:1060:45)
+[0-1]     at Array.map (<anonymous>)
+[0-1]     at executeHooksWithArgs (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/utils/build/index.js:1060:31)
+[0-1]     at Runner.run (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:752:13)
+[0-1]     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[0-1] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/chrome-live-preview.e2e.ts
+[0-2] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-modal-focus.e2e.ts
+[0-2] 2026-11-02T13:32:01.884Z WARN webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:44127/session" with method "POST"
+[0-2] 2026-11-02T13:32:02.546Z WARN webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:44127/session" with method "POST"
+[0-2] 2026-11-02T13:32:03.707Z WARN webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:44127/session" with method "POST"
+[0-2] 2026-11-02T13:32:03.867Z ERROR webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:44127/session" with method "POST"
+[0-2] 2026-11-02T13:32:03.867Z ERROR webdriver: session not created: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:44127/session" with method "POST"
+[0-2]     at FetchRequest._request (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:2316:19)
+[0-2]     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[0-2]     at async startWebDriverSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1376:16)
+[0-2]     at async _WebDriver.newSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1805:41)
+[0-2]     at async remote (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriverio/build/node.js:10947:20)
+[0-2]     at async Runner._startSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:886:24)
+[0-2]     at async Runner._initSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:860:22)
+[0-2]     at async Runner.run (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:749:16)
+[0-2] 2026-11-02T13:32:03.929Z ERROR @wdio/runner: Error: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:44127/session" with method "POST"
+[0-2]     at startWebDriverSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1380:11)
+[0-2]     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[0-2]     at async _WebDriver.newSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1805:41)
+[0-2]     at async remote (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriverio/build/node.js:10947:20)
+[0-2]     at async Runner._startSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:886:24)
+[0-2]     at async Runner._initSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:860:22)
+[0-2]     at async Runner.run (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:749:16)
+[0-2] 2026-11-02T13:32:03.941Z ERROR @wdio/utils:shim: TypeError: Cannot read properties of undefined (reading 'requestedCapabilities')
+[0-2]     at ObsidianWorkerService.after (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/wdio-obsidian-service/src/service.ts:787:70)
+[0-2]     at <anonymous> (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/utils/build/index.js:1063:22)
+[0-2]     at new Promise (<anonymous>)
+[0-2]     at <anonymous> (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/utils/build/index.js:1060:45)
+[0-2]     at Array.map (<anonymous>)
+[0-2]     at executeHooksWithArgs (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/utils/build/index.js:1060:31)
+[0-2]     at Runner.run (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:752:13)
+[0-2]     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[0-2] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-modal-focus.e2e.ts
+[0-3] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-modal-stepper-focus.e2e.ts
+[0-3] 2026-11-02T13:32:05.865Z WARN webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:43625/session" with method "POST"
+[0-3] 2026-11-02T13:32:06.528Z WARN webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:43625/session" with method "POST"
+[0-3] 2026-11-02T13:32:07.744Z WARN webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:43625/session" with method "POST"
+[0-3] 2026-11-02T13:32:07.903Z ERROR webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:43625/session" with method "POST"
+[0-3] 2026-11-02T13:32:07.903Z ERROR webdriver: session not created: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:43625/session" with method "POST"
+[0-3]     at FetchRequest._request (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:2316:19)
+[0-3]     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[0-3]     at async startWebDriverSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1376:16)
+[0-3]     at async _WebDriver.newSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1805:41)
+[0-3]     at async remote (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriverio/build/node.js:10947:20)
+[0-3]     at async Runner._startSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:886:24)
+[0-3]     at async Runner._initSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:860:22)
+[0-3]     at async Runner.run (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:749:16)
+[0-3] 2026-11-02T13:32:07.943Z ERROR @wdio/runner: Error: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:43625/session" with method "POST"
+[0-3]     at startWebDriverSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1380:11)
+[0-3]     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[0-3]     at async _WebDriver.newSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1805:41)
+[0-3]     at async remote (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriverio/build/node.js:10947:20)
+[0-3]     at async Runner._startSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:886:24)
+[0-3]     at async Runner._initSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:860:22)
+[0-3]     at async Runner.run (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:749:16)
+[0-3] 2026-11-02T13:32:07.956Z ERROR @wdio/utils:shim: TypeError: Cannot read properties of undefined (reading 'requestedCapabilities')
+[0-3]     at ObsidianWorkerService.after (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/wdio-obsidian-service/src/service.ts:787:70)
+[0-3]     at <anonymous> (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/utils/build/index.js:1063:22)
+[0-3]     at new Promise (<anonymous>)
+[0-3]     at <anonymous> (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/utils/build/index.js:1060:45)
+[0-3]     at Array.map (<anonymous>)
+[0-3]     at executeHooksWithArgs (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/utils/build/index.js:1060:31)
+[0-3]     at Runner.run (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:752:13)
+[0-3]     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[0-3] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-modal-stepper-focus.e2e.ts
+[0-4] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-modal-stepper.e2e.ts
+[0-4] 2026-11-02T13:32:09.976Z WARN webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:46361/session" with method "POST"
+[0-4] 2026-11-02T13:32:10.638Z WARN webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:46361/session" with method "POST"
+[0-4] 2026-11-02T13:32:11.798Z WARN webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:46361/session" with method "POST"
+[0-4] 2026-11-02T13:32:11.958Z ERROR webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:46361/session" with method "POST"
+[0-4] 2026-11-02T13:32:11.958Z ERROR webdriver: session not created: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:46361/session" with method "POST"
+[0-4]     at FetchRequest._request (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:2316:19)
+[0-4]     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[0-4]     at async startWebDriverSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1376:16)
+[0-4]     at async _WebDriver.newSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1805:41)
+[0-4]     at async remote (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriverio/build/node.js:10947:20)
+[0-4]     at async Runner._startSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:886:24)
+[0-4]     at async Runner._initSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:860:22)
+[0-4]     at async Runner.run (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:749:16)
+[0-4] 2026-11-02T13:32:12.004Z ERROR @wdio/runner: Error: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:46361/session" with method "POST"
+[0-4]     at startWebDriverSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1380:11)
+[0-4]     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[0-4]     at async _WebDriver.newSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1805:41)
+[0-4]     at async remote (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriverio/build/node.js:10947:20)
+[0-4]     at async Runner._startSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:886:24)
+[0-4]     at async Runner._initSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:860:22)
+[0-4]     at async Runner.run (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:749:16)
+[0-4] 2026-11-02T13:32:12.019Z ERROR @wdio/utils:shim: TypeError: Cannot read properties of undefined (reading 'requestedCapabilities')
+[0-4]     at ObsidianWorkerService.after (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/wdio-obsidian-service/src/service.ts:787:70)
+[0-4]     at <anonymous> (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/utils/build/index.js:1063:22)
+[0-4]     at new Promise (<anonymous>)
+[0-4]     at <anonymous> (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/utils/build/index.js:1060:45)
+[0-4]     at Array.map (<anonymous>)
+[0-4]     at executeHooksWithArgs (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/utils/build/index.js:1060:31)
+[0-4]     at Runner.run (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:752:13)
+[0-4]     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[0-4] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-modal-stepper.e2e.ts
+[0-5] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-modal.e2e.ts
+[0-5] 2026-11-02T13:32:13.774Z WARN webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:36761/session" with method "POST"
+[0-5] 2026-11-02T13:32:14.439Z WARN webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:36761/session" with method "POST"
+[0-5] 2026-11-02T13:32:15.600Z WARN webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:36761/session" with method "POST"
+[0-5] 2026-11-02T13:32:15.759Z ERROR webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:36761/session" with method "POST"
+[0-5] 2026-11-02T13:32:15.760Z ERROR webdriver: session not created: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:36761/session" with method "POST"
+[0-5]     at FetchRequest._request (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:2316:19)
+[0-5]     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[0-5]     at async startWebDriverSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1376:16)
+[0-5]     at async _WebDriver.newSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1805:41)
+[0-5]     at async remote (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriverio/build/node.js:10947:20)
+[0-5]     at async Runner._startSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:886:24)
+[0-5]     at async Runner._initSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:860:22)
+[0-5]     at async Runner.run (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:749:16)
+[0-5] 2026-11-02T13:32:15.801Z ERROR @wdio/runner: Error: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:36761/session" with method "POST"
+[0-5]     at startWebDriverSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1380:11)
+[0-5]     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[0-5]     at async _WebDriver.newSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1805:41)
+[0-5]     at async remote (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriverio/build/node.js:10947:20)
+[0-5]     at async Runner._startSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:886:24)
+[0-5]     at async Runner._initSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:860:22)
+[0-5]     at async Runner.run (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:749:16)
+[0-5] 2026-11-02T13:32:15.816Z ERROR @wdio/utils:shim: TypeError: Cannot read properties of undefined (reading 'requestedCapabilities')
+[0-5]     at ObsidianWorkerService.after (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/wdio-obsidian-service/src/service.ts:787:70)
+[0-5]     at <anonymous> (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/utils/build/index.js:1063:22)
+[0-5]     at new Promise (<anonymous>)
+[0-5]     at <anonymous> (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/utils/build/index.js:1060:45)
+[0-5]     at Array.map (<anonymous>)
+[0-5]     at executeHooksWithArgs (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/utils/build/index.js:1060:31)
+[0-5]     at Runner.run (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:752:13)
+[0-5]     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[0-5] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-modal.e2e.ts
+[0-6] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-recoveries.e2e.ts
+[0-6] 2026-11-02T13:32:17.551Z WARN webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:39493/session" with method "POST"
+[0-6] 2026-11-02T13:32:18.214Z WARN webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:39493/session" with method "POST"
+[0-6] 2026-11-02T13:32:19.374Z WARN webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:39493/session" with method "POST"
+[0-6] 2026-11-02T13:32:19.535Z ERROR webdriver: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:39493/session" with method "POST"
+[0-6] 2026-11-02T13:32:19.535Z ERROR webdriver: session not created: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:39493/session" with method "POST"
+[0-6]     at FetchRequest._request (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:2316:19)
+[0-6]     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[0-6]     at async startWebDriverSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1376:16)
+[0-6]     at async _WebDriver.newSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1805:41)
+[0-6]     at async remote (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriverio/build/node.js:10947:20)
+[0-6]     at async Runner._startSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:886:24)
+[0-6]     at async Runner._initSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:860:22)
+[0-6]     at async Runner.run (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:749:16)
+[0-6] 2026-11-02T13:32:19.585Z ERROR @wdio/runner: Error: WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:39493/session" with method "POST"
+[0-6]     at startWebDriverSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1380:11)
+[0-6]     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[0-6]     at async _WebDriver.newSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriver/build/node.js:1805:41)
+[0-6]     at async remote (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/webdriverio/build/node.js:10947:20)
+[0-6]     at async Runner._startSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:886:24)
+[0-6]     at async Runner._initSession (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:860:22)
+[0-6]     at async Runner.run (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:749:16)
+[0-6] 2026-11-02T13:32:19.600Z ERROR @wdio/utils:shim: TypeError: Cannot read properties of undefined (reading 'requestedCapabilities')
+[0-6]     at ObsidianWorkerService.after (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/wdio-obsidian-service/src/service.ts:787:70)
+[0-6]     at <anonymous> (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/utils/build/index.js:1063:22)
+[0-6]     at new Promise (<anonymous>)
+[0-6]     at <anonymous> (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/utils/build/index.js:1060:45)
+[0-6]     at Array.map (<anonymous>)
+[0-6]     at executeHooksWithArgs (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/utils/build/index.js:1060:31)
+[0-6]     at Runner.run (file:///home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/node_modules/@wdio/runner/build/index.js:752:13)
+[0-6]     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[0-6] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-recoveries.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: 2daa2c5222ee5cc88222f9f9c91adde1
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/stamina-bar/chrome-focus.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] stamina bar chrome: keyboard focus follows Collapse and Expand (SC-505)
+[chrome 150.0.7871.250 linux #0-0]    ✓ [CHR-F01] Tab to Collapse + Enter: the block collapses and focus lands on the one-liner's Expand button (ring shown); Enter on it expands and focus returns to Collapse (ring shown, panel shown)
+[chrome 150.0.7871.250 linux #0-0]    ✓ [CHR-F02] Enter on Expand (reached by keyboard) expands the block and focus lands on the restored Collapse button (ring shown, panel shown)
+[chrome 150.0.7871.250 linux #0-0]    ✓ [CHR-F03] a MOUSE click on Collapse and on Expand moves focus nowhere new (no hand-off into the block)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] stamina bar chrome: keyboard focus stays on Pin to sidebar across the redraw (SC-505)
+[chrome 150.0.7871.250 linux #0-0]    ✖ "before all" hook for stamina bar chrome: keyboard focus stays on Pin to sidebar across the redraw (SC-505)
+[chrome 150.0.7871.250 linux #0-0]    ✖ "after all" hook for stamina bar chrome: keyboard focus stays on Pin to sidebar across the redraw (SC-505)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 3 passing (1.7s)
+[chrome 150.0.7871.250 linux #0-0] 2 failing
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1) stamina bar chrome: keyboard focus stays on Pin to sidebar across the redraw (SC-505) "before all" hook for stamina bar chrome: keyboard focus stays on Pin to sidebar across the redraw (SC-505)
+[chrome 150.0.7871.250 linux #0-0] WebDriverError: invalid session id: session deleted as the browser has closed the connection
+from disconnected: Unable to receive message from renderer
+  (Session info: chrome=150.0.7871.250) when running "chromium/send_command_and_get_result" with method "POST"
+[chrome 150.0.7871.250 linux #0-0] invalid session id: WebDriverError: invalid session id: session deleted as the browser has closed the connection
+[chrome 150.0.7871.250 linux #0-0] from disconnected: Unable to receive message from renderer
+[chrome 150.0.7871.250 linux #0-0]   (Session info: chrome=150.0.7871.250) when running "chromium/send_command_and_get_result" with method "POST"
+[chrome 150.0.7871.250 linux #0-0]     at async ev (/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc546-r1-impl/sc546-r1-tree2/e2e/driver/page.ts:8:13)
+[chrome 150.0.7871.250 linux #0-0]     at async Object.setPrefs (/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc546-r1-impl/sc546-r1-tree2/e2e/driver/dse.ts:480:2)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 2) stamina bar chrome: keyboard focus stays on Pin to sidebar across the redraw (SC-505) "after all" hook for stamina bar chrome: keyboard focus stays on Pin to sidebar across the redraw (SC-505)
+[chrome 150.0.7871.250 linux #0-0] WebDriverError: invalid session id when running "chromium/send_command_and_get_result" with method "POST"
+[chrome 150.0.7871.250 linux #0-0] invalid session id: WebDriverError: invalid session id when running "chromium/send_command_and_get_result" with method "POST"
+[chrome 150.0.7871.250 linux #0-0]     at async ev (/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc546-r1-impl/sc546-r1-tree2/e2e/driver/page.ts:8:13)
+[chrome 150.0.7871.250 linux #0-0]     at async closeModals (/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc546-r1-impl/sc546-r1-tree2/e2e/driver/cleanup.ts:8:2)
+[chrome 150.0.7871.250 linux #0-0]     at async closeEverything (/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc546-r1-impl/sc546-r1-tree2/e2e/driver/cleanup.ts:52:2)
+[chrome 150.0.7871.250 linux #0-0]     at async Object.setPrefs (/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc546-r1-impl/sc546-r1-tree2/e2e/driver/dse.ts:479:2)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 (unknown) #0-1] Running: chrome (v150.0.7871.250) on (unknown)
+[chrome 150.0.7871.250 (unknown) #0-1]
+[chrome 150.0.7871.250 (unknown) #0-1] ✖ Failed to create a session:
+[chrome 150.0.7871.250 (unknown) #0-1] WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:33449/session" with method "POST"
+[chrome 150.0.7871.250 (unknown) #0-1]
+------------------------------------------------------------------
+[chrome 150.0.7871.250 (unknown) #0-2] Running: chrome (v150.0.7871.250) on (unknown)
+[chrome 150.0.7871.250 (unknown) #0-2]
+[chrome 150.0.7871.250 (unknown) #0-2] ✖ Failed to create a session:
+[chrome 150.0.7871.250 (unknown) #0-2] WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:44127/session" with method "POST"
+[chrome 150.0.7871.250 (unknown) #0-2]
+------------------------------------------------------------------
+[chrome 150.0.7871.250 (unknown) #0-3] Running: chrome (v150.0.7871.250) on (unknown)
+[chrome 150.0.7871.250 (unknown) #0-3]
+[chrome 150.0.7871.250 (unknown) #0-3] ✖ Failed to create a session:
+[chrome 150.0.7871.250 (unknown) #0-3] WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:43625/session" with method "POST"
+[chrome 150.0.7871.250 (unknown) #0-3]
+------------------------------------------------------------------
+[chrome 150.0.7871.250 (unknown) #0-4] Running: chrome (v150.0.7871.250) on (unknown)
+[chrome 150.0.7871.250 (unknown) #0-4]
+[chrome 150.0.7871.250 (unknown) #0-4] ✖ Failed to create a session:
+[chrome 150.0.7871.250 (unknown) #0-4] WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:46361/session" with method "POST"
+[chrome 150.0.7871.250 (unknown) #0-4]
+------------------------------------------------------------------
+[chrome 150.0.7871.250 (unknown) #0-5] Running: chrome (v150.0.7871.250) on (unknown)
+[chrome 150.0.7871.250 (unknown) #0-5]
+[chrome 150.0.7871.250 (unknown) #0-5] ✖ Failed to create a session:
+[chrome 150.0.7871.250 (unknown) #0-5] WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:36761/session" with method "POST"
+[chrome 150.0.7871.250 (unknown) #0-5]
+------------------------------------------------------------------
+[chrome 150.0.7871.250 (unknown) #0-6] Running: chrome (v150.0.7871.250) on (unknown)
+[chrome 150.0.7871.250 (unknown) #0-6]
+[chrome 150.0.7871.250 (unknown) #0-6] ✖ Failed to create a session:
+[chrome 150.0.7871.250 (unknown) #0-6] WebDriverError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause. when running "http://localhost:39493/session" with method "POST"
+[chrome 150.0.7871.250 (unknown) #0-6]
+
+
+Spec Files:	 0 passed, 7 failed, 7 total (100% completed) in 00:00:28  
+
+OBSIDIAN-E2E CHR-F01 ok (484 ms)
+OBSIDIAN-E2E CHR-F02 ok (516 ms)
+OBSIDIAN-E2E CHR-F03 ok (525 ms)
+OBSIDIAN-E2E CHR-F05 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E CHR-F06 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E CHR-F07 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E CHR-F08 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E CHR-F09 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E CHR-F04 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E CHR-L01 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-Q14 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-Q15 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-Q16 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-SF01 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-SF02 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-SF03 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-S01 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-S02 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-S03 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-S04 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-S05 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-S08 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-S14 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-S13 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-S13c FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-S13b FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-S06 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-T12 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-S07 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-F07a FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-F07b FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-F07c FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-W08 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-K03 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-E01 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-D01 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-D02 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-D03 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-D07 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-D08 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-D09 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-H01 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-A16 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-A18 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-W10 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-W11 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-Q01 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-Q04 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-T01 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-T02 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-T03 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-T04 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-T11 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-T13 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-T14 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-T05 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-T09 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-T10 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-F03 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-F05 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-F06 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E RECOV-R01 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E RECOV-I01 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E RECOV-R02a FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E RECOV-R02b FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E RECOV-R03 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E RECOV-R06 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E RECOV-W03 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E RECOV-R04 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E RECOV-R05 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E RECOV-R10 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E RECOV-R11 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-Q06 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-Q08 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-Q09 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-Q10 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-R1X FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-Q13 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-Q13C FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-Q13E FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-Q13X FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E STAM-Q13P FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E RECOV-R07 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E RECOV-R12 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E RECOV-R09 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E RECOV-R08 FAIL: did not run (an earlier hook or session failure?)
+OBSIDIAN-E2E done: 3/86 ok, 83 failed, 0 known-bug, coverage: 4/87 pairs (partial run: gate skipped)
+OBSIDIAN-E2E coverage driven: 4 (control, kind) pair(s) -> /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc546-r1-impl/sc546-r1-tree2/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 83 manifest pair(s) not exercised in this selection
+OBSIDIAN-E2E reaped 6 leftover child process(es) that outlived wdio
+rc=1

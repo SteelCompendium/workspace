@@ -1,0 +1,10 @@
+TMPDIR= os.tmpdir=/tmp
+status before: []
+=== variant e2e-old:  1 file changed, 2 insertions(+), 26 deletions(-)
+rc=1 Tests:       4 failed, 2 passed, 6 total
+=== variant lifecycle-old:  1 file changed, 2 insertions(+), 26 deletions(-)
+rc=1 Tests:       4 failed, 2 passed, 6 total
+status after revert: []
+HEAD cfb16433
+test tmp dirs left in os.tmpdir: 0
+sleep30 left: 0

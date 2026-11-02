@@ -1,0 +1,29 @@
+FAIL unit test/unit/build/xvfbOwned.test.ts
+  ● SC-546: startOwnedXvfb › shouldStop is checked before every spawn: once it turns true no further number is started
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        5301,
+        5302,
+    +   5303,
+      ]
+
+      137 | 		const out = run([5301, 5302, 5303], { lost: [5301, 5302, 5303] }, 'shouldStop: () => spawned.length >= 2,');
+      138 | 		expect(out.display).toBeNull();
+    > 139 | 		expect(out.spawned).toEqual([5301, 5302]);
+          | 		                    ^
+      140 | 	});
+      141 |
+      142 | 	test('a binary that cannot be executed fails fast with an error naming it, instead of trying every number until the timeouts', () => {
+
+      at Object.<anonymous> (test/unit/build/xvfbOwned.test.ts:139:23)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 9 passed, 10 total
+Snapshots:   0 total
+Time:        1.705 s, estimated 2 s
+Ran all test suites matching test/unit/build/xvfbOwned.test.ts.

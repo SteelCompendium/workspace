@@ -1,0 +1,23 @@
+FAIL unit test/unit/build/xvfbOwned.test.ts (11.389 s)
+  ● SC-546: startOwnedXvfb › a binary that cannot be executed fails fast with an error naming it, instead of trying every number until the timeouts
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 5000
+    Received:   10052
+
+      146 | 			const t0 = Date.now();
+      147 | 			const out = run([5301, 5302, 5303], {}, '', bin);
+    > 148 | 			expect(Date.now() - t0).toBeLessThan(5000);
+          | 			                        ^
+      149 | 			expect(out.display).toBeNull();
+      150 | 			expect(out.spawned).toEqual([5301]);
+      151 | 			expect(out.error).toContain(`XvfbSpawnError: could not execute ${bin}: `);
+
+      at Object.<anonymous> (test/unit/build/xvfbOwned.test.ts:148:28)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 9 passed, 10 total
+Snapshots:   0 total
+Time:        11.668 s
+Ran all test suites matching test/unit/build/xvfbOwned.test.ts.

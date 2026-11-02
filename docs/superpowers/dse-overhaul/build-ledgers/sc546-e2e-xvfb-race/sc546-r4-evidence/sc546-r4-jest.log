@@ -1,0 +1,19 @@
+head=4b14600d dirty=[] sleep30=0 tmpdirs=0
+run 1 rc=0 ms=2654 Tests:       10 passed, 10 total
+run 2 rc=0 ms=2450 Tests:       10 passed, 10 total
+run 3 rc=0 ms=2554 Tests:       10 passed, 10 total
+run 4 rc=0 ms=2464 Tests:       10 passed, 10 total
+run 5 rc=0 ms=2506 Tests:       10 passed, 10 total
+=== mutation wrongnum:  1 file changed, 1 insertion(+), 1 deletion(-)
+rc=1 Tests:       1 failed, 9 passed, 10 total
+  ● SC-546: startOwnedXvfb › a server that writes a number other than its own is not ours: the next number is tried
+=== mutation belt:  1 file changed, 1 insertion(+), 1 deletion(-)
+rc=1 Tests:       1 failed, 9 passed, 10 total
+  ● SC-546: startOwnedXvfb › the belt: a server that wrote its number but whose socket is not there is not ours (null)
+=== mutation shouldstop:  1 file changed, 1 insertion(+), 1 deletion(-)
+rc=1 Tests:       1 failed, 9 passed, 10 total
+  ● SC-546: startOwnedXvfb › shouldStop is checked before every spawn: once it turns true no further number is started
+=== mutation errlistener:  1 file changed, 1 insertion(+), 1 deletion(-)
+rc=1 Tests:       1 failed, 9 passed, 10 total
+  ● SC-546: startOwnedXvfb › a binary that cannot be executed fails fast with an error naming it, instead of trying every number until the timeouts
+after: dirty=[] sleep30=0 tmpdirs=0

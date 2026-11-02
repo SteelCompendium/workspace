@@ -1,0 +1,12 @@
+== L3b lifecycle, real Xvfb (:160-:199); SIGINT mid-run
+  runner=1500616 xvfb=1500638 display :162
+  rc=2  OBSIDIAN-LIFECYCLE environment: received SIGINT, cleaning up OBSIDIAN-LIFECYCLE done: 0/5 ok, 0 failed 
+  xvfb still alive? no; obsidian on port 9473: 0
+  leftovers: sockets=[] xvfb534x=[] xvfb16x-ours=[] slowwrappers=[]
+== X1 e2e, XVFB_BIN=slow real Xvfb; SIGTERM the runner during startOwnedXvfb
+  runner=1501047 firstWrapper=1501118 rc=2  OBSIDIAN-E2E environment: received SIGTERM, cleaning up 
+  leftovers: sockets=[] xvfb534x=[] xvfb16x-ours=[] slowwrappers=[]
+== X2 lifecycle, XVFB_BIN=slow real Xvfb; SIGTERM the runner during startOwnedXvfb
+  runner=1501203 firstWrapper=1501243 rc=2  OBSIDIAN-LIFECYCLE environment: received SIGTERM, cleaning up 
+  leftovers: sockets=[] xvfb534x=[] xvfb16x-ours=[] slowwrappers=[]
+== end

@@ -1,0 +1,22 @@
+FAIL unit test/unit/build/xvfbOwned.test.ts
+  ● SC-546: startOwnedXvfb › the belt: a server that wrote its number but whose socket is not there is not ours (null)
+
+    expect(received).toBeNull()
+
+    Received: ":5301"
+
+      130 | 	test('the belt: a server that wrote its number but whose socket is not there is not ours (null)', () => {
+      131 | 		const out = run([5301, 5302], {}, 'hasSocket: () => false,');
+    > 132 | 		expect(out.display).toBeNull();
+          | 		                    ^
+      133 | 		expect(out.spawned).toEqual([5301, 5302]);
+      134 | 	});
+      135 |
+
+      at Object.<anonymous> (test/unit/build/xvfbOwned.test.ts:132:23)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 9 passed, 10 total
+Snapshots:   0 total
+Time:        1.724 s, estimated 2 s
+Ran all test suites matching test/unit/build/xvfbOwned.test.ts.

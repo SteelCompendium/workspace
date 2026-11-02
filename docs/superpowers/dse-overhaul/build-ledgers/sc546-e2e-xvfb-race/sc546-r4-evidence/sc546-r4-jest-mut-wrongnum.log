@@ -1,0 +1,23 @@
+FAIL unit test/unit/build/xvfbOwned.test.ts
+  ● SC-546: startOwnedXvfb › a server that writes a number other than its own is not ours: the next number is tried
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: ":5302"
+    Received: ":5301"
+
+      124 | 	test('a server that writes a number other than its own is not ours: the next number is tried', () => {
+      125 | 		const out = run([5301, 5302], { wrong: [5301] });
+    > 126 | 		expect(out.display).toBe(':5302');
+          | 		                    ^
+      127 | 		expect(out.spawned).toEqual([5301, 5302]);
+      128 | 	});
+      129 |
+
+      at Object.<anonymous> (test/unit/build/xvfbOwned.test.ts:126:23)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 9 passed, 10 total
+Snapshots:   0 total
+Time:        1.719 s, estimated 2 s
+Ran all test suites matching test/unit/build/xvfbOwned.test.ts.

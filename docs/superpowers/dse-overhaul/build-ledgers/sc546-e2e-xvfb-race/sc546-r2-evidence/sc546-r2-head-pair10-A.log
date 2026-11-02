@@ -1,0 +1,29 @@
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :5340 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :5340 (private Xvfb); 1 spec file(s), 1 shard(s); only CTR-F01; run 20261102-144603-a7dd
+
+Execution of 1 workers started at 2026-11-02T14:46:50.638Z
+
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/counter/counter-focus.e2e.ts
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 1490588
+[0-0] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/counter/counter-focus.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: 2b645932f88059bd8b16c7d8d58d07a9
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/counter/counter-focus.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] counter: the stepper keeps keyboard focus across the write when "-" reaches min (SC-495)
+[chrome 150.0.7871.250 linux #0-0]    ✓ [CTR-F01] Enter on "-" at 1 writes 0, focus stays in the stepper (number field, ring shown) after the redraw, and Tab reaches "+"
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1 passing (1.1s)
+
+
+Spec Files:	 1 passed, 1 total (100% completed) in 00:00:05  
+
+OBSIDIAN-E2E CTR-F01 ok (961 ms)
+OBSIDIAN-E2E done: 1/1 ok, 0 failed, 0 known-bug, coverage: 1/87 pairs (partial run: gate skipped)
+OBSIDIAN-E2E coverage driven: 2 (control, kind) pair(s) -> /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc546-r2-review/sc546-r2-tree-head-A/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 86 manifest pair(s) not exercised in this selection
+rc=0

@@ -1,0 +1,72 @@
+FAIL unit test/unit/build/xvfbOwned.test.ts
+  ● SC-546: startOwnedXvfb › a number whose server lost the race (exits without writing) is NOT ours: the next number is tried
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: ":5303"
+    Received: ":5301"
+
+      91 | 	test('a number whose server lost the race (exits without writing) is NOT ours: the next number is tried', () => {
+      92 | 		const out = run([5301, 5302, 5303], { lost: [5301, 5302] });
+    > 93 | 		expect(out.display).toBe(':5303');
+         | 		                    ^
+      94 | 		expect(out.spawned).toEqual([5301, 5302, 5303]);
+      95 | 	});
+      96 |
+
+      at Object.<anonymous> (test/unit/build/xvfbOwned.test.ts:93:23)
+
+  ● SC-546: startOwnedXvfb › a server that stays alive but never writes is not ours: it is killed after the per-start timeout and the next number is tried
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: ":5302"
+    Received: ":5301"
+
+       97 | 	test('a server that stays alive but never writes is not ours: it is killed after the per-start timeout and the next number is tried', () => {
+       98 | 		const out = run([5301, 5302], { stuck: [5301] }, 'startTimeoutMs: 300,');
+    >  99 | 		expect(out.display).toBe(':5302');
+          | 		                    ^
+      100 | 		expect(out.spawned).toEqual([5301, 5302]);
+      101 | 	});
+      102 |
+
+      at Object.<anonymous> (test/unit/build/xvfbOwned.test.ts:99:23)
+
+  ● SC-546: startOwnedXvfb › returns null when no candidate yields a display of our own
+
+    expect(received).toBeNull()
+
+    Received: ":5301"
+
+      103 | 	test('returns null when no candidate yields a display of our own', () => {
+      104 | 		const out = run([5301, 5302], { lost: [5301, 5302] });
+    > 105 | 		expect(out.display).toBeNull();
+          | 		                    ^
+      106 | 		expect(out.spawned).toEqual([5301, 5302]);
+      107 | 	});
+      108 |
+
+      at Object.<anonymous> (test/unit/build/xvfbOwned.test.ts:105:23)
+
+  ● SC-546: startOwnedXvfb › the overall bound stops the search: a stuck server cannot hold the caller past totalTimeoutMs
+
+    expect(received).toBeNull()
+
+    Received: ":5301"
+
+      115 | 	test('the overall bound stops the search: a stuck server cannot hold the caller past totalTimeoutMs', () => {
+      116 | 		const out = run([5301, 5302, 5303], { stuck: [5301, 5302, 5303] }, 'startTimeoutMs: 10000, totalTimeoutMs: 400,');
+    > 117 | 		expect(out.display).toBeNull();
+          | 		                    ^
+      118 | 		expect(out.spawned).toEqual([5301]);
+      119 | 	});
+      120 | });
+
+      at Object.<anonymous> (test/unit/build/xvfbOwned.test.ts:117:23)
+
+Test Suites: 1 failed, 1 total
+Tests:       4 failed, 2 passed, 6 total
+Snapshots:   0 total
+Time:        0.845 s, estimated 2 s
+Ran all test suites matching test/unit/build/xvfbOwned.test.ts.

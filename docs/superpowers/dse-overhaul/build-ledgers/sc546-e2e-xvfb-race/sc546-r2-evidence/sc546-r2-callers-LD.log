@@ -1,0 +1,19 @@
+== L1 lifecycle, XVFB_BIN=fake that always exits 1
+  wall_ms=344 OBSIDIAN-LIFECYCLE environment: no Xvfb of our own could be started on a free display in :160–:199 rc=2 
+  leftovers: sockets=[] locks=[] xvfb=[] sleep60=[] treeProcs=[0]
+== L2 lifecycle, XVFB_BIN=hang; SIGTERM while it waits
+  runner=1495408 hung=1495434 rc=2  OBSIDIAN-LIFECYCLE environment: received SIGTERM, cleaning up 
+  hung child still alive? no
+  leftovers: sockets=[] locks=[] xvfb=[] sleep60=[1495445 ] treeProcs=[0]
+== L3 lifecycle, real Xvfb (:160-:199); SIGINT mid-run
+  runner=1495537 xvfb= 
+  rc=0  
+  xvfb still alive? no; obsidian on port 9473: 0
+  leftovers: sockets=[] locks=[] xvfb=[] sleep60=[] treeProcs=[0]
+== D1 docs-shots, XVFB_BIN=fake that always exits 1 (returns null -> XVFB_HELP + failure)
+  1 docs image(s) failed:   (obsidian shots): Xvfb unavailable — see the note above rc=1 
+  leftovers: sockets=[] locks=[] xvfb=[] sleep60=[] treeProcs=[0]
+== D2 docs-shots, real Xvfb, preferred DSE_DOCS_DISPLAY=:5360 (free) -> one obsidian shot
+  Xvfb up on :5360 (/home/scott/code/steelCompendium/worktrees/sc546-e2e-xvfb-race/draw-steel-elements/.devbox/nix/profile/default/bin/Xvfb) — your own display is not touched all 1 docs image(s) written to /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc546-r2-review/sc546-r2-tree-head-A/docs/Media all 1 docs image(s) written to docs/Media rc=0 
+  leftovers: sockets=[] locks=[] xvfb=[] sleep60=[] treeProcs=[0]
+== end
