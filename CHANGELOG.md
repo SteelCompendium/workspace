@@ -8,6 +8,14 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: two quick clicks on identical blocks each count in the block you clicked (SC-544).**
+  When a note has three or more blocks that read the same (three counters set to 5, or three callouts each holding
+  the same counter) and you clicked + on one and then + on another within about half a second, the second click
+  could be saved into the block below it. Disk went from `[5,5,5]` to `[6,5,6]` instead of `[6,6,5]`, and the lower
+  card briefly showed the other card's number. Now each click is saved into the block you clicked and each card shows
+  its own number. This holds in Live Preview (callouts and plain code blocks), in Reading view (callouts and plain
+  code blocks), with one pane or two panes of the same note, and when a block edit form on one block is saved right after a click on another block.
+
 - **DSE plugin: in Live Preview, clicking a button on a card inside a callout no longer turns the callout into its markdown text (SC-540).**
   A card inside a `> [!note]` callout (a counter, for example) used to be replaced by the callout's markdown, with
   the cursor inside it, after a click on one of its buttons (+ on a counter) or on its text, and the cursor moved into
