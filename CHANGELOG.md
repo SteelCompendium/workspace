@@ -8,6 +8,15 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: a reference that points back to itself now shows one "Reference loop" card instead of nesting forever, and a note open in two panes no longer shows a false "Reference nesting too deep" (SC-536).**
+  A card whose text holds a reference back to itself (a feature whose effect shows `@Self.md`, or two notes that
+  show each other) used to open card inside card without end in Reading view and Live Preview, until Obsidian
+  slowed down. It now stops at one card with a "Reference loop: … is already shown by a card this one is inside"
+  card nested in it. References nested more than 5 deep stop with "Reference nesting too deep: more than 5
+  references inside one another". The check follows what is actually inside what, so the same note shown in two
+  panes, after turning the plugin off and on, or redrawn twice quickly, shows its card each time instead of a
+  "Reference nesting too deep" error in one of them.
+
 - **DSE plugin: a tracker redraws about 40 % faster after a change (SC-533).**
   Each time a tracker was redrawn (a stamina change, a hero added, a write from another pane or from Sync), the
   hover menu's placement code made the browser restyle the whole tracker twice more before anything was drawn.
