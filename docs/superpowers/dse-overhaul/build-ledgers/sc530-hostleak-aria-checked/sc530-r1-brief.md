@@ -1,0 +1,46 @@
+# SC-530 r1 — survey + prototype (orchestration:reviewer)
+
+You are the r1 survey/prototype worker for SC-530. Your final text goes to the ticket-owner, not a human: raw facts (verdict, shas, measured numbers), no prose, plus the absolute path of every evidence artifact.
+
+## 0. Context loading (do this first)
+- Read `/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc530-hostleak-aria-checked/decisions.md` (the ledger — current state and the owner's rulings; obey it).
+- Read the two prior efforts' ledgers this builds on: `/home/scott/code/steelCompendium/workspace/docs/superpowers/dse-overhaul/build-ledgers/sc527-hostleak-state-kinds/` (decisions.md, sc527-r1-survey-report.md exec summary, sc527-r3-review-report.md exec summary) and `.../sc513-hostleak-click-revealed/decisions.md`.
+- Read `/home/scott/code/steelCompendium/workspace/.claude/skills/dse-verify/SKILL.md`: the battery table and the "Button host-leak sweep" bullet (~line 197-215), and the CURRENT block (~line 1231).
+- Read `/home/scott/code/steelCompendium/workspace/.claude/orchestrate/PROJECT.md` §8 (footguns).
+- **You never call the tracker (Linear)** — not to read history, not to post.
+
+## 1. Environment
+- Worktree: `/home/scott/code/steelCompendium/worktrees/sc530-hostleak-aria-checked`; dse at `.../draw-steel-elements`, branch `sc530-hostleak-aria-checked`, at develop `f81a277`. Verify with `git -C <dse> log --oneline -1` and `git -C <dse> fetch origin` → origin/develop must be `f81a277` (if it moved, report it; do not rebase without saying so).
+- Verify `pwd`-independent: every git command is `git -C <absolute path>`. Never edit anything under `/home/scott/code/steelCompendium/workspace/` except your report file in the ledger dir. The main checkout's dse dirt (`demo-vault/Welcome.md`, untracked `compendium-manifest.json`, `demo-vault/*.md`) is Scott's live vault — expected, not yours, don't touch or flag it.
+- Prototype on a LOCAL branch `sc530-r1-proto` cut from `sc530-hostleak-aria-checked` in the dse worktree. Commit after every coherent step. Do not push. Leave `sc530-hostleak-aria-checked` itself at f81a277.
+- Private scratch: `/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc530-r1-<your agentId>/` — every script and log you write goes there with a unique name (the scratchpad is shared by every agent; never a generic `gate.sh`).
+
+## 2. The task
+Ticket (verbatim, from the ledger): "decide whether `aria-checked` belongs in the kind key (it would add kinds wherever a radio-like control is checked at load and needs a reached-state click like SC-527's for the negotiation tier row), and measure the kind and boundary change."
+
+Survey, then prototype the recommended form:
+1. **Inventory every node the sweeps tag that carries `aria-checked`** (gallery button sweep incl. all SC-512/SC-513/SC-527 appended sections, dark and light; the SC-356 modal pass per scenario). Per node: element, classes, role, `aria-checked` value at tag time, whether it is the current first node of its kind, and which CSS rules in `styles.css` / the host copy select on `aria-checked` / `[aria-checked="true"]` / `:checked` / `.is-selected` etc. for it. Also report whether the input and checkbox sweeps have the same blind spot (their own tag functions) — report only, don't change them unless it is the same one-line class of fix and you say so.
+2. **Key form.** Measure at least: (A) `|checked` only when `aria-checked="true"` (mirrors `|selected`; renames nothing); (B) `|aria-checked:<value>` full form (mirrors SC-356's aria-pressed; renames idle kinds). Per form: kind count, comparisons, boundary records (named), new kinds, renamed kinds (old→new string, same first node?), lost kinds, moved first nodes, for gallery and modal pass. Owner lean (ledger): "(A) unless the survey shows `false`/`mixed` carry separate CSS that would otherwise merge." Recommend one with reasons.
+3. **Reaching the checked state.** If a checked tier row already exists in the sweep DOM (SC-527's negotiation sections click a tier to enable Complete Argument — confirm), say so and use it; otherwise reach it by a REAL click in an appended extra section, as SC-527 does. Any other control that is checked only after a click: list it and decide (reach / leave with reason). Every new kind must be asserted tagged with a named FAIL (extend SC-527's `SC527_EXPECT` mechanism or add `SC530_EXPECT` alongside — keep it in its own named constant/one call site so SC-526 rebases cleanly).
+4. **Rulings that bind you (verbatim from the ledger):**
+   - "Inherit SC-513/SC-527 rules: states reached by REAL click (through the page) in the sweep's own load only; captures never perform these clicks, so zero shots / frozen bytes move. A photographed-state change would need a widening file and Scott's sanction — avoid."
+   - "Every new kind must be asserted tagged (named FAIL, never skip). Existing kinds stay compared; no existing kind's first node may move. A key RENAME of an existing kind (same first node, new string) must be listed explicitly in the report, never silent."
+   - "Do NOT mount the Recoveries popover, add `staminaRecoveryPopover`, or click the pips (SC-526). Keep any SC-530 additions in their own named constants/helper (`SC530_*`) or in the existing SC-527 section data, one call site, so SC-526 rebases cleanly."
+5. **Can-fail probes (required, on the prototype):** (a) a host-only CSS rule that hits ONLY the checked tier row (e.g. `[aria-checked="true"].dse-pr__row { padding: 13px }` in the injected host copy path): head must go red naming the new kind; the same probe on f81a277's harness must stay green (proves the gap). (b) Break the reach (e.g. make the expected selector never match / skip the click): named FAIL, rc 1. Revert every probe edit (`git -C <dse> checkout HEAD -- <file>`), confirm `git status --porcelain` clean.
+
+## 3. Gates on the prototype head
+Expected numbers at f81a277 (from dse-verify CURRENT): tsc clean, lint clean, jest 6208 passed / 1 skipped / 249 of 250 suites (one fewer passed + 2 skipped until a shots run caches obsidian-app.css), shots 592 PNGs 0 FAIL, button host-leak 157/942 with a 34-record boundary, modal 228, input 15/176, checkbox 7/116, prose 106 [212], freeze 280/280.
+- Run: tsc, lint, jest, shots (base f81a277 FIRST to record a base PNG sha256 list + the base host-leak lines, then the prototype), freeze on the prototype. Lifecycle, e2e and parity are NOT needed in r1 (r2 runs the full battery). Show that `main.js`/`styles.css` built at the prototype are byte-identical to a build at f81a277 (harness-only).
+- All 592 PNGs must be sha256-identical base vs prototype. Report the new button/modal host-leak lines verbatim and the full boundary list.
+
+## 4. Footguns (obey all)
+- Devbox: `devbox run -c /home/scott/code/steelCompendium/worktrees/sc530-hostleak-aria-checked/draw-steel-elements -- bash <script file>`; never `cd` inside a compound command; `devbox run`'s wrapper eats `$?` — record exit codes from inside a script file you wrote with the Write tool, and read each gate's summary line. Never pipe a gate into `tail`.
+- One gate per Bash call, foreground, redirected to a unique log file. No `run_in_background`, no Monitor — EXCEPT shots under machine load (dse-verify row 5): if a shots run may pass the 600 s tool timeout, start it in the background with output to a unique per-run log plus an rc file, then poll that log/rc file in foreground calls. Never wait on a background-completion notice; never key a wait loop on a generic scratch filename or another run's log.
+- Never `rm` with a shell-variable target (it hangs on a permission prompt); no glob `rm`; never `rm -rf` anything under `/tmp/dse-*` or `.superpowers/` (delete only literal paths you created). Write scratch files with the Write tool, not heredocs.
+- Never `pkill`/`killall` by pattern. Kill only a PID you verified is yours: `pgrep -af "worktrees/sc530-hostleak-aria-checked/"`, or `readlink /proc/<pid>/cwd` inside your worktree (shoot.mjs's node has no worktree path in its command line).
+- Redirect long-running output to a file rather than streaming it — the 600 s stream watchdog kills silent agents.
+- You cannot `SendMessage` me — a depth-2 agent cannot address its parent, and `to: 'main'` routes to the dispatcher, not me. If you need input mid-task, end your turn with `STATUS: NEEDS_CONTEXT` and the question in your report; I'll resume you. If you ever do send a message anyway, its FIRST WORD must be `SC-530:`.
+- If the report-file write is blocked by your harness, return the report inline.
+
+## 5. Report
+Write `/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc530-hostleak-aria-checked/sc530-r1-survey-report.md`. It must open with a ≤10-line executive summary: recommendation (key form + reach mechanism), proto branch + sha, measured button/modal kinds/comparisons/boundary vs base, renamed/lost/moved counts, PNG identity, freeze, can-fail rc's. Then: inventory table, per-form measurements, the boundary list, a "For r2" list (what productionizing needs: comments, jest seam tests like SC-527's, etc.), `Drive-by fixes:` and `Follow-ups:` sections. Final text: verdict, shas, numbers, and absolute paths of every evidence file.
