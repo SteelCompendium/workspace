@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: retyping a reference in the block edit form no longer shows "Reference nesting too deep" (SC-525).**
+  With experimental authoring controls on, a feature or statblock whose YAML box holds a reference such as `@Ref.md`
+  could show "Reference nesting too deep" in the preview if you typed another key (a trailing space, a paste) while
+  the reference was still being looked up, and kept showing it until the next key. The preview now shows the
+  referenced card. A card in the sidebar that redraws while its lookup is running also shows one card, not the
+  card under a stale error.
+
 - **DSE plugin: after Save in a block's edit form, keyboard focus returns to the card's Edit button instead of jumping to the top of the page (SC-518).**
   With experimental authoring controls on, Tab to a card's Edit button, press Enter, change a field and press Save:
   the card is redrawn with the new content, and keyboard focus used to be lost (the next Tab started again from
