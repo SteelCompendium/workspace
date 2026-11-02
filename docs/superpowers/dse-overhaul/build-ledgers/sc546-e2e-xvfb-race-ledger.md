@@ -107,3 +107,8 @@ the number from the server)."
 
 **LAND-READY 2026-11-02:** dse branch `sc546-e2e-xvfb-race` @ `423e798d` on develop `eaf64ba6`. Land-ready comment
 posted on SC-546. Reported to the dispatcher. Proposal file for dse-verify: `sc546-r1-dse-verify-proposal.md`.
+
+**DONE 2026-11-02:** landed by the dispatcher — dse `develop` @ `423e798d`; workspace `main` merge `e10ddcfa` +
+bookkeeping `830b8489` (ledger preserved at `docs/superpowers/dse-overhaul/build-ledgers/sc546-e2e-xvfb-race*`,
+dse-verify proposal applied to rows 4/4b, "Xvfb ownership (SC-546)" bullet, new CURRENT block). Worktree
+removed. Landed comment posted (`sc546-comment-landed.md`); SC-546 -> Done. Not deployed.
