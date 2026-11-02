@@ -1,0 +1,34 @@
+1:  2a3463d = 1:  3a8a084 fix(SC-522): a Live Preview note that embeds a tracker note keeps its scroll position when that tracker changes, and a click in the embedded card no longer scrolls it
+2:  7d3024f ! 2:  df25c24 test(SC-522): G-S52 - a Live Preview host of an embedded tracker keeps its scroll position on a write to the tracker and on a click in the card
+    @@ visual-harness/obsidian-lifecycle.mjs: const SCENARIOS = [
+     +			return out.join('; ');
+     +		},
+     +	},
+    - ];
+    - 
+    - // ---------------------------------------------------------------------------- main
+    + 	{
+    + 		// G-S56 (SC-536): the reference guard follows the DOM, not the block's identity. A card that references itself stops at one
+    + 		// "Reference loop" card nested inside it (Reading view and Live Preview), a chain of seven distinct references stops at five
+3:  ff27e20 = 3:  511f71b fix(SC-522): release an embed hold when Obsidian redraws the embed without a fresh view of ours (a block deleted from B, a paragraph removed), and do not carry a stale floor into a re-hold
+4:  8aaf5ca = 4:  4b380d5 test(SC-522): G-S52 phase (f) - a block deleted from B releases the embed hold within a few frames of the redraw, not at its timer
+5:  d9882d2 = 5:  5d4bcf3 fix(SC-522): drop the redundant cancel of the deferred embed release (the re-check when it fires covers it); the re-hold test now replaces the root with an empty one, as Obsidian does
+6:  13adaa7 ! 6:  ad018cd docs(SC-522): say what a re-hold really does (the read includes the previous floor), name the early release on an unrelated removal in KNOWN LIMITS; G-S52 header count 44
+    @@ Metadata
+     Author: Scott Tomaszewski <scottTomaszewski@gmail.com>
+     
+      ## Commit message ##
+    -    docs(SC-522): say what a re-hold really does (the read includes the previous floor), name the early release on an unrelated removal in KNOWN LIMITS; G-S52 header count 44
+    +    docs(SC-522): say what a re-hold really does (the read includes the previous floor), name the early release on an unrelated removal in KNOWN LIMITS; G-S52 header count 45
+     
+      ## src/framework/host/livePreviewScrollHold.ts ##
+     @@
+    @@ visual-harness/obsidian-lifecycle.mjs
+      // FAILs Live Preview; the stock build that reads the border at mount FAILs Reading view; the shipped build passes both.
+      //
+     -// SC-522 appends G-S52 (42 scenarios in all; the id was assigned by the dispatcher): a tracker in note B embedded in a LIVE PREVIEW host note A keeps
+    -+// SC-522 appends G-S52 (44 scenarios in all; the id was assigned by the dispatcher): a tracker in note B embedded in a LIVE PREVIEW host note A keeps
+    ++// SC-522 appends G-S52 (45 scenarios in all; the id was assigned by the dispatcher): a tracker in note B embedded in a LIVE PREVIEW host note A keeps
+      // A's scroll position and its on-screen text when B is written (in-app and on disk with A parked at its end, from another pane, and a hero added
+      // with A parked below the embed), a real click on the embedded card does not scroll A to the embed's top, and a block deleted from B (a
+      // redraw that brings no fresh tracker of ours) does not keep the hold up until its timer (phase (f)).

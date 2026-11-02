@@ -1,0 +1,5 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :160, port 9522, 1 scenario(s)
+OBSIDIAN-LIFECYCLE P522-COST ok (holds: process:end:E#0 6800->6800, process:end:E#1 6800->6800, process:end:E#2 6800->6800, process:below:S#0 7510->7510, process:below:S#1 7510->7510, process:below:S#2 7510->7510, process:end:C#0 2912->2912, process:end:C#1 2912->2912, process:end:C#2 2912->2912; set n=9 median 1.70 min 1.30 max 3.40 ms; clear n=11 median 217.20 min 0.00 max 464.80 ms; scan (host views, with hold) n=18 median 1.70 min 0.00 max 4.20 ms; scan (3 LP views, write to a note none embeds) n=60 median 0.10 min 0.00 max 0.50 ms)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0
+porcelain-after: [ M src/framework/host/livePreviewScrollHold.ts  M src/framework/host/previewScrollPin.ts  M src/framework/pipeline.ts  M src/framework/registerFrameworkElements.ts  M test/dom/framework/livePreviewScrollHold.test.ts  M test/dom/framework/pipeline.test.ts  M visual-harness/obsidian-lifecycle.mjs ] head: 71437da

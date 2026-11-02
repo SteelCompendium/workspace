@@ -1,0 +1,60 @@
+ 1 KILLED    hold: top-of-host guard removed
+      - SC-522: a Live Preview host holds its embed of the written note nothing is held without a resolver, at the top of the host, or in a Reading view
+ 2 KILLED    hold: any embed held (embedsBlockOf ignored)
+      - SC-522: a Live Preview host holds its embed of the written note only the drawn embed widgets that show a DSE block of the written note are held, at their height
+      - SC-522: a Live Preview host holds its embed of the written note a nested embed (A -> N -> B, resolved from N) and a #heading embed count
+ 3 KILLED    hold: Reading view not skipped
+      - SC-478: LivePreviewScrollHold capture captureViewsOf captures only Live Preview/Source views of that path
+      - SC-522: a Live Preview host holds its embed of the written note nothing is held without a resolver, at the top of the host, or in a Reading view
+ 4 KILLED    hold: other notes never held
+      - SC-522: a Live Preview host holds its embed of the written note only the drawn embed widgets that show a DSE block of the written note are held, at their height
+      - SC-522: a Live Preview host holds its embed of the written note the floor is the embed's content box: padding and border come off, unless the theme sets border-box
+      - SC-522: a Live Preview host holds its embed of the written note a nested embed (A -> N -> B, resolved from N) and a #heading embed count
+ 5 KILLED    hold: own view no longer captured by SC-478
+      - SC-478: LivePreviewScrollHold capture captureViewsOf captures only Live Preview/Source views of that path
+      - SC-522: a Live Preview host holds its embed of the written note only the drawn embed widgets that show a DSE block of the written note are held, at their height
+ 6 KILLED    hold: border-box edge handling removed
+      - SC-522: a Live Preview host holds its embed of the written note the floor is the embed's content box: padding and border come off, unless the theme sets border-box
+ 7 KILLED    hold: re-hold may lower the floor
+      - SC-522: a Live Preview host holds its embed of the written note PIN_TTL_MS backstop, a re-hold never lowers the floor, an inline min-height is restored, unload drops every hold
+ 8 KILLED    hold: TTL backstop doubled
+      - SC-522: a Live Preview host holds its embed of the written note PIN_TTL_MS backstop, a re-hold never lowers the floor, an inline min-height is restored, unload drops every hold
+ 9 KILLED    hold: prior inline min-height not restored
+      - SC-522: a Live Preview host holds its embed of the written note PIN_TTL_MS backstop, a re-hold never lowers the floor, an inline min-height is restored, unload drops every hold
+10 KILLED    hold: released while the new root is empty
+      - SC-522: a Live Preview host holds its embed of the written note released as soon as a fresh view has mounted in the embed, not while it is still empty
+11 KILLED    hold: fresh mount not recognised
+      - SC-522: a Live Preview host holds its embed of the written note released as soon as a fresh view has mounted in the embed, not while it is still empty
+12 KILLED    hold: adopted re-add not recognised
+      - SC-522: a Live Preview host holds its embed of the written note released when the held view is put back (an adopted write)
+13 KILLED    hold: no requestMeasure at release
+      - SC-522: a Live Preview host holds its embed of the written note released as soon as a fresh view has mounted in the embed, not while it is still empty
+14 KILLED    hold: releaseAll does not see embed holds
+      - SC-522: a Live Preview host holds its embed of the written note PIN_TTL_MS backstop, a re-hold never lowers the floor, an inline min-height is restored, unload drops every hold
+15 KILLED    hold: attribute value not the held px
+      - SC-522: a Live Preview host holds its embed of the written note only the drawn embed widgets that show a DSE block of the written note are held, at their height
+      - SC-522: a Live Preview host holds its embed of the written note a nested embed (A -> N -> B, resolved from N) and a #heading embed count
+      - SC-522: a Live Preview host holds its embed of the written note released as soon as a fresh view has mounted in the embed, not while it is still empty
+      - SC-522: a Live Preview host holds its embed of the written note PIN_TTL_MS backstop, a re-hold never lowers the floor, an inline min-height is restored, unload drops every hold
+16 KILLED    pin: embedsBlockOf ignores the container itself
+      - SC-522: a Live Preview host holds its embed of the written note only the drawn embed widgets that show a DSE block of the written note are held, at their height
+      - SC-522: a Live Preview host holds its embed of the written note the floor is the embed's content box: padding and border come off, unless the theme sets border-box
+      - SC-522: a Live Preview host holds its embed of the written note a nested embed (A -> N -> B, resolved from N) and a #heading embed count
+      - SC-522: a Live Preview host holds its embed of the written note released as soon as a fresh view has mounted in the embed, not while it is still empty
+      - SC-522: a Live Preview host holds its embed of the written note PIN_TTL_MS backstop, a re-hold never lowers the floor, an inline min-height is restored, unload drops every hold
+17 KILLED    wiring: modify handler passes no resolver
+      - SC-478: wiring registerFrameworkElements captures on `modify` and registers the editor extension
+18 KILLED    pipeline: no capture click listener
+      - T-9 (Plan 02): ElementPipeline.run (F1 §2.4) click shield (F1 §2.4 step 4 / §1.2) SC-522 Live Preview embed: the root is an Obsidian interactive child a click inside a Live Preview embed marks the root
+19 KILLED    pipeline: press does not mark
+      - T-9 (Plan 02): ElementPipeline.run (F1 §2.4) click shield (F1 §2.4 step 4 / §1.2) SC-522 Live Preview embed: the root is an Obsidian interactive child a pointerdown inside a Live Preview embed marks the root
+      - T-9 (Plan 02): ElementPipeline.run (F1 §2.4) click shield (F1 §2.4 step 4 / §1.2) SC-522 Live Preview embed: the root is an Obsidian interactive child a mousedown inside a Live Preview embed marks the root
+20 KILLED    pipeline: marks in any .internal-embed (Reading view)
+      - T-9 (Plan 02): ElementPipeline.run (F1 §2.4) click shield (F1 §2.4 step 4 / §1.2) SC-522 Live Preview embed: the root is an Obsidian interactive child a click elsewhere (a Reading view embed, or a block that is not embedded) leaves the root alone
+21 KILLED    pipeline: marks anywhere under .cm-content (code-block widget)
+      - T-9 (Plan 02): ElementPipeline.run (F1 §2.4) click shield (F1 §2.4 step 4 / §1.2) SC-522 Live Preview embed: the root is an Obsidian interactive child a click elsewhere (a Reading view embed, or a block that is not embedded) leaves the root alone
+22 KILLED    pipeline: never marks
+      - T-9 (Plan 02): ElementPipeline.run (F1 §2.4) click shield (F1 §2.4 step 4 / §1.2) SC-522 Live Preview embed: the root is an Obsidian interactive child a click inside a Live Preview embed marks the root
+      - T-9 (Plan 02): ElementPipeline.run (F1 §2.4) click shield (F1 §2.4 step 4 / §1.2) SC-522 Live Preview embed: the root is an Obsidian interactive child a pointerdown inside a Live Preview embed marks the root
+      - T-9 (Plan 02): ElementPipeline.run (F1 §2.4) click shield (F1 §2.4 step 4 / §1.2) SC-522 Live Preview embed: the root is an Obsidian interactive child a mousedown inside a Live Preview embed marks the root
+KILLED 22 / 22

@@ -1,0 +1,23 @@
+stock run1 rc=1 OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+stock run2 rc=1 OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+stock run3 rc=1 OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+proto run1 rc=0 OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+proto run2 rc=0 OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+proto run3 rc=0 OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+ctl-nohold run1 rc=1 OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+--- harness changed: (e) no hold assertions; earlier rows superseded
+ctl-nohold run11 rc=1 OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+ctl-nohold run12 rc=1 OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+ctl-nohold run13 rc=1 OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+ctl-norelease run11 rc=1 OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+ctl-norelease run12 rc=1 OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+ctl-norelease run13 rc=1 OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+ctl-noclick run11 rc=1 OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+ctl-noclick run12 rc=1 OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+ctl-noclick run13 rc=1 OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+stock run11 rc=1 OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+stock run12 rc=1 OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+stock run13 rc=1 OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+proto run11 rc=0 OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+proto run12 rc=0 OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+proto run13 rc=0 OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed

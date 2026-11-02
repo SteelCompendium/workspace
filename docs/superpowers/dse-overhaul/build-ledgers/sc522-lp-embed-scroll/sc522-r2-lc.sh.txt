@@ -1,0 +1,20 @@
+#!/bin/bash
+# lc.sh <tag> <only-ids> [bundle-dir]: in-tree lifecycle harness (builds main.js first unless a bundle dir is given)
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc522-r2-impl1
+W=/home/scott/code/steelCompendium/worktrees/sc522-lp-embed-scroll/draw-steel-elements
+T=$1; ONLY=$2; BUNDLE=${3:-}
+LOG="$S/logs/lc-$T.log"
+cd "$W" || exit 9
+if [ -z "$BUNDLE" ]; then
+  npm run build-no-check > "$S/logs/lc-$T.build.log" 2>&1 || { echo "build failed"; echo 9 > "$S/logs/lc-$T.rc"; exit 9; }
+  echo "main.js $(sha256sum main.js | cut -c1-12) styles.css $(sha256sum styles.css | cut -c1-12)" > "$LOG"
+  DSE_LIFECYCLE_PORT=9622 timeout 590 node visual-harness/obsidian-lifecycle.mjs --only="$ONLY" >> "$LOG" 2>&1
+else
+  echo "bundle $BUNDLE main.js $(sha256sum $BUNDLE/main.js | cut -c1-12) styles.css $(sha256sum $BUNDLE/styles.css | cut -c1-12)" > "$LOG"
+  DSE_LIFECYCLE_BUNDLE="$BUNDLE" DSE_LIFECYCLE_PORT=9622 timeout 590 node visual-harness/obsidian-lifecycle.mjs --only="$ONLY" >> "$LOG" 2>&1
+fi
+rc=$?
+echo "rc=$rc" >> "$LOG"
+echo "$rc" > "$S/logs/lc-$T.rc"
+grep -E "OBSIDIAN-LIFECYCLE (start|done|G-[A-Za-z0-9]+ (ok|FAIL))" "$LOG" | sed -E 's/^(OBSIDIAN-LIFECYCLE [^ ]+ ok).*/\1/' | cut -c1-300
+echo "rc=$rc"

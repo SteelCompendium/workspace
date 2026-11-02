@@ -1,0 +1,657 @@
+// ===== SC-522 r3 PROBES (scratch harness copy only; never in the tree) =====
+const R3_OUT = process.env.R3_OUT ?? work;
+const R3_VAR = process.env.R3_VAR ?? 'unknown';
+const R3_REPS = Number(process.env.R3_REPS ?? 2);
+const R3_B = 'Lifecycle/lpembtracker.md';
+const R3_TALL = 'Lifecycle/lpembhosttall.md';
+const R3_ENDH = 'Lifecycle/lpembhostend.md';
+const R3_TRK = (prefix, n) => fence('ds-initiative', ['heroes:', ...Array.from({ length: n }, (_, i) => HERO(`${prefix} ${String(i + 1).padStart(2, '0')}`)).flat(), 'enemy_groups: []', 'malice:', '  value: 1']);
+const R3_PRE = (n) => Array.from({ length: n }, (_, i) => `R-PRE filler ${i}.`).join('\n\n');
+Object.assign(FIXTURES, {
+	'R3/two.md': `# two\n\nW-TOP\n\n${R3_TRK('First', 12)}\n\nW-MID\n\n${R3_TRK('Second', 12)}\n\nW-BOTTOM\n`,
+	'R3/hosttwo.md': `# hosttwo\n\n${R3_PRE(80)}\n\n![[two]]\n\nE-END 1.\n\nE-END 2.\n\nE-END 3.\n`,
+	'R3/hostdouble.md': `# hostdouble\n\n${R3_PRE(80)}\n\n![[lpembtracker]]\n\nD-MID 1.\n\n![[lpembtracker]]\n\nE-END 1.\n\nE-END 2.\n\nE-END 3.\n`,
+	'R3/plain.md': '# plain\n\nP-1 text.\n\nP-2 text.\n',
+	'R3/hostmixed.md': `# hostmixed\n\n${R3_PRE(80)}\n\n![[plain]]\n\n![[lpembtracker]]\n\nE-END 1.\n\nE-END 2.\n\nE-END 3.\n`,
+	'R3/prose.md': `# prose\n\nQ-TOP\n\n${R3_TRK('Prose', 10)}\n\n${Array.from({ length: 30 }, (_, i) => `Q-POST para ${i}.`).join('\n\n')}\n`,
+	'R3/hostprose.md': `# hostprose\n\n${R3_PRE(80)}\n\n![[prose]]\n\nE-END 1.\n\nE-END 2.\n\nE-END 3.\n`,
+	'R3/c1.md': '# c1\n\nC1 text.\n',
+	'R3/c2.md': '# c2\n\nC2 text.\n',
+	'R3/c3.md': '# c3\n\nC3 text.\n',
+});
+const R3_SEQ = { n: 500 };
+const R3_TWO_DEL = FIXTURES['R3/two.md'].replace(new RegExp('W-MID\\n\\n' + '`'.repeat(3) + 'ds-initiative[\\s\\S]*?' + '`'.repeat(3) + '\\n'), 'W-MID\n');
+if (R3_TWO_DEL === FIXTURES['R3/two.md'] || (R3_TWO_DEL.match(/ds-initiative/g) || []).length !== 1) throw new Error('R3_TWO_DEL regex');
+function r3Write(id, data) {
+	fs.mkdirSync(R3_OUT, { recursive: true });
+	fs.writeFileSync(path.join(R3_OUT, `sc522-r5-${R3_VAR}-${id}.json`), JSON.stringify(data, null, 1));
+}
+const R3_INSTALL = `(() => {
+  if (window.__r3) return true;
+  const R = window.__r3 = {};
+  R.cm = (leaf) => leaf.view.editor.cm;
+  R.embeds = (leaf) => Array.from(R.cm(leaf).contentDOM.children).filter((e) => e.classList.contains('internal-embed'));
+  R.dseEmbeds = (leaf) => R.embeds(leaf).filter((e) => !!e.querySelector('[data-dse-element]'));
+  R.emb = (leaf, i) => R.dseEmbeds(leaf)[i || 0] || null;
+  R.desc = (el) => el ? el.tagName.toLowerCase() + '.' + String(el.className).trim().split(/\\s+/).slice(0, 2).join('.') : null;
+  R.snap = (leaf) => {
+    const cm = R.cm(leaf); const s = cm.scrollDOM; const d = s.ownerDocument; const sel = cm.state.selection.main;
+    const ws = String(d.defaultView.getSelection() || '');
+    const e = R.emb(leaf); let embPos = null; try { embPos = e ? cm.posAtDOM(e) : null; } catch (x) {}
+    return { st: Math.round(s.scrollTop), max: s.scrollHeight - s.clientHeight, anchor: sel.anchor, head: sel.head, ranges: cm.state.selection.ranges.length, docLen: cm.state.doc.length, embPos,
+      cmFocus: cm.hasFocus, winSelLen: ws.length, winSel: ws.slice(0, 50), active: R.desc(d.activeElement), file: leaf.view.file && leaf.view.file.path, mode: leaf.view.getMode && leaf.view.getMode(),
+      embH: e ? Math.round(e.getBoundingClientRect().height) : null, embMinH: e ? e.style.minHeight : null, embHold: e ? e.getAttribute('data-dse-lp-embed-hold') : null,
+      rootCls: e && e.querySelector('[data-dse-element]') ? String(e.querySelector('[data-dse-element]').className).includes('interactive-child') : null,
+      selEmb: !!(e && cm.state.selection.ranges.some((r) => embPos !== null && r.from <= embPos && r.to > embPos)) };
+  };
+  R.track = (leaf) => { const s = R.cm(leaf).scrollDOM; const tr = R.tr = { min: s.scrollTop, max: s.scrollTop, n: 0, on: true }; const f = () => { tr.min = Math.min(tr.min, s.scrollTop); tr.max = Math.max(tr.max, s.scrollTop); tr.n++; if (tr.on) requestAnimationFrame(f); }; s.addEventListener('scroll', () => { tr.min = Math.min(tr.min, s.scrollTop); tr.max = Math.max(tr.max, s.scrollTop); }); requestAnimationFrame(f); return true; };
+  R.trackEnd = () => { const tr = R.tr; if (!tr) return null; tr.on = false; return { min: Math.round(tr.min), max: Math.round(tr.max), frames: tr.n }; };
+  // hold log: every set/removal of data-dse-lp-embed-hold / data-dse-lp-hold under a document, with ms since start
+  R.holdLog = (doc) => { const L = R.hl = { t0: performance.now(), ev: [] }; if (R.hlmo) R.hlmo.disconnect(); const W = doc.defaultView; R.hlmo = new W.MutationObserver((rs) => { for (const r of rs) { const el = r.target; const all = Array.from(doc.querySelectorAll('.internal-embed')); L.ev.push({ t: Math.round(performance.now() - L.t0), attr: r.attributeName, val: el.getAttribute(r.attributeName), src: el.getAttribute('src'), idx: all.indexOf(el), cls: R.desc(el), inLP: !!el.closest('.cm-content')}); } }); R.hlmo.observe(doc.body, { attributes: true, subtree: true, attributeFilter: ['data-dse-lp-embed-hold', 'data-dse-lp-hold', 'data-dse-scroll-pin'] }); return true; };
+  R.holdEnd = () => { if (R.hlmo) R.hlmo.disconnect(); R.hlmo = null; return R.hl ? R.hl.ev : null; };
+  R.rdWatch = (leaf) => { const cm = R.cm(leaf); const W = cm.scrollDOM.ownerDocument.defaultView; const X = R.rd = { t0: performance.now(), first: null, batches: [], frames: 0, held: 0, heldAfter: 0, on: true, lastHeldT: null };
+    if (R.rdmo) R.rdmo.disconnect();
+    R.rdmo = new W.MutationObserver((rs) => { let rem = 0, add = 0; for (const r of rs) { const t = r.target; if (!t.closest || !t.closest('.internal-embed')) continue; rem += r.removedNodes.length; add += r.addedNodes.length; } if (!rem && !add) return; const tt = Math.round(performance.now() - X.t0); if (rem && X.first === null) X.first = tt; const roots = Array.from(cm.contentDOM.querySelectorAll('.internal-embed [data-dse-element]')); if (X.batches.length < 40) X.batches.push({ t: tt, rem, add, roots: roots.length, mounted: roots.filter((r) => r.childElementCount > 0).length, hold: !!cm.contentDOM.querySelector('[data-dse-lp-embed-hold]') }); });
+    R.rdmo.observe(cm.contentDOM, { childList: true, subtree: true });
+    const f = () => { X.frames++; const h = !!cm.contentDOM.querySelector('[data-dse-lp-embed-hold]'); if (h) { X.held++; X.lastHeldT = Math.round(performance.now() - X.t0); if (X.first !== null) X.heldAfter++; } if (X.on) W.requestAnimationFrame(f); }; W.requestAnimationFrame(f); return true; };
+  R.rdEnd = () => { const X = R.rd; if (!X) return null; X.on = false; if (R.rdmo) R.rdmo.disconnect(); R.rdmo = null; return { firstRemoval: X.first, frames: X.frames, heldFrames: X.held, heldAfterRedraw: X.heldAfter, lastHeldMs: X.lastHeldT, batches: X.batches.slice(0, 12) }; };
+  R.lpInternals = () => { const h = window.__dseLpHold; return h ? { embedHolds: h.embedHolds.size, holds: h.holds.size } : null; };
+  return true;
+})()`;
+
+function r3Kit(t) {
+	const A = 'window.__r3A';
+	const mouse = (type, x, y, extra = {}) => t.cdp.call('Input.dispatchMouseEvent', { type, x, y, ...extra });
+	const pressAt = async ({ x, y }, count = 1) => {
+		await mouse('mouseMoved', x, y);
+		for (let c = 1; c <= count; c++) {
+			await mouse('mousePressed', x, y, { button: 'left', buttons: 1, clickCount: c });
+			await mouse('mouseReleased', x, y, { button: 'left', buttons: 0, clickCount: c });
+		}
+	};
+	const ctrlA = async () => {
+		await t.cdp.call('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'a', code: 'KeyA', windowsVirtualKeyCode: 65, nativeVirtualKeyCode: 65, modifiers: 2 });
+		await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyUp', key: 'a', code: 'KeyA', windowsVirtualKeyCode: 65, nativeVirtualKeyCode: 65, modifiers: 2 });
+	};
+	const snap = () => t.ev(`window.__r3.snap(${A})`);
+	const openHost = async (rel, mode = 'lp', viaOther = true) => {
+		if (viaOther) await t.open('Lifecycle/other.md');
+		else await t.open(rel); // G-S52's openHost: the leaf goes to the host's Reading view first (the host is never closed)
+		const st = mode === 'lp' ? { mode: 'source', source: false } : { mode: 'preview' };
+		await t.ev(`(async () => { window.__r3A = app.workspace.getMostRecentLeaf(); await window.__r3A.setViewState({ type: 'markdown', state: Object.assign({ file: ${JSON.stringify(rel)} }, ${JSON.stringify(st)}), active: true }); if (window.__r3A.view.editor && ${mode === 'lp'}) window.__r3A.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+		await t.sleep(1500);
+	};
+	const scroller = `window.__r3.cm(${A}).scrollDOM`;
+	// park relative to the i-th DSE embed: end | below | in | view | top:<px from embed top> ; or el:<expr> (element centred)
+	const park = async (where, i = 0) => {
+		await t.ev(`(() => { ${scroller}.scrollTop = 0; return true; })()`);
+		for (let k = 0; k < 80 && !(await t.ev(`(() => { const e = window.__r3.emb(${A}, ${i}); return !!e && !!e.querySelector('[data-dse-element]') && e.querySelector('[data-dse-element]').childElementCount > 0; })()`)); k++) {
+			await t.ev(`(() => { const s = ${scroller}; s.scrollTop += Math.round(s.clientHeight * 0.6); return true; })()`);
+			await t.sleep(200);
+		}
+		for (let k = 0; k < 3; k++) {
+			await t.ev(`(() => { const s = ${scroller}; const e = window.__r3.emb(${A}, ${i}); const sr = s.getBoundingClientRect(); const top = e.getBoundingClientRect().top - sr.top + s.scrollTop; const h = e.getBoundingClientRect().height; const w = ${JSON.stringify(where)};
+				if (w === 'end') s.scrollTop = s.scrollHeight; else if (w === 'below') s.scrollTop = top + h + 400; else if (w === 'in') s.scrollTop = top + 1500; else if (w === 'view') s.scrollTop = top - 200;
+				else if (w.startsWith('top:')) s.scrollTop = top + Number(w.slice(4));
+				else if (w.startsWith('line:')) { const l = Array.from(window.__r3.cm(${A}).contentDOM.children).find((x) => x.classList.contains('cm-line') && x.textContent === w.slice(5)); if (l) { const r = l.getBoundingClientRect(); s.scrollTop = r.top - sr.top + s.scrollTop - s.clientHeight / 2; } }
+				else if (w.startsWith('sel:')) { const el = e.querySelector(w.slice(4)); const r = el.getBoundingClientRect(); s.scrollTop = r.top - sr.top + s.scrollTop - s.clientHeight / 2; }
+				return true; })()`);
+			await t.sleep(450);
+		}
+		return snap();
+	};
+	// prep write so the embed shows what is on disk now
+	const prep = async () => {
+		const v = ++R3_SEQ.n;
+		await t.edit(R3_B, `c.replace(/ {2}value: \\d+/, '  value: ${v}')`);
+		for (let k = 0; k < 40; k++) {
+			const shown = await t.ev(`(() => { const e = window.__r3.emb(${A}); const m = e && e.querySelector('.dse-init__malice-num, .dse-init__malice-value'); return m ? m.textContent : null; })()`);
+			if (shown && shown.includes(String(v))) return true;
+			await t.sleep(150);
+		}
+		return false;
+	};
+	const visible = (scopeExpr, sel) => `(() => { const s = ${scroller}; const sr = s.getBoundingClientRect(); const sc = ${scopeExpr}; if (!sc) return null; const b = Array.from(sc.querySelectorAll(${JSON.stringify(sel)})).find((x) => { const r = x.getBoundingClientRect(); return r.width > 0 && r.top > sr.top + 30 && r.bottom < sr.bottom - 30; }); if (!b) return null; const r = b.getBoundingClientRect(); return { x: r.left + Math.min(r.width / 2, 40), y: r.top + r.height / 2, text: b.textContent.slice(0, 40) }; })()`;
+	return { A, mouse, pressAt, ctrlA, snap, openHost, park, prep, visible, scroller };
+}
+
+// ---------------------------------------------------------------- R3-P2: Part 2 behaviour (dblclick, Mod+A, source reachable, chrome)
+SCENARIOS.push({
+	id: 'R3-P2',
+	async run(t) {
+		await t.ev(R3_INSTALL);
+		const k = r3Kit(t);
+		const EMB = `window.__r3.emb(${k.A})`;
+		const ROOT = `(${EMB}).querySelector('${TRACKER}')`;
+		const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+		const cases = (process.env.R3_CASES ?? 'click-toggle,dbl-toggle,dbl-name,click-name,modA-input,modA-card,outside-text,card-then-outside,open-link,pencil,collapse,pin').split(',');
+		const rows = [];
+		await t.ev(`(() => { if (!document.getElementById('r3-notice')) { const st = document.createElement('style'); st.id = 'r3-notice'; st.textContent = '.notice-container { display: none !important; }'; document.head.appendChild(st); } return true; })()`);
+		for (const kase of cases) {
+			for (let rep = 0; rep < R3_REPS; rep++) {
+				const row = { kase, rep };
+				try {
+					await t.reset(R3_B);
+					const chrome = ['pencil', 'collapse', 'pin'].includes(kase);
+					await t.ev(`${prefs}.set('authoringControls', ${chrome})`);
+					await k.openHost(R3_TALL);
+					await k.park(['outside-text', 'card-then-outside', 'open-link', 'pencil', 'collapse', 'pin'].includes(kase) ? 'view' : kase === 'modA-input' ? 'sel:.dse-init__malice-quickadd-label' : 'in');
+					row.prep = await k.prep();
+					await t.sleep(400);
+					const m0 = await t.mark();
+					const before = t.read(R3_B);
+					row.s0 = await k.snap();
+					await t.ev(`window.__r3.track(${k.A})`);
+					const toggle = () => t.ev(k.visible(EMB, 'button.dse-init__portrait-toggle'));
+					const name = () => t.ev(k.visible(EMB, '.dse-init__name'));
+					if (kase === 'click-toggle' || kase === 'dbl-toggle') {
+						const at = await toggle();
+						t.expect(!!at, 'no visible toggle');
+						await k.pressAt(at, kase === 'dbl-toggle' ? 2 : 1);
+					} else if (kase === 'dbl-name' || kase === 'click-name') {
+						const at = await name();
+						t.expect(!!at, 'no visible hero name');
+						row.target = at.text;
+						await k.pressAt(at, kase === 'dbl-name' ? 2 : 1);
+					} else if (kase === 'modA-input') {
+						const at = await t.ev(k.visible(EMB, '.dse-init__malice-quickadd-label'));
+						t.expect(!!at, 'no visible quick-add label input');
+						await k.pressAt(at);
+						await t.sleep(200);
+						await t.cdp.call('Input.insertText', { text: 'hello world' });
+						await t.sleep(200);
+						row.mid = await k.snap();
+						await k.ctrlA();
+						await t.sleep(300);
+						row.input = await t.ev(`(() => { const i = (${EMB}).querySelector('.dse-init__malice-quickadd-label'); return { value: i.value, ss: i.selectionStart, se: i.selectionEnd, focused: document.activeElement === i }; })()`);
+					} else if (kase === 'modA-card') {
+						const at = await name();
+						t.expect(!!at, 'no visible hero name');
+						await k.pressAt(at);
+						await t.sleep(500);
+						row.mid = await k.snap();
+						await k.ctrlA();
+						await t.sleep(300);
+					} else if (kase === 'outside-text' || kase === 'card-then-outside') {
+						if (kase === 'card-then-outside') {
+							const at = await name();
+							t.expect(!!at, 'no visible hero name');
+							await k.pressAt(at);
+							await t.sleep(700);
+							row.mid = await k.snap();
+						}
+						const at = await t.ev(`(() => { const s = ${k.scroller}; const sr = s.getBoundingClientRect(); const p = Array.from((${EMB}).querySelectorAll('p')).find((x) => x.textContent.trim() === 'S-TOP'); if (!p) return null; const r = p.getBoundingClientRect(); if (r.top < sr.top || r.bottom > sr.bottom) return { off: true, top: r.top }; return { x: r.left + 10, y: r.top + r.height / 2 }; })()`);
+						t.expect(at && !at.off, `S-TOP not on screen: ${JSON.stringify(at)}`);
+						await k.pressAt(at);
+					} else if (kase === 'open-link') {
+						const c = await t.ev(`(() => { const r = (${EMB}).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + 40 }; })()`);
+						await k.mouse('mouseMoved', c.x, c.y);
+						await t.sleep(400);
+						const at = await t.ev(`(() => { const l = (${EMB}).querySelector(':scope > .markdown-embed-link'); if (!l) return null; const r = l.getBoundingClientRect(); const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return { x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width, op: getComputedStyle(l).opacity, hit: window.__r3.desc(hit), hitOk: !!hit && (hit === l || l.contains(hit)) }; })()`);
+						row.link = at;
+						t.expect(!!at && at.w > 0, `no open-link affordance: ${JSON.stringify(at)}`);
+						await k.mouse('mouseMoved', at.x, at.y);
+						await t.sleep(300);
+						await k.pressAt(at);
+						await t.sleep(1200);
+						row.leaves = await t.ev(`app.workspace.getLeavesOfType('markdown').map((l) => l.view.file && l.view.file.path)`);
+					} else if (kase === 'pencil' || kase === 'collapse' || kase === 'pin') {
+						const kit = formKit(t);
+						const target = kase === 'pencil' ? `(${ROOT}).querySelector('.dse-chrome button[aria-label^="Edit "]')` : kase === 'collapse' ? `(${ROOT}).querySelector('.dse-chrome [data-dse-chrome-item="collapse"]')` : `(${ROOT}).querySelector('.dse-chrome [data-dse-chrome-item="pin"]')`;
+						t.expect(await t.ev(`!!(${target})`), `${kase}: no chrome button`);
+						try { await kit.hoverTo(ROOT, target); row.hover = 'revealed'; } catch (e) { row.hover = 'NOT revealed: ' + String(e.message).slice(0, 200); }
+						const at = await t.ev(`(() => { const b = ${target}; const r = b.getBoundingClientRect(); const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return { x: r.left + r.width / 2, y: r.top + r.height / 2, hit: window.__r3.desc(hit), hitOk: !!hit && (hit === b || b.contains(hit)) }; })()`);
+						row.btn = at;
+						await k.pressAt(at);
+						if (kase === 'pencil') {
+							let open = false;
+							for (let i = 0; i < 30 && !open; i++) { open = await t.ev(`!!document.querySelector('.modal-container .dse-modal .dse-form__preview')`); if (!open) await t.sleep(100); }
+							row.formOpen = open;
+							row.sOpen = await k.snap();
+							row.modals = await t.ev(`document.querySelectorAll('.modal-container .dse-modal').length`);
+							await t.key('Escape', 'Escape', 27);
+							await t.sleep(500);
+						} else if (kase === 'collapse') {
+							let col = false;
+							for (let i = 0; i < 30 && !col; i++) { col = await t.ev(`(() => { const r = ${ROOT}; return !!r && r.hasAttribute('data-dse-collapsed'); })()`); if (!col) await t.sleep(100); }
+							row.collapsed = col;
+							row.sCol = await k.snap();
+							if (col) {
+								await t.sleep(400);
+								const ex = await t.ev(`(() => { const b = (${ROOT}).querySelector('[data-dse-control="chrome.expand"]'); if (!b) return null; const r = b.getBoundingClientRect(); const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return { x: r.left + r.width / 2, y: r.top + r.height / 2, hit: window.__r3.desc(hit), hitOk: !!hit && (hit === b || b.contains(hit)) }; })()`);
+								row.expandBtn = ex;
+								if (ex) {
+									await k.pressAt(ex);
+									let exp = false;
+									for (let i = 0; i < 30 && !exp; i++) { exp = await t.ev(`(() => { const r = ${ROOT}; return !!r && !r.hasAttribute('data-dse-collapsed'); })()`); if (!exp) await t.sleep(100); }
+									row.expanded = exp;
+								}
+							}
+						} else {
+							let stamped = false;
+							for (let i = 0; i < 40 && !stamped; i++) { stamped = t.read(R3_B).includes('_dse_anchor:'); if (!stamped) await t.sleep(100); }
+							row.pinStamped = stamped;
+							await t.sleep(800);
+							row.sidebar = await t.ev(`(() => { const l = app.workspace.getLeavesOfType('dse-sidebar')[0]; return l ? !!l.view.containerEl.querySelector('${TRACKER}') : false; })()`);
+							await t.ev(`(() => { app.workspace.getLeavesOfType('dse-sidebar').forEach((l) => l.detach()); return true; })()`);
+						}
+					}
+					await t.sleep(1500);
+					row.track = await t.ev('window.__r3.trackEnd()');
+					row.s1 = await k.snap();
+					const after = t.read(R3_B);
+					row.diskChanged = after !== before;
+					row.turns = [(before.match(/has_taken_turn: true/g) || []).length, (after.match(/has_taken_turn: true/g) || []).length];
+					row.mods = await t.modsSince(m0, R3_B);
+					row.notices = await t.noticesSince(m0);
+					row.errors = (await t.errorsSince(m0)).map((x) => String(x).slice(0, 200));
+				} catch (e) {
+					row.error = String((e && e.message) || e).slice(0, 400);
+					await t.ev(`(() => { document.querySelectorAll('.modal-container .modal-close-button').forEach((b) => b.click()); return true; })()`);
+				}
+				rows.push(row);
+			}
+		}
+		await t.ev(`${prefs}.set('authoringControls', false)`);
+		await t.reset(R3_B);
+		await t.open('Lifecycle/other.md');
+		r3Write('P2', rows);
+		const sh = (s) => s ? `st ${s.st} sel ${s.anchor}-${s.head}${s.selEmb ? ' [embed selected]' : ''} focus ${s.cmFocus} act ${s.active} winSel ${s.winSelLen} ic ${s.rootCls}` : 'null';
+		return '\n  ' + rows.map((r) => r.error ? `${r.kase}#${r.rep}: ERROR ${r.error}` : `${r.kase}#${r.rep}: ${sh(r.s0)} -> ${sh(r.s1)}; track ${JSON.stringify(r.track)}; disk ${r.diskChanged} turns ${r.turns} mods ${r.mods}; notices ${JSON.stringify(r.notices)}${r.mid ? '; mid ' + sh(r.mid) : ''}${r.input ? '; input ' + JSON.stringify(r.input) : ''}${r.link ? '; link ' + JSON.stringify(r.link) + ' leaves ' + JSON.stringify(r.leaves) : ''}${r.btn ? '; hover ' + r.hover + ' btn ' + JSON.stringify(r.btn) : ''}${r.formOpen !== undefined ? '; form ' + r.formOpen + ' ' + sh(r.sOpen) : ''}${r.collapsed !== undefined ? '; collapsed ' + r.collapsed + ' expandBtn ' + JSON.stringify(r.expandBtn) + ' expanded ' + r.expanded : ''}${r.pinStamped !== undefined ? '; pin ' + r.pinStamped + ' sidebar ' + r.sidebar : ''}${r.errors && r.errors.length ? '; ERRS ' + JSON.stringify(r.errors) : ''}`).join('\n  ');
+	},
+});
+
+// ---------------------------------------------------------------- R3-FORM: form Save from inside an LP embed in a tall host (Follow-up 1)
+SCENARIOS.push({
+	id: 'R3-FORM',
+	async run(t) {
+		await t.ev(R3_INSTALL);
+		const k = r3Kit(t);
+		const EMB = `window.__r3.emb(${k.A})`;
+		const ROOT = `(${EMB}).querySelector('${TRACKER}')`;
+		const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+		const cases = (process.env.R3_FCASES ?? 'E:end:mouse,S:below:mouse,E:end:key,S:view:mouse').split(',');
+		const rows = [];
+		await t.ev(`(() => { if (!document.getElementById('r3-notice')) { const st = document.createElement('style'); st.id = 'r3-notice'; st.textContent = '.notice-container { display: none !important; }'; document.head.appendChild(st); } return true; })()`);
+		await t.ev(`${prefs}.set('authoringControls', true)`);
+		for (const kase of cases) {
+			const [shape, parkAt, save] = kase.split(':');
+			for (let rep = 0; rep < R3_REPS; rep++) {
+				const row = { kase, rep };
+				try {
+					await t.reset(R3_B);
+					await k.openHost(shape === 'E' ? R3_ENDH : R3_TALL);
+					await k.park('view');
+					row.prep = await k.prep();
+					await t.sleep(500);
+					const kit = formKit(t);
+					// formKit.clickPencil's realClick scrollIntoView()s the pencil first: that scrolls the host away from under the pointer
+					// (the panel hides) - the r1 Follow-up 1 "form not openable". Hover, then press at the pencil without scrolling.
+					const PEN = `(${ROOT}).querySelector('.dse-chrome button[aria-label^="Edit "]')`;
+					const pressKey = async (key, code, vk, text) => {
+						await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyDown', key, code, text, windowsVirtualKeyCode: vk, nativeVirtualKeyCode: vk });
+						await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyUp', key, code, windowsVirtualKeyCode: vk, nativeVirtualKeyCode: vk });
+					};
+					row.pressKey = pressKey;
+					if (save === 'key') {
+						// SC-518 path: Tab (real key) from just before the root to the pencil, Enter opens the form
+						await t.ev(`(() => { const r = ${ROOT}; const sp = document.createElement('span'); sp.id = 'r3-start'; sp.tabIndex = -1; r.parentElement.insertBefore(sp, r); sp.focus({ preventScroll: true }); return true; })()`);
+						let how = null;
+						for (let i = 1; i <= 8 && !how; i++) { await pressKey('Tab', 'Tab', 9, undefined); if (await t.ev(`document.activeElement === ${PEN}`)) how = 'Tab x' + i; }
+						await t.ev(`document.getElementById('r3-start')?.remove()`);
+						if (!how) { await t.ev(`(${PEN}).focus({ focusVisible: true, preventScroll: true })`); how = (await t.ev(`document.activeElement === ${PEN}`)) ? 'script focus (Tab never reached it)' : null; }
+						row.reach = how;
+						row.sReach = await k.snap();
+						t.expect(!!how, 'Tab never reached the pencil');
+						await pressKey('Enter', 'Enter', 13, '\r');
+					} else {
+						await kit.hoverTo(ROOT, PEN);
+						await k.pressAt(await t.ev(`(() => { const r = (${PEN}).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`));
+					}
+					await kit.waitFormOpen(kase);
+					row.formOpened = true;
+					row.sOpen = await k.snap();
+					if (parkAt !== 'view') row.park = await k.park(parkAt);
+					await t.sleep(300);
+					// reference text: E-END 1. (end) / first line under the embed (below) / a hero name (view)
+					const refExpr = shape === 'E' ? `'E-END 1.'` : `(() => { const cm = window.__r3.cm(${k.A}); const s = cm.scrollDOM; const sr = s.getBoundingClientRect(); const eb = (${EMB}).getBoundingClientRect().bottom; const l = Array.from(cm.contentDOM.children).find((x) => { const r = x.getBoundingClientRect(); return x.classList.contains('cm-line') && x.textContent.trim().length > 0 && r.top >= Math.max(sr.top, eb) && r.bottom <= sr.bottom; }); return l ? l.textContent : null; })()`;
+					const refTxt = parkAt === 'view' ? null : await t.ev(refExpr);
+					const refTop = (txt) => t.ev(`(() => { const cm = window.__r3.cm(${k.A}); const sr = cm.scrollDOM.getBoundingClientRect(); const l = Array.from(cm.contentDOM.children).find((x) => x.classList.contains('cm-line') && x.textContent === ${JSON.stringify(txt)}); return l ? Math.round(l.getBoundingClientRect().top - sr.top) : null; })()`);
+					row.ref = refTxt;
+					row.ref0 = refTxt ? await refTop(refTxt) : null;
+					const v = ++R3_SEQ.n;
+					const ok = await t.ev(`(() => { const ta = document.querySelector('.modal-container .dse-modal textarea.dse-form__raw'); if (!ta) return false; ta.value = ta.value.replace(/  value: \\d+/, '  value: ${v}'); ta.dispatchEvent(new Event('input', { bubbles: true })); return true; })()`);
+					t.expect(ok, 'no raw box in the form');
+					await t.waitFor(`!!(${kit.SAVE}) && !(${kit.SAVE}).disabled`, 'Save enabled');
+					row.s0 = await k.snap();
+					await t.ev(`window.__r3.track(${k.A})`);
+					if (save === 'mouse') {
+						const at = await t.ev(`(() => { const r = (${kit.SAVE}).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
+						await k.pressAt(at);
+					} else {
+						await t.ev(`(${kit.SAVE}).focus({ focusVisible: true })`);
+						await row.pressKey('Enter', 'Enter', 13, '\r');
+					}
+					await t.waitFor(`!document.querySelector('.modal-container .dse-modal')`, 'form closed after Save', 8000);
+					let landed = false;
+					for (let i = 0; i < 50 && !landed; i++) { landed = t.read(R3_B).includes(`  value: ${v}`); if (!landed) await t.sleep(100); }
+					row.landed = landed;
+					await t.sleep(2500);
+					row.track = await t.ev('window.__r3.trackEnd()');
+					row.s1 = await k.snap();
+					row.ref1 = refTxt ? await refTop(refTxt) : null;
+					row.shown = await t.ev(`(() => { const m = (${EMB}) && (${EMB}).querySelector('.dse-init__malice-num, .dse-init__malice-value'); return m ? m.textContent : null; })()`);
+					delete row.pressKey;
+					row.focus = await t.ev(`(() => { const a = document.activeElement; return { el: window.__r3.desc(a), label: a && a.getAttribute('aria-label'), inEmbed: !!(a && a.closest('.internal-embed')), ring: !!(a && a.matches(':focus-visible')) }; })()`);
+				} catch (e) {
+					row.error = String((e && e.message) || e).slice(0, 500);
+					await t.ev(`(() => { document.querySelectorAll('.modal-container .modal-close-button').forEach((b) => b.click()); return true; })()`);
+				}
+				delete row.pressKey;
+				rows.push(row);
+			}
+		}
+		await t.ev(`${prefs}.set('authoringControls', false)`);
+		await t.reset(R3_B);
+		await t.open('Lifecycle/other.md');
+		r3Write('FORM', rows);
+		return '\n  ' + rows.map((r) => r.error ? `${r.kase}#${r.rep}: ERROR ${r.error}` : `${r.kase}#${r.rep}: opened ${r.formOpened} (st ${r.sOpen && r.sOpen.st}); before Save st ${r.s0.st}/max ${r.s0.max}; track ${JSON.stringify(r.track)}; after st ${r.s1.st}; ref ${JSON.stringify(r.ref)} ${r.ref0} -> ${r.ref1}; landed ${r.landed} shown ${r.shown}; focus ${JSON.stringify(r.focus)}${r.reach ? '; reach ' + r.reach + ' st ' + r.sReach.st : ''}; sel ${r.s0.head}->${r.s1.head}`).join('\n  ');
+	},
+});
+
+// ---------------------------------------------------------------- R3-R5: integrity (two blocks, two embeds, deleted block, edited prose, close mid-hold, scope)
+SCENARIOS.push({
+	id: 'R3-R5',
+	async run(t) {
+		await t.ev(R3_INSTALL);
+		const k = r3Kit(t);
+		const cases = (process.env.R3_RCASES ?? 'two-blocks,double-embed,delete-block,edit-prose,close-mid,popout-close,scope-plain,scope-reading,scope-own').split(',');
+		const rows = [];
+		const two = 'R3/two.md';
+		const embState = `(() => window.__r3.embeds(window.__r3A).map((e) => ({ src: e.getAttribute('src'), h: Math.round(e.getBoundingClientRect().height), minH: e.style.minHeight, hold: e.getAttribute('data-dse-lp-embed-hold'), roots: e.querySelectorAll('[data-dse-element]').length })))()`;
+		for (const kase of cases) {
+			for (let rep = 0; rep < R3_REPS; rep++) {
+				const row = { kase, rep };
+				try {
+					for (const f of [R3_B, two, 'R3/plain.md', 'R3/prose.md']) await t.reset(f);
+					const m0 = await t.mark();
+					let write;
+					if (kase === 'two-blocks' || kase === 'delete-block' || kase === 'edit-prose') {
+						await k.openHost('R3/hosttwo.md');
+						row.park = await k.park('end', 0);
+						if (kase === 'two-blocks') write = () => t.edit(two, `c.replace(/ {2}value: \\d+/, '  value: ${++R3_SEQ.n}')`);
+						else if (kase === 'delete-block') write = () => t.ev(`app.vault.modify(app.vault.getAbstractFileByPath(${JSON.stringify(two)}), ${JSON.stringify(R3_TWO_DEL)})`);
+						else write = () => t.edit(two, `c.replace('W-TOP', 'W-TOP edited ${++R3_SEQ.n}')`);
+					} else if (kase === 'shrink-prose' || kase === 'shrink-prose-x3') {
+						await k.openHost('R3/hostprose.md');
+						row.park = await k.park('end', 0);
+						if (kase === 'shrink-prose') write = () => t.edit('R3/prose.md', `c.replace(/(Q-POST para \\d+\\.\\n\\n){12}/, '')`);
+						else write = async () => { for (let i = 0; i < 3; i++) { await t.edit('R3/prose.md', `c.replace(/(Q-POST para \\d+\\.\\n\\n){4}/, '')`); await t.sleep(1000); } };
+					} else if (kase === 'fu1-same') {
+						await k.openHost(R3_ENDH);
+						row.park = await k.park('end', 0);
+						write = () => t.ev(`(async () => { const f = app.vault.getAbstractFileByPath(${JSON.stringify(R3_B)}); const t0 = performance.now(); await app.vault.process(f, (c) => c.replace(/ {2}value: \\d+/, '  value: ${++R3_SEQ.n}')); const t1 = performance.now(); await app.vault.process(f, (c) => c.replace(/ {2}value: \\d+/, '  value: ${++R3_SEQ.n}')); return { gapMs: Math.round(performance.now() - t1), firstMs: Math.round(t1 - t0) }; })()`);
+					} else if (kase === 'fu1-shrink') {
+						await k.openHost('R3/hostprose.md');
+						row.park = await k.park('end', 0);
+						write = () => t.ev(`(async () => { const f = app.vault.getAbstractFileByPath('R3/prose.md'); const t0 = performance.now(); await app.vault.process(f, (c) => c.replace(/ {2}value: \\d+/, '  value: ${++R3_SEQ.n}')); const t1 = performance.now(); await app.vault.process(f, (c) => c.replace(/(Q-POST para \\d+\\.\\n\\n){12}/, '')); return { gapMs: Math.round(performance.now() - t1), firstMs: Math.round(t1 - t0) }; })()`);
+					} else if (kase === 'fu1x-same' || kase === 'fu1x-shrink') {
+						// r4 Follow-up 1 exactly: the second write lands AFTER Obsidian's redraw of the first (the new root is in, still empty)
+						// and BEFORE our view mounts into it - fired from a MutationObserver on the host's embed at the first removal batch
+						const shrink = kase === 'fu1x-shrink';
+						await k.openHost(shrink ? 'R3/hostprose.md' : R3_ENDH);
+						row.park = await k.park('end', 0);
+						const fB = shrink ? 'R3/prose.md' : R3_B;
+						const second = shrink ? `(c) => c.replace(/(Q-POST para \\d+\\.\\n\\n){12}/, '')` : `(c) => c.replace(/ {2}value: \\d+/, '  value: ${++R3_SEQ.n}')`;
+						write = () => t.ev(`(async () => { const f = app.vault.getAbstractFileByPath(${JSON.stringify(fB)}); const emb = window.__r3.emb(window.__r3A); const t0 = performance.now(); const info = { fired: null, rootEmptyAtSecond: null, done: null };
+							const p2 = new Promise((res) => { const mo = new MutationObserver((rs) => { if (!rs.some((r) => r.removedNodes.length)) return; mo.disconnect(); const r = emb.querySelector('[data-dse-element]'); info.rootEmptyAtSecond = !!r && r.childElementCount === 0; info.fired = Math.round(performance.now() - t0); app.vault.process(f, ${second}).then(() => { info.done = Math.round(performance.now() - t0); res(); }); }); mo.observe(emb, { childList: true, subtree: true }); });
+							await app.vault.process(f, (c) => c.replace(/ {2}value: \\d+/, '  value: ${++R3_SEQ.n}'));
+							await p2; return info; })()`);
+					} else if (kase === 'fu1-synth') {
+						// headx only: the code path of r4 Follow-up 1 driven directly - a re-hold (holdEmbedsOf, what a second `modify` calls)
+						// issued at Obsidian's redraw batch, while the new root is in and still empty
+						await k.openHost(R3_ENDH);
+						row.park = await k.park('end', 0);
+						write = () => t.ev(`(async () => { const f = app.vault.getAbstractFileByPath(${JSON.stringify(R3_B)}); const v = window.__r3A.view; const emb = window.__r3.emb(window.__r3A); const t0 = performance.now(); const info = window.__r5info = { fired: null, rootEmptyAtRehold: null };
+							const mo = new MutationObserver((rs) => { if (!rs.some((r) => r.removedNodes.length)) return; mo.disconnect(); const r = emb.querySelector('[data-dse-element]'); info.rootEmptyAtRehold = !!r && r.childElementCount === 0; info.fired = Math.round(performance.now() - t0); window.__dseLpHold.holdEmbedsOf(v.editor.cm, ${JSON.stringify(R3_B)}, v.file.path, (l, sp) => { const d = app.metadataCache.getFirstLinkpathDest(l, sp); return d ? d.path : null; }); info.heldAfterRehold = emb.getAttribute('data-dse-lp-embed-hold'); }); mo.observe(emb, { childList: true, subtree: true });
+							await app.vault.process(f, (c) => c.replace(/ {2}value: \\d+/, '  value: ${++R3_SEQ.n}')); return info; })()`);
+					} else if (kase === 'double-embed-mid') {
+						await k.openHost('R3/hostdouble.md');
+						for (let i = 0; i < 4; i++) {
+							await t.ev(`(() => { const cm = window.__r3.cm(window.__r3A); const pos = cm.state.doc.toString().indexOf('D-MID 1.'); const b = cm.lineBlockAt(pos); cm.scrollDOM.scrollTop = b.top - cm.scrollDOM.clientHeight / 2; return true; })()`);
+							await t.sleep(500);
+						}
+						await t.waitFor(`window.__r3.dseEmbeds(window.__r3A).length === 2 && window.__r3.dseEmbeds(window.__r3A).every((e) => e.querySelector('[data-dse-element]').childElementCount > 0)`, 'both embeds drawn');
+						row.park = await k.snap();
+						write = () => t.edit(R3_B, `c.replace(/ {2}value: \\d+/, '  value: ${++R3_SEQ.n}')`);
+					} else if (kase === 'double-embed') {
+						await k.openHost('R3/hostdouble.md');
+						row.park = await k.park('end', 0);
+						write = () => t.edit(R3_B, `c.replace(/ {2}value: \\d+/, '  value: ${++R3_SEQ.n}')`);
+					} else if (kase === 'close-mid') {
+						await k.openHost(R3_ENDH);
+						row.park = await k.park('end');
+						write = () => t.ev(`(async () => { const p = app.vault.process(app.vault.getAbstractFileByPath(${JSON.stringify(R3_B)}), (c) => c.replace(/ {2}value: \\d+/, '  value: ${++R3_SEQ.n}')); await p; const held = !!document.querySelector('[data-dse-lp-embed-hold]'); const before = window.__r3.lpInternals(); window.__r3A.detach(); return { held, before }; })()`);
+					} else if (kase === 'popout-close') {
+						await t.open('Lifecycle/other.md');
+						await t.ev(`(async () => { const l = app.workspace.openPopoutLeaf({ size: { width: 1200, height: 1000 } }); window.__r3A = l; await l.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(R3_ENDH)}, mode: 'source', source: false }, active: true }); l.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+						await t.sleep(2000);
+						row.park = await k.park('end');
+						write = () => t.ev(`(async () => { const p = app.vault.process(app.vault.getAbstractFileByPath(${JSON.stringify(R3_B)}), (c) => c.replace(/ {2}value: \\d+/, '  value: ${++R3_SEQ.n}')); await p; const d = window.__r3A.view.containerEl.ownerDocument; const held = !!d.querySelector('[data-dse-lp-embed-hold]'); const before = window.__r3.lpInternals(); window.__r3A.detach(); return { held, before, popout: d !== document }; })()`);
+					} else if (kase === 'scope-plain') {
+						await k.openHost('R3/hostmixed.md');
+						row.park = await k.park('end');
+						write = async () => { await t.edit('R3/plain.md', `c.replace('P-1 text.', 'P-1 text ${++R3_SEQ.n}.')`); await t.sleep(1500); await t.edit(R3_B, `c.replace(/ {2}value: \\d+/, '  value: ${++R3_SEQ.n}')`); };
+					} else if (kase === 'scope-reading') {
+						await k.openHost(R3_ENDH, 'reading');
+						await t.ev(`(() => { const s = window.__r3A.view.containerEl.querySelector('.markdown-reading-view > .markdown-preview-view'); s.scrollTop = s.scrollHeight; return true; })()`);
+						await t.sleep(800);
+						write = () => t.edit(R3_B, `c.replace(/ {2}value: \\d+/, '  value: ${++R3_SEQ.n}')`);
+					} else if (kase === 'scope-own') {
+						await k.openHost(R3_B);
+						await t.ev(`(() => { const s = window.__r3.cm(window.__r3A).scrollDOM; s.scrollTop = 1500; return true; })()`);
+						await t.sleep(800);
+						write = () => t.edit(R3_B, `c.replace(/ {2}value: \\d+/, '  value: ${++R3_SEQ.n}')`);
+					}
+					await t.sleep(600);
+					const lpScroll = kase !== 'scope-reading' && kase !== 'close-mid' && kase !== 'popout-close';
+					row.e0 = kase === 'scope-reading' ? null : await t.ev(embState);
+					row.s0 = kase === 'scope-reading' ? null : await k.snap();
+					await t.ev(`window.__r3.holdLog(window.__r3A.view.containerEl.ownerDocument)`);
+					if (lpScroll) await t.ev(`(() => { window.__r3.track(window.__r3A); window.__r3.rdWatch(window.__r3A); return true; })()`);
+					row.w = await write();
+					await t.sleep(400);
+					row.e400 = lpScroll ? await t.ev(embState) : null;
+					await t.sleep(1200);
+					row.e1600 = lpScroll ? await t.ev(embState) : null;
+					row.st1600 = lpScroll ? await k.snap() : null;
+					await t.sleep(2000);
+					row.holdEv = await t.ev('window.__r3.holdEnd()');
+					if (lpScroll) {
+						row.track = await t.ev('window.__r3.trackEnd()');
+						row.rd = await t.ev('window.__r3.rdEnd()');
+						row.s1 = await k.snap();
+						row.e1 = await t.ev(embState);
+					}
+					row.info = await t.ev('window.__r5info || null');
+					await t.ev('(() => { window.__r5info = null; return true; })()');
+					row.internals = await t.ev('window.__r3.lpInternals()');
+					row.leftover = await t.ev(`(() => { const out = []; const docs = [document]; for (const l of app.workspace.getLeavesOfType('markdown')) { const d = l.view.containerEl.ownerDocument; if (!docs.includes(d)) docs.push(d); } for (const d of docs) for (const e of d.querySelectorAll('.internal-embed')) if (e.style.minHeight || e.hasAttribute('data-dse-lp-embed-hold')) out.push({ src: e.getAttribute('src'), minH: e.style.minHeight }); return out; })()`);
+					row.errors = (await t.errorsSince(m0)).map((x) => String(x).slice(0, 200));
+					row.notices = await t.noticesSince(m0);
+				} catch (e) {
+					row.error = String((e && e.message) || e).slice(0, 500);
+				}
+				try { await t.ev(`(() => { try { if (window.__r3A && window.__r3A.view && window.__r3A.view.containerEl.ownerDocument !== document) window.__r3A.detach(); } catch (e) {} return true; })()`); } catch (e) {}
+				rows.push(row);
+			}
+		}
+		for (const f of [R3_B, two, 'R3/plain.md']) await t.reset(f);
+		await t.open('Lifecycle/other.md');
+		r3Write('R5', rows);
+		const hev = (ev) => (ev || []).map((x) => `${x.t}ms ${x.attr}=${x.val} #${x.idx} ${x.src}${x.inLP ? '' : ' (not LP)'}`).join(', ');
+		return '\n  ' + rows.map((r) => r.error ? `${r.kase}#${r.rep}: ERROR ${r.error}` : `${r.kase}#${r.rep}: st ${r.s0 ? r.s0.st + '/' + r.s0.max : '-'} -> ${r.s1 ? r.s1.st + '/' + r.s1.max : '-'} track ${JSON.stringify(r.track)}; holds [${hev(r.holdEv)}]; emb0 ${JSON.stringify(r.e0)}; emb400 ${JSON.stringify(r.e400)}; emb1600 ${JSON.stringify(r.e1600)} st1600 ${r.st1600 ? r.st1600.st : '-'}; emb1 ${JSON.stringify(r.e1)}; w ${JSON.stringify(r.w)}; rd ${JSON.stringify(r.rd)}; info ${JSON.stringify(r.info)}; internals ${JSON.stringify(r.internals)}; leftover ${JSON.stringify(r.leftover)}; errs ${JSON.stringify(r.errors)}`).join('\n  ');
+	},
+});
+
+// ---------------------------------------------------------------- R3-COST: holdEmbedsOf / captureViewsOf cost with many LP views open (headx only)
+SCENARIOS.push({
+	id: 'R3-COST',
+	async run(t) {
+		await t.ev(R3_INSTALL);
+		t.expect(await t.ev('!!window.__dseLpHold'), 'R3-COST needs the headx bundle');
+		await t.open('Lifecycle/other.md');
+		// 6 LP panes: 4 hosts of the tracker, 2 plain notes; all scrolled
+		const hosts = [R3_ENDH, R3_TALL, 'R3/hostdouble.md', 'R3/hostmixed.md', 'R3/c2.md', 'R3/c3.md'];
+		await t.ev(`(async () => { const ls = []; let first = app.workspace.getMostRecentLeaf(); const files = ${JSON.stringify(hosts)}; for (let i = 0; i < files.length; i++) { const l = i === 0 ? first : app.workspace.getLeaf('split', i % 2 ? 'vertical' : 'horizontal'); await l.setViewState({ type: 'markdown', state: { file: files[i], mode: 'source', source: false } }); ls.push(l); } window.__r3L = ls; return true; })()`);
+		await t.sleep(2500);
+		await t.ev(`(() => { for (const l of window.__r3L) { const s = l.view.editor.cm.scrollDOM; s.scrollTop = s.scrollHeight; } return true; })()`);
+		await t.sleep(1500);
+		await t.ev(`(() => { const h = window.__dseLpHold; const T = window.__r3T = { cap: [], emb: [] }; const c0 = h.captureViewsOf.bind(h); h.captureViewsOf = (...a) => { const s = performance.now(); try { return c0(...a); } finally { T.cap.push(performance.now() - s); } }; const e0 = h.holdEmbedsOf.bind(h); h.holdEmbedsOf = (...a) => { const s = performance.now(); try { return e0(...a); } finally { T.emb.push(performance.now() - s); } }; return true; })()`);
+		for (let i = 0; i < 20; i++) { await t.edit('R3/c1.md', `c + ' x'`); await t.sleep(150); }
+		const idle = await t.ev(`(() => { const T = window.__r3T; const r = { cap: T.cap.slice(), emb: T.emb.slice() }; T.cap.length = 0; T.emb.length = 0; return r; })()`);
+		for (let i = 0; i < 5; i++) { await t.edit(R3_B, `c.replace(/ {2}value: \\d+/, '  value: ${++R3_SEQ.n}')`); await t.sleep(3000); }
+		const hold = await t.ev(`(() => { const T = window.__r3T; return { cap: T.cap.slice(), emb: T.emb.slice() }; })()`);
+		const stat = (a) => { const s = [...a].sort((x, y) => x - y); return { n: s.length, med: +(s[Math.floor(s.length / 2)] ?? 0).toFixed(2), max: +(s.at(-1) ?? 0).toFixed(2) }; };
+		await t.ev(`(() => { window.__r3L.slice(1).forEach((l) => l.detach()); return true; })()`);
+		await t.reset(R3_B);
+		await t.ev(`app.vault.modify(app.vault.getAbstractFileByPath('R3/c1.md'), ${JSON.stringify(FIXTURES['R3/c1.md'])})`);
+		await t.open('Lifecycle/other.md');
+		const res = { idleCapture: stat(idle.cap), idleHoldEmbedsOf: stat(idle.emb), holdCapture: stat(hold.cap), holdHoldEmbedsOf: stat(hold.emb) };
+		r3Write('COST', res);
+		return JSON.stringify(res);
+	},
+});
+
+// ---------------------------------------------------------------- R3-FU4: B reset while the host is closed; reopen; click in the embed
+SCENARIOS.push({
+	id: 'R3-FU4',
+	async run(t) {
+		await t.ev(R3_INSTALL);
+		const k = r3Kit(t);
+		const EMB = `window.__r3.emb(${k.A})`;
+		const cases = (process.env.R3_UCASES ?? 'gs52seq,closed-vault,closed-disk').split(',');
+		const rows = [];
+		await t.ev(`(() => { if (!document.getElementById('r3-notice')) { const st = document.createElement('style'); st.id = 'r3-notice'; st.textContent = '.notice-container { display: none !important; }'; document.head.appendChild(st); } return true; })()`);
+		for (const kase of cases) {
+			for (let rep = 0; rep < R3_REPS; rep++) {
+				const row = { kase, rep };
+				try {
+					await t.reset(R3_B);
+					await k.openHost(R3_TALL);
+					if (kase === 'gs52exact') {
+						// G-S52 exactly: (d) host via t.open(host) + LP, parked below, hero added; (e) reset B, the same openHost, park in
+						await k.openHost(R3_TALL, 'lp', false);
+						await k.park('below');
+						await t.edit(R3_B, `c.replace('enemy_groups: []', ${JSON.stringify(`  - name: "Added ${Date.now() % 100000}"\n    max_stamina: 30\nenemy_groups: []`)})`);
+						await t.sleep(3500);
+						await t.reset(R3_B);
+						await k.openHost(R3_TALL, 'lp', false);
+					} else if (kase === 'gs52seq') {
+						// G-S52 (d) then (e) without its fresh write: add a hero with the host parked below, reset B, reopen the host
+						await k.park('below');
+						await t.edit(R3_B, `c.replace('enemy_groups: []', ${JSON.stringify(`  - name: "Added ${Date.now() % 100000}"\n    max_stamina: 30\nenemy_groups: []`)})`);
+						await t.sleep(3500);
+						await t.reset(R3_B);
+						await k.openHost(R3_TALL);
+					} else {
+						// a click lands; the host is closed (another note in the leaf); B is reset (in-app or on disk); the host reopened
+						await k.park('in');
+						const at = await t.ev(k.visible(EMB, 'button.dse-init__portrait-toggle'));
+						const b0 = t.read(R3_B);
+						await k.pressAt(at);
+						for (let i = 0; i < 40 && t.read(R3_B) === b0; i++) await t.sleep(100);
+						row.firstLanded = t.read(R3_B) !== b0;
+						await t.sleep(800);
+						await t.open('Lifecycle/other.md');
+						if (kase === 'closed-vault') await t.reset(R3_B);
+						else { fs.writeFileSync(path.join(vault, R3_B), FIXTURES[R3_B]); await t.sleep(1500); }
+						await k.openHost(R3_TALL);
+					}
+					await k.park('in');
+					await t.sleep(500);
+					const disk = t.read(R3_B);
+					row.diskTurns = (disk.match(/has_taken_turn: true/g) || []).length;
+					row.diskHeroes = (disk.match(/- name:/g) || []).length;
+					row.embHeroes = await t.ev(`(() => { const e = ${EMB}; return e ? e.querySelectorAll('.dse-init__name').length : null; })()`);
+					row.embTurnsPressed = await t.ev(`(() => { const e = ${EMB}; return e ? e.querySelectorAll('button.dse-init__portrait-toggle[aria-pressed="true"]').length : null; })()`);
+					row.embMalice = await t.ev(`(() => { const e = ${EMB}; const m = e && e.querySelector('.dse-init__malice-num, .dse-init__malice-value'); return m ? m.textContent : null; })()`);
+					const m0 = await t.mark();
+					const at = await t.ev(k.visible(EMB, 'button.dse-init__portrait-toggle'));
+					const before = t.read(R3_B);
+					await k.pressAt(at);
+					for (let i = 0; i < 40 && t.read(R3_B) === before; i++) await t.sleep(100);
+					row.landed = t.read(R3_B) !== before;
+					await t.sleep(500);
+					row.notices = await t.noticesSince(m0);
+				} catch (e) {
+					row.error = String((e && e.message) || e).slice(0, 400);
+				}
+				rows.push(row);
+			}
+		}
+		await t.reset(R3_B);
+		await t.open('Lifecycle/other.md');
+		r3Write('FU4', rows);
+		return '\n  ' + rows.map((r) => r.error ? `${r.kase}#${r.rep}: ERROR ${r.error}` : `${r.kase}#${r.rep}: first ${r.firstLanded}; disk heroes ${r.diskHeroes} turns ${r.diskTurns}; embed heroes ${r.embHeroes} pressed ${r.embTurnsPressed} malice ${r.embMalice}; click landed ${r.landed}; notices ${JSON.stringify(r.notices)}`).join('\n  ');
+	},
+});
+
+// ---------------------------------------------------------------- R3-RISK1: trace screenshots of a hero removed/added with the host parked below the embed
+SCENARIOS.push({
+	id: 'R3-RISK1',
+	async run(t) {
+		await t.ev(R3_INSTALL);
+		const k = r3Kit(t);
+		const EMB = `window.__r3.emb(${k.A})`;
+		const cases = (process.env.R3_KCASES ?? 'del,add').split(',');
+		const out = [];
+		const orig = t.cdp.ws.onmessage;
+		let sink = null;
+		t.cdp.ws.onmessage = (e) => { try { const m = JSON.parse(e.data); if (m.method && sink) sink(m); } catch (x) {} orig(e); };
+		try {
+			for (const kase of cases) {
+				for (let rep = 0; rep < R3_REPS; rep++) {
+					await t.reset(R3_B);
+					await k.openHost(R3_TALL);
+					await k.park('below');
+					await t.sleep(800);
+					const ref = await t.ev(`(() => { const cm = window.__r3.cm(${k.A}); const s = cm.scrollDOM; const sr = s.getBoundingClientRect(); const eb = (${EMB}).getBoundingClientRect().bottom; const l = Array.from(cm.contentDOM.children).find((x) => { const r = x.getBoundingClientRect(); return x.classList.contains('cm-line') && x.textContent.trim().length > 0 && r.top >= Math.max(sr.top, eb) + 100 && r.bottom <= sr.bottom - 300; }); const r = l.getBoundingClientRect(); return { text: l.textContent, y: Math.round(r.top), h: Math.round(r.height), x0: Math.round(sr.left), x1: Math.round(sr.right), sTop: Math.round(sr.top), sBot: Math.round(sr.bottom) }; })()`);
+					// page sampler: rAF + post-paint (setTimeout 0) positions of the reference line, with performance.now
+					await t.ev(`(() => { const cm = window.__r3.cm(${k.A}); const s = cm.scrollDOM; const txt = ${JSON.stringify(ref.text)}; const top = () => { const l = Array.from(cm.contentDOM.children).find((x) => x.classList.contains('cm-line') && x.textContent === txt); return l ? Math.round(l.getBoundingClientRect().top) : null; }; const S = window.__r3S = { raf: [], post: [], on: true }; const f = (ts) => { S.raf.push([Math.round(performance.now()), top(), Math.round(s.scrollTop)]); setTimeout(() => S.post.push([Math.round(performance.now()), top(), Math.round(s.scrollTop)]), 0); if (S.on) requestAnimationFrame(f); }; requestAnimationFrame(f); return true; })()`);
+					const events = [];
+					let done = null;
+					const complete = new Promise((r) => (done = r));
+					sink = (m) => { if (m.method === 'Tracing.dataCollected') events.push(...m.params.value); else if (m.method === 'Tracing.tracingComplete') done(); };
+					await t.cdp.call('Tracing.start', { traceConfig: { includedCategories: ['disabled-by-default-devtools.screenshot', 'devtools.timeline', 'blink.user_timing'], recordMode: 'recordAsMuchAsPossible' }, transferMode: 'ReportEvents' });
+					await t.sleep(500);
+					const pn0 = await t.ev(`(() => { performance.mark('r3-write'); console.timeStamp('r3-write'); return Math.round(performance.now()); })()`);
+					if (kase === 'del') await t.edit(R3_B, `c.replace('  - name: "Hero 01"\\n    max_stamina: 30\\n', '')`);
+					else await t.edit(R3_B, `c.replace('enemy_groups: []', '  - name: "Added r3"\\n    max_stamina: 30\\nenemy_groups: []')`);
+					await t.sleep(3500);
+					await t.cdp.call('Tracing.end');
+					await complete;
+					sink = null;
+					const smp = await t.ev(`(() => { const S = window.__r3S; S.on = false; return { raf: S.raf, post: S.post }; })()`);
+					const shots = events.filter((e) => e.name === 'Screenshot' && e.args && e.args.snapshot);
+					const mark = events.find((e) => (e.name === 'TimeStamp' && e.args && e.args.data && e.args.data.message === 'r3-write') || e.name === 'r3-write');
+					const dir = path.join(R3_OUT, `risk1-${R3_VAR}-${kase}-${rep}`);
+					fs.mkdirSync(dir, { recursive: true });
+					shots.forEach((e, i) => fs.writeFileSync(path.join(dir, `f${String(i).padStart(4, '0')}-${e.ts}.jpg`), Buffer.from(e.args.snapshot, 'base64')));
+					const base = smp.raf.find((x) => x[0] >= pn0) || smp.raf[0];
+					const rafY = smp.raf.filter((x) => x[0] >= pn0).map((x) => x[1]);
+					const postY = smp.post.filter((x) => x[0] >= pn0).map((x) => x[1]);
+					const meta = { kase, rep, ref, pn0, markTs: mark ? mark.ts : null, nShots: shots.length, rafMinMax: [Math.min(...rafY.filter((v) => v !== null)), Math.max(...rafY.filter((v) => v !== null))], postMinMax: [Math.min(...postY.filter((v) => v !== null)), Math.max(...postY.filter((v) => v !== null))], y0: base && base[1], rafEnd: smp.raf.at(-1), post: smp.post.filter((x) => x[0] >= pn0 && x[1] !== (base && base[1])).slice(0, 12), raf: smp.raf.filter((x) => x[0] >= pn0 && x[1] !== (base && base[1])).slice(0, 12) };
+					fs.writeFileSync(path.join(dir, 'meta.json'), JSON.stringify(meta, null, 1));
+					out.push(`${kase}#${rep}: shots ${shots.length} y0 ${meta.y0} raf [${meta.rafMinMax}] post [${meta.postMinMax}] off-samples post ${JSON.stringify(meta.post)} raf ${JSON.stringify(meta.raf)} dir ${dir}`);
+				}
+			}
+		} finally {
+			t.cdp.ws.onmessage = orig;
+			await t.reset(R3_B);
+			await t.open('Lifecycle/other.md');
+		}
+		return '\n  ' + out.join('\n  ');
+	},
+});
+// ===== end SC-522 r3 PROBES =====

@@ -1,0 +1,636 @@
+diff --git a/src/framework/host/livePreviewScrollHold.ts b/src/framework/host/livePreviewScrollHold.ts
+index f6e2dfe..c31b14f 100644
+--- a/src/framework/host/livePreviewScrollHold.ts
++++ b/src/framework/host/livePreviewScrollHold.ts
+@@ -83,15 +83,42 @@
+ // hold — which is harmless and not worth telling apart.
+ // Not touched: a DSE block CodeMirror has not drawn (far above or below the viewport) has no widget
+ // in the DOM, so nothing is captured — and the pane was measured to hold anyway (stock and here).
++//
++// EMBEDS: A LIVE PREVIEW HOST NOTE (SC-522). Note A open in Live Preview embeds note B (`![[B]]`) that has a DSE
++// block. A write to B does not touch A's document, so nothing above engages (no transaction on A). Measured
++// (Obsidian 1.15.0, SC-522 r1): in Live Preview the `.internal-embed` IS CodeMirror's block widget (a direct
++// `.cm-content` child), and on every write that redraws B's block Obsidian re-renders the embed's content: for part
++// of one task, 26-108 ms after `modify`, the embed is empty (its inner sizer 3166 -> 111px, the widget 3190 -> 135px),
++// so the scroller's scrollHeight drops by the same 3055px and the browser PASSIVELY CLAMPS scrollTop to the new max
++// (6800 -> 3745 with the embed near the end of the note and the note parked at its end; 7510 -> 7441, the text under
++// the embed moving 69px, parked below the embed; 2912 -> 26 for a note that is mostly the embed). Our view mounts
++// ~40-60ms later and the widget is back at full height before any frame; nothing scrolls back. CodeMirror never sees
++// it: its height map keeps 3190px, no transaction or measure moves scrollTop, nothing in script sets it, and
++// `.cm-scroller` has `overflow-anchor: none`, so Chrome's anchoring cannot help or hurt. Hosts parked above the embed,
++// in it, or with the embed's top on screen hold on stock (the clamp only bites when scrollTop is above the shrunken max).
++// The fix (`holdEmbedsOf`, from the same `modify` event): for every Live Preview view of ANOTHER note that is scrolled,
++// each drawn embed widget that shows a DSE block of the written note (`embedsBlockOf`, SC-479's resolver: nested
++// embeds and `#heading` / `#^block` subpaths too) gets an inline `min-height` of its current height. It is released
++// when our view is back in it — a DSE root that was not there at hold time (a fresh mount), or one of the held roots
++// put back (an adopted write), and every root in the embed mounted (MutationObserver on the widget) — so a write that
++// changes the embed's real height shows that height in the same task, and CodeMirror re-measures it like any resized
++// widget (a growth above the viewport keeps the visible line, as on stock). PIN_TTL_MS is the backstop: a write
++// Obsidian never redraws in the embed (an edit outside an embedded heading) only leaves the floor at the height the
++// embed already has. Measured cost (1.15.0, SC-522 r1): the embed scan per Live Preview view per `modify` of any note,
++// 0.1 ms median (0.5 max) when nothing is held; a hold 1.3-3.4 ms to set (one layout read at `modify`, the DOM still
++// clean); the release reads no layout (CodeMirror measures at its next frame, as it would for any resized widget).
+ 
+ import type { Workspace } from 'obsidian';
+ import { ViewPlugin } from '@codemirror/view';
+ import type { EditorView, ViewUpdate } from '@codemirror/view';
+ import type { Extension, StateEffect } from '@codemirror/state';
+-import { PIN_TTL_MS } from './previewScrollPin';
++import { PIN_TTL_MS, embedsBlockOf } from './previewScrollPin';
++import type { LinkResolver } from './previewScrollPin';
+ 
+ /** On a replacement widget while its height is held; the value is the held px (tests/probes read it). */
+ export const HOLD_ATTR = 'data-dse-lp-hold';
++/** SC-522: on a Live Preview host's embed widget while its height is held across a write to the embedded note; the value is the held px. */
++export const EMBED_HOLD_ATTR = 'data-dse-lp-embed-hold';
+ 
+ /**
+  * A DSE block's widget as CodeMirror drew it: a direct `.cm-content` child holding our root. At capture `from === to`
+@@ -176,22 +203,92 @@ export class LivePreviewScrollHold {
+ 	private readonly pending = new WeakMap<EditorView, Pending>();
+ 	/** Every live hold's release, so `releaseAll()` can drop them at unload. */
+ 	private readonly holds = new Map<() => void, EditorView>();
++	/** SC-522: every held embed widget and its release (a re-hold replaces it). */
++	private readonly embedHolds = new Map<HTMLElement, { px: number; release: () => void }>();
+ 
+-	/** Vault `modify`: capture every Live Preview view of `path` that shows a DSE widget and is scrolled. */
+-	captureViewsOf(workspace: Workspace, path: string): void {
++	/**
++	 * Vault `modify`: capture every Live Preview view of `path` that shows a DSE widget and is scrolled; SC-522: and,
++	 * with `resolveLink`, hold the embeds of `path`'s DSE blocks in every Live Preview view of another note.
++	 */
++	captureViewsOf(workspace: Workspace, path: string, resolveLink?: LinkResolver): void {
+ 		for (const leaf of workspace.getLeavesOfType('markdown')) {
+ 			const view = leaf.view as unknown as LivePreviewViewLike;
+-			if (view.file?.path !== path || view.getMode?.() !== 'source') continue;
++			if (!view.file || view.getMode?.() !== 'source') continue;
++			const own = view.file.path === path;
++			if (!own && !resolveLink) continue;
+ 			const cm = view.editor?.cm;
+ 			if (!cm) continue;
+ 			try {
+-				this.capture(cm, view);
++				if (own) this.capture(cm, view);
++				else this.holdEmbedsOf(cm, path, view.file.path, resolveLink!);
+ 			} catch (err) {
+ 				console.warn('[DSE] Live Preview scroll capture failed', err);
+ 			}
+ 		}
+ 	}
+ 
++	/**
++	 * SC-522: hold every drawn embed widget of `view` (a Live Preview view of `hostPath`) that shows a DSE block of
++	 * `path` at its current height until our view is back in it (header: EMBEDS). Nothing to protect at the top.
++	 */
++	holdEmbedsOf(view: EditorView, path: string, hostPath: string, resolveLink: LinkResolver): void {
++		if (view.scrollDOM.scrollTop <= 0) return;
++		for (const el of Array.from(view.contentDOM.children) as HTMLElement[]) {
++			if (!el.classList.contains('internal-embed') || !el.querySelector('[data-dse-element]')) continue;
++			if (embedsBlockOf(el, path, hostPath, resolveLink)) this.holdEmbed(view, el);
++		}
++	}
++
++	private holdEmbed(view: EditorView, embed: HTMLElement): void {
++		const win = embed.ownerDocument.defaultView;
++		if (!win) return;
++		// min-height sizes the content box unless the theme sets border-box: hold exactly the box the embed has now
++		const cs = win.getComputedStyle(embed);
++		const edges = cs.boxSizing === 'border-box' ? 0 : ['paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth'].reduce((n, k) => n + (parseFloat(cs[k as 'paddingTop']) || 0), 0);
++		let px = embed.getBoundingClientRect().height - edges;
++		const prev = this.embedHolds.get(embed);
++		if (prev) {
++			px = Math.max(px, prev.px); // a re-hold (rapid writes) never lowers the floor
++			prev.release();
++		}
++		if (!(px > 0)) return;
++		const roots0 = new Set(Array.from(embed.querySelectorAll('[data-dse-element]')));
++		const inline = embed.style.getPropertyValue('min-height');
++		embed.style.setProperty('min-height', `${px}px`);
++		embed.setAttribute(EMBED_HOLD_ATTR, String(Math.round(px)));
++		let observer: MutationObserver | null = null;
++		const release = (): void => {
++			if (this.embedHolds.get(embed)?.release !== release) return;
++			this.embedHolds.delete(embed);
++			this.holds.delete(release);
++			observer?.disconnect();
++			win.clearTimeout(timer);
++			if (inline) embed.style.setProperty('min-height', inline);
++			else embed.style.removeProperty('min-height');
++			embed.removeAttribute(EMBED_HOLD_ATTR);
++			view.requestMeasure();
++		};
++		const timer = win.setTimeout(release, PIN_TTL_MS);
++		this.embedHolds.set(embed, { px, release });
++		this.holds.set(release, view);
++		const MO = (win as Window & { MutationObserver?: typeof MutationObserver }).MutationObserver;
++		if (!MO) return;
++		let back = false;
++		observer = new MO((records) => {
++			if (!back) {
++				for (const r of records) {
++					for (const n of Array.from(r.addedNodes)) {
++						if (n.nodeType === 1 && Array.from(roots0).some((root) => n === root || n.contains(root))) back = true; // an adopted view put back
++					}
++				}
++			}
++			const roots = Array.from(embed.querySelectorAll('[data-dse-element]'));
++			if (!back && roots.some((root) => !roots0.has(root))) back = true; // a fresh mount
++			if (back && roots.length >= roots0.size && roots.every((root) => root.childElementCount > 0)) release();
++		});
++		observer.observe(embed, { childList: true, subtree: true });
++	}
++
+ 	/**
+ 	 * Capture one editor (exported for the tests); `owner` is the MarkdownView that shows it, whose `file` the capture is
+ 	 * bound to. Raw Source mode draws no widgets, so it never captures.
+diff --git a/src/framework/host/previewScrollPin.ts b/src/framework/host/previewScrollPin.ts
+index 9f61a65..dd6a0ed 100644
+--- a/src/framework/host/previewScrollPin.ts
++++ b/src/framework/host/previewScrollPin.ts
+@@ -119,8 +119,9 @@
+ // up to PIN_TTL_MS (the same trade as SC-470, TTL-bounded, it never clamps). With a DSE root on screen and the
+ // viewport wholly inside a tall tracker the stop is on, so a row added ABOVE the viewport shifts the text by
+ // the row height instead of being compensated (the same as a note's own pin, SC-198/SC-470).
+-// NOT COVERED: a Live Preview host (`.cm-scroller`, `![[B]]` rendered by CodeMirror) is a different mechanism
+-// and still jumps (6800 -> 3745 measured with the embed near the end of the note): SC-522.
++// NOT COVERED HERE: a Live Preview host (`.cm-scroller`, `![[B]]` rendered by CodeMirror) is a different mechanism
++// (6800 -> 3745 measured with the embed near the end of the note), fixed in livePreviewScrollHold.ts (SC-522), which
++// reuses `embedsBlockOf` to find the host's embeds of the written note.
+ //
+ // THE PIN IS A FLOOR, NOT A CAP (SC-470 r4). The rule's `!important` min-height REPLACES
+ // Obsidian's own inline sizer min-height, and Obsidian's Reading view is virtualised, so the
+@@ -245,8 +246,11 @@ function verticalPadding(el: HTMLElement, win: Window): number {
+  * `closest` per level). A link that cannot be resolved falls back to the host's path, which can only pin one view too
+  * many (TTL-bounded), never miss one.
+  * Only embeds that contain a DSE block count: nothing else of ours can collapse them.
++ * SC-522: `scroller` may itself be an embed (a Live Preview host's embed widget, a direct `.cm-content` child, is the
++ * `.internal-embed`): it is then checked too, with its link resolved from the host's path. A Reading scroller never
++ * matches, so SC-479's behaviour is unchanged.
+  */
+-function embedsBlockOf(scroller: HTMLElement, path: string, hostPath: string, resolveLink: LinkResolver): boolean {
++export function embedsBlockOf(scroller: HTMLElement, path: string, hostPath: string, resolveLink: LinkResolver): boolean {
+ 	const target = new Map<Element, string | null>();
+ 	const resolved = (embed: Element): string | null => {
+ 		if (target.has(embed)) return target.get(embed) ?? null;
+@@ -256,7 +260,9 @@ function embedsBlockOf(scroller: HTMLElement, path: string, hostPath: string, re
+ 		target.set(embed, resolvedPath);
+ 		return resolvedPath;
+ 	};
+-	for (const embed of Array.from(scroller.querySelectorAll<HTMLElement>('.internal-embed[src]'))) {
++	const embeds = Array.from(scroller.querySelectorAll<HTMLElement>('.internal-embed[src]'));
++	if (scroller.matches('.internal-embed[src]')) embeds.unshift(scroller);
++	for (const embed of embeds) {
+ 		if (embed.querySelector('[data-dse-element]') && resolved(embed) === path) return true;
+ 	}
+ 	return false;
+diff --git a/src/framework/pipeline.ts b/src/framework/pipeline.ts
+index 7d4f24e..e2733fd 100644
+--- a/src/framework/pipeline.ts
++++ b/src/framework/pipeline.ts
+@@ -193,7 +193,17 @@ export function isEditableControlTarget(target: EventTarget | null, root: HTMLEl
+  * on the page, which are outside every root and never ours to blur.
+  */
+ function armClickShield(root: HTMLElement): void {
++	// SC-522: inside a Live Preview embed (`![[B]]` in a note open in Live Preview, the `.internal-embed` is CodeMirror's
++	// widget) Obsidian's widget click handler moves the editor selection onto the embed with `scrollIntoView`, scrolling the
++	// HOST note to the embed's top (measured, 1.15.0: parked in the tracker 5420 -> 3916, a click in a note that is mostly
++	// the embed 2912 -> 150) - on every click in the card, written or not. That handler skips a click whose target sits in
++	// an `.interactive-child` (Obsidian's own marker; Bases embeds carry it), so the root takes it, only there, on the press.
++	const markInEditorEmbed = (): void => {
++		if (!root.classList.contains('interactive-child') && root.closest('.cm-content .internal-embed')) root.classList.add('interactive-child');
++	};
++	root.addEventListener('click', markInEditorEmbed, { capture: true });
+ 	const stop = (event: Event): void => {
++		markInEditorEmbed();
+ 		if (!isEditableControlTarget(event.target, root)) {
+ 			event.preventDefault();
+ 			const active = root.ownerDocument.activeElement as HTMLElement | null;
+diff --git a/src/framework/registerFrameworkElements.ts b/src/framework/registerFrameworkElements.ts
+index bfb2b98..7a5bd86 100644
+--- a/src/framework/registerFrameworkElements.ts
++++ b/src/framework/registerFrameworkElements.ts
+@@ -63,7 +63,8 @@ export function registerFrameworkElements(
+ 	// capture at `modify`, which fires before the pane's transaction; restore + hold inside the editor.
+ 	const lpHold = new LivePreviewScrollHold();
+ 	plugin.register(() => lpHold.releaseAll());
+-	plugin.registerEvent(plugin.app.vault.on('modify', (file) => lpHold.captureViewsOf(plugin.app.workspace, file.path)));
++	// SC-522: and every Live Preview view of another note that shows a DSE block embedded from it holds that embed's height.
++	plugin.registerEvent(plugin.app.vault.on('modify', (file) => lpHold.captureViewsOf(plugin.app.workspace, file.path, resolveLink)));
+ 	plugin.registerEditorExtension(lpHold.extension());
+ 	// SC-340 §6.1: the plugin-scoped owner of every reading-mode view.
+ 	const registry = plugin.addChild(new ViewRegistry({ enabled: options.viewAdoption ?? false }));
+diff --git a/test/dom/framework/livePreviewScrollHold.test.ts b/test/dom/framework/livePreviewScrollHold.test.ts
+index 794261b..0ea616f 100644
+--- a/test/dom/framework/livePreviewScrollHold.test.ts
++++ b/test/dom/framework/livePreviewScrollHold.test.ts
+@@ -6,7 +6,7 @@
+ // The real behaviour (Obsidian's 50px widget estimate, the viewport jump, the restore) is the lifecycle gate's
+ // job (G-S18); these tests pin the guards: when it captures, when it engages, that it never engages on a user's
+ // own edit or after a user scroll, and that every hold is released (mount, TTL, destroy, unload).
+-import { HOLD_ATTR, LivePreviewScrollHold } from '../../../src/framework/host/livePreviewScrollHold';
++import { EMBED_HOLD_ATTR, HOLD_ATTR, LivePreviewScrollHold } from '../../../src/framework/host/livePreviewScrollHold';
+ import { registerFrameworkElements } from '../../../src/framework/registerFrameworkElements';
+ import type { ElementRegistry } from '../../../src/framework/registry';
+ import type { ElementPipeline } from '../../../src/framework/pipeline';
+@@ -545,7 +545,8 @@ describe('SC-478: wiring', () => {
+ 			expect(ext).toHaveBeenCalledTimes(1);
+ 			const calls = on.mock.calls.filter(([name]) => name === 'modify');
+ 			for (const call of calls) (call[1] as (file: { path: string }) => void)({ path: 'Note.md' });
+-			expect(spy).toHaveBeenCalledWith(app.workspace, 'Note.md');
++			// SC-522: with the link resolver, so Live Preview hosts of the note's embeds are held too
++			expect(spy).toHaveBeenCalledWith(app.workspace, 'Note.md', expect.any(Function));
+ 		} finally {
+ 			spy.mockRestore();
+ 			ext.mockRestore();
+@@ -553,3 +554,127 @@ describe('SC-478: wiring', () => {
+ 		}
+ 	});
+ });
++
++describe('SC-522: a Live Preview host holds its embed of the written note', () => {
++	/** A Live Preview embed widget of `src`, as Obsidian draws it: `.internal-embed[src]`, a direct `.cm-content` child, holding a DSE root (or not). */
++	function embedWidget(src: string, px: number, opts: { dse?: boolean; nested?: string } = {}): HTMLElement {
++		const e = document.createElement('div');
++		e.className = 'internal-embed markdown-embed inline-embed';
++		e.setAttribute('src', src);
++		let at: HTMLElement = e.appendChild(document.createElement('div'));
++		at.className = 'markdown-embed-content';
++		if (opts.nested) {
++			const n = at.appendChild(document.createElement('span'));
++			n.className = 'internal-embed markdown-embed';
++			n.setAttribute('src', opts.nested);
++			at = n;
++		}
++		if (opts.dse !== false) {
++			const root = at.appendChild(document.createElement('div'));
++			root.setAttribute('data-dse-element', 'initiative');
++			root.appendChild(document.createElement('div'));
++		}
++		e.getBoundingClientRect = () => ({ height: px }) as DOMRect;
++		return e;
++	}
++	/** Resolves `link` from `from` by an exact "from|link" entry, else by `link` alone. */
++	const resolver = (map: Record<string, string>) => jest.fn((link: string, from: string) => map[`${from}|${link}`] ?? map[link] ?? null);
++	const lpLeaf = (path: string, cm: unknown, mode = 'source') => ({ view: { file: { path }, getMode: () => mode, editor: { cm } } });
++	const held = (e: HTMLElement) => e.getAttribute(EMBED_HOLD_ATTR);
++
++	test('only the drawn embed widgets that show a DSE block of the written note are held, at their height', () => {
++		const hold = new LivePreviewScrollHold();
++		const ofB = embedWidget('B', 3190);
++		const ofC = embedWidget('C', 800);
++		const plainB = embedWidget('B', 400, { dse: false });
++		const host = fakeView(6800, [ofB, ofC, plainB]);
++		const own = fakeView(2428, [widget(7, 5230)]);
++		const workspace = { getLeavesOfType: () => [lpLeaf('A.md', host), lpLeaf('B.md', own)] };
++		hold.captureViewsOf(workspace as never, 'B.md', resolver({ B: 'B.md', C: 'C.md' }));
++		expect(held(ofB)).toBe('3190');
++		expect(ofB.style.minHeight).toBe('3190px');
++		expect(held(ofC)).toBeNull();
++		expect(held(plainB)).toBeNull();
++		expect(ofC.style.minHeight).toBe('');
++		expect(own.scrollSnapshot).toHaveBeenCalledTimes(1); // the note's own Live Preview view: SC-478's capture, unchanged
++	});
++
++	test('nothing is held without a resolver, at the top of the host, or in a Reading view', () => {
++		const hold = new LivePreviewScrollHold();
++		const a = embedWidget('B', 3190);
++		const b = embedWidget('B', 3190);
++		const c = embedWidget('B', 3190);
++		hold.captureViewsOf({ getLeavesOfType: () => [lpLeaf('A.md', fakeView(6800, [a]))] } as never, 'B.md');
++		hold.captureViewsOf({ getLeavesOfType: () => [lpLeaf('A.md', fakeView(0, [b]))] } as never, 'B.md', resolver({ B: 'B.md' }));
++		hold.captureViewsOf({ getLeavesOfType: () => [lpLeaf('A.md', fakeView(6800, [c]), 'preview')] } as never, 'B.md', resolver({ B: 'B.md' }));
++		expect([held(a), held(b), held(c)]).toEqual([null, null, null]);
++	});
++
++	test('a nested embed (A -> N -> B, resolved from N) and a #heading embed count', () => {
++		const hold = new LivePreviewScrollHold();
++		const nested = embedWidget('N', 3341, { nested: 'B' });
++		const heading = embedWidget('B#Section', 3166);
++		const resolve = resolver({ 'A.md|N': 'N.md', 'N.md|B': 'B.md', 'A.md|B': 'B.md' });
++		hold.captureViewsOf({ getLeavesOfType: () => [lpLeaf('A.md', fakeView(6800, [nested, heading]))] } as never, 'B.md', resolve);
++		expect(held(nested)).toBe('3341');
++		expect(held(heading)).toBe('3166');
++		expect(resolve).toHaveBeenCalledWith('B', 'N.md'); // the inner link is resolved from the note that writes it
++	});
++
++	test('released as soon as a fresh view has mounted in the embed, not while it is still empty', async () => {
++		const hold = new LivePreviewScrollHold();
++		const e = embedWidget('B', 3190);
++		const host = fakeView(6800, [e]);
++		hold.holdEmbedsOf(host as never, 'B.md', 'A.md', resolver({ B: 'B.md' }));
++		expect(held(e)).toBe('3190');
++		const content = e.querySelector('.markdown-embed-content')!;
++		content.querySelector('[data-dse-element]')!.remove(); // Obsidian empties the embed
++		const fresh = content.appendChild(document.createElement('div'));
++		fresh.setAttribute('data-dse-element', 'initiative');
++		await flush();
++		await flush();
++		expect(held(e)).toBe('3190'); // our root is there but empty: still held
++		expect(host.requestMeasure).not.toHaveBeenCalled();
++		fresh.appendChild(document.createElement('div'));
++		await flush();
++		await flush();
++		expect(held(e)).toBeNull();
++		expect(e.style.minHeight).toBe('');
++		expect(host.requestMeasure).toHaveBeenCalledTimes(1); // CodeMirror re-measures the real height
++	});
++
++	test('released when the held view is put back (an adopted write)', async () => {
++		const hold = new LivePreviewScrollHold();
++		const e = embedWidget('B', 3190);
++		hold.holdEmbedsOf(fakeView(6800, [e]) as never, 'B.md', 'A.md', resolver({ B: 'B.md' }));
++		const root = e.querySelector('[data-dse-element]')!;
++		const section = e.querySelector('.markdown-embed-content')!.appendChild(document.createElement('div'));
++		section.appendChild(root); // moved into the new section, same element
++		await flush();
++		await flush();
++		expect(held(e)).toBeNull();
++	});
++
++	test('PIN_TTL_MS backstop, a re-hold never lowers the floor, an inline min-height is restored, unload drops every hold', () => {
++		jest.useFakeTimers();
++		const hold = new LivePreviewScrollHold();
++		const e = embedWidget('B', 3190);
++		e.style.minHeight = '20px';
++		const host = fakeView(6800, [e]);
++		hold.holdEmbedsOf(host as never, 'B.md', 'A.md', resolver({ B: 'B.md' }));
++		e.getBoundingClientRect = () => ({ height: 135 }) as DOMRect; // a second write lands while the embed is collapsed
++		hold.holdEmbedsOf(host as never, 'B.md', 'A.md', resolver({ B: 'B.md' }));
++		expect(held(e)).toBe('3190');
++		jest.advanceTimersByTime(TTL - 1);
++		expect(held(e)).toBe('3190');
++		jest.advanceTimersByTime(1);
++		expect(held(e)).toBeNull();
++		expect(e.style.minHeight).toBe('20px');
++		const f = embedWidget('B', 900);
++		hold.holdEmbedsOf(fakeView(6800, [f]) as never, 'B.md', 'A.md', resolver({ B: 'B.md' }));
++		expect(held(f)).toBe('900');
++		hold.releaseAll();
++		expect(held(f)).toBeNull();
++		expect(f.style.minHeight).toBe('');
++	});
++});
+diff --git a/test/dom/framework/pipeline.test.ts b/test/dom/framework/pipeline.test.ts
+index cf757ee..59c6cba 100644
+--- a/test/dom/framework/pipeline.test.ts
++++ b/test/dom/framework/pipeline.test.ts
+@@ -580,6 +580,61 @@ describe('T-9 (Plan 02): ElementPipeline.run (F1 §2.4)', () => {
+ 			});
+ 		});
+ 
++		// SC-522: inside a Live Preview embed (the `.internal-embed` is a CodeMirror widget under `.cm-content`) Obsidian's
++		// widget click handler moves the host's selection onto the embed and scrolls to it, unless the click target sits in an
++		// `.interactive-child`. The root takes the class there, on the press or the click, and nowhere else.
++		describe('SC-522 Live Preview embed: the root is an Obsidian interactive child', () => {
++			async function mountIn(wrap: (containerEl: HTMLElement) => HTMLElement): Promise<{ root: HTMLElement; cleanup: () => void }> {
++				const { deps } = makeDeps();
++				const pipeline = new ElementPipeline(deps);
++				const host = makeHost();
++				const outer = wrap(host.containerEl);
++				document.body.appendChild(outer);
++				await pipeline.run(labelDef(), 'label: x', host);
++				return { root: host.containerEl.firstElementChild as HTMLElement, cleanup: () => document.body.removeChild(outer) };
++			}
++			const lpEmbed = (el: HTMLElement): HTMLElement => {
++				const content = document.createElement('div');
++				content.className = 'cm-content';
++				const embed = content.createDiv({ cls: 'internal-embed markdown-embed' });
++				embed.appendChild(el);
++				return content;
++			};
++			test.each(['click', 'pointerdown', 'mousedown'] as const)('a %s inside a Live Preview embed marks the root', async (type) => {
++				const { root, cleanup } = await mountIn(lpEmbed);
++				try {
++					expect(root.classList.contains('interactive-child')).toBe(false);
++					(root.querySelector('.label-content') as HTMLElement).dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true }));
++					expect(root.classList.contains('interactive-child')).toBe(true);
++				} finally {
++					cleanup();
++				}
++			});
++			test('a click elsewhere (a Reading view embed, or a block that is not embedded) leaves the root alone', async () => {
++				const reading = (el: HTMLElement): HTMLElement => {
++					const view = document.createElement('div');
++					view.className = 'markdown-preview-view';
++					view.createDiv({ cls: 'internal-embed markdown-embed' }).appendChild(el);
++					return view;
++				};
++				const editorBlock = (el: HTMLElement): HTMLElement => {
++					const content = document.createElement('div');
++					content.className = 'cm-content';
++					content.createDiv({ cls: 'cm-embed-block' }).appendChild(el);
++					return content;
++				};
++				for (const wrap of [reading, editorBlock]) {
++					const { root, cleanup } = await mountIn(wrap);
++					try {
++						(root.querySelector('.label-content') as HTMLElement).dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
++						expect(root.classList.contains('interactive-child')).toBe(false);
++					} finally {
++						cleanup();
++					}
++				}
++			});
++		});
++
+ 		test('def.noClickShield === true: mousedown bubbles normally (shield not armed)', async () => {
+ 			const { deps } = makeDeps();
+ 			const pipeline = new ElementPipeline(deps);
+diff --git a/visual-harness/obsidian-lifecycle.mjs b/visual-harness/obsidian-lifecycle.mjs
+index cca430b..db4e812 100644
+--- a/visual-harness/obsidian-lifecycle.mjs
++++ b/visual-harness/obsidian-lifecycle.mjs
+@@ -80,6 +80,9 @@
+ // when B is written (in-app, on disk, from another pane, and the embed's own write with adoption off), and the text on screen of a host parked
+ // BELOW the embed does not move when the write changes the embed's height (phase (e): adding a hero), nor does the text of a reader parked
+ // INSIDE a tall embed below its tracker (phase (f): adding a hero).
++// SC-522 appends G-S52 (41 scenarios in all; the id was assigned by the dispatcher): a tracker in note B embedded in a LIVE PREVIEW host note A keeps
++// A's scroll position and its on-screen text when B is written (in-app and on disk with A parked at its end, from another pane, and a hero added
++// with A parked below the embed), and a real click on the embedded card does not scroll A to the embed's top.
+ //
+ // Usage: npm run obsidian-lifecycle   (builds the plugin first)
+ //        node visual-harness/obsidian-lifecycle.mjs [--only=G-S7a,G-S6a]
+@@ -274,6 +277,13 @@ Object.assign(FIXTURES, {
+ 	'Lifecycle/embhostinside.md': `# embhostinside\n\n${Array.from({ length: 30 }, (_, i) => `H-PRE filler ${i}.`).join('\n\n')}\n\n![[embtrackerlong]]\n\n${Array.from({ length: 80 }, (_, i) => `H-POST filler ${i}.`).join('\n\n')}\n`,
+ 	'Lifecycle/embhosttall.md': `# embhosttall\n\n${Array.from({ length: 30 }, (_, i) => `T-PRE filler ${i}.`).join('\n\n')}\n\n![[embtracker]]\n\n${Array.from({ length: 150 }, (_, i) => `T-POST filler ${i}.`).join('\n\n')}\n`,
+ });
++// SC-522: a Live Preview host whose embed of a 25-hero tracker note sits near the host's end (parked at the end the host lost its position
++// on every write that redrew the embed: 6800 -> 3745), and a tall host with the embed in the middle (parked below it, the text moved 69 px).
++Object.assign(FIXTURES, {
++	'Lifecycle/lpembtracker.md': `# lpembtracker\n\nS-TOP\n\n${fence('ds-initiative', ['heroes:', ...Array.from({ length: 25 }, (_, i) => HERO(`Hero ${String(i + 1).padStart(2, '0')}`)).flat(), 'enemy_groups: []', 'malice:', '  value: 1'])}\n\nS-BOTTOM\n`,
++	'Lifecycle/lpembhostend.md': `# lpembhostend\n\n${Array.from({ length: 80 }, (_, i) => `E-PRE filler ${i}.`).join('\n\n')}\n\n![[lpembtracker]]\n\nE-END 1.\n\nE-END 2.\n\nE-END 3.\n`,
++	'Lifecycle/lpembhosttall.md': `# lpembhosttall\n\n${Array.from({ length: 80 }, (_, i) => `L-PRE filler ${i}.`).join('\n\n')}\n\n![[lpembtracker]]\n\n${Array.from({ length: 80 }, (_, i) => `L-POST filler ${i}.`).join('\n\n')}\n`,
++});
+ // SC-487: a zero-width space right after the name. Live Preview ends the name there and renders the block; Reading view shows plain code.
+ const ZWSP = String.fromCharCode(0x200b);
+ // SC-502: a note per element for the Live Preview chrome-panel click scenario (G-S44). The line directly above each fence is text,
+@@ -3160,6 +3170,169 @@ const SCENARIOS = [
+ 			return out.join('; ');
+ 		},
+ 	},
++	{
++		// SC-522: a LIVE PREVIEW host note A embeds B (`![[B]]`, a tracker). A write to B re-renders the embed, which is empty for part
++		// of one task: the scroller's scrollHeight drops by the tracker's height and the browser clamps A's scrollTop (measured, 1.15.0:
++		// 6800 -> 3745 with the embed near A's end and A parked at its end; 7510 -> 7441 and the text under the embed 69 px lower, parked
++		// below it). And a click in the embedded card makes Obsidian move A's selection onto the embed with scrollIntoView (5420 -> 3916).
++		id: 'G-S52',
++		async run(t) {
++			const rel = 'Lifecycle/lpembtracker.md';
++			const A = 'window.__gs52A';
++			const B = 'window.__gs52B';
++			const LP = { mode: 'source', source: false };
++			const cmOf = (leaf) => `(${leaf}).view.editor.cm`;
++			const embedOf = (leaf) => `Array.from(${cmOf(leaf)}.contentDOM.children).find((e) => e.classList.contains('internal-embed') && !!e.querySelector('${TRACKER}'))`;
++			const embRoot = `((${embedOf(A)}) || null)?.querySelector('${TRACKER}')`;
++			const openHost = async (hostRel) => {
++				await t.open(hostRel);
++				await t.ev(`(async () => { window.__gs52A = app.workspace.getMostRecentLeaf(); await window.__gs52A.setViewState({ type: 'markdown', state: Object.assign({ file: ${JSON.stringify(hostRel)} }, ${JSON.stringify(LP)}), active: true }); window.__gs52A.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
++				await t.sleep(1500);
++			};
++			// CodeMirror draws only the viewport (+ a margin): step down until the embedded tracker is drawn, then park.
++			const park = async (where) => {
++				const s = `${cmOf(A)}.scrollDOM`;
++				await t.ev(`(() => { ${s}.scrollTop = 0; return true; })()`);
++				for (let i = 0; i < 60 && !(await t.ev(`!!(${embRoot})`)); i++) {
++					await t.ev(`(() => { const s = ${s}; s.scrollTop += Math.round(s.clientHeight * 0.6); return true; })()`);
++					await t.sleep(200);
++				}
++				await t.waitFor(`!!(${embRoot}) && (${embRoot}).childElementCount > 0`, `the embedded tracker is drawn in the Live Preview host (${where})`);
++				for (let i = 0; i < 3; i++) {
++					await t.ev(`(() => { const s = ${s}; const e = ${embedOf(A)}; const sr = s.getBoundingClientRect(); const top = e.getBoundingClientRect().top - sr.top + s.scrollTop; const h = e.getBoundingClientRect().height; s.scrollTop = ${JSON.stringify(where)} === 'end' ? s.scrollHeight : ${JSON.stringify(where)} === 'below' ? top + h + 400 : top + 1500; return true; })()`);
++					await t.sleep(450);
++				}
++				t.expect(await t.ev(`!!(${embRoot})`), `(${where}) the embedded tracker left the document while parking`);
++				await t.ev(`(() => { (${embRoot}).__lcTag = 'gs52'; return true; })()`);
++			};
++			// Per frame: A's scrollTop and the on-screen top of a reference text (an editor line, found by its text, or a hero name inside the
++			// embed); a MutationObserver notes whether the embed's hold was on when the tagged tracker left the document. Resolves on
++			// window.__gs52rec once the hold was released + 10 frames (cap: first sighting + 4500 ms, 12 s; 5 s with no hold).
++			// `mountedHeld` counts frames where the embed already shows a mounted tracker other than the tagged one while the hold is
++			// still on: the hold must be released by the remount itself, never left to its timer.
++			const record = (ref) => t.ev(`(() => { window.__gs52rec = new Promise((resolve) => { const cm = ${cmOf(A)}; const s = cm.scrollDOM; const emb = ${embedOf(A)}; const ref = ${JSON.stringify(ref)}; const top = () => { const sr = s.getBoundingClientRect(); const pool = ref.inEmbed ? Array.from(emb.querySelectorAll('.dse-init__name')) : Array.from(cm.contentDOM.children).filter((l) => l.classList.contains('cm-line')); const el = pool.find((x) => x.isConnected && x.textContent === ref.text); return el ? Math.round(el.getBoundingClientRect().top - sr.top) : null; }; const st0 = s.scrollTop; const max0 = s.scrollHeight - s.clientHeight; const ref0 = top(); const sel0 = cm.state.selection.main.head; const tagged = emb.querySelector('${TRACKER}'); const isTagged = !!tagged && tagged.__lcTag === 'gs52'; const sts = []; const refs = []; let stMin = st0; let holdAtRedraw = null; let holdFrames = 0; let holdSeen = false; let holdOnAt = 0; let released = false; let goneFrames = 0; let mountedHeld = 0; const onScroll = () => { stMin = Math.min(stMin, s.scrollTop); }; s.addEventListener('scroll', onScroll); const mo = new MutationObserver(() => { if (holdAtRedraw === null && tagged && !tagged.isConnected) holdAtRedraw = emb.hasAttribute('data-dse-lp-embed-hold'); }); mo.observe(emb, { childList: true, subtree: true }); const t0 = performance.now(); const tick = () => { sts.push(s.scrollTop); refs.push(top()); const held = emb.hasAttribute('data-dse-lp-embed-hold'); if (held) { holdFrames++; if (!holdSeen) holdOnAt = performance.now() - t0; holdSeen = true; released = false; goneFrames = 0; if (Array.from(emb.querySelectorAll('${TRACKER}')).some((r) => r !== tagged && r.isConnected && r.childElementCount > 0)) mountedHeld++; } else if (holdSeen) { released = true; goneFrames++; } if (goneFrames < 10 && performance.now() - t0 < (holdSeen ? Math.min(holdOnAt + 4500, 12000) : 5000)) requestAnimationFrame(tick); else { mo.disconnect(); s.removeEventListener('scroll', onScroll); const known = refs.filter((v) => v !== null); resolve({ st0, max0, ref0, isTagged, redrawn: !!tagged && !tagged.isConnected, frames: sts.length, stMin: Math.min(stMin, ...sts), stMax: Math.max(...sts), stEnd: s.scrollTop, refMin: known.length ? Math.min(...known) : null, refMax: known.length ? Math.max(...known) : null, refLost: refs.some((v) => v === null), refEnd: top(), sel0, sel1: cm.state.selection.main.head, holdAtRedraw, holdFrames, mountedHeld, released, ms: Math.round(performance.now() - t0) }); } }; requestAnimationFrame(tick); }); return true; })()`);
++			const firstLineBelowEmbed = () => t.ev(`(() => { const cm = ${cmOf(A)}; const s = cm.scrollDOM; const sr = s.getBoundingClientRect(); const eb = (${embedOf(A)}).getBoundingClientRect().bottom; const l = Array.from(cm.contentDOM.children).find((x) => { const r = x.getBoundingClientRect(); return x.classList.contains('cm-line') && /\\S/.test(x.textContent) && r.top >= Math.max(sr.top, eb) && r.bottom <= sr.bottom; }); return l ? l.textContent : null; })()`);
++			const pos = (m) => `scrollTop start ${m.st0} min ${m.stMin} max ${m.stMax} end ${m.stEnd}; text at ${m.ref0} px, min ${m.refMin} max ${m.refMax} end ${m.refEnd}${m.refLost ? ' (left the screen)' : ''}; hold at the redraw ${m.holdAtRedraw}, hold frames ${m.holdFrames}`;
++			// `redraw`: the tagged tracker must have been replaced (anti-vacuity: the phase reaches Obsidian's re-render). `hold`: the embed's
++			// hold must be seen and released (off for (e): an adopted click redraws nothing, and that phase is about the click alone).
++			const check = (phase, m, landed, { redraw = true, end = false, hold = true } = {}) => {
++				t.expect(landed, `${phase}: the write did not land`);
++				t.expect(m.isTagged, `${phase}: the embedded tracker was not tagged before the write`);
++				if (redraw) t.expect(m.redrawn, `${phase}: the embedded tracker was not redrawn - the phase cannot reach the clamp`);
++				if (end) t.expect(m.st0 > 0 && m.st0 >= m.max0 - 1, `${phase}: the host was not parked at its end (scrollTop ${m.st0} of max ${m.max0}) - not the geometry that jumps`);
++				t.expect(m.ref0 !== null, `${phase}: no reference text on screen before the write`);
++				if (redraw) t.expect(m.holdAtRedraw === true, `${phase}: ${'data-dse-lp-embed-hold'} was not on the host's embed when the embedded tracker was redrawn (${pos(m)})`);
++				t.expect(m.stMin === m.st0 && m.stMax === m.st0 && m.stEnd === m.st0, `${phase}: the host's scrollTop moved: ${pos(m)}`);
++				t.expect(!m.refLost && m.refMin === m.ref0 && m.refMax === m.ref0 && m.refEnd === m.ref0, `${phase}: the text on screen moved: ${pos(m)}`);
++				if (hold) t.expect(m.released, `${phase}: the hold was never seen released within ${m.ms}ms (hold frames ${m.holdFrames})`);
++				t.expect(m.mountedHeld === 0, `${phase}: the hold outlived the remount by ${m.mountedHeld} frames - it must be released by our view mounting, not by its timer`);
++				t.expect(m.sel1 === m.sel0, `${phase}: the host's selection moved ${m.sel0} -> ${m.sel1}`);
++				return `${phase}: host held at ${m.st0} over ${m.frames} frames, text at ${m.ref0} px, held ${m.holdFrames} frames`;
++			};
++			const out = [];
++			const fails = [];
++			const phase = async (fn) => {
++				try {
++					out.push(await fn());
++				} catch (e) {
++					fails.push(e instanceof Error ? e.message : String(e));
++				}
++			};
++			await t.reset(rel);
++			let value = 1;
++			// (a) / (b) a write that is not ours; the host's embed is near its end and the host parked at its end.
++			for (const [name, write] of [
++				['(a) external vault.process', (v) => t.edit(rel, `c.replace(/ {2}value: \\d+/, '  value: ${v}')`)],
++				['(b) external write on disk', async (v) => fs.writeFileSync(path.join(vault, rel), t.read(rel).replace(/ {2}value: \d+/, `  value: ${v}`))],
++			]) {
++				await phase(async () => {
++					await openHost('Lifecycle/lpembhostend.md');
++					await park('end');
++					await record({ text: 'E-END 1.', inEmbed: false });
++					value++;
++					await write(value);
++					const m = await t.ev('window.__gs52rec');
++					return check(name, m, t.read(rel).includes(`  value: ${value}`), { end: true });
++				});
++			}
++			// (c) a second Reading pane showing B makes a DSE write; A is a bystander parked at its end.
++			await phase(async () => {
++				await openHost('Lifecycle/lpembhostend.md');
++				try {
++					await t.ev(`(async () => { const b = app.workspace.getLeaf('split', 'vertical'); window.__gs52B = b; await b.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'preview' }, active: false }); app.workspace.setActiveLeaf(window.__gs52A, { focus: true }); return true; })()`);
++					await t.waitFor(`!!(${t.root(TRACKER, B)})`, '(c) the tracker is drawn in the second pane');
++					for (let i = 0; i < 3; i++) {
++						await t.ev(`(() => { const s = (${B}).view.containerEl.querySelector('.markdown-reading-view > .markdown-preview-view'); const r = ${t.root(TRACKER, B)}; s.scrollTop = r.getBoundingClientRect().top - s.getBoundingClientRect().top + s.scrollTop + 1200; return true; })()`);
++						await t.sleep(450);
++					}
++					await park('end');
++					const before = t.read(rel);
++					await record({ text: 'E-END 1.', inEmbed: false });
++					const clicked = await t.ev(`(() => { const s = (${B}).view.containerEl.querySelector('.markdown-reading-view > .markdown-preview-view'); const sr = s.getBoundingClientRect(); const b = Array.from(s.querySelectorAll('button.dse-init__portrait-toggle')).find((x) => { const r = x.getBoundingClientRect(); return r.top > sr.top + 20 && r.bottom < sr.bottom - 20; }); if (!b) return false; b.click(); return true; })()`);
++					t.expect(clicked, '(c) second pane: no visible portrait toggle');
++					const m = await t.ev('window.__gs52rec');
++					return check('(c) another pane', m, t.read(rel) !== before, { end: true });
++				} finally {
++					await t.ev(`(() => { if (window.__gs52B) window.__gs52B.detach(); window.__gs52B = null; return true; })()`);
++				}
++			});
++			// (d) a tall host parked BELOW the embed; a write that adds a hero makes the embed taller: the first line under the embed must
++			// stay put on screen (CodeMirror compensates the growth above the viewport once the clamp is gone; stock: +69 px).
++			await phase(async () => {
++				await t.reset(rel);
++				await openHost('Lifecycle/lpembhosttall.md');
++				await park('below');
++				const text = await firstLineBelowEmbed();
++				t.expect(!!text, '(d) no text line on screen under the embed');
++				const h0 = await t.ev(`Math.round((${embedOf(A)}).getBoundingClientRect().height)`);
++				await record({ text, inEmbed: false });
++				const newName = `Added ${Date.now() % 100000}`;
++				await t.edit(rel, `c.replace('enemy_groups: []', ${JSON.stringify(`  - name: "${newName}"\n    max_stamina: 30\nenemy_groups: []`)})`);
++				const m = await t.ev('window.__gs52rec');
++				const h1 = await t.ev(`Math.round((${embedOf(A)}).getBoundingClientRect().height)`);
++				t.expect(h1 - h0 >= 50, `(d) the embed did not grow (${h0} -> ${h1} px) - the phase cannot reach the height change`);
++				t.expect(m.stEnd - m.st0 === h1 - h0, `(d) the host's scrollTop did not take the growth above the viewport: ${m.st0} -> ${m.stEnd}, embed ${h0} -> ${h1} px`);
++				// scrollTop moves by the growth (that is how the text stays put): the text's settled position is checked, not every frame -
++				// CodeMirror compensates a widget growing above the viewport at its next measure, one frame after the growth, on stock too
++				// (measured: stock +178 px for that frame then +69 for good; with the hold 0 px for good).
++				t.expect(!m.refLost && m.refEnd === m.ref0, `(d) below the embed, a hero added: the text on screen moved: ${pos(m)}`);
++				const took = `scrollTop ${m.st0} -> ${m.stEnd} as the embed grew ${h0} -> ${h1} px`;
++				Object.assign(m, { stMin: m.st0, stMax: m.st0, stEnd: m.st0, refMin: m.ref0, refMax: m.ref0 });
++				return `${check('(d) below the embed, a hero added', m, t.read(rel).includes(newName)).replace(/host held at \d+ over/, 'text settled where it was after')}, ${took}`;
++			});
++			// (e) a real click on the embedded card (adoption on: the click is adopted, nothing is redrawn): Obsidian's embed click handler
++			// must not move the host's selection onto the embed and scroll it to the embed's top (stock: 5420 -> 3916).
++			await phase(async () => {
++				await t.reset(rel);
++				await openHost('Lifecycle/lpembhosttall.md');
++				// a write the embed has not shown yet, so the card is drawn from what is on disk now (an embed left over from the
++				// phase before would hold the old body, and its click would be refused as "changed on disk first")
++				value++;
++				await t.edit(rel, `c.replace(/ {2}value: \\d+/, '  value: ${value}')`);
++				await park('in');
++				await t.waitFor(`(() => { const m = (${embRoot})?.querySelector('.dse-init__malice-num, .dse-init__malice-value'); return !!m && m.textContent.includes('${value}'); })()`, '(e) the embedded tracker shows the latest write');
++				await t.ev(`(() => { (${embRoot}).__lcTag = 'gs52'; return true; })()`);
++				const ref = await t.ev(`(() => { const s = ${cmOf(A)}.scrollDOM; const sr = s.getBoundingClientRect(); const n = Array.from((${embedOf(A)}).querySelectorAll('.dse-init__name')).find((x) => { const r = x.getBoundingClientRect(); return r.top >= sr.top && r.bottom <= sr.bottom; }); return n ? n.textContent : null; })()`);
++				t.expect(!!ref, '(e) no hero name on screen inside the embed');
++				const at = await t.ev(`(() => { const s = ${cmOf(A)}.scrollDOM; const sr = s.getBoundingClientRect(); const b = Array.from((${embedOf(A)}).querySelectorAll('button.dse-init__portrait-toggle')).find((x) => { const r = x.getBoundingClientRect(); return r.top > sr.top + 20 && r.bottom < sr.bottom - 20; }); if (!b) return null; const r = b.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
++				t.expect(!!at, '(e) no visible portrait toggle in the embedded tracker');
++				const before = t.read(rel);
++				await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: at.x, y: at.y });
++				await record({ text: ref, inEmbed: true });
++				const base = { x: at.x, y: at.y, button: 'left', clickCount: 1 };
++				await t.cdp.call('Input.dispatchMouseEvent', { type: 'mousePressed', buttons: 1, ...base });
++				await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseReleased', buttons: 0, ...base });
++				const m = await t.ev('window.__gs52rec');
++				const landed = await (async () => { for (let i = 0; i < 40 && t.read(rel) === before; i++) await t.sleep(100); return t.read(rel) !== before; })();
++				if (!landed) throw new Error(`(e) a click in the embedded card, adoption on: the write did not land (clicked at ${JSON.stringify(at)}; hit ${await t.ev(`(() => { const e = document.elementFromPoint(${at.x}, ${at.y}); const r = e && e.closest('[data-dse-element]'); return e ? e.tagName + '.' + String(e.className).slice(0, 60) + ' readonly=' + (r && r.getAttribute('data-dse-readonly')) + ' pressed=' + e.getAttribute('aria-pressed') + ' label=' + e.getAttribute('aria-label') : null; })()`)}; errors ${JSON.stringify(await t.errorsSince(0)).slice(-400)}; notices ${JSON.stringify(await t.noticesSince(0)).slice(-300)}; host has_taken_turn ${/has_taken_turn/.test(t.read('Lifecycle/lpembhosttall.md'))}; B turns ${(t.read(rel).match(/has_taken_turn: true/g) || []).length}; ${pos(m)})`);
++				return check('(e) a click in the embedded card, adoption on', m, landed, { redraw: false, hold: false });
++			});
++			await t.reset(rel);
++			await t.open('Lifecycle/other.md'); // back to Reading for the next scenario
++			t.expect(fails.length === 0, fails.join(' | '));
++			return out.join('; ');
++		},
++	},
+ ];
+ 
+ // ---------------------------------------------------------------------------- main

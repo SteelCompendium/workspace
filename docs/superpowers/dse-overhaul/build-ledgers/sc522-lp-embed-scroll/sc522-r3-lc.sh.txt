@@ -1,0 +1,15 @@
+#!/bin/bash
+# r3 lc.sh <tag> <only-ids> <bundle-name> [port]: the in-tree lifecycle harness (unchanged) against a scratch bundle; no in-tree build.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc522-r3-a79dd8ba57f5042f0
+W=/home/scott/code/steelCompendium/worktrees/sc522-lp-embed-scroll/draw-steel-elements
+T=$1; ONLY=$2; B=$3; PORT=${4:-9573}
+LOG="$S/logs/lc-$T.log"
+mkdir -p "$S/logs"
+echo "bundle $B main.js $(sha256sum $S/bundles/$B/main.js | cut -c1-12) styles.css $(sha256sum $S/bundles/$B/styles.css | cut -c1-12) harness $(git -C $W rev-parse --short HEAD)" > "$LOG"
+DSE_LIFECYCLE_BUNDLE="$S/bundles/$B" DSE_LIFECYCLE_PORT=$PORT timeout 595 node "$W/visual-harness/obsidian-lifecycle.mjs" --only="$ONLY" >> "$LOG" 2>&1
+rc=$?
+echo "rc=$rc" >> "$LOG"
+echo "porcelain-after: [$(git -C "$W" status --porcelain | tr '\n' ' ')] head: $(git -C "$W" rev-parse --short HEAD)" >> "$LOG"
+grep -E "OBSIDIAN-LIFECYCLE (start|done|temp|environment|G-[A-Za-z0-9]+ (ok|FAIL))" "$LOG" | sed -E 's/^(OBSIDIAN-LIFECYCLE [^ ]+ ok).*/\1/' | cut -c1-700
+echo "rc=$rc log=$LOG"
+exit $rc

@@ -1,0 +1,60 @@
+// ===== SC-522 r4 PROBE: mutation sequence on the host's embed during a write (scratch harness copy only) =====
+SCENARIOS.push({
+	id: 'R4-MUT',
+	async run(t) {
+		await t.ev(R3_INSTALL);
+		const k = r3Kit(t);
+		const cases = (process.env.R4_CASES ?? 'single,two-first,two-second,delete-block,shrink-prose').split(',');
+		const reps = Number(process.env.R3_REPS ?? 1);
+		const two = 'R3/two.md';
+		const rows = [];
+		await t.ev(`(() => { window.__r4 = { rec: null }; window.__r4.start = (leaf) => {
+			const e = window.__r3.emb(leaf); const R = window.__r4.rec = { t0: performance.now(), b: [], emb: e };
+			const d = (n) => n.nodeType !== 1 ? '#' + n.nodeType : n.tagName.toLowerCase() + '.' + String(n.className).trim().split(/\\s+/).slice(0, 2).join('.') + (n.hasAttribute('data-dse-element') ? '[DSE' + n.childElementCount + ']' : n.querySelector('[data-dse-element]') ? '[has-DSE]' : '') + (n.id ? '#' + n.id : '');
+			R.mo = new MutationObserver((rs) => {
+				const roots = Array.from(e.querySelectorAll('[data-dse-element]'));
+				R.b.push({ t: Math.round(performance.now() - R.t0), n: rs.length, roots: roots.length, rootsFull: roots.filter((r) => r.childElementCount > 0).length, rootsConn: roots.filter((r) => r.isConnected).length,
+					rem: rs.flatMap((r) => Array.from(r.removedNodes).map((n) => d(n) + '<' + d(r.target))).slice(0, 8), add: rs.flatMap((r) => Array.from(r.addedNodes).map((n) => d(n) + '>' + d(r.target))).slice(0, 8), hold: e.getAttribute('data-dse-lp-embed-hold') });
+			});
+			R.mo.observe(e, { childList: true, subtree: true });
+			return true; };
+			window.__r4.stop = () => { const R = window.__r4.rec; if (R && R.mo) R.mo.disconnect(); return R ? R.b : null; }; return true; })()`);
+		for (const kase of cases) {
+			for (let rep = 0; rep < reps; rep++) {
+				const row = { kase, rep };
+				try {
+					for (const f of [R3_B, two, 'R3/prose.md']) await t.reset(f);
+					let write;
+					if (kase === 'single') {
+						await k.openHost(R3_ENDH);
+						row.park = await k.park('end');
+						write = () => t.edit(R3_B, `c.replace(/ {2}value: \\d+/, '  value: ${++R3_SEQ.n}')`);
+					} else if (kase.startsWith('two') || kase === 'delete-block') {
+						await k.openHost('R3/hosttwo.md');
+						row.park = await k.park('end');
+						if (kase === 'two-first') write = () => t.edit(two, `c.replace(/ {2}value: \\d+/, '  value: ${++R3_SEQ.n}')`);
+						else if (kase === 'two-second') write = () => t.edit(two, `c.replace(/(  value: \\d+[\\s\\S]*?)(  value: )\\d+/, '$1$2${++R3_SEQ.n}')`);
+						else write = () => t.ev(`app.vault.modify(app.vault.getAbstractFileByPath(${JSON.stringify(two)}), ${JSON.stringify(R3_TWO_DEL)})`);
+					} else {
+						await k.openHost('R3/hostprose.md');
+						row.park = await k.park('end');
+						write = () => t.edit('R3/prose.md', `c.replace(/(Q-POST para \\d+\\.\\n\\n){12}/, '')`);
+					}
+					await t.sleep(600);
+					await t.ev(`window.__r4.start(window.__r3A)`);
+					await t.ev(`window.__r3.track(window.__r3A)`);
+					row.w = await write();
+					await t.sleep(3500);
+					row.b = await t.ev('window.__r4.stop()');
+					row.track = await t.ev('window.__r3.trackEnd()');
+				} catch (e) { row.error = String((e && e.message) || e).slice(0, 500); }
+				rows.push(row);
+			}
+		}
+		for (const f of [R3_B, two, 'R3/prose.md']) await t.reset(f);
+		await t.open('Lifecycle/other.md');
+		r3Write('R4MUT', rows);
+		return '\n  ' + rows.map((r) => r.error ? `${r.kase}: ERROR ${r.error}` : `${r.kase}#${r.rep} track ${JSON.stringify(r.track)} park ${r.park && r.park.st}/${r.park && r.park.max} batches ${r.b.length}\n    ` + r.b.map((x) => `${x.t}ms n${x.n} roots ${x.roots}/${x.rootsFull}full/${x.rootsConn}conn hold=${x.hold} rem[${x.rem.join(' | ')}] add[${x.add.join(' | ')}]`).join('\n    ')).join('\n  ');
+	},
+});
+// ===== end R4 PROBE =====

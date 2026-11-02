@@ -1,0 +1,40 @@
+bundle headx main.js d889dff15ee8
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :160, port 9573, 1 scenario(s)
+OBSIDIAN-LIFECYCLE R3-R5 ok (
+  two-blocks#0: ERROR page eval failed: TypeError: Cannot read properties of null (reading 'getBoundingClientRect')
+    at <anonymous>:1:156
+    at <anonymous>:5:20
+  two-blocks#1: ERROR page eval failed: TypeError: Cannot read properties of null (reading 'getBoundingClientRect')
+    at <anonymous>:1:156
+    at <anonymous>:5:20
+  double-embed#0: ERROR page eval failed: TypeError: Cannot read properties of null (reading 'getBoundingClientRect')
+    at <anonymous>:1:156
+    at <anonymous>:5:20
+  double-embed#1: ERROR page eval failed: TypeError: Cannot read properties of null (reading 'getBoundingClientRect')
+    at <anonymous>:1:156
+    at <anonymous>:5:20
+  delete-block#0: ERROR page eval failed: TypeError: Cannot read properties of null (reading 'getBoundingClientRect')
+    at <anonymous>:1:156
+    at <anonymous>:5:20
+  delete-block#1: ERROR page eval failed: TypeError: Cannot read properties of null (reading 'getBoundingClientRect')
+    at <anonymous>:1:156
+    at <anonymous>:5:20
+  edit-prose#0: ERROR page eval failed: TypeError: Cannot read properties of null (reading 'getBoundingClientRect')
+    at <anonymous>:1:156
+    at <anonymous>:5:20
+  edit-prose#1: ERROR page eval failed: TypeError: Cannot read properties of null (reading 'getBoundingClientRect')
+    at <anonymous>:1:156
+    at <anonymous>:5:20
+  close-mid#0: st 6800/6800 -> - track undefined; holds [26ms data-dse-lp-embed-hold=3190 #0 lpembtracker]; emb0 [{"src":"lpembtracker","h":3190,"minH":"","hold":null,"roots":1}]; emb400 null; emb1 undefined; w {"held":true,"before":{"embedHolds":1,"holds":1}}; internals {"embedHolds":0,"holds":0}; leftover []; errs []
+  close-mid#1: st 6800/6800 -> - track undefined; holds [5ms data-dse-lp-embed-hold=3190 #0 lpembtracker]; emb0 [{"src":"lpembtracker","h":3190,"minH":"","hold":null,"roots":1}]; emb400 null; emb1 undefined; w {"held":true,"before":{"embedHolds":1,"holds":1}}; internals {"embedHolds":0,"holds":0}; leftover []; errs []
+  popout-close#0: st 6830/6830 -> - track undefined; holds [6ms data-dse-lp-embed-hold=3171 #0 lpembtracker]; emb0 [{"src":"lpembtracker","h":3171,"minH":"","hold":null,"roots":1}]; emb400 null; emb1 undefined; w {"held":true,"before":{"embedHolds":1,"holds":1},"popout":true}; internals {"embedHolds":0,"holds":0}; leftover []; errs []
+  popout-close#1: st 6830/6830 -> - track undefined; holds [3ms data-dse-lp-embed-hold=3171 #0 lpembtracker]; emb0 [{"src":"lpembtracker","h":3171,"minH":"","hold":null,"roots":1}]; emb400 null; emb1 undefined; w {"held":true,"before":{"embedHolds":1,"holds":1},"popout":true}; internals {"embedHolds":0,"holds":0}; leftover []; errs []
+  scope-plain#0: st 6959/6959 -> 6959/6959 track {"min":6959,"max":6959,"frames":284}; holds [1509ms data-dse-lp-embed-hold=3190 #0 lpembtracker, 1566ms data-dse-lp-embed-hold=null #0 lpembtracker]; emb0 [{"src":"lpembtracker","h":3190,"minH":"","hold":null,"roots":1}]; emb400 [{"src":"lpembtracker","h":3190,"minH":"","hold":null,"roots":1}]; emb1 [{"src":"lpembtracker","h":3190,"minH":"","hold":null,"roots":1}]; w undefined; internals {"embedHolds":0,"holds":0}; leftover []; errs []
+  scope-plain#1: st 6959/6959 -> 6959/6959 track {"min":6959,"max":6959,"frames":283}; holds [1507ms data-dse-lp-embed-hold=3190 #0 lpembtracker, 1555ms data-dse-lp-embed-hold=null #0 lpembtracker]; emb0 [{"src":"lpembtracker","h":3190,"minH":"","hold":null,"roots":1}]; emb400 [{"src":"lpembtracker","h":3190,"minH":"","hold":null,"roots":1}]; emb1 [{"src":"lpembtracker","h":3190,"minH":"","hold":null,"roots":1}]; w undefined; internals {"embedHolds":0,"holds":0}; leftover []; errs []
+  scope-reading#0: st - -> - track undefined; holds [4ms data-dse-scroll-pin=1 #-1 null (not LP), 2504ms data-dse-scroll-pin=null #-1 null (not LP)]; emb0 null; emb400 null; emb1 undefined; w undefined; internals {"embedHolds":0,"holds":0}; leftover []; errs []
+  scope-reading#1: st - -> - track undefined; holds [5ms data-dse-scroll-pin=3 #-1 null (not LP), 2505ms data-dse-scroll-pin=null #-1 null (not LP)]; emb0 null; emb400 null; emb1 undefined; w undefined; internals {"embedHolds":0,"holds":0}; leftover []; errs []
+  scope-own#0: st 1500/2787 -> 1500/2787 track {"min":1500,"max":1500,"frames":192}; holds [35ms data-dse-lp-hold=3039 #-1 null, 91ms data-dse-lp-hold=null #-1 null]; emb0 []; emb400 []; emb1 []; w undefined; internals {"embedHolds":0,"holds":0}; leftover []; errs []
+  scope-own#1: st 1500/2787 -> 1500/2787 track {"min":1500,"max":1500,"frames":192}; holds [34ms data-dse-lp-hold=3039 #-1 null, 100ms data-dse-lp-hold=null #-1 null]; emb0 []; emb400 []; emb1 []; w undefined; internals {"embedHolds":0,"holds":0}; leftover []; errs [])
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0
+porcelain-after: [] head: 86ab9a2

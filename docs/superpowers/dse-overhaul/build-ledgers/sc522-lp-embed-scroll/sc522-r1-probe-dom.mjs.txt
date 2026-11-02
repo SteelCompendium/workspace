@@ -1,0 +1,30 @@
+// ===== SC-522 r1 PROBE DOM: the Live Preview embed's structure =====
+SCENARIOS.push({
+	id: 'P522-DOM',
+	async run(t) {
+		const out = {};
+		for (const rel of ['SC522/EmbAS.md', 'SC522/EmbAE.md', 'SC522/EmbAN.md']) {
+			await t.open(rel);
+			await t.ev(`(async () => { window.__d = app.workspace.getMostRecentLeaf(); await window.__d.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'source', source: false }, active: true }); window.__d.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+			await t.sleep(1500);
+			for (let i = 0; i < 40; i++) {
+				const f = await t.ev(`(() => { const s = window.__d.view.containerEl.querySelector('.markdown-source-view .cm-scroller'); const e = s.querySelector('.internal-embed'); if (e && e.querySelector('[data-dse-element]')) { e.scrollIntoView({ block: 'start' }); return true; } s.scrollTop += 500; return false; })()`);
+				await t.sleep(300);
+				if (f) break;
+			}
+			await t.sleep(1200);
+			out[rel] = await t.ev(`(() => {
+				const cm = window.__d.view.editor.cm; const s = cm.scrollDOM;
+				const e = s.querySelector('.internal-embed');
+				const chain = []; for (let x = e.querySelector('[data-dse-element]'); x && x !== s; x = x.parentElement) chain.push(x.tagName + '.' + String(x.className).slice(0, 90) + (x.getAttribute('src') ? '[src=' + x.getAttribute('src') + ']' : '') + ' h=' + Math.round(x.getBoundingClientRect().height) + (x.style.cssText ? ' style=' + x.style.cssText.slice(0, 80) : '') + ' oa=' + getComputedStyle(x).overflowAnchor + ' ov=' + getComputedStyle(x).overflowY + (getComputedStyle(x).maxHeight !== 'none' ? ' maxH=' + getComputedStyle(x).maxHeight : ''));
+				const w = Array.from(cm.contentDOM.children).find((c) => c.contains(e));
+				let pos = null, blk = null; try { pos = cm.posAtDOM(w); const b = cm.lineBlockAt(pos); blk = { from: b.from, to: b.to, top: Math.round(b.top), h: Math.round(b.height), type: String(b.type) }; } catch (err) { blk = String(err); }
+				const kids = Array.from(cm.contentDOM.children).slice(0, 3).map((c) => c.tagName + '.' + c.className);
+				return { scroller: { oa: getComputedStyle(s).overflowAnchor, st: s.scrollTop, sh: s.scrollHeight, ch: s.clientHeight }, contentOA: getComputedStyle(cm.contentDOM).overflowAnchor, sizerOA: s.querySelector('.cm-sizer') ? getComputedStyle(s.querySelector('.cm-sizer')).overflowAnchor : null, contentHeight: cm.contentHeight, docLines: cm.state.doc.lines, embedCount: s.querySelectorAll('.internal-embed').length, widget: w ? { tag: w.tagName, cls: w.className, h: Math.round(w.getBoundingClientRect().height), attrs: Array.from(w.attributes).map((a) => a.name + '=' + a.value.slice(0, 60)) } : null, blk, pos, line: pos !== null ? cm.state.doc.lineAt(pos).text : null, chain, kids, innerSizerStyle: (e.querySelector('.markdown-preview-sizer') || {}).style ? e.querySelector('.markdown-preview-sizer').style.cssText : null, hasDseLpHold: !!s.querySelector('[data-dse-lp-hold]') };
+			})()`);
+		}
+		p522Write(`DOM-${P522_VAR}`, out);
+		return JSON.stringify(out, null, 1);
+	},
+});
+// ===== end SC-522 r1 PROBE DOM =====

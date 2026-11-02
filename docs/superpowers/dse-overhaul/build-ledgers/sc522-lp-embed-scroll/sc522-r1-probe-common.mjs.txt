@@ -1,0 +1,31 @@
+// ===== SC-522 r1 PROBE common (scratch harness copy only; never in the tree) =====
+const P522_OUT = process.env.P522_OUT ?? work;
+const P522_VAR = process.env.P522_VARIANT ?? 'unknown';
+const P522_TRK = (n) => fence('ds-initiative', ['heroes:', ...Array.from({ length: n }, (_, i) => HERO(`Hero ${String(i + 1).padStart(2, '0')}`)).flat(), 'enemy_groups: []', 'malice:', '  value: 1']);
+const P522_A = (link, pre = 80, post = 80) => `# EmbA\n\n${Array.from({ length: pre }, (_, i) => `A-PRE filler ${i}.`).join('\n\n')}\n\n${link}\n\n${Array.from({ length: post }, (_, i) => `A-POST filler ${i}.`).join('\n\n')}\n`;
+Object.assign(FIXTURES, {
+	// B = the 25-hero tracker alone
+	'SC522/EmbS.md': `# EmbS\n\nS-TOP\n\n${P522_TRK(25)}\n\nS-BOTTOM\n`,
+	// B = a 20-hero tracker followed by 25 paragraphs (a reader can park INSIDE the embed below the tracker)
+	'SC522/EmbL.md': `# EmbL\n\nI-TOP\n\n${P522_TRK(20)}\n\n${Array.from({ length: 25 }, (_, i) => `I-POST filler ${i}.`).join('\n\n')}\n`,
+	// tall host: 80 paragraphs, the embed, 80 paragraphs
+	'SC522/EmbAS.md': P522_A('![[EmbS]]'),
+	// the embed near the END of A (3 short paragraphs after it): at max scroll the embed bottom is in view
+	'SC522/EmbAE.md': `# EmbAE\n\n${Array.from({ length: 80 }, (_, i) => `A-PRE filler ${i}.`).join('\n\n')}\n\n![[EmbS]]\n\nA-END 1.\n\nA-END 2.\n\nA-END 3.\n`,
+	// host that is (almost) only the embed
+	'SC522/EmbAC.md': '# EmbAC\n\nC-TOP\n\n![[EmbS]]\n\nC-BOTTOM\n',
+	// tall host around the long B
+	'SC522/EmbAL.md': P522_A('![[EmbL]]', 30, 80),
+	// heading embed, nested embed (A -> N -> S)
+	'SC522/EmbAH.md': P522_A('![[EmbS#EmbS]]'),
+	'SC522/EmbN.md': `# EmbN\n\nN-TOP\n\n![[EmbS]]\n\nN-BOTTOM\n`,
+	'SC522/EmbAN.md': P522_A('![[EmbN]]'),
+	// near-end variants of heading / nested (the end geometry)
+	'SC522/EmbAEH.md': `# EmbAEH\n\n${Array.from({ length: 80 }, (_, i) => `A-PRE filler ${i}.`).join('\n\n')}\n\n![[EmbS#EmbS]]\n\nA-END 1.\n\nA-END 2.\n\nA-END 3.\n`,
+	'SC522/EmbAEN.md': `# EmbAEN\n\n${Array.from({ length: 80 }, (_, i) => `A-PRE filler ${i}.`).join('\n\n')}\n\n![[EmbN]]\n\nA-END 1.\n\nA-END 2.\n\nA-END 3.\n`,
+});
+function p522Write(id, data) {
+	fs.mkdirSync(P522_OUT, { recursive: true });
+	fs.writeFileSync(path.join(P522_OUT, `sc522-r1-${id}.json`), JSON.stringify(data, null, 1));
+}
+// ===== end SC-522 r1 PROBE common =====

@@ -1,0 +1,18 @@
+import json, sys
+# summ.py <json>...: one line per row; TSV-ish
+for p in sys.argv[1:]:
+    rows = json.load(open(p))
+    for r in rows:
+        if 'error' in r:
+            print(f"{p.split('REPRO-')[-1]}\t{r['kase']}#{r['rep']}\tERROR {r['error'][:250]}")
+            continue
+        s = r['summ']
+        def sh(a, b):
+            if a is None: return 'n/a'
+            if b is None: return 'LOST'
+            return f"{b - a:+d}"
+        vis = sh(s['vis0'], s['visEnd']) if s['vis0'] is not None else 'n/a'
+        visr = f"[{s['visMin']},{s['visMax']}]" if s['vis0'] is not None else ''
+        ins = sh(s['ins0'], s['insEnd']) if s['ins0'] is not None else 'n/a'
+        insr = f"[{s['insMin']},{s['insMax']}]" if s['ins0'] is not None else ''
+        print(f"{p.split('REPRO-')[-1].replace('.json','')}\t{r['kase']}#{r['rep']}\tadopt={r['adopt']}\tst {s['st0']}->{s['stEnd']} (min {s['stMin']} max {s['stMax']})\tvis {vis} {visr} [{s['tag']['visTxt']}]\tins {ins} {insr} [{s['tag']['insTxt']}]\tembH {s['embH0']}->{s['embHEnd']}\thold {s['holdFrames']}\trootDisc {s['rootDisc']}\tlanded {r['landed']}\tshown {r.get('shownAfter')}" + (('\tPOST st[%s,%s] vis[%s,%s] ins[%s,%s] n%s' % tuple(s['post'][k] for k in ('stMin','stMax','visMin','visMax','insMin','insMax','n'))) if s.get('post') else ''))

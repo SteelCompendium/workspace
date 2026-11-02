@@ -1,0 +1,57 @@
+FAIL dom test/dom/framework/livePreviewScrollHold.test.ts
+  ● SC-522: a Live Preview host holds its embed of the written note › release without a fresh view › a block deleted from B (one of two sections removed, nothing added) releases one task after the redraw
+
+    expect(received).toBeNull()
+
+    Received: "3437"
+
+      733 | 			await flush();
+      734 | 			await sleep(5);
+    > 735 | 			expect(held(e)).toBeNull();
+          | 			                ^
+      736 | 			expect(e.style.minHeight).toBe('');
+      737 | 			expect(host.requestMeasure).toHaveBeenCalledTimes(1);
+      738 | 		});
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:735:20)
+
+  ● SC-522: a Live Preview host holds its embed of the written note › release without a fresh view › a paragraph removed from B (nothing of ours touched) releases the same way
+
+    expect(received).toBeNull()
+
+    Received: "3437"
+
+      746 | 			await flush();
+      747 | 			await sleep(5);
+    > 748 | 			expect(held(e)).toBeNull();
+          | 			                ^
+      749 | 			expect(host.requestMeasure).toHaveBeenCalledTimes(1);
+      750 | 		});
+      751 |
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:748:20)
+
+  ● SC-522: a Live Preview host holds its embed of the written note › release without a fresh view › a re-hold lowers the floor to the true height while every held root is still in place
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "1806"
+    Received: "3437"
+
+      797 | 			e.getBoundingClientRect = () => ({ height: 1806 }) as DOMRect; // the embed has shrunk for another reason, no root removed
+      798 | 			hold.holdEmbedsOf(host as never, 'B.md', 'A.md', resolver({ B: 'B.md' }));
+    > 799 | 			expect(held(e)).toBe('1806');
+          | 			                ^
+      800 | 			hold.releaseAll();
+      801 | 		});
+      802 | 	});
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:799:20)
+
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       3 failed, 81 passed, 84 total
+Snapshots:   0 total
+Time:        2.316 s
+Ran all test suites matching test/dom/framework/livePreviewScrollHold.test.ts|test/dom/framework/pipeline.test.ts.
+Test results written to: ../../../../../../../tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc522-r4-impl1/logs/onstock.json

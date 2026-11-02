@@ -1,0 +1,25 @@
+#!/bin/bash
+# r3 mkbundle.sh <name> <git-rev> [file old new]: export <rev> to bundles/<name>/tree, optional one exact replacement, build there.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc522-r3-a79dd8ba57f5042f0
+W=/home/scott/code/steelCompendium/worktrees/sc522-lp-embed-scroll/draw-steel-elements
+N=$1; REV=$2
+D="$S/bundles/$N/tree"
+mkdir -p "$D" "$S/logs"
+git -C "$W" archive "$REV" | tar -x -C "$D"
+ln -sfn "$W/node_modules" "$D/node_modules"
+if [ -n "$3" ]; then
+python3 - "$D/$3" "$4" "$5" <<'EOF'
+import sys
+p, old, new = sys.argv[1:4]
+old = old.encode().decode('unicode_escape'); new = new.encode().decode('unicode_escape')
+s = open(p).read()
+assert s.count(old) == 1, ('old text count', s.count(old))
+open(p, 'w').write(s.replace(old, new))
+EOF
+[ $? -eq 0 ] || { echo "variant $N: replace failed"; exit 8; }
+fi
+cd "$D" || exit 9
+node esbuild.config.mjs production > "$S/bundles/$N/build.log" 2>&1
+rc=$?
+for f in main.js styles.css manifest.json; do cp "$D/$f" "$S/bundles/$N/$f"; done
+echo "$N rev=$REV main.js $(sha256sum $S/bundles/$N/main.js | cut -c1-12) styles.css $(sha256sum $S/bundles/$N/styles.css | cut -c1-12) rc=$rc" | tee -a "$S/logs/bundles-summary.log"

@@ -1,0 +1,158 @@
+FAIL dom test/dom/framework/livePreviewScrollHold.test.ts
+  ● SC-478: wiring › registerFrameworkElements captures on `modify` and registers the editor extension
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    - Expected
+    + Received
+
+      {"__rightLeafUnavailable": false, "_activeLeaf": null, "_leaves": [], "_viewFactories": Map {}, "containerEl": <div />, "openLinkTextCalls": [], "requestSaveLayoutCalls": 0},
+      "Note.md",
+    - Any<Function>,
+
+    Number of calls: 1
+
+      547 | 			for (const call of calls) (call[1] as (file: { path: string }) => void)({ path: 'Note.md' });
+      548 | 			// SC-522: with the link resolver, so Live Preview hosts of the note's embeds are held too
+    > 549 | 			expect(spy).toHaveBeenCalledWith(app.workspace, 'Note.md', expect.any(Function));
+          | 			            ^
+      550 | 		} finally {
+      551 | 			spy.mockRestore();
+      552 | 			ext.mockRestore();
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:549:16)
+
+  ● SC-522: a Live Preview host holds its embed of the written note › only the drawn embed widgets that show a DSE block of the written note are held, at their height
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "3190"
+    Received: null
+
+      592 | 		const workspace = { getLeavesOfType: () => [lpLeaf('A.md', host), lpLeaf('B.md', own)] };
+      593 | 		hold.captureViewsOf(workspace as never, 'B.md', resolver({ B: 'B.md', C: 'C.md' }));
+    > 594 | 		expect(held(ofB)).toBe('3190');
+          | 		                  ^
+      595 | 		expect(ofB.style.minHeight).toBe('3190px');
+      596 | 		expect(held(ofC)).toBeNull();
+      597 | 		expect(held(plainB)).toBeNull();
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:594:21)
+
+  ● SC-522: a Live Preview host holds its embed of the written note › a nested embed (A -> N -> B, resolved from N) and a #heading embed count
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "3341"
+    Received: null
+
+      617 | 		const resolve = resolver({ 'A.md|N': 'N.md', 'N.md|B': 'B.md', 'A.md|B': 'B.md' });
+      618 | 		hold.captureViewsOf({ getLeavesOfType: () => [lpLeaf('A.md', fakeView(6800, [nested, heading]))] } as never, 'B.md', resolve);
+    > 619 | 		expect(held(nested)).toBe('3341');
+          | 		                     ^
+      620 | 		expect(held(heading)).toBe('3166');
+      621 | 		expect(resolve).toHaveBeenCalledWith('B', 'N.md'); // the inner link is resolved from the note that writes it
+      622 | 	});
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:619:24)
+
+  ● SC-522: a Live Preview host holds its embed of the written note › released as soon as a fresh view has mounted in the embed, not while it is still empty
+
+    TypeError: hold.holdEmbedsOf is not a function
+
+      626 | 		const e = embedWidget('B', 3190);
+      627 | 		const host = fakeView(6800, [e]);
+    > 628 | 		hold.holdEmbedsOf(host as never, 'B.md', 'A.md', resolver({ B: 'B.md' }));
+          | 		     ^
+      629 | 		expect(held(e)).toBe('3190');
+      630 | 		const content = e.querySelector('.markdown-embed-content')!;
+      631 | 		content.querySelector('[data-dse-element]')!.remove(); // Obsidian empties the embed
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:628:8)
+
+  ● SC-522: a Live Preview host holds its embed of the written note › released when the held view is put back (an adopted write)
+
+    TypeError: hold.holdEmbedsOf is not a function
+
+      647 | 		const hold = new LivePreviewScrollHold();
+      648 | 		const e = embedWidget('B', 3190);
+    > 649 | 		hold.holdEmbedsOf(fakeView(6800, [e]) as never, 'B.md', 'A.md', resolver({ B: 'B.md' }));
+          | 		     ^
+      650 | 		const root = e.querySelector('[data-dse-element]')!;
+      651 | 		const section = e.querySelector('.markdown-embed-content')!.appendChild(document.createElement('div'));
+      652 | 		section.appendChild(root); // moved into the new section, same element
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:649:8)
+
+  ● SC-522: a Live Preview host holds its embed of the written note › PIN_TTL_MS backstop, a re-hold never lowers the floor, an inline min-height is restored, unload drops every hold
+
+    TypeError: hold.holdEmbedsOf is not a function
+
+      662 | 		e.style.minHeight = '20px';
+      663 | 		const host = fakeView(6800, [e]);
+    > 664 | 		hold.holdEmbedsOf(host as never, 'B.md', 'A.md', resolver({ B: 'B.md' }));
+          | 		     ^
+      665 | 		e.getBoundingClientRect = () => ({ height: 135 }) as DOMRect; // a second write lands while the embed is collapsed
+      666 | 		hold.holdEmbedsOf(host as never, 'B.md', 'A.md', resolver({ B: 'B.md' }));
+      667 | 		expect(held(e)).toBe('3190');
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:664:8)
+
+FAIL dom test/dom/framework/pipeline.test.ts
+  ● T-9 (Plan 02): ElementPipeline.run (F1 §2.4) › click shield (F1 §2.4 step 4 / §1.2) › SC-522 Live Preview embed: the root is an Obsidian interactive child › a click inside a Live Preview embed marks the root
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      606 | 					expect(root.classList.contains('interactive-child')).toBe(false);
+      607 | 					(root.querySelector('.label-content') as HTMLElement).dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true }));
+    > 608 | 					expect(root.classList.contains('interactive-child')).toBe(true);
+          | 					                                                     ^
+      609 | 				} finally {
+      610 | 					cleanup();
+      611 | 				}
+
+      at test/dom/framework/pipeline.test.ts:608:59
+
+  ● T-9 (Plan 02): ElementPipeline.run (F1 §2.4) › click shield (F1 §2.4 step 4 / §1.2) › SC-522 Live Preview embed: the root is an Obsidian interactive child › a pointerdown inside a Live Preview embed marks the root
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      606 | 					expect(root.classList.contains('interactive-child')).toBe(false);
+      607 | 					(root.querySelector('.label-content') as HTMLElement).dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true }));
+    > 608 | 					expect(root.classList.contains('interactive-child')).toBe(true);
+          | 					                                                     ^
+      609 | 				} finally {
+      610 | 					cleanup();
+      611 | 				}
+
+      at test/dom/framework/pipeline.test.ts:608:59
+
+  ● T-9 (Plan 02): ElementPipeline.run (F1 §2.4) › click shield (F1 §2.4 step 4 / §1.2) › SC-522 Live Preview embed: the root is an Obsidian interactive child › a mousedown inside a Live Preview embed marks the root
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      606 | 					expect(root.classList.contains('interactive-child')).toBe(false);
+      607 | 					(root.querySelector('.label-content') as HTMLElement).dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true }));
+    > 608 | 					expect(root.classList.contains('interactive-child')).toBe(true);
+          | 					                                                     ^
+      609 | 				} finally {
+      610 | 					cleanup();
+      611 | 				}
+
+      at test/dom/framework/pipeline.test.ts:608:59
+
+Test Suites: 2 failed, 2 total
+Tests:       9 failed, 66 skipped, 2 passed, 77 total
+Snapshots:   0 total
+Time:        2.01 s
+Ran all test suites matching test/dom/framework/livePreviewScrollHold.test.ts|test/dom/framework/pipeline.test.ts with tests matching "SC-522|registerFrameworkElements captures".
+jest-on-stock rc=1

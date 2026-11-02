@@ -1,0 +1,8 @@
+#!/bin/bash
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc522-r4-impl1
+bash $S/mkbundle.sh fbase 34f46cf
+bash $S/mkbundle.sh fhead HEAD
+bash $S/mkbundle.sh fctl-nohold HEAD src/framework/host/livePreviewScrollHold.ts "\t\tif (view.scrollDOM.scrollTop <= 0) return;\n\t\tfor (const el of" "\t\tif (view.scrollDOM.scrollTop <= 0 || view) return;\n\t\tfor (const el of"
+bash $S/mkbundle.sh fctl-norelease HEAD src/framework/host/livePreviewScrollHold.ts "\t\tif (!MO) return;\n\t\tlet back = false;" "\t\tif (!MO || embed) return;\n\t\tlet back = false;"
+bash $S/mkbundle.sh fctl-noclick HEAD src/framework/pipeline.ts "if (!root.classList.contains('interactive-child') && root.closest('.cm-content .internal-embed'))" "if (root.isConnected && false && root.closest('.cm-content .internal-embed'))"
+bash $S/mkbundle.sh fctl-fresh HEAD src/framework/host/livePreviewScrollHold.ts "if (redrawn && settle === null && mounted(roots)) {" "if (false && redrawn && settle === null && mounted(roots)) {"

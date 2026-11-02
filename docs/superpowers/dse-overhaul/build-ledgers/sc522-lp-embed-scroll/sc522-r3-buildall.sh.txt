@@ -1,0 +1,8 @@
+#!/bin/bash
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc522-r3-a79dd8ba57f5042f0
+bash $S/mkbundle.sh base 4deb8cf
+bash $S/mkbundle.sh head 86ab9a2
+bash $S/mkbundle.sh ctl-norelease 86ab9a2 src/framework/host/livePreviewScrollHold.ts "\t\tif (!MO) return;\n\t\tlet back = false;" "\t\tif (!MO || embed) return;\n\t\tlet back = false;"
+bash $S/mkbundle.sh ctl-noclick 86ab9a2 src/framework/pipeline.ts "if (!root.classList.contains('interactive-child') && root.closest('.cm-content .internal-embed'))" "if (root.isConnected && false && root.closest('.cm-content .internal-embed'))"
+# probe-only: head with the LivePreviewScrollHold instance exposed on window (reads embedHolds/holds sizes)
+bash $S/mkbundle.sh headx 86ab9a2 src/framework/registerFrameworkElements.ts "\tconst lpHold = new LivePreviewScrollHold();\n" "\tconst lpHold = new LivePreviewScrollHold();\n\t(window as unknown as { __dseLpHold: unknown }).__dseLpHold = lpHold;\n"

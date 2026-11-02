@@ -1,0 +1,6 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :160, port 9522, 1 scenario(s)
+OBSIDIAN-LIFECYCLE G-S52 FAIL: (a) external vault.process: the hold outlived the remount by 114 frames - it must be released by our view mounting, not by its timer | (b) external write on disk: the hold outlived the remount by 105 frames - it must be released by our view mounting, not by its timer | (c) another pane: the hold outlived the remount by 94 frames - it must be released by our view mounting, not by its timer | (d) below the embed, a hero added: the hold outlived the remount by 109 frames - it must be released by our view mounting, not by its timer [shot /tmp/dse-obsidian-lifecycle-B7eEOn/shots/G-S52-FAIL.png]
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-B7eEOn
+OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+rc=1
+porcelain-after: [ M src/framework/host/livePreviewScrollHold.ts  M src/framework/host/previewScrollPin.ts  M src/framework/pipeline.ts  M src/framework/registerFrameworkElements.ts  M visual-harness/obsidian-lifecycle.mjs ] head: 71437da

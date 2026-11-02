@@ -1,0 +1,36 @@
+1:  61a2423 = 1:  3a8a084 fix(SC-522): a Live Preview note that embeds a tracker note keeps its scroll position when that tracker changes, and a click in the embedded card no longer scrolls it
+2:  257ec42 ! 2:  df25c24 test(SC-522): G-S52 - a Live Preview host of an embedded tracker keeps its scroll position on a write to the tracker and on a click in the card
+    @@ visual-harness/obsidian-lifecycle.mjs
+      // change a field, Enter on Save. Reading view (montage raw box, stamina bar typed field), the sidebar panel and Live Preview each assert the
+      // pencil holds focus with the keyboard ring and the old root/pencil is gone; a real-mouse Save leaves focus where it was (a pointer press never
+     @@
+    - // is in the edited card, not the twin (r3); a tall note with the card at ~60% of the pane keeps scrollTop and the card's top edge (SC-479 touched the
+    - // scroll pin); Cancel leaves focus on the same pencil. Every phase's whole note is the fixture with only the edited value changed; no Notice, no page error.
+    + // anchor has a non-zero border. Controls (temporary bundles via DSE_LIFECYCLE_BUNDLE): the frame-batched build that drops such panels (this fix's first version)
+    + // FAILs Live Preview; the stock build that reads the border at mount FAILs Reading view; the shipped build passes both.
+      //
+     +// SC-522 appends G-S52 (42 scenarios in all; the id was assigned by the dispatcher): a tracker in note B embedded in a LIVE PREVIEW host note A keeps
+     +// A's scroll position and its on-screen text when B is written (in-app and on disk with A parked at its end, from another pane, and a hero added
+    @@ visual-harness/obsidian-lifecycle.mjs: Object.assign(FIXTURES, {
+      const ZWSP = String.fromCharCode(0x200b);
+      // SC-502: a note per element for the Live Preview chrome-panel click scenario (G-S44). The line directly above each fence is text,
+     @@ visual-harness/obsidian-lifecycle.mjs: const SCENARIOS = [
+    - 			return `after a form Save focus is on the redrawn card's Edit pencil, old root/pencil gone (ring after a keyboard open; a mouse Save leaves focus where it was and the hover panel hides; identical twins: the edited upper card; Cancel leaves it on the same pencil): ${outcomes.map((o) => `${o.label} by ${o.input}${o.pencil ? ` (${o.pencil})` : ''} -> ${o.late.active}${o.late.ring ? ' +ring' : ''}${o.scroll ? ` (${o.scroll})` : ''}`).join('; ')}; the note is the fixture with only the edited value changed; no Notice, no page error`;
+    + 			return out.join('; ');
+      		},
+      	},
+     +	{
+    @@ visual-harness/obsidian-lifecycle.mjs: const SCENARIOS = [
+     +			return out.join('; ');
+     +		},
+     +	},
+    - ];
+    - 
+    - // ---------------------------------------------------------------------------- main
+    + 	{
+    + 		// G-S56 (SC-536): the reference guard follows the DOM, not the block's identity. A card that references itself stops at one
+    + 		// "Reference loop" card nested inside it (Reading view and Live Preview), a chain of seven distinct references stops at five
+3:  7612b48 = 3:  511f71b fix(SC-522): release an embed hold when Obsidian redraws the embed without a fresh view of ours (a block deleted from B, a paragraph removed), and do not carry a stale floor into a re-hold
+4:  3a8429c = 4:  4b380d5 test(SC-522): G-S52 phase (f) - a block deleted from B releases the embed hold within a few frames of the redraw, not at its timer
+5:  64e176f = 5:  5d4bcf3 fix(SC-522): drop the redundant cancel of the deferred embed release (the re-check when it fires covers it); the re-hold test now replaces the root with an empty one, as Obsidian does
+-:  ------- > 6:  ad018cd docs(SC-522): say what a re-hold really does (the read includes the previous floor), name the early release on an unrelated removal in KNOWN LIMITS; G-S52 header count 45

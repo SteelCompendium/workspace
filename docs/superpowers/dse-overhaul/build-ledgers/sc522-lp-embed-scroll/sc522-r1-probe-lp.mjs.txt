@@ -1,0 +1,303 @@
+// ===== SC-522 r1 PROBE LP: does a write to B move a Live Preview host A that embeds it? =====
+// Env: P522_CASES (comma list of writer:park:shape), P522_REPS (2), P522_ADOPT (on|off), P522_DUR (ms, 3500),
+//      P522_TRACE=1 (instance hooks: scroller scrollTop setter + scrollTo/scrollIntoView, cm.measure, cm.update),
+//      P522_MOLAYOUT=1 (a forced layout read per mutation batch), P522_SHOT=1 (before/after screenshot of rep 0),
+//      P522_EMU=widget|sizer (page-side emulated hold of the embed element / its inner sizer from `modify` until the DSE root remounts, TTL 2500)
+//   writer: process | nodefs | own (click in A's embedded tracker) | paneR / paneLP (B in a second Reading / Live Preview pane makes the click)
+//           | form (block edit form Save from A's embed) | addhero / delhero (vault.process adding / removing a hero: the embed's real height changes)
+//   park:   above | view (embed top 200px under the viewport top) | in (embed top + 1500) | below (embed bottom + 400) | end (max) | inside (150px under the tracker, inside the embed)
+//   shape:  S (EmbAS: tall host, B = tracker) | E (EmbAE: embed near A's end) | C (EmbAC: host is the embed) | L (EmbAL: B = tracker + 25 paragraphs)
+//           | H (EmbAH: ![[EmbS#EmbS]]) | N (EmbAN: A -> N -> S) | EH / EN (near-end heading / nested) ; suffix '@pop' on the writer = A in a popout window
+const P522_SHAPES = {
+	S: { a: 'SC522/EmbAS.md', b: 'SC522/EmbS.md' },
+	E: { a: 'SC522/EmbAE.md', b: 'SC522/EmbS.md' },
+	C: { a: 'SC522/EmbAC.md', b: 'SC522/EmbS.md' },
+	L: { a: 'SC522/EmbAL.md', b: 'SC522/EmbL.md' },
+	H: { a: 'SC522/EmbAH.md', b: 'SC522/EmbS.md' },
+	N: { a: 'SC522/EmbAN.md', b: 'SC522/EmbS.md' },
+	EH: { a: 'SC522/EmbAEH.md', b: 'SC522/EmbS.md' },
+	EN: { a: 'SC522/EmbAEN.md', b: 'SC522/EmbS.md' },
+};
+const P522_SEQ = { n: 100 };
+const P522_INSTALL = `(() => {
+  if (window.__p522) return true;
+  const P = window.__p522 = { events: [] };
+  P.lp = (leaf) => leaf.view.containerEl.querySelector('.markdown-source-view .cm-scroller');
+  P.rd = (leaf) => leaf.view.containerEl.querySelector('.markdown-reading-view > .markdown-preview-view');
+  P.emb = (s) => s ? (Array.from(s.querySelectorAll('.internal-embed')).find((e) => !e.parentElement.closest('.internal-embed')) || null) : null;
+  P.isz = (e) => e ? e.querySelector(':scope > .markdown-embed-content > .markdown-preview-view > .markdown-preview-sizer') : null;
+  P.lineTop = (s, txt) => { if (!txt) return null; const cm = s.querySelector('.cm-content'); const sr = s.getBoundingClientRect(); for (const l of cm.children) { if (l.classList.contains('cm-line') && l.textContent === txt) return Math.round(l.getBoundingClientRect().top - sr.top); } return null; };
+  P.inTop = (s, txt) => { if (!txt) return null; const e = P.emb(s); if (!e) return null; const sr = s.getBoundingClientRect(); for (const x of e.querySelectorAll('p, .dse-init__name')) { if (x.textContent === txt) return Math.round(x.getBoundingClientRect().top - sr.top); } return null; };
+  P.snap = (leaf, tg) => {
+    const cm = leaf.view.editor.cm; const s = cm.scrollDOM; const sr = s.getBoundingClientRect();
+    const e = P.emb(s); const isz = P.isz(e);
+    const o = { st: Math.round(s.scrollTop), sh: s.scrollHeight, ch: s.clientHeight, cmH: Math.round(cm.contentHeight),
+      embH: e ? Math.round(e.getBoundingClientRect().height) : null, embTop: e ? Math.round(e.getBoundingClientRect().top - sr.top) : null,
+      iszH: isz ? Math.round(isz.getBoundingClientRect().height) : null, imh: isz ? parseFloat(isz.style.minHeight) : null,
+      hold: !!s.querySelector('[data-dse-lp-hold],[data-dse-lp-embed-hold],[data-p522-hold]'),
+      vis: tg ? P.lineTop(s, tg.visTxt) : null, ins: tg ? P.inTop(s, tg.insTxt) : null };
+    try { const y = sr.top - cm.documentTop; const b = cm.lineBlockAtHeight(Math.max(0, y)); o.topLine = cm.state.doc.lineAt(b.from).number; o.topOff = Math.round(y - b.top); } catch (err) { o.topLine = 'ERR'; }
+    if (tg && tg.embPos !== null) { try { o.hmH = Math.round(cm.lineBlockAt(tg.embPos).height); } catch (err) { o.hmH = null; } }
+    if (tg) { o.rootConn = tg.root ? tg.root.isConnected : null; o.embSame = tg.emb ? tg.emb.isConnected : null; o.iszSame = tg.isz ? tg.isz.isConnected : null; }
+    return o;
+  };
+  app.vault.on('modify', (f) => { const r = P.cur; P.events.push({ t: r ? Math.round(performance.now() - r.t0) : null, path: f.path, A: r ? P.snap(r.leaf, r.tg) : null }); });
+  P.tagOf = (leaf) => {
+    const cm = leaf.view.editor.cm; const s = cm.scrollDOM; const sr = s.getBoundingClientRect();
+    const e = P.emb(s); const isz = P.isz(e);
+    const root = e ? e.querySelector('[data-dse-element]') : null;
+    const full = (el) => { const r = el.getBoundingClientRect(); return r.height > 0 && r.top >= sr.top && r.bottom <= sr.bottom; };
+    // the first fully visible editor line with text that is not the embed line: "the text below the embed" (or above, when parked above)
+    const eb = e ? e.getBoundingClientRect().bottom : -Infinity;
+    const lines = Array.from(cm.contentDOM.children).filter((l) => l.classList.contains('cm-line') && /\\S/.test(l.textContent) && full(l));
+    const visL = lines.find((l) => l.getBoundingClientRect().top >= eb) || lines[0] || null;
+    const insEl = e ? Array.from(e.querySelectorAll('p, .dse-init__name')).find((x) => /\\S/.test(x.textContent) && full(x)) : null;
+    let embPos = null; try { embPos = e ? cm.posAtDOM(e) : null; } catch (err) {}
+    return { emb: e, isz, root, embPos, visTxt: visL ? visL.textContent : null, insTxt: insEl ? insEl.textContent : null };
+  };
+  P.rec = (leaf, durMs, action) => new Promise((resolve) => {
+    const cm = leaf.view.editor.cm; const s = cm.scrollDOM; const win = s.ownerDocument.defaultView;
+    const t0 = performance.now(); const tg = P.tagOf(leaf);
+    const r = P.cur = { t0, leaf, tg }; const ev0 = P.events.length;
+    const series = []; const f = { rootDisc: null, embDisc: null, iszDisc: null, scrolls: [], mo: [], measures: [], updates: [], sets: [] };
+    const onScroll = () => { f.scrolls.push({ t: Math.round(performance.now() - t0), st: Math.round(s.scrollTop), sh: s.scrollHeight, cmH: Math.round(cm.contentHeight) }); };
+    s.addEventListener('scroll', onScroll);
+    const mo = new win.MutationObserver((recs) => {
+      const now = Math.round(performance.now() - t0);
+      if (tg.root && !tg.root.isConnected && f.rootDisc === null) f.rootDisc = now;
+      if (tg.emb && !tg.emb.isConnected && f.embDisc === null) f.embDisc = now;
+      if (tg.isz && !tg.isz.isConnected && f.iszDisc === null) f.iszDisc = now;
+      if (P.moLayout && f.mo.length < 60) { const e = P.emb(s); const iz = P.isz(e); f.mo.push({ t: now, st: Math.round(s.scrollTop), sh: s.scrollHeight, cmH: Math.round(cm.contentHeight), embH: e ? Math.round(e.getBoundingClientRect().height) : null, iszH: iz ? Math.round(iz.getBoundingClientRect().height) : null, vis: P.lineTop(s, tg.visTxt), n: recs.length }); }
+    });
+    mo.observe(s, { attributes: true, attributeFilter: ['style', 'class'], childList: true, subtree: true });
+    f.long = []; let po = null; try { po = new win.PerformanceObserver((l) => { for (const e of l.getEntries()) f.long.push({ t: Math.round(e.startTime - t0), d: Math.round(e.duration) }); }); po.observe({ entryTypes: ['longtask'] }); } catch (err) { f.long.push({ err: String(err) }); }
+    let undo = null;
+    if (P.trace) {
+      const d = Object.getOwnPropertyDescriptor(Element.prototype, 'scrollTop');
+      Object.defineProperty(s, 'scrollTop', { configurable: true, get() { return d.get.call(this); }, set(v) { f.sets.push({ t: Math.round(performance.now() - t0), v: Math.round(v), from: Math.round(d.get.call(this)), stack: new Error().stack.split('\\n').slice(2, 7).map((x) => x.trim().replace(/\\(app:\\/\\/obsidian.md\\//, '(').slice(0, 90)).join(' | ') }); d.set.call(this, v); } });
+      const om = cm.measure; cm.measure = function (...a) { const b = { t: Math.round(performance.now() - t0), st0: Math.round(s.scrollTop), cmH0: Math.round(cm.contentHeight) }; const res = om.apply(this, a); b.st1 = Math.round(s.scrollTop); b.cmH1 = Math.round(cm.contentHeight); if (b.st1 !== b.st0 || b.cmH1 !== b.cmH0) f.measures.push(b); return res; };
+      const ou = cm.update; cm.update = function (trs) { const b = { t: Math.round(performance.now() - t0), st0: Math.round(s.scrollTop), cmH0: Math.round(cm.contentHeight), doc: trs.some((x) => x.docChanged), ue: trs.map((x) => x.annotation && x.isUserEvent && (x.isUserEvent('set') ? 'set' : x.isUserEvent('input') ? 'input' : '')).join(','), eff: trs.reduce((n, x) => n + x.effects.length, 0), sel: trs.some((x) => !!x.selection), siv: trs.some((x) => x.scrollIntoView), stack: new Error().stack.split('\\n').slice(2, 12).map((x) => x.trim().replace(/\\(app:\\/\\/obsidian.md\\//, '(').slice(0, 90)).join(' | ') }; const res = ou.call(this, trs); b.st1 = Math.round(s.scrollTop); b.cmH1 = Math.round(cm.contentHeight); f.updates.push(b); return res; };
+      const osi = s.scrollTo; s.scrollTo = function (...a) { f.sets.push({ t: Math.round(performance.now() - t0), m: 'scrollTo', args: JSON.stringify(a).slice(0, 60), stack: new Error().stack.split('\\n').slice(2, 6).map((x) => x.trim().slice(0, 80)).join(' | ') }); return osi.apply(this, a); };
+      undo = () => { delete s.scrollTop; cm.measure = om; cm.update = ou; s.scrollTo = osi; };
+    }
+    series.push(Object.assign({ t: 0 }, P.snap(leaf, tg)));
+    const meta = { actionT: null, actionDoneT: null, actionErr: null };
+    const post = []; const tick = () => { series.push(Object.assign({ t: Math.round(performance.now() - t0) }, P.snap(leaf, tg))); win.setTimeout(() => { if (P.cur === r) post.push(Object.assign({ t: Math.round(performance.now() - t0) }, P.snap(leaf, tg))); }, 0); if (performance.now() - t0 < durMs) win.requestAnimationFrame(tick); else { mo.disconnect(); if (po) po.disconnect(); s.removeEventListener('scroll', onScroll); if (undo) undo(); P.cur = null; resolve({ series, post, f, tagInfo: { visTxt: tg.visTxt, insTxt: tg.insTxt, embPos: tg.embPos, hasRoot: !!tg.root }, events: P.events.slice(ev0), meta }); } };
+    win.requestAnimationFrame(tick);
+    if (action) { meta.actionT = Math.round(performance.now() - t0); try { const p = action(); if (p && p.then) p.then(() => { meta.actionDoneT = Math.round(performance.now() - t0); }, (e) => { meta.actionErr = String(e); }); } catch (e) { meta.actionErr = String(e); } }
+  });
+  // emulated holds (mechanism probe): at 'modify' of a file, every LP view of ANOTHER note whose top-level embed resolves to it
+  P.emuInstall = () => { if (P.emuOn) return; P.emuOn = true; app.vault.on('modify', (file) => { if (!P.emu) return; for (const leaf of app.workspace.getLeavesOfType('markdown')) { const v = leaf.view; if (!v.file || v.file.path === file.path || v.getMode() !== 'source') continue; const s = P.lp(leaf); if (!s) continue; for (const e of s.querySelectorAll('.cm-content > .internal-embed')) { const src = (e.getAttribute('src') || '').split('#')[0]; const d = app.metadataCache.getFirstLinkpathDest(src, v.file.path); if (!d || d.path !== file.path || !e.querySelector('[data-dse-element]')) continue; const tgt = P.emu === 'sizer' ? P.isz(e) : e; if (!tgt) continue; const px = Math.round(tgt.getBoundingClientRect().height); tgt.style.setProperty('min-height', px + 'px', 'important'); tgt.setAttribute('data-p522-hold', String(px)); const root0 = e.querySelector('[data-dse-element]'); const win = s.ownerDocument.defaultView; let done = false; const rel = () => { if (done) return; done = true; mo.disconnect(); tgt.style.removeProperty('min-height'); tgt.removeAttribute('data-p522-hold'); try { v.editor.cm.requestMeasure(); } catch (x) {} }; const mo = new win.MutationObserver(() => { const r = e.querySelector('[data-dse-element]'); if (r && r !== root0 && r.childElementCount > 0) rel(); }); mo.observe(e, { childList: true, subtree: true }); win.setTimeout(rel, 2500); } } }); };
+  return true;
+})()`;
+
+function p522Prof(profile) {
+	// self time per function (ms) and total (inclusive) time of the top frames
+	const byId = new Map(profile.nodes.map((n) => [n.id, n]));
+	const self = new Map();
+	const dt = profile.timeDeltas; const smp = profile.samples;
+	for (let i = 0; i < smp.length; i++) { const n = byId.get(smp[i]); const k = `${n.callFrame.functionName || '(anon)'} ${String(n.callFrame.url).split('/').pop()}:${n.callFrame.lineNumber}`; self.set(k, (self.get(k) ?? 0) + (dt[i] ?? 0) / 1000); }
+	const parent = new Map(); for (const n of profile.nodes) for (const c of n.children ?? []) parent.set(c, n.id);
+	const incl = new Map();
+	for (let i = 0; i < smp.length; i++) { const seen = new Set(); for (let id = smp[i]; id !== undefined; id = parent.get(id)) { const n = byId.get(id); const k = `${n.callFrame.functionName || '(anon)'} ${String(n.callFrame.url).split('/').pop()}:${n.callFrame.lineNumber}`; if (seen.has(k)) continue; seen.add(k); incl.set(k, (incl.get(k) ?? 0) + (dt[i] ?? 0) / 1000); } }
+	const top = (m, n) => [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, n).map(([k, v]) => `${Math.round(v)}ms ${k}`);
+	return { self: top(self, 25), incl: top(incl, 40) };
+}
+async function p522Park(t, where) {
+	const sc = `window.__p522.lp(window.__p522A)`;
+	await t.ev(`(() => { const s = ${sc}; s.scrollTop = 0; return true; })()`);
+	await t.sleep(300);
+	let found = false;
+	for (let i = 0; i < 60 && !found; i++) {
+		found = await t.ev(`(() => { const s = ${sc}; const e = window.__p522.emb(s); if (e && e.querySelector('[data-dse-element]')) return true; s.scrollTop += Math.round(s.clientHeight * 0.6); return false; })()`);
+		if (!found) await t.sleep(200);
+	}
+	await t.sleep(500);
+	const geo = `(() => { const s = ${sc}; const e = window.__p522.emb(s); if (!e) return { err: 'no embed' }; const sr = s.getBoundingClientRect(); const er = e.getBoundingClientRect(); const root = e.querySelector('[data-dse-element]'); const rr = root ? root.getBoundingClientRect() : null; return { top: Math.round(er.top - sr.top + s.scrollTop), h: Math.round(er.height), rootBottom: rr ? Math.round(rr.bottom - sr.top + s.scrollTop) : null, max: s.scrollHeight - s.clientHeight, ch: s.clientHeight }; })()`;
+	for (let i = 0; i < 4; i++) {
+		const p = await t.ev(geo);
+		if (p.err) { await t.sleep(300); continue; }
+		const target = where === 'above' ? Math.max(200, p.top - p.ch - 600) : where === 'near' ? Math.max(200, p.top - p.ch + 100) : where === 'view' ? p.top - 200 : where === 'in' ? p.top + 1500 : where === 'below' ? p.top + p.h + 400 : where === 'inside' ? p.rootBottom + 150 : p.max + 100000;
+		await t.ev(`(() => { const s = ${sc}; s.scrollTop = ${target}; return true; })()`);
+		await t.sleep(450);
+	}
+	await t.sleep(300);
+	const end = await t.ev(`(() => { const s = ${sc}; const e = window.__p522.emb(s); const sr = s.getBoundingClientRect(); return { st: Math.round(s.scrollTop), sh: s.scrollHeight, max: s.scrollHeight - s.clientHeight, embTop: e ? Math.round(e.getBoundingClientRect().top - sr.top) : null, embH: e ? Math.round(e.getBoundingClientRect().height) : null }; })()`);
+	return Object.assign({ geo: await t.ev(geo) }, end);
+}
+
+function p522Summ(r) {
+	const f = r.series;
+	const num = (k) => f.map((x) => x[k]).filter((v) => typeof v === 'number' && !Number.isNaN(v));
+	const mn = (k) => { const a = num(k); return a.length ? Math.min(...a) : null; };
+	const mx = (k) => { const a = num(k); return a.length ? Math.max(...a) : null; };
+	const first = f[0] ?? {};
+	const last = f.at(-1) ?? {};
+	const stMinScroll = r.f.scrolls.length ? Math.min(...r.f.scrolls.map((x) => x.st)) : null;
+	return {
+		actionT: r.meta.actionT, actionErr: r.meta.actionErr, frames: f.length,
+		modify: r.events.map((e) => `${e.path}@${e.t}ms${e.A ? ` st=${e.A.st},embH=${e.A.embH},root=${e.A.rootConn}` : ''}`),
+		st0: first.st, stMin: Math.min(mn('st'), stMinScroll ?? Infinity), stMax: mx('st'), stEnd: last.st,
+		sh0: first.sh, shMin: mn('sh'), cmH0: first.cmH, cmHMin: mn('cmH'), cmHEnd: last.cmH,
+		embH0: first.embH, embHMin: mn('embH'), embHEnd: last.embH, iszH0: first.iszH, iszHMin: mn('iszH'), iszHEnd: last.iszH, imh0: first.imh, imhMin: mn('imh'),
+		hmH0: first.hmH, hmHMin: mn('hmH'), hmHEnd: last.hmH,
+		vis0: first.vis, visMin: mn('vis'), visMax: mx('vis'), visEnd: last.vis, visLost: f.some((x) => x.vis === null) && first.vis !== null,
+		ins0: first.ins, insMin: mn('ins'), insMax: mx('ins'), insEnd: last.ins, insLost: f.some((x) => x.ins === null) && first.ins !== null,
+		top0: `${first.topLine}+${first.topOff}`, topEnd: `${last.topLine}+${last.topOff}`, topLines: [...new Set(f.map((x) => x.topLine))].slice(0, 8),
+		holdFrames: f.filter((x) => x.hold).length,
+		post: (() => { const q = r.post || []; const n = (k) => q.map((x) => x[k]).filter((v) => typeof v === 'number'); const lo = (k) => (n(k).length ? Math.min(...n(k)) : null); const hi = (k) => (n(k).length ? Math.max(...n(k)) : null); return { n: q.length, stMin: lo('st'), stMax: hi('st'), visMin: lo('vis'), visMax: hi('vis'), insMin: lo('ins'), insMax: hi('ins') }; })(),
+		rootDisc: r.f.rootDisc, embDisc: r.f.embDisc, iszDisc: r.f.iszDisc,
+		firstMoveT: (() => { const x = f.find((y) => y.st !== first.st); return x ? x.t : null; })(),
+		firstScroll: r.f.scrolls[0] ?? null, nScrolls: r.f.scrolls.length,
+		tag: r.tagInfo,
+	};
+}
+const p522Line = (row) => {
+	const s = row.summ;
+	return `${row.kase}#${row.rep} adopt=${row.adopt}${row.emu ? ' emu=' + row.emu : ''} park=${JSON.stringify({ st: row.park.st, max: row.park.max, embTop: row.park.geo?.top, embH: row.park.geo?.h })}: st ${s.st0}->min ${s.stMin} max ${s.stMax} end ${s.stEnd}; top ${s.top0}->${s.topEnd}; cmH ${s.cmH0}->min ${s.cmHMin} end ${s.cmHEnd}; embH ${s.embH0}->min ${s.embHMin} end ${s.embHEnd}; iszH ${s.iszH0}->min ${s.iszHMin} end ${s.iszHEnd}; imh ${s.imh0}->${s.imhMin}; hmH ${s.hmH0}->min ${s.hmHMin} end ${s.hmHEnd}; vis[${JSON.stringify(s.tag.visTxt)}] ${s.vis0}->[${s.visMin},${s.visMax}] end ${s.visEnd}${s.visLost ? ' LOST' : ''}; ins[${JSON.stringify(s.tag.insTxt)}] ${s.ins0}->[${s.insMin},${s.insMax}] end ${s.insEnd}${s.insLost ? ' LOST' : ''}; hold ${s.holdFrames}; disc root ${s.rootDisc} emb ${s.embDisc} isz ${s.iszDisc}; move@${s.firstMoveT} scroll1 ${JSON.stringify(s.firstScroll)} n${s.nScrolls}; act ${s.actionT}${s.actionErr ? ' ERR ' + s.actionErr : ''} landed ${row.landed} prep ${row.prepV}/${row.prepShown} shownAfter ${row.shownAfter} modify ${JSON.stringify(s.modify)}`;
+};
+
+async function p522Case(t, kase, rep, adopt) {
+	const [writerRaw, park, shapeKey = 'S'] = kase.split(':');
+	const pop = writerRaw.endsWith('@pop');
+	const writer = writerRaw.replace('@pop', '');
+	const shape = P522_SHAPES[shapeKey];
+	const dur = Number(process.env.P522_DUR ?? 3500);
+	await t.open('Lifecycle/other.md');
+	await t.reset(shape.b);
+	if (shape.b === 'SC522/EmbS.md' && shapeKey === 'N') { /* N embeds S */ }
+	if (pop) {
+		await t.ev(`(async () => { const l = app.workspace.openPopoutLeaf({ size: { width: 1200, height: 1000 } }); window.__p522A = l; await l.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(shape.a)}, mode: 'source', source: false }, active: true }); l.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+	} else {
+		await t.ev(`(async () => { const l = app.workspace.getMostRecentLeaf(); window.__p522A = l; await l.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(shape.a)}, mode: 'source', source: false }, active: true }); l.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+	}
+	await t.sleep(1500);
+	window_B: {
+		if (writer === 'paneR' || writer === 'paneLP') {
+			const st = writer === 'paneR' ? { mode: 'preview' } : { mode: 'source', source: false };
+			await t.ev(`(async () => { const b = app.workspace.getLeaf('split', 'vertical'); window.__p522B = b; await b.setViewState({ type: 'markdown', state: Object.assign({ file: ${JSON.stringify(shape.b)} }, ${JSON.stringify(st)}), active: false }); if (b.view.editor && ${writer === 'paneLP'}) b.view.editor.setCursor({ line: 0, ch: 0 }); app.workspace.setActiveLeaf(window.__p522A, { focus: true }); return true; })()`);
+			await t.sleep(1500);
+		}
+	}
+	// prep: a malice value no embed has shown yet; wait until A's embed shows it (Obsidian skips an embed redraw when the content is unchanged)
+	const prepV = ++P522_SEQ.n;
+	await t.edit(shape.b, `c.replace(/  value: \\d+/, '  value: ${prepV}')`);
+	const shownExpr = `(() => { const s = window.__p522.lp(window.__p522A); const e = s && window.__p522.emb(s); const m = e && e.querySelector('.dse-init__malice-num, .dse-init__malice-value'); return m ? m.textContent : null; })()`;
+	let form = null;
+	if (writer === 'form') {
+		// open the edit form from the embedded tracker with its top in view, then park A underneath the modal
+		const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+		await t.ev(`(() => { if (!document.getElementById('p522-notice')) { const st = document.createElement('style'); st.id = 'p522-notice'; st.textContent = '.notice-container { display: none !important; }'; document.head.appendChild(st); } return true; })()`);
+		await t.ev(`${prefs}.set('authoringControls', true)`);
+		await p522Park(t, 'view');
+		await t.sleep(600);
+		const kit = formKit(t);
+		const rootExpr = `window.__p522.emb(window.__p522.lp(window.__p522A)).querySelector('${TRACKER}')`;
+		await kit.clickPencil('form', rootExpr);
+		await kit.waitFormOpen('form');
+		form = kit;
+	}
+	const parkA = await p522Park(t, park);
+	let prepShown = null;
+	for (let i = 0; i < 25; i++) {
+		prepShown = await t.ev(shownExpr);
+		if (prepShown && prepShown.includes(String(prepV))) break;
+		await t.sleep(200);
+	}
+	if (writer === 'paneR' || writer === 'paneLP') {
+		const sB = writer === 'paneR' ? `window.__p522.rd(window.__p522B)` : `window.__p522.lp(window.__p522B)`;
+		for (let i = 0; i < 4; i++) {
+			await t.ev(`(() => { const s = ${sB}; const r = s.querySelector('${TRACKER}'); if (r) s.scrollTop = r.getBoundingClientRect().top - s.getBoundingClientRect().top + s.scrollTop + 1200; return true; })()`);
+			await t.sleep(400);
+		}
+	}
+	const caseV = ++P522_SEQ.n;
+	const relB = JSON.stringify(shape.b);
+	const before = t.read(shape.b);
+	const shotP = async (when) => { const sh = await t.cdp.call('Page.captureScreenshot', { format: 'png' }); fs.mkdirSync(P522_OUT, { recursive: true }); const fl = path.join(P522_OUT, `sc522-r1-shot-${P522_VAR}-${kase.replace(/[:@]/g, '-')}-${adopt}-${when}.png`); fs.writeFileSync(fl, Buffer.from(sh.data, 'base64')); return fl; };
+	const shots = {};
+	if (process.env.P522_SHOT === '1' && rep === 0 && !pop) shots.before = await shotP('before');
+	await t.ev(`(() => { window.__p522.emu = ${JSON.stringify(process.env.P522_EMU ?? null)}; window.__p522.emuInstall(); return true; })()`);
+	const recExpr = (action, d = dur) => `window.__p522.rec(window.__p522A, ${d}, ${action})`;
+	const clickIn = (scopeExpr) => `() => { const sc = ${scopeExpr}; const s = sc.closest('.cm-scroller') || sc.closest('.markdown-preview-view'); const sr = s.getBoundingClientRect(); const all = Array.from(sc.querySelectorAll('button.dse-init__portrait-toggle')); const b = all.find((x) => { const r = x.getBoundingClientRect(); return r.top > sr.top + 20 && r.bottom < sr.bottom - 20; }); if (!b) throw new Error('no visible toggle (' + all.length + ')'); b.click(); }`;
+	if (process.env.P522_EMU_CLICK === '1') await t.ev(`(() => { const e = window.__p522.emb(window.__p522.lp(window.__p522A)); for (const r of e.querySelectorAll('[data-dse-element]')) if (!r.__p522click) { r.__p522click = true; r.addEventListener('click', (ev) => ev.stopPropagation()); } return true; })()`);
+	let r;
+	const prof = process.env.P522_PROFILE === '1' && rep === 0;
+	if (prof) { await t.cdp.call('Profiler.enable'); await t.cdp.call('Profiler.setSamplingInterval', { interval: 500 }); await t.cdp.call('Profiler.start'); }
+	if (writer === 'own') r = await t.ev(recExpr(clickIn(`window.__p522.emb(window.__p522.lp(window.__p522A))`)));
+	else if (writer === 'ownreal') {
+		const pt = await t.ev(`(() => { const sc = window.__p522.emb(window.__p522.lp(window.__p522A)); const s = window.__p522.lp(window.__p522A); const sr = s.getBoundingClientRect(); const b = Array.from(sc.querySelectorAll('button.dse-init__portrait-toggle')).find((x) => { const q = x.getBoundingClientRect(); return q.top > sr.top + 20 && q.bottom < sr.bottom - 20; }); if (!b) return null; const q = b.getBoundingClientRect(); return { x: q.left + q.width / 2, y: q.top + q.height / 2 }; })()`);
+		if (!pt) throw new Error('ownreal: no visible toggle');
+		await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: pt.x, y: pt.y });
+		await t.ev(`(() => { window.__p522pending = ${recExpr('null')}; return true; })()`);
+		const base = { x: pt.x, y: pt.y, button: 'left', clickCount: 1 };
+		await t.cdp.call('Input.dispatchMouseEvent', { type: 'mousePressed', buttons: 1, ...base });
+		await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseReleased', buttons: 0, ...base });
+		r = await t.ev('window.__p522pending');
+	}
+	else if (writer === 'paneR') r = await t.ev(recExpr(clickIn(`window.__p522.rd(window.__p522B).querySelector('${TRACKER}')`)));
+	else if (writer === 'paneLP') r = await t.ev(recExpr(clickIn(`window.__p522.lp(window.__p522B).querySelector('${TRACKER}')`)));
+	else if (writer === 'process') r = await t.ev(recExpr(`() => app.vault.process(app.vault.getAbstractFileByPath(${relB}), (c) => c.replace(/  value: \\d+/, '  value: ${caseV}'))`));
+	else if (writer === 'addhero') r = await t.ev(recExpr(`() => app.vault.process(app.vault.getAbstractFileByPath(${relB}), (c) => c.replace('enemy_groups: []', '  - name: "Added ${caseV}"\\n    max_stamina: 30\\nenemy_groups: []'))`));
+	else if (writer === 'delhero') r = await t.ev(recExpr(`() => app.vault.process(app.vault.getAbstractFileByPath(${relB}), (c) => c.replace('  - name: "Hero 01"\\n    max_stamina: 30\\n', ''))`));
+	else if (writer === 'nodefs') {
+		await t.ev(`(() => { window.__p522pending = ${recExpr('null', dur + 300)}; return true; })()`);
+		await sleep(60);
+		fs.writeFileSync(path.join(vault, shape.b), t.read(shape.b).replace(/ {2}value: \d+/, `  value: ${caseV}`));
+		r = await t.ev('window.__p522pending');
+	} else if (writer === 'form') {
+		const ok = await t.ev(`(() => { const ta = ${form ? `document.querySelector('.modal-container .dse-modal')` : 'null'}.querySelector('textarea.dse-form__raw'); if (!ta) return false; ta.value = ta.value.replace(/  value: \\d+/, '  value: ${caseV}'); ta.dispatchEvent(new Event('input', { bubbles: true })); return true; })()`);
+		if (!ok) throw new Error('form: no raw box');
+		const SAVE = `Array.from(document.querySelectorAll('.modal-container .dse-modal button')).find((b) => b.getAttribute('aria-label') === 'Save')`;
+		await t.waitFor(`!!(${SAVE}) && !(${SAVE}).disabled`, 'form Save enabled');
+		r = await t.ev(recExpr(`() => { (${SAVE}).click(); }`));
+	} else throw new Error(`unknown writer ${writer}`);
+	let profSumm = null;
+	if (prof) { const { profile } = await t.cdp.call('Profiler.stop', {}, 60000); profSumm = p522Prof(profile); fs.writeFileSync(path.join(P522_OUT, `sc522-r1-PROF-${P522_VAR}-${kase.replace(/[:@]/g, '-')}-${adopt}.cpuprofile`), JSON.stringify(profile)); }
+	await t.sleep(400);
+	const disk = t.read(shape.b);
+	const landed = disk !== before;
+	const shownAfter = await t.ev(shownExpr);
+	const row = { profSumm, kase, rep, adopt, emu: process.env.P522_EMU ?? null, writer, park: parkA, landed, prepV, prepShown, caseV, shownAfter, summ: p522Summ(r), raw: r };
+	if (process.env.P522_SHOT === '1' && rep === 0 && !pop) { shots.after = await shotP('after'); row.shots = shots; }
+	if (writer === 'form') await t.ev(`app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs.set('authoringControls', false)`);
+	if (pop) await t.ev(`(() => { try { window.__p522A.detach(); } catch (e) {} return true; })()`);
+	return row;
+}
+
+SCENARIOS.push({
+	id: 'P522-REPRO',
+	async run(t) {
+		await t.ev(P522_INSTALL);
+		await t.ev(`window.__p522.moLayout = ${process.env.P522_MOLAYOUT === '1'}`);
+		await t.ev(`window.__p522.trace = ${process.env.P522_TRACE === '1'}`);
+		const adopt = process.env.P522_ADOPT ?? 'on';
+		const reps = Number(process.env.P522_REPS ?? 2);
+		const cases = (process.env.P522_CASES ?? 'process:end:E').split(',');
+		const prev = await t.ev(`${t.reg}.enabled`);
+		const rows = [];
+		try {
+			await t.ev(`${t.reg}.enabled = ${adopt === 'on' ? 'true' : 'false'}`);
+			for (const kase of cases) {
+				for (let rep = 0; rep < reps; rep++) {
+					try {
+						rows.push(await p522Case(t, kase, rep, adopt));
+					} catch (e) {
+						rows.push({ kase, rep, adopt, error: String((e && e.stack) || e) });
+						await t.ev(`(() => { document.querySelectorAll('.modal-container .modal-close-button').forEach((b) => b.click()); return true; })()`);
+					} finally {
+						await t.ev(`(() => { if (window.__p522B) { try { window.__p522B.detach(); } catch (e) {} window.__p522B = null; } return true; })()`);
+						for (const sh of new Set(Object.values(P522_SHAPES).map((x) => x.b))) if (t.read(sh) !== FIXTURES[sh]) await t.reset(sh);
+						await t.sleep(300);
+					}
+				}
+			}
+		} finally {
+			await t.ev(`${t.reg}.enabled = ${JSON.stringify(prev)}`);
+			await t.open('Lifecycle/other.md');
+		}
+		p522Write(`REPRO-${P522_VAR}-${adopt}`, rows);
+		return '\n  ' + rows.map((r) => (r.error ? `${r.kase}#${r.rep}: ERROR ${r.error.split('\n').slice(0, 2).join(' / ')}` : p522Line(r))).join('\n  ');
+	},
+});
+// ===== end SC-522 r1 PROBE LP =====

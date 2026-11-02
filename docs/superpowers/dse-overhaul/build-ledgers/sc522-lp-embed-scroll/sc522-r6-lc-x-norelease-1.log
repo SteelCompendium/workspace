@@ -1,0 +1,7 @@
+bundle fctl-norelease main.js ca6ff99cab7a styles.css ae45354b6369 harness ad018cd
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :160, port 9624, 1 scenario(s)
+OBSIDIAN-LIFECYCLE G-S52 FAIL: (a) external vault.process: the hold outlived the remount by 133 frames - it must be released by our view mounting, not by its timer | (b) external write on disk: the hold outlived the remount by 134 frames - it must be released by our view mounting, not by its timer | (c) another pane: the hold outlived the remount by 117 frames - it must be released by our view mounting, not by its timer | (d) below the embed, a hero added: the hold outlived the remount by 132 frames - it must be released by our view mounting, not by its timer | (f) the hold stayed on for 149 frames after the redraw - a blank band until its timer (scrollTop 7047 -> 5416 (new end 5416); embed 3437 -> 1806 px; hold at the redraw true, hold frames 150, after the redraw 149) [shot /tmp/dse-obsidian-lifecycle-tiI3jq/shots/G-S52-FAIL.png]
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-tiI3jq
+OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+rc=1
+porcelain-after: [] head: ad018cd

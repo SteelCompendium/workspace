@@ -1,0 +1,78 @@
+#!/usr/bin/env python3
+# Mutation check for the SC-522 jest. Run via devbox. Each mutation edits one source line, runs the targeted
+# jest suites with --json, records the failing test names, restores the file with git checkout.
+import json, subprocess, sys, os
+W = '/home/scott/code/steelCompendium/worktrees/sc522-lp-embed-scroll/draw-steel-elements'
+S = '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc522-r4-impl1'
+HOLD = 'src/framework/host/livePreviewScrollHold.ts'
+PIN = 'src/framework/host/previewScrollPin.ts'
+PIPE = 'src/framework/pipeline.ts'
+REG = 'src/framework/registerFrameworkElements.ts'
+M = [
+ ('hold: top-of-host guard removed', HOLD, "if (view.scrollDOM.scrollTop <= 0) return;", "if (false) return;"),
+ ('hold: any embed held (embedsBlockOf ignored)', HOLD, "if (embedsBlockOf(el, path, hostPath, resolveLink)) this.holdEmbed(view, el);", "this.holdEmbed(view, el);"),
+ ('hold: Reading view not skipped', HOLD, "if (!view.file || view.getMode?.() !== 'source') continue;", "if (!view.file) continue;"),
+ ('hold: other notes never held', HOLD, "if (!own && !resolveLink) continue;", "if (!own) continue;"),
+ ('hold: own view no longer captured by SC-478', HOLD, "const own = view.file.path === path;", "const own = false;"),
+ ('hold: border-box edge handling removed', HOLD, "cs.boxSizing === 'border-box' ? 0 :", "true ? 0 :"),
+ ('hold: re-hold may lower the floor', HOLD, "px = Math.max(px, prev.px);", "px = px;"),
+ ('hold: TTL backstop doubled', HOLD, "const timer = win.setTimeout(release, PIN_TTL_MS);\n\t\tthis.embedHolds.set(", "const timer = win.setTimeout(release, PIN_TTL_MS * 2);\n\t\tthis.embedHolds.set("),
+ ('hold: prior inline min-height not restored', HOLD, "if (inline) embed.style.setProperty('min-height', inline);", "if (false) embed.style.setProperty('min-height', inline);"),
+ ('hold: released while the new root is empty', HOLD, "roots.every((root) => root.childElementCount > 0)", "true"),
+ ('hold: fresh mount not recognised', HOLD, "if (!back && roots.some((root) => !roots0.has(root))) back = true;", ""),
+ ('hold: adopted re-add not recognised', HOLD, "Array.from(roots0).some((root) => n === root || n.contains(root))", "false"),
+ ('hold: no requestMeasure at release', HOLD, "\t\t\tview.requestMeasure();\n\t\t};\n\t\tconst timer", "\t\t};\n\t\tconst timer"),
+ ('hold: releaseAll does not see embed holds', HOLD, "this.embedHolds.set(embed, { px, roots0, release });\n\t\tthis.holds.set(release, view);", "this.embedHolds.set(embed, { px, roots0, release });"),
+ ('hold: attribute value not the held px', HOLD, "embed.setAttribute(EMBED_HOLD_ATTR, String(Math.round(px)));", "embed.setAttribute(EMBED_HOLD_ATTR, '0');"),
+ ('pin: embedsBlockOf ignores the container itself', PIN, "if (scroller.matches('.internal-embed[src]')) embeds.unshift(scroller);", ""),
+ ('wiring: modify handler passes no resolver', REG, "lpHold.captureViewsOf(plugin.app.workspace, file.path, resolveLink)", "lpHold.captureViewsOf(plugin.app.workspace, file.path)"),
+ ('pipeline: no capture click listener', PIPE, "root.addEventListener('click', markInEditorEmbed, { capture: true });", ""),
+ ('pipeline: press does not mark', PIPE, "\t\tmarkInEditorEmbed();\n\t\tif (!isEditableControlTarget", "\t\tif (!isEditableControlTarget"),
+ ('pipeline: marks in any .internal-embed (Reading view)', PIPE, "root.closest('.cm-content .internal-embed')", "root.closest('.internal-embed')"),
+ ('pipeline: marks anywhere under .cm-content (code-block widget)', PIPE, "root.closest('.cm-content .internal-embed')", "root.closest('.cm-content')"),
+ ('pipeline: never marks', PIPE, "if (!root.classList.contains('interactive-child') && root.closest('.cm-content .internal-embed'))", "if (false)"),
+ ('r4 hold: redraw evidence counts removals inside our own roots', HOLD, "!(r.target as Element).closest?.('[data-dse-element]')", "true"),
+ ('r4 hold: no redraw evidence required', HOLD, "if (redrawn && settle === null && mounted(roots)) {", "if (settle === null && mounted(roots)) {"),
+ ('r4 hold: deferred release never fires', HOLD, "if (mounted(Array.from(embed.querySelectorAll('[data-dse-element]')))) release();", "if (false) release();"),
+ ('r4 hold: released at once, no deferral', HOLD, "\t\t\t\tsettle = win.setTimeout(() => {\n\t\t\t\t\tsettle = null;\n\t\t\t\t\tif (mounted(Array.from(embed.querySelectorAll('[data-dse-element]')))) release();\n\t\t\t\t}, 0);", "\t\t\t\trelease();"),
+ ('r4 hold: re-hold always keeps the larger floor', HOLD, "if (Array.from(prev.roots0).some((root) => !root.isConnected)) px = Math.max(px, prev.px);", "px = Math.max(px, prev.px);"),
+ ('r4 hold: re-hold never keeps the larger floor', HOLD, "if (Array.from(prev.roots0).some((root) => !root.isConnected)) px = Math.max(px, prev.px);", ""),
+ ('r4 hold: release clears no pending deferral', HOLD, "if (settle !== null) win.clearTimeout(settle);", ""),
+ ('r4 hold: deferral not re-checked', HOLD, "if (mounted(Array.from(embed.querySelectorAll('[data-dse-element]')))) release();", "release();"),
+]
+FILES = ['test/dom/framework/livePreviewScrollHold.test.ts', 'test/dom/framework/pipeline.test.ts', 'test/dom/framework/previewScrollPin.test.ts', 'test/dom/framework/register-framework-elements.test.ts']
+def git(*a): return subprocess.run(['git', '-C', W, *a], capture_output=True, text=True)
+def jest(tag):
+    out = f'{S}/logs/mut-{tag}.json'
+    subprocess.run(['npx', 'jest', *FILES, '--json', f'--outputFile={out}'], cwd=W, capture_output=True, text=True)
+    try:
+        j = json.load(open(out))
+    except Exception as e:
+        return None, [f'jest json unreadable: {e}']
+    failed = [a['fullName'] for t in j['testResults'] for a in t['assertionResults'] if a['status'] == 'failed']
+    # a suite that failed to compile has no assertion results
+    bad_suites = [t['name'] for t in j['testResults'] if t['status'] == 'failed' and not any(a['status']=='failed' for a in t['assertionResults'])]
+    return j['numPassedTests'], failed + [f'SUITE-ERROR {b}' for b in bad_suites]
+rows = []
+killed = 0
+assert git('status', '--porcelain').stdout.strip() == '', 'tree must be clean'
+for i, (name, f, old, new) in enumerate(M, 1):
+    p = os.path.join(W, f)
+    s = open(p).read()
+    if s.count(old) != 1:
+        rows.append((i, name, 'NOT-APPLIED (old text count %d)' % s.count(old), [])); continue
+    try:
+        open(p, 'w').write(s.replace(old, new))
+        passed, failed = jest(str(i))
+    finally:
+        git('checkout', '--', f)
+    ok = bool(failed)
+    killed += ok
+    rows.append((i, name, 'KILLED' if ok else 'SURVIVED', failed))
+assert git('status', '--porcelain').stdout.strip() == '', 'tree not restored'
+with open(f'{S}/logs/mutation-summary.txt', 'w') as o:
+    for r in rows:
+        o.write(f'{r[0]:2d} {r[2]:9s} {r[1]}\n')
+        for t in r[3]: o.write(f'      - {t}\n')
+    o.write(f'KILLED {killed} / {len(M)}\n')
+print(f'KILLED {killed} / {len(M)}')

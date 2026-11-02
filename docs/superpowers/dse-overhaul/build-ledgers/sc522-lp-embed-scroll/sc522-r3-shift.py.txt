@@ -1,0 +1,26 @@
+# shift.py <dir>...: for each trace screenshot, the vertical offset (CSS px) of the band below the embed vs the first (pre-write) frame
+import sys, json, os
+from PIL import Image, ImageChops, ImageStat
+for d in sys.argv[1:]:
+    meta = json.load(open(os.path.join(d, 'meta.json')))
+    fs = sorted(f for f in os.listdir(d) if f.endswith('.jpg'))
+    ims = [Image.open(os.path.join(d, f)).convert('L') for f in fs]
+    W, H = ims[0].size
+    sc = W / 1440.0
+    ref = meta['ref']
+    x0, x1 = int((ref['x0'] + 20) * sc), int((ref['x1'] - 40) * sc)
+    # a 240-px band starting 40 px above the reference line (text below the embed)
+    by0 = int((ref['y'] - 40) * sc); bh = int(240 * sc)
+    band = ims[0].crop((x0, by0, x1, by0 + bh))
+    mark = meta['markTs']
+    print(f"== {os.path.basename(d)} size {W}x{H} scale {sc:.3f} ref {ref['text']!r} y {ref['y']}")
+    for f, im in zip(fs, ims):
+        ts = int(f.split('-')[1].split('.')[0])
+        best = None
+        for off in range(-200, 201, 1):
+            y = by0 + int(off * sc)
+            if y < 0 or y + bh > H: continue
+            diff = ImageStat.Stat(ImageChops.difference(band, im.crop((x0, y, x1, y + bh)))).mean[0]
+            if best is None or diff < best[1]: best = (off, diff)
+        same = ImageStat.Stat(ImageChops.difference(band, im.crop((x0, by0, x1, by0 + bh)))).mean[0]
+        print(f"  {f}: t={(ts - mark) / 1000:+.1f} ms from the write; best offset {best[0]:+d} px (diff {best[1]:.2f}); diff at 0 = {same:.2f}")

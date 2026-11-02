@@ -1,0 +1,9 @@
+#!/bin/bash
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc522-r5-a79dd8ba57f5042f0
+W=/home/scott/code/steelCompendium/worktrees/sc522-lp-embed-scroll/draw-steel-elements
+cd "$W" || exit 9
+npm run tsc > "$S/logs/tsc.log" 2>&1; echo "tsc rc=$?" | tee -a "$S/logs/tsc.log"
+npm run lint > "$S/logs/lint.log" 2>&1; echo "lint rc=$?" | tee -a "$S/logs/lint.log"
+npx jest > "$S/logs/jest.log" 2>&1; echo "jest rc=$?" | tee -a "$S/logs/jest.log"
+grep -E "^Tests:|^Test Suites:" "$S/logs/jest.log"
+echo "porcelain: [$(git -C "$W" status --porcelain | tr '\n' ' ')]"

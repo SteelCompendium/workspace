@@ -1,0 +1,37 @@
+// ===== SC-522 r1 PROBE COST: the embed scan per Live Preview view per `modify`, and the hold's set / clear (cost bundle) =====
+SCENARIOS.push({
+	id: 'P522-COST',
+	async run(t) {
+		await t.ev(P522_INSTALL);
+		const out = { holds: [], scanOnly: [] };
+		for (const kase of ['process:end:E', 'process:below:S', 'process:end:C']) {
+			for (let rep = 0; rep < 3; rep++) {
+				await t.ev('(() => { window.__dseLpEmbedCost = []; return true; })()');
+				const row = await p522Case(t, kase, rep, 'on');
+				const cost = await t.ev('window.__dseLpEmbedCost');
+				out.holds.push({ kase, rep, st: `${row.summ.st0}->${row.summ.stEnd}`, cost });
+				for (const sh of new Set(Object.values(P522_SHAPES).map((x) => x.b))) if (t.read(sh) !== FIXTURES[sh]) await t.reset(sh);
+			}
+		}
+		// three Live Preview panes of other notes (one embeds EmbS, two are tall notes without embeds); 20 writes to a note none of them embeds
+		await t.open('Lifecycle/other.md');
+		await t.ev(`(async () => { const a = app.workspace.getMostRecentLeaf(); await a.setViewState({ type: 'markdown', state: { file: 'SC522/EmbAS.md', mode: 'source', source: false } }); for (const f of ['Lifecycle/tall.md', 'SC522/EmbAL.md']) { const l = app.workspace.getLeaf('split', 'vertical'); await l.setViewState({ type: 'markdown', state: { file: f, mode: 'source', source: false } }); } return true; })()`);
+		await t.sleep(1500);
+		await t.ev(`(() => { for (const l of app.workspace.getLeavesOfType('markdown')) { const s = l.view.containerEl.querySelector('.cm-scroller'); if (s) s.scrollTop = 4000; } return true; })()`);
+		await t.sleep(800);
+		await t.ev('(() => { window.__dseLpEmbedCost = []; return true; })()');
+		for (let i = 0; i < 20; i++) {
+			await t.edit('Lifecycle/other.md', `c + 'x'`);
+			await t.sleep(150);
+		}
+		out.scanOnly = await t.ev('window.__dseLpEmbedCost');
+		await t.reset('Lifecycle/other.md');
+		await t.ev(`(() => { const ls = app.workspace.getLeavesOfType('markdown'); for (const l of ls.slice(1)) l.detach(); return true; })()`);
+		p522Write(`COST-${P522_VAR}`, out);
+		const pick = (arr, k) => arr.filter((x) => x.k === k).map((x) => x.ms);
+		const stat = (a) => { if (!a.length) return 'n/a'; const s = [...a].sort((x, y) => x - y); return `n=${a.length} median ${s[Math.floor(s.length / 2)].toFixed(2)} min ${s[0].toFixed(2)} max ${s.at(-1).toFixed(2)} ms`; };
+		const all = out.holds.flatMap((h) => h.cost);
+		return `holds: ${out.holds.map((h) => `${h.kase}#${h.rep} ${h.st}`).join(', ')}; set ${stat(pick(all, 'set'))}; clear ${stat(pick(all, 'clear'))}; scan (host views, with hold) ${stat(pick(all, 'scan'))}; scan (3 LP views, write to a note none embeds) ${stat(pick(out.scanOnly, 'scan'))}`;
+	},
+});
+// ===== end SC-522 r1 PROBE COST =====

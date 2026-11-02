@@ -1,0 +1,21 @@
+// ===== SC-522 r1 PROBE SRC: dump Obsidian app.js around the embed click handler (selectElement) =====
+SCENARIOS.push({
+	id: 'P522-SRC',
+	async run(t) {
+		const scripts = [];
+		t.cdp.ws.addEventListener('message', (e) => { const m = JSON.parse(e.data); if (m.method === 'Debugger.scriptParsed' && /app\.js$/.test(m.params.url)) scripts.push(m.params); });
+		await t.cdp.call('Debugger.enable');
+		await sleep(1500);
+		const sc = scripts[0];
+		if (!sc) return 'no app.js script';
+		const { scriptSource } = await t.cdp.call('Debugger.getScriptSource', { scriptId: sc.scriptId }, 60000);
+		await t.cdp.call('Debugger.disable');
+		const lines = scriptSource.split('\n');
+		const out = [];
+		for (const [ln, col, w] of [[437, 1459, 900], [437, 2230, 700], [203, 10451, 500]]) out.push(`--- ${ln}:${col}\n` + lines[ln - 1].slice(Math.max(0, col - w), col + 400));
+		const i = scriptSource.indexOf('selectElement');
+		fs.writeFileSync(path.join(P522_OUT, 'sc522-r1-SRC-app-snippets.txt'), out.join('\n\n'));
+		return `app.js ${scriptSource.length} chars; selectElement first at ${i}; snippets written`;
+	},
+});
+// ===== end SC-522 r1 PROBE SRC =====
