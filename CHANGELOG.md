@@ -21,7 +21,8 @@ go under an *Internal* sub-heading.
   show the upper one's new value, and a click on it then changed the upper block instead of the lower one. After
   a Save in the block's edit form the same click also undid the edit you had just saved. Each block now keeps
   its own card, its own value, and its clicks and saves go to its own block. Three identical blocks, identical
-  montages, and the view adoption setting turned off are covered too.
+  montages, blocks inside a callout or a quote, and the view adoption setting turned off are covered too.
+  (Identical blocks in two separate callouts are not covered in Live Preview yet.)
 
 - **DSE plugin: after Save in a block's edit form, keyboard focus returns to the card's Edit button instead of jumping to the top of the page (SC-518).**
   With experimental authoring controls on, Tab to a card's Edit button, press Enter, change a field and press Save:
