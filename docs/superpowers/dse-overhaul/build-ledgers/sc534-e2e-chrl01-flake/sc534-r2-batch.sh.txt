@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# usage: r2-batch.sh <label> <first> <last> [e2e args...]   (env SC539_CHURN_MS / SC534_CPU / SC534_NOPARK passed by the caller)
+P=/home/scott/code/steelCompendium/worktrees/sc534-e2e-chrl01-flake/draw-steel-elements
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc534-r2-impl
+label="$1"; first="$2"; last="$3"; shift 3
+cd "$P" || exit 9
+[ "$(pwd)" = "$P" ] || exit 9
+mkdir -p "$S/logs" "$S/bundles"
+sum="$S/summary-$label.txt"
+echo "== batch $label runs $first..$last args: $* env: CHURN=$SC539_CHURN_MS CPU=$SC534_CPU NOPARK=$SC534_NOPARK started $(date -Is) HEAD=$(git -C "$P" rev-parse --short HEAD)" >> "$sum"
+echo "load-before-batch: $(cat /proc/loadavg)" >> "$sum"
+for i in $(seq "$first" "$last"); do
+	log="$S/logs/$label-run$i.log"
+	echo "load-before: $(cat /proc/loadavg)" > "$log"
+	npm run e2e -- "$@" >> "$log" 2>&1
+	rc=$?
+	echo "load-after: $(cat /proc/loadavg)" >> "$log"
+	echo "RC=$rc" >> "$log"
+	run=$(command grep -a -o 'run [0-9]\{8\}-[0-9]\{6\}-[0-9a-f]*' "$log" | head -1 | cut -d' ' -f2)
+	done_line=$(command grep -a 'OBSIDIAN-E2E done:' "$log" | head -1)
+	park=$(command grep -a 'pointer parked\|pointer NOT parked' "$log" | head -1)
+	xing=$(command grep -a 'SC539-XING CHR-L01' "$log" | head -1 | sed 's/.*SC539-XING //')
+	fail=$(command grep -a 'OBSIDIAN-E2E CHR-L01' "$log" | head -1 | sed 's/.*OBSIDIAN-E2E //')
+	leaves_all=$(command grep -a 'SC539-XING' "$log" | command grep -a -o 'leave=[0-9]*' | cut -d= -f2 | awk '{s+=$1} END {print s+0}')
+	echo "run$i rc=$rc run=$run | $done_line | $park | L01: $fail | xing: $xing | leaves(all tests)=$leaves_all | $(command grep -a 'load-after' "$log")" >> "$sum"
+	if [ -n "$run" ] && [ -d "$P/e2e/.out/$run" ]; then
+		for d in "$P/e2e/.out/$run"/*/; do
+			[ -f "$d/error.txt" ] || [ -f "$d/screenshot.png" ] || continue
+			mkdir -p "$S/bundles/$label-run$i"
+			cp -a "$d" "$S/bundles/$label-run$i/"
+		done
+	fi
+done
+echo "load-after-batch: $(cat /proc/loadavg) finished $(date -Is)" >> "$sum"
+tail -n $((last - first + 4)) "$sum"

@@ -1,0 +1,72 @@
+diff --git a/e2e/driver/dse.ts b/e2e/driver/dse.ts
+index d31918bb..689fe843 100644
+--- a/e2e/driver/dse.ts
++++ b/e2e/driver/dse.ts
+@@ -273,7 +273,6 @@ async function beforeAction(el: El): Promise<void> {
+  *  or `inset` px in from its left edge at mid-height - the control's OWN surface (its padding),
+  *  which is where a disabled button's own events (and S1's B7) live. */
+ export interface ClickOptions {
+-	cdp?: boolean;
+ 	inset?: number;
+ 	/** Wait until the element's rect has stopped moving (toasts slide in) before pressing. */
+ 	stable?: boolean;
+@@ -315,25 +314,22 @@ async function cdpClick(el: El, opts: ClickOptions): Promise<void> {
+  * Real pointer click (wdio element.click: scroll into view, hit-test, press/release).
+  * "element click intercepted" is a genuine finding (something covers the control) and is
+  * never papered over; only a non-interactable-geometry error falls back to the CDP path.
+- * `{ cdp: true }` forces the CDP path; `{ inset }` clicks the control's own edge, not its label.
++ * `{ inset }` clicks the control's own edge, not its label.
+  */
+ async function click(el: El, opts: ClickOptions = {}): Promise<void> {
+ 	await el.waitForDisplayed({ timeout: 8000 });
+ 	const enabled = await el.isEnabled();
+ 	await beforeAction(el);
+ 	if (opts.stable) await waitStable(el);
+-	if (opts.cdp) await cdpClick(el, opts);
+-	else {
+-		try {
+-			if (opts.inset !== undefined) {
+-				const size = await el.getSize();
+-				await el.click({ x: Math.round(opts.inset - size.width / 2), y: 0 });
+-			} else await el.click();
+-		} catch (e) {
+-			const msg = e instanceof Error ? e.message : String(e);
+-			if (/intercepted/i.test(msg) || !/not interactable|out of bounds/i.test(msg)) throw e;
+-			await cdpClick(el, opts);
+-		}
++	try {
++		if (opts.inset !== undefined) {
++			const size = await el.getSize();
++			await el.click({ x: Math.round(opts.inset - size.width / 2), y: 0 });
++		} else await el.click();
++	} catch (e) {
++		const msg = e instanceof Error ? e.message : String(e);
++		if (/intercepted/i.test(msg) || !/not interactable|out of bounds/i.test(msg)) throw e;
++		await cdpClick(el, opts);
+ 	}
+ 	// Recorded only once the click really happened: a click that throws drives nothing.
+ 	recordDrive(labelOf(el), enabled ? 'click' : 'click-disabled');
+diff --git a/e2e/specs/stamina-bar/chrome-live-preview.e2e.ts b/e2e/specs/stamina-bar/chrome-live-preview.e2e.ts
+index 70dab6af..072b4754 100644
+--- a/e2e/specs/stamina-bar/chrome-live-preview.e2e.ts
++++ b/e2e/specs/stamina-bar/chrome-live-preview.e2e.ts
+@@ -20,14 +20,16 @@ describe('stamina bar chrome: the panel is clickable in Live Preview (SC-502)',
+ 		// The collapse toggle is session state keyed by the block and outlives openNote: start expanded whatever an earlier test left.
+ 		await dse.page(`(() => { const r = document.querySelector('${BLOCK}'); if (r.hasAttribute('data-dse-collapsed')) r.querySelector('[data-dse-control="chrome.expand"]').click(); })()`);
+ 		expect(await cursorLine()).toBe(0);
+-		// One hover over the block must reveal the panel on the first try; there is no retry. Earlier flakes here were the pointer of the
+-		// shared Xvfb crossing the window while other shards opened theirs (fixed by parking the pointer, SC-539), not Live Preview layout.
++		// One hover over the block must reveal the panel on the first try; there is no retry. Earlier flakes here were the shared Xvfb's
++		// real pointer, which sat at the screen centre inside every window: another shard mapping or unmapping its window there sent this
++		// one a Leave/Enter that dropped the hover (fixed by parking the pointer at 0,0, SC-539), not Live Preview layout or load.
+ 		const collapse = root.control('chrome.collapse');
+ 		await dse.hover(root.root);
+ 		await dse.waitFor(`getComputedStyle(document.querySelector('${BLOCK}').querySelector('.dse-chrome')).pointerEvents === 'auto'`, 'the chrome panel to be revealed by the hover');
+ 		await dse.hover(collapse);
+ 		await dse.waitFor(`getComputedStyle(document.querySelector('${BLOCK}').querySelector('.dse-chrome')).pointerEvents === 'auto'`, 'the chrome panel to stay revealed with the pointer on Collapse');
+-		// The driver's default click: it hit-tests the button before pressing, so a covered Collapse fails here as "element click intercepted".
++		// The driver's default click: it waits for Collapse to be displayed and hit-tests it before pressing, so a hidden or covered Collapse
++		// fails here (not displayed / "element click intercepted") instead of the press landing on the editor line.
+ 		await dse.click(collapse);
+ 		await dse.waitFor(`document.querySelector('${BLOCK}').hasAttribute('data-dse-collapsed')`, 'the block to collapse after a real click on Collapse');
+ 		expect(await cursorLine()).toBe(0); // on the blank line above the fence (line 3) if the click had fallen through to the editor

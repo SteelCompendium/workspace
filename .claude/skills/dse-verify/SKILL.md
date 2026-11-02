@@ -79,7 +79,7 @@ future changes"). A landing without a green full run (0 failed, coverage Y/Y) is
   1440x1100+288+200; both rectangles contain the screen centre). Xvfb starts its pointer at the screen centre,
   inside every window, and a window another shard maps or unmaps there sends our window a real Leave/Enter that
   drops the synthetic CDP hover (CHR-F02, CHR-F03, CHR-L01, INIT-DEF-E04 then time out waiting for the
-  hover-revealed chrome panel; SC-529 / SC-534 are the same cause). `e2e/run.mjs` therefore parks the X pointer
+  hover-revealed chrome panel; SC-534 confirmed it for CHR-L01 (SC-529 is its duplicate): with the park, 20/20 under a foreign window flipping every 150 ms and 10/10 with the renderer CPU slowed x20; with the park off, 0/5, and the old re-hover loop did not rescue a single run). `e2e/run.mjs` therefore parks the X pointer
   at 0,0 after Xvfb starts, with a dependency-free X11 client (`e2e/x11-pointer.mjs`: WarpPointer to the root at
   0,0, read back with QueryPointer). The park holds a connection open for the whole run: Xvfb resets and
   recentres the pointer when its last client disconnects, so a one-shot warp from a short-lived client (xdotool,
@@ -90,7 +90,7 @@ future changes"). A landing without a green full run (0 failed, coverage Y/Y) is
   again after the `done` line), the run continues, exit code unaffected: treat a hover-timeout red in that run as
   possibly this flake and re-run before believing it. No new tool is needed (no xdotool). Never done with
   `--headed`. If the window size or position in `driver/session.ts` ever changes, the pointer must stay outside
-  the new rectangle.
+  the new rectangle. Spec rule (SC-534): do not rescue a hover-revealed control with a re-hover loop, a settle wait or a forced CDP click (`ClickOptions.cdp` was removed). One `dse.hover` must reveal it, and the driver's default click must hit-test it; a lost hover in an e2e run means the park failed (look for the WARN line), not timing.
 - In agent shells `grep` is ugrep with `-I` (skip binary files) and reads `e2e/run.mjs` as binary, so a plain
   `grep` on it silently prints nothing. Use `command grep -a`.
 - **Cache:** `${XDG_CACHE_HOME:-~/.cache}/dse-e2e-obsidian` (override `OBSIDIAN_CACHE`), shared across worktrees,
@@ -1247,7 +1247,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `dabfb518` (2026-11-02; SC-537 landed — in Live Preview, identical callouts each keep their own number, a click writes the callout you clicked, and a form edit on one is no longer erased by a click on the other; new lifecycle G-S57):**
+**CURRENT — dse `develop` @ `eaf64ba6` (2026-11-02; SC-534 landed — e2e CHR-L01 hovers once and presses Collapse with the default click; the unused `ClickOptions.cdp` driver option is gone; test-only, no user-visible change):**
+every number is the `dabfb518` one, unchanged — tsc and lint clean · jest **6262 passed / 1 skipped / 249 of 250 suites** (fresh worktree 6261 / 2) · lifecycle **46/46** (21 + 16 + 9) · e2e **`OBSIDIAN-E2E done: 124/124 ok,
+0 failed, 0 known-bug, coverage: 87/87 pairs`** · `main.js` / `styles.css` byte-identical to `dabfb518`, so shots 592 0 FAIL 161/966, freeze 280/280 and parity 0 GAPs / 0
+undeclared / 24 DECLARED carry. Numbers as reported by the SC-534 ticket-owner; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `dabfb518` (2026-11-02; SC-537 landed — in Live Preview, identical callouts each keep their own number, a click writes the callout you clicked, and a form edit on one is no longer erased by a click on the other; new lifecycle G-S57):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **6262 passed / 1 skipped / 249 of 250 suites** · lifecycle **46/46** (three `--only` parts 21 + 16 + 9) · e2e **`OBSIDIAN-E2E done: 124/124 ok,
 0 failed, 0 known-bug, coverage: 87/87 pairs`** · shots **592**, 0 FAIL, button host-leak 161/966 (34-record boundary), modal 228, input 15/176, checkbox 7/116, prose 106 [212] · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-537 ticket-owner: tsc/lint/jest/shots/freeze/parity at `dabfb518`, lifecycle and e2e at `aca83702` by its reviewer (rebase + a comment since); the dispatcher relayed, not re-ran.
