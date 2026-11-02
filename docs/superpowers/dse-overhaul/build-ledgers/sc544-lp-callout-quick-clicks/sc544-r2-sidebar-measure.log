@@ -1,0 +1,65 @@
+=== base-rv (bundle base)
+SB544 rv-nopin-N1-N2: PROBLEMS disk [5,6,5,6] want [5,6,6,5] cards ["5","6","5","6"] sidebar null timing click2-before-write1 :: disk [5,6,5,6] want [5,6,6,5]
+SB544 rv-pk0-N1-S: PROBLEMS disk [5,6,5,5] want [6,6,5,5] cards ["5","6","5","5"] sidebar 5 timing click2-before-write1 :: disk [5,6,5,5] want [6,6,5,5]
+SB544 rv-pk0-S-N2: clean disk [6,5,6,5] want [6,5,6,5] cards ["6","5","6","5"] sidebar 6 timing click2-before-write1
+SB544 rv-pk0-N1-N2-S: PROBLEMS disk [5,6,5,6] want [6,6,6,5] cards ["5","6","5","6"] sidebar 5 timing click2-before-write1 :: disk [5,6,5,6] want [6,6,6,5]
+SB544 rv-pk1-N0-S: PROBLEMS disk [6,5,5,5] want [6,6,5,5] cards ["6","5","5","5"] sidebar 5 timing click2-before-write1 :: disk [6,5,5,5] want [6,6,5,5]
+SB544 rv-pk1-S-N2: clean disk [5,6,6,5] want [5,6,6,5] cards ["5","6","6","5"] sidebar 6 timing click2-before-write1
+SB544 rv-pk1-N2-S: PROBLEMS disk [5,5,6,5] want [5,6,6,5] cards ["5","5","6","5"] sidebar 5 timing click2-before-write1 :: disk [5,5,6,5] want [5,6,6,5]
+SB544 rv-pk3-N0-S: PROBLEMS disk [6,5,5,5] want [6,5,5,6] cards ["6","5","5","5"] sidebar 5 timing click2-before-write1 :: disk [6,5,5,5] want [6,5,5,6]
+SB544 rv-pk3-S-N1: clean disk [5,6,5,6] want [5,6,5,6] cards ["5","6","5","6"] sidebar 6 timing click2-before-write1
+SB544 rv-pk3-N0-N1-S: PROBLEMS disk [6,5,6,5] want [6,6,5,6] cards ["6","5","6","5"] sidebar 5 timing click2-before-write1 :: disk [6,5,6,5] want [6,6,5,6]
+OBSIDIAN-LIFECYCLE SB544 ok (cases rv-nopin-N1-N2,rv-pk0-N1-S,rv-pk0-S-N2,rv-pk0-N1-N2-S,rv-pk1-N0-S,rv-pk1-S-N2,rv-pk1-N2-S,rv-pk3-N0-S,rv-pk3-S-N1,rv-pk3-N0-N1-S)
+rc=0 elapsed=141s
+=== head-rv (bundle head)
+SB544 rv-nopin-N1-N2: clean disk [5,6,6,5] want [5,6,6,5] cards ["5","6","6","5"] sidebar null timing click2-before-write1
+SB544 rv-pk0-N1-S: PROBLEMS disk [5,6,5,5] want [6,6,5,5] cards ["5","6","5","5"] sidebar 5 timing click2-before-write1 :: disk [5,6,5,5] want [6,6,5,5]
+SB544 rv-pk0-S-N2: clean disk [6,5,6,5] want [6,5,6,5] cards ["6","5","6","5"] sidebar 6 timing click2-before-write1
+SB544 rv-pk0-N1-N2-S: PROBLEMS disk [5,6,6,5] want [6,6,6,5] cards ["5","6","6","5"] sidebar 5 timing click2-before-write1 :: disk [5,6,6,5] want [6,6,6,5]
+SB544 rv-pk1-N0-S: PROBLEMS disk [6,5,5,5] want [6,6,5,5] cards ["6","5","5","5"] sidebar 5 timing click2-before-write1 :: disk [6,5,5,5] want [6,6,5,5]
+SB544 rv-pk1-S-N2: clean disk [5,6,6,5] want [5,6,6,5] cards ["5","6","6","5"] sidebar 6 timing click2-before-write1
+SB544 rv-pk1-N2-S: PROBLEMS disk [5,5,6,5] want [5,6,6,5] cards ["5","5","6","5"] sidebar 5 timing click2-before-write1 :: disk [5,5,6,5] want [5,6,6,5]
+SB544 rv-pk3-N0-S: PROBLEMS disk [6,5,5,5] want [6,5,5,6] cards ["6","5","5","5"] sidebar 5 timing click2-before-write1 :: disk [6,5,5,5] want [6,5,5,6]
+SB544 rv-pk3-S-N1: clean disk [5,6,5,6] want [5,6,5,6] cards ["5","6","5","6"] sidebar 6 timing click2-before-write1
+SB544 rv-pk3-N0-N1-S: PROBLEMS disk [6,6,5,5] want [6,6,5,6] cards ["6","6","5","5"] sidebar 5 timing click2-before-write1 :: disk [6,6,5,5] want [6,6,5,6]
+OBSIDIAN-LIFECYCLE SB544 ok (cases rv-nopin-N1-N2,rv-pk0-N1-S,rv-pk0-S-N2,rv-pk0-N1-N2-S,rv-pk1-N0-S,rv-pk1-S-N2,rv-pk1-N2-S,rv-pk3-N0-S,rv-pk3-S-N1,rv-pk3-N0-N1-S)
+rc=0 elapsed=137s
+=== base-lp (bundle base)
+SB544 lp-nopin-N1-N2: PROBLEMS disk [5,6,5,6] want [5,6,6,5] cards ["5","6","5","6"] sidebar null timing click2-before-write1 :: disk [5,6,5,6] want [5,6,6,5]
+SB544 lp-pk0-N1-S: PROBLEMS disk [5,6,5,5] want [6,6,5,5] cards ["5","6","5","5"] sidebar 5 timing click2-before-write1 :: disk [5,6,5,5] want [6,6,5,5]
+SB544 lp-pk0-S-N2: clean disk [6,5,6,5] want [6,5,6,5] cards ["6","5","6","5"] sidebar 6 timing click2-before-write1
+SB544 lp-pk0-N1-N2-S: PROBLEMS disk [5,6,5,6] want [6,6,6,5] cards ["5","6","5","6"] sidebar 5 timing click2-before-write1 :: disk [5,6,5,6] want [6,6,6,5]
+SB544 lp-pk1-N0-S: PROBLEMS disk [6,5,5,5] want [6,6,5,5] cards ["6","5","5","5"] sidebar 5 timing click2-before-write1 :: disk [6,5,5,5] want [6,6,5,5]
+SB544 lp-pk1-S-N2: clean disk [5,6,6,5] want [5,6,6,5] cards ["5","6","6","5"] sidebar 6 timing click2-before-write1
+SB544 lp-pk1-N2-S: PROBLEMS disk [5,5,6,5] want [5,6,6,5] cards ["5","5","6","5"] sidebar 5 timing click2-before-write1 :: disk [5,5,6,5] want [5,6,6,5]
+SB544 lp-pk3-N0-S: PROBLEMS disk [6,5,5,5] want [6,5,5,6] cards ["6","5","5","5"] sidebar 5 timing click2-before-write1 :: disk [6,5,5,5] want [6,5,5,6]
+SB544 lp-pk3-S-N1: clean disk [5,6,5,6] want [5,6,5,6] cards ["5","6","5","6"] sidebar 6 timing click2-before-write1
+SB544 lp-pk3-N0-N1-S: PROBLEMS disk [6,5,6,5] want [6,6,5,6] cards ["6","5","6","5"] sidebar 5 timing click2-before-write1 :: disk [6,5,6,5] want [6,6,5,6]
+OBSIDIAN-LIFECYCLE SB544 ok (cases lp-nopin-N1-N2,lp-pk0-N1-S,lp-pk0-S-N2,lp-pk0-N1-N2-S,lp-pk1-N0-S,lp-pk1-S-N2,lp-pk1-N2-S,lp-pk3-N0-S,lp-pk3-S-N1,lp-pk3-N0-N1-S)
+rc=0 elapsed=143s
+=== head-lp (bundle head)
+SB544 lp-nopin-N1-N2: clean disk [5,6,6,5] want [5,6,6,5] cards ["5","6","6","5"] sidebar null timing click2-before-write1
+SB544 lp-pk0-N1-S: PROBLEMS disk [5,6,5,5] want [6,6,5,5] cards ["5","6","5","5"] sidebar 5 timing click2-before-write1 :: disk [5,6,5,5] want [6,6,5,5]
+SB544 lp-pk0-S-N2: clean disk [6,5,6,5] want [6,5,6,5] cards ["6","5","6","5"] sidebar 6 timing click2-before-write1
+SB544 lp-pk0-N1-N2-S: PROBLEMS disk [5,6,6,5] want [6,6,6,5] cards ["5","6","6","5"] sidebar 5 timing click2-before-write1 :: disk [5,6,6,5] want [6,6,6,5]
+SB544 lp-pk1-N0-S: PROBLEMS disk [6,5,5,5] want [6,6,5,5] cards ["6","5","5","5"] sidebar 5 timing click2-before-write1 :: disk [6,5,5,5] want [6,6,5,5]
+SB544 lp-pk1-S-N2: clean disk [5,6,6,5] want [5,6,6,5] cards ["5","6","6","5"] sidebar 6 timing click2-before-write1
+SB544 lp-pk1-N2-S: PROBLEMS disk [5,5,6,5] want [5,6,6,5] cards ["5","5","6","5"] sidebar 5 timing click2-before-write1 :: disk [5,5,6,5] want [5,6,6,5]
+SB544 lp-pk3-N0-S: PROBLEMS disk [6,5,5,5] want [6,5,5,6] cards ["6","5","5","5"] sidebar 5 timing click2-before-write1 :: disk [6,5,5,5] want [6,5,5,6]
+SB544 lp-pk3-S-N1: clean disk [5,6,5,6] want [5,6,5,6] cards ["5","6","5","6"] sidebar 6 timing click2-before-write1
+SB544 lp-pk3-N0-N1-S: PROBLEMS disk [6,6,5,5] want [6,6,5,6] cards ["6","6","5","5"] sidebar 5 timing click2-before-write1 :: disk [6,6,5,5] want [6,6,5,6]
+OBSIDIAN-LIFECYCLE SB544 ok (cases lp-nopin-N1-N2,lp-pk0-N1-S,lp-pk0-S-N2,lp-pk0-N1-N2-S,lp-pk1-N0-S,lp-pk1-S-N2,lp-pk1-N2-S,lp-pk3-N0-S,lp-pk3-S-N1,lp-pk3-N0-N1-S)
+rc=0 elapsed=143s
+=== dist-base (bundle dist)
+SB544 dist-pk0-N1-S: PROBLEMS disk [5,6,5,5] want [6,6,5,5] cards ["5","6","5","5"] sidebar 5 timing click2-before-write1 :: disk [5,6,5,5] want [6,6,5,5]
+SB544 dist-pk0-S-N1: clean disk [6,6,5,5] want [6,6,5,5] cards ["6","6","5","5"] sidebar 6 timing click2-before-write1
+OBSIDIAN-LIFECYCLE SB544 ok (cases dist-pk0-N1-S,dist-pk0-S-N1)
+rc=0 elapsed=33s
+=== head-gap (bundle head)
+SB544 rv-pk0-N1-S-50: PROBLEMS disk [5,6,5,5] want [6,6,5,5] cards ["5","6","5","5"] sidebar 5 timing click2-before-write1 :: disk [5,6,5,5] want [6,6,5,5]
+SB544 rv-pk0-N1-S-250: PROBLEMS disk [5,6,5,5] want [6,6,5,5] cards ["5","6","5","5"] sidebar 5 timing click2-before-write1 :: disk [5,6,5,5] want [6,6,5,5]
+SB544 rv-pk0-N1-S-350: PROBLEMS disk [5,6,5,5] want [6,6,5,5] cards ["5","6","5","5"] sidebar 5 timing click2-before-write1 :: disk [5,6,5,5] want [6,6,5,5]
+SB544 rv-pk0-N1-S-500: clean disk [6,6,5,5] want [6,6,5,5] cards ["6","6","5","5"] sidebar 6 timing click2-after-write1
+SB544 rv-pk0-N1-S-700: clean disk [6,6,5,5] want [6,6,5,5] cards ["6","6","5","5"] sidebar 6 timing click2-after-write1
+OBSIDIAN-LIFECYCLE SB544 ok (cases rv-pk0-N1-S-50,rv-pk0-N1-S-250,rv-pk0-N1-S-350,rv-pk0-N1-S-500,rv-pk0-N1-S-700)
+rc=0 elapsed=78s

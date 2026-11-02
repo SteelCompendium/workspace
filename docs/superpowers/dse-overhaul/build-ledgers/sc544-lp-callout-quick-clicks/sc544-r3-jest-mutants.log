@@ -1,0 +1,24 @@
+# SC-544 r3 focused jest (twin-reuse + view-registry) on HEAD and mutant sources (git archive d3e426dd + one change)
+m1 no call; m2 call after await vault.process; m3 fromView only; m4 LP-callout views only; m5 call after own readSection; m6 call in queueMicrotask; j2 no sourcePath filter in flushPendingWrites (precise); j3 no released filter
+head rc=0
+Tests:       52 passed, 52 total
+m1 rc=1
+Tests:       4 failed, 48 passed, 52 total
+Tests:       52 passed, 52 total
+m2 rc=1
+Tests:       1 failed, 51 passed, 52 total
+m3 rc=1
+Tests:       2 failed, 50 passed, 52 total
+m4 rc=1
+Tests:       4 failed, 48 passed, 52 total
+m5 rc=0
+Tests:       52 passed, 52 total
+m6 rc=1
+Tests:       1 failed, 51 passed, 52 total
+mutated j2 (flushPendingWrites only)
+mutated j3 (no released filter)
+j2 rc=1
+Tests:       1 failed, 51 passed, 52 total
+  ● SC-544: ViewRegistry.flushPendingWrites(sourcePath, except) › a pending view of another note is not written
+j3 rc=0
+Tests:       52 passed, 52 total

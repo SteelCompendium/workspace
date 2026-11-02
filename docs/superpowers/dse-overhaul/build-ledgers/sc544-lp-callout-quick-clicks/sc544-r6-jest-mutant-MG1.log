@@ -1,0 +1,45 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc544-lp-callout-quick-clicks/draw-steel-elements
+FAIL dom test/dom/framework/view-registry.test.ts
+  ● SC-544: flushPendingWrites re-entrancy guard › a second round on the same registry flushes again (the guard was reset)
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 2
+    Received number of calls: 1
+
+      387 | 		registry.flushPendingWrites('N.md', null);
+      388 | 		registry.flushPendingWrites('N.md', null);
+    > 389 | 		expect(a.flushPendingWrite).toHaveBeenCalledTimes(2);
+          | 		                            ^
+      390 | 	});
+      391 |
+      392 | 	test('a throw from a sibling does not leave the guard on', () => {
+
+      at Object.<anonymous> (test/dom/framework/view-registry.test.ts:389:31)
+
+  ● SC-544: flushPendingWrites re-entrancy guard › a throw from a sibling does not leave the guard on
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 2
+    Received number of calls: 1
+
+      401 | 		boom = false;
+      402 | 		registry.flushPendingWrites('N.md', null); // the next round runs
+    > 403 | 		expect(a.flushPendingWrite).toHaveBeenCalledTimes(2);
+          | 		                            ^
+      404 | 		expect(b.flushPendingWrite).toHaveBeenCalledTimes(1);
+      405 | 	});
+      406 | });
+
+      at Object.<anonymous> (test/dom/framework/view-registry.test.ts:403:31)
+
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       2 failed, 53 passed, 55 total
+Snapshots:   0 total
+Time:        7.938 s
+Ran all test suites matching test/dom/framework/twin-reuse.test.ts|test/dom/framework/view-registry.test.ts.
+rc=1
+Updated 1 path from the index

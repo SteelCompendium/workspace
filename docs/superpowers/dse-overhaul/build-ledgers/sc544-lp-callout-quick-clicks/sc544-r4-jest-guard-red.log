@@ -1,0 +1,38 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc544-lp-callout-quick-clicks/draw-steel-elements
+FAIL dom test/dom/framework/twin-reuse.test.ts (5.062 s)
+  ● SC-544: a second click before the first block's write › a nested flush (a sibling's own write) does not flush the writer's own waiting view; the siblings are written in registry order
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 6
+
+      Array [
+        "upper",
+    +   "middle",
+    +   "upper",
+    +   "lower",
+    +   "upper",
+    +   "middle",
+    +   "lower",
+        "lower",
+      ]
+
+      826 | 		await jest.advanceTimersByTimeAsync(0); // microtasks only, well inside the debounce
+      827 |
+    > 828 | 		expect(order).toEqual(['upper', 'lower']); // the writer's own view was not flushed by the upper's nested call, and nothing twice
+          | 		              ^
+      829 | 		expect(t.registry.pendingWrites().map((e) => e.host)).toEqual([middle.host]); // it is still waiting for its own debounce
+      830 | 		expect(t.values()).toEqual([6, 5, 6]);
+      831 | 	});
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:828:17)
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 failed, 52 passed, 53 total
+Snapshots:   0 total
+Time:        7.035 s
+Ran all test suites matching test/dom/framework/twin-reuse.test.ts|test/dom/framework/view-registry.test.ts.
+Error: error running script "bash" in Devbox: exit status 1
+

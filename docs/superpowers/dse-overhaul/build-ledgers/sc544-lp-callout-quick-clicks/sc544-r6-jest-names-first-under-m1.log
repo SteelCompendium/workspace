@@ -1,0 +1,33 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc544-lp-callout-quick-clicks/draw-steel-elements
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-544: a second click before the first block's write › a nested flush (a sibling's own write) does not flush the writer's own waiting view; the siblings are written in registry order
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 4
+    + Received  + 1
+
+    - Array [
+    -   "upper",
+    -   "lower",
+    - ]
+    + Array []
+
+      828 |
+      829 | 		expect(t.names()).toEqual(['Twin', 'Edited', 'Twin']);
+    > 830 | 		expect(order).toEqual(['upper', 'lower']); // the writer's own view was not flushed by the upper's nested call, and nothing twice
+          | 		              ^
+      831 | 		expect(t.registry.pendingWrites().map((e) => e.host)).toEqual([middle.host]); // it is still waiting for its own debounce
+      832 | 		expect(t.values()).toEqual([6, 5, 6]);
+      833 | 		expect(t.names()).toEqual(['Twin', 'Edited', 'Twin']); // the form's edit is in the middle block (values alone also read [6,5,6] for a misrouted or dropped form)
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:830:17)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 31 skipped, 32 total
+Snapshots:   0 total
+Time:        2.756 s, estimated 6 s
+Ran all test suites matching test/dom/framework/twin-reuse.test.ts with tests matching "nested flush".
+rc=1
+Updated 2 paths from the index

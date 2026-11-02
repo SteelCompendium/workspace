@@ -1,0 +1,44 @@
+# SC-544 r5 jest: focused (twin-reuse + view-registry) on HEAD and mutants; m1 = no flush call, mg1 = guard never reset, mg2 = no guard
+head rc=0
+Tests:       53 passed, 53 total
+m1 rc=1
+Tests:       5 failed, 48 passed, 53 total
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › SC-544: three callouts, the upper then the middle clicked 120 ms apart: both clicks land in the block clicked, and the widget in the lower slot is 
+  ● SC-544: a second click before the first block's write › a nested flush (a sibling's own write) does not flush the writer's own waiting view; the siblings are written in registry order
+  ● SC-544: a second click before the first block's write › Reading view, three plain blocks: + upper, + middle 120 ms later: each click lands in its own block and every card shows its own block
+  ● SC-544: a second click before the first block's write › the block edit form's Save on the upper while the middle's click is pending: the middle's +1 is written in the middle block in the same round
+  ● SC-544: a second click before the first block's write › the sibling's section is read before the writer's Vault.process runs
+mg1 rc=0
+Tests:       53 passed, 53 total
+mg2 rc=1
+Tests:       1 failed, 52 passed, 53 total
+  ● SC-544: a second click before the first block's write › a nested flush (a sibling's own write) does not flush the writer's own waiting view; the siblings are written in registry order
+
+# scratch guard probe (/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc544-r5-review-af6d13a061fdaf760/guard-probe.test.ts): reset after a round, reset after a throw, nested call returns at once
+head rc=0
+Tests:       3 passed, 3 total
+mg1 rc=1
+Tests:       2 failed, 1 passed, 3 total
+mg2 rc=1
+Tests:       1 failed, 2 passed, 3 total
+## head
+## mg1
+## mg2
+
+# guard jest case + names check + post-debounce read (scratch copy only)
+patched /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc544-r5-review-af6d13a061fdaf760/src-head/test/dom/framework/twin-reuse.test.ts
+head rc=0
+    R5PROBE after-microtasks values [6,5,6] names ["Twin","Edited","Twin"]
+    R5PROBE after-debounce values [6,6,6] names ["Twin","Twin","Twin"]
+Tests:       31 skipped, 1 passed, 32 total
+patched /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc544-r5-review-af6d13a061fdaf760/src-mg2/test/dom/framework/twin-reuse.test.ts
+mg2 rc=1
+    - Expected  - 0
+    + Received  + 6
+      832 | 		console.log('R5PROBE after-microtasks values', JSON.stringify(t.values()), 'names', JSON.stringify(t.names()));
+Tests:       1 failed, 31 skipped, 32 total
+## mg1 failing:
+  ● SC-544 r5 probe: flushPendingWrites guard › a second round on the same registry flushes again (the guard was reset)
+  ● SC-544 r5 probe: flushPendingWrites guard › a throw from a sibling does not leave the guard on; it does skip the siblings after it in that round
+## mg2 failing:
+  ● SC-544 r5 probe: flushPendingWrites guard › a nested call returns at once and the outer loop still reaches every sibling once

@@ -1,0 +1,122 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc544-lp-callout-quick-clicks/draw-steel-elements
+FAIL dom test/dom/framework/twin-reuse.test.ts (5.346 s)
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › SC-544: three callouts, the upper then the middle clicked 120 ms apart: both clicks land in the block clicked, and the widget in the lower slot is redrawn from the lower block
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        6,
+    -   6,
+        5,
+    +   6,
+      ]
+
+      742 | 		t.shiftMiddleToLower(upper, middle, lower);
+      743 | 		await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS); // the middle's own debounce, had it still been waiting
+    > 744 | 		expect(t.values()).toEqual([6, 6, 5]); // not [6, 5, 6]
+          | 		                   ^
+      745 |
+      746 | 		await t.update();
+      747 | 		expect(shown(middle.els[0])).toBe('Twin=5'); // the widget now in the lower slot shows the lower block
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:744:22)
+
+  ● SC-544: a second click before the first block's write › Reading view, three plain blocks: + upper, + middle 120 ms later: each click lands in its own block and every card shows its own block
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        6,
+    -   6,
+        5,
+    +   6,
+      ]
+
+      791 | 		await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS); // the middle's own debounce, had it still been waiting
+      792 |
+    > 793 | 		expect(t.values()).toEqual([6, 6, 5]); // not [6, 5, 6]
+          | 		                   ^
+      794 | 		expect(els.map((el) => el.children.length)).toEqual([1, 1, 1]);
+      795 | 		expect(els.map(shown)).toEqual(['Twin=6', 'Twin=6', 'Twin=5']);
+      796 | 		await t.increase(els[2]);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:793:22)
+
+  ● SC-544: a second click before the first block's write › the block edit form's Save on the upper while the middle's click is pending: the middle's +1 is written in the middle block in the same round
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        5,
+    -   6,
+    +   5,
+        5,
+      ]
+
+      808 |
+      809 | 		expect(t.names()).toEqual(['Edited', 'Twin', 'Twin']);
+    > 810 | 		expect(t.values()).toEqual([5, 6, 5]);
+          | 		                   ^
+      811 | 		expect(t.registry.pendingWrites()).toHaveLength(0);
+      812 | 	});
+      813 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:810:22)
+
+  ● SC-544: a second click before the first block's write › a nested flush (a sibling's own write) does not flush the writer's own waiting view; the siblings are written in registry order
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 4
+    + Received  + 1
+
+    - Array [
+    -   "upper",
+    -   "lower",
+    - ]
+    + Array []
+
+      827 | 		await jest.advanceTimersByTimeAsync(0); // microtasks only, well inside the debounce
+      828 |
+    > 829 | 		expect(order).toEqual(['upper', 'lower']); // the writer's own view was not flushed by the upper's nested call, and nothing twice
+          | 		              ^
+      830 | 		expect(t.registry.pendingWrites().map((e) => e.host)).toEqual([middle.host]); // it is still waiting for its own debounce
+      831 | 		expect(t.values()).toEqual([6, 5, 6]);
+      832 | 		expect(t.names()).toEqual(['Twin', 'Edited', 'Twin']); // the form's edit is in the middle block (values alone also read [6,5,6] for a misrouted or dropped form)
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:829:17)
+
+  ● SC-544: a second click before the first block's write › the sibling's section is read before the writer's Vault.process runs
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 0
+    Received:    -1
+
+      846 | 		await jest.advanceTimersByTimeAsync(0);
+      847 |
+    > 848 | 		expect(order.indexOf('read-middle')).toBeGreaterThanOrEqual(0);
+          | 		                                     ^
+      849 | 		expect(order.indexOf('read-middle')).toBeLessThan(order.indexOf('process'));
+      850 | 	});
+      851 | });
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:848:40)
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       5 failed, 50 passed, 55 total
+Snapshots:   0 total
+Time:        7.433 s
+Ran all test suites matching test/dom/framework/twin-reuse.test.ts|test/dom/framework/view-registry.test.ts.
+rc=1
+Updated 1 path from the index

@@ -1,0 +1,141 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc544-lp-callout-quick-clicks/draw-steel-elements
+FAIL dom test/dom/framework/view-registry.test.ts
+  ● SC-544: ViewRegistry.flushPendingWrites(sourcePath, except) › writes the other pending views of the note now, each in its own block
+
+    TypeError: registry.flushPendingWrites is not a function
+
+      334 | 		a.click();
+      335 | 		b.click();
+    > 336 | 		registry.flushPendingWrites('Note.md', null);
+          | 		         ^
+      337 | 		await jest.advanceTimersByTimeAsync(0); // far inside the debounce
+      338 |
+      339 | 		const note = app.vault.getContent('Note.md')!;
+
+      at Object.<anonymous> (test/dom/framework/view-registry.test.ts:336:12)
+
+  ● SC-544: ViewRegistry.flushPendingWrites(sourcePath, except) › a pending view of another note is not written
+
+    TypeError: registry.flushPendingWrites is not a function
+
+      347 | 		const { app, registry, other } = await mountThree();
+      348 | 		other.click();
+    > 349 | 		registry.flushPendingWrites('Note.md', null);
+          | 		         ^
+      350 | 		await jest.advanceTimersByTimeAsync(0);
+      351 |
+      352 | 		expect(app.vault.getContent('Other.md')).toContain('current_value: 10');
+
+      at Object.<anonymous> (test/dom/framework/view-registry.test.ts:349:12)
+
+  ● SC-544: ViewRegistry.flushPendingWrites(sourcePath, except) › the entry named as `except` is not flushed; a released entry and a view with nothing scheduled make no write
+
+    TypeError: registry.flushPendingWrites is not a function
+
+      357 | 		const { app, registry, a, b, entryOf } = await mountThree();
+      358 | 		a.click();
+    > 359 | 		registry.flushPendingWrites('Note.md', entryOf(a.host)); // a is the writer
+          | 		         ^
+      360 | 		await jest.advanceTimersByTimeAsync(0);
+      361 | 		expect(app.vault.modifyCalls).toHaveLength(0); // a stays on its own debounce, b has nothing scheduled
+      362 | 		expect(registry.pendingWrites().map((e) => e.host)).toEqual([a.host]);
+
+      at Object.<anonymous> (test/dom/framework/view-registry.test.ts:359:12)
+
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › SC-544: three callouts, the upper then the middle clicked 120 ms apart: both clicks land in the block clicked, and the widget in the lower slot is redrawn from the lower block
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        6,
+    -   6,
+        5,
+    +   6,
+      ]
+
+      742 | 		t.shiftMiddleToLower(upper, middle, lower);
+      743 | 		await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS); // the middle's own debounce, had it still been waiting
+    > 744 | 		expect(t.values()).toEqual([6, 6, 5]); // not [6, 5, 6]
+          | 		                   ^
+      745 |
+      746 | 		await t.update();
+      747 | 		expect(shown(middle.els[0])).toBe('Twin=5'); // the widget now in the lower slot shows the lower block
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:744:22)
+
+  ● SC-544: a second click before the first block's write › Reading view, three plain blocks: + upper, + middle 120 ms later: each click lands in its own block and every card shows its own block
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        6,
+    -   6,
+        5,
+    +   6,
+      ]
+
+      791 | 		await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS); // the middle's own debounce, had it still been waiting
+      792 |
+    > 793 | 		expect(t.values()).toEqual([6, 6, 5]); // not [6, 5, 6]
+          | 		                   ^
+      794 | 		expect(els.map((el) => el.children.length)).toEqual([1, 1, 1]);
+      795 | 		expect(els.map(shown)).toEqual(['Twin=6', 'Twin=6', 'Twin=5']);
+      796 | 		await t.increase(els[2]);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:793:22)
+
+  ● SC-544: a second click before the first block's write › the block edit form's Save on the upper while the middle's click is pending: the middle's +1 is written in the middle block in the same round
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        5,
+    -   6,
+    +   5,
+        5,
+      ]
+
+      808 |
+      809 | 		expect(t.names()).toEqual(['Edited', 'Twin', 'Twin']);
+    > 810 | 		expect(t.values()).toEqual([5, 6, 5]);
+          | 		                   ^
+      811 | 		expect(t.registry.pendingWrites()).toHaveLength(0);
+      812 | 	});
+      813 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:810:22)
+
+  ● SC-544: a second click before the first block's write › the sibling's section is read before the writer's Vault.process runs
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 0
+    Received:    -1
+
+      825 | 		await jest.advanceTimersByTimeAsync(0);
+      826 |
+    > 827 | 		expect(order.indexOf('read-middle')).toBeGreaterThanOrEqual(0);
+          | 		                                     ^
+      828 | 		expect(order.indexOf('read-middle')).toBeLessThan(order.indexOf('process'));
+      829 | 	});
+      830 | });
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:827:40)
+
+Test Suites: 2 failed, 2 total
+Tests:       7 failed, 45 passed, 52 total
+Snapshots:   0 total
+Time:        5.512 s
+Ran all test suites matching test/dom/framework/twin-reuse.test.ts|test/dom/framework/view-registry.test.ts.
+rc=1

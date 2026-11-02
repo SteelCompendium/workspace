@@ -1,0 +1,11 @@
+# SC-544 r3 sidebar probes on HEAD (copy of r2's SB544 scenario, /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc544-r3-review-af6d13a061fdaf760/sb-scenario-r2copy.mjs)
+bundle=head sha=d6278dd264af4b79
+SB544 rv-pk0-N1-S: PROBLEMS disk [5,6,5,5] want [6,6,5,5] cards ["5","6","5","5"] sidebar 5 timing click2-before-write1 :: disk [5,6,5,5] want [6,6,5,5]
+SB544 rv-pk0-S-N2: clean disk [6,5,6,5] want [6,5,6,5] cards ["6","5","6","5"] sidebar 6 timing click2-before-write1
+SB544 rv-pk3-S-N1: clean disk [5,6,5,6] want [5,6,5,6] cards ["5","6","5","6"] sidebar 6 timing click2-before-write1
+SB544 lp-pk1-S-N2: clean disk [5,6,6,5] want [5,6,6,5] cards ["5","6","6","5"] sidebar 6 timing click2-before-write1
+SB544 lp-pk3-N0-S: PROBLEMS disk [6,5,5,5] want [6,5,5,6] cards ["6","5","5","5"] sidebar 5 timing click2-before-write1 :: disk [6,5,5,5] want [6,5,5,6]
+SB544 lp-pk0-N1-N2-S: PROBLEMS disk [5,6,6,5] want [6,6,6,5] cards ["5","6","6","5"] sidebar 5 timing click2-before-write1 :: disk [5,6,6,5] want [6,6,6,5]
+SB544 rv-nopin-N1-N2: clean disk [5,6,6,5] want [5,6,6,5] cards ["5","6","6","5"] sidebar null timing click2-before-write1
+SB544 lp-nopin-N1-N2: clean disk [5,6,6,5] want [5,6,6,5] cards ["5","6","6","5"] sidebar null timing click2-before-write1
+rc=0 elapsed=98s

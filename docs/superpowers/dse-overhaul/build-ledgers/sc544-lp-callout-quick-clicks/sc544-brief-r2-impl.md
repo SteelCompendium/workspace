@@ -1,0 +1,55 @@
+# SC-544 r2 — implement C1 (flush sibling pending writes before a host writes), G-S61, jest, full battery
+
+You are the implementer for ticket SC-544. Your final text goes to the ticket-owner, not a human.
+**Workers never call the tracker** (Linear) — not to read history, not to post. Everything you need is in files.
+
+## 1. Context loading
+- Ledger first: `/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc544-lp-callout-quick-clicks/decisions.md` — ticket facts, the r1 results and the **owner rulings on r1** (they govern this round).
+- The design: `/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc544-lp-callout-quick-clicks/sc544-r1-diag-report.md` — §2 mechanism, §3 C1 (exact insertion points), §4 gate proposal (G-S61 phases (a)-(j), FAIL table, mutants, jest 1-5).
+- The r1 prototype patch (a starting point, verify every line): `/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc544-r1-diag-a89d389c7218bb144/sc544-r1-protoC1.patch`, and that folder's probe tooling (`p544-scenario.mjs`, `p544-instr.js`, `harness-p544.mjs`, `probe.sh`, `lc.sh`, `build.sh`). Copy what you need into your own scratch folder; **never write into r1's folder**.
+- SC-537's G-S57 (in `visual-harness/obsidian-lifecycle.mjs`) is the closest pattern for G-S61 (LP callout handling, notice hiding, fixture reset in `finally`).
+- Gate skill: `/home/scott/code/steelCompendium/workspace/.claude/skills/dse-verify/SKILL.md` (battery order, devbox shapes, lifecycle three-part split).
+- Plugin guidance: `<worktree>/draw-steel-elements/AGENTS.md` (if present) and `.repo-docs/architecture.md` (update it for the new flush).
+- **Worktree:** `/home/scott/code/steelCompendium/worktrees/sc544-lp-callout-quick-clicks`, plugin at `.../draw-steel-elements`, branch `sc544-lp-callout-quick-clicks` (every submodule). Verify `git -C <abs path> log --oneline -1` and `pwd`-equivalents before any write. Never work in `/home/scott/code/steelCompendium/workspace/` (shared main checkout); its dse dirt (modified `demo-vault/Welcome.md`, untracked `compendium-manifest.json` / `demo-vault/*.md`) is Scott's live vault — expected, ignore it.
+- **Rebase first:** the plugin branch sits on dabfb518; dse develop is now **eaf64ba6** (SC-534, test-only: e2e CHR-L01 spec + `e2e/driver/dse.ts`; `ClickOptions.cdp` removed — use the driver's default click). `git -C <plugin> fetch origin` then `git -C <plugin> rebase eaf64ba6` (the branch has no commits yet, so this is a fast-forward). Then `npm ci` (node_modules is missing in this fresh worktree; r1 may have installed it — check).
+- **The workspace-level files (CHANGELOG.md) live in YOUR worktree's superproject at `/home/scott/code/steelCompendium/worktrees/sc544-lp-callout-quick-clicks/CHANGELOG.md` — never under `/home/scott/code/steelCompendium/workspace/`.**
+
+## 2. The task
+Owner rulings (verbatim from the ledger):
+- "Adopt C1. Options A and B rejected for this ticket (A needs B anyway; B is LP-only and leaves the display bad)."
+- "SCOPE widened: the fix covers Reading view and plain fences too (same bug, same fix). CHANGELOG bullet names every surface, in plain words."
+- "Typing / outside edit inside the 400 ms window + the ~10 ms write-to-rebuild click window: FILED SC-549 (Backlog, Bug, DSE Plugin, DSE 7.0.0, related SC-544). OUT OF SCOPE."
+- "Sidebar: r2 MEASURES the sidebar-as-writer case first (+ in a pinned sidebar card while a note card of the same note is pending; and the reverse). If it misroutes, FOLD the same flush into SidebarBlockHost.replaceSource (plus a G-S61 phase (k)); if it is clean, no change, report the measurement."
+- "Gate: G-S61 in part 3 before G-S56, phases (a)-(j) per the report §4 (+ (k) if sidebar folded); FAIL on the dabfb518/eaf64ba6 bundle with the r1 numbers. Report part 3's time; if > 540 s, propose a re-split in the dse-verify proposal file (do not edit SKILL.md)."
+
+Do, in this order, committing after every coherent step (tests-red commit first):
+1. **Jest first, red:** the report §4 jest cases 1-5 (`test/dom/framework/twin-reuse.test.ts` infra, `view-registry.test.ts`). Commit; show them red on the unfixed source (log).
+2. **C1** per report §3: `ElementView.flushPendingWrite()`, `ViewRegistry.flushPendingWrites(sourcePath, except)`, the synchronous call in `ReadingModeBlockHost.replaceSource` before the section read. Comment the WHY at the call site (Obsidian hands a pending view's element to an identical twin on the write's rebuild; flushing first places every pending edit while its element still sits on its own block; SC-544). Jest green. Commit.
+3. **Sidebar measurement** in real Obsidian (see ruling). Fold or not per the ruling; report numbers either way.
+4. **G-S61** in `visual-harness/obsidian-lifecycle.mjs`, placed in part 3 BEFORE G-S56 (G-S56 replaces every other leaf and must stay last); fixtures `Lifecycle/twin-callouts-4.md`, `Lifecycle/twin-callouts-xy3.md` (reuse `twin-callouts-3.md`, `twin-triplets.md`); per-phase anti-vacuity (click 2 logged before write 1); note text outside the blocks unchanged; 0 Notices / 0 page errors; reset in `finally`. Update the scenario-count header comments (46 -> 47). **Red/green:** G-S61 must FAIL on an eaf64ba6 bundle (`git archive` export -> build -> `DSE_LIFECYCLE_BUNDLE`) with the r1 numbers per phase ((j) passes on both), and PASS on HEAD. Mutants M1-M3 (report §4) must each fail the phases listed; jest mutants 1-3 must turn the listed jest cases red. Logs for all of it.
+5. **Docs:** `.repo-docs/architecture.md` (the flush, and why); superproject `CHANGELOG.md` — a bullet under `## Unreleased` in plain user words: two quick clicks on identical blocks (callouts or plain, Live Preview or Reading view, one note or two panes) each count in the block you clicked, and each card shows its own number. Do not mention SC-549's typing case. Commit in the superproject worktree branch (CHANGELOG only; do NOT bump the plugin pointer).
+6. **dse-verify proposal file** (do NOT edit SKILL.md): `/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc544-lp-callout-quick-clicks/sc544-dse-verify-proposal.md` — the row-4 text for lifecycle 47/47 with part 3 = `G-S45 G-S44 G-S42 G-S50 G-S53 G-S54 G-S52 G-S57 G-S61 G-S56` (or your re-split), a G-S61 clause in the style of the G-S57 one, and the new CURRENT line.
+
+Out of scope (do not touch): SC-549 (typing/external edits), SC-540 (click shield, `pipeline.ts`), SC-545, SC-547, SC-480 (no body search or refused write to choose among equal bodies). SC-472 is running in `src/framework/host/previewScrollPin.ts`, `livePreviewScrollHold.ts` and a new `redrawBackstop.ts` — do not edit those files; if you think you must, stop with STATUS: NEEDS_CONTEXT.
+
+## 3. Gates (dse-verify battery, in order, on your final HEAD)
+Expected (CURRENT at eaf64ba6, baselines unchanged from dabfb518): tsc (incl. `tsc -p e2e`) and lint clean · jest **6262 + N passed / 1 skipped / 249 of 250 suites** (N = your new jest cases; note jest shows one fewer passed and 2 skipped on a fresh worktree until a shots run caches `obsidian-app.css` — compare after shots, or say so) · lifecycle **47/47** as THREE `--only` calls: `G-S7a … G-S9a` (21), `G-S9b … G-S40` (16), `G-S45 G-S44 G-S42 G-S50 G-S53 G-S54 G-S52 G-S57 G-S61 G-S56` (10) — read the exact id lists for parts 1 and 2 from dse-verify row 4 · e2e **124/124 ok, 0 failed, 0 known-bug, coverage: 87/87 pairs** (plus the pointer-parked line) · shots **592, 0 FAIL**, button host-leak **161/966** (34-record boundary), modal 228, input 15/176, checkbox 7/116, prose 106 [212] · freeze **280/280** · parity **0 GAPs / 0 undeclared / 24 DECLARED**. Report each part's wall time.
+
+## 4. Report
+`/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc544-lp-callout-quick-clicks/sc544-r2-impl-report.md`, opening with a **≤10-line executive summary** (verdict, shas plugin + superproject, gate numbers, red/green, sidebar result). Gate logs as `sc544-r2-gate-<gate>.log`, red/green/mutant logs `sc544-r2-*.log`, one deciding screenshot (`sc544-r2-…png`, LP three callouts after + upper then + middle, cards and disk values in the name) in the ledger dir. List `Drive-by fixes:` and `Follow-ups:` separately.
+
+## 5. Return contract
+Final text: raw facts, no prose — verdict, plugin sha, superproject sha, measured numbers, and the **absolute path of every evidence artifact**.
+
+## Footguns (all apply)
+- If the report-file write is blocked by your harness, return the report inline.
+- Never key a wait-loop on a scratch filename or its contents — the scratch dir is pre-populated across sessions and branches, and a stale log will match. Read the process's own output, or write to a per-run unique path.
+- Redirect long-running output to a file rather than streaming it — the 600 s stream watchdog kills silent agents.
+- **One gate per Bash call, each a blocking foreground call** (lifecycle as three separate calls, e2e and shots separate). No `run_in_background`, no Monitor — EXCEPT shots under load (dse-verify row 5): if shots may pass 600 s, start it with output to a unique log plus an rc file and POLL that log/rc file with short foreground checks; never wait on a background-completion notice.
+- Devbox: `devbox run -c /home/scott/code/steelCompendium/worktrees/sc544-lp-callout-quick-clicks/draw-steel-elements -- bash <script file>`. Never `cd X && …` compound commands; never `cd` inside a compound command; `git -C <abs path>` for every git command. Devbox eats `$?` — record exit codes from inside a script file and read each gate's summary line.
+- Use the Write tool for scratch files (no heredocs). No `rm` with a shell-variable target and no glob `rm` (both hang on a permission prompt nobody answers); overwrite with `>` or use fresh unique names.
+- Never `pkill`/`killall` by pattern; kill only a PID you started, whose cwd (`readlink /proc/<pid>/cwd`) or command line is inside your worktree or scratch folder (the shots `node visual-harness/shoot.mjs` has no worktree path in its command line — check its cwd). Never `rm -rf` a shared `/tmp` glob (e.g. `/tmp/dse-obsidian-lifecycle-*`) — delete only paths you created and recorded. Never touch the shared `.superpowers/` dir beyond writing your own `sc544-` files; never `rm -rf` it.
+- Freeze baseline is shared: never edit `.superpowers/sdd/freeze-baseline.sha256`. If freeze moves, stop and report (no rebaseline is expected — no CSS change).
+- Use a unique `DSE_LIFECYCLE_PORT` (e.g. 9545) for probes so you don't collide with concurrent efforts.
+- Private scratch folder: `/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc544-r2-impl-<your agentId>/`, uniquely named scripts and logs inside it.
+- You cannot `SendMessage` me — a depth-2 agent cannot address its parent, and `to: 'main'` routes to the top-level dispatcher, not me. If you need input mid-task, end your turn with STATUS: NEEDS_CONTEXT and the question in your report. If you ever do send a message anyway, its FIRST WORD must be `SC-544:`.

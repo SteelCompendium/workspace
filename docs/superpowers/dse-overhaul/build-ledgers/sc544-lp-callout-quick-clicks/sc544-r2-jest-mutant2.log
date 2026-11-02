@@ -1,0 +1,35 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc544-lp-callout-quick-clicks/draw-steel-elements
+FAIL dom test/dom/framework/view-registry.test.ts
+  ● SC-544: ViewRegistry.flushPendingWrites(sourcePath, except) › a pending view of another note is not written
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected substring: "current_value: 10"
+    Received string:    "# N·
+    ```ds-counter
+    max_value: 20
+    current_value: 11
+    min_value: 0
+    name: Health
+    ```
+    "
+
+      349 | 		await jest.advanceTimersByTimeAsync(0);
+      350 |
+    > 351 | 		expect(app.vault.getContent('Other.md')).toContain('current_value: 10');
+          | 		                                         ^
+      352 | 		expect(registry.pendingWrites().map((e) => e.host)).toEqual([other.host]);
+      353 | 	});
+      354 |
+
+      at Object.<anonymous> (test/dom/framework/view-registry.test.ts:351:44)
+
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 failed, 51 passed, 52 total
+Snapshots:   0 total
+Time:        4.35 s
+Ran all test suites matching test/dom/framework/twin-reuse.test.ts|test/dom/framework/view-registry.test.ts.
+rc=1
+Updated 1 path from the index

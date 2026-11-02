@@ -1,0 +1,241 @@
+# SC-544 r3 real-Obsidian probes (Obsidian 1.15.0, port 9546). head bundle d6278dd2 (d3e426dd), base bundle aa4efdf6 (423e798d). Scenario: /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc544-r3-review-af6d13a061fdaf760/pr-scenario.mjs, page helpers /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc544-r3-review-af6d13a061fdaf760/pr-page.js, fixtures /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc544-r3-review-af6d13a061fdaf760/pr-fixtures.js; per-case JSON in /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc544-r3-review-af6d13a061fdaf760/runs/<run>/pr544.json
+
+## run A-head
+bundle=head sha=d6278dd264af4b79 load=2.58 3.77 4.08 1/3332 1859858
+PR544 gap50-lp: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:6","2:5"] flush {"calls":2,"maxDepth":2,"maxN":3,"maxSame":2,"pendFlushed":2,"maxDurMs":0.6,"sumDurMs":0.6}
+PR544 gap50-lp seq: rs(d0,view,v6,L5)@5138.3 rs(d1,view,v6,L15)@5139.2 vp1(d2,twin-callouts-3.md)@5139.3 vp2(d1,twin-callouts-3.md)@5139.6 cb1@5140.2 cb2@5142.6
+PR544 gap200-lp: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:6","2:5"] flush {"calls":2,"maxDepth":2,"maxN":3,"maxSame":2,"pendFlushed":2,"maxDurMs":0.5,"sumDurMs":0.5}
+PR544 gap200-lp seq: rs(d0,view,v6,L5)@11056.4 rs(d1,view,v6,L15)@11057 vp1(d2,twin-callouts-3.md)@11057 vp2(d1,twin-callouts-3.md)@11057.1 cb1@11057.4 cb2@11058.6
+PR544 gap350-lp: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:6","2:5"] flush {"calls":2,"maxDepth":2,"maxN":3,"maxSame":2,"pendFlushed":2,"maxDurMs":0.4,"sumDurMs":0.4}
+PR544 gap350-lp seq: rs(d0,view,v6,L5)@16983.2 rs(d1,view,v6,L15)@16983.6 vp1(d2,twin-callouts-3.md)@16983.7 vp2(d1,twin-callouts-3.md)@16983.9 cb1@16984.5 cb2@16986.2
+PR544 gap50-rv: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:6","2:5"] flush {"calls":2,"maxDepth":2,"maxN":6,"maxSame":5,"pendFlushed":2,"maxDurMs":0.2,"sumDurMs":0.2}
+PR544 gap50-rv seq: rs(d0,view,v6,L5)@22823.8 rs(d1,view,v6,L15)@22824.1 vp1(d2,twin-callouts-3.md)@22824.1 vp2(d1,twin-callouts-3.md)@22824.2 cb1@22824.7 cb2@22826.2
+PR544 gap350-rv: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:6","2:5"] flush {"calls":2,"maxDepth":2,"maxN":6,"maxSame":5,"pendFlushed":2,"maxDurMs":0.5,"sumDurMs":0.5}
+PR544 gap350-rv seq: rs(d0,view,v6,L5)@28256.4 rs(d1,view,v6,L15)@28256.7 vp1(d2,twin-callouts-3.md)@28256.9 vp2(d1,twin-callouts-3.md)@28257.1 cb1@28257.4 cb2@28258.9
+PR544 tri4-lp: clean disk [6,6,6,5] names ["Twin","Twin","Twin","Twin"] writes 3 timing click2-before-write1 cardsA ["0:6","1:6","2:6","3:5"] flush {"calls":3,"maxDepth":3,"maxN":4,"maxSame":3,"pendFlushed":6,"maxDurMs":0.7,"sumDurMs":1}
+PR544 tri4-lp seq: rs(d0,view,v6,L5)@33688.6 rs(d1,view,v6,L15)@33689 rs(d2,view,v6,L25)@33689.4 vp1(d3,twin-callouts-4.md)@33689.4 vp2(d2,twin-callouts-4.md)@33689.5 vp3(d1,twin-callouts-4.md)@33689.6 cb1@33690.2 cb2@33692 cb3@33694
+PR544 quad4-lp: clean disk [6,6,6,6] names ["Twin","Twin","Twin","Twin"] writes 4 timing click2-before-write1 cardsA ["0:6","1:6","2:6","3:6"] flush {"calls":4,"maxDepth":4,"maxN":4,"maxSame":3,"pendFlushed":12,"maxDurMs":0.6,"sumDurMs":1}
+PR544 quad4-lp seq: rs(d0,view,v6,L5)@39620.8 rs(d1,view,v6,L15)@39621 rs(d2,view,v6,L25)@39621.2 rs(d3,view,v6,L35)@39621.3 vp1(d4,twin-callouts-4.md)@39621.3 vp2(d3,twin-callouts-4.md)@39621.4 vp3(d2,twin-callouts-4.md)@39621.5 vp4(d1,twin-callouts-4.md)@39621.5 cb1@39622 cb2@39623.2 cb3@39624.7 cb4@39625.4
+PR544 quad4-rv: clean disk [6,6,6,6] names ["Twin","Twin","Twin","Twin"] writes 4 timing click2-before-write1 cardsA ["0:6","1:6","2:6","3:6"] flush {"calls":4,"maxDepth":4,"maxN":8,"maxSame":7,"pendFlushed":12,"maxDurMs":0.6,"sumDurMs":1.3}
+PR544 quad4-rv seq: rs(d0,view,v6,L5)@45535.9 rs(d1,view,v6,L15)@45536.2 rs(d2,view,v6,L25)@45536.3 rs(d3,view,v6,L35)@45536.5 vp1(d4,twin-callouts-4.md)@45536.6 vp2(d3,twin-callouts-4.md)@45536.7 vp3(d2,twin-callouts-4.md)@45536.7 vp4(d1,twin-callouts-4.md)@45536.8 cb1@45537.2 cb2@45538.4 cb3@45554.9 cb4@45555.8
+PR544 xytri-lp: clean disk [6,3,6,3,5,4] names ["Twin","Other","Twin","Other","Twin","Other"] writes 3 timing click2-before-write1 cardsA ["0:6","1:3","2:6","3:3","4:5","5:4"] flush {"calls":3,"maxDepth":3,"maxN":6,"maxSame":5,"pendFlushed":6,"maxDurMs":0.6,"sumDurMs":0.7}
+PR544 xytri-lp seq: rs(d0,view,v6,L5)@51002.3 rs(d1,view,v6,L22)@51002.6 rs(d2,view,v4,L46)@51002.9 vp1(d3,twin-callouts-xy3.md)@51002.9 vp2(d2,twin-callouts-xy3.md)@51003 vp3(d1,twin-callouts-xy3.md)@51003.1 cb1@51003.6 cb2@51004.7 cb3@51006.9
+PR544 xytri-rv: clean disk [6,3,6,3,5,4] names ["Twin","Other","Twin","Other","Twin","Other"] writes 3 timing click2-before-write1 cardsA ["0:6","1:3","2:6","3:3","4:5","5:4"] flush {"calls":3,"maxDepth":3,"maxN":10,"maxSame":9,"pendFlushed":6,"maxDurMs":0.8,"sumDurMs":1.2}
+PR544 xytri-rv seq: rs(d0,view,v6,L5)@56918.9 rs(d1,view,v6,L22)@56919.1 rs(d2,view,v4,L46)@56919.5 vp1(d3,twin-callouts-xy3.md)@56919.7 vp2(d2,twin-callouts-xy3.md)@56919.8 vp3(d1,twin-callouts-xy3.md)@56919.9 cb1@56920.3 cb2@56921.6 cb3@56922.6
+PR544 pl3tri-lp: clean disk [6,6,6] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:6","2:6"] flush {"calls":3,"maxDepth":3,"maxN":3,"maxSame":2,"pendFlushed":6,"maxDurMs":0.3,"sumDurMs":0.6}
+PR544 pl3tri-lp seq: rs(d0,view,v6,L4)@62299.7 rs(d1,view,v6,L13)@62299.8 rs(d2,view,v6,L22)@62299.9 vp1(d3,twin-triplets.md)@62300 vp2(d2,twin-triplets.md)@62300 vp3(d1,twin-triplets.md)@62300 cb1@62300.2 cb2@62301.5 cb3@62303
+PR544 panes-lplp: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:6","2:5"] flush {"calls":2,"maxDepth":2,"maxN":6,"maxSame":5,"pendFlushed":2,"maxDurMs":0.3,"sumDurMs":0.4}
+PR544 panes-lplp seq: rs(d0,view,v6,L5)@69324.1 rs(d1,view,v6,L15)@69324.4 vp1(d2,twin-callouts-3.md)@69324.5 vp2(d1,twin-callouts-3.md)@69325.1 cb1@69325.6 cb2@69326.7
+PR544 panes-rvrv: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:6","2:5"] flush {"calls":2,"maxDepth":2,"maxN":9,"maxSame":8,"pendFlushed":2,"maxDurMs":0.4,"sumDurMs":0.4}
+PR544 panes-rvrv seq: rs(d0,view,v6,L5)@76435.9 rs(d1,view,v6,L15)@76436.3 vp1(d2,twin-callouts-3.md)@76436.5 vp2(d1,twin-callouts-3.md)@76436.6 cb1@76437 cb2@76438.7
+PR544 panes-rvlp: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:6","2:5"] flush {"calls":2,"maxDepth":2,"maxN":9,"maxSame":8,"pendFlushed":2,"maxDurMs":0.1,"sumDurMs":0.1}
+PR544 panes-rvlp seq: rs(d0,view,v6,L5)@83046 rs(d1,view,v6,L15)@83046.2 vp1(d2,twin-callouts-3.md)@83046.2 vp2(d1,twin-callouts-3.md)@83046.3 cb1@83046.9 cb2@83048
+PR544 follow-lp: PROBLEMS disk [7,6,6] names ["Twin","Twin","Twin"] writes 4 timing click2-before-write1 cardsA ["0:7","1:6","2:6"] flush {"calls":4,"maxDepth":2,"maxN":3,"maxSame":2,"pendFlushed":2,"maxDurMs":0.1,"sumDurMs":0.1} :: no + on A:1 | disk [7,6,6] want [7,7,6]
+PR544 follow-lp seq: rs(d0,view,v6,L5)@88542.9 rs(d1,view,v6,L15)@88543.2 vp1(d2,twin-callouts-3.md)@88543.2 vp2(d1,twin-callouts-3.md)@88543.3 cb1@88543.9 cb2@88545.5 rs(d0,view,v7,L5)@92063.5 vp3(d1,twin-callouts-3.md)@92063.5 cb3@92064.1 rs(d0,view,v6,L25)@93847.3 vp4(d1,twin-callouts-3.md)@93847.3 cb4@93847.8
+rc=0 elapsed=108s
+
+## run A-base
+bundle=base sha=aa4efdf671c9292c load=2.68 3.52 3.95 2/3308 1862148
+PR544 gap50-lp: PROBLEMS disk [6,5,6] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:5","2:6"] :: disk [6,5,6] want [6,6,5]
+PR544 gap50-lp seq: rs(d0,view,v6,L5)@5216.5 vp1(d1,twin-callouts-3.md)@5217 cb1@5217.8 rs(d0,view,v6,L15)@5298.6 vp2(d1,twin-callouts-3.md)@5298.8 cb2@5299.2
+PR544 gap200-lp: PROBLEMS disk [6,5,6] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:5","2:6"] :: disk [6,5,6] want [6,6,5]
+PR544 gap200-lp seq: rs(d0,view,v6,L5)@11169.4 vp1(d1,twin-callouts-3.md)@11169.7 cb1@11170.2 rs(d0,view,v6,L15)@11397.7 vp2(d1,twin-callouts-3.md)@11397.9 cb2@11398.5
+PR544 gap350-lp: PROBLEMS disk [6,5,6] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:5","2:6"] :: disk [6,5,6] want [6,6,5]
+PR544 gap350-lp seq: rs(d0,view,v6,L5)@17242.6 vp1(d1,twin-callouts-3.md)@17242.9 cb1@17243.8 rs(d0,view,v6,L15)@17612 vp2(d1,twin-callouts-3.md)@17612.1 cb2@17612.8
+PR544 gap50-rv: PROBLEMS disk [6,5,6] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:5","2:6"] :: disk [6,5,6] want [6,6,5]
+PR544 gap50-rv seq: rs(d0,view,v6,L5)@23446.1 vp1(d1,twin-callouts-3.md)@23446.3 cb1@23446.8 rs(d0,view,v6,L25)@23525.4 vp2(d1,twin-callouts-3.md)@23525.5 cb2@23526.1
+PR544 gap350-rv: PROBLEMS disk [6,5,6] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:5","2:6"] :: disk [6,5,6] want [6,6,5]
+PR544 gap350-rv seq: rs(d0,view,v6,L5)@28873.6 vp1(d1,twin-callouts-3.md)@28873.8 cb1@28874.4 rs(d0,view,v6,L25)@29239.1 vp2(d1,twin-callouts-3.md)@29239.3 cb2@29239.9
+PR544 tri4-lp: PROBLEMS disk [6,6,5,6] names ["Twin","Twin","Twin","Twin"] writes 3 timing click2-before-write1 cardsA ["0:6","1:6","2:5","3:6"] :: disk [6,6,5,6] want [6,6,6,5]
+PR544 tri4-lp seq: rs(d0,view,v6,L5)@34621.8 vp1(d1,twin-callouts-4.md)@34622 cb1@34622.3 rs(d0,view,v6,L15)@34763.3 vp2(d1,twin-callouts-4.md)@34763.4 cb2@34764 rs(d0,view,v6,L35)@34768.7 vp3(d1,twin-callouts-4.md)@34768.9 cb3@34810.3
+PR544 quad4-lp: clean disk [6,6,6,6] names ["Twin","Twin","Twin","Twin"] writes 4 timing click2-before-write1 cardsA ["0:6","1:6","2:6","3:6"]
+PR544 quad4-lp seq: rs(d0,view,v6,L5)@40682.7 vp1(d1,twin-callouts-4.md)@40682.9 cb1@40683.6 rs(d0,view,v6,L35)@40686.6 vp2(d1,twin-callouts-4.md)@40686.6 cb2@40729.5 rs(d0,view,v6,L25)@40732.3 vp3(d1,twin-callouts-4.md)@40732.3 cb3@40758.8 rs(d0,view,v6,L25)@40761.6 vp4(d1,twin-callouts-4.md)@40761.7 cb4@40791.3
+PR544 quad4-rv: clean disk [6,6,6,6] names ["Twin","Twin","Twin","Twin"] writes 4 timing click2-before-write1 cardsA ["0:6","1:6","2:6","3:6"]
+PR544 quad4-rv seq: rs(d0,view,v6,L5)@46764.5 vp1(d1,twin-callouts-4.md)@46764.6 cb1@46765 rs(d0,view,v6,L35)@46799.4 vp2(d1,twin-callouts-4.md)@46799.4 cb2@46802.9 rs(d0,view,v6,L35)@46849.7 vp3(d1,twin-callouts-4.md)@46849.8 rs(d0,view,v6,L25)@46854.3 vp4(d1,twin-callouts-4.md)@46854.6 cb3@46860.7 cb4@46865.8
+PR544 xytri-lp: clean disk [6,3,6,3,5,4] names ["Twin","Other","Twin","Other","Twin","Other"] writes 3 timing click2-before-write1 cardsA ["0:6","1:3","2:6","3:3","4:5","5:4"]
+PR544 xytri-lp seq: rs(d0,view,v6,L5)@52447.9 vp1(d1,twin-callouts-xy3.md)@52448.2 cb1@52448.6 rs(d0,view,v4,L46)@52453.7 vp2(d1,twin-callouts-xy3.md)@52453.8 cb2@52552.3 rs(d0,view,v6,L22)@52557.7 vp3(d1,twin-callouts-xy3.md)@52557.7 cb3@52581.3
+PR544 xytri-rv: PROBLEMS disk [6,3,5,3,6,4] names ["Twin","Other","Twin","Other","Twin","Other"] writes 3 timing click2-before-write1 cardsA ["0:6","1:3","2:5","3:3","4:6","5:4"] :: disk [6,3,5,3,6,4] want [6,3,6,3,5,4]
+PR544 xytri-rv seq: rs(d0,view,v6,L5)@58676.1 vp1(d1,twin-callouts-xy3.md)@58677.2 cb1@58677.9 rs(d0,view,v4,L46)@58729.1 vp2(d1,twin-callouts-xy3.md)@58729.1 cb2@58734.9 rs(d0,view,v6,L39)@58790.9 vp3(d1,twin-callouts-xy3.md)@58790.9 cb3@58792.9
+PR544 pl3tri-lp: clean disk [6,6,6] names ["Twin","Twin","Twin"] writes 3 timing click2-before-write1 cardsA ["0:6","1:6","2:6"]
+PR544 pl3tri-lp seq: rs(d0,view,v6,L4)@64298.6 vp1(d1,twin-triplets.md)@64298.7 cb1@64299.8 rs(d0,view,v6,L22)@64302.4 vp2(d1,twin-triplets.md)@64302.4 cb2@64370.1 rs(d0,view,v6,L22)@64376.2 vp3(d1,twin-triplets.md)@64376.3 cb3@64427.8
+PR544 panes-lplp: PROBLEMS disk [6,5,6] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:5","2:6"] :: disk [6,5,6] want [6,6,5]
+PR544 panes-lplp seq: rs(d0,view,v6,L5)@71634.6 vp1(d1,twin-callouts-3.md)@71634.9 cb1@71635.5 rs(d0,view,v6,L15)@71788.2 vp2(d1,twin-callouts-3.md)@71788.5 cb2@71788.9
+PR544 panes-rvrv: PROBLEMS disk [6,5,6] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:5","2:6"] :: disk [6,5,6] want [6,6,5]
+PR544 panes-rvrv seq: rs(d0,view,v6,L5)@79099.4 vp1(d1,twin-callouts-3.md)@79099.6 cb1@79100.1 rs(d0,view,v6,L15)@79247.2 vp2(d1,twin-callouts-3.md)@79247.4 cb2@79247.7
+PR544 panes-rvlp: PROBLEMS disk [6,5,6] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:5","2:6"] :: disk [6,5,6] want [6,6,5]
+PR544 panes-rvlp seq: rs(d0,view,v6,L5)@85898.1 vp1(d1,twin-callouts-3.md)@85898.2 cb1@85898.9 rs(d0,view,v6,L15)@86060 vp2(d1,twin-callouts-3.md)@86061.1 cb2@86061.6
+PR544 follow-lp: PROBLEMS disk [7,5,7] names ["Twin","Twin","Twin"] writes 4 timing click2-before-write1 cardsA ["0:7","1:5","2:7"] :: no + on A:1 | disk [7,5,7] want [7,7,6]
+PR544 follow-lp seq: rs(d0,view,v6,L5)@91578.7 vp1(d1,twin-callouts-3.md)@91579 cb1@91579.5 rs(d0,view,v6,L15)@91727.2 vp2(d1,twin-callouts-3.md)@91727.4 cb2@91727.8 rs(d0,view,v7,L5)@95109.6 vp3(d1,twin-callouts-3.md)@95109.6 cb3@95110.1 rs(d0,view,v7,L25)@96893.8 vp4(d1,twin-callouts-3.md)@96893.8 cb4@96894.3
+rc=0 elapsed=111s
+
+## run B-head
+bundle=head sha=d6278dd264af4b79 load=4.44 3.87 4.02 6/3295 1867117
+PR544 one5-lp: clean disk [10,5,5] names ["Twin","Twin","Twin"] writes 1 timing click2-before-write1 cardsA ["0:10","1:5","2:5"] flush {"calls":1,"maxDepth":1,"maxN":3,"maxSame":2,"pendFlushed":0,"maxDurMs":0,"sumDurMs":0}
+PR544 one5-lp seq: rs(d0,view,v10,L4)@5708.9 vp1(d1,twin-triplets.md)@5709.4 cb1@5710.2
+PR544 one5-rv: clean disk [10,5,5] names ["Twin","Twin","Twin"] writes 1 timing click2-before-write1 cardsA ["0:10","1:5","2:5"] flush {"calls":1,"maxDepth":1,"maxN":6,"maxSame":5,"pendFlushed":0,"maxDurMs":0,"sumDurMs":0}
+PR544 one5-rv seq: rs(d0,view,v10,L5)@11909 vp1(d1,twin-callouts-3.md)@11909.3 cb1@11909.9
+PR544 altdist-lp: clean disk [8,6] names ["Alpha","Beta"] writes 2 timing click2-before-write1 cardsA ["0:8","1:6"] flush {"calls":2,"maxDepth":2,"maxN":2,"maxSame":1,"pendFlushed":2,"maxDurMs":0.5,"sumDurMs":0.5}
+PR544 altdist-lp seq: rs(d0,view,v8,L4)@17784.1 rs(d1,view,v6,L13)@17784.5 vp1(d2,dist2.md)@17784.6 vp2(d1,dist2.md)@17784.6 cb1@17785.1 cb2@17786.9
+PR544 altdist-rv: clean disk [8,6] names ["Alpha","Beta"] writes 2 timing click2-before-write1 cardsA ["0:8","1:6"] flush {"calls":2,"maxDepth":2,"maxN":4,"maxSame":3,"pendFlushed":2,"maxDurMs":0.3,"sumDurMs":0.3}
+PR544 altdist-rv seq: rs(d0,view,v8,L4)@24085 rs(d1,view,v6,L13)@24085.3 vp1(d2,dist2.md)@24085.3 vp2(d1,dist2.md)@24085.4 cb1@24085.9 cb2@24087.1
+PR544 alttwin-lp: clean disk [8,8,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:8","1:8","2:5"] flush {"calls":2,"maxDepth":2,"maxN":3,"maxSame":2,"pendFlushed":2,"maxDurMs":0.1,"sumDurMs":0.1}
+PR544 alttwin-lp seq: rs(d0,view,v8,L5)@29981.1 rs(d1,view,v8,L15)@29981.5 vp1(d2,twin-callouts-3.md)@29981.5 vp2(d1,twin-callouts-3.md)@29981.7 cb1@29982.2 cb2@29983.9
+PR544 alttwin-rv: clean disk [8,8,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:8","1:8","2:5"] flush {"calls":2,"maxDepth":2,"maxN":6,"maxSame":5,"pendFlushed":2,"maxDurMs":0.5,"sumDurMs":0.5}
+PR544 alttwin-rv seq: rs(d0,view,v8,L5)@36341.4 rs(d1,view,v8,L15)@36341.9 vp1(d2,twin-callouts-3.md)@36342 vp2(d1,twin-callouts-3.md)@36342.3 cb1@36342.8 cb2@36344.2
+PR544 formA-lp: PROBLEMS disk [6,5,5] names ["Twin","Twin","Edited"] writes 2 timing n/a cardsA ["0:6","1:5","2:5"] flush {"calls":2,"maxDepth":1,"maxN":3,"maxSame":2,"pendFlushed":0,"maxDurMs":0,"sumDurMs":0} formRaw "name: Twin|current_value: 5|max_value: 20|min_value: 0" :: names ["Twin","Twin","Edited"] want ["Twin","Edited","Twin"]
+PR544 formA-lp seq: rs(d0,view,v6,L5)@41752 vp1(d1,twin-callouts-3.md)@41752.8 cb1@41753.3 save@42423.3 rs(d0,form,v5,L25)@42424.6 vp2(d1,twin-callouts-3.md)@42424.8 cb2@42425.2
+PR544 formA-rv: PROBLEMS disk [6,5,5] names ["Twin","Twin","Edited"] writes 2 timing n/a cardsA ["0:6","1:5","2:5"] flush {"calls":2,"maxDepth":1,"maxN":6,"maxSame":5,"pendFlushed":0,"maxDurMs":0,"sumDurMs":0} formRaw "name: Twin|current_value: 5|max_value: 20|min_value: 0" :: names ["Twin","Twin","Edited"] want ["Twin","Edited","Twin"]
+PR544 formA-rv seq: rs(d0,view,v6,L5)@48345.6 vp1(d1,twin-callouts-3.md)@48345.7 cb1@48346.2 save@48997.1 rs(d0,form,v5,L25)@48998 vp2(d1,twin-callouts-3.md)@48998.2 cb2@48998.7
+PR544 formA-pl-lp: PROBLEMS disk [6,5,5] names ["Twin","Twin","Edited"] writes 2 timing n/a cardsA ["0:6","1:5","2:5"] flush {"calls":2,"maxDepth":1,"maxN":3,"maxSame":2,"pendFlushed":0,"maxDurMs":0,"sumDurMs":0} formRaw "name: Twin|current_value: 5|max_value: 20|min_value: 0" :: names ["Twin","Twin","Edited"] want ["Twin","Edited","Twin"]
+PR544 formA-pl-lp seq: rs(d0,view,v6,L4)@54404.4 vp1(d1,twin-triplets.md)@54404.4 cb1@54405 save@55047.2 rs(d0,form,v5,L22)@55048.1 vp2(d1,twin-triplets.md)@55048.1 cb2@55048.6
+PR544 formA-slow-lp: clean disk [6,5,5] names ["Twin","Edited","Twin"] writes 2 timing n/a cardsA ["0:6","1:5","2:5"] flush {"calls":2,"maxDepth":1,"maxN":3,"maxSame":2,"pendFlushed":0,"maxDurMs":0,"sumDurMs":0} formRaw "name: Twin|current_value: 5|max_value: 20|min_value: 0"
+PR544 formA-slow-lp seq: rs(d0,view,v6,L5)@60945.5 vp1(d1,twin-callouts-3.md)@60945.5 cb1@60946.1 save@62989.8 rs(d0,form,v5,L15)@62991.2 vp2(d1,twin-callouts-3.md)@62991.5 cb2@62993.5
+PR544 formB-lp: ERROR disk undefined names undefined writes undefined timing undefined cardsA [] :: Error: timed out waiting for formB-lp: the Edit pencil is drawn
+PR544 formB-lp seq: 
+PR544 formC-lp-scriptonly: clean disk [6,5,5] names ["Twin","Edited","Twin"] writes 3 timing click2-before-write1 cardsA ["0:6","1:5","2:5"] flush {"calls":3,"maxDepth":3,"maxN":3,"maxSame":2,"pendFlushed":3,"maxDurMs":0.9,"sumDurMs":1.4}
+PR544 formC-lp-scriptonly seq: save@87091.6 rs(d0,form,v5,L15)@87092.7 rs(d1,view,v6,L5)@87093.1 rs(d2,view,v6,L15)@87093.3 vp1(d3,twin-callouts-3.md)@87093.6 vp2(d2,twin-callouts-3.md)@87093.7 vp3(d1,twin-callouts-3.md)@87093.7 cb1@87094.2 cb2@87096.6 cb3@87097.4
+PR544 undo-lp: clean disk [5,5,5] names ["Twin","Twin","Twin"] writes 3 timing click2-before-write1 cardsA ["0:5","1:5","2:5"] snaps ["after-pair=[6,6,5]/ed[6,6,5]/cards[6,5]","undo1=[6,6,5]/ed[5,5,5]/cards[5,5]","undo2=[5,5,5]/ed[5,5,5]/cards[5,5]","undo3=[5,5,5]/ed[5,5,5]/cards[5,5]"] flush {"calls":2,"maxDepth":2,"maxN":3,"maxSame":2,"pendFlushed":2,"maxDurMs":0.3,"sumDurMs":0.3}
+PR544 undo-lp seq: rs(d0,view,v6,L5)@92992 rs(d1,view,v6,L15)@92992.4 vp1(d2,twin-callouts-3.md)@92992.5 vp2(d1,twin-callouts-3.md)@92992.6 cb1@92993 cb2@92994.7
+PR544 undo1-lp: clean disk [5,5,5] names ["Twin","Twin","Twin"] writes 3 timing click2-after-write1 cardsA ["0:5","1:5","2:5"] snaps ["after-pair=[6,6,5]/ed[6,6,5]/cards[6,5]","undo1=[6,6,5]/ed[6,5,5]/cards[6,5]","undo2=[5,5,5]/ed[5,5,5]/cards[5,5]"] flush {"calls":2,"maxDepth":1,"maxN":3,"maxSame":2,"pendFlushed":0,"maxDurMs":0,"sumDurMs":0}
+PR544 undo1-lp seq: rs(d0,view,v6,L5)@104898.6 vp1(d1,twin-callouts-3.md)@104898.7 cb1@104899.2 rs(d0,view,v6,L15)@106876.9 vp2(d1,twin-callouts-3.md)@106877 cb2@106877.4
+rc=0 elapsed=126s
+
+## run B2-head
+bundle=head sha=d6278dd264af4b79 load=3.11 3.22 3.68 2/3213 1875010
+PR544 formB-rv: clean disk [6,6,5] names ["Twin","Edited","Twin"] writes 3 timing click2-after-write1 cardsA ["0:6","1:6","2:5"] flush {"calls":3,"maxDepth":2,"maxN":3,"maxSame":2,"pendFlushed":1,"maxDurMs":1,"sumDurMs":1.1} formRaw "max_value: 20|current_value: 6|min_value: 0|name: Twin"
+PR544 formB-rv seq: rs(d0,view,v6,L15)@4897.4 vp1(d1,twin-callouts-3.md)@4898.1 cb1@4899.4 save@5733.4 rs(d0,form,v6,L15)@5735 rs(d1,view,v6,L5)@5735.7 vp2(d2,twin-callouts-3.md)@5736.1 vp3(d1,twin-callouts-3.md)@5736.3 cb2@5736.8 cb3@5738.3
+PR544 formB-pl-lp: ERROR disk undefined names undefined writes undefined timing undefined cardsA [] :: Error: timed out waiting for formB-pl-lp form: the edit form opened
+PR544 formB-pl-lp seq: 
+PR544 formC-lp-scriptonly: clean disk [6,5,5] names ["Twin","Edited","Twin"] writes 3 timing click2-before-write1 cardsA ["0:6","1:5","2:5"] flush {"calls":3,"maxDepth":3,"maxN":3,"maxSame":2,"pendFlushed":3,"maxDurMs":3.2,"sumDurMs":4.1}
+PR544 formC-lp-scriptonly seq: save@29996.9 rs(d0,form,v5,L15)@29998.4 rs(d1,view,v6,L5)@29999.4 rs(d2,view,v6,L15)@30001 vp1(d3,twin-callouts-3.md)@30001.5 vp2(d2,twin-callouts-3.md)@30001.7 vp3(d1,twin-callouts-3.md)@30001.8 cb1@30002.4 cb2@30005.1 cb3@30007.8
+rc=0 elapsed=44s
+
+## run B-base
+bundle=base sha=aa4efdf671c9292c load=2.18 3.33 3.80 3/3181 1870967
+PR544 one5-lp: clean disk [10,5,5] names ["Twin","Twin","Twin"] writes 1 timing click2-before-write1 cardsA ["0:10","1:5","2:5"]
+PR544 one5-lp seq: rs(d0,view,v10,L4)@5566 vp1(d1,twin-triplets.md)@5566.2 cb1@5566.8
+PR544 one5-rv: clean disk [10,5,5] names ["Twin","Twin","Twin"] writes 1 timing click2-before-write1 cardsA ["0:10","1:5","2:5"]
+PR544 one5-rv seq: rs(d0,view,v10,L5)@11776.3 vp1(d1,twin-callouts-3.md)@11776.5 cb1@11777.1
+PR544 altdist-lp: clean disk [8,6] names ["Alpha","Beta"] writes 2 timing click2-before-write1 cardsA ["0:8","1:6"]
+PR544 altdist-lp seq: rs(d0,view,v8,L4)@17640.6 vp1(d1,dist2.md)@17640.6 cb1@17641.2 rs(d0,view,v6,L13)@17772.3 vp2(d1,dist2.md)@17772.4 cb2@17773
+PR544 altdist-rv: clean disk [8,6] names ["Alpha","Beta"] writes 2 timing click2-before-write1 cardsA ["0:8","1:6"]
+PR544 altdist-rv seq: rs(d0,view,v8,L4)@23986.7 vp1(d1,dist2.md)@23986.8 cb1@23987.4 rs(d0,view,v6,L13)@24103.3 vp2(d1,dist2.md)@24103.3 cb2@24103.8
+PR544 alttwin-lp: PROBLEMS disk [8,5,8] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:8","1:5","2:8"] :: disk [8,5,8] want [8,8,5]
+PR544 alttwin-lp seq: rs(d0,view,v8,L5)@29935.4 vp1(d1,twin-callouts-3.md)@29935.6 cb1@29936.3 rs(d0,view,v8,L15)@30053.3 vp2(d1,twin-callouts-3.md)@30053.5 cb2@30054.1
+PR544 alttwin-rv: PROBLEMS disk [8,5,8] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:8","1:5","2:8"] :: disk [8,5,8] want [8,8,5]
+PR544 alttwin-rv seq: rs(d0,view,v8,L5)@36352.5 vp1(d1,twin-callouts-3.md)@36352.7 cb1@36353.3 rs(d0,view,v8,L25)@36468.7 vp2(d1,twin-callouts-3.md)@36468.9 cb2@36469.4
+PR544 formA-lp: PROBLEMS disk [6,5,5] names ["Twin","Twin","Edited"] writes 2 timing n/a cardsA ["0:6","1:5","2:5"] formRaw "name: Twin|current_value: 5|max_value: 20|min_value: 0" :: names ["Twin","Twin","Edited"] want ["Twin","Edited","Twin"]
+PR544 formA-lp seq: rs(d0,view,v6,L5)@41820.3 vp1(d1,twin-callouts-3.md)@41820.7 cb1@41821.3 save@42496.3 rs(d0,form,v5,L25)@42497.5 vp2(d1,twin-callouts-3.md)@42497.7 cb2@42498
+PR544 formA-rv: PROBLEMS disk [6,5,5] names ["Twin","Twin","Edited"] writes 2 timing n/a cardsA ["0:6","1:5","2:5"] formRaw "name: Twin|current_value: 5|max_value: 20|min_value: 0" :: names ["Twin","Twin","Edited"] want ["Twin","Edited","Twin"]
+PR544 formA-rv seq: rs(d0,view,v6,L5)@48349.1 vp1(d1,twin-callouts-3.md)@48349.3 cb1@48349.8 save@48997.2 rs(d0,form,v5,L25)@48998.1 vp2(d1,twin-callouts-3.md)@48998.3 cb2@48998.9
+PR544 formA-pl-lp: PROBLEMS disk [6,5,5] names ["Twin","Twin","Edited"] writes 2 timing n/a cardsA ["0:6","1:5","2:5"] formRaw "name: Twin|current_value: 5|max_value: 20|min_value: 0" :: names ["Twin","Twin","Edited"] want ["Twin","Edited","Twin"]
+PR544 formA-pl-lp seq: rs(d0,view,v6,L4)@54379.1 vp1(d1,twin-triplets.md)@54379.2 cb1@54379.7 save@55031.5 rs(d0,form,v5,L22)@55032.2 vp2(d1,twin-triplets.md)@55032.2 cb2@55032.7
+PR544 formA-slow-lp: clean disk [6,5,5] names ["Twin","Edited","Twin"] writes 2 timing n/a cardsA ["0:6","1:5","2:5"] formRaw "name: Twin|current_value: 5|max_value: 20|min_value: 0"
+PR544 formA-slow-lp seq: rs(d0,view,v6,L5)@60884.2 vp1(d1,twin-callouts-3.md)@60884.3 cb1@60884.9 save@62921.7 rs(d0,form,v5,L15)@62923 vp2(d1,twin-callouts-3.md)@62923.2 cb2@62923.9
+PR544 formB-rv: clean disk [6,6,5] names ["Twin","Edited","Twin"] writes 3 timing click2-after-write1 cardsA ["0:6","1:6","2:5"] formRaw "max_value: 20|current_value: 6|min_value: 0|name: Twin"
+PR544 formB-rv seq: rs(d0,view,v6,L15)@68489 vp1(d1,twin-callouts-3.md)@68489.2 cb1@68489.6 save@69320.7 rs(d0,form,v6,L15)@69321.9 vp2(d1,twin-callouts-3.md)@69322 cb2@69322.4 rs(d0,view,v6,L5)@69599.9 vp3(d1,twin-callouts-3.md)@69600 cb3@69600.6
+PR544 formB-pl-lp: ERROR disk undefined names undefined writes undefined timing undefined cardsA [] :: Error: timed out waiting for formB-pl-lp form: the edit form opened
+PR544 formB-pl-lp seq: 
+PR544 formC-lp-scriptonly: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 3 timing click2-before-write1 cardsA ["0:6","1:6","2:5"]
+PR544 formC-lp-scriptonly seq: save@93603.2 rs(d0,form,v5,L15)@93604.3 vp1(d1,twin-callouts-3.md)@93604.4 cb1@93605 rs(d0,view,v6,L15)@93635.1 vp2(d1,twin-callouts-3.md)@93635.2 cb2@93671.1 rs(d0,view,v6,L5)@93881.4 vp3(d1,twin-callouts-3.md)@93881.6 cb3@93882.2
+PR544 undo-lp: PROBLEMS disk [5,5,5] names ["Twin","Twin","Twin"] writes 3 timing click2-before-write1 cardsA ["0:6","1:5","2:5"] snaps ["after-pair=[6,5,6]/ed[6,5,6]/cards[6,6]","undo1=[6,5,6]/ed[6,5,5]/cards[6,5]","undo2=[5,5,5]/ed[5,5,5]/cards[6,5]","undo3=[5,5,5]/ed[5,5,5]/cards[6,5]"] :: card A0 shows 6, disk 5
+PR544 undo-lp seq: rs(d0,view,v6,L5)@99752.9 vp1(d1,twin-callouts-3.md)@99753.1 cb1@99753.5 rs(d0,view,v6,L15)@99902 vp2(d1,twin-callouts-3.md)@99902.1 cb2@99902.9
+PR544 undo1-lp: clean disk [5,5,5] names ["Twin","Twin","Twin"] writes 3 timing click2-after-write1 cardsA ["0:5","1:5","2:5"] snaps ["after-pair=[6,6,5]/ed[6,6,5]/cards[6,5]","undo1=[6,6,5]/ed[6,5,5]/cards[6,5]","undo2=[5,5,5]/ed[5,5,5]/cards[5,5]"]
+PR544 undo1-lp seq: rs(d0,view,v6,L5)@111728.7 vp1(d1,twin-callouts-3.md)@111728.7 cb1@111729.2 rs(d0,view,v6,L15)@113700.3 vp2(d1,twin-callouts-3.md)@113700.3 cb2@113700.9
+rc=0 elapsed=133s
+
+## run C-head
+bundle=head sha=d6278dd264af4b79 load=2.59 3.02 3.59 1/3209 1876826
+PR544 delmid-lp: clean disk [6,6] names ["Twin","Twin"] writes 3 timing click2-before-write1 cardsA ["0:6","1:6"] flush {"calls":2,"maxDepth":2,"maxN":2,"maxSame":1,"pendFlushed":2,"maxDurMs":0.7,"sumDurMs":0.7}
+PR544 delmid-lp seq: ext@5073.5 vp1(d0,twin-callouts-3.md)@5073.5 cb1@5074.4 rs(d0,view,v6,L5)@5262.5 rs(d1,view,v6,L15)@5263.3 vp2(d2,twin-callouts-3.md)@5263.6 vp3(d1,twin-callouts-3.md)@5263.7 cb2@5264.2 cb3@5266.1
+PR544 handlower-lp: clean disk [6,6,5] names ["Twin","Twin","Hand"] writes 3 timing click2-before-write1 cardsA ["0:6","1:6","2:5"] flush {"calls":2,"maxDepth":2,"maxN":3,"maxSame":2,"pendFlushed":2,"maxDurMs":0.4,"sumDurMs":0.4}
+PR544 handlower-lp seq: ext@10973.9 vp1(d0,twin-callouts-3.md)@10974 cb1@10974.5 rs(d0,view,v6,L5)@11165 rs(d1,view,v6,L15)@11165.4 vp2(d2,twin-callouts-3.md)@11165.5 vp3(d1,twin-callouts-3.md)@11165.6 cb2@11166.1 cb3@11167.8
+PR544 insabove-lp: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 3 timing click2-before-write1 cardsA ["0:6","1:6","2:5"] flush {"calls":2,"maxDepth":2,"maxN":3,"maxSame":2,"pendFlushed":2,"maxDurMs":0.2,"sumDurMs":0.2}
+PR544 insabove-lp seq: ext@16821.3 vp1(d0,twin-callouts-3.md)@16821.3 cb1@16821.9 rs(d0,view,v6,L5)@17014.4 rs(d1,view,v6,L15)@17014.7 vp2(d2,twin-callouts-3.md)@17014.8 vp3(d1,twin-callouts-3.md)@17014.9 cb2@17015.5 cb3@17016.9
+PR544 delmid-after-lp: clean disk [6,5] names ["Twin","Twin"] writes 3 timing click2-before-write1 cardsA ["0:6","1:5"] flush {"calls":2,"maxDepth":2,"maxN":3,"maxSame":2,"pendFlushed":2,"maxDurMs":0.3,"sumDurMs":0.3}
+PR544 delmid-after-lp seq: rs(d0,view,v6,L5)@22914.4 rs(d1,view,v6,L15)@22914.8 vp1(d2,twin-callouts-3.md)@22914.9 vp2(d1,twin-callouts-3.md)@22914.9 cb1@22915.5 cb2@22917.1 ext@23365.8 vp3(d0,twin-callouts-3.md)@23365.8 cb3@23366.2
+PR544 delmid-rv: clean disk [6,6] names ["Twin","Twin"] writes 3 timing click2-before-write1 cardsA ["0:6","1:6"] flush {"calls":2,"maxDepth":2,"maxN":5,"maxSame":4,"pendFlushed":2,"maxDurMs":0.4,"sumDurMs":0.4}
+PR544 delmid-rv seq: ext@28940.8 vp1(d0,twin-callouts-3.md)@28940.8 cb1@28941.4 rs(d0,view,v6,L5)@29136.8 rs(d1,view,v6,L15)@29137.1 vp2(d2,twin-callouts-3.md)@29137.2 vp3(d1,twin-callouts-3.md)@29137.4 cb2@29137.9 cb3@29139.1
+PR544 handlower-rv: clean disk [6,6,5] names ["Twin","Twin","Hand"] writes 3 timing click2-before-write1 cardsA ["0:6","1:6","2:5"] flush {"calls":2,"maxDepth":2,"maxN":6,"maxSame":5,"pendFlushed":2,"maxDurMs":0.2,"sumDurMs":0.2}
+PR544 handlower-rv seq: ext@34315.1 vp1(d0,twin-callouts-3.md)@34315.1 cb1@34315.7 rs(d0,view,v6,L5)@34512.6 rs(d1,view,v6,L15)@34512.8 vp2(d2,twin-callouts-3.md)@34512.9 vp3(d1,twin-callouts-3.md)@34513 cb2@34513.6 cb3@34514.9
+PR544 insabove-rv: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 3 timing click2-before-write1 cardsA ["0:6","1:6","2:5"] flush {"calls":2,"maxDepth":2,"maxN":6,"maxSame":5,"pendFlushed":2,"maxDurMs":0.2,"sumDurMs":0.2}
+PR544 insabove-rv seq: ext@39675.8 vp1(d0,twin-callouts-3.md)@39675.8 cb1@39676.2 rs(d0,view,v6,L5)@39880.1 rs(d1,view,v6,L15)@39880.4 vp2(d2,twin-callouts-3.md)@39880.5 vp3(d1,twin-callouts-3.md)@39880.6 cb2@39881.1 cb3@39882.4
+PR544 delmid-after-rv: clean disk [6,5] names ["Twin","Twin"] writes 3 timing click2-before-write1 cardsA ["0:6","1:5"] flush {"calls":2,"maxDepth":2,"maxN":6,"maxSame":5,"pendFlushed":2,"maxDurMs":0.3,"sumDurMs":0.3}
+PR544 delmid-after-rv seq: rs(d0,view,v6,L5)@45238.5 rs(d1,view,v6,L15)@45238.8 vp1(d2,twin-callouts-3.md)@45238.9 vp2(d1,twin-callouts-3.md)@45239 cb1@45239.8 cb2@45242.2 ext@45676.7 vp3(d0,twin-callouts-3.md)@45676.7 cb3@45677.1
+PR544 off-lp: PROBLEMS disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["1:6","2:6"] snaps ["off=[6,6,5]/ed[6,6,5]/cards[6]"] flush {"calls":2,"maxDepth":2,"maxN":3,"maxSame":2,"pendFlushed":2,"maxDurMs":0.3,"sumDurMs":0.3} :: card A2 shows 6, disk 5 | pane A draws 2 cards for 3 blocks
+PR544 off-lp seq: off@50804.9 rs(d0,view,v6,L15)@50817.4 rs(d1,view,v6,L5)@50817.6 vp1(d2,twin-callouts-3.md)@50817.7 vp2(d1,twin-callouts-3.md)@50817.7 cb1@50901.7 cb2@50908.9
+PR544 off-rv: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:6","2:5"] snaps ["off=[6,6,5]/ednull/cards[]"] flush {"calls":2,"maxDepth":2,"maxN":6,"maxSame":5,"pendFlushed":2,"maxDurMs":0.4,"sumDurMs":0.4}
+PR544 off-rv seq: off@62141.3 rs(d0,view,v6,L15)@62141.8 rs(d1,view,v6,L5)@62142.4 vp1(d2,twin-callouts-3.md)@62142.5 vp2(d1,twin-callouts-3.md)@62142.6 cb1@62201.3 cb2@62208.8
+PR544 nav-lp: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA [] flush {"calls":2,"maxDepth":2,"maxN":2,"maxSame":2,"pendFlushed":1,"maxDurMs":0.4,"sumDurMs":0.4}
+PR544 nav-lp seq: nav@73036.4 rs(d0,view,v6,L5)@73040.9 rs(d1,view,v6,L15)@73041.2 vp1(d2,twin-callouts-3.md)@73041.4 vp2(d1,twin-callouts-3.md)@73041.4 cb1@73061.9 cb2@73066.7
+PR544 nav-rv: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA [] flush {"calls":2,"maxDepth":2,"maxN":2,"maxSame":2,"pendFlushed":1,"maxDurMs":0.4,"sumDurMs":0.4}
+PR544 nav-rv seq: nav@78236.4 rs(d0,view,v6,L5)@78243.5 rs(d1,view,v6,L15)@78243.8 vp1(d2,twin-callouts-3.md)@78243.9 vp2(d1,twin-callouts-3.md)@78243.9 cb1@78263.2 cb2@78267.8
+PR544 rename-lp: PROBLEMS disk [5,5,5] names ["Twin","Twin","Twin"] writes 0 timing n/a cardsA ["0:6","1:6","2:5"] :: disk [5,5,5] want [6,6,5] | card A0 shows 6, disk 5 | card A1 shows 6, disk 5 | notices ["Draw Steel Elements: a change to a block in twin-callouts-3 was not saved — the plugin can't tell where this block sits in the note."]
+PR544 rename-lp seq: rename@83469.3 rs(d0,view,v6,L5)@83663.7 rs(d0,view,v6,L15)@83807.1
+PR544 rename-rv: PROBLEMS disk [5,5,5] names ["Twin","Twin","Twin"] writes 0 timing n/a cardsA ["0:6","1:6","2:5"] :: disk [5,5,5] want [6,6,5] | card A0 shows 6, disk 5 | card A1 shows 6, disk 5 | notices ["Draw Steel Elements: a change to a block in twin-callouts-3 was not saved — the plugin can't tell where this block sits in the note."]
+PR544 rename-rv seq: rename@89621.6 rs(d0,view,v6,L5)@89820.9 rs(d0,view,v6,L15)@89959.5
+PR544 closeB-lp: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:6","2:5"] flush {"calls":2,"maxDepth":2,"maxN":7,"maxSame":7,"pendFlushed":1,"maxDurMs":0.3,"sumDurMs":0.3}
+PR544 closeB-lp seq: detachB@96418.7 rs(d0,view,v6,L15)@96421.7 rs(d1,view,v6,L5)@96421.9 vp1(d2,twin-callouts-3.md)@96422 vp2(d1,twin-callouts-3.md)@96422 cb1@96470.1 cb2@96473.5
+PR544 closeB-rv: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:6","2:5"] flush {"calls":2,"maxDepth":2,"maxN":7,"maxSame":7,"pendFlushed":1,"maxDurMs":0.1,"sumDurMs":0.1}
+PR544 closeB-rv seq: detachB@102801.3 rs(d0,view,v6,L15)@102803.9 rs(d1,view,v6,L5)@102804 vp1(d2,twin-callouts-3.md)@102804.1 vp2(d1,twin-callouts-3.md)@102804.2 cb1@102840.6 cb2@102843.9
+rc=0 elapsed=116s
+
+## run C-base
+bundle=base sha=aa4efdf671c9292c load=1.61 2.48 3.31 1/3209 1881122
+PR544 delmid-lp: clean disk [6,6] names ["Twin","Twin"] writes 3 timing click2-before-write1 cardsA ["0:6","1:6"]
+PR544 delmid-lp seq: ext@4982.6 vp1(d0,twin-callouts-3.md)@4982.7 cb1@4983.3 rs(d0,view,v6,L5)@5173.4 vp2(d1,twin-callouts-3.md)@5173.8 cb2@5174.3 rs(d0,view,v6,L17)@5178.4 vp3(d1,twin-callouts-3.md)@5178.6 cb3@5222.7
+PR544 handlower-lp: clean disk [6,6,5] names ["Twin","Twin","Hand"] writes 3 timing click2-before-write1 cardsA ["0:6","1:6","2:5"]
+PR544 handlower-lp seq: ext@10895.1 vp1(d0,twin-callouts-3.md)@10895.1 cb1@10895.7 rs(d0,view,v6,L5)@11088.6 vp2(d1,twin-callouts-3.md)@11088.8 cb2@11089.3 rs(d0,view,v6,L15)@11092.9 vp3(d1,twin-callouts-3.md)@11092.9 cb3@11130.8
+PR544 insabove-lp: PROBLEMS disk [6,5,6] names ["Twin","Twin","Twin"] writes 3 timing click2-before-write1 cardsA ["0:6","1:5","2:6"] :: disk [6,5,6] want [6,6,5]
+PR544 insabove-lp seq: ext@16835.1 vp1(d0,twin-callouts-3.md)@16835.1 cb1@16835.7 rs(d0,view,v6,L5)@17021.6 vp2(d1,twin-callouts-3.md)@17021.8 cb2@17026.5 rs(d0,view,v6,L15)@17172.6 vp3(d1,twin-callouts-3.md)@17172.7 cb3@17173.3
+PR544 delmid-after-lp: clean disk [6,6] names ["Twin","Twin"] writes 3 timing click2-before-write1 cardsA ["0:6","1:6"]
+PR544 delmid-after-lp seq: rs(d0,view,v6,L5)@23074 vp1(d1,twin-callouts-3.md)@23074.2 cb1@23074.9 rs(d0,view,v6,L15)@23215.9 vp2(d1,twin-callouts-3.md)@23216.2 cb2@23216.7 ext@23518.8 vp3(d0,twin-callouts-3.md)@23518.8 cb3@23519.3
+PR544 delmid-rv: clean disk [6,6] names ["Twin","Twin"] writes 3 timing click2-before-write1 cardsA ["0:6","1:6"]
+PR544 delmid-rv seq: ext@29117.2 vp1(d0,twin-callouts-3.md)@29117.2 cb1@29117.7 rs(d0,view,v6,L5)@29313.4 vp2(d1,twin-callouts-3.md)@29313.6 cb2@29314.2 rs(d0,view,v6,L15)@29342.8 vp3(d1,twin-callouts-3.md)@29342.9 cb3@29345.1
+PR544 handlower-rv: clean disk [6,6,5] names ["Twin","Twin","Hand"] writes 3 timing click2-before-write1 cardsA ["0:6","1:6","2:5"]
+PR544 handlower-rv seq: ext@34492.1 vp1(d0,twin-callouts-3.md)@34492.1 cb1@34492.6 rs(d0,view,v6,L5)@34688.3 vp2(d1,twin-callouts-3.md)@34688.4 cb2@34689.1 rs(d0,view,v6,L15)@34718.9 vp3(d1,twin-callouts-3.md)@34719 cb3@34721.1
+PR544 insabove-rv: PROBLEMS disk [6,5,6] names ["Twin","Twin","Twin"] writes 3 timing click2-before-write1 cardsA ["0:6","1:5","2:6"] :: disk [6,5,6] want [6,6,5]
+PR544 insabove-rv seq: ext@39880.8 vp1(d0,twin-callouts-3.md)@39880.8 cb1@39881.2 rs(d0,view,v6,L5)@40084.6 vp2(d1,twin-callouts-3.md)@40084.7 cb2@40085.3 rs(d0,view,v6,L27)@40219.4 vp3(d1,twin-callouts-3.md)@40219.6 cb3@40220.1
+PR544 delmid-after-rv: clean disk [6,6] names ["Twin","Twin"] writes 3 timing click2-before-write1 cardsA ["0:6","1:6"]
+PR544 delmid-after-rv seq: rs(d0,view,v6,L5)@45553.6 vp1(d1,twin-callouts-3.md)@45553.8 cb1@45554.2 rs(d0,view,v6,L25)@45691.9 vp2(d1,twin-callouts-3.md)@45692.1 cb2@45692.5 ext@45993.8 vp3(d0,twin-callouts-3.md)@45993.8 cb3@45994.3
+PR544 off-lp: PROBLEMS disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["1:6","2:6"] snaps ["off=[6,6,5]/ed[6,6,5]/cards[6]"] :: card A2 shows 6, disk 5 | pane A draws 2 cards for 3 blocks
+PR544 off-lp seq: off@51127.8 rs(d0,view,v6,L15)@51141.5 vp1(d1,twin-callouts-3.md)@51141.5 rs(d0,view,v6,L5)@51141.8 vp2(d1,twin-callouts-3.md)@51142 cb1@51217.6 cb2@51228.3
+PR544 off-rv: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:6","2:5"] snaps ["off=[6,6,5]/ednull/cards[]"]
+PR544 off-rv seq: off@62507.8 rs(d0,view,v6,L15)@62508.9 vp1(d1,twin-callouts-3.md)@62509.5 rs(d0,view,v6,L5)@62509.8 vp2(d1,twin-callouts-3.md)@62510 cb1@62600.8 cb2@62611.3
+PR544 nav-lp: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA []
+PR544 nav-lp seq: nav@73475.9 rs(d0,view,v6,L5)@73480.3 vp1(d1,twin-callouts-3.md)@73480.5 rs(d0,view,v6,L15)@73480.7 vp2(d1,twin-callouts-3.md)@73480.7 cb1@73508.7 cb2@73511.4
+PR544 nav-rv: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA []
+PR544 nav-rv seq: nav@78675.7 rs(d0,view,v6,L5)@78682.2 vp1(d1,twin-callouts-3.md)@78682.2 rs(d0,view,v6,L15)@78682.5 vp2(d1,twin-callouts-3.md)@78682.5 cb1@78709.4 cb2@78710.7
+PR544 rename-lp: PROBLEMS disk [5,5,5] names ["Twin","Twin","Twin"] writes 0 timing n/a cardsA ["0:6","1:6","2:5"] :: disk [5,5,5] want [6,6,5] | card A0 shows 6, disk 5 | card A1 shows 6, disk 5 | notices ["Draw Steel Elements: a change to a block in twin-callouts-3 was not saved — the plugin can't tell where this block sits in the note."]
+PR544 rename-lp seq: rename@83910.8 rs(d0,view,v6,L5)@84102 rs(d0,view,v6,L15)@84248.7
+PR544 rename-rv: PROBLEMS disk [5,5,5] names ["Twin","Twin","Twin"] writes 0 timing n/a cardsA ["0:6","1:6","2:5"] :: disk [5,5,5] want [6,6,5] | card A0 shows 6, disk 5 | card A1 shows 6, disk 5 | notices ["Draw Steel Elements: a change to a block in twin-callouts-3 was not saved — the plugin can't tell where this block sits in the note."]
+PR544 rename-rv seq: rename@90031 rs(d0,view,v6,L5)@90234.4 rs(d0,view,v6,L15)@90369.1
+PR544 closeB-lp: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:6","2:5"]
+PR544 closeB-lp seq: detachB@96809.9 rs(d0,view,v6,L15)@96812.5 vp1(d1,twin-callouts-3.md)@96812.5 rs(d0,view,v6,L5)@96812.7 vp2(d1,twin-callouts-3.md)@96812.7 cb1@96841.5 cb2@96844.9
+PR544 closeB-rv: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:6","2:5"]
+PR544 closeB-rv seq: detachB@103121.9 rs(d0,view,v6,L15)@103124.5 vp1(d1,twin-callouts-3.md)@103124.6 rs(d0,view,v6,L5)@103124.7 vp2(d1,twin-callouts-3.md)@103124.8 cb1@103156.9 cb2@103161.4
+rc=0 elapsed=117s
+
+## run D-head
+bundle=head sha=d6278dd264af4b79 load=1.67 2.23 3.11 3/3138 1886221
+PR544 twonotes-lp: clean disk [6,5,5] B [6,5,5] names ["Twin","Twin","Twin"] writes 1/1 timing click2-before-write1 cardsA ["0:6","1:5","2:5"] flush {"calls":2,"maxDepth":1,"maxN":6,"maxSame":2,"pendFlushed":0,"maxDurMs":0.1,"sumDurMs":0.2}
+PR544 twonotes-lp seq: rs(d0,view,v6,L5)@7587.9 vp1(d1,twin-callouts-3.md)@7588.5 cb1@7589.3 rs(d0,view,v6,L4)@7748.6 vp2(d1,twin-triplets.md)@7748.7 cb2@7750
+PR544 twonotes-rv: clean disk [6,5,5] B [6,5,5] names ["Twin","Twin","Twin"] writes 1/1 timing click2-before-write1 cardsA ["0:6","1:5","2:5"] flush {"calls":2,"maxDepth":1,"maxN":9,"maxSame":5,"pendFlushed":0,"maxDurMs":0.1,"sumDurMs":0.1}
+PR544 twonotes-rv seq: rs(d0,view,v6,L5)@16234.5 vp1(d1,twin-callouts-3.md)@16234.9 cb1@16235.2 rs(d0,view,v6,L4)@16382 vp2(d1,twin-triplets.md)@16382.1 cb2@16383.5
+PR544 cost30-rv: clean disk [6,6,6,6,6,6,6,6,6,6,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5] B [5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5] names ["Many0","Many1","Many2","Many3","Many4","Many5","Many6","Many7","Many8","Many9","Many10","Many11","Many12","Many13","Many14","Many15","Many16","Many17","Many18","Many19","Many20","Many21","Many22","Many23","Many24","Many25","Many26","Many27","Many28","Many29"] writes 10/0 timing click2-before-write1 cardsA ["0:6","1:6","2:6","3:6","4:6","5:6","6:6","7:6","8:6","9:6","10:5","11:5","12:5","13:5","14:5"] flush {"calls":10,"maxDepth":10,"maxN":64,"maxSame":33,"pendFlushed":90,"maxDurMs":5,"sumDurMs":24.4}
+PR544 cost30-rv seq: rs(d0,view,v6,L4)@24564.7 rs(d1,view,v6,L13)@24565.3 rs(d2,view,v6,L22)@24565.6 rs(d3,view,v6,L31)@24566.2 rs(d4,view,v6,L40)@24566.6 rs(d5,view,v6,L49)@24567.2 rs(d6,view,v6,L58)@24567.6 rs(d7,view,v6,L67)@24568.2 rs(d8,view,v6,L76)@24568.5 rs(d9,view,v6,L85)@24568.8 vp1(d10,many30.md)@24569.1 vp2(d9,many30.md)@24569.2 vp3(d8,many30.md)@24569.3 vp4(d7,many30.md)@24569.3 vp5(d6,many30.md)@24569.5 vp6(d5,many30.md)@24569.6 vp7(d4,many30.md)@24569.6 vp8(d3,many30.md)@24569.7 vp9(d2,many30.md)@24569.8 vp10(d1,many30.md)@24569.8 cb1@24573.9 cb2@24576.1 cb3@24578 cb4@24580.3 cb5@24582.3 cb6@24584.5 cb7@24588.5 cb8@24590.4 cb9@24592.2 cb10@24594
+PR544 cost30-lp: clean disk [6,6,6,6,6,6,6,6,6,6,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5] B [5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5] names ["Many0","Many1","Many2","Many3","Many4","Many5","Many6","Many7","Many8","Many9","Many10","Many11","Many12","Many13","Many14","Many15","Many16","Many17","Many18","Many19","Many20","Many21","Many22","Many23","Many24","Many25","Many26","Many27","Many28","Many29"] writes 10/0 timing click2-before-write1 cardsA ["0:6","1:6","2:6","3:6","4:6","5:6","6:6","7:6","8:6","9:6","10:5","11:5","12:5"] flush {"calls":10,"maxDepth":10,"maxN":26,"maxSame":12,"pendFlushed":90,"maxDurMs":4,"sumDurMs":19.5}
+PR544 cost30-lp seq: rs(d0,view,v6,L4)@33256.7 rs(d1,view,v6,L13)@33257.2 rs(d2,view,v6,L22)@33257.6 rs(d3,view,v6,L31)@33257.9 rs(d4,view,v6,L40)@33258.2 rs(d5,view,v6,L49)@33258.5 rs(d6,view,v6,L58)@33259 rs(d7,view,v6,L67)@33259.4 rs(d8,view,v6,L76)@33259.8 rs(d9,view,v6,L85)@33260 vp1(d10,many30.md)@33260.2 vp2(d9,many30.md)@33260.3 vp3(d8,many30.md)@33260.4 vp4(d7,many30.md)@33260.5 vp5(d6,many30.md)@33260.5 vp6(d5,many30.md)@33260.6 vp7(d4,many30.md)@33260.6 vp8(d3,many30.md)@33260.7 vp9(d2,many30.md)@33260.8 vp10(d1,many30.md)@33260.8 cb1@33261.4 cb2@33264.2 cb3@33273.6 cb4@33275.1 cb5@33276.7 cb6@33280.4 cb7@33282.7 cb8@33284.1 cb9@33285.3 cb10@33287.7
+PR544 cost30one-rv: clean disk [6,6,6,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5] B [5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5] names ["Many0","Many1","Many2","Many3","Many4","Many5","Many6","Many7","Many8","Many9","Many10","Many11","Many12","Many13","Many14","Many15","Many16","Many17","Many18","Many19","Many20","Many21","Many22","Many23","Many24","Many25","Many26","Many27","Many28","Many29"] writes 3/0 timing click2-after-write1 cardsA ["0:6","1:6","2:6","3:5","4:5","5:5","6:5","7:5","8:5","9:5","10:5","11:5","12:5","13:5","14:5"] flush {"calls":3,"maxDepth":1,"maxN":64,"maxSame":33,"pendFlushed":0,"maxDurMs":0,"sumDurMs":0}
+PR544 cost30one-rv seq: rs(d0,view,v6,L4)@42796.8 vp1(d1,many30.md)@42797 cb1@42797.7 rs(d0,view,v6,L13)@44300.1 vp2(d1,many30.md)@44300.4 cb2@44300.9 rs(d0,view,v6,L22)@45803.1 vp3(d1,many30.md)@45803.5 cb3@45804.1
+rc=0 elapsed=59s
+
+## run smoke-head
+bundle=head sha=d6278dd264af4b79 load=2.45 4.07 4.19 3/3192 1857787
+PR544 gap200-lp: clean disk [6,6,5] names ["Twin","Twin","Twin"] writes 2 timing click2-before-write1 cardsA ["0:6","1:6","2:5"] flush {"calls":2,"maxDepth":2,"maxN":3,"maxSame":2,"pendFlushed":2,"maxDurMs":1.4,"sumDurMs":1.4}
+PR544 gap200-lp seq: rs(d0,view,v6,L5)@5155.7 rs(d1,view,v6,L15)@5157.4 vp1(d2,twin-callouts-3.md)@5157.6 vp2(d1,twin-callouts-3.md)@5158.1 cb1@5158.7 cb2@5161.7
+PR544 one5-lp: PROBLEMS disk [6,5,5] names ["Twin","Twin","Twin"] writes 1 timing n/a cardsA ["0:6","1:5","2:5"] flush {"calls":1,"maxDepth":1,"maxN":3,"maxSame":2,"pendFlushed":0,"maxDurMs":0,"sumDurMs":0} :: no + on A:0 | no + on A:0 | no + on A:0 | no + on A:0 | disk [6,5,5] want [10,5,5]
+PR544 one5-lp seq: rs(d0,view,v6,L5)@11074.1 vp1(d1,twin-callouts-3.md)@11074.2 cb1@11074.8
+PR544 formA-lp: PROBLEMS disk [6,5,5] names ["Twin","Twin","Edited"] writes 2 timing n/a cardsA ["0:6","1:5","2:5"] flush {"calls":2,"maxDepth":1,"maxN":3,"maxSame":2,"pendFlushed":0,"maxDurMs":0,"sumDurMs":0} formRaw "name: Twin|current_value: 5|max_value: 20|min_value: 0" :: names ["Twin","Twin","Edited"] want ["Twin","Edited","Twin"]
+PR544 formA-lp seq: rs(d0,view,v6,L5)@16945.8 vp1(d1,twin-callouts-3.md)@16946.2 cb1@16952.4 save@17611.3 rs(d0,form,v5,L25)@17613.1 vp2(d1,twin-callouts-3.md)@17613.3 cb2@17613.8
+rc=0 elapsed=32s
