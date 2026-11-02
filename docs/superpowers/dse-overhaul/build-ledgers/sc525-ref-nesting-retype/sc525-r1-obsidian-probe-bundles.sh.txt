@@ -1,0 +1,16 @@
+#!/bin/bash
+# Builds two plugin bundles for the real-Obsidian probe: head (this branch) and base (4deb8cf's two source files).
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc525-r1-impl
+P=/home/scott/code/steelCompendium/worktrees/sc525-ref-nesting-retype/draw-steel-elements
+cd "$P" || exit 9
+set -e
+mkdir -p "$S/bundle-head" "$S/bundle-base"
+npm run build-no-check > "$S/bundle-head.build.log" 2>&1
+cp main.js styles.css manifest.json "$S/bundle-head/"
+git checkout 4deb8cf -- src/elements/shared/RefUnwrapView.ts src/framework/view.ts
+npm run build-no-check > "$S/bundle-base.build.log" 2>&1
+cp main.js styles.css manifest.json "$S/bundle-base/"
+git checkout HEAD -- src/elements/shared/RefUnwrapView.ts src/framework/view.ts
+git status --short
+echo "head isUnloaded in bundle: $(grep -c isUnloaded "$S/bundle-head/main.js")  base: $(grep -c isUnloaded "$S/bundle-base/main.js")"
+ls -l "$S/bundle-head" "$S/bundle-base"

@@ -1,0 +1,26 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc525-ref-nesting-retype/draw-steel-elements
+=== MUTANT M1-owner-unloaded-check-removed (applied: 0)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+  ● RefUnwrapView — in-flight depth guard (SC-525) › an unloaded view's pending lookup does not block a new view of the same reference, and it renders once released
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a superseded owner's late finally leaves the new owner's entry in place: a third live view is still refused
+  ● SC-525: retyping the same ds-scc code in the edit form while its entity read is pending › a trailing space: no nesting error while held, the card after the reads finish
+  ● SC-525: retyping the same @Ref.md in the feature edit form while its lookup is pending › a trailing space (the same trimmed reference): no nesting error while both lookups are held, and the card once they finish (first lookup last)
+  ● SC-525: retyping the same @Ref.md in the feature edit form while its lookup is pending › several keys that all leave the reference unchanged, lookups released in typing order: the card
+  ● SC-525: retyping the same @Ref.md in the feature edit form while its lookup is pending › the superseded lookup finishes first, then the current one: still the card, never the nesting error
+  ● SC-525: retyping the same @Ref.md in the statblock edit form while its lookup is pending › a trailing space (the same trimmed reference): no nesting error while both lookups are held, and the card once they finish (first lookup last)
+  ● SC-525: retyping the same @Ref.md in the statblock edit form while its lookup is pending › several keys that all leave the reference unchanged, lookups released in typing order: the card
+  ● SC-525: retyping the same @Ref.md in the statblock edit form while its lookup is pending › the superseded lookup finishes first, then the current one: still the card, never the nesting error
+Tests:       9 failed, 46 passed, 55 total
+Test Suites: 2 failed, 1 passed, 3 total
+=== MUTANT M2-delete-unconditionally (applied: 0)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a superseded owner's late finally leaves the new owner's entry in place: a third live view is still refused
+Tests:       1 failed, 54 passed, 55 total
+Test Suites: 1 failed, 2 passed, 3 total
+=== MUTANT M3-loaded-flag-instead-of-unloaded (applied: 0)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+  ● D6 Task 9: hybrid by-SCC render — frontmatter chrome + source body (spec §2.3, §9) › (d) depth guard: a code already resolving in the SAME block is refused, not infinitely recursed
+Tests:       1 failed, 32 passed, 33 total
+Test Suites: 2 failed, 1 passed, 3 total
+=== restored: 0 changed files

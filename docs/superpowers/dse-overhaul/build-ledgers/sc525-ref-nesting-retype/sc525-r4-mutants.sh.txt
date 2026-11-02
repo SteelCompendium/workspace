@@ -1,0 +1,60 @@
+#!/bin/bash
+# SC-525 r4 mutants on b1d5fa9. Each edits RefUnwrapView.ts, runs the three suites, restores from git.
+P=/home/scott/code/steelCompendium/worktrees/sc525-ref-nesting-retype/draw-steel-elements
+D=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc525-ref-nesting-retype
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc525-r4-rereview
+OUT=$D/sc525-r4-mutants.log
+F=src/elements/shared/RefUnwrapView.ts
+cd "$P" || exit 9
+SUITES="test/dom/elements/refUnwrapView.test.ts test/dom/authoring/formModalStalePreview.test.ts test/dom/elements/displayCardHybrid.test.ts"
+echo "HEAD $(git rev-parse HEAD)" > "$OUT"
+# mutate.py <mode> : replaces exactly-once patterns, or drops gen-check lines
+cat > "$S/mutate.py" <<'PY'
+import sys, re
+p, mode = sys.argv[1], sys.argv[2]
+s = open(p).read()
+def once(a, b):
+    global s
+    assert s.count(a) == 1, (mode, s.count(a))
+    s = s.replace(a, b)
+CHECK = 'if (gen !== this.resolveGen) return'
+if mode == 'M4':
+    once('current !== undefined && current.view !== this && !current.view.isUnloaded()', 'current !== undefined && !current.view.isUnloaded()')
+elif mode == 'M6':
+    lines = s.split('\n'); n = 0
+    for i, ln in enumerate(lines):
+        if CHECK in ln:
+            lines[i] = ln.split(CHECK)[0] + '/* dropped */'; n += 1
+    assert n == 6, n
+    s = '\n'.join(lines)
+elif mode == 'M7':
+    once('if (IN_FLIGHT_REFS.get(guardKey) === token) IN_FLIGHT_REFS.delete(guardKey);', 'if (IN_FLIGHT_REFS.get(guardKey)?.view === this) IN_FLIGHT_REFS.delete(guardKey);')
+elif mode == 'M8':
+    once("\t\tthis.resolveGen++;\n\t\tif (model.kind === 'invalid') {", "\t\tif (model.kind === 'invalid') {")
+elif mode.startswith('M9-'):
+    # drop the k-th gen check only (0-based, file order)
+    k = int(mode.split('-')[1]); lines = s.split('\n'); seen = -1
+    for i, ln in enumerate(lines):
+        if CHECK in ln:
+            seen += 1
+            if seen == k:
+                lines[i] = ln.split(CHECK)[0] + '/* dropped */'
+    s = '\n'.join(lines)
+elif mode == 'M10':
+    once('const gen = ++this.resolveGen;', 'const gen = this.resolveGen;')
+else:
+    raise SystemExit('unknown mode ' + mode)
+open(p, 'w').write(s)
+PY
+grep -n "if (gen !== this.resolveGen) return" "$F" >> "$OUT"
+for m in M4 M6 M7 M8 M9-0 M9-1 M9-2 M9-3 M9-4 M9-5 M10; do
+	python3 "$S/mutate.py" "$F" "$m"
+	echo "=== MUTANT $m (applied rc: $?) $(git diff --stat -- "$F" | tail -1)" >> "$OUT"
+	rm -f main.js styles.css
+	npx jest $SUITES --silent > "$S/mut.tmp" 2>&1
+	grep -E "^Tests:" "$S/mut.tmp" >> "$OUT"
+	grep -E "^\s+●.*›" "$S/mut.tmp" | sort -u >> "$OUT"
+	git checkout -- "$F"
+done
+echo "=== restored: $(git status --porcelain | wc -l) changed files" >> "$OUT"
+exit 0

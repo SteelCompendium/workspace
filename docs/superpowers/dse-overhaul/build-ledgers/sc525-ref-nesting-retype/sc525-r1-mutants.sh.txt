@@ -1,0 +1,30 @@
+#!/bin/bash
+# Mutation check for SC-525. Each mutant edits src/elements/shared/RefUnwrapView.ts, runs the three suites, then
+# restores the file from git. Output: one block per mutant.
+P=/home/scott/code/steelCompendium/worktrees/sc525-ref-nesting-retype/draw-steel-elements
+F=$P/src/elements/shared/RefUnwrapView.ts
+cd "$P" || exit 9
+SUITES="test/dom/elements/refUnwrapView.test.ts test/dom/authoring/formModalStalePreview.test.ts test/dom/elements/displayCardHybrid.test.ts"
+
+run_mutant() {
+	name="$1"; from="$2"; to="$3"
+	git checkout -- src/elements/shared/RefUnwrapView.ts
+	python3 - "$F" "$from" "$to" <<'PY'
+import sys
+p, a, b = sys.argv[1:4]
+s = open(p).read()
+assert s.count(a) == 1, 'pattern count %d' % s.count(a)
+open(p, 'w').write(s.replace(a, b))
+PY
+	echo "=== MUTANT $name (applied: $?)"
+	git diff --stat -- src/elements/shared/RefUnwrapView.ts | tail -1
+	rm -f main.js styles.css
+	npx jest $SUITES --silent 2>&1 | grep -E "^\s+●.*›|^Tests:|^Test Suites:" | sort -u
+	git checkout -- src/elements/shared/RefUnwrapView.ts
+}
+
+run_mutant "M1-owner-unloaded-check-removed" "owner !== this && !owner.isUnloaded()" "owner !== this"
+run_mutant "M2-delete-unconditionally" "if (IN_FLIGHT_REFS.get(guardKey) === this) IN_FLIGHT_REFS.delete(guardKey);" "IN_FLIGHT_REFS.delete(guardKey);"
+run_mutant "M3-loaded-flag-instead-of-unloaded" "!owner.isUnloaded()" "owner._loaded"
+echo "=== restored: $(git status --short | wc -l) changed files"
+exit 0

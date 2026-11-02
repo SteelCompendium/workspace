@@ -1,0 +1,24 @@
+#!/bin/bash
+# SC-525 r4: per-window tests for each resolveGen check, on head and under each single-check mutant.
+P=/home/scott/code/steelCompendium/worktrees/sc525-ref-nesting-retype/draw-steel-elements
+D=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc525-ref-nesting-retype
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc525-r4-rereview
+OUT=$D/sc525-r4-windows.log
+F=src/elements/shared/RefUnwrapView.ts
+T=test/dom/elements/zzSc525R4Windows.test.ts
+cd "$P" || exit 9
+cat test/dom/elements/refUnwrapView.test.ts "$S/probe-windows-append.ts" > "$T"
+echo "HEAD $(git rev-parse HEAD)" > "$OUT"
+for m in none M9-0 M9-1 M9-2 M9-3 M9-4 M9-5 M6; do
+	if [ "$m" != none ]; then python3 "$S/mutate.py" "$F" "$m"; fi
+	echo "=== $m $(git diff --stat -- "$F" | tail -1)" >> "$OUT"
+	rm -f main.js styles.css
+	npx jest "$T" --silent -t "r4 windows" > "$S/win.tmp" 2>&1
+	grep -E "^Tests:" "$S/win.tmp" >> "$OUT"
+	grep -E "^\s+●.*›" "$S/win.tmp" | sort -u >> "$OUT"
+	git checkout -- "$F"
+done
+cp "$S/win.tmp" "$S/win-last.log"
+rm -f test/dom/elements/zzSc525R4Windows.test.ts
+echo "=== restored: $(git status --porcelain | wc -l) changed files" >> "$OUT"
+exit 0

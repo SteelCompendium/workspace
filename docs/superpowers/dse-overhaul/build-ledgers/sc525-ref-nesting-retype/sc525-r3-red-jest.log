@@ -1,0 +1,96 @@
+FAIL dom test/dom/elements/refUnwrapView.test.ts
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the earlier lookup finishes first) › same reference: one card, no nesting error, no orphan child
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "A",
+    +   "A",
+      ]
+
+      681 | 			await Promise.all([first, updated]);
+      682 | 			expect(nestingErrors(s.roots())).toEqual([]);
+    > 683 | 			expect(baseViews(s.roots()[0])).toEqual(['A']);
+          | 			                                ^
+      684 | 			s.hold(false);
+      685 | 			await v.update(model);
+      686 | 			expect(baseViews(s.roots()[0])).toEqual(['A']);
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:683:36)
+
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the earlier lookup finishes first) › a different reference (A then B): only B is drawn, nothing of A is left
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+    +   "A",
+        "B",
+      ]
+
+      705 | 			await Promise.all([first, updated]);
+      706 | 			expect(nestingErrors(s.roots())).toEqual([]);
+    > 707 | 			expect(baseViews(s.roots()[0])).toEqual(['B']);
+          | 			                                ^
+      708 | 			s.hold(false);
+      709 | 			await v.update({ kind: 'ref', raw: '@B' });
+      710 | 			expect(baseViews(s.roots()[0])).toEqual(['B']);
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:707:36)
+
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the later lookup finishes first) › same reference: one card, no nesting error, no orphan child
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "A",
+    +   "A",
+      ]
+
+      681 | 			await Promise.all([first, updated]);
+      682 | 			expect(nestingErrors(s.roots())).toEqual([]);
+    > 683 | 			expect(baseViews(s.roots()[0])).toEqual(['A']);
+          | 			                                ^
+      684 | 			s.hold(false);
+      685 | 			await v.update(model);
+      686 | 			expect(baseViews(s.roots()[0])).toEqual(['A']);
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:683:36)
+
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the later lookup finishes first) › a different reference (A then B): only B is drawn, nothing of A is left
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "B",
+    +   "A",
+      ]
+
+      705 | 			await Promise.all([first, updated]);
+      706 | 			expect(nestingErrors(s.roots())).toEqual([]);
+    > 707 | 			expect(baseViews(s.roots()[0])).toEqual(['B']);
+          | 			                                ^
+      708 | 			s.hold(false);
+      709 | 			await v.update({ kind: 'ref', raw: '@B' });
+      710 | 			expect(baseViews(s.roots()[0])).toEqual(['B']);
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:707:36)
+
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       4 failed, 53 passed, 57 total
+Snapshots:   0 total
+Time:        5.231 s, estimated 7 s
+Ran all test suites matching test/dom/elements/refUnwrapView.test.ts|test/dom/authoring/formModalStalePreview.test.ts.
+jest rc=1

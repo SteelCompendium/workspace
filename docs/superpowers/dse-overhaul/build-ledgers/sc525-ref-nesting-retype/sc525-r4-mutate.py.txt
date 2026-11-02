@@ -1,0 +1,35 @@
+import sys, re
+p, mode = sys.argv[1], sys.argv[2]
+s = open(p).read()
+def once(a, b):
+    global s
+    assert s.count(a) == 1, (mode, s.count(a))
+    s = s.replace(a, b)
+CHECK = 'if (gen !== this.resolveGen) return'
+if mode == 'M4':
+    once('current !== undefined && current.view !== this && !current.view.isUnloaded()', 'current !== undefined && !current.view.isUnloaded()')
+elif mode == 'M6':
+    lines = s.split('\n'); n = 0
+    for i, ln in enumerate(lines):
+        if CHECK in ln:
+            lines[i] = ln.split(CHECK)[0] + '/* dropped */'; n += 1
+    assert n == 6, n
+    s = '\n'.join(lines)
+elif mode == 'M7':
+    once('if (IN_FLIGHT_REFS.get(guardKey) === token) IN_FLIGHT_REFS.delete(guardKey);', 'if (IN_FLIGHT_REFS.get(guardKey)?.view === this) IN_FLIGHT_REFS.delete(guardKey);')
+elif mode == 'M8':
+    once("\t\tthis.resolveGen++;\n\t\tif (model.kind === 'invalid') {", "\t\tif (model.kind === 'invalid') {")
+elif mode.startswith('M9-'):
+    # drop the k-th gen check only (0-based, file order)
+    k = int(mode.split('-')[1]); lines = s.split('\n'); seen = -1
+    for i, ln in enumerate(lines):
+        if CHECK in ln:
+            seen += 1
+            if seen == k:
+                lines[i] = ln.split(CHECK)[0] + '/* dropped */'
+    s = '\n'.join(lines)
+elif mode == 'M10':
+    once('const gen = ++this.resolveGen;', 'const gen = this.resolveGen;')
+else:
+    raise SystemExit('unknown mode ' + mode)
+open(p, 'w').write(s)

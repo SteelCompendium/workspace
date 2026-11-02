@@ -1,0 +1,23 @@
+#!/bin/bash
+# SC-525 r5: single-check resolveGen mutants (M9-k = drop only the k-th check, file order) and r3/r3b mutants, on the final tests.
+P=/home/scott/code/steelCompendium/worktrees/sc525-ref-nesting-retype/draw-steel-elements
+D=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc525-ref-nesting-retype
+OUT=$D/sc525-r5-mutants.log
+F=src/elements/shared/RefUnwrapView.ts
+MUT=$D/sc525-r4-mutate.py.txt
+cd "$P" || exit 9
+SUITES="test/dom/elements/refUnwrapView.test.ts test/dom/authoring/formModalStalePreview.test.ts test/dom/elements/displayCardHybrid.test.ts"
+echo "HEAD $(git rev-parse HEAD) (+ uncommitted test changes: $(git status --porcelain | wc -l) files)" > "$OUT"
+grep -n "if (gen !== this.resolveGen) return" "$F" >> "$OUT"
+for m in M9-0 M9-1 M9-2 M9-3 M9-4 M9-5 M4 M6 M7 M8 M10; do
+	python3 "$MUT" "$F" "$m"
+	echo "=== MUTANT $m (applied rc: $?) $(git diff --stat -- "$F" | tail -1)" >> "$OUT"
+	rm -f main.js styles.css
+	npx jest $SUITES --silent > "$OUT.tmp" 2>&1
+	grep -E "^Tests:" "$OUT.tmp" >> "$OUT"
+	grep -E "^\s+●.*›" "$OUT.tmp" | sort -u | cut -c1-200 >> "$OUT"
+	git checkout -- "$F"
+done
+rm -f "$OUT.tmp"
+echo "=== src restored: $(git status --porcelain -- src | wc -l) changed src files" >> "$OUT"
+exit 0

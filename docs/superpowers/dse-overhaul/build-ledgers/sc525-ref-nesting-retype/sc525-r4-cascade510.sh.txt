@@ -1,0 +1,22 @@
+#!/bin/bash
+# Deliberate mid-hold failure in an SC-510 test (not covered by r3's afterEach releasers): does it cascade on head?
+P=/home/scott/code/steelCompendium/worktrees/sc525-ref-nesting-retype/draw-steel-elements
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc525-r4-rereview
+cd "$P" || exit 9
+rm -f main.js styles.css
+python3 - "$P" <<'PY'
+import sys
+P = sys.argv[1]
+src = open(P + '/test/dom/authoring/formModalStalePreview.test.ts').read()
+a = "\t\texpect(hold.held.map((x) => x.raw)).toEqual(['@', '@R', '@Re', '@Ref', '@Ref.', '@Ref.m', '@Ref.md']);\n"
+assert src.count(a) == 1, src.count(a)
+src = src.replace(a, a + "\t\tthrow new Error('SC525-R4 deliberate mid-hold failure in an SC-510 test');\n")
+open(P + '/test/dom/authoring/zzSc525R4Cascade510.test.ts', 'w').write(src)
+PY
+npx jest test/dom/authoring/zzSc525R4Cascade510.test.ts --silent > "$S/cascade510.log" 2>&1
+echo "rc=$?"
+grep -E "^Tests:" "$S/cascade510.log"
+grep -E "●.*›" "$S/cascade510.log" | sort -u
+rm -f test/dom/authoring/zzSc525R4Cascade510.test.ts
+echo "status lines: $(git status --porcelain | wc -l)"
+exit 0

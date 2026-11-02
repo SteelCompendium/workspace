@@ -1,0 +1,61 @@
+=== BASE-OF-R3 (af09bf2 source, r3 tests)
+  ● RefUnwrapView — in-flight depth guard (SC-525) › an SCC code, view updated while its entity read is running (the earlier entity read finishes first): one card, nothing left behind
+  ● RefUnwrapView — in-flight depth guard (SC-525) › an SCC code, view updated while its entity read is running (the later entity read finishes first): one card, nothing left behind
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the earlier lookup finishes first) › a different reference (A then B): only B is drawn, nothing of A is left
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the earlier lookup finishes first) › same reference: one card, no nesting error, no orphan child
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the later lookup finishes first) › a different reference (A then B): only B is drawn, nothing of A is left
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the later lookup finishes first) › same reference: one card, no nesting error, no orphan child
+  ● RefUnwrapView — in-flight depth guard (SC-525) › the earlier resolution of an updated view settling leaves the later one's entry: another live view is still refused
+Tests:       7 failed, 58 passed, 65 total
+=== MUTANT M1-owner-unloaded-check-removed (applied rc: 0)
+  ● RefUnwrapView — in-flight depth guard (SC-525) › an unloaded view's pending lookup does not block a new view of the same reference, and it renders once released
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a superseded owner's late finally leaves the new owner's entry in place: a third live view is still refused
+  ● SC-525: retyping the same ds-scc code in the edit form while its entity read is pending › a trailing space: no nesting error while held, the card after the reads finish
+  ● SC-525: retyping the same @Ref.md in the feature edit form while its lookup is pending › a trailing space (the same trimmed reference): no nesting error while both lookups are held, and the card once they finish (first lookup last)
+  ● SC-525: retyping the same @Ref.md in the feature edit form while its lookup is pending › several keys that all leave the reference unchanged, lookups released in typing order: the card
+  ● SC-525: retyping the same @Ref.md in the feature edit form while its lookup is pending › the superseded lookup finishes first, then the current one: still the card, never the nesting error
+  ● SC-525: retyping the same @Ref.md in the statblock edit form while its lookup is pending › a trailing space (the same trimmed reference): no nesting error while both lookups are held, and the card once they finish (first lookup last)
+  ● SC-525: retyping the same @Ref.md in the statblock edit form while its lookup is pending › several keys that all leave the reference unchanged, lookups released in typing order: the card
+  ● SC-525: retyping the same @Ref.md in the statblock edit form while its lookup is pending › the superseded lookup finishes first, then the current one: still the card, never the nesting error
+Tests:       9 failed, 56 passed, 65 total
+=== MUTANT M2-delete-unconditionally (applied rc: 0)
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a superseded owner's late finally leaves the new owner's entry in place: a third live view is still refused
+  ● RefUnwrapView — in-flight depth guard (SC-525) › the earlier resolution of an updated view settling leaves the later one's entry: another live view is still refused
+Tests:       2 failed, 63 passed, 65 total
+=== MUTANT M4-same-view-clause-dropped (same view re-entrance refused again) (applied rc: 0)
+  ● RefUnwrapView — in-flight depth guard (SC-525) › an SCC code, view updated while its entity read is running (the earlier entity read finishes first): one card, nothing left behind
+  ● RefUnwrapView — in-flight depth guard (SC-525) › an SCC code, view updated while its entity read is running (the later entity read finishes first): one card, nothing left behind
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the earlier lookup finishes first) › a superseded resolution leaves no entry behind: a fresh view of the same reference resolves
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the earlier lookup finishes first) › same reference: one card, no nesting error, no orphan child
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the later lookup finishes first) › a superseded resolution leaves no entry behind: a fresh view of the same reference resolves
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the later lookup finishes first) › same reference: one card, no nesting error, no orphan child
+  ● RefUnwrapView — in-flight depth guard (SC-525) › the earlier resolution of an updated view settling leaves the later one's entry: another live view is still refused
+Tests:       7 failed, 58 passed, 65 total
+=== MUTANT M5-no-takeover (set only when no entry) (applied rc: 0)
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a superseded owner's late finally leaves the new owner's entry in place: a third live view is still refused
+  ● RefUnwrapView — in-flight depth guard (SC-525) › the earlier resolution of an updated view settling leaves the later one's entry: another live view is still refused
+Tests:       2 failed, 63 passed, 65 total
+=== MUTANT M7-delete-by-view (token compare replaced by view compare) (applied rc: 0)
+  ● RefUnwrapView — in-flight depth guard (SC-525) › the earlier resolution of an updated view settling leaves the later one's entry: another live view is still refused
+Tests:       1 failed, 64 passed, 65 total
+=== MUTANT M6-all-resolveGen-checks-dropped (gen checks dropped: all; diff: 6/6)
+  ● RefUnwrapView — in-flight depth guard (SC-525) › an SCC code, view updated while its entity read is running (the earlier entity read finishes first): one card, nothing left behind
+  ● RefUnwrapView — in-flight depth guard (SC-525) › an SCC code, view updated while its entity read is running (the later entity read finishes first): one card, nothing left behind
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the earlier lookup finishes first) › a different reference (A then B): only B is drawn, nothing of A is left
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the earlier lookup finishes first) › same reference: one card, no nesting error, no orphan child
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the later lookup finishes first) › a different reference (A then B): only B is drawn, nothing of A is left
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the later lookup finishes first) › same reference: one card, no nesting error, no orphan child
+  ● RefUnwrapView — in-flight depth guard (SC-525) › the earlier resolution of an updated view settling leaves the later one's entry: another live view is still refused
+Tests:       7 failed, 58 passed, 65 total
+=== MUTANT M6a-legacy-resolveGen-checks-dropped (gen checks dropped: legacy; diff: 3/3)
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the earlier lookup finishes first) › a different reference (A then B): only B is drawn, nothing of A is left
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the earlier lookup finishes first) › same reference: one card, no nesting error, no orphan child
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the later lookup finishes first) › a different reference (A then B): only B is drawn, nothing of A is left
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the later lookup finishes first) › same reference: one card, no nesting error, no orphan child
+  ● RefUnwrapView — in-flight depth guard (SC-525) › the earlier resolution of an updated view settling leaves the later one's entry: another live view is still refused
+Tests:       5 failed, 60 passed, 65 total
+=== MUTANT M6b-scc-resolveGen-checks-dropped (gen checks dropped: scc; diff: 3/3)
+  ● RefUnwrapView — in-flight depth guard (SC-525) › an SCC code, view updated while its entity read is running (the earlier entity read finishes first): one card, nothing left behind
+  ● RefUnwrapView — in-flight depth guard (SC-525) › an SCC code, view updated while its entity read is running (the later entity read finishes first): one card, nothing left behind
+Tests:       2 failed, 63 passed, 65 total
+=== restored: 0 changed files (the uncommitted SCC test is expected: 1)

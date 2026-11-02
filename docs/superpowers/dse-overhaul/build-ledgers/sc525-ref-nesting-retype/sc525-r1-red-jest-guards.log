@@ -1,0 +1,62 @@
+FAIL dom test/dom/elements/refUnwrapView.test.ts
+  ● RefUnwrapView — in-flight depth guard (SC-525) › an unloaded view's pending lookup does not block a new view of the same reference, and it renders once released
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 22
+
+    - Array []
+    + Array [
+    +   <div
+    +     data-dse-element="test-base"
+    +     data-dse-error-stage="render"
+    +     data-dse-theme="steel"
+    +   >
+    +     <div
+    +       class="dse-error-card"
+    +     >
+    +       <div
+    +         class="dse-error-card-title"
+    +       >
+    +         Test Base: failed to render (render)
+    +       </div>
+    +       <div
+    +         class="dse-error-card-message"
+    +       >
+    +         Reference nesting too deep — `@A` is already resolving in this block (spec §9 depth guard).
+    +       </div>
+    +     </div>
+    +   </div>,
+    + ]
+
+      603 | 		const second = s.run('@A');
+      604 | 		await tick();
+    > 605 | 		expect(nestingErrors(s.roots())).toEqual([]);
+          | 		                                 ^
+      606 | 		expect(s.holds).toHaveLength(2);
+      607 | 		s.holds[1]();
+      608 | 		await second;
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:605:36)
+
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a superseded owner's late finally leaves the new owner's entry in place: a third live view is still refused
+
+    TypeError: s.holds[0] is not a function
+
+      624 | 		const second = s.run('@A'); // takes the entry over
+      625 | 		await tick();
+    > 626 | 		s.holds[0](); // the superseded lookup finishes first: its finally runs while `second` is still in flight
+          | 		          ^
+      627 | 		await first;
+      628 | 		const third = s.run('@A');
+      629 | 		await tick();
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:626:13)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 20 passed, 22 total
+Snapshots:   0 total
+Time:        1.878 s
+Ran all test suites matching test/dom/elements/refUnwrapView.test.ts.
+jest rc=1

@@ -1,0 +1,27 @@
+HEAD b1d5fa99148b7489241228aea1777571e5746bba
+=== none 
+Tests:       36 skipped, 5 passed, 41 total
+=== M9-0  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       1 failed, 36 skipped, 4 passed, 41 total
+  ● SC-525 r4 windows › W1 SCC: view updated while its entity READ returns null for the stale resolution: one card, no stale error
+=== M9-1  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       36 skipped, 5 passed, 41 total
+=== M9-2  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       1 failed, 36 skipped, 4 passed, 41 total
+  ● SC-525 r4 windows › W3 SCC: view updated while entity.body() runs: one card
+=== M9-3  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       1 failed, 36 skipped, 4 passed, 41 total
+  ● SC-525 r4 windows › W4 legacy: a stale lookup that REJECTS after the view was updated to an inline body: only the inline card, no error
+=== M9-4  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       36 skipped, 5 passed, 41 total
+=== M9-5  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       1 failed, 36 skipped, 4 passed, 41 total
+  ● SC-525 r4 windows › W5 legacy: view updated while the referenced file is being READ (block text): one card
+=== M6  1 file changed, 6 insertions(+), 6 deletions(-)
+Tests:       5 failed, 36 skipped, 41 total
+  ● SC-525 r4 windows › W1 SCC: view updated while its entity READ returns null for the stale resolution: one card, no stale error
+  ● SC-525 r4 windows › W2 SCC: view updated while entity.model() runs: one card
+  ● SC-525 r4 windows › W3 SCC: view updated while entity.body() runs: one card
+  ● SC-525 r4 windows › W4 legacy: a stale lookup that REJECTS after the view was updated to an inline body: only the inline card, no error
+  ● SC-525 r4 windows › W5 legacy: view updated while the referenced file is being READ (block text): one card
+=== restored: 0 changed files

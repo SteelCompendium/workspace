@@ -1,0 +1,31 @@
+#!/bin/bash
+# SC-525 r5: a deliberate mid-hold throw in an SC-510 test. Measured on the b1d5fa9 test file and on the head test file.
+P=/home/scott/code/steelCompendium/worktrees/sc525-ref-nesting-retype/draw-steel-elements
+D=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc525-ref-nesting-retype
+OUT=$D/sc525-r5-cascade.log
+T=test/dom/authoring/formModalStalePreview.test.ts
+Z=test/dom/authoring/zzSc525R5Cascade510.test.ts
+cd "$P" || exit 9
+rm -f main.js styles.css
+: > "$OUT"
+for which in b1d5fa9 HEAD; do
+	git show "$which:$T" > "$Z.src"
+	python3 - "$P/$Z.src" "$P/$Z" <<'PY'
+import sys
+src = open(sys.argv[1]).read()
+a = "\t\texpect(hold.held.map((x) => x.raw)).toEqual(['@', '@R', '@Re', '@Ref', '@Ref.', '@Ref.m', '@Ref.md']);\n"
+assert src.count(a) == 1, src.count(a)
+src = src.replace(a, a + "\t\tthrow new Error('SC525-R5 deliberate mid-hold failure in an SC-510 test');\n")
+open(sys.argv[2], 'w').write(src)
+PY
+	rm -f "$Z.src"
+	echo "=== test file from $which, injected throw in SC-510 'every keystroke's lookup finishes after the last one'" >> "$OUT"
+	npx jest "$Z" --silent > "$OUT.tmp" 2>&1
+	echo "jest rc=$?" >> "$OUT"
+	grep -E "^Tests:" "$OUT.tmp" >> "$OUT"
+	grep -E "^\s+●.*›" "$OUT.tmp" | sort -u | cut -c1-210 >> "$OUT"
+	rm -f "$Z"
+done
+rm -f "$OUT.tmp"
+echo "=== status lines after: $(git status --porcelain | wc -l)" >> "$OUT"
+exit 0

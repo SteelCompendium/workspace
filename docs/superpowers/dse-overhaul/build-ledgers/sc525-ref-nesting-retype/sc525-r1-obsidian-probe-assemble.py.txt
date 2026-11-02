@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+# Assemble the scratch probe harness: lifecycle harness + SC-525 kit + SC-525 scenario. Output is untracked
+# and deleted by literal path after the run.
+LED = '/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc525-ref-nesting-retype'
+P = '/home/scott/code/steelCompendium/worktrees/sc525-ref-nesting-retype/draw-steel-elements'
+src = open(P + '/visual-harness/obsidian-lifecycle.mjs').read()
+kit = open(LED + '/sc525-r1-obsidian-probe-kit.js.txt').read()
+scn = open(LED + '/sc525-r1-obsidian-probe-scenarios.js.txt').read()
+marker = 'const SCENARIOS = [\n'
+assert src.count(marker) == 1
+out = src.replace(marker, kit + '\n' + marker + scn)
+open(P + '/visual-harness/zz-sc525-probe.mjs', 'w').write(out)
+print('written', len(out))

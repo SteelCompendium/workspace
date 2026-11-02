@@ -1,0 +1,46 @@
+	// ===================== SC-525 r1 real-Obsidian probe (throwaway scratch copy of the harness; never committed) =====================
+	// Retype the SAME reference while its lookup is held (held at a hook on services.refs.resolve, no timers): type
+	// "@Ref.md" with real keys, then a real Space key (same trimmed reference, same blockKey). Release the held
+	// lookups (oldest first, then a second run newest first) and read the form preview.
+	{
+		id: 'SC525-P',
+		async run(t) {
+			const P = sc525Kit(t);
+			const out = { tag: P.tag() };
+			await P.install();
+			await t.ev(`app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs.set('authoringControls', true)`);
+			const m = await t.mark();
+			await P.openFormOn('Lifecycle/sc525-feature.md', 0);
+			for (const reverse of [false, true]) {
+				const key = reverse ? 'newestFirst' : 'oldestFirst';
+				await P.clearBox();
+				await P.settle();
+				await P.hold(true);
+				for (const ch of '@Ref.md') await P.key(ch);
+				await P.key(' ');
+				const atSpace = await P.previewState();
+				const heldCount = await t.ev(`window.__p525.held.length`);
+				await P.hold(false);
+				await P.releaseAll(reverse);
+				await P.settle();
+				const after = await P.previewState();
+				out[key] = {
+					box: JSON.stringify(after.box),
+					heldLookups: heldCount,
+					atSpace: atSpace.text.slice(0, 140),
+					afterRelease: after.text.slice(0, 140),
+					nestingAtSpace: /nesting too deep/.test(atSpace.text),
+					nestingAfterRelease: /nesting too deep/.test(after.text),
+					cardAfterRelease: /Ref Strike/.test(after.text),
+					errorCard: after.errorCard,
+				};
+				if (!reverse) out.shot = await P.shotModal(`sc525-r1-shot-${out.tag}-form-preview`);
+			}
+			out.errors = await t.errorsSince(m);
+			await P.closeForm();
+			console.log('SC525-P-JSON ' + JSON.stringify(out));
+			const o = out.oldestFirst;
+			const r = out.newestFirst;
+			return `${out.tag}: oldestFirst nesting@space=${o.nestingAtSpace} nesting@release=${o.nestingAfterRelease} card=${o.cardAfterRelease}; newestFirst nesting@space=${r.nestingAtSpace} nesting@release=${r.nestingAfterRelease} card=${r.cardAfterRelease}; page errors=${out.errors.length}`;
+		},
+	},

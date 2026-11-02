@@ -1,0 +1,34 @@
+#!/bin/bash
+# SC-525 r3b: M8 = drop the resolveGen bump in onMount. Also the r3 mutant M6 (all gen checks) again on the final source.
+P=/home/scott/code/steelCompendium/worktrees/sc525-ref-nesting-retype/draw-steel-elements
+D=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc525-ref-nesting-retype
+OUT=$D/sc525-r3b-mutants.log
+cd "$P" || exit 9
+SUITES="test/dom/elements/refUnwrapView.test.ts test/dom/authoring/formModalStalePreview.test.ts test/dom/elements/displayCardHybrid.test.ts"
+R=src/elements/shared/RefUnwrapView.ts
+: > "$OUT"
+run_suites() {
+	rm -f main.js styles.css
+	npx jest $SUITES --silent > "$OUT.tmp" 2>&1
+	grep -E "^\s+●.*›|^Tests:" "$OUT.tmp" | sort -u | cut -c1-230 >> "$OUT"
+}
+echo "=== BASE-OF-R3B (b1d5fa9~1 = RED commit source: r3 fix, no onMount bump), r3b tests" >> "$OUT"
+git show 5bb5cd2:$R > "$R"
+run_suites
+git checkout -- "$R"
+
+echo "=== MUTANT M8-onMount-bump-dropped" >> "$OUT"
+python3 - "$R" <<'PY'
+import sys
+p = sys.argv[1]
+s = open(p).read()
+a = "		this.resolveGen++;\n		if (model.kind === 'invalid') {"
+assert s.count(a) == 1
+open(p, 'w').write(s.replace(a, "		if (model.kind === 'invalid') {"))
+PY
+git diff --numstat -- "$R" >> "$OUT"
+run_suites
+git checkout -- "$R"
+rm -f "$OUT.tmp"
+echo "=== restored: $(git status --porcelain | wc -l) changed files" >> "$OUT"
+exit 0

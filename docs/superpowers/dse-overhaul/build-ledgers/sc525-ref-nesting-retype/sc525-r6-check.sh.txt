@@ -1,0 +1,63 @@
+#!/bin/bash
+# SC-525 r6: single-check mutants vs the landed W tests; cascade probes; double-release instrumentation.
+P=/home/scott/code/steelCompendium/worktrees/sc525-ref-nesting-retype/draw-steel-elements
+D=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc525-ref-nesting-retype
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc525-r6-check
+F=src/elements/shared/RefUnwrapView.ts
+FORM=test/dom/authoring/formModalStalePreview.test.ts
+SUITES="test/dom/elements/refUnwrapView.test.ts test/dom/authoring/formModalStalePreview.test.ts test/dom/elements/displayCardHybrid.test.ts"
+cd "$P" || exit 9
+OUT=$D/sc525-r6-mutants.log
+echo "HEAD $(git rev-parse HEAD)" > "$OUT"
+for m in none M9-0 M9-1 M9-2 M9-3 M9-4 M9-5; do
+	if [ "$m" != none ]; then python3 "$S/mutate.py" "$F" "$m"; fi
+	echo "=== $m $(git diff --stat -- "$F" | tail -1)" >> "$OUT"
+	rm -f main.js styles.css
+	npx jest $SUITES --silent > "$S/mut.tmp" 2>&1
+	grep -E "^Tests:" "$S/mut.tmp" >> "$OUT"
+	grep -E "^\s+●.*›" "$S/mut.tmp" | sort -u >> "$OUT"
+	git checkout -- "$F"
+done
+echo "=== restored: $(git status --porcelain | wc -l) changed files" >> "$OUT"
+
+# cascade + double-release instrumentation (scratch copies of the head form test file)
+python3 - "$P" <<'PY'
+import sys
+P = sys.argv[1]
+src = open(P + '/test/dom/authoring/formModalStalePreview.test.ts').read()
+THROW = "\t\tthrow new Error('SC525-R6 deliberate mid-hold failure');\n"
+a510 = "\t\texpect(hold.held.map((x) => x.raw)).toEqual(['@', '@R', '@Re', '@Ref', '@Ref.', '@Ref.m', '@Ref.md']);\n"
+a525 = "\t\texpect(hold.held.map((x) => x.raw)).toEqual(['@Ref.md', '@Ref.md']); // the current preview starts its own lookup\n"
+for name, a in (('510', a510), ('525', a525)):
+    assert src.count(a) == 1, (name, src.count(a))
+    open(P + '/test/dom/authoring/zzSc525R6Cascade' + name + '.test.ts', 'w').write(src.replace(a, a + THROW))
+# instrumentation: a second release OUTSIDE afterEach throws (a test body double-release would surface)
+g = "\t\t\t\t\tif (released) return;\n"
+assert src.count(g) == 1
+ins = src.replace(g, "\t\t\t\t\tif (released) {\n\t\t\t\t\t\tif (!(globalThis as any).__r6InAfterEach) throw new Error('SC525-R6 double release inside a test body');\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n")
+ae = "afterEach(async () => {\n\tfor (const release of releasers.splice(0)) await release();\n});\n"
+assert ins.count(ae) == 1
+ins = ins.replace(ae, "afterEach(async () => {\n\t(globalThis as any).__r6InAfterEach = true;\n\ttry {\n\t\tfor (const release of releasers.splice(0)) await release();\n\t} finally {\n\t\t(globalThis as any).__r6InAfterEach = false;\n\t}\n});\n")
+# count releases that happen only in afterEach (holds a test body never released)
+open(P + '/test/dom/authoring/zzSc525R6Instr.test.ts', 'w').write(ins)
+# no-guard variant: the r3 non-idempotent release, to see what the guard is for
+ng = src.replace(g, "")
+open(P + '/test/dom/authoring/zzSc525R6NoGuard.test.ts', 'w').write(ng)
+print('written')
+PY
+OUT2=$D/sc525-r6-cascade.log
+echo "HEAD $(git rev-parse HEAD)" > "$OUT2"
+for f in zzSc525R6Cascade510 zzSc525R6Cascade525 zzSc525R6Instr zzSc525R6NoGuard; do
+	rm -f main.js styles.css
+	npx jest "test/dom/authoring/$f.test.ts" --silent > "$S/$f.log" 2>&1
+	echo "== $f rc=$?" >> "$OUT2"
+	grep -E "^Tests:" "$S/$f.log" >> "$OUT2"
+	grep -E "●.*›" "$S/$f.log" | sort -u >> "$OUT2"
+	grep -m3 -E "SC525-R6 double release|Error:" "$S/$f.log" >> "$OUT2"
+done
+rm -f test/dom/authoring/zzSc525R6Cascade510.test.ts
+rm -f test/dom/authoring/zzSc525R6Cascade525.test.ts
+rm -f test/dom/authoring/zzSc525R6Instr.test.ts
+rm -f test/dom/authoring/zzSc525R6NoGuard.test.ts
+echo "=== status lines: $(git status --porcelain | wc -l)" >> "$OUT2"
+exit 0

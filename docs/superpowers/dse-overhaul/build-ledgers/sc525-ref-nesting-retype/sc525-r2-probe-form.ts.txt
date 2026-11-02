@@ -1,0 +1,73 @@
+
+// ===================== SC-525 r2 REVIEW PROBES (scratch; never committed) =====================
+import * as r2fs from 'fs';
+const PROBE_OUT = process.env.SC525_PROBE_OUT ?? '/dev/null';
+const r2log = (name: string, data: unknown) => r2fs.appendFileSync(PROBE_OUT, JSON.stringify({ probe: name, ...(data as object) }) + '\n');
+const R2_NESTING = /nesting too deep/i;
+
+const PERMS3 = [
+	[0, 1, 2],
+	[0, 2, 1],
+	[1, 0, 2],
+	[1, 2, 0],
+	[2, 0, 1],
+	[2, 1, 0],
+];
+
+describe.each(CASES)('SC-525 r2 probes — $name form preview', (c) => {
+	const withRef = async () => {
+		const s = await setup(c, noteWith(c.alias, c.source));
+		s.h.app.vault.setFile('Ref.md', refNote(c.alias, c.refBlock));
+		s.h.app.vault.setFile('Other.md', refNote(c.alias, c.refBlock.replace(c.refName, 'Other Thing')));
+		const { el } = await s.render(c.source);
+		const form = openForm(el);
+		const hold = holdLookups(s.h.deps.refs as never);
+		return { ...s, form, hold };
+	};
+	const state = (preview: HTMLElement) => ({
+		nesting: R2_NESTING.test(preview.textContent ?? ''),
+		errorCard: !!preview.querySelector('.dse-error-card, .dse-ref-notice'),
+		hasRef: (preview.textContent ?? '').includes(c.refName),
+		hasOther: (preview.textContent ?? '').includes('Other Thing'),
+		slots: preview.querySelectorAll('.dse-form__preview-slot').length,
+		cardRootsInSlot: preview.querySelector('.dse-form__preview-slot')?.children.length ?? 0,
+		textLen: (preview.textContent ?? '').length,
+	});
+
+	test('F0 a first-time held lookup: what the preview shows while pending', async () => {
+		const { form, hold } = await withRef();
+		form.type('@Ref.md');
+		const whileHeld = state(form.preview);
+		await hold.releaseAll();
+		r2log(`F0-${c.name}-first-lookup-pending`, { whileHeld, after: state(form.preview) });
+	});
+
+	for (const order of PERMS3) {
+		test(`F1 three mounts of the same ref (A, A+space, A+2 spaces), release ${order.join('')}`, async () => {
+			const { form, hold } = await withRef();
+			form.type('@Ref.md');
+			form.type('@Ref.md ');
+			form.type('@Ref.md  ');
+			const steps = [state(form.preview)];
+			for (const i of order) {
+				if (i < hold.held.length) await hold.release(i);
+				else await settle();
+				steps.push(state(form.preview));
+			}
+			r2log(`F1-${c.name}-same-x3-${order.join('')}`, { held: hold.held.length, steps, anyNesting: steps.some((x) => x.nesting) });
+		});
+		test(`F2 A pending, B (other ref) pending, A again; release ${order.join('')}`, async () => {
+			const { form, hold } = await withRef();
+			form.type('@Ref.md');
+			form.type('@Other.md');
+			form.type('@Ref.md ');
+			const steps = [state(form.preview)];
+			for (const i of order) {
+				if (i < hold.held.length) await hold.release(i);
+				else await settle();
+				steps.push(state(form.preview));
+			}
+			r2log(`F2-${c.name}-ABA-${order.join('')}`, { held: hold.held.length, steps, anyNesting: steps.some((x) => x.nesting) });
+		});
+	}
+});

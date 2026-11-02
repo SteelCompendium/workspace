@@ -1,0 +1,10 @@
+#!/bin/bash
+# usage: sc525-probe-run.sh <base|head> <port> <logfile>
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc525-r1-impl
+cd /home/scott/code/steelCompendium/worktrees/sc525-ref-nesting-retype/draw-steel-elements || exit 9
+export DSE_LIFECYCLE_BUNDLE="$S/bundle-$1"
+export DSE_LIFECYCLE_PORT="$2"
+node visual-harness/zz-sc525-probe.mjs --only=SC525-P > "$3" 2>&1
+rc=$?
+echo "probe rc=$rc" >> "$3"
+exit $rc

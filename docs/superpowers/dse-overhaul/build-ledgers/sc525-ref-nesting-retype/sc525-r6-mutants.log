@@ -1,0 +1,20 @@
+HEAD 34f46cf8f771581af17d0cc19e6d52d230597eb5
+=== none 
+Tests:       73 passed, 73 total
+=== M9-0  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       1 failed, 72 passed, 73 total
+  ● RefUnwrapView — in-flight depth guard (SC-525) › each await window of a resolution is guarded on its own › SCC: the stale entity read returns null after the view was updated: one card, no stale "not renderable" error
+=== M9-1  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       73 passed, 73 total
+=== M9-2  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       1 failed, 72 passed, 73 total
+  ● RefUnwrapView — in-flight depth guard (SC-525) › each await window of a resolution is guarded on its own › SCC: the view is updated while entity.body() is being read: one card
+=== M9-3  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       1 failed, 72 passed, 73 total
+  ● RefUnwrapView — in-flight depth guard (SC-525) › each await window of a resolution is guarded on its own › legacy: a stale lookup that REJECTS after the view was updated to an inline body: only the inline card, no error
+=== M9-4  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       73 passed, 73 total
+=== M9-5  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       1 failed, 72 passed, 73 total
+  ● RefUnwrapView — in-flight depth guard (SC-525) › each await window of a resolution is guarded on its own › legacy: the view is updated while the referenced file's block text is being read: one card
+=== restored: 0 changed files

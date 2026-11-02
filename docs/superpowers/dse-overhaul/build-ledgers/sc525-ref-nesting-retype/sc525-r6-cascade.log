@@ -1,0 +1,26 @@
+HEAD 34f46cf8f771581af17d0cc19e6d52d230597eb5
+== zzSc525R6Cascade510 rc=1
+Tests:       2 failed, 26 passed, 28 total
+  ● SC-510: typing @Ref.md into the feature edit form, one character at a time › every keystroke's lookup finishes after the last one, in typing order: only the latest shows
+  ● SC-510: typing @Ref.md into the statblock edit form, one character at a time › every keystroke's lookup finishes after the last one, in typing order: only the latest shows
+== zzSc525R6Cascade525 rc=1
+Tests:       2 failed, 26 passed, 28 total
+  ● SC-525: retyping the same @Ref.md in the feature edit form while its lookup is pending › a trailing space (the same trimmed reference): no nesting error while both lookups are held, and the card once they finish (first lookup last)
+  ● SC-525: retyping the same @Ref.md in the statblock edit form while its lookup is pending › a trailing space (the same trimmed reference): no nesting error while both lookups are held, and the card once they finish (first lookup last)
+== zzSc525R6Instr rc=0
+Tests:       28 passed, 28 total
+== zzSc525R6NoGuard rc=1
+Tests:       12 failed, 16 passed, 28 total
+  ● SC-510: the feature edit form when the mount itself fails › a referenced block the element cannot read: the preview shows the same error card the real card shows, with no Read-only badge over it
+  ● SC-510: the feature edit form when the mount itself fails › a rejection from a superseded keystroke arriving after a newer valid preview leaves the newer preview (and its badge) alone
+  ● SC-510: the feature edit form when the mount itself fails › a self-referencing @Note.md raises no unhandled rejection however the lookups finish
+  ● SC-510: the statblock edit form when the mount itself fails › a referenced block the element cannot read: the preview shows the same error card the real card shows, with no Read-only badge over it
+  ● SC-510: the statblock edit form when the mount itself fails › a rejection from a superseded keystroke arriving after a newer valid preview leaves the newer preview (and its badge) alone
+  ● SC-510: the statblock edit form when the mount itself fails › a self-referencing @Note.md raises no unhandled rejection however the lookups finish
+  ● SC-510: typing @Ref.md into the feature edit form, one character at a time › an earlier keystroke's lookup finishes AFTER the latest one: the preview still shows only the latest
+  ● SC-510: typing @Ref.md into the feature edit form, one character at a time › clearing the box to an invalid one while a lookup is pending: the late mount does not resurrect a preview under the error
+  ● SC-510: typing @Ref.md into the feature edit form, one character at a time › every keystroke's lookup finishes after the last one, in typing order: only the latest shows
+  ● SC-510: typing @Ref.md into the statblock edit form, one character at a time › an earlier keystroke's lookup finishes AFTER the latest one: the preview still shows only the latest
+  ● SC-510: typing @Ref.md into the statblock edit form, one character at a time › clearing the box to an invalid one while a lookup is pending: the late mount does not resurrect a preview under the error
+  ● SC-510: typing @Ref.md into the statblock edit form, one character at a time › every keystroke's lookup finishes after the last one, in typing order: only the latest shows
+=== status lines: 0

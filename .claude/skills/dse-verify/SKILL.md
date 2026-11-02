@@ -1228,7 +1228,12 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `4deb8cf` (2026-10-30; SC-531 landed — the lifecycle and e2e harnesses' trust-dialog script waits in the page (≤ 20 s) for `document.body` before installing its observer, so a start-up reload between check and install no longer exits 2; harness-only, no plugin byte change):**
+**CURRENT — dse `develop` @ `34f46cf` (2026-11-02; SC-525 landed — retyping a reference in the block edit form while its lookup is still running no longer shows "Reference nesting too deep": the in-flight reference guard (`RefUnwrapView.ts` `IN_FLIGHT_REFS`) now records the owning view and refuses only when a different, still-loaded view owns the lookup; new `ElementView.isUnloaded()`; 31 new jest tests):**
+tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **6184 passed / 1 skipped / 248 of 249 suites** · lifecycle **41/41** (halves 20 + 21) · e2e **`OBSIDIAN-E2E done: 124/124 ok,
+0 failed, 0 known-bug, coverage: 87/87 pairs`** · shots **592**, 0 FAIL, button host-leak 157/942 (34-record boundary) · freeze **`freeze OK (280/280 …)`** (no rebaseline) · parity **0 GAPs / 0
+undeclared / 24 DECLARED**. Numbers as reported by the SC-525 ticket-owner: jest at `34f46cf`, the rest at `b1d5fa9` (the last commit is tests-only; same built plugin); the dispatcher relayed, not re-ran. Known flake seen in review: e2e CHR-F02 (SC-539).
+
+**PREVIOUS — dse `develop` @ `4deb8cf` (2026-10-30; SC-531 landed — the lifecycle and e2e harnesses' trust-dialog script waits in the page (≤ 20 s) for `document.body` before installing its observer, so a start-up reload between check and install no longer exits 2; harness-only, no plugin byte change):**
 tsc (incl. `tsc -p e2e`) and lint (incl. `e2e/`) clean · jest **6153 passed / 1 skipped / 248 of 249 suites** (fresh worktree: 6152 / 2) · lifecycle **41/41** (halves 20 + 21) · e2e **`OBSIDIAN-E2E done: 124/124 ok,
 0 failed, 0 known-bug, coverage: 87/87 pairs`** · shots, freeze, parity carried from `4f73043` (not re-run; no plugin byte change): shots **592**, 0 FAIL, button host-leak 157/942 (34-record boundary) · freeze **280/280** · parity **0 GAPs / 0
 undeclared / 24 DECLARED**. Numbers as reported by the SC-531 ticket-owner at `4deb8cf` (on `4f73043`); the dispatcher relayed, not re-ran.

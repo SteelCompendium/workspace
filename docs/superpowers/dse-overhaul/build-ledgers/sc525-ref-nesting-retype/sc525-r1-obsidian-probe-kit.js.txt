@@ -1,0 +1,102 @@
+// ===================== SC-525 r1 real-Obsidian probe kit (adapted from the SC-510 r2 reviewer kit; throwaway) =====================
+const SC525_OUT = '/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc525-ref-nesting-retype';
+const SC525_FEATURE = fs.readFileSync(path.join(repo, 'src/elements/feature/example.yaml'), 'utf8').trim();
+Object.assign(FIXTURES, {
+	'Ref.md': `# Ref\n\n${fence('ds-feature', SC525_FEATURE.replace('name: Coverage Strike', 'name: Ref Strike').split('\n'))}\n`,
+	'Lifecycle/sc525-feature.md': `# sc525\n\nAbove.\n\n${fence('ds-feature', SC525_FEATURE.split('\n'))}\n\nAfter.\n`,
+});
+function sc525Kit(t) {
+	const kit = formKit(t);
+	const PREVIEW = `document.querySelector('.modal-container .dse-form__preview')`;
+	const TA = `document.querySelector('.modal-container textarea.dse-form__raw')`;
+	const KEYS = { '@': ['Digit2', 50, 8], '.': ['Period', 190, 0], ' ': ['Space', 32, 0] };
+	const P = {
+		tag: () => (process.env.DSE_LIFECYCLE_BUNDLE ?? '').includes('bundle-base') ? 'base' : 'head',
+		async install() {
+			await t.ev(`(() => {
+				if (window.__p525) return true;
+				const P = (window.__p525 = { pendingResolve: 0, pendingReads: 0, calls: [], hold: false, held: [], inputs: [], shown: null });
+				const refs = app.plugins.plugins['draw-steel-elements'].frameworkV2.services.refs;
+				const real = refs.resolve.bind(refs);
+				refs.resolve = (raw, sp) => {
+					const rec = { raw, t0: performance.now() };
+					P.calls.push(rec);
+					P.pendingResolve++;
+					const go = () => real(raw, sp).finally(() => { P.pendingResolve--; rec.t1 = performance.now(); });
+					if (P.hold) return new Promise((res, rej) => P.held.push({ raw, go: () => go().then(res, rej) }));
+					return go();
+				};
+				for (const fn of ['cachedRead', 'read']) {
+					const r = app.vault[fn].bind(app.vault);
+					app.vault[fn] = (f) => { P.pendingReads++; return r(f).finally(() => P.pendingReads--); };
+				}
+				document.addEventListener('input', (e) => { if (e.target && e.target.matches && e.target.matches('textarea.dse-form__raw')) P.inputs.push({ t: performance.now(), v: e.target.value }); }, true);
+				new MutationObserver(() => {
+					const pv = document.querySelector('.modal-container .dse-form__preview');
+					if (P.shown === null && pv && /Ref Strike/.test(pv.textContent)) P.shown = performance.now();
+				}).observe(document.body, { childList: true, subtree: true, characterData: true });
+				return true;
+			})()`);
+		},
+		hold: (on) => t.ev(`(() => { window.__p525.hold = ${on ? 'true' : 'false'}; return true; })()`),
+		/** Release every held lookup one by one (newest first when reverse), waiting for each to settle. */
+		async releaseAll(reverse) {
+			for (;;) {
+				const n = await t.ev(`(() => { const H = window.__p525.held; if (!H.length) return 0; const h = ${reverse ? 'H.pop()' : 'H.shift()'}; h.go(); return H.length + 1; })()`);
+				if (!n) return;
+				await P.settle();
+			}
+		},
+		/** Settled = no lookup or file read in flight, and two animation frames painted (a condition, not a delay). */
+		async settle() {
+			await t.waitFor(`window.__p525.pendingResolve === window.__p525.held.length && window.__p525.pendingReads === 0`, 'lookups settled', 15000);
+			await t.ev(`new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => r(true))))`);
+			await t.waitFor(`window.__p525.pendingResolve === window.__p525.held.length && window.__p525.pendingReads === 0`, 'lookups settled (2)', 15000);
+		},
+		async key(ch) {
+			if (ch === '\b') return t.key('Backspace', 'Backspace', 8);
+			let code, vk, mod;
+			if (KEYS[ch]) [code, vk, mod] = KEYS[ch];
+			else if (/[a-z]/.test(ch)) [code, vk, mod] = ['Key' + ch.toUpperCase(), ch.toUpperCase().charCodeAt(0), 0];
+			else if (/[A-Z]/.test(ch)) [code, vk, mod] = ['Key' + ch, ch.charCodeAt(0), 8];
+			else if (/[0-9]/.test(ch)) [code, vk, mod] = ['Digit' + ch, ch.charCodeAt(0), 0];
+			await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyDown', key: ch, code, text: ch, unmodifiedText: ch, windowsVirtualKeyCode: vk, nativeVirtualKeyCode: vk, modifiers: mod });
+			await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyUp', key: ch, code, windowsVirtualKeyCode: vk, nativeVirtualKeyCode: vk, modifiers: mod });
+		},
+		async openFormOn(rel, index) {
+			await t.open(rel);
+			await t.reset(rel);
+			const root = `Array.from(${t.readingScope('app.workspace.getMostRecentLeaf()')}.querySelectorAll('[data-dse-element="feature"]')).filter((x) => x.isConnected && !x.parentElement.closest('[data-dse-element]'))[${index}]`;
+			await t.waitFor(`!!(${root})`, `${rel}: feature #${index} rendered`);
+			const pencil = `(${root}).querySelector('.dse-chrome button[aria-label^="Edit "]')`;
+			await t.waitFor(`!!(${pencil})`, `${rel}: pencil`);
+			await t.ev(`(${pencil}).click()`);
+			await kit.waitFormOpen(rel);
+			await P.settle();
+			await t.realClick(TA);
+			await t.waitFor(`document.activeElement === ${TA}`, 'the box has focus');
+		},
+		async clearBox() {
+			await t.ev(`(() => { const ta = ${TA}; ta.focus(); ta.select(); return true; })()`);
+			await t.key('Backspace', 'Backspace', 8);
+			await t.waitFor(`${TA}.value === ''`, 'box cleared');
+		},
+		previewState: () => t.ev(`(() => { const p = ${PREVIEW}; return { text: p.textContent, children: p.children.length, slots: p.querySelectorAll('.dse-form__preview-slot').length, badge: p.getAttribute('data-dse-readonly'), errorCard: !!p.querySelector('.dse-error-card'), box: ${TA}.value }; })()`),
+		async closeForm() {
+			const cancel = `Array.from(document.querySelectorAll('.modal-container .dse-modal button')).find((b) => b.getAttribute('aria-label') === 'Cancel')`;
+			await t.realClick(cancel);
+			await t.waitFor(`!document.querySelector('.modal-container .dse-modal')`, 'form closed');
+		},
+		async shotClip(elExpr, name) {
+			const r = await t.ev(`(() => { const e = ${elExpr}; e.scrollIntoView({ block: 'nearest' }); const b = e.getBoundingClientRect(); return { x: Math.max(0, b.left - 8), y: Math.max(0, b.top - 8), width: b.width + 16, height: Math.min(b.height + 16, 1080) }; })()`);
+			const shot = await t.cdp.call('Page.captureScreenshot', { format: 'png', clip: { ...r, scale: 1 } });
+			fs.mkdirSync(SC525_OUT, { recursive: true });
+			const f = path.join(SC525_OUT, `${name}.png`);
+			fs.writeFileSync(f, Buffer.from(shot.data, 'base64'));
+			return f;
+		},
+		shotModal: (name) => P.shotClip(`document.querySelector('.modal-container .dse-modal')`, name),
+		shotEl: (elExpr, name) => P.shotClip(elExpr, name),
+	};
+	return P;
+}

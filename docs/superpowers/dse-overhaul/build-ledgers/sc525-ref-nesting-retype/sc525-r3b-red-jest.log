@@ -1,0 +1,95 @@
+FAIL dom test/dom/elements/refUnwrapView.test.ts
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated from a pending reference to: inline body › the stale lookup is released after the update has drawn: only the new content, no card for A
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "Inline Card",
+    +   "A",
+      ]
+
+      821 | 			await tick();
+      822 | 			const root = s.roots()[0];
+    > 823 | 			expect(baseViews(root)).toEqual(expectedCard() === null ? [] : [expectedCard()]);
+          | 			                        ^
+      824 | 			if (expectedCard() === null) expect(root.querySelector('.dse-error-card-message')?.textContent).toBe('Refused body message');
+      825 | 			expect(nestingErrors(s.roots())).toEqual([]);
+      826 | 		});
+
+      at test/dom/elements/refUnwrapView.test.ts:823:28
+
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated from a pending reference to: inline body › the stale lookup is released while the update is still settling: only the new content, no card for A
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "Inline Card",
+    +   "A",
+      ]
+
+      821 | 			await tick();
+      822 | 			const root = s.roots()[0];
+    > 823 | 			expect(baseViews(root)).toEqual(expectedCard() === null ? [] : [expectedCard()]);
+          | 			                        ^
+      824 | 			if (expectedCard() === null) expect(root.querySelector('.dse-error-card-message')?.textContent).toBe('Refused body message');
+      825 | 			expect(nestingErrors(s.roots())).toEqual([]);
+      826 | 		});
+
+      at test/dom/elements/refUnwrapView.test.ts:823:28
+
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated from a pending reference to: refused body › the stale lookup is released after the update has drawn: only the new content, no card for A
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "A",
+    + ]
+
+      821 | 			await tick();
+      822 | 			const root = s.roots()[0];
+    > 823 | 			expect(baseViews(root)).toEqual(expectedCard() === null ? [] : [expectedCard()]);
+          | 			                        ^
+      824 | 			if (expectedCard() === null) expect(root.querySelector('.dse-error-card-message')?.textContent).toBe('Refused body message');
+      825 | 			expect(nestingErrors(s.roots())).toEqual([]);
+      826 | 		});
+
+      at test/dom/elements/refUnwrapView.test.ts:823:28
+
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated from a pending reference to: refused body › the stale lookup is released while the update is still settling: only the new content, no card for A
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "A",
+    + ]
+
+      821 | 			await tick();
+      822 | 			const root = s.roots()[0];
+    > 823 | 			expect(baseViews(root)).toEqual(expectedCard() === null ? [] : [expectedCard()]);
+          | 			                        ^
+      824 | 			if (expectedCard() === null) expect(root.querySelector('.dse-error-card-message')?.textContent).toBe('Refused body message');
+      825 | 			expect(nestingErrors(s.roots())).toEqual([]);
+      826 | 		});
+
+      at test/dom/elements/refUnwrapView.test.ts:823:28
+
+Test Suites: 1 failed, 1 total
+Tests:       4 failed, 32 passed, 36 total
+Snapshots:   0 total
+Time:        2.441 s
+Ran all test suites matching test/dom/elements/refUnwrapView.test.ts.
+jest rc=1

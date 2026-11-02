@@ -1,0 +1,21 @@
+=== test file from b1d5fa9, injected throw in SC-510 'every keystroke's lookup finishes after the last one'
+jest rc=1
+Tests:       12 failed, 16 passed, 28 total
+  ● SC-510: the feature edit form when the mount itself fails › a rejection from a superseded keystroke arriving after a newer valid preview leaves the newer preview (and its badge) alone
+  ● SC-510: the statblock edit form when the mount itself fails › a rejection from a superseded keystroke arriving after a newer valid preview leaves the newer preview (and its badge) alone
+  ● SC-510: typing @Ref.md into the feature edit form, one character at a time › an earlier keystroke's lookup finishes AFTER the latest one: the preview still shows only the latest
+  ● SC-510: typing @Ref.md into the feature edit form, one character at a time › every keystroke's lookup finishes after the last one, in typing order: only the latest shows
+  ● SC-510: typing @Ref.md into the statblock edit form, one character at a time › an earlier keystroke's lookup finishes AFTER the latest one: the preview still shows only the latest
+  ● SC-510: typing @Ref.md into the statblock edit form, one character at a time › every keystroke's lookup finishes after the last one, in typing order: only the latest shows
+  ● SC-525: retyping the same @Ref.md in the feature edit form while its lookup is pending › a trailing space (the same trimmed reference): no nesting error while both lookups are held, and the card once th
+  ● SC-525: retyping the same @Ref.md in the feature edit form while its lookup is pending › several keys that all leave the reference unchanged, lookups released in typing order: the card
+  ● SC-525: retyping the same @Ref.md in the feature edit form while its lookup is pending › the superseded lookup finishes first, then the current one: still the card, never the nesting error
+  ● SC-525: retyping the same @Ref.md in the statblock edit form while its lookup is pending › a trailing space (the same trimmed reference): no nesting error while both lookups are held, and the card once 
+  ● SC-525: retyping the same @Ref.md in the statblock edit form while its lookup is pending › several keys that all leave the reference unchanged, lookups released in typing order: the card
+  ● SC-525: retyping the same @Ref.md in the statblock edit form while its lookup is pending › the superseded lookup finishes first, then the current one: still the card, never the nesting error
+=== test file from HEAD, injected throw in SC-510 'every keystroke's lookup finishes after the last one'
+jest rc=1
+Tests:       2 failed, 26 passed, 28 total
+  ● SC-510: typing @Ref.md into the feature edit form, one character at a time › every keystroke's lookup finishes after the last one, in typing order: only the latest shows
+  ● SC-510: typing @Ref.md into the statblock edit form, one character at a time › every keystroke's lookup finishes after the last one, in typing order: only the latest shows
+=== status lines after: 0

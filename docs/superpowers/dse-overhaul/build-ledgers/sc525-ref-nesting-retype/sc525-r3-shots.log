@@ -1,0 +1,694 @@
+
+> draw-steel-elements@7.0.0 shots
+> npm run harness:build && node visual-harness/shoot.mjs
+
+
+> draw-steel-elements@7.0.0 harness:build
+> node visual-harness/esbuild.mjs
+
+
+  visual-harness/dist/harness.js     2.8mb ⚠️
+  visual-harness/dist/harness.css  419.4kb
+
+⚡ Done in 179ms
+
+OBSIDIAN APP.CSS PIN DRIFT — installed Obsidian is 1.15.0 (app.css sha256 dabc7a75001af0cf898501d570e110d86f269496789942fbb3370bba47a3db07) but the harness gate runs against the pinned 1.13.7 (app.css sha256 f612f1e8f36486fa57f3b8bd45f0c848409d5b168002e757a13c6d286a7b4c41). Expected until the pin is deliberately bumped — see visual-harness/README.md → "Obsidian app.css pin" for the bump procedure.
+
+host sheet: pinned-cache, Obsidian 1.13.7, sha256 f612f1e8f36486fa57f3b8bd45f0c848409d5b168002e757a13c6d286a7b4c41
+  ok ancestry--steel-dark.png
+  ok ancestry--steel-light.png
+  ok ancestry--steel-print.png
+  ok ancestry--steel-realprint.png
+  ok career--steel-dark.png
+  ok career--steel-light.png
+  ok career--steel-print.png
+  ok career--steel-realprint.png
+  ok characteristics--steel-dark.png
+  ok characteristics--steel-light.png
+  ok characteristics--steel-print.png
+  ok characteristics--steel-realprint.png
+  ok class--steel-dark.png
+  ok class--steel-light.png
+  ok class--steel-print.png
+  ok class--steel-realprint.png
+  ok complication--steel-dark.png
+  ok complication--steel-light.png
+  ok complication--steel-print.png
+  ok complication--steel-realprint.png
+  ok condition--steel-dark.png
+  ok condition--steel-light.png
+  ok condition--steel-print.png
+  ok condition--steel-realprint.png
+  ok condition-by-scc--steel-dark.png
+  ok condition-by-scc--steel-light.png
+  ok condition-by-scc--steel-print.png
+  ok condition-by-scc--steel-realprint.png
+  ok conditions--steel-dark.png
+  ok conditions--steel-light.png
+  ok conditions--steel-print.png
+  ok conditions--steel-realprint.png
+  ok counter--steel-dark.png
+  ok counter--steel-light.png
+  ok counter--steel-print.png
+  ok counter--steel-realprint.png
+  ok culture--steel-dark.png
+  ok culture--steel-light.png
+  ok culture--steel-print.png
+  ok culture--steel-realprint.png
+  ok encounter--steel-dark.png
+  ok encounter--steel-light.png
+  ok encounter--steel-print.png
+  ok encounter--steel-realprint.png
+  ok encounter-collapsed--steel-dark.png
+  ok encounter-collapsed--steel-light.png
+  ok encounter-collapsed--steel-print.png
+  ok encounter-collapsed--steel-realprint.png
+  ok feature--steel-dark.png
+  ok feature--steel-light.png
+  ok feature--steel-print.png
+  ok feature--steel-realprint.png
+  ok feature-spend--steel-dark.png
+  ok feature-spend--steel-light.png
+  ok feature-spend--steel-print.png
+  ok feature-spend--steel-realprint.png
+  ok feature-villain--steel-dark.png
+  ok feature-villain--steel-light.png
+  ok feature-villain--steel-print.png
+  ok feature-villain--steel-realprint.png
+  ok feature-collapsed--steel-dark.png
+  ok feature-collapsed--steel-light.png
+  ok feature-collapsed--steel-print.png
+  ok feature-collapsed--steel-realprint.png
+  ok feature-list--steel-dark.png
+  ok feature-list--steel-light.png
+  ok feature-list--steel-print.png
+  ok feature-list--steel-realprint.png
+  ok feature-trait-provenance--steel-dark.png
+  ok feature-trait-provenance--steel-light.png
+  ok feature-trait-provenance--steel-print.png
+  ok feature-trait-provenance--steel-realprint.png
+  ok feature-ability-provenance--steel-dark.png
+  ok feature-ability-provenance--steel-light.png
+  ok feature-ability-provenance--steel-print.png
+  ok feature-ability-provenance--steel-realprint.png
+  ok featureblock--steel-dark.png
+  ok featureblock--steel-light.png
+  ok featureblock--steel-print.png
+  ok featureblock--steel-realprint.png
+  ok featureblock-advancement--steel-dark.png
+  ok featureblock-advancement--steel-light.png
+  ok featureblock-advancement--steel-print.png
+  ok featureblock-advancement--steel-realprint.png
+  ok featureblock-stats--steel-dark.png
+  ok featureblock-stats--steel-light.png
+  ok featureblock-stats--steel-print.png
+  ok featureblock-stats--steel-realprint.png
+  ok hero--steel-dark.png
+  ok hero--steel-light.png
+  ok hero--steel-print.png
+  ok hero--steel-realprint.png
+  ok hero-sparse--steel-dark.png
+  ok hero-sparse--steel-light.png
+  ok hero-sparse--steel-print.png
+  ok hero-sparse--steel-realprint.png
+  ok hero-collapsed--steel-dark.png
+  ok hero-collapsed--steel-light.png
+  ok hero-collapsed--steel-print.png
+  ok hero-collapsed--steel-realprint.png
+  ok hero-tokens--steel-dark.png
+  ok hero-tokens--steel-light.png
+  ok hero-tokens--steel-print.png
+  ok hero-tokens--steel-realprint.png
+  ok heroic-resource--steel-dark.png
+  ok heroic-resource--steel-light.png
+  ok heroic-resource--steel-print.png
+  ok heroic-resource--steel-realprint.png
+  ok horizontal-rule--steel-dark.png
+  ok horizontal-rule--steel-light.png
+  ok horizontal-rule--steel-print.png
+  ok horizontal-rule--steel-realprint.png
+  ok initiative--steel-dark.png
+  ok initiative--steel-light.png
+  ok initiative--steel-print.png
+  ok initiative--steel-realprint.png
+  ok initiative-no-images--steel-dark.png
+  ok initiative-no-images--steel-light.png
+  ok initiative-no-images--steel-print.png
+  ok initiative-no-images--steel-realprint.png
+  ok initiative-controls--steel-dark.png
+  ok initiative-controls--steel-light.png
+  ok initiative-controls--steel-print.png
+  ok initiative-controls--steel-realprint.png
+  ok initiative-fight--steel-dark.png
+  ok initiative-fight--steel-light.png
+  ok initiative-fight--steel-print.png
+  ok initiative-fight--steel-realprint.png
+  ok initiative-named--steel-dark.png
+  ok initiative-named--steel-light.png
+  ok initiative-named--steel-print.png
+  ok initiative-named--steel-realprint.png
+  ok initiative-roster--steel-dark.png
+  ok initiative-roster--steel-light.png
+  ok initiative-roster--steel-print.png
+  ok initiative-roster--steel-realprint.png
+  ok initiative-squads--steel-dark.png
+  ok initiative-squads--steel-light.png
+  ok initiative-squads--steel-print.png
+  ok initiative-squads--steel-realprint.png
+  ok initiative-captain-bonus--steel-dark.png
+  ok initiative-captain-bonus--steel-light.png
+  ok initiative-captain-bonus--steel-print.png
+  ok initiative-captain-bonus--steel-realprint.png
+  ok kit--steel-dark.png
+  ok kit--steel-light.png
+  ok kit--steel-print.png
+  ok kit--steel-realprint.png
+  ok kit-collapsed--steel-dark.png
+  ok kit-collapsed--steel-light.png
+  ok kit-collapsed--steel-print.png
+  ok kit-collapsed--steel-realprint.png
+  ok montage--steel-dark.png
+  ok montage--steel-light.png
+  ok montage--steel-print.png
+  ok montage--steel-realprint.png
+  ok montage-mid--steel-dark.png
+  ok montage-mid--steel-light.png
+  ok montage-mid--steel-print.png
+  ok montage-mid--steel-realprint.png
+  ok montage-done--steel-dark.png
+  ok montage-done--steel-light.png
+  ok montage-done--steel-print.png
+  ok montage-done--steel-realprint.png
+  ok montage-failed--steel-dark.png
+  ok montage-failed--steel-light.png
+  ok montage-failed--steel-print.png
+  ok montage-failed--steel-realprint.png
+  ok montage-old-shape--steel-dark.png
+  ok montage-old-shape--steel-light.png
+  ok montage-old-shape--steel-print.png
+  ok montage-old-shape--steel-realprint.png
+  ok negotiation--steel-dark.png
+  ok negotiation--steel-light.png
+  ok negotiation--steel-print.png
+  ok negotiation--steel-realprint.png
+  ok negotiation-checked--steel-dark.png
+  ok negotiation-checked--steel-light.png
+  ok negotiation-checked--steel-print.png
+  ok negotiation-checked--steel-realprint.png
+  ok negotiation-ended--steel-dark.png
+  ok negotiation-ended--steel-light.png
+  ok negotiation-ended--steel-print.png
+  ok negotiation-ended--steel-realprint.png
+  ok party--steel-dark.png
+  ok party--steel-light.png
+  ok party--steel-print.png
+  ok party--steel-realprint.png
+  ok perk--steel-dark.png
+  ok perk--steel-light.png
+  ok perk--steel-print.png
+  ok perk--steel-realprint.png
+  ok perk-links--steel-dark.png
+  ok perk-links--steel-light.png
+  ok perk-links--steel-print.png
+  ok perk-links--steel-realprint.png
+  ok perk-headings--steel-dark.png
+  ok perk-headings--steel-light.png
+  ok perk-headings--steel-print.png
+  ok perk-headings--steel-realprint.png
+  ok project--steel-dark.png
+  ok project--steel-light.png
+  ok project--steel-print.png
+  ok project--steel-realprint.png
+  ok roll--steel-dark.png
+  ok roll--steel-light.png
+  ok roll--steel-print.png
+  ok roll--steel-realprint.png
+  ok rule--steel-dark.png
+  ok rule--steel-light.png
+  ok rule--steel-print.png
+  ok rule--steel-realprint.png
+  ok rule-by-scc--steel-dark.png
+  ok rule-by-scc--steel-light.png
+  ok rule-by-scc--steel-print.png
+  ok rule-by-scc--steel-realprint.png
+  ok skills--steel-dark.png
+  ok skills--steel-light.png
+  ok skills--steel-print.png
+  ok skills--steel-realprint.png
+  ok skills-hero-picks--steel-dark.png
+  ok skills-hero-picks--steel-light.png
+  ok skills-hero-picks--steel-print.png
+  ok skills-hero-picks--steel-realprint.png
+  ok skills-ledger--steel-dark.png
+  ok skills-ledger--steel-light.png
+  ok skills-ledger--steel-print.png
+  ok skills-ledger--steel-realprint.png
+  ok skills-chips--steel-dark.png
+  ok skills-chips--steel-light.png
+  ok skills-chips--steel-print.png
+  ok skills-chips--steel-realprint.png
+  ok skills-ledger-hidden--steel-dark.png
+  ok skills-ledger-hidden--steel-light.png
+  ok skills-ledger-hidden--steel-print.png
+  ok skills-ledger-hidden--steel-realprint.png
+  ok skills-chips-hidden--steel-dark.png
+  ok skills-chips-hidden--steel-light.png
+  ok skills-chips-hidden--steel-print.png
+  ok skills-chips-hidden--steel-realprint.png
+  ok stamina-bar--steel-dark.png
+  ok stamina-bar--steel-light.png
+  ok stamina-bar--steel-print.png
+  ok stamina-bar--steel-realprint.png
+  ok stamina-bar-recoveries--steel-dark.png
+  ok stamina-bar-recoveries--steel-light.png
+  ok stamina-bar-recoveries--steel-print.png
+  ok stamina-bar-recoveries--steel-realprint.png
+  ok stamina-bar-winded--steel-dark.png
+  ok stamina-bar-winded--steel-light.png
+  ok stamina-bar-winded--steel-print.png
+  ok stamina-bar-winded--steel-realprint.png
+  ok stamina-bar-dying--steel-dark.png
+  ok stamina-bar-dying--steel-light.png
+  ok stamina-bar-dying--steel-print.png
+  ok stamina-bar-dying--steel-realprint.png
+  ok stamina-bar-collapsed--steel-dark.png
+  ok stamina-bar-collapsed--steel-light.png
+  ok stamina-bar-collapsed--steel-print.png
+  ok stamina-bar-collapsed--steel-realprint.png
+  ok stamina-bar-collapse-default--steel-dark.png
+  ok stamina-bar-collapse-default--steel-light.png
+  ok stamina-bar-collapse-default--steel-print.png
+  ok stamina-bar-collapse-default--steel-realprint.png
+  ok stamina-bar-not-collapsible--steel-dark.png
+  ok stamina-bar-not-collapsible--steel-light.png
+  ok stamina-bar-not-collapsible--steel-print.png
+  ok stamina-bar-not-collapsible--steel-realprint.png
+  ok statblock--steel-dark.png
+  ok statblock--steel-light.png
+  ok statblock--steel-print.png
+  ok statblock--steel-realprint.png
+  ok statblock-villain-corpus--steel-dark.png
+  ok statblock-villain-corpus--steel-light.png
+  ok statblock-villain-corpus--steel-print.png
+  ok statblock-villain-corpus--steel-realprint.png
+  ok statblock-roleless-corpus--steel-dark.png
+  ok statblock-roleless-corpus--steel-light.png
+  ok statblock-roleless-corpus--steel-print.png
+  ok statblock-roleless-corpus--steel-realprint.png
+  ok statblock-companion-corpus--steel-dark.png
+  ok statblock-companion-corpus--steel-light.png
+  ok statblock-companion-corpus--steel-print.png
+  ok statblock-companion-corpus--steel-realprint.png
+  ok statblock-stats-ledger--steel-dark.png
+  ok statblock-stats-ledger--steel-light.png
+  ok statblock-stats-ledger--steel-print.png
+  ok statblock-stats-ledger--steel-realprint.png
+  ok statblock-stats-gridc--steel-dark.png
+  ok statblock-stats-gridc--steel-light.png
+  ok statblock-stats-gridc--steel-print.png
+  ok statblock-stats-gridc--steel-realprint.png
+  ok statblock-featstyle-flat--steel-dark.png
+  ok statblock-featstyle-flat--steel-light.png
+  ok statblock-featstyle-flat--steel-print.png
+  ok statblock-featstyle-flat--steel-realprint.png
+  ok statblock-columns-wide--steel-dark.png
+  ok statblock-columns-wide--steel-light.png
+  ok statblock-columns-wide--steel-print.png
+  ok statblock-columns-wide--steel-realprint.png
+  ok statblock-with-captain--steel-dark.png
+  ok statblock-with-captain--steel-light.png
+  ok statblock-with-captain--steel-print.png
+  ok statblock-with-captain--steel-realprint.png
+  ok statblock-collapsed--steel-dark.png
+  ok statblock-collapsed--steel-light.png
+  ok statblock-collapsed--steel-print.png
+  ok statblock-collapsed--steel-realprint.png
+  ok surges--steel-dark.png
+  ok surges--steel-light.png
+  ok surges--steel-print.png
+  ok surges--steel-realprint.png
+  ok title--steel-dark.png
+  ok title--steel-light.png
+  ok title--steel-print.png
+  ok title--steel-realprint.png
+  ok title-nested--steel-dark.png
+  ok title-nested--steel-light.png
+  ok title-nested--steel-print.png
+  ok title-nested--steel-realprint.png
+  ok treasure--steel-dark.png
+  ok treasure--steel-light.png
+  ok treasure--steel-print.png
+  ok treasure--steel-realprint.png
+  ok treasure-hr--steel-dark.png
+  ok treasure-hr--steel-light.png
+  ok treasure-hr--steel-print.png
+  ok treasure-hr--steel-realprint.png
+  ok values-row--steel-dark.png
+  ok values-row--steel-light.png
+  ok values-row--steel-print.png
+  ok values-row--steel-realprint.png
+  ok perk-narrow--steel-dark.png
+  ok perk-narrow--steel-light.png
+  ok perk-narrow--steel-print.png
+  ok perk-narrow--steel-realprint.png
+  ok stamina-rail--steel-dark.png
+  ok stamina-rail--steel-light.png
+  ok stamina-rail--steel-print.png
+  ok stamina-rail--steel-realprint.png
+  ok hero-narrow--steel-dark.png
+  ok hero-narrow--steel-light.png
+  ok hero-narrow--steel-print.png
+  ok hero-narrow--steel-realprint.png
+  ok encounter-narrow--steel-dark.png
+  ok encounter-narrow--steel-light.png
+  ok encounter-narrow--steel-print.png
+  ok encounter-narrow--steel-realprint.png
+  ok initiative-narrow--steel-dark.png
+  ok initiative-narrow--steel-light.png
+  ok initiative-narrow--steel-print.png
+  ok initiative-narrow--steel-realprint.png
+  ok initiative-no-images-narrow--steel-dark.png
+  ok initiative-no-images-narrow--steel-light.png
+  ok initiative-no-images-narrow--steel-print.png
+  ok initiative-no-images-narrow--steel-realprint.png
+  ok initiative-controls-narrow--steel-dark.png
+  ok initiative-controls-narrow--steel-light.png
+  ok initiative-controls-narrow--steel-print.png
+  ok initiative-controls-narrow--steel-realprint.png
+  ok skills-narrow--steel-dark.png
+  ok skills-narrow--steel-light.png
+  ok skills-narrow--steel-print.png
+  ok skills-narrow--steel-realprint.png
+  ok skills-ledger-narrow--steel-dark.png
+  ok skills-ledger-narrow--steel-light.png
+  ok skills-ledger-narrow--steel-print.png
+  ok skills-ledger-narrow--steel-realprint.png
+  ok skills-chips-narrow--steel-dark.png
+  ok skills-chips-narrow--steel-light.png
+  ok skills-chips-narrow--steel-print.png
+  ok skills-chips-narrow--steel-realprint.png
+  ok initiative-fight-500--steel-dark.png
+  ok initiative-fight-500--steel-light.png
+  ok initiative-fight-500--steel-print.png
+  ok initiative-fight-500--steel-realprint.png
+  ok initiative-fight-narrow--steel-dark.png
+  ok initiative-fight-narrow--steel-light.png
+  ok initiative-fight-narrow--steel-print.png
+  ok initiative-fight-narrow--steel-realprint.png
+  ok initiative-named-narrow--steel-dark.png
+  ok initiative-named-narrow--steel-light.png
+  ok initiative-named-narrow--steel-print.png
+  ok initiative-named-narrow--steel-realprint.png
+  ok initiative-roster-500--steel-dark.png
+  ok initiative-roster-500--steel-light.png
+  ok initiative-roster-500--steel-print.png
+  ok initiative-roster-500--steel-realprint.png
+  ok initiative-roster-narrow--steel-dark.png
+  ok initiative-roster-narrow--steel-light.png
+  ok initiative-roster-narrow--steel-print.png
+  ok initiative-roster-narrow--steel-realprint.png
+  ok initiative-squads-500--steel-dark.png
+  ok initiative-squads-500--steel-light.png
+  ok initiative-squads-500--steel-print.png
+  ok initiative-squads-500--steel-realprint.png
+  ok montage-narrow--steel-dark.png
+  ok montage-narrow--steel-light.png
+  ok montage-narrow--steel-print.png
+  ok montage-narrow--steel-realprint.png
+  ok negotiation-narrow--steel-dark.png
+  ok negotiation-narrow--steel-light.png
+  ok negotiation-narrow--steel-print.png
+  ok negotiation-narrow--steel-realprint.png
+  ok statblock-narrow--steel-dark.png
+  ok statblock-narrow--steel-light.png
+  ok statblock-narrow--steel-print.png
+  ok statblock-narrow--steel-realprint.png
+  ok featureblock-narrow--steel-dark.png
+  ok featureblock-narrow--steel-light.png
+  ok featureblock-narrow--steel-print.png
+  ok featureblock-narrow--steel-realprint.png
+  ok negotiation-pr-checked--steel-dark.png
+  ok negotiation-pr-checked--steel-light.png
+  ok negotiation-pr-checked--steel-print.png
+  ok negotiation-pr-checked--steel-realprint.png
+  ok negotiation-appeal--steel-dark.png
+  ok negotiation-appeal--steel-light.png
+  ok negotiation-appeal--steel-print.png
+  ok negotiation-appeal--steel-realprint.png
+  ok initiative-log-open--steel-dark.png
+  ok initiative-log-open--steel-light.png
+  ok initiative-log-open--steel-print.png
+  ok initiative-log-open--steel-realprint.png
+  ok initiative-cell-selected--steel-dark.png
+  ok initiative-cell-selected--steel-light.png
+  ok initiative-cell-selected--steel-print.png
+  ok initiative-cell-selected--steel-realprint.png
+  ok montage-strip-pinned--steel-dark.png
+  ok montage-strip-pinned--steel-light.png
+  ok montage-strip-pinned--steel-print.png
+  ok montage-strip-pinned--steel-realprint.png
+  ok montage-guide-open--steel-dark.png
+  ok montage-guide-open--steel-light.png
+  ok montage-guide-open--steel-print.png
+  ok montage-guide-open--steel-realprint.png
+  ok montage-sheet-log--steel-dark.png
+  ok montage-sheet-log--steel-light.png
+  ok roll-expanded--steel-dark.png
+  ok roll-expanded--steel-light.png
+  ok roll-expanded-narrow--steel-dark.png
+  ok roll-expanded-narrow--steel-light.png
+  ok feature-rolled--steel-dark.png
+  ok feature-rolled--steel-light.png
+  ok feature-rolled-expanded--steel-dark.png
+  ok feature-rolled-expanded--steel-light.png
+  ok feature-rolled-expanded-narrow--steel-dark.png
+  ok feature-rolled-expanded-narrow--steel-light.png
+  ok feature-rolled-modified--steel-dark.png
+  ok feature-rolled-modified--steel-light.png
+  ok statblock-kwusage-text--steel-dark.png
+  ok statblock-kwusage-text--steel-light.png
+  ok statblock-kwusage-text--steel-print.png
+  ok statblock-kwusage-text--steel-realprint.png
+  ok statblock-kwusage-grid--steel-dark.png
+  ok statblock-kwusage-grid--steel-light.png
+  ok statblock-kwusage-grid--steel-print.png
+  ok statblock-kwusage-grid--steel-realprint.png
+  ok statblock-kwusage-ledger--steel-dark.png
+  ok statblock-kwusage-ledger--steel-light.png
+  ok statblock-kwusage-ledger--steel-print.png
+  ok statblock-kwusage-ledger--steel-realprint.png
+  ok statblock-disttarget-text--steel-dark.png
+  ok statblock-disttarget-text--steel-light.png
+  ok statblock-disttarget-text--steel-print.png
+  ok statblock-disttarget-text--steel-realprint.png
+  ok statblock-disttarget-ledger--steel-dark.png
+  ok statblock-disttarget-ledger--steel-light.png
+  ok statblock-disttarget-ledger--steel-print.png
+  ok statblock-disttarget-ledger--steel-realprint.png
+  ok statblock-charline-two--steel-dark.png
+  ok statblock-charline-two--steel-light.png
+  ok statblock-charline-two--steel-print.png
+  ok statblock-charline-two--steel-realprint.png
+  ok statblock-charbox-on--steel-dark.png
+  ok statblock-charbox-on--steel-light.png
+  ok statblock-charbox-on--steel-print.png
+  ok statblock-charbox-on--steel-realprint.png
+  ok statblock-charbox-onword--steel-dark.png
+  ok statblock-charbox-onword--steel-light.png
+  ok statblock-charbox-onword--steel-print.png
+  ok statblock-charbox-onword--steel-realprint.png
+  ok statblock-villain-banded--steel-dark.png
+  ok statblock-villain-banded--steel-light.png
+  ok statblock-villain-banded--steel-print.png
+  ok statblock-villain-banded--steel-realprint.png
+  ok featureblock-featstyle-flat--steel-dark.png
+  ok featureblock-featstyle-flat--steel-light.png
+  ok featureblock-featstyle-flat--steel-print.png
+  ok featureblock-featstyle-flat--steel-realprint.png
+  ok featureblock-stats-ledger--steel-dark.png
+  ok featureblock-stats-ledger--steel-light.png
+  ok featureblock-stats-ledger--steel-print.png
+  ok featureblock-stats-ledger--steel-realprint.png
+  ok complication-edit-btn--steel-dark.png
+  ok complication-edit-btn--steel-light.png
+  ok complication-edit-btn--steel-print.png
+  ok complication-edit-btn--steel-realprint.png
+  ok counter-edit-btn--steel-dark.png
+  ok counter-edit-btn--steel-light.png
+  ok counter-edit-btn--steel-print.png
+  ok counter-edit-btn--steel-realprint.png
+  ok statblock-edit-btn--steel-dark.png
+  ok statblock-edit-btn--steel-light.png
+  ok statblock-edit-btn--steel-print.png
+  ok statblock-edit-btn--steel-realprint.png
+  ok horizontal-rule-edit-btn--steel-dark.png
+  ok horizontal-rule-edit-btn--steel-light.png
+  ok horizontal-rule-edit-btn--steel-print.png
+  ok horizontal-rule-edit-btn--steel-realprint.png
+  ok initiative-mark-seal--steel-dark.png
+  ok initiative-mark-seal--steel-light.png
+  ok initiative-mark-seal--steel-print.png
+  ok initiative-mark-seal--steel-realprint.png
+  ok initiative-portraits-off--steel-dark.png
+  ok initiative-portraits-off--steel-light.png
+  ok initiative-portraits-off--steel-print.png
+  ok initiative-portraits-off--steel-realprint.png
+  ok statblock-sticky--steel-dark.png
+  ok statblock-sticky--steel-light.png
+  ok statblock-sticky--steel-print.png
+  ok statblock-sticky--steel-realprint.png
+  ok statblock-sticky-unscrolled--steel-dark.png
+  ok statblock-sticky-unscrolled--steel-light.png
+  ok statblock-sticky-unscrolled--steel-print.png
+  ok statblock-sticky-unscrolled--steel-realprint.png
+  ok statblock-sticky-nometa--steel-dark.png
+  ok statblock-sticky-nometa--steel-light.png
+  ok statblock-sticky-nometa--steel-print.png
+  ok statblock-sticky-nometa--steel-realprint.png
+  ok statblock-sticky-off--steel-dark.png
+  ok statblock-sticky-off--steel-light.png
+  ok statblock-sticky-off--steel-print.png
+  ok statblock-sticky-off--steel-realprint.png
+  ok statblock-sticky-narrow--steel-dark.png
+  ok statblock-sticky-narrow--steel-light.png
+  ok statblock-sticky-narrow--steel-print.png
+  ok statblock-sticky-narrow--steel-realprint.png
+  ok chrome-hover-statblock--steel-dark.png
+  ok chrome-hover-statblock--steel-light.png
+  ok chrome-hover-statblock--steel-print.png
+  ok chrome-hover-statblock--steel-realprint.png
+  ok chrome-hover-hero--steel-dark.png
+  ok chrome-hover-hero--steel-light.png
+  ok chrome-hover-hero--steel-print.png
+  ok chrome-hover-hero--steel-realprint.png
+  ok chrome-skills-menu--steel-dark.png
+  ok chrome-skills-menu--steel-light.png
+  ok chrome-skills-menu--steel-print.png
+  ok chrome-skills-menu--steel-realprint.png
+  ok chrome-initiative-menu--steel-dark.png
+  ok chrome-initiative-menu--steel-light.png
+  ok chrome-initiative-menu--steel-print.png
+  ok chrome-initiative-menu--steel-realprint.png
+  ok chrome-stacked-hover--steel-dark.png
+  ok chrome-stacked-hover--steel-light.png
+  ok chrome-stacked-hover--steel-print.png
+  ok chrome-stacked-hover--steel-realprint.png
+  ok chrome-collapsed-trio--steel-dark.png
+  ok chrome-collapsed-trio--steel-light.png
+  ok chrome-collapsed-trio--steel-print.png
+  ok chrome-collapsed-trio--steel-realprint.png
+  ok chrome-mobile--steel-dark.png
+  ok chrome-mobile--steel-light.png
+  ok chrome-mobile--steel-print.png
+  ok chrome-mobile--steel-realprint.png
+  ok chrome-placement-trio--steel-dark.png
+  ok chrome-placement-trio--steel-light.png
+  ok chrome-placement-trio--steel-print.png
+  ok chrome-placement-trio--steel-realprint.png
+  ok chrome-border-winded--steel-dark.png
+  ok chrome-border-winded--steel-light.png
+  ok chrome-border-winded--steel-print.png
+  ok chrome-border-winded--steel-realprint.png
+  ok chrome-border-dying--steel-dark.png
+  ok chrome-border-dying--steel-light.png
+  ok chrome-border-dying--steel-print.png
+  ok chrome-border-dying--steel-realprint.png
+  ok chrome-legacy-keys--steel-dark.png
+  ok chrome-legacy-keys--steel-light.png
+  ok chrome-legacy-keys--steel-print.png
+  ok chrome-legacy-keys--steel-realprint.png
+  ok chrome-hover-card--steel-dark.png
+  ok chrome-hover-card--steel-light.png
+  ok chrome-hover-card--steel-print.png
+  ok chrome-hover-card--steel-realprint.png
+  ok chrome-collapsed-rollout--steel-dark.png
+  ok chrome-collapsed-rollout--steel-light.png
+  ok chrome-collapsed-rollout--steel-print.png
+  ok chrome-collapsed-rollout--steel-realprint.png
+  ok gallery--steel-dark.png
+  ok gallery--steel-light.png
+
+chrome placement OK (7 element families: inset 10.00px from the card's right edge, 0 border overlap)
+
+turn mark parity OK (hero vs enemy-group mark: 20 comparisons across dark/light x portraits-on/off x not-acted/acted on the computed cascade; no kit button paint inside any socket)
+
+portrait mark parity OK (clicked-in-place vs rendered, both directions, plus acted with data-pressed stripped: 6 comparisons across dark/light x not-acted->acted/acted->not-acted/CSS-half-alone on the computed cascade, 5 paint properties each)
+
+pressed toggle parity OK (toggled vs rendered, both directions: 96 comparisons across 8 sites x dark/light x rest/hover/focus-visible on the computed cascade, 9 paint properties each)
+
+pipette selected look OK (a custom colour fills the pipette, hides its glyph and draws the check; the kit ring shows on keyboard focus: idle/picked/focused x dark/light on the computed cascade)
+
+title line stable OK (heading height, heading top and Heroes line top identical at rest / editing / committed: 52 comparisons over 13 cases x dark/light, 8 of them wrapped to 2+ lines; the "Untitled encounter" prompt measures the label size)
+
+montage track widths OK (success 413.13px === failure 413.13px, montage:mid, 6/3 limits)
+
+montage quick-trio containment OK (6 configurations: 560/700/900px panes + 4/5/8-round track lists, mid fixture, pointer: coarse — every .dse-mt__cell-quick box AND its .dse-mt__quick buttons' union stay inside their own .dse-mt__cell; the width series also confirms elementFromPoint 6px inside a recorded cell's right edge, on-screen in this gate's 2400px viewport, always returns that cell)
+
+montage board scroll OK (14 rounds x 900px pane, genuine probe-rounds-14 source — fine: 1359px grid in a 690px frame, 96 cells reachable, 85 Tab stops all fully visible; coarse: 2255px grid in a 690px frame, 96 cells reachable, 85 Tab stops all fully visible; overflow-x auto, real wheel reaches the far end, every board child scrolls fully inside the frame, its centre hit-tests to itself and its content stays inside it, fine AND coarse pointer)
+
+chrome host-leak OK (18 family/scheme combos: chrome buttons carry no host box-shadow, the panel's box is unchanged by Obsidian's `button` rule, and the card's top border is continuous under the panel AND around the top-right arc beside it)
+
+host-copy pin OK (6 button-reaching rules + 14 tokens × dark/light + the styles-source.css listing: the host model is verbatim Obsidian 1.15.0; 18 further rules whose subject is a plain button were excluded by documented ancestor scope, 0 unclassifiable — see EXCLUDED_ANCESTOR_SCOPES)
+
+SC-127 light island OK (1096 Obsidian tokens checked, 295 differ dark vs light in the pinned sheet, all 295 restated and correct at the default accent AND under a non-default accent — 0 skipped, no reachability filter)
+
+button host-leak OK (157 button kinds × 3 states (rest/hover/focus-visible) × dark/light = 942 comparisons: every sampled property is identical with and without Obsidian's `button` rules; user-select and -webkit-app-region are excluded by design)
+  34 of those (kind,state) records sampled the node at rest because the mounted DOM cannot put it into that state — each one proved per record, never assumed, and the authoring chrome is MOUNTED for the sweep so this is no longer a claim about controls the product merely had not revealed:
+      32× focus-visible: disabled
+          featureblock|dse-btn.dse-btn--ghost.dse-rollbar__reset|disabled ×2
+          featureblock|dse-btn.dse-btn--icon.dse-stepper__btn|disabled ×2
+          feature|dse-btn.dse-btn--ghost.dse-rollbar__reset|disabled ×2
+          feature|dse-btn.dse-btn--icon.dse-stepper__btn|disabled ×2
+          hero|dse-btn.dse-btn--ghost.dse-rollbar__reset|disabled ×2
+          hero|dse-btn.dse-btn--icon.dse-stepper__btn|disabled ×2
+          hero|dse-btn|disabled ×2
+          montage|dse-btn.dse-btn--accent|disabled ×2
+          montage|dse-btn.dse-btn--icon.dse-mt__board-rowact|disabled ×2
+          montage|dse-btn|disabled ×2
+          negotiation|dse-btn|disabled ×2
+          party|dse-btn.dse-btn--icon.dse-stepper__btn|disabled ×2
+          roll|dse-btn.dse-btn--ghost.dse-rollbar__reset|disabled ×2
+          roll|dse-btn.dse-btn--icon.dse-stepper__btn|disabled ×2
+          statblock|dse-btn.dse-btn--ghost.dse-rollbar__reset|disabled ×2
+          statblock|dse-btn.dse-btn--icon.dse-stepper__btn|disabled ×2
+      2× hover: no point in its box hit-tests to it (clipped by an ancestor overflow, or covered)
+          initiative|dse-btn.dse-init__stamina ×2
+
+modal button host-leak OK (10 modal scenarios over 9 modal classes, 38 button kinds × 3 states (rest/hover/focus-visible) × dark/light = 228 comparisons: every sampled property is identical with and without Obsidian's `button` rules; user-select and -webkit-app-region are excluded by design)
+  not openable in the harness (3, no <button> of their own beyond the swept kit footers): CompendiumSearchModal, LegacyCompendiumModal, CompendiumMigrationModal
+  6 of those (kind,state) records sampled the node at rest because the mounted DOM cannot put it into that state — each one proved per record, never assumed:
+      6× focus-visible: disabled
+          modal:(none)|dse-btn.dse-btn--accent|disabled @MinionStaminaPoolModal ×2
+          modal:(none)|dse-btn.dse-btn--accent|disabled @MontageAddHeroModal ×2
+          modal:(none)|dse-btn.dse-btn--accent|disabled @StaminaEditModal ×2
+
+input host-leak OK (15 input kinds × 6 states (rest/hover/disabled/focus-visible/placeholder/spinner) × dark/light = 176 comparisons against the real Obsidian app.css: every sampled property is identical with and without it; -webkit-app-region and unicode-bidi and fontFamily are excluded by design)
+
+table host-leak OK (4 table kinds × dark/light = 278 comparisons against the real Obsidian app.css under a real .markdown-preview-view.markdown-rendered ancestor: every sampled table/row/cell property is identical with and without it; fontFamily excluded by design; 170 cells' box-sizing/overflow-wrap ABSOLUTE-asserted border-box/break-word — SC-202 r6b fix round LOW-1, accepted Obsidian truth pinned, not compared)
+
+list host-leak OK (8 ul/ol [24] + 70 li box [156] + 70 li::marker [156] + 2 blockquote box [4] + 4 blockquote-child-margin (first+last) [8] + 1 hr [2] + 1 li>p synthetic probe [2] × dark/light = 352 comparisons against the real Obsidian app.css under a real .markdown-preview-view.markdown-rendered ancestor: every sampled ul/ol/li/li::marker/blockquote/blockquote-child/hr property is identical with and without it, and the li>p fix genuinely fires on a synthetic loose-list-item node; li.task-list-item's own three declarations (list-style/data-task decorations) are deliberately NOT covered here — checkbox round)
+
+inline host-leak OK (0h1+2h2+12h3+5h4+0h5+2h6+35strong+11em+13b+5i+155a rest [490] + 2 external-link icon [2] + 2 external-link ::after glyph (SC-317, FIX ROUND 1) [2] + 2 external-link ::after glyph under :hover (SC-317 LOW-1) [2] + 2 external-link ::after glyph under :focus-visible (SC-317 FIX ROUND 2, N2) [2] + a:hover [314] + a:focus-visible [314] + 4 synthetic (h1/h5/mark/code) [8] × dark/light = 1134 comparisons against the real Obsidian app.css under a real .markdown-preview-view.markdown-rendered ancestor: every sampled heading/strong/em/b/i/mark/code/link property is identical with and without it, rest AND :hover/:focus-visible for links; del is deliberately NOT covered — Obsidian's rendered-markdown rules do not reach it at all (checked, not assumed); heading fontFamily excluded by design)
+
+link token-override probe OK (157 links [1 .internal-link + 1 .external-link + 155 generic] × 7 properties = 1099 samples: 0 diffs under absurd body-scoped --link-* tokens — the .internal-link companion wins structurally, not by matching Obsidian's default token values)
+
+checkbox host-leak OK (7 plugin-authored checkbox kinds × 7 states [98] + 1 synthetic task-list checkbox × 7 states [14] + 2 synthetic task-list <li> decoration [4] × dark/light = 116 comparisons against the real Obsidian app.css under a real .markdown-preview-view.markdown-rendered ancestor: every sampled property is identical with and without it)
+
+prose host-leak OK (106 bare <p> [212] + 9 <img> [18] + 7 root-inherited properties (caret-color + the SC-202 r6c fold's six) [476] × dark/light against the real Obsidian app.css under a real .markdown-preview-view.markdown-rendered ancestor: every sampled property is identical with and without it; unicode-bidi and -webkit-touch-callout excluded by design)
+
+modal text-scale anchoring OK (.dse-modal__body scales exactly x1.4 at textScale 1.4, with AND without an intervening .modal-content-style absolute font-size reset — no compounding)
+
+text scale OK (1626 comparisons: small/large/control at 80% and 120% on an element root, in a real DseModal, on 5 chrome surfaces (search modal rows + empty-index hint, settings preview caption, sidebar header + empty message) and in both print surfaces; a knob scales its own tokens exactly and moves no other knob's; control text does not move on paper; the "Untitled encounter" prompt stays on the label size)
+
+text scale once OK (107256 comparisons over 214 loads: every visible element in every stamped root scales by exactly 1 or exactly 1.2 per knob, on screen and the print twin, control never on paper, 5 chrome surfaces included; 76s)
+
+print-twin delta self-test OK (the reviewer's can-fail pair: a synthetic backgroundColor-only divergence on a non-control node is caught; a synthetic color-only divergence outside an element root is correctly excused, and the SAME divergence inside an element root is correctly flagged — SC-127 r3)
+
+print-twin paper-exemption self-test OK (a synthetic root white-vs-transparent background is excused; a synthetic root NON-white background is flagged; a synthetic DESCENDANT'S white-vs-transparent background is flagged — SC-127 r3)
+
+print-twin delta OK (144 capture ids: same DOM, no horizontal/size drift, max vertical drift 2.00px (< 24px), every differing computed-style property is one of the pinned sheet's own @media print properties: backgroundImage, color, fontFamily, webkitPrintColorAdjust)
+
+nested corner-radius OK (no child sits flush in a rounded, bordered parent with a radius other than the parent's own inner radius)
+
+all shots written to /home/scott/code/steelCompendium/worktrees/sc525-ref-nesting-retype/draw-steel-elements/visual-harness/shots
+npm rc=0

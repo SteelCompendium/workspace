@@ -1,0 +1,5 @@
+failure: [CHR-F02] Enter on Expand (reached by keyboard) expands the block and focus lands on the restored Collapse button (ring shown, panel shown)
+
+Error: element ("[data-dse-control="chrome.collapse"]") still not displayed after 8000ms
+    at async Object.click (/home/scott/code/steelCompendium/worktrees/sc525-ref-nesting-retype/draw-steel-elements/e2e/driver/dse.ts:321:2)
+    at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc525-ref-nesting-retype/draw-steel-elements/e2e/specs/stamina-bar/chrome-focus.e2e.ts:69:3)

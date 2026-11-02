@@ -1,0 +1,127 @@
+FAIL dom test/dom/authoring/formModalStalePreview.test.ts
+  ● SC-525: retyping the same @Ref.md in the feature edit form while its lookup is pending › a trailing space (the same trimmed reference): no nesting error while both lookups are held, and the card once they finish (first lookup last)
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /nesting too deep/i
+    Received string:      "Feature: failed to render (render)Reference nesting too deep — `@Ref.md` is already resolving in this block (spec §9 depth guard)."
+
+      351 | /** A preview that never shows the depth guard's refusal, nor any other error card. */
+      352 | function expectNoNestingError(preview: HTMLElement): void {
+    > 353 | 	expect(preview.textContent).not.toMatch(NESTING);
+          | 	                                ^
+      354 | 	expect(preview.querySelector('.dse-error-card')).toBeNull();
+      355 | }
+      356 |
+
+      at expectNoNestingError (test/dom/authoring/formModalStalePreview.test.ts:353:34)
+      at Object.<anonymous> (test/dom/authoring/formModalStalePreview.test.ts:371:3)
+
+  ● SC-525: retyping the same @Ref.md in the feature edit form while its lookup is pending › the superseded lookup finishes first, then the current one: still the card, never the nesting error
+
+    TypeError: Cannot read properties of undefined (reading 'release')
+
+      79 | 		/** Let one held lookup go, then give its mount time to finish. */
+      80 | 		async release(index: number): Promise<void> {
+    > 81 | 			held[index].release();
+         | 			            ^
+      82 | 			await settle();
+      83 | 		},
+      84 | 		async releaseAll(order: number[] = held.map((_h, i) => i)): Promise<void> {
+
+      at Object.release (test/dom/authoring/formModalStalePreview.test.ts:81:16)
+      at Object.<anonymous> (test/dom/authoring/formModalStalePreview.test.ts:383:14)
+
+  ● SC-525: retyping the same @Ref.md in the feature edit form while its lookup is pending › several keys that all leave the reference unchanged, lookups released in typing order: the card
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /nesting too deep/i
+    Received string:      "Feature: failed to render (render)Reference nesting too deep — `@Ref.md` is already resolving in this block (spec §9 depth guard)."
+
+      351 | /** A preview that never shows the depth guard's refusal, nor any other error card. */
+      352 | function expectNoNestingError(preview: HTMLElement): void {
+    > 353 | 	expect(preview.textContent).not.toMatch(NESTING);
+          | 	                                ^
+      354 | 	expect(preview.querySelector('.dse-error-card')).toBeNull();
+      355 | }
+      356 |
+
+      at expectNoNestingError (test/dom/authoring/formModalStalePreview.test.ts:353:34)
+      at Object.<anonymous> (test/dom/authoring/formModalStalePreview.test.ts:395:3)
+
+  ● SC-525: retyping the same @Ref.md in the statblock edit form while its lookup is pending › a trailing space (the same trimmed reference): no nesting error while both lookups are held, and the card once they finish (first lookup last)
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /nesting too deep/i
+    Received string:      "Statblock: failed to render (render)Reference nesting too deep — `@Ref.md` is already resolving in this block (spec §9 depth guard)."
+
+      351 | /** A preview that never shows the depth guard's refusal, nor any other error card. */
+      352 | function expectNoNestingError(preview: HTMLElement): void {
+    > 353 | 	expect(preview.textContent).not.toMatch(NESTING);
+          | 	                                ^
+      354 | 	expect(preview.querySelector('.dse-error-card')).toBeNull();
+      355 | }
+      356 |
+
+      at expectNoNestingError (test/dom/authoring/formModalStalePreview.test.ts:353:34)
+      at Object.<anonymous> (test/dom/authoring/formModalStalePreview.test.ts:371:3)
+
+  ● SC-525: retyping the same @Ref.md in the statblock edit form while its lookup is pending › the superseded lookup finishes first, then the current one: still the card, never the nesting error
+
+    TypeError: Cannot read properties of undefined (reading 'release')
+
+      79 | 		/** Let one held lookup go, then give its mount time to finish. */
+      80 | 		async release(index: number): Promise<void> {
+    > 81 | 			held[index].release();
+         | 			            ^
+      82 | 			await settle();
+      83 | 		},
+      84 | 		async releaseAll(order: number[] = held.map((_h, i) => i)): Promise<void> {
+
+      at Object.release (test/dom/authoring/formModalStalePreview.test.ts:81:16)
+      at Object.<anonymous> (test/dom/authoring/formModalStalePreview.test.ts:383:14)
+
+  ● SC-525: retyping the same @Ref.md in the statblock edit form while its lookup is pending › several keys that all leave the reference unchanged, lookups released in typing order: the card
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /nesting too deep/i
+    Received string:      "Statblock: failed to render (render)Reference nesting too deep — `@Ref.md` is already resolving in this block (spec §9 depth guard)."
+
+      351 | /** A preview that never shows the depth guard's refusal, nor any other error card. */
+      352 | function expectNoNestingError(preview: HTMLElement): void {
+    > 353 | 	expect(preview.textContent).not.toMatch(NESTING);
+          | 	                                ^
+      354 | 	expect(preview.querySelector('.dse-error-card')).toBeNull();
+      355 | }
+      356 |
+
+      at expectNoNestingError (test/dom/authoring/formModalStalePreview.test.ts:353:34)
+      at Object.<anonymous> (test/dom/authoring/formModalStalePreview.test.ts:395:3)
+
+  ● SC-525: retyping the same ds-scc code in the edit form while its entity read is pending › a trailing space: no nesting error while held, the card after the reads finish
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /nesting too deep/i
+    Received string:      "Reference nesting too deep — `mcdm.heroes.v1/kit/panther` is already resolving in this block (spec §9 depth guard)."
+
+      351 | /** A preview that never shows the depth guard's refusal, nor any other error card. */
+      352 | function expectNoNestingError(preview: HTMLElement): void {
+    > 353 | 	expect(preview.textContent).not.toMatch(NESTING);
+          | 	                                ^
+      354 | 	expect(preview.querySelector('.dse-error-card')).toBeNull();
+      355 | }
+      356 |
+
+      at expectNoNestingError (test/dom/authoring/formModalStalePreview.test.ts:353:34)
+      at Object.<anonymous> (test/dom/authoring/formModalStalePreview.test.ts:416:3)
+
+Test Suites: 1 failed, 1 total
+Tests:       7 failed, 21 passed, 28 total
+Snapshots:   0 total
+Time:        4.547 s, estimated 7 s
+Ran all test suites matching test/dom/authoring/formModalStalePreview.test.ts.
+jest rc=1

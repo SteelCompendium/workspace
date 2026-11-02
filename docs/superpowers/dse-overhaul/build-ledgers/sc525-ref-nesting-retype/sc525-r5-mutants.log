@@ -1,0 +1,65 @@
+HEAD 34f46cf8f771581af17d0cc19e6d52d230597eb5 (+ uncommitted test changes: 0 files)
+220:			if (gen !== this.resolveGen) return; // superseded by a later resolution of this view
+243:			if (gen !== this.resolveGen) return;
+256:			if (gen !== this.resolveGen) return;
+304:			if (gen !== this.resolveGen) return; // superseded by a later resolution of this view
+308:		if (gen !== this.resolveGen) return;
+310:		if (gen !== this.resolveGen) return;
+=== MUTANT M9-0 (applied rc: 0)  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       1 failed, 72 passed, 73 total
+  ● RefUnwrapView — in-flight depth guard (SC-525) › each await window of a resolution is guarded on its own › SCC: the stale entity read returns null after the view was updated: one card, no 
+=== MUTANT M9-1 (applied rc: 0)  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       73 passed, 73 total
+=== MUTANT M9-2 (applied rc: 0)  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       1 failed, 72 passed, 73 total
+  ● RefUnwrapView — in-flight depth guard (SC-525) › each await window of a resolution is guarded on its own › SCC: the view is updated while entity.body() is being read: one card
+=== MUTANT M9-3 (applied rc: 0)  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       1 failed, 72 passed, 73 total
+  ● RefUnwrapView — in-flight depth guard (SC-525) › each await window of a resolution is guarded on its own › legacy: a stale lookup that REJECTS after the view was updated to an inline body:
+=== MUTANT M9-4 (applied rc: 0)  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       73 passed, 73 total
+=== MUTANT M9-5 (applied rc: 0)  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       1 failed, 72 passed, 73 total
+  ● RefUnwrapView — in-flight depth guard (SC-525) › each await window of a resolution is guarded on its own › legacy: the view is updated while the referenced file's block text is being read:
+=== MUTANT M4 (applied rc: 0)  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       10 failed, 63 passed, 73 total
+  ● RefUnwrapView — in-flight depth guard (SC-525) › an SCC code, view updated while its entity read is running (the earlier entity read finishes first): one card, nothing left behind
+  ● RefUnwrapView — in-flight depth guard (SC-525) › an SCC code, view updated while its entity read is running (the later entity read finishes first): one card, nothing left behind
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the earlier lookup finishes first) › a superseded resolution leaves no entry behind: a fres
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the earlier lookup finishes first) › same reference: one card, no nesting error, no orphan 
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the later lookup finishes first) › a superseded resolution leaves no entry behind: a fresh 
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the later lookup finishes first) › same reference: one card, no nesting error, no orphan ch
+  ● RefUnwrapView — in-flight depth guard (SC-525) › each await window of a resolution is guarded on its own › legacy: the view is updated while the referenced file's block text is being read:
+  ● RefUnwrapView — in-flight depth guard (SC-525) › each await window of a resolution is guarded on its own › SCC: the stale entity read returns null after the view was updated: one card, no 
+  ● RefUnwrapView — in-flight depth guard (SC-525) › each await window of a resolution is guarded on its own › SCC: the view is updated while entity.body() is being read: one card
+  ● RefUnwrapView — in-flight depth guard (SC-525) › the earlier resolution of an updated view settling leaves the later one's entry: another live view is still refused
+=== MUTANT M6 (applied rc: 0)  1 file changed, 6 insertions(+), 6 deletions(-)
+Tests:       15 failed, 58 passed, 73 total
+  ● RefUnwrapView — in-flight depth guard (SC-525) › an SCC code, view updated while its entity read is running (the earlier entity read finishes first): one card, nothing left behind
+  ● RefUnwrapView — in-flight depth guard (SC-525) › an SCC code, view updated while its entity read is running (the later entity read finishes first): one card, nothing left behind
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated from a pending reference to: inline body › the stale lookup is released after the update has drawn: only the new content, no
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated from a pending reference to: inline body › the stale lookup is released while the update is still settling: only the new con
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated from a pending reference to: refused body › the stale lookup is released after the update has drawn: only the new content, n
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated from a pending reference to: refused body › the stale lookup is released while the update is still settling: only the new co
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the earlier lookup finishes first) › a different reference (A then B): only B is drawn, not
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the earlier lookup finishes first) › same reference: one card, no nesting error, no orphan 
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the later lookup finishes first) › a different reference (A then B): only B is drawn, nothi
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated while its own lookup is running (the later lookup finishes first) › same reference: one card, no nesting error, no orphan ch
+  ● RefUnwrapView — in-flight depth guard (SC-525) › each await window of a resolution is guarded on its own › legacy: a stale lookup that REJECTS after the view was updated to an inline body:
+  ● RefUnwrapView — in-flight depth guard (SC-525) › each await window of a resolution is guarded on its own › legacy: the view is updated while the referenced file's block text is being read:
+  ● RefUnwrapView — in-flight depth guard (SC-525) › each await window of a resolution is guarded on its own › SCC: the stale entity read returns null after the view was updated: one card, no 
+  ● RefUnwrapView — in-flight depth guard (SC-525) › each await window of a resolution is guarded on its own › SCC: the view is updated while entity.body() is being read: one card
+  ● RefUnwrapView — in-flight depth guard (SC-525) › the earlier resolution of an updated view settling leaves the later one's entry: another live view is still refused
+=== MUTANT M7 (applied rc: 0)  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       1 failed, 72 passed, 73 total
+  ● RefUnwrapView — in-flight depth guard (SC-525) › the earlier resolution of an updated view settling leaves the later one's entry: another live view is still refused
+=== MUTANT M8 (applied rc: 0)  1 file changed, 1 deletion(-)
+Tests:       5 failed, 68 passed, 73 total
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated from a pending reference to: inline body › the stale lookup is released after the update has drawn: only the new content, no
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated from a pending reference to: inline body › the stale lookup is released while the update is still settling: only the new con
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated from a pending reference to: refused body › the stale lookup is released after the update has drawn: only the new content, n
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated from a pending reference to: refused body › the stale lookup is released while the update is still settling: only the new co
+  ● RefUnwrapView — in-flight depth guard (SC-525) › each await window of a resolution is guarded on its own › legacy: a stale lookup that REJECTS after the view was updated to an inline body:
+=== MUTANT M10 (applied rc: 0)  1 file changed, 1 insertion(+), 1 deletion(-)
+Tests:       73 passed, 73 total
+=== src restored: 0 changed src files

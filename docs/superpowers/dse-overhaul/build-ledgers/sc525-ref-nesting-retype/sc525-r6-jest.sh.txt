@@ -1,0 +1,10 @@
+#!/bin/bash
+P=/home/scott/code/steelCompendium/worktrees/sc525-ref-nesting-retype/draw-steel-elements
+D=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc525-ref-nesting-retype
+cd "$P" || exit 9
+echo "HEAD $(git rev-parse HEAD)" > $D/sc525-r6-jest-full.log
+echo "SRC_DIFF_LINES $(git diff b1d5fa9..HEAD -- src | wc -l)" >> $D/sc525-r6-jest-full.log
+rm -f main.js styles.css
+npx jest >> $D/sc525-r6-jest-full.log 2>&1
+echo "JEST_RC=$?" >> $D/sc525-r6-jest-full.log
+exit 0

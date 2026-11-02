@@ -1,0 +1,30 @@
+#!/bin/bash
+# Build head + base bundles and assemble the scratch probe harness (untracked; deleted by literal path in obs-run.sh).
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc525-r2-review
+P=/home/scott/code/steelCompendium/worktrees/sc525-ref-nesting-retype/draw-steel-elements
+LED=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc525-ref-nesting-retype
+cd "$P" || exit 9
+mkdir -p "$S/bundle-head" "$S/bundle-base"
+npm run build-no-check > "$S/bundle-head.build.log" 2>&1 || { echo "head build failed"; exit 1; }
+cp main.js styles.css manifest.json "$S/bundle-head/"
+git checkout 4deb8cf -- src/elements/shared/RefUnwrapView.ts src/framework/view.ts
+npm run build-no-check > "$S/bundle-base.build.log" 2>&1
+brc=$?
+cp main.js styles.css manifest.json "$S/bundle-base/"
+git checkout HEAD -- src/elements/shared/RefUnwrapView.ts src/framework/view.ts
+echo "base build rc=$brc"
+echo "isUnloaded: head $(grep -c 'isUnloaded' "$S/bundle-head/main.js") base $(grep -c 'isUnloaded' "$S/bundle-base/main.js")"
+python3 - <<PY
+src = open('$P/visual-harness/obsidian-lifecycle.mjs').read()
+kit = open('$LED/sc525-r1-obsidian-probe-kit.js.txt').read()
+kit = kit.replace("const SC525_OUT = '/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc525-ref-nesting-retype';", "const SC525_OUT = '$S';")
+kit += "\nObject.assign(FIXTURES, { 'Lifecycle/sc525-refcard.md': '# sc525 refcard\\\\n\\\\nAbove.\\\\n\\\\n' + fence('ds-feature', ['@Ref.md']) + '\\\\n\\\\nAfter.\\\\n' });\n"
+scn = open('$S/obs-scenario.js.txt').read()
+marker = 'const SCENARIOS = [\n'
+assert src.count(marker) == 1
+open('$P/visual-harness/zz-sc525-r2-probe.mjs', 'w').write(src.replace(marker, kit + '\n' + marker + scn))
+print('assembled')
+PY
+grep -n "sc525-refcard" "$P/visual-harness/zz-sc525-r2-probe.mjs" | head -3
+git status --porcelain
+exit 0

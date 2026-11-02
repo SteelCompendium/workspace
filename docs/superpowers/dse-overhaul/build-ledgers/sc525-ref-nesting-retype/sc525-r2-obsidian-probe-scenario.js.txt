@@ -1,0 +1,85 @@
+	// ===================== SC-525 r2 REVIEW real-Obsidian probe (throwaway scratch copy of the harness; never committed) =====================
+	// Reading view, outside the form. Lookups held at a hook on services.refs.resolve (no timers).
+	// A: two rerenders of the same pane while the first's lookup is held (old view released, new view same blockKey).
+	// B: the same note opened in a second pane (lookup held), then pane 1 rerenders (two LIVE copies, same blockKey).
+	// C: natural timing, no hold: open a split of the note and rerender pane 1 in the same tick, 5 times.
+	// D: natural timing: two panes of the note, plugin disable + enable.
+	{
+		id: 'SC525-R2',
+		async run(t) {
+			const P = sc525Kit(t);
+			const out = { tag: P.tag() };
+			await P.install();
+			const m = await t.mark();
+			const rel = 'Lifecycle/sc525-refcard.md';
+			await t.open(rel);
+			await t.ev(`(() => { window.__r2p1 = app.workspace.getMostRecentLeaf(); return true; })()`);
+			const ROOT = (leaf) => `(Array.from(${t.readingScope(leaf)}.querySelectorAll('[data-dse-element="feature"]')).filter((x) => x.isConnected && !x.parentElement.closest('[data-dse-element]'))[0])`;
+			const TEXT = (leaf) => `((${ROOT(leaf)})?.textContent ?? '')`;
+			const st = async (leaf) => {
+				const s = await t.ev(`(() => { const r = ${ROOT(leaf)}; const tx = r ? r.textContent : null; return { present: !!r, card: !!tx && /Ref Strike/.test(tx), nesting: !!tx && /nesting too deep/.test(tx), cards: r ? (tx.match(/Ref Strike/g) || []).length : 0, text: tx ? tx.slice(0, 90) : null }; })()`);
+				return s;
+			};
+			await t.waitFor(`/Ref Strike/.test(${TEXT('window.__r2p1')})`, 'pane 1 card');
+			await P.settle();
+			out.initial = await st('window.__r2p1');
+
+			// ---- A
+			await P.hold(true);
+			await t.ev(`(() => { window.__r2p1.view.previewMode.rerender(true); return true; })()`);
+			await t.waitFor(`window.__p525.held.length >= 1`, 'A: first rerender lookup held');
+			await t.ev(`(() => { window.__r2p1.view.previewMode.rerender(true); return true; })()`);
+			await t.waitFor(`window.__p525.held.length >= 2 || /nesting too deep/.test(${TEXT('window.__r2p1')})`, 'A: second rerender held or refused');
+			const aHeld = await t.ev(`window.__p525.held.length`);
+			const aWhile = await st('window.__r2p1');
+			await P.hold(false);
+			await P.releaseAll(false);
+			await P.settle();
+			out.A = { held: aHeld, whileHeld: aWhile, after: await st('window.__r2p1') };
+
+			// ---- B
+			await P.hold(true);
+			await t.ev(`(async () => { const leaf = app.workspace.getLeaf('split', 'vertical'); window.__r2p2 = leaf; await leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'preview' }, active: true }); return true; })()`);
+			await t.waitFor(`window.__p525.held.length >= 1`, 'B: pane 2 lookup held');
+			await t.ev(`(() => { window.__r2p1.view.previewMode.rerender(true); return true; })()`);
+			await t.waitFor(`window.__p525.held.length >= 2 || /nesting too deep/.test(${TEXT('window.__r2p1')})`, 'B: pane 1 rerender held or refused');
+			const bHeld = await t.ev(`window.__p525.held.length`);
+			const bWhile = { p1: await st('window.__r2p1'), p2: await st('window.__r2p2') };
+			await P.hold(false);
+			await P.releaseAll(false);
+			await P.settle();
+			out.B = { held: bHeld, whileHeld: bWhile, after: { p1: await st('window.__r2p1'), p2: await st('window.__r2p2') } };
+			await t.ev(`(() => { window.__r2p2.detach(); return true; })()`);
+			await P.settle();
+
+			// ---- C (natural timing)
+			out.C = [];
+			for (let i = 0; i < 5; i++) {
+				await t.ev(`(async () => { const leaf = app.workspace.getLeaf('split', 'vertical'); window.__r2p2 = leaf; const p = leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'preview' }, active: false }); window.__r2p1.view.previewMode.rerender(true); await p; return true; })()`);
+				await t.waitFor(`!!${ROOT('window.__r2p2')} && !!${ROOT('window.__r2p1')}`, 'C: both panes drawn');
+				await P.settle();
+				await t.waitFor(`(/Ref Strike|nesting too deep|failed/.test(${TEXT('window.__r2p1')})) && (/Ref Strike|nesting too deep|failed/.test(${TEXT('window.__r2p2')}))`, 'C: both panes settled');
+				out.C.push({ p1: await st('window.__r2p1'), p2: await st('window.__r2p2'), lookups: await t.ev(`window.__p525.calls.length`) });
+				await t.ev(`(() => { window.__r2p2.detach(); return true; })()`);
+				await P.settle();
+			}
+
+			// ---- D (natural timing: two panes, plugin disable + enable)
+			await t.ev(`(async () => { const leaf = app.workspace.getLeaf('split', 'vertical'); window.__r2p2 = leaf; await leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'preview' }, active: false }); return true; })()`);
+			await t.waitFor(`/Ref Strike/.test(${TEXT('window.__r2p2')})`, 'D: pane 2 card');
+			out.D = [];
+			for (let i = 0; i < 3; i++) {
+				await t.ev(`(async () => { await app.plugins.disablePlugin('draw-steel-elements'); await app.plugins.enablePlugin('draw-steel-elements'); return true; })()`);
+				await t.waitFor(`(/Ref Strike|nesting too deep|failed/.test(${TEXT('window.__r2p1')})) && (/Ref Strike|nesting too deep|failed/.test(${TEXT('window.__r2p2')}))`, 'D: both panes drawn after enable');
+				await t.waitFor(`window.__p525.pendingReads === 0`, 'D: reads settled');
+				await t.ev(`new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => r(true))))`);
+				out.D.push({ p1: await st('window.__r2p1'), p2: await st('window.__r2p2') });
+			}
+			await t.ev(`(() => { window.__r2p2.detach(); return true; })()`);
+			out.errors = await t.errorsSince(m);
+			console.log('SC525-R2-JSON ' + JSON.stringify(out));
+			const nC = out.C.filter((x) => x.p1.nesting || x.p2.nesting).length;
+			const nD = out.D.filter((x) => x.p1.nesting || x.p2.nesting).length;
+			return `${out.tag}: A held=${out.A.held} nestingWhile=${out.A.whileHeld.nesting} after card=${out.A.after.card} nesting=${out.A.after.nesting} cards=${out.A.after.cards}; B held=${out.B.held} after p1 card=${out.B.after.p1.card} nesting=${out.B.after.p1.nesting}, p2 card=${out.B.after.p2.card} nesting=${out.B.after.p2.nesting}; C nesting ${nC}/5; D nesting ${nD}/3; page errors=${out.errors.length}`;
+		},
+	},

@@ -1,0 +1,14 @@
+=== BASE-OF-R3B (b1d5fa9~1 = RED commit source: r3 fix, no onMount bump), r3b tests
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated from a pending reference to: inline body › the stale lookup is released after the update has drawn: only the new content, no card for A
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated from a pending reference to: inline body › the stale lookup is released while the update is still settling: only the new content, no card for A
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated from a pending reference to: refused body › the stale lookup is released after the update has drawn: only the new content, no card for A
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated from a pending reference to: refused body › the stale lookup is released while the update is still settling: only the new content, no card for A
+Tests:       4 failed, 65 passed, 69 total
+=== MUTANT M8-onMount-bump-dropped
+0	1	src/elements/shared/RefUnwrapView.ts
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated from a pending reference to: inline body › the stale lookup is released after the update has drawn: only the new content, no card for A
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated from a pending reference to: inline body › the stale lookup is released while the update is still settling: only the new content, no card for A
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated from a pending reference to: refused body › the stale lookup is released after the update has drawn: only the new content, no card for A
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a view updated from a pending reference to: refused body › the stale lookup is released while the update is still settling: only the new content, no card for A
+Tests:       4 failed, 65 passed, 69 total
+=== restored: 0 changed files

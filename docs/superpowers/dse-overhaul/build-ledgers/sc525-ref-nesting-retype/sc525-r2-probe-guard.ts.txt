@@ -1,0 +1,257 @@
+
+// ===================== SC-525 r2 REVIEW PROBES (scratch; never committed) =====================
+// Observational: each probe writes a JSON line to PROBE_OUT and asserts nothing about the product.
+import * as r2fs from 'fs';
+const PROBE_OUT = process.env.SC525_PROBE_OUT ?? '/dev/null';
+const r2log = (name: string, data: unknown) => r2fs.appendFileSync(PROBE_OUT, JSON.stringify({ probe: name, ...(data as object) }) + '\n');
+
+describe('SC-525 r2 probes — guard harness', () => {
+	interface NestModel {
+		text: string;
+		next?: string;
+		throws?: boolean;
+	}
+	const NESTING = /nesting too deep/i;
+	let probeSeq = 0;
+	function setup() {
+		const table: Record<string, NestModel> = {};
+		const holds: Array<{ raw: string; release: () => void; reject: () => void }> = [];
+		let holding = false;
+		const views: ElementView<any>[] = [];
+		const deps = makeDeps();
+		const pipeline = new ElementPipeline(deps);
+		const host = makeHost();
+		const probeKey = `Probe.md::ds-test-base::${++probeSeq}`;
+		(host as any).blockKey = () => probeKey;
+		class NestView extends ElementView<NestModel> {
+			protected async onMount(root: HTMLElement, model: NestModel): Promise<void> {
+				if (model.throws) throw new Error('base mount threw');
+				root.createDiv({ cls: 'test-base-view', attr: { 'data-test-model': model.text } });
+				if (model.next) await pipeline.run(def, model.next, host);
+			}
+		}
+		const nestBase: ElementDefinition<NestModel> = {
+			id: 'test-base',
+			name: 'Test Base',
+			aliases: ['ds-test-base'],
+			shape: 'static',
+			parse: (data) => data as NestModel,
+			createView: (cx) => new NestView(cx),
+		};
+		const wrapped = withReference(nestBase, { sccType: /statblock$/ });
+		const def: ElementDefinition<any> = {
+			...wrapped,
+			createView: (cx: any) => {
+				const view = wrapped.createView(cx) as ElementView<any>;
+				views.push(view);
+				return view;
+			},
+		};
+		deps.refs.register({
+			kind: 'at-path',
+			canResolve: (raw) => raw in table,
+			resolve: ({ raw }) =>
+				holding
+					? new Promise((resolve, reject) =>
+							holds.push({ raw, release: () => resolve({ data: table[raw] }), reject: () => reject(new Error('lookup rejected')) }),
+						)
+					: Promise.resolve({ data: table[raw] }),
+		});
+		return {
+			table,
+			holds,
+			views,
+			host,
+			run: (ref: string) => pipeline.run(def, ref, host),
+			hold: (on: boolean) => {
+				holding = on;
+			},
+			roots: () => Array.from(host.containerEl.children) as HTMLElement[],
+		};
+	}
+	const tick = async () => {
+		for (let i = 0; i < 8; i++) await new Promise<void>((resolve) => setTimeout(resolve, 0));
+	};
+	const summary = (el: HTMLElement) => ({
+		baseViews: Array.from(el.querySelectorAll('.test-base-view')).map((n) => n.getAttribute('data-test-model')),
+		nesting: Array.from(el.querySelectorAll('.dse-error-card-message')).filter((n) => NESTING.test(n.textContent ?? '')).length,
+		otherErrors: Array.from(el.querySelectorAll('.dse-error-card-message'))
+			.map((n) => n.textContent ?? '')
+			.filter((t) => !NESTING.test(t)),
+	});
+	const owned = (v: ElementView<any>) => (v as any).ownedChildren.length as number;
+	const mountedIsLast = (v: ElementView<any>) => {
+		const o = (v as any).ownedChildren as unknown[];
+		return o.length ? o[o.length - 1] === (v as any).mountedChild : null;
+	};
+
+	for (const order of [
+		[0, 1],
+		[1, 0],
+	]) {
+		test(`R1 re-entrance (same ref) — onUpdate on a live card while its own lookup is held; release ${order.join(',')}`, async () => {
+			const s = setup();
+			s.table['@A'] = { text: 'A' };
+			s.hold(true);
+			const first = s.run('@A');
+			await tick();
+			const v = s.views[0];
+			const model = v.currentModel();
+			const upd = v.update(model);
+			await tick();
+			const whileHeld = { ...summary(s.roots()[0]), holds: s.holds.length };
+			const heldCount = s.holds.length;
+			for (const i of order) {
+				if (i < s.holds.length) s.holds[i].release();
+				await tick();
+			}
+			await Promise.all([first, upd]);
+			const final = { ...summary(s.roots()[0]), ownedChildren: owned(v), mountedChildIsLastOwned: mountedIsLast(v), rootCount: s.roots().length };
+			// a later onUpdate: does it clear everything (leak check for the orphaned child)?
+			s.hold(false);
+			await v.update(model);
+			const afterThirdUpdate = { ...summary(s.roots()[0]), ownedChildren: owned(v) };
+			// leak check on the map: a NEW live view in the same block now resolves (not refused)
+			await s.run('@A');
+			const fresh = summary(s.roots()[s.roots().length - 1]);
+			r2log(`R1-same-ref-release-${order.join('')}`, { heldCount, whileHeld, final, afterThirdUpdate, freshViewAfter: fresh });
+		});
+
+		test(`R2 re-entrance (different ref A -> B) — pre-existing class; release ${order.join(',')}`, async () => {
+			const s = setup();
+			s.table['@A'] = { text: 'A' };
+			s.table['@B'] = { text: 'B' };
+			s.hold(true);
+			const first = s.run('@A');
+			await tick();
+			const v = s.views[0];
+			const upd = v.update({ kind: 'ref', raw: '@B' });
+			await tick();
+			const heldCount = s.holds.length;
+			for (const i of order) {
+				if (i < s.holds.length) s.holds[i].release();
+				await tick();
+			}
+			await Promise.all([first, upd]);
+			r2log(`R2-diff-ref-release-${order.join('')}`, { final: { ...summary(s.roots()[0]), ownedChildren: owned(v) } });
+		});
+
+		test(`R3 re-entrance with a SELF-REFERENCE (A -> A): bounded? release ${order.join(',')}`, async () => {
+			const s = setup();
+			s.table['@A'] = { text: 'A', next: '@A' };
+			s.hold(true);
+			const first = s.run('@A');
+			await tick();
+			const v = s.views[0];
+			const upd = v.update(v.currentModel());
+			await tick();
+			s.hold(false); // nested lookups resolve at once
+			const heldCount = s.holds.length;
+			for (const i of order) {
+				if (i < s.holds.length) s.holds[i].release();
+				await tick();
+			}
+			await Promise.all([first, upd]);
+			r2log(`R3-self-ref-reentrance-release-${order.join('')}`, {
+				roots: s.roots().map(summary),
+				viewsCreated: s.views.length,
+			});
+		});
+	}
+
+	test('R4 cycle A -> B -> A whose live ancestors unload mid-resolution: bounded?', async () => {
+		const s = setup();
+		s.table['@A'] = { text: 'A', next: '@B' };
+		s.table['@B'] = { text: 'B', next: '@A' };
+		s.hold(true);
+		const first = s.run('@A');
+		await tick();
+		s.views[0].load();
+		s.holds[0].release(); // A resolves, mounts base A, whose nested @B lookup is held
+		await tick();
+		s.views[1].load();
+		// the whole tree unloads (note closed / section redrawn) while B's lookup is in flight
+		s.views[1].unload();
+		s.views[0].unload();
+		s.hold(false);
+		s.holds[1]?.release();
+		await tick();
+		await first;
+		r2log('R4-cycle-ancestors-unloaded', { roots: s.roots().map(summary), viewsCreated: s.views.length });
+	});
+
+	test('R4b cycle where EVERY new nested view is loaded and immediately unloaded (adversarial): bounded?', async () => {
+		const s = setup();
+		s.table['@A'] = { text: 'A', next: '@B' };
+		s.table['@B'] = { text: 'B', next: '@A' };
+		// host.addChild loads+unloads every nested view right after the pipeline adds it, before its mount runs
+		(s.host as any).addChild = (child: any) => {
+			if (s.views.length < 40) {
+				child.load();
+				child.unload();
+			}
+			return child;
+		};
+		await s.run('@A');
+		await tick();
+		r2log('R4b-cycle-every-nested-view-unloaded', { rootCount: s.roots().length, viewsCreated: s.views.length, last: summary(s.roots()[s.roots().length - 1]) });
+	});
+
+	test('R5 leaks: unloaded owner that never settles; live owner that never settles; rejected lookup; throwing base mount', async () => {
+		const s = setup();
+		s.table['@A'] = { text: 'A' };
+		s.table['@T'] = { text: 'T', throws: true };
+		s.hold(true);
+		void s.run('@A'); // never released
+		await tick();
+		s.views[0].load();
+		s.views[0].unload();
+		s.hold(false);
+		await s.run('@A');
+		const afterDeadHang = summary(s.roots()[1]);
+		await s.run('@A');
+		const againAfterDeadHang = summary(s.roots()[2]);
+
+		// a LIVE owner that never settles blocks the block forever (pre-existing)
+		const s2 = setup();
+		s2.table['@A'] = { text: 'A' };
+		s2.hold(true);
+		void s2.run('@A');
+		await tick();
+		s2.hold(false);
+		await s2.run('@A');
+		const liveHangSecond = summary(s2.roots()[1]);
+
+		// a rejected lookup clears its entry
+		const s3 = setup();
+		s3.table['@A'] = { text: 'A' };
+		s3.table['@T'] = { text: 'T', throws: true };
+		s3.hold(true);
+		const r = s3.run('@A');
+		await tick();
+		s3.holds[0]?.reject();
+		await r;
+		s3.hold(false);
+		await s3.run('@A');
+		const afterReject = { first: summary(s3.roots()[0]), second: summary(s3.roots()[1]) };
+
+		// a base mount that throws clears its entry
+		await s3.run('@T').catch(() => undefined);
+		await s3.run('@T').catch(() => undefined);
+		const afterThrow = s3.roots().slice(2).map(summary);
+		r2log('R5-leaks', { afterDeadHang, againAfterDeadHang, liveHangSecond, afterReject, afterThrow });
+	});
+
+	test('R6 same blockKey, two LIVE copies (split panes / pane + embed) resolving at once', async () => {
+		const s = setup();
+		s.table['@A'] = { text: 'A' };
+		s.hold(true);
+		const a = s.run('@A');
+		await tick();
+		const b = s.run('@A');
+		await tick();
+		s.holds.forEach((h) => h.release());
+		await Promise.all([a, b]);
+		r2log('R6-two-live-copies', { roots: s.roots().map(summary) });
+	});
+});

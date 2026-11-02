@@ -1,0 +1,123 @@
+
+// ===================== SC-525 r4 REVIEW: one test per resolveGen await window (scratch; never committed) =====================
+describe('SC-525 r4 windows', () => {
+	let seq = 0;
+	const tick = async () => {
+		for (let i = 0; i < 8; i++) await new Promise<void>((resolve) => setTimeout(resolve, 0));
+	};
+	const cards = (root: HTMLElement) => Array.from(root.querySelectorAll('.test-base-view')).map((n) => n.getAttribute('data-test-model'));
+	function capture(def0: ElementDefinition<any>) {
+		const views: ElementView<any>[] = [];
+		const def: ElementDefinition<any> = {
+			...def0,
+			createView: (cx: any) => {
+				const v = def0.createView(cx) as ElementView<any>;
+				views.push(v);
+				return v;
+			},
+		};
+		return { views, def };
+	}
+	function host() {
+		const h = makeHost();
+		const key = `W.md::ds-test-base::${++seq}`;
+		(h as any).blockKey = () => key;
+		return h;
+	}
+	/** SCC ladder with ONE of getEntity/model/body held on its first call. */
+	async function sccWindow(which: 'getEntity-null' | 'model' | 'body') {
+		const { views, def } = capture(withReference(baseDef(), { sccType: /statblock$/ }));
+		const file = fakeTFile('DS Compendium/monster/goblin/statblock/goblin-stinker.md');
+		const held: Array<() => void> = [];
+		let calls = { getEntity: 0, model: 0, body: 0 };
+		const entity: CompendiumEntity = {
+			scc: CODE,
+			type: 'monster.goblin.statblock',
+			name: 'Goblin Stinker',
+			source: 'mcdm.monsters.v1',
+			file,
+			frontmatter: { type: 'monster.goblin.statblock' },
+			body: () => (which === 'body' && calls.body++ === 0 ? new Promise((r) => held.push(() => r('body text'))) : Promise.resolve('body text')),
+			model: () =>
+				which === 'model' && calls.model++ === 0 ? new Promise((r) => held.push(() => r({ text: 'Goblin' }))) : Promise.resolve({ text: 'Goblin' }),
+		};
+		const deps = makeDeps({
+			sccAnchors: fakeSccAnchors(() => ({ kind: 'vault', file, linkpath: file.path })),
+			compendium: fakeCompendium({
+				getEntity: () =>
+					which === 'getEntity-null' && calls.getEntity++ === 0 ? new Promise((r) => held.push(() => r(null))) : Promise.resolve(entity),
+			}),
+		});
+		const h = host();
+		const first = new ElementPipeline(deps).run(def, CODE, h);
+		await tick();
+		expect(held).toHaveLength(1);
+		const updated = views[0].update(views[0].currentModel());
+		await updated;
+		held[0]();
+		await first;
+		await tick();
+		const root = h.containerEl.firstElementChild as HTMLElement;
+		return { cards: cards(root), text: root.textContent ?? '' };
+	}
+
+	test('W1 SCC: view updated while its entity READ returns null for the stale resolution: one card, no stale error', async () => {
+		const r = await sccWindow('getEntity-null');
+		expect(r.cards).toEqual(['Goblin']);
+		expect(r.text).not.toMatch(/not renderable/);
+	});
+	test('W2 SCC: view updated while entity.model() runs: one card', async () => {
+		expect((await sccWindow('model')).cards).toEqual(['Goblin']);
+	});
+	test('W3 SCC: view updated while entity.body() runs: one card', async () => {
+		expect((await sccWindow('body')).cards).toEqual(['Goblin']);
+	});
+
+	function legacy(opts: { holdRead?: boolean; reject?: boolean }) {
+		const { views, def } = capture(withReference(baseDef(), { sccType: /statblock$/ }));
+		const deps = makeDeps();
+		const file = fakeTFile('A.md');
+		const held: Array<{ ok: () => void; fail: () => void }> = [];
+		let resolves = 0;
+		let reads = 0;
+		deps.refs.register({
+			kind: 'at-path',
+			canResolve: (raw) => raw === '@A',
+			resolve: () =>
+				opts.reject && resolves++ === 0
+					? new Promise((_r, rej) => held.push({ ok: () => undefined, fail: () => rej(new Error('stale lookup rejected')) }))
+					: Promise.resolve({ data: { text: 'A' }, file } as any),
+		});
+		(deps.app as any).vault.read = () =>
+			opts.holdRead && reads++ === 0
+				? new Promise((r) => held.push({ ok: () => r('```ds-test-base\ntext: A\n```'), fail: () => undefined }))
+				: Promise.resolve('```ds-test-base\ntext: A\n```');
+		const h = host();
+		return { views, def, deps, h, held };
+	}
+
+	test('W4 legacy: a stale lookup that REJECTS after the view was updated to an inline body: only the inline card, no error', async () => {
+		const s = legacy({ reject: true });
+		const first = new ElementPipeline(s.deps).run(s.def, '@A', s.h);
+		await tick();
+		await s.views[0].update({ kind: 'inline', model: { text: 'Inline Card' } });
+		s.held[0].fail();
+		await first;
+		await tick();
+		const root = s.h.containerEl.firstElementChild as HTMLElement;
+		expect(cards(root)).toEqual(['Inline Card']);
+		expect(root.textContent).not.toMatch(/stale lookup rejected/);
+	});
+
+	test('W5 legacy: view updated while the referenced file is being READ (block text): one card', async () => {
+		const s = legacy({ holdRead: true });
+		const first = new ElementPipeline(s.deps).run(s.def, '@A', s.h);
+		await tick();
+		expect(s.held).toHaveLength(1);
+		await s.views[0].update(s.views[0].currentModel());
+		s.held[0].ok();
+		await first;
+		await tick();
+		expect(cards(s.h.containerEl.firstElementChild as HTMLElement)).toEqual(['A']);
+	});
+});

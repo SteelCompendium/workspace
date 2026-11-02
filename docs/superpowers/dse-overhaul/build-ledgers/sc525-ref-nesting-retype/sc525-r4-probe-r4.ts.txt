@@ -1,0 +1,221 @@
+
+// ===================== SC-525 r4 REVIEW PROBES (scratch; never committed) =====================
+describe('SC-525 r4 probes — guard harness', () => {
+	interface NestModel {
+		text: string;
+		next?: string;
+		gate?: boolean;
+	}
+	const NESTING = /nesting too deep/i;
+	let seq = 0;
+	function setup() {
+		const table: Record<string, NestModel> = {};
+		const holds: Array<{ raw: string; release: () => void; reject: () => void }> = [];
+		const gates: Array<() => void> = [];
+		let holding = false;
+		const views: ElementView<any>[] = [];
+		const deps = makeDeps();
+		const pipeline = new ElementPipeline(deps);
+		const host = makeHost();
+		const key = `R4.md::ds-test-base::${++seq}`;
+		(host as any).blockKey = () => key;
+		class NestView extends ElementView<NestModel> {
+			protected async onMount(root: HTMLElement, model: NestModel): Promise<void> {
+				// `gate`: the child's own mount awaits something before it writes (like a card that renders markdown)
+				if (model.gate) await new Promise<void>((resolve) => gates.push(resolve));
+				root.createDiv({ cls: 'test-base-view', attr: { 'data-test-model': model.text } });
+				if (model.next) await pipeline.run(def, model.next, host);
+			}
+		}
+		const nestBase: ElementDefinition<NestModel> = {
+			id: 'test-base',
+			name: 'Test Base',
+			aliases: ['ds-test-base'],
+			shape: 'static',
+			parse: (data) => data as NestModel,
+			createView: (cx) => new NestView(cx),
+		};
+		const wrapped = withReference(nestBase, { sccType: /statblock$/ });
+		const def: ElementDefinition<any> = {
+			...wrapped,
+			createView: (cx: any) => {
+				const view = wrapped.createView(cx) as ElementView<any>;
+				views.push(view);
+				return view;
+			},
+		};
+		deps.refs.register({
+			kind: 'at-path',
+			canResolve: (raw) => raw in table,
+			resolve: ({ raw }) =>
+				holding
+					? new Promise((resolve, reject) =>
+							holds.push({ raw, release: () => resolve({ data: table[raw] }), reject: () => reject(new Error('lookup rejected')) }),
+						)
+					: Promise.resolve({ data: table[raw] }),
+		});
+		return {
+			table,
+			holds,
+			gates,
+			views,
+			host,
+			run: (ref: string) => pipeline.run(def, ref, host),
+			hold: (on: boolean) => {
+				holding = on;
+			},
+			roots: () => Array.from(host.containerEl.children) as HTMLElement[],
+		};
+	}
+	const tick = async () => {
+		for (let i = 0; i < 8; i++) await new Promise<void>((resolve) => setTimeout(resolve, 0));
+	};
+	const summary = (el: HTMLElement) => ({
+		baseViews: Array.from(el.querySelectorAll('.test-base-view')).map((n) => n.getAttribute('data-test-model')),
+		nesting: Array.from(el.querySelectorAll('.dse-error-card-message')).filter((n) => NESTING.test(n.textContent ?? '')).length,
+		otherErrors: Array.from(el.querySelectorAll('.dse-error-card-message'))
+			.map((n) => n.textContent ?? '')
+			.filter((t) => !NESTING.test(t)),
+	});
+	const owned = (v: ElementView<any>) => (v as any).ownedChildren.length as number;
+	const loadedChildren = (v: ElementView<any>) => ((v as any).ownedChildren as any[]).filter((c) => c instanceof ElementView).length;
+
+	for (const order of [
+		[0, 1],
+		[1, 0],
+	]) {
+		const tag = order.join('');
+		test(`R1 same-ref re-entrance, release ${tag}`, async () => {
+			const s = setup();
+			s.table['@A'] = { text: 'A' };
+			s.hold(true);
+			const first = s.run('@A');
+			await tick();
+			const v = s.views[0];
+			const model = v.currentModel();
+			const baseline = owned(v);
+			const upd = v.update(model);
+			await tick();
+			const heldCount = s.holds.length;
+			for (const i of order) {
+				if (i < s.holds.length) s.holds[i].release();
+				await tick();
+			}
+			await Promise.all([first, upd]);
+			const final = { ...summary(s.roots()[0]), ownedChildren: owned(v), elementViewChildren: loadedChildren(v) };
+			s.hold(false);
+			await v.update(model);
+			const afterLaterUpdate = { ...summary(s.roots()[0]), ownedChildren: owned(v), elementViewChildren: loadedChildren(v) };
+			await s.run('@A');
+			const freshView = summary(s.roots()[s.roots().length - 1]);
+			r2log(`R1-${tag}`, { baselineOwnedBeforeUpdate: baseline, heldCount, final, afterLaterUpdate, freshView });
+		});
+
+		test(`R2 A->B re-entrance, release ${tag}`, async () => {
+			const s = setup();
+			s.table['@A'] = { text: 'A' };
+			s.table['@B'] = { text: 'B' };
+			s.hold(true);
+			const first = s.run('@A');
+			await tick();
+			const v = s.views[0];
+			const upd = v.update({ kind: 'ref', raw: '@B' });
+			await tick();
+			for (const i of order) {
+				s.holds[i].release();
+				await tick();
+			}
+			await Promise.all([first, upd]);
+			const final = { ...summary(s.roots()[0]), ownedChildren: owned(v), elementViewChildren: loadedChildren(v) };
+			s.hold(false);
+			await s.run('@A');
+			await s.run('@B');
+			r2log(`R2-${tag}`, { final, freshA: summary(s.roots()[1]), freshB: summary(s.roots()[2]) });
+		});
+
+		test(`R3 self-reference re-entrance, release ${tag}`, async () => {
+			const s = setup();
+			s.table['@A'] = { text: 'A', next: '@A' };
+			s.hold(true);
+			const first = s.run('@A');
+			await tick();
+			const v = s.views[0];
+			const upd = v.update(v.currentModel());
+			await tick();
+			s.hold(false);
+			for (const i of order) {
+				s.holds[i].release();
+				await tick();
+			}
+			await Promise.all([first, upd]);
+			r2log(`R3-${tag}`, { roots: s.roots().map(summary), viewsCreated: s.views.length });
+		});
+
+		for (const [label, replacement] of [
+			['inline', { kind: 'inline', model: { text: 'Inline Card' } }],
+			['invalid', { kind: 'invalid', message: 'Refused body message' }],
+		] as Array<[string, any]>) {
+			test(`R7 pending @A -> update to ${label}; stale lookup released ${tag === '01' ? 'after' : 'during'} the update`, async () => {
+				const s = setup();
+				s.table['@A'] = { text: 'A' };
+				s.hold(true);
+				const first = s.run('@A');
+				await tick();
+				const v = s.views[0];
+				const upd = v.update(replacement);
+				if (tag === '10') s.holds[0].release();
+				await upd;
+				if (tag === '01') s.holds[0].release();
+				await first;
+				await tick();
+				const final = { ...summary(s.roots()[0]), ownedChildren: owned(v), elementViewChildren: loadedChildren(v) };
+				// back to the reference: does it still resolve (no entry left, generation not stuck)?
+				s.hold(false);
+				await v.update({ kind: 'ref', raw: '@A' });
+				const backToRef = summary(s.roots()[0]);
+				r2log(`R7-${label}-${tag === '01' ? 'after' : 'during'}`, { final, backToRef });
+			});
+		}
+	}
+
+	test('R7c pending @A -> update to inline -> stale lookup REJECTS', async () => {
+		const s = setup();
+		s.table['@A'] = { text: 'A' };
+		s.hold(true);
+		const first = s.run('@A');
+		await tick();
+		const v = s.views[0];
+		await v.update({ kind: 'inline', model: { text: 'Inline Card' } });
+		s.holds[0].reject();
+		await first;
+		await tick();
+		r2log('R7c-inline-then-reject', { final: summary(s.roots()[0]) });
+	});
+
+	test('R8 (older class, not the delta) a child whose own mount is still running when the view is updated', async () => {
+		const s = setup();
+		s.table['@A'] = { text: 'A', gate: true };
+		const first = s.run('@A');
+		await tick();
+		const v = s.views[0];
+		const upd = v.update(v.currentModel()); // the first child is mid-mount (gated)
+		await tick();
+		s.gates.forEach((g) => g()); // both children's mounts finish
+		await tick();
+		await Promise.all([first, upd]);
+		r2log('R8-child-mid-mount', { final: { ...summary(s.roots()[0]), elementViewChildren: loadedChildren(v) }, gates: s.gates.length });
+	});
+
+	test('R9 unload/reload-ish: view unloaded while its lookup runs, still draws into its own root (unchanged)', async () => {
+		const s = setup();
+		s.table['@A'] = { text: 'A' };
+		s.hold(true);
+		const first = s.run('@A');
+		await tick();
+		s.views[0].load();
+		s.views[0].unload();
+		s.holds[0].release();
+		await first;
+		r2log('R9-unloaded-owner-still-draws', { final: summary(s.roots()[0]) });
+	});
+});

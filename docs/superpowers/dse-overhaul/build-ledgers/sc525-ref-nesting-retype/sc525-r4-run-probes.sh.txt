@@ -1,0 +1,58 @@
+#!/bin/bash
+# SC-525 r4: (1) re-run r2 probes + r4 probes on head; (2) INFO-3 cascade proof: a deliberate mid-hold failure
+# injected into scratch copies of the head and af09bf2 test files. Every scratch file is deleted by literal path.
+P=/home/scott/code/steelCompendium/worktrees/sc525-ref-nesting-retype/draw-steel-elements
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc525-r4-rereview
+S2=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc525-r2-review
+D=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc525-ref-nesting-retype
+cd "$P" || exit 9
+rm -f main.js styles.css
+
+# (1) probes
+cat test/dom/elements/refUnwrapView.test.ts "$S2/probe-guard-append.ts" "$S/probe-r4-append.ts" > test/dom/elements/zzSc525R4Probe.test.ts
+out="$S/probe-head-$(date +%s%N).jsonl"
+SC525_PROBE_OUT="$out" npx jest test/dom/elements/zzSc525R4Probe.test.ts --silent -t "r[24] probes" > "$S/probe-jest.log" 2>&1
+echo "probes jest rc=$?"
+grep -E "^Tests:|●.*›" "$S/probe-jest.log" | sort -u
+cp "$out" "$D/sc525-r4-probe-head.jsonl"
+rm -f test/dom/elements/zzSc525R4Probe.test.ts
+
+# (2) INFO-3 cascade proof
+python3 - "$P" <<'PY'
+import sys, subprocess
+P = sys.argv[1]
+FORM = 'test/dom/authoring/formModalStalePreview.test.ts'
+GUARD = 'test/dom/elements/refUnwrapView.test.ts'
+FA = "\t\texpect(hold.held.map((x) => x.raw)).toEqual(['@Ref.md', '@Ref.md']); // the current preview starts its own lookup\n"
+GA = "\t\tconst second = s.run('@A');\n\t\tawait tick();\n\t\texpect(nestingErrors(s.roots())).toEqual([s.roots()[1]]);\n\t\ts.holds.forEach((release) => release());\n"
+THROW = "\t\tthrow new Error('SC525-R4 deliberate mid-hold failure');\n"
+for ver in ('head', 'af09bf2'):
+    for path, anchor, out in ((FORM, FA, 'test/dom/authoring/zzSc525R4Cascade' + ver.capitalize() + 'Form.test.ts'),
+                              (GUARD, GA, 'test/dom/elements/zzSc525R4Cascade' + ver.capitalize() + 'Guard.test.ts')):
+        src = open(P + '/' + path).read() if ver == 'head' else subprocess.check_output(['git', '-C', P, 'show', 'af09bf2:' + path], text=True)
+        assert src.count(anchor) == 1, (ver, path, src.count(anchor))
+        if anchor is GA:
+            src = src.replace(anchor, anchor.split('\t\texpect(')[0] + THROW + '\t\texpect(' + anchor.split('\t\texpect(', 1)[1])
+        else:
+            src = src.replace(anchor, anchor + THROW)
+        open(P + '/' + out, 'w').write(src)
+        print('wrote', out)
+PY
+for f in zzSc525R4CascadeHeadForm zzSc525R4CascadeAf09bf2Form; do
+	npx jest "test/dom/authoring/$f.test.ts" --silent > "$S/$f.log" 2>&1
+	echo "== $f rc=$?"
+	grep -E "^Tests:" "$S/$f.log"
+	grep -E "●.*›" "$S/$f.log" | sort -u
+done
+for f in zzSc525R4CascadeHeadGuard zzSc525R4CascadeAf09bf2Guard; do
+	npx jest "test/dom/elements/$f.test.ts" --silent > "$S/$f.log" 2>&1
+	echo "== $f rc=$?"
+	grep -E "^Tests:" "$S/$f.log"
+	grep -E "●.*›" "$S/$f.log" | sort -u
+done
+rm -f test/dom/authoring/zzSc525R4CascadeHeadForm.test.ts
+rm -f test/dom/authoring/zzSc525R4CascadeAf09bf2Form.test.ts
+rm -f test/dom/elements/zzSc525R4CascadeHeadGuard.test.ts
+rm -f test/dom/elements/zzSc525R4CascadeAf09bf2Guard.test.ts
+echo "status lines: $(git status --porcelain | wc -l)"
+exit 0

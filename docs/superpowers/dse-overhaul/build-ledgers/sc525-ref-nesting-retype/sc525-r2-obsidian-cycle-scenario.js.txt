@@ -1,0 +1,21 @@
+	// ===================== SC-525 r2 REVIEW: a genuine reference cycle in real Obsidian (throwaway) =====================
+	// Cyc.md's ds-feature has an effect whose markdown holds a ~~~ds-feature fence with body @Cyc.md; the note's block is @Cyc.md.
+	{
+		id: 'SC525-R2C',
+		async run(t) {
+			const P = sc525Kit(t);
+			const out = { tag: P.tag() };
+			await P.install();
+			const m = await t.mark();
+			const rel = 'Lifecycle/sc525-cycle.md';
+			await t.open(rel);
+			const SCOPE = t.readingScope('app.workspace.getMostRecentLeaf()');
+			const probe = `(() => { const sc = ${SCOPE}; const all = Array.from(sc.querySelectorAll('[data-dse-element="feature"]')); const depth = (el) => { let d = 0; let p = el.parentElement; while (p) { if (p.matches && p.matches('[data-dse-element]')) d++; p = p.parentElement; } return d; }; return { roots: all.length, maxDepth: all.reduce((a, el) => Math.max(a, depth(el)), 0), nesting: Array.from(sc.querySelectorAll('.dse-error-card')).map((e) => e.textContent.slice(0, 120)), cyc: (sc.textContent.match(/Cycle Strike/g) || []).length, lookups: window.__p525.calls.length, lookupRaws: Array.from(new Set(window.__p525.calls.map((c) => c.raw))) }; })()`;
+			await t.waitFor(`(() => { const s = ${probe}; return s.nesting.length > 0 || s.lookups > 40; })()`, 'cycle: error card or >40 lookups', 30000).catch((e) => { out.waitError = String(e); });
+			await P.settle().catch((e) => { out.settleError = String(e); });
+			out.state = await t.ev(probe);
+			out.errors = await t.errorsSince(m);
+			console.log('SC525-R2C-JSON ' + JSON.stringify(out));
+			return `${out.tag}: roots=${out.state.roots} maxDepth=${out.state.maxDepth} errorCards=${out.state.nesting.length} lookups=${out.state.lookups} waitError=${!!out.waitError}`;
+		},
+	},

@@ -1,0 +1,24 @@
+#!/bin/bash
+# SC-525 r2 review probes: assemble two scratch test files in the worktree, run on head, then on base src, restore.
+P=/home/scott/code/steelCompendium/worktrees/sc525-ref-nesting-retype/draw-steel-elements
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc525-r2-review
+D=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc525-ref-nesting-retype
+cd "$P" || exit 9
+cat test/dom/elements/refUnwrapView.test.ts "$S/probe-guard-append.ts" > test/dom/elements/zzSc525R2ProbeGuard.test.ts
+cat test/dom/authoring/formModalStalePreview.test.ts "$S/probe-form-append.ts" > test/dom/authoring/zzSc525R2ProbeForm.test.ts
+SUITES="test/dom/elements/zzSc525R2ProbeGuard.test.ts test/dom/authoring/zzSc525R2ProbeForm.test.ts"
+for tag in head base; do
+	if [ "$tag" = base ]; then git checkout 4deb8cf -- src/elements/shared/RefUnwrapView.ts src/framework/view.ts; fi
+	out="$S/probe-$tag-$(date +%s%N).jsonl"
+	rm -f main.js styles.css
+	SC525_PROBE_OUT="$out" npx jest $SUITES --silent -t "SC-525 r2 probes" > "$S/probe-$tag-jest.log" 2>&1
+	echo "$tag jest rc=$? out=$out"
+	grep -E "^Tests:" "$S/probe-$tag-jest.log"
+	cp "$out" "$D/sc525-r2-probe-$tag.jsonl"
+done
+git checkout HEAD -- src/elements/shared/RefUnwrapView.ts src/framework/view.ts
+rm -f test/dom/elements/zzSc525R2ProbeGuard.test.ts
+rm -f test/dom/authoring/zzSc525R2ProbeForm.test.ts
+git status --porcelain
+echo "status lines: $(git status --porcelain | wc -l)"
+exit 0
