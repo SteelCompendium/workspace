@@ -93,3 +93,6 @@ dse base at worktree creation: develop f81a277 (2026-11-02). Superproject worktr
 - dse branch sc530-hostleak-aria-checked @ 97284051 (c59c4882, f9bdb873, 13e5d0c2, 97284051) on develop 88cb7db9, ancestor verified, tree clean; diff = visual-harness/shoot.mjs + test/dom/visual-harness/fixtures.test.ts only. Superproject worktree only dirt ` M draw-steel-elements` (pointer bump at landing).
 - No widening, no rebaseline, no CHANGELOG (harness-only). dse-verify edits: sc530-dse-verify-proposal.md. No Backlog filed (INFO-1/INFO-3 dropped with reasons). Local branch sc530-r1-proto (d1ab0bd) is survey-only, must not land.
 - Land-ready comment posted to SC-530 (sc530-comment-landready.md); state left Awaiting for the dispatcher to land and close.
+
+## DONE (2026-11-02)
+- Landed by the dispatcher: dse develop ff to 97284051; workspace main b27ec651 (pointer bump f8108803); docs 4fba48e5 applied sc530-dse-verify-proposal.md (host-leak bullet 161/966, new CURRENT) and preserved this ledger at docs/superpowers/dse-overhaul/build-ledgers/sc530-hostleak-aria-checked/. Worktree removed; sc530-r1-proto not landed. Ticket -> Done with closing comment.
