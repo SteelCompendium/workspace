@@ -8,6 +8,15 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: in Live Preview, clicking a button on a card inside a callout no longer turns the callout into its markdown text (SC-540).**
+  A card inside a `> [!note]` callout (a counter, for example) used to be replaced by the callout's markdown, with
+  the cursor inside it, after a click on one of its buttons (+ on a counter) or on its text, and the cursor moved into
+  the callout when Enter opened the edit form from its Edit pencil. The card now stays drawn, the cursor and scroll
+  position do not move, and the click still does its job. Clicking the callout's own text or title, its `</>` button
+  and its fold arrow work as before, and links inside a card in a callout still open.
+  The same holds for buttons that redraw the whole card (an initiative tracker's Advance round, a project's Add project
+  roll), and an initiative tracker embedded with `![[note]]` is no longer selected by such a click either.
+
 - **DSE plugin: pressing Enter on "Unpin from sidebar" no longer drops keyboard focus to the page (SC-511).**
   With the keyboard, unpinning a block from the Draw Steel sidebar removed the panel and left focus on the page
   body, so you had to Tab in from the top again. Focus now goes to the pinned block that took its place (the link
