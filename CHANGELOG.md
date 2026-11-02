@@ -37,8 +37,10 @@ go under an *Internal* sub-heading.
   say), and click + in the upper one in Live Preview. The note was right (6 and 5), but the lower callout then showed
   6, and a click on it changed the upper block instead of the lower one. If you had saved an edit in the upper block's
   edit form first (with experimental authoring controls on), that click also erased your edit. Each callout now keeps
-  its own card and value, and its clicks and saves go to its own block. Three identical callouts, callouts holding two
-  blocks, and callouts inside callouts are covered too.
+  its own card and value, and its clicks and saves go to its own block. This holds when the two callouts are far apart
+  in the note (the lower one off screen when you click, shown correctly when you scroll to it), when you click the
+  other callout's title straight after the +, for three identical callouts, for callouts holding two blocks, and for
+  callouts inside callouts.
 
 - **DSE plugin: with two identical blocks in a note, editing one no longer makes the other disappear, show the wrong number, or write into the first block (SC-481).**
   Put two blocks with exactly the same text in one note (two identical counters, say), open it in Reading view or
