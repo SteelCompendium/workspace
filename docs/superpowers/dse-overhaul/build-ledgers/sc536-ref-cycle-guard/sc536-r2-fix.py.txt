@@ -1,0 +1,109 @@
+import sys
+p=sys.argv[1]
+s=open(p,encoding='utf-8').read()
+
+a=s.index("/**\n * D6 Task 9 (spec §9 risk) — depth guard")
+b=s.index("export class RefUnwrapView")
+NEW_DOC='''/**
+ * D6 Task 9 (spec §9 risk), SC-536 — the guard against a reference chain that comes back to itself, and a hard cap on how
+ * deep references may nest. A whole-block reference whose card shows markdown holding another whole-block reference
+ * (`~~~ds-feature` / `@Self.md` / `~~~`) makes Obsidian call the code-block processor, synchronously, inside the parent's
+ * `renderMarkdown`. That nested block is a new block: its own `RenderContext`, its own host, its own `blockKey` (the
+ * `docId` fallback), and a new `RefUnwrapView`. The one thing it shares with its parent is the DOM: its element is
+ * inside the parent card's root, already connected, when the view mounts and again after its lookup.
+ *
+ * So the guard follows the DOM. A root that resolved a reference records, in `REF_CHAIN`, the targets of every reference
+ * it and the cards around it have resolved (`targets`) and how many references that is (`depth`, the outermost being 1).
+ * A new resolution walks `parentElement` to the nearest recorded ancestor and is refused when
+ *   - that chain already holds its target (a cycle: the card is inside a card showing the same thing), or
+ *   - the chain is already `MAX_REF_DEPTH` deep (the backstop: any target that was not recognised as the same one --
+ *     a provider without a file, two mirror files -- still stops).
+ * Cards that are not inside one another never meet: two panes showing one note, a plugin reload, a redraw, the block edit
+ * form's preview remounted on every keystroke (SC-525) each have their own DOM and are never refused.
+ *
+ * A target is the resolved thing, not the text the author typed: `file:<path>` for `@path` / `[[wikilink]]` (so `[[Cyc]]`
+ * and `@Cyc.md  ` meet), `raw:<base id>|<text>` for a provider that resolves without a file, and for the SCC ladder both
+ * `scc:<code>` and `file:<entity file path>` (so a code and an `@path` to its file meet).
+ *
+ * Invariant this relies on: a nested block's element is inside the card that holds the markdown. Every `renderMarkdown`
+ * caller passes an element created inside its card; one that rendered into a detached element and moved it in later would
+ * defeat both checks.
+ */
+const MAX_REF_DEPTH = 5;
+interface RefChain {
+	readonly targets: ReadonlySet<string>;
+	readonly depth: number;
+}
+const REF_CHAIN = new WeakMap<HTMLElement, RefChain>();
+
+/** The chain of the nearest enclosing reference card, if any (a root is not its own ancestor). */
+function nearestChain(root: HTMLElement): RefChain | undefined {
+	for (let n = root.parentElement; n; n = n.parentElement) {
+		const chain = REF_CHAIN.get(n);
+		if (chain) return chain;
+	}
+	return undefined;
+}
+
+'''
+s=s[:a]+NEW_DOC+s[b:]
+
+old='''		this.resolveGen++;
+		if (model.kind === 'invalid') {'''
+assert old in s
+s=s.replace(old,'''		this.resolveGen++;
+		// SC-536: this root is about to show something new, so what it recorded about its OLD content (a chain of
+		// references) no longer holds -- an inline body must not leave its children inside a stale chain.
+		REF_CHAIN.delete(root);
+		if (model.kind === 'invalid') {''',1)
+
+a=s.index("		// D6 Task 9 (spec §9 risk): refuse a ref that is already mid-resolution")
+b=s.index("			// `@path` / `[[wikilink]]` — the legacy forms")
+NEW_GUARD='''		// D6 Task 9 (spec §9 risk), SC-536: a card inside MAX_REF_DEPTH references shows no more. Checked before any
+		// lookup, so a refused level costs nothing. The cycle check is `claimChain`, once the target is known.
+		if ((nearestChain(root)?.depth ?? 0) >= MAX_REF_DEPTH) {
+			this.errorCard(root, `Reference nesting too deep: more than ${MAX_REF_DEPTH} references inside one another.`);
+			return;
+		}
+'''
+# the try body spans from "			// `@path`" to just before "		} finally {" ; dedent one tab
+tb=s.index("			// `@path` / `[[wikilink]]` — the legacy forms")
+te=s.index("		} finally {\n			if (IN_FLIGHT_REFS")
+body=s[tb:te]
+body='\n'.join((l[1:] if l.startswith('\t') else l) for l in body.split('\n'))
+fe=s.index("\n",s.index("if (IN_FLIGHT_REFS.get(guardKey) === token)"))
+fe=s.index("		}\n",fe)+len("		}\n")
+s=s[:a]+NEW_GUARD+body+s[fe:]
+
+# scc claim
+old="			const source: RefSource = { file: entity.file, frontmatter: entity.frontmatter, body };\n		await this.mountBase(root, parsed as M, source, base);"
+old=old.replace("			const source","		const source",1)
+assert old in s, 'scc mount'
+s=s.replace(old,"		const source: RefSource = { file: entity.file, frontmatter: entity.frontmatter, body };\n		// SC-536: the last gen check is above; from here this resolution is the one that draws, so it may record its chain.\n		if (!this.claimChain(root, trimmed, [`scc:${code}`, `file:${entity.file.path}`])) return;\n		await this.mountBase(root, parsed as M, source, base);",1)
+
+old="		const model = this.base.parse(resolved.data, rawText);\n		await this.mountBase(root, model);"
+assert old in s
+s=s.replace(old,"		const model = this.base.parse(resolved.data, rawText);\n		// SC-536: the last gen check is above (see resolveAndMount's SCC ladder).\n		if (!this.claimChain(root, raw, [resolved.file ? `file:${resolved.file.path}` : `raw:${this.base.id}|${raw}`])) return;\n		await this.mountBase(root, model);",1)
+
+old="	/** Fix round 1 (Low, finding 3): byte-original block text over a `stringifyYaml`"
+assert old in s
+CLAIM='''	/**
+	 * SC-536: refuse a target the cards around this root already show; otherwise record this root's chain. Runs immediately
+	 * before each `mountBase`, after the last `resolveGen` check: only the resolution that is about to draw may stamp the
+	 * root (a superseded one never does), and the nested blocks of the base view's markdown exist only after `mountBase`,
+	 * so recording the chain here is always early enough -- even though their processors run synchronously inside it.
+	 */
+	private claimChain(root: HTMLElement, raw: string, targets: string[]): boolean {
+		const parent = nearestChain(root);
+		if (parent && targets.some((t) => parent.targets.has(t))) {
+			this.errorCard(root, `Reference loop: ${raw} is already shown by a card this one is inside.`);
+			return false;
+		}
+		REF_CHAIN.set(root, { targets: new Set([...(parent?.targets ?? []), ...targets]), depth: (parent?.depth ?? 0) + 1 });
+		return true;
+	}
+
+'''
+s=s.replace(old,CLAIM+old,1)
+open(p,'w',encoding='utf-8').write(s)
+print('written')

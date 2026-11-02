@@ -1,0 +1,14 @@
+1:  36cd8edb = 1:  55cb698c test(refs): SC-536 reference ancestry guard tests, red on 34f46cf
+2:  8c1269fb = 2:  1f305e06 fix(refs): SC-536 reference guard follows DOM ancestry, not block identity
+3:  514946db ! 3:  1be1ebc7 test(lifecycle): G-S56 the reference guard follows the DOM (self-reference, depth cap, a card live twice)
+    @@ visual-harness/obsidian-lifecycle.mjs: function formKit(t) {
+      	{
+      		// SC-343: identical twins, 4 lines inserted above — the SECTION path writes the right twin.
+     @@ visual-harness/obsidian-lifecycle.mjs: const SCENARIOS = [
+    - 			return `identical blocks keep their own card, value and block (Reading view: 2 twins, 3 twins, montage twins, adoption off, form Save; Live Preview): ${outcomes.join('; ')}`;
+    + 			return out.join('; ');
+      		},
+      	},
+     +	{
+4:  432c50e2 = 4:  effbb9d8 test(lifecycle): G-S56 starts from one fresh Reading-view leaf (earlier scenarios leave editors that look up too)
+-:  -------- > 5:  fb24f8a2 test(lifecycle): G-S56 reads its lookup count and list in one eval; says it runs last and detaches other leaves

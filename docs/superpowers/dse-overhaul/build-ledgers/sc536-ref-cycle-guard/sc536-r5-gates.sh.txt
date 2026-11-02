@@ -1,0 +1,7 @@
+#!/bin/bash
+P=/home/scott/code/steelCompendium/worktrees/sc536-ref-cycle-guard/draw-steel-elements
+L=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc536-ref-cycle-guard
+G=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc536-r5-rev7k/gate.sh
+bash $G $P $L/sc536-r5-gate-tsc.log npm run tsc; echo "tsc rc=$?"
+bash $G $P $L/sc536-r5-gate-lint.log npm run lint; echo "lint rc=$?"
+bash $G $P $L/sc536-r5-gate-jest.log npx jest; echo "jest rc=$?"

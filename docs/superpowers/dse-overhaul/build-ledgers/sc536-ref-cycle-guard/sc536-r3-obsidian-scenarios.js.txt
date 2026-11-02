@@ -1,0 +1,253 @@
+	// ===================== SC-536 r3 reviewer probes (throwaway; never committed) =====================
+	// Fresh single Reading-view leaf first (the G-S56 lesson: leftover Live Preview editors look up too).
+	{
+		id: 'R3-FRESH',
+		async run(t) {
+			await t.ev(`(async () => { const leaf = app.workspace.getLeaf('tab'); await leaf.setViewState({ type: 'markdown', state: { file: 'Lifecycle/sc536-other.md', mode: 'preview' }, active: true }); for (const type of ['markdown', 'dse-sidebar']) for (const l of app.workspace.getLeavesOfType(type)) if (l !== leaf) l.detach(); return true; })()`);
+			await t.waitFor(`app.workspace.getMostRecentLeaf()?.view?.file?.path === 'Lifecycle/sc536-other.md'`, 'fresh leaf');
+			return 'one fresh leaf';
+		},
+	},
+	// SHOT-CYC: the @Cyc.md note settled (head: natural speed) / after 4 released levels (base, which never stops).
+	{
+		id: 'R3-SHOT-CYC',
+		async run(t) {
+			const K = sc536Kit(t);
+			const R = r3Kit(t, K);
+			await K.install();
+			await R.resetCounters();
+			const tag = K.tag();
+			const L = 'app.workspace.getMostRecentLeaf()';
+			let how;
+			if (tag === 'base') {
+				await K.holdRefs(true);
+				await t.open('Lifecycle/sc536-cycle.md');
+				await t.waitFor(`window.__k536.held.length >= 1`, 'first lookup held');
+				for (let i = 0; i < 4; i++) { await K.settle(); await K.releaseOne(false); }
+				await K.settle();
+				how = '4 levels released, 5th lookup held';
+			} else {
+				await t.open('Lifecycle/sc536-cycle.md');
+				await t.waitFor(`(${t.readingScope(L)}).querySelectorAll('.dse-error-card').length > 0 || window.__k536.calls.length > 30`, 'loop card or runaway');
+				await K.settle();
+				how = 'natural speed, settled';
+			}
+			await t.ev(`(() => { const r = ${K.ROOT(L)}; r && r.scrollIntoView({ block: 'start' }); return true; })()`);
+			await K.frames();
+			const s = await R.stats(t.readingScope(L));
+			const f = await R.shot(`sc536-r3-shot-cycle-${tag}.png`);
+			await K.holdRefs(false);
+			await R.resetCounters();
+			await t.open('Lifecycle/sc536-other.md');
+			return `${tag}: ${how}; ${JSON.stringify(s)}; shot ${f}`;
+		},
+	},
+	// SHOT-2P: @Ref.md in two panes; Ref.md reads held across plugin off/on, released FIFO; shot.
+	{
+		id: 'R3-SHOT-2P',
+		async run(t) {
+			const K = sc536Kit(t);
+			const R = r3Kit(t, K);
+			await K.install();
+			await R.resetCounters();
+			const tag = K.tag();
+			const rel = 'Lifecycle/sc536-refcard.md';
+			await t.open(rel);
+			await t.ev(`(() => { window.__r3p1 = app.workspace.getMostRecentLeaf(); return true; })()`);
+			const TEXT = (leaf) => `((${K.ROOT(leaf)})?.textContent ?? '')`;
+			await t.waitFor(`/Ref Strike/.test(${TEXT('window.__r3p1')})`, 'pane 1 card');
+			await t.ev(`(async () => { const leaf = app.workspace.getLeaf('split', 'vertical'); window.__r3p2 = leaf; await leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'preview' }, active: false }); return true; })()`);
+			await t.waitFor(`/Ref Strike/.test(${TEXT('window.__r3p2')})`, 'pane 2 card');
+			await K.settle();
+			await K.holdPath('Ref.md');
+			await t.ev(`(async () => { await app.plugins.disablePlugin('draw-steel-elements'); await app.plugins.enablePlugin('draw-steel-elements'); return true; })()`);
+			await t.waitFor(`window.__k536.held.length >= 2 || ((/nesting too deep|Reference loop/.test(${TEXT('window.__r3p1')}) || /nesting too deep|Reference loop/.test(${TEXT('window.__r3p2')})) && window.__k536.held.length >= 1)`, 'both held or one refused');
+			const held = await K.held();
+			await K.holdPath(null);
+			await K.releaseAll(false);
+			await K.settle();
+			await t.waitFor(`(/Ref Strike|nesting too deep|Reference loop|failed/.test(${TEXT('window.__r3p1')})) && (/Ref Strike|nesting too deep|Reference loop|failed/.test(${TEXT('window.__r3p2')}))`, 'both drawn');
+			await K.frames();
+			const s1 = await R.stats(t.readingScope('window.__r3p1'));
+			const s2 = await R.stats(t.readingScope('window.__r3p2'));
+			const f = await R.shot(`sc536-r3-shot-twopanes-${tag}.png`);
+			await t.ev(`(() => { window.__r3p2.detach(); return true; })()`);
+			await R.resetCounters();
+			await t.open('Lifecycle/sc536-other.md');
+			return `${tag}: held ${held}; pane1 ${JSON.stringify(s1)}; pane2 ${JSON.stringify(s2)}; shot ${f}`;
+		},
+	},
+	// SB: sidebar host. (1) pinned inline card nesting @Cyc.md; (2) pinned inline card nesting @Ref.md with the note open in Reading
+	// view, plus a redraw and a held plugin off/on; (3) what a pin of a bare `@Cyc.md` / `@Ref.md` ref block does.
+	{
+		id: 'R3-SB',
+		async run(t) {
+			const K = sc536Kit(t);
+			const R = r3Kit(t, K);
+			const { pinToSidebar } = formKit(t);
+			await K.install();
+			const out = { tag: K.tag() };
+			const m = await t.mark();
+			const L = 'app.workspace.getMostRecentLeaf()';
+			const closeSb = () => t.ev(`(async () => { for (const l of app.workspace.getLeavesOfType('dse-sidebar')) l.detach(); return true; })()`);
+			const one = async (label, rel, cardRe) => {
+				const r = { label };
+				try {
+					await R.resetCounters();
+					await t.open(rel);
+					await t.waitFor(`new RegExp(${JSON.stringify(cardRe)}).test((${K.ROOT(L)})?.textContent ?? '')`, `${label}: note card`);
+					await K.settle();
+					r.readingBefore = await R.stats(t.readingScope(L));
+					await R.resetCounters();
+					const { panelRoot } = await pinToSidebar(rel, '[data-dse-element="feature"]');
+					r.panelRootFound = await t.ev(`!!(${panelRoot})`);
+					await K.settle();
+					r.stable = await R.stable();
+					r.panel = await R.stats(R.SB);
+					r.readingAfter = await R.stats(t.readingScope(L));
+				} catch (e) {
+					r.error = e instanceof Error ? e.message : String(e);
+					try { r.panel = await R.stats(R.SB); r.readingAfter = await R.stats(t.readingScope(L)); r.disk = t.read(rel); } catch { /* */ }
+				}
+				return r;
+			};
+			if (out.tag !== 'base') out.cycHost = await one('cycHost', 'Lifecycle/sc536-sb-cychost.md', 'CycHost Strike');
+			if (out.tag !== 'base') try { out.cycHostShot = await R.shot(`sc536-r3-shot-sidebar-cyc-${out.tag}.png`); } catch (e) { out.cycHostShot = String(e); }
+			await closeSb();
+			out.refHost = await one('refHost', 'Lifecycle/sc536-sb-refhost.md', 'RefHost Strike');
+			if (!out.refHost.error) {
+				// the note stays open in Reading view; redraw it, then a held plugin off/on (both hosts ask for Ref.md at once)
+				await t.ev(`(() => { app.workspace.getMostRecentLeaf().view.previewMode.rerender(true); return true; })()`);
+				await K.settle();
+				out.refHost.afterRedraw = { reading: await R.stats(t.readingScope(L)), panel: await R.stats(R.SB) };
+				await R.resetCounters();
+				await K.holdPath('Ref.md');
+				await t.ev(`(async () => { await app.plugins.disablePlugin('draw-steel-elements'); await app.plugins.enablePlugin('draw-steel-elements'); return true; })()`);
+				try {
+					await t.waitFor(`window.__k536.held.length >= 2`, 'two Ref.md reads held (reading + panel)', 10000);
+				} catch (e) { out.refHost.heldWait = String(e); }
+				out.refHost.heldAtOnce = await K.held();
+				await K.holdPath(null);
+				await K.releaseAll(false);
+				await K.settle();
+				try { await t.waitFor(`!!${R.SB} && /Ref Strike/.test(${R.SB}.textContent)`, 'panel redrawn', 10000); } catch (e) { out.refHost.panelWait = String(e); }
+				await K.settle();
+				out.refHost.afterReenable = { reading: await R.stats(t.readingScope(L)), panel: await R.stats(R.SB) };
+				try { out.refHostShot = await R.shot(`sc536-r3-shot-sidebar-ref-${out.tag}.png`); } catch (e) { out.refHostShot = String(e); }
+			}
+			await closeSb();
+			if (out.tag !== 'base') out.cycDirect = await one('cycDirect', 'Lifecycle/sc536-sb-cycdirect.md', 'Cycle Strike');
+			await closeSb();
+			out.refDirect = await one('refDirect', 'Lifecycle/sc536-sb-refdirect.md', 'Ref Strike');
+			await closeSb();
+			out.errors = await t.errorsSince(m);
+			await R.resetCounters();
+			await t.open('Lifecycle/sc536-other.md');
+			console.log('R3-SB-JSON ' + JSON.stringify(out));
+			return 'see R3-SB-JSON';
+		},
+	},
+	// TWIN: SC-481 identical blocks. Two @Ref.md, two @Outer.md (nests @Ref.md), two @Cyc.md; then edits that make Obsidian reuse
+	// rendered elements (a line above every block; the first block changed so its old element goes to its twin; and back).
+	{
+		id: 'R3-TWIN',
+		async run(t) {
+			const K = sc536Kit(t);
+			const R = r3Kit(t, K);
+			await K.install();
+			const out = { tag: K.tag() };
+			const m = await t.mark();
+			const L = 'app.workspace.getMostRecentLeaf()';
+			const SC = t.readingScope(L);
+			const want = async (label, cond) => { try { await t.waitFor(cond, label, 10000); return true; } catch { return false; } };
+			const snap = async (label, cond) => { const ok = await want(label, cond); await K.settle(); return { label, waitOk: ok, ...(await R.stats(SC)) }; };
+			for (const [key, rel, inner] of [['ref', 'Lifecycle/sc536-twins-ref.md', '@Ref.md'], ['outer', 'Lifecycle/sc536-twins-outer.md', '@Outer.md'], ['cyc', 'Lifecycle/sc536-twins-cyc.md', '@Cyc.md']]) {
+				const steps = [];
+				await R.resetCounters();
+				await t.open(rel);
+				const top = `Array.from((${SC}).querySelectorAll('[data-dse-element="feature"]')).filter((x) => x.isConnected && !x.parentElement.closest('[data-dse-element]'))`;
+				steps.push(await snap('open', `${top}.length === 2`));
+				// tag the two top-level roots so we can see which elements Obsidian reused
+				await t.ev(`(() => { ${top}.forEach((r, i) => { r.__r3 = 'orig' + i; }); return true; })()`);
+				await t.edit(rel, `c.replace('Above.', 'Above.\\n\\nInserted line.')`);
+				steps.push({ ...(await snap('line inserted above', `/Inserted line/.test((${SC}).textContent) && ${top}.length === 2`)), tags: await t.ev(`${top}.map((r) => r.__r3 ?? 'new')`) });
+				await t.edit(rel, `c.replace(${JSON.stringify('```ds-feature\n' + inner + '\n```')}, '\`\`\`ds-feature\\n@Ref.md\\n\`\`\`\\n\\nSwapped.')`);
+				steps.push({ ...(await snap('first block changed to @Ref.md', `/Swapped/.test((${SC}).textContent) && ${top}.length === 2`)), tags: await t.ev(`${top}.map((r) => r.__r3 ?? 'new')`), texts: await t.ev(`${top}.map((r) => r.textContent.slice(0, 60))`) });
+				await t.edit(rel, `c.replace('\`\`\`ds-feature\\n@Ref.md\\n\`\`\`\\n\\nSwapped.', ${JSON.stringify('```ds-feature\n' + inner + '\n```')})`);
+				steps.push({ ...(await snap('changed back', `!/Swapped/.test((${SC}).textContent) && ${top}.length === 2`)), tags: await t.ev(`${top}.map((r) => r.__r3 ?? 'new')`), texts: await t.ev(`${top}.map((r) => r.textContent.slice(0, 60))`) });
+				await t.ev(`(() => { app.workspace.getMostRecentLeaf().view.previewMode.rerender(true); return true; })()`);
+				steps.push(await snap('rerender', `${top}.length === 2`));
+				out[key] = steps;
+				await t.reset(rel);
+				await t.open('Lifecycle/sc536-other.md');
+			}
+			// Live Preview: the outer twins
+			await R.resetCounters();
+			await t.ev(`(async () => { const leaf = app.workspace.getLeaf('tab'); window.__r3lp = leaf; await leaf.setViewState({ type: 'markdown', state: { file: 'Lifecycle/sc536-twins-outer.md', mode: 'source', source: false }, active: true }); })()`);
+			const LPS = `window.__r3lp.view.containerEl.querySelector('.markdown-source-view')`;
+			await want('LP outer twins', `(${LPS}).querySelectorAll('[data-dse-element="feature"]').length >= 4`);
+			await K.settle();
+			out.lpOuter = await R.stats(LPS);
+			await t.ev(`(() => { window.__r3lp.detach(); return true; })()`);
+			out.errors = await t.errorsSince(m);
+			await t.open('Lifecycle/sc536-other.md');
+			console.log('R3-TWIN-JSON ' + JSON.stringify(out));
+			return 'see R3-TWIN-JSON';
+		},
+	},
+	// LP: identical-twin notes in Live Preview, each in a fresh tab leaf (closed after). Counts per widget.
+	{
+		id: 'R3-LP',
+		async run(t) {
+			const K = sc536Kit(t);
+			const R = r3Kit(t, K);
+			await K.install();
+			const out = { tag: K.tag() };
+			for (const rel of ['Lifecycle/sc536-twins-ref.md', 'Lifecycle/sc536-twins-outer.md', 'Lifecycle/sc536-outer.md', 'Lifecycle/sc536-twins-cyc.md'].filter((r) => out.tag !== 'base' || !r.includes('twins-cyc'))) {
+				await R.resetCounters();
+				await t.ev(`(async () => { const leaf = app.workspace.getLeaf('tab'); window.__r3lp = leaf; await leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'source', source: false }, active: true }); })()`);
+				await t.waitFor(`window.__r3lp?.view?.file?.path === ${JSON.stringify(rel)}`, 'LP open');
+				const LPS = `window.__r3lp.view.containerEl.querySelector('.markdown-source-view')`;
+				await t.waitFor(`(${LPS}).querySelectorAll('[data-dse-element="feature"]').length >= 1`, 'LP first card', 10000);
+				await K.settle();
+				await K.frames();
+				await K.settle();
+				const s = await R.stats(LPS);
+				const w = await t.ev(`(() => { const sc = ${LPS}; const ws = Array.from(sc.querySelectorAll('.cm-embed-block, .cm-preview-code-block')); return { widgets: ws.length, perWidget: ws.map((x) => ({ cls: x.className.slice(0, 60), feats: x.querySelectorAll('[data-dse-element="feature"]').length, text: x.textContent.slice(0, 50) })), allFeatsInDoc: document.querySelectorAll('[data-dse-element="feature"]').length, disconnectedNote: null }; })()`);
+				out[rel] = { ...s, ...w };
+				if (rel.endsWith('twins-outer.md')) {
+					await t.ev(`(() => { const sc = window.__r3lp.view.containerEl.querySelector('.cm-scroller'); sc.scrollTop = sc.scrollHeight; return true; })()`);
+					await K.frames(); await K.settle(); await K.frames(); await K.settle();
+					out.twinsOuterScrolledBottom = { ...(await R.stats(LPS)), widgets: await t.ev(`(${LPS}).querySelectorAll('.cm-embed-block').length`), seen: await t.ev(`Array.from((${LPS}).querySelectorAll('.cm-embed-block')).map((x) => x.textContent.slice(0, 40))`) };
+					await t.ev(`(() => { const sc = window.__r3lp.view.containerEl.querySelector('.cm-scroller'); sc.scrollTop = 0; return true; })()`);
+					await K.frames(); await K.settle();
+				}
+				if (rel.endsWith('twins-outer.md')) { try { out.shot = await R.shot(`sc536-r3-shot-lp-twins-outer-${out.tag}.png`); } catch (e) { out.shot = String(e); } }
+				await t.ev(`(() => { window.__r3lp.detach(); return true; })()`);
+			}
+			await t.open('Lifecycle/sc536-other.md');
+			console.log('R3-LP-JSON ' + JSON.stringify(out));
+			return 'see R3-LP-JSON';
+		},
+	},
+	{
+		id: 'R3-ANCHOR',
+		async run(t) {
+			const K = sc536Kit(t);
+			const R = r3Kit(t, K);
+			await K.install();
+			const L = 'app.workspace.getMostRecentLeaf()';
+			const res = [];
+			for (const rel of ['Lifecycle/sc536-anchor.md', 'Lifecycle/sc536-anchor2.md', 'Lifecycle/sc536-wikianchor.md']) {
+				await R.resetCounters();
+				await t.open(rel);
+				let waitOk = true;
+				try { await t.waitFor(`(${t.readingScope(L)}).querySelectorAll('.dse-error-card').length > 0 || window.__k536.calls.length > 30`, 'error card or runaway', 15000); } catch { waitOk = false; }
+				try { await K.settle(5000); } catch { /* runaway */ }
+				res.push({ rel, waitOk, ...(await R.stats(t.readingScope(L))), raws: await t.ev(`window.__k536.calls.map((c) => c.raw).slice(0, 6)`) });
+				await t.open('Lifecycle/sc536-other.md');
+			}
+			console.log('R3-ANCHOR-JSON ' + JSON.stringify(res));
+			return res.map((r) => `${r.rel}: lookups=${r.lookups} els=${r.els} loops=${r.loops} caps=${r.caps} msgs=${JSON.stringify(r.msgs)}`).join(' | ');
+		},
+	},

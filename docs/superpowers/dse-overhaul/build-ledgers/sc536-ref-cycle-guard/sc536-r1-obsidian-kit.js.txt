@@ -1,0 +1,95 @@
+// ===================== SC-536 r1 real-Obsidian probe kit (throwaway; scratch copy of the lifecycle harness) =====================
+const SC536_FEATURE = fs.readFileSync(path.join(repo, 'src/elements/feature/example.yaml'), 'utf8').trim();
+/** A feature named `name` whose one effect's markdown holds a `~~~ds-feature` fence with body `inner`. */
+const sc536Nest = (name, inner) =>
+	fence('ds-feature', ['type: feature', 'feature_type: ability', `name: ${name}`, 'effects:', '  - name: Effect', '    effect: |-', `      ${name} text.`, '', '      ~~~ds-feature', `      ${inner}`, '      ~~~'].map((l) => l));
+const SC536_CHAIN = {};
+for (let i = 1; i <= 7; i++) SC536_CHAIN[`Chain${i}.md`] = `# Chain${i}\n\n${i < 7 ? sc536Nest(`Chain${i} Strike`, `@Chain${i + 1}.md`) : fence('ds-feature', SC536_FEATURE.replace('name: Coverage Strike', 'name: Chain7 Strike').split('\n'))}\n`;
+Object.assign(FIXTURES, {
+	'Ref.md': `# Ref\n\n${fence('ds-feature', SC536_FEATURE.replace('name: Coverage Strike', 'name: Ref Strike').split('\n'))}\n`,
+	'Cyc.md': `# Cyc\n\n${sc536Nest('Cycle Strike', '@Cyc.md')}\n`,
+	'Outer.md': `# Outer\n\n${sc536Nest('Outer Strike', '@Ref.md')}\n`,
+	'CycA.md': `# CycA\n\n${sc536Nest('CycA Strike', '@CycB.md')}\n`,
+	'CycB.md': `# CycB\n\n${sc536Nest('CycB Strike', '@CycA.md')}\n`,
+	...SC536_CHAIN,
+	'Lifecycle/sc536-refcard.md': `# sc536 refcard\n\nAbove.\n\n${fence('ds-feature', ['@Ref.md'])}\n\nAfter.\n`,
+	'Lifecycle/sc536-cycle.md': `# sc536 cycle\n\nAbove.\n\n${fence('ds-feature', ['@Cyc.md'])}\n\nAfter.\n`,
+	'Lifecycle/sc536-cycle-lp.md': `# sc536 cycle lp\n\nAbove.\n\n${fence('ds-feature', ['@Cyc.md'])}\n\nAfter.\n`,
+	'Lifecycle/sc536-cycle-wiki.md': `# sc536 cycle wiki\n\nAbove.\n\n${fence('ds-feature', ['[[Cyc]]  '])}\n\nAfter.\n`,
+	'Lifecycle/sc536-outer.md': `# sc536 outer\n\nAbove.\n\n${fence('ds-feature', ['@Outer.md'])}\n\nAfter.\n`,
+	'Lifecycle/sc536-cycab.md': `# sc536 cycab\n\nAbove.\n\n${fence('ds-feature', ['@CycA.md'])}\n\nAfter.\n`,
+	'Lifecycle/sc536-chain.md': `# sc536 chain\n\nAbove.\n\n${fence('ds-feature', ['@Chain1.md'])}\n\nAfter.\n`,
+	'Lifecycle/sc536-other.md': '# sc536 other\n\nNothing here.\n',
+});
+function sc536Kit(t) {
+	const K = {
+		tag: () => {
+			const b = process.env.DSE_LIFECYCLE_BUNDLE ?? '';
+			return b.includes('bundle-base') ? 'base' : b.includes('bundle-instr') ? 'instr' : b.includes('bundle-proto') ? 'proto' : 'repo';
+		},
+		/** Hooks: services.refs.resolve on the CURRENT plugin instance (re-run after a plugin re-enable) and app.vault.read/cachedRead (survives a re-enable). */
+		async install() {
+			await t.ev(`(() => {
+				const K = (window.__k536 ??= { calls: [], pendingResolve: 0, pendingReads: 0, holdRefs: false, holdPath: null, held: [], reads: [] });
+				if (!K.vaultHooked) {
+					K.vaultHooked = true;
+					for (const fn of ['cachedRead', 'read']) {
+						const r = app.vault[fn].bind(app.vault);
+						app.vault[fn] = (f) => {
+							K.pendingReads++;
+							K.reads.push(f && f.path);
+							const go = () => r(f).finally(() => K.pendingReads--);
+							if (K.holdPath && f && f.path === K.holdPath) return new Promise((res, rej) => K.held.push({ kind: 'read', path: f.path, go: () => go().then(res, rej) }));
+							return go();
+						};
+					}
+				}
+				const refs = app.plugins.plugins['draw-steel-elements'].frameworkV2.services.refs;
+				if (!refs.__k536) {
+					refs.__k536 = true;
+					const real = refs.resolve.bind(refs);
+					refs.resolve = (raw, sp) => {
+						const rec = { raw, sp };
+						K.calls.push(rec);
+						K.pendingResolve++;
+						const go = () => real(raw, sp).finally(() => { K.pendingResolve--; });
+						if (K.holdRefs) return new Promise((res, rej) => K.held.push({ kind: 'resolve', raw, go: () => go().then(res, rej) }));
+						return go();
+					};
+				}
+				return true;
+			})()`);
+		},
+		holdRefs: (on) => t.ev(`(() => { window.__k536.holdRefs = ${on ? 'true' : 'false'}; return true; })()`),
+		holdPath: (p) => t.ev(`(() => { window.__k536.holdPath = ${JSON.stringify(p)}; return true; })()`),
+		held: () => t.ev(`window.__k536.held.length`),
+		calls: () => t.ev(`window.__k536.calls.length`),
+		/** Release one held call (FIFO or LIFO); returns how many were held before. */
+		releaseOne: (lifo) => t.ev(`(() => { const H = window.__k536.held; if (!H.length) return 0; const n = H.length; (${lifo ? 'H.pop()' : 'H.shift()'}).go(); return n; })()`),
+		async releaseAll(lifo) {
+			for (;;) {
+				const n = await K.releaseOne(lifo);
+				if (!n) return;
+				await K.settle();
+			}
+		},
+		/** Settled = every lookup / read in flight is one we hold, then two painted frames, then the same again (a condition, not a delay). */
+		async settle(ms = 15000) {
+			const C = `(() => { const K = window.__k536; const hr = K.held.filter((h) => h.kind === 'read').length; const hs = K.held.filter((h) => h.kind === 'resolve').length; return K.pendingReads === hr && (hr > 0 || K.pendingResolve === hs); })()`;
+			await t.waitFor(C, 'lookups/reads settled', ms);
+			await t.ev(`new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => r(true))))`);
+			await t.waitFor(C, 'lookups/reads settled (2)', ms);
+		},
+		/** Top-level feature root of a leaf's reading view. */
+		ROOT: (leaf) => `(Array.from(${t.readingScope(leaf)}.querySelectorAll('[data-dse-element="feature"]')).filter((x) => x.isConnected && !x.parentElement.closest('[data-dse-element]'))[0])`,
+		async st(leaf, card = 'Ref Strike') {
+			return t.ev(`(() => { const r = ${K.ROOT(leaf)}; const tx = r ? r.textContent : null; return { present: !!r, card: !!tx && /${card}/.test(tx), nesting: !!tx && /nesting too deep/.test(tx), cards: r ? (tx.match(/${card}/g) || []).length : 0, text: tx ? tx.slice(0, 100) : null }; })()`);
+		},
+		/** Whole-tree stats of every feature element under a scope expression. */
+		treeStats: (scopeExpr, card) => t.ev(`(() => { const sc = ${scopeExpr}; if (!sc) return null; const all = Array.from(sc.querySelectorAll('[data-dse-element="feature"]')); const depth = (el) => { let d = 0; for (let p = el.parentElement; p; p = p.parentElement) if (p.matches && p.matches('[data-dse-element]')) d++; return d; }; return { roots: all.length, maxDepth: all.reduce((a, el) => Math.max(a, depth(el)), 0), errorCards: Array.from(sc.querySelectorAll('.dse-error-card')).map((e) => e.textContent.slice(0, 140)), cards: (sc.textContent.match(new RegExp(${JSON.stringify(card)}, 'g')) || []).length, lookups: window.__k536.calls.length }; })()`),
+		instr: () => t.ev(`window.__sc536 ? JSON.parse(JSON.stringify(window.__sc536.ev)) : null`),
+		instrReset: () => t.ev(`(() => { if (window.__sc536) { window.__sc536.ev = []; } return true; })()`),
+		frames: () => t.ev(`new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => r(true))))`),
+	};
+	return K;
+}

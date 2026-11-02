@@ -1,0 +1,99 @@
+Running one project: dom
+FAIL dom test/dom/elements/refUnwrapView.test.ts (6 s)
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render awaited › SCC: an entity whose file is the nested @path target is the same target
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "A",
+    +   "A again",
+      ]
+
+      1083 | 		await s.run(CODE_A);
+      1084 | 		await settle();
+    > 1085 | 		expect(cards(s.top)).toEqual(['A']);
+           | 		                     ^
+      1086 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@a.md') }]);
+      1087 | 	});
+      1088 |
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1085:24)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render fire-and-forget › SCC: an entity whose file is the nested @path target is the same target
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "A",
+    +   "A again",
+      ]
+
+      1083 | 		await s.run(CODE_A);
+      1084 | 		await settle();
+    > 1085 | 		expect(cards(s.top)).toEqual(['A']);
+           | 		                     ^
+      1086 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@a.md') }]);
+      1087 | 	});
+      1088 |
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1085:24)
+
+
+Summary of all failing tests
+FAIL test/dom/elements/refUnwrapView.test.ts (6 s)
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render awaited › SCC: an entity whose file is the nested @path target is the same target
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "A",
+    +   "A again",
+      ]
+
+      1083 | 		await s.run(CODE_A);
+      1084 | 		await settle();
+    > 1085 | 		expect(cards(s.top)).toEqual(['A']);
+           | 		                     ^
+      1086 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@a.md') }]);
+      1087 | 	});
+      1088 |
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1085:24)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render fire-and-forget › SCC: an entity whose file is the nested @path target is the same target
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "A",
+    +   "A again",
+      ]
+
+      1083 | 		await s.run(CODE_A);
+      1084 | 		await settle();
+    > 1085 | 		expect(cards(s.top)).toEqual(['A']);
+           | 		                     ^
+      1086 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@a.md') }]);
+      1087 | 	});
+      1088 |
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1085:24)
+
+
+Test Suites: 1 failed, 164 passed, 165 total
+Tests:       2 failed, 2 skipped, 4465 passed, 4469 total
+Snapshots:   0 total
+Time:        50.852 s
+Ran all test suites.

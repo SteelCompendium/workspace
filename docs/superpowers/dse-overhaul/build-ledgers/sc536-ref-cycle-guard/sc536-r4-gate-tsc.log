@@ -1,0 +1,6 @@
+fb24f8a2 test(lifecycle): G-S56 reads its lookup count and list in one eval; says it runs last and detaches other leaves
+
+> draw-steel-elements@7.0.0 tsc
+> tsc --noEmit && tsc --noEmit -p e2e
+
+gate rc=0

@@ -1,0 +1,12 @@
+#!/bin/bash
+# usage: gs56.sh <base|head> <port> <logname>   -- HEAD's lifecycle harness (scratch copy), G-S56 only, against a scratch bundle
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc536-r3-rev7k
+L=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc536-ref-cycle-guard
+cd "$S/plugin" || exit 9
+export DSE_LIFECYCLE_BUNDLE="$S/bundle-$1"
+export DSE_LIFECYCLE_PORT="$2"
+log="$L/sc536-r3-lifecycle-gs56-$3.log"
+echo "bundle=$1 $(date -Is)" > "$log"
+timeout 580 node visual-harness/obsidian-lifecycle.mjs --only=G-S56 >> "$log" 2>&1
+echo "lifecycle rc=$?" >> "$log"
+grep -E "^OBSIDIAN-LIFECYCLE (G-S56|done|temp)|lifecycle rc" "$log" | cut -c1-1500

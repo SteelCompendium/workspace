@@ -1,0 +1,62 @@
+FAIL dom test/dom/elements/refUnwrapView.test.ts
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render awaited › depth cap: 7 distinct references show 5 cards and the cap card, and the refused level makes no lookup
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 2
+
+    @@ -2,6 +2,8 @@
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+    +   "C6",
+    +   "C7",
+      ]
+
+      1092 | 		await s.run('@C1');
+      1093 | 		await settle();
+    > 1094 | 		expect(cards(s.top)).toEqual(['C1', 'C2', 'C3', 'C4', 'C5']);
+           | 		                     ^
+      1095 | 		expect(messages(s.top, CAP)).toEqual([{ depth: 6, text: CAP_MESSAGE }]);
+      1096 | 		expect(messages(s.top, LOOP)).toEqual([]);
+      1097 | 		expect(s.resolved).toEqual(['@C1', '@C2', '@C3', '@C4', '@C5']);
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1094:24)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render fire-and-forget › depth cap: 7 distinct references show 5 cards and the cap card, and the refused level makes no lookup
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 2
+
+    @@ -2,6 +2,8 @@
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+    +   "C6",
+    +   "C7",
+      ]
+
+      1092 | 		await s.run('@C1');
+      1093 | 		await settle();
+    > 1094 | 		expect(cards(s.top)).toEqual(['C1', 'C2', 'C3', 'C4', 'C5']);
+           | 		                     ^
+      1095 | 		expect(messages(s.top, CAP)).toEqual([{ depth: 6, text: CAP_MESSAGE }]);
+      1096 | 		expect(messages(s.top, LOOP)).toEqual([]);
+      1097 | 		expect(s.resolved).toEqual(['@C1', '@C2', '@C3', '@C4', '@C5']);
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1094:24)
+
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       2 failed, 91 passed, 93 total
+Snapshots:   0 total
+Time:        6.169 s
+Ran all test suites matching test/dom/elements/refUnwrapView.test.ts|test/dom/elements/displayCardHybrid.test.ts|test/dom/authoring/formModalStalePreview.test.ts.
+jest rc=1

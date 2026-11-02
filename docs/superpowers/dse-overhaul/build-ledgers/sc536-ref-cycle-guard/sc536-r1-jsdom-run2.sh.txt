@@ -1,0 +1,19 @@
+#!/bin/bash
+# SC-536 r1 (pass 2): probe on base + proto; the existing refUnwrapView suite on proto with the three sibling-model cycle tests
+# (which recurse without end once the guard follows DOM ancestry) excluded, as JSON so every test's status is listed.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc536-r1-a8dc3ea22e7ab9edd
+B="$S/plugin"
+X="$S/plugin-proto-check"
+for D in "$B" "$X"; do cp "$S/sc536-r1-probe-jsdom.test.ts" "$D/test/dom/elements/zz-sc536-probe.test.ts"; done
+cd "$B" || exit 9
+npx jest test/dom/elements/zz-sc536-probe.test.ts > "$S/logs/jest2-probe-base.log" 2>&1
+echo "base probe rc=$?"
+cd "$X" || exit 9
+npx jest test/dom/elements/zz-sc536-probe.test.ts > "$S/logs/jest2-probe-proto.log" 2>&1
+echo "proto probe rc=$?"
+npx jest test/dom/elements/refUnwrapView.test.ts -t '^(?!.*(cycle A -> B -> A in one live block|a reference to itself|a self-reference \(A -> A\) still stops)).*$' --json --outputFile="$S/logs/jest2-ruv-proto.json" > "$S/logs/jest2-ruv-proto.log" 2>&1
+echo "proto ruv rc=$?"
+npx jest test/dom/authoring/formModalStalePreview.test.ts > "$S/logs/jest2-form-proto.log" 2>&1
+echo "proto form rc=$?"
+rm -f "$B/test/dom/elements/zz-sc536-probe.test.ts" "$X/test/dom/elements/zz-sc536-probe.test.ts"
+exit 0

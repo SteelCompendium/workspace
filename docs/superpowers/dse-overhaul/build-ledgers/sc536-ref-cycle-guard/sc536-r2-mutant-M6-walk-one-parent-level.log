@@ -1,0 +1,513 @@
+FAIL dom test/dom/elements/displayCardHybrid.test.ts
+  ● D6 Task 9: hybrid by-SCC render — frontmatter chrome + source body (spec §2.3, §9) › (d) reference guard: a code already shown by a card this one is inside is refused, not infinitely recursed
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Reference loop: scc.v1:mcdm.heroes.v1/kit/self-ref is already shown by a card this one is inside."
+    Received: undefined
+
+      199 |
+      200 | 		const inner = innerHost.containerEl.firstElementChild as HTMLElement;
+    > 201 | 		expect(inner.querySelector('.dse-error-card-message')?.textContent).toBe(
+          | 		                                                                    ^
+      202 | 			`Reference loop: scc.v1:${SELF_REF_CODE} is already shown by a card this one is inside.`,
+      203 | 		);
+      204 | 		expect(inner.querySelector('.dse-card')).toBeNull();
+
+      at Object.<anonymous> (test/dom/elements/displayCardHybrid.test.ts:201:71)
+
+FAIL dom test/dom/elements/refUnwrapView.test.ts
+  ● RefUnwrapView — superseded and overlapping resolutions (SC-525) › a cycle A -> B -> A in one live block is refused at the second A
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  0
+    + Received  + 28
+
+      Array [
+        "A",
+        "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+      ]
+
+      656 | 		await s.run('@A');
+      657 | 		expect(s.roots()).toHaveLength(1);
+    > 658 | 		expect(cards(s.top)).toEqual(['A', 'B']);
+          | 		                     ^
+      659 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 3, text: loopMessage('@A') }]);
+      660 | 	});
+      661 |
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:658:24)
+
+  ● RefUnwrapView — superseded and overlapping resolutions (SC-525) › a reference to itself (A -> A) is refused
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  0
+    + Received  + 29
+
+      Array [
+        "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+    +   "A",
+      ]
+
+      664 | 		s.table['@A'] = { text: 'A', next: '@A' };
+      665 | 		await s.run('@A');
+    > 666 | 		expect(cards(s.top)).toEqual(['A']);
+          | 		                     ^
+      667 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@A') }]);
+      668 | 	});
+      669 |
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:666:24)
+
+  ● RefUnwrapView — superseded and overlapping resolutions (SC-525) › a self-reference (A -> A) still stops when its view was updated while its lookup ran
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 30
+
+      1012 | 		s.holds.forEach((release) => release());
+      1013 | 		await Promise.all([first, updated]);
+    > 1014 | 		expect(s.views.length).toBe(2); // the view and its one refused nested block: bounded, no endless recursion
+           | 		                       ^
+      1015 | 		expect(cards(s.top)).toEqual(['A']);
+      1016 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@A') }]);
+      1017 | 	});
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1014:26)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render awaited › A -> A: one card, one loop card one level down, bounded views, one extra lookup
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 30
+    Received:   30
+
+      1032 | 		await s.run('@A');
+      1033 | 		await settle();
+    > 1034 | 		expect(s.views.length).toBeLessThan(VIEW_CAP);
+           | 		                       ^
+      1035 | 		expect(cards(s.top)).toEqual(['A']);
+      1036 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@A') }]);
+      1037 | 		expect(s.resolved).toEqual(['@A', '@A']);
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1034:26)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render awaited › A -> B -> A: cards A and B, the loop card inside B
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 30
+    Received:   30
+
+      1044 | 		await s.run('@A');
+      1045 | 		await settle();
+    > 1046 | 		expect(s.views.length).toBeLessThan(VIEW_CAP);
+           | 		                       ^
+      1047 | 		expect(cards(s.top)).toEqual(['A', 'B']);
+      1048 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 3, text: loopMessage('@A') }]);
+      1049 | 	});
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1046:26)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render awaited › the same file under another spelling is the same target (an alias then the path)
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 30
+    Received:   30
+
+      1060 | 		await s.run(outer);
+      1061 | 		await settle();
+    > 1062 | 		expect(s.views.length).toBeLessThan(VIEW_CAP);
+           | 		                       ^
+      1063 | 		expect(cards(s.top)).toEqual(['A']);
+      1064 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@A.md') }]);
+      1065 | 	});
+
+      at test/dom/elements/refUnwrapView.test.ts:1062:26
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render awaited › the same file under another spelling is the same target (trailing spaces on the outer reference)
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 30
+    Received:   30
+
+      1060 | 		await s.run(outer);
+      1061 | 		await settle();
+    > 1062 | 		expect(s.views.length).toBeLessThan(VIEW_CAP);
+           | 		                       ^
+      1063 | 		expect(cards(s.top)).toEqual(['A']);
+      1064 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@A.md') }]);
+      1065 | 	});
+
+      at test/dom/elements/refUnwrapView.test.ts:1062:26
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render awaited › SCC: a code whose body nests the same code is refused
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 30
+    Received:   30
+
+      1071 | 		await s.run(CODE_A);
+      1072 | 		await settle();
+    > 1073 | 		expect(s.views.length).toBeLessThan(VIEW_CAP);
+           | 		                       ^
+      1074 | 		expect(cards(s.top)).toEqual(['A']);
+      1075 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage(CODE_A) }]);
+      1076 | 	});
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1073:26)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render awaited › SCC: an entity whose file is the nested @path target is the same target
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "A",
+    +   "A again",
+      ]
+
+      1083 | 		await s.run(CODE_A);
+      1084 | 		await settle();
+    > 1085 | 		expect(cards(s.top)).toEqual(['A']);
+           | 		                     ^
+      1086 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@a.md') }]);
+      1087 | 	});
+      1088 |
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1085:24)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render awaited › depth cap: 7 distinct references show 5 cards and the cap card, and the refused level makes no lookup
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 2
+
+    @@ -2,6 +2,8 @@
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+    +   "C6",
+    +   "C7",
+      ]
+
+      1092 | 		await s.run('@C1');
+      1093 | 		await settle();
+    > 1094 | 		expect(cards(s.top)).toEqual(['C1', 'C2', 'C3', 'C4', 'C5']);
+           | 		                     ^
+      1095 | 		expect(messages(s.top, CAP)).toEqual([{ depth: 6, text: CAP_MESSAGE }]);
+      1096 | 		expect(messages(s.top, LOOP)).toEqual([]);
+      1097 | 		expect(s.resolved).toEqual(['@C1', '@C2', '@C3', '@C4', '@C5']);
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1094:24)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render awaited › a superseded resolution never stamps a chain: the new reference's children see the new chain
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  0
+    + Received  + 29
+
+      Array [
+        "B",
+        "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+      ]
+
+      1160 | 		await settle();
+      1161 | 		await Promise.all([first, updated]);
+    > 1162 | 		expect(cards(s.top)).toEqual(['B', 'A']);
+           | 		                     ^
+      1163 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@B') }]);
+      1164 | 	});
+      1165 | });
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1162:24)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render fire-and-forget › A -> A: one card, one loop card one level down, bounded views, one extra lookup
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 30
+    Received:   30
+
+      1032 | 		await s.run('@A');
+      1033 | 		await settle();
+    > 1034 | 		expect(s.views.length).toBeLessThan(VIEW_CAP);
+           | 		                       ^
+      1035 | 		expect(cards(s.top)).toEqual(['A']);
+      1036 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@A') }]);
+      1037 | 		expect(s.resolved).toEqual(['@A', '@A']);
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1034:26)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render fire-and-forget › A -> B -> A: cards A and B, the loop card inside B
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 30
+    Received:   30
+
+      1044 | 		await s.run('@A');
+      1045 | 		await settle();
+    > 1046 | 		expect(s.views.length).toBeLessThan(VIEW_CAP);
+           | 		                       ^
+      1047 | 		expect(cards(s.top)).toEqual(['A', 'B']);
+      1048 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 3, text: loopMessage('@A') }]);
+      1049 | 	});
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1046:26)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render fire-and-forget › the same file under another spelling is the same target (an alias then the path)
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 30
+    Received:   30
+
+      1060 | 		await s.run(outer);
+      1061 | 		await settle();
+    > 1062 | 		expect(s.views.length).toBeLessThan(VIEW_CAP);
+           | 		                       ^
+      1063 | 		expect(cards(s.top)).toEqual(['A']);
+      1064 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@A.md') }]);
+      1065 | 	});
+
+      at test/dom/elements/refUnwrapView.test.ts:1062:26
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render fire-and-forget › the same file under another spelling is the same target (trailing spaces on the outer reference)
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 30
+    Received:   30
+
+      1060 | 		await s.run(outer);
+      1061 | 		await settle();
+    > 1062 | 		expect(s.views.length).toBeLessThan(VIEW_CAP);
+           | 		                       ^
+      1063 | 		expect(cards(s.top)).toEqual(['A']);
+      1064 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@A.md') }]);
+      1065 | 	});
+
+      at test/dom/elements/refUnwrapView.test.ts:1062:26
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render fire-and-forget › SCC: a code whose body nests the same code is refused
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 30
+    Received:   30
+
+      1071 | 		await s.run(CODE_A);
+      1072 | 		await settle();
+    > 1073 | 		expect(s.views.length).toBeLessThan(VIEW_CAP);
+           | 		                       ^
+      1074 | 		expect(cards(s.top)).toEqual(['A']);
+      1075 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage(CODE_A) }]);
+      1076 | 	});
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1073:26)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render fire-and-forget › SCC: an entity whose file is the nested @path target is the same target
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "A",
+    +   "A again",
+      ]
+
+      1083 | 		await s.run(CODE_A);
+      1084 | 		await settle();
+    > 1085 | 		expect(cards(s.top)).toEqual(['A']);
+           | 		                     ^
+      1086 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@a.md') }]);
+      1087 | 	});
+      1088 |
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1085:24)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render fire-and-forget › depth cap: 7 distinct references show 5 cards and the cap card, and the refused level makes no lookup
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 2
+
+    @@ -2,6 +2,8 @@
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+    +   "C6",
+    +   "C7",
+      ]
+
+      1092 | 		await s.run('@C1');
+      1093 | 		await settle();
+    > 1094 | 		expect(cards(s.top)).toEqual(['C1', 'C2', 'C3', 'C4', 'C5']);
+           | 		                     ^
+      1095 | 		expect(messages(s.top, CAP)).toEqual([{ depth: 6, text: CAP_MESSAGE }]);
+      1096 | 		expect(messages(s.top, LOOP)).toEqual([]);
+      1097 | 		expect(s.resolved).toEqual(['@C1', '@C2', '@C3', '@C4', '@C5']);
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1094:24)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render fire-and-forget › a superseded resolution never stamps a chain: the new reference's children see the new chain
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  0
+    + Received  + 29
+
+      Array [
+        "B",
+        "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+      ]
+
+      1160 | 		await settle();
+      1161 | 		await Promise.all([first, updated]);
+    > 1162 | 		expect(cards(s.top)).toEqual(['B', 'A']);
+           | 		                     ^
+      1163 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@B') }]);
+      1164 | 	});
+      1165 | });
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1162:24)
+
+
+Test Suites: 2 failed, 1 passed, 3 total
+Tests:       20 failed, 73 passed, 93 total
+Snapshots:   0 total
+Time:        6.545 s
+Ran all test suites matching test/dom/elements/refUnwrapView.test.ts|test/dom/elements/displayCardHybrid.test.ts|test/dom/authoring/formModalStalePreview.test.ts.
+jest rc=1

@@ -1,0 +1,183 @@
+// SC-536 r1 throwaway jsdom probe (scratch copy only; never committed). Models REAL nesting: a nested block gets its OWN
+// host whose containerEl is INSIDE the parent card's root and whose blockKey differs (Obsidian's docId fallback), and the
+// nested render is fire-and-forget (renderFeature's `void renderMd`). Compare: refUnwrapView.test.ts's cycle tests reuse ONE
+// host, so the nested root is a SIBLING with the SAME blockKey.
+import { ElementPipeline } from '@/framework/pipeline';
+import type { ElementPipelineDeps } from '@/framework/pipeline';
+import type { ElementDefinition } from '@/framework/registry';
+import { ElementView } from '@/framework/view';
+import type { BlockHost, RenderMode } from '@/framework/host/BlockHost';
+import { createThemeService } from '@/framework/seams/theme';
+import { createPreferenceStore } from '@/framework/seams/prefs';
+import { createRollService } from '@/framework/roll/service';
+import type { PrefsStorage } from '@/framework/seams/prefs';
+import { createReferenceService } from '@/framework/seams/refs';
+import { createValidationService } from '@/framework/validation';
+import { createSessionStore } from '@/framework/session';
+import { DEFAULT_SETTINGS } from '@model/Settings';
+import { App, Plugin } from '../../mocks/obsidian';
+import { fakeTFile } from '../../fakes/fakeObsidian';
+import { withReference } from '@/elements/shared/withReference';
+
+let hostSeq = 0;
+function makeHost(containerEl: HTMLElement, key?: string): BlockHost & { containerEl: HTMLElement } {
+	const k = key ?? `Note.md::ds-test-base::nested-${++hostSeq}`;
+	return {
+		mode: 'reading' as RenderMode,
+		sourcePath: 'Note.md',
+		containerEl,
+		canPersist: true,
+		addChild: (child) => child,
+		getBlockInfo: () => ({ language: 'ds-test-base', lineStart: 0, lineEnd: 1 }),
+		replaceSource: async () => true,
+		blockKey: () => k,
+	};
+}
+function makeDeps(): ElementPipelineDeps {
+	const app = new App();
+	const plugin = new Plugin(app);
+	const storage: PrefsStorage = { get: async () => undefined, set: async () => {} };
+	const prefs = createPreferenceStore(storage);
+	return {
+		app: app as any,
+		plugin: plugin as any,
+		settings: DEFAULT_SETTINGS,
+		theme: createThemeService(prefs, plugin as any),
+		prefs,
+		refs: createReferenceService(app as any, DEFAULT_SETTINGS),
+		validation: createValidationService(),
+		session: createSessionStore(),
+		roll: createRollService(prefs),
+	};
+}
+interface NestModel {
+	text: string;
+	next?: string;
+}
+const NESTING = /nesting too deep/i;
+const VIEW_CAP = 30; // the probe's own brake: base recursion is unbounded
+const tick = async (n = 10) => {
+	for (let i = 0; i < n; i++) await new Promise<void>((r) => setTimeout(r, 0));
+};
+
+function setup(fireAndForget: boolean) {
+	const table: Record<string, NestModel> = {};
+	const holds: Array<() => void> = [];
+	let holding = false;
+	let views = 0;
+	const deps = makeDeps();
+	const pipeline = new ElementPipeline(deps);
+	let def: ElementDefinition<any>;
+	class NestView extends ElementView<NestModel> {
+		protected async onMount(root: HTMLElement, model: NestModel): Promise<void> {
+			root.createDiv({ cls: 'test-base-view', attr: { 'data-test-model': model.text } });
+			if (!model.next) return;
+			const slot = root.createDiv({ cls: 'nested-slot' }); // the effect markdown's element, inside this card
+			if (++views > VIEW_CAP) return;
+			const run = pipeline.run(def, model.next, makeHost(slot));
+			if (!fireAndForget) await run;
+		}
+	}
+	const nestBase: ElementDefinition<NestModel> = {
+		id: 'test-base',
+		name: 'Test Base',
+		aliases: ['ds-test-base'],
+		shape: 'static',
+		parse: (data) => data as NestModel,
+		createView: (cx) => new NestView(cx),
+	};
+	def = withReference(nestBase, { sccType: /statblock$/ });
+	deps.refs.register({
+		kind: 'at-path',
+		canResolve: (raw) => raw in table,
+		resolve: ({ raw }) => {
+			const r = { data: table[raw], file: fakeTFile(raw.slice(1)) } as any;
+			return holding ? new Promise((res) => holds.push(() => res(r))) : Promise.resolve(r);
+		},
+	});
+	(deps.app as any).vault.read = async () => '';
+	const top = document.createElement('div');
+	return {
+		table,
+		holds,
+		top,
+		views: () => views,
+		run: (ref: string, key?: string) => pipeline.run(def, ref, makeHost(top, key)),
+		hold: (on: boolean) => {
+			holding = on;
+		},
+	};
+}
+const depthOf = (el: Element) => {
+	let d = 0;
+	for (let p = el.parentElement; p; p = p.parentElement) if (p.hasAttribute('data-dse-element')) d++;
+	return d;
+};
+const cards = (top: HTMLElement) => Array.from(top.querySelectorAll('.test-base-view')).map((n) => n.getAttribute('data-test-model'));
+const nestingCards = (top: HTMLElement) =>
+	Array.from(top.querySelectorAll('.dse-error-card-message')).filter((n) => NESTING.test(n.textContent ?? '')).map((n) => ({ depth: depthOf(n), text: n.textContent }));
+
+describe.each([['awaited', false], ['fire-and-forget', true]] as Array<[string, boolean]>)('SC536 probe: real nesting (%s nested render)', (_n, ff) => {
+	test('Bug 1: A -> A stops with one nesting card one level down', async () => {
+		const s = setup(ff);
+		s.table['@A'] = { text: 'A', next: '@A' };
+		await s.run('@A');
+		await tick(40);
+		console.log(`SC536-PROBE bug1 ${_n}: views=${s.views()} cards=${JSON.stringify(cards(s.top))} nesting=${JSON.stringify(nestingCards(s.top))}`);
+		expect(s.views()).toBeLessThan(VIEW_CAP);
+		expect(cards(s.top)).toEqual(['A']);
+		expect(nestingCards(s.top).map((x) => x.depth)).toEqual([2]); // message inside the refused root (2) inside the outer root (1)
+	});
+	test('Bug 1: A -> B -> A stops at the second A', async () => {
+		const s = setup(ff);
+		s.table['@A'] = { text: 'A', next: '@B' };
+		s.table['@B'] = { text: 'B', next: '@A' };
+		await s.run('@A');
+		await tick(40);
+		console.log(`SC536-PROBE bug1-ab ${_n}: views=${s.views()} cards=${JSON.stringify(cards(s.top))} nesting=${JSON.stringify(nestingCards(s.top))}`);
+		expect(cards(s.top)).toEqual(['A', 'B']);
+		expect(nestingCards(s.top).map((x) => x.depth)).toEqual([3]);
+	});
+	test('depth cap: a chain of 7 distinct references stops after 5', async () => {
+		const s = setup(ff);
+		for (let i = 1; i <= 7; i++) s.table[`@C${i}`] = { text: `C${i}`, next: i < 7 ? `@C${i + 1}` : undefined };
+		await s.run('@C1');
+		await tick(40);
+		console.log(`SC536-PROBE cap ${_n}: cards=${JSON.stringify(cards(s.top))} nesting=${JSON.stringify(nestingCards(s.top))}`);
+		expect(cards(s.top)).toEqual(['C1', 'C2', 'C3', 'C4', 'C5']);
+		expect(nestingCards(s.top).map((x) => x.depth)).toEqual([6]);
+	});
+	test('a legitimate nested reference renders (A -> B, no cycle)', async () => {
+		const s = setup(ff);
+		s.table['@A'] = { text: 'A', next: '@B' };
+		s.table['@B'] = { text: 'B' };
+		await s.run('@A');
+		await tick(20);
+		expect(cards(s.top)).toEqual(['A', 'B']);
+		expect(nestingCards(s.top)).toEqual([]);
+	});
+});
+
+describe.each([['FIFO', false], ['LIFO', true]] as Array<[string, boolean]>)('SC536 probe: one block live twice (Bug 2), release %s', (_n, lifo) => {
+	test('two live copies with the SAME blockKey, both lookups in flight at once: both draw the card', async () => {
+		const s = setup(false);
+		s.table['@R'] = { text: 'R' };
+		s.hold(true);
+		const a = s.run('@R', 'Note.md::ds-test-base::4');
+		await tick();
+		const b = s.run('@R', 'Note.md::ds-test-base::4');
+		await tick();
+		const whileHeld = nestingCards(s.top).length;
+		const order = lifo ? [...s.holds].reverse() : [...s.holds];
+		const heldCount = s.holds.length;
+		for (const r of order) {
+			r();
+			await tick();
+		}
+		await Promise.all([a, b]);
+		console.log(`SC536-PROBE bug2 ${_n}: held=${heldCount} nestingWhileHeld=${whileHeld} after cards=${JSON.stringify(cards(s.top))} nesting=${nestingCards(s.top).length}`);
+		expect(heldCount).toBe(2);
+		expect(cards(s.top)).toEqual(['R', 'R']);
+		expect(nestingCards(s.top)).toEqual([]);
+	});
+});

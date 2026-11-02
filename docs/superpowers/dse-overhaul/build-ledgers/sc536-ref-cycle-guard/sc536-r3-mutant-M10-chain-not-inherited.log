@@ -1,0 +1,161 @@
+Running one project: dom
+FAIL dom test/dom/elements/refUnwrapView.test.ts (9.368 s)
+  ● RefUnwrapView — superseded and overlapping resolutions (SC-525) › a cycle A -> B -> A in one live block is refused at the second A
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 3
+
+      Array [
+        "A",
+        "B",
+    +   "A",
+    +   "B",
+    +   "A",
+      ]
+
+      656 | 		await s.run('@A');
+      657 | 		expect(s.roots()).toHaveLength(1);
+    > 658 | 		expect(cards(s.top)).toEqual(['A', 'B']);
+          | 		                     ^
+      659 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 3, text: loopMessage('@A') }]);
+      660 | 	});
+      661 |
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:658:24)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render awaited › A -> B -> A: cards A and B, the loop card inside B
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 3
+
+      Array [
+        "A",
+        "B",
+    +   "A",
+    +   "B",
+    +   "A",
+      ]
+
+      1045 | 		await settle();
+      1046 | 		expect(s.views.length).toBeLessThan(VIEW_CAP);
+    > 1047 | 		expect(cards(s.top)).toEqual(['A', 'B']);
+           | 		                     ^
+      1048 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 3, text: loopMessage('@A') }]);
+      1049 | 	});
+      1050 |
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1047:24)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render fire-and-forget › A -> B -> A: cards A and B, the loop card inside B
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 3
+
+      Array [
+        "A",
+        "B",
+    +   "A",
+    +   "B",
+    +   "A",
+      ]
+
+      1045 | 		await settle();
+      1046 | 		expect(s.views.length).toBeLessThan(VIEW_CAP);
+    > 1047 | 		expect(cards(s.top)).toEqual(['A', 'B']);
+           | 		                     ^
+      1048 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 3, text: loopMessage('@A') }]);
+      1049 | 	});
+      1050 |
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1047:24)
+
+
+Summary of all failing tests
+FAIL test/dom/elements/refUnwrapView.test.ts (9.368 s)
+  ● RefUnwrapView — superseded and overlapping resolutions (SC-525) › a cycle A -> B -> A in one live block is refused at the second A
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 3
+
+      Array [
+        "A",
+        "B",
+    +   "A",
+    +   "B",
+    +   "A",
+      ]
+
+      656 | 		await s.run('@A');
+      657 | 		expect(s.roots()).toHaveLength(1);
+    > 658 | 		expect(cards(s.top)).toEqual(['A', 'B']);
+          | 		                     ^
+      659 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 3, text: loopMessage('@A') }]);
+      660 | 	});
+      661 |
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:658:24)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render awaited › A -> B -> A: cards A and B, the loop card inside B
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 3
+
+      Array [
+        "A",
+        "B",
+    +   "A",
+    +   "B",
+    +   "A",
+      ]
+
+      1045 | 		await settle();
+      1046 | 		expect(s.views.length).toBeLessThan(VIEW_CAP);
+    > 1047 | 		expect(cards(s.top)).toEqual(['A', 'B']);
+           | 		                     ^
+      1048 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 3, text: loopMessage('@A') }]);
+      1049 | 	});
+      1050 |
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1047:24)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render fire-and-forget › A -> B -> A: cards A and B, the loop card inside B
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 3
+
+      Array [
+        "A",
+        "B",
+    +   "A",
+    +   "B",
+    +   "A",
+      ]
+
+      1045 | 		await settle();
+      1046 | 		expect(s.views.length).toBeLessThan(VIEW_CAP);
+    > 1047 | 		expect(cards(s.top)).toEqual(['A', 'B']);
+           | 		                     ^
+      1048 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 3, text: loopMessage('@A') }]);
+      1049 | 	});
+      1050 |
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1047:24)
+
+
+Test Suites: 1 failed, 164 passed, 165 total
+Tests:       3 failed, 2 skipped, 4464 passed, 4469 total
+Snapshots:   0 total
+Time:        53.443 s, estimated 61 s
+Ran all test suites.

@@ -1,0 +1,22 @@
+#!/bin/bash
+# SC-536 r1: build three plugin bundles from a SCRATCH copy of dse 34f46cf (the worktree is never touched):
+#   base  = 34f46cf as is;  instr = + throwaway logging;  proto = the recommended ancestry guard.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc536-r1-a8dc3ea22e7ab9edd
+cd "$S/plugin" || exit 9
+for v in base instr proto; do
+	rm -rf "$S/plugin/src"
+	cp -a "$S/src-pristine" "$S/plugin/src"
+	if [ "$v" = instr ]; then python3 "$S/sc536-r1-patch-instr.py" "$S/plugin" || exit 3; fi
+	if [ "$v" = proto ]; then python3 "$S/sc536-r1-patch-proto.py" "$S/plugin" || exit 3; fi
+	node esbuild.config.mjs production > "$S/build-$v.log" 2>&1
+	rc=$?
+	echo "$v build rc=$rc"
+	[ $rc -eq 0 ] || { tail -20 "$S/build-$v.log"; exit 4; }
+	mkdir -p "$S/bundle-$v"
+	cp main.js styles.css manifest.json "$S/bundle-$v/"
+done
+rm -rf "$S/plugin/src"
+cp -a "$S/src-pristine" "$S/plugin/src"
+echo "instr markers: $(grep -c __sc536 "$S/bundle-instr/main.js")  proto markers: $(grep -c 'references inside one another' "$S/bundle-proto/main.js")  base IN_FLIGHT-ish: $(grep -c 'already resolving in this block' "$S/bundle-base/main.js")"
+ls -l "$S"/bundle-*/main.js
+exit 0

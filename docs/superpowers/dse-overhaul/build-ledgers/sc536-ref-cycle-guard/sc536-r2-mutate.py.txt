@@ -1,0 +1,31 @@
+import sys
+name=sys.argv[1]; p=sys.argv[2]
+s=open(p,encoding='utf-8').read()
+def sub(old,new):
+    global s
+    assert s.count(old)==1,(name,old,s.count(old))
+    s=s.replace(old,new)
+if name=='M1-drop-cycle-check':
+    sub("if (parent && targets.some((t) => parent.targets.has(t))) {","if (parent && false) {")
+elif name=='M2-drop-cap':
+    sub("if ((nearestChain(root)?.depth ?? 0) >= MAX_REF_DEPTH) {","if (false) {")
+elif name=='M3-drop-delete-at-onMount':
+    sub("\t\tREF_CHAIN.delete(root);\n","")
+elif name=='M4-claim-before-last-gen-check':
+    sub("""		const rawText = await this.legacyRefRawText(resolved);
+		if (gen !== this.resolveGen) return;
+		const model = this.base.parse(resolved.data, rawText);
+		// SC-536: the last gen check is above (see resolveAndMount's SCC ladder).
+		if (!this.claimChain(root, raw, [resolved.file ? `file:${resolved.file.path}` : `raw:${this.base.id}|${raw}`])) return;
+""","""		const rawText = await this.legacyRefRawText(resolved);
+		if (!this.claimChain(root, raw, [resolved.file ? `file:${resolved.file.path}` : `raw:${this.base.id}|${raw}`])) return;
+		if (gen !== this.resolveGen) return;
+		const model = this.base.parse(resolved.data, rawText);
+""")
+elif name=='M5-key-on-raw-text':
+    sub("[resolved.file ? `file:${resolved.file.path}` : `raw:${this.base.id}|${raw}`]","[`raw:${this.base.id}|${raw}`]")
+elif name=='M6-walk-one-parent-level':
+    sub("for (let n = root.parentElement; n; n = n.parentElement) {","for (let n = root.parentElement; n; n = null) {")
+else:
+    raise SystemExit('unknown '+name)
+open(p,'w',encoding='utf-8').write(s)

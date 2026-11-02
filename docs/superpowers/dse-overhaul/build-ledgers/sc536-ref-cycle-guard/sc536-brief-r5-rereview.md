@@ -1,0 +1,9 @@
+# SC-536 r5 — scoped re-review of the r4 rebase delta (orchestration:reviewer, r3 identity resumed)
+
+You reviewed `458abe3..432c50e2` in r3 (LAND-READY). The author has since rebased onto dse develop `f81a277` (SC-533: `mountChrome.ts` + lifecycle G-S54) and made the r4 folds. Review **only the delta**:
+- Ledger: `/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc536-ref-cycle-guard/decisions.md` ("Owner rulings on r3 findings"); author's r4 section at the end of `sc536-r2-impl-report.md`.
+- Plugin: `git -C /home/scott/code/steelCompendium/worktrees/sc536-ref-cycle-guard/draw-steel-elements range-diff 458abe3..432c50e2 f81a277..fb24f8a2` — confirm the rebase changed nothing in `src/` beyond conflict-free replay, the `obsidian-lifecycle.mjs` merge keeps both G-S54 and G-S56 intact (G-S56 last), and INFO-3 (one `t.ev`) / INFO-5 (comment) are done as ruled.
+- Superproject worktree (head `5325f33b`, reset onto main `e0f5c76a`; the old `2f5eb7d1` is replaced): net diff vs main `e0f5c76a` touches only `CHANGELOG.md` (no `.claude/skills/dse-verify/SKILL.md`), and the pointer bump is not staged. Check `sc536-dse-verify-row4-proposal.md` reads correctly against the row on `origin/main`.
+- Re-run yourself: tsc, lint, jest, lifecycle second half (the one holding G-S54 and G-S56) — and G-S56 `--only` once more. Expected: jest 6228 passed / 1 skipped / 249 of 250; lifecycle total 44/44 (author split 22 + 22; second half 542 s — confirm it fits under 600 s on your run).
+- You never call the tracker. Same footguns as your r3 brief (`sc536-brief-r3-review.md` §5); scratch in `.../scratchpad/sc536-r5-<yourAgentId>/`.
+- Report: `sc536-r5-rereview-report.md` in the ledger dir, ≤10-line executive summary first. Final text to the ticket-owner: verdict, findings with file:line, measured numbers, artifact paths. If you need input, end with `STATUS: NEEDS_CONTEXT`.

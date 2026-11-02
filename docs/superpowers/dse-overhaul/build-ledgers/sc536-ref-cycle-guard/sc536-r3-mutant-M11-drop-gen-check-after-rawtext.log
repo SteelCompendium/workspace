@@ -1,0 +1,147 @@
+Running one project: dom
+FAIL dom test/dom/elements/refUnwrapView.test.ts (7.875 s)
+  ● RefUnwrapView — superseded and overlapping resolutions (SC-525) › each await window of a resolution is guarded on its own › legacy: the view is updated while the referenced file's block text is being read: one card
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "A",
+    +   "A",
+      ]
+
+       997 | 			await first;
+       998 | 			await windowTick();
+    >  999 | 			expect(baseViews(w.h.containerEl.firstElementChild as HTMLElement)).toEqual(['A']);
+           | 			                                                                    ^
+      1000 | 		});
+      1001 | 	});
+      1002 |
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:999:72)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render awaited › a superseded resolution never stamps a chain: the new reference's children see the new chain
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "B",
+    +   "B",
+        "A",
+      ]
+
+      1160 | 		await settle();
+      1161 | 		await Promise.all([first, updated]);
+    > 1162 | 		expect(cards(s.top)).toEqual(['B', 'A']);
+           | 		                     ^
+      1163 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@B') }]);
+      1164 | 	});
+      1165 | });
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1162:24)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render fire-and-forget › a superseded resolution never stamps a chain: the new reference's children see the new chain
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "B",
+    +   "B",
+        "A",
+      ]
+
+      1160 | 		await settle();
+      1161 | 		await Promise.all([first, updated]);
+    > 1162 | 		expect(cards(s.top)).toEqual(['B', 'A']);
+           | 		                     ^
+      1163 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@B') }]);
+      1164 | 	});
+      1165 | });
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1162:24)
+
+
+Summary of all failing tests
+FAIL test/dom/elements/refUnwrapView.test.ts (7.875 s)
+  ● RefUnwrapView — superseded and overlapping resolutions (SC-525) › each await window of a resolution is guarded on its own › legacy: the view is updated while the referenced file's block text is being read: one card
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "A",
+    +   "A",
+      ]
+
+       997 | 			await first;
+       998 | 			await windowTick();
+    >  999 | 			expect(baseViews(w.h.containerEl.firstElementChild as HTMLElement)).toEqual(['A']);
+           | 			                                                                    ^
+      1000 | 		});
+      1001 | 	});
+      1002 |
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:999:72)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render awaited › a superseded resolution never stamps a chain: the new reference's children see the new chain
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "B",
+    +   "B",
+        "A",
+      ]
+
+      1160 | 		await settle();
+      1161 | 		await Promise.all([first, updated]);
+    > 1162 | 		expect(cards(s.top)).toEqual(['B', 'A']);
+           | 		                     ^
+      1163 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@B') }]);
+      1164 | 	});
+      1165 | });
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1162:24)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render fire-and-forget › a superseded resolution never stamps a chain: the new reference's children see the new chain
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "B",
+    +   "B",
+        "A",
+      ]
+
+      1160 | 		await settle();
+      1161 | 		await Promise.all([first, updated]);
+    > 1162 | 		expect(cards(s.top)).toEqual(['B', 'A']);
+           | 		                     ^
+      1163 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@B') }]);
+      1164 | 	});
+      1165 | });
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1162:24)
+
+
+Test Suites: 1 failed, 164 passed, 165 total
+Tests:       3 failed, 2 skipped, 4464 passed, 4469 total
+Snapshots:   0 total
+Time:        56.541 s
+Ran all test suites.

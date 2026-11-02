@@ -1,0 +1,25 @@
+#!/bin/bash
+# usage: run.sh <base|head> <port> <only-ids> <logname>
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc536-r3-rev7k
+L=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc536-ref-cycle-guard
+cd "$S/plugin" || exit 9
+python3 - "$S" <<'PY' || exit 3
+import sys
+S = sys.argv[1]
+src = open(S + '/plugin/visual-harness/obsidian-lifecycle.mjs').read()
+kit = open(S + '/kit.js').read() + '\n' + open(S + '/kit-r3.js').read()
+scn = open(S + '/r1-scenarios.js').read() + '\n' + open(S + '/scenarios-r3.js').read()
+marker = 'const SCENARIOS = [\n'
+assert src.count(marker) == 1
+open(S + '/plugin/visual-harness/zz-sc536-r3-probe.mjs', 'w').write(src.replace(marker, kit + '\n' + marker + scn))
+PY
+export DSE_LIFECYCLE_BUNDLE="$S/bundle-$1"
+export DSE_LIFECYCLE_PORT="$2"
+log="$L/sc536-r3-obsidian-$4.log"
+echo "bundle=$1 $(date -Is)" > "$log"
+timeout 580 node visual-harness/zz-sc536-r3-probe.mjs --only="$3" >> "$log" 2>&1
+rc=$?
+echo "probe rc=$rc" >> "$log"
+echo "log=$log rc=$rc"
+grep -E "^OBSIDIAN-LIFECYCLE" "$log" | cut -c1-3000
+exit 0

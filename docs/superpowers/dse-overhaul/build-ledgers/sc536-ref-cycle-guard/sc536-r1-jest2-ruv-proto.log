@@ -1,0 +1,82 @@
+FAIL dom test/dom/elements/refUnwrapView.test.ts
+  ● RefUnwrapView — in-flight depth guard (SC-525) › two live views in one block resolving the same reference at once: the later one is refused, the earlier one still renders
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 6
+    + Received  + 1
+
+    - Array [
+    -   <div
+    -     data-dse-element="test-base"
+    -     data-dse-theme="steel"
+    -   />,
+    - ]
+    + Array []
+
+      583 | 		const second = s.run('@A');
+      584 | 		await tick();
+    > 585 | 		expect(nestingErrors(s.roots())).toEqual([s.roots()[1]]);
+          | 		                                 ^
+      586 | 		s.holds.forEach((release) => release());
+      587 | 		await Promise.all([first, second]);
+      588 | 		expect(rendered(s.roots()[0])).toBe('A');
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:585:36)
+
+  ● RefUnwrapView — in-flight depth guard (SC-525) › a superseded owner's late finally leaves the new owner's entry in place: a third live view is still refused
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 6
+    + Received  + 1
+
+    - Array [
+    -   <div
+    -     data-dse-element="test-base"
+    -     data-dse-theme="steel"
+    -   />,
+    - ]
+    + Array []
+
+      634 | 		const third = s.run('@A');
+      635 | 		await tick();
+    > 636 | 		expect(nestingErrors(s.roots())).toEqual([s.roots()[2]]);
+          | 		                                 ^
+      637 | 		await third;
+      638 | 		s.holds[1]();
+      639 | 		await second;
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:636:36)
+
+  ● RefUnwrapView — in-flight depth guard (SC-525) › the earlier resolution of an updated view settling leaves the later one's entry: another live view is still refused
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 6
+    + Received  + 1
+
+    - Array [
+    -   <div
+    -     data-dse-element="test-base"
+    -     data-dse-theme="steel"
+    -   />,
+    - ]
+    + Array []
+
+      744 | 		const other = s.run('@A'); // a different live view of the same block
+      745 | 		await tick();
+    > 746 | 		expect(nestingErrors(s.roots())).toEqual([s.roots()[1]]);
+          | 		                                 ^
+      747 | 		await other;
+      748 | 		s.holds[1]();
+      749 | 		await updated;
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:746:36)
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 3 skipped, 34 passed, 40 total
+Snapshots:   0 total
+Time:        2.197 s
+Ran all test suites matching test/dom/elements/refUnwrapView.test.ts with tests matching "^(?!.*(cycle A -> B -> A in one live block|a reference to itself|a self-reference \(A -> A\) still stops)).*$".
+Test results written to: ../logs/jest2-ruv-proto.json

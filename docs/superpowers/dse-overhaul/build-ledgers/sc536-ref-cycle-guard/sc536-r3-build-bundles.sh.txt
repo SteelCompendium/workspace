@@ -1,0 +1,15 @@
+#!/bin/bash
+# build bundle-head and bundle-base from the SCRATCH copy
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc536-r3-rev7k
+cd "$S/plugin" || exit 9
+for v in base head; do
+  rm -rf "$S/plugin/src"
+  cp -a "$S/src-$v/src" "$S/plugin/src"
+  node esbuild.config.mjs production > "$S/logs/build-$v.log" 2>&1
+  rc=$?; echo "$v build rc=$rc"
+  [ $rc -eq 0 ] || { tail -20 "$S/logs/build-$v.log"; exit 4; }
+  mkdir -p "$S/bundle-$v"
+  cp main.js styles.css manifest.json "$S/bundle-$v/"
+done
+rm -rf "$S/plugin/src"; cp -a "$S/src-head/src" "$S/plugin/src"
+echo "head markers: $(grep -c 'references inside one another' $S/bundle-head/main.js) base markers: $(grep -c 'already resolving in this block' $S/bundle-base/main.js)"

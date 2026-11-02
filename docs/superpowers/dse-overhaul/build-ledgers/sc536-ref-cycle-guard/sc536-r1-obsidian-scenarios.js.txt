@@ -1,0 +1,191 @@
+	// ===================== SC-536 r1 real-Obsidian probes (throwaway; never committed) =====================
+	// NEST: a legitimate nested reference (Outer.md's effect holds ~~~ds-feature @Ref.md) + instrumentation dump.
+	{
+		id: 'S536-NEST',
+		async run(t) {
+			const K = sc536Kit(t);
+			const out = { tag: K.tag() };
+			await K.install();
+			await K.instrReset();
+			const m = await t.mark();
+			await t.open('Lifecycle/sc536-outer.md');
+			const L = 'app.workspace.getMostRecentLeaf()';
+			await t.waitFor(`/Ref Strike|nesting too deep|failed/.test((${K.ROOT(L)})?.textContent ?? '')`, 'outer: nested card or error');
+			await K.settle();
+			out.outer = await K.st(L, 'Outer Strike');
+			out.inner = await K.st(L, 'Ref Strike');
+			out.tree = await K.treeStats(t.readingScope(L), 'Ref Strike');
+			out.instr = await K.instr();
+			out.errors = await t.errorsSince(m);
+			console.log('S536-NEST-JSON ' + JSON.stringify(out));
+			return `${out.tag}: outer card=${out.outer.card} nested Ref card=${out.inner.card} roots=${out.tree.roots} maxDepth=${out.tree.maxDepth} errorCards=${out.tree.errorCards.length} lookups=${out.tree.lookups}`;
+		},
+	},
+	// B2: one block live twice (Bug 2). A/H1/H2/H3 hold the referenced file's read at app.vault (survives a plugin re-enable); C/D natural timing.
+	{
+		id: 'S536-B2',
+		async run(t) {
+			const K = sc536Kit(t);
+			const out = { tag: K.tag() };
+			await K.install();
+			const m = await t.mark();
+			const rel = 'Lifecycle/sc536-refcard.md';
+			await t.open(rel);
+			await t.ev(`(() => { window.__p1 = app.workspace.getMostRecentLeaf(); return true; })()`);
+			const TEXT = (leaf) => `((${K.ROOT(leaf)})?.textContent ?? '')`;
+			await t.waitFor(`/Ref Strike/.test(${TEXT('window.__p1')})`, 'pane 1 card');
+			await K.settle();
+			out.initial = await K.st('window.__p1');
+			const split = (active) => t.ev(`(async () => { const leaf = app.workspace.getLeaf('split', 'vertical'); window.__p2 = leaf; await leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'preview' }, active: ${active} }); return true; })()`);
+			const both = async () => ({ p1: await K.st('window.__p1'), p2: await K.st('window.__p2') });
+
+			// ---- A: two redraws of pane 1 while the first redraw's read is held
+			await K.holdPath('Ref.md');
+			await t.ev(`(() => { window.__p1.view.previewMode.rerender(true); return true; })()`);
+			await t.waitFor(`window.__k536.held.length >= 1`, 'A: first redraw read held');
+			await t.ev(`(() => { window.__p1.view.previewMode.rerender(true); return true; })()`);
+			await t.waitFor(`window.__k536.held.length >= 2 || /nesting too deep/.test(${TEXT('window.__p1')})`, 'A: second redraw held or refused');
+			const aHeld = await K.held();
+			const aWhile = await K.st('window.__p1');
+			await K.holdPath(null);
+			await K.releaseAll(false);
+			await K.settle();
+			out.A = { held: aHeld, whileHeld: aWhile, after: await K.st('window.__p1') };
+
+			// ---- H1 / H2: pane 2 opens (read held), then pane 1 redraws (read held): two LIVE copies in flight at once; release FIFO / LIFO
+			out.H = [];
+			for (const lifo of [false, true]) {
+				await K.holdPath('Ref.md');
+				await split(true);
+				await t.waitFor(`window.__k536.held.length >= 1`, 'H: pane 2 read held');
+				await t.ev(`(() => { window.__p1.view.previewMode.rerender(true); return true; })()`);
+				await t.waitFor(`window.__k536.held.length >= 2 || /nesting too deep/.test(${TEXT('window.__p1')})`, 'H: pane 1 redraw held or refused');
+				const held = await K.held();
+				const whileHeld = await both();
+				await K.holdPath(null);
+				await K.releaseAll(lifo);
+				await K.settle();
+				out.H.push({ lifo, held, whileHeld, after: await both() });
+				await t.ev(`(() => { window.__p2.detach(); return true; })()`);
+				await K.settle();
+			}
+
+			// ---- C: natural timing, split + redraw in the same tick, 5 times
+			out.C = [];
+			for (let i = 0; i < 5; i++) {
+				await t.ev(`(async () => { const leaf = app.workspace.getLeaf('split', 'vertical'); window.__p2 = leaf; const p = leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'preview' }, active: false }); window.__p1.view.previewMode.rerender(true); await p; return true; })()`);
+				await t.waitFor(`!!${K.ROOT('window.__p2')} && !!${K.ROOT('window.__p1')}`, 'C: both panes drawn');
+				await K.settle();
+				await t.waitFor(`(/Ref Strike|nesting too deep|failed/.test(${TEXT('window.__p1')})) && (/Ref Strike|nesting too deep|failed/.test(${TEXT('window.__p2')}))`, 'C: both panes settled');
+				out.C.push(await both());
+				await t.ev(`(() => { window.__p2.detach(); return true; })()`);
+				await K.settle();
+			}
+
+			// ---- D: natural timing, two panes, plugin disable + enable, 3 times
+			await split(false);
+			await t.waitFor(`/Ref Strike/.test(${TEXT('window.__p2')})`, 'D: pane 2 card');
+			out.D = [];
+			for (let i = 0; i < 3; i++) {
+				await t.ev(`(async () => { await app.plugins.disablePlugin('draw-steel-elements'); await app.plugins.enablePlugin('draw-steel-elements'); return true; })()`);
+				await t.waitFor(`(/Ref Strike|nesting too deep|failed/.test(${TEXT('window.__p1')})) && (/Ref Strike|nesting too deep|failed/.test(${TEXT('window.__p2')}))`, 'D: both panes drawn after enable');
+				await K.settle();
+				out.D.push(await both());
+			}
+
+			// ---- H3: the same, deterministic: the referenced file's read is held across disable + enable, released after both panes asked
+			out.H3 = [];
+			for (const lifo of [false, true]) {
+				await K.holdPath('Ref.md');
+				await t.ev(`(async () => { await app.plugins.disablePlugin('draw-steel-elements'); await app.plugins.enablePlugin('draw-steel-elements'); return true; })()`);
+				await t.waitFor(`window.__k536.held.length >= 2 || (/nesting too deep/.test(${TEXT('window.__p1')}) || /nesting too deep/.test(${TEXT('window.__p2')})) && window.__k536.held.length >= 1`, 'H3: both reads held, or one held + one refused');
+				const held = await K.held();
+				const whileHeld = await both();
+				await K.holdPath(null);
+				await K.releaseAll(lifo);
+				await K.settle();
+				out.H3.push({ lifo, held, whileHeld, after: await both() });
+			}
+			await t.ev(`(() => { window.__p2.detach(); return true; })()`);
+			out.errors = await t.errorsSince(m);
+			console.log('S536-B2-JSON ' + JSON.stringify(out));
+			const n = (x) => x.p1.nesting || x.p2.nesting;
+			return `${out.tag}: A held=${out.A.held} nestingWhile=${out.A.whileHeld.nesting} after card=${out.A.after.card} nesting=${out.A.after.nesting}; H1(fifo) held=${out.H[0].held} after nesting=${n(out.H[0].after)}; H2(lifo) held=${out.H[1].held} after nesting=${n(out.H[1].after)}; C nesting ${out.C.filter(n).length}/5; D nesting ${out.D.filter(n).length}/3; H3 nesting fifo=${n(out.H3[0].after)} lifo=${n(out.H3[1].after)} (held ${out.H3[0].held}/${out.H3[1].held}); page errors=${out.errors.length}`;
+		},
+	},
+	// CYC: Bug 1, deterministic. Every lookup is held at services.refs.resolve and released ONE at a time; count how many levels start.
+	{
+		id: 'S536-CYC',
+		async run(t) {
+			const K = sc536Kit(t);
+			const out = { tag: K.tag(), cases: [] };
+			await K.install();
+			const m = await t.mark();
+			const MAX_STEPS = 8;
+			const cases = [
+				['Lifecycle/sc536-cycle.md', 'Cycle Strike', 'reading', '@Cyc.md -> @Cyc.md'],
+				['Lifecycle/sc536-cycle-wiki.md', 'Cycle Strike', 'reading', '[[Cyc]] -> @Cyc.md (alias of the same file)'],
+				['Lifecycle/sc536-cycab.md', 'Cyc[AB] Strike', 'reading', '@CycA.md -> @CycB.md -> @CycA.md'],
+				['Lifecycle/sc536-chain.md', 'Chain\\d Strike', 'reading', '@Chain1..7 (7 distinct, no cycle)'],
+				['Lifecycle/sc536-cycle-lp.md', 'Cycle Strike', 'live-preview', '@Cyc.md -> @Cyc.md in Live Preview'],
+			];
+			for (const [rel, card, mode, label] of cases) {
+				await K.instrReset();
+				await t.ev(`(() => { const K = window.__k536; K.pendingResolve -= K.held.filter((h) => h.kind === 'resolve').length; K.held = []; K.calls = []; K.holdRefs = true; return true; })()`);
+				if (mode === 'reading') await t.open(rel);
+				else {
+					await t.ev(`(async () => { const leaf = app.workspace.getMostRecentLeaf(); await leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'source', source: false }, active: true }); })()`);
+					await t.waitFor(`app.workspace.getMostRecentLeaf()?.view?.file?.path === ${JSON.stringify(rel)}`, `open LP ${rel}`);
+				}
+				const L = 'app.workspace.getMostRecentLeaf()';
+				const SCOPE = mode === 'reading' ? t.readingScope(L) : `(${L}).view.containerEl.querySelector('.markdown-source-view')`;
+				const errorIn = `(${SCOPE}).querySelectorAll('.dse-error-card').length`;
+				let levels = 0;
+				let stopped = false;
+				await t.waitFor(`window.__k536.held.length >= 1 || ${errorIn} > 0`, `${label}: first lookup or a refusal`);
+				for (let i = 0; i < MAX_STEPS; i++) {
+					await K.settle();
+					if ((await K.held()) === 0) { stopped = true; break; }
+					levels++;
+					await K.releaseOne(false);
+				}
+				const tree = await K.treeStats(SCOPE, card);
+				const stillHeld = await K.held();
+				const instr = await K.instr();
+				out.cases.push({ label, mode, levelsStarted: levels, stoppedByGuard: stopped, stillHeldAtEnd: stillHeld, tree, instr: instr ? instr.slice(0, 60) : null });
+				await t.ev(`(() => { window.__k536.holdRefs = false; return true; })()`);
+				await t.open('Lifecycle/sc536-other.md');
+			}
+			await t.ev(`(() => { const K = window.__k536; K.holdRefs = false; return true; })()`);
+			out.errors = await t.errorsSince(m);
+			console.log('S536-CYC-JSON ' + JSON.stringify(out));
+			return `${out.tag}: ` + out.cases.map((c) => `[${c.label}: lookups started=${c.levelsStarted}${c.stoppedByGuard ? ' then STOPPED' : ' and still going at step cap'}; roots=${c.tree.roots} maxDepth=${c.tree.maxDepth} errorCards=${c.tree.errorCards.length}]`).join(' ') + `; page errors=${out.errors.length}`;
+		},
+	},
+	// CYCN: Bug 1 at natural speed (no holds), in a fresh tab: the review's 116-levels-in-30-s measurement. Run it ALONE in its own
+	// Obsidian (unbounded on base). Samples the lookup count over 20 s; counts feature elements in the whole document.
+	{
+		id: 'S536-CYCN',
+		async run(t) {
+			const K = sc536Kit(t);
+			const out = { tag: K.tag(), samples: [] };
+			await K.install();
+			const m = await t.mark();
+			const rel = 'Lifecycle/sc536-cycle.md';
+			await t.ev(`(async () => { const leaf = app.workspace.getLeaf('tab'); window.__pn = leaf; await leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'preview' }, active: true }); return true; })()`);
+			const SCOPE = t.readingScope('window.__pn');
+			const t0 = Date.now();
+			const sample = async () => out.samples.push({ ms: Date.now() - t0, lookups: await K.calls(), inDoc: await t.ev(`document.querySelectorAll('[data-dse-element="feature"]').length`), tree: await K.treeStats(SCOPE, 'Cycle Strike') });
+			await t.waitFor(`(${SCOPE}).querySelectorAll('.dse-error-card').length > 0 || window.__k536.calls.length > 40`, 'cycle: error card or >40 lookups', 30000).catch((e) => { out.waitError = String(e); });
+			await sample();
+			for (const at of [5000, 10000, 20000]) {
+				while (Date.now() - t0 < at) await t.sleep(250);
+				await sample();
+			}
+			await K.settle(3000).catch((e) => { out.settleError = String(e); });
+			out.errors = await t.errorsSince(m);
+			console.log('S536-CYCN-JSON ' + JSON.stringify(out));
+			const last = out.samples.at(-1);
+			return `${out.tag}: lookups ${out.samples.map((x) => `${x.lookups}@${x.ms}ms`).join(', ')}; at end roots=${last.tree.roots} maxDepth=${last.tree.maxDepth} errorCards=${last.tree.errorCards.length} featureEls-in-document=${last.inDoc} settled=${!out.settleError}`;
+		},
+	},

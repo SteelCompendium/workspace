@@ -1,0 +1,6 @@
+432c50e2 test(lifecycle): G-S56 starts from one fresh Reading-view leaf (earlier scenarios leave editors that look up too)
+
+> draw-steel-elements@7.0.0 tsc
+> tsc --noEmit && tsc --noEmit -p e2e
+
+gate rc=0

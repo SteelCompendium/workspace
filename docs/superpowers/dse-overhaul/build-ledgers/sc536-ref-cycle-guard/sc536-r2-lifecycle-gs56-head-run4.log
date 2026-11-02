@@ -1,0 +1,14 @@
+cbd5cf5e fix(refs): SC-536 reference guard follows DOM ancestry, not block identity
+
+> draw-steel-elements@7.0.0 obsidian-lifecycle
+> npm run build-no-check && node visual-harness/obsidian-lifecycle.mjs --only=G-S56
+
+
+> draw-steel-elements@7.0.0 build-no-check
+> node esbuild.config.mjs production
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :162, port 9536, 1 scenario(s)
+OBSIDIAN-LIFECYCLE G-S56 ok ((a) cycle, Reading view: 2 lookups, 1 card + 1 loop card inside it, settled; (a') cycle, Live Preview: 2 lookups, 1 card + 1 loop card inside it, settled; (cap) seven distinct references: 5 lookups, 5 cards + the depth-cap card; (b) two live copies (split + redraw): 2 reads held at once, then one card per pane (released FIFO then LIFO); (c) plugin off/on with two panes: 2 reads held across the re-enable, then one card per pane (released FIFO then LIFO); (d) redraw twice: 2 reads held at once, then one card; no page error)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+lifecycle rc=0

@@ -1,0 +1,49 @@
+// ===================== SC-536 r3 reviewer probe kit additions (throwaway; scratch copy only) =====================
+const R3_LEDGER = '/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc536-ref-cycle-guard';
+Object.assign(FIXTURES, {
+	// sidebar: an INLINE feature whose effect nests the cycle / the plain ref (a ref body cannot carry the pin's anchor line)
+	'Lifecycle/sc536-sb-cychost.md': `# sc536 sb cychost\n\nAbove.\n\n${sc536Nest('CycHost Strike', '@Cyc.md')}\n\nAfter.\n`,
+	'Lifecycle/sc536-sb-refhost.md': `# sc536 sb refhost\n\nAbove.\n\n${sc536Nest('RefHost Strike', '@Ref.md')}\n\nAfter.\n`,
+	'Lifecycle/sc536-sb-cycdirect.md': `# sc536 sb cycdirect\n\nAbove.\n\n${fence('ds-feature', ['@Cyc.md'])}\n\nAfter.\n`,
+	'Lifecycle/sc536-sb-refdirect.md': `# sc536 sb refdirect\n\nAbove.\n\n${fence('ds-feature', ['@Ref.md'])}\n\nAfter.\n`,
+	// SC-481 twins
+	'Lifecycle/sc536-twins-ref.md': `# sc536 twins ref\n\nAbove.\n\n${fence('ds-feature', ['@Ref.md'])}\n\nMiddle.\n\n${fence('ds-feature', ['@Ref.md'])}\n\nAfter.\n`,
+	'Lifecycle/sc536-twins-outer.md': `# sc536 twins outer\n\nAbove.\n\n${fence('ds-feature', ['@Outer.md'])}\n\nMiddle.\n\n${fence('ds-feature', ['@Outer.md'])}\n\nAfter.\n`,
+	'Lifecycle/sc536-twins-cyc.md': `# sc536 twins cyc\n\nAbove.\n\n${fence('ds-feature', ['@Cyc.md'])}\n\nMiddle.\n\n${fence('ds-feature', ['@Cyc.md'])}\n\nAfter.\n`,
+});
+function r3Kit(t, K) {
+	const SB = `(app.workspace.getLeavesOfType('dse-sidebar')[0]?.view.containerEl ?? null)`;
+	const R = {
+		SB,
+		/** Feature-element stats for any scope: elements, top-level count, drawn cards (no error card as a direct child), messages. */
+		stats: (scopeExpr) =>
+			t.ev(`(() => { const sc = ${scopeExpr}; if (!sc) return null; const all = Array.from(sc.querySelectorAll('[data-dse-element="feature"]')).filter((x) => x.isConnected); const depth = (el) => { let d = 0; for (let p = el.parentElement; p; p = p.parentElement) if (p.matches && p.matches('[data-dse-element]')) d++; return d; }; const msgs = Array.from(sc.querySelectorAll('.dse-error-card-message, .dse-ref-notice__msg')).map((e) => e.textContent); return { els: all.length, top: all.filter((x) => !x.parentElement.closest('[data-dse-element]')).length, cards: all.filter((el) => !el.querySelector(':scope > .dse-error-card')).length, maxDepth: all.reduce((a, el) => Math.max(a, depth(el)), 0), loops: msgs.filter((m) => /Reference loop/.test(m)).length, caps: msgs.filter((m) => /nesting too deep/.test(m)).length, msgs, lookups: window.__k536.calls.length }; })()`),
+		/** Save a screenshot to the ledger dir under `name` (removing the harness copy so the temp dir is not kept). */
+		async shot(name) {
+			const f = await t.shot(`r3-${name}`);
+			const dest = path.join(R3_LEDGER, name);
+			fs.copyFileSync(f, dest);
+			fs.unlinkSync(f);
+			try { fs.rmdirSync(path.dirname(f)); } catch { /* not empty */ }
+			return dest;
+		},
+		resetCounters: () => t.ev(`(() => { const K = window.__k536; K.pendingResolve -= K.held.filter((h) => h.kind === 'resolve').length; K.pendingReads -= K.held.filter((h) => h.kind === 'read').length; K.held = []; K.calls = []; K.holdRefs = false; K.holdPath = null; return true; })()`),
+		/** Lookup count does not move across another settle + 2 more frames (a settled chain, not a runaway). */
+		async stable() {
+			const a = await K.calls();
+			await K.settle();
+			await K.frames();
+			await K.frames();
+			await K.settle();
+			return { before: a, after: await K.calls() };
+		},
+	};
+	return R;
+}
+Object.assign(FIXTURES, {
+	'CycAnchor.md': `# CycAnchor\n\n${sc536Nest('CycAnchor Strike', '@CycAnchor.md#CycAnchor')}\n`,
+	'CycWikiAnchor.md': `# CycWikiAnchor\n\n${sc536Nest('CycWikiAnchor Strike', '[[CycWikiAnchor#CycWikiAnchor]]')}\n`,
+	'Lifecycle/sc536-anchor.md': `# sc536 anchor\n\nAbove.\n\n${fence('ds-feature', ['@CycAnchor.md'])}\n\nAfter.\n`,
+	'Lifecycle/sc536-anchor2.md': `# sc536 anchor2\n\nAbove.\n\n${fence('ds-feature', ['@CycAnchor.md#CycAnchor   '])}\n\nAfter.\n`,
+	'Lifecycle/sc536-wikianchor.md': `# sc536 wikianchor\n\nAbove.\n\n${fence('ds-feature', ['[[CycWikiAnchor]]'])}\n\nAfter.\n`,
+});

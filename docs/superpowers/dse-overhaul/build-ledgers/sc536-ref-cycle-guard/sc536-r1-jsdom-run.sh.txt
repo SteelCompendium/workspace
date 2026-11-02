@@ -1,0 +1,24 @@
+#!/bin/bash
+# SC-536 r1: run the jsdom probe + the guard's existing suites against BASE (scratch copy, 34f46cf src) and PROTO
+# (scratch copy + the prototype patch). Also tsc + lint on the proto copy. Never touches the worktree.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc536-r1-a8dc3ea22e7ab9edd
+B="$S/plugin"
+X="$S/plugin-proto-check"
+rm -f "$B/main.js" "$B/styles.css" "$B/main.css" "$X/main.js" "$X/styles.css" "$X/main.css"
+rm -rf "$X/src"
+cp -a "$S/src-pristine" "$X/src"
+python3 "$S/sc536-r1-patch-proto.py" "$X" || exit 3
+for D in "$B" "$X"; do cp "$S/sc536-r1-probe-jsdom.test.ts" "$D/test/dom/elements/zz-sc536-probe.test.ts"; done
+FILES="test/dom/elements/zz-sc536-probe.test.ts test/dom/elements/refUnwrapView.test.ts test/dom/authoring/formModalStalePreview.test.ts test/dom/elements/displayCardHybrid.test.ts"
+cd "$B" || exit 9
+npx jest $FILES > "$S/logs/jest-base.log" 2>&1
+echo "base jest rc=$?"
+cd "$X" || exit 9
+npx jest $FILES > "$S/logs/jest-proto.log" 2>&1
+echo "proto jest rc=$?"
+npx tsc --noEmit > "$S/logs/tsc-proto.log" 2>&1
+echo "proto tsc rc=$?"
+npx eslint src/elements/shared/RefUnwrapView.ts > "$S/logs/lint-proto.log" 2>&1
+echo "proto lint rc=$?"
+rm -f "$B/test/dom/elements/zz-sc536-probe.test.ts" "$X/test/dom/elements/zz-sc536-probe.test.ts"
+exit 0

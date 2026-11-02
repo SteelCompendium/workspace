@@ -1,0 +1,26 @@
+#!/bin/bash
+# usage: sc536-r1-obsidian-run.sh <base|instr|proto> <port> <only-ids>
+# Assembles the probe harness inside the SCRATCH plugin copy (lifecycle harness + kit + scenarios) and runs it
+# against the chosen bundle. Log: $S/logs/obs-<bundle>-<ns>.log (a per-run unique path).
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc536-r1-a8dc3ea22e7ab9edd
+cd "$S/plugin" || exit 9
+mkdir -p "$S/logs"
+python3 - "$S" <<'PY' || exit 3
+import sys
+S = sys.argv[1]
+src = open(S + '/plugin/visual-harness/obsidian-lifecycle.mjs').read()
+kit = open(S + '/sc536-r1-obsidian-kit.js').read()
+scn = open(S + '/sc536-r1-obsidian-scenarios.js').read()
+marker = 'const SCENARIOS = [\n'
+assert src.count(marker) == 1
+open(S + '/plugin/visual-harness/zz-sc536-r1-probe.mjs', 'w').write(src.replace(marker, kit + '\n' + marker + scn))
+PY
+export DSE_LIFECYCLE_BUNDLE="$S/bundle-$1"
+export DSE_LIFECYCLE_PORT="$2"
+log="$S/logs/obs-$1-$(date +%s%N).log"
+timeout 580 node visual-harness/zz-sc536-r1-probe.mjs --only="$3" > "$log" 2>&1
+rc=$?
+echo "probe rc=$rc" >> "$log"
+echo "log=$log rc=$rc"
+grep -E "^OBSIDIAN-LIFECYCLE" "$log"
+exit 0

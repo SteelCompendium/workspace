@@ -1,0 +1,99 @@
+Running one project: dom
+FAIL dom test/dom/elements/refUnwrapView.test.ts (6.223 s)
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render awaited › a card updated to an inline body starts a new chain: the reference it nests renders
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 0
+
+      Array [
+        "Inline",
+    -   "A",
+      ]
+
+      1132 | 		await s.views[0].update({ kind: 'inline', model: { text: 'Inline', next: '@A' } });
+      1133 | 		await settle();
+    > 1134 | 		expect(cards(s.top)).toEqual(['Inline', 'A']);
+           | 		                     ^
+      1135 | 		expect(messages(s.top, REFUSED)).toEqual([]);
+      1136 | 	});
+      1137 |
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1134:24)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render fire-and-forget › a card updated to an inline body starts a new chain: the reference it nests renders
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 0
+
+      Array [
+        "Inline",
+    -   "A",
+      ]
+
+      1132 | 		await s.views[0].update({ kind: 'inline', model: { text: 'Inline', next: '@A' } });
+      1133 | 		await settle();
+    > 1134 | 		expect(cards(s.top)).toEqual(['Inline', 'A']);
+           | 		                     ^
+      1135 | 		expect(messages(s.top, REFUSED)).toEqual([]);
+      1136 | 	});
+      1137 |
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1134:24)
+
+
+Summary of all failing tests
+FAIL test/dom/elements/refUnwrapView.test.ts (6.223 s)
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render awaited › a card updated to an inline body starts a new chain: the reference it nests renders
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 0
+
+      Array [
+        "Inline",
+    -   "A",
+      ]
+
+      1132 | 		await s.views[0].update({ kind: 'inline', model: { text: 'Inline', next: '@A' } });
+      1133 | 		await settle();
+    > 1134 | 		expect(cards(s.top)).toEqual(['Inline', 'A']);
+           | 		                     ^
+      1135 | 		expect(messages(s.top, REFUSED)).toEqual([]);
+      1136 | 	});
+      1137 |
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1134:24)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render fire-and-forget › a card updated to an inline body starts a new chain: the reference it nests renders
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 0
+
+      Array [
+        "Inline",
+    -   "A",
+      ]
+
+      1132 | 		await s.views[0].update({ kind: 'inline', model: { text: 'Inline', next: '@A' } });
+      1133 | 		await settle();
+    > 1134 | 		expect(cards(s.top)).toEqual(['Inline', 'A']);
+           | 		                     ^
+      1135 | 		expect(messages(s.top, REFUSED)).toEqual([]);
+      1136 | 	});
+      1137 |
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1134:24)
+
+
+Test Suites: 1 failed, 164 passed, 165 total
+Tests:       2 failed, 2 skipped, 4465 passed, 4469 total
+Snapshots:   0 total
+Time:        51.434 s
+Ran all test suites.

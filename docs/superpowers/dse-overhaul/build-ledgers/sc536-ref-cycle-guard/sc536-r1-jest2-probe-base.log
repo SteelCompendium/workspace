@@ -1,0 +1,270 @@
+  console.log
+    SC536-PROBE bug1 awaited: views=31 cards=["A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A"] nesting=[]
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:126:11)
+
+  console.log
+    SC536-PROBE bug1-ab awaited: views=31 cards=["A","B","A","B","A","B","A","B","A","B","A","B","A","B","A","B","A","B","A","B","A","B","A","B","A","B","A","B","A","B","A"] nesting=[]
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:137:11)
+
+  console.log
+    SC536-PROBE cap awaited: cards=["C1","C2","C3","C4","C5","C6","C7"] nesting=[]
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:146:11)
+
+  console.log
+    SC536-PROBE bug1 fire-and-forget: views=31 cards=["A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A","A"] nesting=[]
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:126:11)
+
+  console.log
+    SC536-PROBE bug1-ab fire-and-forget: views=31 cards=["A","B","A","B","A","B","A","B","A","B","A","B","A","B","A","B","A","B","A","B","A","B","A","B","A","B","A","B","A","B","A"] nesting=[]
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:137:11)
+
+  console.log
+    SC536-PROBE cap fire-and-forget: cards=["C1","C2","C3","C4","C5","C6","C7"] nesting=[]
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:146:11)
+
+  console.log
+    SC536-PROBE bug2 FIFO: held=1 nestingWhileHeld=1 after cards=["R"] nesting=1
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:178:11)
+
+  console.log
+    SC536-PROBE bug2 LIFO: held=1 nestingWhileHeld=1 after cards=["R"] nesting=1
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:178:11)
+
+FAIL dom test/dom/elements/zz-sc536-probe.test.ts
+  ● SC536 probe: real nesting (awaited nested render) › Bug 1: A -> A stops with one nesting card one level down
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 30
+    Received:   31
+
+      125 | 		await tick(40);
+      126 | 		console.log(`SC536-PROBE bug1 ${_n}: views=${s.views()} cards=${JSON.stringify(cards(s.top))} nesting=${JSON.stringify(nestingCards(s.top))}`);
+    > 127 | 		expect(s.views()).toBeLessThan(VIEW_CAP);
+          | 		                  ^
+      128 | 		expect(cards(s.top)).toEqual(['A']);
+      129 | 		expect(nestingCards(s.top).map((x) => x.depth)).toEqual([2]); // message inside the refused root (2) inside the outer root (1)
+      130 | 	});
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:127:21)
+
+  ● SC536 probe: real nesting (awaited nested render) › Bug 1: A -> B -> A stops at the second A
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  0
+    + Received  + 29
+
+      Array [
+        "A",
+        "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+      ]
+
+      136 | 		await tick(40);
+      137 | 		console.log(`SC536-PROBE bug1-ab ${_n}: views=${s.views()} cards=${JSON.stringify(cards(s.top))} nesting=${JSON.stringify(nestingCards(s.top))}`);
+    > 138 | 		expect(cards(s.top)).toEqual(['A', 'B']);
+          | 		                     ^
+      139 | 		expect(nestingCards(s.top).map((x) => x.depth)).toEqual([3]);
+      140 | 	});
+      141 | 	test('depth cap: a chain of 7 distinct references stops after 5', async () => {
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:138:24)
+
+  ● SC536 probe: real nesting (awaited nested render) › depth cap: a chain of 7 distinct references stops after 5
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 2
+
+    @@ -2,6 +2,8 @@
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+    +   "C6",
+    +   "C7",
+      ]
+
+      145 | 		await tick(40);
+      146 | 		console.log(`SC536-PROBE cap ${_n}: cards=${JSON.stringify(cards(s.top))} nesting=${JSON.stringify(nestingCards(s.top))}`);
+    > 147 | 		expect(cards(s.top)).toEqual(['C1', 'C2', 'C3', 'C4', 'C5']);
+          | 		                     ^
+      148 | 		expect(nestingCards(s.top).map((x) => x.depth)).toEqual([6]);
+      149 | 	});
+      150 | 	test('a legitimate nested reference renders (A -> B, no cycle)', async () => {
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:147:24)
+
+  ● SC536 probe: real nesting (fire-and-forget nested render) › Bug 1: A -> A stops with one nesting card one level down
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 30
+    Received:   31
+
+      125 | 		await tick(40);
+      126 | 		console.log(`SC536-PROBE bug1 ${_n}: views=${s.views()} cards=${JSON.stringify(cards(s.top))} nesting=${JSON.stringify(nestingCards(s.top))}`);
+    > 127 | 		expect(s.views()).toBeLessThan(VIEW_CAP);
+          | 		                  ^
+      128 | 		expect(cards(s.top)).toEqual(['A']);
+      129 | 		expect(nestingCards(s.top).map((x) => x.depth)).toEqual([2]); // message inside the refused root (2) inside the outer root (1)
+      130 | 	});
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:127:21)
+
+  ● SC536 probe: real nesting (fire-and-forget nested render) › Bug 1: A -> B -> A stops at the second A
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  0
+    + Received  + 29
+
+      Array [
+        "A",
+        "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+    +   "B",
+    +   "A",
+      ]
+
+      136 | 		await tick(40);
+      137 | 		console.log(`SC536-PROBE bug1-ab ${_n}: views=${s.views()} cards=${JSON.stringify(cards(s.top))} nesting=${JSON.stringify(nestingCards(s.top))}`);
+    > 138 | 		expect(cards(s.top)).toEqual(['A', 'B']);
+          | 		                     ^
+      139 | 		expect(nestingCards(s.top).map((x) => x.depth)).toEqual([3]);
+      140 | 	});
+      141 | 	test('depth cap: a chain of 7 distinct references stops after 5', async () => {
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:138:24)
+
+  ● SC536 probe: real nesting (fire-and-forget nested render) › depth cap: a chain of 7 distinct references stops after 5
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 2
+
+    @@ -2,6 +2,8 @@
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+    +   "C6",
+    +   "C7",
+      ]
+
+      145 | 		await tick(40);
+      146 | 		console.log(`SC536-PROBE cap ${_n}: cards=${JSON.stringify(cards(s.top))} nesting=${JSON.stringify(nestingCards(s.top))}`);
+    > 147 | 		expect(cards(s.top)).toEqual(['C1', 'C2', 'C3', 'C4', 'C5']);
+          | 		                     ^
+      148 | 		expect(nestingCards(s.top).map((x) => x.depth)).toEqual([6]);
+      149 | 	});
+      150 | 	test('a legitimate nested reference renders (A -> B, no cycle)', async () => {
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:147:24)
+
+  ● SC536 probe: one block live twice (Bug 2), release FIFO › two live copies with the SAME blockKey, both lookups in flight at once: both draw the card
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 1
+
+      177 | 		await Promise.all([a, b]);
+      178 | 		console.log(`SC536-PROBE bug2 ${_n}: held=${heldCount} nestingWhileHeld=${whileHeld} after cards=${JSON.stringify(cards(s.top))} nesting=${nestingCards(s.top).length}`);
+    > 179 | 		expect(heldCount).toBe(2);
+          | 		                  ^
+      180 | 		expect(cards(s.top)).toEqual(['R', 'R']);
+      181 | 		expect(nestingCards(s.top)).toEqual([]);
+      182 | 	});
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:179:21)
+
+  ● SC536 probe: one block live twice (Bug 2), release LIFO › two live copies with the SAME blockKey, both lookups in flight at once: both draw the card
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 1
+
+      177 | 		await Promise.all([a, b]);
+      178 | 		console.log(`SC536-PROBE bug2 ${_n}: held=${heldCount} nestingWhileHeld=${whileHeld} after cards=${JSON.stringify(cards(s.top))} nesting=${nestingCards(s.top).length}`);
+    > 179 | 		expect(heldCount).toBe(2);
+          | 		                  ^
+      180 | 		expect(cards(s.top)).toEqual(['R', 'R']);
+      181 | 		expect(nestingCards(s.top)).toEqual([]);
+      182 | 	});
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:179:21)
+
+Test Suites: 1 failed, 1 total
+Tests:       8 failed, 2 passed, 10 total
+Snapshots:   0 total
+Time:        1.803 s, estimated 3 s
+Ran all test suites matching test/dom/elements/zz-sc536-probe.test.ts.

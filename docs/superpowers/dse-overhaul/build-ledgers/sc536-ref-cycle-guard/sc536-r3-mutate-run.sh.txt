@@ -1,0 +1,12 @@
+#!/bin/bash
+# usage: mut.sh <mutant names...>  -- runs in the SCRATCH copy only
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc536-r3-rev7k
+L=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc536-ref-cycle-guard
+cd "$S/plugin" || exit 9
+for m in "$@"; do
+  cp "$S/src-head/src/elements/shared/RefUnwrapView.ts" src/elements/shared/RefUnwrapView.ts
+  if [ "$m" != none ]; then python3 "$S/mutate.py" "$m" src/elements/shared/RefUnwrapView.ts || { echo "$m apply failed"; continue; }; fi
+  npx jest --selectProjects dom test/dom/elements/refUnwrapView.test.ts test/dom/elements/displayCardHybrid.test.ts test/dom/authoring/formModalStalePreview.test.ts > "$L/sc536-r3-mutant-$m.log" 2>&1
+  echo "$m rc=$? $(grep -E '^Tests:' $L/sc536-r3-mutant-$m.log)"
+done
+cp "$S/src-head/src/elements/shared/RefUnwrapView.ts" src/elements/shared/RefUnwrapView.ts

@@ -1,0 +1,80 @@
+#!/usr/bin/env python3
+# SC-536 r1: throwaway PROTOTYPE of the recommended design (scratch copy only; never the worktree).
+# Ancestry guard: each RefUnwrapView root that resolved a reference records, in a module WeakMap, the set of
+# target identities on its chain plus its depth. A new resolution looks at its NEAREST recorded DOM ancestor:
+# refuse when that chain already holds this target (a cycle) or when depth would exceed MAX_REF_DEPTH.
+# IN_FLIGHT_REFS is removed. resolveGen is untouched.
+import sys
+P = sys.argv[1]
+f = P + '/src/elements/shared/RefUnwrapView.ts'
+s = open(f).read()
+
+def rep(old, new):
+    global s
+    assert s.count(old) == 1, old[:70]
+    s = s.replace(old, new)
+
+rep("""const IN_FLIGHT_REFS = new Map<string, { view: ElementView<unknown> }>();
+""", """const MAX_REF_DEPTH = 5;
+interface RefChain { readonly targets: ReadonlySet<string>; readonly depth: number }
+const REF_CHAIN = new WeakMap<HTMLElement, RefChain>();
+function nearestChain(root: HTMLElement): RefChain | undefined {
+	for (let n = root.parentElement; n; n = n.parentElement) {
+		const c = REF_CHAIN.get(n);
+		if (c) return c;
+	}
+	return undefined;
+}
+""")
+# every mount starts with no chain on this root (an inline / refused body, or a new reference)
+rep("""		this.resolveGen++;
+		if (model.kind === 'invalid') {""", """		this.resolveGen++;
+		REF_CHAIN.delete(root);
+		if (model.kind === 'invalid') {""")
+# replace the guard block + try/finally header
+rep("""		const guardKey = `${this.cx.host.blockKey()}|${trimmed}`;
+		const current = IN_FLIGHT_REFS.get(guardKey);
+		if (current !== undefined && current.view !== this && !current.view.isUnloaded()) {
+			this.errorCard(
+				root,
+				`Reference nesting too deep — \\`${trimmed}\\` is already resolving in this block (spec §9 depth guard).`,
+			);
+			return;
+		}
+		const token = { view: this as ElementView<unknown> };
+		IN_FLIGHT_REFS.set(guardKey, token);
+		try {""", """		const parent = nearestChain(root);
+		if ((parent?.depth ?? 0) >= MAX_REF_DEPTH) {
+			this.errorCard(root, `Reference nesting too deep — more than ${MAX_REF_DEPTH} references inside one another.`);
+			return;
+		}
+		{""")
+rep("""		} finally {
+			if (IN_FLIGHT_REFS.get(guardKey) === token) IN_FLIGHT_REFS.delete(guardKey);
+		}
+""", """		}
+""")
+# SCC ladder: claim before mountBase
+rep("""			const source: RefSource = { file: entity.file, frontmatter: entity.frontmatter, body };
+			await this.mountBase(root, parsed as M, source, base);""", """			const source: RefSource = { file: entity.file, frontmatter: entity.frontmatter, body };
+			if (!this.claimChain(root, trimmed, [`scc:${code}`, `file:${entity.file.path}`])) return;
+			await this.mountBase(root, parsed as M, source, base);""")
+# legacy ladder
+rep("""		const model = this.base.parse(resolved.data, rawText);
+		await this.mountBase(root, model);""", """		const model = this.base.parse(resolved.data, rawText);
+		if (!this.claimChain(root, raw, [resolved.file ? `file:${resolved.file.path}` : `raw:${this.base.id}|${raw}`])) return;
+		await this.mountBase(root, model);""")
+rep("""	/** Fix round 1 (Low, finding 3): byte-original block text""", """	/** Ancestry guard: refuse a target already on this card's chain of enclosing references; else record the chain. */
+	private claimChain(root: HTMLElement, raw: string, targets: string[]): boolean {
+		const parent = nearestChain(root);
+		if (parent && targets.some((t) => parent.targets.has(t))) {
+			this.errorCard(root, `Reference nesting too deep — \\`${raw}\\` is already shown by a card this one is inside (a reference cycle).`);
+			return false;
+		}
+		REF_CHAIN.set(root, { targets: new Set([...(parent?.targets ?? []), ...targets]), depth: (parent?.depth ?? 0) + 1 });
+		return true;
+	}
+
+	/** Fix round 1 (Low, finding 3): byte-original block text""")
+open(f, 'w').write(s)
+print('proto patched')

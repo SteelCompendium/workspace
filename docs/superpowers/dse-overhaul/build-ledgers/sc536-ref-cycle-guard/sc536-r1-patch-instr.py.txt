@@ -1,0 +1,137 @@
+#!/usr/bin/env python3
+# SC-536 r1: throwaway INSTRUMENTATION of the nested-render path (scratch copy only; never the worktree).
+# Records to window.__sc536 = { seq, ev: [...], renderDepth }. No behaviour change.
+import sys
+P = sys.argv[1]  # scratch plugin copy root
+
+def patch(rel, old, new, count=1):
+    f = P + '/' + rel
+    s = open(f).read()
+    assert s.count(old) == count, (rel, old[:60], s.count(old))
+    open(f, 'w').write(s.replace(old, new))
+
+LOG = "const __L = ((window as any).__sc536 ??= { seq: 0, ev: [] as any[], renderDepth: 0 });"
+
+# 1. ElementView.renderMarkdown: is the nested processor called synchronously inside MarkdownRenderer.render?
+patch('src/framework/view.ts',
+"""		await MarkdownRenderer.render(this.cx.app, markdown, el, this.cx.host.sourcePath, this);
+""",
+"""		""" + LOG + """
+		const __id = ++__L.seq;
+		(el as any).__sc536md = { id: __id };
+		if (__L.ev.length < 900) __L.ev.push({ id: __id, ph: 'md-start', rootInDoc: !!this.rootEl && this.rootEl.isConnected, elInRoot: !!this.rootEl && this.rootEl.contains(el), elInDoc: el.isConnected, fence: /ds-feature/.test(markdown) });
+		__L.renderDepth++;
+		let __p: Promise<void>;
+		try {
+			__p = MarkdownRenderer.render(this.cx.app, markdown, el, this.cx.host.sourcePath, this);
+		} finally {
+			__L.renderDepth--;
+		}
+		await __p;
+		if (__L.ev.length < 900) __L.ev.push({ id: ++__L.seq, ph: 'md-end', of: __id, elChildren: el.children.length });
+""")
+
+# 2. The code-block processor callback: what does Obsidian hand a NESTED block?
+patch('src/framework/registerFrameworkElements.ts',
+"""				(source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+""",
+"""				(source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+					{
+						""" + LOG + """
+						const anc: string[] = [];
+						let mdTag: number | null = null;
+						for (let n = el.parentElement; n; n = n.parentElement) {
+							if ((n as any).__sc536md && mdTag === null) mdTag = (n as any).__sc536md.id;
+							if (n.hasAttribute('data-dse-element')) anc.push(n.getAttribute('data-dse-element') as string);
+						}
+						const cc = (ctx as any).containerEl;
+						let ccTag: number | null = null;
+						if (cc instanceof HTMLElement) for (let n: HTMLElement | null = cc; n; n = n.parentElement) if ((n as any).__sc536md) { ccTag = (n as any).__sc536md.id; break; }
+						let top: Node = el; while (top.parentNode) top = top.parentNode;
+						let sect: unknown = null;
+						try { sect = ctx.getSectionInfo(el); } catch (e) { sect = 'throw'; }
+						if (__L.ev.length < 900) __L.ev.push({
+							id: ++__L.seq, ph: 'proc', alias, src: source.trim().slice(0, 40), docId: ctx.docId, sp: ctx.sourcePath,
+							sect: sect === null ? null : sect === 'throw' ? 'throw' : (sect as any).lineStart,
+							elInDoc: el.isConnected, elParent: !!el.parentElement, top: top === document ? 'document' : (top as any).nodeName,
+							dseAnc: anc.length, mdTag, renderDepth: __L.renderDepth,
+							ctxKeys: Object.keys(ctx).join(','), ccType: cc === undefined ? 'undef' : cc instanceof HTMLElement ? 'el' : typeof cc, ccTag,
+							ccContainsEl: cc instanceof HTMLElement ? cc.contains(el) : null,
+							nest: (ctx as any).remainingNestLevel,
+						});
+					}
+""")
+
+# 3. RefUnwrapView: ancestry, blockKey, guard result, attachment at mount / guard / post-lookup / finally.
+patch('src/elements/shared/RefUnwrapView.ts',
+"""const IN_FLIGHT_REFS = new Map<string, { view: ElementView<unknown> }>();
+""",
+"""const IN_FLIGHT_REFS = new Map<string, { view: ElementView<unknown> }>();
+const __REF_ROOTS = new WeakMap<HTMLElement, { id: number; raw: string; cx: number }>();
+const __CX_IDS = new WeakMap<object, number>();
+let __cxSeq = 0;
+function __cxId(cx: object): number { let v = __CX_IDS.get(cx); if (v === undefined) { v = ++__cxSeq; __CX_IDS.set(cx, v); } return v; }
+function __anc(root: HTMLElement): Array<{ id: number; raw: string; cx: number }> {
+	const out: Array<{ id: number; raw: string; cx: number }> = [];
+	for (let n = root.parentElement; n; n = n.parentElement) { const e = __REF_ROOTS.get(n); if (e) out.push(e); }
+	return out;
+}
+function __log(rec: Record<string, unknown>): void {
+	""" + LOG + """
+	if (__L.ev.length < 900) __L.ev.push({ id: ++__L.seq, ...rec });
+}
+""")
+patch('src/elements/shared/RefUnwrapView.ts',
+"""		const guardKey = `${this.cx.host.blockKey()}|${trimmed}`;
+		const current = IN_FLIGHT_REFS.get(guardKey);
+""",
+"""		const guardKey = `${this.cx.host.blockKey()}|${trimmed}`;
+		const current = IN_FLIGHT_REFS.get(guardKey);
+		{
+			const a = __anc(root);
+			const rid = ((window as any).__sc536.seq as number) + 1;
+			__log({ ph: 'ruv-guard', raw: trimmed, guardKey, sp: this.cx.host.sourcePath, mode: this.cx.host.mode, cx: __cxId(this.cx), rootInDoc: root.isConnected,
+				refAnc: a.map((x) => x.id), ancCx: a.map((x) => x.cx), parentContains: a.length > 0 ? 'yes' : 'none',
+				inflight: current === undefined ? 'none' : current.view === this ? 'self' : current.view.isUnloaded() ? 'unloaded' : 'live',
+				mapSize: IN_FLIGHT_REFS.size });
+			__REF_ROOTS.set(root, { id: rid, raw: trimmed, cx: __cxId(this.cx) });
+		}
+""")
+patch('src/elements/shared/RefUnwrapView.ts',
+"""			this.errorCard(
+				root,
+				`Reference nesting too deep — \\`${trimmed}\\` is already resolving in this block (spec §9 depth guard).`,
+			);
+			return;
+""",
+"""			this.errorCard(
+				root,
+				`Reference nesting too deep — \\`${trimmed}\\` is already resolving in this block (spec §9 depth guard).`,
+			);
+			__log({ ph: 'ruv-refused', raw: trimmed, guardKey });
+			return;
+""")
+patch('src/elements/shared/RefUnwrapView.ts',
+"""		} finally {
+			if (IN_FLIGHT_REFS.get(guardKey) === token) IN_FLIGHT_REFS.delete(guardKey);
+		}
+""",
+"""		} finally {
+			if (IN_FLIGHT_REFS.get(guardKey) === token) IN_FLIGHT_REFS.delete(guardKey);
+			__log({ ph: 'ruv-finally', raw: trimmed, guardKey, rootInDoc: root.isConnected });
+		}
+""")
+patch('src/elements/shared/RefUnwrapView.ts',
+"""		const rawText = await this.legacyRefRawText(resolved);
+		if (gen !== this.resolveGen) return;
+		const model = this.base.parse(resolved.data, rawText);
+""",
+"""		const rawText = await this.legacyRefRawText(resolved);
+		if (gen !== this.resolveGen) return;
+		{
+			const a = __anc(root);
+			__log({ ph: 'ruv-post', raw, file: resolved.file?.path ?? null, rootInDoc: root.isConnected, refAnc: a.map((x) => x.id), ancRaws: a.map((x) => x.raw) });
+		}
+		const model = this.base.parse(resolved.data, rawText);
+""")
+print('instr patched')

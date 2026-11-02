@@ -1,0 +1,218 @@
+FAIL dom test/dom/elements/displayCardHybrid.test.ts
+  ● D6 Task 9: hybrid by-SCC render — frontmatter chrome + source body (spec §2.3, §9) › (d) depth guard: a code already resolving in the SAME block is refused, not infinitely recursed
+
+    TypeError: expect(received).toMatch(expected)
+
+    Matcher error: received value must be a string
+
+    Received has value: undefined
+
+      216 | 		// refused by the depth guard instead of recursing further.
+      217 | 		const innerMessage = roots[1].querySelector('.dse-error-card-message');
+    > 218 | 		expect(innerMessage?.textContent).toMatch(/nesting too deep/i);
+          | 		                                  ^
+      219 | 		expect(roots[1].querySelector('.dse-card')).toBeNull();
+      220 | 	});
+      221 |
+
+      at Object.<anonymous> (test/dom/elements/displayCardHybrid.test.ts:218:37)
+
+FAIL dom test/dom/elements/zz-sc536-probe.test.ts
+  ● Console
+
+    console.log
+      SC536-PROBE bug1 awaited: views=1 cards=["A"] nesting=[{"depth":2,"text":"Reference nesting too deep — `@A` is already shown by a card this one is inside (a reference cycle)."}]
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:126:11)
+
+    console.log
+      SC536-PROBE bug1-ab awaited: views=2 cards=["A","B"] nesting=[{"depth":3,"text":"Reference nesting too deep — `@A` is already shown by a card this one is inside (a reference cycle)."}]
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:137:11)
+
+    console.log
+      SC536-PROBE cap awaited: cards=["C1","C2","C3","C4","C5"] nesting=[{"depth":6,"text":"Reference nesting too deep — more than 5 references inside one another."}]
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:146:11)
+
+    console.log
+      SC536-PROBE bug1 fire-and-forget: views=1 cards=["A"] nesting=[{"depth":2,"text":"Reference nesting too deep — `@A` is already shown by a card this one is inside (a reference cycle)."}]
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:126:11)
+
+    console.log
+      SC536-PROBE bug1-ab fire-and-forget: views=2 cards=["A","B"] nesting=[{"depth":3,"text":"Reference nesting too deep — `@A` is already shown by a card this one is inside (a reference cycle)."}]
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:137:11)
+
+    console.log
+      SC536-PROBE cap fire-and-forget: cards=["C1","C2","C3","C4","C5"] nesting=[{"depth":6,"text":"Reference nesting too deep — more than 5 references inside one another."}]
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:146:11)
+
+    console.log
+      SC536-PROBE bug2 FIFO: held=2 nestingWhileHeld=0 after cards=["R","R"] nesting=0
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:178:11)
+
+    console.log
+      SC536-PROBE bug2 LIFO: held=2 nestingWhileHeld=0 after cards=["R","R"] nesting=0
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:178:11)
+
+  ● SC536 probe: real nesting (awaited nested render) › Bug 1: A -> A stops with one nesting card one level down
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   1,
+    +   2,
+      ]
+
+      127 | 		expect(s.views()).toBeLessThan(VIEW_CAP);
+      128 | 		expect(cards(s.top)).toEqual(['A']);
+    > 129 | 		expect(nestingCards(s.top).map((x) => x.depth)).toEqual([1]);
+          | 		                                                ^
+      130 | 	});
+      131 | 	test('Bug 1: A -> B -> A stops at the second A', async () => {
+      132 | 		const s = setup(ff);
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:129:51)
+
+  ● SC536 probe: real nesting (awaited nested render) › Bug 1: A -> B -> A stops at the second A
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   2,
+    +   3,
+      ]
+
+      137 | 		console.log(`SC536-PROBE bug1-ab ${_n}: views=${s.views()} cards=${JSON.stringify(cards(s.top))} nesting=${JSON.stringify(nestingCards(s.top))}`);
+      138 | 		expect(cards(s.top)).toEqual(['A', 'B']);
+    > 139 | 		expect(nestingCards(s.top).map((x) => x.depth)).toEqual([2]);
+          | 		                                                ^
+      140 | 	});
+      141 | 	test('depth cap: a chain of 7 distinct references stops after 5', async () => {
+      142 | 		const s = setup(ff);
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:139:51)
+
+  ● SC536 probe: real nesting (awaited nested render) › depth cap: a chain of 7 distinct references stops after 5
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   5,
+    +   6,
+      ]
+
+      146 | 		console.log(`SC536-PROBE cap ${_n}: cards=${JSON.stringify(cards(s.top))} nesting=${JSON.stringify(nestingCards(s.top))}`);
+      147 | 		expect(cards(s.top)).toEqual(['C1', 'C2', 'C3', 'C4', 'C5']);
+    > 148 | 		expect(nestingCards(s.top).map((x) => x.depth)).toEqual([5]);
+          | 		                                                ^
+      149 | 	});
+      150 | 	test('a legitimate nested reference renders (A -> B, no cycle)', async () => {
+      151 | 		const s = setup(ff);
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:148:51)
+
+  ● SC536 probe: real nesting (fire-and-forget nested render) › Bug 1: A -> A stops with one nesting card one level down
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   1,
+    +   2,
+      ]
+
+      127 | 		expect(s.views()).toBeLessThan(VIEW_CAP);
+      128 | 		expect(cards(s.top)).toEqual(['A']);
+    > 129 | 		expect(nestingCards(s.top).map((x) => x.depth)).toEqual([1]);
+          | 		                                                ^
+      130 | 	});
+      131 | 	test('Bug 1: A -> B -> A stops at the second A', async () => {
+      132 | 		const s = setup(ff);
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:129:51)
+
+  ● SC536 probe: real nesting (fire-and-forget nested render) › Bug 1: A -> B -> A stops at the second A
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   2,
+    +   3,
+      ]
+
+      137 | 		console.log(`SC536-PROBE bug1-ab ${_n}: views=${s.views()} cards=${JSON.stringify(cards(s.top))} nesting=${JSON.stringify(nestingCards(s.top))}`);
+      138 | 		expect(cards(s.top)).toEqual(['A', 'B']);
+    > 139 | 		expect(nestingCards(s.top).map((x) => x.depth)).toEqual([2]);
+          | 		                                                ^
+      140 | 	});
+      141 | 	test('depth cap: a chain of 7 distinct references stops after 5', async () => {
+      142 | 		const s = setup(ff);
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:139:51)
+
+  ● SC536 probe: real nesting (fire-and-forget nested render) › depth cap: a chain of 7 distinct references stops after 5
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   5,
+    +   6,
+      ]
+
+      146 | 		console.log(`SC536-PROBE cap ${_n}: cards=${JSON.stringify(cards(s.top))} nesting=${JSON.stringify(nestingCards(s.top))}`);
+      147 | 		expect(cards(s.top)).toEqual(['C1', 'C2', 'C3', 'C4', 'C5']);
+    > 148 | 		expect(nestingCards(s.top).map((x) => x.depth)).toEqual([5]);
+          | 		                                                ^
+      149 | 	});
+      150 | 	test('a legitimate nested reference renders (A -> B, no cycle)', async () => {
+      151 | 		const s = setup(ff);
+
+      at Object.<anonymous> (test/dom/elements/zz-sc536-probe.test.ts:148:51)
+
+
+<--- Last few GCs --->
+
+[486311:0x5ccce07c0000]    66379 ms: Mark-Compact 4076.0 (4106.0) -> 4067.9 (4123.0) MB, pooled: 0 MB, 2020.85 / 0.00 ms  (average mu = 0.182, current mu = 0.090) allocation failure; scavenge might not succeed
+[486311:0x5ccce07c0000]    68428 ms: Mark-Compact (reduce) 4076.6 (4123.0) -> 4073.1 (4096.3) MB, pooled: 0 MB, 1067.66 / 0.00 ms  (+ 681.2 ms in 136 steps since start of marking, biggest step 7.3 ms, walltime since start of marking 1839 ms) (average mu =
+FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 0x5ccca8d432e7 node::OOMErrorHandler(char const*, v8::OOMDetails const&) [/nix/store/9z1v3wyrxp6fpyzw21lcakd5w7aknzyc-nodejs-24.12.0/bin/node]
+ 2: 0x5ccca91f35f0  [/nix/store/9z1v3wyrxp6fpyzw21lcakd5w7aknzyc-nodejs-24.12.0/bin/node]
+ 3: 0x5ccca91f370c  [/nix/store/9z1v3wyrxp6fpyzw21lcakd5w7aknzyc-nodejs-24.12.0/bin/node]
+ 4: 0x5ccca94d03b7  [/nix/store/9z1v3wyrxp6fpyzw21lcakd5w7aknzyc-nodejs-24.12.0/bin/node]
+FAIL dom test/dom/elements/refUnwrapView.test.ts
+  ● Test suite failed to run
+
+    Jest worker ran out of memory and crashed
+
+      at ChildProcessWorker._onExit (../../../../../../../home/scott/code/steelCompendium/worktrees/sc533-chrome-border-reflow/draw-steel-elements/node_modules/jest-worker/build/index.js:924:26)
+
+Test Suites: 3 failed, 1 passed, 4 total
+Tests:       7 failed, 36 passed, 43 total
+Snapshots:   0 total
+Time:        68.999 s
+Ran all test suites matching test/dom/elements/zz-sc536-probe.test.ts|test/dom/elements/refUnwrapView.test.ts|test/dom/authoring/formModalStalePreview.test.ts|test/dom/elements/displayCardHybrid.test.ts.

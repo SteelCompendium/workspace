@@ -1,0 +1,115 @@
+Running one project: dom
+FAIL dom test/dom/elements/refUnwrapView.test.ts (7.852 s)
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render awaited › depth cap: 7 distinct references show 5 cards and the cap card, and the refused level makes no lookup
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+    @@ -2,6 +2,7 @@
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+    +   "C6",
+      ]
+
+      1092 | 		await s.run('@C1');
+      1093 | 		await settle();
+    > 1094 | 		expect(cards(s.top)).toEqual(['C1', 'C2', 'C3', 'C4', 'C5']);
+           | 		                     ^
+      1095 | 		expect(messages(s.top, CAP)).toEqual([{ depth: 6, text: CAP_MESSAGE }]);
+      1096 | 		expect(messages(s.top, LOOP)).toEqual([]);
+      1097 | 		expect(s.resolved).toEqual(['@C1', '@C2', '@C3', '@C4', '@C5']);
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1094:24)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render fire-and-forget › depth cap: 7 distinct references show 5 cards and the cap card, and the refused level makes no lookup
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+    @@ -2,6 +2,7 @@
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+    +   "C6",
+      ]
+
+      1092 | 		await s.run('@C1');
+      1093 | 		await settle();
+    > 1094 | 		expect(cards(s.top)).toEqual(['C1', 'C2', 'C3', 'C4', 'C5']);
+           | 		                     ^
+      1095 | 		expect(messages(s.top, CAP)).toEqual([{ depth: 6, text: CAP_MESSAGE }]);
+      1096 | 		expect(messages(s.top, LOOP)).toEqual([]);
+      1097 | 		expect(s.resolved).toEqual(['@C1', '@C2', '@C3', '@C4', '@C5']);
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1094:24)
+
+
+Summary of all failing tests
+FAIL test/dom/elements/refUnwrapView.test.ts (7.852 s)
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render awaited › depth cap: 7 distinct references show 5 cards and the cap card, and the refused level makes no lookup
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+    @@ -2,6 +2,7 @@
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+    +   "C6",
+      ]
+
+      1092 | 		await s.run('@C1');
+      1093 | 		await settle();
+    > 1094 | 		expect(cards(s.top)).toEqual(['C1', 'C2', 'C3', 'C4', 'C5']);
+           | 		                     ^
+      1095 | 		expect(messages(s.top, CAP)).toEqual([{ depth: 6, text: CAP_MESSAGE }]);
+      1096 | 		expect(messages(s.top, LOOP)).toEqual([]);
+      1097 | 		expect(s.resolved).toEqual(['@C1', '@C2', '@C3', '@C4', '@C5']);
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1094:24)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render fire-and-forget › depth cap: 7 distinct references show 5 cards and the cap card, and the refused level makes no lookup
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+    @@ -2,6 +2,7 @@
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+    +   "C6",
+      ]
+
+      1092 | 		await s.run('@C1');
+      1093 | 		await settle();
+    > 1094 | 		expect(cards(s.top)).toEqual(['C1', 'C2', 'C3', 'C4', 'C5']);
+           | 		                     ^
+      1095 | 		expect(messages(s.top, CAP)).toEqual([{ depth: 6, text: CAP_MESSAGE }]);
+      1096 | 		expect(messages(s.top, LOOP)).toEqual([]);
+      1097 | 		expect(s.resolved).toEqual(['@C1', '@C2', '@C3', '@C4', '@C5']);
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1094:24)
+
+
+Test Suites: 1 failed, 164 passed, 165 total
+Tests:       2 failed, 2 skipped, 4465 passed, 4469 total
+Snapshots:   0 total
+Time:        62.768 s
+Ran all test suites.

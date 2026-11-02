@@ -1,0 +1,54 @@
+FAIL dom test/dom/elements/refUnwrapView.test.ts
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render awaited › a superseded resolution never stamps a chain: the new reference's children see the new chain
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        "B",
+    -   "A",
+    +   "B",
+      ]
+
+      1160 | 		await settle();
+      1161 | 		await Promise.all([first, updated]);
+    > 1162 | 		expect(cards(s.top)).toEqual(['B', 'A']);
+           | 		                     ^
+      1163 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@B') }]);
+      1164 | 	});
+      1165 | });
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1162:24)
+
+  ● RefUnwrapView — reference ancestry guard (SC-536), nested render fire-and-forget › a superseded resolution never stamps a chain: the new reference's children see the new chain
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        "B",
+    -   "A",
+    +   "B",
+      ]
+
+      1160 | 		await settle();
+      1161 | 		await Promise.all([first, updated]);
+    > 1162 | 		expect(cards(s.top)).toEqual(['B', 'A']);
+           | 		                     ^
+      1163 | 		expect(messages(s.top, LOOP)).toEqual([{ depth: 2, text: loopMessage('@B') }]);
+      1164 | 	});
+      1165 | });
+
+      at Object.<anonymous> (test/dom/elements/refUnwrapView.test.ts:1162:24)
+
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       2 failed, 91 passed, 93 total
+Snapshots:   0 total
+Time:        5.984 s
+Ran all test suites matching test/dom/elements/refUnwrapView.test.ts|test/dom/elements/displayCardHybrid.test.ts|test/dom/authoring/formModalStalePreview.test.ts.
+jest rc=1

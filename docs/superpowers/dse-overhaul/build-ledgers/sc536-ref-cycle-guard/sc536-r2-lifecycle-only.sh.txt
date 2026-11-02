@@ -1,0 +1,9 @@
+#!/bin/bash
+# usage: sc536-r2-lifecycle-only.sh <plugin dir> <log file> <port> <only ids>
+cd "$1" || exit 9
+export DSE_LIFECYCLE_PORT="$3"
+git log --oneline -1 > "$2"
+npm run obsidian-lifecycle -- --only="$4" >> "$2" 2>&1
+rc=$?
+echo "lifecycle rc=$rc" >> "$2"
+exit $rc
