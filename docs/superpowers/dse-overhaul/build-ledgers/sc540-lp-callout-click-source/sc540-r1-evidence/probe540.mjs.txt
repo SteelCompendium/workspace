@@ -1,0 +1,187 @@
+// ===== SC-540 r1 PROBE (scratch harness copy only; never in the tree) =====
+// Env: P540_CASES (comma list), P540_OUT (dir for json/png), P540_VARIANT (label)
+const P540_OUT = process.env.P540_OUT ?? work;
+const P540_VAR = process.env.P540_VARIANT ?? 'unknown';
+const p540Fill = (n, tag) => Array.from({ length: n }, (_, i) => `${tag} filler ${i}.`).join('\n\n');
+const P540_FEATURE_LINK = ['```ds-feature', 'type: feature', 'feature_type: ability', 'name: Link Strike', 'effects:', '  - name: Effect', '    effect: |-', '      See [[P540/link-target]] for more.', '```'];
+Object.assign(FIXTURES, {
+	// callout (body text + counter Twin 5), then a plain counter fence (Plain 5)
+	'P540/cc.md': `# cc\n\nTOP\n\n${p540Fill(14, 'A')}\n\n${QUOTED(['[!note] Camp', 'Callout body text'])}\n\n${p540Fill(14, 'B')}\n\n${COUNTER(5, 'Plain')}\n\n${p540Fill(14, 'C')}\n`,
+	// foldable callouts: collapsed (-) and open (+), each with a counter
+	'P540/cf.md': `# cf\n\nTOP\n\n${p540Fill(14, 'A')}\n\n${QUOTED(['[!note]- Folded', 'Folded body text'], 5, 'Fold')}\n\n${p540Fill(14, 'B')}\n\n${QUOTED(['[!note]+ Open', 'Open body text'], 5, 'Open')}\n\n${p540Fill(14, 'C')}\n`,
+	// callout holding a feature whose effect links to P540/link-target
+	'P540/cl.md': `# cl\n\nTOP\n\n${p540Fill(14, 'A')}\n\n${['[!note] Linked', 'Linked body text', ...P540_FEATURE_LINK].map((l) => `> ${l}`).join('\n')}\n\n${p540Fill(14, 'B')}\n\n${P540_FEATURE_LINK.join('\n')}\n\n${p540Fill(14, 'C')}\n`,
+	'P540/link-target.md': '# link target\n\nThe target of the link.\n',
+	// callout in a callout
+	'P540/cn.md': `# cn\n\nTOP\n\n${p540Fill(14, 'A')}\n\n${QUOTED_NESTED()}\n\n${p540Fill(14, 'B')}\n`,
+	// embed in a callout: P540/embc.md (a counter) embedded inside a callout
+	'P540/embc.md': `# embc\n\nEMBC-TOP\n\n${COUNTER(5, 'Embedded')}\n\nEMBC-BOTTOM\n`,
+	'P540/ce.md': `# ce\n\nTOP\n\n${p540Fill(14, 'A')}\n\n> [!note] Emb\n> Embed body text\n> ![[P540/embc]]\n\n${p540Fill(14, 'B')}\n`,
+	// callout in an embedded note: P540/cbsrc.md holds the callout, P540/cb.md embeds it
+	'P540/cbsrc.md': `# cbsrc\n\nCBSRC-TOP\n\n${QUOTED(['[!note] In embed', 'Embedded callout text'], 5, 'InEmbed')}\n\nCBSRC-BOTTOM\n`,
+	'P540/cb.md': `# cb\n\nTOP\n\n${p540Fill(14, 'A')}\n\n![[P540/cbsrc]]\n\n${p540Fill(14, 'B')}\n`,
+});
+const P540_CASES = {
+	// name: [rel, root selector, nth top-level root, act, extra]
+	'cc-plus': ['P540/cc.md', 'counter', 0, 'plus'],
+	'cc-pencil': ['P540/cc.md', 'counter', 0, 'pencil'],
+	'cc-ws': ['P540/cc.md', 'counter', 0, 'ws'],
+	'cc-body': ['P540/cc.md', 'counter', 0, 'body'],
+	'cc-title': ['P540/cc.md', 'counter', 0, 'title'],
+	'cc-codebtn': ['P540/cc.md', 'counter', 0, 'codebtn'],
+	'plain-plus': ['P540/cc.md', 'counter', 1, 'plus'],
+	'plain-ws': ['P540/cc.md', 'counter', 1, 'ws'],
+	'plain-pencil': ['P540/cc.md', 'counter', 1, 'pencil'],
+	'cf-chevron-closed': ['P540/cf.md', 'counter', 0, 'chevron'],
+	'cf-chevron-open': ['P540/cf.md', 'counter', 1, 'chevron'],
+	'cf-plus-open': ['P540/cf.md', 'counter', 1, 'plus'],
+	'cl-link': ['P540/cl.md', 'feature', 0, 'link'],
+	'cl-link-ctrl': ['P540/cl.md', 'feature', 0, 'link-ctrl'],
+	'plain-link': ['P540/cl.md', 'feature', 1, 'link'],
+	'plain-link-ctrl': ['P540/cl.md', 'feature', 1, 'link-ctrl'],
+	'cc-plus-clipped': ['P540/cc.md', 'counter', 0, 'plus', { clip: 30 }],
+	'cn-plus': ['P540/cn.md', 'counter', 0, 'plus'],
+	'ce-plus': ['P540/ce.md', 'counter', 0, 'plus'],
+	'ce-body': ['P540/ce.md', 'counter', 0, 'body'],
+	'cb-plus': ['P540/cb.md', 'counter', 0, 'plus'],
+};
+const P540_INSTALL = `(() => {
+  if (window.__p540) return true;
+  const P = window.__p540 = {};
+  P.main = app.workspace.getMostRecentLeaf();
+  P.cm = () => P.main.view.editor.cm;
+  P.roots = (kind) => Array.from(P.cm().contentDOM.querySelectorAll('[data-dse-element="' + kind + '"]')).filter((r) => r.isConnected && !r.parentElement.closest('[data-dse-element]'));
+  P.fences = (kind) => { const out = []; P.cm().state.doc.toString().split('\\n').forEach((l, i) => { if (/^(?:[ ]{0,3}>[ ]?)*\`\`\`ds-/.test(l) && l.includes('ds-' + kind)) out.push(i); }); return out; };
+  P.snap = () => {
+    const cm = P.cm(); const sel = cm.state.selection.main;
+    const lines = Array.from(cm.contentDOM.querySelectorAll('.cm-line'));
+    const rawHeaders = lines.filter((l) => /^\\s*>\\s*\\[!/.test(l.textContent)).map((l) => l.textContent.slice(0, 30));
+    const widgets = Array.from(cm.contentDOM.querySelectorAll('.cm-embed-block.cm-callout'));
+    const roots = Array.from(cm.contentDOM.querySelectorAll('[data-dse-element]')).filter((r) => r.isConnected && !r.parentElement.closest('[data-dse-element]'));
+    const f = app.workspace.getMostRecentLeaf();
+    return { file: P.main.view.file.path, selFrom: sel.from, selTo: sel.to, st: Math.round(cm.scrollDOM.scrollTop), rawHeaders, calloutWidgets: widgets.length, roots: roots.length, rootsInCallout: roots.filter((r) => r.closest('.cm-callout')).length, leaves: app.workspace.getLeavesOfType('markdown').length, active: app.workspace.getActiveFile()?.path, modal: !!document.querySelector('.modal-container .dse-modal'), collapsed: widgets.map((w) => w.querySelector('.callout')?.classList.contains('is-collapsed')) };
+  };
+  return true;
+})()`;
+async function p540Click(t, expr, mods = 0, noScroll = false) {
+	const pt = await t.ev(`(() => { const el = ${expr}; if (!el) return null; if (!${noScroll}) el.scrollIntoView({ block: 'center', inline: 'center' }); const r = el.getBoundingClientRect(); return { w: r.width, h: r.height }; })()`);
+	t.expect(pt && pt.w > 0 && pt.h > 0, `no visible element to click: ${expr}`);
+	await sleep(250);
+	await t.ev(`window.__p540.pre = window.__p540.snap()`);
+	const at = await t.ev(`(() => { const r = (${expr}).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
+	const base = { x: at.x, y: at.y, button: 'left', clickCount: 1, modifiers: mods };
+	await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: at.x, y: at.y, modifiers: mods });
+	await t.cdp.call('Input.dispatchMouseEvent', { type: 'mousePressed', buttons: 1, ...base });
+	await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseReleased', buttons: 0, ...base });
+	return at;
+}
+async function p540Run(t, name) {
+	const [rel, kind, nth, act, opts = {}] = P540_CASES[name];
+	const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+	await t.ev(P540_INSTALL);
+	const P = 'window.__p540';
+	// back to one leaf, fresh note, Live Preview
+	await t.ev(`(async () => { const keep = ${P}.main; app.workspace.getLeavesOfType('markdown').filter((l) => l !== keep).forEach((l) => l.detach()); app.workspace.setActiveLeaf(keep, { focus: true }); return true; })()`);
+	await t.open('Lifecycle/other.md', `${P}.main`);
+	await t.ev(`(async () => { await app.vault.modify(app.vault.getAbstractFileByPath(${JSON.stringify(rel)}), ${JSON.stringify(FIXTURES[rel])}); })()`);
+	await sleep(800);
+	await t.ev(`${prefs}.set('authoringControls', ${act === 'pencil' ? 'true' : 'false'})`);
+	await t.ev(`(async () => { await ${P}.main.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'source', source: false }, active: true }); ${P}.main.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+	await sleep(1500);
+	// scroll the block into view (never count .cm-embed-block): the n-th ds-<kind> fence's line, centred; embeds: the n-th root as it appears
+	const embedded = rel === 'P540/ce.md' || rel === 'P540/cb.md';
+	if (!embedded) {
+		await t.ev(`(async () => { const cm = ${P}.cm(); const fl = ${P}.fences(${JSON.stringify(kind)}); cm.dispatch({ effects: cm.constructor.scrollIntoView(cm.state.doc.line(fl[${nth}] + 1).from, { y: 'center' }) }); return true; })()`);
+	} else {
+		const sc = rel === 'P540/ce.md' ? '> [!note] Emb' : '![[P540/cbsrc]]';
+		await t.ev(`(async () => { const cm = ${P}.cm(); const i = cm.state.doc.toString().indexOf(${JSON.stringify(sc)}); cm.dispatch({ effects: cm.constructor.scrollIntoView(i, { y: 'center' }) }); return true; })()`);
+	}
+	await t.waitFor(`${P}.roots(${JSON.stringify(kind)}).length > ${nth}`, `${name}: the root is drawn`);
+	await sleep(1500);
+	if (opts.clip) {
+		await t.ev(`(async () => { const cm = ${P}.cm(); const fl = ${P}.fences(${JSON.stringify(kind)}); cm.dispatch({ effects: cm.constructor.scrollIntoView(cm.state.doc.line(fl[${nth}] + 1).from - 2, { y: 'start', yMargin: 0 }) }); return true; })()`);
+		await sleep(600);
+		await t.ev(`(() => { ${P}.cm().scrollDOM.scrollTop += ${opts.clip}; return true; })()`);
+		await sleep(800);
+	}
+	const R = `${P}.roots(${JSON.stringify(kind)})[${nth}]`;
+	const W = `(${R}).closest('.cm-embed-block.cm-callout')`;
+	const out = { name, variant: P540_VAR, rel, act, before: await t.ev(`${P}.snap()`), disk0: t.read(rel) };
+	const notes = [];
+	await t.ev(`window.__p540errs0 = window.__lc.errs.length`);
+	if (act === 'plus') {
+		out.geom = await t.ev(`(() => { const b = (${R}).querySelector('button[aria-label^="Increase"]'); const sr = ${P}.cm().scrollDOM.getBoundingClientRect(); const br = b.getBoundingClientRect(); const wr = (${W})?.getBoundingClientRect() ?? br; return { btnTop: Math.round(br.top - sr.top), btnBottom: Math.round(br.bottom - sr.top), wTop: Math.round(wr.top - sr.top), wBottom: Math.round(wr.bottom - sr.top), viewH: Math.round(sr.height) }; })()`);
+		out.at = await p540Click(t, `(${R}).querySelector('button[aria-label^="Increase"]')`, 0, !!opts.clip);
+	} else if (act === 'ws') {
+		out.at = await p540Click(t, `(${R}).querySelector('.dse-counter__name')`);
+	} else if (act === 'body') {
+		out.at = await p540Click(t, `(${W}).querySelector('.callout-content > p')`);
+	} else if (act === 'title') {
+		out.at = await p540Click(t, `(${W}).querySelector('.callout-title')`);
+	} else if (act === 'codebtn') {
+		out.at = await p540Click(t, `(${W}).querySelector('.edit-block-button')`);
+	} else if (act === 'chevron') {
+		out.at = await p540Click(t, `(${W}).querySelector('.callout-fold')`);
+	} else if (act === 'link' || act === 'link-ctrl') {
+		out.linkHtml = await t.ev(`(${R}).querySelector('a')?.outerHTML?.slice(0, 200)`);
+		out.at = await p540Click(t, `(${R}).querySelector('a.internal-link')`, act === 'link-ctrl' ? 2 : 0);
+	} else if (act === 'pencil') {
+		const pencil = `(${R}).querySelector('.dse-chrome button[data-dse-chrome-item="edit"]')`;
+		await t.waitFor(`!!${pencil}`, `${name}: the Edit pencil is drawn`);
+		await t.ev(`${pencil}.focus({ focusVisible: true })`);
+		out.focusedPencil = await t.ev(`document.activeElement === ${pencil}`);
+		await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', text: '\r', windowsVirtualKeyCode: 13, nativeVirtualKeyCode: 13 });
+		await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, nativeVirtualKeyCode: 13 });
+		await sleep(1500);
+		out.afterEnter = await t.ev(`${P}.snap()`);
+		await t.shot(`${name}-${P540_VAR}-afterEnter`).then((f) => { notes.push(f); });
+		await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27, nativeVirtualKeyCode: 27 });
+		await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27, nativeVirtualKeyCode: 27 });
+		await sleep(1200);
+		out.afterEscape = await t.ev(`${P}.snap()`);
+		if (out.afterEscape.modal) {
+			await t.ev(`(document.querySelector('.modal-container .dse-modal button.dse-form__cancel, .modal-container .dse-modal [data-dse-control="cancel"]') || document.querySelector('.modal-container .modal-close-button'))?.click()`);
+			await sleep(800);
+			out.afterCancel = await t.ev(`${P}.snap()`);
+		}
+	}
+	await sleep(1800);
+	out.after = await t.ev(`${P}.snap()`);
+	out.pre = await t.ev(`window.__p540.pre ?? null`);
+	await t.ev(`window.__p540.pre = null`);
+	out.disk1 = t.read(rel);
+	out.diskChanged = out.disk0 !== out.disk1;
+	out.counterValues = t.counterValues(rel);
+	const extra = { 'P540/ce.md': 'P540/embc.md', 'P540/cb.md': 'P540/cbsrc.md' }[rel];
+	if (extra) { out.extraValues = t.counterValues(extra); out.extraChanged = t.read(extra) !== FIXTURES[extra]; await t.ev(`(async () => { await app.vault.modify(app.vault.getAbstractFileByPath(${JSON.stringify(extra)}), ${JSON.stringify(FIXTURES[extra])}); })()`); }
+	out.errs = await t.ev(`window.__lc.errs.slice(window.__p540errs0).map((e) => e.text)`);
+	out.shot = await t.shot(`${name}-${P540_VAR}-after`);
+	fs.mkdirSync(P540_OUT, { recursive: true });
+	fs.copyFileSync(out.shot, path.join(P540_OUT, `p540-${P540_VAR}-${name}-after.png`));
+	if (notes[0]) fs.copyFileSync(notes[0], path.join(P540_OUT, `p540-${P540_VAR}-${name}-afterEnter.png`));
+	delete out.disk0; delete out.disk1;
+	fs.mkdirSync(P540_OUT, { recursive: true });
+	fs.writeFileSync(path.join(P540_OUT, `p540-${P540_VAR}-${name}.json`), JSON.stringify(out, null, 1));
+	await t.ev(`${prefs}.set('authoringControls', false)`);
+	return out;
+}
+SCENARIOS.push({
+	id: 'P540',
+	async run(t) {
+		const names = (process.env.P540_CASES || Object.keys(P540_CASES).join(',')).split(',').filter(Boolean);
+		const lines = [];
+		for (const n of names) {
+			try {
+				const o = await p540Run(t, n);
+				const raw = o.after.rawHeaders.length ? 'RAW' : 'card';
+				lines.push(`${n}: disk ${o.diskChanged ? JSON.stringify(o.counterValues) : 'unchanged'} ${raw} sel ${(o.pre ?? o.before).selFrom}-${(o.pre ?? o.before).selTo} -> ${o.after.selFrom}-${o.after.selTo} st ${(o.pre ?? o.before).st} -> ${o.after.st} roots ${o.before.rootsInCallout}/${o.before.roots} -> ${o.after.rootsInCallout}/${o.after.roots} file ${o.after.file} active ${o.after.active} leaves ${o.after.leaves}${o.afterEnter ? ` | enter: modal ${o.afterEnter.modal} ${o.afterEnter.rawHeaders.length ? 'RAW' : 'card'} sel ${o.afterEnter.selFrom}-${o.afterEnter.selTo} | esc: modal ${o.afterEscape.modal} ${o.afterEscape.rawHeaders.length ? 'RAW' : 'card'} sel ${o.afterEscape.selFrom}-${o.afterEscape.selTo}` : ''} collapsed ${JSON.stringify(o.before.collapsed)} -> ${JSON.stringify(o.after.collapsed)} errs ${o.errs.length}${o.extraValues ? ` embedded-note ${JSON.stringify(o.extraValues)} changed ${o.extraChanged}` : ''}${o.geom ? ' geom ' + JSON.stringify(o.geom) : ''}`);
+			} catch (e) {
+				lines.push(`${n}: PROBE-ERROR ${e.message}`);
+			}
+		}
+		fs.mkdirSync(P540_OUT, { recursive: true });
+		fs.writeFileSync(path.join(P540_OUT, `p540-${P540_VAR}-summary.txt`), lines.join('\n') + '\n');
+		return '\n' + lines.join('\n');
+	},
+});
+// ===== end SC-540 r1 PROBE =====

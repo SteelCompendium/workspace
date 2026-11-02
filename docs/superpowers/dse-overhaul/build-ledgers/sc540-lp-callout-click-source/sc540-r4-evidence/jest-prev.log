@@ -1,0 +1,41 @@
+FAIL dom test/dom/framework/pipeline.test.ts
+  ● T-9 (Plan 02): ElementPipeline.run (F1 §2.4) › click shield (F1 §2.4 step 4 / §1.2) › SC-540 Live Preview callout: the root is an Obsidian interactive child › a click that rebuilds the card in a Live Preview callout widget still ends Obsidian's walk on an interactive child
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      741 | 					press(button, 'click');
+      742 | 					expect(root.contains(button)).toBe(false);
+    > 743 | 					expect(widgetWouldSelect(button, outer)).toBe(false);
+          | 					                                         ^
+      744 | 				} finally {
+      745 | 					cleanup();
+      746 | 				}
+
+      at test/dom/framework/pipeline.test.ts:743:47
+
+  ● T-9 (Plan 02): ElementPipeline.run (F1 §2.4) › click shield (F1 §2.4 step 4 / §1.2) › SC-540 Live Preview callout: the root is an Obsidian interactive child › a click that rebuilds the card in a Live Preview embed still ends Obsidian's walk on an interactive child
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      741 | 					press(button, 'click');
+      742 | 					expect(root.contains(button)).toBe(false);
+    > 743 | 					expect(widgetWouldSelect(button, outer)).toBe(false);
+          | 					                                         ^
+      744 | 				} finally {
+      745 | 					cleanup();
+      746 | 				}
+
+      at test/dom/framework/pipeline.test.ts:743:47
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 51 passed, 53 total
+Snapshots:   0 total
+Time:        3.083 s
+Ran all test suites matching test/dom/framework/pipeline.test.ts.
+rc=1

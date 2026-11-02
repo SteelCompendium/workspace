@@ -1,0 +1,158 @@
+===== r540-H-head-summary.jsonl
+## rebuild-init-callout
+   before={sel 0-0, st 378, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+   after={sel 0-0, st 316, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 792}
+   diag=[{"tgt": "SPAN.dse-btn__text", "rootIc0": true, "connected": false, "inRoot": false, "rootConnected": true, "walkHit": "DIV.dse-init.interactive-child", "walkEnd": "hit"}]
+   diskChanged=true
+   preClick={sel 0-0, st 316, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+## rebuild-proj-callout
+   before={sel 0-0, st 278, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+   after={sel 0-0, st 374, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 807}
+   diag=[{"tgt": "SPAN.dse-btn__text", "rootIc0": true, "connected": false, "inRoot": false, "rootConnected": true, "walkHit": "DIV.dse-prj.interactive-child", "walkEnd": "hit"}]
+   diskChanged=true
+   preClick={sel 0-0, st 374, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+## rebuild-init-lpembed
+   before={sel 0-0, st 595, card, inC 0/1, ic 0, file R540/init-host.md, ae DIV.cm-content.cm-lineWrapping, docLen 409}
+   after={sel 0-0, st 530, card, inC 0/1, ic 1, file R540/init-host.md, ae DIV.cm-content.cm-lineWrapping, docLen 409}
+   diag=[{"tgt": "SPAN.dse-btn__text", "rootIc0": true, "connected": false, "inRoot": false, "rootConnected": true, "walkHit": "DIV.dse-init.interactive-child", "walkEnd": "hit"}]
+   diskChanged=true
+   preClick={sel 0-0, st 530, card, inC 0/1, ic 0, file R540/init-host.md, ae DIV.cm-content.cm-lineWrapping, docLen 409}
+## rebuild-init-plain
+   before={sel 0-0, st 1534, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+   after={sel 0-0, st 1407, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 790}
+   diag=[{"tgt": "SPAN.dse-btn__text", "rootIc0": false, "connected": false, "inRoot": false, "rootConnected": true, "walkHit": null, "walkEnd": "null (detached)"}]
+   diskChanged=true
+   preClick={sel 0-0, st 1407, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+## callout-plus
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   pre={sel 0-0, st 433, card, inC 1/1, ic 1, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   disk={"R540/cc.md": [6, 5]}
+   preClick={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## callout-text
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 197-316, st 376, RAW, inC 0/0, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, winSel 119 "> [!note] Camp\n> Callout body ", docLen 764}
+   preClick={sel 0-0, st 376, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## link-plain
+   before={sel 0-0, st 299, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+   after={sel 0-0, st 0, card, inC 0/0, ic 0, file R540/link-target.md, ae DIV.cm-content.cm-lineWrapping, docLen 39}
+   preClick={sel 0-0, st 386, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+## link-ctrl
+   before={sel 0-0, st 299, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+   after={sel 0-0, st 0, card, inC 1/2, ic 1, clink.md, leaves 2, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+   tabs=["R540/clink.md", "R540/link-target.md"]
+   preClick={sel 0-0, st 386, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+## callout-checkbox
+   before={sel 0-0, st 278, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+   after={sel 0-0, st 374, card, inC 1/2, ic 1, cproj.md, ae INPUT[Breakthrough (natural 19-20)], aeSel null-null/2, aeVal "on", docLen 765}
+   checked=[false, true]
+   preClick={sel 0-0, st 374, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+## reading-plus
+   disk=[6, 5]
+   rootsAfter=[{"ic": false, "inCallout": true}, {"ic": false, "inCallout": false}]
+   mode="preview"
+   preClick={sel 0-0, st 0, card, inC 1/1, ic 0, cc.md, mode preview, ae DIV.markdown-preview-view.markdown-rendered.node-insert-event, docLen 764}
+## callout-enter
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae BUTTON.dse-btn.dse-btn--ghost.dse-btn--icon[Edit Counter], docLen 764}
+   open={sel 0-0, st 406, card, inC 1/1, ic 1, cc.md, MODAL, ae TEXTAREA.dse-form__raw, aeSel 54-54/54, aeVal "name: Twin\ncurrent_v", docLen 764}
+   closed={sel 0-0, st 406, card, inC 1/1, ic 1, cc.md, ae BUTTON.dse-btn.dse-btn--ghost.dse-btn--icon[Edit Counter], docLen 764}
+   diskSame=true
+   preClick=null
+## blast-live
+   pre={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 197-316, st 433, RAW, inC 0/0, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, winSel 119 "> [!note] Camp\n> Callout body ", docLen 764}
+   stray=[]
+   info={"btnConnected": true, "btnMarked": false, "liveHostMarked": false, "laterMarked": null, "docMarked": false}
+   preClick={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## blast-fragment
+   pre={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 197-316, st 433, RAW, inC 0/0, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, winSel 119 "> [!note] Camp\n> Callout body ", docLen 764}
+   stray=[]
+   info={"btnConnected": false, "btnMarked": false, "liveHostMarked": null, "laterMarked": null, "docMarked": false}
+   preClick={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## blast-later
+   pre={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   stray=["LIVE DIV.interactive-child"]
+   info={"btnConnected": true, "btnMarked": false, "liveHostMarked": null, "laterMarked": true, "docMarked": false}
+   preClick={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## blast-root-replaced
+   pre={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   stray=[]
+   info={"btnConnected": null, "btnMarked": null, "liveHostMarked": null, "laterMarked": null, "docMarked": false}
+   preClick={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+===== r540-FZ1-head-summary.jsonl
+## fz-characteristics: buttons 0, clicked 0, BAD 0, errs 0
+    ok: 
+## fz-conditions: buttons 5, clicked 3, BAD 0, errs 0
+    ok: Roll save vs Bleeding (6+ ends); Remove condition: Bleeding; Add condition
+## fz-counter: buttons 2, clicked 2, BAD 0, errs 0
+    ok: Decrease Health; Increase Health
+## fz-encounter: buttons 2, clicked 2, BAD 0, errs 0
+    ok: Create initiative tracker block; Open initiative tracker in sidebar
+## fz-featureblock: buttons 0, clicked 0, BAD 0, errs 0
+    ok: 
+## fz-feature: buttons 0, clicked 0, BAD 0, errs 0
+    ok: 
+## fz-hero: buttons 13, clicked 8, BAD 0, errs 0
+    ok: Respite: Restore Stamina + Recoveries; clear Surges, temp Stamina, and end-of-encounter conditions; Decrease Ferocity; Increase Ferocity; Increase Surges; Increase Surges; Roll save vs Bleeding (6+ ends); All; Signature
+## fz-initiative: buttons 31, clicked 7, BAD 0, errs 0
+    {"i": 7, "label": "Edit Stamina: Frodo Baggins", "skipped": "not hit-testable"}
+    ok: Advance round; Toggle turn taken: Frodo Baggins; Add Condition; Toggle Main action: Frodo Baggins; Toggle Maneuver action: Frodo Baggins; Toggle Move action: Frodo Baggins; Toggle Triggered action: Frodo Baggins
+## fz-montage: buttons 9, clicked 7, BAD 0, errs 0
+    ok: Test tierseasy · medium · hard; Add a hero; Log an action for Kira; Log a success for Kira in round 1; End round 1; Log an assist for Kira in round 2; Running a montage testlimits ·
+## fz-negotiation: buttons 24, clicked 8, BAD 0, errs 0
+    ok: Negotiation options; Patience 0; Patience 1; Patience 2; Patience 3; Patience 4; Patience 5; Interest 5: Remembers the taste of strawberries and cream!
+===== r540-FZ2-head-summary.jsonl
+## fz-party: buttons 17, clicked 8, BAD 0, errs 0
+    ok: Decrease Kira's Victories; Decrease Kira's XP; Increase Kira's XP; Decrease Kira's Renown; Increase Kira's Renown; Increase Kira's Wealth; Increase Kira's Wealth; Decrease Doran's Victories
+## fz-project: buttons 3, clicked 3, BAD 0, errs 0
+    ok: Add project roll; Roll a project test; Log respite
+## fz-resource: buttons 2, clicked 2, BAD 0, errs 0
+    ok: Decrease Ferocity; Increase Ferocity
+## fz-roll: buttons 2, clicked 2, BAD 0, errs 0
+    ok: Roll; ModifiersReason 0, 1 edge
+## fz-skills: buttons 5, clicked 5, BAD 0, errs 0
+    ok: Crafting0/10; Exploration1/10; Interpersonal1/14; Intrigue1/12; Lore0/12
+## fz-stamina-bar: buttons 0, clicked 0, BAD 0, errs 0
+    ok: 
+## fz-statblock: buttons 1, clicked 1, BAD 0, errs 0
+    ok: Villain Actions
+## fz-surges: buttons 2, clicked 2, BAD 0, errs 0
+    ok: Decrease Surges; Increase Surges
+## fz-tokens: buttons 2, clicked 2, BAD 0, errs 0
+    ok: Decrease Hero Tokens; Increase Hero Tokens
+===== r540-FZP-prev-summary.jsonl
+## fz-conditions: buttons 5, clicked 5, BAD 4, errs 0
+    {"i": 0, "label": "Roll save vs Bleeding (6+ ends)", "bad": true, "sel": "0-0->100-219", "raw": 1, "st": "54->54", "modal": false, "menu": false, "strayLive": []}
+    {"i": 1, "label": "Remove condition: Bleeding", "bad": true, "sel": "0-0->100-219", "raw": 1, "st": "54->54", "modal": false, "menu": false, "strayLive": []}
+    {"i": 2, "label": "Remove condition: Slowed", "bad": true, "sel": "0-0->100-227", "raw": 1, "st": "54->54", "modal": false, "menu": false, "strayLive": []}
+    {"i": 3, "label": "Remove condition: Restrained", "bad": true, "sel": "0-0->100-246", "raw": 1, "st": "54->54", "modal": false, "menu": false, "strayLive": []}
+    ok: Add condition
+## fz-hero: buttons 13, clicked 8, BAD 3, errs 0
+    {"i": 5, "label": "Roll save vs Bleeding (6+ ends)", "bad": true, "sel": "0-0->94-1400", "raw": 1, "st": "709->438", "modal": false, "menu": false, "strayLive": []}
+    {"i": 6, "label": "Roll save vs Bleeding (6+ ends)", "bad": true, "sel": "0-0->94-1399", "raw": 1, "st": "709->438", "modal": false, "menu": false, "strayLive": []}
+    {"i": 7, "label": "Remove condition: Bleeding", "bad": true, "sel": "0-0->94-1399", "raw": 1, "st": "709->438", "modal": false, "menu": false, "strayLive": []}
+    ok: Respite: Restore Stamina + Recoveries; clear Surges, temp Stamina, and end-of-encounter conditions; Decrease Ferocity; Increase Ferocity; Increase Surges; Increase Surges
+## fz-initiative: buttons 31, clicked 7, BAD 1, errs 0
+    {"i": 0, "label": "Advance round", "bad": true, "sel": "0-0->100-639", "raw": 1, "st": "124->124", "modal": false, "menu": false, "strayLive": []}
+    {"i": 7, "label": "Edit Stamina: Frodo Baggins", "skipped": "not hit-testable"}
+    ok: Toggle turn taken: Frodo Baggins; Add Condition; Toggle Main action: Frodo Baggins; Toggle Maneuver action: Frodo Baggins; Toggle Move action: Frodo Baggins; Toggle Triggered action: Frodo Baggins
+## fz-montage: buttons 9, clicked 6, BAD 2, errs 0
+    {"i": 0, "label": "Test tierseasy \u00b7 medium \u00b7 hard", "bad": true, "sel": "0-0->97-389", "raw": 1, "st": "138->138", "modal": false, "menu": false, "strayLive": []}
+    {"i": 4, "label": "End round 1", "bad": true, "sel": "0-0->97-454", "raw": 1, "st": "728->438", "modal": false, "menu": false, "strayLive": []}
+    ok: Add a hero; Log an action for Kira; Log a success for Kira in round 1; Log an assist for Kira in round 1
+## fz-negotiation: buttons 24, clicked 8, BAD 0, errs 0
+    ok: Negotiation options; Patience 0; Patience 1; Patience 2; Patience 3; Patience 4; Patience 5; Interest 5: Remembers the taste of strawberries and cream!
+## fz-project: buttons 3, clicked 3, BAD 3, errs 0
+    {"i": 0, "label": "Add project roll", "bad": true, "sel": "0-0->97-610", "raw": 1, "st": "411->411", "modal": false, "menu": false, "strayLive": []}
+    {"i": 1, "label": "Roll a project test", "bad": true, "sel": "0-0->97-612", "raw": 1, "st": "411->411", "modal": false, "menu": false, "strayLive": []}
+    {"i": 2, "label": "Log respite", "bad": true, "sel": "0-0->97-563", "raw": 1, "st": "411->411", "modal": false, "menu": false, "strayLive": []}
+    ok: 
+## fz-roll: buttons 2, clicked 2, BAD 0, errs 0
+    ok: Roll; ModifiersReason 0, 1 edge
+## fz-skills: buttons 5, clicked 5, BAD 0, errs 0
+    ok: Crafting0/10; Exploration1/10; Interpersonal1/14; Intrigue1/12; Lore0/12
+## fz-party: buttons 17, clicked 8, BAD 0, errs 0
+    ok: Decrease Kira's Victories; Decrease Kira's XP; Increase Kira's XP; Decrease Kira's Renown; Increase Kira's Renown; Increase Kira's Wealth; Increase Kira's Wealth; Decrease Doran's Victories

@@ -1,0 +1,7 @@
+bundle prev main.js 1e1036c0aeb1 styles.css ae45354b6369 harness fb71e8ac
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :160, port 9543, 1 scenario(s)
+OBSIDIAN-LIFECYCLE G-S62 FAIL: (g) Advance round in a callout: the callout is shown as markdown source (1 raw callout line(s)); no DSE card is drawn inside a callout widget (0 of 0 roots); the editor selection moved 0-0 -> 316-151 | (h) the host editor selection moved 0-0 -> 243-212 (the embed was selected) -- passed: (a) + in a callout: card, selection 0-0, scrollTop 856; (b) form open: card, selection 0-0, scrollTop 406; (b) form closed: card, selection 0-0, scrollTop 406; (c) text: source, selection 0-0 -> 327-208; (c) title: source, selection 0-0 -> 327-208; (c) </> button: source, selection 0-0 -> 327-208; (c) chevron: collapsed true -> false, card; (d) plain click: this tab shows Lifecycle/other.md; (d) Ctrl-click: new tab(s) ["Lifecycle/other.md"], this tab Lifecycle/callout-link.md; (e) a click on the card text: card, selection 0-0, scrollTop 856; (f) plain fence +: selection 0-0, scrollTop 1168; (g) Advance round in a callout: source, selection 316-151, scrollTop 316; (h) Advance round in an LP embed: written, selection 243-212, scrollTop 530; (i) Reading view +: disk [6,5], marked [false,false] [shot /tmp/dse-obsidian-lifecycle-gGybeZ/shots/G-S62-FAIL.png]
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-gGybeZ
+OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+rc=1 seconds=100
+porcelain-after: [ M visual-harness/obsidian-lifecycle.mjs ] head: fb71e8ac

@@ -1,0 +1,41 @@
+FAIL dom test/dom/framework/pipeline.test.ts
+  ● T-9 (Plan 02): ElementPipeline.run (F1 §2.4) › click shield (F1 §2.4 step 4 / §1.2) › SC-540 Live Preview callout: the root is an Obsidian interactive child › a rebuilt card outside a Live Preview widget (Reading view) marks nothing, not even the detached target
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      757 | 					const button = rebuildOnClick(root);
+      758 | 					press(button, 'click');
+    > 759 | 					expect(button.classList.contains('interactive-child')).toBe(false);
+          | 					                                                       ^
+      760 | 					expect(root.classList.contains('interactive-child')).toBe(false);
+      761 | 				} finally {
+      762 | 					cleanup();
+
+      at Object.<anonymous> (test/dom/framework/pipeline.test.ts:759:61)
+
+  ● T-9 (Plan 02): ElementPipeline.run (F1 §2.4) › click shield (F1 §2.4 step 4 / §1.2) › SC-540 Live Preview callout: the root is an Obsidian interactive child › Reading view callouts, and Live Preview blocks that are not in a callout widget, are left alone
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      794 | 						press(root.querySelector('.label-content') as HTMLElement, 'click');
+      795 | 						press(root.querySelector('.label-content') as HTMLElement, 'mousedown');
+    > 796 | 						expect(root.classList.contains('interactive-child')).toBe(false);
+          | 						                                                     ^
+      797 | 					} finally {
+      798 | 						cleanup();
+      799 | 					}
+
+      at Object.<anonymous> (test/dom/framework/pipeline.test.ts:796:60)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 51 passed, 53 total
+Snapshots:   0 total
+Time:        3.12 s
+Ran all test suites matching test/dom/framework/pipeline.test.ts.
+rc=1

@@ -1,0 +1,29 @@
+// ===== SC-540 r3 scratch probe: Advance round (shot) + Add project roll in a callout =====
+const P3_PROJ = ['```ds-project', 'goal_name: "Craft Thing"', 'goal_points: 100', 'accrued: 10', 'rolls: []', 'current_respite: 1', '```'];
+Object.assign(FIXTURES, { 'P3/cproj.md': `# cproj\n\nTOP\n\n${GS62_FILL(10, 'A')}\n\n${['[!note] Proj', 'Proj body text', ...P3_PROJ].map((l) => `> ${l}`).join('\n')}\n\n${GS62_FILL(14, 'B')}\n` });
+SCENARIOS.push({
+	id: 'P3',
+	async run(t) {
+		const out = [];
+		const main = await t.ev(`(() => { window.__p3 = app.workspace.getMostRecentLeaf(); return true; })()`);
+		for (const [name, rel, kind, label] of [['advance', 'Lifecycle/callout-init.md', 'initiative', 'Advance round'], ['projroll', 'P3/cproj.md', 'project', 'Add project roll']]) {
+			await t.open('Lifecycle/other.md', 'window.__p3');
+			await t.reset(rel);
+			await t.ev(`(async () => { await window.__p3.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'source', source: false }, active: true }); window.__p3.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+			await t.sleep(1500);
+			const cm = `window.__p3.view.editor.cm`;
+			await t.ev(`(async () => { const cm = ${cm}; const i = cm.state.doc.toString().indexOf('\`\`\`ds-${kind}'); cm.dispatch({ effects: cm.constructor.scrollIntoView(i, { y: 'center' }) }); return true; })()`);
+			await t.waitFor(`!!${cm}.contentDOM.querySelector('[data-dse-element="${kind}"]')`, `${name}: drawn`);
+			await t.sleep(1500);
+			const btn = `Array.from(${cm}.contentDOM.querySelector('[data-dse-element="${kind}"]').querySelectorAll('button[aria-label]')).find((b) => b.getAttribute('aria-label') === ${JSON.stringify(label)})`;
+			const before = await t.ev(`({ sel: ${cm}.state.selection.main.anchor + '-' + ${cm}.state.selection.main.head, st: Math.round(${cm}.scrollDOM.scrollTop) })`);
+			await t.realClick(btn);
+			await t.sleep(2500);
+			const after = await t.ev(`({ sel: ${cm}.state.selection.main.anchor + '-' + ${cm}.state.selection.main.head, st: Math.round(${cm}.scrollDOM.scrollTop), raw: Array.from(${cm}.contentDOM.querySelectorAll('.cm-line')).filter((l) => /^\\s*>\\s*\\[!/.test(l.textContent)).length, roots: ${cm}.contentDOM.querySelectorAll('.cm-callout [data-dse-element]').length })`);
+			const f = await t.shot(`P3-${name}`);
+			fs.copyFileSync(f, path.join(process.env.P3_OUT, `p3-${process.env.P3_VAR}-${name}.png`));
+			out.push(`${name}: written ${t.read(rel) !== FIXTURES[rel]}; before ${JSON.stringify(before)} after ${JSON.stringify(after)}`);
+		}
+		return '\n' + out.join('\n');
+	},
+});

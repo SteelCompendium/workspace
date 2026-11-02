@@ -1,0 +1,27 @@
+// ===== SC-540 r6: is the saveHistory RangeError Obsidian's own race (open a note in a new tab, detach it before it finishes loading)? =====
+SCENARIOS.push({
+	id: 'R6RACE',
+	async run(t) {
+		const res = [];
+		for (const plugin of ['enabled', 'disabled']) {
+			if (plugin === 'disabled') { await t.ev(`(async () => { await app.plugins.disablePlugin('draw-steel-elements'); return true; })()`); await sleep(1500); }
+			for (const d of [0, 10, 30, 60, 100, 200, 400, 800]) {
+				let hits = 0;
+				for (let rep = 0; rep < 4; rep++) {
+					const m = await t.ev('window.__lc.errs.length');
+					await t.ev(`(() => { const f = app.vault.getAbstractFileByPath('Lifecycle/other.md'); const leaf = app.workspace.getLeaf('tab'); window.__r6leaf = leaf; leaf.openFile(f); return true; })()`);
+					if (d) await sleep(d);
+					await t.ev(`(() => { window.__r6leaf.detach(); return true; })()`);
+					await sleep(500);
+					const errs = await t.ev(`window.__lc.errs.slice(${m}).map((e) => e.text.slice(0, 300))`);
+					if (errs.some((e) => /Field is not present/.test(e))) hits++;
+					if (errs.length && !errs.every((e) => /Field is not present/.test(e))) res.push(`other error: ${JSON.stringify(errs).slice(0, 300)}`);
+				}
+				res.push(`plugin ${plugin} delay ${d} ms: RangeError in ${hits}/4`);
+			}
+		}
+		await t.ev(`(async () => { await app.plugins.enablePlugin('draw-steel-elements'); return true; })()`);
+		fs.writeFileSync(path.join(process.env.R6_OUT, 'r6race.txt'), res.join('\n') + '\n');
+		return '\n' + res.join('\n');
+	},
+});

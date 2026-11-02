@@ -1,0 +1,92 @@
+FAIL dom test/dom/framework/pipeline.test.ts
+  ● T-9 (Plan 02): ElementPipeline.run (F1 §2.4) › click shield (F1 §2.4 step 4 / §1.2) › SC-540 Live Preview callout: the root is an Obsidian interactive child › a click inside a Live Preview callout marks the root
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      674 | 					expect(root.classList.contains('interactive-child')).toBe(false);
+      675 | 					press(root.querySelector('.label-content') as HTMLElement, type);
+    > 676 | 					expect(root.classList.contains('interactive-child')).toBe(true);
+          | 					                                                     ^
+      677 | 				} finally {
+      678 | 					cleanup();
+      679 | 				}
+
+      at test/dom/framework/pipeline.test.ts:676:59
+
+  ● T-9 (Plan 02): ElementPipeline.run (F1 §2.4) › click shield (F1 §2.4 step 4 / §1.2) › SC-540 Live Preview callout: the root is an Obsidian interactive child › a pointerdown inside a Live Preview callout marks the root
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      674 | 					expect(root.classList.contains('interactive-child')).toBe(false);
+      675 | 					press(root.querySelector('.label-content') as HTMLElement, type);
+    > 676 | 					expect(root.classList.contains('interactive-child')).toBe(true);
+          | 					                                                     ^
+      677 | 				} finally {
+      678 | 					cleanup();
+      679 | 				}
+
+      at test/dom/framework/pipeline.test.ts:676:59
+
+  ● T-9 (Plan 02): ElementPipeline.run (F1 §2.4) › click shield (F1 §2.4 step 4 / §1.2) › SC-540 Live Preview callout: the root is an Obsidian interactive child › a mousedown inside a Live Preview callout marks the root
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      674 | 					expect(root.classList.contains('interactive-child')).toBe(false);
+      675 | 					press(root.querySelector('.label-content') as HTMLElement, type);
+    > 676 | 					expect(root.classList.contains('interactive-child')).toBe(true);
+          | 					                                                     ^
+      677 | 				} finally {
+      678 | 					cleanup();
+      679 | 				}
+
+      at test/dom/framework/pipeline.test.ts:676:59
+
+  ● T-9 (Plan 02): ElementPipeline.run (F1 §2.4) › click shield (F1 §2.4 step 4 / §1.2) › SC-540 Live Preview callout: the root is an Obsidian interactive child › a callout inside a callout (the inner one is drawn inside the outer widget) marks the root
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      690 | 				try {
+      691 | 					press(root.querySelector('.label-content') as HTMLElement, 'click');
+    > 692 | 					expect(root.classList.contains('interactive-child')).toBe(true);
+          | 					                                                     ^
+      693 | 				} finally {
+      694 | 					cleanup();
+      695 | 				}
+
+      at Object.<anonymous> (test/dom/framework/pipeline.test.ts:692:59)
+
+  ● T-9 (Plan 02): ElementPipeline.run (F1 §2.4) › click shield (F1 §2.4 step 4 / §1.2) › SC-540 Live Preview callout: the root is an Obsidian interactive child › after the click, Obsidian's callout handler skips a click in the card but still selects the callout for its title
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      702 | 					expect(widgetWouldSelect(label, outer)).toBe(true); // before the press: the whole callout would be selected
+      703 | 					press(label, 'click');
+    > 704 | 					expect(widgetWouldSelect(label, outer)).toBe(false);
+          | 					                                        ^
+      705 | 					expect(widgetWouldSelect(title, outer)).toBe(true); // the title, and any callout text outside the card, keep entering the source
+      706 | 				} finally {
+      707 | 					cleanup();
+
+      at Object.<anonymous> (test/dom/framework/pipeline.test.ts:704:46)
+
+Test Suites: 1 failed, 1 total
+Tests:       5 failed, 45 passed, 50 total
+Snapshots:   0 total
+Time:        2.817 s
+Ran all test suites matching test/dom/framework/pipeline.test.ts.
+rc=1

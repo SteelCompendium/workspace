@@ -1,0 +1,607 @@
+===== r540-A-base-summary.jsonl
+## callout-plus
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   pre={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 197-316, st 433, RAW, inC 0/0, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, winSel 119 "> [!note] Camp\n> Callout body ", docLen 764}
+   disk={"R540/cc.md": [6, 5]}
+   preClick={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## plain-plus
+   before={sel 0-0, st 1168, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   pre={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   disk={"R540/cc.md": [5, 6]}
+   preClick={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## nested-plus
+   before={sel 0-0, st 417, card, inC 1/1, ic 0, cn.md, ae DIV.cm-content.cm-lineWrapping, docLen 513}
+   pre={sel 0-0, st 426, card, inC 1/1, ic 0, cn.md, ae DIV.cm-content.cm-lineWrapping, docLen 513}
+   after={sel 197-326, st 426, RAW, inC 0/0, ic 0, cn.md, ae DIV.cm-content.cm-lineWrapping, winSel 129 "> [!note] Outer\n> > [!tip] Inn", docLen 513}
+   disk={"R540/cn.md": [6]}
+   preClick={sel 0-0, st 426, card, inC 1/1, ic 0, cn.md, ae DIV.cm-content.cm-lineWrapping, docLen 513}
+## embincallout-plus
+   before={sel 0-0, st 482, card, inC 1/1, ic 0, ce.md, ae DIV.cm-content.cm-lineWrapping, docLen 435}
+   pre={sel 0-0, st 528, card, inC 1/1, ic 1, ce.md, ae DIV.cm-content.cm-lineWrapping, docLen 435}
+   after={sel 0-0, st 528, card, inC 1/1, ic 1, ce.md, ae DIV.cm-content.cm-lineWrapping, docLen 435}
+   disk={"R540/ce.md": [], "R540/emb-src.md": [6]}
+   preClick={sel 0-0, st 528, card, inC 1/1, ic 0, ce.md, ae DIV.cm-content.cm-lineWrapping, docLen 435}
+## lpembed-plus
+   before={sel 0-0, st 432, card, inC 0/1, ic 0, emb-host.md, ae DIV.cm-content.cm-lineWrapping, docLen 407}
+   pre={sel 0-0, st 455, card, inC 0/1, ic 1, emb-host.md, ae DIV.cm-content.cm-lineWrapping, docLen 407}
+   after={sel 0-0, st 455, card, inC 0/1, ic 1, emb-host.md, ae DIV.cm-content.cm-lineWrapping, docLen 407}
+   disk={"R540/emb-host.md": [], "R540/emb-src.md": [6]}
+   preClick={sel 0-0, st 455, card, inC 0/1, ic 0, emb-host.md, ae DIV.cm-content.cm-lineWrapping, docLen 407}
+## calloutinembed-plus
+   before={sel 0-0, st 482, card, inC 0/1, ic 0, cb.md, ae DIV.cm-content.cm-lineWrapping, docLen 399}
+   pre={sel 0-0, st 544, card, inC 0/1, ic 1, cb.md, ae DIV.cm-content.cm-lineWrapping, docLen 399}
+   after={sel 0-0, st 544, card, inC 0/1, ic 1, cb.md, ae DIV.cm-content.cm-lineWrapping, docLen 399}
+   disk={"R540/cb.md": [], "R540/cbsrc.md": [6]}
+   preClick={sel 0-0, st 544, card, inC 0/1, ic 0, cb.md, ae DIV.cm-content.cm-lineWrapping, docLen 399}
+## reading-plus
+   disk=[6, 5]
+   rootsAfter=[{"ic": false, "inCallout": true}, {"ic": false, "inCallout": false}]
+   mode="preview"
+   preClick={sel 0-0, st 0, card, inC 1/1, ic 0, cc.md, mode preview, ae DIV.markdown-preview-view.markdown-rendered.node-insert-event, docLen 764}
+## callout-enter
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae BUTTON.dse-btn.dse-btn--ghost.dse-btn--icon[Edit Counter], docLen 764}
+   open={sel 197-316, st 406, card, inC 1/1, ic 0, cc.md, MODAL, ae TEXTAREA.dse-form__raw, aeSel 54-54/54, aeVal "name: Twin\ncurrent_v", docLen 764}
+   closed={sel 197-316, st 406, card, inC 1/1, ic 0, cc.md, ae BUTTON.dse-btn.dse-btn--ghost.dse-btn--icon[Edit Counter], docLen 764}
+   diskSame=true
+   preClick=null
+## plain-enter
+   before={sel 0-0, st 1168, card, inC 1/2, ic 0, cc.md, ae BUTTON.dse-btn.dse-btn--ghost.dse-btn--icon[Edit Counter], docLen 764}
+   open={sel 0-0, st 1168, card, inC 1/2, ic 0, cc.md, MODAL, ae TEXTAREA.dse-form__raw, aeSel 55-55/55, aeVal "name: Plain\ncurrent_", docLen 764}
+   closed={sel 0-0, st 1168, card, inC 1/2, ic 0, cc.md, ae BUTTON.dse-btn.dse-btn--ghost.dse-btn--icon[Edit Counter], docLen 764}
+   diskSame=true
+   preClick=null
+## callout-space
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae BUTTON.dse-btn.dse-btn--ghost.dse-btn--icon[Edit Counter], docLen 764}
+   open={sel 197-316, st 406, card, inC 1/1, ic 0, cc.md, MODAL, ae TEXTAREA.dse-form__raw, aeSel 54-54/54, aeVal "name: Twin\ncurrent_v", docLen 764}
+   closed={sel 197-316, st 406, card, inC 1/1, ic 0, cc.md, ae BUTTON.dse-btn.dse-btn--ghost.dse-btn--icon[Edit Counter], docLen 764}
+   diskSame=true
+   preClick=null
+## callout-text
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 197-316, st 376, RAW, inC 0/0, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, winSel 119 "> [!note] Camp\n> Callout body ", docLen 764}
+   preClick={sel 0-0, st 376, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## callout-title
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 197-316, st 338, RAW, inC 0/0, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, winSel 119 "> [!note] Camp\n> Callout body ", docLen 764}
+   preClick={sel 0-0, st 338, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## callout-codebtn
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 197-316, st 331, RAW, inC 0/0, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, winSel 119 "> [!note] Camp\n> Callout body ", docLen 764}
+   preClick={sel 0-0, st 331, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## link-plain
+   before={sel 0-0, st 299, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+   after={sel 0-0, st 0, card, inC 0/0, ic 0, file R540/link-target.md, ae DIV.cm-content.cm-lineWrapping, docLen 39}
+   preClick={sel 0-0, st 386, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+## link-ctrl
+   before={sel 0-0, st 299, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+   after={sel 0-0, st 0, card, inC 1/2, ic 0, clink.md, leaves 2, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+   tabs=["R540/clink.md", "R540/link-target.md"]
+   preClick={sel 0-0, st 386, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+## link-hover-callout
+   before={sel 0-0, st 299, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+   after={sel 0-0, st 386, card, inC 1/2, ic 0, clink.md, popover 1, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+   ptext=["link-targetPropertiesAdd propertylink ta"]
+   preClick={sel 0-0, st 386, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+## link-hover-plain
+   before={sel 0-0, st 1304, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+   after={sel 0-0, st 1335, card, inC 1/2, ic 0, clink.md, popover 1, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+   ptext=["link-targetPropertiesAdd propertylink ta"]
+   preClick={sel 0-0, st 1335, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+## chevron
+   before={sel 0-0, st 337, card, inC 1/1, ic 0, cf.md, ae DIV.cm-content.cm-lineWrapping, docLen 505}
+   after={sel 0-0, st 338, card, inC 1/1, ic 0, cf.md, ae DIV.cm-content.cm-lineWrapping, docLen 505}
+   collapsed=[true, false]
+   preClick={sel 0-0, st 338, card, inC 1/1, ic 0, cf.md, ae DIV.cm-content.cm-lineWrapping, docLen 505}
+## twin-plus-plus
+   s1={"disk": [6, 5], "names": ["Twin", "Twin"], "cards": [{"block": 1, "name": "Twin", "value": 5}], "snap": {"file": "R540/twin2.md", "mode": "source", "sel": "14-113", "docLen": 228, "st": 0, "raw": 1, "roots": 1, "rootsInCallout": 1, "ic": 0, "modal": false, "anyModal": false, "menu": false, "popover
+   s2={"disk": [6, 6], "names": ["Twin", "Twin"], "cards": [{"block": 0, "name": "Twin", "value": 6}], "snap": {"file": "R540/twin2.md", "mode": "source", "sel": "120-219", "docLen": 228, "st": 0, "raw": 1, "roots": 1, "rootsInCallout": 1, "ic": 0, "modal": false, "anyModal": false, "menu": false, "popove
+   preClick={sel 14-113, st 0, RAW, inC 1/1, ic 0, twin2.md, ae DIV.cm-content.cm-lineWrapping, winSel 99 "> [!note] Camp\n> ```ds-counter", docLen 228}
+## twin-save-plus
+   s1={"disk": [5, 5], "names": ["Edited", "Twin"], "cards": [{"block": 0, "name": "Edited", "value": 5}, {"block": 1, "name": "Twin", "value": 5}], "snap": {"file": "R540/twin2.md", "mode": "source", "sel": "14-115", "docLen": 230, "st": 0, "raw": 0, "roots": 2, "rootsInCallout": 2, "ic": 0, "modal": fal
+   s2={"disk": [5, 6], "names": ["Edited", "Twin"], "cards": [{"block": 0, "name": "Edited", "value": 5}], "snap": {"file": "R540/twin2.md", "mode": "source", "sel": "122-221", "docLen": 230, "st": 0, "raw": 1, "roots": 1, "rootsInCallout": 1, "ic": 0, "modal": false, "anyModal": false, "menu": false, "po
+   preClick={sel 14-115, st 0, card, inC 2/2, ic 0, twin2.md, ae BUTTON.dse-btn.dse-btn--ghost.dse-btn--icon[Edit Counter], docLen 230}
+===== r540-A-head-summary.jsonl
+## callout-plus
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   pre={sel 0-0, st 433, card, inC 1/1, ic 1, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   disk={"R540/cc.md": [6, 5]}
+   preClick={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## plain-plus
+   before={sel 0-0, st 1168, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   pre={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   disk={"R540/cc.md": [5, 6]}
+   preClick={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## nested-plus
+   before={sel 0-0, st 417, card, inC 1/1, ic 0, cn.md, ae DIV.cm-content.cm-lineWrapping, docLen 513}
+   pre={sel 0-0, st 426, card, inC 1/1, ic 1, cn.md, ae DIV.cm-content.cm-lineWrapping, docLen 513}
+   after={sel 0-0, st 426, card, inC 1/1, ic 0, cn.md, ae DIV.cm-content.cm-lineWrapping, docLen 513}
+   disk={"R540/cn.md": [6]}
+   preClick={sel 0-0, st 426, card, inC 1/1, ic 0, cn.md, ae DIV.cm-content.cm-lineWrapping, docLen 513}
+## embincallout-plus
+   before={sel 0-0, st 482, card, inC 1/1, ic 0, ce.md, ae DIV.cm-content.cm-lineWrapping, docLen 435}
+   pre={sel 0-0, st 528, card, inC 1/1, ic 1, ce.md, ae DIV.cm-content.cm-lineWrapping, docLen 435}
+   after={sel 0-0, st 528, card, inC 1/1, ic 1, ce.md, ae DIV.cm-content.cm-lineWrapping, docLen 435}
+   disk={"R540/ce.md": [], "R540/emb-src.md": [6]}
+   preClick={sel 0-0, st 528, card, inC 1/1, ic 0, ce.md, ae DIV.cm-content.cm-lineWrapping, docLen 435}
+## lpembed-plus
+   before={sel 0-0, st 432, card, inC 0/1, ic 0, emb-host.md, ae DIV.cm-content.cm-lineWrapping, docLen 407}
+   pre={sel 0-0, st 455, card, inC 0/1, ic 1, emb-host.md, ae DIV.cm-content.cm-lineWrapping, docLen 407}
+   after={sel 0-0, st 455, card, inC 0/1, ic 1, emb-host.md, ae DIV.cm-content.cm-lineWrapping, docLen 407}
+   disk={"R540/emb-host.md": [], "R540/emb-src.md": [6]}
+   preClick={sel 0-0, st 455, card, inC 0/1, ic 0, emb-host.md, ae DIV.cm-content.cm-lineWrapping, docLen 407}
+## calloutinembed-plus
+   before={sel 0-0, st 482, card, inC 0/1, ic 0, cb.md, ae DIV.cm-content.cm-lineWrapping, docLen 399}
+   pre={sel 0-0, st 544, card, inC 0/1, ic 1, cb.md, ae DIV.cm-content.cm-lineWrapping, docLen 399}
+   after={sel 0-0, st 544, card, inC 0/1, ic 1, cb.md, ae DIV.cm-content.cm-lineWrapping, docLen 399}
+   disk={"R540/cb.md": [], "R540/cbsrc.md": [6]}
+   preClick={sel 0-0, st 544, card, inC 0/1, ic 0, cb.md, ae DIV.cm-content.cm-lineWrapping, docLen 399}
+## reading-plus
+   disk=[6, 5]
+   rootsAfter=[{"ic": false, "inCallout": true}, {"ic": false, "inCallout": false}]
+   mode="preview"
+   preClick={sel 0-0, st 0, card, inC 1/1, ic 0, cc.md, mode preview, ae DIV.markdown-preview-view.markdown-rendered.node-insert-event, docLen 764}
+## callout-enter
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae BUTTON.dse-btn.dse-btn--ghost.dse-btn--icon[Edit Counter], docLen 764}
+   open={sel 0-0, st 406, card, inC 1/1, ic 1, cc.md, MODAL, ae TEXTAREA.dse-form__raw, aeSel 54-54/54, aeVal "name: Twin\ncurrent_v", docLen 764}
+   closed={sel 0-0, st 406, card, inC 1/1, ic 1, cc.md, ae BUTTON.dse-btn.dse-btn--ghost.dse-btn--icon[Edit Counter], docLen 764}
+   diskSame=true
+   preClick=null
+## plain-enter
+   before={sel 0-0, st 1168, card, inC 1/2, ic 0, cc.md, ae BUTTON.dse-btn.dse-btn--ghost.dse-btn--icon[Edit Counter], docLen 764}
+   open={sel 0-0, st 1168, card, inC 1/2, ic 0, cc.md, MODAL, ae TEXTAREA.dse-form__raw, aeSel 55-55/55, aeVal "name: Plain\ncurrent_", docLen 764}
+   closed={sel 0-0, st 1168, card, inC 1/2, ic 0, cc.md, ae BUTTON.dse-btn.dse-btn--ghost.dse-btn--icon[Edit Counter], docLen 764}
+   diskSame=true
+   preClick=null
+## callout-space
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae BUTTON.dse-btn.dse-btn--ghost.dse-btn--icon[Edit Counter], docLen 764}
+   open={sel 0-0, st 406, card, inC 1/1, ic 1, cc.md, MODAL, ae TEXTAREA.dse-form__raw, aeSel 54-54/54, aeVal "name: Twin\ncurrent_v", docLen 764}
+   closed={sel 0-0, st 406, card, inC 1/1, ic 1, cc.md, ae BUTTON.dse-btn.dse-btn--ghost.dse-btn--icon[Edit Counter], docLen 764}
+   diskSame=true
+   preClick=null
+## callout-text
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 197-316, st 376, RAW, inC 0/0, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, winSel 119 "> [!note] Camp\n> Callout body ", docLen 764}
+   preClick={sel 0-0, st 376, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## callout-title
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 197-316, st 338, RAW, inC 0/0, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, winSel 119 "> [!note] Camp\n> Callout body ", docLen 764}
+   preClick={sel 0-0, st 338, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## callout-codebtn
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 197-316, st 331, RAW, inC 0/0, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, winSel 119 "> [!note] Camp\n> Callout body ", docLen 764}
+   preClick={sel 0-0, st 331, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## link-plain
+   before={sel 0-0, st 299, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+   after={sel 0-0, st 0, card, inC 0/0, ic 0, file R540/link-target.md, ae DIV.cm-content.cm-lineWrapping, docLen 39}
+   preClick={sel 0-0, st 386, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+## link-ctrl
+   before={sel 0-0, st 299, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+   after={sel 0-0, st 0, card, inC 1/2, ic 1, clink.md, leaves 2, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+   tabs=["R540/clink.md", "R540/link-target.md"]
+   preClick={sel 0-0, st 386, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+## link-hover-callout
+   before={sel 0-0, st 299, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+   after={sel 0-0, st 386, card, inC 1/2, ic 0, clink.md, popover 1, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+   ptext=["link-targetPropertiesAdd propertylink ta"]
+   preClick={sel 0-0, st 386, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+## link-hover-plain
+   before={sel 0-0, st 1304, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+   after={sel 0-0, st 1335, card, inC 1/2, ic 0, clink.md, popover 1, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+   ptext=["link-targetPropertiesAdd propertylink ta"]
+   preClick={sel 0-0, st 1335, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+## chevron
+   before={sel 0-0, st 337, card, inC 1/1, ic 0, cf.md, ae DIV.cm-content.cm-lineWrapping, docLen 505}
+   after={sel 0-0, st 338, card, inC 1/1, ic 0, cf.md, ae DIV.cm-content.cm-lineWrapping, docLen 505}
+   collapsed=[true, false]
+   preClick={sel 0-0, st 338, card, inC 1/1, ic 0, cf.md, ae DIV.cm-content.cm-lineWrapping, docLen 505}
+## twin-plus-plus
+   s1={"disk": [6, 5], "names": ["Twin", "Twin"], "cards": [{"block": 0, "name": "Twin", "value": 6}, {"block": 1, "name": "Twin", "value": 5}], "snap": {"file": "R540/twin2.md", "mode": "source", "sel": "0-0", "docLen": 228, "st": 0, "raw": 0, "roots": 2, "rootsInCallout": 2, "ic": 0, "modal": false, "an
+   s2={"disk": [6, 6], "names": ["Twin", "Twin"], "cards": [{"block": 0, "name": "Twin", "value": 6}, {"block": 1, "name": "Twin", "value": 6}], "snap": {"file": "R540/twin2.md", "mode": "source", "sel": "0-0", "docLen": 228, "st": 0, "raw": 0, "roots": 2, "rootsInCallout": 2, "ic": 0, "modal": false, "an
+   preClick={sel 0-0, st 0, card, inC 2/2, ic 0, twin2.md, ae DIV.cm-content.cm-lineWrapping, docLen 228}
+## twin-save-plus
+   s1={"disk": [5, 5], "names": ["Edited", "Twin"], "cards": [{"block": 0, "name": "Edited", "value": 5}, {"block": 1, "name": "Twin", "value": 5}], "snap": {"file": "R540/twin2.md", "mode": "source", "sel": "0-0", "docLen": 230, "st": 0, "raw": 0, "roots": 2, "rootsInCallout": 2, "ic": 0, "modal": false,
+   s2={"disk": [5, 6], "names": ["Edited", "Twin"], "cards": [{"block": 0, "name": "Edited", "value": 5}, {"block": 1, "name": "Twin", "value": 6}], "snap": {"file": "R540/twin2.md", "mode": "source", "sel": "0-0", "docLen": 230, "st": 0, "raw": 0, "roots": 2, "rootsInCallout": 2, "ic": 0, "modal": false,
+   preClick={sel 0-0, st 0, card, inC 2/2, ic 0, twin2.md, ae BUTTON.dse-btn.dse-btn--ghost.dse-btn--icon[Edit Counter], docLen 230}
+===== r540-B2-head-summary.jsonl
+## init-callout
+   before={sel 0-0, st 378, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+   after={sel 144-309, st 316, RAW, inC 0/1, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, winSel 165 "> [!note] Init\n> Init body tex", docLen 792}
+   label="Advance round"
+   diskChanged=true
+   preClick={sel 0-0, st 316, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+## init-plain
+   before={sel 0-0, st 1534, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+   after={sel 0-0, st 1407, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 790}
+   label="Advance round"
+   diskChanged=true
+   preClick={sel 0-0, st 1407, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+## expand-callout
+   before={sel 0-0, st 229, card, inC 1/2, ic 0, ccoll.md, ae DIV.cm-content.cm-lineWrapping, docLen 741}
+   after={sel 0-0, st 229, card, inC 1/2, ic 1, ccoll.md, ae DIV.cm-content.cm-lineWrapping, docLen 741}
+   collapsed0=true
+   stillCollapsed=false
+   preClick={sel 0-0, st 229, card, inC 1/2, ic 0, ccoll.md, ae DIV.cm-content.cm-lineWrapping, docLen 741}
+## expand-plain
+   before={sel 0-0, st 992, card, inC 1/2, ic 0, ccoll.md, ae DIV.cm-content.cm-lineWrapping, docLen 741}
+   after={sel 0-0, st 992, card, inC 1/2, ic 0, ccoll.md, ae DIV.cm-content.cm-lineWrapping, docLen 741}
+   collapsed0=true
+   stillCollapsed=false
+   preClick={sel 0-0, st 992, card, inC 1/2, ic 0, ccoll.md, ae DIV.cm-content.cm-lineWrapping, docLen 741}
+===== r540-B-base-summary.jsonl
+## callout-counter-type
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   focused={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae INPUT.dse-stepper__input.dse-counter__value[Twin], aeSel null-null/1, aeVal "5", docLen 764}
+   typedSnap={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae INPUT.dse-stepper__input.dse-counter__value[Twin], aeSel null-null/2, aeVal "12", docLen 764}
+   inputVal="12"
+   afterTab={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae BODY.theme-dark.mod-linux.is-frameless, docLen 765}
+   disk=[12, 5]
+   diskChangedOutsideBlocks=false
+   strayInDoc=false
+   preClick={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## plain-counter-type
+   before={sel 0-0, st 1168, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   focused={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae INPUT.dse-stepper__input.dse-counter__value[Plain], aeSel null-null/1, aeVal "5", docLen 764}
+   typedSnap={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae INPUT.dse-stepper__input.dse-counter__value[Plain], aeSel null-null/2, aeVal "12", docLen 764}
+   inputVal="12"
+   afterTab={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae BODY.theme-dark.mod-linux.is-frameless, docLen 765}
+   disk=[5, 12]
+   diskChangedOutsideBlocks=false
+   strayInDoc=false
+   preClick={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## callout-proj-type
+   before={sel 0-0, st 278, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+   focused={sel 0-0, st 374, card, inC 1/2, ic 0, cproj.md, ae INPUT.dse-prj__roll-input[Roll (natural 2d10 total)], aeSel null-null/0, docLen 765}
+   typedSnap={sel 0-0, st 374, card, inC 1/2, ic 0, cproj.md, ae INPUT.dse-prj__roll-input[Roll (natural 2d10 total)], aeSel null-null/2, aeVal "14", docLen 765}
+   inputVal="14"
+   afterTab=null
+   disk=null
+   diskChangedOutsideBlocks=false
+   strayInDoc=false
+   preClick={sel 0-0, st 374, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+## callout-init-type
+   before={sel 0-0, st 378, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+   focused={sel 0-0, st 490, card, inC 1/2, ic 0, cinit.md, ae INPUT.dse-init__malice-quickadd-label[Quick-add malice label], aeSel 0-0/0, docLen 783}
+   typedSnap={sel 0-0, st 490, card, inC 1/2, ic 0, cinit.md, ae INPUT.dse-init__malice-quickadd-label[Quick-add malice label], aeSel 3-3/3, aeVal "abc", docLen 783}
+   inputVal="abc"
+   afterTab=null
+   disk=null
+   diskChangedOutsideBlocks=false
+   strayInDoc=false
+   preClick={sel 0-0, st 490, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+## callout-checkbox
+   before={sel 0-0, st 278, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+   after={sel 0-0, st 374, card, inC 1/2, ic 0, cproj.md, ae INPUT[Breakthrough (natural 19-20)], aeSel null-null/2, aeVal "on", docLen 765}
+   checked=[false, true]
+   preClick={sel 0-0, st 374, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+## modA-callout
+   before={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae INPUT.dse-stepper__input.dse-counter__value[Twin], aeSel null-null/1, aeVal "5", docLen 764}
+   after={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae INPUT.dse-stepper__input.dse-counter__value[Twin], aeSel null-null/1, aeVal "5", winSel 1 "5", docLen 764}
+   preClick={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## modA-plain
+   before={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae INPUT.dse-stepper__input.dse-counter__value[Plain], aeSel null-null/1, aeVal "5", docLen 764}
+   after={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae INPUT.dse-stepper__input.dse-counter__value[Plain], aeSel null-null/1, aeVal "5", winSel 1 "5", docLen 764}
+   preClick={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## modA-lpembed
+   before={sel 0-0, st 455, card, inC 0/1, ic 1, emb-host.md, ae INPUT.dse-stepper__input.dse-counter__value[Embedded], aeSel null-null/1, aeVal "5", docLen 407}
+   after={sel 0-0, st 455, card, inC 0/1, ic 1, emb-host.md, ae INPUT.dse-stepper__input.dse-counter__value[Embedded], aeSel null-null/1, aeVal "5", winSel 1 "5", docLen 407}
+   preClick={sel 0-0, st 455, card, inC 0/1, ic 0, emb-host.md, ae DIV.cm-content.cm-lineWrapping, docLen 407}
+## modA-callout-focusonly
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae INPUT.dse-stepper__input.dse-counter__value[Twin], aeSel null-null/1, aeVal "5", docLen 764}
+   after={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae INPUT.dse-stepper__input.dse-counter__value[Twin], aeSel null-null/1, aeVal "5", winSel 1 "5", docLen 764}
+   preClick=null
+## modA-callout-proj
+   before={sel 0-0, st 374, card, inC 1/2, ic 0, cproj.md, ae INPUT.dse-prj__roll-input[Roll (natural 2d10 total)], aeSel null-null/0, docLen 765}
+   after={sel 0-0, st 374, card, inC 1/2, ic 0, cproj.md, ae INPUT.dse-prj__roll-input[Roll (natural 2d10 total)], aeSel null-null/0, docLen 765}
+   preClick={sel 0-0, st 374, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+## modA-callout-button
+   before={sel 197-316, st 433, RAW, inC 0/0, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, winSel 119 "> [!note] Camp\n> Callout body ", docLen 764}
+   after={sel 0-764, st 433, RAW, inC 0/0, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, winSel 489 "# cc\n\nTOP\n\nA filler 0.\n\nA fill", docLen 764}
+   preClick={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## dbl-text-callout
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 197-316, st 457, RAW, inC 0/0, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, winSel 119 "> [!note] Camp\n> Callout body ", docLen 764}
+   disk=[5, 5]
+   preClick={sel 0-0, st 457, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## tri-text-callout
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 197-316, st 457, RAW, inC 0/0, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, winSel 119 "> [!note] Camp\n> Callout body ", docLen 764}
+   disk=[5, 5]
+   preClick={sel 0-0, st 457, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## dbl-plus-callout
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 197-316, st 433, RAW, inC 0/0, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, winSel 119 "> [!note] Camp\n> Callout body ", docLen 764}
+   disk=[7, 5]
+   preClick={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## drag-callout
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   mid={sel 0-0, st 457, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 197-316, st 457, RAW, inC 0/0, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, winSel 119 "> [!note] Camp\n> Callout body ", docLen 764}
+   preClick={sel 0-0, st 457, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## ctx-callout
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-0, st 457, card, inC 1/1, ic 0, cc.md, MENU, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   items=["Edit", "Callout type"]
+   closed={sel 0-0, st 457, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   preClick={sel 0-0, st 457, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## stam-callout
+   before={sel 0-0, st 214, card, inC 1/2, ic 0, cstam.md, ae DIV.cm-content.cm-lineWrapping, docLen 707}
+   open={sel 144-259, st 253, card, inC 1/2, ic 0, cstam.md, MODAL, ae INPUT.dse-sedit__apply-input[Amount to apply], aeSel null-null/1, aeVal "0", docLen 707}
+   closed={sel 144-259, st 253, RAW, inC 0/1, ic 0, cstam.md, ae DIV.cm-content.cm-lineWrapping, winSel 115 "> [!note] Stam\n> Stam body tex", docLen 707}
+   preClick={sel 0-0, st 253, card, inC 1/2, ic 0, cstam.md, ae DIV.cm-content.cm-lineWrapping, docLen 707}
+## expand-callout
+   before={sel 0-0, st 229, card, inC 1/2, ic 0, ccoll.md, ae DIV.cm-content.cm-lineWrapping, docLen 741}
+   after={sel 144-277, st 229, RAW, inC 0/1, ic 0, ccoll.md, ae DIV.cm-content.cm-lineWrapping, winSel 133 "> [!note] Coll\n> Coll body tex", docLen 741}
+   collapsed0=true
+   stillCollapsed=true
+   preClick={sel 0-0, st 229, card, inC 1/2, ic 0, ccoll.md, ae DIV.cm-content.cm-lineWrapping, docLen 741}
+## rebuild-init-callout
+   before={sel 0-0, st 378, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+   after={sel 144-309, st 316, RAW, inC 0/1, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, winSel 165 "> [!note] Init\n> Init body tex", docLen 792}
+   diag=[{"tgt": "SPAN.dse-btn__text", "rootIc0": false, "connected": false, "inRoot": false, "rootConnected": false, "walkHit": null, "walkEnd": "null (detached)"}]
+   diskChanged=true
+   preClick={sel 0-0, st 316, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+## rebuild-init-lpembed
+   before={sel 0-0, st 595, card, inC 0/1, ic 0, file R540/init-host.md, ae DIV.cm-content.cm-lineWrapping, docLen 409}
+   after={sel 204-222, st 530, card, inC 0/1, ic 1, file R540/init-host.md, ae DIV.cm-content.cm-lineWrapping, winSel 18 "![[R540/init-src]]", docLen 409}
+   diag=[{"tgt": "SPAN.dse-btn__text", "rootIc0": true, "connected": false, "inRoot": false, "rootConnected": true, "walkHit": null, "walkEnd": "null (detached)"}]
+   diskChanged=true
+   preClick={sel 0-0, st 530, card, inC 0/1, ic 0, file R540/init-host.md, ae DIV.cm-content.cm-lineWrapping, docLen 409}
+===== r540-B-head-summary.jsonl
+## callout-counter-type
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   focused={sel 0-0, st 433, card, inC 1/1, ic 1, cc.md, ae INPUT.dse-stepper__input.dse-counter__value[Twin], aeSel null-null/1, aeVal "5", docLen 764}
+   typedSnap={sel 0-0, st 433, card, inC 1/1, ic 1, cc.md, ae INPUT.dse-stepper__input.dse-counter__value[Twin], aeSel null-null/2, aeVal "12", docLen 764}
+   inputVal="12"
+   afterTab={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae BODY.theme-dark.mod-linux.is-frameless, docLen 765}
+   disk=[12, 5]
+   diskChangedOutsideBlocks=false
+   strayInDoc=false
+   preClick={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## plain-counter-type
+   before={sel 0-0, st 1168, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   focused={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae INPUT.dse-stepper__input.dse-counter__value[Plain], aeSel null-null/1, aeVal "5", docLen 764}
+   typedSnap={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae INPUT.dse-stepper__input.dse-counter__value[Plain], aeSel null-null/2, aeVal "12", docLen 764}
+   inputVal="12"
+   afterTab={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae BODY.theme-dark.mod-linux.is-frameless, docLen 765}
+   disk=[5, 12]
+   diskChangedOutsideBlocks=false
+   strayInDoc=false
+   preClick={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## callout-proj-type
+   before={sel 0-0, st 278, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+   focused={sel 0-0, st 374, card, inC 1/2, ic 1, cproj.md, ae INPUT.dse-prj__roll-input[Roll (natural 2d10 total)], aeSel null-null/0, docLen 765}
+   typedSnap={sel 0-0, st 374, card, inC 1/2, ic 1, cproj.md, ae INPUT.dse-prj__roll-input[Roll (natural 2d10 total)], aeSel null-null/2, aeVal "14", docLen 765}
+   inputVal="14"
+   afterTab=null
+   disk=null
+   diskChangedOutsideBlocks=false
+   strayInDoc=false
+   preClick={sel 0-0, st 374, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+## plain-proj-type
+   before={sel 0-0, st 1233, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+   focused={sel 0-0, st 1265, card, inC 1/2, ic 0, cproj.md, ae INPUT.dse-prj__roll-input[Roll (natural 2d10 total)], aeSel null-null/0, docLen 765}
+   typedSnap={sel 0-0, st 1265, card, inC 1/2, ic 0, cproj.md, ae INPUT.dse-prj__roll-input[Roll (natural 2d10 total)], aeSel null-null/2, aeVal "14", docLen 765}
+   inputVal="14"
+   afterTab=null
+   disk=null
+   diskChangedOutsideBlocks=false
+   strayInDoc=false
+   preClick={sel 0-0, st 1265, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+## callout-init-type
+   before={sel 0-0, st 378, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+   focused={sel 0-0, st 490, card, inC 1/2, ic 1, cinit.md, ae INPUT.dse-init__malice-quickadd-label[Quick-add malice label], aeSel 0-0/0, docLen 783}
+   typedSnap={sel 0-0, st 490, card, inC 1/2, ic 1, cinit.md, ae INPUT.dse-init__malice-quickadd-label[Quick-add malice label], aeSel 3-3/3, aeVal "abc", docLen 783}
+   inputVal="abc"
+   afterTab=null
+   disk=null
+   diskChangedOutsideBlocks=false
+   strayInDoc=false
+   preClick={sel 0-0, st 490, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+## callout-checkbox
+   before={sel 0-0, st 278, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+   after={sel 0-0, st 374, card, inC 1/2, ic 1, cproj.md, ae INPUT[Breakthrough (natural 19-20)], aeSel null-null/2, aeVal "on", docLen 765}
+   checked=[false, true]
+   preClick={sel 0-0, st 374, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+## plain-checkbox
+   before={sel 0-0, st 1233, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+   after={sel 0-0, st 1265, card, inC 1/2, ic 0, cproj.md, ae INPUT[Breakthrough (natural 19-20)], aeSel null-null/2, aeVal "on", docLen 765}
+   checked=[false, true]
+   preClick={sel 0-0, st 1265, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+## modA-callout
+   before={sel 0-0, st 433, card, inC 1/1, ic 1, cc.md, ae INPUT.dse-stepper__input.dse-counter__value[Twin], aeSel null-null/1, aeVal "5", docLen 764}
+   after={sel 0-0, st 433, card, inC 1/1, ic 1, cc.md, ae INPUT.dse-stepper__input.dse-counter__value[Twin], aeSel null-null/1, aeVal "5", winSel 1 "5", docLen 764}
+   preClick={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## modA-plain
+   before={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae INPUT.dse-stepper__input.dse-counter__value[Plain], aeSel null-null/1, aeVal "5", docLen 764}
+   after={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae INPUT.dse-stepper__input.dse-counter__value[Plain], aeSel null-null/1, aeVal "5", winSel 1 "5", docLen 764}
+   preClick={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## modA-lpembed
+   before={sel 0-0, st 455, card, inC 0/1, ic 1, emb-host.md, ae INPUT.dse-stepper__input.dse-counter__value[Embedded], aeSel null-null/1, aeVal "5", docLen 407}
+   after={sel 0-0, st 455, card, inC 0/1, ic 1, emb-host.md, ae INPUT.dse-stepper__input.dse-counter__value[Embedded], aeSel null-null/1, aeVal "5", winSel 1 "5", docLen 407}
+   preClick={sel 0-0, st 455, card, inC 0/1, ic 0, emb-host.md, ae DIV.cm-content.cm-lineWrapping, docLen 407}
+## modA-callout-focusonly
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae INPUT.dse-stepper__input.dse-counter__value[Twin], aeSel null-null/1, aeVal "5", docLen 764}
+   after={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae INPUT.dse-stepper__input.dse-counter__value[Twin], aeSel null-null/1, aeVal "5", winSel 1 "5", docLen 764}
+   preClick=null
+## modA-callout-proj
+   before={sel 0-0, st 374, card, inC 1/2, ic 1, cproj.md, ae INPUT.dse-prj__roll-input[Roll (natural 2d10 total)], aeSel null-null/0, docLen 765}
+   after={sel 0-0, st 374, card, inC 1/2, ic 1, cproj.md, ae INPUT.dse-prj__roll-input[Roll (natural 2d10 total)], aeSel null-null/0, docLen 765}
+   preClick={sel 0-0, st 374, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+## modA-callout-button
+   before={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-764, st 433, RAW, inC 0/0, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, winSel 489 "# cc\n\nTOP\n\nA filler 0.\n\nA fill", docLen 764}
+   preClick={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## dbl-text-callout
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-0, st 457, card, inC 1/1, ic 1, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   disk=[5, 5]
+   preClick={sel 0-0, st 457, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## dbl-text-plain
+   before={sel 0-0, st 1168, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-0, st 1221, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   disk=[5, 5]
+   preClick={sel 0-0, st 1221, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## tri-text-callout
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-0, st 457, card, inC 1/1, ic 1, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   disk=[5, 5]
+   preClick={sel 0-0, st 457, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## tri-text-plain
+   before={sel 0-0, st 1168, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-0, st 1221, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   disk=[5, 5]
+   preClick={sel 0-0, st 1221, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## dbl-plus-callout
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   disk=[7, 5]
+   preClick={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## dbl-plus-plain
+   before={sel 0-0, st 1168, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   disk=[5, 7]
+   preClick={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## drag-callout
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   mid={sel 0-0, st 457, card, inC 1/1, ic 1, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-0, st 457, card, inC 1/1, ic 1, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   preClick={sel 0-0, st 457, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## drag-plain
+   before={sel 0-0, st 1168, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   mid={sel 0-0, st 1221, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-0, st 1221, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   preClick={sel 0-0, st 1221, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## ctx-callout
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-0, st 457, card, inC 1/1, ic 1, cc.md, MENU, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   items=["Edit", "Callout type"]
+   closed={sel 0-0, st 457, card, inC 1/1, ic 1, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   preClick={sel 0-0, st 457, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## ctx-plain
+   before={sel 0-0, st 1168, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-0, st 1221, card, inC 1/2, ic 0, cc.md, MENU, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   items=["Add link", "Add external link", "Format", "Paragraph", "Insert", "Cut", "Copy", "Paste", "Paste as plain text", "Select all", "Rename this heading...", "Bookmark this heading..."]
+   closed={sel 0-0, st 1221, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   preClick={sel 0-0, st 1221, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## stam-callout
+   before={sel 0-0, st 214, card, inC 1/2, ic 0, cstam.md, ae DIV.cm-content.cm-lineWrapping, docLen 707}
+   open={sel 0-0, st 253, card, inC 1/2, ic 1, cstam.md, MODAL, ae INPUT.dse-sedit__apply-input[Amount to apply], aeSel null-null/1, aeVal "0", docLen 707}
+   closed={sel 0-0, st 253, card, inC 1/2, ic 1, cstam.md, ae DIV.cm-content.cm-lineWrapping, docLen 707}
+   preClick={sel 0-0, st 253, card, inC 1/2, ic 0, cstam.md, ae DIV.cm-content.cm-lineWrapping, docLen 707}
+## stam-plain
+   before={sel 0-0, st 1042, card, inC 1/2, ic 0, cstam.md, ae DIV.cm-content.cm-lineWrapping, docLen 707}
+   open={sel 0-0, st 1016, card, inC 1/2, ic 0, cstam.md, MODAL, ae INPUT.dse-sedit__apply-input[Amount to apply], aeSel null-null/1, aeVal "0", docLen 707}
+   closed={sel 0-0, st 1016, card, inC 1/2, ic 0, cstam.md, ae DIV.cm-content.cm-lineWrapping, docLen 707}
+   preClick={sel 0-0, st 1016, card, inC 1/2, ic 0, cstam.md, ae DIV.cm-content.cm-lineWrapping, docLen 707}
+init-callout PROBE-ERROR no visible element: (window.__r540.roots("initiative")[0]).querySelector('button[aria-label^="Toggle turn taken"]')
+init-plain PROBE-ERROR no visible element: (window.__r540.roots("initiative")[1]).querySelector('button[aria-label^="Toggle turn taken"]')
+## expand-callout
+   before={sel 0-0, st 190, card, inC 1/2, ic 0, ccoll.md, ae DIV.cm-content.cm-lineWrapping, docLen 741}
+   after={sel 0-0, st 229, card, inC 1/2, ic 1, ccoll.md, ae DIV.cm-content.cm-lineWrapping, docLen 741}
+   stillCollapsed=true
+   preClick={sel 0-0, st 229, card, inC 1/2, ic 0, ccoll.md, ae DIV.cm-content.cm-lineWrapping, docLen 741}
+## expand-plain
+   before={sel 0-0, st 1018, card, inC 1/2, ic 0, ccoll.md, ae DIV.cm-content.cm-lineWrapping, docLen 741}
+   after={sel 0-0, st 992, card, inC 1/2, ic 0, ccoll.md, ae DIV.cm-content.cm-lineWrapping, docLen 741}
+   stillCollapsed=true
+   preClick={sel 0-0, st 992, card, inC 1/2, ic 0, ccoll.md, ae DIV.cm-content.cm-lineWrapping, docLen 741}
+===== r540-FX-fixprobe-summary.jsonl
+## rebuild-init-callout
+   before={sel 0-0, st 378, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+   after={sel 0-0, st 316, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 792}
+   diag=[{"tgt": "SPAN.dse-btn__text", "rootIc0": true, "connected": false, "inRoot": false, "rootConnected": true, "walkHit": "DIV.dse-init.interactive-child", "walkEnd": "hit"}]
+   diskChanged=true
+   preClick={sel 0-0, st 316, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+## rebuild-proj-callout
+   before={sel 0-0, st 278, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+   after={sel 0-0, st 374, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 807}
+   diag=[{"tgt": "SPAN.dse-btn__text", "rootIc0": true, "connected": false, "inRoot": false, "rootConnected": true, "walkHit": "DIV.dse-prj.interactive-child", "walkEnd": "hit"}]
+   diskChanged=true
+   preClick={sel 0-0, st 374, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+## rebuild-init-lpembed
+   before={sel 0-0, st 595, card, inC 0/1, ic 0, file R540/init-host.md, ae DIV.cm-content.cm-lineWrapping, docLen 409}
+   after={sel 0-0, st 530, card, inC 0/1, ic 1, file R540/init-host.md, ae DIV.cm-content.cm-lineWrapping, docLen 409}
+   diag=[{"tgt": "SPAN.dse-btn__text", "rootIc0": true, "connected": false, "inRoot": false, "rootConnected": true, "walkHit": "DIV.dse-init.interactive-child", "walkEnd": "hit"}]
+   diskChanged=true
+   preClick={sel 0-0, st 530, card, inC 0/1, ic 0, file R540/init-host.md, ae DIV.cm-content.cm-lineWrapping, docLen 409}
+## rebuild-init-plain
+   before={sel 0-0, st 1534, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+   after={sel 0-0, st 1407, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 790}
+   diag=[{"tgt": "SPAN.dse-btn__text", "rootIc0": false, "connected": false, "inRoot": false, "rootConnected": true, "walkHit": null, "walkEnd": "null (detached)"}]
+   diskChanged=true
+   preClick={sel 0-0, st 1407, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+## callout-plus
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   pre={sel 0-0, st 433, card, inC 1/1, ic 1, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   disk={"R540/cc.md": [6, 5]}
+   preClick={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## link-plain
+   before={sel 0-0, st 299, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+   after={sel 0-0, st 0, card, inC 0/0, ic 0, file R540/link-target.md, ae DIV.cm-content.cm-lineWrapping, docLen 39}
+   preClick={sel 0-0, st 386, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+## link-ctrl
+   before={sel 0-0, st 299, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+   after={sel 0-0, st 0, card, inC 1/2, ic 1, clink.md, leaves 2, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+   tabs=["R540/clink.md", "R540/link-target.md"]
+   preClick={sel 0-0, st 386, card, inC 1/2, ic 0, clink.md, ae DIV.cm-content.cm-lineWrapping, docLen 879}
+## callout-text
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 197-316, st 376, RAW, inC 0/0, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, winSel 119 "> [!note] Camp\n> Callout body ", docLen 764}
+   preClick={sel 0-0, st 376, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+## callout-checkbox
+   before={sel 0-0, st 278, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+   after={sel 0-0, st 374, card, inC 1/2, ic 1, cproj.md, ae INPUT[Breakthrough (natural 19-20)], aeSel null-null/2, aeVal "on", docLen 765}
+   checked=[false, true]
+   preClick={sel 0-0, st 374, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+===== r540-RB-head-summary.jsonl
+## rebuild-init-callout
+   before={sel 0-0, st 378, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+   after={sel 144-309, st 316, RAW, inC 0/1, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, winSel 165 "> [!note] Init\n> Init body tex", docLen 792}
+   diag=[{"tgt": "SPAN.dse-btn__text", "rootIc0": true, "connected": false, "inRoot": false, "rootConnected": false, "walkHit": null, "walkEnd": "null (detached)"}]
+   diskChanged=true
+   preClick={sel 0-0, st 316, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+## rebuild-init-plain
+   before={sel 0-0, st 1534, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+   after={sel 0-0, st 1407, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 790}
+   diag=[{"tgt": "SPAN.dse-btn__text", "rootIc0": false, "connected": false, "inRoot": false, "rootConnected": true, "walkHit": null, "walkEnd": "null (detached)"}]
+   diskChanged=true
+   preClick={sel 0-0, st 1407, card, inC 1/2, ic 0, cinit.md, ae DIV.cm-content.cm-lineWrapping, docLen 783}
+## rebuild-init-lpembed
+   before={sel 0-0, st 595, card, inC 0/1, ic 0, file R540/init-host.md, ae DIV.cm-content.cm-lineWrapping, docLen 409}
+   after={sel 204-222, st 530, card, inC 0/1, ic 1, file R540/init-host.md, ae DIV.cm-content.cm-lineWrapping, winSel 18 "![[R540/init-src]]", docLen 409}
+   diag=[{"tgt": "SPAN.dse-btn__text", "rootIc0": true, "connected": false, "inRoot": false, "rootConnected": true, "walkHit": null, "walkEnd": "null (detached)"}]
+   diskChanged=true
+   preClick={sel 0-0, st 530, card, inC 0/1, ic 0, file R540/init-host.md, ae DIV.cm-content.cm-lineWrapping, docLen 409}
+## rebuild-proj-callout
+   before={sel 0-0, st 278, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+   after={sel 144-332, st 374, RAW, inC 0/1, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, winSel 188 "> [!note] Proj\n> Proj body tex", docLen 807}
+   diag=[{"tgt": "SPAN.dse-btn__text", "rootIc0": true, "connected": false, "inRoot": false, "rootConnected": false, "walkHit": null, "walkEnd": "null (detached)"}]
+   diskChanged=true
+   preClick={sel 0-0, st 374, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+## rebuild-proj-plain
+   before={sel 0-0, st 1233, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+   after={sel 0-0, st 1265, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 801}
+   diag=[{"tgt": "SPAN.dse-btn__text", "rootIc0": false, "connected": false, "inRoot": false, "rootConnected": true, "walkHit": null, "walkEnd": "null (detached)"}]
+   diskChanged=true
+   preClick={sel 0-0, st 1265, card, inC 1/2, ic 0, cproj.md, ae DIV.cm-content.cm-lineWrapping, docLen 765}
+===== r540-smoke-head-summary.jsonl
+## callout-plus
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   pre={sel 0-0, st 433, card, inC 1/1, ic 1, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-0, st 433, card, inC 1/1, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   disk={"R540/cc.md": [6, 5]}
+## plain-plus
+   before={sel 0-0, st 1168, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   pre={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   after={sel 0-0, st 1197, card, inC 1/2, ic 0, cc.md, ae DIV.cm-content.cm-lineWrapping, docLen 764}
+   disk={"R540/cc.md": [5, 6]}
+## callout-enter
+   before={sel 0-0, st 406, card, inC 1/1, ic 0, cc.md, ae BUTTON.dse-btn.dse-btn--ghost.dse-btn--icon[Edit Counter], docLen 764}
+   open={sel 0-0, st 406, card, inC 1/1, ic 1, cc.md, MODAL, ae TEXTAREA.dse-form__raw, aeSel 54-54/54, aeVal "name: Twin\ncurrent_v", docLen 764}
+   closed={sel 0-0, st 406, card, inC 1/1, ic 1, cc.md, ae BUTTON.dse-btn.dse-btn--ghost.dse-btn--icon[Edit Counter], docLen 764}
+   diskSame=true

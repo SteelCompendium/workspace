@@ -1,0 +1,502 @@
+// ===== SC-540 r2 REVIEW PROBE (scratch harness copy only; never in the tree) =====
+// Env: R540_CASES (comma list), R540_OUT (dir), R540_VARIANT (label)
+const R540_OUT = process.env.R540_OUT ?? work;
+const R540_VAR = process.env.R540_VARIANT ?? 'unknown';
+const rFill = (n, tag) => Array.from({ length: n }, (_, i) => `${tag} filler ${i}.`).join('\n\n');
+const rQ = (lines) => lines.map((l) => `> ${l}`).join('\n');
+const R_LINK_FEATURE = ['```ds-feature', 'type: feature', 'feature_type: ability', 'name: Link Strike', 'effects:', '  - name: Effect', '    effect: |-', '      See [[R540/link-target]] for more.', '```'];
+const R_PROJECT = ['```ds-project', 'goal_name: "Craft Thing"', 'goal_points: 100', 'accrued: 10', 'rolls: []', 'current_respite: 1', '```'];
+const R_INIT = ['```ds-initiative', 'heroes:', '  - name: "Alice Alpha"', '    max_stamina: 30', 'enemy_groups: []', 'malice:', '  value: 1', '```'];
+const R_STAM = ['```ds-stamina-bar', 'max_stamina: 20', 'current_stamina: 15', 'temp_stamina: 5', '```'];
+const R_STAM_COLL = ['```ds-stamina-bar', 'collapsed: true', 'max_stamina: 20', 'current_stamina: 15', 'temp_stamina: 5', '```'];
+const R_CTR = (v, n) => ['```ds-counter', ...counterLines(v, n), '```'];
+Object.assign(FIXTURES, {
+	'R540/cc.md': `# cc\n\nTOP\n\n${rFill(14, 'A')}\n\n${rQ(['[!note] Camp', 'Callout body text', ...R_CTR(5, 'Twin')])}\n\n${rFill(14, 'B')}\n\n${R_CTR(5, 'Plain').join('\n')}\n\n${rFill(14, 'C')}\n`,
+	'R540/cproj.md': `# cproj\n\nTOP\n\n${rFill(10, 'A')}\n\n${rQ(['[!note] Proj', 'Proj body text', ...R_PROJECT])}\n\n${rFill(14, 'B')}\n\n${R_PROJECT.join('\n')}\n\n${rFill(14, 'C')}\n`,
+	'R540/cinit.md': `# cinit\n\nTOP\n\n${rFill(10, 'A')}\n\n${rQ(['[!note] Init', 'Init body text', ...R_INIT])}\n\n${rFill(14, 'B')}\n\n${R_INIT.join('\n')}\n\n${rFill(14, 'C')}\n`,
+	'R540/cstam.md': `# cstam\n\nTOP\n\n${rFill(10, 'A')}\n\n${rQ(['[!note] Stam', 'Stam body text', ...R_STAM])}\n\n${rFill(14, 'B')}\n\n${R_STAM.join('\n')}\n\n${rFill(14, 'C')}\n`,
+	'R540/ccoll.md': `# ccoll\n\nTOP\n\n${rFill(10, 'A')}\n\n${rQ(['[!note] Coll', 'Coll body text', ...R_STAM_COLL])}\n\n${rFill(14, 'B')}\n\n${R_STAM_COLL.join('\n')}\n\n${rFill(14, 'C')}\n`,
+	'R540/clink.md': `# clink\n\nTOP\n\n${rFill(10, 'A')}\n\n${rQ(['[!note] Linked', 'Linked body text', ...R_LINK_FEATURE])}\n\n${rFill(14, 'B')}\n\n${R_LINK_FEATURE.join('\n')}\n\n${rFill(14, 'C')}\n`,
+	'R540/link-target.md': '# link target\n\nThe target of the link.\n',
+	'R540/emb-src.md': `# emb src\n\nEMB-TOP\n\n${R_CTR(5, 'Embedded').join('\n')}\n\nEMB-BOTTOM\n`,
+	'R540/emb-host.md': `# emb host\n\nTOP\n\n${rFill(14, 'A')}\n\n![[R540/emb-src]]\n\n${rFill(14, 'B')}\n`,
+	'R540/cn.md': `# cn\n\nTOP\n\n${rFill(14, 'A')}\n\n${QUOTED_NESTED()}\n\n${rFill(14, 'B')}\n`,
+	'R540/ce.md': `# ce\n\nTOP\n\n${rFill(14, 'A')}\n\n> [!note] Emb\n> Embed body text\n> ![[R540/emb-src]]\n\n${rFill(14, 'B')}\n`,
+	'R540/cbsrc.md': `# cbsrc\n\nCBSRC-TOP\n\n${rQ(['[!note] In embed', 'Embedded callout text', ...R_CTR(5, 'InEmbed')])}\n\nCBSRC-BOTTOM\n`,
+	'R540/cb.md': `# cb\n\nTOP\n\n${rFill(14, 'A')}\n\n![[R540/cbsrc]]\n\n${rFill(14, 'B')}\n`,
+	'R540/cf.md': `# cf\n\nTOP\n\n${rFill(14, 'A')}\n\n${rQ(['[!note]- Folded', 'Folded body text', ...R_CTR(5, 'Fold')])}\n\n${rFill(14, 'B')}\n`,
+	'R540/init-src.md': `# init src\n\nINIT-TOP\n\n${R_INIT.join('\n')}\n\nINIT-BOTTOM\n`,
+	'R540/init-host.md': `# init host\n\nTOP\n\n${rFill(14, 'A')}\n\n![[R540/init-src]]\n\n${rFill(14, 'B')}\n`,
+	'R540/twin2.md': `# twin2\n\nTOP\n\n${QUOTED(['[!note] Camp'])}\n\nMID\n\n${QUOTED(['[!note] Camp'])}\n\nBOTTOM\n`,
+});
+const R540_INSTALL = `(() => {
+  const P = window.__r540 = window.__r540 || {};
+  P.main = P.main || app.workspace.getMostRecentLeaf();
+  P.cm = () => P.main.view.editor.cm;
+  P.top = (scope, kind) => Array.from(scope.querySelectorAll('[data-dse-element="' + kind + '"]')).filter((r) => r.isConnected && !r.parentElement.closest('[data-dse-element]'));
+  P.roots = (kind) => P.top(P.cm().contentDOM, kind);
+  P.fences = (kind) => { const out = []; P.cm().state.doc.toString().split('\\n').forEach((l, i) => { if (/^(?:[ ]{0,3}>[ ]?)*\`\`\`ds-/.test(l) && l.includes('ds-' + kind)) out.push(i); }); return out; };
+  P.desc = (el) => el ? (el.tagName + (el.className && typeof el.className === 'string' ? '.' + el.className.trim().split(/\\s+/).slice(0, 3).join('.') : '') + (el.getAttribute && el.getAttribute('aria-label') ? '[' + el.getAttribute('aria-label') + ']' : '')) : null;
+  P.snap = () => {
+    const cm = P.cm(); const sel = cm.state.selection.main;
+    const lines = Array.from(cm.contentDOM.querySelectorAll('.cm-line'));
+    const raw = lines.filter((l) => /^\\s*>\\s*\\[!/.test(l.textContent)).length;
+    const roots = Array.from(cm.contentDOM.querySelectorAll('[data-dse-element]')).filter((r) => r.isConnected && !r.parentElement.closest('[data-dse-element]'));
+    const ae = document.activeElement;
+    const ws = window.getSelection();
+    return { file: P.main.view.file?.path, mode: P.main.view.getMode?.(), sel: sel.from + '-' + sel.to, docLen: cm.state.doc.length, st: Math.round(cm.scrollDOM.scrollTop), raw, roots: roots.length, rootsInCallout: roots.filter((r) => r.closest('.cm-embed-block.cm-callout')).length, ic: roots.filter((r) => r.classList.contains('interactive-child')).length, modal: !!document.querySelector('.modal-container .dse-modal'), anyModal: !!document.querySelector('.modal-container'), menu: !!document.querySelector('.menu'), popover: document.querySelectorAll('.popover.hover-popover').length, leaves: app.workspace.getLeavesOfType('markdown').length, ae: P.desc(ae), aeInRoot: !!(ae && ae.closest && ae.closest('[data-dse-element]')), aeSelRange: (ae && 'selectionStart' in ae) ? (() => { try { return ae.selectionStart + '-' + ae.selectionEnd + '/' + String(ae.value).length; } catch (e) { return 'n/a(' + String(ae.value).length + ')'; } })() : null, aeValue: (ae && 'value' in ae) ? String(ae.value) : null, winSel: ws ? ws.toString().slice(0, 60) : '', winSelLen: ws ? ws.toString().length : 0 };
+  };
+  return true;
+})()`;
+const RG = 'window.__r540';
+async function rMouse(t, at, { mods = 0, button = 'left', clickCount = 1, type = 'click' } = {}) {
+	const buttons = button === 'right' ? 2 : 1;
+	const base = { x: at.x, y: at.y, button, clickCount, modifiers: mods };
+	if (type === 'click') {
+		await t.cdp.call('Input.dispatchMouseEvent', { type: 'mousePressed', buttons, ...base });
+		await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseReleased', buttons: 0, ...base });
+	}
+}
+async function rAt(t, expr, noScroll = false) {
+	const ok = await t.ev(`(() => { const el = ${expr}; if (!el) return null; if (!${noScroll}) el.scrollIntoView({ block: 'center', inline: 'center' }); const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; })()`);
+	t.expect(ok, `no visible element: ${expr}`);
+	await sleep(250);
+	await t.ev(`(${RG}.preClick = ${RG}.snap(), true)`);
+	return t.ev(`(() => { const r = (${expr}).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2, l: r.left, r: r.right, t: r.top, b: r.bottom }; })()`);
+}
+async function rClick(t, expr, opts = {}) {
+	const at = await rAt(t, expr, opts.noScroll);
+	await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: at.x, y: at.y, modifiers: opts.mods ?? 0 });
+	await rMouse(t, at, opts);
+	return at;
+}
+async function rDbl(t, expr, n = 2) {
+	const at = await rAt(t, expr);
+	await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: at.x, y: at.y });
+	for (let c = 1; c <= n; c++) await rMouse(t, at, { clickCount: c });
+	return at;
+}
+async function rKey(t, key, code, vk, mods = 0, text) {
+	await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyDown', key, code, windowsVirtualKeyCode: vk, nativeVirtualKeyCode: vk, modifiers: mods, ...(text ? { text } : {}) });
+	await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyUp', key, code, windowsVirtualKeyCode: vk, nativeVirtualKeyCode: vk, modifiers: mods });
+}
+async function rType(t, s) {
+	for (const ch of s) {
+		await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyDown', key: ch, code: /\d/.test(ch) ? 'Digit' + ch : 'Key' + ch.toUpperCase(), text: ch, unmodifiedText: ch, windowsVirtualKeyCode: ch.toUpperCase().charCodeAt(0), nativeVirtualKeyCode: ch.toUpperCase().charCodeAt(0) });
+		await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyUp', key: ch, code: /\d/.test(ch) ? 'Digit' + ch : 'Key' + ch.toUpperCase(), windowsVirtualKeyCode: ch.toUpperCase().charCodeAt(0), nativeVirtualKeyCode: ch.toUpperCase().charCodeAt(0) });
+		await sleep(40);
+	}
+}
+/** open rel fresh in LP (or Reading when mode='preview'), cursor line 0, scroll the nth ds-<kind> fence into view (or `scrollTo` text). */
+async function rOpen(t, rel, kind, nth, { mode = 'lp', scrollTo = null, auth = false } = {}) {
+	const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+	await t.ev(R540_INSTALL);
+	await t.ev(`(async () => { const keep = ${RG}.main; app.workspace.getLeavesOfType('markdown').filter((l) => l !== keep).forEach((l) => l.detach()); app.workspace.setActiveLeaf(keep, { focus: true }); document.querySelectorAll('.popover.hover-popover').forEach((p) => p.remove()); return true; })()`);
+	await t.open('Lifecycle/other.md', `${RG}.main`);
+	await t.ev(`(async () => { await app.vault.modify(app.vault.getAbstractFileByPath(${JSON.stringify(rel)}), ${JSON.stringify(FIXTURES[rel])}); })()`);
+	for (const extra of ['R540/emb-src.md', 'R540/cbsrc.md', 'R540/init-src.md']) await t.ev(`(async () => { await app.vault.modify(app.vault.getAbstractFileByPath(${JSON.stringify(extra)}), ${JSON.stringify(FIXTURES[extra])}); })()`);
+	await sleep(700);
+	await t.ev(`${prefs}.set('authoringControls', ${auth ? 'true' : 'false'})`);
+	if (mode === 'preview') {
+		await t.ev(`(async () => { await ${RG}.main.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'preview' }, active: true }); return true; })()`);
+		await sleep(1500);
+		return;
+	}
+	await t.ev(`(async () => { await ${RG}.main.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'source', source: false }, active: true }); ${RG}.main.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+	await sleep(1500);
+	if (scrollTo) {
+		await t.ev(`(async () => { const cm = ${RG}.cm(); const i = cm.state.doc.toString().indexOf(${JSON.stringify(scrollTo)}); cm.dispatch({ effects: cm.constructor.scrollIntoView(i, { y: 'center' }) }); return true; })()`);
+	} else {
+		await t.ev(`(async () => { const cm = ${RG}.cm(); const fl = ${RG}.fences(${JSON.stringify(kind)}); cm.dispatch({ effects: cm.constructor.scrollIntoView(cm.state.doc.line(fl[${nth}] + 1).from, { y: 'center' }) }); return true; })()`);
+	}
+	await t.waitFor(`${RG}.roots(${JSON.stringify(kind)}).length > ${scrollTo ? 0 : nth}`, `${rel}: root drawn`);
+	await sleep(1500);
+}
+const rRoot = (kind, n) => `${RG}.roots(${JSON.stringify(kind)})[${n}]`;
+const rW = (kind, n) => `(${rRoot(kind, n)}).closest('.cm-embed-block.cm-callout')`;
+const rSnap = (t) => t.ev(`${RG}.snap()`);
+const rEsc = (t) => rKey(t, 'Escape', 'Escape', 27);
+const R540_CASES = {};
+const rCase = (name, fn) => { R540_CASES[name] = fn; };
+// ---- generic + click in a context
+for (const [name, rel, kind, nth, opts] of [
+	['callout-plus', 'R540/cc.md', 'counter', 0, {}],
+	['plain-plus', 'R540/cc.md', 'counter', 1, {}],
+	['nested-plus', 'R540/cn.md', 'counter', 0, {}],
+	['embincallout-plus', 'R540/ce.md', 'counter', 0, { scrollTo: '> [!note] Emb' }],
+	['lpembed-plus', 'R540/emb-host.md', 'counter', 0, { scrollTo: '![[R540/emb-src]]' }],
+	['calloutinembed-plus', 'R540/cb.md', 'counter', 0, { scrollTo: '![[R540/cbsrc]]' }],
+]) {
+	rCase(name, async (t) => {
+		await rOpen(t, rel, kind, nth, opts);
+		const before = await rSnap(t);
+		await rClick(t, `(${rRoot(kind, nth)}).querySelector('button[aria-label^="Increase"]')`);
+		const pre = await rSnap(t);
+		await sleep(2000);
+		const after = await rSnap(t);
+		const disk = { [rel]: t.counterValues(rel) };
+		for (const x of ['R540/emb-src.md', 'R540/cbsrc.md']) if (FIXTURES[rel].includes(x.replace('.md', ''))) disk[x] = t.counterValues(x);
+		return { before, pre, after, disk };
+	});
+}
+rCase('reading-plus', async (t) => {
+	const rel = 'R540/cc.md';
+	await rOpen(t, rel, 'counter', 0, { mode: 'preview' });
+	const scope = `${RG}.main.view.containerEl.querySelector('.markdown-reading-view')`;
+	const R = `${RG}.top(${scope}, 'counter')[0]`;
+	await rClick(t, `(${R}).querySelector('button[aria-label^="Increase"]')`);
+	await sleep(1800);
+	const R2 = `${RG}.top(${scope}, 'counter')`;
+	const info = await t.ev(`(() => ${R2}.map((r) => ({ ic: r.classList.contains('interactive-child'), inCallout: !!r.closest('.callout') })))()`);
+	return { disk: t.counterValues(rel), rootsAfter: info, mode: await t.ev(`${RG}.main.view.getMode()`) };
+});
+// ---- the pencil's Enter (and Space)
+for (const [name, n, keyName] of [['callout-enter', 0, 'Enter'], ['plain-enter', 1, 'Enter'], ['callout-space', 0, ' ']]) {
+	rCase(name, async (t) => {
+		await rOpen(t, 'R540/cc.md', 'counter', n, { auth: true });
+		const pencil = `(${rRoot('counter', n)}).querySelector('.dse-chrome button[data-dse-chrome-item="edit"]')`;
+		await t.waitFor(`!!${pencil}`, 'pencil');
+		await t.ev(`${pencil}.focus({ focusVisible: true })`);
+		const before = await rSnap(t);
+		if (keyName === 'Enter') await rKey(t, 'Enter', 'Enter', 13, 0, '\r');
+		else await rKey(t, ' ', 'Space', 32, 0, ' ');
+		await sleep(1500);
+		const open = await rSnap(t);
+		await rEsc(t);
+		await sleep(1200);
+		const closed = await rSnap(t);
+		return { before, open, closed, diskSame: t.read('R540/cc.md') === FIXTURES['R540/cc.md'] };
+	});
+}
+// ---- callout's own controls
+for (const [name, sel] of [['callout-text', '.callout-content > p'], ['callout-title', '.callout-title'], ['callout-codebtn', '.edit-block-button']]) {
+	rCase(name, async (t) => {
+		await rOpen(t, 'R540/cc.md', 'counter', 0);
+		const before = await rSnap(t);
+		await rClick(t, `(${rW('counter', 0)}).querySelector('${sel}')`);
+		await sleep(1500);
+		return { before, after: await rSnap(t) };
+	});
+}
+// ---- links: plain, ctrl, ctrl-hover
+rCase('link-plain', async (t) => {
+	await rOpen(t, 'R540/clink.md', 'feature', 0);
+	const before = await rSnap(t);
+	await rClick(t, `(${rRoot('feature', 0)}).querySelector('a.internal-link')`);
+	await sleep(1800);
+	return { before, after: await rSnap(t) };
+});
+rCase('link-ctrl', async (t) => {
+	await rOpen(t, 'R540/clink.md', 'feature', 0);
+	const before = await rSnap(t);
+	await rClick(t, `(${rRoot('feature', 0)}).querySelector('a.internal-link')`, { mods: 2 });
+	await sleep(1800);
+	const tabs = await t.ev(`app.workspace.getLeavesOfType('markdown').map((l) => l.view.file?.path)`);
+	return { before, after: await rSnap(t), tabs };
+});
+for (const [name, n] of [['link-hover-callout', 0], ['link-hover-plain', 1]]) {
+	rCase(name, async (t) => {
+		await rOpen(t, 'R540/clink.md', 'feature', n);
+		const before = await rSnap(t);
+		const at = await rAt(t, `(${rRoot('feature', n)}).querySelector('a.internal-link')`);
+		await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: at.x - 30, y: at.y, modifiers: 2 });
+		await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: at.x, y: at.y, modifiers: 2 });
+		await sleep(1800);
+		const after = await rSnap(t);
+		const ptext = await t.ev(`Array.from(document.querySelectorAll('.popover.hover-popover')).map((p) => p.textContent.slice(0, 40))`);
+		await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 5, y: 5 });
+		return { before, after, ptext };
+	});
+}
+// ---- fold chevron
+rCase('chevron', async (t) => {
+	await rOpen(t, 'R540/cf.md', 'counter', 0);
+	const col = () => t.ev(`(${rW('counter', 0)}).querySelector('.callout').classList.contains('is-collapsed')`);
+	const before = await rSnap(t);
+	const c0 = await col();
+	await rClick(t, `(${rW('counter', 0)}).querySelector('.callout-fold')`);
+	await sleep(1200);
+	return { before, after: await rSnap(t), collapsed: [c0, await col()] };
+});
+// ---- inputs: typing into the counter's number input / the project's roll input; checkbox
+for (const [name, rel, kind, n, sel, typed, commit] of [
+	['callout-counter-type', 'R540/cc.md', 'counter', 0, 'input.dse-stepper__input', '12', true],
+	['plain-counter-type', 'R540/cc.md', 'counter', 1, 'input.dse-stepper__input', '12', true],
+	['callout-proj-type', 'R540/cproj.md', 'project', 0, 'input.dse-prj__roll-input', '14', false],
+	['plain-proj-type', 'R540/cproj.md', 'project', 1, 'input.dse-prj__roll-input', '14', false],
+	['callout-init-type', 'R540/cinit.md', 'initiative', 0, 'input.dse-init__malice-quickadd-label', 'abc', false],
+]) {
+	rCase(name, async (t) => {
+		await rOpen(t, rel, kind, n);
+		const before = await rSnap(t);
+		const inp = `(${rRoot(kind, n)}).querySelector('${sel}')`;
+		const exists = await t.ev(`!!(${inp})`);
+		if (!exists) return { before, error: 'no input ' + sel };
+		await rClick(t, inp);
+		await sleep(400);
+		const focused = await rSnap(t);
+		// clear the field with the keyboard: End then Backspace x4
+		await rKey(t, 'End', 'End', 35);
+		for (let i = 0; i < 4; i++) await rKey(t, 'Backspace', 'Backspace', 8);
+		await rType(t, typed);
+		await sleep(500);
+		const typedSnap = await rSnap(t);
+		const inputVal = await t.ev(`(${inp})?.value ?? null`);
+		let afterTab = null;
+		if (commit) {
+			await rKey(t, 'Tab', 'Tab', 9);
+			await sleep(1500);
+			afterTab = await rSnap(t);
+		}
+		const docText = t.read(rel);
+		return { before, focused, typedSnap, inputVal, afterTab, disk: kind === 'counter' ? t.counterValues(rel) : null, diskChangedOutsideBlocks: docText !== FIXTURES[rel] && kind !== 'counter', strayInDoc: docText.includes(typed) && !FIXTURES[rel].includes(typed) && kind !== 'counter' };
+	});
+}
+for (const [name, n] of [['callout-checkbox', 0], ['plain-checkbox', 1]]) {
+	rCase(name, async (t) => {
+		await rOpen(t, 'R540/cproj.md', 'project', n);
+		const cb = `(${rRoot('project', n)}).querySelector('.dse-prj__breakthrough-label input[type=checkbox]')`;
+		if (!(await t.ev(`!!(${cb})`))) return { error: 'no checkbox' };
+		const before = await rSnap(t);
+		const c0 = await t.ev(`(${cb}).checked`);
+		await rClick(t, cb);
+		await sleep(1200);
+		const after = await rSnap(t);
+		const c1 = await t.ev(`(${cb})?.checked ?? null`);
+		return { before, after, checked: [c0, c1] };
+	});
+}
+// ---- Mod+A in an input: callout, plain, LP embed; and "focus without a click" (keyboard-only) in the callout
+for (const [name, rel, kind, n, how, opts] of [
+	['modA-callout', 'R540/cc.md', 'counter', 0, 'click', {}],
+	['modA-plain', 'R540/cc.md', 'counter', 1, 'click', {}],
+	['modA-lpembed', 'R540/emb-host.md', 'counter', 0, 'click', { scrollTo: '![[R540/emb-src]]' }],
+	['modA-callout-focusonly', 'R540/cc.md', 'counter', 0, 'focus', {}],
+	['modA-callout-proj', 'R540/cproj.md', 'project', 0, 'click', {}],
+	['modA-callout-button', 'R540/cc.md', 'counter', 0, 'button', {}],
+]) {
+	rCase(name, async (t) => {
+		await rOpen(t, rel, kind, n, opts);
+		const sel = kind === 'counter' ? 'input.dse-stepper__input' : 'input.dse-prj__roll-input';
+		const inp = `(${rRoot(kind, n)}).querySelector('${sel}')`;
+		if (how === 'click') await rClick(t, inp);
+		else if (how === 'focus') await t.ev(`(${inp}).focus()`);
+		else if (how === 'button') { await rClick(t, `(${rRoot(kind, n)}).querySelector('button[aria-label^="Increase"]')`); await sleep(1500); }
+		await sleep(500);
+		const before = await rSnap(t);
+		await rKey(t, 'a', 'KeyA', 65, 2);
+		await sleep(600);
+		const after = await rSnap(t);
+		await rKey(t, 'Escape', 'Escape', 27);
+		return { before, after };
+	});
+}
+// ---- double / triple click on card text and on +, callout vs plain
+for (const [name, n, target, count] of [
+	['dbl-text-callout', 0, 'name', 2], ['dbl-text-plain', 1, 'name', 2],
+	['tri-text-callout', 0, 'name', 3], ['tri-text-plain', 1, 'name', 3],
+	['dbl-plus-callout', 0, 'plus', 2], ['dbl-plus-plain', 1, 'plus', 2],
+]) {
+	rCase(name, async (t) => {
+		await rOpen(t, 'R540/cc.md', 'counter', n);
+		const before = await rSnap(t);
+		const el = target === 'name' ? `(${rRoot('counter', n)}).querySelector('.dse-counter__name')` : `(${rRoot('counter', n)}).querySelector('button[aria-label^="Increase"]')`;
+		await rDbl(t, el, count);
+		await sleep(1800);
+		return { before, after: await rSnap(t), disk: t.counterValues('R540/cc.md') };
+	});
+}
+// ---- drag-select across the card text
+for (const [name, n] of [['drag-callout', 0], ['drag-plain', 1]]) {
+	rCase(name, async (t) => {
+		await rOpen(t, 'R540/cc.md', 'counter', n);
+		const before = await rSnap(t);
+		const R = rRoot('counter', n);
+		const a = await rAt(t, `(${R}).querySelector('.dse-counter__name')`);
+		const box = await t.ev(`(() => { const r = (${R}).getBoundingClientRect(); return { l: r.left, r: r.right, t: r.top, b: r.bottom }; })()`);
+		const from = { x: a.l + 1, y: a.y };
+		const to = { x: box.r - 4, y: box.t + 6 };
+		await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: from.x, y: from.y });
+		await t.cdp.call('Input.dispatchMouseEvent', { type: 'mousePressed', x: from.x, y: from.y, button: 'left', buttons: 1, clickCount: 1 });
+		for (let i = 1; i <= 10; i++) await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: from.x + ((to.x - from.x) * i) / 10, y: from.y + ((to.y - from.y) * i) / 10, button: 'left', buttons: 1 });
+		const mid = await rSnap(t);
+		await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseReleased', x: to.x, y: to.y, button: 'left', buttons: 0, clickCount: 1 });
+		await sleep(1500);
+		return { before, mid, after: await rSnap(t) };
+	});
+}
+// ---- right-click (context menu) on the card text
+for (const [name, n] of [['ctx-callout', 0], ['ctx-plain', 1]]) {
+	rCase(name, async (t) => {
+		await rOpen(t, 'R540/cc.md', 'counter', n);
+		const before = await rSnap(t);
+		await rClick(t, `(${rRoot('counter', n)}).querySelector('.dse-counter__name')`, { button: 'right' });
+		await sleep(1000);
+		const after = await rSnap(t);
+		const items = await t.ev(`Array.from(document.querySelectorAll('.menu .menu-item-title')).map((x) => x.textContent).slice(0, 12)`);
+		await rEsc(t);
+		await sleep(800);
+		return { before, after, items, closed: await rSnap(t) };
+	});
+}
+// ---- stamina bar modal, initiative toggle, collapsed one-liner Expand (callout vs plain)
+for (const [name, n] of [['stam-callout', 0], ['stam-plain', 1]]) {
+	rCase(name, async (t) => {
+		await rOpen(t, 'R540/cstam.md', 'stamina-bar', n);
+		const before = await rSnap(t);
+		await rClick(t, `(${rRoot('stamina-bar', n)}).querySelector('.dse-stamina')`);
+		await sleep(1500);
+		const open = await rSnap(t);
+		await rEsc(t);
+		await sleep(1200);
+		return { before, open, closed: await rSnap(t) };
+	});
+}
+for (const [name, n] of [['init-callout', 0], ['init-plain', 1]]) {
+	rCase(name, async (t) => {
+		await rOpen(t, 'R540/cinit.md', 'initiative', n);
+		const before = await rSnap(t);
+		const label = await t.ev(`(() => { const b = Array.from((${rRoot('initiative', n)}).querySelectorAll('button[aria-label]')).find((x) => !x.closest('.dse-chrome') && x.getBoundingClientRect().width > 0 && !x.disabled); if (!b) return null; b.setAttribute('data-r540-pick', '1'); return b.getAttribute('aria-label'); })()`);
+		await rClick(t, `(${rRoot('initiative', n)}).querySelector('[data-r540-pick]')`);
+		await sleep(2000);
+		const after = await rSnap(t);
+		return { before, after, label, diskChanged: t.read('R540/cinit.md') !== FIXTURES['R540/cinit.md'] };
+	});
+}
+for (const [name, n] of [['expand-callout', 0], ['expand-plain', 1]]) {
+	rCase(name, async (t) => {
+		await rOpen(t, 'R540/ccoll.md', 'stamina-bar', n);
+		const EX = `(${rRoot('stamina-bar', n)}).querySelector('[data-dse-control="chrome.expand"]')`;
+		if (!(await t.ev(`!!(${EX})`))) return { error: 'no expand' };
+		const collapsed0 = await t.ev(`(${rRoot('stamina-bar', n)}).hasAttribute('data-dse-collapsed')`);
+		const ov = await rAt(t, rRoot('stamina-bar', n));
+		await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: ov.x, y: ov.y });
+		await sleep(400);
+		const before = await rSnap(t);
+		before.collapsed0 = collapsed0;
+		await rClick(t, EX);
+		await sleep(1500);
+		const after = await rSnap(t);
+		const stillCollapsed = await t.ev(`(() => { const r = ${rRoot('stamina-bar', n)}; return r ? r.hasAttribute('data-dse-collapsed') : 'no-root'; })()`);
+		const wasCollapsed = before && true;
+		return { before, after, collapsed0, stillCollapsed };
+	});
+}
+// ---- controls whose click handler rebuilds the card's DOM synchronously (diagnostic: is the click target still connected when Obsidian's deferred handler walks?)
+const R_DIAG_INSTALL = `(() => { const P = window.__r540; P.diag = []; if (P.diagOn) return true; P.diagOn = true;
+  document.addEventListener('click', (e) => { const tgt = e.target; const root = tgt.closest ? tgt.closest('[data-dse-element]') : null; const rec = { tgt: P.desc(tgt), rootIc0: root ? root.classList.contains('interactive-child') : null };
+    P.diag.push(rec);
+    setTimeout(() => { rec.connected = tgt.isConnected; rec.inRoot = root ? root.contains(tgt) : null; rec.rootConnected = root ? root.isConnected : null; const content = P.cm().contentDOM; let n = tgt, hit = null; while (n && n !== content) { if (n instanceof HTMLElement && n.matches('.cm-editor, .interactive-child')) { hit = P.desc(n); break; } n = n.parentNode; } rec.walkHit = hit; rec.walkEnd = n === content ? 'contentDOM' : (n ? 'hit' : 'null (detached)'); }, 200); }, { capture: true });
+  return true; })()`;
+for (const [name, rel, kind, n, pick, opts] of [
+	['rebuild-init-callout', 'R540/cinit.md', 'initiative', 0, 'Advance round', {}],
+	['rebuild-init-plain', 'R540/cinit.md', 'initiative', 1, 'Advance round', {}],
+	['rebuild-init-lpembed', 'R540/init-host.md', 'initiative', 0, 'Advance round', { scrollTo: '![[R540/init-src]]' }],
+	['rebuild-proj-callout', 'R540/cproj.md', 'project', 0, 'Add project roll', {}],
+	['rebuild-proj-plain', 'R540/cproj.md', 'project', 1, 'Add project roll', {}],
+]) {
+	rCase(name, async (t) => {
+		await rOpen(t, rel, kind, n, opts);
+		await t.ev(R_DIAG_INSTALL);
+		const ok = await t.ev(`(() => { const b = Array.from((${rRoot(kind, n)}).querySelectorAll('button[aria-label]')).find((x) => x.getAttribute('aria-label') === ${JSON.stringify(pick)}); if (!b) return false; b.setAttribute('data-r540-pick', '1'); return true; })()`);
+		if (!ok) return { error: 'no button ' + pick };
+		const before = await rSnap(t);
+		await rClick(t, `(${rRoot(kind, n)}).querySelector('[data-r540-pick]')`);
+		await sleep(2000);
+		const after = await rSnap(t);
+		const diag = await t.ev(`${RG}.diag.slice()`);
+		const src = { 'R540/init-host.md': 'R540/init-src.md' }[rel] ?? rel;
+		return { before, after, diag, diskChanged: t.read(src) !== FIXTURES[src] };
+	});
+}
+// ---- twins without parking: + upper then + lower; form Save upper then + lower
+const rCards = `(() => {
+  const cm = ${RG}.cm();
+  const fences = []; cm.state.doc.toString().split('\\n').forEach((l, i) => { if (/^(?:[ ]{0,3}>[ ]?)*\`\`\`ds-counter\\s*$/.test(l)) fences.push(i); });
+  const ws = Array.from(cm.contentDOM.children).filter((x) => x.classList.contains('cm-embed-block') && x.classList.contains('cm-callout'));
+  const out = [];
+  for (const w of ws) { let L; try { L = cm.state.doc.lineAt(cm.posAtDOM(w)).number - 1; } catch (e) { continue; }
+    const after = fences.filter((x) => x >= L);
+    Array.from(w.querySelectorAll('[data-dse-element="counter"]')).filter((r) => r.isConnected && !r.parentElement.closest('[data-dse-element]')).forEach((r, k) => out.push({ block: fences.indexOf(after[k]), name: r.querySelector('.dse-counter__name')?.textContent ?? '', value: Number(Array.from(r.querySelectorAll('input')).map((i) => i.value).find((v) => v !== '')) })); }
+  return out.sort((a, b) => a.block - b.block);
+})()`;
+const rRootFor = (block) => `(() => { const cm = ${RG}.cm(); const fences = []; cm.state.doc.toString().split('\\n').forEach((l, i) => { if (/^(?:[ ]{0,3}>[ ]?)*\`\`\`ds-counter\\s*$/.test(l)) fences.push(i); }); const ws = Array.from(cm.contentDOM.children).filter((x) => x.classList.contains('cm-embed-block') && x.classList.contains('cm-callout')); for (const w of ws) { let L; try { L = cm.state.doc.lineAt(cm.posAtDOM(w)).number - 1; } catch (e) { continue; } const after = fences.filter((x) => x >= L); const roots = Array.from(w.querySelectorAll('[data-dse-element="counter"]')).filter((r) => r.isConnected && !r.parentElement.closest('[data-dse-element]')); const k = roots.findIndex((_, i) => fences.indexOf(after[i]) === ${block}); if (k >= 0) return roots[k]; } return null; })()`;
+const rNames = (t, rel) => (t.read(rel).match(/^(?:> ?)*name: (\w+)$/gm) ?? []).map((s) => s.replace(/^(?:> ?)*name: /, ''));
+async function rTwinOpen(t) {
+	const rel = 'R540/twin2.md';
+	await t.ev(R540_INSTALL);
+	await t.open('Lifecycle/other.md', `${RG}.main`);
+	await t.ev(`(async () => { await app.vault.modify(app.vault.getAbstractFileByPath(${JSON.stringify(rel)}), ${JSON.stringify(FIXTURES[rel])}); })()`);
+	await sleep(700);
+	await t.ev(`(async () => { await ${RG}.main.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'source', source: false }, active: true }); ${RG}.main.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+	await t.waitFor(`${rCards}.length === 2`, 'twin2: both cards drawn');
+	await sleep(1200);
+	return rel;
+}
+async function rTwinPlus(t, rel, block) {
+	const before = JSON.stringify([t.counterValues(rel), rNames(t, rel)]);
+	const btn = `(${rRootFor(block)})?.querySelector('button[aria-label^="Increase"]')`;
+	if (!(await t.ev(`!!(${btn})`))) return `no + on block ${block}; cards ${JSON.stringify(await t.ev(rCards))}`;
+	await rClick(t, btn);
+	const t0 = Date.now();
+	while (JSON.stringify([t.counterValues(rel), rNames(t, rel)]) === before && Date.now() - t0 < 5000) await sleep(80);
+	await sleep(1500);
+	return { disk: t.counterValues(rel), names: rNames(t, rel), cards: await t.ev(rCards), snap: await rSnap(t) };
+}
+rCase('twin-plus-plus', async (t) => {
+	const rel = await rTwinOpen(t);
+	const s1 = await rTwinPlus(t, rel, 0);
+	const s2 = await rTwinPlus(t, rel, 1);
+	return { s1, s2 };
+});
+rCase('twin-save-plus', async (t) => {
+	const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+	await t.ev(`${prefs}.set('authoringControls', true)`);
+	const rel = await rTwinOpen(t);
+	const { waitFormOpen, FORM, SAVE } = formKit(t);
+	const pencil = `(${rRootFor(0)})?.querySelector('.dse-chrome button[data-dse-chrome-item="edit"]')`;
+	await t.waitFor(`!!(${pencil})`, 'pencil');
+	await t.ev(`(${pencil}).focus({ focusVisible: true })`);
+	await rKey(t, 'Enter', 'Enter', 13, 0, '\r');
+	await waitFormOpen('twin save');
+	await t.ev(`(() => { const ta = ${FORM}.querySelector('textarea.dse-form__raw'); ta.value = ta.value.replace('name: Twin', 'name: Edited'); ta.dispatchEvent(new Event('input', { bubbles: true })); return true; })()`);
+	await t.waitFor(`!!(${SAVE}) && !(${SAVE}).disabled`, 'save enabled');
+	await t.realClick(SAVE);
+	await t.waitFor(`!document.querySelector('.modal-container .dse-modal')`, 'closed');
+	const t0 = Date.now();
+	while (!rNames(t, rel).includes('Edited') && Date.now() - t0 < 5000) await sleep(80);
+	await sleep(1500);
+	const s1 = { disk: t.counterValues(rel), names: rNames(t, rel), cards: await t.ev(rCards), snap: await rSnap(t) };
+	const s2 = await rTwinPlus(t, rel, 1);
+	await t.ev(`${prefs}.set('authoringControls', false)`);
+	return { s1, s2 };
+});
+SCENARIOS.push({
+	id: 'R540',
+	async run(t) {
+		const names = (process.env.R540_CASES || Object.keys(R540_CASES).join(',')).split(',').filter(Boolean);
+		await t.ev(`(() => { if (!document.getElementById('r540-notice')) { const st = document.createElement('style'); st.id = 'r540-notice'; st.textContent = '.notice-container { display: none !important; }'; document.head.appendChild(st); } return true; })()`);
+		const lines = [];
+		const all = {};
+		for (const n of names) {
+			const m0 = await t.ev('window.__lc.errs.length');
+			try {
+				const o = await R540_CASES[n](t);
+				o.preClick = await t.ev(`${RG}.preClick ?? null`);
+				await t.ev(`${RG}.preClick = null`);
+				o.errs = await t.ev(`window.__lc.errs.slice(${m0}).map((e) => e.text.slice(0, 200))`);
+				all[n] = o;
+				lines.push(`${n}: ${JSON.stringify(o)}`);
+				try { const f = await t.shot(`r540-${R540_VAR}-${n}`); fs.mkdirSync(R540_OUT, { recursive: true }); fs.copyFileSync(f, path.join(R540_OUT, `r540-${R540_VAR}-${n}.png`)); } catch (e) { /* best effort */ }
+			} catch (e) {
+				lines.push(`${n}: PROBE-ERROR ${e.message}`);
+			}
+			await rEsc(t).catch(() => {});
+			await sleep(300);
+		}
+		fs.mkdirSync(R540_OUT, { recursive: true });
+		fs.writeFileSync(path.join(R540_OUT, `r540-${R540_VAR}-summary.jsonl`), lines.join('\n') + '\n');
+		return 'cases ' + names.length;
+	},
+});
+// ===== end SC-540 r2 REVIEW PROBE =====

@@ -1,0 +1,24 @@
+FAIL dom test/dom/framework/pipeline.test.ts
+  ● T-9 (Plan 02): ElementPipeline.run (F1 §2.4) › click shield (F1 §2.4 step 4 / §1.2) › SC-540 Live Preview callout: the root is an Obsidian interactive child › Reading view callouts, and Live Preview blocks that are not in a callout widget, are left alone
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      752 | 						press(root.querySelector('.label-content') as HTMLElement, 'click');
+      753 | 						press(root.querySelector('.label-content') as HTMLElement, 'mousedown');
+    > 754 | 						expect(root.classList.contains('interactive-child')).toBe(false);
+          | 						                                                     ^
+      755 | 					} finally {
+      756 | 						cleanup();
+      757 | 					}
+
+      at Object.<anonymous> (test/dom/framework/pipeline.test.ts:754:60)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 49 passed, 50 total
+Snapshots:   0 total
+Time:        2.907 s
+Ran all test suites matching test/dom/framework/pipeline.test.ts.
+rc=1

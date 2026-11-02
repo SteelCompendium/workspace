@@ -1,0 +1,77 @@
+// ===== SC-540 r4 additions: blast radius of the detached-top mark + a button fuzz over every element kind in a callout =====
+const R4_KINDS = ['characteristics', 'conditions', 'counter', 'encounter', 'featureblock', 'feature', 'hero', 'initiative', 'montage', 'negotiation', 'party', 'project', 'resource', 'roll', 'skills', 'stamina-bar', 'statblock', 'surges', 'tokens'];
+const R4_REPO = process.env.S540_REPO ?? repo;
+for (const k of R4_KINDS) {
+	const y = fs.readFileSync(path.join(R4_REPO, 'src/elements', k, 'example.yaml'), 'utf8').replace(/\n+$/, '').split('\n');
+	FIXTURES[`R540/fz-${k}.md`] = `# fz ${k}\n\nTOP\n\n${rFill(6, 'A')}\n\n${rQ(['[!note] Fz', 'Fz body text', '```ds-' + k, ...y, '```'])}\n\n${rFill(10, 'B')}\n`;
+}
+const R4_STRAY = `Array.from(document.querySelectorAll('.interactive-child')).filter((e) => !e.matches('[data-dse-element]') && !e.classList.contains('bases-embed')).map((e) => (e.isConnected ? 'LIVE ' : 'detached ') + ${RG}.desc(e))`;
+const R4_ROOT = `(() => { const w = Array.from(${RG}.cm().contentDOM.querySelectorAll('.cm-embed-block.cm-callout')); for (const x of w) { const r = Array.from(x.querySelectorAll('[data-dse-element]')).find((e) => !e.parentElement.closest('[data-dse-element]')); if (r) return r; } return null; })()`;
+async function r4OpenFz(t, rel) {
+	await t.ev(R540_INSTALL);
+	await t.ev(`(async () => { const keep = ${RG}.main; app.workspace.getLeavesOfType('markdown').filter((l) => l !== keep).forEach((l) => l.detach()); app.workspace.setActiveLeaf(keep, { focus: true }); return true; })()`);
+	await t.open('Lifecycle/other.md', `${RG}.main`);
+	await t.ev(`(async () => { await app.vault.modify(app.vault.getAbstractFileByPath(${JSON.stringify(rel)}), ${JSON.stringify(FIXTURES[rel])}); })()`);
+	await sleep(600);
+	await t.ev(`(async () => { await ${RG}.main.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'source', source: false }, active: true }); ${RG}.main.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+	await sleep(1200);
+	await t.ev(`(async () => { const cm = ${RG}.cm(); const i = cm.state.doc.toString().indexOf('> [!note] Fz'); cm.dispatch({ effects: cm.constructor.scrollIntoView(i, { y: 'start' }) }); return true; })()`);
+	await t.waitFor(`!!${R4_ROOT}`, `${rel}: the card in the callout is drawn`);
+	await sleep(1200);
+}
+// every visible, hit-testable, enabled button in the card (chrome excluded), tagged with an index
+const R4_TAG = `(() => { const r = ${R4_ROOT}; if (!r) return []; r.querySelectorAll('[data-r4-btn]').forEach((b) => b.removeAttribute('data-r4-btn')); const out = []; Array.from(r.querySelectorAll('button')).filter((b) => !b.closest('.dse-chrome') && !b.disabled).forEach((b) => { const q = b.getBoundingClientRect(); if (q.width <= 0 || q.height <= 0) return; b.setAttribute('data-r4-btn', String(out.length)); out.push(b.getAttribute('aria-label') || b.textContent.trim().slice(0, 30)); }); return out; })()`;
+const R4_MAX = Number(process.env.R4_MAX ?? 8);
+for (const k of R4_KINDS) {
+	rCase(`fz-${k}`, async (t) => {
+		const rel = `R540/fz-${k}.md`;
+		await r4OpenFz(t, rel);
+		let labels = await t.ev(R4_TAG);
+		const total = labels.length;
+		const clicks = [];
+		for (let i = 0; i < Math.min(total, R4_MAX); i++) {
+			labels = await t.ev(R4_TAG);
+			if (i >= labels.length) break;
+			const label = labels[i];
+			const sel = `document.querySelector('[data-r4-btn="${i}"]')`;
+			const hit = await t.ev(`(() => { const b = ${sel}; b.scrollIntoView({ block: 'center' }); const q = b.getBoundingClientRect(); const e = document.elementFromPoint(q.left + q.width / 2, q.top + q.height / 2); return !!e && (e === b || b.contains(e)); })()`);
+			await sleep(250);
+			if (!hit) { clicks.push({ i, label, skipped: 'not hit-testable' }); continue; }
+			const pre = await rSnap(t);
+			try { await rClick(t, sel, { noScroll: true }); } catch (e) { clicks.push({ i, label, error: e.message }); continue; }
+			await sleep(900);
+			const post = await rSnap(t);
+			const rootNow = await t.ev(`!!${R4_ROOT}`);
+			const bad = post.raw > 0 || !rootNow || post.sel !== pre.sel;
+			const stray = await t.ev(R4_STRAY);
+			clicks.push({ i, label, bad, sel: `${pre.sel}->${post.sel}`, raw: post.raw, st: `${pre.st}->${post.st}`, modal: post.anyModal, menu: post.menu, file: post.file !== rel ? post.file : undefined, strayLive: stray.filter((s) => s.startsWith('LIVE')) });
+			for (let j = 0; j < 2; j++) { await rKey(t, 'Escape', 'Escape', 27); await sleep(200); }
+			if (bad || post.file !== rel) await r4OpenFz(t, rel);
+		}
+		return { total, clicks, badCount: clicks.filter((c) => c.bad).length };
+	});
+}
+// blast radius: a click handler that RE-PARENTS the clicked button (live document, a DocumentFragment, a detached div that is attached later)
+for (const [name, how] of [['blast-live', 'live'], ['blast-fragment', 'fragment'], ['blast-later', 'later'], ['blast-root-replaced', 'rootswap']]) {
+	rCase(name, async (t) => {
+		await rOpen(t, 'R540/cc.md', 'counter', 0);
+		const R = rRoot('counter', 0);
+		await t.ev(`(() => { const r = ${R}; const b = r.querySelector('button[aria-label^="Increase"]'); b.setAttribute('data-r4-blast', '1');
+			b.addEventListener('click', () => {
+				if (${JSON.stringify(how)} === 'live') { const host = document.createElement('div'); host.id = 'r4-live-host'; document.body.appendChild(host); host.appendChild(b); }
+				else if (${JSON.stringify(how)} === 'fragment') { const f = document.createDocumentFragment(); f.appendChild(b); window.__r4frag = f; }
+				else if (${JSON.stringify(how)} === 'later') { const d = document.createElement('div'); d.id = 'r4-later'; d.appendChild(b); setTimeout(() => document.body.appendChild(d), 0); }
+				else if (${JSON.stringify(how)} === 'rootswap') { r.parentElement.replaceChild(document.createElement('div'), r); }
+			});
+			return true; })()`);
+		const pre = await rSnap(t);
+		await rClick(t, `document.querySelector('[data-r4-blast]')`);
+		await sleep(1200);
+		const after = await rSnap(t);
+		const stray = await t.ev(R4_STRAY);
+		const info = await t.ev(`(() => { const b = document.querySelector('[data-r4-blast]') || (window.__r4frag && window.__r4frag.firstChild); return { btnConnected: b ? b.isConnected : null, btnMarked: b ? b.classList.contains('interactive-child') : null, liveHostMarked: document.getElementById('r4-live-host')?.classList.contains('interactive-child') ?? null, laterMarked: document.getElementById('r4-later')?.classList.contains('interactive-child') ?? null, docMarked: document.documentElement.classList.contains('interactive-child') || document.body.classList.contains('interactive-child') }; })()`);
+		await t.ev(`(() => { document.getElementById('r4-live-host')?.remove(); document.getElementById('r4-later')?.remove(); window.__r4frag = null; return true; })()`);
+		return { pre, after, stray, info };
+	});
+}
+// ===== end SC-540 r4 additions =====
