@@ -1,0 +1,16 @@
+## quoteoff
+   R3/quote-twins.md upper (adoption off) disk=[6,5] want=[6,5] A(BAD)=["6","6"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   R3/quote-twins.md lower (adoption off) disk=[7,5] want=[6,6] WRONGDISK A(BAD)=["7","7"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   R3/callout-twins.md upper (adoption off) disk=[6,5] want=[6,5] A(BAD)=["6","6"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   R3/callout-twins.md lower (adoption off) disk=[7,5] want=[6,6] WRONGDISK A(BAD)=["7","7"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+## quotelp
+  start {"vals":[],"empty":0,"errs":[]}
+   R3/quote-twins.md LP upper NOCONTROL disk=[5,5] want=[6,5] WRONGDISK A(BAD)=[] runs=0 rel=[] cl=0 col=0 err=0 not=0 
+   R3/quote-twins.md LP lower NOCONTROL disk=[5,5] want=[6,6] WRONGDISK A(BAD)=[] runs=0 rel=[] cl=0 col=0 err=0 not=0 
+  start {"vals":["Twin=5","Twin=5"],"empty":0,"errs":[]}
+   R3/callout-twins.md LP upper disk=[6,5] want=[6,5] A(BAD)=["6"] runs=0 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   R3/callout-twins.md LP lower NOCONTROL disk=[6,5] want=[6,6] WRONGDISK A(BAD)=["6"] runs=0 rel=[] cl=0 col=0 err=0 not=0 
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :163, port 9442, 1 scenario(s)
+OBSIDIAN-LIFECYCLE P481-R3 ok (probe done: quoteoff,quotelp)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0

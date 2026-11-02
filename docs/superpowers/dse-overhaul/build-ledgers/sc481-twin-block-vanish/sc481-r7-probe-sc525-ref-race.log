@@ -1,0 +1,209 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :162, port 9473, 1 scenario(s)
+OBSIDIAN-LIFECYCLE P481-REF ok ({"race":{"start":["?","?"],"during":["?","?"],"after":["Beta","Alpha"],"nesting":false,"note":["@Lifecycle/ref-b.md","@Lifecycle/ref-a.md"],"rel":[{"why":"reused-by-twin","t":9113},{"why":"render-child-unload","t":17172}]},"settled":{"after":["Beta","Alpha"],"note":["@Lifecycle/ref-b.md","@Lifecycle/ref-a.md"]}})
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0
+{
+  "delay": 4000,
+  "race": {
+    "phase": "race",
+    "openAt": 840,
+    "startCards": [
+      "?",
+      "?"
+    ],
+    "pencilAt": 8993,
+    "saveAt": 9087,
+    "duringCards": [
+      "?",
+      "?"
+    ],
+    "afterCards": [
+      "Beta",
+      "Alpha"
+    ],
+    "nestingTextVisible": false,
+    "note": [
+      "@Lifecycle/ref-b.md",
+      "@Lifecycle/ref-a.md"
+    ],
+    "reads": [
+      {
+        "p": "/ref-a.md",
+        "s": 872,
+        "e": 4873
+      },
+      {
+        "p": "/ref-a.md",
+        "s": 873,
+        "e": 4873
+      },
+      {
+        "p": "/ref-a.md",
+        "s": 4887,
+        "e": 8888
+      },
+      {
+        "p": "/ref-a.md",
+        "s": 4889,
+        "e": 8993
+      },
+      {
+        "p": "/ref-a.md",
+        "s": 9020,
+        "e": 13021
+      },
+      {
+        "p": "/ref-b.md",
+        "s": 9076,
+        "e": 13076
+      },
+      {
+        "p": "/ref-b.md",
+        "s": 9122,
+        "e": 13122
+      },
+      {
+        "p": "/ref-a.md",
+        "s": 9122,
+        "e": 13122
+      },
+      {
+        "p": "/ref-a.md",
+        "s": 13022,
+        "e": 17022
+      },
+      {
+        "p": "/ref-b.md",
+        "s": 13077,
+        "e": 17077
+      },
+      {
+        "p": "/ref-b.md",
+        "s": 13123,
+        "e": 17123
+      },
+      {
+        "p": "/ref-a.md",
+        "s": 13124,
+        "e": 17145
+      }
+    ],
+    "releases": [
+      {
+        "why": "reused-by-twin",
+        "t": 9113
+      },
+      {
+        "why": "render-child-unload",
+        "t": 17172
+      }
+    ],
+    "notices": [],
+    "errors": [],
+    "reopenCards": [
+      "Beta",
+      "Alpha"
+    ]
+  },
+  "settled": {
+    "phase": "settled",
+    "openAt": 23406,
+    "startCards": [
+      "?",
+      "?"
+    ],
+    "pencilAt": 31457,
+    "saveAt": 31509,
+    "duringCards": [
+      "?",
+      "?"
+    ],
+    "afterCards": [
+      "Beta",
+      "Alpha"
+    ],
+    "nestingTextVisible": false,
+    "note": [
+      "@Lifecycle/ref-b.md",
+      "@Lifecycle/ref-a.md"
+    ],
+    "reads": [
+      {
+        "p": "/ref-a.md",
+        "s": 23429,
+        "e": 27429
+      },
+      {
+        "p": "/ref-a.md",
+        "s": 23429,
+        "e": 27429
+      },
+      {
+        "p": "/ref-a.md",
+        "s": 27430,
+        "e": 31430
+      },
+      {
+        "p": "/ref-a.md",
+        "s": 27431,
+        "e": 31445
+      },
+      {
+        "p": "/ref-a.md",
+        "s": 31483,
+        "e": 35483
+      },
+      {
+        "p": "/ref-b.md",
+        "s": 31507,
+        "e": 35507
+      },
+      {
+        "p": "/ref-b.md",
+        "s": 31544,
+        "e": 35544
+      },
+      {
+        "p": "/ref-a.md",
+        "s": 31545,
+        "e": 35545
+      },
+      {
+        "p": "/ref-a.md",
+        "s": 35485,
+        "e": 39485
+      },
+      {
+        "p": "/ref-b.md",
+        "s": 35508,
+        "e": 39509
+      },
+      {
+        "p": "/ref-b.md",
+        "s": 35545,
+        "e": 39546
+      },
+      {
+        "p": "/ref-a.md",
+        "s": 35546,
+        "e": 39546
+      }
+    ],
+    "releases": [
+      {
+        "why": "reused-by-twin",
+        "t": 31537
+      },
+      {
+        "why": "render-child-unload",
+        "t": 39588
+      }
+    ],
+    "notices": [],
+    "errors": [],
+    "reopenCards": [
+      "Beta",
+      "Alpha"
+    ]
+  }
+}

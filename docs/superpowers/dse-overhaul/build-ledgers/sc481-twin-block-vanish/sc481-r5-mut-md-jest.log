@@ -1,0 +1,46 @@
+applied md
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-481 r4: a writer whose rebuild is still to come is not mistaken for a reused element › pane B's rebuild runs before pane A's: the writer in A keeps its view and is adopted by its own rebuild
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      372 |
+      373 | 		await draw('doc-B'); // pane B's rebuild comes first
+    > 374 | 		expect(registry.liveEntries().some((e) => e.root === writerRoot)).toBe(true);
+          | 		                                                                  ^
+      375 | 		expect(writerRoot!.isConnected || paneA.el.contains(writerRoot)).toBe(true);
+      376 |
+      377 | 		at.delete(paneA.el);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:374:69)
+
+
+Summary of all failing tests
+FAIL test/dom/framework/twin-reuse.test.ts
+  ● SC-481 r4: a writer whose rebuild is still to come is not mistaken for a reused element › pane B's rebuild runs before pane A's: the writer in A keeps its view and is adopted by its own rebuild
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      372 |
+      373 | 		await draw('doc-B'); // pane B's rebuild comes first
+    > 374 | 		expect(registry.liveEntries().some((e) => e.root === writerRoot)).toBe(true);
+          | 		                                                                  ^
+      375 | 		expect(writerRoot!.isConnected || paneA.el.contains(writerRoot)).toBe(true);
+      376 |
+      377 | 		at.delete(paneA.el);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:374:69)
+
+
+Test Suites: 1 failed, 46 passed, 47 total
+Tests:       1 failed, 2 skipped, 1085 passed, 1088 total
+Snapshots:   0 total
+Time:        22.308 s, estimated 26 s
+Ran all test suites matching test/dom/framework.
+jest rc=1

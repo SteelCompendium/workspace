@@ -1,0 +1,30 @@
+## lpleak
+   LP R3/twin-triplets.md click 0 disk=[6,5,5] want=[6,5,5] A=["6","5","5"] runs=2 rel=["render-child-unload","reused-by-twin"] cl=0 col=0 err=0 not=0 
+   LP R3/twin-triplets.md click 1 disk=[6,6,5] want=[6,6,5] A=["6","6","5"] runs=2 rel=["render-child-unload","reused-by-twin"] cl=0 col=0 err=0 not=0 
+   LP R3/twin-triplets.md click 2 disk=[6,6,6] want=[6,6,6] A=["6","6","6"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   LP R3/twin-triplets.md click 0 disk=[7,6,6] want=[7,6,6] A=["7","6","6"] runs=2 rel=["render-child-unload","reused-by-twin"] cl=0 col=0 err=0 not=0 
+   LP R3/twin-triplets.md click 2 disk=[7,6,7] want=[7,6,7] A=["7","6","7"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   LP R3/twin-triplets.md click 1 disk=[7,7,7] want=[7,7,7] A=["7","7","7"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   LP R3/twin-triplets.md click 0 disk=[8,7,7] want=[8,7,7] A=["8","7","7"] runs=2 rel=["render-child-unload","reused-by-twin"] cl=0 col=0 err=0 not=0 
+   LP R3/twin-triplets.md click 0 disk=[9,7,7] want=[9,7,7] A=["9","7","7"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   {"rel":"R3/twin-triplets.md","entries":3,"connected":3,"roots":3}
+   {"rel":"R3/twin-triplets.md","afterClose":0,"regSize":0}
+   LP R3/five.md click 0 disk=[2,2,3,4,5] want=[2,2,3,4,5] A=["2","2","3","4","5"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   LP R3/five.md click 1 disk=[2,3,3,4,5] want=[2,3,3,4,5] A=["2","3","3","4","5"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   LP R3/five.md click 2 disk=[2,3,4,4,5] want=[2,3,4,4,5] A=["2","3","4","4","5"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   LP R3/five.md click 0 disk=[3,3,4,4,5] want=[3,3,4,4,5] A=["3","3","4","4","5"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   LP R3/five.md click 2 disk=[3,3,5,4,5] want=[3,3,5,4,5] A=["3","3","5","4","5"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   LP R3/five.md click 1 disk=[3,4,5,4,5] want=[3,4,5,4,5] A=["3","4","5","4","5"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   LP R3/five.md click 0 disk=[4,4,5,4,5] want=[4,4,5,4,5] A=["4","4","5","4","5"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   LP R3/five.md click 0 disk=[5,4,5,4,5] want=[5,4,5,4,5] A=["5","4","5","4","5"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   {"rel":"R3/five.md","entries":5,"connected":5,"roots":5}
+   {"rel":"R3/five.md","afterClose":0,"regSize":0}
+## perf
+   {"mode":"preview","rep":0,"open":{"ms":20009,"drawn":15},"click":{"longTaskMs":0,"before":"0"}}
+   {"mode":"preview","rep":1,"open":{"ms":20003,"drawn":15},"click":{"longTaskMs":0,"before":"1"}}
+   {"mode":"source","rep":0,"open":{"ms":20009,"drawn":13},"click":{"longTaskMs":0,"before":"2"}}
+   {"mode":"source","rep":1,"open":{"ms":20009,"drawn":13},"click":{"longTaskMs":0,"before":"3"}}
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :162, port 9438, 1 scenario(s)
+OBSIDIAN-LIFECYCLE P481-R3 ok (probe done: lpleak,perf)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0

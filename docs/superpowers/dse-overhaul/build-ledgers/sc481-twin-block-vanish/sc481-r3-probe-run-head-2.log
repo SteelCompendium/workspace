@@ -1,0 +1,56 @@
+## embed
+  start {"vals":["Twin=5","Twin=5"],"empty":0,"errs":[]}
+   embed upper disk=[6,5] want=[6,5] A=["6","5"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 
+   embed lower disk=[6,6] want=[6,6] A=["6","6"] runs=0 rel=[] cl=1 col=0 err=0 not=0 
+   embed upper again disk=[7,6] want=[7,6] A=["7","6"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 
+   embed lower again disk=[7,7] want=[7,7] A=["7","7"] runs=0 rel=[] cl=1 col=0 err=0 not=0 
+## panes
+  start {"A":{"vals":["Twin=5","Twin=5"],"empty":0,"errs":[]},"B":{"vals":["Twin=5","Twin=5"],"empty":0,"errs":[]}}
+   A upper disk=[6,5] want=[6,5] A=["6","5"] B=["6","5"] runs=2 rel=["render-child-unload","render-child-unload"] cl=1 col=0 err=0 not=0 
+   B lower disk=[6,6] want=[6,6] A=["6","6"] B=["6","6"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 
+   B upper disk=[7,6] want=[7,6] A=["7","6"] B=["7","6"] runs=2 rel=["render-child-unload","render-child-unload"] cl=1 col=0 err=0 not=0 
+   A lower disk=[7,7] want=[7,7] A=["7","7"] B=["7","7"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 
+   A upper disk=[8,7] want=[8,7] A=["8","7"] B=["8","7"] runs=2 rel=["render-child-unload","render-child-unload"] cl=1 col=0 err=0 not=0 
+   B upper disk=[9,7] want=[9,7] A=["9","7"] B=["9","7"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 
+   {"entries":[{"path":"R3/twin-pair.md","docId":"10c7f773d09d2447","connected":true,"loaded":true,"el":"counter"},{"path":"R3/twin-pair.md","docId":"78281f7e60e1a70f","connected":true,"loaded":true,"el":"counter"},{"path":"R3/twin-pair.md","docId":"1258783991a3f006","connected":true,"loaded":true,"el":"counter"},{"path":"R3/twin-pair.md","docId":"1eb92c10295df161","connected":true,"loaded":true,"el":"counter"},{"path":"R3/twin-pair.md","docId":"1258783991a3f006","connected":true,"loaded":true,"el":"counter"},{"path":"R3/twin-pair.md","docId":"1eb92c10295df161","connected":true,"loaded":true,"el":"counter"}]}
+## lp2
+  start {"A":{"vals":["Twin=5","Twin=5"],"empty":0,"errs":[]},"B":{"vals":["Twin=5","Twin=5"],"empty":0,"errs":[]}}
+   LP upper disk=[6,5] want=[6,5] A=["6","5"] B=["6","5"] runs=3 rel=["render-child-unload","reused-by-twin","render-child-unload"] cl=0 col=0 err=0 not=0 
+   Reading lower disk=[6,6] want=[6,6] A=["6","6"] B=["6","6"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 
+   Reading upper disk=[7,6] want=[7,6] A=["7","6"] B=["7","6"] runs=2 rel=["render-child-unload","render-child-unload"] cl=1 col=0 err=0 not=0 
+   LP lower disk=[7,7] want=[7,7] A=["7","7"] B=["7","7"] runs=2 rel=["render-child-unload","render-child-unload"] cl=0 col=0 err=0 not=0 
+   LP upper disk=[8,7] want=[8,7] A=["8","7"] B=["8","7"] runs=3 rel=["render-child-unload","reused-by-twin","render-child-unload"] cl=0 col=0 err=0 not=0 
+   LP upper disk=[9,7] want=[9,7] A=["9","7"] B=["9","7"] runs=2 rel=["render-child-unload","render-child-unload"] cl=0 col=0 err=0 not=0 
+   Reading upper disk=[10,7] want=[10,7] A=["10","7"] B=["10","7"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 
+   {"entries":[{"path":"R3/twin-pair.md","docId":"664d0366e933a371","connected":true,"loaded":true,"el":"counter"},{"path":"R3/twin-pair.md","docId":"8bb9f79b35c90b53","connected":true,"loaded":true,"el":"counter"},{"path":"R3/twin-pair.md","docId":"1eb92c10295df161","connected":true,"loaded":true,"el":"counter"},{"path":"R3/twin-pair.md","docId":"13f51553dbbdf88b","connected":true,"loaded":true,"el":"counter"},{"path":"R3/twin-pair.md","docId":"1eb92c10295df161","connected":true,"loaded":true,"el":"counter"},{"path":"R3/twin-pair.md","docId":"23b990aae103824f","connected":true,"loaded":true,"el":"counter"}]}
+## converge
+   preview click 0 disk=[6,5] want=[6,5] A=["6","5"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 
+   preview click 1 disk=[6,6] want=[6,6] A=["6","6"] runs=0 rel=[] cl=1 col=0 err=0 not=0 
+   preview click 0 disk=[7,6] want=[7,6] A=["7","6"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 
+   preview click 1 disk=[7,7] want=[7,7] A=["7","7"] runs=0 rel=[] cl=1 col=0 err=0 not=0 
+   preview click 1 disk=[7,8] want=[7,8] A=["7","8"] runs=0 rel=[] cl=1 col=0 err=0 not=0 
+   preview click 0 disk=[8,8] want=[8,8] A=["8","8"] runs=1 rel=["render-child-unload"] cl=0 col=1 err=0 not=0 
+   preview click 0 disk=[9,8] want=[9,8] A=["9","8"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 
+   preview click 1 disk=[9,9] want=[9,9] A=["9","9"] runs=0 rel=[] cl=1 col=0 err=0 not=0 
+   source click 0 disk=[6,5] want=[6,5] A=["6","5"] runs=2 rel=["render-child-unload","reused-by-twin"] cl=0 col=0 err=0 not=0 
+   source click 1 disk=[6,6] want=[6,6] A=["6","6"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   source click 0 disk=[7,6] want=[7,6] A=["7","6"] runs=2 rel=["render-child-unload","reused-by-twin"] cl=0 col=0 err=0 not=0 
+   source click 1 disk=[7,7] want=[7,7] A=["7","7"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   source click 1 disk=[7,8] want=[7,8] A=["7","8"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   source click 0 disk=[8,8] want=[8,8] A=["8","8"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   source click 0 disk=[9,8] want=[9,8] A=["9","8"] runs=2 rel=["render-child-unload","reused-by-twin"] cl=0 col=0 err=0 not=0 
+   source click 1 disk=[9,9] want=[9,9] A=["9","9"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   triplets click 2 disk=[5,5,6] want=[5,5,6] A=["5","5","6"] runs=0 rel=[] cl=1 col=0 err=0 not=0 
+   triplets click 0 disk=[6,5,6] want=[6,5,6] A=["6","5","6"] runs=2 rel=["reused-by-twin","render-child-unload"] cl=0 col=1 err=0 not=0 
+   triplets click 1 disk=[6,6,6] want=[6,6,6] A=["6","6","6"] runs=1 rel=["render-child-unload"] cl=0 col=1 err=0 not=0 
+   triplets click 1 disk=[6,7,6] want=[6,7,6] A=["6","7","6"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 
+   triplets click 2 disk=[6,7,7] want=[6,7,7] A=["6","7","7"] runs=0 rel=[] cl=1 col=0 err=0 not=0 
+   triplets click 0 disk=[7,7,7] want=[7,7,7] A=["7","7","7"] runs=1 rel=["render-child-unload"] cl=0 col=1 err=0 not=0 
+   triplets click 0 disk=[8,7,7] want=[8,7,7] A=["8","7","7"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 
+   triplets click 2 disk=[8,7,8] want=[8,7,8] A=["8","7","8"] runs=0 rel=[] cl=1 col=0 err=0 not=0 
+   triplets click 1 disk=[8,8,8] want=[8,8,8] A=["8","8","8"] runs=1 rel=["render-child-unload"] cl=0 col=1 err=0 not=0 
+   {"entries":6}
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9436, 1 scenario(s)
+OBSIDIAN-LIFECYCLE P481-R3 ok (probe done: embed,panes,lp2,converge)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0

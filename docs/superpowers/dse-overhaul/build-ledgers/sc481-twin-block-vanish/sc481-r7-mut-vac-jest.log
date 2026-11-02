@@ -1,0 +1,134 @@
+applied vac
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-481 r4: twin blocks inside a callout › the UPPER one clicked: the twin gets its own card (no error card), shows its own value and its click writes its own block
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received object: []
+
+      315 |
+      316 | 		expect(top.firstElementChild).toBe(writerRoot);
+    > 317 | 		expect(bottom.children).toHaveLength(1);
+          | 		                        ^
+      318 | 		expect(bottom.textContent).not.toContain('failed to render'); // r3 MEDIUM-1: the callout's raw lines were parsed as the block
+      319 | 		expect(shown(top)).toBe('Twin=6');
+      320 | 		expect(shown(bottom)).toBe('Twin=5');
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:317:27)
+
+  ● SC-481 r4: twin blocks inside a quote › the UPPER one clicked: the twin gets its own card (no error card), shows its own value and its click writes its own block
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received object: []
+
+      315 |
+      316 | 		expect(top.firstElementChild).toBe(writerRoot);
+    > 317 | 		expect(bottom.children).toHaveLength(1);
+          | 		                        ^
+      318 | 		expect(bottom.textContent).not.toContain('failed to render'); // r3 MEDIUM-1: the callout's raw lines were parsed as the block
+      319 | 		expect(shown(top)).toBe('Twin=6');
+      320 | 		expect(shown(bottom)).toBe('Twin=5');
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:317:27)
+
+  ● SC-481 r6: two identical callouts holding two blocks each (view adoption true) › X in the upper callout clicked: all four cards are drawn, each shows its own block, and later clicks write the block of the card clicked
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        1,
+        1,
+    -   1,
+    +   0,
+        1,
+      ]
+
+      440 |
+      441 | 		const cards = [fresh.ctxs[0].el, fresh.ctxs[1].el, upper.ctxs[0].el, upper.ctxs[1].el];
+    > 442 | 		expect(cards.map((el) => el.children.length)).toEqual([1, 1, 1, 1]);
+          | 		                                              ^
+      443 | 		expect(cards.map(shown)).toEqual(['X=6', 'Y=3', 'X=5', 'Y=3']);
+      444 | 		expect(cards.map((el) => el.textContent).join()).not.toContain('failed to render');
+      445 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:442:49)
+
+
+Summary of all failing tests
+FAIL test/dom/framework/twin-reuse.test.ts
+  ● SC-481 r4: twin blocks inside a callout › the UPPER one clicked: the twin gets its own card (no error card), shows its own value and its click writes its own block
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received object: []
+
+      315 |
+      316 | 		expect(top.firstElementChild).toBe(writerRoot);
+    > 317 | 		expect(bottom.children).toHaveLength(1);
+          | 		                        ^
+      318 | 		expect(bottom.textContent).not.toContain('failed to render'); // r3 MEDIUM-1: the callout's raw lines were parsed as the block
+      319 | 		expect(shown(top)).toBe('Twin=6');
+      320 | 		expect(shown(bottom)).toBe('Twin=5');
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:317:27)
+
+  ● SC-481 r4: twin blocks inside a quote › the UPPER one clicked: the twin gets its own card (no error card), shows its own value and its click writes its own block
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received object: []
+
+      315 |
+      316 | 		expect(top.firstElementChild).toBe(writerRoot);
+    > 317 | 		expect(bottom.children).toHaveLength(1);
+          | 		                        ^
+      318 | 		expect(bottom.textContent).not.toContain('failed to render'); // r3 MEDIUM-1: the callout's raw lines were parsed as the block
+      319 | 		expect(shown(top)).toBe('Twin=6');
+      320 | 		expect(shown(bottom)).toBe('Twin=5');
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:317:27)
+
+  ● SC-481 r6: two identical callouts holding two blocks each (view adoption true) › X in the upper callout clicked: all four cards are drawn, each shows its own block, and later clicks write the block of the card clicked
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        1,
+        1,
+    -   1,
+    +   0,
+        1,
+      ]
+
+      440 |
+      441 | 		const cards = [fresh.ctxs[0].el, fresh.ctxs[1].el, upper.ctxs[0].el, upper.ctxs[1].el];
+    > 442 | 		expect(cards.map((el) => el.children.length)).toEqual([1, 1, 1, 1]);
+          | 		                                              ^
+      443 | 		expect(cards.map(shown)).toEqual(['X=6', 'Y=3', 'X=5', 'Y=3']);
+      444 | 		expect(cards.map((el) => el.textContent).join()).not.toContain('failed to render');
+      445 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:442:49)
+
+
+Test Suites: 1 failed, 46 passed, 47 total
+Tests:       3 failed, 2 skipped, 1085 passed, 1090 total
+Snapshots:   0 total
+Time:        21.095 s
+Ran all test suites matching test/dom/framework.
+jest rc=1

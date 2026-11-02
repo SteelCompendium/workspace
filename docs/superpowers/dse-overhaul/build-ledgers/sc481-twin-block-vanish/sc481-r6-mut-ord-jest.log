@@ -1,0 +1,112 @@
+mutated ord
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-481 r6: two identical callouts holding two blocks each (view adoption true) › X in the upper callout clicked: all four cards are drawn, each shows its own block, and later clicks write the block of the card clicked
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        1,
+        1,
+    -   1,
+    +   0,
+        1,
+      ]
+
+      440 |
+      441 | 		const cards = [fresh.ctxs[0].el, fresh.ctxs[1].el, upper.ctxs[0].el, upper.ctxs[1].el];
+    > 442 | 		expect(cards.map((el) => el.children.length)).toEqual([1, 1, 1, 1]);
+          | 		                                              ^
+      443 | 		expect(cards.map(shown)).toEqual(['X=6', 'Y=3', 'X=5', 'Y=3']);
+      444 | 		expect(cards.map((el) => el.textContent).join()).not.toContain('failed to render');
+      445 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:442:49)
+
+  ● SC-481 r6: two identical callouts holding two blocks each (view adoption false) › X in the upper callout clicked: all four cards are drawn, each shows its own block, and later clicks write the block of the card clicked
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        "X=6",
+        "Y=3",
+    -   "X=5",
+    +   "X=6",
+        "Y=3",
+      ]
+
+      441 | 		const cards = [fresh.ctxs[0].el, fresh.ctxs[1].el, upper.ctxs[0].el, upper.ctxs[1].el];
+      442 | 		expect(cards.map((el) => el.children.length)).toEqual([1, 1, 1, 1]);
+    > 443 | 		expect(cards.map(shown)).toEqual(['X=6', 'Y=3', 'X=5', 'Y=3']);
+          | 		                         ^
+      444 | 		expect(cards.map((el) => el.textContent).join()).not.toContain('failed to render');
+      445 |
+      446 | 		await increase(cards[2]);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:443:28)
+
+
+Summary of all failing tests
+FAIL test/dom/framework/twin-reuse.test.ts
+  ● SC-481 r6: two identical callouts holding two blocks each (view adoption true) › X in the upper callout clicked: all four cards are drawn, each shows its own block, and later clicks write the block of the card clicked
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        1,
+        1,
+    -   1,
+    +   0,
+        1,
+      ]
+
+      440 |
+      441 | 		const cards = [fresh.ctxs[0].el, fresh.ctxs[1].el, upper.ctxs[0].el, upper.ctxs[1].el];
+    > 442 | 		expect(cards.map((el) => el.children.length)).toEqual([1, 1, 1, 1]);
+          | 		                                              ^
+      443 | 		expect(cards.map(shown)).toEqual(['X=6', 'Y=3', 'X=5', 'Y=3']);
+      444 | 		expect(cards.map((el) => el.textContent).join()).not.toContain('failed to render');
+      445 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:442:49)
+
+  ● SC-481 r6: two identical callouts holding two blocks each (view adoption false) › X in the upper callout clicked: all four cards are drawn, each shows its own block, and later clicks write the block of the card clicked
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        "X=6",
+        "Y=3",
+    -   "X=5",
+    +   "X=6",
+        "Y=3",
+      ]
+
+      441 | 		const cards = [fresh.ctxs[0].el, fresh.ctxs[1].el, upper.ctxs[0].el, upper.ctxs[1].el];
+      442 | 		expect(cards.map((el) => el.children.length)).toEqual([1, 1, 1, 1]);
+    > 443 | 		expect(cards.map(shown)).toEqual(['X=6', 'Y=3', 'X=5', 'Y=3']);
+          | 		                         ^
+      444 | 		expect(cards.map((el) => el.textContent).join()).not.toContain('failed to render');
+      445 |
+      446 | 		await increase(cards[2]);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:443:28)
+
+
+Test Suites: 1 failed, 46 passed, 47 total
+Tests:       2 failed, 1088 passed, 1090 total
+Snapshots:   0 total
+Time:        22.35 s
+Ran all test suites matching test/dom/framework.
+jest rc=1

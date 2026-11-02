@@ -1,0 +1,118 @@
+applied mc
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-481: identical twin blocks keep their own card, value and block › two twins, the UPPER one clicked: each card shows its own block, none is empty, and the lower card writes the lower block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    If it should pass with deep equality, replace "toBe" with "toStrictEqual"
+
+    Expected: <div class="dse-chrome-anchor" data-dse-chrome="" data-dse-density="comfortable" data-dse-disttarget="grid" data-dse-element="counter" data-dse-fb-featstyle="card" data-dse-fb-stats="grid" data-dse-kwusage="crest" data-dse-portraits="on" data-dse-print="off" data-dse-reduce-motion="false" data-dse-sb-charbox="off" data-dse-sb-charline="two" data-dse-sb-columns="single" data-dse-sb-featstyle="card" data-dse-sb-stats="grid" data-dse-sb-sticky="on" data-dse-sb-stickymeta="on" data-dse-sb-villain="banded" data-dse-theme="steel" style="--dse-chrome-frame-border-top: 0px; --dse-chrome-frame-border-right: 0px;"><div class="dse-counter" style="--dse-value-scale: 3; --dse-label-scale: 1;"><div aria-label="Twin" class="dse-stepper" role="group"><button aria-label="Decrease Twin" class="dse-btn dse-btn--icon dse-stepper__btn" data-dse-control="counter.dec" type="button"><span class="dse-btn__icon" data-icon="minus" /></button><input aria-label="Twin" aria-live="polite" class="dse-stepper__input dse-counter__value" data-dse-control="counter.input" max="20" min="0" step="1" type="number" /><button aria-label="Increase Twin" class="dse-btn dse-btn--icon dse-stepper__btn" data-dse-control="counter.inc" type="button"><span class="dse-btn__icon" data-icon="plus" /></button></div><div class="dse-counter__name">Twin</div></div><div class="dse-chrome-summary"><div class="dse-chrome-summary__text"><span class="dse-chrome-summary__label" /><span class="dse-chrome-summary__name" /><span class="dse-chrome-summary__detail" /></div><button aria-expanded="true" aria-label="Expand Counter" class="dse-btn dse-btn--ghost dse-btn--icon" data-dse-chrome-item="expand" data-dse-control="chrome.expand" type="button"><span class="dse-btn__icon" data-icon="chevron-down" /></button></div><div aria-label="Counter actions" class="dse-chrome" role="toolbar"><button aria-label="Pin to sidebar" class="dse-btn dse-btn--ghost dse-btn--icon" data-dse-chrome-item="pin" data-dse-control="chrome.pin" type="button"><span class="dse-btn__icon" data-icon="pin" /></button><button aria-expanded="true" aria-label="Collapse Counter" class="dse-btn dse-btn--ghost dse-btn--icon" data-dse-chrome-item="collapse" data-dse-control="chrome.collapse" type="button"><span class="dse-btn__icon" data-icon="chevron-up" /></button></div></div>
+    Received: serializes to the same string
+
+      121 | 		expect(shown(top)).toBe('Twin=6');
+      122 | 		expect(shown(bottom)).toBe('Twin=5'); // not the writer's 6
+    > 123 | 		expect(top.firstElementChild).toBe(writerRoot); // the writer's view followed its own block (adoption)
+          | 		                              ^
+      124 | 		expect(registry.stats.claims).toBe(1);
+      125 | 		expect(registry.stats.collisions).toBe(0);
+      126 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:123:33)
+
+  ● SC-481: identical twin blocks keep their own card, value and block › three twins, the MIDDLE one clicked: the lower card is the old middle element, redrawn from the lower block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      171 | 		expect(els.map((el) => el.children.length)).toEqual([1, 1, 1]);
+      172 | 		expect(els.map(shown)).toEqual(['Twin=5', 'Twin=6', 'Twin=5']);
+    > 173 | 		expect(registry.stats.collisions).toBe(0);
+          | 		                                  ^
+      174 |
+      175 | 		await increase(els[2]);
+      176 | 		expect(values()).toEqual([5, 6, 6]); // not [5, 7, 5]
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:173:37)
+
+  ● SC-481: identical twin blocks keep their own card, value and block › the claim guard compares the line the write landed at: a twin whose element was reused does not look like a second copy of the writer
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      204 | 		// said "two views of one block" and refused the adoption.
+      205 | 		await rebuild(['fresh', { reuse: upper }], [lower]);
+    > 206 | 		expect(registry.stats.collisions).toBe(0);
+          | 		                                  ^
+      207 | 		expect(registry.stats.claims).toBe(1);
+      208 | 	});
+      209 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:206:37)
+
+
+Summary of all failing tests
+FAIL test/dom/framework/twin-reuse.test.ts
+  ● SC-481: identical twin blocks keep their own card, value and block › two twins, the UPPER one clicked: each card shows its own block, none is empty, and the lower card writes the lower block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    If it should pass with deep equality, replace "toBe" with "toStrictEqual"
+
+    Expected: <div class="dse-chrome-anchor" data-dse-chrome="" data-dse-density="comfortable" data-dse-disttarget="grid" data-dse-element="counter" data-dse-fb-featstyle="card" data-dse-fb-stats="grid" data-dse-kwusage="crest" data-dse-portraits="on" data-dse-print="off" data-dse-reduce-motion="false" data-dse-sb-charbox="off" data-dse-sb-charline="two" data-dse-sb-columns="single" data-dse-sb-featstyle="card" data-dse-sb-stats="grid" data-dse-sb-sticky="on" data-dse-sb-stickymeta="on" data-dse-sb-villain="banded" data-dse-theme="steel" style="--dse-chrome-frame-border-top: 0px; --dse-chrome-frame-border-right: 0px;"><div class="dse-counter" style="--dse-value-scale: 3; --dse-label-scale: 1;"><div aria-label="Twin" class="dse-stepper" role="group"><button aria-label="Decrease Twin" class="dse-btn dse-btn--icon dse-stepper__btn" data-dse-control="counter.dec" type="button"><span class="dse-btn__icon" data-icon="minus" /></button><input aria-label="Twin" aria-live="polite" class="dse-stepper__input dse-counter__value" data-dse-control="counter.input" max="20" min="0" step="1" type="number" /><button aria-label="Increase Twin" class="dse-btn dse-btn--icon dse-stepper__btn" data-dse-control="counter.inc" type="button"><span class="dse-btn__icon" data-icon="plus" /></button></div><div class="dse-counter__name">Twin</div></div><div class="dse-chrome-summary"><div class="dse-chrome-summary__text"><span class="dse-chrome-summary__label" /><span class="dse-chrome-summary__name" /><span class="dse-chrome-summary__detail" /></div><button aria-expanded="true" aria-label="Expand Counter" class="dse-btn dse-btn--ghost dse-btn--icon" data-dse-chrome-item="expand" data-dse-control="chrome.expand" type="button"><span class="dse-btn__icon" data-icon="chevron-down" /></button></div><div aria-label="Counter actions" class="dse-chrome" role="toolbar"><button aria-label="Pin to sidebar" class="dse-btn dse-btn--ghost dse-btn--icon" data-dse-chrome-item="pin" data-dse-control="chrome.pin" type="button"><span class="dse-btn__icon" data-icon="pin" /></button><button aria-expanded="true" aria-label="Collapse Counter" class="dse-btn dse-btn--ghost dse-btn--icon" data-dse-chrome-item="collapse" data-dse-control="chrome.collapse" type="button"><span class="dse-btn__icon" data-icon="chevron-up" /></button></div></div>
+    Received: serializes to the same string
+
+      121 | 		expect(shown(top)).toBe('Twin=6');
+      122 | 		expect(shown(bottom)).toBe('Twin=5'); // not the writer's 6
+    > 123 | 		expect(top.firstElementChild).toBe(writerRoot); // the writer's view followed its own block (adoption)
+          | 		                              ^
+      124 | 		expect(registry.stats.claims).toBe(1);
+      125 | 		expect(registry.stats.collisions).toBe(0);
+      126 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:123:33)
+
+  ● SC-481: identical twin blocks keep their own card, value and block › three twins, the MIDDLE one clicked: the lower card is the old middle element, redrawn from the lower block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      171 | 		expect(els.map((el) => el.children.length)).toEqual([1, 1, 1]);
+      172 | 		expect(els.map(shown)).toEqual(['Twin=5', 'Twin=6', 'Twin=5']);
+    > 173 | 		expect(registry.stats.collisions).toBe(0);
+          | 		                                  ^
+      174 |
+      175 | 		await increase(els[2]);
+      176 | 		expect(values()).toEqual([5, 6, 6]); // not [5, 7, 5]
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:173:37)
+
+  ● SC-481: identical twin blocks keep their own card, value and block › the claim guard compares the line the write landed at: a twin whose element was reused does not look like a second copy of the writer
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      204 | 		// said "two views of one block" and refused the adoption.
+      205 | 		await rebuild(['fresh', { reuse: upper }], [lower]);
+    > 206 | 		expect(registry.stats.collisions).toBe(0);
+          | 		                                  ^
+      207 | 		expect(registry.stats.claims).toBe(1);
+      208 | 	});
+      209 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:206:37)
+
+
+Test Suites: 1 failed, 46 passed, 47 total
+Tests:       3 failed, 2 skipped, 1076 passed, 1081 total
+Snapshots:   0 total
+Time:        22.595 s
+Ran all test suites matching test/dom/framework.
+jest rc=1

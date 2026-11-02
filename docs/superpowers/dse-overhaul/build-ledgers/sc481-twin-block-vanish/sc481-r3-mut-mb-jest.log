@@ -1,0 +1,92 @@
+applied mb
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-481: identical twin blocks keep their own card, value and block › two twins with view adoption off: each card shows its own block and the lower card writes the lower block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Twin=5"
+    Received: "Twin=6"
+
+      140 | 		expect(bottom.children).toHaveLength(1);
+      141 | 		expect(shown(top)).toBe('Twin=6');
+    > 142 | 		expect(shown(bottom)).toBe('Twin=5');
+          | 		                      ^
+      143 |
+      144 | 		await increase(bottom);
+      145 | 		expect(values()).toEqual([6, 6]);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:142:25)
+
+  ● SC-481: identical twin blocks keep their own card, value and block › a write that is not the view's own (the block edit form's Save) does not leave the old view in the twin: the edit survives a click on the twin
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   "Edited",
+    +   "Twin",
+        "Twin",
+      ]
+
+      192 |
+      193 | 		await increase(bottom);
+    > 194 | 		expect(names()).toEqual(['Edited', 'Twin']); // the edit is still there
+          | 		                ^
+      195 | 		expect(values()).toEqual([5, 6]);
+      196 | 	});
+      197 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:194:19)
+
+
+Summary of all failing tests
+FAIL test/dom/framework/twin-reuse.test.ts
+  ● SC-481: identical twin blocks keep their own card, value and block › two twins with view adoption off: each card shows its own block and the lower card writes the lower block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Twin=5"
+    Received: "Twin=6"
+
+      140 | 		expect(bottom.children).toHaveLength(1);
+      141 | 		expect(shown(top)).toBe('Twin=6');
+    > 142 | 		expect(shown(bottom)).toBe('Twin=5');
+          | 		                      ^
+      143 |
+      144 | 		await increase(bottom);
+      145 | 		expect(values()).toEqual([6, 6]);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:142:25)
+
+  ● SC-481: identical twin blocks keep their own card, value and block › a write that is not the view's own (the block edit form's Save) does not leave the old view in the twin: the edit survives a click on the twin
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   "Edited",
+    +   "Twin",
+        "Twin",
+      ]
+
+      192 |
+      193 | 		await increase(bottom);
+    > 194 | 		expect(names()).toEqual(['Edited', 'Twin']); // the edit is still there
+          | 		                ^
+      195 | 		expect(values()).toEqual([5, 6]);
+      196 | 	});
+      197 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:194:19)
+
+
+Test Suites: 1 failed, 46 passed, 47 total
+Tests:       2 failed, 2 skipped, 1077 passed, 1081 total
+Snapshots:   0 total
+Time:        21.229 s
+Ran all test suites matching test/dom/framework.
+jest rc=1

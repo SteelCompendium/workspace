@@ -1,0 +1,47 @@
+file:///home/scott/code/steelCompendium/worktrees/sc481-twin-block-vanish/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got object and undefined)
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc481-twin-block-vanish/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///home/scott/code/steelCompendium/worktrees/sc481-twin-block-vanish/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///home/scott/code/steelCompendium/worktrees/sc481-twin-block-vanish/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got undefined and object)
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc481-twin-block-vanish/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///home/scott/code/steelCompendium/worktrees/sc481-twin-block-vanish/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///home/scott/code/steelCompendium/worktrees/sc481-twin-block-vanish/draw-steel-elements/visual-harness/obsidian-light-island.mjs:245
+			throw new TypeError(`findDriftedTokens: "${t}" is missing from ${!(t in oursMap) ? 'oursMap' : 'targetMap'}`);
+			      ^
+
+TypeError: findDriftedTokens: "--b" is missing from oursMap
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc481-twin-block-vanish/draw-steel-elements/visual-harness/obsidian-light-island.mjs:245:10)
+    at file:///home/scott/code/steelCompendium/worktrees/sc481-twin-block-vanish/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+
+Test Suites: 1 skipped, 249 passed, 249 of 250 total
+Tests:       1 skipped, 6201 passed, 6202 total
+Snapshots:   3 passed, 3 total
+Time:        72.571 s
+Ran all test suites in 2 projects.
+jest rc=0

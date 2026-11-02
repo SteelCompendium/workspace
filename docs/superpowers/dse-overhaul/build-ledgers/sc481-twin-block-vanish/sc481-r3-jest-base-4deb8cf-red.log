@@ -1,0 +1,129 @@
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-481: identical twin blocks keep their own card, value and block › two twins, the UPPER one clicked: each card shows its own block, none is empty, and the lower card writes the lower block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Twin=5"
+    Received: "Twin=6"
+
+      120 | 		expect(bottom.children).toHaveLength(1); // not empty: the vanish
+      121 | 		expect(shown(top)).toBe('Twin=6');
+    > 122 | 		expect(shown(bottom)).toBe('Twin=5'); // not the writer's 6
+          | 		                      ^
+      123 | 		expect(top.firstElementChild).toBe(writerRoot); // the writer's view followed its own block (adoption)
+      124 | 		expect(registry.stats.claims).toBe(1);
+      125 | 		expect(registry.stats.collisions).toBe(0);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:122:25)
+
+  ● SC-481: identical twin blocks keep their own card, value and block › two twins with view adoption off: each card shows its own block and the lower card writes the lower block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Twin=5"
+    Received: "Twin=6"
+
+      140 | 		expect(bottom.children).toHaveLength(1);
+      141 | 		expect(shown(top)).toBe('Twin=6');
+    > 142 | 		expect(shown(bottom)).toBe('Twin=5');
+          | 		                      ^
+      143 |
+      144 | 		await increase(bottom);
+      145 | 		expect(values()).toEqual([6, 6]);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:142:25)
+
+  ● SC-481: identical twin blocks keep their own card, value and block › three twins, the UPPER one clicked: three cards, each with its own value, and a click on the lower card writes the lower block
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        1,
+    -   1,
+    +   0,
+        1,
+      ]
+
+      153 | 		// [A', A, A]: block 1 reuses the old upper element, block 2 the old middle one, the old lower one is discarded.
+      154 | 		const first = await rebuild(['fresh', { reuse: upper }, { reuse: middle }], [lower]);
+    > 155 | 		expect(first.map((el) => el.children.length)).toEqual([1, 1, 1]);
+          | 		                                              ^
+      156 | 		expect(first.map(shown)).toEqual(['Twin=6', 'Twin=5', 'Twin=5']);
+      157 |
+      158 | 		await increase(first[2]); // the lower card writes the lower block
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:155:49)
+
+  ● SC-481: identical twin blocks keep their own card, value and block › three twins, the MIDDLE one clicked: the lower card is the old middle element, redrawn from the lower block
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        "Twin=5",
+        "Twin=6",
+    -   "Twin=5",
+    +   "Twin=6",
+      ]
+
+      170 |
+      171 | 		expect(els.map((el) => el.children.length)).toEqual([1, 1, 1]);
+    > 172 | 		expect(els.map(shown)).toEqual(['Twin=5', 'Twin=6', 'Twin=5']);
+          | 		                       ^
+      173 | 		expect(registry.stats.collisions).toBe(0);
+      174 |
+      175 | 		await increase(els[2]);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:172:26)
+
+  ● SC-481: identical twin blocks keep their own card, value and block › a write that is not the view's own (the block edit form's Save) does not leave the old view in the twin: the edit survives a click on the twin
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   "Edited",
+    +   "Twin",
+        "Twin",
+      ]
+
+      192 |
+      193 | 		await increase(bottom);
+    > 194 | 		expect(names()).toEqual(['Edited', 'Twin']); // the edit is still there
+          | 		                ^
+      195 | 		expect(values()).toEqual([5, 6]);
+      196 | 	});
+      197 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:194:19)
+
+  ● SC-481: identical twin blocks keep their own card, value and block › the claim guard compares the line the write landed at: a twin whose element was reused does not look like a second copy of the writer
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      204 | 		// said "two views of one block" and refused the adoption.
+      205 | 		await rebuild(['fresh', { reuse: upper }], [lower]);
+    > 206 | 		expect(registry.stats.collisions).toBe(0);
+          | 		                                  ^
+      207 | 		expect(registry.stats.claims).toBe(1);
+      208 | 	});
+      209 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:206:37)
+
+Test Suites: 1 failed, 1 total
+Tests:       6 failed, 2 passed, 8 total
+Snapshots:   0 total
+Time:        2.55 s
+Ran all test suites matching test/dom/framework/twin-reuse.
+jest rc=1

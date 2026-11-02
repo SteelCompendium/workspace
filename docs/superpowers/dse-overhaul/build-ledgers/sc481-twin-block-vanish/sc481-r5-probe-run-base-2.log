@@ -1,0 +1,44 @@
+## quotelp
+  start {"vals":[],"empty":0,"errs":[]}
+   R3/quote-twins.md LP upper NOCONTROL disk=[5,5] want=[6,5] WRONGDISK A(BAD)=[] runs=0 rel=[] cl=0 col=0 err=0 not=0 
+   R3/quote-twins.md LP lower NOCONTROL disk=[5,5] want=[6,6] WRONGDISK A(BAD)=[] runs=0 rel=[] cl=0 col=0 err=0 not=0 
+  start {"vals":["Twin=5","Twin=5"],"empty":0,"errs":[]}
+   R3/callout-twins.md LP upper disk=[6,5] want=[6,5] A(BAD)=["6"] runs=0 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   R3/callout-twins.md LP lower NOCONTROL disk=[6,5] want=[6,6] WRONGDISK A(BAD)=["6"] runs=0 rel=[] cl=0 col=0 err=0 not=0 
+## nontwin
+  start {"vals":["Solo=5","Plain=7"],"empty":0,"errs":[]}
+   R3/callout-one.md click 0 disk=[6,7] want=[6,7] A=["6","7"] runs=0 rel=[] cl=1 col=0 err=0 not=0 tags=["k0","k1"]
+   R3/callout-one.md click 1 disk=[6,8] want=[6,8] A=["6","8"] runs=0 rel=[] cl=1 col=0 err=0 not=0 tags=["k0","k1"]
+  text: "# callout one\n\nTOP\n\n> [!note] Camp\n> text\n> ```ds-counter\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: Solo\n> ```\n\nMID\n\n```ds-counter\nmax_value: 20\ncurrent_value: 8\nmin_value: 0\nname: Plain\n```\n\nBOTTOM\n"
+  start {"vals":["QA=5","QB=6","CA=1","CB=2"],"empty":0,"errs":[]}
+   R3/quote-diff.md click 0 disk=[6,6,1,2] want=[6,6,1,2] A=["6","6","1","2"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 tags=["k0",null,"k2","k3"]
+   R3/quote-diff.md click 1 disk=[6,7,1,2] want=[6,7,1,2] A=["6","7","1","2"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 tags=[null,null,"k2","k3"]
+   R3/quote-diff.md click 2 disk=[6,7,2,2] want=[6,7,2,2] A=["6","7","2","2"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 tags=[null,null,"k2",null]
+   R3/quote-diff.md click 3 disk=[6,7,2,3] want=[6,7,2,3] A=["6","7","2","3"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 tags=[null,null,null,null]
+  text: "# quote diff\n\nTOP\n\n> ```ds-counter\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: QA\n> ```\n>\n> ```ds-counter\n> max_value: 20\n> current_value: 7\n> min_value: 0\n> name: QB\n> ```\n\nMID\n\n> [!tip] Two\n> ```ds-counter\n> max_value: 20\n> current_value: 2\n> min_value: 0\n> name: CA\n> ```\n> x\n> ```ds-counter\n> max_value: 20\n> current_value: 3\n> min_value: 0\n> name: 
+## lpcallout
+  start {"vals":["Twin=5","Twin=5"],"empty":0,"errs":[]}
+   R3/callout-twins.md LP click shown #0 disk=[6,5] want=null WRONGDISK A(BAD)=["6"] runs=0 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 before=[5,5] cursor=4
+   R3/callout-twins.md LP click shown #0 disk=[7,5] want=null WRONGDISK A(BAD)=["7"] runs=2 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 before=[6,5] cursor=14
+   R3/callout-twins.md LP click shown #0 disk=[8,5] want=null WRONGDISK A(BAD)=["7"] runs=0 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 before=[7,5] cursor=4
+   R3/callout-twins.md LP click shown #1 NOCONTROL disk=[8,5] want=null WRONGDISK A(BAD)=["7"] runs=0 rel=[] cl=0 col=0 err=0 not=0 before=[8,5] cursor=4
+   R3/callout-twins.md LP click shown #0 disk=[8,5] want=null WRONGDISK A(BAD)=["8"] runs=1 rel=[] cl=0 col=0 err=0 not=1 before=[8,5] cursor=14
+  text: "# callout twins\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 8\n> min_value: 0\n> name: Twin\n> ```\n\nMID\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n"
+  start {"vals":["X=5","Y=2","X=5","Y=2"],"empty":0,"errs":[]}
+   R3/callout-pairs.md LP click shown #0 disk=[6,2,5,2] want=null WRONGDISK A(BAD)=["6","2"] runs=0 rel=["render-child-unload","render-child-unload"] cl=0 col=0 err=0 not=0 before=[5,2,5,2] cursor=4
+   R3/callout-pairs.md LP click shown #0 disk=[7,2,5,2] want=null WRONGDISK A(BAD)=["7","2"] runs=4 rel=["render-child-unload","render-child-unload"] cl=0 col=0 err=0 not=0 before=[6,2,5,2] cursor=21
+   R3/callout-pairs.md LP click shown #0 disk=[8,2,5,2] want=null WRONGDISK A(BAD)=["7","2"] runs=0 rel=["render-child-unload","render-child-unload"] cl=0 col=0 err=0 not=0 before=[7,2,5,2] cursor=4
+   R3/callout-pairs.md LP click shown #1 disk=[8,2,5,3] want=null WRONGDISK A(BAD)=["8","2"] runs=2 rel=["render-child-unload","render-child-unload"] cl=0 col=0 err=0 not=0 before=[8,2,5,2] cursor=21
+   R3/callout-pairs.md LP click shown #0 disk=[9,2,5,3] want=null WRONGDISK A(BAD)=["5","3"] runs=2 rel=["render-child-unload","render-child-unload"] cl=0 col=0 err=0 not=0 before=[8,2,5,3] cursor=4
+  text: "# callout pairs\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 9\n> min_value: 0\n> name: X\n> ```\n> between\n> ```ds-counter\n> name: Y\n> current_value: 2\n> max_value: 20\n> min_value: 0\n> ```\n\nMID\n\n> [!note] Camp\n> ```ds-counter\n> name: X\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n> between\n> ```ds-counter\n> max_value: 20\n> current_va
+  start {"vals":["Twin=5","Twin=5"],"empty":0,"errs":[]}
+   R3/nested-twins.md LP click shown #0 disk=[6,5] want=null WRONGDISK A(BAD)=["6"] runs=0 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 before=[5,5] cursor=4
+   R3/nested-twins.md LP click shown #0 disk=[7,5] want=null WRONGDISK A(BAD)=["7"] runs=2 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 before=[6,5] cursor=16
+   R3/nested-twins.md LP click shown #0 disk=[8,5] want=null WRONGDISK A(BAD)=["7"] runs=0 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 before=[7,5] cursor=4
+   R3/nested-twins.md LP click shown #1 NOCONTROL disk=[8,5] want=null WRONGDISK A(BAD)=["7"] runs=0 rel=[] cl=0 col=0 err=0 not=0 before=[8,5] cursor=4
+   R3/nested-twins.md LP click shown #0 disk=[8,5] want=null WRONGDISK A(BAD)=["8"] runs=1 rel=[] cl=0 col=0 err=0 not=1 before=[8,5] cursor=16
+  text: "# nested twins\n\nTOP\n\n> [!note] Outer\n> outer text\n> > [!tip] Inner\n> > ```ds-counter\n> > max_value: 20\n> > current_value: 8\n> > min_value: 0\n> > name: Twin\n> > ```\n\nMID\n\n> [!note] Outer\n> outer text\n> > [!tip] Inner\n> > ```ds-counter\n> > name: Twin\n> > current_value: 5\n> > max_value: 20\n> > min_value: 0\n> > ```\n\nBOTTOM\n"
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :160, port 9459, 1 scenario(s)
+OBSIDIAN-LIFECYCLE P481-R3 ok (probe done: quotelp,nontwin,lpcallout)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0

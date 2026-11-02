@@ -1,0 +1,125 @@
+mutated window
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-481 r4: twin blocks inside a callout › the UPPER one clicked: the twin gets its own card (no error card), shows its own value and its click writes its own block
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received object: []
+
+      306 |
+      307 | 		expect(top.firstElementChild).toBe(writerRoot);
+    > 308 | 		expect(bottom.children).toHaveLength(1);
+          | 		                        ^
+      309 | 		expect(bottom.textContent).not.toContain('failed to render'); // r3 MEDIUM-1: the callout's raw lines were parsed as the block
+      310 | 		expect(shown(top)).toBe('Twin=6');
+      311 | 		expect(shown(bottom)).toBe('Twin=5');
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:308:27)
+
+  ● SC-481 r4: twin blocks inside a callout › view adoption off: each card shows its own block and the lower card writes the lower block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Twin=5"
+    Received: "Twin=6"
+
+      325 | 		expect(bottom.children).toHaveLength(1);
+      326 | 		expect(shown(top)).toBe('Twin=6');
+    > 327 | 		expect(shown(bottom)).toBe('Twin=5');
+          | 		                      ^
+      328 | 		await increase(bottom);
+      329 | 		expect(values()).toEqual([6, 6]);
+      330 | 	});
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:327:25)
+
+  ● SC-481 r4: twin blocks inside a callout › a write that is not the view's own (the edit form's Save) on the upper twin: a click on the lower twin does not erase the edit
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   "Edited",
+    +   "Twin",
+        "Twin",
+      ]
+
+      341 | 		expect(shown(bottom)).toBe('Twin=5');
+      342 | 		await increase(bottom);
+    > 343 | 		expect(names()).toEqual(['Edited', 'Twin']);
+          | 		                ^
+      344 | 		expect(values()).toEqual([5, 6]);
+      345 | 	});
+      346 | });
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:343:19)
+
+  ● SC-481 r4: twin blocks inside a quote › the UPPER one clicked: the twin gets its own card (no error card), shows its own value and its click writes its own block
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received object: []
+
+      306 |
+      307 | 		expect(top.firstElementChild).toBe(writerRoot);
+    > 308 | 		expect(bottom.children).toHaveLength(1);
+          | 		                        ^
+      309 | 		expect(bottom.textContent).not.toContain('failed to render'); // r3 MEDIUM-1: the callout's raw lines were parsed as the block
+      310 | 		expect(shown(top)).toBe('Twin=6');
+      311 | 		expect(shown(bottom)).toBe('Twin=5');
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:308:27)
+
+  ● SC-481 r4: twin blocks inside a quote › view adoption off: each card shows its own block and the lower card writes the lower block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Twin=5"
+    Received: "Twin=6"
+
+      325 | 		expect(bottom.children).toHaveLength(1);
+      326 | 		expect(shown(top)).toBe('Twin=6');
+    > 327 | 		expect(shown(bottom)).toBe('Twin=5');
+          | 		                      ^
+      328 | 		await increase(bottom);
+      329 | 		expect(values()).toEqual([6, 6]);
+      330 | 	});
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:327:25)
+
+  ● SC-481 r4: twin blocks inside a quote › a write that is not the view's own (the edit form's Save) on the upper twin: a click on the lower twin does not erase the edit
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   "Edited",
+    +   "Twin",
+        "Twin",
+      ]
+
+      341 | 		expect(shown(bottom)).toBe('Twin=5');
+      342 | 		await increase(bottom);
+    > 343 | 		expect(names()).toEqual(['Edited', 'Twin']);
+          | 		                ^
+      344 | 		expect(values()).toEqual([5, 6]);
+      345 | 	});
+      346 | });
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:343:19)
+
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       6 failed, 49 passed, 55 total
+Snapshots:   0 total
+Time:        4.139 s
+Ran all test suites matching test/dom/framework/twin-reuse.test.ts|test/dom/framework/view-adoption.test.ts|test/dom/framework/formSaveFocus.test.ts.
+jest rc=1

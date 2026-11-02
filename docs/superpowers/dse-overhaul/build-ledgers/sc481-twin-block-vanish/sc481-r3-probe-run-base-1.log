@@ -1,0 +1,19 @@
+## callout
+  start {"vals":["Twin=5","Twin=5"],"empty":0,"errs":[]}
+   upper disk=[6,5] want=[6,5] A(BAD)=["6"] EMPTY1 runs=0 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 
+   lower NOCONTROL disk=[6,5] want=[6,6] WRONGDISK A(BAD)=["6"] EMPTY1 runs=0 rel=[] cl=0 col=0 err=0 not=0 
+   upper again disk=[7,5] want=[7,6] WRONGDISK A(BAD)=["7"] EMPTY1 runs=0 rel=[] cl=1 col=0 err=0 not=0 
+  text: "# callout twins\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 7\n> min_value: 0\n> name: Twin\n> ```\n\nMID\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n"
+## calloutoff
+   upper (adoption off) disk=[6,5] want=[6,5] A(BAD)=["6","6"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   lower (adoption off) disk=[7,5] want=[6,6] WRONGDISK A(BAD)=["7","7"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+## quote
+  start {"vals":["Twin=5","Twin=5"],"empty":0,"errs":[]}
+   upper disk=[6,5] want=[6,5] A(BAD)=["6","6"] runs=1 rel=["render-child-unload"] cl=0 col=1 err=0 not=0 
+   lower disk=[7,5] want=[6,6] WRONGDISK A(BAD)=["7"] EMPTY1 runs=0 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 
+   upper again disk=[8,5] want=[7,6] WRONGDISK A(BAD)=["8"] EMPTY1 runs=0 rel=[] cl=1 col=0 err=0 not=0 
+  text: "# quote twins\n\nTOP\n\n> ```ds-counter\n> max_value: 20\n> current_value: 8\n> min_value: 0\n> name: Twin\n> ```\n\nMID\n\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n"
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9435, 1 scenario(s)
+OBSIDIAN-LIFECYCLE P481-R3 ok (probe done: callout,calloutoff,quote)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0

@@ -1,0 +1,144 @@
+applied ma
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-481: identical twin blocks keep their own card, value and block › two twins, the UPPER one clicked: each card shows its own block, none is empty, and the lower card writes the lower block
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received object: []
+
+      118 |
+      119 | 		expect(top.children).toHaveLength(1);
+    > 120 | 		expect(bottom.children).toHaveLength(1); // not empty: the vanish
+          | 		                        ^
+      121 | 		expect(shown(top)).toBe('Twin=6');
+      122 | 		expect(shown(bottom)).toBe('Twin=5'); // not the writer's 6
+      123 | 		expect(top.firstElementChild).toBe(writerRoot); // the writer's view followed its own block (adoption)
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:120:27)
+
+  ● SC-481: identical twin blocks keep their own card, value and block › three twins, the UPPER one clicked: three cards, each with its own value, and a click on the lower card writes the lower block
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        1,
+    -   1,
+    +   0,
+        1,
+      ]
+
+      153 | 		// [A', A, A]: block 1 reuses the old upper element, block 2 the old middle one, the old lower one is discarded.
+      154 | 		const first = await rebuild(['fresh', { reuse: upper }, { reuse: middle }], [lower]);
+    > 155 | 		expect(first.map((el) => el.children.length)).toEqual([1, 1, 1]);
+          | 		                                              ^
+      156 | 		expect(first.map(shown)).toEqual(['Twin=6', 'Twin=5', 'Twin=5']);
+      157 |
+      158 | 		await increase(first[2]); // the lower card writes the lower block
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:155:49)
+
+  ● SC-481: identical twin blocks keep their own card, value and block › three twins, the MIDDLE one clicked: the lower card is the old middle element, redrawn from the lower block
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        1,
+        1,
+    -   1,
+    +   0,
+      ]
+
+      169 | 		const els = await rebuild([{ reuse: upper }, 'fresh', { reuse: middle }], [lower]);
+      170 |
+    > 171 | 		expect(els.map((el) => el.children.length)).toEqual([1, 1, 1]);
+          | 		                                            ^
+      172 | 		expect(els.map(shown)).toEqual(['Twin=5', 'Twin=6', 'Twin=5']);
+      173 | 		expect(registry.stats.collisions).toBe(0);
+      174 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:171:47)
+
+
+Summary of all failing tests
+FAIL test/dom/framework/twin-reuse.test.ts
+  ● SC-481: identical twin blocks keep their own card, value and block › two twins, the UPPER one clicked: each card shows its own block, none is empty, and the lower card writes the lower block
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received object: []
+
+      118 |
+      119 | 		expect(top.children).toHaveLength(1);
+    > 120 | 		expect(bottom.children).toHaveLength(1); // not empty: the vanish
+          | 		                        ^
+      121 | 		expect(shown(top)).toBe('Twin=6');
+      122 | 		expect(shown(bottom)).toBe('Twin=5'); // not the writer's 6
+      123 | 		expect(top.firstElementChild).toBe(writerRoot); // the writer's view followed its own block (adoption)
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:120:27)
+
+  ● SC-481: identical twin blocks keep their own card, value and block › three twins, the UPPER one clicked: three cards, each with its own value, and a click on the lower card writes the lower block
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        1,
+    -   1,
+    +   0,
+        1,
+      ]
+
+      153 | 		// [A', A, A]: block 1 reuses the old upper element, block 2 the old middle one, the old lower one is discarded.
+      154 | 		const first = await rebuild(['fresh', { reuse: upper }, { reuse: middle }], [lower]);
+    > 155 | 		expect(first.map((el) => el.children.length)).toEqual([1, 1, 1]);
+          | 		                                              ^
+      156 | 		expect(first.map(shown)).toEqual(['Twin=6', 'Twin=5', 'Twin=5']);
+      157 |
+      158 | 		await increase(first[2]); // the lower card writes the lower block
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:155:49)
+
+  ● SC-481: identical twin blocks keep their own card, value and block › three twins, the MIDDLE one clicked: the lower card is the old middle element, redrawn from the lower block
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        1,
+        1,
+    -   1,
+    +   0,
+      ]
+
+      169 | 		const els = await rebuild([{ reuse: upper }, 'fresh', { reuse: middle }], [lower]);
+      170 |
+    > 171 | 		expect(els.map((el) => el.children.length)).toEqual([1, 1, 1]);
+          | 		                                            ^
+      172 | 		expect(els.map(shown)).toEqual(['Twin=5', 'Twin=6', 'Twin=5']);
+      173 | 		expect(registry.stats.collisions).toBe(0);
+      174 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:171:47)
+
+
+Test Suites: 1 failed, 46 passed, 47 total
+Tests:       3 failed, 2 skipped, 1076 passed, 1081 total
+Snapshots:   0 total
+Time:        21.23 s, estimated 24 s
+Ran all test suites matching test/dom/framework.
+jest rc=1

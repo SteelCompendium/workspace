@@ -1,0 +1,212 @@
+applied guard
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-481: identical twin blocks keep their own card, value and block › a block in a callout (a section window that starts at the callout, not the fence) is left alone
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 2
+
+      286 | 		await draw();
+      287 |
+    > 288 | 		expect(registry.stats.releases).toBe(0);
+          | 		                                ^
+      289 | 		expect([first.el.firstElementChild, second.el.firstElementChild]).toEqual(roots);
+      290 | 		expect(first.el.children).toHaveLength(1);
+      291 | 		expect(second.el.children).toHaveLength(1);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:288:35)
+
+  ● SC-481 r4: twin blocks inside a callout › the UPPER one clicked: the twin gets its own card (no error card), shows its own value and its click writes its own block
+
+    TypeError: Cannot read properties of null (reading 'click')
+
+      127 | 	/** Click the Increase button of a card and let the write (and its debounce) land. */
+      128 | 	async function increase(el: HTMLElement): Promise<void> {
+    > 129 | 		(el.querySelector(INC) as HTMLElement).click();
+          | 		                                      ^
+      130 | 		await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS);
+      131 | 	}
+      132 | 	const values = (): number[] => [...app.vault.getContent('Note.md')!.matchAll(/current_value: (\d+)/g)].map((m) => Number(m[1]));
+
+      at increase (test/dom/framework/twin-reuse.test.ts:129:41)
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:312:9)
+
+  ● SC-481 r4: twin blocks inside a callout › view adoption off: each card shows its own block and the lower card writes the lower block
+
+    TypeError: Cannot read properties of null (reading 'click')
+
+      127 | 	/** Click the Increase button of a card and let the write (and its debounce) land. */
+      128 | 	async function increase(el: HTMLElement): Promise<void> {
+    > 129 | 		(el.querySelector(INC) as HTMLElement).click();
+          | 		                                      ^
+      130 | 		await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS);
+      131 | 	}
+      132 | 	const values = (): number[] => [...app.vault.getContent('Note.md')!.matchAll(/current_value: (\d+)/g)].map((m) => Number(m[1]));
+
+      at increase (test/dom/framework/twin-reuse.test.ts:129:41)
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:331:9)
+
+  ● SC-481 r4: twin blocks inside a callout › a write that is not the view's own (the edit form's Save) on the upper twin: a click on the lower twin does not erase the edit
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   "Edited",
+        "Twin",
+    +   "Edited",
+      ]
+
+      344 | 		const [entry] = registry.liveEntries();
+      345 | 		await entry.host.replaceSource(bodyOf(noteOf(counter('Edited', 5)), 0));
+    > 346 | 		expect(names()).toEqual(['Edited', 'Twin']);
+          | 		                ^
+      347 | 		const [top, bottom] = await rebuild(['fresh', { reuse: upper }], [lower]);
+      348 |
+      349 | 		expect(shown(top)).toBe('Edited=5');
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:346:19)
+
+  ● SC-481 r6: two identical callouts holding two blocks each (view adoption true) › X in the upper callout clicked: all four cards are drawn, each shows its own block, and later clicks write the block of the card clicked
+
+    TypeError: Cannot read properties of null (reading 'click')
+
+      127 | 	/** Click the Increase button of a card and let the write (and its debounce) land. */
+      128 | 	async function increase(el: HTMLElement): Promise<void> {
+    > 129 | 		(el.querySelector(INC) as HTMLElement).click();
+          | 		                                      ^
+      130 | 		await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS);
+      131 | 	}
+      132 | 	const values = (): number[] => [...app.vault.getContent('Note.md')!.matchAll(/current_value: (\d+)/g)].map((m) => Number(m[1]));
+
+      at increase (test/dom/framework/twin-reuse.test.ts:129:41)
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:431:9)
+
+  ● SC-481 r6: two identical callouts holding two blocks each (view adoption false) › X in the upper callout clicked: all four cards are drawn, each shows its own block, and later clicks write the block of the card clicked
+
+    TypeError: Cannot read properties of null (reading 'click')
+
+      127 | 	/** Click the Increase button of a card and let the write (and its debounce) land. */
+      128 | 	async function increase(el: HTMLElement): Promise<void> {
+    > 129 | 		(el.querySelector(INC) as HTMLElement).click();
+          | 		                                      ^
+      130 | 		await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS);
+      131 | 	}
+      132 | 	const values = (): number[] => [...app.vault.getContent('Note.md')!.matchAll(/current_value: (\d+)/g)].map((m) => Number(m[1]));
+
+      at increase (test/dom/framework/twin-reuse.test.ts:129:41)
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:431:9)
+
+
+Summary of all failing tests
+FAIL test/dom/framework/twin-reuse.test.ts
+  ● SC-481: identical twin blocks keep their own card, value and block › a block in a callout (a section window that starts at the callout, not the fence) is left alone
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 2
+
+      286 | 		await draw();
+      287 |
+    > 288 | 		expect(registry.stats.releases).toBe(0);
+          | 		                                ^
+      289 | 		expect([first.el.firstElementChild, second.el.firstElementChild]).toEqual(roots);
+      290 | 		expect(first.el.children).toHaveLength(1);
+      291 | 		expect(second.el.children).toHaveLength(1);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:288:35)
+
+  ● SC-481 r4: twin blocks inside a callout › the UPPER one clicked: the twin gets its own card (no error card), shows its own value and its click writes its own block
+
+    TypeError: Cannot read properties of null (reading 'click')
+
+      127 | 	/** Click the Increase button of a card and let the write (and its debounce) land. */
+      128 | 	async function increase(el: HTMLElement): Promise<void> {
+    > 129 | 		(el.querySelector(INC) as HTMLElement).click();
+          | 		                                      ^
+      130 | 		await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS);
+      131 | 	}
+      132 | 	const values = (): number[] => [...app.vault.getContent('Note.md')!.matchAll(/current_value: (\d+)/g)].map((m) => Number(m[1]));
+
+      at increase (test/dom/framework/twin-reuse.test.ts:129:41)
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:312:9)
+
+  ● SC-481 r4: twin blocks inside a callout › view adoption off: each card shows its own block and the lower card writes the lower block
+
+    TypeError: Cannot read properties of null (reading 'click')
+
+      127 | 	/** Click the Increase button of a card and let the write (and its debounce) land. */
+      128 | 	async function increase(el: HTMLElement): Promise<void> {
+    > 129 | 		(el.querySelector(INC) as HTMLElement).click();
+          | 		                                      ^
+      130 | 		await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS);
+      131 | 	}
+      132 | 	const values = (): number[] => [...app.vault.getContent('Note.md')!.matchAll(/current_value: (\d+)/g)].map((m) => Number(m[1]));
+
+      at increase (test/dom/framework/twin-reuse.test.ts:129:41)
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:331:9)
+
+  ● SC-481 r4: twin blocks inside a callout › a write that is not the view's own (the edit form's Save) on the upper twin: a click on the lower twin does not erase the edit
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   "Edited",
+        "Twin",
+    +   "Edited",
+      ]
+
+      344 | 		const [entry] = registry.liveEntries();
+      345 | 		await entry.host.replaceSource(bodyOf(noteOf(counter('Edited', 5)), 0));
+    > 346 | 		expect(names()).toEqual(['Edited', 'Twin']);
+          | 		                ^
+      347 | 		const [top, bottom] = await rebuild(['fresh', { reuse: upper }], [lower]);
+      348 |
+      349 | 		expect(shown(top)).toBe('Edited=5');
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:346:19)
+
+  ● SC-481 r6: two identical callouts holding two blocks each (view adoption true) › X in the upper callout clicked: all four cards are drawn, each shows its own block, and later clicks write the block of the card clicked
+
+    TypeError: Cannot read properties of null (reading 'click')
+
+      127 | 	/** Click the Increase button of a card and let the write (and its debounce) land. */
+      128 | 	async function increase(el: HTMLElement): Promise<void> {
+    > 129 | 		(el.querySelector(INC) as HTMLElement).click();
+          | 		                                      ^
+      130 | 		await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS);
+      131 | 	}
+      132 | 	const values = (): number[] => [...app.vault.getContent('Note.md')!.matchAll(/current_value: (\d+)/g)].map((m) => Number(m[1]));
+
+      at increase (test/dom/framework/twin-reuse.test.ts:129:41)
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:431:9)
+
+  ● SC-481 r6: two identical callouts holding two blocks each (view adoption false) › X in the upper callout clicked: all four cards are drawn, each shows its own block, and later clicks write the block of the card clicked
+
+    TypeError: Cannot read properties of null (reading 'click')
+
+      127 | 	/** Click the Increase button of a card and let the write (and its debounce) land. */
+      128 | 	async function increase(el: HTMLElement): Promise<void> {
+    > 129 | 		(el.querySelector(INC) as HTMLElement).click();
+          | 		                                      ^
+      130 | 		await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS);
+      131 | 	}
+      132 | 	const values = (): number[] => [...app.vault.getContent('Note.md')!.matchAll(/current_value: (\d+)/g)].map((m) => Number(m[1]));
+
+      at increase (test/dom/framework/twin-reuse.test.ts:129:41)
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:431:9)
+
+
+Test Suites: 1 failed, 46 passed, 47 total
+Tests:       6 failed, 2 skipped, 1082 passed, 1090 total
+Snapshots:   0 total
+Time:        21.334 s
+Ran all test suites matching test/dom/framework.
+jest rc=1

@@ -1,0 +1,12 @@
+ 1:  b625438 =  1:  e5a6bad test(SC-481): identical twin blocks - each card shows its own block, none empty, writes land in the right block (red on 9be397e)
+ 2:  26c0bd5 =  2:  7f7aa6a fix(SC-481): identical twin blocks - redraw the element Obsidian reused for the twin; claim guard uses the line the write landed at
+ 3:  6643941 =  3:  618422c fix(SC-481): judge a reused element across the whole note (path), not one docId - Live Preview gives every widget its own docId
+ 4:  f001937 =  4:  3cc38b3 test(SC-481): lifecycle G-S53 - identical blocks keep their own card, value and block (Reading view 2/3 twins, montage, adoption off, form Save; Live Preview)
+ 5:  d250e97 =  5:  a20ab1d docs(SC-481): architecture notes for the twin-block remount
+ 6:  4cac5fd =  6:  a70ee5a test(SC-481 r4): twins inside a callout / quote (red), and the writer-not-yet-rebuilt guard
+ 7:  4afd35d =  7:  70dab52 fix(SC-481 r4): twins inside a quote/callout - one shared section test (fenceOnElement) for reconcile and remountVacated, window sections read for the fence inside; no parse-error card
+ 8:  0435953 =  8:  6cce104 test(SC-481 r4): G-S53 phases for twins inside a callout and a blockquote (click, adoption off, form Save then lower click)
+ 9:  c90d5e9 =  9:  23fb2ee docs(SC-481 r4): G-S50 twin-mode comment - the old root is redrawn from the twin's block now
+10:  99484a6 = 10:  8393c35 docs(SC-481 r4): architecture note - window sections, fenceOnElement
+11:  2c5887f = 11:  3b44409 docs(SC-481 r4): architecture note - window sections, fenceOnElement (fix backticks)
+ -:  ------- > 12:  458abe3 test(SC-481 r6): callout ordinal (two identical callouts of two blocks) and the adoption path for callout/quote twins (blocks drawn inside the callout/blockquote element)

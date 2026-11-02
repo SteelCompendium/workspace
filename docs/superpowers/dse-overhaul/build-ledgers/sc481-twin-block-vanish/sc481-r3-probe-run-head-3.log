@@ -1,0 +1,37 @@
+## rapid
+   double upper disk=[7,5] want=undefined WRONGDISK A=["7","5"] runs=undefined rel=undefined cl=undefined col=undefined err=0 not=0 
+   upper+lower same tick disk=[8,6] want=undefined WRONGDISK A=["8","6"] runs=undefined rel=undefined cl=undefined col=undefined err=0 not=0 
+   preview: upper, then upper+lower right after the write landed disk=[7,6] want=[7,6] A=["7","6"] runs=undefined rel=undefined cl=undefined col=undefined err=0 not=0 r={"n":2,"ms":473}
+   source: upper, then upper+lower right after the write landed disk=[7,6] want=[7,6] A=["7","6"] runs=undefined rel=undefined cl=undefined col=undefined err=0 not=0 r={"n":2,"ms":498}
+   adoption off: upper, then upper during the rebuild disk=[7,5] want=[7,5] A=["7","5"] runs=undefined rel=undefined cl=undefined col=undefined err=0 not=0 
+## leak
+   undefined disk=[10,9,8] want=[10,9,8] A=["10","9","8"] runs=undefined rel=undefined cl=undefined col=undefined err=0 not=0 entries=[{"path":"R3/twin-triplets.md","docId":"171db3c2e4099464","connected":true,"loaded":true,"el":"counter"},{"path":"R3/twin-triplets.md","docId":"721bec93e3457232","connected":true,"loaded":true,"el":"counter"},{"path":"R3/twin-triplets.md","docId":"49990fdcaca9fa05","connected":true,"loaded":true,"el":"counter"},{"path":"R3/twin-triplets.md","docId":"f0ee11963ad02461","connected":true,"loaded":true,"el":"counter"},{"path":"R3/twin-triplets.md","docId":"f0ee11963ad02461","connected":true,"loaded":true,"el":"counter"},{"path":"R3/twin-triplets.md","docId":"f0ee11963ad02461","connected":true,"loaded":true,"el":"counter"}] regSize=6
+   {"afterClose":{"entries":[],"regSize":0,"all":[]}}
+## undo
+   upper disk=[6,5] want=[6,5] A=["6","5"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 
+   after undo disk=[5,5] want=undefined WRONGDISK A=["5","5"] runs=undefined rel=undefined cl=undefined col=undefined err=0 not=0 editorVals=["current_value: 5","current_value: 5"]
+   lower after undo disk=[5,6] want=[5,6] A=["5","6"] runs=0 rel=[] cl=1 col=0 err=0 not=0 
+   upper after undo disk=[6,6] want=[6,6] A=["6","6"] runs=1 rel=["render-child-unload"] cl=0 col=1 err=0 not=0 
+## diff
+   five click 0 disk=[2,2,3,4,5] want=[2,2,3,4,5] A=["2","2","3","4","5"] runs=0 rel=[] cl=1 col=0 err=0 not=0 tagsKept=["k0","k1","k2","k3","k4"]
+   five click 4 disk=[2,2,3,4,6] want=[2,2,3,4,6] A=["2","2","3","4","6"] runs=0 rel=[] cl=1 col=0 err=0 not=0 tagsKept=["k0","k1","k2","k3","k4"]
+   five click 2 disk=[2,2,4,4,6] want=[2,2,4,4,6] A=["2","2","4","4","6"] runs=0 rel=[] cl=1 col=0 err=0 not=0 tagsKept=["k0","k1","k2","k3","k4"]
+   five click 1 disk=[2,3,4,4,6] want=[2,3,4,4,6] A=["2","3","4","4","6"] runs=0 rel=[] cl=1 col=0 err=0 not=0 tagsKept=["k0","k1","k2","k3","k4"]
+   five click 3 disk=[2,3,4,5,6] want=[2,3,4,5,6] A=["2","3","4","5","6"] runs=0 rel=[] cl=1 col=0 err=0 not=0 tagsKept=["k0","k1","k2","k3","k4"]
+   five click 0 disk=[3,3,4,5,6] want=[3,3,4,5,6] A=["3","3","4","5","6"] runs=0 rel=[] cl=1 col=0 err=0 not=0 tagsKept=["k0","k1","k2","k3","k4"]
+   five adoption off click 0 disk=[2,2,3,4,5] want=[2,2,3,4,5] A=["2","2","3","4","5"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+   five adoption off click 3 disk=[2,2,3,5,5] want=[2,2,3,5,5] A=["2","2","3","5","5"] runs=1 rel=["render-child-unload"] cl=0 col=0 err=0 not=0 
+## mixed
+   mixed counter 0 disk=[6,5] want=[6,5] A=["6","5"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 other={"m":{"vals":["R1","R1"],"empty":0,"errs":[]},"disk":[1,1]}
+   mixed montage 0 disk=[2,1] want=[2,1] A(BAD)=[null,null] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 other={"c":{"vals":["Twin=6","Twin=5"],"empty":0,"errs":[]},"disk":[6,5]}
+   mixed counter 1 disk=[6,6] want=[6,6] A=["6","6"] runs=0 rel=[] cl=1 col=0 err=0 not=0 other={"m":{"vals":["R2","R1"],"empty":0,"errs":[]},"disk":[2,1]}
+   mixed montage 1 disk=[2,2] want=[2,2] A(BAD)=[null,null] runs=0 rel=[] cl=1 col=0 err=0 not=0 other={"c":{"vals":["Twin=6","Twin=6"],"empty":0,"errs":[]},"disk":[6,6]}
+   mixed counter 0 disk=[7,6] want=[7,6] A=["7","6"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 other={"m":{"vals":["R2","R2"],"empty":0,"errs":[]},"disk":[2,2]}
+   mixed montage 0 disk=[3,2] want=[3,2] A(BAD)=[null,null] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 other={"c":{"vals":["Twin=7","Twin=6"],"empty":0,"errs":[]},"disk":[7,6]}
+## samename
+   a upper disk=[6,5] want=[6,5] A=["6","5"] B(BAD)=["5","5"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 bDisk=[5,5]
+   b upper disk=[6,5] want=[6,5] A=["6","5"] B=["6","5"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 aDisk=[6,5]
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9437, 1 scenario(s)
+OBSIDIAN-LIFECYCLE P481-R3 ok (probe done: rapid,leak,undo,diff,mixed,samename)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0

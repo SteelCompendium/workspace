@@ -1,0 +1,17 @@
+## pairs
+   pairs click 0 disk=[6,2,5,2] want=[6,2,5,2] A(BAD)=["6","2","2"] EMPTY1 runs=1 rel=["render-child-unload","render-child-unload"] cl=1 col=0 err=0 not=0 
+   pairs click 1 disk=[6,3,5,2] want=[6,3,5,2] A(BAD)=["6","3","2"] EMPTY1 runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 
+   pairs click 2 disk=[6,3,5,3] want=[6,3,6,2] WRONGDISK A=["6","3","5","3"] runs=1 rel=[] cl=1 col=0 err=0 not=0 
+   pairs click 3 disk=[6,3,5,4] want=[6,3,6,3] WRONGDISK A=["6","3","5","4"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 
+   pairs click 1 disk=[6,4,5,4] want=[6,4,6,3] WRONGDISK A=["6","4","5","4"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 
+   pairs click 0 disk=[7,4,5,4] want=[7,4,6,3] WRONGDISK A=["7","4","5","4"] runs=1 rel=["render-child-unload"] cl=1 col=0 err=0 not=0 
+   off pairs click 0 disk=[6,2,5,2] want=[6,2,5,2] A(BAD)=["6","2","6","2"] runs=2 rel=["render-child-unload","render-child-unload"] cl=0 col=0 err=0 not=0 
+   off pairs click 1 disk=[6,3,5,2] want=[6,3,5,2] A(BAD)=["6","3","6","2"] runs=2 rel=["render-child-unload","render-child-unload"] cl=0 col=0 err=0 not=0 
+   off pairs click 2 disk=[7,3,5,2] want=[6,3,6,2] WRONGDISK A(BAD)=["7","3","7","2"] runs=2 rel=["render-child-unload","render-child-unload"] cl=0 col=0 err=0 not=0 
+   off pairs click 3 disk=[7,3,5,3] want=[6,3,6,3] WRONGDISK A=["7","3","5","3"] runs=2 rel=["render-child-unload","render-child-unload"] cl=0 col=0 err=0 not=0 
+   off pairs click 1 disk=[7,4,5,3] want=[6,4,6,3] WRONGDISK A=["7","4","5","3"] runs=2 rel=["render-child-unload","render-child-unload"] cl=0 col=0 err=0 not=0 
+   off pairs click 0 disk=[8,4,5,3] want=[7,4,6,3] WRONGDISK A=["8","4","5","3"] runs=2 rel=["render-child-unload","render-child-unload"] cl=0 col=0 err=0 not=0 
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :160, port 9461, 1 scenario(s)
+OBSIDIAN-LIFECYCLE P481-R3 ok (probe done: pairs)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0
