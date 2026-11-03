@@ -1,0 +1,30 @@
+r6-T.log: FAIL rc=? ?s load 0.07 1.95 3.13 -> 0.07 1.95 3.13
+   failing: (a) TORNRUN  (b) TORNRUN  (c) TORNRUN  (d) TORNRUN  (e) TORNRUN  (f) TORNRUN  (i) TORNRUN  (j1) TORNRUN  (j3) TORNRUN
+     msg: (a) LP callouts, upper then middle: the recorder's disk read was torn in 148 frames in a row, so its stale-frame check did not run (0 frame(s) of 148 with a pending edit on a block the card was not clicked on, 0 frame(s) (0 in a row) with a card that did not match its block and was not catching up (
+     msg: (b) LP callouts, upper, middle, lower: the recorder's disk read was torn in 177 frames in a row, so its stale-frame check did not run (0 frame(s) of 177 with a pending edit on a block the card was not clicked on, 0 frame(s) (0 in a row) with a card that did not match its block and was not catching u
+     msg: (c) LP four callouts, blocks 1 then 2: the recorder's disk read was torn in 147 frames in a row, so its stale-frame check did not run (0 frame(s) of 147 with a pending edit on a block the card was not clicked on, 0 frame(s) (0 in a row) with a card that did not match its block and was not catching u
+     msg: (d) LP callouts of two counters, X upper then Y middle: the recorder's disk read was torn in 148 frames in a row, so its stale-frame check did not run (0 frame(s) of 148 with a pending edit on a block the card was not clicked on, 0 frame(s) (0 in a row) with a card that did not match its block and w
+     msg: (e) LP callouts, form Save on the upper 120 ms after + on the middle: the recorder's disk read was torn in 124 frames in a row, so its stale-frame check did not run (0 frame(s) of 124 with a pending edit on a block the card was not clicked on, 0 frame(s) (0 in a row) with a card that did not match i
+     msg: (f) LP plain fences, first then second: the recorder's disk read was torn in 146 frames in a row, so its stale-frame check did not run (0 frame(s) of 146 with a pending edit on a block the card was not clicked on, 0 frame(s) (0 in a row) with a card that did not match its block and was not catching 
+     msg: (i) two panes, upper in Live Preview, middle in Reading view: the recorder's disk read was torn in 148 frames in a row, so its stale-frame check did not run (0 frame(s) of 148 with a pending edit on a block the card was not clicked on, 0 frame(s) (0 in a row) with a card that did not match its block
+     msg: (j1) LP callouts, middle then lower: the recorder's disk read was torn in 148 frames in a row, so its stale-frame check did not run (0 frame(s) of 148 with a pending edit on a block the card was not clicked on, 0 frame(s) (0 in a row) with a card that did not match its block and was not catching up 
+     msg: (j3) LP two callouts, upper then lower: the recorder's disk read was torn in 149 frames in a row, so its stale-frame check did not run (0 frame(s) of 149 with a pending edit on a block the card was not clicked on, 0 frame(s) (0 in a row) with a card that did not match its block and was not catching 
+   (a) frames 148 pend 0 stale 24 counted 0 run 0 | catch-up max 24f/417ms docbehind<=414ms | cu 0 u 24 dd 0 x 0 | torn 148 longest-torn-run 148 failed 0
+   (b) frames 177 pend 0 stale 8 counted 0 run 0 | catch-up max 8f/150ms docbehind<=136ms | cu 0 u 8 dd 0 x 0 | torn 177 longest-torn-run 177 failed 0
+   (c) frames 147 pend 0 stale 24 counted 0 run 0 | catch-up max 24f/417ms docbehind<=410ms | cu 0 u 24 dd 0 x 0 | torn 147 longest-torn-run 147 failed 0
+   (d) frames 148 pend 0 stale 23 counted 0 run 0 | catch-up max 23f/417ms docbehind<=416ms | cu 0 u 23 dd 0 x 0 | torn 148 longest-torn-run 148 failed 0
+   (e) frames 124 pend 0 stale 23 counted 0 run 0 | catch-up max 23f/417ms docbehind<=416ms | cu 0 u 23 dd 0 x 0 | torn 124 longest-torn-run 124 failed 0
+   (f) frames 146 pend 0 stale 24 counted 0 run 0 | catch-up max 24f/417ms docbehind<=406ms | cu 0 u 24 dd 0 x 0 | torn 146 longest-torn-run 146 failed 0
+   (i) frames 148 pend 0 stale 25 counted 0 run 0 | catch-up max 25f/417ms docbehind<=400ms | cu 0 u 25 dd 0 x 0 | torn 148 longest-torn-run 148 failed 0
+   (j1) frames 148 pend 0 stale 24 counted 0 run 0 | catch-up max 24f/417ms docbehind<=404ms | cu 0 u 24 dd 0 x 0 | torn 148 longest-torn-run 148 failed 0
+   (j3) frames 149 pend 0 stale 0 counted 0 run 0 | catch-up max 0f/0ms docbehind<=0ms | cu 0 u 0 dd 0 x 0 | torn 149 longest-torn-run 149 failed 0
+r6-green-idle.log: OK rc=? ?s load 0.36 1.53 2.87 -> 0.36 1.53 2.87
+   (a) frames 147 pend 0 stale 0 counted 0 run 0 | catch-up max 0f/0ms docbehind<=0ms | cu 0 u 0 dd 0 x 0 | torn 0 longest-torn-run 0 failed 0
+   (b) frames 176 pend 0 stale 0 counted 0 run 0 | catch-up max 0f/0ms docbehind<=0ms | cu 0 u 0 dd 0 x 0 | torn 0 longest-torn-run 0 failed 0
+   (c) frames 149 pend 0 stale 0 counted 0 run 0 | catch-up max 0f/0ms docbehind<=0ms | cu 0 u 0 dd 0 x 0 | torn 0 longest-torn-run 0 failed 0
+   (d) frames 147 pend 0 stale 0 counted 0 run 0 | catch-up max 0f/0ms docbehind<=0ms | cu 0 u 0 dd 0 x 0 | torn 0 longest-torn-run 0 failed 0
+   (e) frames 123 pend 0 stale 0 counted 0 run 0 | catch-up max 0f/0ms docbehind<=0ms | cu 0 u 0 dd 0 x 0 | torn 0 longest-torn-run 0 failed 0
+   (f) frames 145 pend 0 stale 0 counted 0 run 0 | catch-up max 0f/0ms docbehind<=0ms | cu 0 u 0 dd 0 x 0 | torn 0 longest-torn-run 0 failed 0
+   (i) frames 148 pend 0 stale 0 counted 0 run 0 | catch-up max 0f/0ms docbehind<=0ms | cu 0 u 0 dd 0 x 0 | torn 0 longest-torn-run 0 failed 0
+   (j1) frames 149 pend 0 stale 1 counted 0 run 0 | catch-up max 1f/17ms docbehind<=1ms | cu 1 u 0 dd 0 x 0 | torn 0 longest-torn-run 0 failed 0
+   (j3) frames 148 pend 0 stale 0 counted 0 run 0 | catch-up max 0f/0ms docbehind<=0ms | cu 0 u 0 dd 0 x 0 | torn 0 longest-torn-run 0 failed 0
