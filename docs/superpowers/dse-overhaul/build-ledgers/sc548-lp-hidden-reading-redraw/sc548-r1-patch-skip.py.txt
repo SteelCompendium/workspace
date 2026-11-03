@@ -1,0 +1,59 @@
+# sc548 r1 prototype patcher (scratch bundle only; apply AFTER sc548-r1-patch-instr.py): python3 -I sc548-r1-patch-skip.py <tree>
+# The ticket's "possible direction": a code-block processor call whose element sits in a Reading view that is NOT its leaf's
+# current mode (MarkdownView.previewMode of a leaf in source / Live Preview) draws nothing now and defers: the block is drawn
+# by the normal path once that Reading view is shown (a ResizeObserver on `.markdown-reading-view`). Every hit is reported to
+# the probe hook as 'skip' (el, ctx) and 'deferred-run' (el) so a run can count how often the guard fires.
+import sys
+
+T = sys.argv[1]
+
+
+def rep(rel, old, new):
+    p = f'{T}/{rel}'
+    s = open(p).read()
+    assert s.count(old) == 1, (rel, old[:80], s.count(old))
+    open(p, 'w').write(s.replace(old, new))
+
+
+HOOK = '(globalThis as unknown as { __sc548hook?: (kind: string, ...a: unknown[]) => unknown }).__sc548hook'
+
+# 1. the guard, a module-level helper
+rep(
+    'src/framework/registerFrameworkElements.ts',
+    "/**\n * The subset of `ElementFrameworkV2` (main.ts) this wiring loop needs.",
+    "/** SC-548 prototype: the `.markdown-reading-view` this block is drawn in when that Reading view is hidden because its leaf is in\n"
+    " *  source / Live Preview mode (`MarkdownView.previewMode` of a leaf whose `getMode()` is 'source'); else null. */\n"
+    "function hiddenReadingViewOf(plugin: Plugin, el: HTMLElement, ctx: MarkdownPostProcessorContext): HTMLElement | null {\n"
+    "\tconst probe = (ctx as unknown as { containerEl?: HTMLElement }).containerEl ?? el;\n"
+    "\tconst rv = probe.closest<HTMLElement>('.markdown-reading-view') ?? el.closest<HTMLElement>('.markdown-reading-view');\n"
+    "\tif (!rv || rv.offsetParent !== null) return null;\n"
+    "\tfor (const leaf of plugin.app.workspace.getLeavesOfType('markdown')) {\n"
+    "\t\tconst view = leaf.view as unknown as { getMode?: () => string; previewMode?: { containerEl?: HTMLElement } };\n"
+    "\t\tif (view.previewMode?.containerEl === rv) return view.getMode?.() === 'source' ? rv : null;\n"
+    "\t}\n"
+    "\treturn null;\n"
+    "}\n\n"
+    "/**\n * The subset of `ElementFrameworkV2` (main.ts) this wiring loop needs.",
+)
+# 2. the guard at the top of the processor (after the instr hook), deferring the call itself until the view is shown
+rep(
+    'src/framework/registerFrameworkElements.ts',
+    "?.('proc', el, ctx, alias);\n",
+    "?.('proc', el, ctx, alias);\n"
+    "\t\t\t\t\tconst hiddenRv = hiddenReadingViewOf(plugin, el, ctx);\n"
+    "\t\t\t\t\tif (hiddenRv) {\n"
+    "\t\t\t\t\t\t" + HOOK + "?.('skip', el, ctx);\n"
+    "\t\t\t\t\t\tconst ro = new ResizeObserver(() => {\n"
+    "\t\t\t\t\t\t\tif (hiddenRv.offsetParent === null) return;\n"
+    "\t\t\t\t\t\t\tro.disconnect();\n"
+    "\t\t\t\t\t\t\tif (!el.isConnected || el.childElementCount > 0) return;\n"
+    "\t\t\t\t\t\t\t" + HOOK + "?.('deferred-run', el);\n"
+    "\t\t\t\t\t\t\tconst host = new ReadingModeBlockHost(plugin, el, ctx, alias, scrollPin, registry);\n"
+    "\t\t\t\t\t\t\thost.setMountedBody(source);\n"
+    "\t\t\t\t\t\t\tvoid framework.pipeline.run(def, source, host);\n"
+    "\t\t\t\t\t\t});\n"
+    "\t\t\t\t\t\tro.observe(hiddenRv);\n"
+    "\t\t\t\t\t\treturn;\n"
+    "\t\t\t\t\t}\n",
+)
+print('skip ok')

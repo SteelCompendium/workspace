@@ -171,6 +171,7 @@ In the LP sibling runs, the prototype releases at the first painted frame after 
 - **SC-478 widget holds in the LP sibling runs were released by the timer, not on mount.** For example, on stock at 8x (`b-lpsib-thr8-1`) the hold was set at +384, the mount was seen at +2112, and the hold was released at +4441. The held widget is probably one that CodeMirror replaced. Pane B was not sampled.
 - **G-S52 cannot run under heavy load.** Its (c) anti-vacuity times out first. dse-verify's "false red" sentence for G-S52 covers it, and the recommended design would remove the false red.
 - **A Live Preview leaf keeps a hidden Reading view that also re-renders embeds** (the `mh3rd` events in G-S52 timelines). That is extra main-thread work on every write to an embedded note. Out of scope.
+  - **Correction (2026-11-02, SC-548 r1):** this does not reproduce. Obsidian 1.15.0 skips rendering a hidden Reading view (`MarkdownPreviewRenderer.onRender` returns while the preview element has no `offsetParent`), so DSE runs 0 renders there. The `mh3rd` events here were visible Reading renders: G-S52's `openHost` opens each host in Reading first, and those renders fell into the previous write's timeline window. SC-548 was closed as Canceled. Evidence: `../sc548-lp-hidden-reading-redraw/sc548-r1-measure-report.md`.
 
 ## Evidence (all in `/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc472-scroll-pin-timer/`)
 - **Prototype:** `sc472-r1-prototype.patch`.

@@ -1,0 +1,33 @@
+diff --git tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc548-r1-reviewer/bundles/stock/tree/src/framework/registerFrameworkElements.ts tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc548-r1-reviewer/bundles/instr/tree/src/framework/registerFrameworkElements.ts
+index ea6cc4aa..6938d0f9 100644
+--- tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc548-r1-reviewer/bundles/stock/tree/src/framework/registerFrameworkElements.ts
++++ tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc548-r1-reviewer/bundles/instr/tree/src/framework/registerFrameworkElements.ts
+@@ -82,6 +82,7 @@ export function registerFrameworkElements(
+ 			plugin.registerMarkdownCodeBlockProcessor(
+ 				alias,
+ 				(source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
++					(globalThis as unknown as { __sc548hook?: (kind: string, ...a: unknown[]) => unknown }).__sc548hook?.('proc', el, ctx, alias);
+ 					// SC-340 §6.2: a rebuild caused by one of OUR writes adopts the live view.
+ 					const claimed = registry.claim(ctx.docId, ctx.sourcePath, source);
+ 					if (claimed) {
+diff --git tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc548-r1-reviewer/bundles/stock/tree/src/framework/pipeline.ts tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc548-r1-reviewer/bundles/instr/tree/src/framework/pipeline.ts
+index 7afcb96c..d47353a3 100644
+--- tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc548-r1-reviewer/bundles/stock/tree/src/framework/pipeline.ts
++++ tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc548-r1-reviewer/bundles/instr/tree/src/framework/pipeline.ts
+@@ -429,6 +429,16 @@ export class ElementPipeline {
+ 	constructor(private readonly deps: ElementPipelineDeps) {}
+ 
+ 	async run<M>(def: ElementDefinition<M>, source: string, host: BlockHost): Promise<void> {
++		const hook = (globalThis as unknown as { __sc548hook?: (kind: string, ...a: unknown[]) => unknown }).__sc548hook;
++		const tok = hook?.('run', host.containerEl, host.sourcePath);
++		try {
++			return await this.runInner(def, source, host);
++		} finally {
++			hook?.('done', tok);
++		}
++	}
++
++	private async runInner<M>(def: ElementDefinition<M>, source: string, host: BlockHost): Promise<void> {
+ 		// SC-406: a deferred element, switch off ⇒ the inert card and nothing else — before the
+ 		// RenderContext, the host's view registry or the block's source are touched at all.
+ 		if (def.deferred === true && !isExperimental()) {

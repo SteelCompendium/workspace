@@ -1,0 +1,341 @@
+// ---------------------------------------------------------------------------- SC-548 r1 probe block (scratch harness copy only; the tree is never edited)
+// Per scenario: optional CDP CPU throttle (P548_THR, P548_THR_IDS). P548 scenarios record, per write, every DSE entry
+// (processor call 'proc', pipeline run 'run'/'done' from the instr bundle's __sc548hook) classified by WHERE its element
+// sits (leaf id, visible LP editor / visible Reading / HIDDEN Reading view of an LP leaf, inside an embed or not), the
+// hidden Reading views' own renderer work (Obsidian: embed loadContents and renderer.onRender, timed by instance wrappers),
+// the write -> visible LP remount -> paint latency, and CDP Performance.getMetrics deltas over the write's window.
+const P548_THR = Number(process.env.P548_THR ?? 1);
+const P548_THR_IDS = (process.env.P548_THR_IDS ?? '').split(',').filter(Boolean);
+const P548_REPS = Number(process.env.P548_REPS ?? 3);
+const P548_PHASES = (process.env.P548_PHASES ?? '').split(',').filter(Boolean);
+const P548_WIN = Number(process.env.P548_WIN ?? (P548_THR > 1 ? 30000 : 6000));
+const P548_SETTLE = Number(process.env.P548_SETTLE ?? (P548_THR > 1 ? 4000 : 1500));
+const P548_REC = `(() => {
+  const R = (window.__p548 = window.__p548 || {});
+  R.ev = [];
+  R.ids = R.ids || new WeakMap(); R.nid = R.nid || 1;
+  const T0 = performance.now(); R.T0 = T0;
+  const now = () => Math.round((performance.now() - T0) * 10) / 10;
+  const push = (...a) => { if (R.ev.length < 20000) R.ev.push([now(), ...a]); };
+  R.push = push; R.now = now;
+  const leafId = (leaf) => { if (!R.ids.has(leaf)) R.ids.set(leaf, R.nid++); return R.ids.get(leaf); };
+  R.leafId = leafId;
+  const cls = (el) => {
+    if (!el) return 'null';
+    if (!el.isConnected) return 'detached';
+    if (el.closest('.hover-popover')) return 'popover';
+    const leaf = app.workspace.getLeavesOfType('markdown').find((l) => l.view && l.view.containerEl && l.view.containerEl.contains(el));
+    if (!leaf) return 'noleaf';
+    const v = leaf.view; const mode = v.getMode ? v.getMode() : '?';
+    const inPrev = !!(v.previewMode && v.previewMode.containerEl && v.previewMode.containerEl.contains(el));
+    const inEd = !!(v.editor && v.editor.cm && v.editor.cm.dom && v.editor.cm.dom.contains(el));
+    const emb = !!el.closest('.internal-embed, .markdown-embed');
+    const loc = inPrev ? (mode === 'preview' ? 'RD' : 'RDHIDDEN') : inEd ? (mode === 'source' ? 'LP' : 'LPHIDDEN') : 'LEAF';
+    const shown = !!(el.offsetParent || (el.getClientRects && el.getClientRects().length));
+    return 'L' + leafId(leaf) + ':' + loc + (emb ? 'E' : '') + (shown ? '' : '-noshow');
+  };
+  R.cls = cls;
+  let seq = 0;
+  window.__sc548hook = (kind, a, b, c) => {
+    if (kind === 'proc') { push('proc', cls(a), b && b.sourcePath, c); return null; }
+    if (kind === 'skip') { push('skip', cls(a), b && b.sourcePath); return null; }
+    if (kind === 'deferred-run') { push('deferred-run', cls(a)); return null; }
+    if (kind === 'run') { const tok = { id: ++seq, el: a, t0: performance.now(), c0: cls(a) }; push('run', tok.id, tok.c0, b); return tok; }
+    if (kind === 'done' && a) {
+      const c1 = cls(a.el); const ms = Math.round((performance.now() - a.t0) * 10) / 10;
+      push('done', a.id, a.c0, c1, ms);
+      if (/:LP/.test(c1) && !/noshow/.test(c1)) { requestAnimationFrame(() => { const ch = new MessageChannel(); ch.port1.onmessage = () => push('paint', a.id, c1); ch.port2.postMessage(0); }); }
+    }
+    return null;
+  };
+  // Obsidian side of every HIDDEN Reading view (an LP leaf's previewMode): the view's own renderer and every embed component under it.
+  const wrapped = R.wrapped || (R.wrapped = new WeakSet());
+  const wrapRenderer = (r, tag) => {
+    if (!r || wrapped.has(r)) return; wrapped.add(r);
+    const on = r.onRender; r.onRender = function () { const t = performance.now(); const pe = this.previewEl; const vis = !!(pe && pe.offsetParent && pe.offsetWidth > 0); const out = on.apply(this, arguments); push('onRender', tag, vis ? 'rendered' : 'early-return', Math.round((performance.now() - t) * 100) / 100); return out; };
+    const st = r.set; r.set = function () { const t = performance.now(); const out = st.apply(this, arguments); push('rset', tag, Math.round((performance.now() - t) * 100) / 100); return out; };
+  };
+  const walk = (comp, f, depth = 0) => { if (!comp || depth > 12) return; f(comp); for (const ch of comp._children || []) walk(ch, f, depth + 1); };
+  R.wrapHidden = () => {
+    let n = 0;
+    for (const leaf of app.workspace.getLeavesOfType('markdown')) {
+      const v = leaf.view; if (!v || !v.previewMode) continue;
+      const id = 'L' + leafId(leaf);
+      wrapRenderer(v.previewMode.renderer, id + ':view');
+      walk(v.previewMode, (c) => {
+        if (c !== v.previewMode && c.previewMode && c.previewMode.renderer && c.file) {
+          wrapRenderer(c.previewMode.renderer, id + ':embed:' + c.file.path);
+          if (!wrapped.has(c)) { wrapped.add(c); const lc = c.loadContents; c.loadContents = function () { const t = performance.now(); const out = lc.apply(this, arguments); push('loadContents', id + ':embed:' + this.file.path, (v.getMode() === 'preview') ? 'visible-view' : 'hidden-view', Math.round((performance.now() - t) * 100) / 100); return out; }; }
+          n++;
+        }
+      });
+    }
+    return n;
+  };
+  if (!R.modRef) R.modRef = app.vault.on('modify', (f) => window.__p548 && window.__p548.push && window.__p548.push('mod', f.path));
+  if (!R.mcRef) R.mcRef = app.metadataCache.on('changed', (f) => window.__p548 && window.__p548.push && window.__p548.push('mcchanged', f.path));
+  // SC-472 pins / SC-522+SC-478 holds: on/off per element class (is a HIDDEN Reading view ever pinned?)
+  if (R.amo) R.amo.disconnect();
+  R.amo = new MutationObserver((recs) => { for (const r of recs) { const on = r.target.hasAttribute(r.attributeName); const was = r.oldValue !== null; if (on !== was) push('attr', r.attributeName, cls(r.target), on ? 1 : 0); } });
+  R.amo.observe(document.body, { subtree: true, attributes: true, attributeOldValue: true, attributeFilter: ['data-dse-scroll-pin', 'data-dse-lp-embed-hold', 'data-dse-lp-hold'] });
+  // frame gaps (a busy main thread)
+  if (R.raf) cancelAnimationFrame(R.raf);
+  let lastF = performance.now();
+  const frame = () => { const n = performance.now(); if (n - lastF > 200) push('gap', Math.round(n - lastF)); lastF = n; R.raf = requestAnimationFrame(frame); };
+  R.raf = requestAnimationFrame(frame);
+  return true;
+})()`;
+
+async function p548Run(s, t) {
+	const thr = P548_THR > 1 && (!P548_THR_IDS.length || P548_THR_IDS.includes(s.id)) ? P548_THR : 1;
+	const la0 = fs.readFileSync('/proc/loadavg', 'utf8').trim();
+	console.log(`P548-LOAD ${s.id} start thr=${thr} loadavg=[${la0}] ${new Date().toISOString()}`);
+	t.p548thr = thr;
+	// P548_GLOBALREC=1: for an in-tree scenario, record every DSE entry / pin / hold of the whole scenario and print the totals by class.
+	const glob = process.env.P548_GLOBALREC === '1' && !s.id.startsWith('P548-');
+	if (glob) await t.ev(P548_REC);
+	try {
+		return await s.run(t);
+	} finally {
+		if (glob) {
+			try {
+				const g = await t.ev(`(() => { const R = window.__p548; if (!R || !R.ev) return null; const c = {}; for (const e of R.ev) { let k = null; if (e[1] === 'proc' || e[1] === 'skip' || e[1] === 'deferred-run') k = e[1] + ' ' + e[2]; else if (e[1] === 'done') k = 'done ' + e[4]; else if (e[1] === 'attr') k = 'attr ' + e[2] + (e[4] ? '+' : '-') + ' ' + e[3]; if (k) c[k] = (c[k] || 0) + 1; } return c; })()`);
+				console.log(`P548-GLOBAL ${s.id} ${JSON.stringify(g)}`);
+			} catch (e) {
+				console.log(`P548-GLOBAL ${s.id} dump failed ${e}`);
+			}
+		}
+		try {
+			await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: 1 });
+		} catch {}
+		console.log(`P548-LOAD ${s.id} end loadavg=[${fs.readFileSync('/proc/loadavg', 'utf8').trim()}] ${new Date().toISOString()}`);
+	}
+}
+
+const P548_METRICS = ['TaskDuration', 'ScriptDuration', 'LayoutDuration', 'RecalcStyleDuration'];
+const p548Metrics = async (t) => {
+	const r = await t.cdp.call('Performance.getMetrics', {});
+	const o = {};
+	for (const m of r.metrics) if (P548_METRICS.includes(m.name)) o[m.name] = m.value;
+	return o;
+};
+const P548_RD = (leaf) => `(${leaf}).view.containerEl.querySelector('.markdown-reading-view > .markdown-preview-view')`;
+const P548_CM = (leaf) => `(${leaf}).view.editor.cm`;
+const P548_EMB = (leaf) => `Array.from(${P548_CM(leaf)}.contentDOM.children).find((e) => e.classList.contains('internal-embed') && !!e.querySelector('${TRACKER}'))`;
+const P548_EMBROOT = (leaf) => `((${P548_EMB(leaf)}) || null)?.querySelector('${TRACKER}')`;
+
+// One write + its window. `visibleLpPath` = the note the visible LP block shows (the latency end point is the first 'done' of a
+// run in a visible LP element after the write, then its paint). Returns the per-write record.
+const p548Write = async (t, rel, v, { expectLp = true } = {}) => {
+	const m0 = await p548Metrics(t);
+	if (t.p548thr > 1) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: t.p548thr });
+	const wStart = await t.ev(`(async () => { const R = window.__p548; R.wmark = R.ev.length; const w = R.now(); R.push('write', ${JSON.stringify(rel)}, ${v}); await app.vault.process(app.vault.getAbstractFileByPath(${JSON.stringify(rel)}), (c) => c.replace(/ {2}value: \\d+/, '  value: ${v}')); return w; })()`);
+	// wait: a visible LP paint (when expected) + settle, cap P548_WIN
+	const t0 = Date.now();
+	let painted = false;
+	for (;;) {
+		const st = await t.ev(`(() => { const R = window.__p548; const ev = R.ev.slice(R.wmark); return { paint: ev.some((e) => e[1] === 'paint'), last: ev.length ? ev[ev.length - 1][0] : 0, now: R.now() }; })()`);
+		if (expectLp && st.paint && !painted) painted = Date.now();
+		if (expectLp ? painted && Date.now() - painted > P548_SETTLE : Date.now() - t0 > P548_SETTLE + 1500) break;
+		if (Date.now() - t0 > P548_WIN) break;
+		await t.sleep(100);
+	}
+	if (t.p548thr > 1) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: 1 });
+	const m1 = await p548Metrics(t);
+	const ev = await t.ev(`(() => { const R = window.__p548; return R.ev.slice(R.wmark); })()`);
+	const d = {};
+	for (const k of P548_METRICS) d[k] = Math.round((m1[k] - m0[k]) * 10000) / 10; // ms
+	return { rel, v, wStart, windowMs: Date.now() - t0, metricsMs: d, ev };
+};
+
+const p548Summ = (w) => {
+	const t0 = w.wStart;
+	const mod = w.ev.find((e) => e[1] === 'mod' && e[2] === w.rel);
+	const mc = w.ev.find((e) => e[1] === 'mcchanged' && e[2] === w.rel);
+	const by = {};
+	for (const e of w.ev) {
+		if (e[1] === 'proc') (by['proc ' + e[2]] = (by['proc ' + e[2]] || 0) + 1);
+		if (e[1] === 'run') (by['run ' + e[3]] = (by['run ' + e[3]] || 0) + 1);
+		if (e[1] === 'done') (by['done ' + e[4]] = (by['done ' + e[4]] || 0) + 1);
+		if (e[1] === 'skip' || e[1] === 'deferred-run') (by[e[1] + ' ' + e[2]] = (by[e[1] + ' ' + e[2]] || 0) + 1);
+		if (e[1] === 'attr') (by[`attr ${e[2]}${e[4] ? '+' : '-'} ${e[3]}`] = (by[`attr ${e[2]}${e[4] ? '+' : '-'} ${e[3]}`] || 0) + 1);
+	}
+	const lpDone = w.ev.find((e) => e[1] === 'done' && /:LP/.test(e[4]) && !/noshow/.test(e[4]));
+	const lpPaint = lpDone ? w.ev.find((e) => e[1] === 'paint' && e[2] === lpDone[2]) : null;
+	const hiddenObs = w.ev.filter((e) => e[1] === 'onRender' || e[1] === 'rset' || e[1] === 'loadContents');
+	const hidObsMs = hiddenObs.filter((e) => /hidden|early-return/.test(String(e[3])) || e[1] === 'rset').reduce((a, e) => a + (e[4] ?? e[3] ?? 0) * 0, 0);
+	const sumKind = (k, pred) => Math.round(w.ev.filter((e) => e[1] === k && pred(e)).reduce((a, e) => a + Number(e[e.length - 1]), 0) * 100) / 100;
+	return {
+		v: w.v,
+		mod: mod ? Math.round(mod[0] - t0) : null,
+		mcchanged: mc ? Math.round(mc[0] - t0) : null,
+		counts: by,
+		runsDone: w.ev.filter((e) => e[1] === 'done').map((e) => `${e[3]}->${e[4]} ${e[5]}ms @${Math.round(e[0] - t0)}`),
+		lpDone: lpDone ? Math.round(lpDone[0] - t0) : null,
+		lpPaint: lpPaint ? Math.round(lpPaint[0] - t0) : null,
+		obsidianHidden: hiddenObs.map((e) => `${e[1]} ${e[2]} ${e.slice(3).join(' ')} @${Math.round(e[0] - t0)}`),
+		obsidianHiddenMs: { loadContents: sumKind('loadContents', (e) => e[3] === 'hidden-view'), onRenderEarly: sumKind('onRender', (e) => e[3] === 'early-return'), onRenderRendered: sumKind('onRender', (e) => e[3] === 'rendered'), rset: sumKind('rset', () => true) },
+		gaps: w.ev.filter((e) => e[1] === 'gap').map((e) => `${e[2]}@${Math.round(e[0] - t0)}`),
+		metricsMs: w.metricsMs,
+		windowMs: w.windowMs,
+	};
+};
+
+// Hidden-view DSE roots of a leaf: count + tagged survivors (a DSE re-render in the hidden view replaces the tagged root).
+const p548HiddenRoots = (leaf) => `(() => { const v = (${leaf}).view; const c = v.previewMode && v.previewMode.containerEl; if (!c) return null; const rs = Array.from(c.querySelectorAll('[data-dse-element]')).filter((r) => !r.parentElement.closest('[data-dse-element]')); return { mode: v.getMode(), shown: !!c.offsetParent, roots: rs.length, mounted: rs.filter((r) => r.childElementCount > 0).length, tagged: rs.filter((r) => r.__p548tag).length, malice: rs.map((r) => (r.querySelector('.dse-init__malice-num, .dse-init__malice-value') || {}).textContent || null) }; })()`;
+const p548TagHidden = (leaf) => t0 => null;
+
+// LP -> Reading switch of `leaf` (showing `file`) after writes it did not show: per painted frame (rAF), the Reading view's tracker roots,
+// mounted, their malice text and how many are the OLD (tagged before the writes) roots. Consecutive equal states are collapsed.
+const p548Switch = async (t, leaf, file, label, active = true) => {
+	await t.ev(P548_REC);
+	await t.ev('window.__p548.wrapHidden()');
+	const sw = await t.ev(`(async () => { const R = window.__p548; R.wmark = R.ev.length; const t0 = R.now(); const leaf = ${leaf}; const states = []; let last = null; let done = false; const tick = () => { const c = leaf.view.previewMode.containerEl; const rs = Array.from(c.querySelectorAll('${TRACKER}')).filter((r) => !r.parentElement.closest('[data-dse-element]')); const st = [leaf.view.getMode(), !!c.offsetParent, rs.length, rs.filter((r) => r.childElementCount > 0).length, rs.map((r) => (r.querySelector('.dse-init__malice-num, .dse-init__malice-value') || {}).textContent || null).join('|'), rs.filter((r) => r.__p548tag).length].join(','); if (st !== last) { states.push([Math.round(R.now() - t0), st]); last = st; } if (!done) requestAnimationFrame(tick); }; requestAnimationFrame(tick); await leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(file)}, mode: 'preview' }, active: ${active} }); await new Promise((r) => setTimeout(r, 2500)); done = true; return { states, ev: R.ev.slice(R.wmark).filter((e) => ['proc', 'run', 'done', 'skip', 'deferred-run', 'gap', 'attr'].includes(e[1])).map((e) => [Math.round(e[0] - t0), ...e.slice(1)]) }; })()`);
+	const disk = (t.read(file).match(/ {2}value: (\d+)/) || [])[1];
+	console.log(`P548-SWITCH ${label} disk=${disk} ${JSON.stringify(sw)}`);
+	return sw;
+};
+
+SCENARIOS.push({
+	id: 'P548-MECH',
+	async run(t) {
+		await t.cdp.call('Performance.enable', {});
+		const out = {};
+		const want = (p) => !P548_PHASES.length || P548_PHASES.includes(p);
+		const host = 'Lifecycle/lpembhostend.md';
+		const rel = 'Lifecycle/lpembtracker.md';
+		const A = 'window.__p548A';
+		const parkEnd = async (leaf) => {
+			const s = `${P548_CM(leaf)}.scrollDOM`;
+			await t.ev(`(() => { ${s}.scrollTop = 0; return true; })()`);
+			for (let i = 0; i < 60 && !(await t.ev(`!!(${P548_EMBROOT(leaf)})`)); i++) {
+				await t.ev(`(() => { const s = ${s}; s.scrollTop += Math.round(s.clientHeight * 0.6); return true; })()`);
+				await t.sleep(200);
+			}
+			await t.waitFor(`!!(${P548_EMBROOT(leaf)}) && (${P548_EMBROOT(leaf)}).childElementCount > 0`, 'the LP embed is drawn', 60000);
+			for (let i = 0; i < 3; i++) {
+				await t.ev(`(() => { const s = ${s}; s.scrollTop = s.scrollHeight; return true; })()`);
+				await t.sleep(450);
+			}
+		};
+		const tagHidden = (leaf) => t.ev(`(() => { const c = (${leaf}).view.previewMode.containerEl; let n = 0; for (const r of c.querySelectorAll('[data-dse-element]')) { r.__p548tag = 1; n++; } return n; })()`);
+		const writes = async (name, wrel, leaf, opts) => {
+			const rows = [];
+			const raw = [];
+			for (let k = 0; k < P548_REPS; k++) {
+				await t.ev(P548_REC);
+				const nWrapped = await t.ev('window.__p548.wrapHidden()');
+				if (leaf) await tagHidden(leaf);
+				const hb = leaf ? await t.ev(p548HiddenRoots(leaf)) : null;
+				const w = await p548Write(t, wrel, 10 + k, opts);
+				const ha = leaf ? await t.ev(p548HiddenRoots(leaf)) : null;
+				const sm = p548Summ(w);
+				sm.nWrappedEmbeds = nWrapped;
+				sm.hiddenBefore = hb;
+				sm.hiddenAfter = ha;
+				rows.push(sm);
+				raw.push(w.ev);
+				console.log(`P548-W ${name} k=${k} ${JSON.stringify(sm)}`);
+				await t.sleep(800);
+			}
+			console.log(`P548-RAW ${name} ${JSON.stringify(raw)}`);
+			out[name] = rows;
+		};
+		const openLpHost = async (viaReading) => {
+			if (viaReading) await t.open(host);
+			else await t.open('Lifecycle/other.md');
+			await t.ev(`(async () => { window.__p548A = app.workspace.getMostRecentLeaf(); await window.__p548A.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(host)}, mode: 'source', source: false }, active: true }); window.__p548A.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+			await t.sleep(1500);
+		};
+		const detach = (v) => t.ev(`(() => { if (${v}) ${v}.detach(); ${v} = null; return true; })()`);
+
+		// P1: the G-S52 shape. LP host (opened in Reading first, as G-S52's openHost does), parked at its end, outside vault.process of B.
+		if (want('p1')) {
+			await t.reset(rel);
+			await openLpHost(true);
+			await parkEnd(A);
+			await writes('p1-lphost-viaRD', rel, A);
+			// mode switch after the writes: LP -> Reading. Does the embed show fresh, and who renders it?
+			out.switch1 = (await p548Switch(t, A, host, 'p1-lp-to-rd')).states;
+			// and a write while in Reading (unchanged path): the visible Reading embed is redrawn
+			await t.ev(P548_REC);
+			const wr = await p548Write(t, rel, 30, { expectLp: false });
+			console.log(`P548-W p1-in-reading ${JSON.stringify(p548Summ(wr))}`);
+			// back to LP: is the LP embed fresh?
+			await t.ev(`(async () => { await ${A}.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(host)}, mode: 'source', source: false }, active: true }); return true; })()`);
+			await t.sleep(1500);
+			const lpFresh = await t.ev(`(() => { const rs = Array.from(${P548_CM(A)}.contentDOM.querySelectorAll('${TRACKER}')); return rs.map((r) => (r.querySelector('.dse-init__malice-num, .dse-init__malice-value') || {}).textContent || null); })()`);
+			console.log(`P548-BACK p1-rd-to-lp malice=${JSON.stringify(lpFresh)} disk=${(t.read(rel).match(/ {2}value: (\d+)/) || [])[1]}`);
+			await t.reset(rel);
+		}
+		// P2: LP host opened straight in LP (its Reading view never rendered).
+		if (want('p2')) {
+			await t.reset(rel);
+			await openLpHost(false);
+			await parkEnd(A);
+			await writes('p2-lphost-fresh', rel, A);
+			await t.reset(rel);
+		}
+		// P3: the embedded note itself open in LP (no embed), opened in Reading first.
+		if (want('p3')) {
+			await t.reset(rel);
+			await t.open(rel);
+			await t.ev(`(async () => { window.__p548A = app.workspace.getMostRecentLeaf(); await window.__p548A.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'source', source: false }, active: true }); window.__p548A.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+			await t.sleep(1500);
+			await writes('p3-own-lp-viaRD', rel, A);
+			out.switch3 = (await p548Switch(t, A, rel, 'p3-lp-to-rd')).states;
+			await t.reset(rel);
+		}
+		// P4: G-S52 (c) load: LP host (via Reading) + a second pane: Reading view of B; outside write.
+		if (want('p4')) {
+			await t.reset(rel);
+			await openLpHost(true);
+			try {
+				await t.ev(`(async () => { const b = app.workspace.getLeaf('split', 'vertical'); window.__p548B = b; await b.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'preview' }, active: false }); app.workspace.setActiveLeaf(window.__p548A, { focus: true }); return true; })()`);
+				await t.waitFor(`!!(${t.root(TRACKER, 'window.__p548B')})`, 'second pane drawn', 60000);
+				await parkEnd(A);
+				await writes('p4-lphost+rdB', rel, A);
+			} finally {
+				await detach('window.__p548B');
+			}
+			await t.reset(rel);
+		}
+		// P5: a second LP pane of the host (both via Reading).
+		if (want('p5')) {
+			await t.reset(rel);
+			await openLpHost(true);
+			try {
+				await t.ev(`(async () => { const b = app.workspace.getLeaf('split', 'vertical'); window.__p548B = b; await b.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(host)}, mode: 'preview' }, active: false }); await new Promise((r) => setTimeout(r, 1500)); await b.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(host)}, mode: 'source', source: false }, active: false }); app.workspace.setActiveLeaf(window.__p548A, { focus: true }); return true; })()`);
+				await t.sleep(1500);
+				await parkEnd(A);
+				await writes('p5-two-lp-hosts', rel, A);
+			} finally {
+				await detach('window.__p548B');
+			}
+			await t.reset(rel);
+		}
+		// P6: SC-470's LP sibling shape: tall.md in Reading pane A and LP pane B (B via Reading first), outside write to tall.md.
+		if (want('p6')) {
+			const tall = 'Lifecycle/tall.md';
+			await t.reset(tall);
+			await t.open(tall);
+			try {
+				await t.ev(`(async () => { window.__p548A = app.workspace.getMostRecentLeaf(); const b = app.workspace.getLeaf('split', 'vertical'); window.__p548B = b; await b.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(tall)}, mode: 'preview' }, active: false }); await new Promise((r) => setTimeout(r, 1500)); await b.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(tall)}, mode: 'source', source: false }, active: false }); app.workspace.setActiveLeaf(window.__p548A, { focus: true }); return true; })()`);
+				await t.sleep(1500);
+				const cmB = 'window.__p548B.view.editor.cm';
+				const lpRootB = `Array.from(${cmB}.contentDOM.querySelectorAll('${TRACKER}')).find((x) => x.isConnected)`;
+				for (let i = 0; i < 12 && !(await t.ev(`!!(${lpRootB})`)); i++) { await t.ev(`(() => { ${cmB}.scrollDOM.scrollTop += 600; return true; })()`); await t.sleep(250); }
+				for (let i = 0; i < 2; i++) { await t.ev(`(() => { const s = ${cmB}.scrollDOM; const r = ${lpRootB}; if (r) s.scrollTop = r.getBoundingClientRect().top - s.getBoundingClientRect().top + s.scrollTop + 1500; return true; })()`); await t.sleep(300); }
+				await writes('p6-lpsib', tall, 'window.__p548B');
+				out.switch6 = (await p548Switch(t, 'window.__p548B', tall, 'p6-B-lp-to-rd', false)).states;
+			} finally {
+				await detach('window.__p548B');
+			}
+			await t.reset(tall);
+		}
+		await t.open('Lifecycle/other.md');
+		const brief = {};
+		for (const [k, rows] of Object.entries(out)) brief[k] = Array.isArray(rows) ? rows.map((r) => ({ counts: r.counts, lpDone: r.lpDone, lpPaint: r.lpPaint, hidden: r.hiddenAfter, obs: r.obsidianHiddenMs, m: r.metricsMs })) : rows;
+		return JSON.stringify(brief);
+	},
+});

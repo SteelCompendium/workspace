@@ -1,0 +1,39 @@
+# sc548 r1 instrumentation patcher (scratch bundles only): python3 -I sc548-r1-patch-instr.py <tree>
+# Adds an optional page hook `globalThis.__sc548hook(kind, ...)` (installed by the probe; absent = no-op):
+#  - 'proc'  at the top of every code-block processor call (registerFrameworkElements.ts): (el, ctx, alias)
+#  - 'run'   when ElementPipeline.run starts (every fresh DSE render: processor or SC-481 remount): (containerEl, sourcePath) -> token
+#  - 'done'  when that run settles: (token)
+import sys
+
+T = sys.argv[1]
+
+
+def rep(rel, old, new):
+    p = f'{T}/{rel}'
+    s = open(p).read()
+    assert s.count(old) == 1, (rel, old[:80], s.count(old))
+    open(p, 'w').write(s.replace(old, new))
+
+
+HOOK = '(globalThis as unknown as { __sc548hook?: (kind: string, ...a: unknown[]) => unknown }).__sc548hook'
+
+rep(
+    'src/framework/registerFrameworkElements.ts',
+    "(source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {\n\t\t\t\t\t// SC-340 §6.2: a rebuild caused by one of OUR writes adopts the live view.\n",
+    "(source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {\n\t\t\t\t\t" + HOOK + "?.('proc', el, ctx, alias);\n\t\t\t\t\t// SC-340 §6.2: a rebuild caused by one of OUR writes adopts the live view.\n",
+)
+rep(
+    'src/framework/pipeline.ts',
+    '\tasync run<M>(def: ElementDefinition<M>, source: string, host: BlockHost): Promise<void> {\n',
+    '\tasync run<M>(def: ElementDefinition<M>, source: string, host: BlockHost): Promise<void> {\n'
+    '\t\tconst hook = ' + HOOK + ';\n'
+    "\t\tconst tok = hook?.('run', host.containerEl, host.sourcePath);\n"
+    '\t\ttry {\n'
+    '\t\t\treturn await this.runInner(def, source, host);\n'
+    '\t\t} finally {\n'
+    "\t\t\thook?.('done', tok);\n"
+    '\t\t}\n'
+    '\t}\n\n'
+    '\tprivate async runInner<M>(def: ElementDefinition<M>, source: string, host: BlockHost): Promise<void> {\n',
+)
+print('instr ok')

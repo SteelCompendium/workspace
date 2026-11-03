@@ -1,0 +1,68 @@
+diff --git tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc548-r1-reviewer/bundles/stock/tree/src/framework/registerFrameworkElements.ts tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc548-r1-reviewer/bundles/skip/tree/src/framework/registerFrameworkElements.ts
+index ea6cc4aa..70e17b90 100644
+--- tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc548-r1-reviewer/bundles/stock/tree/src/framework/registerFrameworkElements.ts
++++ tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc548-r1-reviewer/bundles/skip/tree/src/framework/registerFrameworkElements.ts
+@@ -28,6 +28,19 @@ import { adoptView } from './host/adoptView';
+ import { ReusedElementRemounter } from './host/remountReused';
+ import { livePreviewReconcileExtension } from './host/livePreviewReconcile';
+ 
++/** SC-548 prototype: the `.markdown-reading-view` this block is drawn in when that Reading view is hidden because its leaf is in
++ *  source / Live Preview mode (`MarkdownView.previewMode` of a leaf whose `getMode()` is 'source'); else null. */
++function hiddenReadingViewOf(plugin: Plugin, el: HTMLElement, ctx: MarkdownPostProcessorContext): HTMLElement | null {
++	const probe = (ctx as unknown as { containerEl?: HTMLElement }).containerEl ?? el;
++	const rv = probe.closest<HTMLElement>('.markdown-reading-view') ?? el.closest<HTMLElement>('.markdown-reading-view');
++	if (!rv || rv.offsetParent !== null) return null;
++	for (const leaf of plugin.app.workspace.getLeavesOfType('markdown')) {
++		const view = leaf.view as unknown as { getMode?: () => string; previewMode?: { containerEl?: HTMLElement } };
++		if (view.previewMode?.containerEl === rv) return view.getMode?.() === 'source' ? rv : null;
++	}
++	return null;
++}
++
+ /**
+  * The subset of `ElementFrameworkV2` (main.ts) this wiring loop needs. A narrow structural
+  * interface — rather than importing `ElementFrameworkV2` from main.ts — keeps
+@@ -82,6 +95,22 @@ export function registerFrameworkElements(
+ 			plugin.registerMarkdownCodeBlockProcessor(
+ 				alias,
+ 				(source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
++					(globalThis as unknown as { __sc548hook?: (kind: string, ...a: unknown[]) => unknown }).__sc548hook?.('proc', el, ctx, alias);
++					const hiddenRv = hiddenReadingViewOf(plugin, el, ctx);
++					if (hiddenRv) {
++						(globalThis as unknown as { __sc548hook?: (kind: string, ...a: unknown[]) => unknown }).__sc548hook?.('skip', el, ctx);
++						const ro = new ResizeObserver(() => {
++							if (hiddenRv.offsetParent === null) return;
++							ro.disconnect();
++							if (!el.isConnected || el.childElementCount > 0) return;
++							(globalThis as unknown as { __sc548hook?: (kind: string, ...a: unknown[]) => unknown }).__sc548hook?.('deferred-run', el);
++							const host = new ReadingModeBlockHost(plugin, el, ctx, alias, scrollPin, registry);
++							host.setMountedBody(source);
++							void framework.pipeline.run(def, source, host);
++						});
++						ro.observe(hiddenRv);
++						return;
++					}
+ 					// SC-340 §6.2: a rebuild caused by one of OUR writes adopts the live view.
+ 					const claimed = registry.claim(ctx.docId, ctx.sourcePath, source);
+ 					if (claimed) {
+diff --git tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc548-r1-reviewer/bundles/stock/tree/src/framework/pipeline.ts tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc548-r1-reviewer/bundles/skip/tree/src/framework/pipeline.ts
+index 7afcb96c..d47353a3 100644
+--- tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc548-r1-reviewer/bundles/stock/tree/src/framework/pipeline.ts
++++ tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc548-r1-reviewer/bundles/skip/tree/src/framework/pipeline.ts
+@@ -429,6 +429,16 @@ export class ElementPipeline {
+ 	constructor(private readonly deps: ElementPipelineDeps) {}
+ 
+ 	async run<M>(def: ElementDefinition<M>, source: string, host: BlockHost): Promise<void> {
++		const hook = (globalThis as unknown as { __sc548hook?: (kind: string, ...a: unknown[]) => unknown }).__sc548hook;
++		const tok = hook?.('run', host.containerEl, host.sourcePath);
++		try {
++			return await this.runInner(def, source, host);
++		} finally {
++			hook?.('done', tok);
++		}
++	}
++
++	private async runInner<M>(def: ElementDefinition<M>, source: string, host: BlockHost): Promise<void> {
+ 		// SC-406: a deferred element, switch off ⇒ the inert card and nothing else — before the
+ 		// RenderContext, the host's view registry or the block's source are touched at all.
+ 		if (def.deferred === true && !isExperimental()) {
