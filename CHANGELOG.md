@@ -40,7 +40,7 @@ go under an *Internal* sub-heading.
   Obsidian often had not started to redraw yet, the hold ended too early, and the note jumped up (in our tests it
   scrolled from 2779 px to 2001 px in Reading view, and from 7486 px to 3745 px in a Live Preview note that embeds the
   tracker). The hold now ends when Obsidian has finished redrawing the tracker, and the 2.5 seconds are only a safety net,
-  so a redraw that comes late no longer moves the note, even if you scroll while you wait for it. A change that
+  so a redraw that comes late no longer jumps, even if you scroll while you wait for it (a reader who scrolls to the very end of a long note can still settle up to about 500 px higher, as before). A change that
   Obsidian never redraws still lets go after about 3 seconds, and the hold lets go at once when you open another note
   in the same pane. Also fixed: holding the position added 64 px of empty space below a note, so if you were reading at
   the very end, the page snapped back 64 px when the hold ended. One small trade: when a change makes the end of a note
