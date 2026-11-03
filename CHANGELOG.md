@@ -8,6 +8,15 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: an edit form opened on one of several identical blocks saves into the block you opened it on (SC-552, SC-549).**
+  When a note has two or more blocks that read the same and you clicked + on an upper one and then opened the edit form
+  (the pencil) on a lower one within about half a second, Saving the form wrote your edit into the block below the one you
+  had opened. The same happened when another block was edited (by you elsewhere, or by a sync) while the form was open.
+  With two identical blocks the form on the lower one even closed by itself, with nothing saved. Now the edit is saved
+  into the block you opened the form on, and the form stays open until you save or cancel it as long as the note is still
+  on screen. A click on an identical block followed quickly by typing in the note or an outside edit above it now also
+  counts in the block you clicked.
+
 - **DSE plugin: turning Draw Steel Elements off and back on no longer leaves cards in Live Preview callouts and embeds unclickable (SC-545).**
   With a note open in Live Preview, turning the plugin off and on in Community plugins left the cards inside a
   `> [!note]` callout, or inside a note embedded with `![[note]]`, on screen but dead: a click on + saved nothing and
