@@ -8,6 +8,14 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: in Live Preview, typing and scrolling in a note with a callout holding many blocks is no longer slowed by the identical-callout check (SC-547).**
+  Since SC-537 the plugin checks, after every edit, scroll and cursor move, whether a callout's cards still sit on
+  their own blocks. For a callout holding many blocks (forty counters, say) that check re-read the whole callout once
+  for every block in it, so it got much slower with each block added and made typing and scrolling in such a note
+  feel heavier. It now reads each callout once per check. Which cards are redrawn, and when, is unchanged, with one fix: in two
+  identical callouts that each hold two or more blocks of two kinds, a click could leave a card of one kind in the other callout
+  showing the clicked value, and that card's next click wrote the callout you had clicked first. Both kinds are checked now.
+
 - **DSE plugin: two quick clicks on identical blocks each count in the block you clicked (SC-544).**
   When a note has three or more blocks that read the same (three counters set to 5, or three callouts each holding
   the same counter) and you clicked + on one and then + on another within about half a second, the second click
