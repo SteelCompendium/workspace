@@ -1,0 +1,37 @@
+# sc548 r1: print the Obsidian app.js excerpts the report cites. usage: python3 -I sc548-r1-excerpts.py <app-1.15.0.js> <app-1.14.4.js> <app-1.13.7.js>
+import sys
+
+new, v144, v137 = sys.argv[1:4]
+s = open(new).read()
+
+
+def show(label, anchor, before=0, after=600, src=s):
+    i = src.find(anchor)
+    assert i >= 0, label
+    print(f'==== {label} (offset {i})')
+    print(src[max(0, i - before):i + after])
+    print()
+
+
+print('Obsidian 1.15.0 app.js (from ~/.config/obsidian/obsidian-1.15.0.asar, the asar the lifecycle harness runs)\n')
+show('1. MarkdownPreviewRenderer.onRender: returns at once while the preview element is not shown (offsetParent null) - no parse, no section render, no post-processor (DSE code-block processor) call',
+     'onRender(){this.queued=null;let{previewEl:t}=this;', 0, 420)
+show('2. MarkdownPreviewRenderer.set / rerender / clear: set only stores the text and queues a render', 'set(t){this.text=t,this.queueRender()}rerender(t)', 0, 200)
+show('3. MarkdownPreviewRenderer.queueRender', 'queueRender(){this.rendered||(this.rendered=[]);', 0, 300)
+show('4. MarkdownView.setViewData: a write to the open note (clear=false) sets only the CURRENT mode; the hidden Reading view is not told',
+     'setViewData(e,i){let{currentMode:r,modes:n}=this;', 0, 330)
+show('5. MarkdownView/TextFileView.onModify -> loadFileInternal -> setData -> setViewData(data, false)', 'onModify(e){this.saving||e===this.file&&this.loadFileInternal(e,!1)}', 0, 520)
+i = s.find('kE=class kE extends An{')
+show('6. Markdown embed (kE): every embed listens to metadataCache "changed" for its file -> loadFileInternal -> loadContents (-> set -> previewMode.set -> renderer.set -> queueRender)',
+     'this.registerEvent(this.app.metadataCache.on("changed",this.onFileChanged,this))', 120, 1000, s[i:])
+show('7. Markdown embed base (An): set -> previewMode.set', 'set(e,i){this.text=e,this.previewMode.set(e),this.editMode&&this.editMode.set(e,i)}', 0, 120)
+show('8. getSectionInfo reads lastText (the text of the last PARSE), so a hidden renderer still answers with the old text',
+     'getSectionInfo(t){if(!this.belongsToMe(t))return null;', 0, 200)
+show('9. Export to PDF renders a FRESH copy into div.print in a hidden popup window (not the leaf previewMode)', 'async printToPdfDesktop(t){', 0, 700)
+for label, p in (('1.14.4', v144), ('1.13.7', v137)):
+    t = open(p).read()
+    k = t.find('var n=this.previewEl;if(!!n.offsetParent&&n.offsetWidth>0){')
+    assert k >= 0, label
+    print(f'==== 10. the same visibility gate in Obsidian {label} app.js (offset {k})')
+    print(t[k - 60:k + 200])
+    print()

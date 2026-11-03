@@ -1,0 +1,17 @@
+// SC-548 r1: build a SCRATCH copy of the lifecycle harness with the P548 probe block injected before main(), and every
+// scenario run wrapped by p548Run (throttle + loadavg). The worktree is never edited.
+// usage: node sc548-r1-mkharness.cjs <in-tree harness> <out file (inside an exported tree's visual-harness/)> <block file>
+const fs = require('fs');
+const [src, out, block] = process.argv.slice(2);
+let s = fs.readFileSync(src, 'utf8');
+const rep = (a, b) => {
+	if (s.split(a).length !== 2) {
+		console.error('anchor count != 1: ' + a.slice(0, 60));
+		process.exit(3);
+	}
+	s = s.replace(a, b);
+};
+rep('\nasync function main() {', '\n' + fs.readFileSync(block, 'utf8') + '\nasync function main() {');
+rep('const summary = await s.run(t);', 'const summary = await p548Run(s, t);');
+fs.writeFileSync(out, s);
+console.log(`wrote ${out} (${s.length} bytes)`);

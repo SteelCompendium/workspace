@@ -1,0 +1,35 @@
+Obsidian 1.15.0 app.js (from ~/.config/obsidian/obsidian-1.15.0.asar, the asar the lifecycle harness runs)
+
+==== 1. MarkdownPreviewRenderer.onRender: returns at once while the preview element is not shown (offsetParent null) - no parse, no section render, no post-processor (DSE code-block processor) call (offset 1816126)
+onRender(){this.queued=null;let{previewEl:t}=this;if(!(!!t.offsetParent&&t.offsetWidth>0))return;let i=t.scrollTop;this.lastText!==this.text&&(!zg.asyncParse||this.text.length<10*1024?this.parseSync():this.parseAsync());let{sections:r,sizerEl:n,pusherEl:a}=this,s=0,l=performance.now(),c=!1;for(let f of r){if(f.rendered)continue;s++;let m=f.el;f.render();for(let b of os.recyclers)b(m,this.recycledSections);if(J5(m,b=>
+
+==== 2. MarkdownPreviewRenderer.set / rerender / clear: set only stores the text and queues a render (offset 1811673)
+set(t){this.text=t,this.queueRender()}rerender(t){if(this.lastText=null,t){let{header:e,footer:i}=this;for(let r of this.sections)r===e||r===i||(r.rendered=!1,r.el.empty())}this.queueRender()}clear(){
+
+==== 3. MarkdownPreviewRenderer.queueRender (offset 1814325)
+queueRender(){this.rendered||(this.rendered=[]);let t=this.queued,e=!this.parsing;if(t){e&&!t.high&&(t.cancel(),this.queued=fa(this.onRender.bind(this),0));return}let i=e?0:200;this.queued=fa(this.onRender.bind(this),i)}parseAsync(){this.parsing||(this.parsing=!0,(async()=>{try{if(!Vx){let n=await q
+
+==== 4. MarkdownView.setViewData: a write to the open note (clear=false) sets only the CURRENT mode; the hidden Reading view is not told (offset 2693400)
+setViewData(e,i){let{currentMode:r,modes:n}=this;if(i){this.scroll=null;for(let s in n)n.hasOwnProperty(s)&&n[s].set(e,!0);let a=this.app.foldManager.load(this.file);a&&r.applyFoldInfo(a),this.metadataEditor.setCollapse(!!a&&a.folds.some(s=>s.from===0),!1)}else r.set(e,!1);this.loadFrontmatter(e)}onConfigChanged(e){e==="spellche
+
+==== 5. MarkdownView/TextFileView.onModify -> loadFileInternal -> setData -> setViewData(data, false) (offset 2457790)
+onModify(e){this.saving||e===this.file&&this.loadFileInternal(e,!1)}async loadFileInternal(e,i){let r;e.saving?r=await this.app.vault.cachedRead(e):r=await this.app.vault.read(e);let n=this.lastSavedData;if(this.lastSavedData=r,!i&&n){if(n===r)return;if(this.dirty){let a=this.getViewData();if(a===r)return;a!==n&&this.isPlaintext&&(r=Zv(n,a,r),new R(y.interface.msgFileChanged({file:e.path})))}}this.setData(r,i)}setData(e,i){this.data===e&&!i||(this.data=e,this.setViewData(e,i))}};var LE="release-notes",VDe="obsidian
+
+==== 6. Markdown embed (kE): every embed listens to metadataCache "changed" for its file -> loadFileInternal -> loadContents (-> set -> previewMode.set -> renderer.set -> queueRender) (offset 5092)
+getText().trim());return n?(Hhe(r,n,!0),!1):!0}onload(){super.onload(),this.file instanceof wi&&this.file.addUser(this),this.registerEvent(this.app.metadataCache.on("changed",this.onFileChanged,this)),this.registerEvent(this.app.vault.on("rename",this.onFileRename,this))}onunload(){super.onunload(),this.file instanceof wi&&this.file.removeUser(this),this.applyScope(null)}onFileChanged(e,i,r){e===this.file&&i!==this.data&&!this.dirty&&this.loadFileInternal(i,r)}onFileRename(e,i){e instanceof j&&e===this.file&&!this.subpath&&this.inlineTitleEl.setText(e.basename)}async loadFile(){let{app:e,file:i,headerEl:r,previewMode:n,subpath:a,state:s}=this;a||(r?.setText(i.basename),this.inlineTitleEl.setText(i.basename),n.registerEvent(e.workspace.on("quick-preview",(h,u)=>{h===this.file&&u!==this.data&&this.loadContents(u)})));let l=this.data=await e.vault.cachedRead(i);this.loadFileInternal(l),s&&Number.isNumber(s.scroll)&&this.previewMode.renderer.applyScrollDelayed(s.scroll,{highlight:!0,center:!0});let c=this.getFoldInfo();this.localPropertiesFoldState=!!(c&&c?.folds.some(h=>h.from===0)),this.previewMode.render
+
+==== 7. Markdown embed base (An): set -> previewMode.set (offset 2300850)
+set(e,i){this.text=e,this.previewMode.set(e),this.editMode&&this.editMode.set(e,i)}showSearch(e){this.editMode?this.edit
+
+==== 8. getSectionInfo reads lastText (the text of the last PARSE), so a hidden renderer still answers with the old text (offset 1812672)
+getSectionInfo(t){if(!this.belongsToMe(t))return null;let e=this.getSectionForElement(t);return e?{text:this.lastText||"",lineStart:e.start.line,lineEnd:e.end.line}:null}getInternalLinkHref(t){let e=t
+
+==== 9. Export to PDF renders a FRESH copy into div.print in a hidden popup window (not the leaf previewMode) (offset 2697362)
+async printToPdfDesktop(t){let e=window.open("about:blank","_blank","popup,hide=true"),i=createEl("base",{href:location.href});e.document.head.appendChild(i),e.document.title=this.file.basename,p1(e),ib(e.document),xf(e),u1(e,[i])(),pn.instance.setMessage(y.dialogue.preparingPdf()).show();let n=e.document;await sleep(200),n.body.removeClass("theme-dark"),n.body.addClass("theme-light");let a=n.body.createDiv("print"),s=new Me;s.load();let l=()=>{a.detach(),s.unload(),e.close(),pn.instance.hide()};a.addEventListener("click",l);try{await this.print(a,s,t.includeName),this.copyMathJaxStylesheet(n.head),await sleep(200),await yie(a.win.electron,t),new R(`PDF Saved to ${t.filepath}`)}catch(c){cons
+
+==== 10. the same visibility gate in Obsidian 1.14.4 app.js (offset 2007115)
+e.prototype.onRender=function(){var t=this;this.queued=null;var n=this.previewEl;if(!!n.offsetParent&&n.offsetWidth>0){var i=n.scrollTop;this.lastText!==this.text&&(!Ij.asyncParse||this.text.length<10240?this.parseSync():this.parseAsync());for(var r=this,o=r.s
+
+==== 10. the same visibility gate in Obsidian 1.13.7 app.js (offset 1970502)
+e.prototype.onRender=function(){var t=this;this.queued=null;var n=this.previewEl;if(!!n.offsetParent&&n.offsetWidth>0){var i=n.scrollTop;this.lastText!==this.text&&(!DW.asyncParse||this.text.length<10240?this.parseSync():this.parseAsync());for(var r=this,o=r.s
+

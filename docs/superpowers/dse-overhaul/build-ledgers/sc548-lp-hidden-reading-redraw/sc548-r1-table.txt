@@ -1,0 +1,48 @@
+== sc548-r1-mech-1.log
+    P548-LOAD P548-MECH start thr=1 loadavg=[1.07 2.41 2.47 5/3411 2640938] 2026-11-03T03:28:39.301Z
+    P548-LOAD P548-MECH end loadavg=[1.63 2.17 2.38 3/3420 2642739] 2026-11-03T03:30:30.215Z
+  p1-lphost-viaRD      n=3 lpDone [198, 255, 279] (med 255) lpPaint [354, 493, 522] (med 493) hiddenObsMs [0.1, 0.1, 0.3] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [392.3, 594.4, 625.1]
+  p1-in-reading        n=1 lpDone [None] (med None) lpPaint [None] (med None) hiddenObsMs [0.0] DSE-hidden [0] guard-hits [0] taskMs [914.1]
+  p2-lphost-fresh      n=3 lpDone [264, 276, 245] (med 264) lpPaint [528, 550, 502] (med 528) hiddenObsMs [0.0, 0.2, 0.2] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [575.5, 595.5, 646.2]
+  p3-own-lp-viaRD      n=3 lpDone [245, 248, 223] (med 245) lpPaint [702, 702, 689] (med 702) hiddenObsMs [0.0, 0.0, 0.1] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [932.1, 872.6, 774.8]
+  p4-lphost+rdB        n=3 lpDone [761, 709, 724] (med 724) lpPaint [1021, 956, 1008] (med 1008) hiddenObsMs [0.1, 0.0, 0.2] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [1217.3, 990.7, 1246.8]
+  p5-two-lp-hosts      n=3 lpDone [272, 271, 261] (med 271) lpPaint [535, 569, 492] (med 535) hiddenObsMs [0.4, 0.1, 0.4] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [632.2, 634.5, 526.4]
+  p6-lpsib             n=3 lpDone [286, 264, 275] (med 275) lpPaint [1103, 985, 937] (med 985) hiddenObsMs [0.0, 0.0, 0.0] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [1149.8, 1168, 1138.1]
+== sc548-r1-mech-instr-2.log
+    P548-LOAD P548-MECH start thr=1 loadavg=[3.14 2.21 2.17 2/3387 2657795] 2026-11-03T03:39:22.068Z
+    P548-LOAD P548-MECH end loadavg=[4.64 2.77 2.37 11/3743 2661236] 2026-11-03T03:41:25.962Z
+  p1-lphost-viaRD      n=3 lpDone [430, 509, 449] (med 449) lpPaint [690, 800, 710] (med 710) hiddenObsMs [0.2, 0.1, 0.0] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [728.5, 948, 757.4]
+  p1-in-reading        n=1 lpDone [None] (med None) lpPaint [None] (med None) hiddenObsMs [0.0] DSE-hidden [0] guard-hits [0] taskMs [1119]
+  p2-lphost-fresh      n=3 lpDone [442, 433, 443] (med 442) lpPaint [686, 693, 681] (med 686) hiddenObsMs [0.1, 0.1, 0.1] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [802.7, 817.1, 728.1]
+  p3-own-lp-viaRD      n=3 lpDone [477, 536, 454] (med 477) lpPaint [954, 1041, 907] (med 954) hiddenObsMs [0.3, 0.1, 0.2] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [1236.2, 1267.1, 1134]
+  p4-lphost+rdB        n=3 lpDone [1009, 1076, 1050] (med 1050) lpPaint [1289, 1341, 1310] (med 1310) hiddenObsMs [0.0, 0.1, 0.1] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [1344.9, 1389.4, 1368.3]
+  p5-two-lp-hosts      n=3 lpDone [492, 451, 466] (med 466) lpPaint [784, 711, 721] (med 721) hiddenObsMs [0.3, 0.3, 0.3] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [1041.7, 759.5, 874.8]
+  p6-lpsib             n=3 lpDone [569, 892, 867] (med 867) lpPaint [1450, 2193, 2508] (med 2193) hiddenObsMs [0.0, 0.0, 0.0] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [1541.7, 2267, 2604.4]
+== sc548-r1-mech-skip-1.log
+    P548-LOAD P548-MECH start thr=1 loadavg=[1.42 1.59 2.01 1/3393 2651515] 2026-11-03T03:36:37.802Z
+    P548-LOAD P548-MECH end loadavg=[3.27 2.10 2.13 2/3531 2656242] 2026-11-03T03:38:43.232Z
+  p1-lphost-viaRD      n=3 lpDone [423, 436, 482] (med 436) lpPaint [680, 725, 779] (med 725) hiddenObsMs [0.1, 0.1, 0.1] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [760.8, 814.8, 873.6]
+  p1-in-reading        n=1 lpDone [None] (med None) lpPaint [None] (med None) hiddenObsMs [0.0] DSE-hidden [0] guard-hits [0] taskMs [889.6]
+  p2-lphost-fresh      n=3 lpDone [429, 482, 446] (med 446) lpPaint [688, 723, 697] (med 697) hiddenObsMs [0.3, 0.1, 0.2] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [805.1, 816.7, 733.8]
+  p3-own-lp-viaRD      n=3 lpDone [435, 444, 501] (med 444) lpPaint [896, 889, 958] (med 896) hiddenObsMs [0.2, 0.2, 0.1] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [1139.5, 972.9, 1216.3]
+  p4-lphost+rdB        n=3 lpDone [870, 1004, 1077] (med 1004) lpPaint [1145, 1248, 1324] (med 1248) hiddenObsMs [0.1, 0.1, 0.0] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [1321.1, 1294.6, 1375.9]
+  p5-two-lp-hosts      n=3 lpDone [711, 670, 680] (med 680) lpPaint [1103, 1072, 1096] (med 1096) hiddenObsMs [0.3, 0.5, 0.2] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [1468, 1232, 1164.5]
+  p6-lpsib             n=3 lpDone [705, 717, 699] (med 705) lpPaint [1773, 1863, 1545] (med 1773) hiddenObsMs [0.0, 0.0, 0.0] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [1844.4, 2262.1, 1625.2]
+== sc548-r1-mech-thr8-instr.log
+    P548-LOAD P548-MECH start thr=8 loadavg=[0.96 1.58 2.10 6/3451 2647313] 2026-11-03T03:33:30.751Z
+    P548-LOAD P548-MECH end loadavg=[1.93 1.69 2.08 7/3313 2649230] 2026-11-03T03:35:29.323Z
+  p1-lphost-viaRD      n=3 lpDone [4058, 4286, 4384] (med 4286) lpPaint [6330, 6381, 6661] (med 6381) hiddenObsMs [2.4, 1.6, 2.2] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [7270.7, 7487.3, 7922.7]
+  p1-in-reading        n=1 lpDone [None] (med None) lpPaint [None] (med None) hiddenObsMs [0.0] DSE-hidden [0] guard-hits [0] taskMs [8029.3]
+  p6-lpsib             n=3 lpDone [4849, 5302, 5127] (med 5127) lpPaint [12050, 12422, 16747] (med 12422) hiddenObsMs [0.0, 0.0, 0.0] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [12591.2, 13079.5, 17347.4]
+== sc548-r1-mech-thr8-skip.log
+    P548-LOAD P548-MECH start thr=8 loadavg=[5.42 3.03 2.46 15/3547 2662659] 2026-11-03T03:41:41.189Z
+    P548-LOAD P548-MECH end loadavg=[4.18 3.82 2.88 5/3390 2666580] 2026-11-03T03:44:19.157Z
+  p1-lphost-viaRD      n=3 lpDone [8954, 8009, 6397] (med 8009) lpPaint [14355, 10671, 10383] (med 10671) hiddenObsMs [7.4, 0.4, 3.3] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [16029.9, 12099.8, 12169.7]
+  p1-in-reading        n=1 lpDone [None] (med None) lpPaint [None] (med None) hiddenObsMs [0.0] DSE-hidden [0] guard-hits [0] taskMs [13061.4]
+  p6-lpsib             n=3 lpDone [7310, 7097, 6928] (med 7097) lpPaint [17812, 17210, 20877] (med 17812) hiddenObsMs [0.0, 0.0, 0.0] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [18593.8, 17936.6, 21662.4]
+== sc548-r1-mech-thr8-instr-2.log
+    P548-LOAD P548-MECH start thr=8 loadavg=[1.70 3.00 2.98 1/3143 2682344] 2026-11-03T03:55:07.795Z
+    P548-LOAD P548-MECH end loadavg=[9.70 5.00 3.68 11/3307 2687897] 2026-11-03T03:57:32.388Z
+  p1-lphost-viaRD      n=3 lpDone [4088, 4584, 4891] (med 4584) lpPaint [6602, 7769, 7280] (med 7280) hiddenObsMs [2.3, 1.6, 1.2] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [7753.7, 9307.4, 8533]
+  p1-in-reading        n=1 lpDone [None] (med None) lpPaint [None] (med None) hiddenObsMs [0.0] DSE-hidden [0] guard-hits [0] taskMs [7528.5]
+  p6-lpsib             n=3 lpDone [4865, 22591, 14525] (med 14525) lpPaint [12242, 29710, 23049] (med 23049) hiddenObsMs [0.0, 0.0, 0.0] DSE-hidden [0, 0, 0] guard-hits [0, 0, 0] taskMs [13327.3, 29971.7, 28017.4]

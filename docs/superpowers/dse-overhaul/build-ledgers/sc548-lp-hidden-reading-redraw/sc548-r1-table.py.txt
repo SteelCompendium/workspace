@@ -1,0 +1,36 @@
+# sc548 r1: per run x phase table of the P548-W writes. usage: python3 -I sc548-r1-table.py <log>...
+# hiddenObs = Obsidian's own work for HIDDEN Reading views only (embed loadContents in a hidden view + every renderer.set /
+# onRender early-return of a renderer whose view was hidden); DSE-hidden = DSE processor calls / pipeline runs / pins / holds
+# whose element sat in a hidden Reading view (class RDHIDDEN).
+import json, re, sys, statistics as st
+
+for log in sys.argv[1:]:
+    rows = {}
+    la = [l.strip() for l in open(log) if l.startswith('P548-LOAD')]
+    for line in open(log):
+        m = re.match(r'P548-W (\S+)(?: k=(\d+))? (\{.*\})$', line.strip())
+        if not m:
+            continue
+        name, k, js = m.groups()
+        d = json.loads(js)
+        ev = d['obsidianHidden']
+        hid = 0.0
+        for e in ev:
+            parts = e.split(' ')
+            kind, tag = parts[0], parts[1]
+            if kind == 'loadContents' and parts[2] == 'hidden-view':
+                hid += float(parts[3])
+            elif kind == 'onRender' and parts[2] == 'early-return':
+                hid += float(parts[3])
+            elif kind == 'rset' and ':embed:' in tag and name.startswith(('p1-lphost', 'p2', 'p3', 'p4', 'p5')):
+                hid += float(parts[2])
+        dse_hidden = sum(v for kk, v in d['counts'].items() if 'RDHIDDEN' in kk)
+        skips = sum(v for kk, v in d['counts'].items() if kk.startswith(('skip', 'deferred-run')))
+        rows.setdefault(name, []).append((d['lpDone'], d['lpPaint'], round(hid, 2), dse_hidden, skips, d['metricsMs']['TaskDuration']))
+    print(f'== {log.split("/")[-1]}')
+    for l in la:
+        print('   ', l[:140])
+    for name, rs in rows.items():
+        f = lambda i: [r[i] for r in rs]
+        med = lambda xs: st.median([x for x in xs if x is not None]) if any(x is not None for x in xs) else None
+        print(f'  {name:20s} n={len(rs)} lpDone {f(0)} (med {med(f(0))}) lpPaint {f(1)} (med {med(f(1))}) hiddenObsMs {f(2)} DSE-hidden {f(3)} guard-hits {f(4)} taskMs {f(5)}')

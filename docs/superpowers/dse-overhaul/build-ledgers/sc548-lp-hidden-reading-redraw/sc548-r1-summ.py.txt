@@ -1,0 +1,24 @@
+# sc548 r1: summarise a run log. usage: python3 -I sc548-r1-summ.py <log>
+# One line per P548-W write: ms after the write starts of `modify`, the visible LP block's run done and its paint; DSE entry
+# counts by element class (RDHIDDEN = the hidden Reading view of an LP leaf); Obsidian's hidden-view renderer ms; CDP task ms.
+# Plus P548-GLOBAL totals, P548-LOAD loadavg lines and the lifecycle verdict lines.
+import json, re, sys
+
+for line in open(sys.argv[1]):
+    line = line.rstrip('\n')
+    if line.startswith('P548-W '):
+        head, js = re.match(r'(P548-W \S+(?: k=\d+)?) (\{.*\})$', line).groups()
+        d = json.loads(js)
+        c = d['counts']
+        hid = sum(v for k, v in c.items() if 'RDHIDDEN' in k)
+        print(f"{head:34s} mod {d['mod']} lpDone {d['lpDone']} lpPaint {d['lpPaint']} | DSE in hidden RD: {hid} | counts {json.dumps(c, sort_keys=True)} | obsidian hidden ms {d['obsidianHiddenMs']} | task {d['metricsMs']['TaskDuration']} script {d['metricsMs']['ScriptDuration']} | hiddenAfter {d.get('hiddenAfter')}")
+    elif line.startswith(('P548-GLOBAL', 'P548-LOAD', 'P548-BACK', 'OBSIDIAN-LIFECYCLE', 'loadavg-', 'bundle:', 'rc=', 'porcelain-after')):
+        print(line[:1500])
+    elif line.startswith('P548-SWITCH'):
+        parts = line.split(' ', 3)
+        if parts[2].startswith('disk='):
+            d = json.loads(parts[3])
+            print(f'P548-SWITCH {parts[1]} {parts[2]} states(ms after setViewState: mode,shown,roots,mounted,malice,oldRoots):', d['states'], '| events', d['ev'])
+        else:  # mech-1 / mech-thr8-instr format (first 40 frames)
+            d = json.loads(line.split(' ', 2)[2])
+            print('P548-SWITCH frames(ms, mode, shown, roots, mounted, malice, taggedOld):', d['frames'][:4], '... last', d['frames'][-1:], '| events', [e for e in d['ev'] if e[1] in ('proc', 'run', 'done', 'skip', 'deferred-run', 'gap')])
