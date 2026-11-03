@@ -1,0 +1,113 @@
+Running one project: dom
+FAIL dom test/dom/framework/replugRemount.test.ts
+  ● SC-545 remount: the new instance draws the stashed cards › empties the element and mounts once per mark with the stashed context, label and body; the mark is gone
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 0
+
+      159 | 		const { view } = fakeView(container);
+      160 | 		const result = await new ReplugRemounter(fakeApp([{ view }]), d).run();
+    > 161 | 		expect(d.mount).toHaveBeenCalledTimes(1);
+          | 		                ^
+      162 | 		expect(d.mount).toHaveBeenCalledWith(el, ctx, 'ds-counter', BODY);
+      163 | 		expect(old.isConnected).toBe(false); // the old card, and with it the click shield's listeners on its root
+      164 | 		expect(el.children).toHaveLength(0);
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:161:19)
+
+  ● SC-545 remount: the new instance draws the stashed cards › a second run mounts nothing
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 0
+
+      174 | 		await remounter.run();
+      175 | 		await remounter.run();
+    > 176 | 		expect(d.mount).toHaveBeenCalledTimes(1);
+          | 		                ^
+      177 | 	});
+      178 |
+      179 | 	test('skips an element that left the document, and one whose label is no longer an element; the latter keeps its card', async () => {
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:176:19)
+
+  ● SC-545 remount: the new instance draws the stashed cards › the normal path (every card stashed and redrawn into an owned root) does not rebuild the note
+
+    expect(jest.fn()).not.toHaveBeenCalled()
+
+    Expected number of calls: 0
+    Received number of calls: 1
+
+    1: "the note text", true
+
+      213 | 		const result = await new ReplugRemounter(fakeApp([{ view }]), d).run();
+      214 | 		expect(el.children).toHaveLength(1);
+    > 215 | 		expect(view.setViewData).not.toHaveBeenCalled();
+          | 		                             ^
+      216 | 		expect(result).toEqual({ remounted: 1, rebuilt: [] });
+      217 | 	});
+      218 |
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:215:32)
+
+  ● SC-545 remount: the new instance draws the stashed cards › off/on/off while a draw is running: the element is marked again for the next instance, and the fallback does not run
+
+    expect(received).toEqual(expected) // deep equality
+
+    Expected: {"alias": "ds-counter", "body": "name: Health
+    current_value: 10
+    max_value: 20
+    min_value: 0", "ctx": {"addChild": [Function addChild], "docId": "d", "frontmatter": undefined, "getSectionInfo": [Function getSectionInfo], "sourcePath": "Note.md"}, "v": 1}
+    Received: null
+
+      236 | 		expect(readReplugStash(el)).toBeNull(); // taken by this instance
+      237 | 		remounter.dispose(); // the plugin is turned off again before the draw finished
+    > 238 | 		expect(readReplugStash(el)).toEqual({ v: 1, ctx, alias: 'ds-counter', body: BODY });
+          | 		                            ^
+      239 | 		finish();
+      240 | 		expect(await running).toEqual({ remounted: 1, rebuilt: [] });
+      241 | 		expect(view.setViewData).not.toHaveBeenCalled();
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:238:31)
+
+  ● SC-545 wiring: an off/on of the plugin with a card in a Live Preview callout › the unload leaves the card for the next instance; the next one redraws it at layout-ready: a fresh, owned root, no rebuild, and its + writes
+
+    expect(received).not.toBe(expected) // Object.is equality
+
+    Expected: not <div class="dse-chrome-anchor" data-dse-chrome="" data-dse-density="comfortable" data-dse-disttarget="grid" data-dse-element="counter" data-dse-fb-featstyle="card" data-dse-fb-stats="grid" data-dse-kwusage="crest" data-dse-portraits="on" data-dse-print="off" data-dse-reduce-motion="false" data-dse-sb-charbox="off" data-dse-sb-charline="two" data-dse-sb-columns="single" data-dse-sb-featstyle="card" data-dse-sb-stats="grid" data-dse-sb-sticky="on" data-dse-sb-stickymeta="on" data-dse-sb-villain="banded" data-dse-theme="steel"><div class="dse-counter" style="--dse-value-scale: 3; --dse-label-scale: 1;"><div aria-label="Health" class="dse-stepper" role="group"><button aria-label="Decrease Health" class="dse-btn dse-btn--icon dse-stepper__btn" data-dse-control="counter.dec" type="button"><span class="dse-btn__icon" data-icon="minus" /></button><input aria-label="Health" aria-live="polite" class="dse-stepper__input dse-counter__value" data-dse-control="counter.input" max="20" min="0" step="1" type="number" /><button aria-label="Increase Health" class="dse-btn dse-btn--icon dse-stepper__btn" data-dse-control="counter.inc" type="button"><span class="dse-btn__icon" data-icon="plus" /></button></div><div class="dse-counter__name">Health</div></div><div class="dse-chrome-summary"><div class="dse-chrome-summary__text"><span class="dse-chrome-summary__label" /><span class="dse-chrome-summary__name" /><span class="dse-chrome-summary__detail" /></div><button aria-expanded="true" aria-label="Expand Counter" class="dse-btn dse-btn--ghost dse-btn--icon" data-dse-chrome-item="expand" data-dse-control="chrome.expand" type="button"><span class="dse-btn__icon" data-icon="chevron-down" /></button></div><div aria-label="Counter actions" class="dse-chrome" role="toolbar"><button aria-label="Pin to sidebar" class="dse-btn dse-btn--ghost dse-btn--icon" data-dse-chrome-item="pin" data-dse-control="chrome.pin" type="button"><span class="dse-btn__icon" data-icon="pin" /></button><button aria-expanded="true" aria-label="Collapse Counter" class="dse-btn dse-btn--ghost dse-btn--icon" data-dse-chrome-item="collapse" data-dse-control="chrome.collapse" type="button"><span class="dse-btn__icon" data-icon="chevron-up" /></button></div></div>
+
+      357 | 		const newRoot = el.firstElementChild as HTMLElement;
+      358 | 		expect(el.children).toHaveLength(1);
+    > 359 | 		expect(newRoot).not.toBe(oldRoot);
+          | 		                    ^
+      360 | 		expect(oldRoot.isConnected).toBe(false);
+      361 | 		expect(second.registry.liveEntries().map((e) => e.root)).toEqual([newRoot]);
+      362 | 		expect(v.setViewData).not.toHaveBeenCalled(); // the normal path never rebuilds the note
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:359:23)
+
+  ● SC-545 wiring: an off/on of the plugin with a card in a Live Preview callout › off, on, off, on: the card is redrawn again, and a draw of the second instance never leaves a card behind unmarked
+
+    expect(received).not.toBeNull()
+
+    Received: null
+
+      380 | 		second.plugin.unload(); // off again before the draw finished
+      381 | 		await jest.advanceTimersByTimeAsync(50);
+    > 382 | 		expect(readReplugStash(el)).not.toBeNull(); // whatever the second instance managed to draw, the third one draws again
+          | 		                                ^
+      383 |
+      384 | 		const third = boot(env);
+      385 | 		await jest.advanceTimersByTimeAsync(50);
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:382:35)
+
+Test Suites: 1 failed, 1 total
+Tests:       6 failed, 14 passed, 20 total
+Snapshots:   0 total
+Time:        1.181 s
+Ran all test suites matching test/dom/framework/replugRemount.test.ts.
+GATE-RC=1

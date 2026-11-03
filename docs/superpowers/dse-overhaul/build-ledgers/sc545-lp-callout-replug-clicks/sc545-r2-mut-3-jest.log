@@ -1,0 +1,111 @@
+Running one project: dom
+FAIL dom test/dom/framework/replugRemount.test.ts
+  ● SC-545 remount: the new instance draws the stashed cards › the normal path (every card stashed and redrawn into an owned root) does not rebuild the note
+
+    expect(jest.fn()).not.toHaveBeenCalled()
+
+    Expected number of calls: 0
+    Received number of calls: 1
+
+    1: "the note text", true
+
+      213 | 		const result = await new ReplugRemounter(fakeApp([{ view }]), d).run();
+      214 | 		expect(el.children).toHaveLength(1);
+    > 215 | 		expect(view.setViewData).not.toHaveBeenCalled();
+          | 		                             ^
+      216 | 		expect(result).toEqual({ remounted: 1, rebuilt: [] });
+      217 | 	});
+      218 |
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:215:32)
+
+  ● SC-545 fallback: rebuild a note only for a block that is still undrawn › an unowned DSE card in a callout triggers it; an owned card, a nested card and the inert deferred card do not
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Array [
+        1,
+    -   0,
+    -   0,
+    -   0,
+    +   1,
+    +   1,
+    +   1,
+      ]
+
+      275 | 		const views = [unowned, owned.w, deferred.w, nested.w].map((w) => fakeView(w.container).view);
+      276 | 		const result = await new ReplugRemounter(fakeApp(views.map((view) => ({ view }))), deps({ liveRoots: () => live })).run();
+    > 277 | 		expect(views.map((v) => v.setViewData.mock.calls.length)).toEqual([1, 0, 0, 0]);
+          | 		                                                          ^
+      278 | 		expect(stray.isConnected).toBe(true);
+      279 | 		expect(result.rebuilt).toEqual(['Note.md']);
+      280 | 	});
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:277:61)
+
+  ● SC-545 fallback: rebuild a note only for a block that is still undrawn › ignores code that is not a DSE fence, a raw fence outside a callout/embed widget, and Reading view
+
+    expect(jest.fn()).not.toHaveBeenCalled()
+
+    Expected number of calls: 0
+    Received number of calls: 1
+
+    1: "the note text", true
+
+      292 | 		const views = [other, unknownLabel, plainWidget, reading].map((w) => fakeView(w.container).view);
+      293 | 		const result = await new ReplugRemounter(fakeApp(views.map((view) => ({ view }))), deps()).run();
+    > 294 | 		for (const v of views) expect(v.setViewData).not.toHaveBeenCalled();
+          | 		                                                 ^
+      295 | 		expect(result.rebuilt).toEqual([]);
+      296 | 	});
+      297 |
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:294:52)
+
+  ● SC-545 wiring: an off/on of the plugin with a card in a Live Preview callout › the unload leaves the card for the next instance; the next one redraws it at layout-ready: a fresh, owned root, no rebuild, and its + writes
+
+    expect(jest.fn()).not.toHaveBeenCalled()
+
+    Expected number of calls: 0
+    Received number of calls: 1
+
+    1: "the note text", true
+
+      360 | 		expect(oldRoot.isConnected).toBe(false);
+      361 | 		expect(second.registry.liveEntries().map((e) => e.root)).toEqual([newRoot]);
+    > 362 | 		expect(v.setViewData).not.toHaveBeenCalled(); // the normal path never rebuilds the note
+          | 		                          ^
+      363 |
+      364 | 		(newRoot.querySelector(INC) as HTMLElement).click();
+      365 | 		await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS);
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:362:29)
+
+  ● SC-545 wiring: an off/on of the plugin with a card in a Live Preview callout › off, on, off, on: the card is redrawn again, and a draw of the second instance never leaves a card behind unmarked
+
+    expect(jest.fn()).not.toHaveBeenCalled()
+
+    Expected number of calls: 0
+    Received number of calls: 1
+
+    1: "the note text", true
+
+      387 | 		expect(el.children).toHaveLength(1);
+      388 | 		expect(third.registry.liveEntries().map((e) => e.root)).toEqual([root]);
+    > 389 | 		expect(v.setViewData).not.toHaveBeenCalled();
+          | 		                          ^
+      390 | 	});
+      391 |
+      392 | 	test('ViewRegistry.onunload stashes the entries it is about to clear', async () => {
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:389:29)
+
+Test Suites: 1 failed, 1 total
+Tests:       5 failed, 15 passed, 20 total
+Snapshots:   0 total
+Time:        1.238 s
+Ran all test suites matching test/dom/framework/replugRemount.test.ts.
+GATE-RC=1

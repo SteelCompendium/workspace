@@ -1,0 +1,808 @@
+{
+ "cases": {
+  "e-pending-mid": {
+   "name": "e-pending-mid",
+   "rel": "Probe545/callout-mid.md",
+   "mode": "lp",
+   "where": "lp-callout",
+   "el": "counter",
+   "pendingAtDisable": true,
+   "scrollMid": true,
+   "snaps": {
+    "start": {
+     "mode": "source",
+     "plugin": "i1",
+     "live": 0,
+     "roots": []
+    },
+    "cycle1:afterDisable": {
+     "mode": "source",
+     "plugin": null,
+     "live": null,
+     "roots": []
+    },
+    "cycle1:afterEnable": {
+     "mode": "source",
+     "plugin": "i2",
+     "live": 1,
+     "roots": [
+      {
+       "el": "counter",
+       "gen": "new",
+       "where": "lp-callout",
+       "visible": true,
+       "connected": true,
+       "owned": "live",
+       "value": "7",
+       "text": "Solo",
+       "parentClass": "block-language-ds-counter"
+      }
+     ]
+    }
+   },
+   "listeners": {
+    "start": null,
+    "cycle1:afterDisable": null,
+    "cycle1:afterEnable": [
+     "click"
+    ]
+   },
+   "metrics": {
+    "cycle1:beforeDisable": {
+     "scrollTop": 2559,
+     "rootTop": 482,
+     "cursor": {
+      "line": 132,
+      "ch": 0
+     },
+     "stashed": null,
+     "remounted": null,
+     "rebuilt": null
+    },
+    "cycle1:afterEnable": {
+     "scrollTop": 2083,
+     "rootTop": 958,
+     "cursor": {
+      "line": 132,
+      "ch": 0
+     },
+     "stashed": null,
+     "remounted": null,
+     "rebuilt": null
+    }
+   },
+   "steps": [
+    {
+     "label": "before-offon",
+     "diskChanged": true,
+     "valuesBefore": [
+      5
+     ],
+     "valuesAfter": [
+      6
+     ],
+     "modalOpened": false,
+     "snap": {
+      "mode": "source",
+      "plugin": "i1",
+      "live": 1,
+      "roots": [
+       {
+        "el": "counter",
+        "gen": "new",
+        "where": "lp-callout",
+        "visible": true,
+        "connected": true,
+        "owned": "live",
+        "value": "6",
+        "text": "Solo",
+        "parentClass": "block-language-ds-counter"
+       }
+      ]
+     },
+     "log": [
+      {
+       "ev": "pointerdown",
+       "target": "SPAN",
+       "gen": "new",
+       "owned": "live",
+       "interactiveChild": false,
+       "n": 2,
+       "t": 7041
+      },
+      {
+       "ev": "click",
+       "target": "SPAN",
+       "gen": "new",
+       "owned": "live",
+       "interactiveChild": true,
+       "n": 3,
+       "t": 7043
+      },
+      {
+       "ev": "click:bubble-reached-document",
+       "defaultPrevented": false,
+       "n": 4,
+       "t": 7045
+      },
+      {
+       "ev": "vault.process",
+       "path": "Probe545/callout-mid.md",
+       "n": 5,
+       "t": 7448
+      },
+      {
+       "ev": "setViewData",
+       "clear": false,
+       "n": 6,
+       "t": 7451
+      }
+     ],
+     "errors": [],
+     "notices": []
+    },
+    {
+     "label": "after-offon",
+     "diskChanged": true,
+     "valuesBefore": [
+      7
+     ],
+     "valuesAfter": [
+      8
+     ],
+     "modalOpened": false,
+     "snap": {
+      "mode": "source",
+      "plugin": "i2",
+      "live": 1,
+      "roots": [
+       {
+        "el": "counter",
+        "gen": "new",
+        "where": "lp-callout",
+        "visible": true,
+        "connected": true,
+        "owned": "live",
+        "value": "8",
+        "text": "Solo",
+        "parentClass": "block-language-ds-counter"
+       }
+      ]
+     },
+     "log": [
+      {
+       "ev": "pointerdown",
+       "target": "SPAN",
+       "gen": "new",
+       "owned": "live",
+       "interactiveChild": false,
+       "n": 98,
+       "t": 13841
+      },
+      {
+       "ev": "click",
+       "target": "SPAN",
+       "gen": "new",
+       "owned": "live",
+       "interactiveChild": true,
+       "n": 99,
+       "t": 13843
+      },
+      {
+       "ev": "click:bubble-reached-document",
+       "defaultPrevented": false,
+       "n": 100,
+       "t": 13845
+      },
+      {
+       "ev": "vault.process",
+       "path": "Probe545/callout-mid.md",
+       "n": 101,
+       "t": 14247
+      },
+      {
+       "ev": "setViewData",
+       "clear": false,
+       "n": 102,
+       "t": 14252
+      },
+      {
+       "ev": "proc",
+       "lang": "ds-counter",
+       "inst": "i2",
+       "docId": "5801dd45190bd5a5",
+       "section": null,
+       "val": "8",
+       "n": 103,
+       "t": 14266
+      }
+     ],
+     "errors": [],
+     "notices": []
+    }
+   ],
+   "problems": [],
+   "tStart": 1877,
+   "ctl": "(Array.from((window.__r545.leaf).view.containerEl.querySelectorAll('.markdown-source-view .cm-embed-block.cm-callout [data-dse-element=\"counter\"]')).filter((r) => r.isConnected && !r.parentElement.closest('[data-dse-element]'))[0])?.querySelector('button[aria-label^=\"Increase\"]')",
+   "inst": "i2",
+   "diskAfterOffOn": [
+    7
+   ],
+   "errorsAll": [],
+   "fullLog": [
+    {
+     "ev": "vault.modify",
+     "path": "Probe545/callout-mid.md",
+     "n": 1,
+     "t": 2463
+    },
+    {
+     "ev": "pointerdown",
+     "target": "SPAN",
+     "gen": "new",
+     "owned": "live",
+     "interactiveChild": false,
+     "n": 2,
+     "t": 7041
+    },
+    {
+     "ev": "click",
+     "target": "SPAN",
+     "gen": "new",
+     "owned": "live",
+     "interactiveChild": true,
+     "n": 3,
+     "t": 7043
+    },
+    {
+     "ev": "click:bubble-reached-document",
+     "defaultPrevented": false,
+     "n": 4,
+     "t": 7045
+    },
+    {
+     "ev": "vault.process",
+     "path": "Probe545/callout-mid.md",
+     "n": 5,
+     "t": 7448
+    },
+    {
+     "ev": "setViewData",
+     "clear": false,
+     "n": 6,
+     "t": 7451
+    },
+    {
+     "ev": "pointerdown",
+     "target": "SPAN",
+     "gen": "pre",
+     "owned": "live",
+     "interactiveChild": false,
+     "n": 7,
+     "t": 9207
+    },
+    {
+     "ev": "click",
+     "target": "SPAN",
+     "gen": "pre",
+     "owned": "live",
+     "interactiveChild": true,
+     "n": 8,
+     "t": 9209
+    },
+    {
+     "ev": "click:bubble-reached-document",
+     "defaultPrevented": false,
+     "n": 9,
+     "t": 9212
+    },
+    {
+     "ev": "vault.process",
+     "path": "Probe545/callout-mid.md",
+     "n": 10,
+     "t": 9246
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 11,
+     "t": 9246
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 12,
+     "t": 9246
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 13,
+     "t": 9246
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 14,
+     "t": 9246
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 15,
+     "t": 9246
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 16,
+     "t": 9246
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 17,
+     "t": 9246
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 18,
+     "t": 9246
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 19,
+     "t": 9246
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 20,
+     "t": 9246
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 21,
+     "t": 9246
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 22,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 23,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 24,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 25,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 26,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 27,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 28,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 29,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 30,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 31,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 32,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 33,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 34,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 35,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 36,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 37,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 38,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 39,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 40,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 41,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 42,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 43,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 44,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 45,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 46,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 47,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 48,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 49,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 50,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 51,
+     "t": 9247
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 52,
+     "t": 9265
+    },
+    {
+     "ev": "setViewData",
+     "clear": false,
+     "n": 53,
+     "t": 9341
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 54,
+     "t": 10903
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 55,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 56,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 57,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 58,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 59,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 60,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 61,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 62,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 63,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 64,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 65,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 66,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 67,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 68,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 69,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 70,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 71,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 72,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 73,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 74,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 75,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 76,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 77,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 78,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 79,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 80,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 81,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 82,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 83,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 84,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 85,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 86,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 87,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 88,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 89,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 90,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 91,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 92,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 93,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 94,
+     "t": 10917
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 95,
+     "t": 10917
+    },
+    {
+     "ev": "setViewData",
+     "clear": true,
+     "n": 96,
+     "t": 10920
+    },
+    {
+     "ev": "proc",
+     "lang": "ds-counter",
+     "inst": "?",
+     "docId": "4ebe4fc556d549f3",
+     "section": null,
+     "val": "7",
+     "n": 97,
+     "t": 10938
+    },
+    {
+     "ev": "pointerdown",
+     "target": "SPAN",
+     "gen": "new",
+     "owned": "live",
+     "interactiveChild": false,
+     "n": 98,
+     "t": 13841
+    },
+    {
+     "ev": "click",
+     "target": "SPAN",
+     "gen": "new",
+     "owned": "live",
+     "interactiveChild": true,
+     "n": 99,
+     "t": 13843
+    },
+    {
+     "ev": "click:bubble-reached-document",
+     "defaultPrevented": false,
+     "n": 100,
+     "t": 13845
+    },
+    {
+     "ev": "vault.process",
+     "path": "Probe545/callout-mid.md",
+     "n": 101,
+     "t": 14247
+    },
+    {
+     "ev": "setViewData",
+     "clear": false,
+     "n": 102,
+     "t": 14252
+    },
+    {
+     "ev": "proc",
+     "lang": "ds-counter",
+     "inst": "i2",
+     "docId": "5801dd45190bd5a5",
+     "section": null,
+     "val": "8",
+     "n": 103,
+     "t": 14266
+    }
+   ],
+   "rootListeners": [
+    "click",
+    "click",
+    "mousedown",
+    "pointerdown"
+   ],
+   "ms": 13967
+  }
+ },
+ "order": [
+  "e-pending-mid"
+ ],
+ "instr": "installed FE",
+ "version": "1.15.0"
+}

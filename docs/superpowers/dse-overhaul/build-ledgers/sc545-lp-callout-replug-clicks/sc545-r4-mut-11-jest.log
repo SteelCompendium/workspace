@@ -1,0 +1,45 @@
+Running one project: dom
+FAIL dom test/dom/framework/replugRemount.test.ts
+  ● SC-545 robustness: one bad stash does not stop the others; an unloaded instance never rebuilds a note › a stash whose reader throws is logged and dropped; the other card is still drawn and the run resolves (LOW-1)
+
+    forged
+
+      322 | 		cardIn(good.el);
+      323 | 		stashForReplug([fakeEntry(bad.el.firstElementChild as HTMLElement, bad.el, fakeCtx()), fakeEntry(good.el.firstElementChild as HTMLElement, good.el, fakeCtx())]);
+    > 324 | 		(bad.el as unknown as Record<string, unknown>)[REPLUG_KEY] = new Proxy({}, { get: () => { throw new Error('forged'); } });
+          | 		                                                                                                ^
+      325 | 		const d = deps();
+      326 | 		const result = await new ReplugRemounter(fakeApp([{ view: fakeView(bad.container).view }, { view: fakeView(good.container).view }]), d).run();
+      327 | 		expect(d.mount).toHaveBeenCalledTimes(1);
+
+      at Object.get (test/dom/framework/replugRemount.test.ts:324:99)
+      at readReplugStash (src/framework/host/replugRemount.ts:74:8)
+      at ReplugRemounter.remountWithin (src/framework/host/replugRemount.ts:228:19)
+      at ReplugRemounter.remountMarked (src/framework/host/replugRemount.ts:218:29)
+      at ReplugRemounter.run (src/framework/host/replugRemount.ts:187:32)
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:326:139)
+
+  ● SC-545 robustness: one bad stash does not stop the others; an unloaded instance never rebuilds a note › a draw that throws synchronously is logged and does not stop the run
+
+    expect(received).resolves.toEqual()
+
+    Received promise rejected instead of resolved
+    Rejected to value: [Error: boom]
+
+      337 | 		stashForReplug([fakeEntry(cardIn(a.el), a.el, fakeCtx())]);
+      338 | 		const d = deps({ mount: jest.fn(() => { throw new Error('boom'); }) });
+    > 339 | 		await expect(new ReplugRemounter(fakeApp([{ view: fakeView(a.container).view }]), d).run()).resolves.toEqual({ remounted: 0, rebuilt: [] });
+          | 		      ^
+      340 | 		expect(log).toHaveBeenCalled();
+      341 | 	});
+      342 |
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:339:9)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 28 passed, 30 total
+Snapshots:   0 total
+Time:        1.354 s
+Ran all test suites matching test/dom/framework/replugRemount.test.ts.
+GATE-RC=1

@@ -1,0 +1,101 @@
+Running one project: dom
+FAIL dom test/dom/framework/replugRemount.test.ts
+  ● SC-545 remount: the new instance draws the stashed cards › a stash with the wrong shape is ignored: nothing is drawn, the card stays, and the note is left to the fallback
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 0
+
+      197 | 		expect(old.isConnected).toBe(true);
+      198 | 		expect(el.hasAttribute(REPLUG_ATTR)).toBe(false);
+    > 199 | 		expect(view.setViewData).toHaveBeenCalledTimes(1); // the unowned card is rebuilt
+          | 		                         ^
+      200 | 		expect(result).toEqual({ remounted: 0, rebuilt: ['Note.md'] });
+      201 | 	});
+      202 |
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:199:28)
+
+  ● SC-545 fallback: rebuild a note only for a block that is still undrawn › a raw DSE fence in a Live Preview callout: the note is set from its own text once, with its ephemeral state put back
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 0
+
+      253 | 		const { view } = fakeView(container);
+      254 | 		const result = await new ReplugRemounter(fakeApp([{ view }]), deps()).run();
+    > 255 | 		expect(view.setViewData).toHaveBeenCalledTimes(1);
+          | 		                         ^
+      256 | 		expect(view.setViewData).toHaveBeenCalledWith('the note text', true);
+      257 | 		expect(view.setEphemeralState).toHaveBeenCalledWith({ cursor: 3 });
+      258 | 		expect(result.rebuilt).toEqual(['Note.md']);
+
+      at test/dom/framework/replugRemount.test.ts:255:28
+
+  ● SC-545 fallback: rebuild a note only for a block that is still undrawn › a raw DSE fence in a Live Preview embed: the note is set from its own text once, with its ephemeral state put back
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 0
+
+      253 | 		const { view } = fakeView(container);
+      254 | 		const result = await new ReplugRemounter(fakeApp([{ view }]), deps()).run();
+    > 255 | 		expect(view.setViewData).toHaveBeenCalledTimes(1);
+          | 		                         ^
+      256 | 		expect(view.setViewData).toHaveBeenCalledWith('the note text', true);
+      257 | 		expect(view.setEphemeralState).toHaveBeenCalledWith({ cursor: 3 });
+      258 | 		expect(result.rebuilt).toEqual(['Note.md']);
+
+      at test/dom/framework/replugRemount.test.ts:255:28
+
+  ● SC-545 fallback: rebuild a note only for a block that is still undrawn › an unowned DSE card in a callout triggers it; an owned card, a nested card and the inert deferred card do not
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   1,
+    +   0,
+        0,
+        0,
+        0,
+      ]
+
+      275 | 		const views = [unowned, owned.w, deferred.w, nested.w].map((w) => fakeView(w.container).view);
+      276 | 		const result = await new ReplugRemounter(fakeApp(views.map((view) => ({ view }))), deps({ liveRoots: () => live })).run();
+    > 277 | 		expect(views.map((v) => v.setViewData.mock.calls.length)).toEqual([1, 0, 0, 0]);
+          | 		                                                          ^
+      278 | 		expect(stray.isConnected).toBe(true);
+      279 | 		expect(result.rebuilt).toEqual(['Note.md']);
+      280 | 	});
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:277:61)
+
+  ● SC-545 fallback: rebuild a note only for a block that is still undrawn › puts the pixel scroll position back after the rebuild (Obsidian restores a line, and heights are measured again)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2559
+    Received: 40
+
+      304 | 		scrollDOM.scrollTop = 40; // the editor drifts again before the next frame
+      305 | 		await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => r(null))));
+    > 306 | 		expect(scrollDOM.scrollTop).toBe(2559);
+          | 		                            ^
+      307 | 	});
+      308 | });
+      309 |
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:306:31)
+
+Test Suites: 1 failed, 1 total
+Tests:       5 failed, 15 passed, 20 total
+Snapshots:   0 total
+Time:        1.225 s
+Ran all test suites matching test/dom/framework/replugRemount.test.ts.
+GATE-RC=1

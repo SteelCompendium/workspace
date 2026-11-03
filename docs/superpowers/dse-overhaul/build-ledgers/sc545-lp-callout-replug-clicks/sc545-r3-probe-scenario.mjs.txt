@@ -1,0 +1,489 @@
+	{
+		// SC-545 r3 reviewer probes (not a gate). Cases from R3_CASES. Results to R3_OUT/r3-<case>.json.
+		id: 'R3P',
+		async run(t) {
+			const ID = 'draw-steel-elements';
+			const J = JSON.stringify;
+			const G = 'window.__r3';
+			const OUT = process.env.R3_OUT;
+			const CASES = (process.env.R3_CASES || '').split(',').filter(Boolean);
+			const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+			const results = {};
+			const save = () => fs.writeFileSync(path.join(OUT, 'r3.json'), JSON.stringify(results, null, 1));
+			const m0 = await t.mark();
+			await t.ev(`(() => { if (!document.getElementById('r3-notice')) { const st = document.createElement('style'); st.id = 'r3-notice'; st.textContent = '.notice-container { display: none !important; }'; document.head.appendChild(st); } return true; })()`);
+			await t.ev(`(() => {
+				const P = (window.__r3 = {});
+				P.keep = new Set(app.workspace.getLeavesOfType('markdown'));
+				P.main = app.workspace.getMostRecentLeaf();
+				P.keep.add(P.main);
+				P.cm = (leaf) => (leaf ?? P.main).view.editor.cm;
+				P.reg = () => app.plugins.plugins['${ID}']?.viewRegistry ?? null;
+				P.owned = (r) => !!P.reg()?.liveEntries().some((e) => e.root === r);
+				P.roots = (kind, leaf) => Array.from(P.cm(leaf).contentDOM.querySelectorAll('[data-dse-element="' + kind + '"]')).filter((r) => r.isConnected && !r.parentElement.closest('[data-dse-element]'));
+				P.sv = [];
+				P.log = () => (window.__dseReplugLog ?? []).slice();
+				P.stashCount = () => { let n = 0; for (const el of document.querySelectorAll('*')) if (Object.prototype.hasOwnProperty.call(el, '__dseReplugV1')) n++; return { expando: n, attr: document.querySelectorAll('[data-dse-replug]').length }; };
+				P.regStats = () => { const r = P.reg(); if (!r) return null; const live = r.liveEntries(); return { live: live.length, disconnected: live.filter((e) => !e.root.isConnected).length, unloaded: live.filter((e) => !e.view._loaded).length }; };
+				return true;
+			})()`);
+			await t.open('Lifecycle/other.md', `${G}.main`);
+			await t.ev(`(() => {
+				const P = ${G};
+				let owner = Object.getPrototypeOf(P.main.view);
+				while (owner && !Object.prototype.hasOwnProperty.call(owner, 'setViewData')) owner = Object.getPrototypeOf(owner);
+				P.svOwner = owner; P.svOrig = owner.setViewData;
+				owner.setViewData = function (data, clear) { if (clear === true) P.sv.push({ path: this.file?.path ?? null, at: performance.now() }); return P.svOrig.apply(this, arguments); };
+				return true;
+			})()`);
+			const detachExtra = () => t.ev(`(() => { const keep = ${G}.keep; app.workspace.getLeavesOfType('markdown').filter((l) => !keep.has(l)).forEach((l) => l.detach()); app.workspace.setActiveLeaf(${G}.main, { focus: true }); return true; })()`);
+			const openLP = async (rel, kind, n, { leaf = `${G}.main`, scrollText = null, reset = true } = {}) => {
+				if (reset) {
+					await t.open('Lifecycle/other.md', leaf);
+					await t.reset(rel);
+				}
+				await t.ev(`(async () => { await (${leaf}).setViewState({ type: 'markdown', state: { file: ${J(rel)}, mode: 'source', source: false }, active: true }); (${leaf}).view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+				await t.waitFor(`(${leaf}).view.file?.path === ${J(rel)} && (${leaf}).view.getMode() === 'source'`, `${rel} open in LP`);
+				await t.sleep(700);
+				if (scrollText) await t.ev(`(async () => { const cm = ${G}.cm(${leaf}); cm.dispatch({ effects: cm.constructor.scrollIntoView(cm.state.doc.toString().indexOf(${J(scrollText)}), { y: 'center' }) }); return true; })()`);
+				else if (kind) await t.ev(`(async () => { const cm = ${G}.cm(${leaf}); const lines = cm.state.doc.toString().split('\\n'); const i = lines.findIndex((l) => new RegExp('^(?:[ ]{0,3}>[ ]?)*\`\`\`ds-' + ${J(kind)}).test(l)); cm.dispatch({ effects: cm.constructor.scrollIntoView(cm.state.doc.line(i + 1).from, { y: 'center' }) }); return true; })()`);
+				if (kind) await t.waitFor(`${G}.roots(${J(kind)}, ${leaf}).length > ${n} && ${G}.roots(${J(kind)}, ${leaf}).every((r) => ${G}.owned(r))`, `${rel}: ${kind} cards drawn and owned`);
+				await t.sleep(500);
+			};
+			const click = async (expr) => {
+				const ok = await t.ev(`(() => { const el = ${expr}; if (!el) return false; const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; })()`);
+				if (!ok) throw new Error(`no visible element to click: ${expr}`);
+				const at = await t.ev(`(() => { const r = (${expr}).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
+				const base = { x: at.x, y: at.y, button: 'left', clickCount: 1 };
+				await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: at.x, y: at.y });
+				await t.cdp.call('Input.dispatchMouseEvent', { type: 'mousePressed', buttons: 1, ...base });
+				await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseReleased', buttons: 0, ...base });
+			};
+			const plus = (kind, n, leaf = `${G}.main`) => `(${G}.roots(${J(kind)}, ${leaf})[${n}])?.querySelector('button[aria-label^="Increase"]')`;
+			const diskIs = async (rel, want, ms = 5000) => {
+				const t0 = Date.now();
+				while (!same(t.counterValues(rel), want)) {
+					if (Date.now() - t0 > ms) return false;
+					await t.sleep(80);
+				}
+				return true;
+			};
+			const shown = (leaf = `${G}.main`) => t.ev(`${G}.roots('counter', ${leaf}).map((r) => Number(r.querySelector('.dse-counter__value')?.value))`);
+			const plusWrites = async (rel, n, want, leaf = `${G}.main`) => {
+				await click(plus('counter', n, leaf));
+				const ok = await diskIs(rel, want);
+				await t.sleep(900);
+				return { ok, disk: t.counterValues(rel), shown: await shown(leaf) };
+			};
+			const disable = () => t.ev(`(async () => { await app.plugins.disablePlugin('${ID}'); return !app.plugins.plugins['${ID}']; })()`);
+			const enable = () => t.ev(`(async () => { await app.plugins.enablePlugin('${ID}'); return !!app.plugins.plugins['${ID}']; })()`);
+			const tag = (kind, leaf = `${G}.main`) => t.ev(`(() => { ${G}.pre = ${G}.roots(${J(kind)}, ${leaf}); ${G}.pre.forEach((r) => { r.__r3 = 'pre'; }); ${G}.sv0 = ${G}.sv.length; ${G}.log0 = ${G}.log().length; return ${G}.pre.length; })()`);
+			const state = (kind, leaf = `${G}.main`) => t.ev(`(() => { const P = ${G}; const roots = P.roots(${J(kind)}, ${leaf}); return {
+				preGone: P.pre.map((r) => !r.isConnected), now: roots.length, owned: roots.map((r) => P.owned(r)),
+				rebuildsSV: P.sv.length - P.sv0, log: P.log().slice(P.log0),
+				widgets: roots.map((r) => { const w = r.closest('.cm-embed-block, .internal-embed'); return w ? w.querySelectorAll('[data-dse-element]:not([data-dse-element] [data-dse-element])').length : -1; }),
+				interactiveChild: roots.map((r) => !!r.closest('.interactive-child')),
+				stash: P.stashCount(), reg: P.regStats(),
+				sel: (${leaf}).view.editor.cm.state.selection.main.from + '-' + (${leaf}).view.editor.cm.state.selection.main.to,
+				rawCallout: Array.from((${leaf}).view.editor.cm.contentDOM.querySelectorAll('.cm-line')).some((l) => /^> \\[!/.test(l.textContent)),
+				scrollTop: P.cm(${leaf}).scrollDOM.scrollTop,
+			}; })()`);
+			const waitRedrawn = async (kind, n, leaf = `${G}.main`, ms = 6000) => {
+				try {
+					await t.waitFor(`${G}.pre.every((r) => !r.isConnected) && ${G}.roots(${J(kind)}, ${leaf}).length === ${n} && ${G}.roots(${J(kind)}, ${leaf}).every((r) => ${G}.owned(r))`, 'redrawn', ms);
+					return true;
+				} catch {
+					return false;
+				}
+			};
+			const run = async (name, fn) => {
+				if (CASES.length && !CASES.includes(name)) return;
+				const m = await t.mark();
+				const t0 = Date.now();
+				const r = { };
+				try {
+					await fn(r);
+				} catch (e) {
+					r.error = String(e.message);
+				}
+				try {
+					if (!(await t.ev(`!!app.plugins.plugins['${ID}']`))) await enable();
+				} catch (e) {
+					r.reenableError = String(e.message);
+				}
+				r.errors = await t.errorsSince(m);
+				r.notices = await t.noticesSince(m);
+				r.ms = Date.now() - t0;
+				results[name] = r;
+				save();
+				console.log(`R3P ${name}: ${JSON.stringify(r).slice(0, 3000)}`);
+				await detachExtra();
+			};
+
+			const CAL = 'Probe3/callout.md';
+			// P1 rapid off/on/off/on, awaited, no dwell
+			await run('P1-rapid', async (r) => {
+				await openLP(CAL, 'counter', 0);
+				r.before = await plusWrites(CAL, 0, [6]);
+				r.pre = await tag('counter');
+				r.d1 = await disable(); r.e1 = await enable(); r.d2 = await disable(); r.e2 = await enable();
+				r.redrawn = await waitRedrawn('counter', 1);
+				await t.sleep(800);
+				r.state = await state('counter');
+				r.after = await plusWrites(CAL, 0, [7]);
+				r.stateAfterClick = await state('counter');
+			});
+			// P2 disable while a remount is pending: enable then disable with no await in between
+			await run('P2-disable-pending', async (r) => {
+				await openLP(CAL, 'counter', 0);
+				r.pre = await tag('counter');
+				r.d1 = await disable();
+				r.overlap = await t.ev(`(async () => { const p = app.plugins.enablePlugin('${ID}'); await p; const tEn = performance.now(); await app.plugins.disablePlugin('${ID}'); const tDis = performance.now(); return { tEn, tDis, log: ${G}.log().slice(${G}.log0) }; })()`);
+				await t.sleep(600);
+				r.stashOff = await t.ev(`${G}.stashCount()`);
+				r.e2 = await enable();
+				r.redrawn = await waitRedrawn('counter', 1);
+				await t.sleep(800);
+				r.state = await state('counter');
+				r.after = await plusWrites(CAL, 0, [6]);
+			});
+			// P2b/P2c: disable DURING the remount (a timer / microtask queued when the new instance's run starts)
+			for (const [name, sched] of [['P2b-disable-during-remount-timer', 'setTimeout(go, 0)'], ['P2c-disable-during-remount-microtask', 'queueMicrotask(go)']]) {
+				await run(name, async (r) => {
+					await openLP(CAL, 'counter', 0);
+					r.pre = await tag('counter');
+					r.d1 = await disable();
+					await t.ev(`(() => {
+						const arr = (window.__dseReplugLog ??= []);
+						const orig = Array.prototype.push;
+						window.__r3arm = true;
+						arr.push = function (x) {
+							const res = orig.call(this, x);
+							if (x && x.phase === 'start' && window.__r3arm) {
+								window.__r3arm = false;
+								const go = () => { window.__r3disAt = performance.now(); app.plugins.disablePlugin('${ID}').then(() => { window.__r3disDone = performance.now(); }, (e) => { window.__r3disErr = String(e); }); };
+								${sched};
+							}
+							return res;
+						};
+						return true;
+					})()`);
+					r.e1 = await t.ev(`(async () => { try { await app.plugins.enablePlugin('${ID}'); return true; } catch (e) { return String(e); } })()`);
+					await t.sleep(1500);
+					r.timing = await t.ev(`({ disAt: window.__r3disAt ?? null, disDone: window.__r3disDone ?? null, disErr: window.__r3disErr ?? null, on: !!app.plugins.plugins['${ID}'], log: ${G}.log().slice(${G}.log0) })`);
+					r.stashOff = await t.ev(`${G}.stashCount()`);
+					r.domOff = await t.ev(`(() => { const w = ${G}.cm().contentDOM.querySelector('.cm-callout'); return w ? { roots: w.querySelectorAll('[data-dse-element]').length, raw: !!w.querySelector('pre > code') } : null; })()`);
+					await t.ev(`(() => { delete window.__dseReplugLog.push; return true; })()`);
+					if (!(await t.ev(`!!app.plugins.plugins['${ID}']`))) r.e2 = await enable();
+					try { await t.waitFor(`${G}.roots('counter').length === 1 && ${G}.roots('counter').every((x) => ${G}.owned(x))`, 'redrawn', 6000); r.redrawn = true; } catch { r.redrawn = false; }
+					await t.sleep(800);
+					r.state = await state('counter');
+					r.after = await plusWrites(CAL, 0, [6]);
+				});
+			}
+			// P3a disable, close the note, enable, reopen
+			await run('P3a-close-while-off', async (r) => {
+				await openLP(CAL, 'counter', 0);
+				r.pre = await tag('counter');
+				await disable();
+				await t.open('Lifecycle/other.md', `${G}.main`);
+				await enable();
+				await t.sleep(800);
+				r.stashWhileClosed = await t.ev(`${G}.stashCount()`);
+				await openLP(CAL, 'counter', 0, { reset: false });
+				r.state = await state('counter');
+				r.after = await plusWrites(CAL, 0, [6]);
+			});
+			// P3b note opened while the plugin was off (raw code): the fallback heals it
+			await run('P3b-open-while-off', async (r) => {
+				await t.open('Lifecycle/other.md', `${G}.main`);
+				await t.reset(CAL);
+				await disable();
+				await openLP(CAL, null, 0, { reset: false });
+				r.rawBefore = await t.ev(`!!${G}.cm().contentDOM.querySelector('.cm-callout pre > code.language-ds-counter, .cm-embed-block pre > code.language-ds-counter')`);
+				await t.ev(`(() => { ${G}.pre = []; ${G}.sv0 = ${G}.sv.length; ${G}.log0 = ${G}.log().length; return true; })()`);
+				await enable();
+				r.redrawn = await waitRedrawn('counter', 1);
+				await t.sleep(800);
+				r.state = await state('counter');
+				r.after = await plusWrites(CAL, 0, [6]);
+			});
+			// P4 two panes showing the same note in LP
+			await run('P4-two-panes', async (r) => {
+				await openLP(CAL, 'counter', 0);
+				await t.ev(`(() => { ${G}.b = app.workspace.getLeaf('split', 'vertical'); return true; })()`);
+				await openLP(CAL, 'counter', 0, { leaf: `${G}.b`, reset: false });
+				await t.ev(`(() => { const P = ${G}; P.pre = [...P.roots('counter', P.main), ...P.roots('counter', P.b)]; P.pre.forEach((x) => { x.__r3 = 'pre'; }); P.sv0 = P.sv.length; P.log0 = P.log().length; return P.pre.length; })()`);
+				r.pre = await t.ev(`${G}.pre.length`);
+				await disable(); await t.sleep(500); await enable();
+				try { await t.waitFor(`${G}.pre.every((x) => !x.isConnected) && ${G}.roots('counter', ${G}.main).length === 1 && ${G}.roots('counter', ${G}.b).length === 1 && [...${G}.roots('counter', ${G}.main), ...${G}.roots('counter', ${G}.b)].every((x) => ${G}.owned(x))`, 'both panes', 6000); r.redrawn = true; } catch { r.redrawn = false; }
+				await t.sleep(800);
+				r.stateA = await state('counter');
+				r.stateB = await state('counter', `${G}.b`);
+				r.plusB = await plusWrites(CAL, 0, [6], `${G}.b`);
+				r.shownA = await shown();
+				r.plusA = await plusWrites(CAL, 0, [7]);
+				r.shownB = await shown(`${G}.b`);
+			});
+			// P5 hover popover (from an LP host) and a canvas file node across off/on: expected uncovered; nothing may break
+			await run('P5-hover-canvas', async (r) => {
+				await t.reset(CAL);
+				await openLP('Probe3/hoverhost.md', null, 0);
+				await t.ev(`(() => { const a = ${G}.main.view.containerEl.querySelector('.cm-hmd-internal-link, a.internal-link, .internal-link'); app.workspace.trigger('hover-link', { event: new MouseEvent('mouseover', { clientX: 400, clientY: 300, ctrlKey: true }), source: 'preview', hoverParent: ${G}.main.view, targetEl: a, linktext: 'Probe3/callout', sourcePath: 'Probe3/hoverhost.md' }); return !!a; })()`);
+				try { await t.waitFor(`!!document.querySelector('.hover-popover [data-dse-element="counter"]')`, 'popover card', 8000); r.popover = true; } catch { r.popover = false; }
+				if (r.popover) {
+					r.popoverMode = await t.ev(`document.querySelector('.hover-popover .markdown-source-view') ? 'source' : 'preview'`);
+					await t.ev(`(() => { const x = document.querySelector('.hover-popover [data-dse-element="counter"]'); x.__r3 = 'pop'; window.__r3pop = x; return true; })()`);
+					await disable(); await t.sleep(500); await enable(); await t.sleep(1500);
+					r.popoverAfter = await t.ev(`(() => { const x = document.querySelector('.hover-popover [data-dse-element="counter"]'); return { open: !!document.querySelector('.hover-popover'), card: !!x, same: x === window.__r3pop, owned: x ? ${G}.owned(x) : null }; })()`);
+					await t.ev(`(() => { document.querySelectorAll('.hover-popover').forEach((p) => p.remove()); return true; })()`);
+				}
+				// canvas
+				await t.ev(`(async () => { ${G}.c = app.workspace.getLeaf('tab'); await ${G}.c.setViewState({ type: 'canvas', state: { file: 'Probe3/board.canvas' }, active: true }); return true; })()`);
+				try { await t.waitFor(`!!${G}.c.view.containerEl.querySelector('[data-dse-element="counter"]')`, 'canvas card', 8000); r.canvas = true; } catch { r.canvas = false; }
+				if (r.canvas) {
+					await t.ev(`(() => { const x = ${G}.c.view.containerEl.querySelector('[data-dse-element="counter"]'); window.__r3can = x; return true; })()`);
+					r.canvasMode = await t.ev(`${G}.c.view.containerEl.querySelector('[data-dse-element="counter"]').closest('.markdown-source-view') ? 'source' : 'preview'`);
+					await disable(); await t.sleep(500); await enable(); await t.sleep(1500);
+					r.canvasAfter = await t.ev(`(() => { const x = ${G}.c.view.containerEl.querySelector('[data-dse-element="counter"]'); return { card: !!x, same: x === window.__r3can, owned: x ? ${G}.owned(x) : null }; })()`);
+				}
+				await t.ev(`(() => { ${G}.c?.detach(); return true; })()`);
+				r.stash = await t.ev(`${G}.stashCount()`);
+			});
+			// P6 the callout is edited while the plugin is off (tall note, mid): the fallback; scroll + undo cost
+			await run('P6-edit-while-off', async (r) => {
+				const MID = 'Probe3/mid.md';
+				await openLP(MID, 'counter', 0);
+				// an undoable edit outside the callout first
+				await t.ev(`(() => { const ed = ${G}.main.view.editor; ed.replaceRange('Q', { line: 2, ch: 0 }); return true; })()`);
+				await t.sleep(400);
+				await t.ev(`(async () => { const cm = ${G}.cm(); const i = cm.state.doc.toString().indexOf('[!note] Camp'); cm.dispatch({ effects: cm.constructor.scrollIntoView(i, { y: 'center' }) }); return true; })()`);
+				await t.sleep(800);
+				r.pre = await tag('counter');
+				r.before = await state('counter');
+				r.cardTopBefore = await t.ev(`(() => { const x = ${G}.roots('counter')[0]; return x.getBoundingClientRect().top - ${G}.cm().scrollDOM.getBoundingClientRect().top; })()`);
+				await disable();
+				r.stBeforeEdit = await t.ev(`${G}.cm().scrollDOM.scrollTop`);
+				await t.ev(`(() => { const cm = ${G}.cm(); const i = cm.state.doc.toString().indexOf('[!note] Camp') + '[!note] Camp'.length; cm.dispatch({ changes: { from: i, insert: '2' } }); return true; })()`);
+				r.stAfterEdit = await t.ev(`${G}.cm().scrollDOM.scrollTop`);
+				await t.sleep(1200);
+				r.rawWhileOff = await t.ev(`!!${G}.cm().contentDOM.querySelector('pre > code.language-ds-counter')`);
+				await enable();
+				r.redrawn = await waitRedrawn('counter', 1);
+				await t.sleep(900);
+				r.state = await state('counter');
+				r.cardTopAfter = await t.ev(`(() => { const x = ${G}.roots('counter')[0]; return x ? x.getBoundingClientRect().top - ${G}.cm().scrollDOM.getBoundingClientRect().top : null; })()`);
+				const textBefore = await t.ev(`${G}.main.view.editor.getValue()`);
+				await t.ev(`(() => { ${G}.main.view.editor.undo(); return true; })()`);
+				await t.sleep(300);
+				const textAfter = await t.ev(`${G}.main.view.editor.getValue()`);
+				r.undoChanged = textBefore !== textAfter;
+				r.hasQ = textAfter.split('\n')[2].startsWith('Q');
+				r.hasCamp2 = textAfter.includes('[!note] Camp2');
+				await t.sleep(1500);
+				r.after = await plusWrites(MID, 0, [6]);
+				const disk = t.read(MID);
+				r.diskOutsideOk = disk.includes('Above filler 59.') && disk.includes('Below filler 99.') && disk.includes('BOTTOM');
+			});
+			// P16a a callout that is OFF SCREEN (CodeMirror dropped its DOM) when the plugin is turned off and on, then scrolled back
+			await run('P16a-offscreen-at-toggle', async (r) => {
+				const TOPC = 'Probe3/topcallout.md';
+				await openLP(TOPC, 'counter', 0);
+				r.before = await plusWrites(TOPC, 0, [6]);
+				r.pre = await tag('counter');
+				await t.ev(`(() => { const sc = ${G}.cm().scrollDOM; sc.scrollTop = sc.scrollHeight; return true; })()`);
+				await t.sleep(1200);
+				r.offscreen = await t.ev(`({ connected: ${G}.pre.map((x) => x.isConnected), st: ${G}.cm().scrollDOM.scrollTop, reg: ${G}.regStats() })`);
+				await disable(); await t.sleep(500);
+				r.stashWhileOff = await t.ev(`({ ...${G}.stashCount(), preEl: ${G}.pre.map((x) => !!x.parentElement && Object.prototype.hasOwnProperty.call(x.parentElement, '__dseReplugV1')) })`);
+				await enable(); await t.sleep(1200);
+				r.logAtEnable = await t.ev(`${G}.log().slice(${G}.log0)`);
+				await t.ev(`(async () => { const cm = ${G}.cm(); cm.dispatch({ effects: cm.constructor.scrollIntoView(cm.state.doc.toString().indexOf('[!note] Camp'), { y: 'center' }) }); return true; })()`);
+				await t.sleep(1500);
+				r.state = await state('counter');
+				r.sameOldRoot = await t.ev(`${G}.roots('counter').map((x) => x.__r3 === 'pre')`);
+				r.after = await plusWrites(TOPC, 0, [7]);
+				r.stateAfter = await state('counter');
+			});
+			// P16b the note is opened while the plugin is off with its callout below the fold; enable; scroll to the callout
+			await run('P16b-open-while-off-below-fold', async (r) => {
+				const BOT = 'Probe3/botcallout.md';
+				await t.open('Lifecycle/other.md', `${G}.main`);
+				await t.reset(BOT);
+				await disable();
+				await openLP(BOT, null, 0, { reset: false });
+				await t.ev(`(() => { ${G}.pre = []; ${G}.sv0 = ${G}.sv.length; ${G}.log0 = ${G}.log().length; return true; })()`);
+				await enable(); await t.sleep(1200);
+				r.logAtEnable = await t.ev(`${G}.log().slice(${G}.log0)`);
+				await t.ev(`(async () => { const cm = ${G}.cm(); cm.dispatch({ effects: cm.constructor.scrollIntoView(cm.state.doc.toString().indexOf('[!note] Camp'), { y: 'center' }) }); return true; })()`);
+				await t.sleep(1500);
+				r.raw = await t.ev(`!!${G}.cm().contentDOM.querySelector('.cm-callout pre > code.language-ds-counter')`);
+				r.state = await state('counter');
+				if (r.state.now > 0) r.after = await plusWrites(BOT, 0, [6]);
+			});
+			// P17 the callout note sits in a BACKGROUND tab at the toggle; switch back to it
+			await run('P17-background-tab', async (r) => {
+				await openLP(CAL, 'counter', 0);
+				r.pre = await tag('counter');
+				await t.ev(`(async () => { ${G}.bt = app.workspace.getLeaf('tab'); await ${G}.bt.setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'source' }, active: true }); return true; })()`);
+				await t.sleep(800);
+				r.hidden = await t.ev(`({ connected: ${G}.pre.map((x) => x.isConnected), visible: ${G}.pre.map((x) => x.getBoundingClientRect().height > 0) })`);
+				await disable(); await t.sleep(500); await enable(); await t.sleep(1000);
+				r.logAtEnable = await t.ev(`${G}.log().slice(${G}.log0)`);
+				await t.ev(`(() => { app.workspace.setActiveLeaf(${G}.main, { focus: true }); return true; })()`);
+				await t.sleep(1200);
+				r.state = await state('counter');
+				r.after = await plusWrites(CAL, 0, [6]);
+				await t.ev(`(() => { ${G}.bt.detach(); return true; })()`);
+			});
+			// P18 how far off screen must the callout be before CodeMirror drops its DOM?
+			await run('P18-detach-threshold', async (r) => {
+				const TOPC = 'Probe3/topcallout.md';
+				await openLP(TOPC, 'counter', 0);
+				r.pre = await tag('counter');
+				r.steps = [];
+				for (let st = 0; st <= 4000; st += 250) {
+					const o = await t.ev(`(async () => { const sc = ${G}.cm().scrollDOM; sc.scrollTop = ${st}; await new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res))); await new Promise((res) => setTimeout(res, 150)); const x = ${G}.pre[0]; const w = x.closest('.cm-embed-block'); return { st: sc.scrollTop, h: sc.clientHeight, connected: x.isConnected, bottomBelowTop: w && x.isConnected ? Math.round(sc.getBoundingClientRect().top - w.getBoundingClientRect().bottom) : null }; })()`);
+					r.steps.push(o);
+				}
+			});
+			// P7 forged / mismatched stash shapes (the reader validates; fallback heals; no crash)
+			for (const [name, forge] of [
+				['P7a-version2', `s.v = 2`],
+				['P7b-ctx-empty', `s.ctx = {}`],
+				['P7c-alias-unknown', `s.alias = 'ds-nope'`],
+				['P7d-body-number', `s.body = 42`],
+				['P7e-null', `el.__dseReplugV1 = null; return true`],
+				['P7f-v2key-only', `el.__dseReplugV2 = el.__dseReplugV1; delete el.__dseReplugV1; el.setAttribute('data-dse-replug', '2'); return true`],
+				['P7g-throwing-getter', `el.__dseReplugV1 = new Proxy({}, { get() { throw new Error('forged'); } }); return true`],
+			]) {
+				await run(name, async (r) => {
+					await openLP(CAL, 'counter', 0);
+					r.pre = await tag('counter');
+					await disable();
+					r.forged = await t.ev(`(() => { const el = document.querySelector('[data-dse-replug]'); if (!el) return 'no stash'; const s = el.__dseReplugV1 = Object.assign({}, el.__dseReplugV1); ${forge}; return true; })()`);
+					await enable();
+					r.redrawn = await waitRedrawn('counter', 1);
+					await t.sleep(900);
+					r.state = await state('counter');
+					r.after = await plusWrites(CAL, 0, [6]);
+				});
+			}
+			// P9 integrity: hand-edit the remounted block (the callout text changes -> new widget); then + writes the edited block; registry does not leak the remounted view
+			await run('P9-handedit-after-remount', async (r) => {
+				const TW = 'Probe3/twin3.md';
+				await openLP(TW, 'counter', 2);
+				r.pre = await tag('counter');
+				await disable(); await t.sleep(500); await enable();
+				r.redrawn = await waitRedrawn('counter', 3);
+				await t.sleep(800);
+				r.state = await state('counter');
+				r.regAfterRemount = await t.ev(`${G}.regStats()`);
+				// hand-edit the middle block's name
+				await t.ev(`(() => { const ed = ${G}.main.view.editor; const text = ed.getValue(); const first = text.indexOf('name: Twin'); const i = text.indexOf('name: Twin', first + 1); const p0 = ed.offsetToPos(i); const p1 = ed.offsetToPos(i + 'name: Twin'.length); ed.replaceRange('name: Hand', p0, p1); ed.setCursor({ line: 0, ch: 0 }); return true; })()`);
+				await t.sleep(2500);
+				r.regAfterEdit = await t.ev(`${G}.regStats()`);
+				r.click1 = await plusWrites(TW, 1, [5, 6, 5]);
+				r.click0 = await plusWrites(TW, 0, [6, 6, 5]);
+				const disk = t.read(TW);
+				r.nameKept = disk.includes('name: Hand');
+				r.outsideOk = ['TOP', 'M1', 'M2', 'BOTTOM'].every((x) => disk.includes(`\n${x}\n`));
+				r.regEnd = await t.ev(`${G}.regStats()`);
+			});
+			// P10 SC-540 shield after off/on: a real + and a click on the card text keep the callout a card, selection unmoved
+			await run('P10-shield-after-offon', async (r) => {
+				await openLP(CAL, 'counter', 0);
+				r.pre = await tag('counter');
+				await disable(); await t.sleep(500); await enable();
+				r.redrawn = await waitRedrawn('counter', 1);
+				await t.sleep(800);
+				r.state0 = await state('counter');
+				r.plus = await plusWrites(CAL, 0, [6]);
+				r.state1 = await state('counter');
+				await click(`${G}.roots('counter')[0]?.querySelector('.dse-counter__name, .dse-head__primary--left, .dse-head') ?? ${G}.roots('counter')[0]`);
+				await t.sleep(900);
+				r.state2 = await state('counter');
+			});
+			// P13 SC-544: after off/on, two quick clicks on twin callouts (upper, then middle 120 ms later)
+			await run('P13-quick-twins-after-offon', async (r) => {
+				const TW = 'Probe3/twin3.md';
+				await openLP(TW, 'counter', 2);
+				r.pre = await tag('counter');
+				await disable(); await t.sleep(500); await enable();
+				r.redrawn = await waitRedrawn('counter', 3);
+				await t.sleep(800);
+				await t.ev(`(async () => { ${G}.roots('counter')[0].querySelector('button[aria-label^="Increase"]').click(); await new Promise((res) => setTimeout(res, 120)); ${G}.roots('counter')[1].querySelector('button[aria-label^="Increase"]').click(); return true; })()`);
+				r.ok = await diskIs(TW, [6, 6, 5], 4000);
+				await t.sleep(1200);
+				r.disk = t.counterValues(TW);
+				r.shown = await shown();
+			});
+			// P15 SC-535 overlap: a tracker in a callout, off/on timing; Advance round writes after
+			await run('P15-tracker-callout', async (r) => {
+				const IN = 'Probe3/init.md';
+				await openLP(IN, 'initiative', 0);
+				r.pre = await tag('initiative');
+				const t0 = Date.now(); await disable(); r.disableMs = Date.now() - t0;
+				await t.sleep(500);
+				const t1 = Date.now(); await enable(); r.enableMs = Date.now() - t1;
+				r.redrawn = await waitRedrawn('initiative', 1);
+				await t.sleep(800);
+				r.state = await state('initiative');
+				const before = t.read(IN);
+				const btn = `Array.from(${G}.roots('initiative')[0]?.querySelectorAll('button') ?? []).find((b) => /advance|next round|end round/i.test(b.getAttribute('aria-label') + ' ' + b.textContent))`;
+				r.btn = await t.ev(`(() => { const b = ${btn}; return b ? (b.getAttribute('aria-label') || b.textContent) : null; })()`);
+				if (r.btn) { await click(btn); await t.sleep(1500); r.wrote = t.read(IN) !== before; }
+			});
+			// P12 leaks: after everything, no stash left; registry roots all connected
+			await run('P12-leaks', async (r) => {
+				await openLP(CAL, 'counter', 0);
+				for (let i = 0; i < 3; i++) { await disable(); await t.sleep(300); await enable(); await t.sleep(900); }
+				r.stash = await t.ev(`${G}.stashCount()`);
+				r.reg = await t.ev(`${G}.regStats()`);
+				r.layoutCbs = await t.ev(`app.workspace.onLayoutReadyCallbacks === null ? 'null (ready)' : app.workspace.onLayoutReadyCallbacks.length`);
+				r.roots = await t.ev(`${G}.roots('counter').length`);
+				r.widgetsChildren = await t.ev(`${G}.roots('counter').map((x) => x.parentElement.children.length)`);
+				await disable();
+				r.stashWhileOff = await t.ev(`${G}.stashCount()`);
+				await enable();
+				await t.sleep(900);
+				r.stashAfter = await t.ev(`${G}.stashCount()`);
+			});
+			// P8 update from a pre-fix build: the run's own bundle is the old one; swap in R3_NEWBUNDLE between disable and enable
+			await run('P8-update-from-prefix', async (r) => {
+				await openLP(CAL, 'counter', 0);
+				r.before = await plusWrites(CAL, 0, [6]);
+				r.pre = await tag('counter');
+				await disable();
+				const pdir = path.join(vault, '.obsidian', 'plugins', 'draw-steel-elements');
+				for (const f of ['main.js', 'styles.css', 'manifest.json']) fs.copyFileSync(path.join(process.env.R3_NEWBUNDLE, f), path.join(pdir, f));
+				await t.sleep(500);
+				await enable();
+				r.newBuild = await t.ev(`Array.isArray(window.__dseReplugLog)`);
+				r.redrawn = await waitRedrawn('counter', 1);
+				await t.sleep(900);
+				r.state = await state('counter');
+				r.after = await plusWrites(CAL, 0, [7]);
+				r.stateAfter = await state('counter');
+			});
+			// P14 startup: reload the app with the callout note open in LP; the fallback must not fire on a normal start
+			await run('P14-startup', async (r) => {
+				await openLP(CAL, 'counter', 0);
+				await t.ev(`(async () => { await app.workspace.saveLayout?.(); return true; })()`);
+				await t.sleep(1500);
+				r.reloadRequested = true;
+				await t.ev(`(() => { setTimeout(() => location.reload(), 50); return true; })()`).catch(() => null);
+				await t.sleep(8000);
+				for (let i = 0; i < 60; i++) {
+					try { if (await t.ev(`!!(window.app && app.workspace && app.workspace.layoutReady && app.plugins.plugins['${ID}'])`)) break; } catch { /* reloading */ }
+					await t.sleep(500);
+				}
+				await t.sleep(3000);
+				await t.ev(PAGE_HELPERS);
+				r.after = await t.ev(`(() => { const leaf = app.workspace.getLeavesOfType('markdown').find((l) => l.view.file?.path === ${J(CAL)}); const cm = leaf?.view.editor?.cm; const roots = cm ? Array.from(cm.contentDOM.querySelectorAll('[data-dse-element="counter"]')) : []; const reg = app.plugins.plugins['${ID}'].viewRegistry; return { leaf: !!leaf, mode: leaf?.view.getMode(), roots: roots.length, owned: roots.map((x) => reg.liveEntries().some((e) => e.root === x)), log: window.__dseReplugLog ?? null }; })()`);
+			});
+			results.__errorsAll = await t.errorsSince(m0).catch(() => 'n/a');
+			save();
+			return 'r3 probes: ' + Object.keys(results).join(',');
+		},
+	},

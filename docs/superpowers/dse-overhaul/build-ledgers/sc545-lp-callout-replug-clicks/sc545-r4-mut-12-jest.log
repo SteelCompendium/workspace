@@ -1,0 +1,33 @@
+Running one project: dom
+FAIL dom test/dom/framework/replugRemount.test.ts
+  ● SC-545 robustness: one bad stash does not stop the others; an unloaded instance never rebuilds a note › dispose() that lands during a slow remount, with a raw DSE fence in a callout: no setViewData after the unload (LOW-2)
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+      Object {
+    -   "rebuilt": Array [],
+    +   "rebuilt": Array [
+    +     "Note.md",
+    +   ],
+        "remounted": 1,
+      }
+
+      353 | 		remounter.dispose(); // the plugin is turned off again while the draw is still running
+      354 | 		finish();
+    > 355 | 		expect(await running).toEqual({ remounted: 1, rebuilt: [] });
+          | 		                      ^
+      356 | 		expect(rawView.setViewData).not.toHaveBeenCalled();
+      357 | 	});
+      358 | });
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:355:25)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 29 passed, 30 total
+Snapshots:   0 total
+Time:        1.194 s
+Ran all test suites matching test/dom/framework/replugRemount.test.ts.
+GATE-RC=1

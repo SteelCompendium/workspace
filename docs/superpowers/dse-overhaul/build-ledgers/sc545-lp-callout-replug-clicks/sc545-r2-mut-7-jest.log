@@ -1,0 +1,49 @@
+Running one project: dom
+FAIL dom test/dom/framework/replugRemount.test.ts
+  ● SC-545 stash: what the unloading instance leaves on the element › a stash with the wrong version or shape is not read
+
+    expect(received).toBeNull()
+
+    Received: {"alias": "ds-counter", "body": "name: Health
+    current_value: 10
+    max_value: 20
+    min_value: 0", "ctx": {"addChild": [Function addChild], "docId": "d", "frontmatter": undefined, "getSectionInfo": [Function getSectionInfo], "sourcePath": "Note.md"}, "v": 2}
+
+      136 | 			const el = document.createElement('div');
+      137 | 			(el as unknown as Record<string, unknown>)[REPLUG_KEY] = stash;
+    > 138 | 			expect(readReplugStash(el)).toBeNull();
+          | 			                            ^
+      139 | 		}
+      140 | 		const el = document.createElement('div');
+      141 | 		expect(readReplugStash(el)).toBeNull();
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:138:32)
+
+  ● SC-545 remount: the new instance draws the stashed cards › a stash with the wrong shape is ignored: nothing is drawn, the card stays, and the note is left to the fallback
+
+    expect(jest.fn()).not.toHaveBeenCalled()
+
+    Expected number of calls: 0
+    Received number of calls: 1
+
+    1: <div />, {"addChild": [Function addChild], "docId": "d", "frontmatter": undefined, "getSectionInfo": [Function getSectionInfo], "sourcePath": "Note.md"}, "ds-counter", "name: Health
+    current_value: 10
+    max_value: 20
+    min_value: 0"
+
+      194 | 		const { view } = fakeView(container);
+      195 | 		const result = await new ReplugRemounter(fakeApp([{ view }]), d).run();
+    > 196 | 		expect(d.mount).not.toHaveBeenCalled();
+          | 		                    ^
+      197 | 		expect(old.isConnected).toBe(true);
+      198 | 		expect(el.hasAttribute(REPLUG_ATTR)).toBe(false);
+      199 | 		expect(view.setViewData).toHaveBeenCalledTimes(1); // the unowned card is rebuilt
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:196:23)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 18 passed, 20 total
+Snapshots:   0 total
+Time:        1.227 s
+Ran all test suites matching test/dom/framework/replugRemount.test.ts.
+GATE-RC=1

@@ -1,0 +1,6 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :160, port 9547, 1 scenario(s)
+R3P E6-resize-while-off: {"pre":1,"beforeResize":{"embed":true,"raw":0,"roots":1,"old":1,"owned":0},"afterResize":{"embed":true,"raw":0,"roots":1,"old":1,"owned":0},"end":{"embed":true,"raw":0,"roots":1,"old":0,"owned":1},"log":[{"phase":"start","at":9875.099999904633},{"phase":"mount","t0":9875.599999904633,"at":9885.400000095367,"alias":"ds-counter","connected":true},{"phase":"end","at":9885.5,"remounted":1,"rebuilt":[]}],"errors":[],"notices":[],"ms":9082}
+R3P E6b-resize-while-on: {"pre":1,"beforeResize":{"embed":true,"raw":0,"roots":1,"old":1,"owned":1},"afterResize":{"embed":true,"raw":0,"roots":1,"old":1,"owned":1},"end":{"embed":true,"raw":0,"roots":1,"old":1,"owned":1},"log":[],"errors":[],"notices":[],"ms":6913}
+OBSIDIAN-LIFECYCLE R3P ok (r3 probes: E6-resize-while-off,E6b-resize-while-on,__errorsAll)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=21s

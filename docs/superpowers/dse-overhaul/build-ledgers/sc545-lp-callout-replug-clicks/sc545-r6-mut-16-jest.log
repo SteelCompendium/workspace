@@ -1,0 +1,28 @@
+Running one project: dom
+FAIL dom test/dom/framework/replugRemount.test.ts
+  ● SC-545 remount: the new instance draws the stashed cards › off/on/off while a draw is running and CodeMirror has taken the widget off the page meanwhile: the element is marked again all the same
+
+    expect(received).toEqual(expected) // deep equality
+
+    Expected: {"alias": "ds-counter", "body": "name: Health
+    current_value: 10
+    max_value: 20
+    min_value: 0", "ctx": {"addChild": [Function addChild], "docId": "d", "frontmatter": undefined, "getSectionInfo": [Function getSectionInfo], "sourcePath": "Note.md"}, "v": 1}
+    Received: null
+
+      215 | 		expect(el.isConnected).toBe(false);
+      216 | 		remounter.dispose();
+    > 217 | 		expect(readReplugStash(el)).toEqual({ v: 1, ctx, alias: 'ds-counter', body: BODY });
+          | 		                            ^
+      218 | 		finish();
+      219 | 		await running;
+      220 | 	});
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:217:31)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 31 passed, 32 total
+Snapshots:   0 total
+Time:        2.642 s
+Ran all test suites matching test/dom/framework/replugRemount.test.ts.
+GATE-RC=1

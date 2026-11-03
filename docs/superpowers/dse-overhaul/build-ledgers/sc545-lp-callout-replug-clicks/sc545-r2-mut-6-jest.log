@@ -1,0 +1,44 @@
+Running one project: dom
+FAIL dom test/dom/framework/replugRemount.test.ts
+  ● SC-545 remount: the new instance draws the stashed cards › off/on/off while a draw is running: the element is marked again for the next instance, and the fallback does not run
+
+    expect(received).toEqual(expected) // deep equality
+
+    Expected: {"alias": "ds-counter", "body": "name: Health
+    current_value: 10
+    max_value: 20
+    min_value: 0", "ctx": {"addChild": [Function addChild], "docId": "d", "frontmatter": undefined, "getSectionInfo": [Function getSectionInfo], "sourcePath": "Note.md"}, "v": 1}
+    Received: null
+
+      236 | 		expect(readReplugStash(el)).toBeNull(); // taken by this instance
+      237 | 		remounter.dispose(); // the plugin is turned off again before the draw finished
+    > 238 | 		expect(readReplugStash(el)).toEqual({ v: 1, ctx, alias: 'ds-counter', body: BODY });
+          | 		                            ^
+      239 | 		finish();
+      240 | 		expect(await running).toEqual({ remounted: 1, rebuilt: [] });
+      241 | 		expect(view.setViewData).not.toHaveBeenCalled();
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:238:31)
+
+  ● SC-545 wiring: an off/on of the plugin with a card in a Live Preview callout › off, on, off, on: the card is redrawn again, and a draw of the second instance never leaves a card behind unmarked
+
+    expect(received).not.toBeNull()
+
+    Received: null
+
+      380 | 		second.plugin.unload(); // off again before the draw finished
+      381 | 		await jest.advanceTimersByTimeAsync(50);
+    > 382 | 		expect(readReplugStash(el)).not.toBeNull(); // whatever the second instance managed to draw, the third one draws again
+          | 		                                ^
+      383 |
+      384 | 		const third = boot(env);
+      385 | 		await jest.advanceTimersByTimeAsync(50);
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:382:35)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 18 passed, 20 total
+Snapshots:   0 total
+Time:        1.212 s
+Ran all test suites matching test/dom/framework/replugRemount.test.ts.
+GATE-RC=1

@@ -1,0 +1,68 @@
+Running one project: dom
+FAIL dom test/dom/framework/replugRemount.test.ts
+  ● SC-545 wiring: an off/on of the plugin with a card in a Live Preview callout › a layout-ready run that rejects is logged, not left as an unhandled rejection (LOW-1)
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: StringContaining "redrawing the cards after the plugin was turned on failed", Any<Error>
+
+    Number of calls: 0
+
+      548 | 		boot(env);
+      549 | 		await jest.advanceTimersByTimeAsync(0);
+    > 550 | 		expect(log).toHaveBeenCalledWith(expect.stringContaining('redrawing the cards after the plugin was turned on failed'), expect.any(Error));
+          | 		            ^
+      551 | 	});
+      552 |
+      553 | 	test('ViewRegistry.onunload stashes the entries it is about to clear', async () => {
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:550:15)
+
+  ● SC-545 wiring: an off/on of the plugin with a card in a Live Preview callout › a layout-ready run that rejects is logged, not left as an unhandled rejection (LOW-1)
+
+    boom
+
+      544 | 	test('a layout-ready run that rejects is logged, not left as an unhandled rejection (LOW-1)', async () => {
+      545 | 		const log = jest.spyOn(console, 'error').mockImplementation(() => {});
+    > 546 | 		jest.spyOn(ReplugRemounter.prototype, 'run').mockRejectedValue(new Error('boom'));
+          | 		                                                               ^
+      547 | 		const env = makeEnv();
+      548 | 		boot(env);
+      549 | 		await jest.advanceTimersByTimeAsync(0);
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:546:66)
+
+  ● SC-545 wiring: an off/on of the plugin with a card in a Live Preview callout › a layout-ready run that rejects is logged, not left as an unhandled rejection (LOW-1)
+
+    boom
+
+      544 | 	test('a layout-ready run that rejects is logged, not left as an unhandled rejection (LOW-1)', async () => {
+      545 | 		const log = jest.spyOn(console, 'error').mockImplementation(() => {});
+    > 546 | 		jest.spyOn(ReplugRemounter.prototype, 'run').mockRejectedValue(new Error('boom'));
+          | 		                                                               ^
+      547 | 		const env = makeEnv();
+      548 | 		boot(env);
+      549 | 		await jest.advanceTimersByTimeAsync(0);
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:546:66)
+
+  ● SC-545 wiring: an off/on of the plugin with a card in a Live Preview callout › a layout-ready run that rejects is logged, not left as an unhandled rejection (LOW-1)
+
+    boom
+
+      544 | 	test('a layout-ready run that rejects is logged, not left as an unhandled rejection (LOW-1)', async () => {
+      545 | 		const log = jest.spyOn(console, 'error').mockImplementation(() => {});
+    > 546 | 		jest.spyOn(ReplugRemounter.prototype, 'run').mockRejectedValue(new Error('boom'));
+          | 		                                                               ^
+      547 | 		const env = makeEnv();
+      548 | 		boot(env);
+      549 | 		await jest.advanceTimersByTimeAsync(0);
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:546:66)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 29 passed, 30 total
+Snapshots:   0 total
+Time:        1.313 s
+Ran all test suites matching test/dom/framework/replugRemount.test.ts.
+GATE-RC=1

@@ -1,0 +1,51 @@
+== mutA
+applied mutant A to src/framework/host/replugRemount.ts
+  ● SC-545 remount: the new instance draws the stashed cards › a stash with the wrong shape is ignored: nothing is drawn, the card stays, and the note is left to the fallback
+  ● SC-545 fallback: rebuild a note only for a block that is still undrawn › an unowned DSE card in a callout triggers it; an owned card, a nested card and the inert deferred card do not
+Tests:       2 failed, 18 passed, 20 total
+== mutB
+applied mutant B to src/framework/host/replugRemount.ts
+  ● SC-545 remount: the new instance draws the stashed cards › empties the element and mounts once per mark with the stashed context, label and body; the mark is gone
+  ● SC-545 remount: the new instance draws the stashed cards › the normal path (every card stashed and redrawn into an owned root) does not rebuild the note
+  ● SC-545 wiring: an off/on of the plugin with a card in a Live Preview callout › the unload leaves the card for the next instance; the next one redraws it at layout-ready: a fresh, owned root, no rebuild, and its + writes
+  ● SC-545 wiring: an off/on of the plugin with a card in a Live Preview callout › off, on, off, on: the card is redrawn again, and a draw of the second instance never leaves a card behind unmarked
+Tests:       4 failed, 16 passed, 20 total
+== mutC
+applied mutant C to src/framework/host/replugRemount.ts
+  ● SC-545 remount: the new instance draws the stashed cards › empties the element and mounts once per mark with the stashed context, label and body; the mark is gone
+  ● SC-545 remount: the new instance draws the stashed cards › a second run mounts nothing
+  ● SC-545 remount: the new instance draws the stashed cards › a stash with the wrong shape is ignored: nothing is drawn, the card stays, and the note is left to the fallback
+  ● SC-545 remount: the new instance draws the stashed cards › off/on/off while a draw is running: the element is marked again for the next instance, and the fallback does not run
+Tests:       4 failed, 16 passed, 20 total
+== mutD
+applied mutant D to src/framework/host/replugRemount.ts
+  ● SC-545 stash: what the unloading instance leaves on the element › marks a connected card in a Live Preview embed with the widget context, fence label and body
+Tests:       1 failed, 19 passed, 20 total
+== mutE
+applied mutant E to src/framework/host/replugRemount.ts
+Tests:       20 passed, 20 total
+== mutF
+applied mutant F to src/framework/host/replugRemount.ts
+  ● SC-545 stash: what the unloading instance leaves on the element › a stash with the wrong version or shape is not read
+Tests:       1 failed, 19 passed, 20 total
+== mutG
+applied mutant G to src/framework/host/replugRemount.ts
+  ● SC-545 remount: the new instance draws the stashed cards › empties the element and mounts once per mark with the stashed context, label and body; the mark is gone
+Tests:       1 failed, 19 passed, 20 total
+== mutH
+applied mutant H to src/framework/host/replugRemount.ts
+  ● SC-545 fallback: rebuild a note only for a block that is still undrawn › a raw DSE fence in a Live Preview callout: the note is set from its own text once, with its ephemeral state put back
+  ● SC-545 fallback: rebuild a note only for a block that is still undrawn › a raw DSE fence in a Live Preview embed: the note is set from its own text once, with its ephemeral state put back
+Tests:       2 failed, 18 passed, 20 total
+== mutI
+applied mutant I to src/framework/host/replugRemount.ts
+  ● SC-545 stash: what the unloading instance leaves on the element › marks a connected card in a Live Preview callout with the widget context, fence label and body
+  ● SC-545 stash: what the unloading instance leaves on the element › marks a connected card in a Live Preview embed with the widget context, fence label and body
+  ● SC-545 remount: the new instance draws the stashed cards › empties the element and mounts once per mark with the stashed context, label and body; the mark is gone
+  ● SC-545 remount: the new instance draws the stashed cards › off/on/off while a draw is running: the element is marked again for the next instance, and the fallback does not run
+  ● SC-545 wiring: an off/on of the plugin with a card in a Live Preview callout › the unload leaves the card for the next instance; the next one redraws it at layout-ready: a fresh, owned root, no rebuild, and its + writes
+Tests:       5 failed, 15 passed, 20 total
+== mutJ
+applied mutant J to src/framework/host/replugRemount.ts
+  ● SC-545 fallback: rebuild a note only for a block that is still undrawn › an unowned DSE card in a callout triggers it; an owned card, a nested card and the inert deferred card do not
+Tests:       1 failed, 19 passed, 20 total

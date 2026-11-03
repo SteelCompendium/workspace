@@ -1,0 +1,1547 @@
+{
+ "cases": {
+  "e-pending-mid": {
+   "name": "e-pending-mid",
+   "rel": "Probe545/callout-mid.md",
+   "mode": "lp",
+   "where": "lp-callout",
+   "el": "counter",
+   "pendingAtDisable": true,
+   "scrollMid": true,
+   "snaps": {
+    "start": {
+     "mode": "source",
+     "plugin": "i1",
+     "live": 0,
+     "roots": []
+    },
+    "cycle1:afterDisable": {
+     "mode": "source",
+     "plugin": null,
+     "live": null,
+     "roots": []
+    },
+    "cycle1:afterEnable": {
+     "mode": "source",
+     "plugin": "i2",
+     "live": 1,
+     "roots": [
+      {
+       "el": "counter",
+       "gen": "new",
+       "where": "lp-callout",
+       "visible": true,
+       "connected": true,
+       "owned": "live",
+       "value": "7",
+       "text": "Solo",
+       "parentClass": "block-language-ds-counter"
+      }
+     ]
+    }
+   },
+   "listeners": {
+    "start": null,
+    "cycle1:afterDisable": null,
+    "cycle1:afterEnable": [
+     "click"
+    ]
+   },
+   "metrics": {
+    "cycle1:beforeDisable": {
+     "scrollTop": 2559,
+     "rootTop": 482,
+     "cursor": {
+      "line": 132,
+      "ch": 0
+     },
+     "stashed": null,
+     "remounted": null,
+     "rebuilt": null
+    },
+    "cycle1:afterEnable": {
+     "scrollTop": 2559,
+     "rootTop": 482,
+     "cursor": {
+      "line": 132,
+      "ch": 0
+     },
+     "stashed": null,
+     "remounted": null,
+     "rebuilt": null
+    }
+   },
+   "steps": [
+    {
+     "label": "before-offon",
+     "diskChanged": true,
+     "valuesBefore": [
+      5
+     ],
+     "valuesAfter": [
+      6
+     ],
+     "modalOpened": false,
+     "snap": {
+      "mode": "source",
+      "plugin": "i1",
+      "live": 1,
+      "roots": [
+       {
+        "el": "counter",
+        "gen": "new",
+        "where": "lp-callout",
+        "visible": true,
+        "connected": true,
+        "owned": "live",
+        "value": "6",
+        "text": "Solo",
+        "parentClass": "block-language-ds-counter"
+       }
+      ]
+     },
+     "log": [
+      {
+       "ev": "pointerdown",
+       "target": "SPAN",
+       "gen": "new",
+       "owned": "live",
+       "interactiveChild": false,
+       "n": 2,
+       "t": 7083
+      },
+      {
+       "ev": "click",
+       "target": "SPAN",
+       "gen": "new",
+       "owned": "live",
+       "interactiveChild": true,
+       "n": 3,
+       "t": 7086
+      },
+      {
+       "ev": "click:bubble-reached-document",
+       "defaultPrevented": false,
+       "n": 4,
+       "t": 7088
+      },
+      {
+       "ev": "vault.process",
+       "path": "Probe545/callout-mid.md",
+       "n": 5,
+       "t": 7490
+      }
+     ],
+     "errors": [],
+     "notices": []
+    },
+    {
+     "label": "after-offon",
+     "diskChanged": true,
+     "valuesBefore": [
+      7
+     ],
+     "valuesAfter": [
+      8
+     ],
+     "modalOpened": false,
+     "snap": {
+      "mode": "source",
+      "plugin": "i2",
+      "live": 1,
+      "roots": [
+       {
+        "el": "counter",
+        "gen": "new",
+        "where": "lp-callout",
+        "visible": true,
+        "connected": true,
+        "owned": "live",
+        "value": "8",
+        "text": "Solo",
+        "parentClass": "block-language-ds-counter"
+       }
+      ]
+     },
+     "log": [
+      {
+       "ev": "pointerdown",
+       "target": "SPAN",
+       "gen": "new",
+       "owned": "live",
+       "interactiveChild": false,
+       "n": 95,
+       "t": 14049
+      },
+      {
+       "ev": "click",
+       "target": "SPAN",
+       "gen": "new",
+       "owned": "live",
+       "interactiveChild": true,
+       "n": 96,
+       "t": 14051
+      },
+      {
+       "ev": "click:bubble-reached-document",
+       "defaultPrevented": false,
+       "n": 97,
+       "t": 14053
+      },
+      {
+       "ev": "vault.process",
+       "path": "Probe545/callout-mid.md",
+       "n": 98,
+       "t": 14455
+      },
+      {
+       "ev": "proc",
+       "lang": "ds-counter",
+       "inst": "i2",
+       "docId": "be25f8bc2c7b8441",
+       "section": null,
+       "val": "8",
+       "n": 99,
+       "t": 14467
+      }
+     ],
+     "errors": [],
+     "notices": []
+    }
+   ],
+   "problems": [],
+   "tStart": 1900,
+   "ctl": "(Array.from((window.__r545.leaf).view.containerEl.querySelectorAll('.markdown-source-view .cm-embed-block.cm-callout [data-dse-element=\"counter\"]')).filter((r) => r.isConnected && !r.parentElement.closest('[data-dse-element]'))[0])?.querySelector('button[aria-label^=\"Increase\"]')",
+   "inst": "i2",
+   "diskAfterOffOn": [
+    7
+   ],
+   "errorsAll": [],
+   "fullLog": [
+    {
+     "ev": "vault.modify",
+     "path": "Probe545/callout-mid.md",
+     "n": 1,
+     "t": 2481
+    },
+    {
+     "ev": "pointerdown",
+     "target": "SPAN",
+     "gen": "new",
+     "owned": "live",
+     "interactiveChild": false,
+     "n": 2,
+     "t": 7083
+    },
+    {
+     "ev": "click",
+     "target": "SPAN",
+     "gen": "new",
+     "owned": "live",
+     "interactiveChild": true,
+     "n": 3,
+     "t": 7086
+    },
+    {
+     "ev": "click:bubble-reached-document",
+     "defaultPrevented": false,
+     "n": 4,
+     "t": 7088
+    },
+    {
+     "ev": "vault.process",
+     "path": "Probe545/callout-mid.md",
+     "n": 5,
+     "t": 7490
+    },
+    {
+     "ev": "pointerdown",
+     "target": "SPAN",
+     "gen": "pre",
+     "owned": "live",
+     "interactiveChild": false,
+     "n": 6,
+     "t": 9382
+    },
+    {
+     "ev": "click",
+     "target": "SPAN",
+     "gen": "pre",
+     "owned": "live",
+     "interactiveChild": true,
+     "n": 7,
+     "t": 9384
+    },
+    {
+     "ev": "click:bubble-reached-document",
+     "defaultPrevented": false,
+     "n": 8,
+     "t": 9386
+    },
+    {
+     "ev": "vault.process",
+     "path": "Probe545/callout-mid.md",
+     "n": 9,
+     "t": 9420
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 10,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 11,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 12,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 13,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 14,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 15,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 16,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 17,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 18,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 19,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 20,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 21,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 22,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 23,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 24,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 25,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 26,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 27,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 28,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 29,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 30,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 31,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 32,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 33,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 34,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 35,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 36,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 37,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 38,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 39,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 40,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 41,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 42,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 43,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 44,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 45,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 46,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 47,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 48,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 49,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 50,
+     "t": 9421
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 51,
+     "t": 9433
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 52,
+     "t": 11067
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 53,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 54,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 55,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 56,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 57,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 58,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 59,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 60,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 61,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 62,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 63,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 64,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 65,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 66,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 67,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 68,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 69,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 70,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 71,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 72,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 73,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 74,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 75,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 76,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 77,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 78,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 79,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 80,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 81,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 82,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 83,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 84,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 85,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 86,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 87,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 88,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 89,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 90,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 91,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 92,
+     "t": 11079
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 93,
+     "t": 11079
+    },
+    {
+     "ev": "proc",
+     "lang": "ds-counter",
+     "inst": "?",
+     "docId": "a8deba573e6ac394",
+     "section": null,
+     "val": "7",
+     "n": 94,
+     "t": 11101
+    },
+    {
+     "ev": "pointerdown",
+     "target": "SPAN",
+     "gen": "new",
+     "owned": "live",
+     "interactiveChild": false,
+     "n": 95,
+     "t": 14049
+    },
+    {
+     "ev": "click",
+     "target": "SPAN",
+     "gen": "new",
+     "owned": "live",
+     "interactiveChild": true,
+     "n": 96,
+     "t": 14051
+    },
+    {
+     "ev": "click:bubble-reached-document",
+     "defaultPrevented": false,
+     "n": 97,
+     "t": 14053
+    },
+    {
+     "ev": "vault.process",
+     "path": "Probe545/callout-mid.md",
+     "n": 98,
+     "t": 14455
+    },
+    {
+     "ev": "proc",
+     "lang": "ds-counter",
+     "inst": "i2",
+     "docId": "be25f8bc2c7b8441",
+     "section": null,
+     "val": "8",
+     "n": 99,
+     "t": 14467
+    }
+   ],
+   "rootListeners": [
+    "click",
+    "click",
+    "mousedown",
+    "pointerdown"
+   ],
+   "ms": 14290
+  },
+  "a-lp-callout": {
+   "name": "a-lp-callout",
+   "rel": "Probe545/callout.md",
+   "mode": "lp",
+   "where": "lp-callout",
+   "el": "counter",
+   "snaps": {
+    "start": {
+     "mode": "source",
+     "plugin": "i2",
+     "live": 1,
+     "roots": [
+      {
+       "el": "counter",
+       "gen": "new",
+       "where": "lp-callout",
+       "visible": true,
+       "connected": true,
+       "owned": "live",
+       "value": "5",
+       "text": "Solo",
+       "parentClass": "block-language-ds-counter"
+      }
+     ]
+    },
+    "cycle1:afterDisable": {
+     "mode": "source",
+     "plugin": null,
+     "live": null,
+     "roots": [
+      {
+       "el": "counter",
+       "gen": "pre",
+       "where": "lp-callout",
+       "visible": true,
+       "connected": true,
+       "owned": "no-plugin",
+       "value": "6",
+       "text": "Solo",
+       "parentClass": "block-language-ds-counter"
+      }
+     ]
+    },
+    "cycle1:afterEnable": {
+     "mode": "source",
+     "plugin": "i3",
+     "live": 1,
+     "roots": [
+      {
+       "el": "counter",
+       "gen": "new",
+       "where": "lp-callout",
+       "visible": true,
+       "connected": true,
+       "owned": "live",
+       "value": "6",
+       "text": "Solo",
+       "parentClass": "block-language-ds-counter"
+      }
+     ]
+    }
+   },
+   "listeners": {
+    "start": [
+     "click"
+    ],
+    "cycle1:afterDisable": [],
+    "cycle1:afterEnable": [
+     "click"
+    ]
+   },
+   "metrics": {
+    "cycle1:beforeDisable": {
+     "scrollTop": 0,
+     "rootTop": 187,
+     "cursor": {
+      "line": 0,
+      "ch": 0
+     },
+     "stashed": null,
+     "remounted": null,
+     "rebuilt": null
+    },
+    "cycle1:afterEnable": {
+     "scrollTop": 0,
+     "rootTop": 187,
+     "cursor": {
+      "line": 0,
+      "ch": 0
+     },
+     "stashed": null,
+     "remounted": null,
+     "rebuilt": null
+    }
+   },
+   "steps": [
+    {
+     "label": "before-offon",
+     "diskChanged": true,
+     "valuesBefore": [
+      5
+     ],
+     "valuesAfter": [
+      6
+     ],
+     "modalOpened": false,
+     "snap": {
+      "mode": "source",
+      "plugin": "i2",
+      "live": 1,
+      "roots": [
+       {
+        "el": "counter",
+        "gen": "new",
+        "where": "lp-callout",
+        "visible": true,
+        "connected": true,
+        "owned": "live",
+        "value": "6",
+        "text": "Solo",
+        "parentClass": "block-language-ds-counter"
+       }
+      ]
+     },
+     "log": [
+      {
+       "ev": "pointerdown",
+       "target": "SPAN",
+       "gen": "new",
+       "owned": "live",
+       "interactiveChild": false,
+       "n": 102,
+       "t": 20139
+      },
+      {
+       "ev": "click",
+       "target": "SPAN",
+       "gen": "new",
+       "owned": "live",
+       "interactiveChild": true,
+       "n": 103,
+       "t": 20141
+      },
+      {
+       "ev": "click:bubble-reached-document",
+       "defaultPrevented": false,
+       "n": 104,
+       "t": 20143
+      },
+      {
+       "ev": "vault.process",
+       "path": "Probe545/callout.md",
+       "n": 105,
+       "t": 20543
+      },
+      {
+       "ev": "proc",
+       "lang": "ds-counter",
+       "inst": "i2",
+       "docId": "79cd5cf02c3feff9",
+       "section": null,
+       "val": "6",
+       "n": 106,
+       "t": 20550
+      }
+     ],
+     "errors": [],
+     "notices": []
+    },
+    {
+     "label": "after-offon",
+     "diskChanged": true,
+     "valuesBefore": [
+      6
+     ],
+     "valuesAfter": [
+      7
+     ],
+     "modalOpened": false,
+     "snap": {
+      "mode": "source",
+      "plugin": "i3",
+      "live": 1,
+      "roots": [
+       {
+        "el": "counter",
+        "gen": "new",
+        "where": "lp-callout",
+        "visible": true,
+        "connected": true,
+        "owned": "live",
+        "value": "7",
+        "text": "Solo",
+        "parentClass": "block-language-ds-counter"
+       }
+      ]
+     },
+     "log": [
+      {
+       "ev": "pointerdown",
+       "target": "SPAN",
+       "gen": "new",
+       "owned": "live",
+       "interactiveChild": false,
+       "n": 191,
+       "t": 26766
+      },
+      {
+       "ev": "click",
+       "target": "SPAN",
+       "gen": "new",
+       "owned": "live",
+       "interactiveChild": true,
+       "n": 192,
+       "t": 26769
+      },
+      {
+       "ev": "click:bubble-reached-document",
+       "defaultPrevented": false,
+       "n": 193,
+       "t": 26771
+      },
+      {
+       "ev": "vault.process",
+       "path": "Probe545/callout.md",
+       "n": 194,
+       "t": 27171
+      },
+      {
+       "ev": "proc",
+       "lang": "ds-counter",
+       "inst": "i3",
+       "docId": "6be5f2965eb7ff53",
+       "section": null,
+       "val": "7",
+       "n": 195,
+       "t": 27178
+      }
+     ],
+     "errors": [],
+     "notices": []
+    }
+   ],
+   "problems": [],
+   "tStart": 16191,
+   "ctl": "(Array.from((window.__r545.leaf).view.containerEl.querySelectorAll('.markdown-source-view .cm-embed-block.cm-callout [data-dse-element=\"counter\"]')).filter((r) => r.isConnected && !r.parentElement.closest('[data-dse-element]'))[0])?.querySelector('button[aria-label^=\"Increase\"]')",
+   "inst": "i3",
+   "errorsAll": [],
+   "fullLog": [
+    {
+     "ev": "vault.modify",
+     "path": "Probe545/callout.md",
+     "n": 100,
+     "t": 16785
+    },
+    {
+     "ev": "proc",
+     "lang": "ds-counter",
+     "inst": "i2",
+     "docId": "41e8015ed7b466b0",
+     "section": null,
+     "val": "5",
+     "n": 101,
+     "t": 17804
+    },
+    {
+     "ev": "pointerdown",
+     "target": "SPAN",
+     "gen": "new",
+     "owned": "live",
+     "interactiveChild": false,
+     "n": 102,
+     "t": 20139
+    },
+    {
+     "ev": "click",
+     "target": "SPAN",
+     "gen": "new",
+     "owned": "live",
+     "interactiveChild": true,
+     "n": 103,
+     "t": 20141
+    },
+    {
+     "ev": "click:bubble-reached-document",
+     "defaultPrevented": false,
+     "n": 104,
+     "t": 20143
+    },
+    {
+     "ev": "vault.process",
+     "path": "Probe545/callout.md",
+     "n": 105,
+     "t": 20543
+    },
+    {
+     "ev": "proc",
+     "lang": "ds-counter",
+     "inst": "i2",
+     "docId": "79cd5cf02c3feff9",
+     "section": null,
+     "val": "6",
+     "n": 106,
+     "t": 20550
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 107,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 108,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 109,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 110,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 111,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 112,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 113,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 114,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 115,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 116,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 117,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 118,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 119,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 120,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 121,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 122,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 123,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 124,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 125,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 126,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 127,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 128,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 129,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 130,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 131,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 132,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 133,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 134,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 135,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 136,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 137,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 138,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 139,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 140,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 141,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 142,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 143,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 144,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 145,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 146,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 147,
+     "t": 22209
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 148,
+     "t": 22219
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 149,
+     "t": 23897
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 150,
+     "t": 23921
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 151,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 152,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 153,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 154,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 155,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 156,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 157,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 158,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 159,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 160,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 161,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 162,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 163,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 164,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 165,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 166,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 167,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 168,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 169,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 170,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 171,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 172,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 173,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 174,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 175,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 176,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 177,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 178,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 179,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 180,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 181,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 182,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 183,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 184,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 185,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 186,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 187,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 188,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 189,
+     "t": 23922
+    },
+    {
+     "ev": "post-processor-change",
+     "n": 190,
+     "t": 23922
+    },
+    {
+     "ev": "pointerdown",
+     "target": "SPAN",
+     "gen": "new",
+     "owned": "live",
+     "interactiveChild": false,
+     "n": 191,
+     "t": 26766
+    },
+    {
+     "ev": "click",
+     "target": "SPAN",
+     "gen": "new",
+     "owned": "live",
+     "interactiveChild": true,
+     "n": 192,
+     "t": 26769
+    },
+    {
+     "ev": "click:bubble-reached-document",
+     "defaultPrevented": false,
+     "n": 193,
+     "t": 26771
+    },
+    {
+     "ev": "vault.process",
+     "path": "Probe545/callout.md",
+     "n": 194,
+     "t": 27171
+    },
+    {
+     "ev": "proc",
+     "lang": "ds-counter",
+     "inst": "i3",
+     "docId": "6be5f2965eb7ff53",
+     "section": null,
+     "val": "7",
+     "n": 195,
+     "t": 27178
+    }
+   ],
+   "rootListeners": [
+    "click",
+    "click",
+    "mousedown",
+    "pointerdown"
+   ],
+   "ms": 12606
+  }
+ },
+ "order": [
+  "e-pending-mid",
+  "a-lp-callout"
+ ],
+ "instr": "installed FE",
+ "version": "1.15.0"
+}

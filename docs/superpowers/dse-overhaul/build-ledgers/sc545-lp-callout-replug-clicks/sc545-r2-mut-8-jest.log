@@ -1,0 +1,25 @@
+Running one project: dom
+FAIL dom test/dom/framework/replugRemount.test.ts
+  ● SC-545 stash: what the unloading instance leaves on the element › leaves alone a card in Reading view, in a Live Preview code-block widget, a detached one, and one with no known body
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 2
+
+      120 | 		detached.remove(); // the whole widget left the document
+      121 | 		expect(entries[2].root.isConnected).toBe(false);
+    > 122 | 		expect(stashForReplug(entries)).toBe(0);
+          | 		                                ^
+      123 | 		for (const el of [reading, codeblock, detached, noBody]) expect(el.hasAttribute(REPLUG_ATTR)).toBe(false);
+      124 | 	});
+      125 |
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:122:35)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 19 passed, 20 total
+Snapshots:   0 total
+Time:        1.311 s
+Ran all test suites matching test/dom/framework/replugRemount.test.ts.
+GATE-RC=1

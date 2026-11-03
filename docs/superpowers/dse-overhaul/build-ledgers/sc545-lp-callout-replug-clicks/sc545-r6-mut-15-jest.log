@@ -1,0 +1,35 @@
+Running one project: dom
+FAIL dom test/dom/framework/replugRemount.test.ts
+  ● SC-545 fallback: rebuild a note only for a block that is still undrawn › an OWNED DSE card in a Live Preview embed does not trigger it (the embed twin of the callout case); an unowned one does, and a nested or deferred one does not
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Array [
+    -   0,
+        1,
+    -   0,
+    -   0,
+    +   1,
+    +   1,
+    +   1,
+      ]
+
+      424 | 		const views = [owned.w, unowned.w, deferred.w, nested.w].map((w) => fakeView(w.container).view);
+      425 | 		const result = await new ReplugRemounter(fakeApp(views.map((view) => ({ view }))), deps({ liveRoots: () => live })).run();
+    > 426 | 		expect(views.map((v) => v.setViewData.mock.calls.length)).toEqual([0, 1, 0, 0]);
+          | 		                                                          ^
+      427 | 		expect(result.rebuilt).toEqual(['Note.md']);
+      428 | 	});
+      429 |
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:426:61)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 31 passed, 32 total
+Snapshots:   0 total
+Time:        2.238 s
+Ran all test suites matching test/dom/framework/replugRemount.test.ts.
+GATE-RC=1

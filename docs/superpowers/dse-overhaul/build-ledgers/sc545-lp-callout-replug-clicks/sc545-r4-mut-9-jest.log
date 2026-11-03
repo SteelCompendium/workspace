@@ -1,0 +1,58 @@
+Running one project: dom
+FAIL dom test/dom/framework/replugRemount.test.ts
+  ● SC-545 remount of a card that was off the page at the toggle › the layout-ready run does not reach it; the editor update that puts the widget back draws it once, with the stashed context
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 0
+
+      283 | 		remounter.remountReattached(editor);
+      284 | 		await Promise.resolve();
+    > 285 | 		expect(d.mount).toHaveBeenCalledTimes(1);
+          | 		                ^
+      286 | 		expect(d.mount).toHaveBeenCalledWith(el, ctx, 'ds-counter', BODY);
+      287 | 		expect(readReplugStash(el)).toBeNull();
+      288 | 		remounter.remountReattached(editor);
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:285:19)
+
+  ● SC-545 remount of a card that was off the page at the toggle › with nothing marked an editor update costs one querySelector: no query of all marks, no draw
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 0
+
+      298 | 		new ReplugRemounter(fakeApp([]), d).remountReattached(scope);
+      299 | 		expect(all).not.toHaveBeenCalled();
+    > 300 | 		expect(one).toHaveBeenCalledTimes(1);
+          | 		            ^
+      301 | 		expect(d.mount).not.toHaveBeenCalled();
+      302 | 	});
+      303 |
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:300:15)
+
+  ● SC-545 wiring: an off/on of the plugin with a card in a Live Preview callout › a card CodeMirror had taken off the page at the toggle: stashed at unload, not drawn at layout-ready, drawn by the editor update that puts its widget back; owned, + writes, no rebuild
+
+    expect(received).not.toBe(expected) // Object.is equality
+
+    Expected: not <div class="dse-chrome-anchor" data-dse-chrome="" data-dse-density="comfortable" data-dse-disttarget="grid" data-dse-element="counter" data-dse-fb-featstyle="card" data-dse-fb-stats="grid" data-dse-kwusage="crest" data-dse-portraits="on" data-dse-print="off" data-dse-reduce-motion="false" data-dse-sb-charbox="off" data-dse-sb-charline="two" data-dse-sb-columns="single" data-dse-sb-featstyle="card" data-dse-sb-stats="grid" data-dse-sb-sticky="on" data-dse-sb-stickymeta="on" data-dse-sb-villain="banded" data-dse-theme="steel"><div class="dse-counter" style="--dse-value-scale: 3; --dse-label-scale: 1;"><div aria-label="Health" class="dse-stepper" role="group"><button aria-label="Decrease Health" class="dse-btn dse-btn--icon dse-stepper__btn" data-dse-control="counter.dec" type="button"><span class="dse-btn__icon" data-icon="minus" /></button><input aria-label="Health" aria-live="polite" class="dse-stepper__input dse-counter__value" data-dse-control="counter.input" max="20" min="0" step="1" type="number" /><button aria-label="Increase Health" class="dse-btn dse-btn--icon dse-stepper__btn" data-dse-control="counter.inc" type="button"><span class="dse-btn__icon" data-icon="plus" /></button></div><div class="dse-counter__name">Health</div></div><div class="dse-chrome-summary"><div class="dse-chrome-summary__text"><span class="dse-chrome-summary__label" /><span class="dse-chrome-summary__name" /><span class="dse-chrome-summary__detail" /></div><button aria-expanded="true" aria-label="Expand Counter" class="dse-btn dse-btn--ghost dse-btn--icon" data-dse-chrome-item="expand" data-dse-control="chrome.expand" type="button"><span class="dse-btn__icon" data-icon="chevron-down" /></button></div><div aria-label="Counter actions" class="dse-chrome" role="toolbar"><button aria-label="Pin to sidebar" class="dse-btn dse-btn--ghost dse-btn--icon" data-dse-chrome-item="pin" data-dse-control="chrome.pin" type="button"><span class="dse-btn__icon" data-icon="pin" /></button><button aria-expanded="true" aria-label="Collapse Counter" class="dse-btn dse-btn--ghost dse-btn--icon" data-dse-chrome-item="collapse" data-dse-control="chrome.collapse" type="button"><span class="dse-btn__icon" data-icon="chevron-up" /></button></div></div>
+
+      533 | 		const newRoot = el.firstElementChild as HTMLElement;
+      534 | 		expect(el.children).toHaveLength(1);
+    > 535 | 		expect(newRoot).not.toBe(oldRoot);
+          | 		                    ^
+      536 | 		expect(oldRoot.isConnected).toBe(false);
+      537 | 		expect(second.registry.liveEntries().map((e) => e.root)).toEqual([newRoot]);
+      538 | 		expect(v.setViewData).not.toHaveBeenCalled();
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:535:23)
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 27 passed, 30 total
+Snapshots:   0 total
+Time:        1.183 s, estimated 2 s
+Ran all test suites matching test/dom/framework/replugRemount.test.ts.
+GATE-RC=1

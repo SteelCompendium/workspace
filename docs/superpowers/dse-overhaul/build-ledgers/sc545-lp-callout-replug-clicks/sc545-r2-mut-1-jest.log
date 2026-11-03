@@ -1,0 +1,61 @@
+Running one project: dom
+FAIL dom test/dom/framework/replugRemount.test.ts
+  ● SC-545 wiring: an off/on of the plugin with a card in a Live Preview callout › the unload leaves the card for the next instance; the next one redraws it at layout-ready: a fresh, owned root, no rebuild, and its + writes
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "name: Health
+    current_value: 10
+    max_value: 20
+    min_value: 0"
+    Received: undefined
+
+      344 | 		first.plugin.unload(); // off: the registry unloads its views, then stashes
+      345 | 		expect(first.registry.size).toBe(0);
+    > 346 | 		expect(readReplugStash(el)?.body).toBe(BODY);
+          | 		                                  ^
+      347 | 		expect(el.firstElementChild).toBe(oldRoot); // Obsidian keeps the widget's DOM: still the old card, nobody owns it
+      348 |
+      349 | 		const { view: v } = fakeView(container);
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:346:37)
+
+  ● SC-545 wiring: an off/on of the plugin with a card in a Live Preview callout › off, on, off, on: the card is redrawn again, and a draw of the second instance never leaves a card behind unmarked
+
+    expect(received).not.toBeNull()
+
+    Received: null
+
+      380 | 		second.plugin.unload(); // off again before the draw finished
+      381 | 		await jest.advanceTimersByTimeAsync(50);
+    > 382 | 		expect(readReplugStash(el)).not.toBeNull(); // whatever the second instance managed to draw, the third one draws again
+          | 		                                ^
+      383 |
+      384 | 		const third = boot(env);
+      385 | 		await jest.advanceTimersByTimeAsync(50);
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:382:35)
+
+  ● SC-545 wiring: an off/on of the plugin with a card in a Live Preview callout › ViewRegistry.onunload stashes the entries it is about to clear
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "ds-counter"
+    Received: undefined
+
+      398 | 		(registry as unknown as { entries: Set<ViewRegistryEntry> }).entries.add(entry);
+      399 | 		registry.unload();
+    > 400 | 		expect(readReplugStash(el)?.alias).toBe('ds-counter');
+          | 		                                   ^
+      401 | 		expect(registry.size).toBe(0);
+      402 | 	});
+      403 | });
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:400:38)
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 17 passed, 20 total
+Snapshots:   0 total
+Time:        1.295 s, estimated 4 s
+Ran all test suites matching test/dom/framework/replugRemount.test.ts.
+GATE-RC=1

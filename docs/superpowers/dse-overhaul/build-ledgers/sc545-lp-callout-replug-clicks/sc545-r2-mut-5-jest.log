@@ -1,0 +1,25 @@
+Running one project: dom
+FAIL dom test/dom/framework/replugRemount.test.ts
+  ● SC-545 fallback: rebuild a note only for a block that is still undrawn › puts the pixel scroll position back after the rebuild (Obsidian restores a line, and heights are measured again)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2559
+    Received: 0
+
+      301 | 		const { view, scrollDOM } = fakeView(container, { scrollTop: 2559, resetsScroll: true });
+      302 | 		await new ReplugRemounter(fakeApp([{ view }]), deps()).run();
+    > 303 | 		expect(scrollDOM.scrollTop).toBe(2559);
+          | 		                            ^
+      304 | 		scrollDOM.scrollTop = 40; // the editor drifts again before the next frame
+      305 | 		await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => r(null))));
+      306 | 		expect(scrollDOM.scrollTop).toBe(2559);
+
+      at Object.<anonymous> (test/dom/framework/replugRemount.test.ts:303:31)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 19 passed, 20 total
+Snapshots:   0 total
+Time:        1.276 s
+Ran all test suites matching test/dom/framework/replugRemount.test.ts.
+GATE-RC=1

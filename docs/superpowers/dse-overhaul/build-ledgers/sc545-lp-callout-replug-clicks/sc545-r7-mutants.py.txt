@@ -1,0 +1,47 @@
+#!/usr/bin/env python3
+"""usage: mut.py <src-root> <id> -- applies one r3 reviewer mutant to an exported copy (never the worktree)."""
+import sys
+
+R = 'src/framework/host/replugRemount.ts'
+V = 'src/framework/host/viewRegistry.ts'
+F = 'src/framework/registerFrameworkElements.ts'
+
+MUTANTS = {
+    # A: the fallback ignores unowned cards (only raw fences) -> the update-from-a-pre-fix-build path is not healed
+    'A': (R, "\t\t\tif (!live.has(r)) return true;\n", "\t\t\tvoid live;\n"),
+    # B: no replaceChildren: the old root stays next to the new one
+    'B': (R, "\t\t\t\tel.replaceChildren();\n", ""),
+    # C: the stash is not cleared on read (mark stays)
+    'C': (R, "\t\t\t\tconst stash = readReplugStash(el);\n\t\t\t\tclearStash(el);\n", "\t\t\t\tconst stash = readReplugStash(el);\n"),
+    # D: embeds are not sticky widgets
+    'D': (R, "\treturn !!(root.closest('.cm-embed-block.cm-callout') || root.closest('.internal-embed'));\n", "\treturn !!root.closest('.cm-embed-block.cm-callout');\n"),
+    # E: no disposed check after the remount awaits (fallback may run after unload)
+    'E': (R, "\t\tif (this.disposed) return { remounted, rebuilt: [] };\n", ""),
+    # F: ctx validation dropped (any object accepted as ctx)
+    'F': (R, "\tif (typeof ctx.sourcePath !== 'string' || typeof ctx.addChild !== 'function' || typeof ctx.getSectionInfo !== 'function') return null;\n", ""),
+    # G: the remount uses a synthetic ctx copy (not the widget's own) -- addChild unbound
+    'G': (R, "\t\t\t\tjobs.push(this.deps.mount(el, stash.ctx, stash.alias, stash.body)", "\t\t\t\tjobs.push(this.deps.mount(el, { ...stash.ctx, addChild: () => undefined } as typeof stash.ctx, stash.alias, stash.body)"),
+    # H: no setEphemeralState after the rebuild
+    'H': (R, "\tview.setEphemeralState(state);\n", "\tvoid state;\n"),
+    # I: the stash body is taken empty (wrong body)
+    'I': (R, "\t\t\twriteStash(el, { v: REPLUG_VERSION, ctx, alias, body });\n", "\t\t\twriteStash(el, { v: REPLUG_VERSION, ctx, alias, body: body.replace(/current_value: *\\d+/, 'current_value: 0') });\n"),
+    # J: deferred skip removed
+    'J': (R, " || r.getAttribute('data-dse-element') === 'deferred') continue;", ") continue;"),
+    # P: probe instrumentation only (no behaviour change): log run start/end + result, and each remount's start/end
+    'P': [(F, "\t\treplug.run().catch(", "\t\tconst w0 = window as unknown as { __dseReplugLog?: unknown[] }; (w0.__dseReplugLog ??= []).push({ phase: 'start', at: performance.now() });\n\t\treplug.run().then((r) => { (w0.__dseReplugLog ??= []).push({ phase: 'end', at: performance.now(), ...r }); return r; }).catch("),
+          (F, "\t\tmount: (el, ctx, alias, body) => remounter.mount(el, ctx, alias, body),\n", "\t\tmount: (el, ctx, alias, body) => { const w = window as unknown as { __dseReplugLog?: unknown[] }; const t0 = performance.now(); return remounter.mount(el, ctx, alias, body).finally(() => (w.__dseReplugLog ??= []).push({ phase: 'mount', t0, at: performance.now(), alias, connected: el.isConnected })); },\n")],
+    # K: the fallback always rebuilds a note whose LP embed holds a DSE card (owned or not)
+    'K': (R, "\tfor (const w of Array.from(src.querySelectorAll('.cm-embed-block.cm-callout, .internal-embed'))) {\n", "\tfor (const w of Array.from(src.querySelectorAll('.cm-embed-block.cm-callout, .internal-embed'))) {\n\t\tif (w.classList.contains('internal-embed') && w.querySelector('[data-dse-element]')) return true;\n"),
+    # L: the reattach path ignores dispose
+    'L': (R, "\t\tif (this.disposed) return;\n\t\tif (scope.querySelector(", "\t\tif (scope.querySelector("),
+}
+MUTANTS['N'] = MUTANTS['P'] + [(R, "\tprivate rebuildUndrawn(): string[] {\n\t\tconst rebuilt: string[] = [];\n", "\tprivate rebuildUndrawn(): string[] {\n\t\tconst rebuilt: string[] = [];\n\t\tif (rebuilt.length === 0) return rebuilt;\n")]
+
+root, n = sys.argv[1], sys.argv[2]
+spec = MUTANTS[n]
+for path, a, b in (spec if isinstance(spec, list) else [spec]):
+    p = f'{root}/{path}'
+    s = open(p).read()
+    assert s.count(a) == 1, f'mutant {n}: anchor matched {s.count(a)} times'
+    open(p, 'w').write(s.replace(a, b))
+    print(f'applied mutant {n} to {path}')
