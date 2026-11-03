@@ -1,0 +1,2050 @@
+{
+ "cases": {
+  "R-c3-lp-f1-e0-inapp": {
+   "name": "R-c3-lp-f1-e0-inapp",
+   "kind": "R",
+   "fx": "c3",
+   "mode": "lp",
+   "rel": "Lifecycle/twin-callouts-3.md",
+   "form": 1,
+   "edit": 0,
+   "how": "inapp",
+   "problems": [],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 5452.3,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 15,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "settled",
+     "t": 6774.3,
+     "block": 2,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 15,
+     "hostLastWrite": null,
+     "value": 5
+    }
+   ],
+   "notes": [],
+   "formOpenAtSettle": true,
+   "disk": [
+    7,
+    5,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Edited",
+    "Twin"
+   ],
+   "text": "# twin callouts 3\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 7\n> max_value: 20\n> min_value: 0\n> ```\n\nM1\n\n> [!note] Camp\n> ```ds-counter\n> name: Edited\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nM2\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 5463.9,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 5500.3,
+     "saving": false
+    },
+    {
+     "k": "ext",
+     "t": 5830.7
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 5830.7,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 0
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 5831.4
+    },
+    {
+     "k": "save",
+     "t": 6783.3
+    },
+    {
+     "k": "rs",
+     "t": 6784,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 25,
+     "value": 5,
+     "name": "Edited"
+    },
+    {
+     "k": "flush",
+     "t": 6784.2,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 6784.5,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 6785
+    },
+    {
+     "k": "rs-done",
+     "t": 6787.5,
+     "ok": true,
+     "formHost": true,
+     "line": 15
+    },
+    {
+     "k": "form-close",
+     "t": 6795,
+     "saving": true
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 5462.5
+    }
+   ],
+   "mods": [
+    {
+     "t": 5832.7,
+     "path": "Lifecycle/twin-callouts-3.md"
+    },
+    {
+     "t": 6787.4,
+     "path": "Lifecycle/twin-callouts-3.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 7
+    },
+    {
+     "block": 1,
+     "name": "Edited",
+     "value": 5
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    7,
+    5,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Edited",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(none)@5463.9",
+    "form-open@5500.3",
+    "form-close(saving)@6795"
+   ],
+   "rsSeq": "ext vp1 save rs(FORM,v5,Edited,kL25) vp2 done(true,FORML15)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "R-p3-rv-f1-e0-disk": {
+   "name": "R-p3-rv-f1-e0-disk",
+   "kind": "R",
+   "fx": "p3",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-triplets.md",
+   "form": 1,
+   "edit": 0,
+   "how": "disk",
+   "problems": [],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 12455.3,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "settled",
+     "t": 13717.3,
+     "block": 2,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": 5
+    }
+   ],
+   "notes": [],
+   "formOpenAtSettle": true,
+   "disk": [
+    7,
+    5,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Edited",
+    "Twin"
+   ],
+   "text": "# twin triplets\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 7\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nname: Edited\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM2\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 12463.8,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 12476.9,
+     "saving": false
+    },
+    {
+     "k": "ext-disk",
+     "t": 12782.8
+    },
+    {
+     "k": "save",
+     "t": 13726.3
+    },
+    {
+     "k": "rs",
+     "t": 13726.7,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 22,
+     "value": 5,
+     "name": "Edited"
+    },
+    {
+     "k": "flush",
+     "t": 13726.7,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 13726.7,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 13727.3
+    },
+    {
+     "k": "rs-done",
+     "t": 13728.3,
+     "ok": true,
+     "formHost": true,
+     "line": 13
+    },
+    {
+     "k": "form-close",
+     "t": 13734.6,
+     "saving": true
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 12463.5
+    }
+   ],
+   "mods": [
+    {
+     "t": 12784.4,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 13728.3,
+     "path": "Lifecycle/twin-triplets.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 7
+    },
+    {
+     "block": 1,
+     "name": "Edited",
+     "value": 5
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    7,
+    5,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Edited",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(none)@12463.8",
+    "form-open@12476.9",
+    "form-close(saving)@13734.6"
+   ],
+   "rsSeq": "ext-disk save rs(FORM,v5,Edited,kL22) vp1 done(true,FORML13)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "R-c3-rv-f1-e2-inapp": {
+   "name": "R-c3-rv-f1-e2-inapp",
+   "kind": "R",
+   "fx": "c3",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-callouts-3.md",
+   "form": 1,
+   "edit": 2,
+   "how": "inapp",
+   "problems": [],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 19327.6,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 15,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "settled",
+     "t": 20559.3,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 15,
+     "hostLastWrite": null,
+     "value": 5
+    }
+   ],
+   "notes": [],
+   "formOpenAtSettle": true,
+   "disk": [
+    5,
+    5,
+    7
+   ],
+   "names": [
+    "Twin",
+    "Edited",
+    "Twin"
+   ],
+   "text": "# twin callouts 3\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nM1\n\n> [!note] Camp\n> ```ds-counter\n> name: Edited\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nM2\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 7\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 19333.9,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 19346.5,
+     "saving": false
+    },
+    {
+     "k": "ext",
+     "t": 19655.8
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 19655.8,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 0
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 19656.4
+    },
+    {
+     "k": "save",
+     "t": 20567
+    },
+    {
+     "k": "rs",
+     "t": 20567.2,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 15,
+     "value": 5,
+     "name": "Edited"
+    },
+    {
+     "k": "flush",
+     "t": 20567.3,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 20567.4,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 20568.1
+    },
+    {
+     "k": "rs-done",
+     "t": 20569.3,
+     "ok": true,
+     "formHost": true,
+     "line": 15
+    },
+    {
+     "k": "form-close",
+     "t": 20574.3,
+     "saving": true
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 19333.8
+    }
+   ],
+   "mods": [
+    {
+     "t": 19657.3,
+     "path": "Lifecycle/twin-callouts-3.md"
+    },
+    {
+     "t": 20569.2,
+     "path": "Lifecycle/twin-callouts-3.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Edited",
+     "value": 5
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 7
+    }
+   ],
+   "want": [
+    5,
+    5,
+    7
+   ],
+   "wantNames": [
+    "Twin",
+    "Edited",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(none)@19333.9",
+    "form-open@19346.5",
+    "form-close(saving)@20574.3"
+   ],
+   "rsSeq": "ext vp1 save rs(FORM,v5,Edited,kL15) vp2 done(true,FORML15)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "R-p3-lp-f1-e0-disk": {
+   "name": "R-p3-lp-f1-e0-disk",
+   "kind": "R",
+   "fx": "p3",
+   "mode": "lp",
+   "rel": "Lifecycle/twin-triplets.md",
+   "form": 1,
+   "edit": 0,
+   "how": "disk",
+   "problems": [],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 26173.2,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "settled",
+     "t": 27421.4,
+     "block": 2,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": 5
+    }
+   ],
+   "notes": [],
+   "formOpenAtSettle": true,
+   "disk": [
+    7,
+    5,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Edited",
+    "Twin"
+   ],
+   "text": "# twin triplets\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 7\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nname: Edited\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM2\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 26181.3,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 26194.7,
+     "saving": false
+    },
+    {
+     "k": "ext-disk",
+     "t": 26518.5
+    },
+    {
+     "k": "save",
+     "t": 27429.9
+    },
+    {
+     "k": "rs",
+     "t": 27430.1,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 22,
+     "value": 5,
+     "name": "Edited"
+    },
+    {
+     "k": "flush",
+     "t": 27430.1,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 27430.2,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 27430.7
+    },
+    {
+     "k": "rs-done",
+     "t": 27432.2,
+     "ok": true,
+     "formHost": true,
+     "line": 13
+    },
+    {
+     "k": "form-close",
+     "t": 27439.1,
+     "saving": true
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 26181.2
+    }
+   ],
+   "mods": [
+    {
+     "t": 26519.9,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 27432.1,
+     "path": "Lifecycle/twin-triplets.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 7
+    },
+    {
+     "block": 1,
+     "name": "Edited",
+     "value": 5
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    7,
+    5,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Edited",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(none)@26181.3",
+    "form-open@26194.7",
+    "form-close(saving)@27439.1"
+   ],
+   "rsSeq": "ext-disk save rs(FORM,v5,Edited,kL22) vp1 done(true,FORML13)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "X-c3-lp-p1-g150-e0-inapp": {
+   "name": "X-c3-lp-p1-g150-e0-inapp",
+   "kind": "X",
+   "fx": "c3",
+   "mode": "lp",
+   "rel": "Lifecycle/twin-callouts-3.md",
+   "plus": 1,
+   "gap": 150,
+   "edit": 0,
+   "how": "inapp",
+   "problems": [],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    7,
+    6,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin callouts 3\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 7\n> max_value: 20\n> min_value: 0\n> ```\n\nM1\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: Twin\n> ```\n\nM2\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "ext",
+     "t": 33425.4
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 33425.4,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 0
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 33426
+    },
+    {
+     "k": "rs",
+     "t": 33675.9,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 15,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 33676.1,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 33676.2,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 33676.9
+    },
+    {
+     "k": "rs-done",
+     "t": 33677.9,
+     "ok": true,
+     "formHost": false,
+     "line": 15
+    }
+   ],
+   "clicks": [
+    {
+     "t": 33272.4,
+     "trusted": true
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 33426.8,
+     "path": "Lifecycle/twin-callouts-3.md"
+    },
+    {
+     "t": 33677.9,
+     "path": "Lifecycle/twin-callouts-3.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 7
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 6
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    7,
+    6,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 154,
+   "formEvents": [],
+   "rsSeq": "ext vp1 rs(view,v6,Twin,kL15) vp2 done(true,L15)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "X-c3-lp-p1-g150-e0-disk": {
+   "name": "X-c3-lp-p1-g150-e0-disk",
+   "kind": "X",
+   "fx": "c3",
+   "mode": "lp",
+   "rel": "Lifecycle/twin-callouts-3.md",
+   "plus": 1,
+   "gap": 150,
+   "edit": 0,
+   "how": "disk",
+   "problems": [],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    7,
+    6,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin callouts 3\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 7\n> max_value: 20\n> min_value: 0\n> ```\n\nM1\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: Twin\n> ```\n\nM2\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "ext-disk",
+     "t": 39615.2
+    },
+    {
+     "k": "rs",
+     "t": 39864.1,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 15,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 39864.3,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 39864.3,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 39865
+    },
+    {
+     "k": "rs-done",
+     "t": 39866.3,
+     "ok": true,
+     "formHost": false,
+     "line": 15
+    }
+   ],
+   "clicks": [
+    {
+     "t": 39462.8,
+     "trusted": true
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 39616.4,
+     "path": "Lifecycle/twin-callouts-3.md"
+    },
+    {
+     "t": 39866.1,
+     "path": "Lifecycle/twin-callouts-3.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 7
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 6
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    7,
+    6,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 154,
+   "formEvents": [],
+   "rsSeq": "ext-disk rs(view,v6,Twin,kL15) vp1 done(true,L15)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "X-p3-rv-p1-g150-e0-inapp": {
+   "name": "X-p3-rv-p1-g150-e0-inapp",
+   "kind": "X",
+   "fx": "p3",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-triplets.md",
+   "plus": 1,
+   "gap": 150,
+   "edit": 0,
+   "how": "inapp",
+   "problems": [],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    7,
+    6,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin triplets\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 7\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nmax_value: 20\ncurrent_value: 6\nmin_value: 0\nname: Twin\n```\n\nM2\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "ext",
+     "t": 45781.3
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 45781.3,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 0
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 45782
+    },
+    {
+     "k": "rs",
+     "t": 46029.5,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 46029.6,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 46029.6,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 46030.2
+    },
+    {
+     "k": "rs-done",
+     "t": 46031,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    }
+   ],
+   "clicks": [
+    {
+     "t": 45628.7,
+     "trusted": true
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 45783,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 46030.9,
+     "path": "Lifecycle/twin-triplets.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 7
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 6
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    7,
+    6,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 154,
+   "formEvents": [],
+   "rsSeq": "ext vp1 rs(view,v6,Twin,kL13) vp2 done(true,L13)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "X-p3-rv-p1-g150-e0-disk": {
+   "name": "X-p3-rv-p1-g150-e0-disk",
+   "kind": "X",
+   "fx": "p3",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-triplets.md",
+   "plus": 1,
+   "gap": 150,
+   "edit": 0,
+   "how": "disk",
+   "problems": [],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    7,
+    6,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin triplets\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 7\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nmax_value: 20\ncurrent_value: 6\nmin_value: 0\nname: Twin\n```\n\nM2\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "ext-disk",
+     "t": 51864.7
+    },
+    {
+     "k": "rs",
+     "t": 52112.7,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 52112.8,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 52112.8,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 52113.2
+    },
+    {
+     "k": "rs-done",
+     "t": 52113.8,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    }
+   ],
+   "clicks": [
+    {
+     "t": 51712,
+     "trusted": true
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 51865.9,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 52113.8,
+     "path": "Lifecycle/twin-triplets.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 7
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 6
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    7,
+    6,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 154,
+   "formEvents": [],
+   "rsSeq": "ext-disk rs(view,v6,Twin,kL13) vp1 done(true,L13)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "X-c3-rv-p1-g60-e0-disk": {
+   "name": "X-c3-rv-p1-g60-e0-disk",
+   "kind": "X",
+   "fx": "c3",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-callouts-3.md",
+   "plus": 1,
+   "gap": 60,
+   "edit": 0,
+   "how": "disk",
+   "problems": [],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    7,
+    6,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin callouts 3\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 7\n> max_value: 20\n> min_value: 0\n> ```\n\nM1\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: Twin\n> ```\n\nM2\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "ext-disk",
+     "t": 57941.1
+    },
+    {
+     "k": "rs",
+     "t": 58279.9,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 15,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 58279.9,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 58280,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 58280.5
+    },
+    {
+     "k": "rs-done",
+     "t": 58281.5,
+     "ok": true,
+     "formHost": false,
+     "line": 15
+    }
+   ],
+   "clicks": [
+    {
+     "t": 57878.5,
+     "trusted": true
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 57942.4,
+     "path": "Lifecycle/twin-callouts-3.md"
+    },
+    {
+     "t": 58281.4,
+     "path": "Lifecycle/twin-callouts-3.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 7
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 6
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    7,
+    6,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 64,
+   "formEvents": [],
+   "rsSeq": "ext-disk rs(view,v6,Twin,kL15) vp1 done(true,L15)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "X-p3-lp-p1-g300-e0-inapp": {
+   "name": "X-p3-lp-p1-g300-e0-inapp",
+   "kind": "X",
+   "fx": "p3",
+   "mode": "lp",
+   "rel": "Lifecycle/twin-triplets.md",
+   "plus": 1,
+   "gap": 300,
+   "edit": 0,
+   "how": "inapp",
+   "problems": [],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    7,
+    6,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin triplets\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 7\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nmax_value: 20\ncurrent_value: 6\nmin_value: 0\nname: Twin\n```\n\nM2\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "ext",
+     "t": 64332
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 64332,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 0
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 64332.5
+    },
+    {
+     "k": "rs",
+     "t": 64429.8,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 64429.9,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 64429.9,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 64430.3
+    },
+    {
+     "k": "rs-done",
+     "t": 64431.2,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    }
+   ],
+   "clicks": [
+    {
+     "t": 64029.2,
+     "trusted": true
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 64333.5,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 64431.2,
+     "path": "Lifecycle/twin-triplets.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 7
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 6
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    7,
+    6,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 304,
+   "formEvents": [],
+   "rsSeq": "ext vp1 rs(view,v6,Twin,kL13) vp2 done(true,L13)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "X-c4-lp-p2-g150-e0-inapp": {
+   "name": "X-c4-lp-p2-g150-e0-inapp",
+   "kind": "X",
+   "fx": "c4",
+   "mode": "lp",
+   "rel": "Lifecycle/twin-callouts-4.md",
+   "plus": 2,
+   "gap": 150,
+   "edit": 0,
+   "how": "inapp",
+   "problems": [],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    7,
+    5,
+    6,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin callouts 4\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 7\n> max_value: 20\n> min_value: 0\n> ```\n\nM1\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nM2\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: Twin\n> ```\n\nM3\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "ext",
+     "t": 70532
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 70532,
+     "path": "Lifecycle/twin-callouts-4.md",
+     "depth": 0
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 70533.9
+    },
+    {
+     "k": "rs",
+     "t": 70778.5,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 25,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 70778.8,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 70778.9,
+     "path": "Lifecycle/twin-callouts-4.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 70779.3
+    },
+    {
+     "k": "rs-done",
+     "t": 70780.9,
+     "ok": true,
+     "formHost": false,
+     "line": 25
+    }
+   ],
+   "clicks": [
+    {
+     "t": 70377.3,
+     "trusted": true
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 70535.4,
+     "path": "Lifecycle/twin-callouts-4.md"
+    },
+    {
+     "t": 70780.8,
+     "path": "Lifecycle/twin-callouts-4.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 7
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 6
+    },
+    {
+     "block": 3,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    7,
+    5,
+    6,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 158,
+   "formEvents": [],
+   "rsSeq": "ext vp1 rs(view,v6,Twin,kL25) vp2 done(true,L25)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "X-c3-lp-p1-g150-e2-inapp": {
+   "name": "X-c3-lp-p1-g150-e2-inapp",
+   "kind": "X",
+   "fx": "c3",
+   "mode": "lp",
+   "rel": "Lifecycle/twin-callouts-3.md",
+   "plus": 1,
+   "gap": 150,
+   "edit": 2,
+   "how": "inapp",
+   "problems": [],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    5,
+    6,
+    7
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin callouts 3\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nM1\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: Twin\n> ```\n\nM2\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 7\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "ext",
+     "t": 77034.1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 77034.1,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 0
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 77034.5
+    },
+    {
+     "k": "rs",
+     "t": 77281.1,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 15,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 77281.3,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 77281.4,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 77284.4
+    },
+    {
+     "k": "rs-done",
+     "t": 77285.7,
+     "ok": true,
+     "formHost": false,
+     "line": 15
+    }
+   ],
+   "clicks": [
+    {
+     "t": 76877,
+     "trusted": true
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 77035.6,
+     "path": "Lifecycle/twin-callouts-3.md"
+    },
+    {
+     "t": 77285.6,
+     "path": "Lifecycle/twin-callouts-3.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 6
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 7
+    }
+   ],
+   "want": [
+    5,
+    6,
+    7
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 159,
+   "formEvents": [],
+   "rsSeq": "ext vp1 rs(view,v6,Twin,kL15) vp2 done(true,L15)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "T-c3-lp-p1-g150-e0": {
+   "name": "T-c3-lp-p1-g150-e0",
+   "kind": "T",
+   "fx": "c3",
+   "mode": "lp",
+   "rel": "Lifecycle/twin-callouts-3.md",
+   "plus": 1,
+   "gap": 150,
+   "edit": 0,
+   "problems": [],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    5,
+    6,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin callouts 3\n\nTOP\n\n> [!note] CampZ\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nM1\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: Twin\n> ```\n\nM2\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "type",
+     "t": 83484.9
+    },
+    {
+     "k": "rs",
+     "t": 83732.1,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 15,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 83732.3,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 83732.5,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 83733
+    },
+    {
+     "k": "rs-done",
+     "t": 83734.4,
+     "ok": true,
+     "formHost": false,
+     "line": 15
+    }
+   ],
+   "clicks": [
+    {
+     "t": 83329.9,
+     "trusted": true
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 83734.2,
+     "path": "Lifecycle/twin-callouts-3.md"
+    },
+    {
+     "t": 85522.4,
+     "path": "Lifecycle/twin-callouts-3.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 6
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    5,
+    6,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 404,
+   "formEvents": [],
+   "rsSeq": "rs(view,v6,Twin,kL15) vp1 done(true,L15)",
+   "errors": [],
+   "notices": [
+    "“Lifecycle/twin-callouts-3.md” has been modified externally, merging changes automatically."
+   ],
+   "verdict": "clean"
+  },
+  "T-c3-lp-p1-g60-e0": {
+   "name": "T-c3-lp-p1-g60-e0",
+   "kind": "T",
+   "fx": "c3",
+   "mode": "lp",
+   "rel": "Lifecycle/twin-callouts-3.md",
+   "plus": 1,
+   "gap": 60,
+   "edit": 0,
+   "problems": [],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    5,
+    6,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin callouts 3\n\nTOP\n\n> [!note] CampZ\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nM1\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: Twin\n> ```\n\nM2\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "type",
+     "t": 92061
+    },
+    {
+     "k": "rs",
+     "t": 92397.3,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 15,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 92397.5,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 92397.7,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 92402.9
+    },
+    {
+     "k": "rs-done",
+     "t": 92404.3,
+     "ok": true,
+     "formHost": false,
+     "line": 15
+    }
+   ],
+   "clicks": [
+    {
+     "t": 91995.9,
+     "trusted": true
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 92404.2,
+     "path": "Lifecycle/twin-callouts-3.md"
+    },
+    {
+     "t": 94074.2,
+     "path": "Lifecycle/twin-callouts-3.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 6
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    5,
+    6,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 408,
+   "formEvents": [],
+   "rsSeq": "rs(view,v6,Twin,kL15) vp1 done(true,L15)",
+   "errors": [],
+   "notices": [
+    "“Lifecycle/twin-callouts-3.md” has been modified externally, merging changes automatically."
+   ],
+   "verdict": "clean"
+  },
+  "T-c3-lp-p2-g150-e1": {
+   "name": "T-c3-lp-p2-g150-e1",
+   "kind": "T",
+   "fx": "c3",
+   "mode": "lp",
+   "rel": "Lifecycle/twin-callouts-3.md",
+   "plus": 2,
+   "gap": 150,
+   "edit": 1,
+   "problems": [],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    5,
+    5,
+    6
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin callouts 3\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nM1\n\n> [!note] CampZ\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nM2\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: Twin\n> ```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "type",
+     "t": 100770.5
+    },
+    {
+     "k": "rs",
+     "t": 100774.6,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 25,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 100774.8,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 100775,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 100854.2
+    },
+    {
+     "k": "rs-done",
+     "t": 100855.7,
+     "ok": true,
+     "formHost": false,
+     "line": 25
+    }
+   ],
+   "clicks": [
+    {
+     "t": 100616.6,
+     "trusted": true
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 100855.6,
+     "path": "Lifecycle/twin-callouts-3.md"
+    },
+    {
+     "t": 102782.1,
+     "path": "Lifecycle/twin-callouts-3.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 6
+    }
+   ],
+   "want": [
+    5,
+    5,
+    6
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 239,
+   "formEvents": [],
+   "rsSeq": "rs(view,v6,Twin,kL25) vp1 done(true,L25)",
+   "errors": [],
+   "notices": [
+    "“Lifecycle/twin-callouts-3.md” has been modified externally, merging changes automatically."
+   ],
+   "verdict": "clean"
+  }
+ }
+}

@@ -1,0 +1,1547 @@
+{
+ "cases": {
+  "Q-p3-rv-p1-c2-g225-u2-x1": {
+   "name": "Q-p3-rv-p1-c2-g225-u2-x1",
+   "kind": "Q",
+   "fx": "p3",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-triplets.md",
+   "plus": 1,
+   "clicks": [
+    {
+     "t": 5368.5,
+     "trusted": true
+    },
+    {
+     "t": 5535.2,
+     "trusted": true
+    },
+    {
+     "t": 5766,
+     "trusted": true
+    }
+   ],
+   "gap": 225,
+   "upper": 2,
+   "rep": 1,
+   "problems": [],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    5,
+    7,
+    6
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin triplets\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nmax_value: 20\ncurrent_value: 7\nmin_value: 0\nname: Twin\n```\n\nM2\n\n```ds-counter\nmax_value: 20\ncurrent_value: 6\nmin_value: 0\nname: Twin\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "rs",
+     "t": 5772.1,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 22,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 5772.5,
+     "pend": 1,
+     "depth": 1
+    },
+    {
+     "k": "rs",
+     "t": 5772.9,
+     "depth": 1,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 7,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 5772.9,
+     "pend": 1,
+     "depth": 2
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 5773,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 2
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 5773.1,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 5774.3
+    },
+    {
+     "k": "rs-done",
+     "t": 5776.4,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 5776.7
+    },
+    {
+     "k": "rs-done",
+     "t": 5777.5,
+     "ok": true,
+     "formHost": false,
+     "line": 22
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 5776.3,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 5777.5,
+     "path": "Lifecycle/twin-triplets.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 7
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 6
+    }
+   ],
+   "want": [
+    5,
+    7,
+    6
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 408,
+   "formEvents": [],
+   "rsSeq": "rs(view,v6,Twin,kL22) rs(view,v7,Twin,kL13) vp1 vp2 done(true,L13) done(true,L22)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "Q-p3-rv-p1-c2-g232-u2-x2": {
+   "name": "Q-p3-rv-p1-c2-g232-u2-x2",
+   "kind": "Q",
+   "fx": "p3",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-triplets.md",
+   "plus": 1,
+   "clicks": [
+    {
+     "t": 11660.4,
+     "trusted": true
+    },
+    {
+     "t": 11828.8,
+     "trusted": true
+    },
+    {
+     "t": 12065.9,
+     "trusted": true
+    }
+   ],
+   "gap": 232,
+   "upper": 2,
+   "rep": 2,
+   "problems": [
+    "writes 3 want 2"
+   ],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    5,
+    7,
+    6
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin triplets\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nmax_value: 20\ncurrent_value: 7\nmin_value: 0\nname: Twin\n```\n\nM2\n\n```ds-counter\nmax_value: 20\ncurrent_value: 6\nmin_value: 0\nname: Twin\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "rs",
+     "t": 12061.3,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 22,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 12061.3,
+     "pend": 1,
+     "depth": 1
+    },
+    {
+     "k": "rs",
+     "t": 12061.5,
+     "depth": 1,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 12061.6,
+     "pend": 1,
+     "depth": 2
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 12061.6,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 2
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 12061.6,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 12062.1
+    },
+    {
+     "k": "rs-done",
+     "t": 12062.8,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 12063.4
+    },
+    {
+     "k": "rs-done",
+     "t": 12067.1,
+     "ok": true,
+     "formHost": false,
+     "line": 22
+    },
+    {
+     "k": "rs",
+     "t": 12466.6,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 7,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 12466.6,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 3,
+     "t": 12466.7,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 3,
+     "t": 12467.3
+    },
+    {
+     "k": "rs-done",
+     "t": 12468.1,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 12062.8,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 12067.1,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 12468.1,
+     "path": "Lifecycle/twin-triplets.md"
+    }
+   ],
+   "writes": 3,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 7
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 6
+    }
+   ],
+   "want": [
+    5,
+    7,
+    6
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 402,
+   "formEvents": [],
+   "rsSeq": "rs(view,v6,Twin,kL22) rs(view,v6,Twin,kL13) vp1 vp2 done(true,L13) done(true,L22) rs(view,v7,Twin,kL13) vp3 done(true,L13)",
+   "errors": [],
+   "notices": [],
+   "verdict": "PROBLEMS"
+  },
+  "Q-p3-rv-p1-c2-g238-u2-x3": {
+   "name": "Q-p3-rv-p1-c2-g238-u2-x3",
+   "kind": "Q",
+   "fx": "p3",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-triplets.md",
+   "plus": 1,
+   "clicks": [
+    {
+     "t": 18224.1,
+     "trusted": true
+    },
+    {
+     "t": 18394.6,
+     "trusted": true
+    },
+    {
+     "t": 18655.8,
+     "trusted": true
+    }
+   ],
+   "gap": 238,
+   "upper": 2,
+   "rep": 3,
+   "problems": [
+    "writes 3 want 2"
+   ],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    5,
+    7,
+    6
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin triplets\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nmax_value: 20\ncurrent_value: 7\nmin_value: 0\nname: Twin\n```\n\nM2\n\n```ds-counter\nmax_value: 20\ncurrent_value: 6\nmin_value: 0\nname: Twin\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "rs",
+     "t": 18624.9,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 22,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 18625,
+     "pend": 1,
+     "depth": 1
+    },
+    {
+     "k": "rs",
+     "t": 18625.3,
+     "depth": 1,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 18625.3,
+     "pend": 1,
+     "depth": 2
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 18625.3,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 2
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 18625.3,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 18626
+    },
+    {
+     "k": "rs-done",
+     "t": 18626.8,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 18627.2
+    },
+    {
+     "k": "rs-done",
+     "t": 18628.6,
+     "ok": true,
+     "formHost": false,
+     "line": 22
+    },
+    {
+     "k": "rs",
+     "t": 19056.6,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 7,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 19056.6,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 3,
+     "t": 19056.6,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 3,
+     "t": 19057.1
+    },
+    {
+     "k": "rs-done",
+     "t": 19058.1,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 18626.8,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 18628.6,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 19058.1,
+     "path": "Lifecycle/twin-triplets.md"
+    }
+   ],
+   "writes": 3,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 7
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 6
+    }
+   ],
+   "want": [
+    5,
+    7,
+    6
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 403,
+   "formEvents": [],
+   "rsSeq": "rs(view,v6,Twin,kL22) rs(view,v6,Twin,kL13) vp1 vp2 done(true,L13) done(true,L22) rs(view,v7,Twin,kL13) vp3 done(true,L13)",
+   "errors": [],
+   "notices": [],
+   "verdict": "PROBLEMS"
+  },
+  "Q-p3-rv-p1-c2-g244-u2-x4": {
+   "name": "Q-p3-rv-p1-c2-g244-u2-x4",
+   "kind": "Q",
+   "fx": "p3",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-triplets.md",
+   "plus": 1,
+   "clicks": [
+    {
+     "t": 24756.6,
+     "trusted": true
+    },
+    {
+     "t": 24926.8,
+     "trusted": true
+    },
+    {
+     "t": 25190,
+     "trusted": true
+    }
+   ],
+   "gap": 244,
+   "upper": 2,
+   "rep": 4,
+   "problems": [
+    "writes 3 want 2"
+   ],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    5,
+    7,
+    6
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin triplets\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nmax_value: 20\ncurrent_value: 7\nmin_value: 0\nname: Twin\n```\n\nM2\n\n```ds-counter\nmax_value: 20\ncurrent_value: 6\nmin_value: 0\nname: Twin\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "rs",
+     "t": 25157.7,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 22,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 25157.8,
+     "pend": 1,
+     "depth": 1
+    },
+    {
+     "k": "rs",
+     "t": 25158,
+     "depth": 1,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 25158,
+     "pend": 1,
+     "depth": 2
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 25158.1,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 2
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 25158.1,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 25158.6
+    },
+    {
+     "k": "rs-done",
+     "t": 25159.7,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 25159.8
+    },
+    {
+     "k": "rs-done",
+     "t": 25161.6,
+     "ok": true,
+     "formHost": false,
+     "line": 22
+    },
+    {
+     "k": "rs",
+     "t": 25590.8,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 7,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 25590.9,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 3,
+     "t": 25591,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 3,
+     "t": 25592.3
+    },
+    {
+     "k": "rs-done",
+     "t": 25593.7,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 25159.4,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 25161.5,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 25593.6,
+     "path": "Lifecycle/twin-triplets.md"
+    }
+   ],
+   "writes": 3,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 7
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 6
+    }
+   ],
+   "want": [
+    5,
+    7,
+    6
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 403,
+   "formEvents": [],
+   "rsSeq": "rs(view,v6,Twin,kL22) rs(view,v6,Twin,kL13) vp1 vp2 done(true,L13) done(true,L22) rs(view,v7,Twin,kL13) vp3 done(true,L13)",
+   "errors": [],
+   "notices": [],
+   "verdict": "PROBLEMS"
+  },
+  "Q-p3-rv-p1-c2-g250-u2-x5": {
+   "name": "Q-p3-rv-p1-c2-g250-u2-x5",
+   "kind": "Q",
+   "fx": "p3",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-triplets.md",
+   "plus": 1,
+   "clicks": [
+    {
+     "t": 31352,
+     "trusted": true
+    },
+    {
+     "t": 31525.8,
+     "trusted": true
+    },
+    {
+     "t": 31794,
+     "trusted": true
+    }
+   ],
+   "gap": 250,
+   "upper": 2,
+   "rep": 5,
+   "problems": [
+    "writes 3 want 2"
+   ],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    5,
+    7,
+    6
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin triplets\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nmax_value: 20\ncurrent_value: 7\nmin_value: 0\nname: Twin\n```\n\nM2\n\n```ds-counter\nmax_value: 20\ncurrent_value: 6\nmin_value: 0\nname: Twin\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "rs",
+     "t": 31754.3,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 22,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 31754.4,
+     "pend": 1,
+     "depth": 1
+    },
+    {
+     "k": "rs",
+     "t": 31754.7,
+     "depth": 1,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 31754.8,
+     "pend": 1,
+     "depth": 2
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 31754.8,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 2
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 31754.8,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 31755.8
+    },
+    {
+     "k": "rs-done",
+     "t": 31757.1,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 31757.5
+    },
+    {
+     "k": "rs-done",
+     "t": 31760.5,
+     "ok": true,
+     "formHost": false,
+     "line": 22
+    },
+    {
+     "k": "rs",
+     "t": 32194.6,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 7,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 32194.7,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 3,
+     "t": 32194.7,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 3,
+     "t": 32195.2
+    },
+    {
+     "k": "rs-done",
+     "t": 32196,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 31757,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 31760.4,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 32196,
+     "path": "Lifecycle/twin-triplets.md"
+    }
+   ],
+   "writes": 3,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 7
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 6
+    }
+   ],
+   "want": [
+    5,
+    7,
+    6
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 405,
+   "formEvents": [],
+   "rsSeq": "rs(view,v6,Twin,kL22) rs(view,v6,Twin,kL13) vp1 vp2 done(true,L13) done(true,L22) rs(view,v7,Twin,kL13) vp3 done(true,L13)",
+   "errors": [],
+   "notices": [],
+   "verdict": "PROBLEMS"
+  },
+  "Q-p3-rv-p1-c2-g235-u2-x6": {
+   "name": "Q-p3-rv-p1-c2-g235-u2-x6",
+   "kind": "Q",
+   "fx": "p3",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-triplets.md",
+   "plus": 1,
+   "clicks": [
+    {
+     "t": 37959.2,
+     "trusted": true
+    },
+    {
+     "t": 38131.9,
+     "trusted": true
+    },
+    {
+     "t": 38406.9,
+     "trusted": true
+    }
+   ],
+   "gap": 235,
+   "upper": 2,
+   "rep": 6,
+   "problems": [
+    "writes 3 want 2"
+   ],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    5,
+    7,
+    6
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin triplets\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nmax_value: 20\ncurrent_value: 7\nmin_value: 0\nname: Twin\n```\n\nM2\n\n```ds-counter\nmax_value: 20\ncurrent_value: 6\nmin_value: 0\nname: Twin\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "rs",
+     "t": 38359.9,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 22,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 38360,
+     "pend": 1,
+     "depth": 1
+    },
+    {
+     "k": "rs",
+     "t": 38360.3,
+     "depth": 1,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 38360.3,
+     "pend": 1,
+     "depth": 2
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 38360.3,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 2
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 38360.3,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 38360.9
+    },
+    {
+     "k": "rs-done",
+     "t": 38362.2,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 38362.6
+    },
+    {
+     "k": "rs-done",
+     "t": 38364,
+     "ok": true,
+     "formHost": false,
+     "line": 22
+    },
+    {
+     "k": "rs",
+     "t": 38807.5,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 7,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 38807.5,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 3,
+     "t": 38807.5,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 3,
+     "t": 38808.1
+    },
+    {
+     "k": "rs-done",
+     "t": 38808.9,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 38362.2,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 38363.9,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 38808.9,
+     "path": "Lifecycle/twin-triplets.md"
+    }
+   ],
+   "writes": 3,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 7
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 6
+    }
+   ],
+   "want": [
+    5,
+    7,
+    6
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 403,
+   "formEvents": [],
+   "rsSeq": "rs(view,v6,Twin,kL22) rs(view,v6,Twin,kL13) vp1 vp2 done(true,L13) done(true,L22) rs(view,v7,Twin,kL13) vp3 done(true,L13)",
+   "errors": [],
+   "notices": [],
+   "verdict": "PROBLEMS"
+  },
+  "Q-p3-rv-p1-c2-g240-u2-x7": {
+   "name": "Q-p3-rv-p1-c2-g240-u2-x7",
+   "kind": "Q",
+   "fx": "p3",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-triplets.md",
+   "plus": 1,
+   "clicks": [
+    {
+     "t": 44541.1,
+     "trusted": true
+    },
+    {
+     "t": 44726.3,
+     "trusted": true
+    },
+    {
+     "t": 44983.2,
+     "trusted": true
+    }
+   ],
+   "gap": 240,
+   "upper": 2,
+   "rep": 7,
+   "problems": [
+    "writes 3 want 2"
+   ],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    5,
+    7,
+    6
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin triplets\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nmax_value: 20\ncurrent_value: 7\nmin_value: 0\nname: Twin\n```\n\nM2\n\n```ds-counter\nmax_value: 20\ncurrent_value: 6\nmin_value: 0\nname: Twin\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "rs",
+     "t": 44942,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 22,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 44942,
+     "pend": 1,
+     "depth": 1
+    },
+    {
+     "k": "rs",
+     "t": 44942.3,
+     "depth": 1,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 44942.3,
+     "pend": 1,
+     "depth": 2
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 44942.3,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 2
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 44942.4,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 44943
+    },
+    {
+     "k": "rs-done",
+     "t": 44944.1,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 44944.3
+    },
+    {
+     "k": "rs-done",
+     "t": 44945,
+     "ok": true,
+     "formHost": false,
+     "line": 22
+    },
+    {
+     "k": "rs",
+     "t": 45383.9,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 7,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 45383.9,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 3,
+     "t": 45383.9,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 3,
+     "t": 45384.4
+    },
+    {
+     "k": "rs-done",
+     "t": 45385.8,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 44944,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 44944.9,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 45385.7,
+     "path": "Lifecycle/twin-triplets.md"
+    }
+   ],
+   "writes": 3,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 7
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 6
+    }
+   ],
+   "want": [
+    5,
+    7,
+    6
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 403,
+   "formEvents": [],
+   "rsSeq": "rs(view,v6,Twin,kL22) rs(view,v6,Twin,kL13) vp1 vp2 done(true,L13) done(true,L22) rs(view,v7,Twin,kL13) vp3 done(true,L13)",
+   "errors": [],
+   "notices": [],
+   "verdict": "PROBLEMS"
+  },
+  "Q-p3-rv-p1-c2-g228-u2-x8": {
+   "name": "Q-p3-rv-p1-c2-g228-u2-x8",
+   "kind": "Q",
+   "fx": "p3",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-triplets.md",
+   "plus": 1,
+   "clicks": [
+    {
+     "t": 51140.4,
+     "trusted": true
+    },
+    {
+     "t": 51310.7,
+     "trusted": true
+    },
+    {
+     "t": 51545.3,
+     "trusted": true
+    }
+   ],
+   "gap": 228,
+   "upper": 2,
+   "rep": 8,
+   "problems": [
+    "writes 3 want 2"
+   ],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    5,
+    7,
+    6
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin triplets\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nmax_value: 20\ncurrent_value: 7\nmin_value: 0\nname: Twin\n```\n\nM2\n\n```ds-counter\nmax_value: 20\ncurrent_value: 6\nmin_value: 0\nname: Twin\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "rs",
+     "t": 51541.1,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 22,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 51541.2,
+     "pend": 1,
+     "depth": 1
+    },
+    {
+     "k": "rs",
+     "t": 51541.4,
+     "depth": 1,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 51541.4,
+     "pend": 1,
+     "depth": 2
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 51541.4,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 2
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 51541.4,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 51541.9
+    },
+    {
+     "k": "rs-done",
+     "t": 51543.3,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 51543.5
+    },
+    {
+     "k": "rs-done",
+     "t": 51547,
+     "ok": true,
+     "formHost": false,
+     "line": 22
+    },
+    {
+     "k": "rs",
+     "t": 51945.8,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 7,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 51945.9,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 3,
+     "t": 51945.9,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 3,
+     "t": 51946.2
+    },
+    {
+     "k": "rs-done",
+     "t": 51947,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 51543.1,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 51547,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 51946.9,
+     "path": "Lifecycle/twin-triplets.md"
+    }
+   ],
+   "writes": 3,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 7
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 6
+    }
+   ],
+   "want": [
+    5,
+    7,
+    6
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 403,
+   "formEvents": [],
+   "rsSeq": "rs(view,v6,Twin,kL22) rs(view,v6,Twin,kL13) vp1 vp2 done(true,L13) done(true,L22) rs(view,v7,Twin,kL13) vp3 done(true,L13)",
+   "errors": [],
+   "notices": [],
+   "verdict": "PROBLEMS"
+  }
+ }
+}

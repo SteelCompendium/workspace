@@ -1,0 +1,889 @@
+{
+ "cases": {
+  "M-mid6-rv-f1-g150": {
+   "name": "M-mid6-rv-f1-g150",
+   "kind": "M",
+   "fx": "mid6",
+   "mode": "rv",
+   "rel": "Probe552/twin-mid6.md",
+   "form": 1,
+   "gap": 150,
+   "problems": [],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 5635.9,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "settled",
+     "t": 6585,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": 13,
+     "value": 5
+    }
+   ],
+   "notes": [],
+   "formOpenAtSettle": true,
+   "disk": [
+    5,
+    5,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Edited",
+    "Twin"
+   ],
+   "text": "# twin mid6\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nmax_value: 20\ncurrent_value: 5\nmin_value: 0\nname: Edited\n```\n\nM2\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 5645.1,
+     "pending": true
+    },
+    {
+     "k": "rs",
+     "t": 5649.1,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 5,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 5649.5,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 5649.8,
+     "path": "Probe552/twin-mid6.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 5650.8
+    },
+    {
+     "k": "rs-done",
+     "t": 5653.1,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    },
+    {
+     "k": "form-open",
+     "t": 5682.7,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 6594.6
+    },
+    {
+     "k": "rs",
+     "t": 6595.2,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 13,
+     "value": 5,
+     "name": "Edited"
+    },
+    {
+     "k": "flush",
+     "t": 6595.3,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 6595.3,
+     "path": "Probe552/twin-mid6.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 6595.7
+    },
+    {
+     "k": "rs-done",
+     "t": 6596.9,
+     "ok": true,
+     "formHost": true,
+     "line": 13
+    },
+    {
+     "k": "form-close",
+     "t": 6602.6,
+     "saving": true
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 5644.7
+    }
+   ],
+   "mods": [
+    {
+     "t": 5652.9,
+     "path": "Probe552/twin-mid6.md"
+    },
+    {
+     "t": 6596.9,
+     "path": "Probe552/twin-mid6.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Edited",
+     "value": 5
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    5,
+    5,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Edited",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(pending)@5645.1",
+    "form-open@5682.7",
+    "form-close(saving)@6602.6"
+   ],
+   "rsSeq": "rs(view,v5,Twin,kL13) vp1 done(true,L13) save rs(FORM,v5,Edited,kL13) vp2 done(true,FORML13)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "M-mid6-lp-f1-g150": {
+   "name": "M-mid6-lp-f1-g150",
+   "kind": "M",
+   "fx": "mid6",
+   "mode": "lp",
+   "rel": "Probe552/twin-mid6.md",
+   "form": 1,
+   "gap": 150,
+   "problems": [
+    "form closed by itself before Save",
+    "names [\"Twin\",\"Twin\",\"Twin\"] want [\"Twin\",\"Edited\",\"Twin\"]"
+   ],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 12562.4,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "settled",
+     "t": 13486,
+     "block": null,
+     "connected": false,
+     "released": true,
+     "loaded": false,
+     "hostKnownLine": 13,
+     "hostLastWrite": 13,
+     "value": null
+    }
+   ],
+   "notes": [],
+   "formOpenAtSettle": false,
+   "disk": [
+    5,
+    5,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin mid6\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nmax_value: 20\ncurrent_value: 5\nmin_value: 0\nname: Twin\n```\n\nM2\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 12569.5,
+     "pending": true
+    },
+    {
+     "k": "rs",
+     "t": 12570,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 5,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 12570.1,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 12570.1,
+     "path": "Probe552/twin-mid6.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 12570.8
+    },
+    {
+     "k": "rs-done",
+     "t": 12572,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    },
+    {
+     "k": "form-open",
+     "t": 12583.7,
+     "saving": false
+    },
+    {
+     "k": "form-close",
+     "t": 12624.6,
+     "saving": false
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 12569.1
+    }
+   ],
+   "mods": [
+    {
+     "t": 12571.9,
+     "path": "Probe552/twin-mid6.md"
+    }
+   ],
+   "writes": 1,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    5,
+    5,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Edited",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(pending)@12569.5",
+    "form-open@12583.7",
+    "form-close@12624.6"
+   ],
+   "rsSeq": "rs(view,v5,Twin,kL13) vp1 done(true,L13)",
+   "errors": [],
+   "notices": [],
+   "verdict": "PROBLEMS"
+  },
+  "M-cmid6-lp-f1-g150": {
+   "name": "M-cmid6-lp-f1-g150",
+   "kind": "M",
+   "fx": "cmid6",
+   "mode": "lp",
+   "rel": "Probe552/twin-callouts-mid6.md",
+   "form": 1,
+   "gap": 150,
+   "problems": [
+    "form closed by itself before Save",
+    "names [\"Twin\",\"Twin\",\"Twin\"] want [\"Twin\",\"Edited\",\"Twin\"]"
+   ],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 19478.5,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 15,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "settled",
+     "t": 20402.1,
+     "block": null,
+     "connected": false,
+     "released": true,
+     "loaded": false,
+     "hostKnownLine": 14,
+     "hostLastWrite": 15,
+     "value": null
+    }
+   ],
+   "notes": [],
+   "formOpenAtSettle": false,
+   "disk": [
+    5,
+    5,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin callouts mid6\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nM1\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 5\n> min_value: 0\n> name: Twin\n> ```\n\nM2\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 19485.1,
+     "pending": true
+    },
+    {
+     "k": "rs",
+     "t": 19486.5,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 15,
+     "value": 5,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 19486.7,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 19486.9,
+     "path": "Probe552/twin-callouts-mid6.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 19487.5
+    },
+    {
+     "k": "rs-done",
+     "t": 19488.9,
+     "ok": true,
+     "formHost": false,
+     "line": 15
+    },
+    {
+     "k": "form-open",
+     "t": 19500,
+     "saving": false
+    },
+    {
+     "k": "form-close",
+     "t": 19537.9,
+     "saving": false
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 19484.9
+    }
+   ],
+   "mods": [
+    {
+     "t": 19488.8,
+     "path": "Probe552/twin-callouts-mid6.md"
+    }
+   ],
+   "writes": 1,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    5,
+    5,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Edited",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(pending)@19485.1",
+    "form-open@19500",
+    "form-close@19537.9"
+   ],
+   "rsSeq": "rs(view,v5,Twin,kL15) vp1 done(true,L15)",
+   "errors": [],
+   "notices": [],
+   "verdict": "PROBLEMS"
+  },
+  "M-cmid6-rv-f1-g150": {
+   "name": "M-cmid6-rv-f1-g150",
+   "kind": "M",
+   "fx": "cmid6",
+   "mode": "rv",
+   "rel": "Probe552/twin-callouts-mid6.md",
+   "form": 1,
+   "gap": 150,
+   "problems": [],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 26339.4,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 15,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "settled",
+     "t": 27265.1,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 15,
+     "hostLastWrite": 15,
+     "value": 5
+    }
+   ],
+   "notes": [],
+   "formOpenAtSettle": true,
+   "disk": [
+    5,
+    5,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Edited",
+    "Twin"
+   ],
+   "text": "# twin callouts mid6\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nM1\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 5\n> min_value: 0\n> name: Edited\n> ```\n\nM2\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 26346.4,
+     "pending": true
+    },
+    {
+     "k": "rs",
+     "t": 26347,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 15,
+     "value": 5,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 26347.3,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 26347.3,
+     "path": "Probe552/twin-callouts-mid6.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 26348.1
+    },
+    {
+     "k": "rs-done",
+     "t": 26349.8,
+     "ok": true,
+     "formHost": false,
+     "line": 15
+    },
+    {
+     "k": "form-open",
+     "t": 26362.6,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 27281.7
+    },
+    {
+     "k": "rs",
+     "t": 27282.2,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 15,
+     "value": 5,
+     "name": "Edited"
+    },
+    {
+     "k": "flush",
+     "t": 27282.3,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 27282.4,
+     "path": "Probe552/twin-callouts-mid6.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 27282.9
+    },
+    {
+     "k": "rs-done",
+     "t": 27284.1,
+     "ok": true,
+     "formHost": true,
+     "line": 15
+    },
+    {
+     "k": "form-close",
+     "t": 27289.9,
+     "saving": true
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 26346.3
+    }
+   ],
+   "mods": [
+    {
+     "t": 26349.7,
+     "path": "Probe552/twin-callouts-mid6.md"
+    },
+    {
+     "t": 27284.1,
+     "path": "Probe552/twin-callouts-mid6.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Edited",
+     "value": 5
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    5,
+    5,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Edited",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(pending)@26346.4",
+    "form-open@26362.6",
+    "form-close(saving)@27289.9"
+   ],
+   "rsSeq": "rs(view,v5,Twin,kL15) vp1 done(true,L15) save rs(FORM,v5,Edited,kL15) vp2 done(true,FORML15)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "M-mid6-rv-f1-g60": {
+   "name": "M-mid6-rv-f1-g60",
+   "kind": "M",
+   "fx": "mid6",
+   "mode": "rv",
+   "rel": "Probe552/twin-mid6.md",
+   "form": 1,
+   "gap": 60,
+   "problems": [],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 33097,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "settled",
+     "t": 34023.8,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": 13,
+     "value": 5
+    }
+   ],
+   "notes": [],
+   "formOpenAtSettle": true,
+   "disk": [
+    5,
+    5,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Edited",
+    "Twin"
+   ],
+   "text": "# twin mid6\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nmax_value: 20\ncurrent_value: 5\nmin_value: 0\nname: Edited\n```\n\nM2\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 33103.3,
+     "pending": true
+    },
+    {
+     "k": "rs",
+     "t": 33103.9,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 5,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 33104,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 33104,
+     "path": "Probe552/twin-mid6.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 33104.6
+    },
+    {
+     "k": "rs-done",
+     "t": 33105.6,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    },
+    {
+     "k": "form-open",
+     "t": 33116.4,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 34033
+    },
+    {
+     "k": "rs",
+     "t": 34033.4,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 13,
+     "value": 5,
+     "name": "Edited"
+    },
+    {
+     "k": "flush",
+     "t": 34033.5,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 34033.5,
+     "path": "Probe552/twin-mid6.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 34034.2
+    },
+    {
+     "k": "rs-done",
+     "t": 34035.2,
+     "ok": true,
+     "formHost": true,
+     "line": 13
+    },
+    {
+     "k": "form-close",
+     "t": 34042.1,
+     "saving": true
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 33103.1
+    }
+   ],
+   "mods": [
+    {
+     "t": 33105.4,
+     "path": "Probe552/twin-mid6.md"
+    },
+    {
+     "t": 34035.2,
+     "path": "Probe552/twin-mid6.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Edited",
+     "value": 5
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    5,
+    5,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Edited",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(pending)@33103.3",
+    "form-open@33116.4",
+    "form-close(saving)@34042.1"
+   ],
+   "rsSeq": "rs(view,v5,Twin,kL13) vp1 done(true,L13) save rs(FORM,v5,Edited,kL13) vp2 done(true,FORML13)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  }
+ }
+}

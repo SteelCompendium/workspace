@@ -1,0 +1,27 @@
+===== run head-plug
+bundle=head sha=8e969de241ee12f4 load=18.65 17.24 12.28 13/3172 3137868
+PR552R3 P-c2-lp-p0-g150-f1: clean disk [6,6] names ["Twin","Twin"] writes 1 gap null write 409 where [] form [] off[unch true/true stash 2 ch 3 en 2] on[stash 0 ch 2 en 2 holders 0] formOpen true load 18.57 17.27 12.34 20/3302 3138233
+PR552R3 P-p2-lp-p0-g150-f1: clean disk [6,6] names ["Twin","Twin"] writes 1 gap null write 406 where [] form [] off[unch true/true stash 0 ch 3 en 2] on[stash 0 ch 2 en 2 holders 0] formOpen true load 17.94 17.18 12.37 20/3275 3138357
+PR552R3 P-c2-rv-p0-g150-f1: clean disk [6,6] names ["Twin","Twin"] writes 1 gap null write 406 where [] form [] off[unch true/true stash 2 ch 5 en 4] on[stash 0 ch 4 en 4 holders 0] formOpen true load 17.64 17.14 12.40 18/3288 3138487
+PR552R3 P-p2-rv-p0-g150-f1: clean disk [6,6] names ["Twin","Twin"] writes 1 gap null write 405 where [] form [] off[unch true/true stash 0 ch 5 en 4] on[stash 0 ch 4 en 4 holders 0] formOpen true load 17.08 17.03 12.42 19/3253 3138601
+PR552R3 P-c3-lp-f1: clean disk [5,6,5] names ["Twin","Twin","Twin"] writes 1 gap null write 406 where [] form [] off[unch true/true stash 3 ch 3 en 3] on[stash 0 ch 3 en 3 holders 0] formOpen true load 16.77 16.97 12.45 18/3251 3138711
+PR552R3 P-c3-lp: clean disk [5,6,5] names ["Twin","Twin","Twin"] writes 1 gap null write 407 where [] form [] off[unch true/true stash 3 ch 3 en 3] on[stash 0 ch 3 en 3 holders 0] formOpen undefined load 17.05 17.02 12.54 14/3277 3138849
+PR552R3 P-p3-rv: clean disk [5,6,5] names ["Twin","Twin","Twin"] writes 1 gap null write 406 where [] form [] off[unch true/true stash 0 ch 6 en 6] on[stash 0 ch 6 en 6 holders 0] formOpen undefined load 17.12 17.03 12.59 16/3254 3138963
+PR552R3 P-c2-lp: clean disk [5,6] names ["Twin","Twin"] writes 1 gap null write 406 where [] form [] off[unch true/true stash 2 ch 2 en 2] on[stash 0 ch 2 en 2 holders 0] formOpen undefined load 16.95 17.00 12.63 28/3306 3139130
+rc=0 elapsed=113s
+===== run base-plug
+bundle=base sha=fe88efc5e83622c2 load=15.48 16.63 12.63 14/3155 3139997
+PR552R3 P-c2-lp-p0-g150-f1: clean disk [6,6] names ["Twin","Twin"] writes 1 gap null write 406 where [] form [] off[unch true/true stash 2 ch 2 en 2] on[stash 0 ch 2 en 2 holders 0] formOpen false load 15.25 16.55 12.64 15/3291 3140380
+PR552R3 P-p2-lp-p0-g150-f1: clean disk [6,6] names ["Twin","Twin"] writes 1 gap null write 405 where [] form [] off[unch true/true stash 0 ch 2 en 2] on[stash 0 ch 2 en 2 holders 0] formOpen false load 15.69 16.59 12.70 16/3278 3140500
+PR552R3 P-c2-rv-p0-g150-f1: clean disk [6,6] names ["Twin","Twin"] writes 1 gap null write 406 where [] form [] off[unch true/true stash 2 ch 4 en 4] on[stash 0 ch 4 en 4 holders 0] formOpen false load 15.84 16.58 12.76 17/3264 3140621
+PR552R3 P-p2-rv-p0-g150-f1: clean disk [6,6] names ["Twin","Twin"] writes 1 gap null write 407 where [] form [] off[unch true/true stash 0 ch 4 en 4] on[stash 0 ch 4 en 4 holders 0] formOpen false load 15.70 16.53 12.78 14/3279 3140752
+PR552R3 P-c3-lp-f1: clean disk [5,6,5] names ["Twin","Twin","Twin"] writes 1 gap null write 406 where [] form [] off[unch true/true stash 3 ch 3 en 3] on[stash 0 ch 3 en 3 holders 0] formOpen true load 15.44 16.45 12.80 23/3250 3140862
+PR552R3 P-c3-lp: clean disk [5,6,5] names ["Twin","Twin","Twin"] writes 1 gap null write 405 where [] form [] off[unch true/true stash 3 ch 3 en 3] on[stash 0 ch 3 en 3 holders 0] formOpen undefined load 15.21 16.36 12.81 14/3250 3140972
+PR552R3 P-p3-rv: clean disk [5,6,5] names ["Twin","Twin","Twin"] writes 1 gap null write 406 where [] form [] off[unch true/true stash 0 ch 6 en 6] on[stash 0 ch 6 en 6 holders 0] formOpen undefined load 15.34 16.35 12.84 17/3297 3141185
+PR552R3 P-c2-lp: clean disk [5,6] names ["Twin","Twin"] writes 1 gap null write 406 where [] form [] off[unch true/true stash 2 ch 2 en 2] on[stash 0 ch 2 en 2 holders 0] formOpen undefined load 15.49 16.33 12.90 21/3272 3141324
+rc=0 elapsed=112s
+===== run m18-plug
+bundle=R7-M18-disable-saves-then-closes sha=1a0ab53630e2ea74 load=16.16 16.06 13.68 15/3179 3147398
+PR552R3 P-c2-rv-p0-g150-f1: PROBLEMS disk [6,6] names ["Twin","Edited"] writes 1 gap null write 406 where [] form [] off[unch true/false stash 0 ch 3 en 2] on[stash 0 ch 2 en 2 holders 0] formOpen true load 16.39 16.11 13.71 20/3271 3147771 :: the disable changed the note | names ["Twin","Edited"] want ["Twin","Twin"]
+PR552R3 P-c2-lp-p0-g150-f1: PROBLEMS disk [6,6] names ["Twin","Edited"] writes 1 gap null write 405 where [] form [] off[unch true/false stash 2 ch 3 en 2] on[stash 0 ch 2 en 2 holders 0] formOpen true load 16.83 16.20 13.77 18/3261 3147881 :: the disable changed the note | names ["Twin","Edited"] want ["Twin","Twin"]
+rc=0 elapsed=44s

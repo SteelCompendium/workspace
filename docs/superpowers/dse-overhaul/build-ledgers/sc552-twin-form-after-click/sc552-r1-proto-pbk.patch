@@ -1,0 +1,268 @@
+diff -ruN -x node_modules -x main.js -x styles.css -x '*.log' /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r1-diag-q4n8/src-base/src/authoring/FormModal.ts /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r1-diag-q4n8/src-pbk/src/authoring/FormModal.ts
+--- /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r1-diag-q4n8/src-base/src/authoring/FormModal.ts	2026-11-02 17:20:02.000000000 -0500
++++ /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r1-diag-q4n8/src-pbk/src/authoring/FormModal.ts	2026-11-02 18:47:20.915157483 -0500
+@@ -32,7 +32,7 @@
+ import type { ElementDefinition } from '@/framework/registry';
+ import type { DsePrefs } from '@/framework/seams/prefs';
+ import type { ValidationService } from '@/framework/validation';
+-import { DseModal, openManagedModal } from '@/framework/kit/managedModal';
++import { DseModal } from '@/framework/kit/managedModal';
+ import { readBlockBody } from '@/framework/blockBody';
+ import { renderErrorCard } from '@/framework/errorCard';
+ import { extractPrefOverrides } from '@/framework/prefOverrides';
+@@ -119,6 +119,14 @@
+ 		private readonly opener: FormOpener | null = null,
+ 	) {
+ 		super(cx.app);
++		// SC-552 PROTOTYPE: the block this form was opened on, pinned now (before any rebuild can hand the host's element to a twin).
++		this.pin = cx.host.pinPosition?.() ?? null;
++	}
++
++	private readonly pin: import('@/framework/host/BlockHost').BlockPin | null;
++
++	hasPin(): boolean {
++		return this.pin !== null;
+ 	}
+ 
+ 	onOpen(): void {
+@@ -491,7 +499,7 @@
+ 		// not hold focus when pressed (a mouse press) arms nothing either (SC-518 r3).
+ 		const key = this.opener && body !== this.source ? this.cx.host.blockKey() : null;
+ 		if (this.opener && key !== null) armFormFocus(key, this.opener);
+-		const ok = await this.cx.host.replaceSource(body);
++		const ok = await this.cx.host.replaceSource(body, this.pin ? { pin: this.pin } : undefined);
+ 		if (key !== null) settleChromeFocus(key, null, ok);
+ 		if (ok) this.close();
+ 		// SC-455: a host that already said why it could not write (its own Notice) is not repeated here.
+@@ -513,5 +521,19 @@
+ 	validation: ValidationService,
+ 	opener: FormOpener | null = null,
+ ): FormModal {
+-	return openManagedModal(owner, () => new FormModal(cx, def, source, validation, opener));
++	// SC-552 PROTOTYPE (K): a pinned form outlives its view when Obsidian's rebuild of the note discards the view's element (an
++	// identical twin took the block's text): the block is still there and Save is placed through the pin. Plugin unload still closes it.
++	const modal = new FormModal(cx, def, source, validation, opener);
++	const host = cx.host as unknown as { registry?: { _loaded?: boolean; register(cb: () => void): void } | null; renderChildGone?: boolean };
++	owner.register(() => {
++		const reg = host.registry;
++		if (modal.hasPin() && reg && reg._loaded && host.renderChildGone) {
++			(window as unknown as { __pbLog?: unknown[] }).__pbLog?.push({ keptOpen: true, t: performance.now() });
++			reg.register(() => modal.close());
++			return;
++		}
++		modal.close();
++	});
++	modal.open();
++	return modal;
+ }
+diff -ruN -x node_modules -x main.js -x styles.css -x '*.log' /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r1-diag-q4n8/src-base/src/framework/host/BlockHost.ts /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r1-diag-q4n8/src-pbk/src/framework/host/BlockHost.ts
+--- /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r1-diag-q4n8/src-base/src/framework/host/BlockHost.ts	2026-11-02 17:20:02.000000000 -0500
++++ /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r1-diag-q4n8/src-pbk/src/framework/host/BlockHost.ts	2026-11-02 18:40:01.692421881 -0500
+@@ -35,6 +35,12 @@
+  * The mode adapter: the single seam between an ElementView and where/how it is
+  * mounted and persisted. RenderContext.host (F1 §3.2) is always one of these.
+  */
++/** SC-552 PROTOTYPE: the note text a block position was read from, and the block's fence line in it. */
++export interface BlockPin {
++	readonly text: string;
++	readonly lineStart: number;
++}
++
+ export interface BlockHost {
+ 	readonly mode: RenderMode;
+ 	/** Note path; "" for canvas text nodes (mirrors ctx.sourcePath today). */
+@@ -95,7 +101,9 @@
+ 	 * re-render like an external edit instead of being adopted/swallowed. The default is
+ 	 * deliberately the safe one: an unmarked write costs a fresh render, never a stale card.
+ 	 */
+-	replaceSource(newSource: string, options?: { fromView?: boolean }): Promise<boolean>;
++	replaceSource(newSource: string, options?: { fromView?: boolean; pin?: BlockPin | null }): Promise<boolean>;
++	/** SC-552 PROTOTYPE: where the block is now, as a pin a later write can be placed through (see BlockPin). */
++	pinPosition?(): BlockPin | null;
+ 	/**
+ 	 * SC-455 — optional: true when the LAST `replaceSource` call that failed already told the user why
+ 	 * (the host showed its own Notice), false when it landed or failed silently. A caller that adds its
+diff -ruN -x node_modules -x main.js -x styles.css -x '*.log' /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r1-diag-q4n8/src-base/src/framework/host/lineMap.ts /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r1-diag-q4n8/src-pbk/src/framework/host/lineMap.ts
+--- /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r1-diag-q4n8/src-base/src/framework/host/lineMap.ts	1969-12-31 19:00:00.000000000 -0500
++++ /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r1-diag-q4n8/src-pbk/src/framework/host/lineMap.ts	2026-11-02 18:39:40.021293681 -0500
+@@ -0,0 +1,70 @@
++// SC-552 r1 PROTOTYPE (scratch only): map a line of one version of a note to the same line of a later version.
++import { splitLines } from './lineEnding';
++
++/** Edit distance above which the map gives up (null): a rewrite of most of the note is not something to place a block through. */
++export const LINE_MAP_MAX_EDITS = 400;
++
++/**
++ * The line of `after` that is line `line` of `before`, by a minimal line diff (common head and tail first, Myers in between).
++ * Null when that line was changed or removed, or the notes differ too much to tell.
++ */
++export function mapLine(before: string, after: string, line: number): number | null {
++	if (before === after) return line;
++	const a = splitLines(before);
++	const b = splitLines(after);
++	if (line < 0 || line >= a.length) return null;
++	let head = 0;
++	while (head < a.length && head < b.length && a[head] === b[head]) head++;
++	if (line < head) return line;
++	let tail = 0;
++	while (tail < a.length - head && tail < b.length - head && a[a.length - 1 - tail] === b[b.length - 1 - tail]) tail++;
++	if (line >= a.length - tail) return line + (b.length - a.length);
++	// Myers over the changed middle a[head, a.length - tail) / b[head, b.length - tail).
++	const A = a.slice(head, a.length - tail);
++	const B = b.slice(head, b.length - tail);
++	const n = A.length;
++	const m = B.length;
++	const max = Math.min(n + m, LINE_MAP_MAX_EDITS);
++	const off = max + 1;
++	let v = new Int32Array(2 * max + 3);
++	const trace: Int32Array[] = [];
++	let found = -1;
++	for (let d = 0; d <= max && found < 0; d++) {
++		trace.push(v.slice());
++		for (let k = -d; k <= d; k += 2) {
++			let x = k === -d || (k !== d && v[off + k - 1] < v[off + k + 1]) ? v[off + k + 1] : v[off + k - 1] + 1;
++			let y = x - k;
++			while (x < n && y < m && A[x] === B[y]) {
++				x++;
++				y++;
++			}
++			v[off + k] = x;
++			if (x >= n && y >= m) {
++				found = d;
++				break;
++			}
++		}
++	}
++	if (found < 0) return null;
++	// Walk back: every diagonal step is a kept line, x -> y.
++	const target = line - head;
++	let x = n;
++	let y = m;
++	for (let d = found; d >= 0; d--) {
++		const vd = trace[d];
++		const k = x - y;
++		let prevK: number;
++		if (d === 0) prevK = k;
++		else prevK = k === -d || (k !== d && vd[off + k - 1] < vd[off + k + 1]) ? k + 1 : k - 1;
++		const prevX = d === 0 ? 0 : vd[off + prevK];
++		const prevY = prevX - prevK;
++		const startX = d === 0 ? 0 : prevK === k + 1 ? prevX : prevX + 1;
++		// the snake from (startX, startX - k) to (x, y) keeps lines
++		if (target >= startX && target < x) return head + target - (x - y);
++		if (d === 0) break;
++		x = prevX;
++		y = prevY;
++		if (target === x && prevK === k - 1) return null; // that line was deleted at this step
++	}
++	return null;
++}
+diff -ruN -x node_modules -x main.js -x styles.css -x '*.log' /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r1-diag-q4n8/src-base/src/framework/host/ReadingModeBlockHost.ts /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r1-diag-q4n8/src-pbk/src/framework/host/ReadingModeBlockHost.ts
+--- /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r1-diag-q4n8/src-base/src/framework/host/ReadingModeBlockHost.ts	2026-11-02 17:20:02.000000000 -0500
++++ /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r1-diag-q4n8/src-pbk/src/framework/host/ReadingModeBlockHost.ts	2026-11-02 18:40:01.693421887 -0500
+@@ -62,7 +62,8 @@
+ // RESOLVES and a click writes the correct block, same as any other reading-mode context.
+ import { MarkdownRenderChild, TFile } from 'obsidian';
+ import type { Component, MarkdownPostProcessorContext, MarkdownSectionInformation, MarkdownView, Plugin } from 'obsidian';
+-import type { BlockHost, BlockInfo, RenderMode } from './BlockHost';
++import type { BlockHost, BlockInfo, BlockPin, RenderMode } from './BlockHost';
++import { mapLine } from './lineMap';
+ import type { PreviewScrollPin } from './previewScrollPin';
+ import { listFences } from '../sidebar/anchor';
+ import { notifyDroppedWrite, notifyUnsavableWrite } from './droppedWriteNotice';
+@@ -680,7 +681,28 @@
+ 			.some((l) => /^[ \t]*(?:[-*+]|\d+[.)])[ \t]/.test(l) || /^ {2,}[`~]{3,}/.test(l));
+ 	}
+ 
+-	async replaceSource(newSource: string, options?: { fromView?: boolean }): Promise<boolean> {
++	/** SC-552 PROTOTYPE: pin the block where it is drawn now (its section's text and its own fence line). */
++	pinPosition(): BlockPin | null {
++		const section = this.readSection();
++		if (!section) return null;
++		return { text: section.text, lineStart: this.ownFence ? this.ownFence.lineStart : section.lineStart };
++	}
++
++	/** SC-552 PROTOTYPE: the block at `pin`'s line mapped into `content`, when it is still a `language` block holding knownBody. */
++	private pinnedTarget(content: string, pin: BlockPin): { lineStart: number; lineEnd: number } | null {
++		const line = mapLine(pin.text, content, pin.lineStart);
++		if (line === null) return null;
++		const language = this.knownLanguage ?? this.alias;
++		const fence = listFences(content, language).find((f) => f.lineStart === line);
++		if (!fence) return null;
++		if (this.knownBody !== null) {
++			const lines = splitLines(content);
++			if (normalizeBody(blockBodyLines(lines, fence.lineStart, fence.lineEnd).join('\n')) !== normalizeBody(this.knownBody)) return null;
++		}
++		return { lineStart: fence.lineStart, lineEnd: fence.lineEnd };
++	}
++
++	async replaceSource(newSource: string, options?: { fromView?: boolean; pin?: BlockPin | null }): Promise<boolean> {
+ 		this.reported = false;
+ 		if (!this.canPersist) return false;
+ 
+@@ -729,7 +751,10 @@
+ 			options?.fromView === true && this.entry && this.registry ? this.registry.noteWrite(this.entry, newSource) : null;
+ 		try {
+ 			await this.plugin.app.vault.process(abstractFile, (content) => {
+-				const target = this.resolveWriteTarget(content, section);
++				const pinned = options?.pin ? this.pinnedTarget(content, options.pin) : null;
++				if (pinned) this.knownLineStart = pinned.lineStart;
++				(window as unknown as { __pbLog?: unknown[] }).__pbLog?.push({ pin: options?.pin ? options.pin.lineStart : null, pinned: pinned ? pinned.lineStart : null, t: performance.now() });
++				const target = pinned ?? this.resolveWriteTarget(content, section);
+ 				if (target === 'abort') {
+ 					unplaceable = true; // SC-455: a write that cannot land is never silent
+ 					listShape = this.looksLikeList(content, section);
+diff -ruN /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r1-diag-q4n8/src-base/test/unit/framework/lineMap.test.ts /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r1-diag-q4n8/src-pbk/test/unit/framework/lineMap.test.ts
+--- /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r1-diag-q4n8/src-base/test/unit/framework/lineMap.test.ts	1969-12-31 19:00:00.000000000 -0500
++++ /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r1-diag-q4n8/src-pbk/test/unit/framework/lineMap.test.ts	2026-11-02 18:40:39.100645084 -0500
+@@ -0,0 +1,51 @@
++import { mapLine } from '@/framework/host/lineMap';
++
++const twin = (v: number) => ['```ds-counter', 'name: Twin', `current_value: ${v}`, '```'];
++const note = (vals: number[], extra: Record<number, string[]> = {}) =>
++	['# t', '', 'TOP', '', ...vals.flatMap((v, i) => [...(extra[i] ?? []), ...twin(v), '', `M${i}`, '']), 'BOTTOM'].join('\n');
++
++describe('mapLine (SC-552 prototype)', () => {
++	it('identity', () => {
++		const a = note([5, 5, 5]);
++		expect(mapLine(a, a, 12)).toBe(12);
++	});
++	it('a change in the upper twin keeps the middle and lower lines', () => {
++		const a = note([5, 5, 5]);
++		const b = note([6, 5, 5]);
++		const fences = a.split('\n').map((l, i) => (l === '```ds-counter' ? i : -1)).filter((i) => i >= 0);
++		expect(fences.map((f) => mapLine(a, b, f))).toEqual(fences);
++	});
++	it('changes above AND below the middle (upper and lower both written)', () => {
++		const a = note([5, 5, 5]);
++		const b = note([6, 5, 7]);
++		const f = a.split('\n').map((l, i) => (l === '```ds-counter' ? i : -1)).filter((i) => i >= 0);
++		expect(mapLine(a, b, f[1])).toBe(f[1]);
++		expect(mapLine(a, b, f[1] + 2)).toBe(f[1] + 2);
++		expect(mapLine(a, b, f[0] + 2)).toBeNull(); // the changed line itself
++	});
++	it('lines inserted above shift the block', () => {
++		const a = note([5, 5, 5]);
++		const b = note([5, 5, 5], { 0: ['NEW1', 'NEW2', ''] });
++		const fa = a.split('\n').map((l, i) => (l === '```ds-counter' ? i : -1)).filter((i) => i >= 0);
++		const fb = b.split('\n').map((l, i) => (l === '```ds-counter' ? i : -1)).filter((i) => i >= 0);
++		expect(fa.map((f) => mapLine(a, b, f))).toEqual(fb);
++	});
++	it('a line added inside the upper block and a line removed after the lower', () => {
++		const a = note([5, 5, 5]);
++		const bl = a.split('\n');
++		const f = bl.map((l, i) => (l === '```ds-counter' ? i : -1)).filter((i) => i >= 0);
++		bl.splice(f[0] + 2, 0, 'max_value: 20');
++		bl.splice(bl.length - 2, 1);
++		const b = bl.join('\n');
++		expect(mapLine(a, b, f[1])).toBe(f[1] + 1);
++		expect(mapLine(a, b, f[2])).toBe(f[2] + 1);
++	});
++	it('a deleted line maps to null', () => {
++		const a = ['x', 'y', 'z'].join('\n');
++		expect(mapLine(a, ['x', 'z'].join('\n'), 1)).toBeNull();
++		expect(mapLine(a, ['x', 'z'].join('\n'), 2)).toBe(1);
++	});
++	it('CRLF and LF compare by line (Obsidian numbering)', () => {
++		expect(mapLine('a\r\nb\r\nc', 'a\r\nB\r\nb\r\nc', 1)).toBe(2);
++	});
++});

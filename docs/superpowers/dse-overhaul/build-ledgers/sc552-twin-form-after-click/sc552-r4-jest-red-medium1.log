@@ -1,0 +1,23 @@
+FAIL dom test/dom/authoring/formModal.test.ts
+  ● SC-552: the form pins its block › a form that already closed (Save, Cancel) is never kept open when its view unloads later: no holder is left on the registry
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      973 | 			else modal.close();
+      974 | 			owner.unload(); // the Save redraws the block (or an outside edit does): the view unloads after the form closed
+    > 975 | 			expect(modal.isKeptOpen()).toBe(false);
+          | 			                           ^
+      976 | 			expect(holder._children).toHaveLength(0);
+      977 | 		}
+      978 | 	});
+
+      at Object.<anonymous> (test/dom/authoring/formModal.test.ts:975:31)
+
+Test Suites: 1 failed, 3 passed, 4 total
+Tests:       1 failed, 129 passed, 130 total
+Snapshots:   0 total
+Time:        4.418 s, estimated 5 s
+Ran all test suites matching test/unit/framework/lineMap.test.ts|test/dom/framework/reading-mode-host-pin.test.ts|test/dom/framework/twin-reuse.test.ts|test/dom/authoring/formModal.test.ts in 2 projects.

@@ -1,0 +1,104 @@
+FAIL dom test/dom/framework/reading-mode-host-pin.test.ts
+  ● SC-552: a view's own write is placed through the pin its round's first click took › the first click pins: after the redraw the view's write still lands in the block that was clicked
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        7,
+    -   6,
+        5,
+    +   6,
+      ]
+
+      195 |
+      196 | 		expect(await host.replaceSource(bodyOf(6), own)).toBe(true);
+    > 197 | 		expect(values(app)).toEqual([7, 6, 5]);
+          | 		                    ^
+      198 | 	});
+      199 |
+      200 | 	test('a later click of the same round does not pin again (it may come after the redraw)', async () => {
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:197:23)
+
+  ● SC-552: a view's own write is placed through the pin its round's first click took › a later click of the same round does not pin again (it may come after the redraw)
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        7,
+    -   7,
+        5,
+    +   7,
+      ]
+
+      205 |
+      206 | 		expect(await host.replaceSource(bodyOf(7), own)).toBe(true);
+    > 207 | 		expect(values(app)).toEqual([7, 7, 5]);
+          | 		                    ^
+      208 | 	});
+      209 |
+      210 | 	test('the write uses the pin up: the next write, with no click before it, follows the element as it always did', async () => {
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:207:23)
+
+  ● SC-552: a view's own write is placed through the pin its round's first click took › a write that is not the view's own does not use up the pin either
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        7,
+    -   6,
+        5,
+    +   6,
+      ]
+
+      234 |
+      235 | 		expect(await host.replaceSource(bodyOf(6), own)).toBe(true);
+    > 236 | 		expect(values(app)).toEqual([7, 6, 5]); // the pin was still there for the view\'s own write
+          | 		                    ^
+      237 | 	});
+      238 | });
+      239 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:236:23)
+
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-552: a block edit form opened on one of several identical blocks › + on the middle block, then an outside edit of the upper inside the debounce: the +1 is written in the middle block
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        7,
+    -   6,
+        5,
+    +   6,
+      ]
+
+      982 | 		await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS);
+      983 |
+    > 984 | 		expect(t.values()).toEqual([7, 6, 5]); // not [7, 5, 6]
+          | 		                   ^
+      985 | 	});
+      986 |
+      987 | 	test('a kept-open form closes when the plugin unloads', async () => {
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:984:22)
+
+
+Test Suites: 2 failed, 2 passed, 4 total
+Tests:       4 failed, 119 passed, 123 total
+Snapshots:   0 total
+Time:        4.125 s
+Ran all test suites matching test/unit/framework/lineMap.test.ts|test/dom/framework/reading-mode-host-pin.test.ts|test/dom/framework/twin-reuse.test.ts|test/dom/authoring/formModal.test.ts in 2 projects.

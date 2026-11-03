@@ -1,0 +1,2794 @@
+{
+ "cases": {
+  "Q-c3-lp-p1-c5-g60": {
+   "name": "Q-c3-lp-p1-c5-g60",
+   "kind": "Q",
+   "fx": "c3",
+   "mode": "lp",
+   "rel": "Lifecycle/twin-callouts-3.md",
+   "plus": 1,
+   "clicks": [
+    {
+     "t": 6896.6,
+     "trusted": true
+    },
+    {
+     "t": 6979,
+     "trusted": true
+    },
+    {
+     "t": 7057,
+     "trusted": true
+    },
+    {
+     "t": 7128.7,
+     "trusted": true
+    },
+    {
+     "t": 7199.9,
+     "trusted": true
+    }
+   ],
+   "gap": 60,
+   "problems": [],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    5,
+    10,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin callouts 3\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nM1\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 10\n> min_value: 0\n> name: Twin\n> ```\n\nM2\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "rs",
+     "t": 7606.8,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 15,
+     "value": 10,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 7607.4,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 7608,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 7608.6
+    },
+    {
+     "k": "rs-done",
+     "t": 7612,
+     "ok": true,
+     "formHost": false,
+     "line": 15
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 7611.7,
+     "path": "Lifecycle/twin-callouts-3.md"
+    }
+   ],
+   "writes": 1,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 10
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    5,
+    10,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 715,
+   "formEvents": [],
+   "rsSeq": "rs(view,v10,Twin,kL15) vp1 done(true,L15)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "Q-p3-rv-p1-c5-g60": {
+   "name": "Q-p3-rv-p1-c5-g60",
+   "kind": "Q",
+   "fx": "p3",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-triplets.md",
+   "plus": 1,
+   "clicks": [
+    {
+     "t": 13722.6,
+     "trusted": true
+    },
+    {
+     "t": 13797.3,
+     "trusted": true
+    },
+    {
+     "t": 13864.7,
+     "trusted": true
+    },
+    {
+     "t": 13932.1,
+     "trusted": true
+    },
+    {
+     "t": 14001.2,
+     "trusted": true
+    }
+   ],
+   "gap": 60,
+   "problems": [],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    5,
+    10,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin triplets\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nmax_value: 20\ncurrent_value: 10\nmin_value: 0\nname: Twin\n```\n\nM2\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "rs",
+     "t": 14402.6,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 13,
+     "value": 10,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 14402.7,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 14402.7,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 14403.6
+    },
+    {
+     "k": "rs-done",
+     "t": 14408.6,
+     "ok": true,
+     "formHost": false,
+     "line": 13
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 14408.4,
+     "path": "Lifecycle/twin-triplets.md"
+    }
+   ],
+   "writes": 1,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 10
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    5,
+    10,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 686,
+   "formEvents": [],
+   "rsSeq": "rs(view,v10,Twin,kL13) vp1 done(true,L13)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "Q-c3-lp-p1-c5-g60-u0": {
+   "name": "Q-c3-lp-p1-c5-g60-u0",
+   "kind": "Q",
+   "fx": "c3",
+   "mode": "lp",
+   "rel": "Lifecycle/twin-callouts-3.md",
+   "plus": 1,
+   "clicks": [
+    {
+     "t": 20471,
+     "trusted": true
+    },
+    {
+     "t": 20691.8,
+     "trusted": true
+    },
+    {
+     "t": 20767.2,
+     "trusted": true
+    },
+    {
+     "t": 20844.9,
+     "trusted": true
+    },
+    {
+     "t": 20913.6,
+     "trusted": true
+    },
+    {
+     "t": 21114.8,
+     "trusted": true
+    }
+   ],
+   "gap": 60,
+   "upper": 0,
+   "problems": [
+    "disk [6,9,5] want [6,10,5]",
+    "writes 3 want 2",
+    "notices [\"Draw Steel Elements: a change to a block in twin-callouts-3 was not saved — the block changed on disk first.\"]"
+   ],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    6,
+    9,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin callouts 3\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: Twin\n> ```\n\nM1\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 9\n> min_value: 0\n> name: Twin\n> ```\n\nM2\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "rs",
+     "t": 20876.6,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 5,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 20876.9,
+     "pend": 1,
+     "depth": 1
+    },
+    {
+     "k": "rs",
+     "t": 20877.4,
+     "depth": 1,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 15,
+     "value": 8,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 20878.8,
+     "pend": 1,
+     "depth": 2
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 20879.1,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 2
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 20879.2,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 20883.6
+    },
+    {
+     "k": "rs-done",
+     "t": 20884.9,
+     "ok": true,
+     "formHost": false,
+     "line": 15
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 20885.2
+    },
+    {
+     "k": "rs-done",
+     "t": 20942.8,
+     "ok": true,
+     "formHost": false,
+     "line": 5
+    },
+    {
+     "k": "rs",
+     "t": 20951.5,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 14,
+     "value": 9,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 20952,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 3,
+     "t": 20952.2,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 3,
+     "t": 21125.7
+    },
+    {
+     "k": "rs-done",
+     "t": 21127.2,
+     "ok": true,
+     "formHost": false,
+     "line": 15
+    },
+    {
+     "k": "rs",
+     "t": 21131.4,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 15,
+     "value": 9,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 21131.7,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 4,
+     "t": 21131.9,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 4,
+     "t": 21202.7
+    },
+    {
+     "k": "rs-done",
+     "t": 21207,
+     "ok": false,
+     "formHost": false,
+     "line": null
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 20884.7,
+     "path": "Lifecycle/twin-callouts-3.md"
+    },
+    {
+     "t": 20942.6,
+     "path": "Lifecycle/twin-callouts-3.md"
+    },
+    {
+     "t": 21127,
+     "path": "Lifecycle/twin-callouts-3.md"
+    }
+   ],
+   "writes": 3,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 6
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 9
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    6,
+    10,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 414,
+   "formEvents": [],
+   "rsSeq": "rs(view,v6,Twin,kL5) rs(view,v8,Twin,kL15) vp1 vp2 done(true,L15) done(true,L5) rs(view,v9,Twin,kL14) vp3 done(true,L15) rs(view,v9,Twin,kL15) vp4 done(false,Lnull)",
+   "errors": [],
+   "notices": [
+    "Draw Steel Elements: a change to a block in twin-callouts-3 was not saved — the block changed on disk first."
+   ],
+   "verdict": "PROBLEMS"
+  },
+  "Q-p3-rv-p2-c5-g60-u0": {
+   "name": "Q-p3-rv-p2-c5-g60-u0",
+   "kind": "Q",
+   "fx": "p3",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-triplets.md",
+   "plus": 2,
+   "clicks": [
+    {
+     "t": 27205.8,
+     "trusted": true
+    },
+    {
+     "t": 27411.9,
+     "trusted": true
+    },
+    {
+     "t": 27479.2,
+     "trusted": true
+    },
+    {
+     "t": 27554.4,
+     "trusted": true
+    },
+    {
+     "t": 27687.4,
+     "trusted": true
+    },
+    {
+     "t": 27757.4,
+     "trusted": true
+    }
+   ],
+   "gap": 60,
+   "upper": 0,
+   "problems": [
+    "writes 3 want 2"
+   ],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    6,
+    5,
+    10
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin triplets\n\nTOP\n\n```ds-counter\nmax_value: 20\ncurrent_value: 6\nmin_value: 0\nname: Twin\n```\n\nM1\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM2\n\n```ds-counter\nmax_value: 20\ncurrent_value: 10\nmin_value: 0\nname: Twin\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "rs",
+     "t": 27607,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 4,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 27607.1,
+     "pend": 1,
+     "depth": 1
+    },
+    {
+     "k": "rs",
+     "t": 27607.7,
+     "depth": 1,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 22,
+     "value": 8,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 27607.8,
+     "pend": 1,
+     "depth": 2
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 27607.9,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 2
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 27607.9,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 27611.8
+    },
+    {
+     "k": "rs-done",
+     "t": 27613.6,
+     "ok": true,
+     "formHost": false,
+     "line": 22
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 27614
+    },
+    {
+     "k": "rs-done",
+     "t": 27616,
+     "ok": true,
+     "formHost": false,
+     "line": 4
+    },
+    {
+     "k": "rs",
+     "t": 28158.6,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 22,
+     "value": 10,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 28158.7,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 3,
+     "t": 28158.8,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 3,
+     "t": 28159.6
+    },
+    {
+     "k": "rs-done",
+     "t": 28161.8,
+     "ok": true,
+     "formHost": false,
+     "line": 22
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 27613.5,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 27615.8,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 28161.6,
+     "path": "Lifecycle/twin-triplets.md"
+    }
+   ],
+   "writes": 3,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 6
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 10
+    }
+   ],
+   "want": [
+    6,
+    5,
+    10
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 408,
+   "formEvents": [],
+   "rsSeq": "rs(view,v6,Twin,kL4) rs(view,v8,Twin,kL22) vp1 vp2 done(true,L22) done(true,L4) rs(view,v10,Twin,kL22) vp3 done(true,L22)",
+   "errors": [],
+   "notices": [],
+   "verdict": "PROBLEMS"
+  },
+  "Q-c3-rv-p1-c5-g150": {
+   "name": "Q-c3-rv-p1-c5-g150",
+   "kind": "Q",
+   "fx": "c3",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-callouts-3.md",
+   "plus": 1,
+   "clicks": [
+    {
+     "t": 34110.3,
+     "trusted": true
+    },
+    {
+     "t": 34273.6,
+     "trusted": true
+    },
+    {
+     "t": 34440.3,
+     "trusted": true
+    },
+    {
+     "t": 34603.6,
+     "trusted": true
+    },
+    {
+     "t": 34765.6,
+     "trusted": true
+    }
+   ],
+   "gap": 150,
+   "problems": [],
+   "wheres": [],
+   "notes": [],
+   "disk": [
+    5,
+    10,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin callouts 3\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nM1\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 10\n> min_value: 0\n> name: Twin\n> ```\n\nM2\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "rs",
+     "t": 35166.6,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 15,
+     "value": 10,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 35166.8,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 35166.9,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 35167.6
+    },
+    {
+     "k": "rs-done",
+     "t": 35169.2,
+     "ok": true,
+     "formHost": false,
+     "line": 15
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 35169.1,
+     "path": "Lifecycle/twin-callouts-3.md"
+    }
+   ],
+   "writes": 1,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 10
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    5,
+    10,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 1059,
+   "formEvents": [],
+   "rsSeq": "rs(view,v10,Twin,kL15) vp1 done(true,L15)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "N-solo-rv-x5-save": {
+   "name": "N-solo-rv-x5-save",
+   "kind": "N",
+   "fx": "solo",
+   "mode": "rv",
+   "rel": "Probe552/single.md",
+   "rep": 5,
+   "how": "save",
+   "problems": [],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 40532.2,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 4,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "pencil",
+     "t": 42895.7,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 4,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "pencil",
+     "t": 45213.9,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 4,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "pencil",
+     "t": 47529.3,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 4,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "pencil",
+     "t": 49849.1,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 4,
+     "hostLastWrite": null,
+     "value": 5
+    }
+   ],
+   "notes": [],
+   "children": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+   ],
+   "disk": [
+    5
+   ],
+   "names": [
+    "N5"
+   ],
+   "text": "# single\n\nTOP\n\n```ds-counter\nname: N5\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 40557.1,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 40592.5,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 40905.3
+    },
+    {
+     "k": "rs",
+     "t": 40905.8,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 4,
+     "value": 5,
+     "name": "N1"
+    },
+    {
+     "k": "flush",
+     "t": 40905.9,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 40905.9,
+     "path": "Probe552/single.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 40906.5
+    },
+    {
+     "k": "rs-done",
+     "t": 40907.6,
+     "ok": true,
+     "formHost": true,
+     "line": 4
+    },
+    {
+     "k": "form-close",
+     "t": 40912.9,
+     "saving": true
+    },
+    {
+     "k": "oapw",
+     "t": 42897.1,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 42908.4,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 43220.6
+    },
+    {
+     "k": "rs",
+     "t": 43220.9,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 4,
+     "value": 5,
+     "name": "N2"
+    },
+    {
+     "k": "flush",
+     "t": 43220.9,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 43220.9,
+     "path": "Probe552/single.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 43221.5
+    },
+    {
+     "k": "rs-done",
+     "t": 43223.4,
+     "ok": true,
+     "formHost": true,
+     "line": 4
+    },
+    {
+     "k": "form-close",
+     "t": 43230.7,
+     "saving": true
+    },
+    {
+     "k": "oapw",
+     "t": 45215.1,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 45224.8,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 45536.5
+    },
+    {
+     "k": "rs",
+     "t": 45536.9,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 4,
+     "value": 5,
+     "name": "N3"
+    },
+    {
+     "k": "flush",
+     "t": 45537,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 3,
+     "t": 45537,
+     "path": "Probe552/single.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 3,
+     "t": 45537.6
+    },
+    {
+     "k": "rs-done",
+     "t": 45538.8,
+     "ok": true,
+     "formHost": true,
+     "line": 4
+    },
+    {
+     "k": "form-close",
+     "t": 45545,
+     "saving": true
+    },
+    {
+     "k": "oapw",
+     "t": 47530.3,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 47542.2,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 47852.5
+    },
+    {
+     "k": "rs",
+     "t": 47852.7,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 4,
+     "value": 5,
+     "name": "N4"
+    },
+    {
+     "k": "flush",
+     "t": 47852.7,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 4,
+     "t": 47852.8,
+     "path": "Probe552/single.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 4,
+     "t": 47853.6
+    },
+    {
+     "k": "rs-done",
+     "t": 47855.2,
+     "ok": true,
+     "formHost": true,
+     "line": 4
+    },
+    {
+     "k": "form-close",
+     "t": 47860.1,
+     "saving": true
+    },
+    {
+     "k": "oapw",
+     "t": 49850.3,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 49861.7,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 50172.2
+    },
+    {
+     "k": "rs",
+     "t": 50172.5,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 4,
+     "value": 5,
+     "name": "N5"
+    },
+    {
+     "k": "flush",
+     "t": 50172.5,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 5,
+     "t": 50172.5,
+     "path": "Probe552/single.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 5,
+     "t": 50172.8
+    },
+    {
+     "k": "rs-done",
+     "t": 50173.9,
+     "ok": true,
+     "formHost": true,
+     "line": 4
+    },
+    {
+     "k": "form-close",
+     "t": 50180.7,
+     "saving": true
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 40556.7
+    },
+    {
+     "t": 42897
+    },
+    {
+     "t": 45215
+    },
+    {
+     "t": 47530.3
+    },
+    {
+     "t": 49850.2
+    }
+   ],
+   "mods": [
+    {
+     "t": 40907.5,
+     "path": "Probe552/single.md"
+    },
+    {
+     "t": 43222.5,
+     "path": "Probe552/single.md"
+    },
+    {
+     "t": 45538.6,
+     "path": "Probe552/single.md"
+    },
+    {
+     "t": 47855.2,
+     "path": "Probe552/single.md"
+    },
+    {
+     "t": 50173.8,
+     "path": "Probe552/single.md"
+    }
+   ],
+   "writes": 5,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "N5",
+     "value": 5
+    }
+   ],
+   "want": [
+    5
+   ],
+   "wantNames": [
+    "N5"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(none)@40557.1",
+    "form-open@40592.5",
+    "form-close(saving)@40912.9",
+    "oapw(none)@42897.1",
+    "form-open@42908.4",
+    "form-close(saving)@43230.7",
+    "oapw(none)@45215.1",
+    "form-open@45224.8",
+    "form-close(saving)@45545",
+    "oapw(none)@47530.3",
+    "form-open@47542.2",
+    "form-close(saving)@47860.1",
+    "oapw(none)@49850.3",
+    "form-open@49861.7",
+    "form-close(saving)@50180.7"
+   ],
+   "rsSeq": "save rs(FORM,v5,N1,kL4) vp1 done(true,FORML4) save rs(FORM,v5,N2,kL4) vp2 done(true,FORML4) save rs(FORM,v5,N3,kL4) vp3 done(true,FORML4) save rs(FORM,v5,N4,kL4) vp4 done(true,FORML4) save rs(FORM,v5,N5,kL4) vp5 done(true,FORML4)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "N-p3-rv-x5-save": {
+   "name": "N-p3-rv-x5-save",
+   "kind": "N",
+   "fx": "p3",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-triplets.md",
+   "rep": 5,
+   "how": "save",
+   "problems": [],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 57650.6,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 4,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "pencil",
+     "t": 59973.2,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 4,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "pencil",
+     "t": 62289.5,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 4,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "pencil",
+     "t": 64603.1,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 4,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "pencil",
+     "t": 66917.2,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 4,
+     "hostLastWrite": null,
+     "value": 5
+    }
+   ],
+   "notes": [],
+   "children": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "disk": [
+    5,
+    5,
+    5
+   ],
+   "names": [
+    "N5",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin triplets\n\nTOP\n\n```ds-counter\nname: N5\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM2\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 57657.1,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 57668.9,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 57980.2
+    },
+    {
+     "k": "rs",
+     "t": 57980.4,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 4,
+     "value": 5,
+     "name": "N1"
+    },
+    {
+     "k": "flush",
+     "t": 57980.4,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 57980.4,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 57981
+    },
+    {
+     "k": "rs-done",
+     "t": 57982.1,
+     "ok": true,
+     "formHost": true,
+     "line": 4
+    },
+    {
+     "k": "form-close",
+     "t": 57987.3,
+     "saving": true
+    },
+    {
+     "k": "oapw",
+     "t": 59974.4,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 59986.4,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 60295.6
+    },
+    {
+     "k": "rs",
+     "t": 60295.9,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 4,
+     "value": 5,
+     "name": "N2"
+    },
+    {
+     "k": "flush",
+     "t": 60295.9,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 60295.9,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 60296.4
+    },
+    {
+     "k": "rs-done",
+     "t": 60297.3,
+     "ok": true,
+     "formHost": true,
+     "line": 4
+    },
+    {
+     "k": "form-close",
+     "t": 60302.3,
+     "saving": true
+    },
+    {
+     "k": "oapw",
+     "t": 62290.7,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 62301,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 62610.8
+    },
+    {
+     "k": "rs",
+     "t": 62611,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 4,
+     "value": 5,
+     "name": "N3"
+    },
+    {
+     "k": "flush",
+     "t": 62611.1,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 3,
+     "t": 62611.1,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 3,
+     "t": 62611.7
+    },
+    {
+     "k": "rs-done",
+     "t": 62612.8,
+     "ok": true,
+     "formHost": true,
+     "line": 4
+    },
+    {
+     "k": "form-close",
+     "t": 62617.7,
+     "saving": true
+    },
+    {
+     "k": "oapw",
+     "t": 64604.2,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 64615.8,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 64925.8
+    },
+    {
+     "k": "rs",
+     "t": 64926.1,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 4,
+     "value": 5,
+     "name": "N4"
+    },
+    {
+     "k": "flush",
+     "t": 64926.1,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 4,
+     "t": 64926.1,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 4,
+     "t": 64926.7
+    },
+    {
+     "k": "rs-done",
+     "t": 64927.6,
+     "ok": true,
+     "formHost": true,
+     "line": 4
+    },
+    {
+     "k": "form-close",
+     "t": 64932.5,
+     "saving": true
+    },
+    {
+     "k": "oapw",
+     "t": 66918.3,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 66929,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 67238.9
+    },
+    {
+     "k": "rs",
+     "t": 67239.1,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 4,
+     "value": 5,
+     "name": "N5"
+    },
+    {
+     "k": "flush",
+     "t": 67239.1,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 5,
+     "t": 67239.1,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 5,
+     "t": 67239.7
+    },
+    {
+     "k": "rs-done",
+     "t": 67240.6,
+     "ok": true,
+     "formHost": true,
+     "line": 4
+    },
+    {
+     "k": "form-close",
+     "t": 67246.4,
+     "saving": true
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 57656.9
+    },
+    {
+     "t": 59974.3
+    },
+    {
+     "t": 62290.6
+    },
+    {
+     "t": 64604.1
+    },
+    {
+     "t": 66918.3
+    }
+   ],
+   "mods": [
+    {
+     "t": 57982,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 60297.2,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 62612.7,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 64927.5,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 67240.6,
+     "path": "Lifecycle/twin-triplets.md"
+    }
+   ],
+   "writes": 5,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "N5",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    5,
+    5,
+    5
+   ],
+   "wantNames": [
+    "N5",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(none)@57657.1",
+    "form-open@57668.9",
+    "form-close(saving)@57987.3",
+    "oapw(none)@59974.4",
+    "form-open@59986.4",
+    "form-close(saving)@60302.3",
+    "oapw(none)@62290.7",
+    "form-open@62301",
+    "form-close(saving)@62617.7",
+    "oapw(none)@64604.2",
+    "form-open@64615.8",
+    "form-close(saving)@64932.5",
+    "oapw(none)@66918.3",
+    "form-open@66929",
+    "form-close(saving)@67246.4"
+   ],
+   "rsSeq": "save rs(FORM,v5,N1,kL4) vp1 done(true,FORML4) save rs(FORM,v5,N2,kL4) vp2 done(true,FORML4) save rs(FORM,v5,N3,kL4) vp3 done(true,FORML4) save rs(FORM,v5,N4,kL4) vp4 done(true,FORML4) save rs(FORM,v5,N5,kL4) vp5 done(true,FORML4)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "N-c3-lp-x5-save": {
+   "name": "N-c3-lp-x5-save",
+   "kind": "N",
+   "fx": "c3",
+   "mode": "lp",
+   "rel": "Lifecycle/twin-callouts-3.md",
+   "rep": 5,
+   "how": "save",
+   "problems": [],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 74753.5,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 5,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "pencil",
+     "t": 77114.6,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 5,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "pencil",
+     "t": 79514.1,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 5,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "pencil",
+     "t": 81994.1,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 5,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "pencil",
+     "t": 84400.3,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 5,
+     "hostLastWrite": null,
+     "value": 5
+    }
+   ],
+   "notes": [],
+   "children": [
+    3,
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "disk": [
+    5,
+    5,
+    5
+   ],
+   "names": [
+    "N5",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin callouts 3\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: N5\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nM1\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nM2\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 74776.4,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 74787.2,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 75113.8
+    },
+    {
+     "k": "rs",
+     "t": 75114.1,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 5,
+     "value": 5,
+     "name": "N1"
+    },
+    {
+     "k": "flush",
+     "t": 75114.2,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 75114.2,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 75114.7
+    },
+    {
+     "k": "rs-done",
+     "t": 75116.1,
+     "ok": true,
+     "formHost": true,
+     "line": 5
+    },
+    {
+     "k": "form-close",
+     "t": 75121.1,
+     "saving": true
+    },
+    {
+     "k": "oapw",
+     "t": 77116,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 77194.5,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 77520
+    },
+    {
+     "k": "rs",
+     "t": 77520.2,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 5,
+     "value": 5,
+     "name": "N2"
+    },
+    {
+     "k": "flush",
+     "t": 77520.4,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 77520.5,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 77520.8
+    },
+    {
+     "k": "rs-done",
+     "t": 77522.1,
+     "ok": true,
+     "formHost": true,
+     "line": 5
+    },
+    {
+     "k": "form-close",
+     "t": 77527.2,
+     "saving": true
+    },
+    {
+     "k": "oapw",
+     "t": 79515.4,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 79593.3,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 79918.6
+    },
+    {
+     "k": "rs",
+     "t": 79919,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 5,
+     "value": 5,
+     "name": "N3"
+    },
+    {
+     "k": "flush",
+     "t": 79919,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 3,
+     "t": 79919.1,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 3,
+     "t": 79921.5
+    },
+    {
+     "k": "rs-done",
+     "t": 79922.8,
+     "ok": true,
+     "formHost": true,
+     "line": 5
+    },
+    {
+     "k": "form-close",
+     "t": 79928.5,
+     "saving": true
+    },
+    {
+     "k": "oapw",
+     "t": 81995.5,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 82077.1,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 82405.4
+    },
+    {
+     "k": "rs",
+     "t": 82405.7,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 5,
+     "value": 5,
+     "name": "N4"
+    },
+    {
+     "k": "flush",
+     "t": 82405.8,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 4,
+     "t": 82405.9,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 4,
+     "t": 82406.4
+    },
+    {
+     "k": "rs-done",
+     "t": 82407.5,
+     "ok": true,
+     "formHost": true,
+     "line": 5
+    },
+    {
+     "k": "form-close",
+     "t": 82412.8,
+     "saving": true
+    },
+    {
+     "k": "oapw",
+     "t": 84401.6,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 84487.8,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 84815.9
+    },
+    {
+     "k": "rs",
+     "t": 84816.4,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 5,
+     "value": 5,
+     "name": "N5"
+    },
+    {
+     "k": "flush",
+     "t": 84816.4,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 5,
+     "t": 84816.5,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 5,
+     "t": 84817
+    },
+    {
+     "k": "rs-done",
+     "t": 84819.7,
+     "ok": true,
+     "formHost": true,
+     "line": 5
+    },
+    {
+     "k": "form-close",
+     "t": 84824.9,
+     "saving": true
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 74762.4
+    },
+    {
+     "t": 77115.7
+    },
+    {
+     "t": 79515.3
+    },
+    {
+     "t": 81995.3
+    },
+    {
+     "t": 84401.4
+    }
+   ],
+   "mods": [
+    {
+     "t": 75116,
+     "path": "Lifecycle/twin-callouts-3.md"
+    },
+    {
+     "t": 77522,
+     "path": "Lifecycle/twin-callouts-3.md"
+    },
+    {
+     "t": 79922.8,
+     "path": "Lifecycle/twin-callouts-3.md"
+    },
+    {
+     "t": 82407.4,
+     "path": "Lifecycle/twin-callouts-3.md"
+    },
+    {
+     "t": 84819.6,
+     "path": "Lifecycle/twin-callouts-3.md"
+    }
+   ],
+   "writes": 5,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "N5",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    5,
+    5,
+    5
+   ],
+   "wantNames": [
+    "N5",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(none)@74776.4",
+    "form-open@74787.2",
+    "form-close(saving)@75121.1",
+    "oapw(none)@77116",
+    "form-open@77194.5",
+    "form-close(saving)@77527.2",
+    "oapw(none)@79515.4",
+    "form-open@79593.3",
+    "form-close(saving)@79928.5",
+    "oapw(none)@81995.5",
+    "form-open@82077.1",
+    "form-close(saving)@82412.8",
+    "oapw(none)@84401.6",
+    "form-open@84487.8",
+    "form-close(saving)@84824.9"
+   ],
+   "rsSeq": "save rs(FORM,v5,N1,kL5) vp1 done(true,FORML5) save rs(FORM,v5,N2,kL5) vp2 done(true,FORML5) save rs(FORM,v5,N3,kL5) vp3 done(true,FORML5) save rs(FORM,v5,N4,kL5) vp4 done(true,FORML5) save rs(FORM,v5,N5,kL5) vp5 done(true,FORML5)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "N-p3-rv-x4-cancelext": {
+   "name": "N-p3-rv-x4-cancelext",
+   "kind": "N",
+   "fx": "p3",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-triplets.md",
+   "rep": 4,
+   "how": "cancelext",
+   "problems": [],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 92374.9,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 4,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "pencil",
+     "t": 94925.2,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 4,
+     "hostLastWrite": null,
+     "value": 11
+    },
+    {
+     "label": "pencil",
+     "t": 97485.1,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 4,
+     "hostLastWrite": null,
+     "value": 12
+    },
+    {
+     "label": "pencil",
+     "t": 100042.2,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 4,
+     "hostLastWrite": null,
+     "value": 13
+    }
+   ],
+   "notes": [],
+   "children": [
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "disk": [
+    14,
+    5,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin triplets\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 14\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM2\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 92380.9,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 92392.3,
+     "saving": false
+    },
+    {
+     "k": "form-close",
+     "t": 92701.6,
+     "saving": false
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 93003.3,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 0
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 93003.8
+    },
+    {
+     "k": "oapw",
+     "t": 94935.4,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 94947.2,
+     "saving": false
+    },
+    {
+     "k": "form-close",
+     "t": 95256.3,
+     "saving": false
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 95557.7,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 0
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 95558.4
+    },
+    {
+     "k": "oapw",
+     "t": 97490.8,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 97501.5,
+     "saving": false
+    },
+    {
+     "k": "form-close",
+     "t": 97811.2,
+     "saving": false
+    },
+    {
+     "k": "vp",
+     "id": 3,
+     "t": 98113.1,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 0
+    },
+    {
+     "k": "vp-cb",
+     "id": 3,
+     "t": 98113.8
+    },
+    {
+     "k": "oapw",
+     "t": 100048.8,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 100060.4,
+     "saving": false
+    },
+    {
+     "k": "form-close",
+     "t": 100372.8,
+     "saving": false
+    },
+    {
+     "k": "vp",
+     "id": 4,
+     "t": 100674.4,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 0
+    },
+    {
+     "k": "vp-cb",
+     "id": 4,
+     "t": 100674.7
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 92380.8
+    },
+    {
+     "t": 94935.3
+    },
+    {
+     "t": 97490.8
+    },
+    {
+     "t": 100048.7
+    }
+   ],
+   "mods": [
+    {
+     "t": 93004.4,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 95559.2,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 98114.5,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 100675.5,
+     "path": "Lifecycle/twin-triplets.md"
+    }
+   ],
+   "writes": 4,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 14
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 2,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    14,
+    5,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(none)@92380.9",
+    "form-open@92392.3",
+    "form-close@92701.6",
+    "oapw(none)@94935.4",
+    "form-open@94947.2",
+    "form-close@95256.3",
+    "oapw(none)@97490.8",
+    "form-open@97501.5",
+    "form-close@97811.2",
+    "oapw(none)@100048.8",
+    "form-open@100060.4",
+    "form-close@100372.8"
+   ],
+   "rsSeq": "vp1 vp2 vp3 vp4",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "U-unt-rv-x4": {
+   "name": "U-unt-rv-x4",
+   "kind": "U",
+   "fx": "unt",
+   "mode": "rv",
+   "rel": "Lifecycle/form-pin-unterminated.md",
+   "rep": 4,
+   "problems": [],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 107955.7,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "pencil",
+     "t": 110706.6,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "pencil",
+     "t": 113451.2,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "pencil",
+     "t": 116192.6,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": 5
+    }
+   ],
+   "notes": [],
+   "tails": [
+    "```ds-counter\nname: E1\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n\n```\n",
+    "```ds-counter\nname: E2\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n\n```\n",
+    "```ds-counter\nname: E3\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n\n```\n",
+    "```ds-counter\nname: E4\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n\n```\n"
+   ],
+   "disk": [
+    5,
+    5
+   ],
+   "names": [
+    "Twin",
+    "E4"
+   ],
+   "text": "# form pin unterminated\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nMID\n\n```ds-counter\nname: E4\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n\n```\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 107961.9,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 107973.2,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 108385.9
+    },
+    {
+     "k": "rs",
+     "t": 108386.1,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 13,
+     "value": 5,
+     "name": "E1"
+    },
+    {
+     "k": "flush",
+     "t": 108386.2,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 108386.2,
+     "path": "Lifecycle/form-pin-unterminated.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 108386.7
+    },
+    {
+     "k": "rs-done",
+     "t": 108387.9,
+     "ok": true,
+     "formHost": true,
+     "line": 13
+    },
+    {
+     "k": "form-close",
+     "t": 108393,
+     "saving": true
+    },
+    {
+     "k": "oapw",
+     "t": 110707.7,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 110719.4,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 111130.9
+    },
+    {
+     "k": "rs",
+     "t": 111131,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 13,
+     "value": 5,
+     "name": "E2"
+    },
+    {
+     "k": "flush",
+     "t": 111131,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 111131,
+     "path": "Lifecycle/form-pin-unterminated.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 111131.5
+    },
+    {
+     "k": "rs-done",
+     "t": 111132.5,
+     "ok": true,
+     "formHost": true,
+     "line": 13
+    },
+    {
+     "k": "form-close",
+     "t": 111137.5,
+     "saving": true
+    },
+    {
+     "k": "oapw",
+     "t": 113452.3,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 113462.9,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 113872.9
+    },
+    {
+     "k": "rs",
+     "t": 113873.1,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 13,
+     "value": 5,
+     "name": "E3"
+    },
+    {
+     "k": "flush",
+     "t": 113873.1,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 3,
+     "t": 113873.1,
+     "path": "Lifecycle/form-pin-unterminated.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 3,
+     "t": 113873.7
+    },
+    {
+     "k": "rs-done",
+     "t": 113874.7,
+     "ok": true,
+     "formHost": true,
+     "line": 13
+    },
+    {
+     "k": "form-close",
+     "t": 113879.6,
+     "saving": true
+    },
+    {
+     "k": "oapw",
+     "t": 116193.9,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 116210.1,
+     "saving": false
+    },
+    {
+     "k": "save",
+     "t": 116620.5
+    },
+    {
+     "k": "rs",
+     "t": 116620.7,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 13,
+     "value": 5,
+     "name": "E4"
+    },
+    {
+     "k": "flush",
+     "t": 116620.7,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 4,
+     "t": 116620.7,
+     "path": "Lifecycle/form-pin-unterminated.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 4,
+     "t": 116621.3
+    },
+    {
+     "k": "rs-done",
+     "t": 116622.6,
+     "ok": true,
+     "formHost": true,
+     "line": 13
+    },
+    {
+     "k": "form-close",
+     "t": 116627.8,
+     "saving": true
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 107961.8
+    },
+    {
+     "t": 110707.6
+    },
+    {
+     "t": 113452.2
+    },
+    {
+     "t": 116193.8
+    }
+   ],
+   "mods": [
+    {
+     "t": 108387.9,
+     "path": "Lifecycle/form-pin-unterminated.md"
+    },
+    {
+     "t": 111132.4,
+     "path": "Lifecycle/form-pin-unterminated.md"
+    },
+    {
+     "t": 113874.6,
+     "path": "Lifecycle/form-pin-unterminated.md"
+    },
+    {
+     "t": 116622.5,
+     "path": "Lifecycle/form-pin-unterminated.md"
+    }
+   ],
+   "writes": 4,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "E4",
+     "value": 5
+    }
+   ],
+   "want": [
+    5,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "E4"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(none)@107961.9",
+    "form-open@107973.2",
+    "form-close(saving)@108393",
+    "oapw(none)@110707.7",
+    "form-open@110719.4",
+    "form-close(saving)@111137.5",
+    "oapw(none)@113452.3",
+    "form-open@113462.9",
+    "form-close(saving)@113879.6",
+    "oapw(none)@116193.9",
+    "form-open@116210.1",
+    "form-close(saving)@116627.8"
+   ],
+   "rsSeq": "save rs(FORM,v5,E1,kL13) vp1 done(true,FORML13) save rs(FORM,v5,E2,kL13) vp2 done(true,FORML13) save rs(FORM,v5,E3,kL13) vp3 done(true,FORML13) save rs(FORM,v5,E4,kL13) vp4 done(true,FORML13)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  }
+ }
+}

@@ -1,0 +1,14 @@
+load=2.35 2.76 3.87 2/3163 2828305 head=260763ab
+
+> draw-steel-elements@7.0.0 obsidian-lifecycle
+> npm run build-no-check && node visual-harness/obsidian-lifecycle.mjs --only=G-S59
+
+
+> draw-steel-elements@7.0.0 build-no-check
+> node esbuild.config.mjs production
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 45267, 1 scenario(s)
+OBSIDIAN-LIFECYCLE G-S59 ok ((a) Reading pane + Live Preview pane: write -> redraw 4261 ms (held 2779), 4372 ms (held 2779), 15286 ms (held 2779); (b) Live Preview host embedding the tracker + a Reading pane of it: write -> redraw 4563 ms (other pane 4300 ms) (held 7486), 9782 ms (other pane 4252 ms) (held 7486), 10296 ms (other pane 4304 ms) (held 7486); (c) scroll to the end: pin on 2473 ms after the write, scrollHeight stayed 7965 (arm 7965) through the collapse (reader at 7456, end 6944), sizer collapsed 30 ms and back 256 ms after the redraw was let go, pin released at 321 ms; (c) scroll down then up: pin on 2428 ms after the write, scrollHeight stayed 7965 (arm 7965) through the collapse (reader at 5656, end 5656), sizer collapsed 62 ms and back 321 ms after the redraw was let go, pin released at 341 ms; (c) scroll to the second tracker: pin on 2414 ms after the write, scrollHeight stayed 10620 (arm 10620) through the collapse (reader at 10111, end 9599), sizer collapsed 263 ms and back 725 ms after the redraw was let go, pin released at 771 ms; CPU throttled 8x around 3 writes per phase)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=175s

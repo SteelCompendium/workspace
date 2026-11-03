@@ -1,0 +1,41 @@
+FAIL dom test/dom/framework/reading-mode-host-pin.test.ts
+  ● SC-552: ReadingModeBlockHost.keepFormOpenOn › the note is no longer shown in any pane (leaf closed or navigated away): no holder, the form closes with its view
+
+    expect(received).toBeNull()
+
+    Received: {"_children": [], "_loaded": true, "_registeredCallbacks": [], "enabled": true, "entries": Set {}, "flushingPendingWrites": false, "now": [Function anonymous], "stats": {"ambiguous": 0, "claims": 0, "collisions": 0, "misses": 0, "releases": 0}}
+
+      275 | 		renderChild.load();
+      276 | 		renderChild.unload();
+    > 277 | 		expect(host.keepFormOpenOn()).toBeNull();
+          | 		                              ^
+      278 | 	});
+      279 |
+      280 | 	test('the plugin is unloading (the registry is not loaded): no holder', () => {
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:277:33)
+
+FAIL dom test/dom/framework/twin-reuse.test.ts (5.65 s)
+  ● SC-552: a block edit form (and, wide, a card click) on one of several identical blocks › the note is no longer shown when the view goes (leaf closed, navigated away): the form closes with its view, as it always did, and nothing is written for it
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      993 | 	test('the note is no longer shown when the view goes (leaf closed, navigated away): the form closes with its view, as it always did, and nothing is written for it', async () => {
+      994 | 		const t = await lowerFormAfterTheUppersWrite(false);
+    > 995 | 		expect(isOpen(t.form())).toBe(false);
+          | 		                         ^
+      996 | 		expect(t.names()).toEqual(['Twin', 'Twin']);
+      997 | 		expect(t.values()).toEqual([6, 5]);
+      998 | 	});
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:995:28)
+
+
+Test Suites: 2 failed, 2 passed, 4 total
+Tests:       2 failed, 127 passed, 129 total
+Snapshots:   0 total
+Time:        8.986 s
+Ran all test suites matching test/unit/framework/lineMap.test.ts|test/dom/framework/reading-mode-host-pin.test.ts|test/dom/framework/twin-reuse.test.ts|test/dom/authoring/formModal.test.ts in 2 projects.

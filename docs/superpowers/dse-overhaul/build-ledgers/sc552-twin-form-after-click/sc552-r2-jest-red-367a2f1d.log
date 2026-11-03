@@ -1,0 +1,383 @@
+FAIL unit test/unit/framework/lineMap.test.ts
+  ● Test suite failed to run
+
+    Configuration error:
+
+    Could not locate module @/framework/host/lineMap mapped as:
+    /home/scott/code/steelCompendium/worktrees/sc552-twin-form-after-click/draw-steel-elements/src/$1.
+
+    Please check your configuration for these entries:
+    {
+      "moduleNameMapper": {
+        "/^@\/(.*)$/": "/home/scott/code/steelCompendium/worktrees/sc552-twin-form-after-click/draw-steel-elements/src/$1"
+      },
+      "resolver": undefined
+    }
+
+      1 | // SC-552 -- mapLine: where a line of one version of a note is in a later version. The block edit form pins its block's fence line
+      2 | // when it opens; its Save maps that line through whatever was written to the note since (a click's write, an outside edit, Sync).
+    > 3 | import { LINE_MAP_MAX_EDITS, mapLine } from '@/framework/host/lineMap';
+        | ^
+      4 |
+      5 | const twin = (v: number) => ['```ds-counter', 'name: Twin', `current_value: ${v}`, '```'];
+      6 | const note = (vals: number[], extra: Record<number, string[]> = {}) =>
+
+      at createNoMappedModuleFoundError (node_modules/jest-resolve/build/index.js:1149:17)
+      at Object.<anonymous> (test/unit/framework/lineMap.test.ts:3:1)
+
+FAIL dom test/dom/framework/reading-mode-host-pin.test.ts
+  ● SC-552: ReadingModeBlockHost pinned writes › pinPosition: the note text and the fence line the block is drawn on
+
+    TypeError: host.pinPosition is not a function
+
+      51 | 	test('pinPosition: the note text and the fence line the block is drawn on', () => {
+      52 | 		const { host, text } = triplet();
+    > 53 | 		expect(host.pinPosition()).toEqual({ text, lineStart: fencesOf(text)[1] });
+         | 		            ^
+      54 | 	});
+      55 |
+      56 | 	test('pinPosition: a block inside a callout is pinned at its own fence, told from its twin by its place in the callout', () => {
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:53:15)
+
+  ● SC-552: ReadingModeBlockHost pinned writes › pinPosition: a block inside a callout is pinned at its own fence, told from its twin by its place in the callout
+
+    TypeError: host.pinPosition is not a function
+
+      65 | 		const host = hostOn(app, section, second);
+      66 |
+    > 67 | 		expect(host.pinPosition()).toEqual({ text, lineStart: 7 });
+         | 		            ^
+      68 | 		callout.remove();
+      69 | 	});
+      70 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:67:15)
+
+  ● SC-552: ReadingModeBlockHost pinned writes › pinPosition: null while the block has no section
+
+    TypeError: host.pinPosition is not a function
+
+      72 | 		const { host, section } = triplet();
+      73 | 		section.current = null;
+    > 74 | 		expect(host.pinPosition()).toBeNull();
+         | 		            ^
+      75 | 	});
+      76 |
+      77 | 	test('after Obsidian hands the form\'s element to the lower twin, a pinned write lands in the block the pin was taken on (and without a pin it follows the element)', async () => {
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:74:15)
+
+  ● SC-552: ReadingModeBlockHost pinned writes › after Obsidian hands the form's element to the lower twin, a pinned write lands in the block the pin was taken on (and without a pin it follows the element)
+
+    TypeError: host.pinPosition is not a function
+
+      77 | 	test('after Obsidian hands the form\'s element to the lower twin, a pinned write lands in the block the pin was taken on (and without a pin it follows the element)', async () => {
+      78 | 		const { app, section, host } = triplet();
+    > 79 | 		const pin = host.pinPosition()!;
+         | 		                 ^
+      80 | 		// the upper twin is written (6), and the redraw puts the middle block's element on the lower block
+      81 | 		const after = noteOf([6, 5, 5]);
+      82 | 		app.vault.setFile('Note.md', after);
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:79:20)
+
+  ● SC-552: ReadingModeBlockHost pinned writes › lines inserted above the block while the pin is held move the target with them
+
+    TypeError: host.pinPosition is not a function
+
+       97 | 	test('lines inserted above the block while the pin is held move the target with them', async () => {
+       98 | 		const { app, section, host } = triplet();
+    >  99 | 		const pin = host.pinPosition()!;
+          | 		                 ^
+      100 | 		const after = noteOf([6, 5, 5], ['NEW PARAGRAPH', '']); // an outside edit: text above AND the upper twin changed
+      101 | 		app.vault.setFile('Note.md', after);
+      102 | 		section.current = sectionAt(after, fencesOf(after)[2]);
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:99:20)
+
+  ● SC-552: ReadingModeBlockHost pinned writes › the pinned block is only written while it still holds the body the host knows
+
+    TypeError: host.pinPosition is not a function
+
+      118 | 	test('the pinned block is only written while it still holds the body the host knows', async () => {
+      119 | 		const { app, section, host } = triplet();
+    > 120 | 		const pin = host.pinPosition()!;
+          | 		                 ^
+      121 | 		const after = noteOf([5, 9, 5]); // the pinned (middle) block was edited from outside
+      122 | 		app.vault.setFile('Note.md', after);
+      123 | 		section.current = sectionAt(after, fencesOf(after)[1]);
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:120:20)
+
+  ● SC-552: ReadingModeBlockHost pinned writes › pinOnly: a pin that cannot be placed writes nothing, says the block changed on disk, and reports it
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      132 | 		const stale = { text: before, lineStart: 0 };
+      133 |
+    > 134 | 		expect(await host.replaceSource(bodyOf(5, 'Edited'), { pin: stale, pinOnly: true })).toBe(false);
+          | 		                                                                                     ^
+      135 | 		expect(app.vault.getContent('Note.md')).toBe(before);
+      136 | 		expect(Notice.notices).toEqual([droppedWriteMessage('Note')]);
+      137 | 		expect(host.lastWriteReported).toBe(true);
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:134:88)
+
+  ● SC-552: ReadingModeBlockHost pinned writes › pinOnly with a pin that places: the write lands there
+
+    TypeError: host.pinPosition is not a function
+
+      140 | 	test('pinOnly with a pin that places: the write lands there', async () => {
+      141 | 		const { app, host } = triplet();
+    > 142 | 		expect(await host.replaceSource(bodyOf(5, 'Edited'), { pin: host.pinPosition()!, pinOnly: true })).toBe(true);
+          | 		                                                                 ^
+      143 | 		expect(names(app)).toEqual(['Twin', 'Edited', 'Twin']);
+      144 | 	});
+      145 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:142:68)
+
+  ● SC-552: ReadingModeBlockHost pinned writes › an unterminated trailing fence is pinned and written like any other block: the note's final newline stays
+
+    TypeError: host.pinPosition is not a function
+
+      153 | 		const section: Section = { current: { text, lineStart: unterminated, lineEnd: lines.length - 1 } }; // Obsidian: to the note's last line
+      154 | 		const host = hostOn(app, section);
+    > 155 | 		const pin = host.pinPosition()!;
+          | 		                 ^
+      156 | 		expect(pin.lineStart).toBe(unterminated);
+      157 |
+      158 | 		section.current = { text, lineStart: 2, lineEnd: 5 }; // the element has been handed to the closed twin above
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:155:20)
+
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-552: a block edit form opened on one of several identical blocks › 3 twins, + on the upper then the pencil of the second block: Save writes the second block, not the one its element is handed to
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        "Twin",
+    -   "Edited",
+        "Twin",
+    +   "Edited",
+      ]
+
+      906 |
+      907 | 		await form().save();
+    > 908 | 		expect(t.names()).toEqual(['Twin', 'Edited', ...Array<string>(count - 2).fill('Twin')]);
+          | 		                  ^
+      909 | 		expect(t.values()).toEqual([6, ...Array<number>(count - 1).fill(5)]);
+      910 | 		expect(isOpen(form())).toBe(false);
+      911 | 	});
+
+      at test/dom/framework/twin-reuse.test.ts:908:21
+
+  ● SC-552: a block edit form opened on one of several identical blocks › 4 twins, + on the upper then the pencil of the second block: Save writes the second block, not the one its element is handed to
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        "Twin",
+    -   "Edited",
+        "Twin",
+    +   "Edited",
+        "Twin",
+      ]
+
+      906 |
+      907 | 		await form().save();
+    > 908 | 		expect(t.names()).toEqual(['Twin', 'Edited', ...Array<string>(count - 2).fill('Twin')]);
+          | 		                  ^
+      909 | 		expect(t.values()).toEqual([6, ...Array<number>(count - 1).fill(5)]);
+      910 | 		expect(isOpen(form())).toBe(false);
+      911 | 	});
+
+      at test/dom/framework/twin-reuse.test.ts:908:21
+
+  ● SC-552: a block edit form opened on one of several identical blocks › no click at all: an outside edit of the upper block while the form is open does not move the form's Save
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        "Twin",
+    -   "Edited",
+        "Twin",
+    +   "Edited",
+      ]
+
+      920 |
+      921 | 		await form().save();
+    > 922 | 		expect(t.names()).toEqual(['Twin', 'Edited', 'Twin']);
+          | 		                  ^
+      923 | 		expect(t.values()).toEqual([7, 5, 5]);
+      924 | 	});
+      925 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:922:21)
+
+  ● SC-552: a block edit form opened on one of several identical blocks › an outside edit that also inserts text above the blocks: the form still writes its own block
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        "Twin",
+    -   "Edited",
+        "Twin",
+    +   "Edited",
+      ]
+
+      933 |
+      934 | 		await form().save();
+    > 935 | 		expect(t.names()).toEqual(['Twin', 'Edited', 'Twin']);
+          | 		                  ^
+      936 | 		expect(t.app.vault.getContent('Note.md')).toContain('INSERTED');
+      937 | 	});
+      938 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:935:21)
+
+  ● SC-552: a block edit form opened on one of several identical blocks › two twins: the form on the lower one stays open when Obsidian throws its view away, and Save writes the lower block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      952 | 	test('two twins: the form on the lower one stays open when Obsidian throws its view away, and Save writes the lower block', async () => {
+      953 | 		const t = await lowerFormAfterTheUppersWrite();
+    > 954 | 		expect(isOpen(t.form())).toBe(true);
+          | 		                         ^
+      955 |
+      956 | 		await t.form().save();
+      957 | 		expect(t.names()).toEqual(['Twin', 'Edited']);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:954:28)
+
+  ● SC-552: a block edit form opened on one of several identical blocks › a form kept open saves strictly: its block is gone, so nothing is written (not into a twin), the Notice is shown and the form stays open
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      969 | 		expect(t.app.vault.getContent('Note.md')).toBe(gone);
+      970 | 		expect(Notice.notices).toEqual([droppedWriteMessage('Note')]);
+    > 971 | 		expect(isOpen(t.form())).toBe(true);
+          | 		                         ^
+      972 | 	});
+      973 |
+      974 | 	test('a kept-open form closes when the plugin unloads', async () => {
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:971:28)
+
+  ● SC-552: a block edit form opened on one of several identical blocks › a kept-open form closes when the plugin unloads
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      974 | 	test('a kept-open form closes when the plugin unloads', async () => {
+      975 | 		const t = await lowerFormAfterTheUppersWrite();
+    > 976 | 		expect(isOpen(t.form())).toBe(true);
+          | 		                         ^
+      977 | 		t.registry.unload();
+      978 | 		expect(isOpen(t.form())).toBe(false);
+      979 | 	});
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:976:28)
+
+FAIL dom test/dom/authoring/formModal.test.ts
+  ● SC-552: the form pins its block › pinPosition is read once, when the form is constructed, and Save passes that pin
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 0
+
+      919 | 		const { cx, replaceSource } = pinningCx({ pinPosition });
+      920 | 		const modal = openFormEditor(fakeOwner(), cx, schemaDef(), 'name: Goblin', createValidationService());
+    > 921 | 		expect(pinPosition).toHaveBeenCalledTimes(1);
+          | 		                    ^
+      922 |
+      923 | 		await modal.save();
+      924 | 		await modal.save();
+
+      at Object.<anonymous> (test/dom/authoring/formModal.test.ts:921:23)
+
+  ● SC-552: the form pins its block › a pinned form whose host names a holder stays open when its view unloads, and closes with the holder
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      944 |
+      945 | 		owner.unload();
+    > 946 | 		expect(document.body.contains(modal.containerEl)).toBe(true);
+          | 		                                                  ^
+      947 | 		holder.unload();
+      948 | 		expect(document.body.contains(modal.containerEl)).toBe(false);
+      949 | 	});
+
+      at Object.<anonymous> (test/dom/authoring/formModal.test.ts:946:53)
+
+  ● SC-552: the form pins its block › closing a kept-open form lets go of the holder: nothing builds up on it across forms
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      957 | 			const modal = openFormEditor(owner, cx, schemaDef(), 'name: Goblin', createValidationService());
+      958 | 			owner.unload();
+    > 959 | 			expect(holder._children).toHaveLength(1);
+          | 			                         ^
+      960 | 			modal.close();
+      961 | 			expect(holder._children).toHaveLength(0);
+      962 | 		}
+
+      at Object.<anonymous> (test/dom/authoring/formModal.test.ts:959:29)
+
+  ● SC-552: the form pins its block › a kept-open form saves strictly (its pin or no write); a form that was not kept open does not
+
+    expect(jest.fn()).toHaveBeenLastCalledWith(...expected)
+
+    Expected: Any<String>, {"pin": {"lineStart": 3, "text": "note text"}}
+    Received: "name: Goblin"
+
+    Number of calls: 1
+
+      986 | 		const modal = openFormEditor(owner, cx, schemaDef(), 'name: Goblin', createValidationService());
+      987 | 		await modal.save();
+    > 988 | 		expect(replaceSource).toHaveBeenLastCalledWith(expect.any(String), { pin: PIN });
+          | 		                      ^
+      989 |
+      990 | 		owner.unload(); // kept open
+      991 | 		await modal.save();
+
+      at Object.<anonymous> (test/dom/authoring/formModal.test.ts:988:25)
+
+Test Suites: 4 failed, 4 total
+Tests:       20 failed, 88 passed, 108 total
+Snapshots:   0 total
+Time:        6.191 s
+Ran all test suites matching test/unit/framework/lineMap.test.ts|test/dom/framework/reading-mode-host-pin.test.ts|test/dom/framework/twin-reuse.test.ts|test/dom/authoring/formModal.test.ts in 2 projects.

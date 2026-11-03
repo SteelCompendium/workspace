@@ -1,0 +1,232 @@
+{
+ "cases": {
+  "P-c2-rv-p0-g150-f1": {
+   "name": "P-c2-rv-p0-g150-f1",
+   "kind": "P",
+   "fx": "c2",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-callouts.md",
+   "plus": 0,
+   "gap": 150,
+   "form": 1,
+   "problems": [
+    "the disable changed the note",
+    "names [\"Twin\",\"Edited\"] want [\"Twin\",\"Twin\"]"
+   ],
+   "wheres": [],
+   "notes": [],
+   "formOpenAtSettle": true,
+   "childrenBeforeOff": 3,
+   "entriesBeforeOff": 2,
+   "loadOff": "16.39 16.11 13.71 20/3271 3147771",
+   "unchangedAtOff": true,
+   "stashAfterOff": 0,
+   "unchangedAfter1500": false,
+   "stashAfterOn": 0,
+   "childrenAfterOn": 2,
+   "entriesAfterOn": 2,
+   "holdersAfterOn": 0,
+   "disk": [
+    6,
+    6
+   ],
+   "names": [
+    "Twin",
+    "Edited"
+   ],
+   "text": "# twin callouts\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: Twin\n> ```\n\nMID\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: Edited\n> ```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "rs",
+     "t": 11398.3,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 15,
+     "value": 6,
+     "name": "Edited"
+    },
+    {
+     "k": "flush",
+     "t": 11398.7,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 11399.1,
+     "path": "Lifecycle/twin-callouts.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 11399.5
+    },
+    {
+     "k": "rs-done",
+     "t": 11402.3,
+     "ok": true,
+     "formHost": false,
+     "line": 15
+    }
+   ],
+   "clicks": [
+    {
+     "t": 10995.5,
+     "trusted": true
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 11401.8,
+     "path": "Lifecycle/twin-callouts.md"
+    }
+   ],
+   "writes": 1,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 6
+    },
+    {
+     "block": 1,
+     "name": "Edited",
+     "value": 6
+    }
+   ],
+   "want": [
+    6,
+    6
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 406,
+   "formEvents": [],
+   "rsSeq": "rs(view,v6,Edited,kL15) vp1 done(true,L15)",
+   "errors": [],
+   "notices": [],
+   "verdict": "PROBLEMS"
+  },
+  "P-c2-lp-p0-g150-f1": {
+   "name": "P-c2-lp-p0-g150-f1",
+   "kind": "P",
+   "fx": "c2",
+   "mode": "lp",
+   "rel": "Lifecycle/twin-callouts.md",
+   "plus": 0,
+   "gap": 150,
+   "form": 1,
+   "problems": [
+    "the disable changed the note",
+    "names [\"Twin\",\"Edited\"] want [\"Twin\",\"Twin\"]"
+   ],
+   "wheres": [],
+   "notes": [],
+   "formOpenAtSettle": true,
+   "childrenBeforeOff": 3,
+   "entriesBeforeOff": 2,
+   "loadOff": "16.83 16.20 13.77 18/3261 3147881",
+   "unchangedAtOff": true,
+   "stashAfterOff": 2,
+   "unchangedAfter1500": false,
+   "stashAfterOn": 0,
+   "childrenAfterOn": 2,
+   "entriesAfterOn": 2,
+   "holdersAfterOn": 0,
+   "disk": [
+    6,
+    6
+   ],
+   "names": [
+    "Twin",
+    "Edited"
+   ],
+   "text": "# twin callouts\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: Twin\n> ```\n\nMID\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: Edited\n> ```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "rs",
+     "t": 22004.3,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 15,
+     "value": 6,
+     "name": "Edited"
+    },
+    {
+     "k": "flush",
+     "t": 22004.8,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 22005.1,
+     "path": "Lifecycle/twin-callouts.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 22005.6
+    },
+    {
+     "k": "rs-done",
+     "t": 22008,
+     "ok": true,
+     "formHost": false,
+     "line": 15
+    }
+   ],
+   "clicks": [
+    {
+     "t": 21602.2,
+     "trusted": true
+    }
+   ],
+   "keys": [],
+   "mods": [
+    {
+     "t": 22007.2,
+     "path": "Lifecycle/twin-callouts.md"
+    }
+   ],
+   "writes": 1,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 6
+    },
+    {
+     "block": 1,
+     "name": "Edited",
+     "value": 6
+    }
+   ],
+   "want": [
+    6,
+    6
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": 405,
+   "formEvents": [],
+   "rsSeq": "rs(view,v6,Edited,kL15) vp1 done(true,L15)",
+   "errors": [],
+   "notices": [],
+   "verdict": "PROBLEMS"
+  }
+ }
+}

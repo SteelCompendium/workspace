@@ -1,0 +1,65 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "python3" on /home/scott/code/steelCompendium/worktrees/sc552-twin-form-after-click/draw-steel-elements
+R5-M12-closed-guard-removed: rc=1 Tests:       1 failed, 134 passed, 135 total
+    x SC-552: the form pins its block > a form that already closed (Save, Cancel) is never kept open when its view unloads later: no holder is left on
+    bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r5-ad6d3563992bb99bd/bundle-R5-M12-closed-guard-removed
+R5-M12b-closed-never-set: rc=1 Tests:       1 failed, 134 passed, 135 total
+    x SC-552: the form pins its block > a form that already closed (Save, Cancel) is never kept open when its view unloads later: no holder is left on
+    bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r5-ad6d3563992bb99bd/bundle-R5-M12b-closed-never-set
+R3-M1-pendingPin-not-cleared: rc=1 Tests:       1 failed, 134 passed, 135 total
+    x SC-552: a view's own write is placed through the p > the write uses the pin up: the next write, with no click before it, follows the element as it always did
+    bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r5-ad6d3563992bb99bd/bundle-R3-M1-pendingPin-not-cleared
+R3-M2a-mapLine-tail-off-by-one: rc=1 Tests:       15 failed, 120 passed, 135 total
+    x SC-552: ReadingModeBlockHost pinned writes > after Obsidian hands the form's element to the lower twin, a pinned write lands in the block the pin was taken
+    x SC-552: ReadingModeBlockHost pinned writes > lines inserted above the block while the pin is held move the target with them
+    x SC-552: a block edit form (and, wide, a card click > + on the middle block, then an outside edit of the upper inside the debounce: the +1 is written in the middle 
+    x SC-552: a block edit form (and, wide, a card click > 3 twins, + on the upper then the pencil of the second block: Save writes the second block, not the one its ele
+    x SC-552: a block edit form (and, wide, a card click > 4 twins, + on the upper then the pencil of the second block: Save writes the second block, not the one its ele
+    x SC-552: a block edit form (and, wide, a card click > an outside edit that also inserts text above the blocks: the form still writes its own block
+    x SC-552: a block edit form (and, wide, a card click > no click at all: an outside edit of the upper block while the form is open does not move the form's Save
+    x SC-552: a block edit form (and, wide, a card click > two twins: the form on the lower one stays open when Obsidian throws its view away, and Save writes the lower 
+    bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r5-ad6d3563992bb99bd/bundle-R3-M2a-mapLine-tail-off-by-one
+R3-M2b-mapLine-myers-off-by-one: rc=1 Tests:       2 failed, 133 passed, 135 total
+    x SC-552: mapLine > a line added inside the upper block and a line removed after the lower shift the blocks below by one
+    x SC-552: mapLine > upper AND lower changed: the middle keeps its place, a changed line maps to null
+    bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r5-ad6d3563992bb99bd/bundle-R3-M2b-mapLine-myers-off-by-one
+R3-M2c-mapLine-head-off-by-one: rc=1 Tests:       4 failed, 131 passed, 135 total
+    x SC-552: mapLine > a deleted line maps to null, the lines after it move up
+    x SC-552: mapLine > lines inserted above shift the block
+    x SC-552: mapLine > numbers lines the way Obsidian does: CRLF, CR and LF are one break each
+    x SC-552: mapLine > upper AND lower changed: the middle keeps its place, a changed line maps to null
+    bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r5-ad6d3563992bb99bd/bundle-R3-M2c-mapLine-head-off-by-one
+R3-M3-K-without-pin: rc=1 Tests:       1 failed, 134 passed, 135 total
+    x SC-552: the form pins its block > the form closes with its view when the host names no holder, or the form holds no pin
+    bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r5-ad6d3563992bb99bd/bundle-R3-M3-K-without-pin
+R3-M4-host-pinOnly-falls-back: rc=1 Tests:       2 failed, 133 passed, 135 total
+    x SC-552: ReadingModeBlockHost pinned writes > pinOnly: a pin that cannot be placed writes nothing, says the block changed on disk, and reports it
+    x SC-552: ReadingModeBlockHost pinned writes > the pinned block is only written while it still holds the body the host knows
+    bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r5-ad6d3563992bb99bd/bundle-R3-M4-host-pinOnly-falls-back
+R3-M5-holder-never-removed: rc=1 Tests:       2 failed, 133 passed, 135 total
+    x SC-552: a block edit form (and, wide, a card click > two twins: the form on the lower one stays open when Obsidian throws its view away, and Save writes the lower 
+    x SC-552: the form pins its block > closing a kept-open form lets go of the holder: nothing builds up on it across forms
+    bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r5-ad6d3563992bb99bd/bundle-R3-M5-holder-never-removed
+R3-M6-pin-body-check-removed: rc=1 Tests:       1 failed, 134 passed, 135 total
+    x SC-552: ReadingModeBlockHost pinned writes > the pinned block is only written while it still holds the body the host knows
+    bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r5-ad6d3563992bb99bd/bundle-R3-M6-pin-body-check-removed
+R3-M7-repin-every-intent: rc=1 Tests:       1 failed, 134 passed, 135 total
+    x SC-552: a view's own write is placed through the p > a later click of the same round does not pin again (it may come after the redraw)
+    bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r5-ad6d3563992bb99bd/bundle-R3-M7-repin-every-intent
+R3-M8-K-ignores-registry-loaded: rc=1 Tests:       1 failed, 134 passed, 135 total
+    x SC-552: ReadingModeBlockHost.keepFormOpenOn > the plugin is unloading (the registry is not loaded): no holder
+    bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r5-ad6d3563992bb99bd/bundle-R3-M8-K-ignores-registry-loaded
+R3-M9-K-even-with-section: rc=1 Tests:       1 failed, 134 passed, 135 total
+    x SC-552: ReadingModeBlockHost.keepFormOpenOn > the section is still there: no holder (the form closes with its view as it always did)
+    bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r5-ad6d3563992bb99bd/bundle-R3-M9-K-even-with-section
+R3-M10-unterminated-body-short: rc=1 Tests:       1 failed, 134 passed, 135 total
+    x SC-552: ReadingModeBlockHost pinned writes > an unterminated trailing fence is pinned and written like any other block: the note's final newline stays
+    bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r5-ad6d3563992bb99bd/bundle-R3-M10-unterminated-body-short
+R3-M11-myers-delete-check-removed: rc=0 Tests:       135 passed, 135 total
+    bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r5-ad6d3563992bb99bd/bundle-R3-M11-myers-delete-check-removed
+R3-M14-K-any-note-shown: rc=1 Tests:       1 failed, 134 passed, 135 total
+    x SC-552: ReadingModeBlockHost.keepFormOpenOn > the note is no longer shown in any pane (leaf closed or navigated away): no holder, the form closes with its v
+    bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r5-ad6d3563992bb99bd/bundle-R3-M14-K-any-note-shown
+R3-M15-pin-language-ignored: rc=1 Tests:       1 failed, 134 passed, 135 total
+    x SC-552: ReadingModeBlockHost pinned writes > an unterminated trailing fence is pinned and written like any other block: the note's final newline stays
+    bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc552-r5-ad6d3563992bb99bd/bundle-R3-M15-pin-language-ignored

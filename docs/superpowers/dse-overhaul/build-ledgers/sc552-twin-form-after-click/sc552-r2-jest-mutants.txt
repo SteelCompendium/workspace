@@ -1,0 +1,56 @@
+== M1 rc=1 seconds=4 Tests:       11 failed, 116 passed, 127 total
+SC-552: a block edit form (and, wide, a card click) on one of several identical blocks › 3 twins, + on the upper then the pencil of the second block: Save writes the se
+SC-552: a block edit form (and, wide, a card click) on one of several identical blocks › 4 twins, + on the upper then the pencil of the second block: Save writes the se
+SC-552: a block edit form (and, wide, a card click) on one of several identical blocks › a form kept open saves strictly: its block is gone, so nothing is written (not 
+SC-552: a block edit form (and, wide, a card click) on one of several identical blocks › a kept-open form closes when the plugin unloads
+SC-552: a block edit form (and, wide, a card click) on one of several identical blocks › an outside edit that also inserts text above the blocks: the form still writes 
+SC-552: a block edit form (and, wide, a card click) on one of several identical blocks › no click at all: an outside edit of the upper block while the form is open does
+SC-552: a block edit form (and, wide, a card click) on one of several identical blocks › two twins: the form on the lower one stays open when Obsidian throws its view a
+SC-552: the form pins its block › a kept-open form saves strictly (its pin or no write); a form that was not kept open does not
+SC-552: the form pins its block › a pinned form whose host names a holder stays open when its view unloads, and closes with the holder
+SC-552: the form pins its block › closing a kept-open form lets go of the holder: nothing builds up on it across forms
+SC-552: the form pins its block › pinPosition is read once, when the form is constructed, and Save passes that pin
+== M2 rc=1 seconds=5 Tests:       5 failed, 122 passed, 127 total
+SC-552: a block edit form (and, wide, a card click) on one of several identical blocks › 3 twins, + on the upper then the pencil of the second block: Save writes the se
+SC-552: a block edit form (and, wide, a card click) on one of several identical blocks › 4 twins, + on the upper then the pencil of the second block: Save writes the se
+SC-552: a block edit form (and, wide, a card click) on one of several identical blocks › an outside edit that also inserts text above the blocks: the form still writes 
+SC-552: a block edit form (and, wide, a card click) on one of several identical blocks › no click at all: an outside edit of the upper block while the form is open does
+SC-552: the form pins its block › pinPosition is read once, when the form is constructed, and Save passes that pin
+== M3 rc=1 seconds=4 Tests:       9 failed, 118 passed, 127 total
+SC-552: a block edit form (and, wide, a card click) on one of several identical blocks › an outside edit that also inserts text above the blocks: the form still writes 
+SC-552: mapLine › a deleted line maps to null, the lines after it move up
+SC-552: mapLine › a line added inside the upper block and a line removed after the lower shift the blocks below by one
+SC-552: mapLine › a line outside the old text maps to null
+SC-552: mapLine › gives up (null) when the notes differ by more than LINE_MAP_MAX_EDITS lines
+SC-552: mapLine › lines inserted above shift the block
+SC-552: mapLine › numbers lines the way Obsidian does: CRLF, CR and LF are one break each
+SC-552: mapLine › upper AND lower changed: the middle keeps its place, a changed line maps to null
+SC-552: ReadingModeBlockHost pinned writes › lines inserted above the block while the pin is held move the target with them
+== J4 rc=1 seconds=4 Tests:       1 failed, 126 passed, 127 total
+SC-552: ReadingModeBlockHost pinned writes › the pinned block is only written while it still holds the body the host knows
+== J5 rc=1 seconds=4 Tests:       1 failed, 126 passed, 127 total
+SC-552: ReadingModeBlockHost.keepFormOpenOn › the section is still there: no holder (the form closes with its view as it always did)
+== M4 rc=1 seconds=4 Tests:       6 failed, 121 passed, 127 total
+SC-552: a block edit form (and, wide, a card click) on one of several identical blocks › a form kept open saves strictly: its block is gone, so nothing is written (not 
+SC-552: a block edit form (and, wide, a card click) on one of several identical blocks › a kept-open form closes when the plugin unloads
+SC-552: a block edit form (and, wide, a card click) on one of several identical blocks › two twins: the form on the lower one stays open when Obsidian throws its view a
+SC-552: the form pins its block › a kept-open form saves strictly (its pin or no write); a form that was not kept open does not
+SC-552: the form pins its block › a pinned form whose host names a holder stays open when its view unloads, and closes with the holder
+SC-552: the form pins its block › closing a kept-open form lets go of the holder: nothing builds up on it across forms
+== M5 rc=1 seconds=4 Tests:       2 failed, 125 passed, 127 total
+SC-552: a block edit form (and, wide, a card click) on one of several identical blocks › a kept-open form closes when the plugin unloads
+SC-552: the form pins its block › a pinned form whose host names a holder stays open when its view unloads, and closes with the holder
+== M6 rc=1 seconds=4 Tests:       4 failed, 123 passed, 127 total
+SC-552: a block edit form (and, wide, a card click) on one of several identical blocks › + on the middle block, then an outside edit of the upper inside the debounce: t
+SC-552: a view's own write is placed through the pin its round's first click took › a later click of the same round does not pin again (it may come after the redraw)
+SC-552: a view's own write is placed through the pin its round's first click took › a write that is not the view's own does not use up the pin either
+SC-552: a view's own write is placed through the pin its round's first click took › the first click pins: after the redraw the view's write still lands in the block tha
+== M7 rc=1 seconds=4 Tests:       1 failed, 126 passed, 127 total
+SC-552: the form pins its block › a kept-open form saves strictly (its pin or no write); a form that was not kept open does not
+== M8 rc=1 seconds=4 Tests:       1 failed, 126 passed, 127 total
+SC-552: ReadingModeBlockHost pinned writes › an unterminated trailing fence is pinned and written like any other block: the note's final newline stays
+== M9 rc=1 seconds=4 Tests:       1 failed, 126 passed, 127 total
+SC-552: a view's own write is placed through the pin its round's first click took › a later click of the same round does not pin again (it may come after the redraw)
+== M10 rc=1 seconds=5 Tests:       2 failed, 125 passed, 127 total
+SC-552: a block edit form (and, wide, a card click) on one of several identical blocks › two twins: the form on the lower one stays open when Obsidian throws its view a
+SC-552: the form pins its block › closing a kept-open form lets go of the holder: nothing builds up on it across forms

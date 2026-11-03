@@ -1,0 +1,1511 @@
+{
+ "cases": {
+  "D-p2-rv-f1-e1": {
+   "name": "D-p2-rv-f1-e1",
+   "kind": "D",
+   "fx": "p2",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-pair.md",
+   "form": 1,
+   "edit": 1,
+   "problems": [],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 6748.3,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "before-delete",
+     "t": 7673.4,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "settled",
+     "t": 8603.9,
+     "block": null,
+     "connected": false,
+     "released": true,
+     "loaded": false,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": null
+    }
+   ],
+   "notes": [
+    "form closed by itself after the delete"
+   ],
+   "afterDelete": "# twin pair\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nMID\n\ngone\n\nBOTTOM\n",
+   "formOpenAtSettle": false,
+   "disk": [
+    5
+   ],
+   "names": [
+    "Twin"
+   ],
+   "text": "# twin pair\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nMID\n\ngone\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 6763.9,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 6834.9,
+     "saving": false
+    },
+    {
+     "k": "ext-del",
+     "t": 7676.3
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 7676.4,
+     "path": "Lifecycle/twin-pair.md",
+     "depth": 0
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 7677.7
+    },
+    {
+     "k": "form-close",
+     "t": 7696.4,
+     "saving": false
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 6763.1
+    }
+   ],
+   "mods": [
+    {
+     "t": 7680.2,
+     "path": "Lifecycle/twin-pair.md"
+    }
+   ],
+   "writes": 1,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    }
+   ],
+   "want": [
+    5
+   ],
+   "wantNames": [
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(none)@6763.9",
+    "form-open@6834.9",
+    "form-close@7696.4"
+   ],
+   "rsSeq": "ext-del vp1",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "D-p2-rv-f0-e0": {
+   "name": "D-p2-rv-f0-e0",
+   "kind": "D",
+   "fx": "p2",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-pair.md",
+   "form": 0,
+   "edit": 0,
+   "problems": [
+    "names [\"Edited\"] want [\"Twin\"]",
+    "the Save after the delete wrote 1 time(s)",
+    "note changed after the delete"
+   ],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 14092.4,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 4,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "before-delete",
+     "t": 14960.6,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 4,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "settled",
+     "t": 15899.7,
+     "block": 0,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 4,
+     "hostLastWrite": null,
+     "value": 5
+    }
+   ],
+   "notes": [],
+   "afterDelete": "# twin pair\n\nTOP\n\ngone\n\nMID\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nBOTTOM\n",
+   "formOpenAtSettle": true,
+   "writesBySave": 1,
+   "formOpenAfterSave": false,
+   "disk": [
+    5
+   ],
+   "names": [
+    "Edited"
+   ],
+   "text": "# twin pair\n\nTOP\n\ngone\n\nMID\n\n```ds-counter\nname: Edited\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 14115.1,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 14147,
+     "saving": false
+    },
+    {
+     "k": "ext-del",
+     "t": 14963.4
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 14963.4,
+     "path": "Lifecycle/twin-pair.md",
+     "depth": 0
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 14964
+    },
+    {
+     "k": "save",
+     "t": 15924.8
+    },
+    {
+     "k": "rs",
+     "t": 15925.6,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 8,
+     "value": 5,
+     "name": "Edited"
+    },
+    {
+     "k": "flush",
+     "t": 15947.7,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 15947.9,
+     "path": "Lifecycle/twin-pair.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 15949.1
+    },
+    {
+     "k": "rs-done",
+     "t": 15951.8,
+     "ok": true,
+     "formHost": true,
+     "line": 8
+    },
+    {
+     "k": "form-close",
+     "t": 15964.1,
+     "saving": true
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 14114.8
+    }
+   ],
+   "mods": [
+    {
+     "t": 14965.3,
+     "path": "Lifecycle/twin-pair.md"
+    },
+    {
+     "t": 15951.7,
+     "path": "Lifecycle/twin-pair.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Edited",
+     "value": 5
+    }
+   ],
+   "want": [
+    5
+   ],
+   "wantNames": [
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(none)@14115.1",
+    "form-open@14147",
+    "form-close(saving)@15964.1"
+   ],
+   "rsSeq": "ext-del vp1 save rs(FORM,v5,Edited,kL8) vp2 done(true,FORML8)",
+   "errors": [],
+   "notices": [],
+   "verdict": "PROBLEMS"
+  },
+  "D-p3-rv-f1-e1": {
+   "name": "D-p3-rv-f1-e1",
+   "kind": "D",
+   "fx": "p3",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-triplets.md",
+   "form": 1,
+   "edit": 1,
+   "problems": [
+    "names [\"Twin\",\"Edited\"] want [\"Twin\",\"Twin\"]",
+    "the Save after the delete wrote 1 time(s)",
+    "note changed after the delete"
+   ],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 23917.3,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "before-delete",
+     "t": 24740.9,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "settled",
+     "t": 25646.8,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": 5
+    }
+   ],
+   "notes": [],
+   "afterDelete": "# twin triplets\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\ngone\n\nM2\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nBOTTOM\n",
+   "formOpenAtSettle": true,
+   "writesBySave": 1,
+   "formOpenAfterSave": false,
+   "disk": [
+    5,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Edited"
+   ],
+   "text": "# twin triplets\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\ngone\n\nM2\n\n```ds-counter\nname: Edited\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 23923.9,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 23935.5,
+     "saving": false
+    },
+    {
+     "k": "ext-del",
+     "t": 24742.7
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 24742.8,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 0
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 24743.4
+    },
+    {
+     "k": "save",
+     "t": 25656.3
+    },
+    {
+     "k": "rs",
+     "t": 25656.6,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 17,
+     "value": 5,
+     "name": "Edited"
+    },
+    {
+     "k": "flush",
+     "t": 25656.7,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 25656.7,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 25657.2
+    },
+    {
+     "k": "rs-done",
+     "t": 25658.3,
+     "ok": true,
+     "formHost": true,
+     "line": 17
+    },
+    {
+     "k": "form-close",
+     "t": 25663.6,
+     "saving": true
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 23923.7
+    }
+   ],
+   "mods": [
+    {
+     "t": 24744.3,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 25658.1,
+     "path": "Lifecycle/twin-triplets.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Edited",
+     "value": 5
+    }
+   ],
+   "want": [
+    5,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(none)@23923.9",
+    "form-open@23935.5",
+    "form-close(saving)@25663.6"
+   ],
+   "rsSeq": "ext-del vp1 save rs(FORM,v5,Edited,kL17) vp2 done(true,FORML17)",
+   "errors": [],
+   "notices": [],
+   "verdict": "PROBLEMS"
+  },
+  "D-c3-lp-f1-e1": {
+   "name": "D-c3-lp-f1-e1",
+   "kind": "D",
+   "fx": "c3",
+   "mode": "lp",
+   "rel": "Lifecycle/twin-callouts-3.md",
+   "form": 1,
+   "edit": 1,
+   "problems": [
+    "names [\"Twin\",\"Edited\"] want [\"Twin\",\"Twin\"]",
+    "the Save after the delete wrote 1 time(s)",
+    "note changed after the delete"
+   ],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 33733,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 15,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "before-delete",
+     "t": 34610.8,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 15,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "settled",
+     "t": 35559.6,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 15,
+     "hostLastWrite": null,
+     "value": 5
+    }
+   ],
+   "notes": [],
+   "afterDelete": "# twin callouts 3\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nM1\n\n> [!note] Camp\n> gone\n\nM2\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n",
+   "formOpenAtSettle": true,
+   "writesBySave": 1,
+   "formOpenAfterSave": false,
+   "disk": [
+    5,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Edited"
+   ],
+   "text": "# twin callouts 3\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nM1\n\n> [!note] Camp\n> gone\n\nM2\n\n> [!note] Camp\n> ```ds-counter\n> name: Edited\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 33745.1,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 33767,
+     "saving": false
+    },
+    {
+     "k": "ext-del",
+     "t": 34613.5
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 34613.5,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 0
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 34613.9
+    },
+    {
+     "k": "save",
+     "t": 35574.3
+    },
+    {
+     "k": "rs",
+     "t": 35574.8,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 20,
+     "value": 5,
+     "name": "Edited"
+    },
+    {
+     "k": "flush",
+     "t": 35575,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 35575.1,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 35578.6
+    },
+    {
+     "k": "rs-done",
+     "t": 35581.3,
+     "ok": true,
+     "formHost": true,
+     "line": 20
+    },
+    {
+     "k": "form-close",
+     "t": 35593.3,
+     "saving": true
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 33743.9
+    }
+   ],
+   "mods": [
+    {
+     "t": 34616.8,
+     "path": "Lifecycle/twin-callouts-3.md"
+    },
+    {
+     "t": 35581.2,
+     "path": "Lifecycle/twin-callouts-3.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Edited",
+     "value": 5
+    }
+   ],
+   "want": [
+    5,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(none)@33745.1",
+    "form-open@33767",
+    "form-close(saving)@35593.3"
+   ],
+   "rsSeq": "ext-del vp1 save rs(FORM,v5,Edited,kL20) vp2 done(true,FORML20)",
+   "errors": [],
+   "notices": [],
+   "verdict": "PROBLEMS"
+  },
+  "D-c2-rv-f1-p0-g150-e1": {
+   "name": "D-c2-rv-f1-p0-g150-e1",
+   "kind": "D",
+   "fx": "c2",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-callouts.md",
+   "form": 1,
+   "plus": 0,
+   "gap": 150,
+   "edit": 1,
+   "problems": [],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 43800.9,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 15,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "before-delete",
+     "t": 44885.6,
+     "block": null,
+     "connected": false,
+     "released": true,
+     "loaded": false,
+     "hostKnownLine": 15,
+     "hostLastWrite": null,
+     "value": null
+    },
+    {
+     "label": "settled",
+     "t": 45799,
+     "block": null,
+     "connected": false,
+     "released": true,
+     "loaded": false,
+     "hostKnownLine": 15,
+     "hostLastWrite": null,
+     "value": null
+    }
+   ],
+   "notes": [
+    "form closed by itself after the delete"
+   ],
+   "afterDelete": "# twin callouts\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: Twin\n> ```\n\nMID\n\n> [!note] Camp\n> gone\n\nBOTTOM\n",
+   "formOpenAtSettle": false,
+   "disk": [
+    6
+   ],
+   "names": [
+    "Twin"
+   ],
+   "text": "# twin callouts\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: Twin\n> ```\n\nMID\n\n> [!note] Camp\n> gone\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 43817.1,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 43834.2,
+     "saving": false
+    },
+    {
+     "k": "rs",
+     "t": 44049.9,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 5,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 44050.2,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 44050.4,
+     "path": "Lifecycle/twin-callouts.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 44050.8
+    },
+    {
+     "k": "rs-done",
+     "t": 44052,
+     "ok": true,
+     "formHost": false,
+     "line": 5
+    },
+    {
+     "k": "form-close",
+     "t": 44089.7,
+     "saving": false
+    },
+    {
+     "k": "ext-del",
+     "t": 44888.2
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 44888.2,
+     "path": "Lifecycle/twin-callouts.md",
+     "depth": 0
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 44892.3
+    }
+   ],
+   "clicks": [
+    {
+     "t": 43645.6,
+     "trusted": true
+    }
+   ],
+   "keys": [
+    {
+     "t": 43817
+    }
+   ],
+   "mods": [
+    {
+     "t": 44051.9,
+     "path": "Lifecycle/twin-callouts.md"
+    },
+    {
+     "t": 44893.7,
+     "path": "Lifecycle/twin-callouts.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 6
+    }
+   ],
+   "want": [
+    6
+   ],
+   "wantNames": [
+    "Twin"
+   ],
+   "gapMs": 171,
+   "writeMs": 406,
+   "formEvents": [
+    "oapw(none)@172",
+    "form-open@189",
+    "form-close@444"
+   ],
+   "rsSeq": "rs(view,v6,Twin,kL5) vp1 done(true,L5) ext-del vp2",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "R-p3-rv-f1-e0-big": {
+   "name": "R-p3-rv-f1-e0-big",
+   "kind": "R",
+   "fx": "p3",
+   "mode": "rv",
+   "rel": "Lifecycle/twin-triplets.md",
+   "form": 1,
+   "edit": 0,
+   "how": "big",
+   "problems": [
+    "names [\"Twin\",\"Twin\",\"Edited\"] want [\"Twin\",\"Edited\",\"Twin\"]",
+    "pane A draws 1 cards for 3 blocks"
+   ],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 51467.4,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "settled",
+     "t": 52890.7,
+     "block": null,
+     "connected": false,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": null
+    }
+   ],
+   "notes": [],
+   "formOpenAtSettle": true,
+   "disk": [
+    7,
+    5,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Edited"
+   ],
+   "text": "# twin triplets\n\nfiller above 0\nfiller above 1\nfiller above 2\nfiller above 3\nfiller above 4\nfiller above 5\nfiller above 6\nfiller above 7\nfiller above 8\nfiller above 9\nfiller above 10\nfiller above 11\nfiller above 12\nfiller above 13\nfiller above 14\nfiller above 15\nfiller above 16\nfiller above 17\nfiller above 18\nfiller above 19\nfiller above 20\nfiller above 21\nfiller above 22\nfiller above 23\nfiller above 24\nfiller above 25\nfiller above 26\nfiller above 27\nfiller above 28\nfiller above 29\nfiller above 30\nfiller above 31\nfiller above 32\nfiller above 33\nfiller above 34\nfiller above 35\nfiller above 36\nfiller above 37\nfiller above 38\nfiller above 39\nfiller above 40\nfiller above 41\nfiller above 42\nfiller above 43\nfiller above 44\nfiller above 45\nfiller above 46\nfiller above 47\nfiller above 48\nfiller above 49\nfiller above 50\nfiller above 51\nfiller above 52\nfiller above 53\nfiller above 54\nfiller above 55\nfiller above 56\nfiller above 57\nfiller above 58\nfiller above 59\nfiller above 60\nfiller above 61\nfiller above 62\nfiller above 63\nfiller above 64\nfiller above 65\nfiller above 66\nfiller above 67\nfiller above 68\nfiller above 69\nfiller above 70\nfiller above 71\nfiller above 72\nfiller above 73\nfiller above 74\nfiller above 75\nfiller above 76\nfiller above 77\nfiller above 78\nfiller above 79\nfiller above 80\nfiller above 81\nfiller above 82\nfiller above 83\nfiller above 84\nfiller above 85\nfiller above 86\nfiller above 87\nfiller above 88\nfiller above 89\nfiller above 90\nfiller above 91\nfiller above 92\nfiller above 93\nfiller above 94\nfiller above 95\nfiller above 96\nfiller above 97\nfiller above 98\nfiller above 99\nfiller above 100\nfiller above 101\nfiller above 102\nfiller above 103\nfiller above 104\nfiller above 105\nfiller above 106\nfiller above 107\nfiller above 108\nfiller above 109\nfiller above 110\nfiller above 111\nfiller above 112\nfiller above 113\nfiller above 114\nfiller above 115\nfiller above 116\nfiller above 117\nfiller above 118\nfiller above 119\nfiller above 120\nfiller above 121\nfiller above 122\nfiller above 123\nfiller above 124\nfiller above 125\nfiller above 126\nfiller above 127\nfiller above 128\nfiller above 129\nfiller above 130\nfiller above 131\nfiller above 132\nfiller above 133\nfiller above 134\nfiller above 135\nfiller above 136\nfiller above 137\nfiller above 138\nfiller above 139\nfiller above 140\nfiller above 141\nfiller above 142\nfiller above 143\nfiller above 144\nfiller above 145\nfiller above 146\nfiller above 147\nfiller above 148\nfiller above 149\nfiller above 150\nfiller above 151\nfiller above 152\nfiller above 153\nfiller above 154\nfiller above 155\nfiller above 156\nfiller above 157\nfiller above 158\nfiller above 159\nfiller above 160\nfiller above 161\nfiller above 162\nfiller above 163\nfiller above 164\nfiller above 165\nfiller above 166\nfiller above 167\nfiller above 168\nfiller above 169\nfiller above 170\nfiller above 171\nfiller above 172\nfiller above 173\nfiller above 174\nfiller above 175\nfiller above 176\nfiller above 177\nfiller above 178\nfiller above 179\nfiller above 180\nfiller above 181\nfiller above 182\nfiller above 183\nfiller above 184\nfiller above 185\nfiller above 186\nfiller above 187\nfiller above 188\nfiller above 189\nfiller above 190\nfiller above 191\nfiller above 192\nfiller above 193\nfiller above 194\nfiller above 195\nfiller above 196\nfiller above 197\nfiller above 198\nfiller above 199\nfiller above 200\nfiller above 201\nfiller above 202\nfiller above 203\nfiller above 204\nfiller above 205\nfiller above 206\nfiller above 207\nfiller above 208\nfiller above 209\nfiller above 210\nfiller above 211\nfiller above 212\nfiller above 213\nfiller above 214\nfiller above 215\nfiller above 216\nfiller above 217\nfiller above 218\nfiller above 219\nfiller above 220\nfiller above 221\nfiller above 222\nfiller above 223\nfiller above 224\nfiller above 225\nfiller above 226\nfiller above 227\nfiller above 228\nfiller above 229\nfiller above 230\nfiller above 231\nfiller above 232\nfiller above 233\nfiller above 234\nfiller above 235\nfiller above 236\nfiller above 237\nfiller above 238\nfiller above 239\nfiller above 240\nfiller above 241\nfiller above 242\nfiller above 243\nfiller above 244\nfiller above 245\nfiller above 246\nfiller above 247\nfiller above 248\nfiller above 249\nfiller above 250\nfiller above 251\nfiller above 252\nfiller above 253\nfiller above 254\nfiller above 255\nfiller above 256\nfiller above 257\nfiller above 258\nfiller above 259\nfiller above 260\nfiller above 261\nfiller above 262\nfiller above 263\nfiller above 264\nfiller above 265\nfiller above 266\nfiller above 267\nfiller above 268\nfiller above 269\nfiller above 270\nfiller above 271\nfiller above 272\nfiller above 273\nfiller above 274\nfiller above 275\nfiller above 276\nfiller above 277\nfiller above 278\nfiller above 279\nfiller above 280\nfiller above 281\nfiller above 282\nfiller above 283\nfiller above 284\nfiller above 285\nfiller above 286\nfiller above 287\nfiller above 288\nfiller above 289\nfiller above 290\nfiller above 291\nfiller above 292\nfiller above 293\nfiller above 294\nfiller above 295\nfiller above 296\nfiller above 297\nfiller above 298\nfiller above 299\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 7\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM2\n\n```ds-counter\nname: Edited\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nBOTTOM\nfiller below 0\nfiller below 1\nfiller below 2\nfiller below 3\nfiller below 4\nfiller below 5\nfiller below 6\nfiller below 7\nfiller below 8\nfiller below 9\nfiller below 10\nfiller below 11\nfiller below 12\nfiller below 13\nfiller below 14\nfiller below 15\nfiller below 16\nfiller below 17\nfiller below 18\nfiller below 19\nfiller below 20\nfiller below 21\nfiller below 22\nfiller below 23\nfiller below 24\nfiller below 25\nfiller below 26\nfiller below 27\nfiller below 28\nfiller below 29\nfiller below 30\nfiller below 31\nfiller below 32\nfiller below 33\nfiller below 34\nfiller below 35\nfiller below 36\nfiller below 37\nfiller below 38\nfiller below 39\nfiller below 40\nfiller below 41\nfiller below 42\nfiller below 43\nfiller below 44\nfiller below 45\nfiller below 46\nfiller below 47\nfiller below 48\nfiller below 49\nfiller below 50\nfiller below 51\nfiller below 52\nfiller below 53\nfiller below 54\nfiller below 55\nfiller below 56\nfiller below 57\nfiller below 58\nfiller below 59\nfiller below 60\nfiller below 61\nfiller below 62\nfiller below 63\nfiller below 64\nfiller below 65\nfiller below 66\nfiller below 67\nfiller below 68\nfiller below 69\nfiller below 70\nfiller below 71\nfiller below 72\nfiller below 73\nfiller below 74\nfiller below 75\nfiller below 76\nfiller below 77\nfiller below 78\nfiller below 79\nfiller below 80\nfiller below 81\nfiller below 82\nfiller below 83\nfiller below 84\nfiller below 85\nfiller below 86\nfiller below 87\nfiller below 88\nfiller below 89\nfiller below 90\nfiller below 91\nfiller below 92\nfiller below 93\nfiller below 94\nfiller below 95\nfiller below 96\nfiller below 97\nfiller below 98\nfiller below 99\nfiller below 100\nfiller below 101\nfiller below 102\nfiller below 103\nfiller below 104\nfiller below 105\nfiller below 106\nfiller below 107\nfiller below 108\nfiller below 109\nfiller below 110\nfiller below 111\nfiller below 112\nfiller below 113\nfiller below 114\nfiller below 115\nfiller below 116\nfiller below 117\nfiller below 118\nfiller below 119\nfiller below 120\nfiller below 121\nfiller below 122\nfiller below 123\nfiller below 124\nfiller below 125\nfiller below 126\nfiller below 127\nfiller below 128\nfiller below 129\nfiller below 130\nfiller below 131\nfiller below 132\nfiller below 133\nfiller below 134\nfiller below 135\nfiller below 136\nfiller below 137\nfiller below 138\nfiller below 139\nfiller below 140\nfiller below 141\nfiller below 142\nfiller below 143\nfiller below 144\nfiller below 145\nfiller below 146\nfiller below 147\nfiller below 148\nfiller below 149\nfiller below 150\nfiller below 151\nfiller below 152\nfiller below 153\nfiller below 154\nfiller below 155\nfiller below 156\nfiller below 157\nfiller below 158\nfiller below 159\nfiller below 160\nfiller below 161\nfiller below 162\nfiller below 163\nfiller below 164\nfiller below 165\nfiller below 166\nfiller below 167\nfiller below 168\nfiller below 169\nfiller below 170\nfiller below 171\nfiller below 172\nfiller below 173\nfiller below 174\nfiller below 175\nfiller below 176\nfiller below 177\nfiller below 178\nfiller below 179\nfiller below 180\nfiller below 181\nfiller below 182\nfiller below 183\nfiller below 184\nfiller below 185\nfiller below 186\nfiller below 187\nfiller below 188\nfiller below 189\nfiller below 190\nfiller below 191\nfiller below 192\nfiller below 193\nfiller below 194\nfiller below 195\nfiller below 196\nfiller below 197\nfiller below 198\nfiller below 199\nfiller below 200\nfiller below 201\nfiller below 202\nfiller below 203\nfiller below 204\nfiller below 205\nfiller below 206\nfiller below 207\nfiller below 208\nfiller below 209\nfiller below 210\nfiller below 211\nfiller below 212\nfiller below 213\nfiller below 214\nfiller below 215\nfiller below 216\nfiller below 217\nfiller below 218\nfiller below 219\nfiller below 220\nfiller below 221\nfiller below 222\nfiller below 223\nfiller below 224\nfiller below 225\nfiller below 226\nfiller below 227\nfiller below 228\nfiller below 229\nfiller below 230\nfiller below 231\nfiller below 232\nfiller below 233\nfiller below 234\nfiller below 235\nfiller below 236\nfiller below 237\nfiller below 238\nfiller below 239\nfiller below 240\nfiller below 241\nfiller below 242\nfiller below 243\nfiller below 244\nfiller below 245\nfiller below 246\nfiller below 247\nfiller below 248\nfiller below 249\nfiller below 250\nfiller below 251\nfiller below 252\nfiller below 253\nfiller below 254\nfiller below 255\nfiller below 256\nfiller below 257\nfiller below 258\nfiller below 259\nfiller below 260\nfiller below 261\nfiller below 262\nfiller below 263\nfiller below 264\nfiller below 265\nfiller below 266\nfiller below 267\nfiller below 268\nfiller below 269\nfiller below 270\nfiller below 271\nfiller below 272\nfiller below 273\nfiller below 274\nfiller below 275\nfiller below 276\nfiller below 277\nfiller below 278\nfiller below 279\nfiller below 280\nfiller below 281\nfiller below 282\nfiller below 283\nfiller below 284\nfiller below 285\nfiller below 286\nfiller below 287\nfiller below 288\nfiller below 289\nfiller below 290\nfiller below 291\nfiller below 292\nfiller below 293\nfiller below 294\nfiller below 295\nfiller below 296\nfiller below 297\nfiller below 298\nfiller below 299\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 51483.2,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 51657.9,
+     "saving": false
+    },
+    {
+     "k": "ext-big",
+     "t": 51981.3
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 51981.3,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 0
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 51982
+    },
+    {
+     "k": "save",
+     "t": 52907.8
+    },
+    {
+     "k": "rs",
+     "t": 52909.2,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 322,
+     "value": 5,
+     "name": "Edited"
+    },
+    {
+     "k": "flush",
+     "t": 52909.5,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 52909.6,
+     "path": "Lifecycle/twin-triplets.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 52918
+    },
+    {
+     "k": "rs-done",
+     "t": 52920.7,
+     "ok": true,
+     "formHost": true,
+     "line": 322
+    },
+    {
+     "k": "form-close",
+     "t": 52921.9,
+     "saving": true
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 51483.1
+    }
+   ],
+   "mods": [
+    {
+     "t": 51984,
+     "path": "Lifecycle/twin-triplets.md"
+    },
+    {
+     "t": 52920.6,
+     "path": "Lifecycle/twin-triplets.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 7
+    }
+   ],
+   "want": [
+    7,
+    5,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Edited",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(none)@51483.2",
+    "form-open@51657.9",
+    "form-close(saving)@52921.9"
+   ],
+   "rsSeq": "ext-big vp1 save rs(FORM,v5,Edited,kL322) vp2 done(true,FORML322)",
+   "errors": [],
+   "notices": [],
+   "verdict": "PROBLEMS"
+  },
+  "R-c3-lp-f1-e0-big": {
+   "name": "R-c3-lp-f1-e0-big",
+   "kind": "R",
+   "fx": "c3",
+   "mode": "lp",
+   "rel": "Lifecycle/twin-callouts-3.md",
+   "form": 1,
+   "edit": 0,
+   "how": "big",
+   "problems": [
+    "form closed by itself before Save",
+    "names [\"Twin\",\"Twin\",\"Twin\"] want [\"Twin\",\"Edited\",\"Twin\"]",
+    "pane A draws 0 cards for 3 blocks"
+   ],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 58685,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 15,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "settled",
+     "t": 60089.9,
+     "block": null,
+     "connected": false,
+     "released": true,
+     "loaded": false,
+     "hostKnownLine": 15,
+     "hostLastWrite": null,
+     "value": null
+    }
+   ],
+   "notes": [],
+   "formOpenAtSettle": false,
+   "disk": [
+    7,
+    5,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Twin"
+   ],
+   "text": "# twin callouts 3\n\nfiller above 0\nfiller above 1\nfiller above 2\nfiller above 3\nfiller above 4\nfiller above 5\nfiller above 6\nfiller above 7\nfiller above 8\nfiller above 9\nfiller above 10\nfiller above 11\nfiller above 12\nfiller above 13\nfiller above 14\nfiller above 15\nfiller above 16\nfiller above 17\nfiller above 18\nfiller above 19\nfiller above 20\nfiller above 21\nfiller above 22\nfiller above 23\nfiller above 24\nfiller above 25\nfiller above 26\nfiller above 27\nfiller above 28\nfiller above 29\nfiller above 30\nfiller above 31\nfiller above 32\nfiller above 33\nfiller above 34\nfiller above 35\nfiller above 36\nfiller above 37\nfiller above 38\nfiller above 39\nfiller above 40\nfiller above 41\nfiller above 42\nfiller above 43\nfiller above 44\nfiller above 45\nfiller above 46\nfiller above 47\nfiller above 48\nfiller above 49\nfiller above 50\nfiller above 51\nfiller above 52\nfiller above 53\nfiller above 54\nfiller above 55\nfiller above 56\nfiller above 57\nfiller above 58\nfiller above 59\nfiller above 60\nfiller above 61\nfiller above 62\nfiller above 63\nfiller above 64\nfiller above 65\nfiller above 66\nfiller above 67\nfiller above 68\nfiller above 69\nfiller above 70\nfiller above 71\nfiller above 72\nfiller above 73\nfiller above 74\nfiller above 75\nfiller above 76\nfiller above 77\nfiller above 78\nfiller above 79\nfiller above 80\nfiller above 81\nfiller above 82\nfiller above 83\nfiller above 84\nfiller above 85\nfiller above 86\nfiller above 87\nfiller above 88\nfiller above 89\nfiller above 90\nfiller above 91\nfiller above 92\nfiller above 93\nfiller above 94\nfiller above 95\nfiller above 96\nfiller above 97\nfiller above 98\nfiller above 99\nfiller above 100\nfiller above 101\nfiller above 102\nfiller above 103\nfiller above 104\nfiller above 105\nfiller above 106\nfiller above 107\nfiller above 108\nfiller above 109\nfiller above 110\nfiller above 111\nfiller above 112\nfiller above 113\nfiller above 114\nfiller above 115\nfiller above 116\nfiller above 117\nfiller above 118\nfiller above 119\nfiller above 120\nfiller above 121\nfiller above 122\nfiller above 123\nfiller above 124\nfiller above 125\nfiller above 126\nfiller above 127\nfiller above 128\nfiller above 129\nfiller above 130\nfiller above 131\nfiller above 132\nfiller above 133\nfiller above 134\nfiller above 135\nfiller above 136\nfiller above 137\nfiller above 138\nfiller above 139\nfiller above 140\nfiller above 141\nfiller above 142\nfiller above 143\nfiller above 144\nfiller above 145\nfiller above 146\nfiller above 147\nfiller above 148\nfiller above 149\nfiller above 150\nfiller above 151\nfiller above 152\nfiller above 153\nfiller above 154\nfiller above 155\nfiller above 156\nfiller above 157\nfiller above 158\nfiller above 159\nfiller above 160\nfiller above 161\nfiller above 162\nfiller above 163\nfiller above 164\nfiller above 165\nfiller above 166\nfiller above 167\nfiller above 168\nfiller above 169\nfiller above 170\nfiller above 171\nfiller above 172\nfiller above 173\nfiller above 174\nfiller above 175\nfiller above 176\nfiller above 177\nfiller above 178\nfiller above 179\nfiller above 180\nfiller above 181\nfiller above 182\nfiller above 183\nfiller above 184\nfiller above 185\nfiller above 186\nfiller above 187\nfiller above 188\nfiller above 189\nfiller above 190\nfiller above 191\nfiller above 192\nfiller above 193\nfiller above 194\nfiller above 195\nfiller above 196\nfiller above 197\nfiller above 198\nfiller above 199\nfiller above 200\nfiller above 201\nfiller above 202\nfiller above 203\nfiller above 204\nfiller above 205\nfiller above 206\nfiller above 207\nfiller above 208\nfiller above 209\nfiller above 210\nfiller above 211\nfiller above 212\nfiller above 213\nfiller above 214\nfiller above 215\nfiller above 216\nfiller above 217\nfiller above 218\nfiller above 219\nfiller above 220\nfiller above 221\nfiller above 222\nfiller above 223\nfiller above 224\nfiller above 225\nfiller above 226\nfiller above 227\nfiller above 228\nfiller above 229\nfiller above 230\nfiller above 231\nfiller above 232\nfiller above 233\nfiller above 234\nfiller above 235\nfiller above 236\nfiller above 237\nfiller above 238\nfiller above 239\nfiller above 240\nfiller above 241\nfiller above 242\nfiller above 243\nfiller above 244\nfiller above 245\nfiller above 246\nfiller above 247\nfiller above 248\nfiller above 249\nfiller above 250\nfiller above 251\nfiller above 252\nfiller above 253\nfiller above 254\nfiller above 255\nfiller above 256\nfiller above 257\nfiller above 258\nfiller above 259\nfiller above 260\nfiller above 261\nfiller above 262\nfiller above 263\nfiller above 264\nfiller above 265\nfiller above 266\nfiller above 267\nfiller above 268\nfiller above 269\nfiller above 270\nfiller above 271\nfiller above 272\nfiller above 273\nfiller above 274\nfiller above 275\nfiller above 276\nfiller above 277\nfiller above 278\nfiller above 279\nfiller above 280\nfiller above 281\nfiller above 282\nfiller above 283\nfiller above 284\nfiller above 285\nfiller above 286\nfiller above 287\nfiller above 288\nfiller above 289\nfiller above 290\nfiller above 291\nfiller above 292\nfiller above 293\nfiller above 294\nfiller above 295\nfiller above 296\nfiller above 297\nfiller above 298\nfiller above 299\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 7\n> max_value: 20\n> min_value: 0\n> ```\n\nM1\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nM2\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\nfiller below 0\nfiller below 1\nfiller below 2\nfiller below 3\nfiller below 4\nfiller below 5\nfiller below 6\nfiller below 7\nfiller below 8\nfiller below 9\nfiller below 10\nfiller below 11\nfiller below 12\nfiller below 13\nfiller below 14\nfiller below 15\nfiller below 16\nfiller below 17\nfiller below 18\nfiller below 19\nfiller below 20\nfiller below 21\nfiller below 22\nfiller below 23\nfiller below 24\nfiller below 25\nfiller below 26\nfiller below 27\nfiller below 28\nfiller below 29\nfiller below 30\nfiller below 31\nfiller below 32\nfiller below 33\nfiller below 34\nfiller below 35\nfiller below 36\nfiller below 37\nfiller below 38\nfiller below 39\nfiller below 40\nfiller below 41\nfiller below 42\nfiller below 43\nfiller below 44\nfiller below 45\nfiller below 46\nfiller below 47\nfiller below 48\nfiller below 49\nfiller below 50\nfiller below 51\nfiller below 52\nfiller below 53\nfiller below 54\nfiller below 55\nfiller below 56\nfiller below 57\nfiller below 58\nfiller below 59\nfiller below 60\nfiller below 61\nfiller below 62\nfiller below 63\nfiller below 64\nfiller below 65\nfiller below 66\nfiller below 67\nfiller below 68\nfiller below 69\nfiller below 70\nfiller below 71\nfiller below 72\nfiller below 73\nfiller below 74\nfiller below 75\nfiller below 76\nfiller below 77\nfiller below 78\nfiller below 79\nfiller below 80\nfiller below 81\nfiller below 82\nfiller below 83\nfiller below 84\nfiller below 85\nfiller below 86\nfiller below 87\nfiller below 88\nfiller below 89\nfiller below 90\nfiller below 91\nfiller below 92\nfiller below 93\nfiller below 94\nfiller below 95\nfiller below 96\nfiller below 97\nfiller below 98\nfiller below 99\nfiller below 100\nfiller below 101\nfiller below 102\nfiller below 103\nfiller below 104\nfiller below 105\nfiller below 106\nfiller below 107\nfiller below 108\nfiller below 109\nfiller below 110\nfiller below 111\nfiller below 112\nfiller below 113\nfiller below 114\nfiller below 115\nfiller below 116\nfiller below 117\nfiller below 118\nfiller below 119\nfiller below 120\nfiller below 121\nfiller below 122\nfiller below 123\nfiller below 124\nfiller below 125\nfiller below 126\nfiller below 127\nfiller below 128\nfiller below 129\nfiller below 130\nfiller below 131\nfiller below 132\nfiller below 133\nfiller below 134\nfiller below 135\nfiller below 136\nfiller below 137\nfiller below 138\nfiller below 139\nfiller below 140\nfiller below 141\nfiller below 142\nfiller below 143\nfiller below 144\nfiller below 145\nfiller below 146\nfiller below 147\nfiller below 148\nfiller below 149\nfiller below 150\nfiller below 151\nfiller below 152\nfiller below 153\nfiller below 154\nfiller below 155\nfiller below 156\nfiller below 157\nfiller below 158\nfiller below 159\nfiller below 160\nfiller below 161\nfiller below 162\nfiller below 163\nfiller below 164\nfiller below 165\nfiller below 166\nfiller below 167\nfiller below 168\nfiller below 169\nfiller below 170\nfiller below 171\nfiller below 172\nfiller below 173\nfiller below 174\nfiller below 175\nfiller below 176\nfiller below 177\nfiller below 178\nfiller below 179\nfiller below 180\nfiller below 181\nfiller below 182\nfiller below 183\nfiller below 184\nfiller below 185\nfiller below 186\nfiller below 187\nfiller below 188\nfiller below 189\nfiller below 190\nfiller below 191\nfiller below 192\nfiller below 193\nfiller below 194\nfiller below 195\nfiller below 196\nfiller below 197\nfiller below 198\nfiller below 199\nfiller below 200\nfiller below 201\nfiller below 202\nfiller below 203\nfiller below 204\nfiller below 205\nfiller below 206\nfiller below 207\nfiller below 208\nfiller below 209\nfiller below 210\nfiller below 211\nfiller below 212\nfiller below 213\nfiller below 214\nfiller below 215\nfiller below 216\nfiller below 217\nfiller below 218\nfiller below 219\nfiller below 220\nfiller below 221\nfiller below 222\nfiller below 223\nfiller below 224\nfiller below 225\nfiller below 226\nfiller below 227\nfiller below 228\nfiller below 229\nfiller below 230\nfiller below 231\nfiller below 232\nfiller below 233\nfiller below 234\nfiller below 235\nfiller below 236\nfiller below 237\nfiller below 238\nfiller below 239\nfiller below 240\nfiller below 241\nfiller below 242\nfiller below 243\nfiller below 244\nfiller below 245\nfiller below 246\nfiller below 247\nfiller below 248\nfiller below 249\nfiller below 250\nfiller below 251\nfiller below 252\nfiller below 253\nfiller below 254\nfiller below 255\nfiller below 256\nfiller below 257\nfiller below 258\nfiller below 259\nfiller below 260\nfiller below 261\nfiller below 262\nfiller below 263\nfiller below 264\nfiller below 265\nfiller below 266\nfiller below 267\nfiller below 268\nfiller below 269\nfiller below 270\nfiller below 271\nfiller below 272\nfiller below 273\nfiller below 274\nfiller below 275\nfiller below 276\nfiller below 277\nfiller below 278\nfiller below 279\nfiller below 280\nfiller below 281\nfiller below 282\nfiller below 283\nfiller below 284\nfiller below 285\nfiller below 286\nfiller below 287\nfiller below 288\nfiller below 289\nfiller below 290\nfiller below 291\nfiller below 292\nfiller below 293\nfiller below 294\nfiller below 295\nfiller below 296\nfiller below 297\nfiller below 298\nfiller below 299\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 58697.5,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 58731.2,
+     "saving": false
+    },
+    {
+     "k": "ext-big",
+     "t": 59066.7
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 59066.7,
+     "path": "Lifecycle/twin-callouts-3.md",
+     "depth": 0
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 59067.3
+    },
+    {
+     "k": "form-close",
+     "t": 59149,
+     "saving": false
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 58697.2
+    }
+   ],
+   "mods": [
+    {
+     "t": 59069.4,
+     "path": "Lifecycle/twin-callouts-3.md"
+    }
+   ],
+   "writes": 1,
+   "cardsA": [],
+   "want": [
+    7,
+    5,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Edited",
+    "Twin"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(none)@58697.5",
+    "form-open@58731.2",
+    "form-close@59149"
+   ],
+   "rsSeq": "ext-big vp1",
+   "errors": [],
+   "notices": [],
+   "verdict": "PROBLEMS"
+  },
+  "F-crlf-rv-p0-f1-g150": {
+   "name": "F-crlf-rv-p0-f1-g150",
+   "kind": "F",
+   "fx": "crlf",
+   "mode": "rv",
+   "rel": "Probe552/twin-crlf.md",
+   "plus": 0,
+   "form": 1,
+   "gap": 150,
+   "problems": [
+    "names [\"Twin\",\"Twin\",\"Edited\"] want [\"Twin\",\"Edited\",\"Twin\"]"
+   ],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 66109,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "settled",
+     "t": 67203.9,
+     "block": 2,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 22,
+     "hostLastWrite": null,
+     "value": 5
+    }
+   ],
+   "notes": [],
+   "wroteBeforeSave": true,
+   "formOpenAtSettle": true,
+   "formRaw": "name: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0",
+   "disk": [
+    6,
+    5,
+    5
+   ],
+   "names": [
+    "Twin",
+    "Twin",
+    "Edited"
+   ],
+   "text": "# twin crlf\r\n\r\nTOP\r\n\r\n```ds-counter\r\nmax_value: 20\r\ncurrent_value: 6\r\nmin_value: 0\r\nname: Twin\r\n```\r\n\r\nM1\r\n\r\n```ds-counter\r\nname: Twin\r\ncurrent_value: 5\r\nmax_value: 20\r\nmin_value: 0\r\n```\r\n\r\nM2\r\n\r\n```ds-counter\r\nname: Edited\r\ncurrent_value: 5\r\nmax_value: 20\r\nmin_value: 0\r\n```\r\n\r\nBOTTOM\r\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 66126.9,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 66151.1,
+     "saving": false
+    },
+    {
+     "k": "rs",
+     "t": 66355.5,
+     "depth": 0,
+     "fromView": true,
+     "formHost": false,
+     "knownLine": 4,
+     "value": 6,
+     "name": "Twin"
+    },
+    {
+     "k": "flush",
+     "t": 66355.6,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 66355.7,
+     "path": "Probe552/twin-crlf.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 66356.3
+    },
+    {
+     "k": "rs-done",
+     "t": 66357.8,
+     "ok": true,
+     "formHost": false,
+     "line": 4
+    },
+    {
+     "k": "save",
+     "t": 67232.3
+    },
+    {
+     "k": "rs",
+     "t": 67233,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 22,
+     "value": 5,
+     "name": "Edited"
+    },
+    {
+     "k": "flush",
+     "t": 67233.3,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 67233.3,
+     "path": "Probe552/twin-crlf.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 67234.5
+    },
+    {
+     "k": "rs-done",
+     "t": 67237.3,
+     "ok": true,
+     "formHost": true,
+     "line": 22
+    },
+    {
+     "k": "form-close",
+     "t": 67247.2,
+     "saving": true
+    }
+   ],
+   "clicks": [
+    {
+     "t": 65953.7,
+     "trusted": true
+    }
+   ],
+   "keys": [
+    {
+     "t": 66126.7
+    }
+   ],
+   "mods": [
+    {
+     "t": 66357.7,
+     "path": "Probe552/twin-crlf.md"
+    },
+    {
+     "t": 67237.2,
+     "path": "Probe552/twin-crlf.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 6
+    },
+    {
+     "block": 1,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 2,
+     "name": "Edited",
+     "value": 5
+    }
+   ],
+   "want": [
+    6,
+    5,
+    5
+   ],
+   "wantNames": [
+    "Twin",
+    "Edited",
+    "Twin"
+   ],
+   "bareLF": 0,
+   "gapMs": 173,
+   "writeMs": 404,
+   "formEvents": [
+    "oapw(none)@173",
+    "form-open@197",
+    "form-close(saving)@1294"
+   ],
+   "rsSeq": "rs(view,v6,Twin,kL4) vp1 done(true,L4) save rs(FORM,v5,Edited,kL22) vp2 done(true,FORML22)",
+   "errors": [],
+   "notices": [],
+   "verdict": "PROBLEMS"
+  },
+  "R-mixed-lp-f1-e2-inapp": {
+   "name": "R-mixed-lp-f1-e2-inapp",
+   "kind": "R",
+   "fx": "mixed",
+   "mode": "lp",
+   "rel": "Probe552/mixed-kinds.md",
+   "form": 1,
+   "edit": 2,
+   "how": "inapp",
+   "problems": [],
+   "wheres": [
+    {
+     "label": "pencil",
+     "t": 72940.3,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": 5
+    },
+    {
+     "label": "settled",
+     "t": 74493.8,
+     "block": 1,
+     "connected": true,
+     "released": false,
+     "loaded": true,
+     "hostKnownLine": 13,
+     "hostLastWrite": null,
+     "value": 5
+    }
+   ],
+   "notes": [],
+   "formOpenAtSettle": true,
+   "disk": [
+    5,
+    5,
+    7
+   ],
+   "names": [
+    "Twin",
+    "Edited",
+    "Other"
+   ],
+   "text": "# mixed\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM1\n\n```ds-counter\nname: Edited\ncurrent_value: 5\nmax_value: 20\nmin_value: 0\n```\n\nM2\n\n```ds-counter\nname: Other\ncurrent_value: 7\nmax_value: 20\nmin_value: 0\n```\n\nBOTTOM\n",
+   "log": [
+    {
+     "k": "oapw",
+     "t": 72964.6,
+     "pending": false
+    },
+    {
+     "k": "form-open",
+     "t": 73162.7,
+     "saving": false
+    },
+    {
+     "k": "ext",
+     "t": 73514.4
+    },
+    {
+     "k": "vp",
+     "id": 1,
+     "t": 73514.5,
+     "path": "Probe552/mixed-kinds.md",
+     "depth": 0
+    },
+    {
+     "k": "vp-cb",
+     "id": 1,
+     "t": 73515.1
+    },
+    {
+     "k": "save",
+     "t": 74512
+    },
+    {
+     "k": "rs",
+     "t": 74512.3,
+     "depth": 0,
+     "fromView": false,
+     "formHost": true,
+     "knownLine": 13,
+     "value": 5,
+     "name": "Edited"
+    },
+    {
+     "k": "flush",
+     "t": 74512.3,
+     "pend": 0,
+     "depth": 1
+    },
+    {
+     "k": "vp",
+     "id": 2,
+     "t": 74512.3,
+     "path": "Probe552/mixed-kinds.md",
+     "depth": 1
+    },
+    {
+     "k": "vp-cb",
+     "id": 2,
+     "t": 74513.3
+    },
+    {
+     "k": "rs-done",
+     "t": 74515.6,
+     "ok": true,
+     "formHost": true,
+     "line": 13
+    },
+    {
+     "k": "form-close",
+     "t": 74531.8,
+     "saving": true
+    }
+   ],
+   "clicks": [],
+   "keys": [
+    {
+     "t": 72964.2
+    }
+   ],
+   "mods": [
+    {
+     "t": 73519.4,
+     "path": "Probe552/mixed-kinds.md"
+    },
+    {
+     "t": 74515.5,
+     "path": "Probe552/mixed-kinds.md"
+    }
+   ],
+   "writes": 2,
+   "cardsA": [
+    {
+     "block": 0,
+     "name": "Twin",
+     "value": 5
+    },
+    {
+     "block": 1,
+     "name": "Edited",
+     "value": 5
+    },
+    {
+     "block": 2,
+     "name": "Other",
+     "value": 7
+    }
+   ],
+   "want": [
+    5,
+    5,
+    7
+   ],
+   "wantNames": [
+    "Twin",
+    "Edited",
+    "Other"
+   ],
+   "gapMs": null,
+   "writeMs": null,
+   "formEvents": [
+    "oapw(none)@72964.6",
+    "form-open@73162.7",
+    "form-close(saving)@74531.8"
+   ],
+   "rsSeq": "ext vp1 save rs(FORM,v5,Edited,kL13) vp2 done(true,FORML13)",
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  }
+ }
+}

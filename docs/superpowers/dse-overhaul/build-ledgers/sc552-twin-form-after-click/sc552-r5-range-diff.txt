@@ -1,0 +1,43 @@
+ 1:  cee31d9d !  1:  3bf46a87 test(SC-552): red tests - a block edit form pins its block (lineMap, pinned host writes, FormModal pin and keep-open, twin redraw flows)
+    @@ test/dom/framework/twin-reuse.test.ts: import { ElementPipeline } from '../../..
+     +import { droppedWriteMessage, resetDroppedWriteNotices } from '../../../src/framework/host/droppedWriteNotice';
+     +import { Notice, makeFakeContext } from '../../mocks/obsidian';
+      import { makeEnv } from './_adoptionEnv';
+    - 
+    - type Ctx = ReturnType<typeof makeFakeContext>;
+    + import * as anchor from '../../../src/framework/sidebar/anchor';
+    + import { fenceOnElement, newPassMemo } from '../../../src/framework/host/ReadingModeBlockHost';
+     @@ test/dom/framework/twin-reuse.test.ts: async function setup(note: string, viewAdoption = true, windowed: false | 'callo
+      	}
+      	const values = (): number[] => [...app.vault.getContent('Note.md')!.matchAll(/current_value: (\d+)/g)].map((m) => Number(m[1]));
+    @@ test/dom/framework/twin-reuse.test.ts: describe('SC-544: a second click before t
+      
+      	test('Reading view, three plain blocks: + upper, + middle 120 ms later: each click lands in its own block and every card shows its own block', async () => {
+      		const t = await setup(triplet());
+    -@@ test/dom/framework/twin-reuse.test.ts: describe('SC-544: a second click before the first block\'s write', () => {
+    - 		expect(order.indexOf('read-middle')).toBeLessThan(order.indexOf('process'));
+    +@@ test/dom/framework/twin-reuse.test.ts: describe('SC-547: the pass cache changes no answer', () => {
+    + 		expect(a.windowEnds).not.toBe(b.windowEnds);
+      	});
+      });
+     +
+ 2:  05fc1225 =  2:  e2822e5a fix(SC-552): a block edit form pins its block when it opens and Save writes through the pin
+ 3:  f8c7f51e =  3:  3c9f86af fix(SC-552): a pinned form stays open when Obsidian throws its view away, and then saves strictly
+ 4:  dfb50595 !  4:  1eba9814 fix(SC-549/SC-552): the first click of a round pins its card's block, and the view's own write goes there
+    @@ test/dom/framework/reading-mode-host-pin.test.ts: describe('SC-552: ReadingModeB
+     +});
+     
+      ## test/dom/framework/twin-reuse.test.ts ##
+    -@@ test/dom/framework/twin-reuse.test.ts: describe('SC-544: a second click before the first block\'s write', () => {
+    +@@ test/dom/framework/twin-reuse.test.ts: describe('SC-547: the pass cache changes no answer', () => {
+      // of its own pending), but the upper block's write (a click inside its debounce, or an outside edit) makes Obsidian hand the form's
+      // element to the block below, and Save then followed the element. The form pins its block when it opens and Save writes through
+      // the pin; a form whose view Obsidian threw away stays open and then saves strictly.
+ 5:  288ce292 =  5:  a12e4dc8 test(SC-552): lifecycle G-S64 - the block edit form opened on one of several identical blocks saves into the block it was opened on
+ 6:  e3a5cf9e =  6:  90feb96e test(SC-552): G-S64 (p) catches a Save that falls back to the twin; keepFormOpenOn host cases; plugin re-enabled in cleanup
+ 7:  34c4f02e =  7:  91308c50 docs(SC-552): architecture - the pinned position, the form that outlives its view, the wide pin (narrows the F1 4.5 contract)
+ 8:  f2b913be =  8:  58e11047 fix(SC-552): a form is kept open past its view only while its note is still shown in some pane (leaf closed / navigated away: it closes with its view as before)
+ 9:  42b62158 =  9:  c2d92f56 test(SC-552): G-S64 (q) triggers a redraw instead of navigating away; (r) navigate-away and (s) pane-close with a pinned form open close the form, nothing written; header counts 50 scenarios; architecture
+10:  260763ab = 10:  26d5f5eb docs(SC-552): lifecycle header counts 50 scenarios and five parts
+ -:  -------- > 11:  f110be1b fix(SC-552): a form that already closed is never kept open - no holder is left on the registry (Save redraws the block, so every normal Save did); comments on the 400-line map limit; the 'section is still there' host test puts the note on screen
+ -:  -------- > 12:  3871e673 test(SC-552): G-S64 asserts the registry holds nothing for a closed form after Save (every form phase) and after Cancel + an outside edit (t)
