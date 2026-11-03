@@ -1,0 +1,17 @@
+import sys
+# mkvariant.py <in harness> <out harness> <RATE> <BUSY_MS> [blockfile]
+# Scratch copy of the in-tree lifecycle harness with G-S59's RATE / BUSY_MS changed; optional probe block injected before main().
+src, out, rate, busy = sys.argv[1:5]
+block = sys.argv[5] if len(sys.argv) > 5 else None
+s = open(src).read()
+def rep(a, b):
+    global s
+    assert s.count(a) == 1, ('anchor count', a[:60], s.count(a))
+    s = s.replace(a, b)
+rep('const repo = path.dirname(dir);', 'const repo = process.env.P472_REPO ?? path.dirname(dir);')
+rep("\t\t\tconst RATE = 8;\n", "\t\t\tconst RATE = %s;\n" % rate)
+rep("\t\t\tconst BUSY_MS = 4000;\n", "\t\t\tconst BUSY_MS = %s;\n" % busy)
+if block:
+    rep('\nasync function main() {', '\n' + open(block).read() + '\nasync function main() {')
+open(out, 'w').write(s)
+print('wrote', out, len(s))

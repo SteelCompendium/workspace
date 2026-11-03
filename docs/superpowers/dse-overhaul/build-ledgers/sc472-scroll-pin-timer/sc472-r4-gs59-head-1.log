@@ -1,0 +1,7 @@
+loadavg-start: 0.54 2.76 3.28 1/3076 1761326 date: 12:46:53
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :160, port 9262, 1 scenario(s)
+OBSIDIAN-LIFECYCLE G-S59 FAIL: (c) scroll to the end: the reader was moved: scrollTop 7456 before the redraw, min 6944 after it, 6944 at the end (new end of the note 7456); pin released 284 ms after the redraw was let go, sizer collapsed at 25 ms and back at 241 ms -- write -> redraw latencies: (a) Reading pane + Live Preview pane: write -> redraw 4307 ms (held 2779), 10344 ms (held 2779), 4192 ms (held 2779); (b) Live Preview host embedding the tracker + a Reading pane of it: write -> redraw 9076 ms (other pane 4225 ms) (held 7486), 4473 ms (other pane 4253 ms) (held 7486), 4495 ms (other pane 4246 ms) (held 7486); (c) scroll down then up: held at 5656 (end 5656), sizer collapsed 36 ms and back 266 ms after the redraw was let go, pin released at 286 ms [shot /tmp/dse-obsidian-lifecycle-fvS0GF/shots/G-S59-FAIL.png]
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-fvS0GF
+OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+rc=1
+loadavg-end: 0.97 2.08 2.94 3/3099 1765466 date: 12:49:19

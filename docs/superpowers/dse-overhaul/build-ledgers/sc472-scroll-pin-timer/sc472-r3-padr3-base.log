@@ -1,0 +1,13 @@
+loadavg-start: 3.45 4.48 3.01 3/3319 1735670 date: 12:29:35 ids=P3R-PAD,P3R-RISK3 bundle=base harness=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc472-r3-a5a83f0e5db8b6abf/h-probe.mjs port=9473
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9473, 2 scenario(s)
+P3R PAD-install "installed"
+P3R PAD {"k":0,"g0":{"st":2254,"sh":3275,"ch":1021,"max":2254},"during":{"pin":true,"sh":3339},"during2":{"pin":true,"st":2318,"sh":3339},"pin":{"on":17,"off":2523},"stEnd":2254,"shEnd":3275,"snap":64,"tl":[[1,"st",2254],[1,"sh",3275],[1,"mh",2700],[1,"pin",0],[3,"A:data-dse-scroll-pin",1],[17,"sh",3339],[17,"pin",1],[164,"mh",2699],[416,"st",2318],[2503,"A:data-dse-scroll-pin",0],[2523,"st",2254],[2523,"sh",3275],[2523,"pin",0]]}
+P3R PAD {"k":1,"g0":{"st":2254,"sh":3275,"ch":1021,"max":2254},"during":{"pin":true,"sh":3339},"during2":{"pin":true,"st":2318,"sh":3339},"pin":{"on":20,"off":2525},"stEnd":2254,"shEnd":3275,"snap":64,"tl":[[1,"st",2254],[1,"sh",3275],[1,"mh",2699],[1,"pin",0],[4,"A:data-dse-scroll-pin",1],[20,"sh",3339],[20,"pin",1],[419,"st",2318],[2504,"A:data-dse-scroll-pin",0],[2525,"st",2254],[2525,"sh",3275],[2525,"pin",0]]}
+OBSIDIAN-LIFECYCLE P3R-PAD ok (run 1: sh 3275 -> 3339 while pinned (phantom 64 px), reader 2318 -> 2254 at release (snap 64 px), pin 17..2523 ms; run 2: sh 3275 -> 3339 while pinned (phantom 64 px), reader 2318 -> 2254 at release (snap 64 px), pin 20..2525 ms)
+P3R RISK3-install "already"
+P3R RISK3 {"k":0,"load":"3.17 4.31 3.00 4/3415 1736616","st0":5287,"sh0":6308,"pin":{"on":9,"off":2530},"blankFrames":152,"blankFirst":1,"blankLast":2530,"blankMax":6276,"stEnd":3160,"shEnd":4693,"st":[[1,"st",5287],[2530,"st",3160]],"sh":[[1,"sh",6308],[9,"sh",6372],[2530,"sh",4181],[2622,"sh",4693]],"gap":[[1,"gap",544],[24,"gap",6276],[2530,"gap",4149],[2622,"gap",48]]}
+P3R RISK3 {"k":1,"load":"3.41 4.29 3.02 5/3419 1736838","st0":5287,"sh0":6308,"pin":{"on":27,"off":2529},"blankFrames":153,"blankFirst":1,"blankLast":2529,"blankMax":6276,"stEnd":3160,"shEnd":4693,"st":[[1,"st",5287],[2529,"st",3160]],"sh":[[1,"sh",6308],[27,"sh",6372],[2529,"sh",4181],[2660,"sh",4693]],"gap":[[1,"gap",544],[42,"gap",6276],[2529,"gap",4149],[2660,"gap",48]]}
+OBSIDIAN-LIFECYCLE P3R-RISK3 ok (run 1: pin off +2530 ms, blank band 1..2530 ms (152 frames, max 6276 px), scrollTop 5287 -> 3160 (sh 6308 -> 4693); run 2: pin off +2529 ms, blank band 1..2529 ms (153 frames, max 6276 px), scrollTop 5287 -> 3160 (sh 6308 -> 4693))
+OBSIDIAN-LIFECYCLE done: 2/2 ok, 0 failed
+rc=0 elapsed=59s
+loadavg-end: 3.43 4.26 3.03 3/3309 1736981 date: 12:30:34

@@ -1,0 +1,18 @@
+import sys, os
+# MUTATION (env MUT): m1 re-arm does not cancel the queued check; m2 the 60-quiet-frame limit removed (a started redraw is busy forever);
+# m3 the backstop's 2-quiet-frame rule removed
+t = sys.argv[1]
+m = os.environ['MUT']
+def rep(rel, old, new):
+    p = t + '/' + rel
+    s = open(p).read()
+    assert s.count(old) == 1, (rel, old[:50], s.count(old))
+    open(p, 'w').write(s.replace(old, new))
+if m == 'm1':
+    rep('src/framework/host/previewScrollPin.ts', "\t\tthis.cancelCheck(held); // a check queued", "\t\t// MUT m1 this.cancelCheck(held); // a check queued")
+elif m == 'm2':
+    rep('src/framework/host/previewScrollPin.ts', "(held.started && quiet < BACKSTOP_REDRAW_QUIET_FRAMES && !this.redrawDone(scroller, held))", "(held.started && (quiet < BACKSTOP_REDRAW_QUIET_FRAMES || true) && !this.redrawDone(scroller, held))")
+elif m == 'm3':
+    rep('src/framework/host/redrawBackstop.ts', "this.quiet >= BACKSTOP_QUIET_FRAMES && ", "(this.quiet >= BACKSTOP_QUIET_FRAMES || true) && ")
+else:
+    raise SystemExit('MUT?')

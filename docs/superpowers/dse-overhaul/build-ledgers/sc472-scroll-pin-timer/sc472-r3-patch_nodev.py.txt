@@ -1,0 +1,18 @@
+import sys
+# CONTROL: undo r2's deviations from the r1 prototype. argv[2] = 'i' (re-pin does not cancel the queued check) or 'ii' (re-pin may lower sizers0)
+t, which = sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else None
+p = t + '/src/framework/host/previewScrollPin.ts'
+s = open(p).read()
+def rep(old, new):
+    global s
+    assert s.count(old) == 1, (old[:50], s.count(old))
+    s = s.replace(old, new)
+import os
+which = os.environ.get('NODEV', which)
+if which == 'i':
+    rep("\t\tthis.cancelCheck(held); // a check queued by the redraw that began before this arm must not judge the new one\n", "\t\t// CONTROL nodev-i\n")
+elif which == 'ii':
+    rep("if (was !== undefined && Number.isFinite(was) && !(v >= was)) held.sizers0.set(key, was);", "if (was !== undefined && Number.isFinite(was) && !(v >= was) && v < 0) held.sizers0.set(key, was); // CONTROL nodev-ii")
+else:
+    raise SystemExit('which?')
+open(p, 'w').write(s)

@@ -1,0 +1,176 @@
+FAIL dom test/dom/framework/livePreviewScrollHold.test.ts
+  ● SC-478: LivePreviewScrollHold hold › a block drawn after PIN_TTL_MS is not held (the pending entry expired)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      276 | 		view.contentDOM.appendChild(late);
+      277 | 		hold.applyHolds(view as never);
+    > 278 | 		expect(late.hasAttribute(HOLD_ATTR)).toBe(false);
+          | 		                                     ^
+      279 | 	});
+      280 |
+      281 | 	test('holds the replacement widget drawn empty at the old height (position mapped through the change), released on mount', async () => {
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:278:40)
+
+  ● SC-478: LivePreviewScrollHold hold › a hold that never sees a mount is released after PIN_TTL_MS; releaseAll() drops the rest
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      441 | 		expect(c.hasAttribute(HOLD_ATTR)).toBe(true);
+      442 | 		jest.advanceTimersByTime(TTL);
+    > 443 | 		expect(c.hasAttribute(HOLD_ATTR)).toBe(false);
+          | 		                                  ^
+      444 | 	});
+      445 | });
+      446 |
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:443:37)
+
+  ● SC-522: a Live Preview host holds its embed of the written note › PIN_TTL_MS backstop, a re-hold never lowers the floor, an inline min-height is restored, unload drops every hold
+
+    expect(received).toBeNull()
+
+    Received: "3190"
+
+      688 | 		expect(held(e)).toBe('3190');
+      689 | 		jest.advanceTimersByTime(1);
+    > 690 | 		expect(held(e)).toBeNull();
+          | 		                ^
+      691 | 		expect(e.style.minHeight).toBe('20px');
+      692 | 		const f = embedWidget('B', 900);
+      693 | 		hold.holdEmbedsOf(fakeView(6800, [f]) as never, 'B.md', 'A.md', resolver({ B: 'B.md' }));
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:690:19)
+
+FAIL dom test/dom/framework/previewScrollPin.test.ts
+  ● SC-198: PreviewScrollPin › release › the TTL drops the pin even if the expected rebuild never arrives
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      168 | 			expect(isPinned(scroller)).toBe(true);
+      169 | 			jest.advanceTimersByTime(1);
+    > 170 | 			expect(isPinned(scroller)).toBe(false);
+          | 			                           ^
+      171 | 			expect(pinStyle(scroller)).toBeNull();
+      172 | 			expect(allPinStyles()).toBe(0); // the injected rule goes with the attribute
+      173 | 		});
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:170:31)
+
+  ● SC-198: PreviewScrollPin › release › a re-pin refreshes the TTL and takes no ratchet from the scroller's own padding on rapid clicks
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "4883px"
+    Received: "4819px"
+
+      181 | 			const pin = new PreviewScrollPin();
+      182 | 			pin.pin(el);
+    > 183 | 			expect(pinnedPx(scroller)).toBe('4883px');
+          | 			                           ^
+      184 |
+      185 | 			// The rule replaces the inline value, so while pinned scrollHeight reads back as the
+      186 | 			// pinned value plus the scroller's padding, and the inline value is unchanged.
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:183:31)
+
+  ● SC-470: PreviewScrollPin.pinReadingViewsOf › the writer's view, already pinned by its write, is re-pinned without ever being lowered (a collapsed height is never captured)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      505 | 			expect(pinnedPx(a.scroller)).toBe('4883px');
+      506 | 			jest.advanceTimersByTime(TTL);
+    > 507 | 			expect(isPinned(a.scroller)).toBe(false);
+          | 			                             ^
+      508 | 		} finally {
+      509 | 			jest.useRealTimers();
+      510 | 		}
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:507:33)
+
+  ● SC-479: embeds pin the host note's scroller › a pin that is first a note's own and then also a host pin gains the anchoring stop, keeps its id and height, and releases on the TTL
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      797 | 			expect(allPinStyles()).toBe(1);
+      798 | 			jest.advanceTimersByTime(TTL);
+    > 799 | 			expect(isPinned(scroller)).toBe(false);
+          | 			                           ^
+      800 | 			expect(allPinStyles()).toBe(0);
+      801 | 		} finally {
+      802 | 			jest.useRealTimers();
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:799:31)
+
+  ● SC-470: the pin is a floor (re-pin and observer) › Obsidian collapsing the inline min-height (46px, 2446px) never lowers the floor
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "4883px"
+    Received: "4819px"
+
+      848 | 			sizerOf(scroller).style.minHeight = collapsed;
+      849 | 			await flushObservers();
+    > 850 | 			expect(pinnedPx(scroller)).toBe('4883px');
+          | 			                           ^
+      851 | 		}
+      852 | 		sizerOf(scroller).style.minHeight = '5000px';
+      853 | 		await flushObservers();
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:850:31)
+
+  ● SC-470: the pin is a floor (re-pin and observer) › the observer is disconnected at release (TTL) and by releaseAll(): later inline writes touch nothing
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 2
+
+      891 | 		const b = pinned();
+      892 | 		jest.advanceTimersByTime(TTL);
+    > 893 | 		expect(allPinStyles()).toBe(0);
+          | 		                       ^
+      894 | 		sizerOf(a.scroller).style.minHeight = '9000px';
+      895 | 		await flushObservers();
+      896 | 		expect(allPinStyles()).toBe(0);
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:893:26)
+
+  ● SC-470: the pin is a floor (re-pin and observer) › a re-pin restarts the TTL (autosave keeps the pin alive) and the release still removes the rule
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      934 | 		expect(isPinned(scroller)).toBe(true);
+      935 | 		jest.advanceTimersByTime(1);
+    > 936 | 		expect(isPinned(scroller)).toBe(false);
+          | 		                           ^
+      937 | 		expect(allPinStyles()).toBe(0);
+      938 | 	});
+      939 | });
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:936:30)
+
+Test Suites: 2 failed, 2 total
+Tests:       10 failed, 82 passed, 92 total
+Snapshots:   0 total
+Time:        2.768 s
+Ran all test suites matching test/dom/framework/previewScrollPin.test.ts|test/dom/framework/livePreviewScrollHold.test.ts.

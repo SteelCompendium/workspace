@@ -1,0 +1,17 @@
+import sys
+# CONTROL: the backstop's busy rules removed everywhere (frames + quiet frames + 20 s cap only)
+t = sys.argv[1]
+def rep(rel, old, new):
+    p = t + '/' + rel
+    s = open(p).read()
+    assert s.count(old) == 1, (rel, old[:50], s.count(old))
+    open(p, 'w').write(s.replace(old, new))
+rep('src/framework/host/previewScrollPin.ts',
+    "(quiet) => emptyRoot(scroller) || (held.started && quiet < BACKSTOP_REDRAW_QUIET_FRAMES && !this.redrawDone(scroller, held)));",
+    "(quiet) => quiet < 0 && BACKSTOP_REDRAW_QUIET_FRAMES > 0 && emptyRoot(scroller)); // CONTROL nobusy")
+rep('src/framework/host/livePreviewScrollHold.ts',
+    "const backstop = new Backstop(win, release, () => Array.from(embed.querySelectorAll('[data-dse-element]')).some((r) => r.childElementCount === 0));",
+    "const backstop = new Backstop(win, release, () => false); // CONTROL nobusy")
+rep('src/framework/host/livePreviewScrollHold.ts',
+    "const backstop = new Backstop(win, release, () => widget.isConnected && unmounted(widget));",
+    "const backstop = new Backstop(win, release, () => false); // CONTROL nobusy")

@@ -1,0 +1,15 @@
+loadavg-start: 1.94 2.53 3.66 4/3083 1476582 date: 09:41:31
+
+> draw-steel-elements@7.0.0 obsidian-lifecycle
+> npm run build-no-check && node visual-harness/obsidian-lifecycle.mjs --only=G-S59
+
+
+> draw-steel-elements@7.0.0 build-no-check
+> node esbuild.config.mjs production
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9262, 1 scenario(s)
+OBSIDIAN-LIFECYCLE G-S59 ok ((a) Reading pane + Live Preview pane: write -> redraw 4374 ms (held 2779), 15352 ms (held 2779), 4395 ms (held 2779); (b) Live Preview host embedding the tracker + a Reading pane of it: write -> redraw 13308 ms (other pane 4416 ms) (held 7486), 12325 ms (other pane 4377 ms) (held 7486), 13751 ms (other pane 4443 ms) (held 7486); CPU throttled 8x around 3 writes per phase)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0
+loadavg-end: 2.51 2.69 3.54 2/3209 1483217 date: 09:44:32

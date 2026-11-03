@@ -1,0 +1,9 @@
+loadavg-start: 2.49 3.89 4.09 3/3316 1987688 date: 14:30:31 ids=G-S59 bundle=old harness=tree port=9473
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9473, 1 scenario(s)
+OBSIDIAN-LIFECYCLE G-S59 FAIL: (c) scroll to the end: the pin was released before the late redraw, when the reader's scroll took the tracker's section out of the document (scrollTop 1979 -> 7456, sizer untouched at 7901) | page eval failed: TypeError: Cannot read properties of undefined (reading 'getBoundingClientRect')
+    at <anonymous>:1:351
+    at <anonymous>:1:448 -- write -> redraw latencies: (a) Reading pane + Live Preview pane: write -> redraw 12732 ms (held 2779), 10186 ms (held 2779), 11218 ms (held 2779); (b) Live Preview host embedding the tracker + a Reading pane of it: write -> redraw 9557 ms (other pane 4251 ms) (held 7486), 9355 ms (other pane 4230 ms) (held 7486), 4443 ms (other pane 4248 ms) (held 7486) [shot /tmp/dse-obsidian-lifecycle-FS76sO/shots/G-S59-FAIL.png]
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-FS76sO
+OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+rc=1 elapsed=149s
+loadavg-end: 1.73 3.08 3.76 4/3227 1990850 date: 14:33:00

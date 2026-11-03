@@ -1,0 +1,682 @@
+// ---------------------------------------------------------------------------- SC-472 r3 probe block (scratch harness copy only; the tree is never edited)
+FIXTURES['Lifecycle/p3r-virt.md'] = `# p3r virt\n\n${Array.from({ length: 10 }, (_, i) => `VPRE filler ${i}.`).join('\n\n')}\n\n${fence('ds-initiative', ['heroes:', ...Array.from({ length: 25 }, (_, i) => HERO(`Hero ${String(i + 1).padStart(2, '0')}`)).flat(), 'enemy_groups: []', 'malice:', '  value: 1'])}\n\n${Array.from({ length: Number(process.env.P3R_POST ?? 110) }, (_, i) => `VPOST filler ${i}.`).join('\n\n')}\n`;
+FIXTURES['Lifecycle/p3r-two.md'] = `# p3r two\n\n${Array.from({ length: 10 }, (_, i) => `TPRE filler ${i}.`).join('\n\n')}\n\n${fence('ds-initiative', ['heroes:', ...Array.from({ length: 25 }, (_, i) => HERO(`Hero ${String(i + 1).padStart(2, '0')}`)).flat(), 'enemy_groups: []', 'malice:', '  value: 1'])}\n\n${Array.from({ length: Number(process.env.P3R_MID ?? 110) }, (_, i) => `TMID filler ${i}.`).join('\n\n')}\n\n${fence('ds-initiative', ['heroes:', ...Array.from({ length: 25 }, (_, i) => HERO(`Second ${String(i + 1).padStart(2, '0')}`)).flat(), 'enemy_groups: []', 'malice:', '  value: 5'])}\n\n${Array.from({ length: 20 }, (_, i) => `TEND filler ${i}.`).join('\n\n')}\n`;
+FIXTURES['Lifecycle/p3r-end.md'] = `# p3r end\n\n${Array.from({ length: 60 }, (_, i) => `END-PRE filler ${i}.`).join('\n\n')}\n\n${fence('ds-initiative', ['heroes:', ...Array.from({ length: 12 }, (_, i) => HERO(`First ${String(i + 1).padStart(2, '0')}`)).flat(), 'enemy_groups: []', 'malice:', '  value: 1'])}\n\nEND-MID\n\n${fence('ds-initiative', ['heroes:', ...Array.from({ length: 12 }, (_, i) => HERO(`Second ${String(i + 1).padStart(2, '0')}`)).flat(), 'enemy_groups: []', 'malice:', '  value: 1'])}\n`;
+FIXTURES['Lifecycle/p3r-pad.md'] = `# p3r pad\n\n${Array.from({ length: 40 }, (_, i) => `PAD-PRE filler ${i}.`).join('\n\n')}\n\n${fence('ds-initiative', ['heroes:', ...Array.from({ length: 6 }, (_, i) => HERO(`Pad ${String(i + 1).padStart(2, '0')}`)).flat(), 'enemy_groups: []', 'malice:', '  value: 1'])}\n\nPAD-END 1.\n\nPAD-END 2.\n`;
+
+const R3 = {
+	RD: (leaf) => `(${leaf}).view.containerEl.querySelector('.markdown-reading-view > .markdown-preview-view')`,
+	log: (id, obj) => console.log(`P3R ${id} ${JSON.stringify(obj)}`),
+	load: () => fs.readFileSync('/proc/loadavg', 'utf8').trim(),
+	async park(t, leaf, below = 1500) {
+		await t.ev(`(() => { const s = ${R3.RD(leaf)}; s.scrollTop = 0; return true; })()`);
+		await t.waitFor(`!!(${t.root(TRACKER, leaf)})`, 'tracker drawn for parking', 15000);
+		for (let i = 0; i < 3; i++) {
+			await t.ev(`(() => { const s = ${R3.RD(leaf)}; const r = ${t.root(TRACKER, leaf)}; s.scrollTop = r.getBoundingClientRect().top - s.getBoundingClientRect().top + s.scrollTop + ${below}; return true; })()`);
+			await t.sleep(450);
+		}
+	},
+	async noPins(t, ms = 25000) {
+		await t.waitFor(`!document.querySelector('[data-dse-scroll-pin], [data-dse-lp-embed-hold], [data-dse-lp-hold]')`, 'every pin / hold gone', ms);
+	},
+	async fetch(t) {
+		return JSON.parse(await t.ev('JSON.stringify(window.__r3rec)'));
+	},
+	/** Holds `leafExpr`'s next setViewData; window.__r3go() runs it. */
+	hold: (t, leafExpr) => t.ev(`(() => { window.__r3go = null; window.__r3goAt = null; const v = (${leafExpr}).view; const o = v.setViewData; v.setViewData = function (d, c) { v.setViewData = o; window.__r3heldAt = performance.now(); window.__r3go = () => { window.__r3goAt = performance.now(); return o.call(v, d, c); }; }; return true; })()`),
+};
+
+// Page side: DSE-origin rAF / setTimeout / MutationObserver accounting (stack contains 'draw-steel-elements'), and capture of the pin / hold Maps.
+function r3PageInstall() {
+	if (window.__r3) return 'already';
+	const st = { raf: 0, rafMs: 0, rafMax: 0, active: new Set(), tmo: 0, tmoActive: new Set(), sample: null, moObs: 0, moDisc: 0, pins: null, holds: null };
+	window.__r3 = st;
+	const isDse = () => {
+		const s = new Error().stack || '';
+		const hit = s.includes('draw-steel-elements');
+		if (hit && !st.sample) st.sample = s.slice(0, 500);
+		return hit;
+	};
+	const oRaf = window.requestAnimationFrame.bind(window);
+	const oCaf = window.cancelAnimationFrame.bind(window);
+	st.oRaf = oRaf;
+	window.requestAnimationFrame = function (cb) {
+		if (!isDse()) return oRaf(cb);
+		st.raf++;
+		const id = oRaf((ts) => {
+			st.active.delete(id);
+			const a = performance.now();
+			try {
+				cb(ts);
+			} finally {
+				const d = performance.now() - a;
+				st.rafMs += d;
+				if (d > st.rafMax) st.rafMax = d;
+			}
+		});
+		st.active.add(id);
+		return id;
+	};
+	window.cancelAnimationFrame = function (id) {
+		st.active.delete(id);
+		return oCaf(id);
+	};
+	const oSt = window.setTimeout.bind(window);
+	const oCt = window.clearTimeout.bind(window);
+	window.setTimeout = function (cb, ms, ...a) {
+		if (typeof cb !== 'function' || !isDse()) return oSt(cb, ms, ...a);
+		st.tmo++;
+		const id = oSt(() => {
+			st.tmoActive.delete(id);
+			cb(...a);
+		}, ms);
+		st.tmoActive.add(id);
+		return id;
+	};
+	window.clearTimeout = function (id) {
+		st.tmoActive.delete(id);
+		return oCt(id);
+	};
+	const OMO = window.MutationObserver;
+	st.OMO = OMO;
+	class MO extends OMO {
+		constructor(cb) {
+			super(cb);
+			this.__dse = isDse();
+			this.__on = false;
+		}
+		observe(...a) {
+			if (this.__dse && !this.__on) {
+				st.moObs++;
+				this.__on = true;
+			}
+			return super.observe(...a);
+		}
+		disconnect() {
+			if (this.__dse && this.__on) {
+				st.moDisc++;
+				this.__on = false;
+			}
+			return super.disconnect();
+		}
+	}
+	window.MutationObserver = MO;
+	const oSet = Map.prototype.set;
+	Map.prototype.set = function (k, v) {
+		try {
+			if (v && typeof v === 'object' && 'px' in v && 'style' in v && 'id' in v && 'win' in v) st.pins = this;
+			if (typeof k === 'function' && v && typeof v === 'object' && 'contentDOM' in v) st.holds = this;
+		} catch {
+			/* probe */
+		}
+		return oSet.call(this, k, v);
+	};
+	return 'installed';
+}
+const r3Stats = `(() => { const s = window.__r3; return { raf: s.raf, rafMs: Math.round(s.rafMs * 100) / 100, rafMax: Math.round(s.rafMax * 100) / 100, rafActive: s.active.size, tmo: s.tmo, tmoActive: s.tmoActive.size, moObs: s.moObs, moDisc: s.moDisc, moNet: s.moObs - s.moDisc, pins: s.pins ? s.pins.size : null, holds: s.holds ? s.holds.size : null, pinAttr: document.querySelectorAll('[data-dse-scroll-pin]').length, pinStyle: document.querySelectorAll('style[data-dse-scroll-pin-style]').length, lpHold: document.querySelectorAll('[data-dse-lp-hold]').length, embHold: document.querySelectorAll('[data-dse-lp-embed-hold]').length }; })()`;
+
+// Page side: a per-frame recorder of one scroller (Reading `.markdown-preview-view` or `.cm-scroller`), compacted to changes.
+function r3PageRec(s, tagged, opts) {
+	const T0 = performance.now();
+	window.__r3t0 = T0;
+	const ev = [];
+	const last = {};
+	const now = () => Math.round(performance.now() - T0);
+	const push = (k, v) => {
+		if (last[k] === v) return;
+		last[k] = v;
+		if (ev.length < 1500) ev.push([now(), k, v]);
+	};
+	const isLp = s.classList.contains('cm-scroller');
+	const rec = { ev, frames: 0, st0: Math.round(s.scrollTop), sh0: s.scrollHeight, ch: s.clientHeight, stMin: Infinity, stMax: -Infinity, done: false, mods: [], tagOff: null, blankFrames: 0, blankMax: 0 };
+	const attrs = opts.attrs || ['data-dse-scroll-pin'];
+	const OMO = (window.__r3 && window.__r3.OMO) || MutationObserver;
+	const mo = new OMO((recs) => {
+		for (const r of recs) {
+			if (r.type === 'attributes' && attrs.includes(r.attributeName)) {
+				const on = r.target.hasAttribute(r.attributeName);
+				push('A:' + r.attributeName + (r.target === s ? '' : '@' + String(r.target.className).slice(0, 24)), on ? 1 : 0);
+			}
+		}
+		if (tagged && !tagged.isConnected && rec.tagOff === null) rec.tagOff = now();
+	});
+	mo.observe(s, { subtree: true, childList: true, attributes: true, attributeFilter: attrs });
+	const ref = app.vault.on('modify', (f) => {
+		rec.mods.push([now(), f.path]);
+	});
+	const raf = (window.__r3 && window.__r3.oRaf) || window.requestAnimationFrame.bind(window);
+	const finish = () => {
+		if (rec.done) return;
+		rec.done = true;
+		mo.disconnect();
+		app.vault.offref(ref);
+		rec.stEnd = Math.round(s.scrollTop);
+		rec.shEnd = s.scrollHeight;
+	};
+	const tick = () => {
+		if (rec.done) return;
+		rec.frames++;
+		const v = Math.round(s.scrollTop);
+		if (v < rec.stMin) rec.stMin = v;
+		if (v > rec.stMax) rec.stMax = v;
+		push('st', v);
+		push('sh', s.scrollHeight);
+		if (!isLp) {
+			const z = s.querySelector(':scope > .markdown-preview-sizer');
+			push('mh', z ? Math.round(parseFloat(z.style.minHeight)) : null);
+			push('pin', s.hasAttribute('data-dse-scroll-pin') ? 1 : 0);
+			if (opts.blank && z) {
+				// blank band: viewport bottom below the last rendered block's bottom
+				const kids = Array.from(z.children).filter((c) => c.getBoundingClientRect().height > 0);
+				const lastKid = kids[kids.length - 1];
+				const vb = s.getBoundingClientRect().bottom;
+				const gap = lastKid ? Math.round(vb - lastKid.getBoundingClientRect().bottom) : null;
+				push('gap', gap);
+				if (gap !== null && gap > 80) {
+					rec.blankFrames++;
+					rec.blankMax = Math.max(rec.blankMax, gap);
+					if (rec.blankFirst === undefined) rec.blankFirst = now();
+					rec.blankLast = now();
+				}
+			}
+		}
+		const rs = Array.from(s.querySelectorAll('[data-dse-element]'));
+		push('roots', rs.length + '/' + rs.filter((r) => r.childElementCount === 0).length);
+		if (tagged) push('tag', tagged.isConnected ? 1 : 0);
+		if (opts.lpb) {
+			// SC-478 pane: holds and blank (connected, unmounted) DSE widgets
+			const ws = Array.from(s.querySelectorAll('.cm-content > .cm-embed-block')).filter((w) => /cm-lang-ds-/.test(w.className));
+			const blank = ws.filter((w) => {
+				const r = w.querySelector('[data-dse-element]');
+				return !r || r.childElementCount === 0;
+			});
+			const vis = blank.filter((w) => {
+				const b = w.getBoundingClientRect();
+				const sr = s.getBoundingClientRect();
+				return b.bottom > sr.top && b.top < sr.bottom && b.height > 0;
+			});
+			push('lhold', s.querySelectorAll('[data-dse-lp-hold]').length);
+			push('blankW', blank.length + '/' + vis.length);
+			if (vis.length) {
+				rec.blankFrames++;
+				if (rec.blankFirst === undefined) rec.blankFirst = now();
+				rec.blankLast = now();
+			}
+		}
+		if (performance.now() - T0 > (opts.ms || 10000)) return finish();
+		raf(tick);
+	};
+	rec.stop = finish;
+	window.__r3rec = rec;
+	raf(tick);
+	return true;
+}
+const r3Rec = (t, scrollerExpr, taggedExpr, opts) => t.ev(`(${r3PageRec.toString()})(${scrollerExpr}, ${taggedExpr}, ${JSON.stringify(opts)})`);
+const r3Install = (t) => t.ev(`(${r3PageInstall.toString()})()`);
+/** events of kind k after time a */
+const r3Pick = (rec, k, a = -1) => rec.ev.filter((e) => e[1] === k && e[0] >= a);
+const r3PinOnOff = (rec, k = 'pin') => {
+	const on = rec.ev.find((e) => e[1] === k && e[2] === 1);
+	const off = on ? rec.ev.find((e) => e[1] === k && e[2] === 0 && e[0] > on[0]) : null;
+	return { on: on ? on[0] : null, off: off ? off[0] : null };
+};
+
+// Risk 4: a reader scrolls while the redraw is delayed (A's setViewData held back), so virtualisation removes / re-inserts the arm-time root.
+SCENARIOS.push({
+	id: 'P3R-RISK4',
+	async run(t) {
+		const rel = process.env.P3R_REL ?? 'Lifecycle/p3r-virt.md';
+		const A = 'app.workspace.getMostRecentLeaf()';
+		const RD = R3.RD(A);
+		R3.log('RISK4-install', await r3Install(t));
+		const out = [];
+		for (const variant of (process.env.P3R_VARIANTS || 'none,far,downup,small').split(',')) {
+			await t.reset(rel);
+			await t.open(rel);
+			await R3.noPins(t);
+			await R3.park(t, A, 1500);
+			await t.tag(TRACKER, 'p3r', A);
+			const geo = await t.ev(`(() => { const s = ${RD}; return { st: Math.round(s.scrollTop), sh: s.scrollHeight, ch: s.clientHeight, roots: s.querySelectorAll('[data-dse-element]').length }; })()`);
+			await R3.hold(t, A);
+			await r3Rec(t, RD, t.root(TRACKER, A), { ms: 7000 });
+			const la = R3.load();
+			await t.edit(rel, `c.replace('  value: 1', '  value: 2')`);
+			await t.waitFor('typeof window.__r3go === "function"', 'A reached setViewData', 10000);
+			const heldAt = await t.ev('Math.round(window.__r3heldAt - window.__r3t0)');
+			const c = await t.ev(`(() => { const r = ${RD}.getBoundingClientRect(); return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) }; })()`);
+			const wheel = async (dy, n) => {
+				for (let i = 0; i < n; i++) {
+					await t.cdp.call('Input.dispatchMouseEvent', { type: 'mouseWheel', x: c.x, y: c.y, deltaX: 0, deltaY: dy });
+					await t.sleep(40);
+				}
+			};
+			if (variant === 'far') await wheel(Number(process.env.P3R_FARD ?? 300), Number(process.env.P3R_FARN ?? 20));
+			if (variant === 'downup') {
+				await wheel(300, 20);
+				await wheel(-300, 6);
+			}
+			if (variant === 'small') await wheel(100, 3);
+			await t.sleep(300);
+			const mid = await t.ev(`(() => { const s = ${RD}; const tg = Array.from(s.querySelectorAll('${TRACKER}')).some((x) => x.__lcTag === 'p3r' && x.isConnected); return { at: Math.round(performance.now() - window.__r3t0), pin: s.hasAttribute('data-dse-scroll-pin'), st: Math.round(s.scrollTop), sh: s.scrollHeight, tagConnected: tg, roots: s.querySelectorAll('[data-dse-element]').length, mh: Math.round(parseFloat(s.querySelector(':scope > .markdown-preview-sizer').style.minHeight)) }; })()`);
+			await t.ev('(() => { window.__r3go(); return true; })()');
+			const goAt = await t.ev('Math.round(window.__r3goAt - window.__r3t0)');
+			await t.waitFor('window.__r3rec.done', 'recorder', 20000);
+			const rec = await R3.fetch(t);
+			const after = r3Pick(rec, 'st', goAt).map((e) => e[2]);
+			const pin = r3PinOnOff(rec);
+			const res = { variant, load: la, geo, heldAt, mid, goAt, pin, tagOff: rec.tagOff, stAfterGoMin: after.length ? Math.min(...after) : mid.st, stEnd: rec.stEnd, clamped: (after.length ? Math.min(...after) : mid.st) < mid.st - 2, mhAfterGo: r3Pick(rec, 'mh', goAt).slice(0, 6) };
+			R3.log('RISK4', res);
+			R3.log('RISK4-tl', rec.ev.filter((e) => e[1] !== 'sh' && e[1] !== 'st').slice(0, 80));
+			out.push(`${variant}: pin ${mid.pin ? 'ON' : 'off'} at go (${goAt} ms), tag ${mid.tagConnected ? 'in' : 'out'}, st ${mid.st} -> min ${res.stAfterGoMin} end ${rec.stEnd}${res.clamped ? ' CLAMPED' : ''}`);
+		}
+		await t.reset(rel);
+		await t.open('Lifecycle/other.md');
+		return out.join('; ');
+	},
+});
+
+// Item 2 / addendum 10: re-pin during a redraw, two writes in flight, writes to a different note. Reading pane A of tall.md.
+SCENARIOS.push({
+	id: 'P3R-REPIN',
+	async run(t) {
+		const rel = 'Lifecycle/tall.md';
+		const A = 'app.workspace.getMostRecentLeaf()';
+		const RD = R3.RD(A);
+		const THR = Number(process.env.P3R_THR ?? 1);
+		R3.log('REPIN-install', await r3Install(t));
+		const out = [];
+		for (const variant of (process.env.P3R_VARIANTS || 'collapse-write2,collapse-trigger,recovered-trigger,two-writes-50,two-writes-400,diff-note').split(',')) {
+			await t.reset(rel);
+			await t.open(rel);
+			await R3.noPins(t);
+			await R3.park(t, A, 1500);
+			await t.tag(TRACKER, 'p3r', A);
+			if (variant === 'diff-note') await R3.hold(t, A);
+			// the page-side trigger, armed before the write: fires once
+			await t.ev(`(() => { const s = ${RD}; const f = app.vault.getAbstractFileByPath(${JSON.stringify(rel)}); const tagged = Array.from(s.querySelectorAll('${TRACKER}')).find((x) => x.__lcTag === 'p3r'); const v = ${JSON.stringify(variant)}; window.__r3fired = null; const OMO = window.__r3.OMO; const mo = new OMO(() => { if (window.__r3fired) return; const collapsed = tagged && !tagged.isConnected; const fresh = Array.from(s.querySelectorAll('${TRACKER}')).some((x) => x.isConnected && x !== tagged && x.childElementCount > 0); let go = false; if ((v === 'collapse-write2' || v === 'collapse-trigger') && collapsed) go = true; if (v === 'recovered-trigger' && collapsed && fresh) go = true; if (!go) return; window.__r3fired = Math.round(performance.now() - window.__r3t0); mo.disconnect(); if (v === 'collapse-write2') app.vault.process(f, (c) => c.replace(/ {2}value: \\d+/, '  value: 9')); else if (${JSON.stringify(process.env.P3R_TASK ?? '0')} === '1') setTimeout(() => { window.__r3fired2 = Math.round(performance.now() - window.__r3t0); app.vault.trigger('modify', f); }, 0); else app.vault.trigger('modify', f); }); mo.observe(s, { subtree: true, childList: true }); window.__r3mo = mo; return true; })()`);
+			if (variant === 'recovered-rearm-redraw') {
+				// the sizer is back (a check is now queued for the next frame); in the same task a re-pin (modify) arrives, and its redraw
+				// (setViewData with new text) comes 300 ms later. Without deviation (i) the old check releases the new arm's pin before that redraw.
+				await t.ev(`(() => { const s = ${RD}; const f = app.vault.getAbstractFileByPath(${JSON.stringify(rel)}); const tagged = Array.from(s.querySelectorAll('${TRACKER}')).find((x) => x.__lcTag === 'p3r'); const v = (${A}).view; window.__r3fired = null; let collapsed = false; const mo = new window.__r3.OMO(() => { if (window.__r3fired) return; const z = s.querySelector(':scope > .markdown-preview-sizer'); const mh = z ? parseFloat(z.style.minHeight) : NaN; if (tagged && !tagged.isConnected && mh < 3000) collapsed = true; if (!collapsed || !(mh >= 5400)) return; window.__r3fired = Math.round(performance.now() - window.__r3t0); mo.disconnect(); const go2 = () => { window.__r3fired2 = Math.round(performance.now() - window.__r3t0); app.vault.trigger('modify', f); }; if (${JSON.stringify(process.env.P3R_TASK ?? '0')} === '1') setTimeout(go2, 0); else go2(); window.__r3log = []; const lg = new window.__r3.OMO((recs) => { for (const r of recs) { const hit = (n) => n.nodeType === 1 && (n.matches('${TRACKER}') || n.querySelector('${TRACKER}')); const rm = Array.from(r.removedNodes).filter(hit).length; const ad = Array.from(r.addedNodes).filter(hit).length; if (rm || ad) window.__r3log.push([Math.round(performance.now() - window.__r3t0), rm, ad, String(r.target.className).slice(0, 40)]); } }); lg.observe(s, { subtree: true, childList: true }); setTimeout(() => lg.disconnect(), 3000); const data = v.getViewData().replace(/ {2}value: \\d+/, '  value: 7'); setTimeout(() => { window.__r3redraw2 = Math.round(performance.now() - window.__r3t0); v.setViewData(data, false); }, Number(${JSON.stringify(process.env.P3R_DELAY ?? '300')})); }); mo.observe(s, { subtree: true, childList: true, attributes: true, attributeFilter: ['style'] }); window.__r3mo = mo; return true; })()`);
+			}
+			await r3Rec(t, RD, t.root(TRACKER, A), { ms: Number(process.env.P3R_MS ?? 9000) });
+			const la = R3.load();
+			if (THR > 1) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: THR });
+			try {
+				await t.edit(rel, `c.replace(/ {2}value: \\d+/, '  value: 2')`);
+				if (variant === 'two-writes-50' || variant === 'two-writes-400') {
+					await t.sleep(variant === 'two-writes-50' ? 50 : 400);
+					await t.edit(rel, `c.replace(/ {2}value: \\d+/, '  value: 3')`);
+				}
+				if (variant === 'diff-note') {
+					await t.waitFor('typeof window.__r3go === "function"', 'A reached setViewData', 10000);
+					for (let i = 0; i < 3; i++) {
+						await t.ev(`app.vault.modify(app.vault.getAbstractFileByPath('Lifecycle/other.md'), '# other\\n\\nJust another note ${i}.\\n')`);
+						await t.sleep(250);
+					}
+					await t.ev('(() => { window.__r3goPin = !!document.querySelector("[data-dse-scroll-pin]"); window.__r3go(); return true; })()');
+				}
+				await t.waitFor('window.__r3rec.done', 'recorder', 60000);
+			} finally {
+				if (THR > 1) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: 1 });
+				await t.ev('(() => { if (window.__r3mo) window.__r3mo.disconnect(); return true; })()');
+			}
+			const rec = await R3.fetch(t);
+			const pins = rec.ev.filter((e) => e[1] === 'pin');
+			const lastMod = rec.mods.length ? rec.mods[rec.mods.length - 1][0] : null;
+			const res = { variant, thr: THR, load: la, redraw2: await t.ev('window.__r3redraw2 ?? null'), rlog: await t.ev('window.__r3log ?? null'), fired2: await t.ev('window.__r3fired2 ?? null'), st0: rec.st0, stMin: rec.stMin, stMax: rec.stMax, stEnd: rec.stEnd, held: rec.stMin === rec.st0 && rec.stMax === rec.st0, fired: await t.ev('window.__r3fired'), goPin: await t.ev('window.__r3goPin ?? null'), mods: rec.mods, pins, tagOff: rec.tagOff, lastPinOff: pins.length && pins[pins.length - 1][2] === 0 ? pins[pins.length - 1][0] : 'STILL ON', offAfterLastMod: pins.length && pins[pins.length - 1][2] === 0 && lastMod !== null ? pins[pins.length - 1][0] - lastMod : null, mh: rec.ev.filter((e) => e[1] === 'mh').slice(0, 12), stats: await t.ev(r3Stats) };
+			R3.log('REPIN', res);
+			out.push(`${variant}: ${res.held ? 'held' : 'MOVED ' + rec.st0 + '->' + rec.stMin} pin off ${res.lastPinOff} ms (${res.offAfterLastMod} after last modify)`);
+			await t.ev(`app.vault.modify(app.vault.getAbstractFileByPath('Lifecycle/other.md'), ${JSON.stringify(FIXTURES['Lifecycle/other.md'])})`);
+		}
+		await t.reset(rel);
+		await t.open('Lifecycle/other.md');
+		return out.join('; ');
+	},
+});
+
+// Item 2: leaf navigated to another note mid-pin; plugin unloaded mid-pin; popout closed mid-pin. Reading view of tall.md.
+SCENARIOS.push({
+	id: 'P3R-LIFE',
+	async run(t) {
+		const rel = 'Lifecycle/tall.md';
+		const A = 'app.workspace.getMostRecentLeaf()';
+		const RD = R3.RD(A);
+		R3.log('LIFE-install', await r3Install(t));
+		const out = [];
+		// (nav) write, then navigate the leaf to other.md before / right after the redraw
+		for (const when of ['nav-before-redraw', 'nav-at-collapse']) {
+			await t.reset(rel);
+			await t.open(rel);
+			await R3.noPins(t);
+			await R3.park(t, A, 1500);
+			await t.tag(TRACKER, 'p3r', A);
+			if (when === 'nav-before-redraw') await R3.hold(t, A);
+			await r3Rec(t, RD, t.root(TRACKER, A), { ms: 8000 });
+			if (when === 'nav-at-collapse') await t.ev(`(() => { const s = ${RD}; const tagged = Array.from(s.querySelectorAll('${TRACKER}')).find((x) => x.__lcTag === 'p3r'); const mo = new window.__r3.OMO(() => { if (tagged.isConnected) return; mo.disconnect(); window.__r3navAt = Math.round(performance.now() - window.__r3t0); (${A}).openFile(app.vault.getAbstractFileByPath('Lifecycle/other.md'), { state: { mode: 'preview' } }); }); mo.observe(s, { subtree: true, childList: true }); return true; })()`);
+			await t.edit(rel, `c.replace(/ {2}value: \\d+/, '  value: 2')`);
+			if (when === 'nav-before-redraw') {
+				await t.waitFor('typeof window.__r3go === "function"', 'A reached setViewData', 10000);
+				await t.ev(`(async () => { window.__r3navAt = Math.round(performance.now() - window.__r3t0); await (${A}).openFile(app.vault.getAbstractFileByPath('Lifecycle/other.md'), { state: { mode: 'preview' } }); return true; })()`);
+			}
+			await t.waitFor('window.__r3rec.done', 'recorder', 20000);
+			const rec = await R3.fetch(t);
+			const pins = rec.ev.filter((e) => e[1] === 'pin');
+			const res = { when, navAt: await t.ev('window.__r3navAt'), pins, sh: rec.ev.filter((e) => e[1] === 'sh').slice(0, 10), mh: rec.ev.filter((e) => e[1] === 'mh').slice(0, 10), st: rec.ev.filter((e) => e[1] === 'st').slice(0, 10), file: await t.ev(`(${A}).view.file.path`), stats: await t.ev(r3Stats) };
+			R3.log('LIFE', res);
+			out.push(`${when}: pin ${JSON.stringify(pins)}`);
+			await t.open(rel);
+		}
+		// (unload) pinned (redraw held back), then the plugin disabled; then the held redraw released; re-enabled
+		{
+			await t.reset(rel);
+			await t.open(rel);
+			await R3.noPins(t);
+			await R3.park(t, A, 1500);
+			await R3.hold(t, A);
+			await t.edit(rel, `c.replace(/ {2}value: \\d+/, '  value: 2')`);
+			await t.waitFor('typeof window.__r3go === "function"', 'A reached setViewData', 10000);
+			const before = await t.ev(r3Stats);
+			await t.ev(`app.plugins.disablePlugin('draw-steel-elements')`);
+			await t.sleep(300);
+			const afterOff = await t.ev(r3Stats);
+			await t.ev('(() => { window.__r3go(); return true; })()');
+			const r0 = await t.ev('window.__r3.raf');
+			await t.sleep(4000);
+			const after4s = await t.ev(r3Stats);
+			await t.ev(`app.plugins.enablePlugin('draw-steel-elements')`);
+			await t.sleep(3000);
+			const res = { case: 'unload', before, afterOff, after4s, dseRafAfterUnload4s: after4s.raf - r0 };
+			R3.log('LIFE', res);
+			out.push(`unload: attr ${afterOff.pinAttr}, style ${afterOff.pinStyle}, pins map ${afterOff.pins}, DSE rAF in 4 s after ${res.dseRafAfterUnload4s}`);
+		}
+		// (popout) tall.md in a popout Reading view, pinned (redraw held), popout closed
+		{
+			await t.reset(rel);
+			const ok = await t.ev(`(async () => { const leaf = app.workspace.openPopoutLeaf(); window.__r3P = leaf; await leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'preview' }, active: true }); return true; })()`);
+			await t.sleep(2500);
+			const P = 'window.__r3P';
+			const PRD = `(${P}).view.containerEl.querySelector('.markdown-reading-view > .markdown-preview-view')`;
+			await t.waitFor(`!!(${PRD}) && !!${PRD}.querySelector('${TRACKER}')`, 'popout tracker', 20000);
+			for (let i = 0; i < 3; i++) {
+				await t.ev(`(() => { const s = ${PRD}; const r = s.querySelector('${TRACKER}'); s.scrollTop = r.getBoundingClientRect().top - s.getBoundingClientRect().top + s.scrollTop + 1500; return true; })()`);
+				await t.sleep(450);
+			}
+			await R3.hold(t, P);
+			const pdoc = `(${PRD}).ownerDocument`;
+			await t.edit(rel, `c.replace(/ {2}value: \\d+/, '  value: 2')`);
+			await t.waitFor('typeof window.__r3go === "function"', 'popout reached setViewData', 10000);
+			const pinned = await t.ev(`(() => { const s = ${PRD}; return { attr: s.hasAttribute('data-dse-scroll-pin'), style: ${pdoc}.querySelectorAll('style[data-dse-scroll-pin-style]').length, popoutDoc: ${pdoc} !== document }; })()`);
+			const before = await t.ev(r3Stats);
+			await t.ev(`(() => { const w = (${PRD}).ownerDocument.defaultView; window.__r3Pwin = w; w.close(); return true; })()`);
+			await t.sleep(1500);
+			const after = await t.ev(r3Stats);
+			const closed = await t.ev('!!(window.__r3Pwin && window.__r3Pwin.closed)');
+			const res = { case: 'popout', ok, pinned, before, after, closed };
+			R3.log('LIFE', res);
+			out.push(`popout: pinned ${JSON.stringify(pinned)}, pins map ${before.pins} -> ${after.pins} after close (closed ${closed})`);
+		}
+		await t.reset(rel);
+		await t.open('Lifecycle/other.md');
+		return out.join('; ');
+	},
+});
+
+// ---------------------------------------------------------------------------- SC-472 r3 probe block, part 2
+const R3_ALIASES = ['ds-ancestry', 'ds-career', 'ds-char', 'ds-class', 'ds-complication', 'ds-condition', 'ds-conditions', 'ds-counter', 'ds-culture', 'ds-encounter', 'ds-featureblock', 'ds-feature', 'ds-hero', 'ds-hr', 'ds-initiative', 'ds-kit', 'ds-montage', 'ds-negotiation', 'ds-party', 'ds-perk', 'ds-project', 'ds-resource', 'ds-roll', 'ds-rule', 'ds-statblock', 'ds-skills', 'ds-stamina-bar', 'ds-surges', 'ds-title', 'ds-tokens', 'ds-treasure', 'ds-values-row', 'ds-scc'];
+FIXTURES['Lifecycle/p3r-census.md'] = `# census\n\n${R3_ALIASES.map((a) => `CENSUS ${a}\n\n${fence(a, [])}\n\nCENSUS ${a} body\n\n${fence(a, ['name: Probe'])}`).join('\n\n')}\n\nCENSUS END\n`;
+
+// Census: DSE roots that stay EMPTY (no element child) after mounting: such a root keeps every Reading pin / LP embed hold busy until the 20 s cap.
+SCENARIOS.push({
+	id: 'P3R-EMPTY',
+	async run(t) {
+		const out = {};
+		const demo = await t.ev(`app.vault.getMarkdownFiles().map((f) => f.path).filter((p) => !p.startsWith('Lifecycle/') || p === 'Lifecycle/p3r-census.md' || p === 'Lifecycle/tall.md' || p === 'Lifecycle/tracker.md' || p === 'Lifecycle/multi.md' || p === 'Lifecycle/chrome-frame.md')`);
+		for (const rel of demo) {
+			for (const mode of ['preview', 'source']) {
+				await t.ev(`(async () => { const leaf = app.workspace.getMostRecentLeaf(); await leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: ${JSON.stringify(mode)}, source: false }, active: true }); })()`);
+				await t.sleep(1500);
+				const scroller = mode === 'preview' ? `app.workspace.getMostRecentLeaf().view.containerEl.querySelector('.markdown-reading-view > .markdown-preview-view')` : `app.workspace.getMostRecentLeaf().view.editor.cm.scrollDOM`;
+				const found = new Set();
+				let roots = 0;
+				for (let i = 0; i < 60; i++) {
+					const r = await t.ev(`(() => { const s = ${scroller}; if (!s) return null; const rs = Array.from(s.querySelectorAll('[data-dse-element]')).filter((x) => x.isConnected); const empty = rs.filter((x) => x.childElementCount === 0).map((x) => x.getAttribute('data-dse-element') + (x.parentElement && x.parentElement.closest('[data-dse-element]') ? '(nested)' : '') + ':' + (x.textContent || '').slice(0, 30)); const atEnd = s.scrollTop + s.clientHeight >= s.scrollHeight - 2; s.scrollTop += Math.round(s.clientHeight * 0.7); return { n: rs.length, empty, atEnd }; })()`);
+					if (!r) break;
+					roots = Math.max(roots, r.n);
+					await t.sleep(500);
+					// re-check after the settle: only roots still empty 500 ms later count
+					const again = await t.ev(`(() => { const s = ${scroller}; return Array.from(s.querySelectorAll('[data-dse-element]')).filter((x) => x.isConnected && x.childElementCount === 0).map((x) => x.getAttribute('data-dse-element') + (x.parentElement && x.parentElement.closest('[data-dse-element]') ? '(nested)' : '') + ':' + (x.textContent || '').slice(0, 30)); })()`);
+					for (const e of r.empty) if (again.includes(e)) found.add(e);
+					if (r.atEnd) break;
+				}
+				out[`${rel} [${mode}]`] = { roots, empty: [...found] };
+			}
+		}
+		R3.log('EMPTY', out);
+		await t.open('Lifecycle/other.md');
+		const bad = Object.entries(out).filter(([, v]) => v.empty.length);
+		return bad.length ? `EMPTY ROOTS: ${JSON.stringify(bad)}` : `no permanently empty root in ${Object.keys(out).length} views`;
+	},
+});
+
+// Cost + leak: 10 writes of three kinds with a Reading pane A and a Live Preview pane B of tall.md; per write DSE rAF ticks / ms while pinned;
+// after the 10th, nothing of ours left running.
+SCENARIOS.push({
+	id: 'P3R-COST',
+	async run(t) {
+		const rel = 'Lifecycle/tall.md';
+		const A = 'window.__r3A';
+		const RD = R3.RD(A);
+		R3.log('COST-install', await r3Install(t));
+		await t.reset(rel);
+		await t.open(rel);
+		await t.ev(`(async () => { window.__r3A = app.workspace.getMostRecentLeaf(); const b = app.workspace.getLeaf('split', 'vertical'); window.__r3B = b; await b.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'source', source: false }, active: false }); app.workspace.setActiveLeaf(window.__r3A, { focus: true }); return true; })()`);
+		await t.sleep(2000);
+		const cmB = 'window.__r3B.view.editor.cm';
+		const lpRootB = `Array.from(${cmB}.contentDOM.querySelectorAll('${TRACKER}')).find((x) => x.isConnected)`;
+		const kinds = ['outside', 'outside', 'never', 'other-section', 'outside', 'never', 'other-section', 'outside', 'never', 'outside'];
+		const per = [];
+		for (let k = 0; k < kinds.length; k++) {
+			await R3.noPins(t);
+			for (let i = 0; i < 12 && !(await t.ev(`!!(${lpRootB})`)); i++) {
+				await t.ev(`(() => { ${cmB}.scrollDOM.scrollTop += 600; return true; })()`);
+				await t.sleep(250);
+			}
+			await t.ev(`(() => { const s = ${cmB}.scrollDOM; const r = ${lpRootB}; if (r) s.scrollTop = r.getBoundingClientRect().top - s.getBoundingClientRect().top + s.scrollTop + 1500; return true; })()`);
+			await R3.park(t, A, 1500);
+			const s0 = await t.ev(r3Stats);
+			await r3Rec(t, RD, 'null', { ms: 6000 });
+			const kind = kinds[k];
+			if (kind === 'outside') await t.edit(rel, `c.replace(/ {2}value: \\d+/, '  value: ${k + 2}')`);
+			if (kind === 'never') await t.ev(`(() => { app.vault.trigger('modify', app.vault.getAbstractFileByPath(${JSON.stringify(rel)})); return true; })()`);
+			if (kind === 'other-section') await t.edit(rel, `c.replace(/POST filler 29\\.[^\\n]*/, 'POST filler 29. edit ${k}')`);
+			await t.waitFor('window.__r3rec.done', 'recorder', 20000);
+			await R3.noPins(t);
+			await t.sleep(300);
+			const s1 = await t.ev(r3Stats);
+			const rec = await R3.fetch(t);
+			const p = r3PinOnOff(rec);
+			per.push({ k, kind, pinOn: p.on, pinOff: p.off, life: p.on !== null && p.off !== null ? p.off - p.on : null, held: rec.stMin === rec.st0 && rec.stMax === rec.st0, dseRaf: s1.raf - s0.raf, dseRafMs: Math.round((s1.rafMs - s0.rafMs) * 100) / 100, rafMaxSoFar: s1.rafMax, mh: rec.ev.filter((e) => e[1] === 'mh').slice(0, 6), mods: rec.mods });
+		}
+		await t.sleep(3000);
+		const q0 = await t.ev(r3Stats);
+		await t.sleep(2000);
+		const q1 = await t.ev(r3Stats);
+		const res = { per, quiet: { rafIn2s: q1.raf - q0.raf, tmoIn2s: q1.tmo - q0.tmo, after: q1 }, sample: await t.ev('window.__r3.sample') };
+		R3.log('COST', res);
+		await t.ev(`(() => { if (window.__r3B) window.__r3B.detach(); window.__r3B = null; return true; })()`);
+		await t.reset(rel);
+		await t.open('Lifecycle/other.md');
+		return `per write ${JSON.stringify(per.map((x) => [x.kind, x.life, x.dseRaf, x.dseRafMs, x.held]))}; quiet 2 s: rAF ${res.quiet.rafIn2s}, active rAF ${q1.rafActive}, pins ${q1.pins}, holds ${q1.holds}, DSE MO net ${q1.moNet}`;
+	},
+});
+
+// SC-478 pane B (owner follow-up): LP sibling at 8x (no busy spin, as r1 measured it): pane B's widget hold and blank widget, head vs stock.
+SCENARIOS.push({
+	id: 'P3R-LPB',
+	async run(t) {
+		const rel = 'Lifecycle/tall.md';
+		const A = 'window.__r3A';
+		const RATE = Number(process.env.P3R_THR ?? 8);
+		R3.log('LPB-install', await r3Install(t));
+		await t.reset(rel);
+		await t.open(rel);
+		await t.ev(`(async () => { window.__r3A = app.workspace.getMostRecentLeaf(); const b = app.workspace.getLeaf('split', 'vertical'); window.__r3B = b; await b.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'source', source: false }, active: false }); app.workspace.setActiveLeaf(window.__r3A, { focus: true }); return true; })()`);
+		await t.sleep(2000);
+		const cmB = 'window.__r3B.view.editor.cm';
+		const lpRootB = `Array.from(${cmB}.contentDOM.querySelectorAll('${TRACKER}')).find((x) => x.isConnected)`;
+		const out = [];
+		for (let k = 0; k < Number(process.env.P3R_WRITES ?? 3); k++) {
+			await R3.noPins(t, 40000);
+			await t.ev(`(() => { ${cmB}.scrollDOM.scrollTop = 0; return true; })()`);
+			await t.sleep(300);
+			for (let i = 0; i < 12 && !(await t.ev(`!!(${lpRootB})`)); i++) {
+				await t.ev(`(() => { ${cmB}.scrollDOM.scrollTop += 600; return true; })()`);
+				await t.sleep(250);
+			}
+			for (let i = 0; i < 2; i++) {
+				await t.ev(`(() => { const s = ${cmB}.scrollDOM; const r = ${lpRootB}; if (r) s.scrollTop = r.getBoundingClientRect().top - s.getBoundingClientRect().top + s.scrollTop + 1500; return true; })()`);
+				await t.sleep(300);
+			}
+			await R3.park(t, A, 1500);
+			await r3Rec(t, `${cmB}.scrollDOM`, 'null', { ms: 20000, lpb: true, attrs: ['data-dse-lp-hold'] });
+			const la = R3.load();
+			try {
+				await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: RATE });
+				await t.edit(rel, `c.replace(/ {2}value: \\d+/, '  value: ${k + 2}')`);
+				await t.waitFor('window.__r3rec.done', 'recorder', 90000);
+			} finally {
+				await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: 1 });
+			}
+			const rec = await R3.fetch(t);
+			const holds = rec.ev.filter((e) => e[1] === 'lhold' || e[1].startsWith('A:'));
+			const blank = rec.ev.filter((e) => e[1] === 'blankW');
+			const holdOn = holds.find((e) => e[1] === 'lhold' && e[2] > 0);
+			const holdOffs = holds.filter((e) => e[1] === 'lhold' && e[2] === 0 && holdOn && e[0] > holdOn[0]);
+			const res = { k, rate: RATE, load: la, st0: rec.st0, stMin: rec.stMin, stMax: rec.stMax, stEnd: rec.stEnd, holdOn: holdOn ? holdOn[0] : null, holdOff: holdOffs.length ? holdOffs[holdOffs.length - 1][0] : null, blankFrames: rec.blankFrames, blankFirst: rec.blankFirst ?? null, blankLast: rec.blankLast ?? null, frames: rec.frames, holds: holds.slice(0, 30), blank: blank.slice(0, 30) };
+			R3.log('LPB', res);
+			out.push(`write ${k + 1}: hold ${res.holdOn}..${res.holdOff} ms, visible blank widget frames ${res.blankFrames} (${res.blankFirst}..${res.blankLast} ms), B scrollTop ${rec.st0} min ${rec.stMin} max ${rec.stMax}`);
+			await t.reset(rel);
+		}
+		await t.ev(`(() => { if (window.__r3B) window.__r3B.detach(); window.__r3B = null; return true; })()`);
+		await t.reset(rel);
+		await t.open('Lifecycle/other.md');
+		return out.join('; ');
+	},
+});
+
+// 64 px: reader parked at the very end; a write the tracker section is not redrawn for (a paragraph above changed); the reader then scrolls to
+// the bottom while pinned; snapped back at release?
+SCENARIOS.push({
+	id: 'P3R-PAD',
+	async run(t) {
+		const rel = 'Lifecycle/p3r-pad.md';
+		const A = 'app.workspace.getMostRecentLeaf()';
+		const RD = R3.RD(A);
+		R3.log('PAD-install', await r3Install(t));
+		const out = [];
+		for (let k = 0; k < 2; k++) {
+			await t.reset(rel);
+			await t.open(rel);
+			await R3.noPins(t);
+			await t.waitFor(`!!(${t.root(TRACKER, A)})`, 'tracker', 15000);
+			for (let i = 0; i < 4; i++) {
+				await t.ev(`(() => { const s = ${RD}; s.scrollTop = s.scrollHeight; return true; })()`);
+				await t.sleep(400);
+			}
+			const g0 = await t.ev(`(() => { const s = ${RD}; return { st: Math.round(s.scrollTop), sh: s.scrollHeight, ch: s.clientHeight, max: s.scrollHeight - s.clientHeight }; })()`);
+			await r3Rec(t, RD, 'null', { ms: 6000 });
+			await t.edit(rel, `c.replace('PAD-PRE filler 0.', 'PAD-PRE filler 0 edited ${k}.')`);
+			await t.sleep(400);
+			const during = await t.ev(`(() => { const s = ${RD}; s.scrollTop = s.scrollHeight; return { pin: s.hasAttribute('data-dse-scroll-pin'), sh: s.scrollHeight }; })()`);
+			await t.sleep(200);
+			const during2 = await t.ev(`(() => { const s = ${RD}; return { pin: s.hasAttribute('data-dse-scroll-pin'), st: Math.round(s.scrollTop), sh: s.scrollHeight }; })()`);
+			await t.waitFor('window.__r3rec.done', 'recorder', 20000);
+			const rec = await R3.fetch(t);
+			const p = r3PinOnOff(rec);
+			const res = { k, g0, during, during2, pin: p, stEnd: rec.stEnd, shEnd: rec.shEnd, snap: during2.st - rec.stEnd, tl: rec.ev.filter((e) => e[1] !== 'roots').slice(0, 40) };
+			R3.log('PAD', res);
+			out.push(`run ${k + 1}: sh ${g0.sh} -> ${during.sh} while pinned (phantom ${during.sh - g0.sh} px), reader ${during2.st} -> ${rec.stEnd} at release (snap ${res.snap} px), pin ${p.on}..${p.off} ms`);
+		}
+		await t.reset(rel);
+		await t.open('Lifecycle/other.md');
+		return out.join('; ');
+	},
+});
+
+// Risk 3 re-check: Reading view, the LAST of two trackers deleted, reader at the end, unloaded. Band = frames with the viewport bottom > 80 px below
+// the last rendered block; settled scrollTop.
+SCENARIOS.push({
+	id: 'P3R-RISK3',
+	async run(t) {
+		const rel = 'Lifecycle/p3r-end.md';
+		const A = 'app.workspace.getMostRecentLeaf()';
+		const RD = R3.RD(A);
+		R3.log('RISK3-install', await r3Install(t));
+		const out = [];
+		for (let k = 0; k < Number(process.env.P3R_REPS ?? 2); k++) {
+			await t.reset(rel);
+			await t.open(rel);
+			await R3.noPins(t);
+			for (let i = 0; i < 6; i++) {
+				await t.ev(`(() => { const s = ${RD}; s.scrollTop = s.scrollHeight; return true; })()`);
+				await t.sleep(500);
+			}
+			await t.waitFor(`Array.from(document.querySelectorAll('${TRACKER}')).some((r) => r.isConnected && r.childElementCount > 0)`, 'the end tracker drawn');
+			for (let i = 0; i < 3; i++) {
+				await t.ev(`(() => { const s = ${RD}; s.scrollTop = s.scrollHeight; return true; })()`);
+				await t.sleep(500);
+			}
+			const la = R3.load();
+			await r3Rec(t, RD, 'null', { ms: 9000, blank: true });
+			const del = FIXTURES[rel].replace(new RegExp('END-MID\\n\\n' + '`'.repeat(3) + 'ds-initiative[\\s\\S]*?' + '`'.repeat(3) + '\\n'), 'END-MID\n');
+			await t.ev(`app.vault.modify(app.vault.getAbstractFileByPath(${JSON.stringify(rel)}), ${JSON.stringify(del)})`);
+			await t.waitFor('window.__r3rec.done', 'recorder', 20000);
+			const rec = await R3.fetch(t);
+			const p = r3PinOnOff(rec);
+			const sts = rec.ev.filter((e) => e[1] === 'st');
+			const res = { k, load: la, st0: rec.st0, sh0: rec.sh0, pin: p, blankFrames: rec.blankFrames, blankFirst: rec.blankFirst ?? null, blankLast: rec.blankLast ?? null, blankMax: rec.blankMax, stEnd: rec.stEnd, shEnd: rec.shEnd, st: sts.slice(0, 10), sh: rec.ev.filter((e) => e[1] === 'sh').slice(0, 10), gap: rec.ev.filter((e) => e[1] === 'gap').slice(0, 20) };
+			R3.log('RISK3', res);
+			out.push(`run ${k + 1}: pin off +${p.off} ms, blank band ${res.blankFirst}..${res.blankLast} ms (${rec.blankFrames} frames, max ${rec.blankMax} px), scrollTop ${rec.st0} -> ${rec.stEnd} (sh ${rec.sh0} -> ${rec.shEnd})`);
+		}
+		await t.reset(rel);
+		await t.open('Lifecycle/other.md');
+		return out.join('; ');
+	},
+});
+
+// Hidden window (item 2): the main window hidden through Electron; a write pins; when is it released? (MO timestamps; rAF does not run hidden.)
+SCENARIOS.push({
+	id: 'P3R-HIDDEN',
+	async run(t) {
+		const rel = 'Lifecycle/tall.md';
+		const A = 'app.workspace.getMostRecentLeaf()';
+		const RD = R3.RD(A);
+		await t.reset(rel);
+		await t.open(rel);
+		await R3.noPins(t);
+		await R3.park(t, A, 1500);
+		const how = await t.ev(`(() => { const tries = []; let w = null; for (const f of [() => window.require('@electron/remote').getCurrentWindow(), () => window.require('electron').remote.getCurrentWindow()]) { try { w = f(); if (w) break; } catch (e) { tries.push(String(e).slice(0, 80)); } } window.__r3win = w; return { ok: !!w, tries }; })()`);
+		if (!how.ok) {
+			R3.log('HIDDEN', { skipped: how });
+			return `not probed: no Electron window handle (${JSON.stringify(how.tries)})`;
+		}
+		await t.ev(`(() => { const s = ${RD}; const T0 = performance.now(); const r = { ev: [] }; window.__r3h = r; const mo = new MutationObserver(() => { r.ev.push([Math.round(performance.now() - T0), s.hasAttribute('data-dse-scroll-pin') ? 1 : 0, document.visibilityState]); }); mo.observe(s, { attributes: true, attributeFilter: ['data-dse-scroll-pin'] }); r.mo = mo; r.T0 = T0; return true; })()`);
+		await t.ev('(() => { window.__r3win.hide(); return true; })()');
+		await t.sleep(1500);
+		const vis = await t.ev('document.visibilityState');
+		await t.ev(`(() => { window.__r3h.writeAt = Math.round(performance.now() - window.__r3h.T0); app.vault.process(app.vault.getAbstractFileByPath(${JSON.stringify(rel)}), (c) => c.replace(/ {2}value: \\d+/, '  value: 5')); return true; })()`);
+		for (let i = 0; i < 60; i++) {
+			await t.sleep(500);
+			const n = await t.ev('window.__r3h.ev.filter((e) => e[1] === 0).length');
+			if (n > 0) break;
+		}
+		const r = await t.ev('JSON.stringify({ ev: window.__r3h.ev, writeAt: window.__r3h.writeAt })');
+		await t.ev('(() => { window.__r3win.show(); window.__r3h.mo.disconnect(); return true; })()');
+		await t.sleep(1500);
+		R3.log('HIDDEN', { vis, r: JSON.parse(r) });
+		await t.reset(rel);
+		await t.open('Lifecycle/other.md');
+		return `visibility ${vis}; ${r}`;
+	},
+});

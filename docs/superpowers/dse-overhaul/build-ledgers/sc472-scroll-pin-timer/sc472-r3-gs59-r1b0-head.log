@@ -1,0 +1,7 @@
+loadavg-start: 13.15 7.38 5.87 6/3311 1578226 date: 10:27:16 ids=G-S59 bundle=head harness=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc472-r3-a5a83f0e5db8b6abf/h-r1b0.mjs port=9473
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :160, port 9473, 1 scenario(s)
+OBSIDIAN-LIFECYCLE G-S59 FAIL: (a) Reading pane + Live Preview pane: vacuous - no write was redrawn later than PIN_TTL_MS (2500 ms); latencies [959,798,1190]. The race this scenario is about was not exercised | (b) Live Preview host embedding the tracker + a Reading pane of it: vacuous - no write was redrawn later than PIN_TTL_MS (2500 ms); latencies [107,58,52]. The race this scenario is about was not exercised -- write -> redraw latencies: (a) Reading pane + Live Preview pane: write -> redraw 959 ms (held 2779), 798 ms (held 2779), 1190 ms (held 2779); (b) Live Preview host embedding the tracker + a Reading pane of it: write -> redraw 107 ms (other pane 61 ms) (held 7486), 58 ms (other pane 32 ms) (held 7486), 52 ms (other pane 22 ms) (held 7486) [shot /tmp/dse-obsidian-lifecycle-jjkY9E/shots/G-S59-FAIL.png]
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-jjkY9E
+OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+rc=1 elapsed=62s
+loadavg-end: 7.75 6.95 5.82 2/3312 1579892 date: 10:28:18

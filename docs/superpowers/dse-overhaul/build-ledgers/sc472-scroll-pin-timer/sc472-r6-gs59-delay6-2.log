@@ -1,0 +1,7 @@
+loadavg-start: 7.02 5.37 4.50 6/3122 2062425 date: 15:08:29
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :160, port 9481, 1 scenario(s)
+OBSIDIAN-LIFECYCLE G-S59 FAIL: (c) scroll to the end: the pin was released before the late redraw (2219 ms after the write), when the reader's scroll took the tracker's section out of the document (scrollTop 1979 -> 7456, sizer untouched at 7901) | (c) scroll down then up: the pin was released before the late redraw (2209 ms after the write), when the reader's scroll took the tracker's section out of the document (scrollTop 1979 -> 5656, sizer untouched at 7901) | (c) scroll to the second tracker: the pin was released before the late redraw (2275 ms after the write), when the reader's scroll drew a second tracker (scrollTop 1979 -> 10111, sizer untouched at 10556) -- write -> redraw latencies: (a) Reading pane + Live Preview pane: write -> redraw 4300 ms (held 2779), 10594 ms (held 2779), 10137 ms (held 2779); (b) Live Preview host embedding the tracker + a Reading pane of it: write -> redraw 9250 ms (other pane 4262 ms) (held 7486), 8740 ms (other pane 4314 ms) (held 7486), 9337 ms (other pane 4244 ms) (held 7486) [shot /tmp/dse-obsidian-lifecycle-jZw1fy/shots/G-S59-FAIL.png]
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-jZw1fy
+OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+rc=1
+loadavg-end: 1.95 3.83 4.05 1/3088 2065861 date: 15:11:04

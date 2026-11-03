@@ -1,0 +1,7 @@
+loadavg-start: 1.44 2.88 3.67 1/3107 1991620 date: 14:33:32 ids=G-S59 bundle=prevdelay harness=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc472-r3-a5a83f0e5db8b6abf/h-c-only.mjs port=9473
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9473, 1 scenario(s)
+OBSIDIAN-LIFECYCLE G-S59 FAIL: (a) Reading pane + Live Preview pane: vacuous - no write was redrawn later than PIN_TTL_MS (2500 ms); latencies []. The race this scenario is about was not exercised | (b) Live Preview host embedding the tracker + a Reading pane of it: vacuous - no write was redrawn later than PIN_TTL_MS (2500 ms); latencies []. The race this scenario is about was not exercised | (c) scroll down then up: the pin was released before the late redraw, when the reader's scroll took the tracker's section out of the document (scrollTop 1979 -> 5656, sizer untouched at 7901) -- write -> redraw latencies: (a) Reading pane + Live Preview pane: write -> redraw ; (b) Live Preview host embedding the tracker + a Reading pane of it: write -> redraw ; (c) scroll to the end: scrollHeight stayed 7965 (arm 7965) through the collapse (reader at 7456, end 6944), sizer collapsed 29 ms and back 253 ms after the redraw was let go, pin released at 297 ms [shot /tmp/dse-obsidian-lifecycle-4yAbrn/shots/G-S59-FAIL.png]
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-4yAbrn
+OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+rc=1 elapsed=26s
+loadavg-end: 1.05 2.65 3.57 3/3203 1992771 date: 14:33:58

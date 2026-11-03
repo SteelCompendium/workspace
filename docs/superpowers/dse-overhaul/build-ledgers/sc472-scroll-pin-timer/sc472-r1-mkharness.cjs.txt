@@ -1,0 +1,18 @@
+// SC-472 r1: build a SCRATCH copy of the in-tree lifecycle harness with the P472 probe block injected before main(),
+// and every scenario run wrapped by p472Run (throttle + timeline). The tree is never edited.
+// usage: node mkharness.cjs <in-tree harness> <out file> <block file>
+const fs = require('fs');
+const [src, out, block] = process.argv.slice(2);
+let s = fs.readFileSync(src, 'utf8');
+const rep = (a, b) => {
+	if (s.split(a).length !== 2) {
+		console.error('anchor count != 1: ' + a.slice(0, 60));
+		process.exit(3);
+	}
+	s = s.replace(a, b);
+};
+rep('const repo = path.dirname(dir);', 'const repo = process.env.P472_REPO ?? path.dirname(dir);');
+rep('\nasync function main() {', '\n' + fs.readFileSync(block, 'utf8') + '\nasync function main() {');
+rep('const summary = await s.run(t);', 'const summary = await p472Run(s, t);');
+fs.writeFileSync(out, s);
+console.log(`wrote ${out} (${s.length} bytes)`);

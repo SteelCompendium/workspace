@@ -1,0 +1,19 @@
+import sys, os
+# r5 MUTATIONS (env MUT): n5 evidence (c) removed; n9 takeRecords removed; n12 releaseNavigated releases nothing
+t = sys.argv[1]
+m = os.environ['MUT']
+p = t + '/src/framework/host/previewScrollPin.ts'
+s = open(p).read()
+def rep(old, new):
+    global s
+    assert s.count(old) == 1, (old[:50], s.count(old))
+    s = s.replace(old, new)
+if m == 'n5':
+    rep("for (const root of held.roots0) if (root.isConnected && root.parentElement !== held.parents0.get(root)) return true; // (c)", "// MUT n5 (c) removed")
+elif m == 'n9':
+    rep("held.observer?.takeRecords(); // ...nor", "// MUT n9 held.observer?.takeRecords(); // ...nor")
+elif m == 'n12':
+    rep("if (this.navigatedAway(held)) this.release(scroller);\n\t\t}\n\t}", "if (this.navigatedAway(held) && scroller === null) this.release(scroller); // MUT n12\n\t\t}\n\t}")
+else:
+    raise SystemExit('MUT?')
+open(p, 'w').write(s)

@@ -1,0 +1,7 @@
+loadavg-start: 3.65 3.39 3.28 1/3355 1772020 date: 12:53:00
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :162, port 9262, 1 scenario(s)
+OBSIDIAN-LIFECYCLE G-S59 FAIL: (c) scroll to the end: the scroller was too short while the sizer was collapsed (scrollHeight 7965 < scrollTop 7456 + 1021) - it clamps; pin released 293 ms after the redraw was let go, sizer collapsed at 34 ms and back at 253 ms -- write -> redraw latencies: (a) Reading pane + Live Preview pane: write -> redraw 11477 ms (held 2779), 10506 ms (held 2779), 10487 ms (held 2779); (b) Live Preview host embedding the tracker + a Reading pane of it: write -> redraw 9347 ms (other pane 4271 ms) (held 7486), 9090 ms (other pane 4244 ms) (held 7486), 9216 ms (other pane 4285 ms) (held 7486); (c) scroll down then up: scrollHeight stayed 7965 through the collapse (reader at 5656, end 5656), sizer collapsed 49 ms and back 285 ms after the redraw was let go, pin released at 304 ms [shot /tmp/dse-obsidian-lifecycle-ylbiSh/shots/G-S59-FAIL.png]
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-ylbiSh
+OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+rc=1
+loadavg-end: 2.10 2.82 3.08 1/3377 1775906 date: 12:55:29

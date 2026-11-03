@@ -1,0 +1,9 @@
+import sys
+# CONTROL (r5 item 8): the end-of-redraw check runs 1000 ms after the mutation instead of one frame later, so a build that wrongly counts a
+# virtualised-out root as "redraw started" releases the pin about 1 s after the root leaves (not within the 300 ms G-S59 (c) waits).
+p = sys.argv[1] + '/src/framework/host/previewScrollPin.ts'
+s = open(p).read()
+old = "held.check = typeof held.win.requestAnimationFrame === 'function' ? held.win.requestAnimationFrame(run) : held.win.setTimeout(run, 0);"
+assert s.count(old) == 1, s.count(old)
+s = s.replace(old, "held.check = held.win.setTimeout(run, 1000); // CONTROL delay")
+open(p, 'w').write(s)

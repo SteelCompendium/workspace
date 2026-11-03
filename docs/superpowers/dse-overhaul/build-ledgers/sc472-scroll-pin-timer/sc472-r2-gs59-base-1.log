@@ -1,0 +1,7 @@
+loadavg-start: 2.04 3.03 3.74 2/3171 1322568 date: 08:31:48
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :161, port 9262, 1 scenario(s)
+OBSIDIAN-LIFECYCLE G-S59 FAIL: (a) Reading pane + Live Preview pane write 1: scrollTop moved: start 2779, min 2001, max 2779, end 2001 over 16 frames (tracker replaced 8164 ms after the write, the Reading pane's data-dse-scroll-pin on 4 frames) | (a) Reading pane + Live Preview pane write 3: scrollTop moved: start 2779, min 2001, max 2779, end 2001 over 15 frames (tracker replaced 7708 ms after the write, the Reading pane's data-dse-scroll-pin on 3 frames) | (b) Live Preview host embedding the tracker + a Reading pane of it write 1: the host embed's data-dse-lp-embed-hold was not on when the tracker was replaced (5282 ms after the write) - it was dropped before the redraw | (b) Live Preview host embedding the tracker + a Reading pane of it write 2: the host embed's data-dse-lp-embed-hold was not on when the tracker was replaced (4925 ms after the write) - it was dropped before the redraw [shot /tmp/dse-obsidian-lifecycle-K9XgC2/shots/G-S59-FAIL.png]
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-K9XgC2
+OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+rc=1
+loadavg-end: 1.87 2.67 3.52 5/3086 1327225 date: 08:33:49

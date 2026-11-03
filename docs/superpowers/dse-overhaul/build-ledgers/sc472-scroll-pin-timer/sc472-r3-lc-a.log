@@ -1,0 +1,17 @@
+loadavg-start: 13.12 6.67 5.37 14/3292 1558056 date: 10:14:14 ids=G-S8,G-S15,G-S18 bundle=repo harness=tree port=9473
+
+> draw-steel-elements@7.0.0 obsidian-lifecycle
+> npm run build-no-check && node visual-harness/obsidian-lifecycle.mjs --only=G-S8,G-S15,G-S18
+
+
+> draw-steel-elements@7.0.0 build-no-check
+> node esbuild.config.mjs production
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :162, port 9473, 3 scenario(s)
+OBSIDIAN-LIFECYCLE G-S8 ok (adoption on: scrollTop held at 2779 over 29 frames; adoption off: tracker rebuilt, sizer min-height fell to 2446px under the pin and was 5501px at its release, scrollTop held at 2779 over 36 frames (2023ms))
+OBSIDIAN-LIFECYCLE G-S15 ok ((a) second pane: sizer fell to 2446px under the pin, 6187px at release, scrollTop held at 2779 over 39 frames; (b) external vault.process: sizer fell to 2446px under the pin, 5501px at release, scrollTop held at 2779 over 14 frames; (b) external write on disk: sizer fell to 2446px under the pin, 5501px at release, scrollTop held at 2779 over 14 frames)
+OBSIDIAN-LIFECYCLE G-S18 ok ((a) another pane: scrollTop held at 3020 over 36 frames, top line 63+1500, tracker 3725px, held 3725px for 0 frames; (b1) external vault.process: scrollTop held at 3020 over 10 frames, top line 63+1500, tracker 3039px, held 3039px for 0 frames; (b2) external write on disk: scrollTop held at 3020 over 10 frames, top line 63+1500, tracker 3039px, held 3039px for 0 frames; (c) own write: scrollTop held at 3020 over 34 frames, top line 63+1500, tracker 3039px, held 3039px for 0 frames; (d) wheel before a late set: scrollTop held at 2620 over 11 frames, top line 63+1100, tracker 3725px, held 3725px for 0 frames; (e) insert above the fence + change: scrollTop held at 3020 over 10 frames, top line 65+1452, tracker 3039px, held 3039px for 0 frames)
+OBSIDIAN-LIFECYCLE done: 3/3 ok, 0 failed
+rc=0 elapsed=94s
+loadavg-end: 8.51 6.86 5.56 4/3605 1561348 date: 10:15:48

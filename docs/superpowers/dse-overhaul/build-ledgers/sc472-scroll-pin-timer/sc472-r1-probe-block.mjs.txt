@@ -1,0 +1,420 @@
+// ---------------------------------------------------------------------------- SC-472 r1 probe block (scratch copy only)
+// Per scenario: optional CDP CPU throttle (P472_THR, P472_THR_IDS) + a page timeline recorder dumped as `P472-TL <id> ...`.
+const P472_THR = Number(process.env.P472_THR ?? 1);
+const P472_THR_IDS = (process.env.P472_THR_IDS ?? '').split(',').filter(Boolean);
+const P472_SAMPLE_MS = Number(process.env.P472_SAMPLE_MS ?? 8000);
+const P472_REPS = Number(process.env.P472_REPS ?? 2);
+const P472_REC_INSTALL = `(() => {
+  if (window.__p472) { try { window.__p472.stop(); } catch (e) {} }
+  const T0 = performance.now();
+  const ev = [];
+  window.__p472dbg = { push: (...a) => { if (ev.length < 8000) ev.push([Math.round(performance.now() - T0), 'dbg', ...a]); } };
+  const now = () => Math.round(performance.now() - T0);
+  const push = (...a) => { if (ev.length < 8000) ev.push([now(), ...a]); };
+  const leafIdx = (el) => { const leaf = el.closest && el.closest('.workspace-leaf'); return leaf ? Array.from(document.querySelectorAll('.workspace-leaf')).indexOf(leaf) : -1; };
+  const where = (el) => { if (!el || !el.closest) return '?'; return leafIdx(el) + (el.closest('.cm-scroller') ? 'lp' : 'rd') + (el.closest('.internal-embed') ? 'E' : ''); };
+  const lastMh = new WeakMap(); const lastSt = new WeakMap(); const mounted = new WeakSet();
+  const countRoots = (n) => (n.nodeType !== 1 ? 0 : (n.matches('[data-dse-element]') ? 1 : 0) + n.querySelectorAll('[data-dse-element]').length);
+  const mo = new MutationObserver((recs) => {
+    for (const r of recs) {
+      const el = r.target;
+      if (r.type === 'attributes') {
+        const a = r.attributeName;
+        if (a === 'style') {
+          if (!el.classList || !el.classList.contains('markdown-preview-sizer')) continue;
+          const v = Math.round(parseFloat(el.style.minHeight));
+          if (lastMh.get(el) === v) continue;
+          lastMh.set(el, v);
+          push('mh', where(el), v);
+        } else {
+          const on = el.hasAttribute(a); const was = r.oldValue !== null;
+          if (on === was) continue;
+          push(a === 'data-dse-scroll-pin' ? 'pin' : a === 'data-dse-lp-embed-hold' ? 'ehold' : 'lhold', where(el), on ? 1 : 0, on ? el.getAttribute(a) : r.oldValue);
+        }
+      } else {
+        let rm = 0, add = 0, addM = 0;
+        for (const n of r.removedNodes) rm += countRoots(n);
+        for (const n of r.addedNodes) { const c = countRoots(n); add += c; if (c && n.nodeType === 1) addM += Array.from(n.matches('[data-dse-element]') ? [n] : n.querySelectorAll('[data-dse-element]')).filter((x) => x.childElementCount > 0).length; }
+        if (rm) push('rm', where(el), rm);
+        if (add) push('add', where(el), add, addM);
+        if (el.nodeType === 1 && el.matches('[data-dse-element]') && r.addedNodes.length && !mounted.has(el)) { mounted.add(el); push('mnt', where(el)); }
+      }
+    }
+  });
+  mo.observe(document.body, { subtree: true, childList: true, attributes: true, attributeOldValue: true, attributeFilter: ['style', 'data-dse-scroll-pin', 'data-dse-lp-embed-hold', 'data-dse-lp-hold'] });
+  const isScroller = (el) => el && el.nodeType === 1 && (el.classList.contains('cm-scroller') || (el.classList.contains('markdown-preview-view') && !(el.parentElement && el.parentElement.closest('.markdown-preview-view'))));
+  const onScroll = (e) => { const el = e.target; if (!isScroller(el)) return; const st = Math.round(el.scrollTop); const l = lastSt.has(el) ? lastSt.get(el) : null; if (l !== null && Math.abs(st - l) < 20) return; lastSt.set(el, st); push('st', where(el), l, st, Math.round(el.scrollHeight)); };
+  document.addEventListener('scroll', onScroll, true);
+  const ref = app.vault.on('modify', (f) => { push('mod', f.path); for (const s of document.querySelectorAll('.markdown-preview-view, .cm-scroller')) { if (!s.isConnected || !isScroller(s) || s.scrollTop <= 0) continue; lastSt.set(s, Math.round(s.scrollTop)); push('st0', where(s), Math.round(s.scrollTop), Math.round(s.scrollHeight)); } });
+  let raf = 0; let lastF = performance.now();
+  const frame = () => { const n = performance.now(); if (n - lastF > 300) push('gap', Math.round(n - lastF)); lastF = n; raf = requestAnimationFrame(frame); };
+  raf = requestAnimationFrame(frame);
+  window.__p472 = { stop: () => { mo.disconnect(); document.removeEventListener('scroll', onScroll, true); app.vault.offref(ref); cancelAnimationFrame(raf); }, dump: () => { window.__p472.stop(); return JSON.stringify(ev); } };
+  return true;
+})()`;
+async function p472Run(s, t) {
+	const thr = P472_THR > 1 && (!P472_THR_IDS.length || P472_THR_IDS.includes(s.id)) ? P472_THR : 1;
+	const la0 = fs.readFileSync('/proc/loadavg', 'utf8').trim();
+	await t.ev(P472_REC_INSTALL);
+	if (thr > 1) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: thr });
+	const w0 = Date.now();
+	try {
+		return await s.run(t);
+	} finally {
+		try {
+			if (thr > 1) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: 1 });
+		} catch {}
+		let tl = null;
+		try {
+			tl = await t.ev('window.__p472 ? window.__p472.dump() : null');
+		} catch (e) {
+			tl = JSON.stringify('dump failed ' + e);
+		}
+		console.log(`P472-TL ${s.id} thr=${thr} wall=${Date.now() - w0}ms load0=[${la0}] load1=[${fs.readFileSync('/proc/loadavg', 'utf8').trim()}] ${tl}`);
+	}
+}
+const p472Sampler = (scrollerExpr, ms) => `new Promise((resolve) => { const s = ${scrollerExpr}; const st0 = Math.round(s.scrollTop); const sh0 = Math.round(s.scrollHeight); let stMin = st0, stMax = st0, frames = 0, shMax = sh0; const t0 = performance.now(); const tick = () => { const v = Math.round(s.scrollTop); stMin = Math.min(stMin, v); stMax = Math.max(stMax, v); shMax = Math.max(shMax, Math.round(s.scrollHeight)); frames++; if (performance.now() - t0 < ${ms}) requestAnimationFrame(tick); else resolve({ st0, stMin, stMax, stEnd: Math.round(s.scrollTop), frames, sh0, shMax, shEnd: Math.round(s.scrollHeight), ch: s.clientHeight }); }; requestAnimationFrame(tick); })`;
+const p472Start = (t, scrollerExpr, ms = P472_SAMPLE_MS) => t.ev(`(() => { window.__p472samp = ${p472Sampler(scrollerExpr, ms)}; return true; })()`);
+const P472_RD = (leaf) => `(${leaf}).view.containerEl.querySelector('.markdown-reading-view > .markdown-preview-view')`;
+const p472ParkTall = async (t, leaf) => {
+	for (let i = 0; i < 3; i++) {
+		await t.ev(`(() => { const s = ${P472_RD(leaf)}; const r = ${t.root(TRACKER, leaf)}; s.scrollTop = r.getBoundingClientRect().top - s.getBoundingClientRect().top + s.scrollTop + 1500; return true; })()`);
+		await t.sleep(450);
+	}
+};
+const p472Held = (out) => out.every((m) => m.stMin === m.st0 && m.stEnd === m.st0);
+
+// SC-470 r1's "lp-process": tall.md in Reading pane A AND Live Preview pane B; an outside vault.process; A observed.
+SCENARIOS.push({
+	id: 'P472-LPSIB',
+	async run(t) {
+		const rel = 'Lifecycle/tall.md';
+		const A = 'window.__p472A';
+		const out = [];
+		await t.open(rel);
+		await t.reset(rel);
+		try {
+			await t.ev(`(async () => { window.__p472A = app.workspace.getMostRecentLeaf(); const b = app.workspace.getLeaf('split', 'vertical'); window.__p472B = b; await b.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'source', source: false }, active: false }); app.workspace.setActiveLeaf(window.__p472A, { focus: true }); return true; })()`);
+			await t.sleep(2000);
+			const cmB = 'window.__p472B.view.editor.cm';
+			const lpRootB = `Array.from(${cmB}.contentDOM.querySelectorAll('${TRACKER}')).find((x) => x.isConnected)`;
+			for (let k = 0; k < P472_REPS; k++) {
+				// park the Live Preview sibling B inside the tracker too, so its widget is drawn and redrawn (SC-470 r1's load)
+				for (let i = 0; i < 12 && !(await t.ev(`!!(${lpRootB})`)); i++) { await t.ev(`(() => { ${cmB}.scrollDOM.scrollTop += 600; return true; })()`); await t.sleep(250); }
+				for (let i = 0; i < 2; i++) { await t.ev(`(() => { const s = ${cmB}.scrollDOM; const r = ${lpRootB}; if (r) s.scrollTop = r.getBoundingClientRect().top - s.getBoundingClientRect().top + s.scrollTop + 1500; return true; })()`); await t.sleep(300); }
+				await p472ParkTall(t, A);
+				await t.tag(TRACKER, 'p472', A);
+				await p472Start(t, P472_RD(A));
+				await t.edit(rel, `c.replace(/ {2}value: \\d+/, '  value: ${k + 2}')`);
+				const m = await t.ev('window.__p472samp');
+				m.redrawn = !(await t.sameRoot(TRACKER, 'p472', A));
+				out.push(m);
+				await t.reset(rel);
+				await t.sleep(2500);
+			}
+		} finally {
+			await t.ev(`(() => { if (window.__p472B) window.__p472B.detach(); window.__p472B = null; return true; })()`);
+		}
+		t.expect(p472Held(out), `Reading pane A moved: ${JSON.stringify(out)}`);
+		return JSON.stringify(out);
+	},
+});
+
+// Part C, Reading view own pin, unloaded: (1) an ADOPTED own write (adoption on); (2) a write Obsidian never redraws in the DSE
+// section (a paragraph far from the tracker changed); (3) two outside writes 1 s apart. Pin on/off comes from the P472-TL timeline.
+SCENARIOS.push({
+	id: 'P472-READC',
+	async run(t) {
+		const rel = 'Lifecycle/tall.md';
+		const A = 'app.workspace.getMostRecentLeaf()';
+		const out = {};
+		const one = async (name, act) => {
+			await t.open(rel);
+			await t.reset(rel);
+			await p472ParkTall(t, A);
+			await t.tag(TRACKER, 'p472', A);
+			await t.ev(`(() => { window.__p472mark && window.__p472mark(); return true; })()`);
+			await p472Start(t, P472_RD(A), 9000);
+			await act();
+			const m = await t.ev('window.__p472samp');
+			m.redrawn = !(await t.sameRoot(TRACKER, 'p472', A));
+			out[name] = m;
+		};
+		await one('adopted', async () => {
+			const ok = await t.ev(`(() => { const s = ${P472_RD(A)}; const sr = s.getBoundingClientRect(); const b = Array.from(${t.root(TRACKER, A)}.querySelectorAll('button.dse-init__portrait-toggle')).find((x) => { const r = x.getBoundingClientRect(); return r.top > sr.top + 100 && r.bottom < sr.bottom - 100; }); if (!b) return false; b.click(); return true; })()`);
+			t.expect(ok, 'adopted: no visible toggle');
+		});
+		await one('noredraw', async () => {
+			await t.edit(rel, `c.replace('POST filler 29.', 'POST filler 29 changed.')`);
+		});
+		await one('two1s', async () => {
+			await t.edit(rel, `c.replace(/ {2}value: \\d+/, '  value: 2')`);
+			await t.sleep(1000);
+			await t.edit(rel, `c.replace(/ {2}value: \\d+/, '  value: 3')`);
+		});
+		await t.reset(rel);
+		return JSON.stringify(out);
+	},
+});
+
+// Part C, SC-479 host pin + SC-522 LP embed hold, unloaded: the embed's own write ADOPTED (adoption on), and a write to B
+// that Obsidian does not redraw in the embed... (B is the tracker alone, so every content write redraws; the adopted write is the
+// no-redraw case here). Host parked at its end.
+SCENARIOS.push({
+	id: 'P472-HOSTC',
+	async run(t) {
+		const out = {};
+		// Reading host
+		{
+			const host = 'Lifecycle/embhost.md';
+			const rel = 'Lifecycle/embtracker.md';
+			await t.reset(rel);
+			await t.open(host);
+			const A = 'app.workspace.getMostRecentLeaf()';
+			const emb = `Array.from(${P472_RD(A)}.querySelectorAll('.internal-embed ${TRACKER}')).find((x) => x.isConnected)`;
+			for (const name of ['rd-adopted', 'rd-two1s']) {
+				await t.waitFor(`!!(${emb}) && (${emb}).childElementCount > 0`, 'embed drawn');
+				for (let i = 0; i < 3; i++) {
+					await t.ev(`(() => { const s = ${P472_RD(A)}; s.scrollTop = s.scrollHeight; return true; })()`);
+					await t.sleep(450);
+				}
+				await t.ev(`(() => { (${emb}).__lcTag = 'p472h'; return true; })()`);
+				await p472Start(t, P472_RD(A), 9000);
+				if (name === 'rd-adopted') {
+					const ok = await t.ev(`(() => { const s = ${P472_RD(A)}; const sr = s.getBoundingClientRect(); const b = Array.from((${emb}).querySelectorAll('button.dse-init__portrait-toggle')).find((x) => { const r = x.getBoundingClientRect(); return r.top > sr.top && r.bottom < sr.bottom; }); if (!b) return false; b.click(); return true; })()`);
+					t.expect(ok, 'rd-adopted: no visible toggle');
+				} else {
+					await t.edit(rel, `c.replace(/ {2}value: \\d+/, '  value: 7')`);
+					await t.sleep(1000);
+					await t.edit(rel, `c.replace(/ {2}value: \\d+/, '  value: 8')`);
+				}
+				const m = await t.ev('window.__p472samp');
+				m.redrawn = !(await t.ev(`Array.from(${P472_RD(A)}.querySelectorAll('${TRACKER}')).some((x) => x.isConnected && x.__lcTag === 'p472h')`));
+				out[name] = m;
+				await t.reset(rel);
+				await t.sleep(1500);
+			}
+		}
+		// Live Preview host
+		{
+			const host = 'Lifecycle/lpembhostend.md';
+			const rel = 'Lifecycle/lpembtracker.md';
+			await t.reset(rel);
+			await t.open(host);
+			await t.ev(`(async () => { window.__p472A = app.workspace.getMostRecentLeaf(); await window.__p472A.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(host)}, mode: 'source', source: false }, active: true }); window.__p472A.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+			await t.sleep(1500);
+			const cm = 'window.__p472A.view.editor.cm';
+			const embedOf = `Array.from(${cm}.contentDOM.children).find((e) => e.classList.contains('internal-embed') && !!e.querySelector('${TRACKER}'))`;
+			const embRoot = `((${embedOf}) || null)?.querySelector('${TRACKER}')`;
+			for (const name of ['lp-adopted', 'lp-two1s']) {
+				await t.ev(`(() => { ${cm}.scrollDOM.scrollTop = 0; return true; })()`);
+				for (let i = 0; i < 60 && !(await t.ev(`!!(${embRoot})`)); i++) {
+					await t.ev(`(() => { const s = ${cm}.scrollDOM; s.scrollTop += Math.round(s.clientHeight * 0.6); return true; })()`);
+					await t.sleep(200);
+				}
+				await t.waitFor(`!!(${embRoot}) && (${embRoot}).childElementCount > 0`, 'lp embed drawn');
+				for (let i = 0; i < 3; i++) {
+					await t.ev(`(() => { const s = ${cm}.scrollDOM; s.scrollTop = s.scrollHeight; return true; })()`);
+					await t.sleep(450);
+				}
+				await t.ev(`(() => { (${embRoot}).__lcTag = 'p472l'; return true; })()`);
+				await p472Start(t, `${cm}.scrollDOM`, 9000);
+				if (name === 'lp-adopted') {
+					const ok = await t.ev(`(() => { const s = ${cm}.scrollDOM; const sr = s.getBoundingClientRect(); const b = Array.from((${embRoot}).querySelectorAll('button.dse-init__portrait-toggle')).find((x) => { const r = x.getBoundingClientRect(); return r.top > sr.top && r.bottom < sr.bottom; }); if (!b) return false; b.click(); return true; })()`);
+					t.expect(ok, 'lp-adopted: no visible toggle');
+				} else {
+					await t.edit(rel, `c.replace(/ {2}value: \\d+/, '  value: 7')`);
+					await t.sleep(1000);
+					await t.edit(rel, `c.replace(/ {2}value: \\d+/, '  value: 8')`);
+				}
+				const m = await t.ev('window.__p472samp');
+				m.redrawn = !(await t.ev(`Array.from(${cm}.contentDOM.querySelectorAll('${TRACKER}')).some((x) => x.isConnected && x.__lcTag === 'p472l')`));
+				out[name] = m;
+				await t.reset(rel);
+				await t.sleep(1500);
+			}
+		}
+		return JSON.stringify(out);
+	},
+});
+
+// Part C cost: the pin's own set/clear cost (SC-470 Risk 1) on tall.md: time the first forced layout after a pin and after a release.
+SCENARIOS.push({
+	id: 'P472-COST',
+	async run(t) {
+		const rel = 'Lifecycle/tall.md';
+		const A = 'app.workspace.getMostRecentLeaf()';
+		await t.open(rel);
+		await t.reset(rel);
+		await p472ParkTall(t, A);
+		const r = await t.ev(`(async () => { const p = app.plugins.plugins['draw-steel-elements']; const s = ${P472_RD(A)}; const pinObj = p.previewScrollPin ?? p.scrollPin ?? null; const out = []; const root = ${t.root(TRACKER, A)}; for (let i = 0; i < 5; i++) { void s.offsetHeight; const a = performance.now(); app.vault.trigger('modify', app.vault.getAbstractFileByPath(${JSON.stringify(rel)})); void s.offsetHeight; const b = performance.now(); const on = s.hasAttribute('data-dse-scroll-pin'); await new Promise((r) => setTimeout(r, 200)); const c0 = performance.now(); let rel = 'none'; if (pinObj && pinObj.release) { pinObj.release(s); rel = 'release'; } else { s.removeAttribute('data-dse-scroll-pin'); document.querySelectorAll('style[data-dse-scroll-pin-style]').forEach((x) => x.remove()); rel = 'manual'; } void s.offsetHeight; const c = performance.now(); out.push({ set: Math.round((b - a) * 10) / 10, on, clear: Math.round((c - c0) * 10) / 10, rel }); await new Promise((r) => setTimeout(r, 300)); } return { descendants: s.querySelectorAll('*').length, out, keys: Object.keys(p).filter((k) => /pin|hold|scroll/i.test(k)) }; })()`);
+		return JSON.stringify(r);
+	},
+});
+
+// Part B repeaters (P472_REPS reps each, sampler P472_SAMPLE_MS). Each rep: park, tag, sample, write, check redrawn, reset.
+const p472Rep = async (t, name, { setup, park, scroller, write, tagged }) => {
+	const out = [];
+	for (let k = 0; k < P472_REPS; k++) {
+		await setup();
+		await park();
+		await p472Start(t, scroller);
+		await write(k);
+		const m = await t.ev('window.__p472samp');
+		m.redrawn = !(await t.ev(tagged));
+		m.k = k;
+		out.push(m);
+	}
+	return out;
+};
+
+// P472_B2=1: before each rep, a second Reading pane shows B (the written note), parked 1500 px into its tracker (G-S42 (d) / G-S52 (c) load).
+const p472SecondPane = async (t, rel) => {
+	if (process.env.P472_B2 !== '1') return;
+	await t.ev(`(async () => { if (window.__p472B2) { window.__p472B2.detach(); window.__p472B2 = null; } const a = app.workspace.getMostRecentLeaf(); const b = app.workspace.getLeaf('split', 'vertical'); window.__p472B2 = b; await b.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'preview' }, active: false }); app.workspace.setActiveLeaf(a, { focus: true }); return true; })()`);
+	await t.waitFor(`!!(${t.root(TRACKER, 'window.__p472B2')})`, 'second pane drawn', 60000);
+	for (let i = 0; i < 2; i++) { await t.ev(`(() => { const s = ${P472_RD('window.__p472B2')}; const r = ${t.root(TRACKER, 'window.__p472B2')}; s.scrollTop = r.getBoundingClientRect().top - s.getBoundingClientRect().top + s.scrollTop + 1500; return true; })()`); await t.sleep(300); }
+};
+// G-S8 geometry, adoption off: the tracker's own click redraws it fresh.
+SCENARIOS.push({
+	id: 'P472-RDOFF',
+	async run(t) {
+		const rel = 'Lifecycle/tall.md';
+		const A = 'app.workspace.getMostRecentLeaf()';
+		const prev = await t.ev(`${t.reg}.enabled`);
+		let out;
+		try {
+			await t.ev(`${t.reg}.enabled = false`);
+			out = await p472Rep(t, 'rdoff', {
+				setup: async () => { await t.open(rel); await t.reset(rel); },
+				park: async () => { await p472ParkTall(t, A); await t.tag(TRACKER, 'p472', A); },
+				scroller: P472_RD(A),
+				write: async () => {
+					const ok = await t.ev(`(() => { const s = ${P472_RD(A)}; const sr = s.getBoundingClientRect(); const b = Array.from(${t.root(TRACKER, A)}.querySelectorAll('button.dse-init__portrait-toggle')).find((x) => { const r = x.getBoundingClientRect(); return r.top > sr.top + 100 && r.bottom < sr.bottom - 100; }); if (!b) return false; b.click(); return true; })()`);
+					t.expect(ok, 'no visible toggle');
+				},
+				tagged: `Array.from(${P472_RD(A)}.querySelectorAll('${TRACKER}')).some((x) => x.isConnected && x.__lcTag === 'p472')`,
+			});
+		} finally {
+			await t.ev(`${t.reg}.enabled = ${JSON.stringify(prev)}`);
+		}
+		await t.reset(rel);
+		t.expect(p472Held(out), `moved: ${JSON.stringify(out)}`);
+		return JSON.stringify(out);
+	},
+});
+// G-S42 (a) geometry: Reading host embhost.md parked at its end, outside vault.process of embtracker.md.
+SCENARIOS.push({
+	id: 'P472-HOST',
+	async run(t) {
+		const host = 'Lifecycle/embhost.md';
+		const rel = 'Lifecycle/embtracker.md';
+		const A = 'app.workspace.getMostRecentLeaf()';
+		const emb = `Array.from(${P472_RD(A)}.querySelectorAll('.internal-embed ${TRACKER}')).find((x) => x.isConnected)`;
+		const out = await p472Rep(t, 'host', {
+			setup: async () => { await t.reset(rel); await t.open(host); await p472SecondPane(t, rel); },
+			park: async () => {
+				await t.waitFor(`!!(${emb}) && (${emb}).childElementCount > 0`, 'embed drawn', 60000);
+				for (let i = 0; i < 3; i++) { await t.ev(`(() => { const s = ${P472_RD(A)}; s.scrollTop = s.scrollHeight; return true; })()`); await t.sleep(450); }
+				await t.ev(`(() => { (${emb}).__lcTag = 'p472h'; return true; })()`);
+			},
+			scroller: P472_RD(A),
+			write: async (k) => t.edit(rel, `c.replace(/ {2}value: \\d+/, '  value: ${k + 2}')`),
+			tagged: `Array.from(${P472_RD(A)}.querySelectorAll('${TRACKER}')).some((x) => x.isConnected && x.__lcTag === 'p472h')`,
+		});
+		await t.reset(rel);
+		t.expect(p472Held(out), `moved: ${JSON.stringify(out)}`);
+		return JSON.stringify(out);
+	},
+});
+// G-S52 (a) geometry: Live Preview host lpembhostend.md parked at its end, outside vault.process of lpembtracker.md.
+SCENARIOS.push({
+	id: 'P472-LPEMB',
+	async run(t) {
+		const host = 'Lifecycle/lpembhostend.md';
+		const rel = 'Lifecycle/lpembtracker.md';
+		const cm = 'window.__p472A.view.editor.cm';
+		const embedOf = `Array.from(${cm}.contentDOM.children).find((e) => e.classList.contains('internal-embed') && !!e.querySelector('${TRACKER}'))`;
+		const embRoot = `((${embedOf}) || null)?.querySelector('${TRACKER}')`;
+		const out = await p472Rep(t, 'lpemb', {
+			setup: async () => {
+				await t.reset(rel);
+				await t.open(host);
+				await t.ev(`(async () => { window.__p472A = app.workspace.getMostRecentLeaf(); await window.__p472A.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(host)}, mode: 'source', source: false }, active: true }); window.__p472A.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+				await t.sleep(1500);
+				await p472SecondPane(t, rel);
+			},
+			park: async () => {
+				await t.ev(`(() => { ${cm}.scrollDOM.scrollTop = 0; return true; })()`);
+				for (let i = 0; i < 60 && !(await t.ev(`!!(${embRoot})`)); i++) { await t.ev(`(() => { const s = ${cm}.scrollDOM; s.scrollTop += Math.round(s.clientHeight * 0.6); return true; })()`); await t.sleep(200); }
+				await t.waitFor(`!!(${embRoot}) && (${embRoot}).childElementCount > 0`, 'lp embed drawn', 60000);
+				for (let i = 0; i < 3; i++) { await t.ev(`(() => { const s = ${cm}.scrollDOM; s.scrollTop = s.scrollHeight; return true; })()`); await t.sleep(450); }
+				await t.ev(`(() => { (${embRoot}).__lcTag = 'p472l'; return true; })()`);
+			},
+			scroller: `${cm}.scrollDOM`,
+			write: async (k) => t.edit(rel, `c.replace(/ {2}value: \\d+/, '  value: ${k + 2}')`),
+			tagged: `Array.from(${cm}.contentDOM.querySelectorAll('${TRACKER}')).some((x) => x.isConnected && x.__lcTag === 'p472l')`,
+		});
+		await t.reset(rel);
+		t.expect(p472Held(out), `moved: ${JSON.stringify(out)}`);
+		return JSON.stringify(out);
+	},
+});
+// SC-478 own LP hold, G-S18 (b1) geometry: tall.md in Live Preview parked 1500 px into the tracker, outside vault.process.
+SCENARIOS.push({
+	id: 'P472-LPOWN',
+	async run(t) {
+		const rel = 'Lifecycle/tall.md';
+		const cm = 'window.__p472A.view.editor.cm';
+		const lpRoot = `Array.from(${cm}.contentDOM.querySelectorAll('${TRACKER}')).find((x) => x.isConnected)`;
+		const out = await p472Rep(t, 'lpown', {
+			setup: async () => {
+				await t.reset(rel);
+				await t.open(rel);
+				await t.ev(`(async () => { window.__p472A = app.workspace.getMostRecentLeaf(); await window.__p472A.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'source', source: false }, active: true }); window.__p472A.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+				await t.sleep(1500);
+			},
+			park: async () => {
+				for (let i = 0; i < 12 && !(await t.ev(`!!(${lpRoot})`)); i++) { await t.ev(`(() => { ${cm}.scrollDOM.scrollTop += 600; return true; })()`); await t.sleep(250); }
+				for (let i = 0; i < 4; i++) { await t.ev(`(() => { const s = ${cm}.scrollDOM; const r = ${lpRoot}; s.scrollTop = r.getBoundingClientRect().top - s.getBoundingClientRect().top + s.scrollTop + 1500; return true; })()`); await t.sleep(450); }
+				await t.ev(`(() => { (${lpRoot}).__lcTag = 'p472o'; return true; })()`);
+			},
+			scroller: `${cm}.scrollDOM`,
+			write: async (k) => t.edit(rel, `c.replace(/ {2}value: \\d+/, '  value: ${k + 2}')`),
+			tagged: `Array.from(${cm}.contentDOM.querySelectorAll('${TRACKER}')).some((x) => x.isConnected && x.__lcTag === 'p472o')`,
+		});
+		await t.reset(rel);
+		t.expect(p472Held(out), `moved: ${JSON.stringify(out)}`);
+		return JSON.stringify(out);
+	},
+});
+
+// Diagnostics: which DSE roots are empty in a settled Reading view, and the sizer's inline min-height.
+SCENARIOS.push({
+	id: 'P472-DIAG',
+	async run(t) {
+		const out = {};
+		for (const rel of ['Lifecycle/tall.md', 'Lifecycle/embhost.md']) {
+			await t.open(rel);
+			await t.sleep(1500);
+			out[rel] = await t.ev(`(() => { const s = app.workspace.getMostRecentLeaf().view.containerEl.querySelector('.markdown-reading-view > .markdown-preview-view'); const all = Array.from(s.querySelectorAll('[data-dse-element]')); const z = s.querySelector(':scope > .markdown-preview-sizer'); return { n: all.length, empty: all.filter((r) => r.childElementCount === 0).map((r) => r.getAttribute('data-dse-element') + '|' + r.className + '|' + r.parentElement.className + '|text=' + JSON.stringify((r.textContent || '').slice(0, 40))), mh: z && z.style.minHeight, sh: s.scrollHeight, pad: getComputedStyle(s).paddingTop + '/' + getComputedStyle(s).paddingBottom }; })()`);
+		}
+		return JSON.stringify(out);
+	},
+});
+
+// Cost of the prototype's per-frame end-of-redraw check (emptyRoot + sizer reads + scrollTop/clientHeight + padding), and of
+// the arm-time scan (roots + sizersAt), replicated in-page on tall.md and embhost.md; 2000 iterations each, after a style
+// invalidation per iteration so the layout reads are not free.
+SCENARIOS.push({
+	id: 'P472-BENCH',
+	async run(t) {
+		const out = {};
+		for (const rel of ['Lifecycle/tall.md', 'Lifecycle/embhost.md']) {
+			await t.open(rel);
+			await t.sleep(1500);
+			out[rel] = await t.ev(`(() => { const s = app.workspace.getMostRecentLeaf().view.containerEl.querySelector('.markdown-reading-view > .markdown-preview-view'); const ROOT = '[data-dse-element]'; const arm = () => { const roots = new Set(Array.from(s.querySelectorAll(ROOT))); const m = new Map([[s, parseFloat(s.querySelector(':scope > .markdown-preview-sizer').style.minHeight)]]); for (const e of Array.from(s.querySelectorAll('.internal-embed'))) { if (!e.querySelector(ROOT)) continue; const z = e.querySelector('.markdown-preview-sizer'); if (z) m.set(e, parseFloat(z.style.minHeight)); } return { roots, m }; }; const check = (m) => { if (Array.from(s.querySelectorAll(ROOT)).some((r) => r.childElementCount === 0)) return false; const cs = getComputedStyle(s); const need = s.scrollTop + s.clientHeight - (parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom)); for (const [k, v0] of m) { const z = k === s ? s.querySelector(':scope > .markdown-preview-sizer') : k.querySelector('.markdown-preview-sizer'); const cur = z ? parseFloat(z.style.minHeight) : NaN; if (!(cur >= (k === s ? Math.min(v0, need) : v0) - 2)) return false; } return true; }; const N = 2000; let a = performance.now(); let st; for (let i = 0; i < N; i++) st = arm(); const armMs = (performance.now() - a) / N; let ok = 0; let tot = 0; for (let i = 0; i < N; i++) { s.style.setProperty('outline-offset', (i % 2) + 'px'); const b = performance.now(); if (check(st.m)) ok++; tot += performance.now() - b; } s.style.removeProperty('outline-offset'); return { descendants: s.querySelectorAll('*').length, armMs: Math.round(armMs * 1000) / 1000, checkMsInvalidated: Math.round((tot / N) * 1000) / 1000, ok }; })()`);
+		}
+		return JSON.stringify(out);
+	},
+});

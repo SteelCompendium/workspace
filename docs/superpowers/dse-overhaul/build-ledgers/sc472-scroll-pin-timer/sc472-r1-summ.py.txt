@@ -1,0 +1,46 @@
+# sc472 r1: summarise P472-TL timelines. usage: python3 -I summ.py <log> [path-substring]
+# For each `mod` of a path containing the substring: ms after mod of the first root removal (redraw), the sizer collapse
+# (min mh), the first mounted root add / mnt, the sizer recovery, every pin/hold off, and every scrollTop drop >= 20 px,
+# up to the next mod of the same path (or +12 s).
+import json, re, sys
+log = sys.argv[1]
+want = sys.argv[2] if len(sys.argv) > 2 else ''
+for line in open(log):
+    m = re.match(r'P472-TL (\S+) thr=(\d+) wall=(\d+)ms load0=\[([^\]]*)\] load1=\[([^\]]*)\] (.*)$', line.strip())
+    if not m:
+        continue
+    sid, thr, wall, l0, l1, js = m.groups()
+    try:
+        ev = json.loads(js)
+    except Exception as e:
+        print(sid, 'unparsable', e); continue
+    print(f'== {sid} thr={thr} wall={wall}ms load0=[{l0}] load1=[{l1}] events={len(ev)}')
+    mods = [i for i, e in enumerate(ev) if e[1] == 'mod' and want in e[2]]
+    for j, i in enumerate(mods):
+        t0 = ev[i][0]
+        end = ev[mods[j + 1]][0] if j + 1 < len(mods) else t0 + 12000
+        end = min(end, t0 + 12000)
+        win = [e for e in ev[i + 1:] if e[0] < end]
+        st0 = [f'{e[2]}={e[3]}' for e in ev[i + 1:i + 8] if e[1] == 'st0']
+        out = []
+        for e in win:
+            d = e[0] - t0
+            k = e[1]
+            if k == 'pin' or k == 'ehold' or k == 'lhold':
+                out.append(f'{k}{"+" if e[3] else "-"}{e[2]}@{d}')
+            elif k == 'rm':
+                out.append(f'rm{e[3]}{e[2]}@{d}')
+            elif k == 'add':
+                out.append(f'add{e[3]}/{e[4]}m{e[2]}@{d}')
+            elif k == 'mnt':
+                out.append(f'mnt{e[2]}@{d}')
+            elif k == 'mh':
+                out.append(f'mh{e[2]}={e[3]}@{d}')
+            elif k == 'st':
+                if e[3] is not None and e[4] < e[3] - 19:
+                    out.append(f'ST-DROP {e[2]} {e[3]}->{e[4]}@{d}')
+                else:
+                    out.append(f'st {e[2]} {e[3]}->{e[4]}@{d}')
+            elif k == 'gap':
+                out.append(f'gap{e[2]}@{d}')
+        print(f'  mod {ev[i][2]} @{t0} st0[{" ".join(st0)}]: ' + ' '.join(out))

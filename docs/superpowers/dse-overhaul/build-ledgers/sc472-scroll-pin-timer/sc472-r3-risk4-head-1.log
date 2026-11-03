@@ -1,0 +1,14 @@
+loadavg-start: 6.45 4.76 5.43 3/3476 1625437 date: 10:42:51 ids=P3R-RISK4 bundle=head harness=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc472-r3-a5a83f0e5db8b6abf/h-probe.mjs port=9473
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :162, port 9473, 1 scenario(s)
+P3R RISK4-install "installed"
+P3R RISK4 {"variant":"none","load":"6.02 4.69 5.40 6/3593 1625742","geo":{"st":1979,"sh":15565,"ch":1021,"roots":1},"heldAt":7,"mid":{"at":312,"pin":true,"st":1979,"sh":15565,"tagConnected":true,"roots":1,"mh":15501},"goAt":314,"pin":{"on":19,"off":1100},"tagOff":397,"stAfterGoMin":1979,"stEnd":1979,"clamped":false,"mhAfterGo":[[442,"mh",12446],[1100,"mh",15501]]}
+P3R RISK4-tl [[1,"mh",15501],[1,"pin",0],[2,"roots","1/0"],[2,"tag",1],[6,"A:data-dse-scroll-pin",1],[19,"pin",1],[442,"mh",12446],[442,"roots","0/0"],[442,"tag",0],[443,"A:data-dse-scroll-pin",0],[1100,"mh",15501],[1100,"pin",0],[1101,"roots","1/0"]]
+P3R RISK4 {"variant":"far","load":"5.61 4.65 5.38 3/3293 1625909","geo":{"st":1979,"sh":15565,"ch":1021,"roots":1},"heldAt":6,"mid":{"at":1330,"pin":false,"st":5579,"sh":15565,"tagConnected":false,"roots":0,"mh":15501},"goAt":1331,"pin":{"on":6,"off":975},"tagOff":956,"stAfterGoMin":5579,"stEnd":5579,"clamped":false,"mhAfterGo":[[1438,"mh",12446],[1669,"mh",15501]]}
+P3R RISK4-tl [[1,"mh",15501],[1,"pin",0],[1,"roots","1/0"],[1,"tag",1],[4,"A:data-dse-scroll-pin",1],[6,"pin",1],[956,"roots","0/0"],[956,"tag",0],[957,"A:data-dse-scroll-pin",0],[975,"pin",0],[1438,"mh",12446],[1669,"mh",15501]]
+OBSIDIAN-LIFECYCLE P3R-RISK4 FAIL: page eval failed: TypeError: Cannot read properties of undefined (reading 'getBoundingClientRect')
+    at <anonymous>:1:408
+    at <anonymous>:1:505 [shot /tmp/dse-obsidian-lifecycle-11pmFZ/shots/P3R-RISK4-FAIL.png]
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-11pmFZ
+OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+rc=1 elapsed=28s
+loadavg-end: 5.12 4.58 5.35 2/3203 1626192 date: 10:43:19

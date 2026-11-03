@@ -1,0 +1,8 @@
+import sys
+# CONTROL: release on the redraw + a plain 2.5 s timer (the backstop fires at the deadline, no frame count / busy rule)
+p = sys.argv[1] + '/src/framework/host/redrawBackstop.ts'
+s = open(p).read()
+old = "this.timer = null;\n\t\tthis.frames = 0;"
+new = "this.timer = null;\n\t\treturn this.done(); // CONTROL: plain timer\n\t\tthis.frames = 0;"
+assert s.count(old) == 1, s.count(old)
+open(p, 'w').write(s.replace(old, new))

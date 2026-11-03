@@ -1,0 +1,599 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "npx" on /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc472-r2-a01ddb12d6e62735a/stocktree
+Info: Ensuring packages are installed.
+FAIL dom test/dom/framework/redrawBackstop.test.ts
+  ● Test suite failed to run
+
+    Cannot find module '../../../src/framework/host/redrawBackstop' from 'test/dom/framework/redrawBackstop.test.ts'
+
+      3 | // (previewScrollPin.test.ts, livePreviewScrollHold.test.ts); this file pins the Backstop's own guards, each one in
+      4 | // a test that fails when the guard is removed (the SC-472 r2 mutation check).
+    > 5 | import {
+        | ^
+      6 | 	BACKSTOP_QUIET_FRAMES,
+      7 | 	BACKSTOP_RETRY_MS,
+      8 | 	Backstop,
+
+      at Resolver._throwModNotFoundError (../../../../../../../home/scott/code/steelCompendium/worktrees/sc472-scroll-pin-timer/draw-steel-elements/node_modules/jest-resolve/build/index.js:895:11)
+      at Object.<anonymous> (test/dom/framework/redrawBackstop.test.ts:5:1)
+
+FAIL dom test/dom/framework/livePreviewScrollHold.test.ts
+  ● SC-478: LivePreviewScrollHold hold › a block drawn after PIN_TTL_MS but before 30 frames were painted is still held; the 30th frame expires the entry
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "3039"
+    Received: null
+
+      310 | 		view.contentDOM.appendChild(late);
+      311 | 		hold.applyHolds(view as never);
+    > 312 | 		expect(late.getAttribute(HOLD_ATTR)).toBe('3039');
+          | 		                                     ^
+      313 | 		hold.releaseAll();
+      314 |
+      315 | 		const view2 = fakeView(3500, [widget(637, 3039)]);
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:312:40)
+
+  ● SC-478: LivePreviewScrollHold hold › a hold that never sees a mount is released after PIN_TTL_MS; releaseAll() drops the rest
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      500 | 		backstopElapses();
+      501 | 		// SC-472: the widget is still in the document and still empty - its view is mounting: the backstop waits (busy)
+    > 502 | 		expect(c.hasAttribute(HOLD_ATTR)).toBe(true);
+          | 		                                  ^
+      503 | 		jest.advanceTimersByTime(HARD_CAP - TTL - 1);
+      504 | 		expect(c.hasAttribute(HOLD_ATTR)).toBe(true);
+      505 | 		jest.advanceTimersByTime(1);
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:502:37)
+
+  ● SC-478: LivePreviewScrollHold hold › SC-472: a held widget that CodeMirror has since dropped from the document is released by the backstop (PIN_TTL_MS + 30 frames), not held for the cap
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      521 | 		jest.advanceTimersByTime(TTL);
+      522 | 		frames.run(BACKSTOP_FRAMES - 1);
+    > 523 | 		expect(w.hasAttribute(HOLD_ATTR)).toBe(true);
+          | 		                                  ^
+      524 | 		frames.run(1);
+      525 | 		expect(w.hasAttribute(HOLD_ATTR)).toBe(false);
+      526 | 	});
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:523:37)
+
+  ● SC-478: LivePreviewScrollHold hold › SC-472: a mutation in the held widget restarts the backstop's two quiet frames
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      543 | 		await flush();
+      544 | 		frames.run(1); // the 30th frame, one quiet frame since the mutation
+    > 545 | 		expect(w.hasAttribute(HOLD_ATTR)).toBe(true);
+          | 		                                  ^
+      546 | 		frames.run(1);
+      547 | 		expect(w.hasAttribute(HOLD_ATTR)).toBe(false);
+      548 | 	});
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:545:37)
+
+  ● SC-472: the backstops are cancelled with what they guard › a widget hold released on mount leaves no timer or frame callback behind
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 0
+
+      650 | 		hold.applyHolds(view as never);
+      651 | 		jest.advanceTimersByTime(TTL); // the frame loops are running: the hold's and the pending entry's
+    > 652 | 		expect(frames.pending()).toBe(2);
+          | 		                         ^
+      653 | 		fresh.querySelector('[data-dse-element]')!.appendChild(document.createElement('div'));
+      654 | 		await flush();
+      655 | 		await flush();
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:652:28)
+
+  ● SC-522: a Live Preview host holds its embed of the written note › the backstop (PIN_TTL_MS and 30 painted frames), a re-hold never lowers the floor, an inline min-height is restored, unload drops every hold
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "3190"
+    Received: null
+
+      844 | 		expect(held(g)).toBe('3190');
+      845 | 		jest.advanceTimersByTime(1);
+    > 846 | 		expect(held(g)).toBe('3190'); // the timer alone does not release it
+          | 		                ^
+      847 | 		frames.run(BACKSTOP_FRAMES - 1);
+      848 | 		expect(held(g)).toBe('3190');
+      849 | 		frames.run(1);
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:846:19)
+
+  ● SC-522: a Live Preview host holds its embed of the written note › SC-472: busy while a root in the embed is empty: held past PIN_TTL_MS and 30 frames, released by the 20 s cap
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "3190"
+    Received: null
+
+      870 | 		backstopElapses();
+      871 | 		frames.run(BACKSTOP_FRAMES * 3);
+    > 872 | 		expect(held(e)).toBe('3190');
+          | 		                ^
+      873 | 		jest.advanceTimersByTime(HARD_CAP - TTL - 1);
+      874 | 		expect(held(e)).toBe('3190');
+      875 | 		jest.advanceTimersByTime(1);
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:872:19)
+
+  ● SC-522: a Live Preview host holds its embed of the written note › SC-472: an embed hold released on mount leaves no timer or frame callback behind
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+      883 | 		hold.holdEmbedsOf(fakeView(6800, [e]) as never, 'B.md', 'A.md', resolver({ B: 'B.md' }));
+      884 | 		jest.advanceTimersByTime(TTL); // the backstop's frame loop is running
+    > 885 | 		expect(frames.pending()).toBe(1);
+          | 		                         ^
+      886 | 		const content = e.querySelector('.markdown-embed-content')!;
+      887 | 		content.querySelector('[data-dse-element]')!.remove();
+      888 | 		const fresh = content.appendChild(document.createElement('div'));
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:885:28)
+
+  ● SC-522: a Live Preview host holds its embed of the written note › SC-472: a mutation in the embed restarts the backstop's two quiet frames
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "3190"
+    Received: null
+
+      907 | 		await flush();
+      908 | 		frames.run(1);
+    > 909 | 		expect(held(e)).toBe('3190');
+          | 		                ^
+      910 | 		frames.run(1);
+      911 | 		expect(held(e)).toBeNull();
+      912 | 	});
+
+      at Object.<anonymous> (test/dom/framework/livePreviewScrollHold.test.ts:909:19)
+
+FAIL dom test/dom/framework/previewScrollPin.test.ts
+  ● SC-198: PreviewScrollPin › pin() › SC-472: the first pin holds the sizer height: scrollHeight less the scroller's vertical padding
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "4819px"
+    Received: "4883px"
+
+      121 | 			scroller.style.paddingBottom = '32px';
+      122 | 			new PreviewScrollPin().pin(el);
+    > 123 | 			expect(pinnedPx(scroller)).toBe('4819px');
+          | 			                           ^
+      124 | 			const bare = makeScroller({ scrollHeight: 6000 }); // no padding: nothing to take off
+      125 | 			new PreviewScrollPin().pin(bare.el);
+      126 | 			expect(pinnedPx(bare.scroller)).toBe('6000px');
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:123:31)
+
+  ● SC-198: PreviewScrollPin › release › the backstop drops the pin even if the expected rebuild never arrives: after PIN_TTL_MS and 30 painted frames, not before either
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      204 | 			expect(isPinned(scroller)).toBe(true);
+      205 | 			jest.advanceTimersByTime(1);
+    > 206 | 			expect(isPinned(scroller)).toBe(true); // the timer alone does not release it
+          | 			                           ^
+      207 | 			frames.run(BACKSTOP_FRAMES - 1);
+      208 | 			expect(isPinned(scroller)).toBe(true);
+      209 | 			frames.run(1);
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:206:31)
+
+  ● SC-198: PreviewScrollPin › release › a re-pin refreshes the backstop and takes no ratchet from the scroller's own padding on rapid clicks
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "4819px"
+    Received: "4883px"
+
+      221 | 			const pin = new PreviewScrollPin();
+      222 | 			pin.pin(el);
+    > 223 | 			expect(pinnedPx(scroller)).toBe('4819px');
+          | 			                           ^
+      224 |
+      225 | 			// The rule replaces the inline value, so while pinned scrollHeight reads back as the
+      226 | 			// pinned value plus the scroller's padding, and the inline value is unchanged.
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:223:31)
+
+  ● SC-470: the pin is a floor (re-pin and observer) › Obsidian collapsing the inline min-height (46px, 2446px) never lowers the floor
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "4819px"
+    Received: "4883px"
+
+      892 | 			sizerOf(scroller).style.minHeight = collapsed;
+      893 | 			await flushObservers();
+    > 894 | 			expect(pinnedPx(scroller)).toBe('4819px');
+          | 			                           ^
+      895 | 		}
+      896 | 		sizerOf(scroller).style.minHeight = '5000px';
+      897 | 		await flushObservers();
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:894:31)
+
+  ● SC-470: the pin is a floor (re-pin and observer) › a re-pin applies the same max: a larger inline value is taken at once; padding-inflated scrollHeight and collapses are not
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "4819px"
+    Received: "4883px"
+
+      915 | 		setMetric(scroller, 'scrollHeight', 4819 + 64); // the pinned px plus padding: no growth
+      916 | 		pin.pin(el);
+    > 917 | 		expect(pinnedPx(scroller)).toBe('4819px');
+          | 		                           ^
+      918 | 		for (const collapsed of [4819, 2446, 246, 0]) {
+      919 | 			setMetric(scroller, 'scrollHeight', collapsed);
+      920 | 			sizerOf(scroller).style.minHeight = `${collapsed}px`;
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:917:30)
+
+  ● SC-472: a Reading pin is released when the redraw is over › released one painted frame after the redraw is over - view mounted, sizer back - with no timer involved
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      1042 | 		expect(isPinned(s.scroller)).toBe(true); // the check runs on the next painted frame, not inside the mutation
+      1043 | 		frames.run(1);
+    > 1044 | 		expect(isPinned(s.scroller)).toBe(false);
+           | 		                             ^
+      1045 | 		expect(allPinStyles()).toBe(0);
+      1046 | 		expect(jest.getTimerCount()).toBe(0); // the backstop's timers went with it
+      1047 | 	});
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:1044:32)
+
+  ● SC-472: a Reading pin is released when the redraw is over › redraw-start detection: the sizer collapsing and returning with none of our roots replaced is not a redraw, so it does not release
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      1059 | 		await flushObservers();
+      1060 | 		frames.run(1);
+    > 1061 | 		expect(isPinned(s.scroller)).toBe(false);
+           | 		                             ^
+      1062 | 	});
+      1063 |
+      1064 | 	test('redraw-start detection, per signal: a root left the document, was removed, or was put back (an adopted view)', () => {
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:1061:32)
+
+  ● SC-472: a Reading pin is released when the redraw is over › redraw-start detection, per signal: a root left the document, was removed, or was put back (an adopted view)
+
+    TypeError: s.pin.redrawStarted is not a function
+
+      1064 | 	test('redraw-start detection, per signal: a root left the document, was removed, or was put back (an adopted view)', () => {
+      1065 | 		const s = scene();
+    > 1066 | 		const started = (records: Array<Partial<MutationRecord>>): boolean => (s.pin as any).redrawStarted(s.held(), records);
+           | 		                                                                                     ^
+      1067 | 		expect(started([])).toBe(false);
+      1068 | 		expect(started([{ type: 'childList', removedNodes: [document.createElement('div')] as any, addedNodes: [] as any }])).toBe(false); // not ours
+      1069 | 		expect(started([{ type: 'childList', removedNodes: [s.root] as any, addedNodes: [] as any }])).toBe(true);
+
+      at started (test/dom/framework/previewScrollPin.test.ts:1066:88)
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:1067:10)
+
+  ● SC-472: a Reading pin is released when the redraw is over › redraw-done, roots: the redraw is not over while a root of ours is still empty, even with the sizer back
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      1085 | 		await flushObservers();
+      1086 | 		frames.run(1);
+    > 1087 | 		expect(isPinned(s.scroller)).toBe(false);
+           | 		                             ^
+      1088 | 	});
+      1089 |
+      1090 | 	test('redraw-done, the scroller\'s sizer: not over while it is collapsed; over at 2 px below its height, not at 3', async () => {
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:1087:32)
+
+  ● SC-472: a Reading pin is released when the redraw is over › redraw-done, the scroller's sizer: not over while it is collapsed; over at 2 px below its height, not at 3
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        4817,
+    -   false,
+    +   true,
+      ]
+
+      1102 | 			await flushObservers();
+      1103 | 			frames.run(2);
+    > 1104 | 			expect([back, isPinned(s.scroller)]).toEqual([back, !over]);
+           | 			                                     ^
+      1105 | 			s.pin.releaseAll();
+      1106 | 		}
+      1107 | 	});
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:1104:41)
+
+  ● SC-472: a Reading pin is released when the redraw is over › redraw-done, the viewport: a sizer shorter than it was is enough once it still covers the viewport bottom (releasing cannot clamp)
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        3504,
+    -   false,
+    +   true,
+      ]
+
+      1120 | 			await flushObservers();
+      1121 | 			frames.run(2);
+    > 1122 | 			expect([back, isPinned(s.scroller)]).toEqual([back, !over]);
+           | 			                                     ^
+      1123 | 			s.pin.releaseAll();
+      1124 | 		}
+      1125 | 	});
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:1122:41)
+
+  ● SC-472: a Reading pin is released when the redraw is over › redraw-done, an embed's inner sizer (SC-479 host pin): the redraw is over only when it is back too; a DSE-less embed's sizer is not protected
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      1163 | 		await flushObservers();
+      1164 | 		frames.run(1);
+    > 1165 | 		expect(isPinned(s.scroller)).toBe(false);
+           | 		                             ^
+      1166 | 	});
+      1167 |
+      1168 | 	test('redraw-done skips what cannot be compared: an embed that left the document, a scroller sizer with no inline min-height', async () => {
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:1165:32)
+
+  ● SC-472: a Reading pin is released when the redraw is over › redraw-done skips what cannot be compared: an embed that left the document, a scroller sizer with no inline min-height
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      1178 | 		await flushObservers();
+      1179 | 		frames.run(1);
+    > 1180 | 		expect(isPinned(s.scroller)).toBe(false);
+           | 		                             ^
+      1181 |
+      1182 | 		const bare = makeScroller(); // Obsidian has not written a min-height on the sizer: nothing to compare against
+      1183 | 		const root = makeRoot(true);
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:1180:32)
+
+  ● SC-472: a Reading pin is released when the redraw is over › re-pin re-arm: a redraw that began before the latest write does not count; the next redraw releases the re-pinned view
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      1207 | 		await flushObservers();
+      1208 | 		frames.run(1);
+    > 1209 | 		expect(isPinned(s.scroller)).toBe(false);
+           | 		                             ^
+      1210 | 	});
+      1211 |
+      1212 | 	test('re-pin re-arm: the sizer heights it waits for are the ones at the LATEST arm', async () => {
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:1209:32)
+
+  ● SC-472: a Reading pin is released when the redraw is over › re-pin re-arm: the sizer heights it waits for are the ones at the LATEST arm
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      1224 | 		await flushObservers();
+      1225 | 		frames.run(1);
+    > 1226 | 		expect(isPinned(s.scroller)).toBe(false);
+           | 		                             ^
+      1227 | 	});
+      1228 |
+      1229 | 	test('re-pin re-arm: a re-pin that lands while the sizer is collapsed does not lower the height the redraw must restore', async () => {
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:1226:32)
+
+  ● SC-472: a Reading pin is released when the redraw is over › re-pin re-arm: a re-pin that lands while the sizer is collapsed does not lower the height the redraw must restore
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      1242 | 		await flushObservers();
+      1243 | 		frames.run(1);
+    > 1244 | 		expect(isPinned(s.scroller)).toBe(false);
+           | 		                             ^
+      1245 | 	});
+      1246 |
+      1247 | 	test('a check pending when the pin is released is cancelled with it (nothing runs against a released pin)', async () => {
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:1244:32)
+
+  ● SC-472: a Reading pin is released when the redraw is over › a check pending when the pin is released is cancelled with it (nothing runs against a released pin)
+
+    expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+      1251 | 		setSizer(s.scroller, 4819);
+      1252 | 		await flushObservers();
+    > 1253 | 		expect(frames.pending()).toBeGreaterThan(0);
+           | 		                         ^
+      1254 | 		s.pin.release(s.scroller);
+      1255 | 		expect(frames.pending()).toBe(0);
+      1256 | 	});
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:1253:28)
+
+  ● SC-472: a Reading pin is released when the redraw is over › a window without requestAnimationFrame checks on a zero timer instead
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      1266 | 			expect(isPinned(s.scroller)).toBe(true);
+      1267 | 			jest.advanceTimersByTime(0);
+    > 1268 | 			expect(isPinned(s.scroller)).toBe(false);
+           | 			                             ^
+      1269 | 		} finally {
+      1270 | 			none.restore();
+      1271 | 		}
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:1268:33)
+
+  ● SC-472: a Reading pin is released when the redraw is over › the backstop's busy rules › never fires while a root of ours is still empty (the view is mounting), however long; the 20 s cap ends it
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1280 | 			jest.advanceTimersByTime(TTL);
+      1281 | 			frames.run(BACKSTOP_FRAMES * 4);
+    > 1282 | 			expect(isPinned(scroller)).toBe(true);
+           | 			                           ^
+      1283 | 			jest.advanceTimersByTime(HARD_CAP - TTL - 1);
+      1284 | 			expect(isPinned(scroller)).toBe(true);
+      1285 | 			jest.advanceTimersByTime(1);
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:1282:31)
+
+  ● SC-472: a Reading pin is released when the redraw is over › the backstop's busy rules › once that root is mounted the backstop fires after its two quiet frames
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1297 | 			await flushObservers();
+      1298 | 			frames.run(1);
+    > 1299 | 			expect(isPinned(scroller)).toBe(true);
+           | 			                           ^
+      1300 | 			frames.run(1);
+      1301 | 			expect(isPinned(scroller)).toBe(false);
+      1302 | 		});
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:1299:31)
+
+  ● SC-472: a Reading pin is released when the redraw is over › the backstop's busy rules › a redraw that started and did not finish holds the backstop until 60 frames pass without a mutation
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1309 | 			jest.advanceTimersByTime(TTL);
+      1310 | 			frames.run(REDRAW_QUIET_FRAMES - 1);
+    > 1311 | 			expect(isPinned(s.scroller)).toBe(true); // 30 frames and the quiet frames are long past
+           | 			                             ^
+      1312 | 			frames.run(1);
+      1313 | 			expect(isPinned(s.scroller)).toBe(false); // the shrunk note (a block deleted at its end): nothing else is coming
+      1314 | 		});
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:1311:33)
+
+  ● SC-472: a Reading pin is released when the redraw is over › the backstop's busy rules › ...and a mutation during that wait restarts the 60
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1324 | 			await flushObservers();
+      1325 | 			frames.run(REDRAW_QUIET_FRAMES - 1);
+    > 1326 | 			expect(isPinned(s.scroller)).toBe(true);
+           | 			                             ^
+      1327 | 			frames.run(1);
+      1328 | 			expect(isPinned(s.scroller)).toBe(false);
+      1329 | 		});
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:1326:33)
+
+  ● SC-472: a Reading pin is released when the redraw is over › the backstop's busy rules › ...but a redraw that became done without a mutation (the reader scrolled up) no longer holds it
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1337 | 			jest.advanceTimersByTime(TTL);
+      1338 | 			frames.run(BACKSTOP_FRAMES + 10);
+    > 1339 | 			expect(isPinned(s.scroller)).toBe(true);
+           | 			                             ^
+      1340 | 			setMetric(s.scroller, 'scrollTop', 2000); // the viewport bottom now needs 2910: the sizer covers it
+      1341 | 			frames.run(1); // not 60 quiet frames: the redraw is over, so it is not held for them
+      1342 | 			expect(isPinned(s.scroller)).toBe(false);
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:1339:33)
+
+  ● SC-472: a Reading pin is released when the redraw is over › the backstop's busy rules › a pin whose redraw never starts is released by the backstop at PIN_TTL_MS + 30 frames (nothing started: not held for the 60)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1347 | 			jest.advanceTimersByTime(TTL);
+      1348 | 			frames.run(BACKSTOP_FRAMES - 1);
+    > 1349 | 			expect(isPinned(s.scroller)).toBe(true);
+           | 			                             ^
+      1350 | 			frames.run(1);
+      1351 | 			expect(isPinned(s.scroller)).toBe(false);
+      1352 | 		});
+
+      at Object.<anonymous> (test/dom/framework/previewScrollPin.test.ts:1349:33)
+
+Test Suites: 3 failed, 3 total
+Tests:       33 failed, 87 passed, 120 total
+Snapshots:   0 total
+Time:        2.864 s
+Ran all test suites matching test/dom/framework/redrawBackstop.test.ts|test/dom/framework/previewScrollPin.test.ts|test/dom/framework/livePreviewScrollHold.test.ts.
+Error: error running script "npx" in Devbox: exit status 1
+
