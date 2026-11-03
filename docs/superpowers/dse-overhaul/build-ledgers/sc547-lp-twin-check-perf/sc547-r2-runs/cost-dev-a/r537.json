@@ -1,0 +1,153 @@
+{
+ "cases": {
+  "cost-big": {
+   "rel": "Probe537/bigcallout.md",
+   "problems": [],
+   "patch": "patched",
+   "judged": {
+    "live": 40,
+    "inEditorDom": 40,
+    "inCalloutWidget": 40,
+    "docChars": 5109,
+    "docLines": 443
+   },
+   "cost": {
+    "typing": {
+     "n": 200,
+     "mean": 9.1535,
+     "p50": 8.4,
+     "p95": 14.6,
+     "max": 18
+    },
+    "typingPasses": {
+     "passes": 200,
+     "entriesPerPass": 40,
+     "n": 200,
+     "mean": 7.6475,
+     "p50": 7,
+     "p95": 12.9,
+     "max": 14.2
+    },
+    "cursor": {
+     "lines": [
+      41,
+      362
+     ],
+     "n": 100,
+     "mean": 7.074,
+     "p50": 7.6,
+     "p95": 14,
+     "max": 42
+    },
+    "cursorPasses": {
+     "passes": 42,
+     "entriesPerPass": 40,
+     "n": 42,
+     "mean": 8.0452,
+     "p50": 7,
+     "p95": 12.2,
+     "max": 12.7
+    },
+    "scrollFrames": {
+     "endScrollTop": 4773,
+     "n": 120,
+     "mean": 21.5825,
+     "p50": 19.5,
+     "p95": 33.5,
+     "max": 149.5
+    },
+    "scrollPasses": {
+     "passes": 66,
+     "entriesPerPass": 40,
+     "n": 66,
+     "mean": 6.9455,
+     "p50": 6.7,
+     "p95": 8.3,
+     "max": 12.4
+    }
+   },
+   "reused": [],
+   "errors": []
+  },
+  "cost-large": {
+   "rel": "Probe537/large.md",
+   "problems": [],
+   "patch": "already",
+   "judged": {
+    "live": 24,
+    "inEditorDom": 14,
+    "inCalloutWidget": 14,
+    "docChars": 125619,
+    "docLines": 3003
+   },
+   "cost": {
+    "typing": {
+     "n": 200,
+     "mean": 3.334,
+     "p50": 2.7,
+     "p95": 5.4,
+     "max": 21.8
+    },
+    "typingPasses": {
+     "passes": 200,
+     "entriesPerPass": 14,
+     "n": 200,
+     "mean": 1.046,
+     "p50": 0.8,
+     "p95": 2.2,
+     "max": 7
+    },
+    "cursor": {
+     "lines": [
+      715,
+      851
+     ],
+     "n": 100,
+     "mean": 6.411,
+     "p50": 4.7,
+     "p95": 13.7,
+     "max": 14.6
+    },
+    "cursorPasses": {
+     "passes": 100,
+     "entriesPerPass": 14,
+     "n": 100,
+     "mean": 2.014,
+     "p50": 1.8,
+     "p95": 3.5,
+     "max": 4
+    },
+    "scrollFrames": {
+     "endScrollTop": 17973,
+     "n": 150,
+     "mean": 26.4147,
+     "p50": 19,
+     "p95": 64.7,
+     "max": 293.3
+    },
+    "scrollPasses": {
+     "passes": 32,
+     "entriesPerPass": 11,
+     "n": 32,
+     "mean": 1.2812,
+     "p50": 1.2,
+     "p95": 2.1,
+     "max": 2.7
+    }
+   },
+   "reused": [],
+   "errors": []
+  }
+ },
+ "instr": "installed",
+ "gsi": {
+  "calls": 0,
+  "nonNull": 0,
+  "textDiff": 0,
+  "passes": 0,
+  "mixedPasses": 0,
+  "mixedSamples": [],
+  "samples": [],
+  "byPath": {}
+ }
+}

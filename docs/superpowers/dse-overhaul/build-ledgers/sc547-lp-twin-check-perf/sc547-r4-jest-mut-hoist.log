@@ -1,0 +1,188 @@
+applied hoist
+ src/framework/host/ReadingModeBlockHost.ts | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+FAIL dom test/dom/framework/twin-reuse.test.ts (5.838 s)
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › a pass over a callout of six blocks (typing, scrolling) reads the callout's block list once, not once per block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 11
+
+      727 | 		await pass;
+      728 |
+    > 729 | 		expect(reads).toBe(1);
+          | 		              ^
+      730 | 		expect(upper.els.map((el) => el.children.length)).toEqual([1, 1, 1, 1, 1, 1]); // nothing was redrawn
+      731 | 	});
+      732 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:729:17)
+
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › SC-547: a pass over a callout of 40 same-alias blocks scans the callout's lines for fences once, not once per block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 122
+
+      741 | 		await t.update();
+      742 |
+    > 743 | 		expect(scan.mock.calls.length).toBe(2); // two callout windows x one alias, not 80
+          | 		                               ^
+      744 | 		expect(upper.els.map((el) => el.children.length)).toEqual(Array(40).fill(1)); // nothing was redrawn
+      745 |
+      746 | 		await t.update();
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:743:34)
+
+  ● SC-547: the pass cache changes no answer › twins, two blocks of each of two aliases and an unterminated last fence: every block resolves to the same fence with the memo as without
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 8
+
+      916 | 		expect(plain.map((f) => f?.lineStart ?? null)).toEqual([3, 7, 11, 15, 19, null]);
+      917 | 		expect(plain.map((f) => f?.body.split('\n')[0] ?? null)).toEqual(['name: A', 'name: A', 'name: Y', 'name: Z', 'name: B', null]);
+    > 918 | 		expect(memo.fences.size).toBe(2); // one list per alias, however many blocks asked
+          | 		                         ^
+      919 | 	});
+      920 |
+      921 | 	test('one memo, two sections of different text with the same window bounds (a self-embed next to the editor\'s callout): each is read from its own text', () => {
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:918:28)
+
+  ● SC-547: the pass cache changes no answer › each pass gets memory of its own: nothing a pass remembers is shared with the next
+
+    expect(received).not.toBe(expected) // Object.is equality
+
+    Expected: not Map {"10:16:ds-counter" => {"lines": ["# N", "", "> [!note] Camp", "> ```ds-counter", "> max_value: 20", "> current_value: 6", "> min_value: 0", "> name: Twin", "> ```", "", …], "spans": [{"lineEnd": 16, "lineStart": 11}]}, "17:30:ds-counter" => {"lines": ["# N", "", "> [!note] Camp", "> ```ds-counter", "> max_value: 20", "> current_value: 6", "> min_value: 0", "> name: X", "> ```", ">", …], "spans": [{"lineEnd": 23, "lineStart": 18}, {"lineEnd": 30, "lineStart": 25}]}, "2:8:ds-counter" => {"lines": ["# N", "", "> [!note] Camp", "> ```ds-counter", "> name: B0", "> current_value: 5", "> max_value: 20", "> min_value: 0", "> ```", ">", …], "spans": [{"lineEnd": 8, "lineStart": 3}]}, "45:86:ds-counter" => {"lines": ["# N", "", "> [!note] Camp", "> ```ds-counter", "> name: B0", "> current_value: 5", "> max_value: 20", "> min_value: 0", "> ```", ">", …], "spans": [{"lineEnd": 51, "lineStart": 46}, {"lineEnd": 58, "lineStart": 53}, {"lineEnd": 65, "lineStart": 60}, {"lineEnd": 72, "lineStart": 67}, {"lineEnd": 79, "lineStart": 74}, {"lineEnd": 86, "lineStart": 81}]}, "283:562:ds-counter" => {"lines": ["# N", "", "> [!note] Camp", "> ```ds-counter", "> name: B0", "> current_value: 5", "> max_value: 20", "> min_value: 0", "> ```", ">", …], "spans": [{"lineEnd": 289, "lineStart": 284}, {"lineEnd": 296, "lineStart": 291}, {"lineEnd": 303, "lineStart": 298}, {"lineEnd": 310, "lineStart": 305}, {"lineEnd": 317, "lineStart": 312}, {"lineEnd": 324, "lineStart": 319}, {"lineEnd": 331, "lineStart": 326}, {"lineEnd": 338, "lineStart": 333}, {"lineEnd": 345, "lineStart": 340}, {"lineEnd": 352, "lineStart": 347}, …]}, "18:24:ds-counter" => {"lines": ["# N", "", "> [!note] Camp", "> ```ds-counter", "> max_value: 20", "> current_value: 6", "> min_value: 0", "> name: Twin", "> ```", "", …], "spans": [{"lineEnd": 24, "lineStart": 19}]}, "2:24:ds-counter" => {"lines": ["# N", "", "> [!note] Camp", "> ```ds-counter", "> name: A", "> ```", ">", "> ```ds-counter", "> name: A", "> ```", …], "spans": [{"lineEnd": 5, "lineStart": 3}, {"lineEnd": 9, "lineStart": 7}, {"lineEnd": 21, "lineStart": 19}]}, "2:24:ds-other" => {"lines": ["# N", "", "> [!note] Camp", "> ```ds-counter", "> name: A", "> ```", ">", "> ```ds-counter", "> name: A", "> ```", …], "spans": [{"lineEnd": 13, "lineStart": 11}, {"lineEnd": 17, "lineStart": 15}]}, "2:11:ds-counter" => {"lines": ["# N", "", "> [!note] Camp", "> ```ds-counter", "> name: A", "> ```", ">", "> text", "> ```ds-counter", "> name: B", …], "spans": [{"lineEnd": 5, "lineStart": 3}, {"lineEnd": 10, "lineStart": 8}]}, "2:14:ds-counter" => {"lines": ["# N", "", "> [!note] Camp", "> ```ds-counter", "> name: A", "> ```", ">", "> ```ds-counter", "> name: A", "> ```", …], "spans": [{"lineEnd": 5, "lineStart": 3}, {"lineEnd": 9, "lineStart": 7}]}, …}
+
+      950 | 		const b = newPassMemo();
+      951 | 		expect(a.blocks).not.toBe(b.blocks);
+    > 952 | 		expect(a.fences).not.toBe(b.fences);
+          | 		                     ^
+      953 | 		expect(a.windowEnds).not.toBe(b.windowEnds);
+      954 | 	});
+      955 | });
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:952:24)
+
+file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got object and undefined)
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got undefined and object)
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:245
+			throw new TypeError(`findDriftedTokens: "${t}" is missing from ${!(t in oursMap) ? 'oursMap' : 'targetMap'}`);
+			      ^
+
+TypeError: findDriftedTokens: "--b" is missing from oursMap
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:245:10)
+    at file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+
+Summary of all failing tests
+FAIL test/dom/framework/twin-reuse.test.ts (5.838 s)
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › a pass over a callout of six blocks (typing, scrolling) reads the callout's block list once, not once per block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 11
+
+      727 | 		await pass;
+      728 |
+    > 729 | 		expect(reads).toBe(1);
+          | 		              ^
+      730 | 		expect(upper.els.map((el) => el.children.length)).toEqual([1, 1, 1, 1, 1, 1]); // nothing was redrawn
+      731 | 	});
+      732 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:729:17)
+
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › SC-547: a pass over a callout of 40 same-alias blocks scans the callout's lines for fences once, not once per block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 122
+
+      741 | 		await t.update();
+      742 |
+    > 743 | 		expect(scan.mock.calls.length).toBe(2); // two callout windows x one alias, not 80
+          | 		                               ^
+      744 | 		expect(upper.els.map((el) => el.children.length)).toEqual(Array(40).fill(1)); // nothing was redrawn
+      745 |
+      746 | 		await t.update();
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:743:34)
+
+  ● SC-547: the pass cache changes no answer › twins, two blocks of each of two aliases and an unterminated last fence: every block resolves to the same fence with the memo as without
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 8
+
+      916 | 		expect(plain.map((f) => f?.lineStart ?? null)).toEqual([3, 7, 11, 15, 19, null]);
+      917 | 		expect(plain.map((f) => f?.body.split('\n')[0] ?? null)).toEqual(['name: A', 'name: A', 'name: Y', 'name: Z', 'name: B', null]);
+    > 918 | 		expect(memo.fences.size).toBe(2); // one list per alias, however many blocks asked
+          | 		                         ^
+      919 | 	});
+      920 |
+      921 | 	test('one memo, two sections of different text with the same window bounds (a self-embed next to the editor\'s callout): each is read from its own text', () => {
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:918:28)
+
+  ● SC-547: the pass cache changes no answer › each pass gets memory of its own: nothing a pass remembers is shared with the next
+
+    expect(received).not.toBe(expected) // Object.is equality
+
+    Expected: not Map {"10:16:ds-counter" => {"lines": ["# N", "", "> [!note] Camp", "> ```ds-counter", "> max_value: 20", "> current_value: 6", "> min_value: 0", "> name: Twin", "> ```", "", …], "spans": [{"lineEnd": 16, "lineStart": 11}]}, "17:30:ds-counter" => {"lines": ["# N", "", "> [!note] Camp", "> ```ds-counter", "> max_value: 20", "> current_value: 6", "> min_value: 0", "> name: X", "> ```", ">", …], "spans": [{"lineEnd": 23, "lineStart": 18}, {"lineEnd": 30, "lineStart": 25}]}, "2:8:ds-counter" => {"lines": ["# N", "", "> [!note] Camp", "> ```ds-counter", "> name: B0", "> current_value: 5", "> max_value: 20", "> min_value: 0", "> ```", ">", …], "spans": [{"lineEnd": 8, "lineStart": 3}]}, "45:86:ds-counter" => {"lines": ["# N", "", "> [!note] Camp", "> ```ds-counter", "> name: B0", "> current_value: 5", "> max_value: 20", "> min_value: 0", "> ```", ">", …], "spans": [{"lineEnd": 51, "lineStart": 46}, {"lineEnd": 58, "lineStart": 53}, {"lineEnd": 65, "lineStart": 60}, {"lineEnd": 72, "lineStart": 67}, {"lineEnd": 79, "lineStart": 74}, {"lineEnd": 86, "lineStart": 81}]}, "283:562:ds-counter" => {"lines": ["# N", "", "> [!note] Camp", "> ```ds-counter", "> name: B0", "> current_value: 5", "> max_value: 20", "> min_value: 0", "> ```", ">", …], "spans": [{"lineEnd": 289, "lineStart": 284}, {"lineEnd": 296, "lineStart": 291}, {"lineEnd": 303, "lineStart": 298}, {"lineEnd": 310, "lineStart": 305}, {"lineEnd": 317, "lineStart": 312}, {"lineEnd": 324, "lineStart": 319}, {"lineEnd": 331, "lineStart": 326}, {"lineEnd": 338, "lineStart": 333}, {"lineEnd": 345, "lineStart": 340}, {"lineEnd": 352, "lineStart": 347}, …]}, "18:24:ds-counter" => {"lines": ["# N", "", "> [!note] Camp", "> ```ds-counter", "> max_value: 20", "> current_value: 6", "> min_value: 0", "> name: Twin", "> ```", "", …], "spans": [{"lineEnd": 24, "lineStart": 19}]}, "2:24:ds-counter" => {"lines": ["# N", "", "> [!note] Camp", "> ```ds-counter", "> name: A", "> ```", ">", "> ```ds-counter", "> name: A", "> ```", …], "spans": [{"lineEnd": 5, "lineStart": 3}, {"lineEnd": 9, "lineStart": 7}, {"lineEnd": 21, "lineStart": 19}]}, "2:24:ds-other" => {"lines": ["# N", "", "> [!note] Camp", "> ```ds-counter", "> name: A", "> ```", ">", "> ```ds-counter", "> name: A", "> ```", …], "spans": [{"lineEnd": 13, "lineStart": 11}, {"lineEnd": 17, "lineStart": 15}]}, "2:11:ds-counter" => {"lines": ["# N", "", "> [!note] Camp", "> ```ds-counter", "> name: A", "> ```", ">", "> text", "> ```ds-counter", "> name: B", …], "spans": [{"lineEnd": 5, "lineStart": 3}, {"lineEnd": 10, "lineStart": 8}]}, "2:14:ds-counter" => {"lines": ["# N", "", "> [!note] Camp", "> ```ds-counter", "> name: A", "> ```", ">", "> ```ds-counter", "> name: A", "> ```", …], "spans": [{"lineEnd": 5, "lineStart": 3}, {"lineEnd": 9, "lineStart": 7}]}, …}
+
+      950 | 		const b = newPassMemo();
+      951 | 		expect(a.blocks).not.toBe(b.blocks);
+    > 952 | 		expect(a.fences).not.toBe(b.fences);
+          | 		                     ^
+      953 | 		expect(a.windowEnds).not.toBe(b.windowEnds);
+      954 | 	});
+      955 | });
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:952:24)
+
+
+Test Suites: 1 failed, 1 skipped, 253 passed, 254 of 255 total
+Tests:       4 failed, 1 skipped, 6383 passed, 6388 total
+Snapshots:   3 passed, 3 total
+Time:        52.632 s
+Ran all test suites in 2 projects.
+jest rc=1

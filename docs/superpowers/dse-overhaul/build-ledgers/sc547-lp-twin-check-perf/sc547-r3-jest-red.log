@@ -1,0 +1,74 @@
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-547: the pass cache changes no answer › twins, two blocks of each of two aliases and an unterminated last fence: every block resolves to the same fence with the memo as without
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 10
+    + Received  +  2
+
+    @@ -7,20 +7,12 @@
+        Object {
+          "body": "name: A",
+          "lineEnd": 9,
+          "lineStart": 7,
+        },
+    -   Object {
+    -     "body": "name: Y",
+    -     "lineEnd": 13,
+    -     "lineStart": 11,
+    -   },
+    -   Object {
+    -     "body": "name: Z",
+    -     "lineEnd": 17,
+    -     "lineStart": 15,
+    -   },
+    +   null,
+    +   null,
+        Object {
+          "body": "name: B",
+          "lineEnd": 21,
+          "lineStart": 19,
+        },
+
+      912 | 		const plain = els.map(([alias, el]) => fenceOnElement(ctx, el, alias, linesOf, section));
+      913 | 		const cached = els.map(([alias, el]) => fenceOnElement(ctx, el, alias, linesOf, section, memo));
+    > 914 | 		expect(cached).toEqual(plain);
+          | 		               ^
+      915 | 		// the twins told apart by place, both blocks of the second alias found (not just the first); the never-closed fence is not a block to Obsidian either way (null)
+      916 | 		expect(plain.map((f) => f?.lineStart ?? null)).toEqual([3, 7, 11, 15, 19, null]);
+      917 | 		expect(plain.map((f) => f?.body.split('\n')[0] ?? null)).toEqual(['name: A', 'name: A', 'name: Y', 'name: Z', 'name: B', null]);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:914:18)
+
+  ● SC-547: the pass cache changes no answer › one memo, two sections of different text with the same window bounds (a self-embed next to the editor's callout): each is read from its own text
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "body": "name: B",
+    -   "lineEnd": 10,
+    -   "lineStart": 8,
+    +   "body": "> ```ds-counter",
+    +   "lineEnd": 9,
+    +   "lineStart": 7,
+      }
+
+      930 | 		const first = fenceOnElement(ctx, second, 'ds-counter', linesOf, old, memo); // the host judged first, by one text
+      931 | 		const viaMemo = fenceOnElement(ctx, second, 'ds-counter', linesOf, fresh, memo); // the next, by another
+    > 932 | 		expect(viaMemo).toEqual(fenceOnElement(ctx, second, 'ds-counter', linesOf, fresh));
+          | 		                ^
+      933 | 		expect(viaMemo).not.toEqual(first); // the two texts do put the block on different lines
+      934 | 		expect(viaMemo?.body).toBe('name: B');
+      935 | 	});
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:932:19)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 35 passed, 37 total
+Snapshots:   0 total
+Time:        2.963 s, estimated 6 s
+Ran all test suites matching test/dom/framework/twin-reuse.test.ts.
+jest exit 1

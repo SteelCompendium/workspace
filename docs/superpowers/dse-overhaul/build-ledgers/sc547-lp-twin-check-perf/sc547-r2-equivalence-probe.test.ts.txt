@@ -1,0 +1,169 @@
+/** @jest-environment jsdom */
+// SC-547 r2 reviewer probe (TEMPORARY - deleted after the review). Cached vs uncached fenceOnElement.
+import { fenceOnElement, newPassMemo } from '../../../src/framework/host/ReadingModeBlockHost';
+
+const ctx = { sourcePath: 'Note.md', getSectionInfo: () => null } as any;
+
+function rng(seed: number): () => number {
+	let s = seed >>> 0;
+	return () => {
+		s = (s * 1664525 + 1013904223) >>> 0;
+		return s / 4294967296;
+	};
+}
+const pick = <T,>(r: () => number, xs: readonly T[]): T => xs[Math.floor(r() * xs.length)];
+
+/** A random callout window's lines (each starts with a quote prefix). */
+function randomWindow(r: () => number, title: string): string[] {
+	const out = [`> [!note] ${title}`];
+	const n = 3 + Math.floor(r() * 30);
+	const opens = ['```ds-counter', '``` ds-counter', '~~~ds-counter', '````ds-counter', '```ds-other', '```js', '~~~', '```', '```ds-counter extra'];
+	const closes = ['```', '~~~', '````', '``` ', '```js'];
+	const bodies = ['name: A', 'name: B', 'current_value: 5', '', 'x: ```ds-counter', '```ds-counter'];
+	for (let i = 0; i < n; i++) {
+		const nest = r() < 0.15 ? '> > ' : r() < 0.1 ? '>  ' : '> ';
+		const k = r();
+		if (k < 0.3) out.push(nest + pick(r, opens));
+		else if (k < 0.55) out.push(nest + pick(r, closes));
+		else if (k < 0.65) out.push('>');
+		else out.push(nest + pick(r, bodies));
+	}
+	return out;
+}
+
+function domFor(aliases: Array<[string, number]>, nested: boolean): Array<[string, HTMLElement]> {
+	const widget = document.body.appendChild(document.createElement('div'));
+	widget.className = 'cm-embed-block cm-callout';
+	let inner: HTMLElement = widget.appendChild(document.createElement('div'));
+	inner.className = 'callout';
+	if (nested) {
+		inner = inner.appendChild(document.createElement('blockquote'));
+	}
+	const out: Array<[string, HTMLElement]> = [];
+	for (const [alias, count] of aliases) {
+		for (let i = 0; i < count; i++) {
+			const el = inner.appendChild(document.createElement('div'));
+			el.classList.add(`block-language-${alias}`);
+			out.push([alias, el]);
+		}
+	}
+	return out;
+}
+
+afterEach(() => document.body.replaceChildren());
+
+describe('r2: equivalence fuzz (one memo per pass, many windows of ONE text)', () => {
+	test('2000 random notes x every block: cached === uncached', () => {
+		let compared = 0;
+		let nonNull = 0;
+		let preexisting = 0;
+		for (let seed = 1; seed <= 2000; seed++) {
+			const r = rng(seed);
+			const nWin = 1 + Math.floor(r() * 3);
+			const parts: string[] = ['# N', ''];
+			const wins: Array<{ lineStart: number; lineEnd: number }> = [];
+			for (let w = 0; w < nWin; w++) {
+				const lines = randomWindow(r, `W${w}`);
+				const lineStart = parts.length;
+				parts.push(...lines);
+				wins.push({ lineStart, lineEnd: parts.length - 1 });
+				if (r() < 0.5) parts.push(''); // else back to back (the run of quote lines would merge them; we still hand both windows)
+			}
+			if (r() < 0.3) parts.push('```ds-counter', 'name: Tail'); // unterminated outside
+			const text = parts.join('\n');
+			const memo = newPassMemo();
+			// also one window that covers two back-to-back callouts, and a window that is a prefix of another (same lineStart)
+			const extra = [{ lineStart: wins[0].lineStart, lineEnd: wins[wins.length - 1].lineEnd }, { lineStart: wins[0].lineStart, lineEnd: Math.max(wins[0].lineStart + 1, wins[0].lineEnd - 2) }];
+			for (const win of [...wins, ...extra]) {
+				const section = { text, ...win };
+				const els = domFor([['ds-counter', 1 + Math.floor(r() * 8)], ['ds-other', Math.floor(r() * 3)]], r() < 0.3);
+				const noMemo = els.map(([a, el]) => fenceOnElement(ctx, el, a, undefined, section));
+				// develop's pass: the SC-537 blocks cache only (no fence cache)
+				const devMemo = { blocks: new Map(), fences: undefined as any, windowEnds: new Map() };
+				const plain = els.map(([a, el]) => fenceOnElement(ctx, el, a, undefined, section, devMemo));
+				if (JSON.stringify(noMemo) !== JSON.stringify(plain)) preexisting++;
+				memo.blocks.clear(); // blocks cache is per DOM top anyway; keep fences memo across windows of the one text
+				const cached = els.map(([a, el]) => fenceOnElement(ctx, el, a, undefined, section, memo));
+				// and the cached path asked a second time in reverse order (cache hits only; blocks cache reset so the first alias asked differs)
+				memo.blocks.clear();
+				const devMemo2 = { blocks: new Map(), fences: undefined as any, windowEnds: new Map() };
+				const plain2 = [...els].reverse().map(([a, el]) => fenceOnElement(ctx, el, a, undefined, section, devMemo2)).reverse();
+				const again = [...els].reverse().map(([a, el]) => fenceOnElement(ctx, el, a, undefined, section, memo)).reverse();
+				expect({ seed, win, cached }).toEqual({ seed, win, cached: plain });
+				expect({ seed, win, again }).toEqual({ seed, win, again: plain2 });
+				compared += els.length;
+				nonNull += plain.filter((p) => p !== null).length;
+				document.body.replaceChildren();
+			}
+			// null section (getSectionInfo null and no editor section): null both ways
+			const [[a, el]] = domFor([['ds-counter', 1]], false);
+			expect(fenceOnElement(ctx, el, a, undefined, null, memo)).toBeNull();
+			expect(fenceOnElement(ctx, el, a, undefined, null)).toBeNull();
+		}
+		console.log(`R2-FUZZ compared=${compared} nonNull=${nonNull} preexistingBlocksCacheDiffs=${preexisting}`);
+		expect(nonNull).toBeGreaterThan(1000);
+	});
+
+	test('hand cases: tildes vs backticks, whitespace before language, nested quote, non-DSE fence holding a ds line, unterminated last fence', () => {
+		const W = [
+			'> [!note] Camp',
+			'> ~~~ds-counter', '> name: A', '> ~~~', '>',
+			'> ``` ds-counter', '> name: A', '> ```', '>',
+			'> ```js', '> ```ds-counter', '> ```', '>',
+			'> > ```ds-counter', '> > name: N', '> > ```', '>',
+			'> ````ds-counter', '> name: Q', '> ```', '> ````', '>',
+			'> ```ds-counter', '> name: C',
+		];
+		const text = `# N\n\n${W.join('\n')}`;
+		const section = { text, lineStart: 2, lineEnd: 2 + W.length - 1 };
+		for (const nested of [false, true]) {
+			const els = domFor([['ds-counter', 7]], nested);
+			const memo = newPassMemo();
+			const plain = els.map(([a, el]) => fenceOnElement(ctx, el, a, undefined, section));
+			const cached = els.map(([a, el]) => fenceOnElement(ctx, el, a, undefined, section, memo));
+			expect(cached).toEqual(plain);
+			console.log(`R2-HAND nested=${nested} ${JSON.stringify(plain.map((p) => p && [p.lineStart, p.lineEnd]))}`);
+			document.body.replaceChildren();
+		}
+	});
+});
+
+describe('r2: pre-existing SC-537 blocks cache keyed by quote element only, not alias', () => {
+	test('quoteOrdinal of a second alias in the same callout after the first alias filled the cache', () => {
+		const { quoteOrdinal } = require('../../../src/framework/host/ReadingModeBlockHost');
+		const els = domFor([['ds-counter', 2], ['ds-other', 2]], false);
+		const cache = new Map();
+		const first = quoteOrdinal(els[0][1], 'ds-counter', cache);
+		const other = quoteOrdinal(els[3][1], 'ds-other', cache);
+		const fresh = quoteOrdinal(els[3][1], 'ds-other');
+		console.log(`R2-BLOCKS first=${first} otherCached=${other} otherFresh=${fresh}`);
+		// fence lookup for the 2nd ds-other block in a pass
+		const W = ['> [!note] Camp', '> ```ds-counter', '> name: A', '> ```', '>', '> ```ds-counter', '> name: B', '> ```', '>', '> ```ds-other', '> name: X', '> ```', '>', '> ```ds-other', '> name: Y', '> ```'];
+		const text = `# N\n\n${W.join('\n')}`;
+		const section = { text, lineStart: 2, lineEnd: 2 + W.length - 1 };
+		const memo = newPassMemo();
+		const pass = els.map(([a, el]) => fenceOnElement(ctx, el, a, undefined, section, memo)?.lineStart ?? null);
+		const alone = els.map(([a, el]) => fenceOnElement(ctx, el, a, undefined, section)?.lineStart ?? null);
+		console.log(`R2-BLOCKS pass=${JSON.stringify(pass)} alone=${JSON.stringify(alone)}`);
+		expect(other).toBe(-1);
+	});
+});
+
+describe('r2: ONE memo, two hosts whose sections carry DIFFERENT texts with the same window bounds', () => {
+	test('second host gets fences read from the first host\'s text', () => {
+		// old (what Obsidian's getSectionInfo might hold) and new (the editor's doc): same line count, the window's 2nd fence moved by one line
+		const OLD = ['> [!note] Camp', '> ```ds-counter', '> name: A', '> ```', '>', '> ```ds-counter', '> name: B', '> ```', '>', '> tail'];
+		const NEW = ['> [!note] Camp', '> ```ds-counter', '> name: A', '> ```', '>', '> text', '> ```ds-counter', '> name: B', '> ```', '>'];
+		const tOld = `# N\n\n${OLD.join('\n')}\n`;
+		const tNew = `# N\n\n${NEW.join('\n')}\n`;
+		const win = { lineStart: 2, lineEnd: 2 + OLD.length - 1 };
+		const els = domFor([['ds-counter', 2]], false);
+		const [, el1] = els[1];
+		const memo = newPassMemo();
+		fenceOnElement(ctx, el1, 'ds-counter', undefined, { text: tOld, ...win }, memo); // host judged first, Obsidian's text
+		const cachedNew = fenceOnElement(ctx, el1, 'ds-counter', undefined, { text: tNew, ...win }, memo);
+		const plainNew = fenceOnElement(ctx, el1, 'ds-counter', undefined, { text: tNew, ...win });
+		console.log(`R2-MIXED cached=${JSON.stringify(cachedNew)} plain=${JSON.stringify(plainNew)}`);
+		expect(cachedNew).not.toEqual(plainNew); // demonstrates the key does not carry the text
+	});
+});

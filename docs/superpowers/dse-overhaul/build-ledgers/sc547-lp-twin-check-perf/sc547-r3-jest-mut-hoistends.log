@@ -1,0 +1,57 @@
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › a pass over a callout of six blocks (typing, scrolling) reads the callout's block list once, not once per block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 11
+
+      727 | 		await pass;
+      728 |
+    > 729 | 		expect(reads).toBe(1);
+          | 		              ^
+      730 | 		expect(upper.els.map((el) => el.children.length)).toEqual([1, 1, 1, 1, 1, 1]); // nothing was redrawn
+      731 | 	});
+      732 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:729:17)
+
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › SC-547: a pass over a callout of 40 same-alias blocks scans the callout's lines for fences once, not once per block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 122
+
+      741 | 		await t.update();
+      742 |
+    > 743 | 		expect(scan.mock.calls.length).toBe(2); // two callout windows x one alias, not 80
+          | 		                               ^
+      744 | 		expect(upper.els.map((el) => el.children.length)).toEqual(Array(40).fill(1)); // nothing was redrawn
+      745 |
+      746 | 		await t.update();
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:743:34)
+
+  ● SC-547: the pass cache changes no answer › each pass gets memory of its own: nothing a pass remembers is shared with the next
+
+    expect(received).not.toBe(expected) // Object.is equality
+
+    Expected: not Map {10 => 16, 17 => 30, 2 => 8, 45 => 86, 283 => 562, 18 => 24}
+
+      951 | 		expect(a.blocks).not.toBe(b.blocks);
+      952 | 		expect(a.fences).not.toBe(b.fences);
+    > 953 | 		expect(a.windowEnds).not.toBe(b.windowEnds);
+          | 		                         ^
+      954 | 	});
+      955 | });
+      956 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:953:28)
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 34 passed, 37 total
+Snapshots:   0 total
+Time:        3.376 s
+Ran all test suites matching test/dom/framework/twin-reuse.test.ts.
+jest exit 1

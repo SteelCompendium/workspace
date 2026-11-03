@@ -1,0 +1,38 @@
+inserted
+applied hoist-fences
+  console.log
+    R2-LIFETIME released=0 shown=["=|true","=|false"]
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:769:11)
+
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-537: twin callouts in Live Preview (the editor-driven pass) › R2-LIFETIME: a count-preserving edit inside the callout between two passes (fences move, window bounds do not)
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Array [
+    -   "X=5|false",
+    -   "Y=3|false",
+    +   "=|true",
+    +   "=|false",
+      ]
+
+      768 | 		const shownNow = upper.els.map((el) => `${shown(el)}|${(el.textContent ?? '').includes('```')}`);
+      769 | 		console.log(`R2-LIFETIME released=${released} shown=${JSON.stringify(shownNow)}`);
+    > 770 | 		expect(shownNow).toEqual(['X=5|false', 'Y=3|false']);
+          | 		                 ^
+      771 | 	});
+      772 |
+      773 | 	// SC-544: the click on the middle callout comes before the upper's write. Obsidian's rebuild after that write hands the middle's widget
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:770:20)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 34 skipped, 35 total
+Snapshots:   0 total
+Time:        1.191 s
+Ran all test suites matching test/dom/framework/twin-reuse.test.ts with tests matching "R2-LIFETIME".
+jest rc=1

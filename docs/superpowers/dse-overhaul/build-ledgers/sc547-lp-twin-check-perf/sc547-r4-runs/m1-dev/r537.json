@@ -1,0 +1,1647 @@
+{
+ "cases": {
+  "mix-ct-2": {
+   "rel": "Probe537/mix.md",
+   "steps": [
+    {
+     "i": 0,
+     "did": "click A2",
+     "disk": [
+      5,
+      5,
+      6,
+      5,
+      5,
+      5,
+      5,
+      5
+     ],
+     "names": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "A",
+      "B",
+      "C",
+      "D"
+     ],
+     "A": {
+      "mode": "lp",
+      "cards": [
+       {
+        "block": 0,
+        "rid": "R11",
+        "name": "A",
+        "value": 5
+       },
+       {
+        "block": 1,
+        "rid": "R12",
+        "name": "B",
+        "value": 5
+       },
+       {
+        "block": 2,
+        "rid": "R9",
+        "name": "C",
+        "value": 6
+       },
+       {
+        "block": 3,
+        "rid": "R10",
+        "name": "D",
+        "value": 5
+       },
+       {
+        "block": 4,
+        "rid": "R3",
+        "name": "A",
+        "value": 5
+       },
+       {
+        "block": 5,
+        "rid": "R4",
+        "name": "B",
+        "value": 5
+       },
+       {
+        "block": 6,
+        "rid": "R13",
+        "name": "C",
+        "value": 5
+       },
+       {
+        "block": 7,
+        "rid": "R2",
+        "name": "D",
+        "value": 5
+       }
+      ]
+     },
+     "B": null,
+     "clicks": [
+      "R1@b2"
+     ],
+     "writes": [
+      "[5,5,5,5,5,5,5,5]->[5,5,6,5,5,5,5,5]"
+     ],
+     "releases": [
+      "R5:render-child-unload@A:lp(C=5)",
+      "R6:render-child-unload@A:lp(D=5)",
+      "R7:render-child-unload@A:lp(A=5)",
+      "R8:render-child-unload@A:lp(B=5)",
+      "R1:reused-by-twin@A:lp(C=6)"
+     ],
+     "owns": [
+      "R9@A:lp(C=6)",
+      "R10@A:lp(D=5)",
+      "R11@A:lp(A=5)",
+      "R12@A:lp(B=5)",
+      "R13@A:lp(C=5)"
+     ]
+    },
+    {
+     "i": 1,
+     "did": "click A6",
+     "disk": [
+      5,
+      5,
+      6,
+      5,
+      5,
+      5,
+      6,
+      5
+     ],
+     "names": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "A",
+      "B",
+      "C",
+      "D"
+     ],
+     "A": {
+      "mode": "lp",
+      "cards": [
+       {
+        "block": 0,
+        "rid": "R11",
+        "name": "A",
+        "value": 5
+       },
+       {
+        "block": 1,
+        "rid": "R12",
+        "name": "B",
+        "value": 5
+       },
+       {
+        "block": 2,
+        "rid": "R9",
+        "name": "C",
+        "value": 6
+       },
+       {
+        "block": 3,
+        "rid": "R10",
+        "name": "D",
+        "value": 5
+       },
+       {
+        "block": 4,
+        "rid": "R16",
+        "name": "A",
+        "value": 5
+       },
+       {
+        "block": 5,
+        "rid": "R17",
+        "name": "B",
+        "value": 5
+       },
+       {
+        "block": 6,
+        "rid": "R14",
+        "name": "C",
+        "value": 6
+       },
+       {
+        "block": 7,
+        "rid": "R15",
+        "name": "D",
+        "value": 5
+       }
+      ]
+     },
+     "B": null,
+     "clicks": [
+      "R13@b6"
+     ],
+     "writes": [
+      "[5,5,6,5,5,5,5,5]->[5,5,6,5,5,5,6,5]"
+     ],
+     "releases": [
+      "R2:render-child-unload@A:lp(D=5)",
+      "R3:render-child-unload@A:lp(A=5)",
+      "R4:render-child-unload@A:lp(B=5)",
+      "R13:render-child-unload@A:lp(C=6)"
+     ],
+     "owns": [
+      "R14@A:lp(C=6)",
+      "R15@A:lp(D=5)",
+      "R16@A:lp(A=5)",
+      "R17@A:lp(B=5)"
+     ]
+    }
+   ],
+   "problems": [],
+   "start": {
+    "disk": [
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5
+    ],
+    "names": [
+     "A",
+     "B",
+     "C",
+     "D",
+     "A",
+     "B",
+     "C",
+     "D"
+    ],
+    "A": {
+     "mode": "lp",
+     "cards": [
+      {
+       "block": 0,
+       "rid": "R3",
+       "name": "A",
+       "value": 5
+      },
+      {
+       "block": 1,
+       "rid": "R4",
+       "name": "B",
+       "value": 5
+      },
+      {
+       "block": 2,
+       "rid": "R1",
+       "name": "C",
+       "value": 5
+      },
+      {
+       "block": 3,
+       "rid": "R2",
+       "name": "D",
+       "value": 5
+      },
+      {
+       "block": 4,
+       "rid": "R7",
+       "name": "A",
+       "value": 5
+      },
+      {
+       "block": 5,
+       "rid": "R8",
+       "name": "B",
+       "value": 5
+      },
+      {
+       "block": 6,
+       "rid": "R5",
+       "name": "C",
+       "value": 5
+      },
+      {
+       "block": 7,
+       "rid": "R6",
+       "name": "D",
+       "value": 5
+      }
+     ]
+    },
+    "B": null
+   },
+   "finalText": "# mix\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: A\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n>\n> ```ds-counter\n> name: B\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n>\n> ```ds-ct\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: C\n> ```\n>\n> ```ds-ct\n> name: D\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nMID\n\n> [!note] Camp\n> ```ds-counter\n> name: A\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n>\n> ```ds-counter\n> name: B\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n>\n> ```ds-ct\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: C\n> ```\n>\n> ```ds-ct\n> name: D\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n",
+   "hosts": [
+    {
+     "rid": "R9",
+     "pane": "A:lp",
+     "known": "C=6",
+     "lastWrite": null
+    },
+    {
+     "rid": "R10",
+     "pane": "A:lp",
+     "known": "D=5",
+     "lastWrite": null
+    },
+    {
+     "rid": "R11",
+     "pane": "A:lp",
+     "known": "A=5",
+     "lastWrite": null
+    },
+    {
+     "rid": "R12",
+     "pane": "A:lp",
+     "known": "B=5",
+     "lastWrite": null
+    },
+    {
+     "rid": "R14",
+     "pane": "A:lp",
+     "known": "C=6",
+     "lastWrite": null
+    },
+    {
+     "rid": "R15",
+     "pane": "A:lp",
+     "known": "D=5",
+     "lastWrite": null
+    },
+    {
+     "rid": "R16",
+     "pane": "A:lp",
+     "known": "A=5",
+     "lastWrite": null
+    },
+    {
+     "rid": "R17",
+     "pane": "A:lp",
+     "known": "B=5",
+     "lastWrite": null
+    }
+   ],
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "mix-ct-3": {
+   "rel": "Probe537/mix.md",
+   "steps": [
+    {
+     "i": 0,
+     "did": "click A3",
+     "disk": [
+      5,
+      5,
+      5,
+      6,
+      5,
+      5,
+      5,
+      5
+     ],
+     "names": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "A",
+      "B",
+      "C",
+      "D"
+     ],
+     "A": {
+      "mode": "lp",
+      "cards": [
+       {
+        "block": 0,
+        "rid": "R36",
+        "name": "A",
+        "value": 5
+       },
+       {
+        "block": 1,
+        "rid": "R37",
+        "name": "B",
+        "value": 5
+       },
+       {
+        "block": 2,
+        "rid": "R34",
+        "name": "C",
+        "value": 5
+       },
+       {
+        "block": 3,
+        "rid": "R35",
+        "name": "D",
+        "value": 6
+       },
+       {
+        "block": 4,
+        "rid": "R28",
+        "name": "A",
+        "value": 5
+       },
+       {
+        "block": 5,
+        "rid": "R29",
+        "name": "B",
+        "value": 5
+       },
+       {
+        "block": 6,
+        "rid": "R26",
+        "name": "C",
+        "value": 5
+       },
+       {
+        "block": 7,
+        "rid": "R38",
+        "name": "D",
+        "value": 5
+       }
+      ]
+     },
+     "B": null,
+     "clicks": [
+      "R27@b3"
+     ],
+     "writes": [
+      "[5,5,5,5,5,5,5,5]->[5,5,5,6,5,5,5,5]"
+     ],
+     "releases": [
+      "R30:render-child-unload@A:lp(C=5)",
+      "R31:render-child-unload@A:lp(D=5)",
+      "R32:render-child-unload@A:lp(A=5)",
+      "R33:render-child-unload@A:lp(B=5)",
+      "R27:reused-by-twin@A:lp(D=6)"
+     ],
+     "owns": [
+      "R34@A:lp(C=5)",
+      "R35@A:lp(D=6)",
+      "R36@A:lp(A=5)",
+      "R37@A:lp(B=5)",
+      "R38@A:lp(D=5)"
+     ]
+    },
+    {
+     "i": 1,
+     "did": "click A7",
+     "disk": [
+      5,
+      5,
+      5,
+      6,
+      5,
+      5,
+      5,
+      6
+     ],
+     "names": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "A",
+      "B",
+      "C",
+      "D"
+     ],
+     "A": {
+      "mode": "lp",
+      "cards": [
+       {
+        "block": 0,
+        "rid": "R36",
+        "name": "A",
+        "value": 5
+       },
+       {
+        "block": 1,
+        "rid": "R37",
+        "name": "B",
+        "value": 5
+       },
+       {
+        "block": 2,
+        "rid": "R34",
+        "name": "C",
+        "value": 5
+       },
+       {
+        "block": 3,
+        "rid": "R35",
+        "name": "D",
+        "value": 6
+       },
+       {
+        "block": 4,
+        "rid": "R41",
+        "name": "A",
+        "value": 5
+       },
+       {
+        "block": 5,
+        "rid": "R42",
+        "name": "B",
+        "value": 5
+       },
+       {
+        "block": 6,
+        "rid": "R39",
+        "name": "C",
+        "value": 5
+       },
+       {
+        "block": 7,
+        "rid": "R40",
+        "name": "D",
+        "value": 6
+       }
+      ]
+     },
+     "B": null,
+     "clicks": [
+      "R38@b7"
+     ],
+     "writes": [
+      "[5,5,5,6,5,5,5,5]->[5,5,5,6,5,5,5,6]"
+     ],
+     "releases": [
+      "R26:render-child-unload@A:lp(C=5)",
+      "R28:render-child-unload@A:lp(A=5)",
+      "R29:render-child-unload@A:lp(B=5)",
+      "R38:render-child-unload@A:lp(D=6)"
+     ],
+     "owns": [
+      "R39@A:lp(C=5)",
+      "R40@A:lp(D=6)",
+      "R41@A:lp(A=5)",
+      "R42@A:lp(B=5)"
+     ]
+    },
+    {
+     "i": 2,
+     "did": "click A2",
+     "disk": [
+      5,
+      5,
+      6,
+      6,
+      5,
+      5,
+      5,
+      6
+     ],
+     "names": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "A",
+      "B",
+      "C",
+      "D"
+     ],
+     "A": {
+      "mode": "lp",
+      "cards": [
+       {
+        "block": 0,
+        "rid": "R45",
+        "name": "A",
+        "value": 5
+       },
+       {
+        "block": 1,
+        "rid": "R46",
+        "name": "B",
+        "value": 5
+       },
+       {
+        "block": 2,
+        "rid": "R43",
+        "name": "C",
+        "value": 6
+       },
+       {
+        "block": 3,
+        "rid": "R44",
+        "name": "D",
+        "value": 6
+       },
+       {
+        "block": 4,
+        "rid": "R36",
+        "name": "A",
+        "value": 5
+       },
+       {
+        "block": 5,
+        "rid": "R37",
+        "name": "B",
+        "value": 5
+       },
+       {
+        "block": 6,
+        "rid": "R47",
+        "name": "C",
+        "value": 5
+       },
+       {
+        "block": 7,
+        "rid": "R35",
+        "name": "D",
+        "value": 6
+       }
+      ]
+     },
+     "B": null,
+     "clicks": [
+      "R34@b2"
+     ],
+     "writes": [
+      "[5,5,5,6,5,5,5,6]->[5,5,6,6,5,5,5,6]"
+     ],
+     "releases": [
+      "R39:render-child-unload@A:lp(C=5)",
+      "R40:render-child-unload@A:lp(D=6)",
+      "R41:render-child-unload@A:lp(A=5)",
+      "R42:render-child-unload@A:lp(B=5)",
+      "R34:reused-by-twin@A:lp(C=6)"
+     ],
+     "owns": [
+      "R43@A:lp(C=6)",
+      "R44@A:lp(D=6)",
+      "R45@A:lp(A=5)",
+      "R46@A:lp(B=5)",
+      "R47@A:lp(C=5)"
+     ]
+    }
+   ],
+   "problems": [],
+   "start": {
+    "disk": [
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5
+    ],
+    "names": [
+     "A",
+     "B",
+     "C",
+     "D",
+     "A",
+     "B",
+     "C",
+     "D"
+    ],
+    "A": {
+     "mode": "lp",
+     "cards": [
+      {
+       "block": 0,
+       "rid": "R28",
+       "name": "A",
+       "value": 5
+      },
+      {
+       "block": 1,
+       "rid": "R29",
+       "name": "B",
+       "value": 5
+      },
+      {
+       "block": 2,
+       "rid": "R26",
+       "name": "C",
+       "value": 5
+      },
+      {
+       "block": 3,
+       "rid": "R27",
+       "name": "D",
+       "value": 5
+      },
+      {
+       "block": 4,
+       "rid": "R32",
+       "name": "A",
+       "value": 5
+      },
+      {
+       "block": 5,
+       "rid": "R33",
+       "name": "B",
+       "value": 5
+      },
+      {
+       "block": 6,
+       "rid": "R30",
+       "name": "C",
+       "value": 5
+      },
+      {
+       "block": 7,
+       "rid": "R31",
+       "name": "D",
+       "value": 5
+      }
+     ]
+    },
+    "B": null
+   },
+   "finalText": "# mix\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: A\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n>\n> ```ds-counter\n> name: B\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n>\n> ```ds-ct\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: C\n> ```\n>\n> ```ds-ct\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: D\n> ```\n\nMID\n\n> [!note] Camp\n> ```ds-counter\n> name: A\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n>\n> ```ds-counter\n> name: B\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n>\n> ```ds-ct\n> name: C\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n>\n> ```ds-ct\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: D\n> ```\n\nBOTTOM\n",
+   "hosts": [
+    {
+     "rid": "R35",
+     "pane": "A:lp",
+     "known": "D=6",
+     "lastWrite": null
+    },
+    {
+     "rid": "R36",
+     "pane": "A:lp",
+     "known": "A=5",
+     "lastWrite": null
+    },
+    {
+     "rid": "R37",
+     "pane": "A:lp",
+     "known": "B=5",
+     "lastWrite": null
+    },
+    {
+     "rid": "R43",
+     "pane": "A:lp",
+     "known": "C=6",
+     "lastWrite": null
+    },
+    {
+     "rid": "R44",
+     "pane": "A:lp",
+     "known": "D=6",
+     "lastWrite": null
+    },
+    {
+     "rid": "R45",
+     "pane": "A:lp",
+     "known": "A=5",
+     "lastWrite": null
+    },
+    {
+     "rid": "R46",
+     "pane": "A:lp",
+     "known": "B=5",
+     "lastWrite": null
+    },
+    {
+     "rid": "R47",
+     "pane": "A:lp",
+     "known": "C=5",
+     "lastWrite": null
+    }
+   ],
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "mix-counter-0": {
+   "rel": "Probe537/mix.md",
+   "steps": [
+    {
+     "i": 0,
+     "did": "click A0",
+     "disk": [
+      6,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5
+     ],
+     "names": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "A",
+      "B",
+      "C",
+      "D"
+     ],
+     "A": {
+      "mode": "lp",
+      "cards": [
+       {
+        "block": 0,
+        "rid": "R66",
+        "name": "A",
+        "value": 6
+       },
+       {
+        "block": 1,
+        "rid": "R67",
+        "name": "B",
+        "value": 5
+       },
+       {
+        "block": 2,
+        "rid": "R64",
+        "name": "C",
+        "value": 5
+       },
+       {
+        "block": 3,
+        "rid": "R65",
+        "name": "D",
+        "value": 5
+       },
+       {
+        "block": 4,
+        "rid": "R58",
+        "name": "A",
+        "value": 6
+       },
+       {
+        "block": 5,
+        "rid": "R59",
+        "name": "B",
+        "value": 5
+       },
+       {
+        "block": 6,
+        "rid": "R56",
+        "name": "C",
+        "value": 5
+       },
+       {
+        "block": 7,
+        "rid": "R57",
+        "name": "D",
+        "value": 5
+       }
+      ]
+     },
+     "B": null,
+     "clicks": [
+      "R58@b0"
+     ],
+     "writes": [
+      "[5,5,5,5,5,5,5,5]->[6,5,5,5,5,5,5,5]"
+     ],
+     "releases": [
+      "R60:render-child-unload@A:lp(C=5)",
+      "R61:render-child-unload@A:lp(D=5)",
+      "R62:render-child-unload@A:lp(A=5)",
+      "R63:render-child-unload@A:lp(B=5)"
+     ],
+     "owns": [
+      "R64@A:lp(C=5)",
+      "R65@A:lp(D=5)",
+      "R66@A:lp(A=6)",
+      "R67@A:lp(B=5)"
+     ]
+    },
+    {
+     "i": 1,
+     "did": "click A4",
+     "disk": [
+      7,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5
+     ],
+     "names": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "A",
+      "B",
+      "C",
+      "D"
+     ],
+     "A": {
+      "mode": "lp",
+      "cards": [
+       {
+        "block": 0,
+        "rid": "R70",
+        "name": "A",
+        "value": 7
+       },
+       {
+        "block": 1,
+        "rid": "R71",
+        "name": "B",
+        "value": 5
+       },
+       {
+        "block": 2,
+        "rid": "R68",
+        "name": "C",
+        "value": 5
+       },
+       {
+        "block": 3,
+        "rid": "R69",
+        "name": "D",
+        "value": 5
+       },
+       {
+        "block": 4,
+        "rid": "R58",
+        "name": "A",
+        "value": 7
+       },
+       {
+        "block": 5,
+        "rid": "R59",
+        "name": "B",
+        "value": 5
+       },
+       {
+        "block": 6,
+        "rid": "R56",
+        "name": "C",
+        "value": 5
+       },
+       {
+        "block": 7,
+        "rid": "R57",
+        "name": "D",
+        "value": 5
+       }
+      ]
+     },
+     "B": null,
+     "clicks": [
+      "R58@b4"
+     ],
+     "writes": [
+      "[6,5,5,5,5,5,5,5]->[7,5,5,5,5,5,5,5]"
+     ],
+     "releases": [
+      "R64:render-child-unload@A:lp(C=5)",
+      "R65:render-child-unload@A:lp(D=5)",
+      "R66:render-child-unload@A:lp(A=6)",
+      "R67:render-child-unload@A:lp(B=5)"
+     ],
+     "owns": [
+      "R68@A:lp(C=5)",
+      "R69@A:lp(D=5)",
+      "R70@A:lp(A=7)",
+      "R71@A:lp(B=5)"
+     ]
+    }
+   ],
+   "problems": [
+    "step 0 click A0: A card of block 4 (R58) shows 6, disk 5",
+    "step 1 click A4: disk [7,5,5,5,5,5,5,5] want [6,5,5,5,6,5,5,5]",
+    "step 1 click A4: A card of block 4 (R58) shows 7, disk 5"
+   ],
+   "start": {
+    "disk": [
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5
+    ],
+    "names": [
+     "A",
+     "B",
+     "C",
+     "D",
+     "A",
+     "B",
+     "C",
+     "D"
+    ],
+    "A": {
+     "mode": "lp",
+     "cards": [
+      {
+       "block": 0,
+       "rid": "R58",
+       "name": "A",
+       "value": 5
+      },
+      {
+       "block": 1,
+       "rid": "R59",
+       "name": "B",
+       "value": 5
+      },
+      {
+       "block": 2,
+       "rid": "R56",
+       "name": "C",
+       "value": 5
+      },
+      {
+       "block": 3,
+       "rid": "R57",
+       "name": "D",
+       "value": 5
+      },
+      {
+       "block": 4,
+       "rid": "R62",
+       "name": "A",
+       "value": 5
+      },
+      {
+       "block": 5,
+       "rid": "R63",
+       "name": "B",
+       "value": 5
+      },
+      {
+       "block": 6,
+       "rid": "R60",
+       "name": "C",
+       "value": 5
+      },
+      {
+       "block": 7,
+       "rid": "R61",
+       "name": "D",
+       "value": 5
+      }
+     ]
+    },
+    "B": null
+   },
+   "finalText": "# mix\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> max_value: 20\n> current_value: 7\n> min_value: 0\n> name: A\n> ```\n>\n> ```ds-counter\n> name: B\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n>\n> ```ds-ct\n> name: C\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n>\n> ```ds-ct\n> name: D\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nMID\n\n> [!note] Camp\n> ```ds-counter\n> name: A\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n>\n> ```ds-counter\n> name: B\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n>\n> ```ds-ct\n> name: C\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n>\n> ```ds-ct\n> name: D\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n",
+   "hosts": [
+    {
+     "rid": "R56",
+     "pane": "A:lp",
+     "known": "C=5",
+     "lastWrite": null
+    },
+    {
+     "rid": "R57",
+     "pane": "A:lp",
+     "known": "D=5",
+     "lastWrite": null
+    },
+    {
+     "rid": "R58",
+     "pane": "A:lp",
+     "known": "A=7",
+     "lastWrite": 5
+    },
+    {
+     "rid": "R59",
+     "pane": "A:lp",
+     "known": "B=5",
+     "lastWrite": null
+    },
+    {
+     "rid": "R68",
+     "pane": "A:lp",
+     "known": "C=5",
+     "lastWrite": null
+    },
+    {
+     "rid": "R69",
+     "pane": "A:lp",
+     "known": "D=5",
+     "lastWrite": null
+    },
+    {
+     "rid": "R70",
+     "pane": "A:lp",
+     "known": "A=7",
+     "lastWrite": null
+    },
+    {
+     "rid": "R71",
+     "pane": "A:lp",
+     "known": "B=5",
+     "lastWrite": null
+    }
+   ],
+   "errors": [],
+   "notices": [],
+   "verdict": "PROBLEMS"
+  },
+  "mixfar-ct": {
+   "rel": "Probe537/mixfar.md",
+   "steps": [
+    {
+     "i": 0,
+     "did": "click A2",
+     "disk": [
+      5,
+      5,
+      6,
+      5,
+      5,
+      5,
+      5,
+      5
+     ],
+     "names": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "A",
+      "B",
+      "C",
+      "D"
+     ],
+     "A": {
+      "mode": "lp",
+      "cards": [
+       {
+        "block": 0,
+        "rid": "R86",
+        "name": "A",
+        "value": 5
+       },
+       {
+        "block": 1,
+        "rid": "R87",
+        "name": "B",
+        "value": 5
+       },
+       {
+        "block": 2,
+        "rid": "R84",
+        "name": "C",
+        "value": 6
+       },
+       {
+        "block": 3,
+        "rid": "R85",
+        "name": "D",
+        "value": 5
+       }
+      ]
+     },
+     "B": null,
+     "clicks": [
+      "R80@b2"
+     ],
+     "writes": [
+      "[5,5,5,5,5,5,5,5]->[5,5,6,5,5,5,5,5]"
+     ],
+     "releases": [],
+     "owns": [
+      "R84@A:lp(C=6)",
+      "R85@A:lp(D=5)",
+      "R86@A:lp(A=5)",
+      "R87@A:lp(B=5)"
+     ]
+    },
+    {
+     "i": 1,
+     "did": "scroll to block 6",
+     "disk": [
+      5,
+      5,
+      6,
+      5,
+      5,
+      5,
+      5,
+      5
+     ],
+     "names": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "A",
+      "B",
+      "C",
+      "D"
+     ],
+     "A": {
+      "mode": "lp",
+      "cards": [
+       {
+        "block": 4,
+        "rid": "R82",
+        "name": "A",
+        "value": 5
+       },
+       {
+        "block": 5,
+        "rid": "R83",
+        "name": "B",
+        "value": 5
+       },
+       {
+        "block": 6,
+        "rid": "R88",
+        "name": "C",
+        "value": 5
+       },
+       {
+        "block": 7,
+        "rid": "R81",
+        "name": "D",
+        "value": 5
+       }
+      ]
+     },
+     "B": null,
+     "clicks": [],
+     "writes": [],
+     "releases": [
+      "R80:reused-by-twin@A:lp(C=6)"
+     ],
+     "owns": [
+      "R88@A:lp(C=5)"
+     ]
+    },
+    {
+     "i": 2,
+     "did": "check",
+     "disk": [
+      5,
+      5,
+      6,
+      5,
+      5,
+      5,
+      5,
+      5
+     ],
+     "names": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "A",
+      "B",
+      "C",
+      "D"
+     ],
+     "A": {
+      "mode": "lp",
+      "cards": [
+       {
+        "block": 4,
+        "rid": "R82",
+        "name": "A",
+        "value": 5
+       },
+       {
+        "block": 5,
+        "rid": "R83",
+        "name": "B",
+        "value": 5
+       },
+       {
+        "block": 6,
+        "rid": "R88",
+        "name": "C",
+        "value": 5
+       },
+       {
+        "block": 7,
+        "rid": "R81",
+        "name": "D",
+        "value": 5
+       }
+      ]
+     },
+     "B": null,
+     "clicks": [],
+     "writes": [],
+     "releases": [],
+     "owns": []
+    },
+    {
+     "i": 3,
+     "did": "click A6",
+     "disk": [
+      5,
+      5,
+      6,
+      5,
+      5,
+      5,
+      6,
+      5
+     ],
+     "names": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "A",
+      "B",
+      "C",
+      "D"
+     ],
+     "A": {
+      "mode": "lp",
+      "cards": [
+       {
+        "block": 4,
+        "rid": "R91",
+        "name": "A",
+        "value": 5
+       },
+       {
+        "block": 5,
+        "rid": "R92",
+        "name": "B",
+        "value": 5
+       },
+       {
+        "block": 6,
+        "rid": "R89",
+        "name": "C",
+        "value": 6
+       },
+       {
+        "block": 7,
+        "rid": "R90",
+        "name": "D",
+        "value": 5
+       }
+      ]
+     },
+     "B": null,
+     "clicks": [
+      "R88@b6"
+     ],
+     "writes": [
+      "[5,5,6,5,5,5,5,5]->[5,5,6,5,5,5,6,5]"
+     ],
+     "releases": [
+      "R81:render-child-unload@A:lp(D=5)",
+      "R82:render-child-unload@A:lp(A=5)",
+      "R83:render-child-unload@A:lp(B=5)",
+      "R88:render-child-unload@A:lp(C=6)"
+     ],
+     "owns": [
+      "R89@A:lp(C=6)",
+      "R90@A:lp(D=5)",
+      "R91@A:lp(A=5)",
+      "R92@A:lp(B=5)"
+     ]
+    },
+    {
+     "i": 4,
+     "did": "scroll to block 2",
+     "disk": [
+      5,
+      5,
+      6,
+      5,
+      5,
+      5,
+      6,
+      5
+     ],
+     "names": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "A",
+      "B",
+      "C",
+      "D"
+     ],
+     "A": {
+      "mode": "lp",
+      "cards": [
+       {
+        "block": 0,
+        "rid": "R86",
+        "name": "A",
+        "value": 5
+       },
+       {
+        "block": 1,
+        "rid": "R87",
+        "name": "B",
+        "value": 5
+       },
+       {
+        "block": 2,
+        "rid": "R84",
+        "name": "C",
+        "value": 6
+       },
+       {
+        "block": 3,
+        "rid": "R85",
+        "name": "D",
+        "value": 5
+       }
+      ]
+     },
+     "B": null,
+     "clicks": [],
+     "writes": [],
+     "releases": [],
+     "owns": []
+    },
+    {
+     "i": 5,
+     "did": "check",
+     "disk": [
+      5,
+      5,
+      6,
+      5,
+      5,
+      5,
+      6,
+      5
+     ],
+     "names": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "A",
+      "B",
+      "C",
+      "D"
+     ],
+     "A": {
+      "mode": "lp",
+      "cards": [
+       {
+        "block": 0,
+        "rid": "R86",
+        "name": "A",
+        "value": 5
+       },
+       {
+        "block": 1,
+        "rid": "R87",
+        "name": "B",
+        "value": 5
+       },
+       {
+        "block": 2,
+        "rid": "R84",
+        "name": "C",
+        "value": 6
+       },
+       {
+        "block": 3,
+        "rid": "R85",
+        "name": "D",
+        "value": 5
+       }
+      ]
+     },
+     "B": null,
+     "clicks": [],
+     "writes": [],
+     "releases": [],
+     "owns": []
+    }
+   ],
+   "problems": [],
+   "start": {
+    "disk": [
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5
+    ],
+    "names": [
+     "A",
+     "B",
+     "C",
+     "D",
+     "A",
+     "B",
+     "C",
+     "D"
+    ],
+    "A": {
+     "mode": "lp",
+     "cards": [
+      {
+       "block": 0,
+       "rid": "R82",
+       "name": "A",
+       "value": 5
+      },
+      {
+       "block": 1,
+       "rid": "R83",
+       "name": "B",
+       "value": 5
+      },
+      {
+       "block": 2,
+       "rid": "R80",
+       "name": "C",
+       "value": 5
+      },
+      {
+       "block": 3,
+       "rid": "R81",
+       "name": "D",
+       "value": 5
+      }
+     ]
+    },
+    "B": null
+   },
+   "finalText": "# mixfar\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: A\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n>\n> ```ds-counter\n> name: B\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n>\n> ```ds-ct\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: C\n> ```\n>\n> ```ds-ct\n> name: D\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nParagraph mid 0.\n\nParagraph mid 1.\n\nParagraph mid 2.\n\nParagraph mid 3.\n\nParagraph mid 4.\n\nParagraph mid 5.\n\nParagraph mid 6.\n\nParagraph mid 7.\n\nParagraph mid 8.\n\nParagraph mid 9.\n\nParagraph mid 10.\n\nParagraph mid 11.\n\nParagraph mid 12.\n\nParagraph mid 13.\n\nParagraph mid 14.\n\nParagraph mid 15.\n\nParagraph mid 16.\n\nParagraph mid 17.\n\nParagraph mid 18.\n\nParagraph mid 19.\n\nParagraph mid 20.\n\nParagraph mid 21.\n\nParagraph mid 22.\n\nParagraph mid 23.\n\nParagraph mid 24.\n\nParagraph mid 25.\n\nParagraph mid 26.\n\nParagraph mid 27.\n\nParagraph mid 28.\n\nParagraph mid 29.\n\nParagraph mid 30.\n\nParagraph mid 31.\n\nParagraph mid 32.\n\nParagraph mid 33.\n\nParagraph mid 34.\n\nParagraph mid 35.\n\nParagraph mid 36.\n\nParagraph mid 37.\n\nParagraph mid 38.\n\nParagraph mid 39.\n\nParagraph mid 40.\n\nParagraph mid 41.\n\nParagraph mid 42.\n\nParagraph mid 43.\n\nParagraph mid 44.\n\nParagraph mid 45.\n\nParagraph mid 46.\n\nParagraph mid 47.\n\nParagraph mid 48.\n\nParagraph mid 49.\n\nParagraph mid 50.\n\nParagraph mid 51.\n\nParagraph mid 52.\n\nParagraph mid 53.\n\nParagraph mid 54.\n\nParagraph mid 55.\n\nParagraph mid 56.\n\nParagraph mid 57.\n\nParagraph mid 58.\n\nParagraph mid 59.\n\nParagraph mid 60.\n\nParagraph mid 61.\n\nParagraph mid 62.\n\nParagraph mid 63.\n\nParagraph mid 64.\n\nParagraph mid 65.\n\nParagraph mid 66.\n\nParagraph mid 67.\n\nParagraph mid 68.\n\nParagraph mid 69.\n\nParagraph mid 70.\n\nParagraph mid 71.\n\nParagraph mid 72.\n\nParagraph mid 73.\n\nParagraph mid 74.\n\nParagraph mid 75.\n\nParagraph mid 76.\n\nParagraph mid 77.\n\nParagraph mid 78.\n\nParagraph mid 79.\n\nParagraph mid 80.\n\nParagraph mid 81.\n\nParagraph mid 82.\n\nParagraph mid 83.\n\nParagraph mid 84.\n\nParagraph mid 85.\n\nParagraph mid 86.\n\nParagraph mid 87.\n\nParagraph mid 88.\n\nParagraph mid 89.\n\nParagraph mid 90.\n\nParagraph mid 91.\n\nParagraph mid 92.\n\nParagraph mid 93.\n\nParagraph mid 94.\n\nParagraph mid 95.\n\nParagraph mid 96.\n\nParagraph mid 97.\n\nParagraph mid 98.\n\nParagraph mid 99.\n\nParagraph mid 100.\n\nParagraph mid 101.\n\nParagraph mid 102.\n\nParagraph mid 103.\n\nParagraph mid 104.\n\nParagraph mid 105.\n\nParagraph mid 106.\n\nParagraph mid 107.\n\nParagraph mid 108.\n\nParagraph mid 109.\n\nParagraph mid 110.\n\nParagraph mid 111.\n\nParagraph mid 112.\n\nParagraph mid 113.\n\nParagraph mid 114.\n\nParagraph mid 115.\n\nParagraph mid 116.\n\nParagraph mid 117.\n\nParagraph mid 118.\n\nParagraph mid 119.\n\n> [!note] Camp\n> ```ds-counter\n> name: A\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n>\n> ```ds-counter\n> name: B\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n>\n> ```ds-ct\n> max_value: 20\n> current_value: 6\n> min_value: 0\n> name: C\n> ```\n>\n> ```ds-ct\n> name: D\n> current_value: 5\n> max_value: 20\n> min_value: 0\n> ```\n\nBOTTOM\n",
+   "hosts": [
+    {
+     "rid": "R84",
+     "pane": "A:lp",
+     "known": "C=6",
+     "lastWrite": null
+    },
+    {
+     "rid": "R85",
+     "pane": "A:lp",
+     "known": "D=5",
+     "lastWrite": null
+    },
+    {
+     "rid": "R86",
+     "pane": "A:lp",
+     "known": "A=5",
+     "lastWrite": null
+    },
+    {
+     "rid": "R87",
+     "pane": "A:lp",
+     "known": "B=5",
+     "lastWrite": null
+    },
+    {
+     "rid": "R89",
+     "pane": "detached",
+     "known": "C=6",
+     "lastWrite": null
+    },
+    {
+     "rid": "R90",
+     "pane": "detached",
+     "known": "D=5",
+     "lastWrite": null
+    },
+    {
+     "rid": "R91",
+     "pane": "detached",
+     "known": "A=5",
+     "lastWrite": null
+    },
+    {
+     "rid": "R92",
+     "pane": "detached",
+     "known": "B=5",
+     "lastWrite": null
+    }
+   ],
+   "errors": [],
+   "notices": [],
+   "verdict": "clean"
+  },
+  "mix-walk": {
+   "rel": "Probe537/mixfar.md",
+   "problems": [
+    "down: 1 scroll jump(s) [[4,1000,973]]",
+    "up: 2 scroll jump(s) [[28,450,476],[31,-124,0]]"
+   ],
+   "patch": "patched",
+   "down": {
+    "frames": 32,
+    "bad": [],
+    "nBad": 0,
+    "jumps": [
+     [
+      4,
+      1000,
+      973
+     ]
+    ],
+    "nJumps": 1
+   },
+   "up": {
+    "frames": 32,
+    "bad": [],
+    "nBad": 0,
+    "jumps": [
+     [
+      28,
+      450,
+      476
+     ],
+     [
+      31,
+      -124,
+      0
+     ]
+    ],
+    "nJumps": 2
+   },
+   "walk": {
+    "steps": 152,
+    "bad": [],
+    "nBad": 0
+   },
+   "passes": {
+    "passes": 53,
+    "entriesPerPass": 4,
+    "n": 53,
+    "mean": 0.266,
+    "p50": 0.2,
+    "p95": 0.7,
+    "max": 0.8
+   },
+   "reused": [],
+   "errors": []
+  }
+ },
+ "instr": "installed",
+ "gsi": {
+  "calls": 0,
+  "nonNull": 0,
+  "textDiff": 0,
+  "passes": 0,
+  "mixedPasses": 0,
+  "mixedSamples": [],
+  "samples": [],
+  "byPath": {}
+ }
+}

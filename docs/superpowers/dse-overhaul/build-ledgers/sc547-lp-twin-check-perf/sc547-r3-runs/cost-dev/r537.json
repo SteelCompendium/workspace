@@ -1,0 +1,84 @@
+{
+ "cases": {
+  "cost-big": {
+   "rel": "Probe537/bigcallout.md",
+   "problems": [],
+   "patch": "patched",
+   "judged": {
+    "live": 40,
+    "inEditorDom": 40,
+    "inCalloutWidget": 40,
+    "docChars": 5109,
+    "docLines": 443
+   },
+   "cost": {
+    "typing": {
+     "n": 200,
+     "mean": 8.8275,
+     "p50": 8.2,
+     "p95": 13.4,
+     "max": 15.4
+    },
+    "typingPasses": {
+     "passes": 200,
+     "entriesPerPass": 40,
+     "n": 200,
+     "mean": 7.431,
+     "p50": 6.9,
+     "p95": 11.8,
+     "max": 13
+    },
+    "cursor": {
+     "lines": [
+      41,
+      362
+     ],
+     "n": 100,
+     "mean": 5.755,
+     "p50": 7.1,
+     "p95": 11.3,
+     "max": 34.6
+    },
+    "cursorPasses": {
+     "passes": 42,
+     "entriesPerPass": 40,
+     "n": 42,
+     "mean": 6.4119,
+     "p50": 6.4,
+     "p95": 6.8,
+     "max": 7.1
+    },
+    "scrollFrames": {
+     "endScrollTop": 4773,
+     "n": 120,
+     "mean": 21.6942,
+     "p50": 19.2,
+     "p95": 33.7,
+     "max": 148.9
+    },
+    "scrollPasses": {
+     "passes": 66,
+     "entriesPerPass": 40,
+     "n": 66,
+     "mean": 7.0106,
+     "p50": 6.6,
+     "p95": 10.5,
+     "max": 12.5
+    }
+   },
+   "reused": [],
+   "errors": []
+  }
+ },
+ "instr": "installed",
+ "gsi": {
+  "calls": 0,
+  "nonNull": 0,
+  "textDiff": 0,
+  "passes": 0,
+  "mixedPasses": 0,
+  "mixedSamples": [],
+  "samples": [],
+  "byPath": {}
+ }
+}

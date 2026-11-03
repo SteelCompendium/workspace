@@ -1,0 +1,13 @@
+per case: typing dispatch mean | typing pass mean/p95/max | cursor passes n / mean | scroll passes n / mean | scroll frame mean/p95/max
+cost-dev-a load 0.95, 1.96, 3.84 problems {'cost-big': [], 'cost-large': []}
+  cost-big   typing disp 9.15 | pass 7.65/12.90/14.20 | curs 42/8.05 | scr 66/6.95 | frame 21.6/33.5/149.5
+  cost-large typing disp 3.33 | pass 1.05/2.20/7.00 | curs 100/2.01 | scr 32/1.28 | frame 26.4/64.7/293.3
+cost-head-a load 1.66, 2.03, 3.80 problems {'cost-big': [], 'cost-large': []}
+  cost-big   typing disp 2.28 | pass 0.93/1.50/2.10 | curs 42/1.00 | scr 66/0.98 | frame 19.0/30.6/140.8
+  cost-large typing disp 3.05 | pass 1.10/2.10/24.20 | curs 100/1.79 | scr 32/1.16 | frame 24.7/55.9/197.6
+cost-dev-b load 2.03, 2.07, 3.76 problems {'cost-big': [], 'cost-large': []}
+  cost-big   typing disp 7.83 | pass 6.62/7.80/11.00 | curs 42/6.46 | scr 66/7.14 | frame 22.0/37.9/143.1
+  cost-large typing disp 4.25 | pass 1.53/3.00/49.60 | curs 100/2.17 | scr 32/1.32 | frame 25.6/60.9/191.9
+cost-head-b load 1.98, 2.05, 3.71 problems {'cost-big': [], 'cost-large': []}
+  cost-big   typing disp 2.92 | pass 1.12/1.90/2.80 | curs 42/0.98 | scr 66/1.19 | frame 20.5/34.4/149.7
+  cost-large typing disp 3.73 | pass 1.18/2.70/5.50 | curs 100/1.99 | scr 32/1.32 | frame 26.3/63.7/332.3

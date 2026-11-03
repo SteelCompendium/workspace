@@ -1,0 +1,48 @@
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-547: the pass cache changes no answer › twins, two blocks of each of two aliases and an unterminated last fence: every block resolves to the same fence with the memo as without
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 10
+    + Received  +  2
+
+    @@ -7,20 +7,12 @@
+        Object {
+          "body": "name: A",
+          "lineEnd": 9,
+          "lineStart": 7,
+        },
+    -   Object {
+    -     "body": "name: Y",
+    -     "lineEnd": 13,
+    -     "lineStart": 11,
+    -   },
+    -   Object {
+    -     "body": "name: Z",
+    -     "lineEnd": 17,
+    -     "lineStart": 15,
+    -   },
+    +   null,
+    +   null,
+        Object {
+          "body": "name: B",
+          "lineEnd": 21,
+          "lineStart": 19,
+        },
+
+      912 | 		const plain = els.map(([alias, el]) => fenceOnElement(ctx, el, alias, linesOf, section));
+      913 | 		const cached = els.map(([alias, el]) => fenceOnElement(ctx, el, alias, linesOf, section, memo));
+    > 914 | 		expect(cached).toEqual(plain);
+          | 		               ^
+      915 | 		// the twins told apart by place, both blocks of the second alias found (not just the first); the never-closed fence is not a block to Obsidian either way (null)
+      916 | 		expect(plain.map((f) => f?.lineStart ?? null)).toEqual([3, 7, 11, 15, 19, null]);
+      917 | 		expect(plain.map((f) => f?.body.split('\n')[0] ?? null)).toEqual(['name: A', 'name: A', 'name: Y', 'name: Z', 'name: B', null]);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:914:18)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 36 passed, 37 total
+Snapshots:   0 total
+Time:        3.122 s
+Ran all test suites matching test/dom/framework/twin-reuse.test.ts.
+jest exit 1

@@ -1,0 +1,48 @@
+== main matrix: per case: typing dispatch mean | typing pass mean/p95/max | cursor passes n / mean | scroll passes n / mean | scroll frame mean/p95/max
+m-88cb7db9-a load 1.50, 2.26, 3.93 problems {'cost-big': [], 'cost-large': [], 'many-scroll': ['down: 2 scroll jump(s) [[3,800,773],[37,7573,7449]]', 'up: 3 scroll jump(s) [[41,7254,7335],[77,135,161],[78,-39,0]]']}
+  cost-big   typing disp 1.13 | pass 0.00/0.00/0.00 | curs 0/0.00 | scr 0/0.00 | frame 18.9/26.8/132.5
+  cost-large typing disp 1.76 | pass 0.00/0.00/0.00 | curs 0/0.00 | scr 0/0.00 | frame 22.7/55.2/158.9
+  many-scroll passes {"passes": 0} reused []
+m-367a2f1d-a load 1.84, 2.24, 3.86 problems {'cost-big': [], 'cost-large': [], 'many-scroll': ['down: 1 scroll jump(s) [[3,800,773]]', 'up: 2 scroll jump(s) [[77,136,162],[78,-38,0]]']}
+  cost-big   typing disp 7.77 | pass 6.55/7.50/9.50 | curs 42/6.40 | scr 66/6.82 | frame 21.6/33.2/141.4
+  cost-large typing disp 3.18 | pass 1.11/2.00/32.00 | curs 100/1.77 | scr 32/1.16 | frame 22.8/55.4/157.3
+  many-scroll passes {"passes": 1081, "entriesPerPass": 40, "n": 1081, "mean": 2.387, "p50": 0.8, "p95": 6.9, "max": 32} reused []
+m-head-a load 1.55, 2.10, 3.73 problems {'cost-big': [], 'cost-large': [], 'many-scroll': ['down: 2 scroll jump(s) [[3,800,773],[37,7573,7449]]', 'up: 3 scroll jump(s) [[41,7254,7335],[77,135,161],[78,-39,0]]']}
+  cost-big   typing disp 2.25 | pass 0.91/1.50/2.40 | curs 42/0.84 | scr 66/0.97 | frame 18.6/25.7/133.9
+  cost-large typing disp 3.23 | pass 1.04/2.20/8.10 | curs 100/1.84 | scr 32/1.23 | frame 22.9/56.3/156.3
+  many-scroll passes {"passes": 1078, "entriesPerPass": 40, "n": 1078, "mean": 0.7633, "p50": 0.7, "p95": 1.8, "max": 8.1} reused []
+m-88cb7db9-b load 1.25, 1.96, 3.61 problems {'cost-big': [], 'cost-large': [], 'many-scroll': ['down: 2 scroll jump(s) [[3,800,773],[36,7373,7330]]', 'up: 2 scroll jump(s) [[77,136,162],[78,-38,0]]']}
+  cost-big   typing disp 1.27 | pass 0.00/0.00/0.00 | curs 0/0.00 | scr 0/0.00 | frame 19.4/29.3/135.1
+  cost-large typing disp 1.95 | pass 0.00/0.00/0.00 | curs 0/0.00 | scr 0/0.00 | frame 23.2/54.3/170.8
+  many-scroll passes {"passes": 0} reused []
+m-367a2f1d-b load 1.06, 1.82, 3.50 problems {'cost-big': [], 'cost-large': [], 'many-scroll': ['down: 2 scroll jump(s) [[3,800,773],[36,7373,7330]]', 'up: 2 scroll jump(s) [[77,136,162],[78,-38,0]]']}
+  cost-big   typing disp 7.81 | pass 6.58/7.80/12.80 | curs 42/6.62 | scr 66/6.70 | frame 21.0/32.4/138.9
+  cost-large typing disp 2.96 | pass 0.92/1.90/7.20 | curs 100/1.77 | scr 32/1.24 | frame 23.1/57.3/156.2
+  many-scroll passes {"passes": 1079, "entriesPerPass": 40, "n": 1079, "mean": 2.3697, "p50": 0.8, "p95": 6.9, "max": 12.8} reused []
+m-head-b load 1.07, 1.72, 3.39 problems {'cost-big': [], 'cost-large': [], 'many-scroll': ['down: 2 scroll jump(s) [[3,800,773],[36,7373,7330]]', 'up: 2 scroll jump(s) [[77,136,162],[78,-38,0]]']}
+  cost-big   typing disp 2.24 | pass 0.88/1.60/1.80 | curs 42/0.84 | scr 66/0.99 | frame 18.8/28.4/134.2
+  cost-large typing disp 3.05 | pass 1.08/2.00/24.80 | curs 100/1.91 | scr 33/1.22 | frame 25.2/61.5/156.9
+  many-scroll passes {"passes": 1080, "entriesPerPass": 40, "n": 1080, "mean": 0.7681, "p50": 0.7, "p95": 1.8, "max": 24.8} reused []
+== sweep: per-pass mean (typing / cursor / scroll) and frame mean
+s-367a2f1d-a load 1.21, 1.68, 3.30
+  cost-n10   typing pass 0.82 | cursor 0.57 | scroll 0.62 | frame mean 16.9 p95 27.4 | dispatch 2.33 problems []
+  cost-n20   typing pass 1.94 | cursor 2.03 | scroll 1.85 | frame mean 17.9 p95 29.4 | dispatch 2.87 problems []
+  cost-n80   typing pass 24.42 | cursor 23.76 | scroll 27.19 | frame mean 31.4 p95 51.6 | dispatch 25.70 problems []
+  cost-n160  NO RESULT: Error: Runtime.evaluate: timed out after 30000 ms
+    at Timeout._onTimeout (file:///tmp/c
+s-head-a load 1.26, 1.56, 3.11
+  cost-n10   typing pass 0.33 | cursor 0.37 | scroll 0.25 | frame mean 16.9 p95 24.3 | dispatch 1.67 problems []
+  cost-n20   typing pass 0.49 | cursor 0.47 | scroll 0.55 | frame mean 17.9 p95 28.1 | dispatch 1.49 problems []
+  cost-n80   typing pass 1.54 | cursor 1.92 | scroll 2.06 | frame mean 21.2 p95 28.2 | dispatch 2.68 problems []
+  cost-n160  typing pass 2.96 | cursor 4.42 | scroll 4.76 | frame mean 28.3 p95 34.3 | dispatch 4.69 problems []
+s-367a2f1d-b load 1.40, 1.53, 3.03
+  cost-n10   typing pass 0.69 | cursor 0.57 | scroll 0.82 | frame mean 17.0 p95 24.7 | dispatch 1.97 problems []
+  cost-n20   typing pass 2.12 | cursor 1.96 | scroll 2.36 | frame mean 18.6 p95 35.5 | dispatch 3.21 problems []
+  cost-n80   typing pass 26.86 | cursor 26.17 | scroll 44.55 | frame mean 51.2 p95 87.3 | dispatch 28.28 problems []
+  cost-n160  NO RESULT: Error: Runtime.evaluate: timed out after 30000 ms
+    at Timeout._onTimeout (file:///tmp/c
+s-head-b load 8.66, 3.70, 3.64
+  cost-n10   typing pass 0.27 | cursor 0.20 | scroll 0.35 | frame mean 16.9 p95 23.8 | dispatch 1.46 problems []
+  cost-n20   typing pass 0.50 | cursor 0.41 | scroll 0.58 | frame mean 17.8 p95 27.8 | dispatch 1.53 problems []
+  cost-n80   typing pass 1.47 | cursor 1.89 | scroll 1.90 | frame mean 21.1 p95 28.8 | dispatch 2.54 problems []
+  cost-n160  typing pass 2.69 | cursor 4.42 | scroll 4.80 | frame mean 27.9 p95 32.5 | dispatch 4.22 problems []

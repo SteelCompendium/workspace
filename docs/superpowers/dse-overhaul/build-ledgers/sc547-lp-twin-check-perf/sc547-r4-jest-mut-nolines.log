@@ -1,0 +1,192 @@
+applied nolines
+ src/framework/host/ReadingModeBlockHost.ts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+FAIL dom test/dom/framework/twin-reuse.test.ts (6.177 s)
+  ● SC-547: the pass cache changes no answer › one memo, two sections of different text with the same window bounds (a self-embed next to the editor's callout): each is read from its own text
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "body": "name: B",
+    -   "lineEnd": 10,
+    -   "lineStart": 8,
+    +   "body": "> ```ds-counter",
+    +   "lineEnd": 9,
+    +   "lineStart": 7,
+      }
+
+      930 | 		const first = fenceOnElement(ctx, second, 'ds-counter', linesOf, old, memo); // the host judged first, by one text
+      931 | 		const viaMemo = fenceOnElement(ctx, second, 'ds-counter', linesOf, fresh, memo); // the next, by another
+    > 932 | 		expect(viaMemo).toEqual(fenceOnElement(ctx, second, 'ds-counter', linesOf, fresh));
+          | 		                ^
+      933 | 		expect(viaMemo).not.toEqual(first); // the two texts do put the block on different lines
+      934 | 		expect(viaMemo?.body).toBe('name: B');
+      935 | 	});
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:932:19)
+
+file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got object and undefined)
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got undefined and object)
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:245
+			throw new TypeError(`findDriftedTokens: "${t}" is missing from ${!(t in oursMap) ? 'oursMap' : 'targetMap'}`);
+			      ^
+
+TypeError: findDriftedTokens: "--b" is missing from oursMap
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:245:10)
+    at file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+FAIL dom test/dom/framework/zz-sc547r4-probe.test.ts (25.757 s)
+  ● Console
+
+    console.log
+      R4-FUZZ compared=47605 nonNull=17822 cachedAsks=95210 listFencesScans=13874
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:105:11)
+
+    console.log
+      R2-HAND nested=false [[3,5],[7,9],[15,17],[19,22],null,null,null]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:129:12)
+
+    console.log
+      R2-HAND nested=true [[3,5],[7,9],[15,17],[19,22],null,null,null]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:129:12)
+
+    console.log
+      R2-BLOCKS first=0 otherCached=1 otherFresh=1
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:143:11)
+
+    console.log
+      R2-BLOCKS pass=[3,7,11,15] alone=[3,7,11,15]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:151:11)
+
+    console.log
+      R2-MIXED cached={"lineStart":7,"lineEnd":9,"body":"> ```ds-counter"} plain={"lineStart":8,"lineEnd":10,"body":"name: B"}
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:173:11)
+
+  ● r2: ONE memo, two hosts whose sections carry DIFFERENT texts with the same window bounds › second host gets fences read from the first host's text
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "body": "name: B",
+    -   "lineEnd": 10,
+    -   "lineStart": 8,
+    +   "body": "> ```ds-counter",
+    +   "lineEnd": 9,
+    +   "lineStart": 7,
+      }
+
+      172 | 		const plainNew = fenceOnElement(ctx, el1, 'ds-counter', undefined, { text: tNew, ...win });
+      173 | 		console.log(`R2-MIXED cached=${JSON.stringify(cachedNew)} plain=${JSON.stringify(plainNew)}`);
+    > 174 | 		expect(cachedNew).toEqual(plainNew); // r3: a hit only for the same lines
+          | 		                  ^
+      175 | 	});
+      176 | });
+      177 |
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:174:21)
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+
+Summary of all failing tests
+FAIL test/dom/framework/twin-reuse.test.ts (6.177 s)
+  ● SC-547: the pass cache changes no answer › one memo, two sections of different text with the same window bounds (a self-embed next to the editor's callout): each is read from its own text
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "body": "name: B",
+    -   "lineEnd": 10,
+    -   "lineStart": 8,
+    +   "body": "> ```ds-counter",
+    +   "lineEnd": 9,
+    +   "lineStart": 7,
+      }
+
+      930 | 		const first = fenceOnElement(ctx, second, 'ds-counter', linesOf, old, memo); // the host judged first, by one text
+      931 | 		const viaMemo = fenceOnElement(ctx, second, 'ds-counter', linesOf, fresh, memo); // the next, by another
+    > 932 | 		expect(viaMemo).toEqual(fenceOnElement(ctx, second, 'ds-counter', linesOf, fresh));
+          | 		                ^
+      933 | 		expect(viaMemo).not.toEqual(first); // the two texts do put the block on different lines
+      934 | 		expect(viaMemo?.body).toBe('name: B');
+      935 | 	});
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:932:19)
+
+FAIL test/dom/framework/zz-sc547r4-probe.test.ts (25.757 s)
+  ● r2: ONE memo, two hosts whose sections carry DIFFERENT texts with the same window bounds › second host gets fences read from the first host's text
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "body": "name: B",
+    -   "lineEnd": 10,
+    -   "lineStart": 8,
+    +   "body": "> ```ds-counter",
+    +   "lineEnd": 9,
+    +   "lineStart": 7,
+      }
+
+      172 | 		const plainNew = fenceOnElement(ctx, el1, 'ds-counter', undefined, { text: tNew, ...win });
+      173 | 		console.log(`R2-MIXED cached=${JSON.stringify(cachedNew)} plain=${JSON.stringify(plainNew)}`);
+    > 174 | 		expect(cachedNew).toEqual(plainNew); // r3: a hit only for the same lines
+          | 		                  ^
+      175 | 	});
+      176 | });
+      177 |
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:174:21)
+
+
+Test Suites: 2 failed, 1 skipped, 252 passed, 254 of 255 total
+Tests:       2 failed, 1 skipped, 6385 passed, 6388 total
+Snapshots:   3 passed, 3 total
+Time:        53.001 s
+Ran all test suites in 2 projects.
+jest rc=1

@@ -1,0 +1,36 @@
+  console.log
+    R4-FUZZ compared=47605 nonNull=17822 cachedAsks=95210 listFencesScans=13874
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:105:11)
+
+  console.log
+    R2-HAND nested=false [[3,5],[7,9],[15,17],[19,22],null,null,null]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:129:12)
+
+  console.log
+    R2-HAND nested=true [[3,5],[7,9],[15,17],[19,22],null,null,null]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:129:12)
+
+  console.log
+    R2-BLOCKS first=0 otherCached=1 otherFresh=1
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:143:11)
+
+  console.log
+    R2-BLOCKS pass=[3,7,11,15] alone=[3,7,11,15]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:151:11)
+
+  console.log
+    R2-MIXED cached={"lineStart":8,"lineEnd":10,"body":"name: B"} plain={"lineStart":8,"lineEnd":10,"body":"name: B"}
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:173:11)
+
+Test Suites: 1 passed, 1 total
+Tests:       4 passed, 4 total
+Snapshots:   0 total
+Time:        11.828 s, estimated 23 s
+Ran all test suites matching test/dom/framework/zz-sc547r4-probe.test.ts.
+jest rc=0

@@ -1,0 +1,33 @@
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-547: the pass cache changes no answer › one memo, two sections of different text with the same window bounds (a self-embed next to the editor's callout): each is read from its own text
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "body": "name: B",
+    -   "lineEnd": 10,
+    -   "lineStart": 8,
+    +   "body": "> ```ds-counter",
+    +   "lineEnd": 9,
+    +   "lineStart": 7,
+      }
+
+      930 | 		const first = fenceOnElement(ctx, second, 'ds-counter', linesOf, old, memo); // the host judged first, by one text
+      931 | 		const viaMemo = fenceOnElement(ctx, second, 'ds-counter', linesOf, fresh, memo); // the next, by another
+    > 932 | 		expect(viaMemo).toEqual(fenceOnElement(ctx, second, 'ds-counter', linesOf, fresh));
+          | 		                ^
+      933 | 		expect(viaMemo).not.toEqual(first); // the two texts do put the block on different lines
+      934 | 		expect(viaMemo?.body).toBe('name: B');
+      935 | 	});
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:932:19)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 36 passed, 37 total
+Snapshots:   0 total
+Time:        3.166 s
+Ran all test suites matching test/dom/framework/twin-reuse.test.ts.
+jest exit 1

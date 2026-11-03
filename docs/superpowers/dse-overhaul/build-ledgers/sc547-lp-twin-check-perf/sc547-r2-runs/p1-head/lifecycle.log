@@ -1,0 +1,9 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :160, port 45575, 1 scenario(s)
+R537 far: clean
+R537 far-form: clean
+R537 raw-lower-100: clean
+R537 many-scroll: {"problems":["down: 2 scroll jump(s) [[3,800,773],[36,7373,7330]]","up: 2 scroll jump(s) [[77,136,162],[78,-38,0]]"],"patch":"patched","down":{"frames":80,"bad":[],"nBad":0,"jumps":[[3,800,773],[36,7373,7330]],"nJumps":2},"up":{"frames":79,"bad":[],"nBad":0,"jumps":[[77,136,162],[78,-38,0]],"nJumps":2},"walk":{"steps":363,"bad":[],"nBad":0},"passes":{"passes":433,"entriesPerPass":4,"n":433,"mean":0.2753,"p50":0.3,"p95":0.5,"max":0.9},"reused":[],"errors":[]}
+R537 many-write: {"problems":[],"patch":"already","down1":{"frames":79,"bad":[],"nBad":0,"jumps":[[2,600,573]],"nJumps":1},"reused1":["R57(Twin=6)"],"disk2":[5,5,5,5,5,5,5,5,5,5,5,5,5,5,6,6,5,5,5,5,5,5,5,5,5,5,5,5,5,5],"down2":{"frames":79,"bad":[],"nBad":0,"jumps":[[2,600,573]],"nJumps":1},"walk2":{"steps":242,"bad":[],"nBad":0},"reused":["R57(Twin=6)","R60(Twin=6)"],"errors":[]}
+OBSIDIAN-LIFECYCLE R537 ok (cases far,far-form,raw-lower-100,many-scroll,many-write)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 elapsed=76s

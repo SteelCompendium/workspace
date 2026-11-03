@@ -1,0 +1,297 @@
+applied blocks-noalias
+ src/framework/host/ReadingModeBlockHost.ts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+FAIL dom test/dom/framework/zz-sc547r4-probe.test.ts
+  ● Console
+
+    console.log
+      R2-HAND nested=false [[3,5],[7,9],[15,17],[19,22],null,null,null]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:129:12)
+
+    console.log
+      R2-HAND nested=true [[3,5],[7,9],[15,17],[19,22],null,null,null]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:129:12)
+
+    console.log
+      R2-BLOCKS first=0 otherCached=-1 otherFresh=1
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:143:11)
+
+    console.log
+      R2-BLOCKS pass=[3,7,null,null] alone=[3,7,11,15]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:151:11)
+
+    console.log
+      R2-MIXED cached={"lineStart":8,"lineEnd":10,"body":"name: B"} plain={"lineStart":8,"lineEnd":10,"body":"name: B"}
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:173:11)
+
+  ● r2: equivalence fuzz (one memo per pass, many windows of ONE text) › 2000 random notes x every block: cached === uncached
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 21
+    + Received  +  2
+
+    @@ -1,28 +1,9 @@
+      Object {
+        "again": Array [
+    -     Object {
+    -       "body": "",
+    -       "lineEnd": 8,
+    -       "lineStart": 6,
+    -     },
+    -     Object {
+    -       "body": "``` ds-counter
+    - name: A
+    - ~~~
+    - ~~~ds-counter
+    -
+    - ~~~
+    - > 
+    - ```ds-counter
+    - > ~~~ds-counter
+    - > ```js
+    - > ```ds-counter extra
+    - > name: B",
+    -       "lineEnd": 23,
+    -       "lineStart": 10,
+    -     },
+    +     null,
+    +     null,
+          null,
+          null,
+          null,
+          null,
+          null,
+
+      92 | 				asks += 2 * els.length;
+      93 | 				expect({ seed, win, cached }).toEqual({ seed, win, cached: noMemo });
+    > 94 | 				expect({ seed, win, again }).toEqual({ seed, win, again: noMemo });
+         | 				                             ^
+      95 | 				const plain = noMemo;
+      96 | 				compared += els.length;
+      97 | 				nonNull += plain.filter((p) => p !== null).length;
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:94:34)
+
+  ● r2: pre-existing SC-537 blocks cache keyed by quote element only, not alias › quoteOrdinal of a second alias in the same callout after the first alias filled the cache
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: -1
+
+      150 | 		const alone = els.map(([a, el]) => fenceOnElement(ctx, el, a, undefined, section)?.lineStart ?? null);
+      151 | 		console.log(`R2-BLOCKS pass=${JSON.stringify(pass)} alone=${JSON.stringify(alone)}`);
+    > 152 | 		expect(other).toBe(1);
+          | 		              ^
+      153 | 		expect(pass).toEqual(alone);
+      154 | 	});
+      155 | });
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:152:17)
+
+FAIL dom test/dom/framework/twin-reuse.test.ts (5.745 s)
+  ● SC-547: the pass cache changes no answer › twins, two blocks of each of two aliases and an unterminated last fence: every block resolves to the same fence with the memo as without
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 10
+    + Received  +  2
+
+    @@ -7,20 +7,12 @@
+        Object {
+          "body": "name: A",
+          "lineEnd": 9,
+          "lineStart": 7,
+        },
+    -   Object {
+    -     "body": "name: Y",
+    -     "lineEnd": 13,
+    -     "lineStart": 11,
+    -   },
+    -   Object {
+    -     "body": "name: Z",
+    -     "lineEnd": 17,
+    -     "lineStart": 15,
+    -   },
+    +   null,
+    +   null,
+        Object {
+          "body": "name: B",
+          "lineEnd": 21,
+          "lineStart": 19,
+        },
+
+      912 | 		const plain = els.map(([alias, el]) => fenceOnElement(ctx, el, alias, linesOf, section));
+      913 | 		const cached = els.map(([alias, el]) => fenceOnElement(ctx, el, alias, linesOf, section, memo));
+    > 914 | 		expect(cached).toEqual(plain);
+          | 		               ^
+      915 | 		// the twins told apart by place, both blocks of the second alias found (not just the first); the never-closed fence is not a block to Obsidian either way (null)
+      916 | 		expect(plain.map((f) => f?.lineStart ?? null)).toEqual([3, 7, 11, 15, 19, null]);
+      917 | 		expect(plain.map((f) => f?.body.split('\n')[0] ?? null)).toEqual(['name: A', 'name: A', 'name: Y', 'name: Z', 'name: B', null]);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:914:18)
+
+file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got object and undefined)
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got undefined and object)
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:245
+			throw new TypeError(`findDriftedTokens: "${t}" is missing from ${!(t in oursMap) ? 'oursMap' : 'targetMap'}`);
+			      ^
+
+TypeError: findDriftedTokens: "--b" is missing from oursMap
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:245:10)
+    at file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+
+Summary of all failing tests
+FAIL test/dom/framework/zz-sc547r4-probe.test.ts
+  ● r2: equivalence fuzz (one memo per pass, many windows of ONE text) › 2000 random notes x every block: cached === uncached
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 21
+    + Received  +  2
+
+    @@ -1,28 +1,9 @@
+      Object {
+        "again": Array [
+    -     Object {
+    -       "body": "",
+    -       "lineEnd": 8,
+    -       "lineStart": 6,
+    -     },
+    -     Object {
+    -       "body": "``` ds-counter
+    - name: A
+    - ~~~
+    - ~~~ds-counter
+    -
+    - ~~~
+    - > 
+    - ```ds-counter
+    - > ~~~ds-counter
+    - > ```js
+    - > ```ds-counter extra
+    - > name: B",
+    -       "lineEnd": 23,
+    -       "lineStart": 10,
+    -     },
+    +     null,
+    +     null,
+          null,
+          null,
+          null,
+          null,
+          null,
+
+      92 | 				asks += 2 * els.length;
+      93 | 				expect({ seed, win, cached }).toEqual({ seed, win, cached: noMemo });
+    > 94 | 				expect({ seed, win, again }).toEqual({ seed, win, again: noMemo });
+         | 				                             ^
+      95 | 				const plain = noMemo;
+      96 | 				compared += els.length;
+      97 | 				nonNull += plain.filter((p) => p !== null).length;
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:94:34)
+
+  ● r2: pre-existing SC-537 blocks cache keyed by quote element only, not alias › quoteOrdinal of a second alias in the same callout after the first alias filled the cache
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: -1
+
+      150 | 		const alone = els.map(([a, el]) => fenceOnElement(ctx, el, a, undefined, section)?.lineStart ?? null);
+      151 | 		console.log(`R2-BLOCKS pass=${JSON.stringify(pass)} alone=${JSON.stringify(alone)}`);
+    > 152 | 		expect(other).toBe(1);
+          | 		              ^
+      153 | 		expect(pass).toEqual(alone);
+      154 | 	});
+      155 | });
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r4-probe.test.ts:152:17)
+
+FAIL test/dom/framework/twin-reuse.test.ts (5.745 s)
+  ● SC-547: the pass cache changes no answer › twins, two blocks of each of two aliases and an unterminated last fence: every block resolves to the same fence with the memo as without
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 10
+    + Received  +  2
+
+    @@ -7,20 +7,12 @@
+        Object {
+          "body": "name: A",
+          "lineEnd": 9,
+          "lineStart": 7,
+        },
+    -   Object {
+    -     "body": "name: Y",
+    -     "lineEnd": 13,
+    -     "lineStart": 11,
+    -   },
+    -   Object {
+    -     "body": "name: Z",
+    -     "lineEnd": 17,
+    -     "lineStart": 15,
+    -   },
+    +   null,
+    +   null,
+        Object {
+          "body": "name: B",
+          "lineEnd": 21,
+          "lineStart": 19,
+        },
+
+      912 | 		const plain = els.map(([alias, el]) => fenceOnElement(ctx, el, alias, linesOf, section));
+      913 | 		const cached = els.map(([alias, el]) => fenceOnElement(ctx, el, alias, linesOf, section, memo));
+    > 914 | 		expect(cached).toEqual(plain);
+          | 		               ^
+      915 | 		// the twins told apart by place, both blocks of the second alias found (not just the first); the never-closed fence is not a block to Obsidian either way (null)
+      916 | 		expect(plain.map((f) => f?.lineStart ?? null)).toEqual([3, 7, 11, 15, 19, null]);
+      917 | 		expect(plain.map((f) => f?.body.split('\n')[0] ?? null)).toEqual(['name: A', 'name: A', 'name: Y', 'name: Z', 'name: B', null]);
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:914:18)
+
+
+Test Suites: 2 failed, 1 skipped, 252 passed, 254 of 255 total
+Tests:       3 failed, 1 skipped, 6384 passed, 6388 total
+Snapshots:   3 passed, 3 total
+Time:        52.341 s
+Ran all test suites in 2 projects.
+jest rc=1

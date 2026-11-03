@@ -1,0 +1,32 @@
+FAIL dom test/dom/framework/twin-reuse.test.ts
+  ● SC-547: the pass cache changes no answer › the memo keys a window by both its bounds: a shorter window from the same first line is not answered from the longer one's list
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+        "body": "name: A",
+    -   "lineEnd": 5,
+    -   "lineStart": 3,
+    +   "lineEnd": 9,
+    +   "lineStart": 7,
+      }
+
+      942 | 		const short = { ...section, lineEnd: 2 + 4 }; // holds the first A block only
+      943 | 		expect(fenceOnElement(ctx, second, 'ds-counter', linesOf, long, memo)?.lineStart).toBe(7);
+    > 944 | 		expect(fenceOnElement(ctx, second, 'ds-counter', linesOf, short, memo)).toEqual(fenceOnElement(ctx, second, 'ds-counter', linesOf, short));
+          | 		                                                                        ^
+      945 | 		expect(fenceOnElement(ctx, second, 'ds-counter', linesOf, short, memo)?.lineStart).toBe(3);
+      946 | 	});
+      947 |
+
+      at Object.<anonymous> (test/dom/framework/twin-reuse.test.ts:944:75)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 36 passed, 37 total
+Snapshots:   0 total
+Time:        3.106 s
+Ran all test suites matching test/dom/framework/twin-reuse.test.ts.
+jest exit 1

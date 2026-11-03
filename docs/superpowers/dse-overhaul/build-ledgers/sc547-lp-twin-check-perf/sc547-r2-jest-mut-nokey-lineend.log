@@ -1,0 +1,157 @@
+applied nokey-lineend
+ src/framework/host/ReadingModeBlockHost.ts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+FAIL dom test/dom/framework/zz-sc547r2-probe.test.ts
+  ● Console
+
+    console.log
+      R2-HAND nested=false [[3,5],[7,9],[15,17],[19,22],null,null,null]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r2-probe.test.ts:125:12)
+
+    console.log
+      R2-HAND nested=true [[3,5],[7,9],[15,17],[19,22],null,null,null]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r2-probe.test.ts:125:12)
+
+    console.log
+      R2-BLOCKS first=0 otherCached=-1 otherFresh=1
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r2-probe.test.ts:139:11)
+
+    console.log
+      R2-BLOCKS pass=[3,7,null,null] alone=[3,7,11,15]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r2-probe.test.ts:147:11)
+
+    console.log
+      R2-MIXED cached={"lineStart":7,"lineEnd":9,"body":"> ```ds-counter"} plain={"lineStart":8,"lineEnd":10,"body":"name: B"}
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r2-probe.test.ts:166:11)
+
+  ● r2: equivalence fuzz (one memo per pass, many windows of ONE text) › 2000 random notes x every block: cached === uncached
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 10
+    + Received  +  2
+
+    @@ -1,17 +1,9 @@
+      Object {
+        "cached": Array [
+    -     Object {
+    -       "body": "",
+    -       "lineEnd": 10,
+    -       "lineStart": 9,
+    -     },
+    -     Object {
+    -       "body": "",
+    -       "lineEnd": 10,
+    -       "lineStart": 9,
+    -     },
+    +     null,
+    +     null,
+          null,
+          null,
+        ],
+        "seed": 2,
+        "win": Object {
+
+      90 | 				const plain2 = [...els].reverse().map(([a, el]) => fenceOnElement(ctx, el, a, undefined, section, devMemo2)).reverse();
+      91 | 				const again = [...els].reverse().map(([a, el]) => fenceOnElement(ctx, el, a, undefined, section, memo)).reverse();
+    > 92 | 				expect({ seed, win, cached }).toEqual({ seed, win, cached: plain });
+         | 				                              ^
+      93 | 				expect({ seed, win, again }).toEqual({ seed, win, again: plain2 });
+      94 | 				compared += els.length;
+      95 | 				nonNull += plain.filter((p) => p !== null).length;
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r2-probe.test.ts:92:35)
+
+file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got object and undefined)
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got undefined and object)
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:245
+			throw new TypeError(`findDriftedTokens: "${t}" is missing from ${!(t in oursMap) ? 'oursMap' : 'targetMap'}`);
+			      ^
+
+TypeError: findDriftedTokens: "--b" is missing from oursMap
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/visual-harness/obsidian-light-island.mjs:245:10)
+    at file:///home/scott/code/steelCompendium/worktrees/sc547-lp-twin-check-perf/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+
+Summary of all failing tests
+FAIL test/dom/framework/zz-sc547r2-probe.test.ts
+  ● r2: equivalence fuzz (one memo per pass, many windows of ONE text) › 2000 random notes x every block: cached === uncached
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 10
+    + Received  +  2
+
+    @@ -1,17 +1,9 @@
+      Object {
+        "cached": Array [
+    -     Object {
+    -       "body": "",
+    -       "lineEnd": 10,
+    -       "lineStart": 9,
+    -     },
+    -     Object {
+    -       "body": "",
+    -       "lineEnd": 10,
+    -       "lineStart": 9,
+    -     },
+    +     null,
+    +     null,
+          null,
+          null,
+        ],
+        "seed": 2,
+        "win": Object {
+
+      90 | 				const plain2 = [...els].reverse().map(([a, el]) => fenceOnElement(ctx, el, a, undefined, section, devMemo2)).reverse();
+      91 | 				const again = [...els].reverse().map(([a, el]) => fenceOnElement(ctx, el, a, undefined, section, memo)).reverse();
+    > 92 | 				expect({ seed, win, cached }).toEqual({ seed, win, cached: plain });
+         | 				                              ^
+      93 | 				expect({ seed, win, again }).toEqual({ seed, win, again: plain2 });
+      94 | 				compared += els.length;
+      95 | 				nonNull += plain.filter((p) => p !== null).length;
+
+      at Object.<anonymous> (test/dom/framework/zz-sc547r2-probe.test.ts:92:35)
+
+
+Test Suites: 1 failed, 1 skipped, 253 passed, 254 of 255 total
+Tests:       1 failed, 1 skipped, 6383 passed, 6385 total
+Snapshots:   3 passed, 3 total
+Time:        53.122 s
+Ran all test suites in 2 projects.
+jest rc=1
