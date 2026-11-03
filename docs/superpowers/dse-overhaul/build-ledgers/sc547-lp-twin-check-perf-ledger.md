@@ -78,3 +78,4 @@ per block (ReadingModeBlockHost.ts, around locateInSectionLines / fenceOnElement
 - r5 DONE (2026-11-03): superproject squashed to 5a3b6572 on origin/main 3ba3f721, CHANGELOG.md only, gitlink 0698550f. Owner
   reviewed the diff (CHANGELOG bullet only). dse ea78ebf8 unchanged, develop still 0698550f.
 - LAND-READY reported to dispatcher: dse sc547-lp-twin-check-perf @ ea78ebf8; superproject sc547-lp-twin-check-perf @ 5a3b6572.
+- 2026-11-03 DONE: landed by dispatcher — dse develop ea78ebf8, workspace main 0db7e677 (merge) + db543e6c (ledger preserved, dse-verify CURRENT). Worktree removed. Ticket flipped to Done with landed comment.
