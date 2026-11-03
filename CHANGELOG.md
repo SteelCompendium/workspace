@@ -33,6 +33,20 @@ go under an *Internal* sub-heading.
   click works as before, and focus you had already moved elsewhere is left alone. The note link and the message now
   show a focus ring in your theme's accent colour when focused.
 
+- **DSE plugin: on a slow or busy computer a note no longer jumps up after a tracker changes, and the end of a note no longer snaps back 64 px (SC-472).**
+  When a tracker in an open note changes (a click, Sync, another pane or another plugin writing the note), Obsidian
+  redraws it, and the plugin holds the note's height so your reading position stays put. That hold was dropped after
+  a fixed 2.5 seconds. When the computer was slow or busy, for example with the same note open in a second pane,
+  Obsidian often had not started to redraw yet, the hold ended too early, and the note jumped up (in our tests it
+  scrolled from 2779 px to 2001 px in Reading view, and from 7486 px to 3745 px in a Live Preview note that embeds the
+  tracker). The hold now ends when Obsidian has finished redrawing the tracker, and the 2.5 seconds are only a safety net,
+  so a redraw that comes late no longer jumps, even if you scroll while you wait for it (a reader who scrolls to the very end of a long note can still settle up to about 500 px higher, as before). A change that
+  Obsidian never redraws still lets go after about 3 seconds, and the hold lets go at once when you open another note
+  in the same pane. Also fixed: holding the position added 64 px of empty space below a note, so if you were reading at
+  the very end, the page snapped back 64 px when the hold ended. One small trade: when a change makes the end of a note
+  shorter (you delete the last tracker), the empty space under the note stays about 1 second longer than before, and
+  the page ends in the same place.
+
 - **DSE plugin: a reference that points back to itself now shows one "Reference loop" card instead of nesting forever, and a note open in two panes no longer shows a false "Reference nesting too deep" (SC-536).**
   A card whose text holds a reference back to itself (a feature whose effect shows `@Self.md`, or two notes that
   show each other) used to open card inside card without end in Reading view and Live Preview, until Obsidian
