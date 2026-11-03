@@ -1,0 +1,17 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "node" on /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r1-survey/dse
+[p4 18:58:44.309] FOREIGN display :5449; camera display :5450
+[p4 18:58:44.888] FOREIGN Obsidian pid 1920797 on 48302: target app://obsidian.md/index.html; browser ws://127.0.0.1:48302/devtools/browser/1c9ea82a-f811-41d1-b6b5-388c2df3041f
+[p4 18:58:44.896] P holder listening on [::]:48301
+[p4 18:58:45.011] P holder: connection #1 (the camera's one-shot check) -> reset, so the check sees "free"
+[p4 18:58:45.026] camera> spawned obsidian pid=1921035 (udd=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r1-survey/p4-camtmp/obsidian-harness-udd, port=48301, display=:5450)
+[p4 18:58:45.028] P holder: connection #2 -> piped to FOREIGN :48302: GET /json/list HTTP/1.1
+[p4 18:58:45.037] P holder: connection #3 -> piped to FOREIGN :48302: GET /devtools/page/15FED2880D2580D6114BF818788ACEBD HTTP/1.1
+[p4 18:58:45.619] camera> attached: obsidian unknown, vault "FOREIGN-VAULT", window 1024x800 (layout ready 593ms after spawn)
+[p4 18:58:45.621] camera> plugin not loaded (restricted mode?) — enabling via app.plugins APIs…
+[p4 18:58:45.708] camera> killing child pid=1921035
+[p4 18:58:45.837] camera> Error: BLOCKED: plugin not loadable via APIs. Window shot: /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r1-survey/dse/visual-harness/shots/CAMERA-BLOCKED.png. Modal: (no modal visible)
+[p4 18:58:45.837] camera>     at main (file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r1-survey/dse/visual-harness/obsidian-camera.mjs:725:10)
+[p4 18:58:48.727] camera's OWN Obsidian pid 1921035: alive=false; DevToolsActivePort in its udd: false
+[p4 18:58:48.727] VERDICT: WRONG-INSTANCE (camera evaluated inside the FOREIGN Obsidian)
+[p4 18:58:48.729] FOREIGN Obsidian targets after the camera: page:app://obsidian.md/index.html

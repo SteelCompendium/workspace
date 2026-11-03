@@ -1,0 +1,38 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc551-lifecycle-cdp-port-race/draw-steel-elements
+try 1: A rc=0 B rc=2
+   [A] TMPLOG A spawned obsidian pid=1963719 vault=/tmp/dse-obsidian-lifecycle-V0yMSw/vault t=1793647049119
+   [A] TMPLOG A attached port=47262 basePath=/tmp/dse-obsidian-lifecycle-V0yMSw/vault ownVault=/tmp/dse-obsidian-lifecycle-V0yMSw/vault OWN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5401, port 47262, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [A] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+   [B] TMPLOG B spawned obsidian pid=1963718 vault=/tmp/dse-obsidian-lifecycle-4VKtnE/vault t=1793647049113
+   [B] TMPLOG B proof failed: no-report; file=false childExit=null/null udd=Cache,Code Cache,Cookies,Cookies-journal,Crashpad,DawnCache,Dictionaries,GPUCache,IndexedDB,Local Storage,Network Persistent State,Preferences,SingletonCookie,SingletonLock,SingletonSocket,Tr
+   [B] OBSIDIAN-LIFECYCLE environment: our Obsidian never reported a DevTools server on port 47262 within 30 s (no DevToolsActivePort in its user-data-dir) - another instance owns it
+try 2: A rc=2 B rc=0
+   [A] TMPLOG A spawned obsidian pid=1965129 vault=/tmp/dse-obsidian-lifecycle-vfIQI8/vault t=1793647095225
+   [A] TMPLOG A proof failed: no-report; file=false childExit=null/null udd=Cache,Code Cache,Cookies,Cookies-journal,Crashpad,DawnCache,Dictionaries,GPUCache,IndexedDB,Local Storage,Network Persistent State,Preferences,SingletonCookie,SingletonLock,SingletonSocket,Tr
+   [A] OBSIDIAN-LIFECYCLE environment: our Obsidian never reported a DevTools server on port 47262 within 30 s (no DevToolsActivePort in its user-data-dir) - another instance owns it
+   [B] TMPLOG B spawned obsidian pid=1965128 vault=/tmp/dse-obsidian-lifecycle-c4b7Ig/vault t=1793647095217
+   [B] TMPLOG B attached port=47262 basePath=/tmp/dse-obsidian-lifecycle-c4b7Ig/vault ownVault=/tmp/dse-obsidian-lifecycle-c4b7Ig/vault OWN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 47262, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [B] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+try 3: A rc=0 B rc=2
+   [A] TMPLOG A spawned obsidian pid=1967748 vault=/tmp/dse-obsidian-lifecycle-B8JCP7/vault t=1793647141388
+   [A] TMPLOG A attached port=47262 basePath=/tmp/dse-obsidian-lifecycle-B8JCP7/vault ownVault=/tmp/dse-obsidian-lifecycle-B8JCP7/vault OWN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 47262, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [A] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+   [B] TMPLOG B spawned obsidian pid=1967749 vault=/tmp/dse-obsidian-lifecycle-E6SYOx/vault t=1793647141397
+   [B] TMPLOG B proof failed: no-report; file=false childExit=null/null udd=Cache,Code Cache,Cookies,Cookies-journal,Crashpad,DawnCache,Dictionaries,GPUCache,IndexedDB,Local Storage,Network Persistent State,Preferences,SingletonCookie,SingletonLock,SingletonSocket,Tr
+   [B] OBSIDIAN-LIFECYCLE environment: our Obsidian never reported a DevTools server on port 47262 within 30 s (no DevToolsActivePort in its user-data-dir) - another instance owns it
+try 4: A rc=0 B rc=2
+   [A] TMPLOG A spawned obsidian pid=1970385 vault=/tmp/dse-obsidian-lifecycle-tbz4IW/vault t=1793647187584
+   [A] TMPLOG A attached port=47262 basePath=/tmp/dse-obsidian-lifecycle-tbz4IW/vault ownVault=/tmp/dse-obsidian-lifecycle-tbz4IW/vault OWN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5401, port 47262, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [A] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+   [B] TMPLOG B spawned obsidian pid=1970384 vault=/tmp/dse-obsidian-lifecycle-vxu8o1/vault t=1793647187586
+   [B] TMPLOG B proof failed: no-report; file=false childExit=null/null udd=Cache,Code Cache,Cookies,Cookies-journal,Crashpad,DawnCache,Dictionaries,GPUCache,IndexedDB,Local Storage,Network Persistent State,Preferences,SingletonCookie,SingletonLock,SingletonSocket,Tr
+   [B] OBSIDIAN-LIFECYCLE environment: our Obsidian never reported a DevTools server on port 47262 within 30 s (no DevToolsActivePort in its user-data-dir) - another instance owns it

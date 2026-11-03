@@ -1,0 +1,13 @@
+[CAMBASE2 22:30:50.156] decoy display :5465; camera display :5470
+[CAMBASE2 22:30:50.733] DECOY Obsidian pid 2197132 on 48712: app://obsidian.md/index.html
+[CAMBASE2 22:30:50.862] camera> spawned obsidian pid=2197401 (udd=/tmp/sc551-r2-repro-K7EAnL/camtmp/obsidian-harness-udd, port=48711, display=:5470)
+[CAMBASE2 22:30:50.870] PROXY listening on [::]:48711 (the stranger now owns the port)
+[CAMBASE2 22:30:51.124] PROXY connection #1 -> piped to DECOY :48712: GET /json/list HTTP/1.1
+[CAMBASE2 22:30:51.139] PROXY connection #2 -> piped to DECOY :48712: GET /devtools/page/548554B3771A8B00D58B4B472FF37FB5 HTTP/1.1
+[CAMBASE2 22:30:51.598] camera> attached: obsidian unknown, vault "FOREIGN-VAULT", window 1024x800 (layout ready 736ms after spawn)
+[CAMBASE2 22:30:51.600] camera> plugin not loaded (restricted mode?) — enabling via app.plugins APIs…
+[CAMBASE2 22:30:51.755] camera> killing child pid=2197401
+[CAMBASE2 22:30:51.907] camera> Error: BLOCKED: plugin not loadable via APIs. Window shot: /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r3-review/basewt/visual-harness/shots/CAMERA-BL
+[CAMBASE2 22:30:51.907] camera>     at main (file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r3-review/basewt/visual-harness/obsidian-camera.mjs:725:10)
+[CAMBASE2 22:30:54.764] RESULT {"cameraExit":1,"attachedForeign":true,"attachedOther":false,"envMessage":null,"proxyConnections":2}
+[CAMBASE2 22:30:54.767] DECOY targets after the camera: page:app://obsidian.md/index.html

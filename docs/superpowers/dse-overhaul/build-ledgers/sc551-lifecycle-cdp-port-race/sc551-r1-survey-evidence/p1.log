@@ -1,0 +1,85 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "node" on /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r1-survey/dse
+
+=== case 48101: foreign listener on 127.0.0.1 only
+  [holder 1906847] FOREIGN listening 127.0.0.1:48101
+  [holder 1906847] FOREIGN READY pid=1906847
+  [OUR-chromedriver 1906854] Starting ChromeDriver 150.0.7871.250 (07ee2042224499f634596843f209356586214e26-refs/heads/main@{#1703817}) on port 48101
+  [OUR-chromedriver 1906854] Only local connections are allowed.
+  [OUR-chromedriver 1906854] Please see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.
+  [OUR-chromedriver 1906854] [1793645707.600][SEVERE]: bind() failed: Address already in use (98)
+  [OUR-chromedriver 1906854] IPv4 port not available. Exiting...
+  [OUR-chromedriver 1906854] EXIT code=1 sig=null
+  our chromedriver alive after start: false
+  wait-port({port:48101}): resolved {"open":true,"ipVersion":4}
+  [holder 1906847] FOREIGN connection on 127.0.0.1:48101 from 127.0.0.1:40694
+  [holder 1906847] FOREIGN connection on 127.0.0.1:48101 from 127.0.0.1:40706
+  [holder 1906847] FOREIGN request: GET /status HTTP/1.1
+  GET http://localhost:48101/status -> 500 {"value":{"error":"wrong-instance","message":"answered by FOREIGN"}}
+  [holder 1906847] EXIT code=null sig=SIGTERM
+
+=== case 48102: foreign listener on ::1 only
+  [holder 1906881] FOREIGN listening ::1:48102
+  [holder 1906881] FOREIGN READY pid=1906881
+  [OUR-chromedriver 1906888] Starting ChromeDriver 150.0.7871.250 (07ee2042224499f634596843f209356586214e26-refs/heads/main@{#1703817}) on port 48102
+  [OUR-chromedriver 1906888] Only local connections are allowed.
+  [OUR-chromedriver 1906888] Please see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.
+  [OUR-chromedriver 1906888] [1793645708.303][SEVERE]: bind() failed: Address already in use (98)
+  [OUR-chromedriver 1906888] IPv6 port not available. Exiting...
+  [OUR-chromedriver 1906888] EXIT code=1 sig=null
+  our chromedriver alive after start: false
+  wait-port({port:48102}): resolved {"open":true,"ipVersion":6}
+  [holder 1906881] FOREIGN connection on ::1:48102 from ::1:53636
+  GET http://localhost:48102/status -> fetch error ECONNREFUSED
+  [holder 1906881] EXIT code=null sig=SIGTERM
+
+=== case 48103: foreign listener on 127.0.0.1 and ::1
+  [holder 1906897] FOREIGN listening 127.0.0.1:48103
+  [holder 1906897] FOREIGN listening ::1:48103
+  [holder 1906897] FOREIGN READY pid=1906897
+  [OUR-chromedriver 1906904] Starting ChromeDriver 150.0.7871.250 (07ee2042224499f634596843f209356586214e26-refs/heads/main@{#1703817}) on port 48103
+  [OUR-chromedriver 1906904] Only local connections are allowed.
+  [OUR-chromedriver 1906904] Please see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.
+  [OUR-chromedriver 1906904] [1793645708.966][SEVERE]: bind() failed: Address already in use (98)
+  [OUR-chromedriver 1906904] IPv6 port not available. Exiting...
+  [OUR-chromedriver 1906904] EXIT code=1 sig=null
+  our chromedriver alive after start: false
+  wait-port({port:48103}): resolved {"open":true,"ipVersion":4}
+  [holder 1906897] FOREIGN connection on 127.0.0.1:48103 from 127.0.0.1:35786
+  [holder 1906897] FOREIGN connection on 127.0.0.1:48103 from 127.0.0.1:35792
+  [holder 1906897] FOREIGN request: GET /status HTTP/1.1
+  GET http://localhost:48103/status -> 500 {"value":{"error":"wrong-instance","message":"answered by FOREIGN"}}
+  [holder 1906897] EXIT code=null sig=SIGTERM
+
+=== case 48104: foreign listener on :: (dual-stack, node default)
+  [holder 1906921] FOREIGN listening :::48104
+  [holder 1906921] FOREIGN READY pid=1906921
+  [OUR-chromedriver 1906928] Starting ChromeDriver 150.0.7871.250 (07ee2042224499f634596843f209356586214e26-refs/heads/main@{#1703817}) on port 48104
+  [OUR-chromedriver 1906928] Only local connections are allowed.
+  [OUR-chromedriver 1906928] Please see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.
+  [OUR-chromedriver 1906928] [1793645709.625][SEVERE]: bind() failed: Address already in use (98)
+  [OUR-chromedriver 1906928] IPv6 port not available. Exiting...
+  [OUR-chromedriver 1906928] EXIT code=1 sig=null
+  our chromedriver alive after start: false
+  wait-port({port:48104}): resolved {"open":true,"ipVersion":4}
+  [holder 1906921] FOREIGN connection on :::48104 from ::ffff:127.0.0.1:44034
+  [holder 1906921] FOREIGN connection on :::48104 from ::ffff:127.0.0.1:44048
+  [holder 1906921] FOREIGN request: GET /status HTTP/1.1
+  GET http://localhost:48104/status -> 500 {"value":{"error":"wrong-instance","message":"answered by FOREIGN"}}
+  [holder 1906921] EXIT code=null sig=SIGTERM
+
+=== case 48105: FOREIGN CHROMEDRIVER already on the port
+  [FOREIGN-chromedriver 1906981] Starting ChromeDriver 150.0.7871.250 (07ee2042224499f634596843f209356586214e26-refs/heads/main@{#1703817}) on port 48105
+  [FOREIGN-chromedriver 1906981] Only local connections are allowed.
+  [FOREIGN-chromedriver 1906981] Please see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.
+  [FOREIGN-chromedriver 1906981] ChromeDriver was started successfully on port 48105.
+  [OUR-chromedriver 1906992] Starting ChromeDriver 150.0.7871.250 (07ee2042224499f634596843f209356586214e26-refs/heads/main@{#1703817}) on port 48105
+  [OUR-chromedriver 1906992] Only local connections are allowed.
+  [OUR-chromedriver 1906992] Please see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.
+  [OUR-chromedriver 1906992] [1793645710.293][SEVERE]: bind() failed: Address already in use (98)
+  [OUR-chromedriver 1906992] IPv6 port not available. Exiting...
+  [OUR-chromedriver 1906992] EXIT code=1 sig=null
+  our chromedriver alive after start: false
+  wait-port({port:48105}): resolved {"open":true,"ipVersion":4}
+  GET http://localhost:48105/status -> 200 {"value":{"build":{"version":"150.0.7871.250 (07ee2042224499f634596843f209356586214e26-refs/heads/main@{#1703817})"},"message":"ChromeDriver ready for new sessi
+  [FOREIGN-chromedriver 1906981] EXIT code=null sig=SIGTERM

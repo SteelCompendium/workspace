@@ -1,0 +1,42 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "bash" on /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r3-review/fixwt
+try 1: A rc=2 B rc=0
+   [A] TMPLOG A spawned obsidian pid=2170538 vault=/tmp/dse-obsidian-lifecycle-bCRioH/vault t=1793657953521
+   [A] OBSIDIAN-LIFECYCLE environment: our Obsidian never reported a DevTools server on port 48622 within 30 s (no DevToolsActivePort in its user-data-dir) - another instance owns it
+   [B] TMPLOG B spawned obsidian pid=2170537 vault=/tmp/dse-obsidian-lifecycle-aWINBz/vault t=1793657953465
+   [B] TMPLOG B attached port=48622 basePath=/tmp/dse-obsidian-lifecycle-aWINBz/vault ownVault=/tmp/dse-obsidian-lifecycle-aWINBz/vault OWN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5440, port 48622, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [B] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+try 2: A rc=0 B rc=2
+   [A] TMPLOG A spawned obsidian pid=2172488 vault=/tmp/dse-obsidian-lifecycle-B4CuKE/vault t=1793657999676
+   [A] TMPLOG A attached port=48622 basePath=/tmp/dse-obsidian-lifecycle-B4CuKE/vault ownVault=/tmp/dse-obsidian-lifecycle-B4CuKE/vault OWN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5440, port 48622, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [A] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+   [B] TMPLOG B spawned obsidian pid=2172489 vault=/tmp/dse-obsidian-lifecycle-1BuNPB/vault t=1793657999693
+   [B] OBSIDIAN-LIFECYCLE environment: our Obsidian never reported a DevTools server on port 48622 within 30 s (no DevToolsActivePort in its user-data-dir) - another instance owns it
+try 3: A rc=2 B rc=0
+   [A] TMPLOG A spawned obsidian pid=2174715 vault=/tmp/dse-obsidian-lifecycle-Ws8RvO/vault t=1793658045866
+   [A] OBSIDIAN-LIFECYCLE environment: our Obsidian never reported a DevTools server on port 48622 within 30 s (no DevToolsActivePort in its user-data-dir) - another instance owns it
+   [B] TMPLOG B spawned obsidian pid=2174714 vault=/tmp/dse-obsidian-lifecycle-i63MSF/vault t=1793658045863
+   [B] TMPLOG B attached port=48622 basePath=/tmp/dse-obsidian-lifecycle-i63MSF/vault ownVault=/tmp/dse-obsidian-lifecycle-i63MSF/vault OWN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5440, port 48622, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [B] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+try 4: A rc=0 B rc=2
+   [A] TMPLOG A spawned obsidian pid=2176314 vault=/tmp/dse-obsidian-lifecycle-vJif7I/vault t=1793658092108
+   [A] TMPLOG A attached port=48622 basePath=/tmp/dse-obsidian-lifecycle-vJif7I/vault ownVault=/tmp/dse-obsidian-lifecycle-vJif7I/vault OWN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5440, port 48622, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [A] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+   [B] TMPLOG B spawned obsidian pid=2176315 vault=/tmp/dse-obsidian-lifecycle-r6sHPZ/vault t=1793658092135
+   [B] OBSIDIAN-LIFECYCLE environment: our Obsidian never reported a DevTools server on port 48622 within 30 s (no DevToolsActivePort in its user-data-dir) - another instance owns it
+try 5: A rc=2 B rc=0
+   [A] TMPLOG A spawned obsidian pid=2177756 vault=/tmp/dse-obsidian-lifecycle-T823Sg/vault t=1793658138271
+   [A] OBSIDIAN-LIFECYCLE environment: our Obsidian never reported a DevTools server on port 48622 within 30 s (no DevToolsActivePort in its user-data-dir) - another instance owns it
+   [B] TMPLOG B spawned obsidian pid=2177755 vault=/tmp/dse-obsidian-lifecycle-DLj0CP/vault t=1793658138264
+   [B] TMPLOG B attached port=48622 basePath=/tmp/dse-obsidian-lifecycle-DLj0CP/vault ownVault=/tmp/dse-obsidian-lifecycle-DLj0CP/vault OWN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5440, port 48622, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [B] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed

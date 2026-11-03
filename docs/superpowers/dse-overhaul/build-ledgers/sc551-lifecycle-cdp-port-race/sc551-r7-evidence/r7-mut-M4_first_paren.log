@@ -1,0 +1,22 @@
+FAIL unit test/unit/build/cdpOwned.test.ts
+  ● SC-551: proveCdpOwned › parseStat splits the comm on the LAST parenthesis (spaces and ")" in the name), and processTree is bounded on a ppid cycle
+
+    expect(received).toEqual(expected) // deep equality
+
+    Expected: {"comm": "my app) (x) y", "ppid": 99}
+    Received: null
+
+      295 | 		`);
+      296 | 		expect(out.plain).toEqual({ ppid: 45, comm: 'obsidian' });
+    > 297 | 		expect(out.weird).toEqual({ ppid: 99, comm: 'my app) (x) y' });
+          | 		                  ^
+      298 | 		expect(out.bad).toEqual([null, null]);
+      299 | 		expect(out.tree).toEqual([1, 2, 3]);
+      300 | 	});
+
+      at Object.<anonymous> (test/unit/build/cdpOwned.test.ts:297:21)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 18 passed, 19 total
+Snapshots:   0 total
+Time:        4.026 s

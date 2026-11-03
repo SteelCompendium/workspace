@@ -1,0 +1,37 @@
+diff --git a/visual-harness/obsidian-lifecycle.mjs b/visual-harness/obsidian-lifecycle.mjs
+index 30da2f84..d942e622 100644
+--- a/visual-harness/obsidian-lifecycle.mjs
++++ b/visual-harness/obsidian-lifecycle.mjs
+@@ -438,7 +438,7 @@ async function startXvfb() {
+ 	try {
+ 		got = await startOwnedXvfb({
+ 			bin,
+-			candidates: displayRange(160, 199),
++			candidates: displayRange(5400, 5439),
+ 			args: ['-screen', '0', '1600x1200x24', '-nolisten', 'tcp'],
+ 			onSpawn: (child) => {
+ 				liveXvfb = child; // tracked now, not only once the display is confirmed (Important-2)
+@@ -4625,6 +4625,7 @@ async function main() {
+ 		if (!fs.existsSync(BIN)) envFail(`no Obsidian binary at ${BIN}`);
+ 		// Checked outside any try/catch that could swallow envFail's throw: a bare `catch
+ 		// {}` right after `envFail(...)` would otherwise treat "port busy" as "port free".
++		if (process.env.TMP_BARRIER) while (Date.now() < Number(process.env.TMP_BARRIER)) await sleep(2); // TEMP SC-551
+ 		let portBusy = false;
+ 		try {
+ 			await fetch(`http://localhost:${PORT}/json/version`);
+@@ -4660,6 +4661,7 @@ async function main() {
+ 			env: { ...process.env, DISPLAY: x.display },
+ 			stdio: 'ignore',
+ 		});
++		console.log(`TMPLOG ${process.env.TMP_TAG} spawned obsidian pid=${child.pid} vault=${vault} t=${Date.now()}`); // TEMP SC-551
+ 		liveObsidian = child; // tracked now, not only if start-up completes (Important-2)
+ 		let alive = true;
+ 		child.once('exit', () => (alive = false));
+@@ -4695,6 +4697,7 @@ async function main() {
+ 		await sleep(800);
+ 		await t.ev(PAGE_HELPERS);
+ 		const version = await t.ev('require("electron").ipcRenderer.sendSync("version")');
++		console.log(`TMPLOG ${process.env.TMP_TAG} attached basePath=${await t.ev('app.vault.adapter.basePath')} ownVault=${vault} ${(await t.ev('app.vault.adapter.basePath')) === vault ? 'OWN' : 'FOREIGN'}`); // TEMP SC-551
+ 		console.log(`OBSIDIAN-LIFECYCLE start: obsidian ${version}, display ${x.display}, port ${PORT}, ${selected.length} scenario(s)`);
+ 		for (const s of selected) {
+ 			try {

@@ -1,0 +1,35 @@
+docs: seeded 7 compendium entr(ies) into DS Compendium/
+spawned obsidian pid=2037364 (udd=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r1-impl/camtmp-C4/obsidian-harness-udd, port=auto, display=:5433)
+cdp: port 33823 (reported by our obsidian pid=2037364, browser id verified)
+attached: obsidian unknown, vault "demo-vault", window 1440x1100 (layout ready 1040ms after spawn)
+plugin not loaded (restricted mode?) — enabling via app.plugins APIs…
+plugin loaded, frameworkV2 present
+  ok simple_feature_power_roll.png (402106 bytes, 1044x350) — note
+  ok scc-reference.png (470694 bytes, 1044x1194, emulated viewport) — note
+  ok settings-index.png (71530 bytes, 874x733) — settings index
+  ok settings-statblock.png (652274 bytes, 874x1594) — settings → Statblock display
+  ok compendium.png (133929 bytes, 874x608) — settings → Compendium
+  ok stamina-bar-modal.png (72611 bytes, 584x292) — modal
+  ok initiative-tracker-stamina-modal.png (106252 bytes, 584x292) — modal
+  ok initiative-tracker-add-conditions.png (197469 bytes, 504x397) — modal
+  ok minion-stamina-pool-modal.png (115483 bytes, 584x331) — modal
+  ok montage-sheet-modal.png (89633 bytes, 504x354) — modal
+  ok canvas-character-sheet.png (307374 bytes, 964x404) — canvas
+  ok tutorial-source-mode.png (89874 bytes, 1120x1084) — note (source, leaf)
+  ok tutorial-reading-mode.png (299075 bytes, 1120x1084) — note (preview, leaf)
+  ok tutorial-command-palette.png (235562 bytes, 724x618) — command palette
+  ok tutorial-compendium-search.png (31194 bytes, 724x152) — compendium search
+  ok tutorial-snapshot-yaml.png (203832 bytes, 1120x1084) — note (source, leaf)
+  ok stamina-bar.gif (119745 bytes, 7 captured / 6 gif frames, 7.9s loop, obsidian @2x)
+  ok montage.gif (642698 bytes, 10 captured / 9 gif frames, 8.6s loop, obsidian @2x)
+FAIL initiative-tracker-conditions.gif: Error: initiative-tracker-conditions.gif step 8/8 {"click":"modal:button[aria-label=\"Done\"]","hold":2000,"what":"modal closed: the condition icon sits on Frodo's row"}: evaluate threw: Error: modal:button[aria-label="Done"]: 0 matches (a step selector must match exactly one node)
+    at Object.one (<anonymous>:9:34)
+    at Object.point (<anonymous>:13:21)
+    at <anonymous>:1:16
+quit cleanly in-app
+
+1 shot(s) had errors:
+  initiative-tracker-conditions.gif: Error: initiative-tracker-conditions.gif step 8/8 {"click":"modal:button[aria-label=\"Done\"]","hold":2000,"what":"modal closed: the condition icon sits on Frodo's row"}: evaluate threw: Error: modal:button[aria-label="Done"]: 0 matches (a step selector must match exactly one node)
+    at Object.one (<anonymous>:9:34)
+    at Object.point (<anonymous>:13:21)
+    at <anonymous>:1:16

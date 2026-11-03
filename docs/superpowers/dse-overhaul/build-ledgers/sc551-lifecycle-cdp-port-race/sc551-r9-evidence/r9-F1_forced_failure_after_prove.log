@@ -1,0 +1,21 @@
+FAIL unit test/unit/build/cdpOwned.test.ts
+  ● SC-551: proveCdpOwned › with the real /proc, a non-exec bash wrapper whose child holds the DevTools socket is accepted
+
+    expect(received).toBeUndefined()
+
+    Received: {"message": "forced", "name": "Error"}
+
+      277 | 			}
+      278 | 		`);
+    > 279 | 		expect(out.error).toBeUndefined();
+          | 		                  ^
+      280 | 		expect(out.ok?.guid).toBe(OURS);
+      281 | 	});
+      282 |
+
+      at Object.<anonymous> (test/unit/build/cdpOwned.test.ts:279:21)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 18 passed, 19 total
+Snapshots:   0 total
+Time:        4.059 s

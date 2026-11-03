@@ -1,0 +1,39 @@
+FAIL unit test/unit/build/cdpOwned.test.ts
+  ● SC-551: proveCdpOwned › with the real /proc: a listener held by this process is ours when child.pid is this process, and foreign when child.pid is a process that is not its ancestor-or-self (a sibling)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "foreign-listener"
+    Received: undefined
+
+      236 | 		`);
+      237 | 		expect(out.ok).toEqual({ port: out.servedPort, guid: OURS });
+    > 238 | 		expect(out.siblingReason).toBe('foreign-listener');
+          | 		                          ^
+      239 | 		expect(out.siblingMessage).toMatch(/held by pid \d+ "/); // names the process that really holds the socket
+      240 | 	});
+      241 |
+
+      at Object.<anonymous> (test/unit/build/cdpOwned.test.ts:238:29)
+
+  ● SC-551: proveCdpOwned › SC-551 r5 LOW-1: a launcher wrapper that does not exec - the spawned pid is a shell, Obsidian is its child - is ours; a socket held outside the child's tree is still foreign
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "foreign-listener"
+    Received: undefined
+
+      252 | 		`);
+      253 | 		expect(out.ok).toEqual({ port: out.servedPort, guid: OURS });
+    > 254 | 		expect(out.reason).toBe('foreign-listener');
+          | 		                   ^
+      255 | 		expect(out.message).toContain('held by pid 5000 "obsidian"');
+      256 | 		expect(out.message).toContain('our pid 4242');
+      257 | 	});
+
+      at Object.<anonymous> (test/unit/build/cdpOwned.test.ts:254:22)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 17 passed, 19 total
+Snapshots:   0 total
+Time:        4.219 s, estimated 6 s

@@ -1,0 +1,12 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc551-lifecycle-cdp-port-race/draw-steel-elements
+F1_forced_failure_after_prove rc=1 Tests:       1 failed, 18 passed, 19 total 
+  failing: ["with the real /proc, a non-exec bash wrapper whose child holds the DevTools socket is acce"] 
+  new server pids after run: []
+F2_positive_control_no_kill rc=0 Tests:       19 passed, 19 total 
+  failing: [] 
+  new server pids after run: [2423779]
+M7_fail_open_unreadable rc=1 Tests:       1 failed, 18 passed, 19 total 
+  failing: ["SC-551 r5 LOW-1: a launcher wrapper that does not exec - the spawned pid is a shell, Obsid"] 
+  new server pids after run: []
+status done

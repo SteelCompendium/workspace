@@ -1,0 +1,12 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "node" on /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r5/r4wt
+[shared-udd 23:34:27.747] display :5461
+[shared-udd 23:34:28.453] try 1 offset 0 ms: A pid 2330676: PROVEN port 35197, real listener pid 2330676 -> correct | B pid 2330677: proof failed (foreign-listener)
+[shared-udd 23:34:31.190] try 2 offset 0 ms: A pid 2331054: proof failed (foreign-listener) | B pid 2331055: PROVEN port 39803, real listener pid 2331055 -> correct
+[shared-udd 23:34:33.804] try 3 offset 0 ms: A pid 2331494: PROVEN port 40835, real listener pid 2331494 -> correct | B pid 2331495: proof failed (foreign-listener)
+[shared-udd 23:34:36.526] try 4 offset 300 ms: A pid 2331971: PROVEN port 45967, real listener pid 2331971 -> correct | B pid 2332047: proof failed (foreign-listener)
+[shared-udd 23:34:39.752] try 5 offset 600 ms: A pid 2332283: PROVEN port 42731, real listener pid 2332283 -> correct | B pid 2332512: proof failed (exited)
+[shared-udd 23:34:43.004] try 6 offset 600 ms: A pid 2332836: PROVEN port 39355, real listener pid 2332836 -> correct | B pid 2333150: PROVEN port 41399, real listener pid 0 -> WRONG-INSTANCE (proof passed for a browser it did not start)
+[shared-udd 23:34:46.298] try 7 offset 800 ms: A pid 2333376: PROVEN port 34973, real listener pid 2333376 -> correct | B pid 2333589: proof failed (exited)
+[shared-udd 23:34:49.811] try 8 offset 1000 ms: A pid 2333690: PROVEN port 33007, real listener pid 2333690 -> correct | B pid 2333924: proof failed (exited)
+[shared-udd 23:34:51.812] SUMMARY: 1 wrong-instance proof(s) in 8 tries

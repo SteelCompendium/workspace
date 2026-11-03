@@ -1,0 +1,26 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "bash" on /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r3-review/basewt
+try 1: A rc=1 B rc=0
+   [A] TMPLOG A spawned obsidian pid=2168057 vault=/tmp/dse-obsidian-lifecycle-Zq0O94/vault t=1793657886416
+   [A] TMPLOG A attached basePath=/tmp/dse-obsidian-lifecycle-Vf09tn/vault ownVault=/tmp/dse-obsidian-lifecycle-Zq0O94/vault FOREIGN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5441, port 48621, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b FAIL: no Increase button on counter #0 [shot /tmp/dse-obsidian-lifecycle-Zq0O94/shots/G-S6b-FAIL.png]
+   [A] OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-Zq0O94
+   [A] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+   [B] TMPLOG B spawned obsidian pid=2168033 vault=/tmp/dse-obsidian-lifecycle-Vf09tn/vault t=1793657886319
+   [B] TMPLOG B attached basePath=/tmp/dse-obsidian-lifecycle-Vf09tn/vault ownVault=/tmp/dse-obsidian-lifecycle-Vf09tn/vault OWN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5440, port 48621, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [B] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+try 2: A rc=1 B rc=1
+   [A] TMPLOG A spawned obsidian pid=2169233 vault=/tmp/dse-obsidian-lifecycle-feakgo/vault t=1793657916573
+   [A] TMPLOG A attached basePath=/tmp/dse-obsidian-lifecycle-RUTnM2/vault ownVault=/tmp/dse-obsidian-lifecycle-feakgo/vault FOREIGN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5440, port 48621, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b FAIL: expected 11, got 10
+   [A] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+   [B] TMPLOG B spawned obsidian pid=2169234 vault=/tmp/dse-obsidian-lifecycle-RUTnM2/vault t=1793657916611
+   [B] TMPLOG B attached basePath=/tmp/dse-obsidian-lifecycle-RUTnM2/vault ownVault=/tmp/dse-obsidian-lifecycle-RUTnM2/vault OWN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5441, port 48621, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b FAIL: no Increase button on counter #0 [shot /tmp/dse-obsidian-lifecycle-RUTnM2/shots/G-S6b-FAIL.png]
+   [B] OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-RUTnM2
+   [B] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed

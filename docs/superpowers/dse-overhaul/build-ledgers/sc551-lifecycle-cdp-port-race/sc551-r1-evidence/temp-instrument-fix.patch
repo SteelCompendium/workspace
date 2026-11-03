@@ -1,0 +1,51 @@
+diff --git a/visual-harness/obsidian-lifecycle.mjs b/visual-harness/obsidian-lifecycle.mjs
+index 2ff02d64..674c388c 100644
+--- a/visual-harness/obsidian-lifecycle.mjs
++++ b/visual-harness/obsidian-lifecycle.mjs
+@@ -442,7 +442,7 @@ async function startXvfb() {
+ 	try {
+ 		got = await startOwnedXvfb({
+ 			bin,
+-			candidates: displayRange(160, 199),
++			candidates: displayRange(5400, 5439),
+ 			args: ['-screen', '0', '1600x1200x24', '-nolisten', 'tcp'],
+ 			onSpawn: (child) => {
+ 				liveXvfb = child; // tracked now, not only once the display is confirmed (Important-2)
+@@ -4631,8 +4631,21 @@ async function main() {
+ 		// of anything: the port can be taken between this check and our Obsidian's bind, which is what proveCdpOwned
+ 		// below catches. Port 0 needs no pre-check - the OS hands out a free one.
+ 		// Checked outside any try/catch that could swallow envFail's throw (portInUse never throws).
++		if (process.env.TMP_BARRIER) while (Date.now() < Number(process.env.TMP_BARRIER)) await sleep(2); // TEMP SC-551
+ 		if (!Number.isInteger(REQUESTED_PORT) || REQUESTED_PORT < 0 || REQUESTED_PORT > 65535) envFail(`DSE_LIFECYCLE_PORT must be a port number (1-65535) or unset, got ${JSON.stringify(process.env.DSE_LIFECYCLE_PORT)}`);
+ 		if (REQUESTED_PORT !== 0 && (await portInUse(REQUESTED_PORT))) envFail(`port ${REQUESTED_PORT} is already in use — another instance owns it`);
++		if (process.env.TMP_FAKE_CDP) { // TEMP SC-551: a stranger starts listening after the pre-check, before our Obsidian spawns
++			const http = await import('node:http');
++			const ws = `ws://127.0.0.1:${REQUESTED_PORT}/devtools/browser/99999999-9999-4999-8999-999999999999`;
++			const srv = http.createServer((req, res) => {
++				console.log(`TMPLOG FAKE request ${req.url}`);
++				res.setHeader('content-type', 'application/json');
++				res.end(req.url === '/json/version' ? JSON.stringify({ webSocketDebuggerUrl: ws }) : JSON.stringify([{ type: 'page', url: 'app://obsidian.md/index.html', webSocketDebuggerUrl: `ws://127.0.0.1:${REQUESTED_PORT}/devtools/page/X` }]));
++			});
++			srv.on('upgrade', (req, sock) => { console.log(`TMPLOG FAKE UPGRADE ${req.url}`); sock.destroy(); });
++			await new Promise((r) => srv.listen(REQUESTED_PORT, '127.0.0.1', r));
++			console.log('TMPLOG FAKE listening');
++		}
+ 		const cfg = path.join(os.homedir(), '.config', 'obsidian');
+ 		const asars = fs.existsSync(cfg) ? fs.readdirSync(cfg).filter((f) => /^obsidian-.*\.asar$/.test(f)).sort() : [];
+ 		if (!asars.length) envFail('no obsidian-*.asar in ~/.config/obsidian — open Obsidian once so it self-updates');
+@@ -4660,6 +4673,7 @@ async function main() {
+ 			env: { ...process.env, DISPLAY: x.display },
+ 			stdio: 'ignore',
+ 		});
++		console.log(`TMPLOG ${process.env.TMP_TAG} spawned obsidian pid=${child.pid} vault=${vault} t=${Date.now()}`); // TEMP SC-551
+ 		liveObsidian = child; // tracked now, not only if start-up completes (Important-2)
+ 		let alive = true;
+ 		child.once('exit', () => (alive = false));
+@@ -4704,6 +4718,7 @@ async function main() {
+ 		await sleep(800);
+ 		await t.ev(PAGE_HELPERS);
+ 		const version = await t.ev('require("electron").ipcRenderer.sendSync("version")');
++		console.log(`TMPLOG ${process.env.TMP_TAG} attached port=${PORT} basePath=${await t.ev('app.vault.adapter.basePath')} ownVault=${vault} ${(await t.ev('app.vault.adapter.basePath')) === vault ? 'OWN' : 'FOREIGN'}`); // TEMP SC-551
+ 		console.log(`OBSIDIAN-LIFECYCLE start: obsidian ${version}, display ${x.display}, port ${PORT}, ${selected.length} scenario(s)`);
+ 		for (const s of selected) {
+ 			try {

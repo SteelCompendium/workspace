@@ -1,0 +1,122 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc551-lifecycle-cdp-port-race/draw-steel-elements
+try 1: A rc=1 B rc=1
+   [A] TMPLOG A spawned obsidian pid=1906119 vault=/tmp/dse-obsidian-lifecycle-J1gxFd/vault t=1793645701499
+   [A] TMPLOG A attached basePath=/tmp/dse-obsidian-lifecycle-J1gxFd/vault ownVault=/tmp/dse-obsidian-lifecycle-J1gxFd/vault OWN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 47262, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b FAIL: no Increase button on counter #0 [shot /tmp/dse-obsidian-lifecycle-J1gxFd/shots/G-S6b-FAIL.png]
+   [A] OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-J1gxFd
+   [A] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+   [B] TMPLOG B spawned obsidian pid=1906120 vault=/tmp/dse-obsidian-lifecycle-njVZbM/vault t=1793645701508
+   [B] TMPLOG B attached basePath=/tmp/dse-obsidian-lifecycle-J1gxFd/vault ownVault=/tmp/dse-obsidian-lifecycle-njVZbM/vault FOREIGN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5401, port 47262, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b FAIL: expected 11, got 10
+   [B] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+try 2: A rc=0 B rc=1
+   [A] TMPLOG A spawned obsidian pid=1907258 vault=/tmp/dse-obsidian-lifecycle-H2I23D/vault t=1793645724858
+   [A] TMPLOG A attached basePath=/tmp/dse-obsidian-lifecycle-H2I23D/vault ownVault=/tmp/dse-obsidian-lifecycle-H2I23D/vault OWN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5401, port 47262, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [A] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+   [B] TMPLOG B spawned obsidian pid=1907257 vault=/tmp/dse-obsidian-lifecycle-qHrg57/vault t=1793645724854
+   [B] TMPLOG B attached basePath=/tmp/dse-obsidian-lifecycle-H2I23D/vault ownVault=/tmp/dse-obsidian-lifecycle-qHrg57/vault FOREIGN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 47262, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b FAIL: no Increase button on counter #0 [shot /tmp/dse-obsidian-lifecycle-qHrg57/shots/G-S6b-FAIL.png]
+   [B] OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-qHrg57
+   [B] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+try 3: A rc=1 B rc=1
+   [A] TMPLOG A spawned obsidian pid=1908345 vault=/tmp/dse-obsidian-lifecycle-S2KzfR/vault t=1793645748239
+   [A] TMPLOG A attached basePath=/tmp/dse-obsidian-lifecycle-S2KzfR/vault ownVault=/tmp/dse-obsidian-lifecycle-S2KzfR/vault OWN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 47262, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b FAIL: no Increase button on counter #0 [shot /tmp/dse-obsidian-lifecycle-S2KzfR/shots/G-S6b-FAIL.png]
+   [A] OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-S2KzfR
+   [A] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+   [B] TMPLOG B spawned obsidian pid=1908346 vault=/tmp/dse-obsidian-lifecycle-3sBRl3/vault t=1793645748245
+   [B] TMPLOG B attached basePath=/tmp/dse-obsidian-lifecycle-S2KzfR/vault ownVault=/tmp/dse-obsidian-lifecycle-3sBRl3/vault FOREIGN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5401, port 47262, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b FAIL: expected 11, got 10
+   [B] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+try 4: A rc=1 B rc=1
+   [A] TMPLOG A spawned obsidian pid=1910366 vault=/tmp/dse-obsidian-lifecycle-H5aAqr/vault t=1793645771600
+   [A] TMPLOG A attached basePath=/tmp/dse-obsidian-lifecycle-J86n1s/vault ownVault=/tmp/dse-obsidian-lifecycle-H5aAqr/vault FOREIGN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5401, port 47262, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b FAIL: expected 11, got 10
+   [A] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+   [B] TMPLOG B spawned obsidian pid=1910365 vault=/tmp/dse-obsidian-lifecycle-J86n1s/vault t=1793645771593
+   [B] TMPLOG B attached basePath=/tmp/dse-obsidian-lifecycle-J86n1s/vault ownVault=/tmp/dse-obsidian-lifecycle-J86n1s/vault OWN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 47262, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b FAIL: no Increase button on counter #0 [shot /tmp/dse-obsidian-lifecycle-J86n1s/shots/G-S6b-FAIL.png]
+   [B] OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-J86n1s
+   [B] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+try 5: A rc=1 B rc=1
+   [A] TMPLOG A spawned obsidian pid=1912244 vault=/tmp/dse-obsidian-lifecycle-BykD53/vault t=1793645795232
+   [A] TMPLOG A attached basePath=/tmp/dse-obsidian-lifecycle-zjJhEW/vault ownVault=/tmp/dse-obsidian-lifecycle-BykD53/vault FOREIGN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5401, port 47262, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b FAIL: expected 11, got 10
+   [A] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+   [B] TMPLOG B spawned obsidian pid=1912243 vault=/tmp/dse-obsidian-lifecycle-zjJhEW/vault t=1793645795230
+   [B] TMPLOG B attached basePath=/tmp/dse-obsidian-lifecycle-zjJhEW/vault ownVault=/tmp/dse-obsidian-lifecycle-zjJhEW/vault OWN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 47262, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b FAIL: no Increase button on counter #0 [shot /tmp/dse-obsidian-lifecycle-zjJhEW/shots/G-S6b-FAIL.png]
+   [B] OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-zjJhEW
+   [B] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+try 6: A rc=1 B rc=1
+   [A] TMPLOG A spawned obsidian pid=1914173 vault=/tmp/dse-obsidian-lifecycle-WTgSQF/vault t=1793645820822
+   [A] TMPLOG A attached basePath=/tmp/dse-obsidian-lifecycle-WTgSQF/vault ownVault=/tmp/dse-obsidian-lifecycle-WTgSQF/vault OWN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 47262, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b FAIL: no Increase button on counter #0 [shot /tmp/dse-obsidian-lifecycle-WTgSQF/shots/G-S6b-FAIL.png]
+   [A] OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-WTgSQF
+   [A] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+   [B] TMPLOG B spawned obsidian pid=1914179 vault=/tmp/dse-obsidian-lifecycle-ew2Toi/vault t=1793645820880
+   [B] TMPLOG B attached basePath=/tmp/dse-obsidian-lifecycle-WTgSQF/vault ownVault=/tmp/dse-obsidian-lifecycle-ew2Toi/vault FOREIGN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5401, port 47262, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b FAIL: expected 11, got 10
+   [B] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+try 7: A rc=1 B rc=0
+   [A] TMPLOG A spawned obsidian pid=1915673 vault=/tmp/dse-obsidian-lifecycle-o5lzcj/vault t=1793645846741
+   [A] TMPLOG A attached basePath=/tmp/dse-obsidian-lifecycle-OZQekw/vault ownVault=/tmp/dse-obsidian-lifecycle-o5lzcj/vault FOREIGN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5401, port 47262, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b FAIL: no Increase button on counter #0 [shot /tmp/dse-obsidian-lifecycle-o5lzcj/shots/G-S6b-FAIL.png]
+   [A] OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-o5lzcj
+   [A] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+   [B] TMPLOG B spawned obsidian pid=1915672 vault=/tmp/dse-obsidian-lifecycle-OZQekw/vault t=1793645846735
+   [B] TMPLOG B attached basePath=/tmp/dse-obsidian-lifecycle-OZQekw/vault ownVault=/tmp/dse-obsidian-lifecycle-OZQekw/vault OWN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 47262, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [B] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+try 8: A rc=1 B rc=1
+   [A] TMPLOG A spawned obsidian pid=1917829 vault=/tmp/dse-obsidian-lifecycle-80JOUM/vault t=1793645870159
+   [A] TMPLOG A attached basePath=/tmp/dse-obsidian-lifecycle-ezLYz3/vault ownVault=/tmp/dse-obsidian-lifecycle-80JOUM/vault FOREIGN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5401, port 47262, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b FAIL: expected 11, got 10
+   [A] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+   [B] TMPLOG B spawned obsidian pid=1917821 vault=/tmp/dse-obsidian-lifecycle-ezLYz3/vault t=1793645870127
+   [B] TMPLOG B attached basePath=/tmp/dse-obsidian-lifecycle-ezLYz3/vault ownVault=/tmp/dse-obsidian-lifecycle-ezLYz3/vault OWN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 47262, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b FAIL: no Increase button on counter #0 [shot /tmp/dse-obsidian-lifecycle-ezLYz3/shots/G-S6b-FAIL.png]
+   [B] OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-ezLYz3
+   [B] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+try 9: A rc=1 B rc=0
+   [A] TMPLOG A spawned obsidian pid=1918645 vault=/tmp/dse-obsidian-lifecycle-SOpAVV/vault t=1793645893447
+   [A] TMPLOG A attached basePath=/tmp/dse-obsidian-lifecycle-CxKSQO/vault ownVault=/tmp/dse-obsidian-lifecycle-SOpAVV/vault FOREIGN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5401, port 47262, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b FAIL: no Increase button on counter #0 [shot /tmp/dse-obsidian-lifecycle-SOpAVV/shots/G-S6b-FAIL.png]
+   [A] OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-SOpAVV
+   [A] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+   [B] TMPLOG B spawned obsidian pid=1918644 vault=/tmp/dse-obsidian-lifecycle-CxKSQO/vault t=1793645893437
+   [B] TMPLOG B attached basePath=/tmp/dse-obsidian-lifecycle-CxKSQO/vault ownVault=/tmp/dse-obsidian-lifecycle-CxKSQO/vault OWN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 47262, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [B] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+try 10: A rc=1 B rc=1
+   [A] TMPLOG A spawned obsidian pid=1919940 vault=/tmp/dse-obsidian-lifecycle-LzZnlv/vault t=1793645916743
+   [A] TMPLOG A attached basePath=/tmp/dse-obsidian-lifecycle-cnjPlw/vault ownVault=/tmp/dse-obsidian-lifecycle-LzZnlv/vault FOREIGN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5401, port 47262, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b FAIL: expected 11, got 10
+   [A] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+   [B] TMPLOG B spawned obsidian pid=1919939 vault=/tmp/dse-obsidian-lifecycle-cnjPlw/vault t=1793645916736
+   [B] TMPLOG B attached basePath=/tmp/dse-obsidian-lifecycle-cnjPlw/vault ownVault=/tmp/dse-obsidian-lifecycle-cnjPlw/vault OWN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 47262, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b FAIL: no Increase button on counter #0 [shot /tmp/dse-obsidian-lifecycle-cnjPlw/shots/G-S6b-FAIL.png]
+   [B] OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-cnjPlw
+   [B] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed

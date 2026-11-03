@@ -1,0 +1,13 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "python3" on /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r5/r4wt
+R1 skip the socket-owner check entirely: KILLED (Tests:       3 failed, 12 passed, 15 total) []
+R2 accept any pid (every inode counts as ours): KILLED (Tests:       2 failed, 13 passed, 15 total) []
+R3 read only /proc/net/tcp6: KILLED (Tests:       7 failed, 8 passed, 15 total) []
+R4 read only /proc/net/tcp: KILLED (Tests:       1 failed, 14 passed, 15 total) []
+R5 nothing listening counts as ours: KILLED (Tests:       1 failed, 14 passed, 15 total) []
+R6 one of several listeners ours is enough (some -> every): SURVIVED (Tests:       15 passed, 15 total) []
+R7 no LISTEN-state filter: KILLED (Tests:       1 failed, 14 passed, 15 total) []
+R8 unreadable procfs passes (fail open): KILLED (Tests:       1 failed, 14 passed, 15 total) []
+R9 socket check after the HTTP GUID read (order): KILLED (Tests:       3 failed, 12 passed, 15 total) []
+R10 servesBrowser always true: KILLED (Tests:       1 failed, 14 passed, 15 total) []
+restored; git status: clean

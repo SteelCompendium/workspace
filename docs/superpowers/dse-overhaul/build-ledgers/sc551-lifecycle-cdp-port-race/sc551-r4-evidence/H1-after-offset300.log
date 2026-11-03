@@ -1,0 +1,25 @@
+[two-cams after-300 22:43:02.520] try 1 A: rc=0 own obsidian pid 2231037; proven port 43349 -> own Obsidian
+[two-cams after-300 22:43:02.522]     A> spawned obsidian pid=2231037 (udd=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r1-impl/r4scratch/two-cams-tmp-after-300-1/obsidian-harness-udd, port=au
+[two-cams after-300 22:43:02.522]     A> cdp: port 43349 (reported by our obsidian pid=2231037, browser id verified)
+[two-cams after-300 22:43:02.522]     A> attached: obsidian unknown, vault "demo-vault", window 1440x1100 (layout ready 974ms after spawn)
+[two-cams after-300 22:43:02.522]     A> all 1 shots written to /home/scott/code/steelCompendium/worktrees/sc551-lifecycle-cdp-port-race/draw-steel-elements/visual-harness/shots
+[two-cams after-300 22:43:02.522] try 1 B: rc=2 own obsidian pid 2231185; proven port - -> no proof line
+[two-cams after-300 22:43:02.522]     B> spawned obsidian pid=2231185 (udd=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r1-impl/r4scratch/two-cams-tmp-after-300-1/obsidian-harness-udd, port=au
+[two-cams after-300 22:43:02.522]     B> OBSIDIAN-CAMERA environment: port 43349: the listening socket there is not our Obsidian's (our pid 2231185) - another instance owns it
+[two-cams after-300 22:43:17.626] try 2 A: rc=0 own obsidian pid 2231508; proven port 36025 -> own Obsidian
+[two-cams after-300 22:43:17.626]     A> spawned obsidian pid=2231508 (udd=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r1-impl/r4scratch/two-cams-tmp-after-300-2/obsidian-harness-udd, port=au
+[two-cams after-300 22:43:17.626]     A> cdp: port 36025 (reported by our obsidian pid=2231508, browser id verified)
+[two-cams after-300 22:43:17.626]     A> attached: obsidian unknown, vault "demo-vault", window 1440x1100 (layout ready 823ms after spawn)
+[two-cams after-300 22:43:17.626]     A> all 1 shots written to /home/scott/code/steelCompendium/worktrees/sc551-lifecycle-cdp-port-race/draw-steel-elements/visual-harness/shots
+[two-cams after-300 22:43:17.626] try 2 B: rc=2 own obsidian pid 2231655; proven port - -> no proof line
+[two-cams after-300 22:43:17.626]     B> spawned obsidian pid=2231655 (udd=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r1-impl/r4scratch/two-cams-tmp-after-300-2/obsidian-harness-udd, port=au
+[two-cams after-300 22:43:17.626]     B> OBSIDIAN-CAMERA environment: port 36025: the listening socket there is not our Obsidian's (our pid 2231655) - another instance owns it
+[two-cams after-300 22:43:32.722] try 3 A: rc=0 own obsidian pid 2232010; proven port 42315 -> own Obsidian
+[two-cams after-300 22:43:32.722]     A> spawned obsidian pid=2232010 (udd=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r1-impl/r4scratch/two-cams-tmp-after-300-3/obsidian-harness-udd, port=au
+[two-cams after-300 22:43:32.722]     A> cdp: port 42315 (reported by our obsidian pid=2232010, browser id verified)
+[two-cams after-300 22:43:32.722]     A> attached: obsidian unknown, vault "demo-vault", window 1440x1100 (layout ready 938ms after spawn)
+[two-cams after-300 22:43:32.722]     A> all 1 shots written to /home/scott/code/steelCompendium/worktrees/sc551-lifecycle-cdp-port-race/draw-steel-elements/visual-harness/shots
+[two-cams after-300 22:43:32.722] try 3 B: rc=2 own obsidian pid 2232161; proven port - -> no proof line
+[two-cams after-300 22:43:32.722]     B> spawned obsidian pid=2232161 (udd=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r1-impl/r4scratch/two-cams-tmp-after-300-3/obsidian-harness-udd, port=au
+[two-cams after-300 22:43:32.722]     B> OBSIDIAN-CAMERA environment: port 42315: the listening socket there is not our Obsidian's (our pid 2232161) - another instance owns it
+[two-cams after-300 22:43:34.224] SUMMARY: 0 wrong-instance camera run(s) in 3 pairs (offset 300 ms)

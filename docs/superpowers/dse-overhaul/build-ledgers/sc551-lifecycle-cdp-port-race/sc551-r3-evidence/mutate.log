@@ -1,0 +1,11 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "python3" on /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r3-review/fixwt
+M1 skip the GUID compare: KILLED (Tests:       1 failed, 10 passed, 11 total) []
+M2 clearStaleReport is a no-op: KILLED (Tests:       1 failed, 10 passed, 11 total) []
+M3 skip the pinned port-mismatch check: KILLED (Tests:       1 failed, 10 passed, 11 total) []
+M4 no exited check while waiting for the report: KILLED (Tests:       1 failed, 10 passed, 11 total) []
+M5 accept a half-written report (no UUID shape): KILLED (Tests:       1 failed, 10 passed, 11 total) []
+M6 portInUse probes 127.0.0.1 only: SURVIVED (Tests:       11 passed, 11 total) []
+M7 pinned no-report message drops the owner clause: KILLED (Tests:       1 failed, 10 passed, 11 total) []
+M8 GUID compare via localhost not 127.0.0.1: SURVIVED (Tests:       11 passed, 11 total) []
+restored; git status: clean

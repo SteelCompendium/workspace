@@ -1,0 +1,59 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc551-lifecycle-cdp-port-race/draw-steel-elements
+try 1: A rc=0 B rc=0
+   [A] TMPLOG A spawned obsidian pid=2240929 vault=/tmp/dse-obsidian-lifecycle-a5G7kl/vault t=1793659510832
+   [A] TMPLOG A attached port=37271 basePath=/tmp/dse-obsidian-lifecycle-a5G7kl/vault ownVault=/tmp/dse-obsidian-lifecycle-a5G7kl/vault OWN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 37271, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [A] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+   [B] TMPLOG B spawned obsidian pid=2240930 vault=/tmp/dse-obsidian-lifecycle-2nkiq5/vault t=1793659510840
+   [B] TMPLOG B attached port=40851 basePath=/tmp/dse-obsidian-lifecycle-2nkiq5/vault ownVault=/tmp/dse-obsidian-lifecycle-2nkiq5/vault OWN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5401, port 40851, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [B] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+try 2: A rc=0 B rc=0
+   [A] TMPLOG A spawned obsidian pid=2241711 vault=/tmp/dse-obsidian-lifecycle-w3qqyj/vault t=1793659534604
+   [A] TMPLOG A attached port=38775 basePath=/tmp/dse-obsidian-lifecycle-w3qqyj/vault ownVault=/tmp/dse-obsidian-lifecycle-w3qqyj/vault OWN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5401, port 38775, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [A] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+   [B] TMPLOG B spawned obsidian pid=2241710 vault=/tmp/dse-obsidian-lifecycle-xIvzNu/vault t=1793659534595
+   [B] TMPLOG B attached port=35535 basePath=/tmp/dse-obsidian-lifecycle-xIvzNu/vault ownVault=/tmp/dse-obsidian-lifecycle-xIvzNu/vault OWN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 35535, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [B] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+try 3: A rc=0 B rc=0
+   [A] TMPLOG A spawned obsidian pid=2242966 vault=/tmp/dse-obsidian-lifecycle-aje7BO/vault t=1793659557962
+   [A] TMPLOG A attached port=43689 basePath=/tmp/dse-obsidian-lifecycle-aje7BO/vault ownVault=/tmp/dse-obsidian-lifecycle-aje7BO/vault OWN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 43689, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [A] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+   [B] TMPLOG B spawned obsidian pid=2242967 vault=/tmp/dse-obsidian-lifecycle-o5xgGe/vault t=1793659557973
+   [B] TMPLOG B attached port=33969 basePath=/tmp/dse-obsidian-lifecycle-o5xgGe/vault ownVault=/tmp/dse-obsidian-lifecycle-o5xgGe/vault OWN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5401, port 33969, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [B] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+try 1: A rc=2 B rc=0
+   [A] TMPLOG A spawned obsidian pid=2243828 vault=/tmp/dse-obsidian-lifecycle-D6E7hh/vault t=1793659581250
+   [A] OBSIDIAN-LIFECYCLE environment: our Obsidian never reported a DevTools server on port 47262 within 30 s (no DevToolsActivePort in its user-data-dir) - another instance owns it
+   [B] TMPLOG B spawned obsidian pid=2243827 vault=/tmp/dse-obsidian-lifecycle-zuNC4R/vault t=1793659581240
+   [B] TMPLOG B attached port=47262 basePath=/tmp/dse-obsidian-lifecycle-zuNC4R/vault ownVault=/tmp/dse-obsidian-lifecycle-zuNC4R/vault OWN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 47262, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [B] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+try 2: A rc=2 B rc=0
+   [A] TMPLOG A spawned obsidian pid=2244886 vault=/tmp/dse-obsidian-lifecycle-5nPp79/vault t=1793659627384
+   [A] OBSIDIAN-LIFECYCLE environment: our Obsidian never reported a DevTools server on port 47262 within 30 s (no DevToolsActivePort in its user-data-dir) - another instance owns it
+   [B] TMPLOG B spawned obsidian pid=2244885 vault=/tmp/dse-obsidian-lifecycle-MalJmU/vault t=1793659627359
+   [B] TMPLOG B attached port=47262 basePath=/tmp/dse-obsidian-lifecycle-MalJmU/vault ownVault=/tmp/dse-obsidian-lifecycle-MalJmU/vault OWN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 47262, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [B] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+try 3: A rc=0 B rc=2
+   [A] TMPLOG A spawned obsidian pid=2246002 vault=/tmp/dse-obsidian-lifecycle-uFdIqx/vault t=1793659673512
+   [A] TMPLOG A attached port=47262 basePath=/tmp/dse-obsidian-lifecycle-uFdIqx/vault ownVault=/tmp/dse-obsidian-lifecycle-uFdIqx/vault OWN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 47262, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [A] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+   [B] TMPLOG B spawned obsidian pid=2246003 vault=/tmp/dse-obsidian-lifecycle-K8dR8t/vault t=1793659673519
+   [B] OBSIDIAN-LIFECYCLE environment: our Obsidian never reported a DevTools server on port 47262 within 30 s (no DevToolsActivePort in its user-data-dir) - another instance owns it

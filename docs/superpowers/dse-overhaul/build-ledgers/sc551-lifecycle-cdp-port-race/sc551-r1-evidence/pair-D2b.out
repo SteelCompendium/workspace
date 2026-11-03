@@ -1,0 +1,42 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc551-lifecycle-cdp-port-race/draw-steel-elements
+try 1: A rc=0 B rc=2
+   [A] TMPLOG A spawned obsidian pid=1949325 vault=/tmp/dse-obsidian-lifecycle-jYvp9H/vault t=1793646636045
+   [A] TMPLOG A attached port=47262 basePath=/tmp/dse-obsidian-lifecycle-jYvp9H/vault ownVault=/tmp/dse-obsidian-lifecycle-jYvp9H/vault OWN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5401, port 47262, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [A] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+   [B] TMPLOG B spawned obsidian pid=1949324 vault=/tmp/dse-obsidian-lifecycle-ALvxXC/vault t=1793646636040
+   [B] OBSIDIAN-LIFECYCLE environment: our Obsidian never reported a DevTools server on port 47262 within 30 s (no DevToolsActivePort in its user-data-dir) - another instance owns it
+try 2: A rc=0 B rc=2
+   [A] TMPLOG A spawned obsidian pid=1950923 vault=/tmp/dse-obsidian-lifecycle-fywm55/vault t=1793646682153
+   [A] TMPLOG A attached port=47262 basePath=/tmp/dse-obsidian-lifecycle-fywm55/vault ownVault=/tmp/dse-obsidian-lifecycle-fywm55/vault OWN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 47262, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [A] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+   [B] TMPLOG B spawned obsidian pid=1950924 vault=/tmp/dse-obsidian-lifecycle-9tsJTr/vault t=1793646682162
+   [B] OBSIDIAN-LIFECYCLE environment: our Obsidian never reported a DevTools server on port 47262 within 30 s (no DevToolsActivePort in its user-data-dir) - another instance owns it
+try 3: A rc=2 B rc=0
+   [A] TMPLOG A spawned obsidian pid=1951957 vault=/tmp/dse-obsidian-lifecycle-GqzHbw/vault t=1793646728273
+   [A] OBSIDIAN-LIFECYCLE environment: our Obsidian never reported a DevTools server on port 47262 within 30 s (no DevToolsActivePort in its user-data-dir) - another instance owns it
+   [B] TMPLOG B spawned obsidian pid=1951956 vault=/tmp/dse-obsidian-lifecycle-P1VcRh/vault t=1793646728266
+   [B] TMPLOG B attached port=47262 basePath=/tmp/dse-obsidian-lifecycle-P1VcRh/vault ownVault=/tmp/dse-obsidian-lifecycle-P1VcRh/vault OWN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 47262, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [B] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+try 4: A rc=2 B rc=0
+   [A] TMPLOG A spawned obsidian pid=1953066 vault=/tmp/dse-obsidian-lifecycle-4G8Ova/vault t=1793646774390
+   [A] OBSIDIAN-LIFECYCLE environment: our Obsidian never reported a DevTools server on port 47262 within 30 s (no DevToolsActivePort in its user-data-dir) - another instance owns it
+   [B] TMPLOG B spawned obsidian pid=1953065 vault=/tmp/dse-obsidian-lifecycle-ATkCnW/vault t=1793646774379
+   [B] TMPLOG B attached port=47262 basePath=/tmp/dse-obsidian-lifecycle-ATkCnW/vault ownVault=/tmp/dse-obsidian-lifecycle-ATkCnW/vault OWN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 47262, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [B] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+try 5: A rc=0 B rc=2
+   [A] TMPLOG A spawned obsidian pid=1954179 vault=/tmp/dse-obsidian-lifecycle-RNnHpw/vault t=1793646820508
+   [A] TMPLOG A attached port=47262 basePath=/tmp/dse-obsidian-lifecycle-RNnHpw/vault ownVault=/tmp/dse-obsidian-lifecycle-RNnHpw/vault OWN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 47262, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [A] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+   [B] TMPLOG B spawned obsidian pid=1954180 vault=/tmp/dse-obsidian-lifecycle-6qjyM2/vault t=1793646820518
+   [B] OBSIDIAN-LIFECYCLE environment: our Obsidian never reported a DevTools server on port 47262 within 30 s (no DevToolsActivePort in its user-data-dir) - another instance owns it

@@ -1,0 +1,57 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "node" on /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r1-survey/dse
+FOREIGN display :5447 (Xvfb pid 1913163); OUR display :5448 (Xvfb pid 1913166)
+FOREIGN chromedriver pid 1913169 up on 48202 (env DISPLAY=:5447)
+2026-11-02T18:56:41.854Z INFO webdriver: Initiate new session using the WebDriver protocol
+[fake get-port] returning 48202 (the number another process grabbed after the real check)
+2026-11-02T18:56:42.156Z INFO chromedriver: Starting ChromeDriver 150.0.7871.250 (07ee2042224499f634596843f209356586214e26-refs/heads/main@{#1703817}) on port 48202
+2026-11-02T18:56:42.156Z INFO chromedriver: Only local connections are allowed.
+2026-11-02T18:56:42.156Z INFO chromedriver: Please see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.
+2026-11-02T18:56:42.156Z INFO chromedriver: IPv6 port not available. Exiting...
+2026-11-02T18:56:42.158Z WARN chromedriver: [1793645802.141][SEVERE]: bind() failed: Address already in use (98)
+2026-11-02T18:56:42.160Z INFO @wdio/utils: Started Chromedriver v150.0.7871.250 with params --port=48202 --binary=/home/scott/.cache/dse-e2e-obsidian/electron-chromedriver/linux-x64/43.7.7/chromedriver --allowed-origins=* in 52ms on port 48202
+2026-11-02T18:56:42.163Z INFO webdriver: [POST] http://localhost:48202/session
+2026-11-02T18:56:43.023Z INFO webdriver: COMMAND getWindowHandle()
+2026-11-02T18:56:43.026Z INFO webdriver: [GET] http://localhost:48202/session/0cbeb5b84173d42af5f79f106a8959b2/window
+2026-11-02T18:56:43.034Z INFO webdriver: RESULT CB0E27216B60DCEA5AF439F8B34F6A90
+SESSION CREATED in 1184 ms: 0cbeb5b84173d42af5f79f106a8959b2; wdio thinks driver is localhost:48202
+2026-11-02T18:56:43.036Z INFO webdriver: COMMAND executeScript(<fn>, <object>)
+2026-11-02T18:56:43.036Z INFO webdriver: [POST] http://localhost:48202/session/0cbeb5b84173d42af5f79f106a8959b2/execute/sync
+2026-11-02T18:56:43.037Z INFO webdriver: DATA {
+  script: '\n' +
+    '            function webdriverioPolyfill() {\n' +
+    '  var __defProp = Object.defineProperty;\n' +
+    '  var __name = function(target, _value) {\n' +
+    '    return __defProp(target, "name", { value: _value, configurable: true });\n' +
+    '  };\n' +
+    '  var __globalThis = typeof globalThis === "object" && globalThis || typeof window === "object" && window;\n' +
+    '  __globalThis.__name = __name;\n' +
+    '}\n' +
+    '            webdriverioPolyfill();\n' +
+    '            return (() => location.href).apply(null, arguments)\n' +
+    '        ',
+  args: []
+}
+2026-11-02T18:56:43.372Z INFO webdriver: RESULT app://obsidian.md/starter.html
+page: app://obsidian.md/starter.html
+  process with OUR udd on its command line: pid 1913191 ppid 1913169 (FOREIGN chromedriver) p2-udd
+  process with OUR udd on its command line: pid 1913229 ppid 1913191 (other) p2-udd --standard-schemes=app --secure-schemes=app --cors-schemes=app --fetch-schemes=app --streaming-schemes=app --code-cache-schemes=app --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,11550176305647478489,7337871238732765255,262144 --enable-features=GlobalShortcutsPortalPreferredTrigger,PdfUseShowSaveFilePicker,SharedArrayBuffer --disable-features=DropInputEventsWhilePaintHolding,IgnoreDuplicateNavs,LocalNetworkAccessChecks,Prewarm,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --pseudonymization-salt-handle=7,i,17710661868039632925,4622982908997981143,4 --trace-process-track-uuid=3190708989122997041 --enable-logging --log-level=3
+  process with OUR udd on its command line: pid 1913243 ppid 1913191 (other) app.asar --no-sandbox --no-zygote --no-sandbox --disable-background-timer-throttling --enable-automation --remote-debugging-port=0 --test-type=webdriver --allow-pre-commit-input --ozone-platform=x11 --lang=en-US --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=4 --time-ticks-at-unix-epoch=-1792444926517139 --launch-time-ticks=1200876076914 --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,11550176305647478489,7337871238732765255,262144 --enable-features=GlobalShortcutsPortalPreferredTrigger,PdfUseShowSaveFilePicker,SharedArrayBuffer --disable-features=DropInputEventsWhilePaintHolding,IgnoreDuplicateNavs,LocalNetworkAccessChecks,Prewarm,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --pseudonymization-salt-handle=7,i,17710661868039632925,4622982908997981143,4 --trace-process-track-uuid=3190708990060038890 --enable-logging --log-level=3
+  process with OUR udd on its command line: pid 1913293 ppid 1913193 (other) p2-udd --gpu-preferences=WAAAAAAAAAAgAQAEAAAAAAAAAAAAAGAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAACAAAAAAAAAAIAAAAAAAAAABAAAAAAAAAAgAAAAAAAAACAAAAAAAAAAIAAAAAAAAAA== --use-gl=disabled --shared-files --field-trial-handle=3,i,11550176305647478489,7337871238732765255,262144 --enable-features=GlobalShortcutsPortalPreferredTrigger,PdfUseShowSaveFilePicker,SharedArrayBuffer --disable-features=DropInputEventsWhilePaintHolding,IgnoreDuplicateNavs,LocalNetworkAccessChecks,Prewarm,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --pseudonymization-salt-handle=7,i,17710661868039632925,4622982908997981143,4 --trace-process-track-uuid=3190708990997080739 --enable-logging --log-level=3
+Obsidian main process(es) parented by the FOREIGN chromedriver (pid 1913169): 1913191
+live children of THIS (our wdio) process: 1913163:Xvfb 1913166:Xvfb 1913169:chromedriver
+  obsidian 1913191 debug flags: /home/scott/.cache/dse-e2e-obsidian/obsidian-installer/linux-x64/Obsidian-1.14.4/obsidian --allow-pre-commit-input --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-client-side-phishing-detection --disable-default-apps --disable-features=IgnoreDuplicateNavs,Prewarm --disable-hang-monitor --disable-popup-blocking --disable-prompt-on-repost --disable-sync --enable-automation --enable-logging --log-level=0 --no-first-run --no-sandbox --no-service-autorun --password-store=basic --remote-debugging-port=0 --test-type=webdriver --use-mock-keychain --user-data-dir=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r1-survey/p2-udd
+OUR udd DevToolsActivePort: "42975\n/devtools/browser/ccdb41f9-13a0-449f-9985-b5290ecb5611"
+windows on FOREIGN display :5447: 0x200003 "Obsidian": ("md.obsidian.obsidian" "md.obsidian.Obsidian")  800x650+240+75  +240+75 | 0x400001 "obsidian": ("obsidian" "Obsidian")  10x10+10+10  +10+10 | 0x200000 "Chromium clipboard": ()  10x10+-100+-100  +-100+-100
+windows on OUR display :5448: none
+2026-11-02T18:56:43.455Z INFO webdriver: COMMAND deleteSession()
+2026-11-02T18:56:43.455Z INFO webdriver: [DELETE] http://localhost:48202/session/0cbeb5b84173d42af5f79f106a8959b2
+2026-11-02T18:56:43.519Z INFO webdriver: RESULT null
+2026-11-02T18:56:43.520Z INFO webdriver: Kill driver process with PID 1913185
+2026-11-02T18:56:43.520Z WARN webdriver: Failed to kill driver process Error: kill ESRCH
+    at process.kill (node:internal/process/per_thread:277:13)
+    at Object.killDriverProcess (file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r1-survey/dse/node_modules/webdriver/build/node.js:2515:42)
+    at file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r1-survey/dse/node_modules/webdriver/build/node.js:1736:27
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Browser.wrapCommandFn (file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r1-survey/dse/node_modules/@wdio/utils/build/index.js:1100:23)
+    at async file:///tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r1-survey/p2-wdio-wrong-instance.mjs:97:3

@@ -1,0 +1,53 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "node" on /home/scott/code/steelCompendium/worktrees/sc551-lifecycle-cdp-port-race/draw-steel-elements
+xvfb :5440 bin /home/scott/code/steelCompendium/worktrees/sc551-lifecycle-cdp-port-race/draw-steel-elements/.devbox/nix/profile/default/bin/Xvfb
+{
+ "mode": "zero",
+ "PORT": 0,
+ "stderrLineAt": 315,
+ "fileAt": 326,
+ "fileContent": "34415\n/devtools/browser/34be13cf-ab43-4553-840c-413f286bb9a7",
+ "exited": null,
+ "alive": true,
+ "stderrTail": [
+  "",
+  "DevTools listening on ws://127.0.0.1:34415/devtools/browser/34be13cf-ab43-4553-840c-413f286bb9a7",
+  "[1898670:1102/135218.249129:ERROR:angle_platform_impl.cc(43)] Display.cpp:997 (initialize): ANGLE Display::initialize error 12289: GLX is not present.",
+  "ERR: Display.cpp:997 (initialize): ANGLE Display::initialize error 12289: GLX is not present.",
+  "[1898670:1102/135218.249296:ERROR:gl_display.cc(508)] EGL Driver message (Critical) eglInitialize: GLX is not present.",
+  "[1898670:1102/135218.249349:ERROR:gl_display.cc(920)] eglInitialize OpenGL failed with error EGL_NOT_INITIALIZED, trying next display type",
+  "[1898670:1102/135218.249586:ERROR:angle_platform_impl.cc(43)] Display.cpp:997 (initialize): ANGLE Display::initialize error 12289: GLX is not present.",
+  "ERR: Display.cpp:997 (initialize): ANGLE Display::initialize error 12289: GLX is not present.",
+  "[1898670:1102/135218.249658:ERROR:gl_display.cc(508)] EGL Driver message (Critical) eglInitialize: GLX is not present.",
+  "[1898670:1102/135218.249703:ERROR:gl_display.cc(920)] eglInitialize OpenGLES failed with error EGL_NOT_INITIALIZED",
+  "[1898670:1102/135218.249769:ERROR:gl_ozone_egl.cc(23)] GLDisplayEGL::Initialize failed.",
+  "[1898670:1102/135218.251166:ERROR:viz_main_impl.cc(186)] Exiting GPU process due to errors during initialization",
+  "[1898684:1102/135218.277872:ERROR:angle_platform_impl.cc(43)] Display.cpp:997 (initialize): ANGLE Display::initialize error 12289: GLX is not present.",
+  "ERR: Display.cpp:997 (initialize): ANGLE Display::initialize error 12289: GLX is not present.",
+  "[1898684:1102/135218.277996:ERROR:gl_display.cc(508)] EGL Driver message (Critical) eglInitialize: GLX is not present.",
+  "[1898684:1102/135218.278041:ERROR:gl_display.cc(920)] eglInitialize OpenGL failed with error EGL_NOT_INITIALIZED, trying next display type",
+  "[1898684:1102/135218.278191:ERROR:angle_platform_impl.cc(43)] Display.cpp:997 (initialize): ANGLE Display::initialize error 12289: GLX is not present.",
+  "ERR: Display.cpp:997 (initialize): ANGLE Display::initialize error 12289: GLX is not present.",
+  "[1898684:1102/135218.278325:ERROR:gl_display.cc(508)] EGL Driver message (Critical) eglInitialize: GLX is not present.",
+  "[1898684:1102/135218.278452:ERROR:gl_display.cc(920)] eglInitialize OpenGLES failed with error EGL_NOT_INITIALIZED",
+  "[1898684:1102/135218.278549:ERROR:gl_ozone_egl.cc(23)] GLDisplayEGL::Initialize failed.",
+  "[1898684:1102/135218.280035:ERROR:viz_main_impl.cc(186)] Exiting GPU process due to errors during initialization",
+  "libva error: vaGetDriverNameByIndex() failed with unknown libva error, driver_name = (null)",
+  "[1898698:1102/135218.306320:ERROR:gpu_memory_buffer_support_x11.cc(44)] dri3 extension not supported.",
+  ""
+ ],
+ "stdoutTail": "2026-11-02 18:52:18 Loading updated app package /tmp/sc551-measure-Z8vZfe/udd/obsidian-1.15.0.asar\n2026-11-02 18:52:18 Checking for update using Github\n2026-11-02 18:52:18 Success.\n2026-11-02 18:52:18 Latest version is 1.15.0\n2026-11-02 18:52:18 App is up to date.\n",
+ "versions": [
+  {
+   "port": 34415,
+   "v": {
+    "Browser": "Chrome/106.0.5249.199",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) obsidian/1.1.16 Chrome/106.0.5249.199 Electron/21.4.1 Safari/537.36",
+    "V8-Version": "10.6.194.27",
+    "WebKit-Version": "537.36 (@22e281b1f863fddd0117abd3caea57e4e84791f8)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:34415/devtools/browser/34be13cf-ab43-4553-840c-413f286bb9a7"
+   }
+  }
+ ]
+}

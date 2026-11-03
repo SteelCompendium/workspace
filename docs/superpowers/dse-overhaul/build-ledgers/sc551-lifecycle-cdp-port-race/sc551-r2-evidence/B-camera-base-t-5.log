@@ -1,0 +1,13 @@
+[B-camera-base-t5 19:45:23.664] decoy display :5400; camera display :5405
+[B-camera-base-t5 19:45:24.227] DECOY Obsidian pid 2016056 on 47404: app://obsidian.md/index.html
+[B-camera-base-t5 19:45:24.344] camera> spawned obsidian pid=2016284 (udd=/tmp/sc551-r2-repro-qK3hNM/camtmp/obsidian-harness-udd, port=47403, display=:5405)
+[B-camera-base-t5 19:45:24.352] PROXY listening on [::]:47403 (the stranger now owns the port)
+[B-camera-base-t5 19:45:24.601] PROXY connection #1 -> piped to DECOY :47404: GET /json/list HTTP/1.1
+[B-camera-base-t5 19:45:24.626] PROXY connection #2 -> piped to DECOY :47404: GET /devtools/page/5B7C975FE3A0146E2B87DEDD59A7A12F HTTP/1.1
+[B-camera-base-t5 19:45:24.925] camera> attached: obsidian unknown, vault "FOREIGN-VAULT", window 1024x800 (layout ready 581ms after spawn)
+[B-camera-base-t5 19:45:24.926] camera> plugin not loaded (restricted mode?) — enabling via app.plugins APIs…
+[B-camera-base-t5 19:45:25.052] camera> killing child pid=2016284
+[B-camera-base-t5 19:45:25.177] camera> Error: BLOCKED: plugin not loadable via APIs. Window shot: /home/scott/code/steelCompendium/worktrees/sc551-lifecycle-cdp-port-race/draw-steel-elements/visual-harness/shots/CAMERA-BLOCKED.png. Modal: (no modal visible)
+[B-camera-base-t5 19:45:25.177] camera>     at main (file:///home/scott/code/steelCompendium/worktrees/sc551-lifecycle-cdp-port-race/draw-steel-elements/visual-harness/obsidian-camera.mjs:725:10)
+[B-camera-base-t5 19:45:28.057] RESULT {"cameraExit":1,"attachedForeign":true,"attachedOther":false,"envMessage":null,"proxyConnections":2}
+[B-camera-base-t5 19:45:28.059] DECOY targets after the camera: page:app://obsidian.md/index.html

@@ -1,0 +1,38 @@
+FAIL unit test/unit/build/cdpOwned.test.ts
+  ● SC-551: proveCdpOwned › SC-551 r5 LOW-1: a launcher wrapper that does not exec - the spawned pid is a shell, Obsidian is its child - is ours; a socket held outside the child's tree is still foreign
+
+    expect(received).toEqual(expected) // deep equality
+
+    Expected: {"guid": "11111111-1111-4111-8111-111111111111", "port": 37691}
+    Received: undefined
+
+      251 | 			try { await prove({ procStats: () => stats, fdLinks: strangerHolds }); } catch (e) { out.reason = e.reason; out.message = e.message; }
+      252 | 		`);
+    > 253 | 		expect(out.ok).toEqual({ port: out.servedPort, guid: OURS });
+          | 		               ^
+      254 | 		expect(out.reason).toBe('foreign-listener');
+      255 | 		expect(out.message).toContain('held by pid 5000 "obsidian"');
+      256 | 		expect(out.message).toContain('our pid 4242');
+
+      at Object.<anonymous> (test/unit/build/cdpOwned.test.ts:253:18)
+
+  ● SC-551: proveCdpOwned › with the real /proc, a non-exec bash wrapper whose child holds the DevTools socket is accepted
+
+    expect(received).toBeUndefined()
+
+    Received: {"message": "port 34635: the listening socket there is not our Obsidian's (our pid 2403491; held by pid 2403492 \"MainThread\") - another instance owns it", "name": "CdpOwnershipError", "reason": "foreign-listener"}
+
+      266 | 			wrapper.kill('SIGKILL');
+      267 | 		`);
+    > 268 | 		expect(out.error).toBeUndefined();
+          | 		                  ^
+      269 | 		expect(out.ok?.guid).toBe(OURS);
+      270 | 	});
+      271 |
+
+      at Object.<anonymous> (test/unit/build/cdpOwned.test.ts:268:21)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 17 passed, 19 total
+Snapshots:   0 total
+Time:        3.948 s, estimated 4 s

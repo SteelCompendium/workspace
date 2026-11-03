@@ -1,0 +1,22 @@
+FAIL unit test/unit/build/cdpOwned.test.ts
+  ● SC-551: proveCdpOwned › SC-551 r5 LOW-1: a launcher wrapper that does not exec - the spawned pid is a shell, Obsidian is its child - is ours; a socket held outside the child's tree is still foreign
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "foreign-listener"
+    Received: undefined
+
+      259 | 		expect(out.message).toContain('held by pid 5000 "obsidian"');
+      260 | 		expect(out.message).toContain('our pid 4242');
+    > 261 | 		expect(out.unreadableReason).toBe('foreign-listener');
+          | 		                             ^
+      262 | 	});
+      263 |
+      264 | 	test('with the real /proc, a non-exec bash wrapper whose child holds the DevTools socket is accepted', () => {
+
+      at Object.<anonymous> (test/unit/build/cdpOwned.test.ts:261:32)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 18 passed, 19 total
+Snapshots:   0 total
+Time:        4.107 s

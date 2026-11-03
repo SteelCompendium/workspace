@@ -1,0 +1,8 @@
+[R4-camera-decoy1 22:48:31.814] decoy display :5400; camera display :5405
+[R4-camera-decoy1 22:48:32.384] DECOY Obsidian pid 2247550 on 47462: app://obsidian.md/index.html
+[R4-camera-decoy1 22:48:32.477] camera> spawned obsidian pid=2247771 (udd=/tmp/sc551-r2-repro-8Ibln3/camtmp/obsidian-harness-udd, port=47461, display=:5405)
+[R4-camera-decoy1 22:48:32.488] PROXY listening on [::]:47461 (the stranger now owns the port)
+[R4-camera-decoy1 22:49:02.480] camera> killing child pid=2247771
+[R4-camera-decoy1 22:49:02.522] camera> OBSIDIAN-CAMERA environment: our Obsidian never reported a DevTools server on port 47461 within 30 s (no DevToolsActivePort in its user-data-dir) - another instance owns it
+[R4-camera-decoy1 22:49:05.659] RESULT {"cameraExit":2,"attachedForeign":false,"attachedOther":false,"envMessage":"environment: our Obsidian never reported a DevTools server on port 47461 within 30 s (no DevToolsActivePort in its user-data-dir) - another instance owns it","proxyConnections":0}
+[R4-camera-decoy1 22:49:05.661] DECOY targets after the camera: page:app://obsidian.md/index.html

@@ -1,0 +1,14 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc551-lifecycle-cdp-port-race/draw-steel-elements
+try 1: A rc=1 B rc=0
+   [A] TMPLOG A spawned obsidian pid=1904902 vault=/tmp/dse-obsidian-lifecycle-3L3Ogw/vault t=1793645674007
+   [A] TMPLOG A attached basePath=/tmp/dse-obsidian-lifecycle-EVAMKT/vault ownVault=/tmp/dse-obsidian-lifecycle-3L3Ogw/vault FOREIGN
+   [A] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5401, port 47262, 1 scenario(s)
+   [A] OBSIDIAN-LIFECYCLE G-S6b FAIL: no Increase button on counter #0 [shot /tmp/dse-obsidian-lifecycle-3L3Ogw/shots/G-S6b-FAIL.png]
+   [A] OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-3L3Ogw
+   [A] OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+   [B] TMPLOG B spawned obsidian pid=1904901 vault=/tmp/dse-obsidian-lifecycle-EVAMKT/vault t=1793645673999
+   [B] TMPLOG B attached basePath=/tmp/dse-obsidian-lifecycle-EVAMKT/vault ownVault=/tmp/dse-obsidian-lifecycle-EVAMKT/vault OWN
+   [B] OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :5400, port 47262, 1 scenario(s)
+   [B] OBSIDIAN-LIFECYCLE G-S6b ok (current_value=11 after leaf close)
+   [B] OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed

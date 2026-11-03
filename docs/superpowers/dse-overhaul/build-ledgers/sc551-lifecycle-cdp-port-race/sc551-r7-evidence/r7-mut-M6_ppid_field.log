@@ -1,0 +1,44 @@
+FAIL unit test/unit/build/cdpOwned.test.ts
+  ● SC-551: proveCdpOwned › with the real /proc, a non-exec bash wrapper whose child holds the DevTools socket is accepted
+
+    expect(received).toBeUndefined()
+
+    Received: {"message": "port 33213: the listening socket there is not our Obsidian's (our pid 2406756; held by pid 2406757 \"MainThread\") - another instance owns it", "name": "CdpOwnershipError", "reason": "foreign-listener"}
+
+      266 | 			wrapper.kill('SIGKILL');
+      267 | 		`);
+    > 268 | 		expect(out.error).toBeUndefined();
+          | 		                  ^
+      269 | 		expect(out.ok?.guid).toBe(OURS);
+      270 | 	});
+      271 |
+
+      at Object.<anonymous> (test/unit/build/cdpOwned.test.ts:268:21)
+
+  ● SC-551: proveCdpOwned › parseStat splits the comm on the LAST parenthesis (spaces and ")" in the name), and processTree is bounded on a ppid cycle
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "comm": "obsidian",
+    -   "ppid": 45,
+    +   "ppid": 123,
+      }
+
+      294 | 			out.tree = [...processTree(1, cyc)].sort();
+      295 | 		`);
+    > 296 | 		expect(out.plain).toEqual({ ppid: 45, comm: 'obsidian' });
+          | 		                  ^
+      297 | 		expect(out.weird).toEqual({ ppid: 99, comm: 'my app) (x) y' });
+      298 | 		expect(out.bad).toEqual([null, null]);
+      299 | 		expect(out.tree).toEqual([1, 2, 3]);
+
+      at Object.<anonymous> (test/unit/build/cdpOwned.test.ts:296:21)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 17 passed, 19 total
+Snapshots:   0 total
+Time:        4.153 s

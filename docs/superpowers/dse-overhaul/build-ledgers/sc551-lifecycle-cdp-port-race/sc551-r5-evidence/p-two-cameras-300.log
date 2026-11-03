@@ -1,0 +1,19 @@
+Info: New devbox available: 0.17.5 -> v0.19.0. Please run `devbox version update`.
+Info: Running script "node" on /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r5/r4wt
+[two-cams 23:36:21.738] try 1 A: rc=0 own obsidian pid 2336958; proven port 43735 -> own Obsidian
+[two-cams 23:36:21.739]     A> spawned obsidian pid=2336958 (udd=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r5/two-cams-tmp/obsidian-harness-udd, port=auto, display=:5462)
+[two-cams 23:36:21.739]     A> cdp: port 43735 (reported by our obsidian pid=2336958, browser id verified)
+[two-cams 23:36:21.739]     A> attached: obsidian unknown, vault "demo-vault", window 1440x1100 (layout ready 1069ms after spawn)
+[two-cams 23:36:21.739]     A> all 1 shots written to /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r5/r4wt/visual-harness/shots
+[two-cams 23:36:21.739] try 1 B: rc=2 own obsidian pid 2337118; proven port - -> no proof line
+[two-cams 23:36:21.739]     B> spawned obsidian pid=2337118 (udd=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r5/two-cams-tmp/obsidian-harness-udd, port=auto, display=:5462)
+[two-cams 23:36:21.739]     B> OBSIDIAN-CAMERA environment: port 43735: the listening socket there is not our Obsidian's (our pid 2337118) - another instance owns it
+[two-cams 23:36:36.846] try 2 A: rc=0 own obsidian pid 2337475; proven port 37257 -> own Obsidian
+[two-cams 23:36:36.846]     A> spawned obsidian pid=2337475 (udd=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r5/two-cams-tmp/obsidian-harness-udd, port=auto, display=:5462)
+[two-cams 23:36:36.846]     A> cdp: port 37257 (reported by our obsidian pid=2337475, browser id verified)
+[two-cams 23:36:36.846]     A> attached: obsidian unknown, vault "demo-vault", window 1440x1100 (layout ready 860ms after spawn)
+[two-cams 23:36:36.846]     A> all 1 shots written to /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r5/r4wt/visual-harness/shots
+[two-cams 23:36:36.846] try 2 B: rc=2 own obsidian pid 2337631; proven port - -> no proof line
+[two-cams 23:36:36.846]     B> spawned obsidian pid=2337631 (udd=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc551-r5/two-cams-tmp/obsidian-harness-udd, port=auto, display=:5462)
+[two-cams 23:36:36.846]     B> OBSIDIAN-CAMERA environment: port 37257: the listening socket there is not our Obsidian's (our pid 2337631) - another instance owns it
+[two-cams 23:36:38.347] SUMMARY: 0 wrong-instance camera run(s) in 2 pairs (offset 300 ms)
