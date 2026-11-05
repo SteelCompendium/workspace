@@ -75,3 +75,7 @@ Prior art: `docs/superpowers/dse-overhaul/build-ledgers/sc326-montage-scroll-led
 - r3 rebase round → r1 implementer a59d073234f5bd1a7 (resume; fresh implementer if no transcript), brief `sc490-r3-brief.md`. Scoped re-review → review1 a7e5ad5d9f152a0e1 (non-author).
 - r3 DONE: dse `248e202b` on develop `d689b719` (range-diff 8× `=`); superproject `cbbc217c` on main `0d0f210e` (one `!`: CHANGELOG context + gitlink only). jest 6470/1/256 of 257; lifecycle 51/51 (21+16+9+4+1); e2e 128/128 89/89; shots 592 0 FAIL 161/966, scroll gate 4 contexts; freeze 280/280; parity 0/0/24. Proposal updated. rereview2 → review1 a7e5ad5d9f152a0e1 (scoped: range-diff + spot gates).
 - rereview2 LAND-READY (2026-11-05): dse `248e202b` / develop `d689b719`, superproject `cbbc217c` / main `0d0f210e`; 0 HIGH/MED/LOW. INFO-1 (superproject main moved `0d0f210e` → `f0f5ffef`, docs-only, no CHANGELOG/gitlink touch): **DROP** — trivial rebase at landing (land-stack). Reported land-ready to dispatcher.
+
+## Done (2026-11-05)
+
+- LANDED by dispatcher: dse develop `248e202b`; workspace main `9ab7c810` (changelog `82edf052`, pointer bump `26650786`); dse-verify CURRENT + "Montage board-scroll gate" subsection in `bcfa7a29`. Ledger preserved at `docs/superpowers/dse-overhaul/build-ledgers/sc490-montage-pin-hero-column*`; worktree removed. Not deployed (no release). Ticket closed Done.
