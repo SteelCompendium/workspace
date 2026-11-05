@@ -36,6 +36,14 @@ go under an *Internal* sub-heading.
   identical callouts that each hold two or more blocks of two kinds, a click could leave a card of one kind in the other callout
   showing the clicked value, and that card's next click wrote the callout you had clicked first. Both kinds are checked now.
 
+- **DSE plugin: on a long Montage Test, the hero names stay in view while the rounds scroll sideways (SC-490).**
+  When the board is wider than its card, the "Hero" corner (with the + button that adds a hero) and each hero's
+  name (with its "Log an action" button) now stay fixed at the left edge while the round columns and the Tally
+  slide under them, so you can tell which row is which in round 12 or at the Tally. The pinned column has a solid
+  background (a close match for the card, so nothing shows through) and a thin line down its right edge. Tabbing
+  through the board never leaves a control hidden under it. A board that fits looks exactly as before, and the
+  narrow one-column layout and printing are unchanged.
+
 - **DSE plugin: two quick clicks on identical blocks each count in the block you clicked (SC-544).**
   When a note has three or more blocks that read the same (three counters set to 5, or three callouts each holding
   the same counter) and you clicked + on one and then + on another within about half a second, the second click
