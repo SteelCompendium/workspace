@@ -341,6 +341,19 @@ every card unchanged at rest. Retuned per scheme in E3's own ratio (55% black da
   view; the panel stays revealed while the pointer
   is over the widget (Obsidian's own `</>` button included), and the collapsed one-liner keeps 36px clear
   on its right so its Expand sits beside that button, not under it.
+- Callouts (SC-520): a block that is the first thing in a `> [!note]` callout has its panel over the
+  callout's title row, and Obsidian's `.callout-content { overflow-x: auto }` clipped it in Live Preview
+  and Reading view alike. Three more rules in the same section, all only for a callout whose first content
+  child is a Steel screen chrome block: `.callout-content` gets `overflow: visible` (+ `display: flow-root`,
+  which keeps that box where the scroll container had it; CodeMirror's widget height is right either way);
+  `.callout` becomes the sideways scroller (`overflow-x: auto; overflow-y: hidden`), so wide content in the
+  same callout (a table, a long code line) still scrolls, at the cost that the callout's title scrolls with
+  it; and in Live Preview the panel keeps 36px clear of the widget's right edge (`--dse-chrome-inset: 24px`)
+  so Obsidian's own `</>` button does not cover Collapse. At rest a callout looks as before, except that the
+  card's drop shadow is no longer cut at the content box (up to 9/255 of a colour step, card shadow only) and a callout that
+  held wide content has no scrollbar of its own any more (the callout scrolls instead). A click on a panel
+  button does not open the callout's source: SC-540's interactive-child mark on the block's root
+  (`armClickShield`) already keeps Obsidian's callout click handler off every click inside the root.
 
 **The collapsed one-liner.** Collapse is by attribute (`data-dse-collapsed="on"`), never by
 unmounting, so expanding is instant and no state is lost. The folded form is one line in a
