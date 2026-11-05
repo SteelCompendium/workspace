@@ -1,0 +1,27 @@
+#!/bin/bash
+# SC-543 r1: export dse fb24f8a2 into the private scratch copy, reuse an identical-lock node_modules, build bundle-head.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc543-r1-a2b4a54291fac85c8
+P=/home/scott/code/steelCompendium/worktrees/sc543-lp-tall-ref-twins/draw-steel-elements
+mkdir -p "$S/plugin" "$S/logs" "$S/bundle-head"
+git -C "$P" archive fb24f8a2 | tar -x -C "$S/plugin"
+echo "archive rc=$?"
+cp -a /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc536-r3-rev7k/plugin/node_modules "$S/plugin/node_modules"
+echo "nm rc=$?"
+cd "$S/plugin" || exit 9
+node esbuild.config.mjs production > "$S/logs/build-head.log" 2>&1
+rc=$?
+echo "build rc=$rc"
+cp main.js styles.css manifest.json "$S/bundle-head/"
+cmp main.js "$S/bundle-head/main.js" && echo bundled
+ls -la "$S/bundle-head"
+#!/bin/bash
+# SC-543 r1: npm ci in the scratch plugin copy, then build bundle-head.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc543-r1-a2b4a54291fac85c8
+cd "$S/plugin" || exit 9
+npm ci --ignore-scripts > "$S/logs/npmci.log" 2>&1
+echo "npmci rc=$?"
+node esbuild.config.mjs production > "$S/logs/build-head.log" 2>&1
+rc=$?
+echo "build rc=$rc"
+cp main.js styles.css manifest.json "$S/bundle-head/"
+ls -la "$S/bundle-head"

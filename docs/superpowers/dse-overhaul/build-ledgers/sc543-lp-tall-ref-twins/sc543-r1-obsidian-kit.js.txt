@@ -1,0 +1,154 @@
+// ===================== SC-543 r1 probe kit (throwaway; scratch copy of the lifecycle harness only) =====================
+const S43_LEDGER = '/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc543-lp-tall-ref-twins';
+const S43_FEATURE = fs.readFileSync(path.join(repo, 'src/elements/feature/example.yaml'), 'utf8').trim();
+const s43Feat = (name) => S43_FEATURE.replace('name: Coverage Strike', `name: ${name}`).split('\n');
+/** A feature `name` whose one effect's markdown holds a `~~~ds-feature` fence with `innerLines`. */
+const s43Nest = (name, innerLines) =>
+	fence('ds-feature', ['type: feature', 'feature_type: trait', `name: ${name}`, 'effects:', '  - name: Effect', '    effect: |-', `      ${name} text.`, '', '      ~~~ds-feature', ...innerLines.map((l) => `      ${l}`), '      ~~~']);
+/** A flat feature made tall by many effects (no nesting, no reference). */
+const s43Tall = (name, n) => {
+	const lines = s43Feat(name);
+	const out = lines.slice(0, lines.indexOf('effects:') + 1);
+	for (let i = 0; i < n; i++) out.push(`  - name: Effect ${i + 1}`, `    effect: Tall body paragraph ${i + 1}, long enough to wrap across the card at its usual width so the card grows tall like a nested card does.`);
+	return fence('ds-feature', out);
+};
+const S43_FILLER = Array.from({ length: 70 }, (_, i) => `Filler paragraph ${i + 1}.\n`).join('\n');
+const S43_TWIN = (title, a, b, mid = 'Middle.') => `# ${title}\n\nAbove.\n\n${a}\n\n${mid}\n\n${b}\n\nAfter.\n`;
+Object.assign(FIXTURES, {
+	'Ref.md': `# Ref\n\n${fence('ds-feature', s43Feat('Ref Strike'))}\n`,
+	'Outer.md': `# Outer\n\n${s43Nest('Outer Strike', ['@Ref.md'])}\n`,
+	'Lifecycle/s43-primer.md': `# s43 primer\n\n${fence('ds-feature', ['@Ref.md'])}\n`,
+	'Lifecycle/s43-other.md': '# s43 other\n\nNothing here.\n',
+	'Lifecycle/s43-a-outer2.md': S43_TWIN('s43 a outer twins', fence('ds-feature', ['@Outer.md']), fence('ds-feature', ['@Outer.md'])),
+	'Lifecycle/s43-a1-outer1.md': `# s43 a1 one outer\n\nAbove.\n\n${fence('ds-feature', ['@Outer.md'])}\n\nAfter.\n`,
+	'Lifecycle/s43-b-ref2.md': S43_TWIN('s43 b ref twins', fence('ds-feature', ['@Ref.md']), fence('ds-feature', ['@Ref.md'])),
+	'Lifecycle/s43-c1-outer-space.md': S43_TWIN('s43 c1 outer, one with a trailing space', fence('ds-feature', ['@Outer.md']), fence('ds-feature', ['@Outer.md '])),
+	'Lifecycle/s43-c2-outer-wiki.md': S43_TWIN('s43 c2 outer at-path and wikilink', fence('ds-feature', ['@Outer.md']), fence('ds-feature', ['[[Outer]]'])),
+	'Lifecycle/s43-d1-nest-inline2.md': S43_TWIN('s43 d1 inline nested twins', s43Nest('Inline Outer', s43Feat('Inline Ref')), s43Nest('Inline Outer', s43Feat('Inline Ref'))),
+	'Lifecycle/s43-d2-flat-tall2.md': S43_TWIN('s43 d2 flat tall twins', s43Tall('Flat Tall', 14), s43Tall('Flat Tall', 14)),
+	'Lifecycle/s43-e-outer2-far.md': S43_TWIN('s43 e outer twins far apart', fence('ds-feature', ['@Outer.md']), fence('ds-feature', ['@Outer.md']), S43_FILLER),
+	'Lifecycle/s43-g-sync2.md': S43_TWIN('s43 g sync tall twins', fence('sc543tallsync', ['same body']), fence('sc543tallsync', ['same body'])),
+	'Lifecycle/s43-g-async2.md': S43_TWIN('s43 g async tall twins', fence('sc543tallasync', ['same body']), fence('sc543tallasync', ['same body'])),
+	'Lifecycle/s43-g-async2-diff.md': S43_TWIN('s43 g async tall, bodies differ', fence('sc543tallasync', ['same body']), fence('sc543tallasync', ['same body '])),
+	'Lifecycle/s43-g-asyncshort2.md': S43_TWIN('s43 g async short twins', fence('sc543shortasync', ['same body']), fence('sc543shortasync', ['same body'])),
+});
+
+/** Page-side instrumentation: lookups (refs.resolve), Obsidian's LP code-block widget lifecycle (initDOM/toDOM/destroy), a probe plugin. */
+const S43_PAGE = `(() => {
+	const S = (window.__s43 ??= { t0: performance.now(), ev: [], calls: [], pendingResolve: 0, pendingReads: 0, wid: new WeakMap(), n: 0, g: [] });
+	S.widOf = (w) => { let id = S.wid.get(w); if (!id) { id = ++S.n; S.wid.set(w, id); } return id; };
+	S.now = () => Math.round(performance.now() - S.t0);
+	if (!S.vaultHooked) {
+		S.vaultHooked = true;
+		for (const fn of ['cachedRead', 'read']) {
+			const r = app.vault[fn].bind(app.vault);
+			app.vault[fn] = (f) => { S.pendingReads++; return r(f).finally(() => S.pendingReads--); };
+		}
+	}
+	const refs = app.plugins.plugins['draw-steel-elements'].frameworkV2.services.refs;
+	if (!refs.__s43) {
+		refs.__s43 = true;
+		const real = refs.resolve.bind(refs);
+		refs.resolve = (raw, sp) => { S.calls.push({ raw, sp, t: S.now() }); S.pendingResolve++; return real(raw, sp).finally(() => { S.pendingResolve--; }); };
+	}
+	return true;
+})()`;
+
+function s43Kit(t) {
+	const CM = 'window.__s43lp.view.editor.cm';
+	const K = {
+		CM,
+		async install() {
+			await t.ev(S43_PAGE);
+		},
+		/** Patch Obsidian's LP code-block widget class (taken from a live decoration) once. */
+		async patchWidgetClass() {
+			return t.ev(`(() => {
+				const S = window.__s43; const cm = ${CM}; const EV = cm.constructor;
+				let proto = null;
+				for (const d of cm.state.facet(EV.decorations)) { const set = typeof d === 'function' ? d(cm) : d; if (!set || !set.iter) continue; for (const it = set.iter(); it.value; it.next()) { const w = it.value.spec.widget; if (w && 'code' in w && 'lang' in w && 'lineStart' in w) { proto = Object.getPrototypeOf(w); break; } } if (proto) break; }
+				if (!proto) return 'no code-block widget found';
+				if (proto.__s43) return 'already patched';
+				proto.__s43 = true;
+				const init = proto.initDOM; const toDOM = proto.toDOM; const destroy = proto.destroy;
+				proto.initDOM = function (v) { const id = S.widOf(this); S.ev.push({ t: S.now(), k: 'initDOM', id, line: this.lineStart, lang: this.lang, st: v.scrollDOM.scrollTop }); const el = init.call(this, v); el.__s43wid = id; return el; };
+				proto.toDOM = function (v) { const id = S.widOf(this); S.ev.push({ t: S.now(), k: 'toDOM', id, line: this.lineStart, cached: !!this.containerEl, st: v.scrollDOM.scrollTop }); return toDOM.call(this, v); };
+				proto.destroy = function (dom) { const id = S.widOf(this); S.ev.push({ t: S.now(), k: 'destroy', id, line: this.lineStart }); return destroy.call(this, dom); };
+				return 'patched ' + proto.constructor.name;
+			})()`);
+		},
+		evReset: () => t.ev(`(() => { window.__s43.ev = []; window.__s43.calls = []; window.__s43.g = []; return true; })()`),
+		events: () => t.ev(`JSON.parse(JSON.stringify(window.__s43.ev))`),
+		calls: () => t.ev(`window.__s43.calls.length`),
+		frames: () => t.ev(`new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => r(true))))`),
+		async settle(ms = 15000) {
+			const C = `(window.__s43.pendingReads === 0 && window.__s43.pendingResolve === 0)`;
+			await t.waitFor(C, 'lookups settled', ms);
+			await K.frames();
+			await t.sleep(250);
+			await t.waitFor(C, 'lookups settled (2)', ms);
+			await K.frames();
+		},
+		/** Open `rel` in a fresh Live Preview tab leaf (window.__s43lp). `cursor`: null = leave Obsidian's default. */
+		async openLP(rel) {
+			await t.ev(`(async () => { const leaf = app.workspace.getLeaf('tab'); window.__s43lp = leaf; await leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'source', source: false }, active: true }); return true; })()`);
+			await t.waitFor(`window.__s43lp?.view?.file?.path === ${JSON.stringify(rel)} && !!window.__s43lp.view.editor?.cm`, 'LP open');
+		},
+		closeLP: () => t.ev(`(() => { window.__s43lp && window.__s43lp.detach(); window.__s43lp = null; return true; })()`),
+		/** Full measurement of the LP editor. */
+		measure: () =>
+			t.ev(`(() => {
+				const S = window.__s43; const cm = ${CM}; const EV = cm.constructor; const doc = cm.state.doc;
+				const fences = []; let open = null;
+				for (let i = 1; i <= doc.lines; i++) { const l = doc.line(i); if (/^\`\`\`/.test(l.text)) { if (!open) open = l; else { fences.push({ from: open.from, to: l.to, line: open.number - 1 }); open = null; } } }
+				const scR = cm.scrollDOM.getBoundingClientRect();
+				const blk = (pos) => { const b = cm.lineBlockAt(pos); return { from: b.from, to: b.to, top: Math.round(b.top), h: Math.round(b.height), type: Array.isArray(b.type) ? 'composite' : b.type }; };
+				const decos = [];
+				for (const d of cm.state.facet(EV.decorations)) { const set = typeof d === 'function' ? d(cm) : d; if (!set || !set.iter) continue; for (const it = set.iter(); it.value; it.next()) { const w = it.value.spec.widget; if (w && 'code' in w && 'lang' in w) decos.push({ from: it.from, to: it.to, id: S.widOf(w), line: w.lineStart, block: !!it.value.spec.block, hasDom: !!w.containerEl, domConnected: !!(w.containerEl && w.containerEl.isConnected), domId: w.containerEl ? w.containerEl.__s43wid ?? null : null, estH: w.estimatedHeight }); } }
+				const embeds = Array.from(cm.contentDOM.querySelectorAll('.cm-embed-block')).map((el) => { let pos = null; try { pos = cm.posAtDOM(el); } catch (e) { pos = 'err'; } const r = el.getBoundingClientRect(); return { wid: el.__s43wid ?? null, pos, top: Math.round(r.top - scR.top + cm.scrollDOM.scrollTop), h: Math.round(r.height), onScreen: r.bottom > scR.top && r.top < scR.bottom, dse: el.querySelectorAll('[data-dse-element]').length, text: el.textContent.replace(/\\s+/g, ' ').slice(0, 40) }; });
+				const allRoots = Array.from(cm.dom.querySelectorAll('[data-dse-element]'));
+				const reg = app.plugins.plugins['draw-steel-elements'].viewRegistry;
+				return {
+					scrollTop: Math.round(cm.scrollDOM.scrollTop), scrollHeight: cm.scrollDOM.scrollHeight, clientHeight: cm.scrollDOM.clientHeight,
+					viewport: cm.viewport, visible: cm.visibleRanges.map((r) => [r.from, r.to]), docLen: doc.length,
+					fences: fences.map((f) => ({ ...f, block: blk(f.from), inViewport: f.from < cm.viewport.to && f.to > cm.viewport.from })),
+					decos, embeds,
+					dseRoots: allRoots.length, dseTop: allRoots.filter((r) => !r.parentElement.closest('[data-dse-element]')).length,
+					docRootsTop: Array.from(document.querySelectorAll('[data-dse-element]')).filter((r) => !r.parentElement.closest('[data-dse-element]')).length,
+					lookups: S.calls.length, raws: S.calls.map((c) => c.raw),
+					sel: cm.state.selection.main.head, focus: cm.hasFocus,
+				};
+			})()`),
+		scrollTo: (y) => t.ev(`(() => { ${CM}.scrollDOM.scrollTop = ${y}; return true; })()`),
+		scrollToBottom: () => t.ev(`(() => { const s = ${CM}.scrollDOM; s.scrollTop = s.scrollHeight; return true; })()`),
+		/** CM scrollIntoView effect (no selection change): position `pos` at the top. */
+		scrollPos: (pos) => t.ev(`(() => { const cm = ${CM}; cm.dispatch({ effects: cm.constructor.scrollIntoView(${pos}, { y: 'start', yMargin: 40 }) }); return true; })()`),
+		async shot(name) {
+			const f = await t.shot(`s43-${name}`);
+			const dest = path.join(S43_LEDGER, name);
+			fs.copyFileSync(f, dest);
+			fs.unlinkSync(f);
+			try { fs.rmdirSync(path.dirname(f)); } catch { /* not empty */ }
+			return dest;
+		},
+		/** Settle, scroll a few times (CM settles its height map), settle. */
+		async steady() {
+			await K.settle();
+			for (let i = 0; i < 3; i++) { await K.frames(); await t.sleep(150); }
+			await K.settle();
+		},
+	};
+	return K;
+}
+
+/** Probe plugin (plugin-free control): a code block processor drawing a fixed-height tall div, sync or after an await. */
+const S43_PROBE_PLUGIN = `
+const { Plugin } = require('obsidian');
+module.exports = class extends Plugin {
+	onload() {
+		const log = (k, el, src) => { const S = (window.__s43 ??= { ev: [], calls: [], g: [] }); (S.g ??= []).push({ k, src: src.trim(), t: Math.round(performance.now()) }); };
+		this.registerMarkdownCodeBlockProcessor('sc543tallsync', (src, el) => { log('sync', el, src); const d = el.createDiv({ cls: 'sc543-tall', text: 'SYNC TALL ' + src }); d.style.height = '1800px'; d.style.border = '4px solid gray'; });
+		this.registerMarkdownCodeBlockProcessor('sc543tallasync', async (src, el) => { log('async', el, src); await new Promise((r) => setTimeout(r, 120)); const d = el.createDiv({ cls: 'sc543-tall', text: 'ASYNC TALL ' + src }); d.style.height = '1800px'; d.style.border = '4px solid gray'; });
+		this.registerMarkdownCodeBlockProcessor('sc543shortasync', async (src, el) => { log('short', el, src); await new Promise((r) => setTimeout(r, 120)); const d = el.createDiv({ cls: 'sc543-tall', text: 'ASYNC SHORT ' + src }); d.style.height = '300px'; d.style.border = '4px solid gray'; });
+	}
+};`;

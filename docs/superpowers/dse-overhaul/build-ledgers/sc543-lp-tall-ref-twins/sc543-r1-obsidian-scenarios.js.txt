@@ -1,0 +1,95 @@
+	// ===================== SC-543 r1 probes (throwaway; never committed) =====================
+	{
+		id: 'S43-FRESH',
+		async run(t) {
+			await t.ev(`(async () => { const leaf = app.workspace.getLeaf('tab'); await leaf.setViewState({ type: 'markdown', state: { file: 'Lifecycle/s43-other.md', mode: 'preview' }, active: true }); for (const type of ['markdown', 'dse-sidebar']) for (const l of app.workspace.getLeavesOfType(type)) if (l !== leaf) l.detach(); return true; })()`);
+			const K = s43Kit(t);
+			await K.install();
+			await K.openLP('Lifecycle/s43-primer.md');
+			await t.waitFor(`${K.CM}.contentDOM.querySelectorAll('.cm-embed-block').length >= 1`, 'primer widget');
+			await K.settle();
+			const p = await K.patchWidgetClass();
+			await K.closeLP();
+			// probe plugin (plugin-free control)
+			const pd = path.join(vault, '.obsidian', 'plugins', 'sc543-probe');
+			fs.mkdirSync(pd, { recursive: true });
+			fs.writeFileSync(path.join(pd, 'main.js'), S43_PROBE_PLUGIN);
+			fs.writeFileSync(path.join(pd, 'manifest.json'), JSON.stringify({ id: 'sc543-probe', name: 'sc543 probe', version: '0.0.1', minAppVersion: '1.0.0', description: 'throwaway', author: 'x', isDesktopOnly: false }));
+			await t.ev(`(async () => { await app.plugins.loadManifests(); await app.plugins.enablePlugin('sc543-probe'); return !!app.plugins.plugins['sc543-probe']; })()`);
+			return `one fresh leaf; ${p}; probe plugin ${await t.ev(`!!app.plugins.plugins['sc543-probe']`)}`;
+		},
+	},
+	{
+		id: 'S43-CASES',
+		async run(t) {
+			const K = s43Kit(t);
+			await K.install();
+			const only = (process.env.S43_CASES ?? '').split(',').filter(Boolean);
+			const CASES = [
+				['a', 'Lifecycle/s43-a-outer2.md', { shots: true }],
+				['a1', 'Lifecycle/s43-a1-outer1.md', {}],
+				['b', 'Lifecycle/s43-b-ref2.md', { shots: true }],
+				['c1', 'Lifecycle/s43-c1-outer-space.md', {}],
+				['c2', 'Lifecycle/s43-c2-outer-wiki.md', {}],
+				['d1', 'Lifecycle/s43-d1-nest-inline2.md', {}],
+				['d2', 'Lifecycle/s43-d2-flat-tall2.md', {}],
+				['e', 'Lifecycle/s43-e-outer2-far.md', {}],
+				['g-sync', 'Lifecycle/s43-g-sync2.md', {}],
+				['g-async', 'Lifecycle/s43-g-async2.md', { shots: true }],
+				['g-async-diff', 'Lifecycle/s43-g-async2-diff.md', {}],
+				['g-short', 'Lifecycle/s43-g-asyncshort2.md', {}],
+				['f-top', 'Lifecycle/s43-a-outer2.md', { cursor: 'top' }],
+				['f-mid', 'Lifecycle/s43-a-outer2.md', { cursor: 'mid' }],
+				['f-after', 'Lifecycle/s43-a-outer2.md', { cursor: 'after', scroll: true }],
+				['f-in1', 'Lifecycle/s43-a-outer2.md', { cursor: 'in1' }],
+				['f-in2', 'Lifecycle/s43-a-outer2.md', { cursor: 'in2', scroll: true }],
+			].filter(([id]) => !only.length || only.includes(id));
+			const brief = (m) => ({ st: m.scrollTop, sh: m.scrollHeight, vp: [m.viewport.from, m.viewport.to], fences: m.fences.map((f) => `${f.from}-${f.to} top${f.block.top} h${f.block.h} ${f.inViewport ? 'inVP' : 'outVP'}`), decos: m.decos.map((d) => `#${d.id}@${d.from} dom:${d.hasDom ? (d.domConnected ? 'conn' : 'detached') : 'none'}`), embeds: m.embeds.map((e) => `w#${e.wid}@${e.pos} top${e.top} h${e.h}${e.onScreen ? ' ON' : ''} dse${e.dse}`), dseTop: m.dseTop, lookups: m.lookups });
+			const res = {};
+			for (const [id, rel, o] of CASES) {
+				const r = { rel, phases: {} };
+				try {
+					await K.evReset();
+					await K.openLP(rel);
+					await t.waitFor(`${K.CM}.contentDOM.querySelectorAll('.cm-embed-block').length >= 1`, 'first widget', 10000);
+					await K.steady();
+					let m = await K.measure();
+					r.phases.settle = brief(m);
+					r.full = m;
+					const f2 = m.fences[1];
+					if (o.cursor) {
+						const pos = await t.ev(`(() => { const d = ${K.CM}.state.doc.toString(); return { top: 0, mid: d.indexOf('Middle.'), after: d.indexOf('After.'), in1: ${m.fences[0].from} + 18, in2: ${f2.from} + 18 }[${JSON.stringify(o.cursor)}]; })()`);
+						await t.ev(`(() => { const cm = ${K.CM}; cm.focus(); cm.dispatch({ selection: { anchor: ${'${pos}'} }, scrollIntoView: ${o.scroll ? 'true' : 'false'} }); return true; })()`.replace('${pos}', String(pos)));
+						await K.steady();
+						const mc = await K.measure();
+						r.phases.cursor = { pos, focus: mc.focus, ...brief(mc) };
+						if (o.cursor === 'in1' || o.cursor === 'mid') r.shotCursor = await K.shot(`sc543-r1-shot-${id}.png`);
+					}
+					if (o.shots) r.shotTop = await K.shot(`sc543-r1-shot-${id}-block1.png`);
+					await K.scrollPos(f2.from);
+					await K.steady();
+					m = await K.measure();
+					r.phases.block2 = brief(m);
+					r.fullBlock2 = m;
+					if (o.shots) r.shotB2 = await K.shot(`sc543-r1-shot-${id}-block2.png`);
+					await K.scrollToBottom();
+					await K.steady();
+					r.phases.bottom = brief(await K.measure());
+					await K.scrollTo(0);
+					await K.steady();
+					r.phases.top = brief(await K.measure());
+					r.g = await t.ev(`JSON.parse(JSON.stringify(window.__s43.g ?? []))`);
+					r.events = (await K.events()).map((e) => `${e.t} ${e.k} #${e.id} L${e.line}${e.cached !== undefined ? (e.cached ? ' cached' : ' new') : ''}${e.st !== undefined ? ' st' + e.st : ''}`);
+				} catch (e) {
+					r.error = e instanceof Error ? e.message : String(e);
+					try { r.atError = brief(await K.measure()); } catch { /* */ }
+				}
+				await K.closeLP();
+				res[id] = r;
+				console.log(`S43-CASE ${id} ` + JSON.stringify({ phases: r.phases, error: r.error, atError: r.atError, g: r.g, shots: [r.shotTop, r.shotB2, r.shotCursor].filter(Boolean) }));
+				console.log(`S43-EVENTS ${id} ` + JSON.stringify(r.events));
+				console.log(`S43-FULL ${id} ` + JSON.stringify({ settle: r.full, block2: r.fullBlock2 }));
+			}
+			return Object.entries(res).map(([id, r]) => `${id}: ${r.error ? 'ERR ' + r.error : Object.entries(r.phases).map(([p, b]) => `${p}=${b.embeds.length}w/${b.lookups}lk`).join(' ')}`).join(' | ');
+		},
+	},

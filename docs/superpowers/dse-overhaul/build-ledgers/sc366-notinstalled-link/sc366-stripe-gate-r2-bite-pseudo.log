@@ -1,0 +1,24 @@
+FAIL dom test/dom/theme/notInstalledLinkColour.test.ts
+  ● SC-366 — the ds-scc degrade cards have no left stripe › no rule on the card roots draws a stripe by other means: an inset box-shadow or a ::before / ::after bar
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /::?(before|after)\b/
+    Received string:      ".dse-ref-notice::before"
+
+      83 | 		for (const r of cardRules) {
+      84 | 			expect(r.body).not.toMatch(/box-shadow:[^;]*\binset\b/);
+    > 85 | 			expect(r.sel).not.toMatch(/::?(before|after)\b/);
+         | 			                  ^
+      86 | 		}
+      87 | 	});
+      88 | });
+
+      at Object.<anonymous> (test/dom/theme/notInstalledLinkColour.test.ts:85:22)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 5 passed, 6 total
+Snapshots:   0 total
+Time:        1.699 s
+Ran all test suites matching test/dom/theme/notInstalledLinkColour.test.ts.
+GATE-RC=1

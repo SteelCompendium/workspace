@@ -66,3 +66,8 @@ Owner decisions:
 - stripe scoped confirm: APPROVE, 0 HIGH/MED/LOW, INFO-4 (pseudo check also trips on descendant ::after rules) -> DROP, loud failure, none exist today.
 - LAND-READY (stripe): dse sc366-stripe-remove @ 8d890f9 on develop 95981f1; superproject 76c24a2 on origin/main 383ec3f. Ask posted to Scott (can it close; offer ticket for remaining left stripes).
 - 2026-10-21 LANDED (stripe): dse develop 8d890f9, workspace merge 0124590; worktree sc366-stripe-remove removed. Ticket stays In Progress + Needs Review awaiting Scott: close? + ticket for remaining left stripes?
+
+Scott ruling, 2026-11-05 00:27Z (comment d4a5573c), verbatim:
+> "Looks good without the left-stripe. I dont want to deal with the other left stripes in this ticket - make a new one if we need to (todo, in the DSE 7.0.0 release)."
+Owner: close SC-366 (Done); file a Todo ticket in project DSE 7.0.0 for the remaining left stripes.
+- 2026-11-05 CLOSED: SC-366 Done, labels [DSE Plugin]. Follow-up SC-558 filed (Todo, project DSE 7.0.0) for the remaining left stripes. No code this round.

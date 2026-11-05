@@ -125,3 +125,7 @@ LAND-READY. Ask to Scott: eyeball the two new by-SCC cards (they become frozen).
 
 ### LANDED 2026-10-21
 dse develop bc4a0c5, workspace merge d5f77e1, freeze 276 -> 280 (dispatcher). Ticket left In Progress + Needs Review for the non-blocking cards-look-right ask; Scott closes.
+
+### Scott ruling 2026-11-05 00:28Z (verbatim)
+> These looks right
+Answers the cards-look-right ask. Ticket closed Done.

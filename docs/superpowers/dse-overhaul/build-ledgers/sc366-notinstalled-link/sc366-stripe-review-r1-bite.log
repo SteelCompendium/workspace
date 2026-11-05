@@ -1,0 +1,54 @@
+=== mutation: none
+Test Suites: 1 passed, 1 total
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        1.29 s, estimated 3 s
+Ran all test suites matching test/dom/theme/notInstalledLinkColour.test.ts.
+JEST_RC[none]=0
+RESTORED_BYTE_CLEAN[none]
+=== mutation: restore-border-left
+ styles-source.css | 1 +
+ 1 file changed, 1 insertion(+)
+FAIL dom test/dom/theme/notInstalledLinkColour.test.ts
+  ● SC-366 — the ds-scc degrade cards have no left stripe › no rule on the card roots declares a left border or an inline-start border
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /border-(left|inline-start)\b/
+    Received string:      "
+    	background-color: var(--background-secondary);
+    	border: 1px solid var(--background-modifier-border);
+    	border-left: 3px solid var(--color-blue);
+    	border-radius: var(--radius-m);
+    	padding: var(--size-4-3);
+    	margin: var(--size-4-2) 0;
+    "
+
+      76 | 	test('no rule on the card roots declares a left border or an inline-start border', () => {
+      77 | 		for (const r of cardRules) {
+    > 78 | 			expect(r.body).not.toMatch(/border-(left|inline-start)\b/);
+         | 			                   ^
+      79 | 		}
+      80 | 	});
+      81 | });
+
+      at Object.<anonymous> (test/dom/theme/notInstalledLinkColour.test.ts:78:23)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 4 passed, 5 total
+Snapshots:   0 total
+Time:        1.211 s
+Ran all test suites matching test/dom/theme/notInstalledLinkColour.test.ts.
+JEST_RC[restore-border-left]=1
+RESTORED_BYTE_CLEAN[restore-border-left]
+=== mutation: inset-shadow
+ styles-source.css | 1 +
+ 1 file changed, 1 insertion(+)
+Test Suites: 1 passed, 1 total
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        1.246 s
+Ran all test suites matching test/dom/theme/notInstalledLinkColour.test.ts.
+JEST_RC[inset-shadow]=0
+RESTORED_BYTE_CLEAN[inset-shadow]
+PORCELAIN=[]

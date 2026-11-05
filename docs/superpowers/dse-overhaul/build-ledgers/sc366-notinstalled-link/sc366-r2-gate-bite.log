@@ -1,0 +1,41 @@
+FAIL dom test/dom/theme/notInstalledLinkColour.test.ts
+  ● SC-366 — not-installed card link is in the in-card link colour family › rest rule carries `a.dse-ref-web-card__link` under the steel / not-print gate
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value: "[data-dse-theme='steel']:not([data-dse-print=\"on\"]) a.dse-ref-web-card__link"
+    Received array: ["[data-dse-theme='steel']:not([data-dse-print=\"on\"]) .dse-feature a", "[data-dse-theme='steel']:not([data-dse-print=\"on\"]) .dse-sb a", "[data-dse-theme='steel']:not([data-dse-print=\"on\"]) .dse-fb a", "[data-dse-theme='steel']:not([data-dse-print=\"on\"]) .dse-section__body a", "[data-dse-theme='steel']:not([data-dse-print=\"on\"]) .dse-card a"]
+
+      45 |
+      46 | 	test('rest rule carries `a.dse-ref-web-card__link` under the steel / not-print gate', () => {
+    > 47 | 		expect(selectorsOf(false)).toContain(`${GATE} a.dse-ref-web-card__link`);
+         | 		                           ^
+      48 | 	});
+      49 |
+      50 | 	test(':hover rule carries `a.dse-ref-web-card__link:hover` under the steel / not-print gate', () => {
+
+      at Object.<anonymous> (test/dom/theme/notInstalledLinkColour.test.ts:47:30)
+
+  ● SC-366 — not-installed card link is in the in-card link colour family › :hover rule carries `a.dse-ref-web-card__link:hover` under the steel / not-print gate
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value: "[data-dse-theme='steel']:not([data-dse-print=\"on\"]) a.dse-ref-web-card__link:hover"
+    Received array: ["[data-dse-theme='steel']:not([data-dse-print=\"on\"]) .dse-feature a:hover", "[data-dse-theme='steel']:not([data-dse-print=\"on\"]) .dse-sb a:hover", "[data-dse-theme='steel']:not([data-dse-print=\"on\"]) .dse-fb a:hover", "[data-dse-theme='steel']:not([data-dse-print=\"on\"]) .dse-section__body a:hover", "[data-dse-theme='steel']:not([data-dse-print=\"on\"]) .dse-card a:hover"]
+
+      49 |
+      50 | 	test(':hover rule carries `a.dse-ref-web-card__link:hover` under the steel / not-print gate', () => {
+    > 51 | 		expect(selectorsOf(true)).toContain(`${GATE} a.dse-ref-web-card__link:hover`);
+         | 		                          ^
+      52 | 	});
+      53 | });
+      54 |
+
+      at Object.<anonymous> (test/dom/theme/notInstalledLinkColour.test.ts:51:29)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 1 passed, 3 total
+Snapshots:   0 total
+Time:        0.703 s, estimated 1 s
+Ran all test suites matching test/dom/theme/notInstalledLinkColour.test.ts.
+GATE_RC=1
