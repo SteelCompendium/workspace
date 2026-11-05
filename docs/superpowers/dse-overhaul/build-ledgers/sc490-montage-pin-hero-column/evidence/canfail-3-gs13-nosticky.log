@@ -1,0 +1,13 @@
+
+> draw-steel-elements@7.0.0 obsidian-lifecycle
+> npm run build-no-check && node visual-harness/obsidian-lifecycle.mjs --only=G-S13
+
+
+> draw-steel-elements@7.0.0 build-no-check
+> node esbuild.config.mjs production
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.0, display :162, port 43779, 1 scenario(s)
+OBSIDIAN-LIFECYCLE G-S13 FAIL: block A (mid-scroll): the hero column is not pinned at the frame's left edge before any write: {"attr":"on","pos":"relative","off":-699} [shot /tmp/dse-obsidian-lifecycle-3grDVB/shots/G-S13-FAIL.png]
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-3grDVB
+OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed

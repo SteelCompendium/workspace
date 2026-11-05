@@ -1,0 +1,56 @@
+
+MONTAGE BOARD CLIPS INSTEAD OF SCROLLING — fine pointer, 14 rounds, 900px pane:
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Talin, round 9: failure with Navigate — edit in Talin r9: 3.5px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Talin, round 8: success with Track — edit in Talin r8: 86.7px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Talin, round 7: success with Navigate — edit in Talin r7: 98.9px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Talin, round 6: success with Track — edit in Talin r6: 99.1px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Talin, round 5: assist with Navigate — edit in Talin r5: 99.3px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Talin, round 1: success with Navigate. Note: Took the long w in Talin r1: 45.0px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Yenna, round 9: success with Persuade — edit in Yenna r9: 3.5px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Yenna, round 8: assist with Lead — edit in Yenna r8: 86.7px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Yenna, round 7: failure with Persuade — edit in Yenna r7: 98.9px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Yenna, round 6: success with Lead — edit in Yenna r6: 99.1px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Yenna, round 5: failure with Persuade — edit in Yenna r5: 99.3px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Yenna, round 1: assist with Persuade — edit in Yenna r1: 45.0px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Osric, round 9: success with Climb — edit in Osric r9: 3.5px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Osric, round 8: failure with Climb — edit in Osric r8: 86.7px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Osric, round 7: success with Climb — edit in Osric r7: 98.9px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Osric, round 6: success with Climb — edit in Osric r6: 99.1px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Osric, round 5: success with Climb. Note: Took the long way  in Osric r5: 99.3px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Osric, round 1: failure with Climb — edit in Osric r1: 45.0px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Bram, round 9: success with Lift — edit in Bram r9: 3.5px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Bram, round 8: success with Endurance — edit in Bram r8: 86.7px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Bram, round 7: assist with Lift. Note: Took the long way rou in Bram r7: 98.9px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Bram, round 6: failure with Endurance — edit in Bram r6: 99.1px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Bram, round 5: success with Lift — edit in Bram r5: 99.3px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Bram, round 1: success with Lift — edit in Bram r1: 45.0px of its left edge lies under the 99.2px pinned hero column
+  … and 6 more
+See styles-source.css → .dse-mt__board (board frame + banding, decoration tier: overflow-x must be auto; the SC-490 pinned hero column: .dse-mt__board[data-overflow='on'] > .dse-mt__board-name / -corner) and BoardView.ts (the track list: Tally track max-content; trackOverflow's data-overflow measurement; the focusin handler that keeps a Tab-focused cell fully in view and right of the pinned column).
+
+MONTAGE BOARD CLIPS INSTEAD OF SCROLLING — coarse pointer, 14 rounds, 900px pane:
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Talin, round 11: failure with Navigate — edit in Talin r11: 93.1px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Talin, round 10: success with Track. Note: Took the long way in Talin r10: 99.3px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Talin, round 7: success with Navigate — edit in Talin r7: 98.9px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Talin, round 6: success with Track — edit in Talin r6: 99.1px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Talin, round 5: assist with Navigate — edit in Talin r5: 99.3px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Talin, round 2: failure with Track — edit in Talin r2: 98.8px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Talin, round 1: success with Navigate. Note: Took the long w in Talin r1: 99.0px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Yenna, round 11: success with Persuade — edit in Yenna r11: 93.1px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Yenna, round 10: success with Lead — edit in Yenna r10: 99.3px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Yenna, round 7: failure with Persuade — edit in Yenna r7: 98.9px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Yenna, round 6: success with Lead — edit in Yenna r6: 99.1px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Yenna, round 5: failure with Persuade — edit in Yenna r5: 99.3px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Yenna, round 2: success with Lead — edit in Yenna r2: 98.8px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Yenna, round 1: assist with Persuade — edit in Yenna r1: 99.0px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Osric, round 11: assist with Climb — edit in Osric r11: 93.1px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Osric, round 10: failure with Climb — edit in Osric r10: 99.3px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Osric, round 7: success with Climb — edit in Osric r7: 98.9px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Osric, round 6: success with Climb — edit in Osric r6: 99.1px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Osric, round 5: success with Climb. Note: Took the long way  in Osric r5: 99.3px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Osric, round 2: success with Climb — edit in Osric r2: 98.8px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Osric, round 1: failure with Climb — edit in Osric r1: 99.0px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Bram, round 11: failure with Lift — edit in Bram r11: 93.1px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Bram, round 10: success with Endurance — edit in Bram r10: 99.3px of its left edge lies under the 99.2px pinned hero column
+  TAB FOCUS NOT FULLY VISIBLE — Shift+Tab: Bram, round 7: assist with Lift. Note: Took the long way rou in Bram r7: 98.9px of its left edge lies under the 99.2px pinned hero column
+  … and 11 more
+See styles-source.css → .dse-mt__board (board frame + banding, decoration tier: overflow-x must be auto; the SC-490 pinned hero column: .dse-mt__board[data-overflow='on'] > .dse-mt__board-name / -corner) and BoardView.ts (the track list: Tally track max-content; trackOverflow's data-overflow measurement; the focusin handler that keeps a Tab-focused cell fully in view and right of the pinned column).

@@ -1,0 +1,33 @@
+FAIL dom test/dom/elements/montage.test.ts
+  ● SC-490: the hero column is pinned while the board overflows › CSS contract: each pinned-column fill literal stays inside its theme's --dse-card-bg gradient stops (fails if the token is retuned without them)
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "cell": "name",
+        "ch": 0,
+    -   "ok": true,
+    +   "ok": false,
+        "theme": "light",
+      }
+
+      2157 | 				const lit = rgb(literals(cell)[theme]);
+      2158 | 				lit.forEach((v, ch) => {
+    > 2159 | 					expect({ cell, theme, ch, ok: v >= Math.min(a[ch], b[ch]) && v <= Math.max(a[ch], b[ch]) }).toEqual({ cell, theme, ch, ok: true });
+           | 					                                                                                            ^
+      2160 | 				});
+      2161 | 			}
+      2162 | 		}
+
+      at test/dom/elements/montage.test.ts:2159:98
+          at Array.forEach (<anonymous>)
+      at Object.<anonymous> (test/dom/elements/montage.test.ts:2158:9)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 118 skipped, 119 total
+Snapshots:   0 total
+Time:        1.283 s
+Ran all test suites matching test/dom/elements/montage.test.ts with tests matching "gradient stops".

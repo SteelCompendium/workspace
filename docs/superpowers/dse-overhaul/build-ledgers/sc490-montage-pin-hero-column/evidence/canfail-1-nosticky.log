@@ -1,0 +1,56 @@
+
+MONTAGE BOARD CLIPS INSTEAD OF SCROLLING — fine pointer, 14 rounds, 900px pane:
+  PINNED COLUMN NOT STICKY — at rest: corner is position relative
+  PINNED COLUMN NOT STICKY — at rest: name cell Kira is position relative
+  PINNED COLUMN NOT STICKY — at rest: name cell Bram is position relative
+  PINNED COLUMN NOT STICKY — at rest: name cell Osric is position relative
+  PINNED COLUMN NOT STICKY — at rest: name cell Yenna is position relative
+  PINNED COLUMN NOT STICKY — at rest: name cell Talin is position relative
+  PINNED COLUMN MOVED — mid-scroll (scrollLeft 335px): corner is -335.0px from the frame's left edge
+  PINNED COLUMN MOVED — mid-scroll (scrollLeft 335px): name cell Kira is -335.0px from the frame's left edge
+  PINNED COLUMN MOVED — mid-scroll (scrollLeft 335px): name cell Bram is -335.0px from the frame's left edge
+  PINNED COLUMN MOVED — mid-scroll (scrollLeft 335px): name cell Osric is -335.0px from the frame's left edge
+  PINNED COLUMN MOVED — mid-scroll (scrollLeft 335px): name cell Yenna is -335.0px from the frame's left edge
+  PINNED COLUMN MOVED — mid-scroll (scrollLeft 335px): name cell Talin is -335.0px from the frame's left edge
+  PINNED COLUMN NOT STICKY — mid-scroll: corner is position relative
+  PINNED COLUMN NOT STICKY — mid-scroll: name cell Kira is position relative
+  PINNED COLUMN NOT STICKY — mid-scroll: name cell Bram is position relative
+  PINNED COLUMN NOT STICKY — mid-scroll: name cell Osric is position relative
+  PINNED COLUMN NOT STICKY — mid-scroll: name cell Yenna is position relative
+  PINNED COLUMN NOT STICKY — mid-scroll: name cell Talin is position relative
+  PINNED CELL COVERED — mid-scroll: corner centre hit nothing belonging to nothing in the board
+  PINNED CELL COVERED — mid-scroll: name cell Kira centre hit nothing belonging to nothing in the board
+  PINNED CELL COVERED — mid-scroll: name cell Bram centre hit nothing belonging to nothing in the board
+  PINNED CELL COVERED — mid-scroll: name cell Osric centre hit nothing belonging to nothing in the board
+  PINNED CELL COVERED — mid-scroll: name cell Yenna centre hit nothing belonging to nothing in the board
+  PINNED CELL COVERED — mid-scroll: name cell Talin centre hit nothing belonging to nothing in the board
+  … and 42 more
+See styles-source.css → .dse-mt__board (board frame + banding, decoration tier: overflow-x must be auto; the SC-490 pinned hero column: .dse-mt__board[data-overflow='on'] > .dse-mt__board-name / -corner) and BoardView.ts (the track list: Tally track max-content; trackOverflow's data-overflow measurement; the focusin handler that keeps a Tab-focused cell fully in view and right of the pinned column).
+
+MONTAGE BOARD CLIPS INSTEAD OF SCROLLING — coarse pointer, 14 rounds, 900px pane:
+  PINNED COLUMN NOT STICKY — at rest: corner is position relative
+  PINNED COLUMN NOT STICKY — at rest: name cell Kira is position relative
+  PINNED COLUMN NOT STICKY — at rest: name cell Bram is position relative
+  PINNED COLUMN NOT STICKY — at rest: name cell Osric is position relative
+  PINNED COLUMN NOT STICKY — at rest: name cell Yenna is position relative
+  PINNED COLUMN NOT STICKY — at rest: name cell Talin is position relative
+  PINNED COLUMN MOVED — mid-scroll (scrollLeft 783px): corner is -783.0px from the frame's left edge
+  PINNED COLUMN MOVED — mid-scroll (scrollLeft 783px): name cell Kira is -783.0px from the frame's left edge
+  PINNED COLUMN MOVED — mid-scroll (scrollLeft 783px): name cell Bram is -783.0px from the frame's left edge
+  PINNED COLUMN MOVED — mid-scroll (scrollLeft 783px): name cell Osric is -783.0px from the frame's left edge
+  PINNED COLUMN MOVED — mid-scroll (scrollLeft 783px): name cell Yenna is -783.0px from the frame's left edge
+  PINNED COLUMN MOVED — mid-scroll (scrollLeft 783px): name cell Talin is -783.0px from the frame's left edge
+  PINNED COLUMN NOT STICKY — mid-scroll: corner is position relative
+  PINNED COLUMN NOT STICKY — mid-scroll: name cell Kira is position relative
+  PINNED COLUMN NOT STICKY — mid-scroll: name cell Bram is position relative
+  PINNED COLUMN NOT STICKY — mid-scroll: name cell Osric is position relative
+  PINNED COLUMN NOT STICKY — mid-scroll: name cell Yenna is position relative
+  PINNED COLUMN NOT STICKY — mid-scroll: name cell Talin is position relative
+  PINNED CELL COVERED — mid-scroll: corner centre hit nothing belonging to nothing in the board
+  PINNED CELL COVERED — mid-scroll: name cell Kira centre hit nothing belonging to nothing in the board
+  PINNED CELL COVERED — mid-scroll: name cell Bram centre hit nothing belonging to nothing in the board
+  PINNED CELL COVERED — mid-scroll: name cell Osric centre hit nothing belonging to nothing in the board
+  PINNED CELL COVERED — mid-scroll: name cell Yenna centre hit nothing belonging to nothing in the board
+  PINNED CELL COVERED — mid-scroll: name cell Talin centre hit nothing belonging to nothing in the board
+  … and 42 more
+See styles-source.css → .dse-mt__board (board frame + banding, decoration tier: overflow-x must be auto; the SC-490 pinned hero column: .dse-mt__board[data-overflow='on'] > .dse-mt__board-name / -corner) and BoardView.ts (the track list: Tally track max-content; trackOverflow's data-overflow measurement; the focusin handler that keeps a Tab-focused cell fully in view and right of the pinned column).
