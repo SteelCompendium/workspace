@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the Recoveries popover's −, + and Catch breath buttons keep the plugin's own compact look in Obsidian (SC-526).**
+  With the "Edit Recoveries with a popover" setting on, clicking the Recoveries markers opens a small popover with −, + and Catch
+  breath buttons. In Obsidian those three took Obsidian's own button look: taller (30px instead of about 18px for − and +),
+  with Obsidian's drop shadow, text colour and font size. They now keep the plugin's compact buttons (− and + about 18px,
+  Catch breath about 26px, on desktop and phone) in the card's font, without Obsidian's shadow. Keyboard focus on them
+  shows the plugin's usual teal-cyan ring instead of Obsidian's grey halo.
+
 - **DSE plugin: an edit form opened on one of several identical blocks saves into the block you opened it on (SC-552, SC-549).**
   When a note has two or more blocks that read the same and you clicked + on an upper one and then opened the edit form
   (the pencil) on a lower one within about half a second, Saving the form wrote your edit into the block below the one you
