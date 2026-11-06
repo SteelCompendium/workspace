@@ -167,3 +167,11 @@ when the fix is disabled; viewport restores; hover kept.
 - **2026-11-05 00:28Z, SC-349 comment `f5db4077`:** "sanctioned" — replying to the ask (comment `34b7ebbd`) whose
   options were "sanctioned" = all 40 lines (`rebaseline.txt`) or "skills only" = 8 lines. **This sanctions all 40 lines.** He then set
   `Ready for Agent`. Applies to the 40 names; if the rebase onto current develop moves a different set, the ask must be amended.
+
+## Done (2026-11-06)
+
+- **LANDED** by the dispatcher: dse `develop` `69b5c0d4`, workspace main `ae9ae2c8`, pointer bump `d6f5c8b7`. The 40-line rebaseline was applied
+  (backup `freeze-baseline.sha256.pre-sc349-bak`); `freeze OK (280/280 …)` was verified against the head shots. dse-verify was updated in workspace `6466f8ef`
+  (sanction record quoting `f5db4077`, capture-clip gate subsection, negotiation note marked fixed, new CURRENT block).
+  The ledger is preserved under `docs/superpowers/dse-overhaul/build-ledgers/sc349-skills-print-clip*`, and the worktree is removed.
+- **SC-349 closed Done 2026-11-06 11:32Z** (not deployed). Follow-ups: SC-484 and SC-562 (Backlog).
