@@ -11,7 +11,7 @@ go under an *Internal* sub-heading.
 - **DSE plugin: the Recoveries popover's −, + and Catch breath buttons keep the plugin's own compact look in Obsidian (SC-526).**
   With the "Edit Recoveries with a popover" setting on, clicking the Recoveries markers opens a small popover with −, + and Catch
   breath buttons. In Obsidian those three took Obsidian's own button look: taller (30px instead of about 18px for − and +),
-  with Obsidian's drop shadow, text colour and font. They now keep the plugin's compact buttons (− and + about 18px,
+  with Obsidian's drop shadow, text colour and font size. They now keep the plugin's compact buttons (− and + about 18px,
   Catch breath about 26px, on desktop and phone) in the card's font, without Obsidian's shadow. Keyboard focus on them
   shows the plugin's usual teal-cyan ring instead of Obsidian's grey halo.
 
