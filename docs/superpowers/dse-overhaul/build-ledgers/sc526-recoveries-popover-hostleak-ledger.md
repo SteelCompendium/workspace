@@ -105,3 +105,7 @@ Owner rulings:
 ## r5 re-review (2026-11-06) — reviewer a9604886: LAND-READY at dse 6270e84a / superproject f99741d0; 0 B/H/M/L, 1 INFO
 - INFO-1 (CHANGELOG "in the card's font" is accurate): DROP — no action, accurate.
 - LAND-READY reported to dispatcher. dse-verify proposal: sc526-dse-verify-proposal.md (placeholder <LANDED> only).
+
+## DONE (2026-11-06)
+- LANDED by dispatcher: dse develop 6270e84a; workspace main 3de70f67 (pointer bump 4a469bc1); dse-verify edits applied in workspace 7afc764d; ledger preserved at docs/superpowers/dse-overhaul/build-ledgers/sc526-recoveries-popover-hostleak*; worktree removed.
+- SC-526 closed Done (not deployed — deploy is Scott's call). Follow-up still open: SC-528 (dark-mode −/+ glyph contrast, Backlog).
