@@ -1,0 +1,105 @@
+From 361353aa0c22d5e05ded9fe08278cf87cf4cd84f Mon Sep 17 00:00:00 2001
+From: Scott Tomaszewski <scottTomaszewski@gmail.com>
+Date: Sat, 24 Oct 2026 09:27:17 -0400
+Subject: [PATCH] SC-526 MEASURE (never lands): popover D mount + modal probe
+
+---
+ visual-harness/shoot.mjs | 50 +++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 47 insertions(+), 3 deletions(-)
+
+diff --git a/visual-harness/shoot.mjs b/visual-harness/shoot.mjs
+index 542e2df..265df14 100644
+--- a/visual-harness/shoot.mjs
++++ b/visual-harness/shoot.mjs
+@@ -2544,6 +2544,35 @@ async function probeButtonsInState(page, state, count, props) {
+ // `dist/obsidian-app.css`, still cross-checked against the live installed Obsidian by
+ // `assertHostCopyPinnedToObsidian`. Can-fail re-proven under this formulation:
+ // `sc202-r6bfix-canfail-button.log`.
++// SC-526 MEASURE (never lands). SC526_SITE=hero (default): the gallery hero's marker row, as in SC-513's
++// 1fce912 prototype. SC526_SITE=bar: an appended ds-stamina-bar:recoveries section's marker row.
++const SC526_SITE = process.env.SC526_SITE ?? 'hero';
++async function mountRecoveriesPopoverForSweep(page, bg, problems) {
++	const sel =
++		SC526_SITE === 'bar'
++			? '[data-dse-harness-extra="stamina-bar"] .dse-stamina-rec__pips'
++			: '.dse-harness-section:not([data-dse-harness-extra]) [data-dse-element="hero"] .dse-stamina-rec__pips';
++	const pips = page.locator(sel);
++	if ((await pips.count()) !== 1) {
++		problems.push(`${bg}: expected one Recoveries marker row at ${sel}, found ${await pips.count()}`);
++		return;
++	}
++	await pips.click();
++	try {
++		await page.waitForFunction(
++			() => {
++				const p = document.querySelectorAll('.dse-stamina-rec__pop');
++				return p.length === 1 && [...p[0].querySelectorAll('button')].filter((b) => b.getClientRects().length > 0).length === 3;
++			},
++			null,
++			{ timeout: 5000 },
++		);
++	} catch {
++		problems.push(`${bg}: clicking the Recoveries markers (staminaRecoveryPopover on) opened no popover with its three buttons`);
++	}
++	await page.mouse.move(0, 0);
++}
++
+ async function assertBtnHostLeak(page) {
+ 	const acc = newBtnSweepAcc();
+ 	let kindCount = 0;
+@@ -2552,11 +2581,12 @@ async function assertBtnHostLeak(page) {
+ 			gallery: '1',
+ 			theme: 'steel',
+ 			bg,
+-			prefs: 'authoringControls:true',
++			// SC-526 MEASURE (never lands): popover pref on (the D mount, from SC-513's 1fce912 prototype).
++			prefs: 'authoringControls:true,staminaRecoveryPopover:true',
+ 			sheet: '1',
+ 			// SC-512 - a SECOND roll strip, appended after every gallery section, whose modifier is
+ 			// changed below so its Reset is enabled. This sweep only: no capture URL sends it.
+-			galleryExtra: 'roll',
++			galleryExtra: SC526_SITE === 'bar' ? 'roll,stamina-bar:recoveries' : 'roll',
+ 		});
+ 		await loadBtnHostLeakPage(page, query);
+ 		// SC-202 r6c fold (review LOW-2b): verify the requested `sheet: '1'` actually
+@@ -2572,7 +2602,10 @@ async function assertBtnHostLeak(page) {
+ 		await openRollModifiersForSweep(page, bg, acc.problems);
+ 		// SC-512 - and change a modifier on the extra strip by a real click, so its Reset is ENABLED.
+ 		await changeExtraRollModifierForSweep(page, bg, acc.problems);
++		// SC-526 MEASURE - the D mount, LAST (any later click outside the popover closes it).
++		await mountRecoveriesPopoverForSweep(page, bg, acc.problems);
+ 		const keys = await page.evaluate(tagButtons);
++		console.log(`SC526 ${bg}: popover kinds tagged: ${JSON.stringify(keys.filter((k) => k.includes('dse-stamina-rec__pop')))}`);
+ 		if (keys.length < 20) {
+ 			acc.problems.push(`${bg}: only ${keys.length} buttons found in the gallery — the sweep is blind`);
+ 			continue;
+@@ -2953,7 +2986,7 @@ const HOSTLEAK_MODAL_SCENARIOS = [
+ 		modal: 'StaminaEditModal',
+ 		title: /Stamina$/,
+ 		mustHave: ['dse-sedit__btn', 'dse-stepper__btn', 'dse-btn--danger', 'dse-btn--accent'],
+-		query: { element: 'stamina-bar', fixture: 'default' },
++		query: { element: 'stamina-bar', fixture: 'default', prefs: 'staminaRecoveryPopover:true' },
+ 		open: async (page) => {
+ 			await page.click('[data-dse-element="stamina-bar"] .dse-stamina--clickable', { timeout: 8000 });
+ 		},
+@@ -3142,6 +3175,17 @@ async function assertModalBtnHostLeak(page) {
+ 				(sel) => document.querySelector(`${sel} .dse-modal__title-text`)?.textContent ?? null,
+ 				rootSel,
+ 			);
++			if (sc.id === 'StaminaEditModal') {
++				// SC-526 MEASURE: does the Stamina modal hold a RecoveriesStrip / popover at all?
++				const probe = await page.evaluate(() => ({
++					strips: document.querySelectorAll('.dse-modal .dse-stamina-rec').length,
++					pips: document.querySelectorAll('.dse-modal .dse-stamina-rec__pips').length,
++					pops: document.querySelectorAll('.dse-modal .dse-stamina-rec__pop').length,
++					popBtns: document.querySelectorAll('.dse-modal .dse-stamina-rec__pop-btn, .dse-modal .dse-stamina-rec__pop-cb').length,
++					modalText: (document.querySelector('.dse-modal')?.textContent ?? '').slice(0, 160),
++				}));
++				console.log(`SC526 ${at}: ${JSON.stringify(probe)}`);
++			}
+ 			if (title === null || !sc.title.test(title)) {
+ 				acc.problems.push(`${at}: opened a modal titled ${JSON.stringify(title)}, expected ${sc.title} — the check would be sweeping the wrong modal`);
+ 				continue;
+-- 
+2.34.1
+

@@ -1,0 +1,99 @@
+diff --git a/visual-harness/obsidian-camera.mjs b/visual-harness/obsidian-camera.mjs
+index 84e6d2f..6822e7b 100644
+--- a/visual-harness/obsidian-camera.mjs
++++ b/visual-harness/obsidian-camera.mjs
+@@ -404,6 +404,23 @@ const requireNote = (name) => {
+ 	}
+ };
+ if (runGenericSidebar) for (const e of genericSidebarIds) requireNote(`${e.id}.md`);
++// SC-526 TEMP (uncommitted evidence edit): real-Obsidian captures of the Recoveries popover, dark + light, on the
++// tracker hero and on the ds-stamina-bar element (StaminaEditModal holds no RecoveriesStrip), plus a phone run.
++if (process.env.SC526_SHOTS) {
++	const sites = [
++		{ site: 'tracker', note: 'hero', strip: '[data-dse-element="hero"] .dse-stamina-rec' },
++		{ site: 'bar', note: 'modal-stamina', strip: '[data-dse-element="stamina-bar"] .dse-stamina-rec' },
++	];
++	modalShots = [];
++	for (const bg of ['dark', 'light']) {
++		for (const st of sites) {
++			modalShots.push({ id: `sc526-${st.site}`, note: st.note, trigger: `${st.strip}__pips`, strip: st.strip, ready: '.dse-stamina-rec__pop', pref: ['staminaRecoveryPopover', true], bg, popover: true });
++		}
++	}
++	if (process.env.SC526_PHONE) {
++		modalShots.push({ id: 'sc526-tracker-phone', note: 'hero', trigger: '[data-dse-element="hero"] .dse-stamina-rec__pips', strip: '[data-dse-element="hero"] .dse-stamina-rec', ready: '.dse-stamina-rec__pop', pref: ['staminaRecoveryPopover', true], bg: 'dark', popover: true, phone: true });
++	}
++}
+ if (runModals) for (const m of modalShots) requireNote(`${m.note}.md`);
+ if (runCanvas) requireNote(`${CANVAS_SPECIAL_ID}.canvas`);
+ if (!fs.existsSync(path.join(repo, 'main.js'))) {
+@@ -1285,7 +1302,7 @@ async function main() {
+ 			};
+ 			const prefsExpr = `window.app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+ 			for (const m of modalShots) {
+-				const outName = `${m.id}--obsidian-steel-dark`;
++				const outName = `${m.id}--obsidian-steel-${m.bg ?? 'dark'}${process.env.SC526_TAG ? '--' + process.env.SC526_TAG : ''}`;
+ 				const elSel = `document.querySelector('.workspace-leaf.mod-active [data-dse-element]')`;
+ 				try {
+ 					await dismissModals();
+@@ -1298,7 +1315,7 @@ async function main() {
+ 					// dialog root from the live ThemeService (managedModal.ts), so the modal
+ 					// inherits whatever the note's element is already showing.
+ 					await setPluginTheme(elSel, 'steel');
+-					await setChromeBg('dark');
++					await setChromeBg(m.bg ?? 'dark');
+ 					await sleep(300);
+ 					await waitFor(cdp, `!!document.querySelector('.workspace-leaf.mod-active ${m.trigger}')`, {
+ 						what: `modal trigger ${m.trigger}`,
+@@ -1317,6 +1334,42 @@ async function main() {
+ 							throw new Error(`follow-up click ${m.then} not available (${clicked})`);
+ 						}
+ 					}
++					if (m.popover) {
++						await sleep(500);
++						await clearNotices();
++						if (m.phone) {
++							// app.emulateMobile() reloads the app, and the body-level mobile classes collapse the desktop layout in
++							// this window, so put Obsidian's phone classes (`.is-mobile`, `.is-phone`) on the POPOVER only: its buttons then
++							// resolve the host's phone `--input-height` the way a real phone does. Measurement only.
++							await evaluate(cdp, `document.querySelector('.dse-stamina-rec__pop').classList.add('is-mobile', 'is-phone')`);
++							await sleep(500);
++						}
++						const readMetrics = () => evaluate(cdp, `(() => {
++							const pop = document.querySelector('.dse-stamina-rec__pop');
++							const cs0 = (b) => { const cs = getComputedStyle(b); const r = b.getBoundingClientRect(); return { label: b.textContent, disabled: b.disabled, h: cs.height, w: r.width.toFixed(2), fontFamily: cs.fontFamily, fontSize: cs.fontSize, fontWeight: cs.fontWeight, lineHeight: cs.lineHeight, color: cs.color, bgColor: cs.backgroundColor, bgImage: cs.backgroundImage.slice(0, 70), boxShadow: cs.boxShadow.slice(0, 70), display: cs.display, opacity: cs.opacity, whiteSpace: cs.whiteSpace }; };
++							const strip = document.querySelector(${JSON.stringify(m.strip)});
++							const pr = pop.getBoundingClientRect();
++							return {
++								btns: [...pop.querySelectorAll('button')].map(cs0),
++								popBox: [pr.x, pr.y, pr.width, pr.height].map((v) => +v.toFixed(1)),
++								popFont: getComputedStyle(pop).fontFamily + ' ' + getComputedStyle(pop).fontSize,
++								inputHeight: getComputedStyle(pop).getPropertyValue('--input-height').trim(),
++								bodyClass: document.body.className.split(/\\s+/).filter((c) => /^(theme-|is-|mod-)/.test(c)).join(' '),
++								win: [window.innerWidth, window.innerHeight],
++							};
++						})()`);
++						const clipExpr = `(() => { const a = document.querySelector(${JSON.stringify(m.strip)}).getBoundingClientRect(); const b = document.querySelector('.dse-stamina-rec__pop').getBoundingClientRect(); const x0 = Math.max(0, Math.min(a.left, b.left) - 10), y0 = Math.max(0, Math.min(a.top, b.top) - 10), x1 = Math.max(a.right, b.right) + 10, y1 = Math.max(a.bottom, b.bottom) + 10; return { x: x0, y: y0, width: x1 - x0, height: y1 - y0, vh: window.innerHeight, vw: window.innerWidth }; })()`;
++						console.log('SC526METRICS ' + outName + ' ' + JSON.stringify(await readMetrics()));
++						await captureClip(outName, clipExpr, 'sc526 popover open');
++						if (!m.phone) {
++							// the disabled Catch breath (SC-428): force the attribute the product sets, measure + shoot once more
++							await evaluate(cdp, `document.querySelector('.dse-stamina-rec__pop-cb').disabled = true`);
++							await sleep(200);
++							console.log('SC526METRICS ' + outName + '--cbdisabled ' + JSON.stringify(await readMetrics()));
++							await captureClip(outName + '--cbdisabled', clipExpr, 'sc526 popover, Catch breath forced disabled');
++						}
++						continue;
++					}
+ 					await sleep(400); // settle: preview-bar geometry / icon paint
+ 					await clearNotices();
+ 					const themed = await evaluate(cdp, `document.querySelector('.dse-modal')?.dataset.dseTheme ?? '(none)'`);
+@@ -1418,6 +1471,9 @@ async function main() {
+ 					console.log(`FAIL ${outName}: ${String(e)}`);
+ 				} finally {
+ 					await dismissModals().catch(() => {});
++					if (m.phone) {
++						await evaluate(cdp, `document.body.classList.remove('is-phone')`).catch(() => {});
++					}
+ 					if (m.pref) {
+ 						// data.json is git-ignored, but leave no pref churn behind.
+ 						await evaluate(cdp, `${prefsExpr}.set('${m.pref[0]}', ${JSON.stringify(!m.pref[1])})`).catch(
