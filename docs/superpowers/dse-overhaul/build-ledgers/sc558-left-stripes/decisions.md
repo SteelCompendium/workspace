@@ -156,3 +156,8 @@ Mapping to the r1 ask (comment fdf6ab10):
 - LAND-READY 2026-11-10: dse sc558-left-stripes @ 10db67e3 (on develop 2ee2e405), superproject
   8cf38a7f (on fc48a0a1; submodule pointer bump left for wt-finish). rebaseline.txt 78 lines
   (Scott-sanctioned item 5 + item 7). Result comment posted on SC-558.
+- DONE 2026-11-10: dispatcher landed SC-558 — dse develop 10db67e3, workspace main 9ed36292
+  (merge) + 184ddedb (bookkeeping). Sanctioned 78-line rebaseline applied (backup
+  freeze-baseline.sha256.pre-sc558-bak; 280 lines). dse-verify CURRENT jest 6591/1/258 of 259.
+  Ledger preserved at docs/superpowers/dse-overhaul/build-ledgers/sc558-left-stripes/; worktree
+  removed. Ticket set Done. Follow-ups: SC-564 (v2 site stripes, High), SC-571 (kit print cell).
