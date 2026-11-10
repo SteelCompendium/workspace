@@ -14,7 +14,7 @@ go under an *Internal* sub-heading.
   Advancement" options, and the left edge of the error card. They are removed. An ability's action type now shows in the
   small icon beside its name and in its "Main action" / "Maneuver" text, and a power-roll row's tier in its badge (the
   coloured wash behind the row stays). The error card now has a thin frame all the way round in its stage colour (red,
-  orange or blue), and its title takes that colour. A featureblock's "Level N Advancement" group now sits in its own
+  orange or blue), and its title takes that colour, toned a little toward the body text so it stays easy to read. A featureblock's "Level N Advancement" group now sits in its own
   recessed panel with the "Level N Advancement" line as its header. On paper (print and PDF export) the action-type bar
   is gone from statblocks, featureblocks and kits, and the violet bar Obsidian draws on the left of a class or perk quote
   is gone too, so printed pages of those shift by a few pixels. The v2 site is unchanged (SC-564).
