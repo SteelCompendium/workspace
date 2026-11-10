@@ -146,3 +146,12 @@ print bytes).
   at 122117dd (origin/main since moved to 51693653, docs-only). tsc/lint rc 0; lifecycle part 5
   `2/2 ok, 0 failed` (G-S59 green, load 7.4); SC-568 suites alone 71/71. e2e not rerun (6270e84a→
   6153acfe diff = lifecycle harness only). **LAND-READY again.**
+- **DONE (2026-11-10)** — landed by the dispatcher: dse develop `2ee2e405`, workspace main
+  `e680c94c` (merge) + `6f8f9b00` (bookkeeping; dse-verify CURRENT updated per
+  sc435-skill-proposal.md). Ledger preserved at
+  `docs/superpowers/dse-overhaul/build-ledgers/sc435-e2e-minion-pool/`. Worktree removed.
+  SC-435 → Done. Filed from this ticket: SC-566, SC-567, SC-572, SC-573, SC-574 (bugs, markers in
+  tests), SC-568 (jest load timeouts), SC-569 (feature idea). For SC-436/437: reuse
+  `e2e/driver/pool.ts`, `dse.editedFences`, the `minion-pool` MODAL_KINDS entry, the
+  `Initiative/squad.md` / `squad-hurt.md` fixtures; the coverage gate keys (control, kind) across
+  manifests, so reach rows shared with another modal dedupe.
