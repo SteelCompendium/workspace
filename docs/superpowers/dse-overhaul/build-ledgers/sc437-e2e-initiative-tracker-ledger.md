@@ -225,3 +225,9 @@ report any move in host-leak or DOM numbers).
   CURRENT e2e → `199/206 ok, 0 failed, 7 known-bug, coverage: 142/142 pairs` (before any SC-436
   re-count); jest CURRENT → 6765 / 1 skipped. Filed from this ticket: SC-575, SC-576 (High),
   SC-577, SC-578, SC-588, SC-589 (bugs, markers in tests), SC-590 (decision), SC-579 (canceled).
+- **DONE (2026-11-10)** — landed by the dispatcher: dse develop `32441332`, workspace main
+  `5d67d825` (merge) + `8a67dccf` (bookkeeping; dse-verify e2e today line → 199/206, 7 known-bug,
+  142/142; CURRENT jest 6765/1/259 of 260). Ledger preserved at
+  `docs/superpowers/dse-overhaul/build-ledgers/sc437-e2e-initiative-tracker/`. Worktree removed.
+  SC-437 → Done. SC-436 rebases and re-counts. Filed from this ticket: SC-575, SC-576 (High),
+  SC-577, SC-578, SC-588, SC-589 (bugs, markers in tests), SC-590 (decision), SC-579 (canceled).
