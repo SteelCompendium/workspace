@@ -99,9 +99,11 @@ Two non-negotiables drive every component:
   used). No glassmorphism, no backdrop blur — transparency only as 6–12% accent/code
   washes.
 - **Borders & cards.** The workhorse: 1px hairline (12% white) borders, `0.4em` radius,
-  flat at rest. Ability cards add a 3px colored left border keyed to type; the redesign
-  layers steel chrome via the `--fx-*` ornament tokens (metal gradients, bevels,
-  embossed headings, `.sc-crest` heraldic crests).
+  flat at rest. The Draw Steel Elements plugin carries an ability card's type in the
+  crest glyph's silhouette and the usage text, with no colored edge (SC-558); the v2
+  site still draws a 3px colored left border keyed to type on ability cards, which
+  SC-564 tracks for removal. The redesign layers steel chrome via the `--fx-*` ornament
+  tokens (metal gradients, bevels, embossed headings, `.sc-crest` heraldic crests).
 - **Elevation & motion.** Minimal. Cards are flat at rest and **lift on hover**
   (`translateY(-1/-2px)` + soft shadow); hover = teal (text/border/10% wash).
   Transitions 0.15s color / 0.2s lift. **No bounces, no springs, no infinite loops.**
@@ -439,8 +441,11 @@ controversy): users pick how dense/faithful the rendering is, **per part**.
    *"it's become a cliche in the software community because claude agents always include
    it in their UI designs."* Carry state/category through the Steel grammars instead
    (materials, crests/glyph silhouettes, notches, banner grounds, borders-all-around).
-   Existing components that ship one today may stay for now but **will be replaced** —
-   don't copy the pattern into anything new.
+   The Draw Steel Elements plugin ships none (removed in SC-558: the action-type spine,
+   the tier-row and montage-strip stripes, the featureblock advancement rail, the error
+   card's and the statblock's left edges; the error card and the "Level N Advancement"
+   group are framed all round instead). The v2 site's remaining ones are tracked in
+   **SC-564**. Don't copy the pattern into anything new.
 8. **Update this file** when the design language changes (new component system, new
    tokens, a changed rule) — current state + pointers only; effort history goes in
    the plan/spec docs and `reference/design-system/` stays a frozen archive.
