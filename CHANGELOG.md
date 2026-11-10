@@ -8,6 +8,18 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: saving a block's edit form after that same block was changed or deleted elsewhere no longer writes your edit into another block (SC-556).**
+  When a note has two or more blocks that read the same and you had a block's edit form open while that same block was
+  edited or deleted from outside (Sync, another editor, a hand edit), Saving the form could write your edit into one of
+  the identical blocks that was left, one you never opened. Now nothing is saved, a Notice says so ("a change to a block
+  in <note> was not saved — the block changed on disk first"), the form stays open, and the outside change is kept. The
+  Notice shows on every such Save, also when you press Save again within a few seconds. A card's own + and − are not
+  affected, and neither is a form whose block only moved because of an edit above or below it, or a form opened on a card in an embed of one heading or one block of a note (`![[note#Heading]]`, `![[note#^id]]`), also right after pressing + on the card. A form in an embed finds its block by the embed's own link. In a hover preview, or when Obsidian's index of the note is behind a change, it finds the block by its text instead. If the plugin cannot tell which block an embed or preview shows (the same text appears twice, or the block changed before you opened the form), Save writes nothing and shows the same Notice, in a short note as in a long one, and never writes into another block. Limits. Two identical blocks
+  with only blank lines between them: if one is deleted from outside, the plugin cannot tell which, so the form on the
+  upper block saves into the block that is left, and the form on the lower block is refused with the same Notice. And if
+  hundreds of lines changed both above and below the block while the form was open, Save is refused the same way even
+  though the block itself is unchanged: copy your text out and reopen the form.
+
 - **DSE plugin: the coloured left stripes are gone from cards in Obsidian (SC-558).**
   Four places drew a thick coloured bar down the left edge: the action-type bar on ability cards (red, blue, green and so
   on), the tier bars on power-roll rows and on the Montage "Test tiers" strip, the bar beside a featureblock's "Level N
