@@ -1,0 +1,8 @@
+/* SC-558 r1 — statblock role spine, candidate A: DELETE the rule (styles-source.css:3034-3039,
+   `.dse-sb[data-dse-role] { border-left: 3px solid var(--dse-role, var(--dse-rule)); }`).
+   It is DEAD CODE today: `[data-dse-theme='steel'] .dse-sb { border: 1px solid var(--dse-border) }`
+   (styles-source.css:7536-7556) has the SAME specificity (0,2,0) and comes later, so it wins in
+   every combo — screen dark, screen light, print twin and real print. Measured: computed
+   border-left on .dse-sb is `1px solid` neutral, identical to the other three sides, in all
+   100 harness pages x 3 combos. Deleting it moves 0 pixels and 0 frozen bytes.
+   Nothing to inject: this file exists to record the candidate. */

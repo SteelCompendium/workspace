@@ -1,0 +1,15 @@
+/* SC-558 r1 — tier rows, candidate B: remove the stripe AND the left-anchored wash. Rows go
+   flat neutral, separated by their existing hairlines; the tier lives only in the badge
+   (text + silhouette + its own tier-hued outline). The cleanest look, but it FLATTENS the
+   row's background-image, which the parity `tier-row` pair's `bg` rule compares against the
+   site's non-flat wash — a material-class GAP that can never be declared. So B needs the v2
+   site to follow (steel-ability-cards.css:166-168) in the same landing. */
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-pr__row,
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-pr__row[data-tier] {
+	border-left: 0;
+	background-image: none;
+}
+[data-dse-theme='steel'][data-dse-element="montage"]:not([data-dse-print="on"]) .dse-mt .dse-mt__tier-row {
+	border-left: 0;
+	background-image: none;
+}

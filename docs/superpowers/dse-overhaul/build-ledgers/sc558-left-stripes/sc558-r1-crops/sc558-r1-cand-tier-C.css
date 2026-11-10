@@ -1,0 +1,24 @@
+/* SC-558 r1 — tier rows, candidate C: banner grounds. No stripe and no left-anchored fade;
+   each row instead sits on a full-width TOP-TO-BOTTOM tier band (the statblock head-band
+   recipe, 180deg, tier hue 10% -> 3%), so the hue is a ground the whole row shares rather
+   than an edge. Keeps a non-flat background-image, so the parity `bg` rule stays satisfied
+   (it tests flat-vs-non-flat, not gradient direction — SC-322 residual). Badge unchanged.
+   Implementation note: color-mix(var()) behind the @supports gate with static --tw twins. */
+@supports (background: color-mix(in srgb, red 14%, blue)) {
+	[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-pr__row,
+	[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-pr__row[data-tier] {
+		border-left: 0;
+		background-image: linear-gradient(180deg,
+			color-mix(in srgb, var(--t) 11%, transparent),
+			color-mix(in srgb, var(--t) 3%, transparent));
+	}
+	[data-dse-theme='steel'][data-dse-element="montage"]:not([data-dse-print="on"]) .dse-mt .dse-mt__tier-row:not(.dse-mt__tier-row--head) {
+		border-left: 0;
+		background-image: linear-gradient(180deg,
+			color-mix(in srgb, var(--t) 11%, transparent),
+			color-mix(in srgb, var(--t) 3%, transparent));
+	}
+	[data-dse-theme='steel'][data-dse-element="montage"]:not([data-dse-print="on"]) .dse-mt .dse-mt__tier-row--head {
+		border-left: 0;
+	}
+}

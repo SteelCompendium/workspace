@@ -1,0 +1,19 @@
+/* SC-558 r1 — error card, candidate C: border all around in the stage hue (a 1px frame,
+   mixed 60% toward the neutral hairline so it stays a thin semantic edge, not a glow), and
+   the title ink follows the stage. Stage still said in words. */
+.dse-error-card {
+	--dse-ec: var(--text-error);
+	border: 1px solid color-mix(in srgb, var(--dse-ec) 60%, var(--background-modifier-border));
+}
+[data-dse-error-stage="parse"] > .dse-error-card,
+[data-dse-error-stage="schema"] > .dse-error-card {
+	--dse-ec: var(--color-orange);
+	border-left-color: color-mix(in srgb, var(--dse-ec) 60%, var(--background-modifier-border));
+}
+[data-dse-error-stage="reference"] > .dse-error-card {
+	--dse-ec: var(--color-blue);
+	border-left-color: color-mix(in srgb, var(--dse-ec) 60%, var(--background-modifier-border));
+}
+.dse-error-card-title {
+	color: var(--dse-ec);
+}

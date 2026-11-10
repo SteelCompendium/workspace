@@ -1,0 +1,9 @@
+/* SC-558 r1 — featureblock advancement band, candidate A: remove the rail.
+   The "Level N Advancement" head strip (sheen + bottom hairline) already opens the group,
+   and the options under it are each framed cards. Base rule (3550) + Steel colour rule
+   (10526) both go; the 0.75em indent goes with the rail (nothing left to clear). */
+.dse-fb__band--adv,
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-fb__band--adv {
+	border-left: 0;
+	padding-left: 0;
+}

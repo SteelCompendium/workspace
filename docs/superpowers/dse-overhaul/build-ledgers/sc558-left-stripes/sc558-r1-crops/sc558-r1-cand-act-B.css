@@ -1,0 +1,19 @@
+/* SC-558 r1 — action-type spine, candidate B: borders all around. The spine goes; each
+   framed option card takes a 1px outline in its action hue (mixed 40% toward transparent, so
+   it reads as a tinted hairline, the same weight as the card's neighbours' neutral
+   hairlines). Unframed contexts (the kit's signature ability) simply lose the spine — a
+   border around an unframed card would invent a frame. Crest silhouette + usage text still
+   carry the action type; the outline is secondary.
+   Implementation note: color-mix(var()) behind the @supports gate (static fallback:
+   1px var(--dse-metal-faint)). Print: the outline would print as a 1px hue frame. */
+[data-dse-theme='steel'] .dse-feature[data-dse-act]::before {
+	display: none;
+}
+[data-dse-theme='steel'] .dse-feature[data-dse-act] {
+	padding-left: 0;
+}
+[data-dse-theme='steel'] :is(.dse-sb, .dse-fb) .dse-feature__nested > .dse-feature[data-dse-act],
+[data-dse-theme='steel']:not([data-dse-print="on"])[data-dse-element='feature'] .dse-feature__nested > .dse-feature[data-dse-act] {
+	padding-left: 0.85rem;
+	border: 1px solid color-mix(in srgb, var(--dse-act) 40%, transparent);
+}

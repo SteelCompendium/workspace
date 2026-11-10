@@ -1,0 +1,27 @@
+/* SC-558 r1 — featureblock advancement band, candidate B: the v2 site's own recipe
+   (v2 steel-featureblock.css:202-221 `.fb__band--adv` / `.fb__adv-head`): no rail, a 1px
+   role hairline (30%) ACROSS THE TOP of the band, and the sub-head set as a small uppercase
+   label in the role ink. Brings DSE onto the site's design (DSE is the outlier today).
+   Borderline check vs "stripe rotated to the top": it is a 1px divider rule spanning the
+   full width (the same weight as every section hairline), not a 2-3px accent bar.
+   Print: the site prints the top rule at rgba(0,0,0,.35). */
+.dse-fb__band--adv,
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-fb__band--adv {
+	border-left: 0;
+	padding-left: 0;
+	margin-top: 0.85rem;
+	padding-top: 0.55rem;
+	border-top: 1px solid var(--dse-rule);
+}
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-fb__band--adv {
+	border-top-color: color-mix(in srgb, var(--dse-role, var(--dse-role-leader)) 30%, transparent);
+}
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-fb__adv-head {
+	background-image: none;
+	border-bottom: 0;
+	padding: 0 0 0.25rem;
+	text-transform: uppercase;
+	letter-spacing: 0.07em;
+	font-size: var(--dse-fs-label);
+	color: var(--dse-role, var(--dse-role-leader));
+}

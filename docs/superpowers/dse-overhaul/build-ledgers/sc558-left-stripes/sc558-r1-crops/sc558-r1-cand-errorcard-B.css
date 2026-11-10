@@ -1,0 +1,29 @@
+/* SC-558 r1 — error card, candidate B: banner ground. The title becomes a header band
+   across the top of the card (the statblock head-band recipe: a 180deg stage-hue gradient
+   band + a stage-hue hairline under it), card hairline all round. Stage is still said in
+   words; the band hue (red render / orange parse+schema / blue reference) is secondary.
+   Implementation note: color-mix(var()) must sit behind the @supports gate with a static
+   fallback (cssSupportFloor.test.ts). */
+.dse-error-card {
+	--dse-ec: var(--text-error);
+	border-left: 1px solid var(--background-modifier-border);
+	overflow: hidden;
+}
+[data-dse-error-stage="parse"] > .dse-error-card,
+[data-dse-error-stage="schema"] > .dse-error-card {
+	--dse-ec: var(--color-orange);
+	border-left-color: var(--background-modifier-border);
+}
+[data-dse-error-stage="reference"] > .dse-error-card {
+	--dse-ec: var(--color-blue);
+	border-left-color: var(--background-modifier-border);
+}
+.dse-error-card-title {
+	margin: calc(-1 * var(--size-4-3)) calc(-1 * var(--size-4-3)) var(--size-4-2);
+	padding: var(--size-4-2) var(--size-4-3);
+	color: var(--text-normal);
+	background: linear-gradient(180deg,
+		color-mix(in srgb, var(--dse-ec) 30%, transparent),
+		color-mix(in srgb, var(--dse-ec) 8%, transparent));
+	border-bottom: 1px solid color-mix(in srgb, var(--dse-ec) 45%, transparent);
+}

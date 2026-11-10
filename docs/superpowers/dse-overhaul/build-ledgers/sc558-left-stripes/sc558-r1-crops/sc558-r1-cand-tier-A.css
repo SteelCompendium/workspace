@@ -1,0 +1,13 @@
+/* SC-558 r1 — power-roll tier rows (+ the montage "Test tiers" strip), candidate A: remove
+   the 3px tier stripe; keep the tier wash and the badge. The tier is already said twice
+   without hue: the badge TEXT (≤11 / 12–16 / 17+ / crit) and the badge SILHOUETTE (t1 notched
+   left, t2 plain, t3 notched right, crit notched right + doubled inner edge — clip-paths at
+   styles-source.css ~15375-15410). Screen-only rules today, so 0 frozen bytes move.
+   Parity: `tier-row` owns `bg` (site wash non-flat) + `hairline-top` + padding — all kept,
+   and border-left is not a compared property, so no GAP opens. */
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-pr__row {
+	border-left: 0;
+}
+[data-dse-theme='steel'][data-dse-element="montage"]:not([data-dse-print="on"]) .dse-mt .dse-mt__tier-row {
+	border-left: 0;
+}

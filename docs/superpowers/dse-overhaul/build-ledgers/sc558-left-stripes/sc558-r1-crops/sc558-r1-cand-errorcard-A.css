@@ -1,0 +1,11 @@
+/* SC-558 r1 — error card, candidate A: remove the stripe. Hairline all round; the stage is
+   already in the title's words ("failed to render (schema)"). Base layer (Obsidian vars),
+   as today: an error-card root carries no data-dse-theme (pipeline.ts:510-521). */
+.dse-error-card {
+	border-left: 1px solid var(--background-modifier-border);
+}
+[data-dse-error-stage="parse"] > .dse-error-card,
+[data-dse-error-stage="schema"] > .dse-error-card,
+[data-dse-error-stage="reference"] > .dse-error-card {
+	border-left-color: var(--background-modifier-border);
+}

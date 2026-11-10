@@ -1,0 +1,24 @@
+/* SC-558 r1 — featureblock advancement band, candidate C: a sunken well, borders all
+   around. The level group becomes one recessed panel (the .dse-pr / .dse-section frame
+   recipe: 1px --dse-metal-faint all round, --dse-radius, --dse-surface-sunken), with the
+   "Level N Advancement" strip as its own head band — exactly how a power-roll panel opens.
+   Containment says "these options belong to Level N" by shape, with no hue at all. */
+.dse-fb__band--adv,
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-fb__band--adv {
+	border-left: 0;
+	padding-left: 0;
+}
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-fb__band--adv {
+	border: 1px solid var(--dse-metal-faint);
+	border-radius: var(--dse-radius);
+	background: var(--dse-surface-sunken);
+	overflow: hidden;
+	padding-bottom: 0.65rem;
+}
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-fb__band--adv > .dse-fb__adv-head {
+	margin-bottom: 0.65rem;
+}
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-fb__band--adv > :not(.dse-fb__adv-head) {
+	margin-left: 0.65rem;
+	margin-right: 0.65rem;
+}

@@ -1,0 +1,20 @@
+/* SC-558 r1 — action-type spine, candidate C: the crest carries it. The spine goes (as A),
+   and the crest shield's 1.5px metal RIM takes the action hue (the glyph inside is already
+   act-tinted — styles-source.css ~8797), so the colour lives on the heraldic mark beside the
+   name rather than on the card edge. Shape still leads: one glyph silhouette per action
+   type. Screen-only (the crest does not draw in print), so the print delta equals A's.
+   Options with no act crest (featureblock options that carry the SDK emoji icon instead,
+   or none) are unchanged by the rim rule: they keep their "◆ TRAIT"/"◆ ABILITY" eyebrow. */
+[data-dse-theme='steel'] .dse-feature[data-dse-act]::before {
+	display: none;
+}
+[data-dse-theme='steel'] .dse-feature[data-dse-act] {
+	padding-left: 0;
+}
+[data-dse-theme='steel'] :is(.dse-sb, .dse-fb) .dse-feature__nested > .dse-feature[data-dse-act],
+[data-dse-theme='steel']:not([data-dse-print="on"])[data-dse-element='feature'] .dse-feature__nested > .dse-feature[data-dse-act] {
+	padding-left: 0.85rem;
+}
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-feature[data-dse-act] > .dse-head > .dse-crest {
+	background: color-mix(in srgb, var(--dse-act) 78%, var(--dse-metal-bright));
+}

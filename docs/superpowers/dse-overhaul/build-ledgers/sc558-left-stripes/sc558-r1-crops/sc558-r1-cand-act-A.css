@@ -1,0 +1,24 @@
+/* SC-558 r1 — action-type spine on feature cards (SC-101 nested-card frame + the kit's
+   unframed signature ability), candidate A: remove the spine. The framed card (translucent
+   sunken fill, 9px radius, .65rem gap) stays and still separates the options. The action
+   type is already said without hue: the crest SILHOUETTE (sword main / user maneuver / zap
+   triggered / footprints move / circle-dashed none / star trait / skull villain —
+   renderFeature.ts crestIconFor) and the usage chip TEXT ("Main action", "Maneuver",
+   "Triggered action"); in print, where no crest draws, the usage text is in the meta row.
+   Structure tier (reaches print): the base spine (styles-source.css:72) and every lane
+   reservation go. Print: 35 frozen ids / 70 lines move (see report).
+   WARNING — this file is an INJECTION override for crops only. Appended at the end of the
+   sheet, the third rule ties (0,5,0) with the featureblock `flat` mode rule and wins by
+   source order, re-padding flat options (caught by shoot.mjs's print-twin delta gate on
+   featureblock-featstyle-flat). Implement by editing in place instead: :73 content none
+   (or delete :72-80), :7076 -> 0, :7175 and :7243 -> 0.85rem. */
+[data-dse-theme='steel'] .dse-feature[data-dse-act]::before {
+	display: none;
+}
+[data-dse-theme='steel'] .dse-feature[data-dse-act] {
+	padding-left: 0;
+}
+[data-dse-theme='steel'] :is(.dse-sb, .dse-fb) .dse-feature__nested > .dse-feature[data-dse-act],
+[data-dse-theme='steel']:not([data-dse-print="on"])[data-dse-element='feature'] .dse-feature__nested > .dse-feature[data-dse-act] {
+	padding-left: 0.85rem;
+}
