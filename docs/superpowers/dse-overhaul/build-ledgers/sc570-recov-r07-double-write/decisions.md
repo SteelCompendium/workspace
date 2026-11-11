@@ -49,3 +49,7 @@ jest 7262 passed / 1 skipped (css cached; ~7261 / 2 fresh) · lifecycle 55/55 (5
 | r1 diagnosis | orchestration:reviewer (id a57a875bf0ba3e46b, "R1") | `sc570-r1-diagnosis.md` (brief `sc570-r1-brief-diagnosis.md`) — DONE: verdict TEST |
 | r2 implement | orchestration:implementer (id a29a8fe53e0498b46, "I2") | `sc570-r2-impl-report.md` (brief `sc570-r2-brief-impl.md`) — DONE: head `ce4937ef` on `e5b6f9f2`; jest 7286/2 fresh; lifecycle 56/56; e2e 264/269 0 failed 164/164; main.js+styles.css byte-identical to e5b6f9f2 |
 | r3 review | orchestration:reviewer, FRESH identity "R3" (not R1 — R1 prescribed the fix) | `sc570-r3-review.md` (brief `sc570-r3-brief-review.md`) — DONE: LAND-READY, 0 HIGH / 0 MED / 1 LOW (folded) / 4 INFO (dropped) |
+
+## Done
+
+- 2026-11-11: LANDED by dispatcher — dse develop `ce4937ef` (e5b6f9f2..ce4937ef), workspace main `ddee3b5f` (pointer bump `db920132`, bookkeeping `c0cf5cea`); worktree removed; ledger preserved at `docs/superpowers/dse-overhaul/build-ledgers/sc570-recov-r07-double-write/`; dse-verify proposal applied. Landed comment posted and SC-570 moved to **Done** via `linear-post.py --state Done`; state verified Done (completedAt 2026-11-11T21:25:08Z). SC-517 Duplicate of SC-570.
