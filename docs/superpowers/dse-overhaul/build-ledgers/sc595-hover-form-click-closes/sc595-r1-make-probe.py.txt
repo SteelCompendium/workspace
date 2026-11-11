@@ -1,0 +1,18 @@
+# Builds the scratch probe harness: a copy of visual-harness/obsidian-lifecycle.mjs (worktree, dse eaa8742a) with the
+# probe scenario injected first in SCENARIOS. Nothing in the worktree is changed. Usage:
+#   python3 -I sc595-r1-make-probe.py <worktree dse dir>/visual-harness/obsidian-lifecycle.mjs <out .mjs> <worktree dse dir> <dir holding sc595-r1-probe-scenario.mjs>
+# then: devbox run -c <dse> -- npm run build-no-check ; devbox run -c <dse> -- bash run-probe.sh "rv/press-hold,lp/press-hold" out.log <camdir>
+# Trials: rv|lp / press-hold, pencil-only, keyboard, kbd-open, esc, protoA, protoA-cancel, protoA-esc, protoA-bg, protoA2, protoA2-cancel,
+#         protoA2-bg, toggleA, toggleA2, protoB, other-stamina, other-conditions, other-stamina-kbd
+import sys
+src, dst, W, S = sys.argv[1:]
+s = open(src).read()
+def rep(a, b):
+    global s
+    assert s.count(a) == 1, (a, s.count(a))
+    s = s.replace(a, b)
+rep("from '../scripts/cdp-owned.mjs';", f"from '{W}/scripts/cdp-owned.mjs';\nimport {{ makeProbe }} from '{S}/sc595-r1-probe-scenario.mjs';")
+rep("from '../scripts/xvfb-owned.mjs';", f"from '{W}/scripts/xvfb-owned.mjs';")
+rep("const repo = path.dirname(dir);", f"const repo = '{W}';")
+rep("const SCENARIOS = [", "const SCENARIOS = [\n\tmakeProbe({ FIXTURES, COUNTER, fence, sleep }),")
+open(dst, 'w').write(s)

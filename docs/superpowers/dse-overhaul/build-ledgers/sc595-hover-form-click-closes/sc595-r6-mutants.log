@@ -1,0 +1,111 @@
+SC-595 r6 mutants. Head: dse 6725243c on develop c3fd8323 (src identical to r4 a53b0454: only tests and the G-S83 harness changed in r6). Each mutant = one edit (mutant.py in the scratch dir) over the 32 SC-595 jest tests (-t SC-595; 7 files); file restored by git checkout; tree clean after. Unmutated: 32/32 green (the keymap test is now test.each [10],[150] with LITERAL delays: +1 test).
+
+== M1-drop-guard: passed 17 failed 15
+  RED SC-595: the free-heal confirmation opened from a Stamina modal in a hover preview confirm closes only the confirmation: the click never reaches the window and the Stamina modal stays open
+  RED SC-595: the free-heal confirmation opened from a Stamina modal in a hover preview cancel closes only the confirmation: the click never reaches the window and the Stamina modal stays open
+  RED SC-595: the Montage sheet opened from a board in a hover preview a click on the sheet never reaches the window
+  RED SC-595: the Conditions modal opened from a conditions panel in a hover preview a click on the modal never reaches the window
+  RED SC-595: the Stamina modal opened from a bar in a hover preview a click on the modal never reaches the window
+  RED SC-595: the Conditions modal opened from a tracker in a hover preview a click on the modal never reaches the window and the modal stays open
+  RED SC-595: the Conditions modal opened from a tracker in a hover preview "Add condition" redraws its own control inside the click: that click still never reaches the window and the modal stays open
+  RED SC-595: the block edit form opened from a hover preview a click in the raw box and on Save never reaches the window (the popover's hide); the form stays open for the first and the edit is saved by the
+  RED SC-595: the block edit form opened from a hover preview Cancel (a click that closes the form) never reaches the window either; after the guard is gone a click elsewhere does, so the preview can be dis
+  RED SC-595: a modal opened from a hover preview a click inside never reaches a window bubble listener (the popover's hide), a document listener still sees it
+  RED SC-595: a modal opened from a hover preview the click is stopped, never default-prevented: an Obsidian-shaped label.checkbox-container > input still toggles and fires change
+  RED SC-595: a modal opened from a hover preview a modal opened from a modal that is anchored in a preview inherits the anchor (FreeHealConfirmModal)
+  RED SC-595: a modal opened from a hover preview a click on a control the modal REDRAWS in its own click handler (the target is detached when the click reaches the document) never reaches the window
+  RED SC-595: a modal opened from a hover preview the click that CLOSES the modal (Cancel, backdrop shape) never reaches the window; once the guard is gone a click outside does, so the preview can be dismis
+  RED SC-595: a modal opened from a hover preview a nested confirmation: Confirm closes the child; the click never reaches the window and the parent stays open
+== M2-preventDefault: passed 17 failed 15
+  RED SC-595: the free-heal confirmation opened from a Stamina modal in a hover preview confirm closes only the confirmation: the click never reaches the window and the Stamina modal stays open
+  RED SC-595: the free-heal confirmation opened from a Stamina modal in a hover preview cancel closes only the confirmation: the click never reaches the window and the Stamina modal stays open
+  RED SC-595: the Conditions modal opened from a conditions panel in a hover preview a click on the modal never reaches the window
+  RED SC-595: the Stamina modal opened from a bar in a hover preview a click on the modal never reaches the window
+  RED SC-595: the Montage sheet opened from a board in a hover preview a click on the sheet never reaches the window
+  RED SC-595: a modal opened from a hover preview a click inside never reaches a window bubble listener (the popover's hide), a document listener still sees it
+  RED SC-595: a modal opened from a hover preview the click is stopped, never default-prevented: an Obsidian-shaped label.checkbox-container > input still toggles and fires change
+  RED SC-595: a modal opened from a hover preview a modal opened from a modal that is anchored in a preview inherits the anchor (FreeHealConfirmModal)
+  RED SC-595: a modal opened from a hover preview a click on a control the modal REDRAWS in its own click handler (the target is detached when the click reaches the document) never reaches the window
+  RED SC-595: a modal opened from a hover preview the click that CLOSES the modal (Cancel, backdrop shape) never reaches the window; once the guard is gone a click outside does, so the preview can be dismis
+  RED SC-595: a modal opened from a hover preview a nested confirmation: Confirm closes the child; the click never reaches the window and the parent stays open
+  RED SC-595: the Conditions modal opened from a tracker in a hover preview a click on the modal never reaches the window and the modal stays open
+  RED SC-595: the Conditions modal opened from a tracker in a hover preview "Add condition" redraws its own control inside the click: that click still never reaches the window and the modal stays open
+  RED SC-595: the block edit form opened from a hover preview a click in the raw box and on Save never reaches the window (the popover's hide); the form stays open for the first and the edit is saved by the
+  RED SC-595: the block edit form opened from a hover preview Cancel (a click that closes the form) never reaches the window either; after the guard is gone a click elsewhere does, so the preview can be dis
+== M3-drop-repush: passed 27 failed 5
+  RED SC-595: a modal opened from a hover preview keymap scope opened from a click, the popover arms its 10 ms push after the opener has opened the modal: the modal is on top whatever the order of the two r
+  RED SC-595: a modal opened from a hover preview keymap scope opened from a click, the popover arms its 150 ms push after the opener has opened the modal: the modal is on top whatever the order of the two 
+  RED SC-595: a modal opened from a hover preview keymap scope the popover pushes its scope above the modal's at 10 ms: the modal's goes back on top at that same tick, and the popover's is on top again afte
+  RED SC-595: a modal opened from a hover preview keymap scope the popover pushes its scope above the modal's at 150 ms: the modal's goes back on top at that same tick, and the popover's is on top again aft
+  RED SC-595: the block edit form opened from a hover preview Escape closes the form: the popover's keymap scope was pushed above the form's by the opening click, and the form's is put back on top
+== M4-drop-hover-popover-condition: passed 25 failed 7
+  RED SC-595: the Conditions modal opened from a conditions panel in a hover preview control: opened from a panel that is not in a hover preview, a click on the modal reaches the window
+  RED SC-595: the Montage sheet opened from a board in a hover preview control: opened from a board that is not in a hover preview, a click on the sheet reaches the window
+  RED SC-595: the Stamina modal opened from a bar in a hover preview control: opened from a bar that is not in a hover preview, a click on the modal reaches the window
+  RED SC-595: the Conditions modal opened from a tracker in a hover preview control: opened from a tracker that is not in a hover preview, a click on the modal reaches the window
+  RED SC-595: the block edit form opened from a hover preview control: the same form opened from a block that is not in a hover preview: a click inside reaches the window as it always did
+  RED SC-595: a modal opened from a hover preview control: opened from an element that is not in a hover preview, nothing changes: the click reaches the window and no scope is re-pushed
+  RED SC-595: a modal opened from a hover preview control: no anchor at all behaves like a modal outside a preview
+== M5-guard-capture-phase: passed 22 failed 10
+  RED SC-595: the free-heal confirmation opened from a Stamina modal in a hover preview confirm closes only the confirmation: the click never reaches the window and the Stamina modal stays open
+  RED SC-595: the free-heal confirmation opened from a Stamina modal in a hover preview cancel closes only the confirmation: the click never reaches the window and the Stamina modal stays open
+  RED SC-595: the Conditions modal opened from a tracker in a hover preview "Add condition" redraws its own control inside the click: that click still never reaches the window and the modal stays open
+  RED SC-595: a modal opened from a hover preview a click inside never reaches a window bubble listener (the popover's hide), a document listener still sees it
+  RED SC-595: a modal opened from a hover preview the click is stopped, never default-prevented: an Obsidian-shaped label.checkbox-container > input still toggles and fires change
+  RED SC-595: a modal opened from a hover preview after close (and the one task the guard outlives it) the guard is gone: the same container, attached again, lets a click through
+  RED SC-595: a modal opened from a hover preview the click that CLOSES the modal (Cancel, backdrop shape) never reaches the window; once the guard is gone a click outside does, so the preview can be dismis
+  RED SC-595: a modal opened from a hover preview a nested confirmation: Confirm closes the child; the click never reaches the window and the parent stays open
+  RED SC-595: the block edit form opened from a hover preview a click in the raw box and on Save never reaches the window (the popover's hide); the form stays open for the first and the edit is saved by the
+  RED SC-595: the block edit form opened from a hover preview Cancel (a click that closes the form) never reaches the window either; after the guard is gone a click elsewhere does, so the preview can be dis
+== M6-repush-0ms: passed 28 failed 4
+  RED SC-595: a modal opened from a hover preview keymap scope opened from a click, the popover arms its 10 ms push after the opener has opened the modal: the modal is on top whatever the order of the two r
+  RED SC-595: a modal opened from a hover preview keymap scope opened from a click, the popover arms its 150 ms push after the opener has opened the modal: the modal is on top whatever the order of the two 
+  RED SC-595: a modal opened from a hover preview keymap scope the popover pushes its scope above the modal's at 10 ms: the modal's goes back on top at that same tick, and the popover's is on top again afte
+  RED SC-595: a modal opened from a hover preview keymap scope the popover pushes its scope above the modal's at 150 ms: the modal's goes back on top at that same tick, and the popover's is on top again aft
+== M7a-dseOpen-check-only: passed 32 failed 0
+== M7-repush-after-close: passed 30 failed 2
+  RED SC-595: a modal opened from a hover preview keymap scope a child opened from the parent while the parent's re-pushes are still due stays on top: the parent does not bury it
+  RED SC-595: a modal opened from a hover preview keymap scope closed before the deferred re-push runs: nothing is pushed back for the closed modal
+== M8-freeheal-no-anchor: passed 30 failed 2
+  RED SC-595: the free-heal confirmation opened from a Stamina modal in a hover preview confirm closes only the confirmation: the click never reaches the window and the Stamina modal stays open
+  RED SC-595: the free-heal confirmation opened from a Stamina modal in a hover preview cancel closes only the confirmation: the click never reaches the window and the Stamina modal stays open
+== M9-conditions-panel-no-anchor: passed 31 failed 1
+  RED SC-595: the Conditions modal opened from a conditions panel in a hover preview a click on the modal never reaches the window
+== M10-montage-no-anchor: passed 31 failed 1
+  RED SC-595: the Montage sheet opened from a board in a hover preview a click on the sheet never reaches the window
+== M11-contains-not-composedPath: passed 30 failed 2
+  RED SC-595: the Conditions modal opened from a tracker in a hover preview "Add condition" redraws its own control inside the click: that click still never reaches the window and the modal stays open
+  RED SC-595: a modal opened from a hover preview a click on a control the modal REDRAWS in its own click handler (the target is detached when the click reaches the document) never reaches the window
+== M12-guard-removed-synchronously: passed 27 failed 5
+  RED SC-595: the free-heal confirmation opened from a Stamina modal in a hover preview confirm closes only the confirmation: the click never reaches the window and the Stamina modal stays open
+  RED SC-595: the free-heal confirmation opened from a Stamina modal in a hover preview cancel closes only the confirmation: the click never reaches the window and the Stamina modal stays open
+  RED SC-595: the block edit form opened from a hover preview Cancel (a click that closes the form) never reaches the window either; after the guard is gone a click elsewhere does, so the preview can be dis
+  RED SC-595: a modal opened from a hover preview the click that CLOSES the modal (Cancel, backdrop shape) never reaches the window; once the guard is gone a click outside does, so the preview can be dismis
+  RED SC-595: a modal opened from a hover preview a nested confirmation: Confirm closes the child; the click never reaches the window and the parent stays open
+== M13-repush-armed-at-open: passed 30 failed 2
+  RED SC-595: a modal opened from a hover preview keymap scope opened from a click, the popover arms its 10 ms push after the opener has opened the modal: the modal is on top whatever the order of the two r
+  RED SC-595: a modal opened from a hover preview keymap scope opened from a click, the popover arms its 150 ms push after the opener has opened the modal: the modal is on top whatever the order of the two 
+== M14-no-newest-modal-check: passed 31 failed 1
+  RED SC-595: a modal opened from a hover preview keymap scope a child opened from the parent while the parent's re-pushes are still due stays on top: the parent does not bury it
+== M15-no-active-window-check: passed 31 failed 1
+  RED SC-595: a modal opened from a hover preview keymap scope the modal's window is not the active one when the re-push is due: nothing is pushed onto the other window's stack
+== M16-one-delay-only: passed 30 failed 2
+  RED SC-595: a modal opened from a hover preview keymap scope opened from a click, the popover arms its 150 ms push after the opener has opened the modal: the modal is on top whatever the order of the two 
+  RED SC-595: a modal opened from a hover preview keymap scope the popover pushes its scope above the modal's at 150 ms: the modal's goes back on top at that same tick, and the popover's is on top again aft
+== R1-arm-capture: passed 29 failed 3
+  RED SC-595: a modal opened from a hover preview keymap scope opened from a click, the popover arms its 10 ms push after the opener has opened the modal: the modal is on top whatever the order of the two r
+  RED SC-595: a modal opened from a hover preview keymap scope opened from a click, the popover arms its 150 ms push after the opener has opened the modal: the modal is on top whatever the order of the two 
+  RED SC-595: the block edit form opened from a hover preview Escape closes the form: the popover's keymap scope was pushed above the form's by the opening click, and the form's is put back on top
+== R2-only-150: passed 30 failed 2
+  RED SC-595: a modal opened from a hover preview keymap scope opened from a click, the popover arms its 10 ms push after the opener has opened the modal: the modal is on top whatever the order of the two r
+  RED SC-595: a modal opened from a hover preview keymap scope the popover pushes its scope above the modal's at 10 ms: the modal's goes back on top at that same tick, and the popover's is on top again afte
+== R3-guard-never-removed: passed 31 failed 1
+  RED SC-595: a modal opened from a hover preview after close (and the one task the guard outlives it) the guard is gone: the same container, attached again, lets a click through
+== R4-removal-microtask: passed 32 failed 0
+
+Notes
+- M16 (HOVER_HELPER_DELAYS_MS = [10]) is KILLED now: 2 jest reds (the 150 ms ordering test and the 150 ms "popover pushes above the modal" test) AND G-S83 goes red on an M16 bundle (only the new `stamtext` trial: the Stamina modal opened by a real press on the bar's number text, Escape 450 ms later leaves the modal open). See sc595-r6-m16-bundle-G-S83.log. The r4 claim "M16 killed" was wrong at a53b0454: the tests read the production constant (r5 MEDIUM-1).
+- M6 / R2 are killed by the same literal-delay tests (R2 = [150] only).
+- M7a is EQUIVALENT by design (layered defence: the closed modal also leaves previewModals and its timers are cleared); M7 drops all three and is killed.
+- R4 (guard removed by queueMicrotask) is INVISIBLE to jsdom (script-dispatched .click() runs no microtask checkpoint between listeners); G-S83 FAILs it (form Cancel and free-heal Confirm, RV and LP; measured by the r5 reviewer, INFO-3 of the r5 report). Not re-run in G-S83 here: src is unchanged since.
+- r5's R5-R7 (arm on any window click, no splice, no dseOpen check) were judged equivalent / near-equivalent by the r5 reviewer (INFO-4) and are not repeated.

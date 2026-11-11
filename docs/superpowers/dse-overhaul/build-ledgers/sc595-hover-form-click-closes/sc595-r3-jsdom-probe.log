@@ -1,0 +1,13 @@
+### head (worktree src): jest-probe.log
+    Expected number of calls: 0
+    Received number of calls: 1
+    Expected number of calls: 0
+    Received number of calls: 1
+    Expected number of calls: 0
+    Received number of calls: 1
+Tests:       3 failed, 3 total
+RC=1
+### prototype src: jest-proto.log (r3 probes + 4 SC-595 files)
+RC=1
+  ● SC-595: a modal opened from a hover preview › after close the guard is gone: the same container, attached again, lets a click through
+Tests:       1 failed, 207 passed, 208 total

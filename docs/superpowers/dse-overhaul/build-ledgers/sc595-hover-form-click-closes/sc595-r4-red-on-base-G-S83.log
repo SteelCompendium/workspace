@@ -1,0 +1,15 @@
+SC-595 r4: G-S83 (r4 steps; harness of dse head 96f4ce6c + judge early-return) against two bundles. Both RED (exit 1).
+
+=== (1) BASE bundle: eaa8742a src (git archive, scratch build; styles.css sha 5e5ff488...). Every trial dies at the first real click.
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :160, port 46471, 1 scenario(s)
+OBSIDIAN-LIFECYCLE G-S83 FAIL: form rv: a real click in the raw box closed {"popover":false,"modal":false,"modals":0} (preview and form must both stay) | form lp: a real click in the raw box closed {"popover":false,"modal":false,"modals":0} (preview and form must both stay) | stamina modal rv: a real click on the title closed {"popover":false,"modal":false,"modals":0} | stamina modal lp: a real click on the title closed {"popover":false,"modal":false,"modals":0} | conditions modal rv: a real click on the title closed {"popover":false,"modal":false,"modals":0} | conditions modal lp: a real click on the title closed {"popover":false,"modal":false,"modals":0} -- passed:  [shot /tmp/dse-obsidian-lifecycle-XoFLqM/shots/G-S83-FAIL.png]
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-XoFLqM
+OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+LIFECYCLE_RC=1
+
+=== (2) PRE-ROUND HEAD bundle: 0f5c9c98 src (r2 head, git archive, scratch build). The r2 steps pass; the new steps catch HIGH-1 (Add condition, RV+LP) and HIGH-2 (form Cancel, free-heal Confirm, RV+LP).
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :160, port 41103, 1 scenario(s)
+OBSIDIAN-LIFECYCLE G-S83 FAIL: form rv: Cancel must close the form and leave the preview {"popover":false,"modal":false,"modals":0} | form lp: Cancel must close the form and leave the preview {"popover":false,"modal":false,"modals":0} | stamina modal rv: free-heal Confirm must close only the confirmation and keep the Stamina modal with its staged heal {"popover":false,"modal":false,"modals":0} footer ""; Escape must close the modal and leave the preview {"popover":false,"modal":false,"modals":0} | stamina modal lp: free-heal Confirm must close only the confirmation and keep the Stamina modal with its staged heal {"popover":false,"modal":false,"modals":0} footer ""; Escape must close the modal and leave the preview {"popover":false,"modal":false,"modals":0} | conditions modal rv: a real click on "Add condition" closed {"popover":false,"modal":false,"modals":0}; Escape must close the modal and leave the preview {"popover":false,"modal":false,"modals":0} | conditions modal lp: a real click on "Add condition" closed {"popover":false,"modal":false,"modals":0}; Escape must close the modal and leave the preview {"popover":false,"modal":false,"modals":0} -- passed:  [shot /tmp/dse-obsidian-lifecycle-8xyimi/shots/G-S83-FAIL.png]
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-8xyimi
+OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+LIFECYCLE_RC=1

@@ -1,0 +1,458 @@
+// SC-595 r1 diagnosis probe (scratch only; never committed). Injected into a scratch copy of
+// visual-harness/obsidian-lifecycle.mjs as its first scenario. Real CDP mouse path throughout.
+export function makeProbe(env) {
+	const { FIXTURES, COUNTER, fence, sleep } = env;
+	const J = JSON.stringify;
+	Object.assign(FIXTURES, {
+		'Lifecycle/sc595-src.md': `# sc595 src\n\nTOP\n\n${COUNTER(5, 'Twin')}\n\nBOTTOM\n`,
+		'Lifecycle/sc595-host.md': `# sc595 host\n\nsee [[sc595-src]] here\n\nfiller one\n\nfiller two\n`,
+		'Lifecycle/sc595-stam.md': `# sc595 stam\n\nABOVE\n\n${fence('ds-stamina-bar', ['max_stamina: 20', 'current_stamina: 15', 'temp_stamina: 5'])}\n\nBELOW\n`,
+		'Lifecycle/sc595-stam-host.md': `# sc595 stam host\n\nsee [[sc595-stam]] here\n\nfiller\n`,
+		'Lifecycle/sc595-trk-host.md': `# sc595 trk host\n\nsee [[tracker]] here\n\nfiller\n`,
+	});
+	const SRC = 'Lifecycle/sc595-src.md';
+	const HOST = 'Lifecycle/sc595-host.md';
+	const out = [];
+	const emit = (o) => {
+		const line = `SC595 ${J(o)}`;
+		console.log(line);
+		out.push(o);
+	};
+
+	// page-side instrumentation: hide() stack + current event, Modal close stack, event log
+	const INSTALL = `(() => {
+		const leaf = app.workspace.getMostRecentLeaf();
+		const v = leaf.view;
+		const cands = [['view', v], ['previewMode', v.previewMode], ['editMode', v.editMode], ['currentMode', v.currentMode], ['editMode.editor?.cm', null]];
+		let hp = null, via = null;
+		for (const [n, o] of cands) { if (o && o.hoverPopover && o.hoverPopover.hoverEl && o.hoverPopover.hoverEl.querySelector('[data-dse-element]')) { hp = o.hoverPopover; via = n; break; } }
+		if (!hp) return 'no hoverPopover found on view/previewMode/editMode/currentMode';
+		const proto = Object.getPrototypeOf(Object.getPrototypeOf(hp));
+		Error.stackTraceLimit = 60;
+		const t0 = performance.now();
+		window.__p = { t0, hp, log: [], hides: [], closes: [], cls: hp.constructor.name, protoHasHide: Object.prototype.hasOwnProperty.call(proto, 'hide') };
+		const P = window.__p;
+		const at = () => Math.round(performance.now() - P.t0);
+		P.state = () => ({ pop: hp.hoverEl.isConnected, form: !!document.querySelector('.modal-container .dse-modal'), focused: !!hp.isFocused, editing: hp.hoverEl.classList.contains('is-editing'), pstate: hp.state, active: document.activeElement ? document.activeElement.tagName + '.' + (document.activeElement.className || '').toString().split(' ').slice(0, 2).join('.') : null });
+		P.L = (m) => P.log.push(at() + 'ms ' + m + ' ' + JSON.stringify(P.state()));
+		if (!proto.__sc595hide) {
+			proto.__sc595hide = proto.hide;
+			proto.hide = function () {
+				try {
+					const Q = window.__p;
+					if (Q && this === Q.hp) {
+						const e = window.event;
+						Q.hides.push({ at: Math.round(performance.now() - Q.t0), event: e ? e.type : null, phase: e ? e.eventPhase : null, currentTarget: e ? (e.currentTarget === window ? 'window' : (e.currentTarget && e.currentTarget.nodeName) || String(e.currentTarget)) : null, target: e && e.target && e.target.className ? String(e.target.className).slice(0, 60) : (e && e.target && e.target.nodeName) || null, defaultPrevented: e ? e.defaultPrevented : null, focused: !!this.isFocused, stack: new Error().stack.split('\\n').slice(1, 30).map((s) => s.trim()) });
+					}
+				} catch (err) {}
+				return proto.__sc595hide.apply(this, arguments);
+			};
+		}
+		for (const [owner, name] of [[Node.prototype, 'detach'], [Element.prototype, 'remove']]) {
+			const key = '__sc595' + name;
+			if (owner[key] || typeof owner[name] !== 'function') continue;
+			owner[key] = owner[name];
+			owner[name] = function () {
+				try {
+					const Q = window.__p;
+					if (Q && this && this.classList && this.classList.contains('modal-container') && this.querySelector && this.querySelector('.dse-modal, .dse-condal-modal')) {
+						const e = window.event;
+						Q.closes.push({ at: Math.round(performance.now() - Q.t0), via: name, event: e ? e.type : null, stack: new Error().stack.split('\\n').slice(1, 60).map((x) => x.trim()) });
+					}
+				} catch (err) {}
+				return owner[key].apply(this, arguments);
+			};
+		}
+		let ModalCls = null;
+		try { ModalCls = require('obsidian').Modal; } catch (e) {}
+		P.modalCls = !!ModalCls;
+		if (ModalCls && !ModalCls.prototype.__sc595close) {
+			ModalCls.prototype.__sc595close = ModalCls.prototype.close;
+			ModalCls.prototype.close = function () {
+				try {
+					const Q = window.__p;
+					if (Q) {
+						const e = window.event;
+						Q.closes.push({ at: Math.round(performance.now() - Q.t0), cls: this.constructor.name, event: e ? e.type : null, stack: new Error().stack.split('\\n').slice(1, 30).map((s) => s.trim()) });
+					}
+				} catch (err) {}
+				return ModalCls.prototype.__sc595close.apply(this, arguments);
+			};
+		}
+		for (const type of ['pointerdown', 'mousedown', 'focusin', 'focusout', 'pointerup', 'mouseup', 'click']) {
+			window.addEventListener(type, (e) => { if (window.__p === P) P.L('capture ' + type + ' on ' + (e.target && e.target.className ? String(e.target.className).slice(0, 40) : e.target && e.target.nodeName)); }, { capture: true });
+			window.addEventListener(type, (e) => { if (window.__p === P) P.L('bubble-after ' + type); });
+		}
+		return 'installed via ' + via + ' ' + P.cls + ' protoHasHide=' + P.protoHasHide + ' modalCls=' + P.modalCls;
+	})()`;
+	const UNINSTALL = `(() => { const hp = window.__p && window.__p.hp; if (hp) { const proto = Object.getPrototypeOf(Object.getPrototypeOf(hp)); if (proto.__sc595hide) { proto.hide = proto.__sc595hide; delete proto.__sc595hide; } } for (const [owner, name] of [[Node.prototype, 'detach'], [Element.prototype, 'remove']]) { const key = '__sc595' + name; if (owner[key]) { owner[name] = owner[key]; delete owner[key]; } } try { const M = require('obsidian').Modal; if (M.prototype.__sc595close) { M.prototype.close = M.prototype.__sc595close; delete M.prototype.__sc595close; } } catch (e) {} return true; })()`;
+
+	return {
+		id: 'SC595-PROBE',
+		async run(t) {
+			const cdp = t.cdp;
+			const mouse = (type, x, y, extra = {}) => cdp.call('Input.dispatchMouseEvent', { type, x, y, ...extra });
+			const center = async (expr) => t.ev(`(() => { const el = ${expr}; if (!el) return null; if (el.closest('.hover-popover') && !el.matches('[data-dse-element]')) el.scrollIntoView({ block: 'nearest' }); const r0 = el.getBoundingClientRect(); const pop = el.closest('.hover-popover'); let r = r0; if (el.matches('[data-dse-element]') && pop) { const pr = pop.getBoundingClientRect(); const top = Math.max(r0.top, pr.top) + 12; r = { left: r0.left, top, width: r0.width, height: 12 }; } return { x: Math.round(r.left + Math.min(r.width / 2, 40)), y: Math.round(r.top + r.height / 2), w: r.width, h: r.height }; })()`);
+			const moveTo = async (expr, mods = 0) => {
+				const p = await center(expr);
+				t.expect(p && p.w > 0, `nothing to move to: ${expr}`);
+				for (let i = 1; i <= 6; i++) await mouse('mouseMoved', p.x - 30 + i * 5, p.y, { modifiers: mods });
+				return p;
+			};
+			const click = async (expr, holdMs = 0, mods = 0) => {
+				const p = await moveTo(expr, mods);
+				const base = { button: 'left', clickCount: 1, modifiers: mods };
+				await mouse('mousePressed', p.x, p.y, { buttons: 1, ...base });
+				if (holdMs) await sleep(holdMs);
+				await mouse('mouseReleased', p.x, p.y, { buttons: 0, ...base });
+				return p;
+			};
+			/** a chrome control (the pencil) is revealed by the pointer hovering the card: move onto it, wait until the point hits it, then press/release */
+			const clickRevealed = async (expr) => {
+				const p = await center(expr);
+				const from = await t.ev(`(() => { const r = (${expr}).closest('[data-dse-element]').getBoundingClientRect(); return { x: ${p ? p.x : 0}, y: Math.round(r.top + 10) }; })()`);
+				t.expect(from && p, `clickRevealed: nothing at ${expr}`);
+				await mouse('mouseMoved', from.x, from.y);
+				await sleep(120);
+				for (let i = 1; i <= 8; i++) {
+					await mouse('mouseMoved', from.x + ((p.x - from.x) * i) / 8, from.y + ((p.y - from.y) * i) / 8);
+					await sleep(30);
+				}
+				const t0 = Date.now();
+				for (;;) {
+					const hit = await t.ev(`(() => { const el = ${expr}; const h = document.elementFromPoint(${p.x}, ${p.y}); return !!(el && h && (el === h || el.contains(h))); })()`);
+					if (hit) break;
+					if (Date.now() - t0 > 4000) {
+						const dbg = await t.ev(`(() => { const el = ${expr}; const h = document.elementFromPoint(${p.x}, ${p.y}); const r = el.getBoundingClientRect(); const ch = el.closest('.dse-chrome'); const pop = el.closest('.hover-popover'); const pr = pop && pop.getBoundingClientRect(); return { pt: ${J(p)}, rect: [r.left, r.top, r.width, r.height], hit: h && (h.className || h.nodeName).toString().slice(0, 80), hitPath: h && h.closest('[data-dse-element]') ? 'in dse root' : 'outside dse root', chromePE: ch && getComputedStyle(ch).pointerEvents, chromeOp: ch && getComputedStyle(ch).opacity, chromeVis: ch && getComputedStyle(ch).visibility, pop: pr && [pr.left, pr.top, pr.width, pr.height] }; })()`);
+						throw new Error(`the pointer never hits ${expr}: ${J(dbg)}`);
+					}
+					await mouse('mouseMoved', p.x + ((Date.now() / 100) % 2), p.y);
+					await sleep(100);
+				}
+				const base = { button: 'left', clickCount: 1 };
+				await mouse('mousePressed', p.x, p.y, { buttons: 1, ...base });
+				await mouse('mouseReleased', p.x, p.y, { buttons: 0, ...base });
+				return p;
+			};
+			const L = (m) => t.ev(`window.__p && window.__p.L(${J(m)})`);
+			const st = () => t.ev(`window.__p ? window.__p.state() : null`);
+			const E = (src) => `app.plugins.plugins['draw-steel-elements'].viewRegistry.liveEntries().filter((e) => e.host.sourcePath === ${J(src)} && e.root.isConnected && e.root.closest('.hover-popover'))`;
+			const ENTRY = (src) => `(${E(src)})[0]`;
+			const FORM = `document.querySelector('.modal-container .dse-modal')`;
+			const RAW = `${FORM}.querySelector('textarea.dse-form__raw')`;
+			const SAVE = `Array.from(document.querySelectorAll('.modal-container .dse-modal button')).find((b) => b.getAttribute('aria-label') === 'Save')`;
+			const CANCEL = `Array.from(document.querySelectorAll('.modal-container .dse-modal button')).find((b) => b.getAttribute('aria-label') === 'Cancel')`;
+
+			const listeners = async (expr, filterTypes) => {
+				const r = await cdp.call('Runtime.evaluate', { expression: expr, objectGroup: 'sc595' });
+				if (!r.result?.objectId) return [];
+				const l = await cdp.call('DOMDebugger.getEventListeners', { objectId: r.result.objectId, depth: 0 });
+				const outL = l.listeners
+					.filter((x) => filterTypes.includes(x.type))
+					.map((x) => ({ type: x.type, capture: x.useCapture, line: x.lineNumber, col: x.columnNumber, scriptId: x.scriptId }));
+				await cdp.call('Runtime.releaseObjectGroup', { objectGroup: 'sc595' });
+				return outL;
+			};
+
+			const openHost = async (host, mode) => {
+				await t.ev(`(async () => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); const leaf = app.workspace.getLeavesOfType('markdown')[0] ?? app.workspace.getMostRecentLeaf(); await leaf.setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true }); await leaf.setViewState({ type: 'markdown', state: { file: ${J(host)}, mode: ${J(mode === 'lp' ? 'source' : 'preview')}, source: false }, active: true }); app.workspace.setActiveLeaf(leaf, { focus: true }); return true; })()`);
+				if (mode === 'lp') {
+					await t.ev(`(() => { const ed = app.workspace.getMostRecentLeaf().view.editor; ed.setCursor({ line: 0, ch: 0 }); return true; })()`);
+				}
+				const LINK = mode === 'lp' ? `document.querySelector('.workspace-leaf.mod-active .cm-content .cm-hmd-internal-link')` : `document.querySelector('.workspace-leaf.mod-active .markdown-reading-view a.internal-link')`;
+				await t.waitFor(`!!${LINK}`, `${mode}: link drawn`, 10000);
+				await sleep(500);
+				return LINK;
+			};
+			const hover = async (link, src) => {
+				await mouse('mouseMoved', 5, 5);
+				await sleep(200);
+				await moveTo(link, 2); // Ctrl held (page preview in LP needs it)
+				const t0 = Date.now();
+				let how = 'real mouse';
+				while (!(await t.ev(`(${E(src)}).length > 0`))) {
+					if (Date.now() - t0 > 4000) {
+						if (how === 'real mouse') {
+							how = 'hover-link trigger (real hover gave no popover in 4 s)';
+							await t.ev(`(() => { const a = ${link}; const leaf = app.workspace.getMostRecentLeaf(); app.workspace.trigger('hover-link', { event: new MouseEvent('mouseover', { ctrlKey: true, clientX: 200, clientY: 200 }), source: 'preview', hoverParent: leaf.view, targetEl: a, linktext: a.getAttribute('data-href') || a.textContent, sourcePath: leaf.view.file.path }); return true; })()`);
+						} else if (Date.now() - t0 > 12000) throw new Error('no popover card');
+					}
+					await sleep(80);
+				}
+				return how;
+			};
+			const closeAll = async () => {
+				await mouse('mouseMoved', 5, 5);
+				await t.ev(`(() => { const m = document.querySelectorAll('.modal-container'); m.forEach((c) => { const b = c.querySelector('.modal-close-button'); if (b) b.click(); }); return true; })()`);
+				await sleep(200);
+				await t.ev(`(() => { const hp = window.__p && window.__p.hp; if (hp && hp.hoverEl.isConnected) hp.hide(); const v = app.workspace.getMostRecentLeaf().view; for (const o of [v, v.previewMode, v.editMode]) { if (o && o.hoverPopover) o.hoverPopover.hide(); } return true; })()`);
+				await t.ev(UNINSTALL);
+				await t.ev(`(() => { document.querySelectorAll('.popover.hover-popover').forEach((p) => p.remove()); delete window.__p; return true; })()`);
+				await sleep(300);
+			};
+			const dump = async () => t.ev(`(() => { const P = window.__p; return P ? { log: P.log, hides: P.hides, closes: P.closes } : null; })()`);
+
+			/**
+			 * One trial. `variant`:
+			 *  'press-hold'  : + then pencil, pointer into raw box, PRESS, hold 600 ms, RELEASE
+			 *  'pencil-only' : no +, pencil, then press+release in raw box
+			 *  'keyboard'    : + then pencil, Tab x2, focus(), type, then real click on Save
+			 *  'protoA'      : emulated fix A (modal container preventDefault on click), click raw box, type, click Save; then click outside
+			 *  'protoA-cancel': emulated A, click raw box, then Cancel
+			 *  'protoA-esc'  : emulated A, click raw box, then Escape
+			 *  'protoB'      : emulated fix B (host.keepFormOpenOn -> registry), click raw box, type, click Save
+			 */
+			const trial = async (mode, variant) => {
+				const label = `${mode}/${variant}`;
+				const rec = { label };
+				try {
+					await t.reset(SRC);
+					await t.reset(HOST);
+					const link0 = await openHost(HOST, mode);
+					let link = link0;
+					if (variant === 'src-open') {
+						// the source note is ALSO open in a second pane (SC-552's keepFormOpenOn then finds it shown)
+						await t.ev(`(async () => { const a = app.workspace.getMostRecentLeaf(); const b = app.workspace.getLeaf('split', 'vertical'); await b.setViewState({ type: 'markdown', state: { file: ${J(SRC)}, mode: 'preview' } }); app.workspace.setActiveLeaf(a, { focus: true }); return true; })()`);
+						await sleep(1200);
+						link = link0.replace('.workspace-leaf.mod-active', '.workspace-leaf.mod-active');
+					}
+					rec.hover = await hover(link, SRC);
+					rec.install = await t.ev(INSTALL);
+					await L('popover card drawn');
+					await moveTo(`${ENTRY(SRC)}.root`);
+					await sleep(250);
+					await L('pointer on card');
+					const pencil = `(${ENTRY(SRC)}.root.querySelector('.dse-chrome button[data-dse-chrome-item="edit"], button[aria-label^="Edit "]'))`;
+					try { await t.waitFor(`!!${pencil}`, `${label}: pencil`, 8000); } catch (e) { rec.buttons = await t.ev(`(() => { const e = ${ENTRY(SRC)}; return e ? Array.from(e.root.querySelectorAll('button')).map((b) => b.getAttribute('aria-label') + '|' + b.className) : 'no entry'; })()`); throw e; }
+					if (variant !== 'pencil-only') {
+						await click(`${ENTRY(SRC)}.root.querySelector('button[aria-label^="Increase"]')`);
+						await sleep(250);
+						await L('after + click');
+					}
+					rec.windowClickListenersBeforePencil = await listeners('window', ['click', 'contextmenu', 'mousedown', 'pointerdown']);
+					if (variant === 'kbd-open') {
+						await t.ev(`(${pencil}).focus()`);
+						await L('pencil focused by script');
+						await cdp.call('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', text: '\r', windowsVirtualKeyCode: 13, nativeVirtualKeyCode: 13 });
+						await cdp.call('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, nativeVirtualKeyCode: 13 });
+					} else await clickRevealed(pencil);
+					await t.waitFor(`!!${FORM}`, `${label}: form`, 10000);
+					await sleep(300);
+					await L('form open');
+					rec.windowClickListenersFormOpen = await listeners('window', ['click', 'contextmenu', 'mousedown', 'pointerdown']);
+					rec.embedListeners = await listeners(`window.__p.hp.hoverEl.firstElementChild`, ['click', 'mousedown']);
+					await moveTo(RAW);
+					await sleep(1200);
+					await L('pointer rested 1.2 s in the raw box');
+					if (variant === 'esc') {
+						rec.scopes = await t.ev(`(() => { const st = app.keymap.getWindowStack(window); const esc = (sc) => !!(sc && sc.keys && sc.keys.some((k) => k.key === 'Escape')); return { depth: st.prevScopes.length, topHasEscape: esc(st.scope), topKeys: st.scope.keys.length, topParentIsRoot: st.scope.parent === app.keymap.rootScope || st.scope.parent === app.scope, belowHasEscape: st.prevScopes.map(esc) }; })()`);
+						await t.key('Escape', 'Escape', 27);
+						await sleep(500);
+						await L('after Escape (no click before)');
+						await t.key('Escape', 'Escape', 27);
+						await sleep(500);
+						await L('after a second Escape');
+					} else if (variant === 'press-hold' || variant === 'pencil-only' || variant === 'kbd-open' || variant === 'src-open') {
+						const p = await center(RAW);
+						await mouse('mousePressed', p.x, p.y, { button: 'left', clickCount: 1, buttons: 1 });
+						await L('after mousePressed returned');
+						await sleep(80);
+						await L('press +80ms');
+						await sleep(600);
+						await L('press +680ms (still held)');
+						await mouse('mouseReleased', p.x, p.y, { button: 'left', clickCount: 1, buttons: 0 });
+						await L('after mouseReleased returned');
+						await sleep(20);
+						await L('release +20ms');
+						await sleep(200);
+						await L('release +220ms');
+						if (variant === 'src-open' && (await t.ev(`!!${FORM}`))) {
+							await t.ev(`(() => { const ta = ${RAW}; ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); return true; })()`);
+							await cdp.call('Input.insertText', { text: '\nnote: sc595src' });
+							await click(SAVE);
+							await sleep(1500);
+							await L('after real click on Save');
+							rec.disk = t.read(SRC).includes('note: sc595src') ? 'saved' : 'not saved';
+							rec.notices = await t.ev('__lc.notices.slice(-2).map((x) => x.text)');
+						}
+					} else if (variant === 'keyboard') {
+						await t.key('Tab', 'Tab', 9);
+						await sleep(150);
+						await L('Tab 1');
+						await t.key('Tab', 'Tab', 9);
+						await sleep(150);
+						await L('Tab 2');
+						await t.ev(`${RAW}.focus()`);
+						await sleep(150);
+						await L('raw focus() by script');
+						await t.ev(`(() => { const ta = ${RAW}; ta.setSelectionRange(ta.value.length, ta.value.length); return true; })()`);
+						await cdp.call('Input.insertText', { text: '\nnote: sc595kb' });
+						await sleep(200);
+						await L('typed');
+						await click(SAVE);
+						await sleep(1500);
+						await L('after real click on Save');
+						rec.disk = t.read(SRC).includes('note: sc595kb') ? 'saved' : 'not saved';
+					} else if (variant === 'toggleA' || variant === 'toggleA2') {
+						// an Obsidian-shaped toggle (label.checkbox-container > input[type=checkbox], 'change' listener) inside the form, then the candidate guard
+						await t.ev(`(() => { const host = document.querySelector('.modal-container .dse-modal__body'); const l = document.createElement('label'); l.className = 'checkbox-container sc595-toggle'; l.tabIndex = 0; l.style.cssText = 'display:inline-block;width:60px;height:30px;'; const i = document.createElement('input'); i.type = 'checkbox'; i.tabIndex = -1; l.appendChild(i); window.__sc595changes = 0; i.addEventListener('change', () => window.__sc595changes++); host.prepend(l); return true; })()`);
+						const how = variant === 'toggleA' ? 'e.preventDefault()' : 'e.stopPropagation()';
+						await t.ev(`(() => { const c = document.querySelector('.modal-container'); c.addEventListener('click', (e) => ${how}); return true; })()`);
+						await click(`document.querySelector('.sc595-toggle')`);
+						await sleep(300);
+						rec.toggle = await t.ev(`({ checked: document.querySelector('.sc595-toggle input').checked, changes: window.__sc595changes })`);
+						await L('after a real click on the toggle with ' + how);
+						await click(RAW);
+						await sleep(300);
+						await L('after real click in raw box');
+						rec.docListeners = await listeners('document', ['click']);
+						rec.bodyListeners = await listeners('document.body', ['click']);
+					} else if (variant.startsWith('protoA')) {
+						const how = variant.startsWith('protoA2') ? 'e.stopPropagation()' : 'e.preventDefault()';
+						await t.ev(`(() => { const c = document.querySelector('.modal-container'); c.addEventListener('click', (e) => ${how}); return true; })()`);
+						await L('protoA installed (modal container bubble click preventDefault; isFocused already ' + 'see state)');
+						await click(RAW);
+						await sleep(400);
+						await L('after real click in raw box');
+						await t.ev(`(() => { const ta = ${RAW}; ta.setSelectionRange(ta.value.length, ta.value.length); return true; })()`);
+						await cdp.call('Input.insertText', { text: '\nnote: sc595a' });
+						await sleep(200);
+						await click(RAW, 0);
+						await sleep(300);
+						await L('after second real click in raw box (typed)');
+						if (variant === 'protoA' || variant === 'protoA2') {
+							await click(SAVE);
+							await sleep(1500);
+							await L('after real click on Save');
+							rec.disk = t.read(SRC).includes('note: sc595a') ? 'saved' : 'not saved';
+							rec.popoverAfterSave = await st();
+							await mouse('mouseMoved', 700, 900);
+							await sleep(1200);
+							await L('pointer elsewhere 1.2 s after Save');
+							await click(`document.querySelector('.workspace-leaf.mod-active .view-header-title, .workspace-leaf.mod-active .view-header')`);
+							await sleep(300);
+							await L('after a real click outside (view header)');
+						} else if (variant === 'protoA-bg' || variant === 'protoA2-bg') {
+							await mouse('mouseMoved', 30, 1000);
+							await sleep(100);
+							const bg = await t.ev(`(() => { const h = document.elementFromPoint(30, 1000); return h ? String(h.className) : null; })()`);
+							await L('pointer on ' + bg);
+							await mouse('mousePressed', 30, 1000, { button: 'left', clickCount: 1, buttons: 1 });
+							await mouse('mouseReleased', 30, 1000, { button: 'left', clickCount: 1, buttons: 0 });
+							await sleep(500);
+							await L('after real click on the modal background');
+							rec.disk = t.read(SRC).includes('note: sc595a') ? 'saved' : 'not saved';
+						} else if (variant === 'protoA-cancel' || variant === 'protoA2-cancel') {
+							await click(CANCEL);
+							await sleep(500);
+							await L('after real click on Cancel');
+							rec.disk = t.read(SRC).includes('note: sc595a') ? 'saved' : 'not saved';
+						} else {
+							await t.key('Escape', 'Escape', 27);
+							await sleep(500);
+							await L('after Escape');
+							rec.disk = t.read(SRC).includes('note: sc595a') ? 'saved' : 'not saved';
+						}
+					} else if (variant === 'protoB') {
+						await t.ev(`(() => { const e = ${ENTRY(SRC)}; const reg = app.plugins.plugins['draw-steel-elements'].viewRegistry; e.host.keepFormOpenOn = () => reg; return true; })()`);
+						await L('protoB installed (host.keepFormOpenOn -> registry)');
+						await click(RAW);
+						await sleep(500);
+						await L('after real click in raw box');
+						const alive = await t.ev(`!!${FORM}`);
+						if (alive) {
+							await t.ev(`(() => { const ta = ${RAW}; ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); return true; })()`);
+							await cdp.call('Input.insertText', { text: '\nnote: sc595b' });
+							await sleep(200);
+							await click(RAW);
+							await sleep(300);
+							await L('after second real click in raw box (typed)');
+							await click(SAVE);
+							await sleep(1500);
+							await L('after real click on Save');
+						}
+						rec.disk = t.read(SRC).includes('note: sc595b') ? 'saved' : 'not saved';
+						rec.notices = await t.ev('__lc.notices.slice(-3).map((x) => x.text)');
+					}
+					Object.assign(rec, await dump());
+				} catch (e) {
+					rec.error = e.message;
+					try {
+						Object.assign(rec, await dump());
+					} catch {
+						/* */
+					}
+				} finally {
+					await closeAll();
+				}
+				emit(rec);
+			};
+
+			/** Q5: another DSE modal opened from a hover preview card. */
+			const otherModal = async (mode, kind) => {
+				const label = `${mode}/other-${kind}`;
+				const rec = { label };
+				const kbd = kind === 'stamina-kbd';
+				if (kbd) kind = 'stamina';
+				const src = kind === 'stamina' ? 'Lifecycle/sc595-stam.md' : 'Lifecycle/tracker.md';
+				const host = kind === 'stamina' ? 'Lifecycle/sc595-stam-host.md' : 'Lifecycle/sc595-trk-host.md';
+				try {
+					await t.reset(src);
+					await t.reset(host);
+					const link = await openHost(host, mode);
+					rec.hover = await hover(link, src);
+					rec.install = await t.ev(INSTALL);
+					await moveTo(`${ENTRY(src)}.root`);
+					await sleep(250);
+					const opener = kind === 'stamina' ? `${ENTRY(src)}.root.querySelector('[data-dse-control="stamina.bar"]')` : `${ENTRY(src)}.root.querySelectorAll('.dse-cond--add')[0]`;
+					await t.waitFor(`!!(${opener})`, `${label}: opener`, 8000);
+					if (kbd) {
+						await t.ev(`(${opener}).focus()`);
+						await L('bar focused by script (no click anywhere)');
+						await t.key('Enter', 'Enter', 13);
+					} else await clickRevealed(opener);
+					const MSEL = kind === 'stamina' ? `document.querySelector('.modal-container .dse-modal')` : `document.querySelector('.modal-container .dse-condal-modal')`;
+					await t.waitFor(`!!(${MSEL})`, `${label}: modal`, 8000);
+					await sleep(300);
+					await L('modal open');
+					rec.modalFocusedBefore = await st();
+					if (kbd) {
+						await sleep(1500);
+						await L('pointer left where it was, 1.5 s');
+						await moveTo(`(${MSEL}).closest('.modal').querySelector('.modal-title') || (${MSEL})`);
+						await sleep(1500);
+						await L('pointer rested 1.5 s on the modal title (no click)');
+						rec.modalAfterRest = await t.ev(`!!(${MSEL})`);
+						if (!rec.modalAfterRest) throw new Error('the modal closed with no click');
+					}
+					// click a NON-acting spot inside the modal: its title
+					await click(`(${MSEL}).closest('.modal').querySelector('.modal-title') || (${MSEL})`);
+					await sleep(400);
+					await L('after real click on the modal title');
+					rec.modalAfter = await t.ev(`!!(${MSEL})`);
+					Object.assign(rec, await dump());
+				} catch (e) {
+					rec.error = e.message;
+					try {
+						Object.assign(rec, await dump());
+					} catch {
+						/* */
+					}
+				} finally {
+					await closeAll();
+				}
+				emit(rec);
+			};
+
+			await t.ev(`app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs.set('authoringControls', true)`);
+			await sleep(500);
+			const which = (process.env.SC595_TRIALS ?? 'rv/press-hold,lp/press-hold').split(',');
+			for (const w of which) {
+				const [mode, variant] = w.split('/');
+				if (variant.startsWith('other-')) await otherModal(mode, variant.slice(6));
+				else await trial(mode, variant);
+			}
+			return `${out.length} trials`;
+		},
+	};
+}

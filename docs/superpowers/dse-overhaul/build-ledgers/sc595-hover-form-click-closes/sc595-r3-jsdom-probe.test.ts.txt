@@ -1,0 +1,33 @@
+// SC-595 r3 reviewer scratch probe (never committed): clicks inside a preview-opened modal that the guard misses.
+import { DseModal, openManagedModal } from '../../../src/framework/kit/managedModal';
+import { App, Component } from '../../mocks/obsidian';
+
+function owner(): any { const c = new Component(); c.load(); return c; }
+function previewAnchor(): HTMLElement {
+	const pop = document.body.appendChild(document.createElement('div'));
+	pop.className = 'popover hover-popover';
+	return pop.appendChild(document.createElement('div'));
+}
+describe('r3 probe', () => {
+	let win: jest.Mock;
+	beforeEach(() => { win = jest.fn(); window.addEventListener('click', win); });
+	afterEach(() => { window.removeEventListener('click', win); document.body.innerHTML = ''; });
+
+	test('P1 a click on a button that CLOSES the modal (Cancel / X / backdrop shape) reaches the window', () => {
+		const m = openManagedModal(owner(), () => { const d = new DseModal(new App() as any); d.footer([{ label: 'Cancel', text: 'Cancel', onClick: () => d.close() }]); return d; }, previewAnchor());
+		m.containerEl.querySelector<HTMLButtonElement>('button[aria-label="Cancel"]')!.click();
+		expect(win).toHaveBeenCalledTimes(0);
+	});
+	test('P2 a click on a control the modal REDRAWS (target detached mid-click, ConditionsModal renderList shape) reaches the window', () => {
+		const m = openManagedModal(owner(), () => { const d = new DseModal(new App() as any); const list = d.body.createDiv(); const draw = () => { list.empty(); const b = list.createEl('button', { text: 'cog' }); b.addEventListener('click', draw); }; draw(); return d; }, previewAnchor());
+		m.body.querySelector('button')!.click();
+		expect(m.containerEl.isConnected).toBe(true);
+		expect(win).toHaveBeenCalledTimes(0);
+	});
+	test('P3 nested (FreeHealConfirm shape): Confirm in the child closes the child; the click reaches the window', () => {
+		const parent = openManagedModal(owner(), () => new DseModal(new App() as any), previewAnchor());
+		const child = openManagedModal(parent.lifecycle, () => { const d = new DseModal(new App() as any); d.footer([{ label: 'Confirm', text: 'Confirm', onClick: () => d.close() }]); return d; }, parent.anchor);
+		child.containerEl.querySelector<HTMLButtonElement>('button[aria-label="Confirm"]')!.click();
+		expect(win).toHaveBeenCalledTimes(0);
+	});
+});

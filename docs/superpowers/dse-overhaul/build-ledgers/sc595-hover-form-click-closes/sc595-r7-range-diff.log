@@ -1,0 +1,57 @@
+== range-diff 6c7216e8..a53b0454 c3fd8323..d15616bc
+ 1:  89b8f71c =  1:  6640536d fix(SC-595): a modal opened from a hover preview keeps the preview alive (click guard on its document, keymap scope back on top)
+ 2:  818513e3 =  2:  cd39d9e2 test(SC-595): jsdom coverage — click guard (window spy), toggle still toggles, control outside a preview, guard gone after close, keymap scope back on top, real form / stamina / conditions openers
+ 3:  dbfffe52 =  3:  ab5a23d3 test(SC-595): lifecycle G-S83 (real CDP mouse, hover preview: form, stamina and conditions modals, RV and LP); fix(SC-595): re-push the modal's keymap scope after the popover's 150 ms click-to-edit delay, not at 0 ms
+ 4:  74b138f0 =  4:  bfcd0bc7 test(SC-595): G-S83 judge stops at the click that closed the form (clear failure on base)
+ 5:  a4aba989 =  5:  c5ac2d21 fix(SC-595): guard uses composedPath and outlives close by one task; re-push armed after the popover's own timers (10/150 ms), newest modal only, active window only; tests for redraw, closing click, nested confirm, ordering, anchors of FreeHeal / conditions panel / montage
+ 6:  d616ccd8 =  6:  a2d3cd75 test(SC-595): G-S83 adds Add condition (RV, LP), free-heal Confirm, form Cancel; Conditions in LP too
+ 7:  0873b589 =  7:  a72f5769 test(SC-595): G-S83 modal trials stop at the click that closed the modal
+ 8:  2a8c56af =  8:  870720fe test(SC-595): the child-on-top test uses fake timers so the newest-modal check is killed deterministically
+ 9:  a53b0454 =  9:  d15616bc test(SC-595): the keymap re-push test uses fake timers (a 5 ms real wait raced the 10 ms re-push under load)
+== origin/develop ec26b709, merge-base c3fd83234bb35afa3903f7c80ab5e892eb25134e
+== files touched by both SC-578 (6c7216e8..c3fd8323) and SC-595 (c3fd8323..6725243c):
+src/elements/initiative/view.ts
+== SC-595 hunks in src/elements/initiative/view.ts on the new base
+diff --git a/src/elements/initiative/view.ts b/src/elements/initiative/view.ts
+index 86756d4f..c97394e5 100644
+--- a/src/elements/initiative/view.ts
++++ b/src/elements/initiative/view.ts
+@@ -52,7 +52,6 @@
+ // omitted, and turn indicators / cells / stamina render as static state displays (spans,
+ // not buttons). The pipeline stamps data-dse-readonly + the CSS badge shows "Read-only".
+ import { Component, Notice, parseYaml, setIcon } from 'obsidian';
+-import type { Modal } from 'obsidian';
+ import { ElementView } from '@/framework/view';
+ import { ElementStageError, renderErrorCard } from '@/framework/errorCard';
+ import type { ErrorStage } from '@/framework/errorCard';
+@@ -72,7 +71,7 @@ import {
+ 	updateStaminaGauge,
+ 	buildConditionIcons as kitBuildConditionIcons,
+ } from '@/framework/kit';
+-import type { IconButtonHandle, StaminaBarValues, StaminaGaugeOptions } from '@/framework/kit';
++import type { DseModal, IconButtonHandle, StaminaBarValues, StaminaGaugeOptions } from '@/framework/kit';
+ import { ConditionManager } from '@utils/Conditions';
+ import { Images } from '@utils/Images';
+ import { StaminaBar } from '@model/StaminaBar';
+@@ -117,7 +116,7 @@ export class InitiativeView extends ElementView<EncounterData> {
+ 	 *  REPLACED (not accumulated) on every open and nulled on close — the view holds
+ 	 *  exactly one pending closer regardless of how many modals were opened
+ 	 *  (stamina-bar's activeModal pattern; never register() per open). */
+-	private activeModal: Modal | null = null;
++	private activeModal: DseModal | null = null;
+ 
+ 	/** SC-576 — set when the re-parse after Reset Encounter threw: the next `onMount` draws the
+ 	 *  pipeline's error card with it (what a reload of that note draws) instead of the tracker. */
+@@ -162,7 +161,9 @@ export class InitiativeView extends ElementView<EncounterData> {
+ 	 *  single registration; the wrapped onClose nulls the reference when the modal
+ 	 *  actually closes (identity-guarded so an older modal can't null a newer one) while
+ 	 *  still running the modal's own inherited onClose behavior. */
+-	private openModal(modal: Modal): void {
++	private openModal(modal: DseModal): void {
++		// SC-595: the anchor keeps a hover preview alive while the modal is open (see DseModal.anchorTo).
++		modal.anchorTo(this.cx.host.containerEl);
+ 		// `.bind(modal)` (not a plain `modal.onClose` reference, which would trip
+ 		// `@typescript-eslint/unbound-method`) snapshots the ORIGINAL bound function
+ 		// at definition time -- immune to `modal.onClose` being reassigned two lines
+== SC-578 hunks of view.ts (6c7216e8..c3fd8323) vs the same hunks carried into the head (a53b0454..6725243c): identical
+IDENTICAL

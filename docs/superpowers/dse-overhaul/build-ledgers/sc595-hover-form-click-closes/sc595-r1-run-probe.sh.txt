@@ -1,0 +1,8 @@
+#!/bin/bash
+# usage: run-probe.sh <trials> <logfile> <tmpdir>
+export SC595_TRIALS="$1"
+# TMPDIR left default: a long TMPDIR makes Electron exit at start-up (socket path length)
+export DSE_CAMERA_TMP="$3"
+node /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc595-r1-reviewer-diag/sc595-r1-probe-lifecycle.mjs --only=SC595-PROBE > "$2" 2>&1
+rc=$?
+echo "PROBE_RC=$rc" >> "$2"

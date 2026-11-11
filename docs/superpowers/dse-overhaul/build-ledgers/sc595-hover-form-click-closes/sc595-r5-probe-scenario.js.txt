@@ -1,0 +1,604 @@
+// ===== SC-595 r3 reviewer probe (scratch only; spliced into a scratch copy of obsidian-lifecycle.mjs before SCENARIOS) =====
+const R3_TRIALS = (process.env.R3_TRIALS ?? '').split(',').filter(Boolean);
+const R3 = (o) => console.log(`R3 ${JSON.stringify(o)}`);
+
+const R3_INSTR = `(() => {
+	const P = window.__r3 = { t0: performance.now(), log: [] };
+	const at = () => Math.round(performance.now() - P.t0);
+	P.L = (m) => P.log.push(at() + ' ' + m);
+	if (!window.__r3ost) {
+		window.__r3ost = window.setTimeout;
+		window.setTimeout = function (fn, d, ...a) { try { if (window.__r3 && (d === 10 || d === 150 || d === 200)) window.__r3.L('setTimeout ' + d); } catch (e) {} return window.__r3ost.call(this, fn, d, ...a); };
+		const km = app.keymap;
+		window.__r3push = km.pushScope; window.__r3pop = km.popScope;
+		const kind = (s) => s && s.tabFocusContainerEl && s.tabFocusContainerEl.classList && s.tabFocusContainerEl.classList.contains('modal-container') ? 'modal' : 'other';
+		km.pushScope = function (s) { try { window.__r3 && window.__r3.L('push ' + kind(s)); } catch (e) {} return window.__r3push.call(this, s); };
+		km.popScope = function (s) { try { window.__r3 && window.__r3.L('pop ' + kind(s)); } catch (e) {} return window.__r3pop.call(this, s); };
+		for (const ty of ['mousedown', 'click', 'keydown']) {
+			window.addEventListener(ty, (e) => { window.__r3 && window.__r3.L('cap ' + ty + (ty === 'keydown' ? ' ' + e.key : '')); }, true);
+			window.addEventListener(ty, (e) => { window.__r3 && window.__r3.L('win-bubble ' + ty + ' prevented=' + e.defaultPrevented); });
+		}
+		new MutationObserver((ms) => { for (const m of ms) { for (const n of m.addedNodes) if (n.classList && n.classList.contains('modal-container')) window.__r3 && window.__r3.L('modal attached'); for (const n of m.removedNodes) if (n.classList && n.classList.contains('modal-container')) window.__r3 && window.__r3.L('modal detached'); } }).observe(document.body, { childList: true });
+	}
+	return true;
+})()`;
+const R3_TOP = `(() => { const st = app.keymap.getWindowStack(window); const c = document.querySelectorAll('.modal-container'); const top = st.scope; return { depth: st.prevScopes.length, topIsNewestModal: !!(c.length && top && top.tabFocusContainerEl === c[c.length - 1]), topIsModal: !!(top && top.tabFocusContainerEl && top.tabFocusContainerEl.classList.contains('modal-container')) }; })()`;
+
+
+const R5_LISTEN = `(() => {
+	if (window.__r5L) return true;
+	const live = window.__r5L = new Map();
+	const tag = () => { const st = String(new Error().stack || ''); return st.includes('plugin:draw-steel-elements') ? 'plugin' : 'other'; };
+	for (const [name, tgt] of [['window', window], ['document', document]]) {
+		const add = tgt.addEventListener, rem = tgt.removeEventListener;
+		tgt.addEventListener = function (ty, fn, o) { if (ty === 'click' && tag() === 'plugin') live.set(fn, name + (o === true || (o && o.capture) ? ':cap' : ':bub')); return add.call(this, ty, fn, o); };
+		tgt.removeEventListener = function (ty, fn, o) { if (ty === 'click') live.delete(fn); return rem.call(this, ty, fn, o); };
+	}
+	return true;
+})()`;
+const R5_COUNT = `(() => { const c = {}; for (const v of (window.__r5L || new Map()).values()) c[v] = (c[v] || 0) + 1; return c; })()`;
+
+async function r3Listeners(t, expr, type = 'click') {
+	const r = await t.cdp.call('Runtime.evaluate', { expression: expr, objectGroup: 'r3' });
+	const l = await t.cdp.call('DOMDebugger.getEventListeners', { objectId: r.result.objectId, objectGroup: 'r3' });
+	const out = [];
+	for (const x of l.listeners.filter((x) => x.type === type)) {
+		let src = '';
+		if (x.handler?.objectId) {
+			const s = await t.cdp.call('Runtime.callFunctionOn', { objectId: x.handler.objectId, functionDeclaration: 'function () { return String(this).slice(0, 140); }', returnByValue: true });
+			src = s.result?.value ?? '';
+		}
+		out.push({ capture: x.useCapture, scriptId: x.scriptId, line: x.lineNumber, col: x.columnNumber, src });
+	}
+	await t.cdp.call('Runtime.releaseObjectGroup', { objectGroup: 'r3' });
+	return out;
+}
+
+async function r3OpenForm(t, K, mode, { plus = true, host = 'Lifecycle/gs83-host.md', src = 'Lifecycle/gs83-src.md', skipOpenHost = false } = {}) {
+	if (!skipOpenHost) {
+		await t.reset(src);
+		await t.reset(host);
+	}
+	const link = skipOpenHost ? (mode === 'lp' ? `document.querySelector('.workspace-leaf.mod-active .cm-content .cm-hmd-internal-link')` : `document.querySelector('.workspace-leaf.mod-active .markdown-reading-view a.internal-link')`) : await K.openHost(host, mode);
+	const hov = await K.hover(link, src);
+	await K.moveTo(`${K.ENTRY(src)}.root`);
+	await t.sleep(250);
+	const pencil = `(${K.ENTRY(src)}.root.querySelector('.dse-chrome button[data-dse-chrome-item="edit"], button[aria-label^="Edit "]'))`;
+	await t.waitFor(`!!${pencil}`, `${mode}: pencil`, 8000);
+	if (plus) {
+		await K.click(`${K.ENTRY(src)}.root.querySelector('button[aria-label^="Increase"]')`);
+		await t.sleep(250);
+	}
+	await K.clickRevealed(pencil);
+	await t.waitFor(`!!${K.FORM}`, `${mode}: form opened`, 10000);
+	await t.sleep(400);
+	return { hov, pencil };
+}
+
+async function r3OpenModal(t, K, mode, kind, { preClick = null } = {}) {
+	const [src, host] = kind === 'stamina' ? ['Lifecycle/gs83-stam.md', 'Lifecycle/gs83-stam-host.md'] : ['Lifecycle/tracker.md', 'Lifecycle/gs83-trk-host.md'];
+	const MODAL = kind !== 'cond' ? `document.querySelector('.modal-container .dse-modal')` : `document.querySelector('.modal-container .dse-condal-modal')`;
+	await t.reset(src);
+	await t.reset(host);
+	const link = await K.openHost(host, mode);
+	const hov = await K.hover(link, src);
+	await K.moveTo(`${K.ENTRY(src)}.root`);
+	await t.sleep(250);
+	const opener = kind === 'stamina' ? `${K.ENTRY(src)}.root.querySelector('[data-dse-control="stamina.bar"]')` : `${K.ENTRY(src)}.root.querySelectorAll('.dse-cond--add')[0]`;
+	await t.waitFor(`!!(${opener})`, `${mode} ${kind}: opener`, 8000);
+	if (preClick) await preClick();
+	await K.clickRevealed(opener);
+	await t.waitFor(`!!${MODAL}`, `${mode} ${kind}: modal opened`, 8000);
+	await t.sleep(400);
+	return { hov, MODAL, src };
+}
+
+async function r3Trial(t, spec) {
+	const K = gs83Kit(t);
+	const [name, mode = 'rv', arg] = spec.split(':');
+	const rec = { spec };
+	try {
+		await t.ev(R3_INSTR);
+		if (name === 'form-close') {
+			// arg: cancel | x | bg  -- a click that closes the form
+			const o = await r3OpenForm(t, K, mode);
+			rec.hover = o.hov;
+			await K.click(K.RAW);
+			await t.sleep(400);
+			rec.afterRaw = await K.state();
+			const target = arg === 'cancel' ? `Array.from(document.querySelectorAll('.modal-container .dse-modal button')).find((b) => b.getAttribute('aria-label') === 'Cancel')`
+				: arg === 'x' ? `document.querySelector('.modal-container .modal-close-button')`
+				: null;
+			if (target) await K.click(target);
+			else {
+				const p = await t.ev(`(() => { const x = 30, y = window.innerHeight - 30; const h = document.elementFromPoint(x, y); return { x, y, hit: h ? h.className : null }; })()`);
+				rec.bgHit = p.hit;
+				await K.press(p);
+			}
+			await t.sleep(600);
+			rec.after = await K.state();
+			rec.top = await t.ev(R3_TOP);
+		} else if (name === 'freeheal') {
+			// arg: confirm | cancel
+			const o = await r3OpenModal(t, K, mode, 'stamina');
+			rec.hover = o.hov;
+			await K.click(`document.querySelector('.modal-container [data-dse-control="sedit.spend-recovery"]')`);
+			await t.waitFor(`document.querySelectorAll('.modal-container').length === 2`, 'free heal confirm opened', 5000);
+			await t.sleep(400);
+			rec.opened = { ...(await K.state()), modals: await t.ev(`document.querySelectorAll('.modal-container').length`) };
+			await K.click(`document.querySelector('.modal-container [data-dse-control="sedit.free-heal.${arg}"]')`);
+			await t.sleep(600);
+			rec.after = { ...(await K.state()), modals: await t.ev(`document.querySelectorAll('.modal-container').length`) };
+		} else if (name === 'cond') {
+			// arg: cog | pick
+			const o = await r3OpenModal(t, K, mode, 'conditions');
+			rec.hover = o.hov;
+			await K.click(`document.querySelector('.dse-condal-modal .dse-condal__add')`);
+			await t.sleep(400);
+			rec.afterAddClick = await K.state();
+			if (!(rec.afterAddClick.popover && rec.afterAddClick.modal)) return rec;
+			await t.waitFor(`!!document.querySelector('.dse-condal-modal .dse-condal__menu-item')`, 'condition menu', 4000);
+			await K.click(`document.querySelector('.dse-condal-modal .dse-condal__menu-item')`);
+			await t.sleep(500);
+			rec.afterPick = { ...(await K.state()), rows: await t.ev(`document.querySelectorAll('.dse-condal-modal .dse-condal__row').length`) };
+			if (!(rec.afterPick.popover && rec.afterPick.modal)) return rec;
+			if (arg === 'cog') {
+				await K.click(`document.querySelector('.dse-condal-modal .dse-condal__row .dse-condal__act')`);
+				await t.sleep(500);
+				rec.afterCog = { ...(await K.state()), editor: await t.ev(`!!document.querySelector('.dse-condal-modal .dse-condal__editor')`) };
+				if (rec.afterCog.popover && rec.afterCog.modal) {
+					await K.click(`document.querySelector('.dse-condal-modal .dse-condal__editor .dse-optchip')`);
+					await t.sleep(500);
+					rec.afterChip = await K.state();
+				}
+			}
+		} else if (name === 'stamapply') {
+			// a real Damage 8 then a real Apply in the stamina modal opened from a preview: does the write land, does the preview stay
+			const o = await r3OpenModal(t, K, mode, 'stamina');
+			rec.hover = o.hov;
+			await K.click(`document.querySelector('.modal-container [data-dse-control="sedit.apply-amount"]')`);
+			await t.ev(`(() => { const i = document.querySelector('.modal-container [data-dse-control="sedit.apply-amount"]'); i.focus(); i.select(); return true; })()`);
+			await t.cdp.call('Input.insertText', { text: '8' });
+			await t.sleep(150);
+			await K.click(`document.querySelector('.modal-container [data-dse-control="sedit.damage"]')`);
+			await t.sleep(300);
+			rec.afterDamage = await K.state();
+			const mp = await t.mark();
+			await K.click(`document.querySelector('.modal-container [data-dse-control="sedit.apply"]')`);
+			await t.sleep(2000);
+			rec.after = await K.state();
+			rec.file = (t.read(o.src).match(/(current|temp)_stamina: \d+/g) || []).join(' ');
+			rec.notices = await t.noticesSince(mp);
+		} else if (name === 'twopane') {
+			const SRC = 'Lifecycle/gs83-src.md';
+			await t.reset(SRC);
+			await t.reset('Lifecycle/gs83-host.md');
+			await K.openHost('Lifecycle/gs83-host.md', mode);
+			await t.ev(`(async () => { const host = app.workspace.getMostRecentLeaf(); const l = app.workspace.getLeaf('split'); await l.openFile(app.vault.getAbstractFileByPath(${JSON.stringify(SRC)}), { state: { mode: 'preview' } }); app.workspace.setActiveLeaf(host, { focus: true }); return true; })()`);
+			await t.sleep(800);
+			await r3OpenForm(t, K, mode, { skipOpenHost: true });
+			await K.click(K.RAW);
+			await t.sleep(400);
+			rec.afterRaw = await K.state();
+			await t.ev(`(() => { const ta = ${K.RAW}; ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); return true; })()`);
+			await t.cdp.call('Input.insertText', { text: '\nnote: r3two' });
+			await t.sleep(200);
+			const mp = await t.mark();
+			await K.click(K.SAVE);
+			const t0 = Date.now();
+			while (Date.now() - t0 < 4000 && !t.read(SRC).includes('note: r3two')) await t.sleep(50);
+			await t.sleep(400);
+			rec.saved = t.read(SRC).includes('note: r3two');
+			rec.notices = await t.noticesSince(mp);
+			rec.afterSave = await K.state();
+		} else if (name === 'twice') {
+			// two forms in succession from the same preview: first closed by Escape, second gets a raw click then Escape
+			const o = await r3OpenForm(t, K, mode);
+			await K.click(K.RAW);
+			await t.sleep(300);
+			await t.key('Escape', 'Escape', 27);
+			await t.sleep(500);
+			rec.afterEsc1 = { ...(await K.state()), top: await t.ev(R3_TOP) };
+			await K.clickRevealed(o.pencil);
+			await t.waitFor(`!!${K.FORM}`, 'second form', 8000);
+			await t.sleep(400);
+			await K.click(K.RAW);
+			await t.sleep(400);
+			rec.afterRaw2 = { ...(await K.state()), top: await t.ev(R3_TOP) };
+			await t.key('Escape', 'Escape', 27);
+			await t.sleep(500);
+			rec.afterEsc2 = { ...(await K.state()), top: await t.ev(R3_TOP), active: await t.ev(`document.activeElement ? document.activeElement.tagName + '.' + String(document.activeElement.className).slice(0, 40) : null`) };
+			// Escape again with the preview focused, then an outside click
+			await t.key('Escape', 'Escape', 27);
+			await t.sleep(400);
+			rec.afterEsc3 = await K.state();
+			await K.click(`document.querySelector('.workspace-leaf.mod-active .view-header-title, .workspace-leaf.mod-active .view-header')`);
+			await t.sleep(800);
+			rec.afterOutside = await K.state();
+		} else if (name === 'noprev' || name === 'leak') {
+			// listener / scope counts around a form opened from an ordinary note (noprev) or from a preview (leak)
+			const SRC = 'Lifecycle/gs83-src.md';
+			await t.reset(SRC);
+			let pencil;
+			if (name === 'noprev') {
+				await t.ev(`(async () => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); const leaf = app.workspace.getMostRecentLeaf(); await leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(SRC)}, mode: ${JSON.stringify(mode === 'lp' ? 'source' : 'preview')}, source: false }, active: true }); return true; })()`);
+				if (mode === 'lp') await t.ev(`(() => { app.workspace.getMostRecentLeaf().view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+				await t.sleep(2500);
+				const ROOT = `(app.plugins.plugins['draw-steel-elements'].viewRegistry.liveEntries().find((e) => e.host.sourcePath === ${JSON.stringify(SRC)} && e.root.isConnected && !e.root.closest('.hover-popover'))?.root)`;
+				pencil = `((${ROOT}).querySelector('.dse-chrome button[data-dse-chrome-item="edit"], button[aria-label^="Edit "]'))`;
+				await K.moveTo(ROOT);
+				await t.sleep(250);
+			}
+			rec.before = { doc: (await r3Listeners(t, 'document')).length, win: (await r3Listeners(t, 'window')).length, top: await t.ev(R3_TOP) };
+			if (name === 'noprev') {
+				await K.clickRevealed(pencil);
+				await t.waitFor(`!!${K.FORM}`, 'form', 8000);
+				await t.sleep(400);
+			} else {
+				const o = await r3OpenForm(t, K, mode);
+				pencil = o.pencil;
+			}
+			rec.open = { doc: (await r3Listeners(t, 'document')).length, win: (await r3Listeners(t, 'window')).length, top: await t.ev(R3_TOP) };
+			await t.ev(`(() => { window.__r3win = 0; if (!window.__r3winL) { window.__r3winL = () => window.__r3win++; window.addEventListener('click', window.__r3winL); } return true; })()`);
+			await K.click(K.RAW);
+			await t.sleep(300);
+			rec.windowSawRawClick = await t.ev('window.__r3win');
+			rec.afterRaw = await K.state();
+			await t.key('Escape', 'Escape', 27);
+			await t.sleep(500);
+			rec.closed = { ...(await K.state()), doc: (await r3Listeners(t, 'document')).length, win: (await r3Listeners(t, 'window')).length, top: await t.ev(R3_TOP) };
+			await t.ev(`(() => { window.removeEventListener('click', window.__r3winL); window.__r3winL = null; return true; })()`);
+		} else if (name === 'early-close') {
+			// a preview form closed by Escape 60 ms after it opened (before the 200 ms re-push): no stray scope afterwards
+			const SRC = 'Lifecycle/gs83-src.md';
+			await t.reset(SRC);
+			await t.reset('Lifecycle/gs83-host.md');
+			const link = await K.openHost('Lifecycle/gs83-host.md', mode);
+			await K.hover(link, SRC);
+			await K.moveTo(`${K.ENTRY(SRC)}.root`);
+			await t.sleep(250);
+			const pencil = `(${K.ENTRY(SRC)}.root.querySelector('.dse-chrome button[data-dse-chrome-item="edit"], button[aria-label^="Edit "]'))`;
+			await t.waitFor(`!!${pencil}`, 'pencil', 8000);
+			await K.click(`${K.ENTRY(SRC)}.root.querySelector('button[aria-label^="Increase"]')`);
+			await t.sleep(600);
+			rec.before = await t.ev(R3_TOP);
+			await t.ev(R3_INSTR);
+			await K.clickRevealed(pencil);
+			await t.sleep(30);
+			await t.ev(`(() => { document.querySelector('.modal-container .dse-modal')?.closest('.modal-container').querySelector('.modal-close-button')?.dispatchEvent(new MouseEvent('click', { bubbles: true })); return true; })()`);
+			await t.sleep(700);
+			rec.after = { ...(await K.state()), top: await t.ev(R3_TOP) };
+			rec.log = await t.ev('window.__r3.log');
+		} else if (name === 'winlist') {
+			await r3OpenForm(t, K, mode);
+			rec.window = (await r3Listeners(t, 'window')).filter((x) => !x.capture).map((x) => `${x.scriptId}:${x.line}:${x.col} ${x.src.slice(0, 110)}`);
+			rec.document = (await r3Listeners(t, 'document')).map((x) => `${x.capture ? 'cap' : 'bub'} ${x.scriptId}:${x.line}:${x.col} ${x.src.slice(0, 110)}`);
+		} else if (name === 'timing' || name === 'escearly') {
+			// arg: form | stamina | cond ; mode slot carries the CPU throttle rate for timing (rv only)
+			const rate = name === 'timing' ? Number(mode) || 1 : 1;
+			const kind = arg;
+			const preClick = async () => {
+				await t.ev(R3_INSTR);
+				if (rate > 1) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate });
+			};
+			let opened = false;
+			try {
+				if (kind === 'form') {
+					const SRC = 'Lifecycle/gs83-src.md';
+					await t.reset(SRC);
+					await t.reset('Lifecycle/gs83-host.md');
+					const link = await K.openHost('Lifecycle/gs83-host.md', 'rv');
+					await K.hover(link, SRC);
+					await K.moveTo(`${K.ENTRY(SRC)}.root`);
+					await t.sleep(250);
+					const pencil = `(${K.ENTRY(SRC)}.root.querySelector('.dse-chrome button[data-dse-chrome-item="edit"], button[aria-label^="Edit "]'))`;
+					await t.waitFor(`!!${pencil}`, 'pencil', 8000);
+					await preClick();
+					if (name === 'escearly') {
+						await K.clickRevealed(pencil);
+					} else {
+						await K.clickRevealed(pencil);
+					}
+					opened = true;
+				} else {
+					const MODAL = kind !== 'cond' ? `document.querySelector('.modal-container .dse-modal')` : `document.querySelector('.modal-container .dse-condal-modal')`;
+					const [src, host] = kind !== 'cond' ? ['Lifecycle/gs83-stam.md', 'Lifecycle/gs83-stam-host.md'] : ['Lifecycle/tracker.md', 'Lifecycle/gs83-trk-host.md'];
+					await t.reset(src);
+					await t.reset(host);
+					const link = await K.openHost(host, 'rv');
+					await K.hover(link, src);
+					await K.moveTo(`${K.ENTRY(src)}.root`);
+					await t.sleep(250);
+					const opener = kind !== 'cond' ? `${K.ENTRY(src)}.root.querySelector('[data-dse-control="stamina.bar"]')` : `${K.ENTRY(src)}.root.querySelectorAll('.dse-cond--add')[0]`;
+					await t.waitFor(`!!(${opener})`, 'opener', 8000);
+					if (kind === 'stamtext') {
+						// a click that lands ON a text node inside the opener: Obsidian's click-to-edit helper then waits 150 ms, not 10
+						const p = await t.ev(`(() => { const op = ${opener}; const w = document.createTreeWalker(op, NodeFilter.SHOW_TEXT); let n; while ((n = w.nextNode())) { if (!n.textContent.trim()) continue; const r = new Range(); r.selectNodeContents(n); const q = r.getClientRects()[0]; if (q && q.width > 2) return { x: Math.round(q.left + q.width / 2), y: Math.round(q.top + q.height / 2), text: n.textContent.trim().slice(0, 20), hit: document.elementFromPoint(q.left + q.width / 2, q.top + q.height / 2)?.className }; } return null; })()`);
+						rec.textHit = p;
+						await K.mouse('mouseMoved', p.x, p.y);
+						await t.sleep(200);
+						await preClick();
+						await K.press(p);
+					} else {
+						await preClick();
+						await K.clickRevealed(opener);
+					}
+					opened = true;
+				}
+				if (name === 'escearly') {
+					// Escape as soon as possible after the release (CDP round trips put it some tens of ms later); the log says when it landed
+					await t.sleep(Number(process.env.R3_ESC_DELAY ?? 120));
+					await t.key('Escape', 'Escape', 27);
+				}
+				await t.sleep(name === 'timing' ? 900 * Math.max(1, rate / 4) : 700);
+			} finally {
+				if (rate > 1) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: 1 });
+			}
+			rec.rate = rate;
+			rec.kind = kind;
+			rec.opened = opened;
+			rec.state = await K.state();
+			rec.active = await t.ev(`document.activeElement ? document.activeElement.tagName + '.' + String(document.activeElement.className).slice(0, 40) : null`);
+			rec.top = await t.ev(R3_TOP);
+			rec.log = await t.ev('window.__r3.log');
+			// derived: when the helper armed its timer, when the modal armed its re-push, and the order the pushes landed in
+			const L = rec.log.map((s) => { const i = s.indexOf(' '); return [Number(s.slice(0, i)), s.slice(i + 1)]; });
+			const clk = L.find(([, m]) => m === 'cap click');
+			const att = L.find(([, m]) => m === 'modal attached');
+			const zh = L.filter(([, m]) => m === 'setTimeout 10' || m === 'setTimeout 150').map(([ts, m]) => ({ ts, d: Number(m.split(' ')[1]) }));
+			const rp = L.filter(([, m]) => m === 'setTimeout 200').map(([ts]) => ts);
+			const zhLast = zh.length ? zh[zh.length - 1] : null;
+			rec.derived = {
+				click: clk ? clk[0] : null,
+				attached: att ? att[0] : null,
+				helperArmedAt: zhLast ? zhLast.ts : null,
+				helperDelay: zhLast ? zhLast.d : null,
+				repushArmedAt: rp.length ? rp[rp.length - 1] : null,
+				marginMs: zhLast && rp.length ? rp[rp.length - 1] + 200 - (zhLast.ts + zhLast.d) : null,
+				pushes: L.filter(([, m]) => m.startsWith('push') || m.startsWith('pop') || m.startsWith('cap keydown')).map(([ts, m]) => `${ts} ${m}`),
+			};
+		} else if (name === 'outside') {
+			// mode rv|lp ; arg cancel|bg|esc : close the form, then AT ONCE a real click outside the preview (the view header).
+			// The guard outlives close by one task: a genuine outside click right after must still dismiss the preview.
+			await t.ev(R5_LISTEN);
+			const o = await r3OpenForm(t, K, mode);
+			rec.hover = o.hov;
+			await K.click(K.RAW);
+			await t.sleep(300);
+			rec.afterRaw = await K.state();
+			const outP = await t.ev(`(() => { const el = document.querySelector('.workspace-leaf.mod-active .view-header-title, .workspace-leaf.mod-active .view-header'); const r = el.getBoundingClientRect(); return { x: Math.round(r.left + Math.min(r.width / 2, 40)), y: Math.round(r.top + r.height / 2) }; })()`);
+			await t.ev(R3_INSTR);
+			if (arg === 'esc') {
+				await t.key('Escape', 'Escape', 27);
+			} else if (arg === 'cancel') {
+				await K.click(K.CANCEL);
+			} else {
+				const p = await t.ev(`(() => { const x = 30, y = window.innerHeight - 30; const h = document.elementFromPoint(x, y); return { x, y, hit: h ? h.className : null }; })()`);
+				rec.bgHit = p.hit;
+				await K.press(p);
+			}
+			// no sleep: the outside press follows as fast as CDP allows
+			await K.press(outP);
+			rec.outsideHit = await t.ev(`(() => { const h = document.elementFromPoint(${outP.x}, ${outP.y}); return h ? h.className : null; })()`);
+			await t.sleep(700);
+			rec.after = { ...(await K.state()), top: await t.ev(R3_TOP), plugin: await t.ev(R5_COUNT) };
+			rec.log = await t.ev('window.__r3.log');
+		} else if (name === 'reopen') {
+			// mode rv|lp ; arg cancel|esc : close the form, reopen it at once from the same preview, click inside, Escape, then outside
+			await t.ev(R5_LISTEN);
+			const o = await r3OpenForm(t, K, mode);
+			rec.hover = o.hov;
+			rec.base = await t.ev(R5_COUNT);
+			if (arg === 'esc') await t.key('Escape', 'Escape', 27);
+			else await K.click(K.CANCEL);
+			await K.clickRevealed(o.pencil);
+			await t.waitFor(`!!${K.FORM}`, 'form reopened', 8000);
+			await t.sleep(400);
+			rec.reopened = { ...(await K.state()), top: await t.ev(R3_TOP), plugin: await t.ev(R5_COUNT) };
+			await K.click(K.RAW);
+			await t.sleep(400);
+			rec.afterRaw = await K.state();
+			await t.key('Escape', 'Escape', 27);
+			await t.sleep(500);
+			rec.afterEsc = { ...(await K.state()), top: await t.ev(R3_TOP), plugin: await t.ev(R5_COUNT) };
+			await K.click(`document.querySelector('.workspace-leaf.mod-active .view-header-title, .workspace-leaf.mod-active .view-header')`);
+			await t.sleep(800);
+			rec.afterOutside = { ...(await K.state()), plugin: await t.ev(R5_COUNT) };
+		} else if (name === 'esc') {
+			// esc:<rate>:<kind>:<delay> : Escape <delay> ms after the opening click's release, CPU throttled by <rate>. kind form|stamina|stamtext|cond
+			const rate = Number(mode) || 1;
+			const delay = Number(spec.split(':')[3] ?? 100);
+			const kind = arg;
+			const [src, host] = kind === 'form' ? ['Lifecycle/gs83-src.md', 'Lifecycle/gs83-host.md'] : kind === 'cond' ? ['Lifecycle/tracker.md', 'Lifecycle/gs83-trk-host.md'] : ['Lifecycle/gs83-stam.md', 'Lifecycle/gs83-stam-host.md'];
+			await t.reset(src);
+			await t.reset(host);
+			const link = await K.openHost(host, 'rv');
+			await K.hover(link, src);
+			await K.moveTo(`${K.ENTRY(src)}.root`);
+			await t.sleep(250);
+			const opener = kind === 'form' ? `(${K.ENTRY(src)}.root.querySelector('.dse-chrome button[data-dse-chrome-item="edit"], button[aria-label^="Edit "]'))` : kind === 'cond' ? `${K.ENTRY(src)}.root.querySelectorAll('.dse-cond--add')[0]` : `${K.ENTRY(src)}.root.querySelector('[data-dse-control="stamina.bar"]')`;
+			await t.waitFor(`!!(${opener})`, 'opener', 8000);
+			try {
+				if (kind === 'stamtext') {
+					const p = await t.ev(`(() => { const op = ${opener}; const w = document.createTreeWalker(op, NodeFilter.SHOW_TEXT); let n; while ((n = w.nextNode())) { if (!n.textContent.trim()) continue; const r = new Range(); r.selectNodeContents(n); const q = r.getClientRects()[0]; if (q && q.width > 2) return { x: Math.round(q.left + q.width / 2), y: Math.round(q.top + q.height / 2) }; } return null; })()`);
+					await K.mouse('mouseMoved', p.x, p.y);
+					await t.sleep(200);
+					await t.ev(R3_INSTR);
+					if (rate > 1) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate });
+					await K.press(p);
+				} else if (kind === 'form') {
+					// reveal the pencil first, then instrument, then press (clickRevealed presses at the end)
+					const p = await t.ev(`(() => { const r = (${opener}).getBoundingClientRect(); return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) }; })()`);
+					const from = await t.ev(`(() => { const r = (${opener}).closest('[data-dse-element]').getBoundingClientRect(); return { x: ${p.x}, y: Math.round(r.top + 10) }; })()`);
+					await K.mouse('mouseMoved', from.x, from.y);
+					await t.sleep(120);
+					for (let i = 1; i <= 8; i++) { await K.mouse('mouseMoved', from.x + ((p.x - from.x) * i) / 8, from.y + ((p.y - from.y) * i) / 8); await t.sleep(30); }
+					const t0 = Date.now();
+					while (!(await t.ev(`(() => { const el = ${opener}; const h = document.elementFromPoint(${p.x}, ${p.y}); return !!(el && h && (el === h || el.contains(h))); })()`))) { if (Date.now() - t0 > 4000) throw new Error('pencil never hit'); await K.mouse('mouseMoved', p.x + ((Date.now() / 100) % 2), p.y); await t.sleep(100); }
+					await t.ev(R3_INSTR);
+					if (rate > 1) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate });
+					await K.press(p);
+				} else {
+					const p = await K.moveTo(opener);
+					await t.sleep(150);
+					await t.ev(R3_INSTR);
+					if (rate > 1) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate });
+					await K.press(p);
+				}
+				const rel = Date.now();
+				if (delay > 0) await t.sleep(delay);
+				await t.key('Escape', 'Escape', 27);
+				rec.escSentAfterReleaseMs = Date.now() - rel;
+				await t.sleep(Math.max(800, 200 * rate));
+			} finally {
+				if (rate > 1) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: 1 });
+			}
+			await t.sleep(300);
+			rec.rate = rate; rec.delay = delay; rec.kind = kind;
+			rec.state = await K.state();
+			rec.active = await t.ev(`document.activeElement ? document.activeElement.tagName + '.' + String(document.activeElement.className).slice(0, 40) : null`);
+			rec.top = await t.ev(R3_TOP);
+			rec.log = await t.ev('window.__r3.log');
+			const L = rec.log.map((s) => { const i = s.indexOf(' '); return [Number(s.slice(0, i)), s.slice(i + 1)]; });
+			const pick = (re) => L.filter(([, m]) => re.test(m)).map(([ts, m]) => `${ts} ${m}`);
+			rec.derived = { seq: pick(/^(cap click|cap keydown|modal attached|modal detached|push|pop|setTimeout)/) };
+			// leave nothing open for the next trial
+			if ((await K.state()).modal) { await t.key('Escape', 'Escape', 27); await t.sleep(300); }
+		} else if (name === 'childquick' || name === 'titlequick' || name === 'inputquick') {
+			// childquick:<rate>:<opener>:<delay> : the Stamina modal opened by a real click (opener stamtext = on the "15" text, 150 ms helper;
+			// bar = on the bar, 10 ms helper), then <delay> ms later a real press on Spend Recovery (the free-heal confirmation opens).
+			// Which scope is on top 800 ms later; does Escape close only the child; does a second Escape close the parent.
+			const rate = Number(mode) || 1;
+			const delay = Number(spec.split(':')[3] ?? 60);
+			const src = 'Lifecycle/gs83-stam.md';
+			await t.reset(src);
+			await t.reset('Lifecycle/gs83-stam-host.md');
+			const link = await K.openHost('Lifecycle/gs83-stam-host.md', 'rv');
+			await K.hover(link, src);
+			await K.moveTo(`${K.ENTRY(src)}.root`);
+			await t.sleep(250);
+			const opener = `${K.ENTRY(src)}.root.querySelector('[data-dse-control="stamina.bar"]')`;
+			await t.waitFor(`!!(${opener})`, 'opener', 8000);
+			let p;
+			if (arg === 'stamtext') {
+				p = await t.ev(`(() => { const op = ${opener}; const w = document.createTreeWalker(op, NodeFilter.SHOW_TEXT); let n; while ((n = w.nextNode())) { if (!n.textContent.trim()) continue; const r = new Range(); r.selectNodeContents(n); const q = r.getClientRects()[0]; if (q && q.width > 2) return { x: Math.round(q.left + q.width / 2), y: Math.round(q.top + q.height / 2) }; } return null; })()`);
+				await K.mouse('mouseMoved', p.x, p.y);
+			} else p = await K.moveTo(opener);
+			await t.sleep(200);
+			await t.ev(R3_INSTR);
+			try {
+				if (rate > 1) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate });
+				await K.press(p);
+				const rel = Date.now();
+				const SR = name === 'childquick' ? `document.querySelector('.modal-container [data-dse-control="sedit.spend-recovery"]')` : name === 'titlequick' ? `document.querySelector('.modal-container .modal-title')` : `document.querySelector('.modal-container [data-dse-control="sedit.apply-amount"]')`;
+				let q = null;
+				while (!q && Date.now() - rel < 3000) q = await t.ev(`(() => { const b = ${SR}; if (!b) return null; const r = b.getBoundingClientRect(); return r.width ? { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) } : null; })()`);
+				const waited = Date.now() - rel;
+				if (delay > waited) await t.sleep(delay - waited);
+				await K.press(q);
+				rec.childPressAfterReleaseMs = Date.now() - rel;
+				rec.activeAfterPress = await t.ev(`document.activeElement ? document.activeElement.tagName + '.' + String(document.activeElement.className).slice(0, 40) : null`);
+				await t.sleep(Math.max(800, 200 * rate));
+			} finally {
+				if (rate > 1) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: 1 });
+			}
+			await t.sleep(300);
+			rec.opened = { ...(await K.state()), top: await t.ev(R3_TOP) };
+			await t.key('Escape', 'Escape', 27);
+			await t.sleep(500);
+			rec.afterEsc1 = { ...(await K.state()), top: await t.ev(R3_TOP), footer: await t.ev(`(document.querySelector('.modal-container .dse-modal .dse-modal__footer .dse-btn--accent')?.textContent ?? '')`) };
+			await t.key('Escape', 'Escape', 27);
+			await t.sleep(500);
+			rec.afterEsc2 = { ...(await K.state()), top: await t.ev(R3_TOP) };
+			rec.log = await t.ev('window.__r3.log');
+			const L = rec.log.map((s) => { const i = s.indexOf(' '); return [Number(s.slice(0, i)), s.slice(i + 1)]; });
+			rec.derived = { seq: L.filter(([, m]) => /^(cap click|win-bubble click|cap keydown|modal attached|modal detached|push|pop|setTimeout)/.test(m)).map(([ts, m]) => `${ts} ${m}`) };
+		} else if (name === 'plugcount') {
+			// plugcount:<mode>:<kind> kind form|noprev : plugin-origin click listeners on window/document and keymap depth before, open, closed (+1 task, +700 ms)
+			await t.ev(R5_LISTEN);
+			const SRC = 'Lifecycle/gs83-src.md';
+			await t.reset(SRC);
+			await t.reset('Lifecycle/gs83-host.md');
+			let pencil;
+			if (arg === 'noprev') {
+				await t.ev(`(async () => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); const leaf = app.workspace.getMostRecentLeaf(); await leaf.setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true }); await leaf.setViewState({ type: 'markdown', state: { file: ${JSON.stringify(SRC)}, mode: ${JSON.stringify(mode === 'lp' ? 'source' : 'preview')}, source: false }, active: true }); return true; })()`);
+				if (mode === 'lp') await t.ev(`(() => { app.workspace.getMostRecentLeaf().view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+				const ROOT = `(app.plugins.plugins['draw-steel-elements'].viewRegistry.liveEntries().find((e) => e.host.sourcePath === ${JSON.stringify(SRC)} && e.root.isConnected && !e.root.closest('.hover-popover'))?.root)`;
+				await t.waitFor(`!!${ROOT}`, 'noprev card', 10000);
+				await t.sleep(800);
+				pencil = `((${ROOT}).querySelector('.dse-chrome button[data-dse-chrome-item="edit"], button[aria-label^="Edit "]'))`;
+				await K.moveTo(ROOT);
+				await t.sleep(250);
+				rec.before = { plugin: await t.ev(R5_COUNT), top: await t.ev(R3_TOP) };
+				await t.ev(R3_INSTR);
+				await K.clickRevealed(pencil);
+				await t.waitFor(`!!${K.FORM}`, 'form', 8000);
+				await t.sleep(400);
+			} else {
+				const link = await K.openHost('Lifecycle/gs83-host.md', mode);
+				await K.hover(link, SRC);
+				await K.moveTo(`${K.ENTRY(SRC)}.root`);
+				await t.sleep(400);
+				pencil = `(${K.ENTRY(SRC)}.root.querySelector('.dse-chrome button[data-dse-chrome-item="edit"], button[aria-label^="Edit "]'))`;
+				await t.waitFor(`!!${pencil}`, 'pencil', 8000);
+				rec.before = { plugin: await t.ev(R5_COUNT), top: await t.ev(R3_TOP) };
+				await t.ev(R3_INSTR);
+				await K.clickRevealed(pencil);
+				await t.waitFor(`!!${K.FORM}`, 'form', 8000);
+				await t.sleep(400);
+			}
+			rec.open = { plugin: await t.ev(R5_COUNT), top: await t.ev(R3_TOP) };
+			await K.click(K.RAW);
+			await t.sleep(300);
+			rec.afterRaw = await K.state();
+			await K.click(K.CANCEL);
+			rec.closedSameTick = await t.ev(R5_COUNT);
+			await t.sleep(700);
+			rec.closed = { ...(await K.state()), plugin: await t.ev(R5_COUNT), top: await t.ev(R3_TOP) };
+			rec.pushes = (await t.ev('window.__r3.log')).filter((m) => / (push|pop) /.test(m) || / setTimeout /.test(m));
+		} else if (name === 'ctxmenu') {
+			// ctxmenu:<mode>:<item index> : a real right-click in the form's raw box (opened from a preview); an Obsidian Menu? then a real click on an item
+			const o = await r3OpenForm(t, K, mode);
+			rec.hover = o.hov;
+			await K.click(K.RAW);
+			await t.sleep(300);
+			rec.afterRaw = await K.state();
+			const p = await K.moveTo(K.RAW);
+			await K.mouse('mousePressed', p.x, p.y, { button: 'right', buttons: 2, clickCount: 1 });
+			await K.mouse('mouseReleased', p.x, p.y, { button: 'right', buttons: 0, clickCount: 1 });
+			await t.sleep(600);
+			rec.afterRight = { ...(await K.state()), menu: await t.ev(`Array.from(document.querySelectorAll('.menu .menu-item')).map((m) => m.textContent.trim())`) };
+			const idx = Number(arg ?? 0);
+			if (rec.afterRight.menu && rec.afterRight.menu.length > idx) {
+				await t.ev(R3_INSTR);
+				await K.click(`document.querySelectorAll('.menu .menu-item')[${idx}]`);
+				await t.sleep(700);
+				rec.afterItem = { ...(await K.state()), menu: await t.ev(`document.querySelectorAll('.menu').length`), raw: await t.ev(`(${K.RAW})?.value?.length ?? null`) };
+				rec.log = await t.ev('window.__r3.log');
+			}
+		} else {
+			rec.error = `unknown trial ${name}`;
+		}
+	} catch (e) {
+		rec.error = e.message;
+	} finally {
+		try { await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: 1 }); } catch {}
+		await K.cleanup();
+		await t.ev(`(() => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); return true; })()`);
+		R3(rec);
+	}
+	return rec;
+}
+
+const R3_PROBE = {
+	id: 'R3-PROBE',
+	async run(t) {
+		const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+		await t.ev(`(() => { if (!document.getElementById('lc-gs83-notice')) { const st = document.createElement('style'); st.id = 'lc-gs83-notice'; st.textContent = '.notice-container { display: none !important; }'; document.head.appendChild(st); } return true; })()`);
+		await t.ev(`${prefs}.set('authoringControls', true)`);
+		const reps = Number(process.env.R3_REPS ?? 1);
+		for (let r = 0; r < reps; r++) for (const spec of R3_TRIALS) await r3Trial(t, spec);
+		return 'probe done';
+	},
+};
+// ===== end SC-595 r3 probe =====

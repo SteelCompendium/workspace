@@ -1,0 +1,62 @@
+MUTANT M1-drop-guard: failed 6 of 205
+  - SC-595: a modal opened from a hover preview a click inside never reaches a window bubble listener (the popover's hide), a document listener still sees it
+  - SC-595: a modal opened from a hover preview the click is stopped, never default-prevented: an Obsidian-shaped label.checkbox-container > input still toggles and fires change
+  - SC-595: a modal opened from a hover preview a modal opened from a modal that is anchored in a preview inherits the anchor (FreeHealConfirmModal)
+  - SC-595: the block edit form opened from a hover preview a click in the raw box and on Save never reaches the window (the popover's hide); the form stays open for the first and the edit is saved by the
+  - SC-595: the Stamina modal opened from a bar in a hover preview a click on the modal never reaches the window
+  - SC-595: the Conditions modal opened from a tracker in a hover preview a click on the modal never reaches the window and the modal stays open
+MUTANT M2-preventDefault: failed 6 of 205
+  - SC-595: a modal opened from a hover preview a click inside never reaches a window bubble listener (the popover's hide), a document listener still sees it
+  - SC-595: a modal opened from a hover preview the click is stopped, never default-prevented: an Obsidian-shaped label.checkbox-container > input still toggles and fires change
+  - SC-595: a modal opened from a hover preview a modal opened from a modal that is anchored in a preview inherits the anchor (FreeHealConfirmModal)
+  - SC-595: the block edit form opened from a hover preview a click in the raw box and on Save never reaches the window (the popover's hide); the form stays open for the first and the edit is saved by the
+  - SC-595: the Stamina modal opened from a bar in a hover preview a click on the modal never reaches the window
+  - SC-595: the Conditions modal opened from a tracker in a hover preview a click on the modal never reaches the window and the modal stays open
+MUTANT M3-drop-repush: failed 2 of 205
+  - SC-595: a modal opened from a hover preview keymap scope after the opening event the popover has pushed its scope above the modal's: the modal's goes back on top, and the popover's is on top again aft
+  - SC-595: the block edit form opened from a hover preview Escape closes the form: the popover's keymap scope was pushed above the form's by the opening click, and the form's is put back on top
+MUTANT M4-drop-hover-popover-condition: failed 5 of 205
+  - SC-595: a modal opened from a hover preview control: opened from an element that is not in a hover preview, nothing changes: the click reaches the window and no scope is re-pushed
+  - SC-595: a modal opened from a hover preview control: no anchor at all behaves like a modal outside a preview
+  - SC-595: the block edit form opened from a hover preview control: the same form opened from a block that is not in a hover preview: a click inside reaches the window as it always did
+  - SC-595: the Stamina modal opened from a bar in a hover preview control: opened from a bar that is not in a hover preview, a click on the modal reaches the window
+  - SC-595: the Conditions modal opened from a tracker in a hover preview control: opened from a tracker that is not in a hover preview, a click on the modal reaches the window
+MUTANT M5-guard-capture-phase: failed 3 of 205
+  - SC-595: a modal opened from a hover preview a click inside never reaches a window bubble listener (the popover's hide), a document listener still sees it
+  - SC-595: a modal opened from a hover preview the click is stopped, never default-prevented: an Obsidian-shaped label.checkbox-container > input still toggles and fires change
+  - SC-595: the block edit form opened from a hover preview a click in the raw box and on Save never reaches the window (the popover's hide); the form stays open for the first and the edit is saved by the
+MUTANT M6-repush-0ms: failed 1 of 205
+  - SC-595: a modal opened from a hover preview keymap scope after the opening event the popover has pushed its scope above the modal's: the modal's goes back on top, and the popover's is on top again aft
+MUTANT M7-repush-after-close: failed 1 of 205
+  - SC-595: a modal opened from a hover preview keymap scope closed before the deferred re-push runs: nothing is pushed back for the closed modal
+MUTANT M8-freeheal-no-anchor: failed 0 of 7195
+MUTANT M9-conditions-panel-no-anchor: failed 0 of 7195
+MUTANT M10-montage-no-anchor: failed 1 of 7195
+  - SC-537: twin callouts in Live Preview (the editor-driven pass) SC-547: a pass over a callout of 40 same-alias blocks scans the callout's lines for fences once, not once per block
+
+Mutation definitions:
+import sys
+W='/home/scott/code/steelCompendium/worktrees/sc595-hover-form-click-closes/draw-steel-elements'
+MM=W+'/src/framework/kit/managedModal.ts'
+muts={
+ 'M1-drop-guard': (MM, "if (target && this.containerEl.contains(target)) evt.stopPropagation();", "void target;"),
+ 'M2-preventDefault': (MM, "if (target && this.containerEl.contains(target)) evt.stopPropagation();","if (target && this.containerEl.contains(target)) evt.preventDefault();"),
+ 'M3-drop-repush': (MM, "\t\t\tthis.app.keymap.popScope(this.scope);\n\t\t\tthis.app.keymap.pushScope(this.scope);\n","\t\t\tvoid 0;\n"),
+ 'M4-drop-hover-popover-condition': (MM, "if (this.anchorEl?.closest('.hover-popover')) this.keepHoverPreviewAlive();","this.keepHoverPreviewAlive();"),
+ 'M5-guard-capture-phase': (MM, "\t\t\tif (target && this.containerEl.contains(target)) evt.stopPropagation();\n\t\t});", "\t\t\tif (target && this.containerEl.contains(target)) evt.stopPropagation();\n\t\t}, { capture: true });"),
+ 'M6-repush-0ms': (MM, "export const HOVER_SCOPE_REPUSH_MS = 200;", "export const HOVER_SCOPE_REPUSH_MS = 0;"),
+ 'M7-repush-after-close': (MM, "\t\t\tif (!this.dseOpen) return;\n\t\t\tthis.app.keymap.popScope", "\t\t\tthis.app.keymap.popScope"),
+ 'M8-freeheal-no-anchor': (W+'/src/views/StaminaEditModal.ts', "\t\t\t\t\t\t\tthis.anchor,\n", ""),
+ 'M9-conditions-panel-no-anchor': (W+'/src/elements/conditions/panel.ts', "\t\t\tthis.cx.host.containerEl, // SC-595: keeps a hover preview alive while the modal is open\n", ""),
+ 'M10-montage-no-anchor': (W+'/src/elements/montage/view.ts', "openManagedModal(modalOwner, factory, this.cx.host.containerEl);", "openManagedModal(modalOwner, factory);"),
+}
+name=sys.argv[1]
+f,a,b=muts[name]
+s=open(f).read()
+assert s.count(a)==1,(name,s.count(a))
+if name=='M7-repush-after-close':
+    # also drop the clearTimeout so the timer survives close (the dseOpen check alone is redundant with it)
+    c="\t\tthis.lifecycle.register(() => win.clearTimeout(timer));\n"
+    assert s.count(c)==1; s=s.replace(c,"\t\tvoid timer;\n")
+open(f,'w').write(s.replace(a,b))
+print(f)

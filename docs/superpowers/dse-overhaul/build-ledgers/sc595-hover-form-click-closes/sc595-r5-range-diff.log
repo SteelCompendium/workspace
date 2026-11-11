@@ -1,0 +1,21 @@
+== range-diff eaa8742a..0f5c9c98 vs 6c7216e8..74b138f0 (the r2/r3 commits over the rebase)
+1:  fa4c68d4 = 1:  89b8f71c fix(SC-595): a modal opened from a hover preview keeps the preview alive (click guard on its document, keymap scope back on top)
+2:  c084a929 = 2:  818513e3 test(SC-595): jsdom coverage — click guard (window spy), toggle still toggles, control outside a preview, guard gone after close, keymap scope back on top, real form / stamina / conditions openers
+3:  fd512b0d = 3:  dbfffe52 test(SC-595): lifecycle G-S83 (real CDP mouse, hover preview: form, stamina and conditions modals, RV and LP); fix(SC-595): re-push the modal's keymap scope after the popover's 150 ms click-to-edit delay, not at 0 ms
+4:  0f5c9c98 = 4:  74b138f0 test(SC-595): G-S83 judge stops at the click that closed the form (clear failure on base)
+== range-diff 0f5c9c98..f05f0955 vs 74b138f0..2a8c56af (the r4 commits over the rebase)
+1:  f0232740 = 1:  a4aba989 fix(SC-595): guard uses composedPath and outlives close by one task; re-push armed after the popover's own timers (10/150 ms), newest modal only, active window only; tests for redraw, closing click, nested confirm, ordering, anchors of FreeHeal / conditions panel / montage
+2:  96f4ce6c = 2:  d616ccd8 test(SC-595): G-S83 adds Add condition (RV, LP), free-heal Confirm, form Cancel; Conditions in LP too
+3:  9c512192 = 3:  0873b589 test(SC-595): G-S83 modal trials stop at the click that closed the modal
+4:  f05f0955 = 4:  2a8c56af test(SC-595): the child-on-top test uses fake timers so the newest-modal check is killed deterministically
+== 6c7216e8 = origin/develop: c3fd83234bb35afa3903f7c80ab5e892eb25134e; merge-base HEAD origin/develop: 6c7216e84b62bc3ed4e004970f8acf3ffc6bb86d
+== eaa8742a..6c7216e8 (SC-573) touches:
+ CHANGELOG.md                                       |   6 +
+ e2e/README.md                                      |   1 +
+ e2e/driver/pool.ts                                 |   1 +
+ e2e/specs/minion-pool/pool-apply-kills.e2e.ts      |  17 +-
+ e2e/vaults/shipped/Initiative/squad-empty.md       |  22 +++
+ src/views/MinionStaminaPoolModal.ts                |  52 ++++--
+ .../views/minion-stamina-pool-modal-matrix.test.ts | 206 +++++++++++++++++++--
+ 7 files changed, 280 insertions(+), 25 deletions(-)
+== overlap with the SC-595 files:

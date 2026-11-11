@@ -1,0 +1,60 @@
+--- /home/scott/code/steelCompendium/worktrees/sc595-hover-form-click-closes/draw-steel-elements/src/framework/kit/managedModal.ts	2026-11-11 08:43:53.847958817 -0500
++++ /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc595-r3-review-R2/proto/src/framework/kit/managedModal.ts	2026-11-11 09:50:41.752191183 -0500
+@@ -22,6 +22,7 @@
+ import { consumeEscapeAt } from './escapeConsumer';
+ 
+ let titleCounter = 0;
++const previewModals: DseModal[] = [];
+ 
+ /** SC-595: how long after open() a modal opened from a hover preview puts its keymap scope back on top: longer than the 150 ms
+  *  Obsidian's page-preview popover waits (click-to-edit helper, a click on text) before pushing its own scope. */
+@@ -201,17 +202,41 @@
+ 	 */
+ 	private keepHoverPreviewAlive(): void {
+ 		const doc = this.containerEl.ownerDocument;
+-		this.lifecycle.registerDomEvent(doc, 'click', (evt: MouseEvent) => {
+-			const target = evt.target as Node | null;
+-			if (target && this.containerEl.contains(target)) evt.stopPropagation();
+-		});
+ 		const win = doc.defaultView ?? window;
+-		const timer = win.setTimeout(() => {
+-			if (!this.dseOpen) return;
++		// r3 prototype (1): composedPath, not target + contains: a control the modal redraws in its own click handler
++		// (ConditionsModal renderAdd/renderList, the pool's condition icons) is detached by the time the click reaches the document.
++		const guard = (evt: MouseEvent): void => {
++			if (evt.composedPath().includes(this.containerEl)) evt.stopPropagation();
++		};
++		doc.addEventListener('click', guard);
++		// r3 prototype (2): removed one task AFTER close, so the click that closes the modal (Cancel, backdrop, a nested
++		// confirmation's buttons) is still stopped on its way to the window.
++		this.lifecycle.register(() => win.setTimeout(() => doc.removeEventListener('click', guard), 0));
++		// r3 prototype (3): re-push ordered after the popover's click-to-edit timer by construction, not by a 200 ms margin.
++		previewModals.push(this);
++		this.lifecycle.register(() => {
++			const i = previewModals.indexOf(this);
++			if (i >= 0) previewModals.splice(i, 1);
++		});
++		const repush = (): void => {
++			if (!this.dseOpen || previewModals[previewModals.length - 1] !== this) return;
+ 			this.app.keymap.popScope(this.scope);
+ 			this.app.keymap.pushScope(this.scope);
+-		}, HOVER_SCOPE_REPUSH_MS);
+-		this.lifecycle.register(() => win.clearTimeout(timer));
++		};
++		const arm = (): void => {
++			for (const ms of [10, 150]) {
++				const id = win.setTimeout(repush, ms);
++				this.lifecycle.register(() => win.clearTimeout(id));
++			}
++		};
++		const opening = (win as unknown as { event?: Event }).event;
++		if (opening && opening.type === 'click') {
++			const onWin = (e: Event): void => {
++				if (e === opening) arm();
++			};
++			win.addEventListener('click', onWin);
++			this.lifecycle.register(() => win.removeEventListener('click', onWin));
++		} else arm();
+ 	}
+ 
+ 	close(): void {

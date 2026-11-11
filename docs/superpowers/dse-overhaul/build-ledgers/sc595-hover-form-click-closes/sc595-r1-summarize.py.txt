@@ -1,0 +1,17 @@
+import json, sys, re
+for line in open(sys.argv[1]):
+    if not line.startswith('SC595 '): continue
+    r = json.loads(line[6:])
+    print('=== ' + r['label'], '| hover:', r.get('hover'), '| disk:', r.get('disk'), '| error:', r.get('error'))
+    for k in ('popoverAfterSave', 'modalFocusedBefore', 'modalAfter', 'notices'):
+        if k in r: print('  ', k, json.dumps(r[k]))
+    for l in r.get('log', []):
+        if re.search(r'capture (pointerdown|mousedown|pointerup|mouseup|click|focusin) |^\d+ms (?!capture|bubble)', l) or 'bubble-after click' in l:
+            l = re.sub(r'"active":"([^"]*)"', r'active=\1', l)
+            print('   ', l.replace('"', ''))
+    for h in r.get('hides', []):
+        print('   HIDE at', h['at'], 'event', h['event'], 'phase', h['phase'], 'on', h['currentTarget'], 'target', h['target'], 'defaultPrevented', h['defaultPrevented'], 'isFocused', h['focused'])
+        print('     stack:', ' <- '.join(s.replace('at ', '') for s in h['stack'][:6]))
+    for c in r.get('closes', []):
+        print('   MODAL DETACH at', c['at'], 'event', c.get('event'))
+        print('     stack:', ' <- '.join(s.replace('at ', '') for s in c['stack'][:40]))

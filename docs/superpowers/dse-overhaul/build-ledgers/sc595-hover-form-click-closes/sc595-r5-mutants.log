@@ -1,0 +1,102 @@
+SC-595 r5 mutants (reviewer R3). Head a53b0454 (git archive copy in scratch). Each mutant = one edit (mutant.py below), run over the 31 SC-595 jest tests (-t SC-595, the 7 files), file restored from the pristine export. Unmutated control: 31 passed.
+Tests:       440 skipped, 31 passed, 471 total
+
+MUTANT M11-contains jest rc=1 restored
+MUTANT M11-contains: failed 2 passed 29
+  RED SC-595: a modal opened from a hover preview a click on a control the modal REDRAWS in its own click handler (the target is detached when the click reaches the document) n
+  RED SC-595: the Conditions modal opened from a tracker in a hover preview "Add condition" redraws its own control inside the click: that click still never reaches the window 
+MUTANT M12-sync-removal jest rc=1 restored
+MUTANT M12-sync-removal: failed 5 passed 26
+  RED SC-595: the free-heal confirmation opened from a Stamina modal in a hover preview confirm closes only the confirmation: the click never reaches the window and the Stamina
+  RED SC-595: the free-heal confirmation opened from a Stamina modal in a hover preview cancel closes only the confirmation: the click never reaches the window and the Stamina 
+  RED SC-595: the block edit form opened from a hover preview Cancel (a click that closes the form) never reaches the window either; after the guard is gone a click elsewhere d
+  RED SC-595: a modal opened from a hover preview the click that CLOSES the modal (Cancel, backdrop shape) never reaches the window; once the guard is gone a click outside does
+  RED SC-595: a modal opened from a hover preview a nested confirmation: Confirm closes the child; the click never reaches the window and the parent stays open
+MUTANT M13-arm-at-open jest rc=1 restored
+MUTANT M13-arm-at-open: failed 2 passed 29
+  RED SC-595: a modal opened from a hover preview keymap scope opened from a click, the popover arms its 10 ms push after the opener has opened the modal: the modal is on top w
+  RED SC-595: a modal opened from a hover preview keymap scope opened from a click, the popover arms its 150 ms push after the opener has opened the modal: the modal is on top 
+MUTANT M14-no-newest jest rc=1 restored
+MUTANT M14-no-newest: failed 1 passed 30
+  RED SC-595: a modal opened from a hover preview keymap scope a child opened from the parent while the parent's re-pushes are still due stays on top: the parent does not bury 
+MUTANT M15-no-active-window jest rc=1 restored
+MUTANT M15-no-active-window: failed 1 passed 30
+  RED SC-595: a modal opened from a hover preview keymap scope the modal's window is not the active one when the re-push is due: nothing is pushed onto the other window's stack
+MUTANT M16-only-10 jest rc=0 restored
+MUTANT M16-only-10: failed 0 passed 30
+MUTANT R2-only-150 jest rc=1 restored
+MUTANT R2-only-150: failed 1 passed 30
+  RED SC-595: a modal opened from a hover preview keymap scope opened from a click, the popover arms its 10 ms push after the opener has opened the modal: the modal is on top w
+MUTANT R1-arm-capture jest rc=1 restored
+MUTANT R1-arm-capture: failed 3 passed 28
+  RED SC-595: a modal opened from a hover preview keymap scope opened from a click, the popover arms its 10 ms push after the opener has opened the modal: the modal is on top w
+  RED SC-595: a modal opened from a hover preview keymap scope opened from a click, the popover arms its 150 ms push after the opener has opened the modal: the modal is on top 
+  RED SC-595: the block edit form opened from a hover preview Escape closes the form: the popover's keymap scope was pushed above the form's by the opening click, and the form'
+MUTANT R3-guard-never-removed jest rc=1 restored
+MUTANT R3-guard-never-removed: failed 1 passed 30
+  RED SC-595: a modal opened from a hover preview after close (and the one task the guard outlives it) the guard is gone: the same container, attached again, lets a click throu
+MUTANT R4-removal-microtask jest rc=0 restored
+MUTANT R4-removal-microtask: failed 0 passed 31
+MUTANT R5-arm-any-click jest rc=0 restored
+MUTANT R5-arm-any-click: failed 0 passed 31
+MUTANT R6-no-splice jest rc=0 restored
+MUTANT R6-no-splice: failed 0 passed 31
+MUTANT R7-no-dseOpen jest rc=0 restored
+MUTANT R7-no-dseOpen: failed 0 passed 31
+MUTANT M8-freeheal-no-anchor jest rc=1 restored
+MUTANT M8-freeheal-no-anchor: failed 2 passed 29
+  RED SC-595: the free-heal confirmation opened from a Stamina modal in a hover preview confirm closes only the confirmation: the click never reaches the window and the Stamina
+  RED SC-595: the free-heal confirmation opened from a Stamina modal in a hover preview cancel closes only the confirmation: the click never reaches the window and the Stamina 
+MUTANT M9-conditions-panel-no-anchor jest rc=1 restored
+MUTANT M9-conditions-panel-no-anchor: failed 1 passed 30
+  RED SC-595: the Conditions modal opened from a conditions panel in a hover preview a click on the modal never reaches the window
+MUTANT M10-montage-no-anchor jest rc=1 restored
+MUTANT M10-montage-no-anchor: failed 1 passed 30
+  RED SC-595: the Montage sheet opened from a board in a hover preview a click on the sheet never reaches the window
+
+== Real-Obsidian checks of two jsdom survivors (G-S83 alone, head harness, mutant bundle via DSE_LIFECYCLE_BUNDLE)
+-- R4-removal-microtask:
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :161, port 36103, 1 scenario(s)
+OBSIDIAN-LIFECYCLE G-S83 FAIL: form rv: Cancel must close the form and leave the preview {"popover":false,"modal":false,"modals":0} | form lp: Cancel must close the form and leave the preview {"popover":false,"modal":false,"modals":0} | stamina modal rv: free-heal Confirm must close only the confirmation and keep the Stamina modal with its staged heal {"popover":false,"modal":false,"modals":0} footer ""; Escape must close the modal and leave the preview {"popover":false,"modal":false,"modals":0} | stamina modal lp: free-heal Confirm must close only the confirmation and keep the Stamina modal with its staged heal {"popover":false,"modal":false,"modals":0} footer ""; Escape must close the modal and leave the preview {"popover":false,"modal":false,"modals":0} -- passed: conditions modal rv (real hover): a real click on the title and on "Add condition" left preview and modal open, Escape clo
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-7LpyxQ
+OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+LIFECYCLE_RC=1
+-- M16-only-10:
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :161, port 33357, 1 scenario(s)
+OBSIDIAN-LIFECYCLE G-S83 ok (form rv (real hover): press+release in the raw box left preview and form open, typed text kept, Save landed (no Notice, preview shown), Escape closed a new form and Cancel another (preview shown both times), a click outside closed the preview; form lp (real hover): press+release in the raw box left preview and form open, typed text kept, Save landed (no Notice, preview shown), Escape closed a new form and Cancel another (preview shown both times), a click outside clo
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+LIFECYCLE_RC=0
+
+== mutant.py
+import sys, shutil
+M = sys.argv[2]
+MM = M + '/src/framework/kit/managedModal.ts'
+G = "if (evt.composedPath().includes(this.containerEl)) evt.stopPropagation();"
+REM = "\t\tthis.lifecycle.register(() => {\n\t\t\twin.setTimeout(() => doc.removeEventListener('click', guard), 0);\n\t\t});\n"
+RP = "if (!this.dseOpen || previewModals[previewModals.length - 1] !== this || activeWindow !== win) return;"
+muts = {
+ 'M11-contains': [(MM, G, "{ const tg = evt.target as Node | null; if (tg && this.containerEl.contains(tg)) evt.stopPropagation(); }")],
+ 'M12-sync-removal': [(MM, REM, "\t\tthis.lifecycle.register(() => doc.removeEventListener('click', guard));\n")],
+ 'M13-arm-at-open': [(MM, "if (opening?.type === 'click') {", "if (false as boolean) {")],
+ 'M14-no-newest': [(MM, RP, "if (!this.dseOpen || activeWindow !== win) return;")],
+ 'M15-no-active-window': [(MM, RP, "if (!this.dseOpen || previewModals[previewModals.length - 1] !== this) return;")],
+ 'M16-only-10': [(MM, "= [10, 150];", "= [10];")],
+ 'R2-only-150': [(MM, "for (const ms of HOVER_HELPER_DELAYS_MS) {", "for (const ms of HOVER_HELPER_DELAYS_MS.filter((d) => d !== 10)) {")],
+ 'R1-arm-capture': [(MM, "win.addEventListener('click', onWindowBubble);", "win.addEventListener('click', onWindowBubble, true);"), (MM, "win.removeEventListener('click', onWindowBubble));", "win.removeEventListener('click', onWindowBubble, true));")],
+ 'R3-guard-never-removed': [(MM, REM, "")],
+ 'R4-removal-microtask': [(MM, "win.setTimeout(() => doc.removeEventListener('click', guard), 0);", "queueMicrotask(() => doc.removeEventListener('click', guard));")],
+ 'R5-arm-any-click': [(MM, "if (evt === opening) arm();", "void opening; arm();")],
+ 'R6-no-splice': [(MM, "if (i >= 0) previewModals.splice(i, 1);", "void i;")],
+ 'R7-no-dseOpen': [(MM, RP, "if (previewModals[previewModals.length - 1] !== this || activeWindow !== win) return;")],
+ 'M8-freeheal-no-anchor': [(M + '/src/views/StaminaEditModal.ts', "\t\t\t\t\t\t\tthis.anchor,\n", "")],
+ 'M9-conditions-panel-no-anchor': [(M + '/src/elements/conditions/panel.ts', "\t\t\tthis.cx.host.containerEl, // SC-595: keeps a hover preview alive while the modal is open\n", "")],
+ 'M10-montage-no-anchor': [(M + '/src/elements/montage/view.ts', "openManagedModal(modalOwner, factory, this.cx.host.containerEl);", "openManagedModal(modalOwner, factory);")],
+}
+name = sys.argv[1]
+files = set()
+for f, a, b in muts[name]:
+    s = open(f).read()
+    assert s.count(a) == 1, (name, a, s.count(a))
+    open(f, 'w').write(s.replace(a, b))
+    files.add(f)
+print(' '.join(sorted(files)))

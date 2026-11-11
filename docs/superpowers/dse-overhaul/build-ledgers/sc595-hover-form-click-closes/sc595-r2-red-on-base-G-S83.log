@@ -1,0 +1,8 @@
+SC-595 r2: G-S83 against the BASE bundle (dse eaa8742a src, built in a scratch dir from git archive; styles.css sha256 5e5ff488... same as head) with the NEW harness (head fd512b0d + judge fix).
+Command: DSE_LIFECYCLE_BUNDLE=<base build dir> node visual-harness/obsidian-lifecycle.mjs --only=G-S83 (devbox, worktree dse dir). Result: RED (exit 1).
+
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :160, port 38077, 1 scenario(s)
+OBSIDIAN-LIFECYCLE G-S83 FAIL: form rv: a real click in the raw box closed {"popover":false,"modal":false} (preview and form must both stay) | form lp: a real click in the raw box closed {"popover":false,"modal":false} (preview and form must both stay) | stamina modal rv: a real click on the title closed {"popover":false,"modal":false}; Escape must close the modal and leave the preview {"popover":false,"modal":false} | stamina modal lp: a real click on the title closed {"popover":false,"modal":false}; Escape must close the modal and leave the preview {"popover":false,"modal":false} | conditions modal rv: a real click on the title closed {"popover":false,"modal":false}; Escape must close the modal and leave the preview {"popover":false,"modal":false} -- passed:  [shot /tmp/dse-obsidian-lifecycle-mhlcv9/shots/G-S83-FAIL.png]
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-mhlcv9
+OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+LIFECYCLE_RC=1

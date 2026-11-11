@@ -1,0 +1,31 @@
+SC-595 r2 mutants. Base commit c084a929 (fix fa4c68d4 + tests). Each mutant = one edit to src/framework/kit/managedModal.ts, run over the 16 SC-595 tests (-t SC-595) in managedModal.test.ts, formModalHoverPreview.test.ts, stamina-bar.test.ts, initiative.test.ts; file reverted by git checkout after each run (git status clean after all four).
+Unmutated: 16/16 green (full files: managedModal 44, form 3, stamina-bar+initiative 158 incl. new).
+
+== M1-drop-guard: passed 10 failed 6
+  RED SC-595: a modal opened from a hover preview a click inside never reaches a window bubble listener (the popover's hide), a document listener still sees it
+  RED SC-595: a modal opened from a hover preview the click is stopped, never default-prevented: an Obsidian-shaped label.checkbox-container > input still toggles and fires cha
+  RED SC-595: a modal opened from a hover preview a modal opened from a modal that is anchored in a preview inherits the anchor (FreeHealConfirmModal)
+  RED SC-595: the Stamina modal opened from a bar in a hover preview a click on the modal never reaches the window
+  RED SC-595: the Conditions modal opened from a tracker in a hover preview a click on the modal never reaches the window and the modal stays open
+  RED SC-595: the block edit form opened from a hover preview a click in the raw box and on Save never reaches the window (the popover's hide); the form stays open for the firs
+== M2-preventDefault: passed 10 failed 6
+  RED SC-595: a modal opened from a hover preview a click inside never reaches a window bubble listener (the popover's hide), a document listener still sees it
+  RED SC-595: a modal opened from a hover preview the click is stopped, never default-prevented: an Obsidian-shaped label.checkbox-container > input still toggles and fires cha
+  RED SC-595: a modal opened from a hover preview a modal opened from a modal that is anchored in a preview inherits the anchor (FreeHealConfirmModal)
+  RED SC-595: the Stamina modal opened from a bar in a hover preview a click on the modal never reaches the window
+  RED SC-595: the Conditions modal opened from a tracker in a hover preview a click on the modal never reaches the window and the modal stays open
+  RED SC-595: the block edit form opened from a hover preview a click in the raw box and on Save never reaches the window (the popover's hide); the form stays open for the firs
+== M3-drop-repush: passed 14 failed 2
+  RED SC-595: a modal opened from a hover preview keymap scope after the opening event the popover has pushed its scope above the modal's: the modal's goes back on top, and the
+  RED SC-595: the block edit form opened from a hover preview Escape closes the form: the popover's keymap scope was pushed above the form's by the opening click, and the form'
+== M4-drop-hover-popover-condition: passed 11 failed 5
+  RED SC-595: a modal opened from a hover preview control: opened from an element that is not in a hover preview, nothing changes: the click reaches the window and no scope is 
+  RED SC-595: a modal opened from a hover preview control: no anchor at all behaves like a modal outside a preview
+  RED SC-595: the Stamina modal opened from a bar in a hover preview control: opened from a bar that is not in a hover preview, a click on the modal reaches the window
+  RED SC-595: the Conditions modal opened from a tracker in a hover preview control: opened from a tracker that is not in a hover preview, a click on the modal reaches the wind
+  RED SC-595: the block edit form opened from a hover preview control: the same form opened from a block that is not in a hover preview: a click inside reaches the window as it
+
+M1: registerDomEvent callback returns at once (guard dropped) -> (a) RED (+ the dependants).
+M2: preventDefault instead of stopPropagation -> (b) RED (toggle test: defaultPrevented true, checkbox not toggled).
+M3: scope re-push dropped -> (e) RED (kit keymap test + form Escape test).
+M4: .hover-popover condition dropped -> (c) controls RED (kit x2, form, stamina, initiative).
