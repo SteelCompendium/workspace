@@ -1,0 +1,24 @@
+# Summarizes SC597 TRIAL lines of a probe log. usage: python3 -I sc597-r1-summarize.py <raw log>
+import sys, json
+def s(x):
+    if not x: return str(x)
+    keys = ['popover', 'modal', 'modals', 'isFocused', 'editing', 'editor', 'active', 't']
+    return '{' + ' '.join(f"{k}={x.get(k)}" for k in keys if k in x) + '}'
+for line in open(sys.argv[1]):
+    if line.startswith('SC597 TOTAL_MS') or line.startswith('PROBE_RC') or line.startswith('OBSIDIAN-LIFECYCLE'):
+        print(line.rstrip()); continue
+    if not line.startswith('SC597 TRIAL '): continue
+    r = json.loads(line[len('SC597 TRIAL '):])
+    print(f"=== variant={r['variant']} mode={r['mode']} opener={r['opener']} hover={r.get('hover')} ms={r.get('ms')} note={r.get('note')}" + (f" ERROR={r['error']}" if r.get('error') else ''))
+    if r['opener'] == 'main-stam-enter': print(f"   opened={r.get('opened')} afterEscape={r.get('afterEscape')}")
+    if 'disk7' in r: print(f"   disk7={r['disk7']}")
+    for k in ['focusedBefore', 'afterEdit', 'at120', 'at1500', 'afterTitleClick', 'afterApply', 'reopened', 'afterEscape', 'afterRest', 'afterOutside']:
+        if k in r: print(f"   {k:16s} {s(r[k])}")
+    if 'saved' in r: print(f"   saved={r['saved']} notices={r.get('notices')}")
+    if r.get('c'): print(f"   proto-c: {r['c']}")
+    if r.get('b'): print(f"   proto-b1: {r['b']}")
+    for e in r.get('ev', []):
+        if e['k'] == 'HIDE': print(f"   {e['t']:6d}ms HIDE event={e['ev']} isFocused={e['isFocused']} from {e['from']}")
+        elif e['k'] == 'click': print(f"   {e['t']:6d}ms click trusted={e['trusted']} detail={e['detail']} target={e['tgt']}")
+        elif e['k'] == 'key': print(f"   {e['t']:6d}ms key {e['key']!r}")
+        else: print(f"   {e['t']:6d}ms {e['k']}")

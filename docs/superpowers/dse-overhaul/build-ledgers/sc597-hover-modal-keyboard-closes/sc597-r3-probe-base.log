@@ -1,0 +1,45 @@
+=== pv-mont-enter
+  hover: "real hover"
+  at150: {"popover": true, "editing": false, "modals": 1, "dseModal": true, "active": "BUTTON.dse-optchip", "activeValue": "", "firstInputValue": "", "pressed": ["Success"], "t": 250}
+  at1500: {"popover": false, "editing": false, "modals": 0, "dseModal": false, "active": "BODY.theme-dark", "activeValue": null, "firstInputValue": null, "pressed": [], "t": 1606}
+  afterEsc: {"popover": false, "editing": false, "modals": 0, "dseModal": false, "active": "BODY.theme-dark", "activeValue": null, "firstInputValue": null, "pressed": [], "t": 2116}
+  note: (no stamina)
+    {"t": 2, "k": "keydown", "key": "Enter", "trusted": true, "detail": 0, "tgt": "DIV.dse-mt__cell", "prevented": false}
+    {"t": 25, "k": "pushScope", "from": "gf.open (app.js:245:25648)"}
+    {"t": 94, "k": "keyup", "key": "Enter", "trusted": true, "detail": 0, "tgt": "BUTTON.dse-optchip", "prevented": false}
+    {"t": 94, "k": "pushScope", "from": "n (dse:367:23528)"}
+    {"t": 222, "k": "pushScope", "from": "n (dse:367:23528)"}
+    {"t": 1609, "k": "keydown", "key": "Escape", "trusted": true, "detail": 0, "tgt": "BODY.theme-dark", "prevented": false}
+    {"t": 1612, "k": "keyup", "key": "Escape", "trusted": true, "detail": 0, "tgt": "BODY.theme-dark", "prevented": false}
+=== pv-esc200
+  hover: "real hover"
+  beforeEsc: {"popover": true, "editing": false, "modals": 1, "dseModal": true, "active": "INPUT.dse-sedit__apply-input", "activeValue": "0", "firstInputValue": "0", "pressed": [], "t": 258}
+  afterEsc: {"popover": true, "editing": false, "modals": 0, "dseModal": false, "active": "DIV.dse-stamina", "activeValue": null, "firstInputValue": null, "pressed": [], "t": 917}
+  at1500: {"popover": true, "editing": false, "modals": 0, "dseModal": false, "active": "DIV.dse-stamina", "activeValue": null, "firstInputValue": null, "pressed": [], "t": 1821}
+  note: current_stamina: 15
+    {"t": 3, "k": "keydown", "key": "Enter", "trusted": true, "detail": 0, "tgt": "DIV.dse-stamina", "prevented": false}
+    {"t": 17, "k": "pushScope", "from": "fs.open (app.js:245:25648)"}
+    {"t": 53, "k": "keyup", "key": "Enter", "trusted": true, "detail": 0, "tgt": "INPUT.dse-sedit__apply-input", "prevented": false}
+    {"t": 56, "k": "pushScope", "from": "n (dse:367:23528)"}
+    {"t": 196, "k": "pushScope", "from": "n (dse:367:23528)"}
+    {"t": 306, "k": "keydown", "key": "Escape", "trusted": true, "detail": 0, "tgt": "INPUT.dse-sedit__apply-input", "prevented": true}
+    {"t": 315, "k": "keyup", "key": "Escape", "trusted": true, "detail": 0, "tgt": "DIV.dse-stamina", "prevented": false}
+=== lp-callout
+  before: {"cursor": 11, "sel": [11, 0, 11, 0], "widget": true, "interactiveChild": false, "modals": 0, "scroll": 0}
+  afterKey: {"cursor": 11, "sel": [11, 0, 11, 0], "widget": true, "interactiveChild": false, "modals": 1, "scroll": 0}
+  afterEsc: {"cursor": 11, "sel": [11, 0, 11, 0], "widget": true, "interactiveChild": false, "modals": 0, "scroll": 0}
+    {"t": 2, "k": "keydown", "key": "Enter", "trusted": true, "detail": 0, "tgt": "DIV.dse-stamina", "prevented": false}
+    {"t": 12, "k": "pushScope", "from": "fs.open (app.js:245:25648)"}
+    {"t": 80, "k": "keyup", "key": "Enter", "trusted": true, "detail": 0, "tgt": "INPUT.dse-sedit__apply-input", "prevented": false}
+    {"t": 915, "k": "keydown", "key": "Escape", "trusted": true, "detail": 0, "tgt": "INPUT.dse-sedit__apply-input", "prevented": true}
+    {"t": 919, "k": "keyup", "key": "Escape", "trusted": true, "detail": 0, "tgt": "DIV.dse-stamina", "prevented": false}
+=== lp-embed
+  before: {"cursor": 0, "sel": [0, 0, 0, 0], "drawn": true, "interactiveChild": false, "modals": 0, "scroll": 1641}
+  afterFocus: {"cursor": 0, "sel": [0, 0, 0, 0], "drawn": true, "interactiveChild": false, "modals": 0, "scroll": 1641}
+  afterKey: {"cursor": 0, "sel": [0, 0, 0, 0], "drawn": true, "interactiveChild": false, "modals": 1, "scroll": 1641}
+  afterEsc: {"cursor": 0, "sel": [0, 0, 0, 0], "drawn": true, "interactiveChild": false, "modals": 0, "scroll": 1641}
+    {"t": 2, "k": "keydown", "key": "Enter", "trusted": true, "detail": 0, "tgt": "DIV.dse-stamina", "prevented": false}
+    {"t": 11, "k": "pushScope", "from": "fs.open (app.js:245:25648)"}
+    {"t": 100, "k": "keyup", "key": "Enter", "trusted": true, "detail": 0, "tgt": "INPUT.dse-sedit__apply-input", "prevented": false}
+    {"t": 916, "k": "keydown", "key": "Escape", "trusted": true, "detail": 0, "tgt": "INPUT.dse-sedit__apply-input", "prevented": true}
+    {"t": 918, "k": "keyup", "key": "Escape", "trusted": true, "detail": 0, "tgt": "DIV.dse-stamina", "prevented": false}

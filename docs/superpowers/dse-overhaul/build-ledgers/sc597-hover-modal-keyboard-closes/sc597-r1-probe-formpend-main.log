@@ -1,0 +1,53 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :162, port 36499, 1 scenario(s)
+=== variant=none mode=rv opener=form-pend-enter hover=real hover ms=5772 note=None
+   disk7=True
+   afterEdit        {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=INPUT.dse-stepper__input t=75}
+   at120            {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=BUTTON.dse-btn t=203}
+   at1500           {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=BUTTON.dse-btn t=1587}
+=== variant=a mode=rv opener=form-pend-enter hover=real hover ms=5668 note=None
+   disk7=True
+   afterEdit        {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=INPUT.dse-stepper__input t=84}
+   at120            {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=BUTTON.dse-btn t=225}
+   at1500           {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=BUTTON.dse-btn t=1609}
+=== variant=c mode=rv opener=form-pend-enter hover=real hover ms=5678 note=None
+   disk7=True
+   afterEdit        {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=INPUT.dse-stepper__input t=106}
+   at120            {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=BUTTON.dse-btn t=260}
+   at1500           {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=BUTTON.dse-btn t=1644}
+=== variant=none mode=rv opener=form-pend-mouse hover=real hover ms=6581 note=None
+   disk7=True
+   afterEdit        {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=INPUT.dse-stepper__input t=74}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=TEXTAREA.dse-form__raw t=654}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=TEXTAREA.dse-form__raw t=2037}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=BODY.theme-dark t=2547}
+      531ms modal+
+     2039ms modal-
+=== variant=c mode=rv opener=form-pend-mouse hover=real hover ms=6581 note=None
+   disk7=True
+   afterEdit        {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=INPUT.dse-stepper__input t=104}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=TEXTAREA.dse-form__raw t=680}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=TEXTAREA.dse-form__raw t=2062}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=BODY.theme-dark t=2575}
+      559ms modal+
+     2064ms modal-
+=== variant=c mode=lp opener=form-pend-enter hover=real hover ms=5635 note=None
+   disk7=True
+   afterEdit        {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=INPUT.dse-stepper__input t=71}
+   at120            {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=BUTTON.dse-btn t=202}
+   at1500           {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=BUTTON.dse-btn t=1586}
+=== variant=none mode=rv opener=main-stam-enter hover=None ms=3355 note=None
+   opened={'modals': 1, 'clicks': 0, 'cursor': None, 'raw': False} afterEscape={'modals': 0}
+   afterEscape      {modals=0}
+=== variant=a mode=rv opener=main-stam-enter hover=None ms=3364 note=None
+   opened={'modals': 1, 'clicks': 1, 'cursor': None, 'raw': False} afterEscape={'modals': 0}
+   afterEscape      {modals=0}
+=== variant=none mode=lp opener=main-stam-enter hover=None ms=3341 note=None
+   opened={'modals': 1, 'clicks': 0, 'cursor': '{"line":0,"ch":0}', 'raw': False} afterEscape={'modals': 0}
+   afterEscape      {modals=0}
+=== variant=a mode=lp opener=main-stam-enter hover=None ms=3363 note=None
+   opened={'modals': 1, 'clicks': 1, 'cursor': '{"line":0,"ch":0}', 'raw': False} afterEscape={'modals': 0}
+   afterEscape      {modals=0}
+SC597 TOTAL_MS 49338
+OBSIDIAN-LIFECYCLE SC597-PROBE ok (10 trials)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+PROBE_RC=0 WALL_S=53 BUNDLE=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc597-r1-D1/dse-proto

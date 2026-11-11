@@ -1,0 +1,254 @@
+// ===== SC-597 r1 probe (injected by sc597-r1-make-probe.py before `const SCENARIOS = [`; the scenario object is put first in SCENARIOS) =====
+// A DSE modal opened from a hover preview by KEYBOARD (Enter/Space on the stamina bar, Enter on a montage cell), and the same by a real
+// mouse click as the control. Real CDP mouse for every pointer move and click, CDP key events for every key. Trials come from
+// SC597_TRIALS="variant:mode:opener,..." where variant is none|a|b1|b1r|c (window.__sc597, read by the prototype bundle only), mode rv|lp,
+// opener stam-enter|stam-space|stam-mouse|mont-enter|mont-mouse.
+Object.assign(FIXTURES, {
+	'Lifecycle/sc597-mont.md': `# sc597 mont\n\nABOVE\n\n${fence('ds-montage', ['title: Probe', 'rounds: 3', 'participants:', '  - name: Kira', 'current_round: 2'])}\n\nBELOW\n`,
+	'Lifecycle/sc597-mont-host.md': `# sc597 mont host\n\nsee [[sc597-mont]] here\n\nfiller\n`,
+});
+
+const SC597_POP = `(() => { const v = app.workspace.getMostRecentLeaf().view; for (const o of [v.previewMode, v, v.editMode]) { if (o && o.hoverPopover) return o.hoverPopover; } return null; })()`;
+
+async function sc597Trial(t, variant, mode, opener) {
+	const K = gs83Kit(t);
+	const J = JSON.stringify;
+	const isMont = opener.startsWith('mont');
+	const viaMouse = opener.endsWith('mouse');
+	const [src, host] = isMont ? ['Lifecycle/sc597-mont.md', 'Lifecycle/sc597-mont-host.md'] : ['Lifecycle/gs83-stam.md', 'Lifecycle/gs83-stam-host.md'];
+	const MODAL = `document.querySelector('.modal-container .dse-modal')`;
+	const rec = { variant, mode, opener };
+	const st = () =>
+		t.ev(`(() => { const pop = document.querySelector('.popover.hover-popover'); const hp = ${SC597_POP}; const a = document.activeElement; return { popover: !!pop, modal: !!${MODAL}, modals: document.querySelectorAll('.modal-container').length, isFocused: hp ? !!hp.isFocused : null, editing: !!pop && pop.classList.contains('is-editing'), editor: !!pop && !!Array.from(pop.querySelectorAll('.markdown-source-view, .cm-editor')).find((e) => e.offsetParent !== null), active: a ? (a.tagName + '.' + String(a.className).split(' ')[0]).slice(0, 40) : null, t: Math.round(performance.now() - (window.__sc597t0 || 0)) }; })()`);
+	try {
+		await t.ev(`(() => { window.__sc597 = ${J(variant === 'none' ? null : variant)}; window.__sc597c = []; window.__sc597b = []; return true; })()`);
+		await t.reset(src);
+		await t.reset(host);
+		const link = await K.openHost(host, mode);
+		rec.hover = await K.hover(link, src);
+		const OPENER = isMont ? `(${K.ENTRY(src)}).root.querySelector('.dse-mt__cell[role="button"][tabindex="0"]')` : `(${K.ENTRY(src)}).root.querySelector('[data-dse-control="stamina.bar"]')`;
+		await t.waitFor(`!!(${OPENER})`, `${mode} ${opener}: the opener is drawn`, 8000);
+		await K.moveTo(`${K.ENTRY(src)}.root`); // the pointer rests on the card, inside the preview
+		await t.sleep(400);
+		// instrumentation: the popover instance's hide (event + caller), modal add/remove, keys and clicks at the window (capture)
+		await t.ev(`(() => {
+			const hp = ${SC597_POP};
+			window.__sc597t0 = performance.now();
+			const ev = (window.__sc597ev = []);
+			const T = () => Math.round(performance.now() - window.__sc597t0);
+			if (hp && !hp.__sc597w) { hp.__sc597w = true; const orig = hp.hide; hp.hide = function () { const s = (new Error().stack || '').split('\\n').slice(2, 4).map((l) => l.trim().replace(/^at /, '').replace('app://obsidian.md/', '')).join(' <- '); ev.push({ k: 'HIDE', t: T(), ev: window.event ? window.event.type : null, isFocused: !!this.isFocused, from: s }); return orig.apply(this, arguments); }; }
+			window.__sc597mo?.disconnect();
+			window.__sc597mo = new MutationObserver((ms) => { for (const m of ms) { for (const n of m.addedNodes) if (n.classList?.contains('modal-container')) ev.push({ k: 'modal+', t: T() }); for (const n of m.removedNodes) if (n.classList?.contains('modal-container')) ev.push({ k: 'modal-', t: T() }); } });
+			window.__sc597mo.observe(document.body, { childList: true });
+			if (!window.__sc597l) { window.__sc597l = true;
+				window.addEventListener('keydown', (e) => window.__sc597ev.push({ k: 'key', key: e.key, t: Math.round(performance.now() - window.__sc597t0) }), true);
+				window.addEventListener('click', (e) => window.__sc597ev.push({ k: 'click', trusted: e.isTrusted, detail: e.detail, tgt: String(e.target?.className || e.target?.nodeName).split(' ')[0].slice(0, 30), t: Math.round(performance.now() - window.__sc597t0) }), true);
+			}
+			return !!hp;
+		})()`);
+		const openIt = async () => {
+			if (viaMouse) await K.clickRevealed(OPENER);
+			else {
+				await t.ev(`(() => { (${OPENER}).focus(); return true; })()`); // keyboard focus on the opener; no click anywhere
+				rec.focusedBefore = rec.focusedBefore ?? (await st());
+				if (opener.endsWith('space')) await t.key(' ', 'Space', 32);
+				else await t.key('Enter', 'Enter', 13);
+			}
+		};
+		await openIt();
+		await t.sleep(120);
+		rec.at120 = await st();
+		await t.sleep(1380); // the bug: modal and preview gone ~300 ms after the open, with the pointer resting and no input
+		rec.at1500 = await st();
+		if (rec.at1500.popover && rec.at1500.modal) {
+			await K.click(`(${MODAL}).closest('.modal').querySelector('.modal-title') || (${MODAL})`);
+			await t.sleep(500);
+			rec.afterTitleClick = await st();
+			if (rec.afterTitleClick.popover && rec.afterTitleClick.modal) {
+				if (!isMont) {
+					// an Apply write: Healing 3 then Apply (15 -> 18)
+					await t.ev(`(() => { const i = document.querySelector('.modal-container [data-dse-control="sedit.apply-amount"]'); i.focus(); i.select(); return true; })()`);
+					await t.cdp.call('Input.insertText', { text: '3' });
+					await K.click(`document.querySelector('.modal-container [data-dse-control="sedit.healing"]')`);
+					await t.sleep(250);
+					const m = await t.mark();
+					await K.click(`document.querySelector('.modal-container [data-dse-control="sedit.apply"]')`);
+					const t0 = Date.now();
+					while (Date.now() - t0 < 4000 && !/current_stamina: 18/.test(t.read(src))) await t.sleep(50);
+					await t.sleep(400);
+					rec.saved = /current_stamina: 18/.test(t.read(src));
+					rec.notices = await t.noticesSince(m);
+					rec.afterApply = await st();
+					// a second open the same way, then Escape 450 ms later
+					await t.waitFor(`!!(${OPENER})`, `${mode} ${opener}: the bar is redrawn`, 8000);
+					await openIt();
+					await t.sleep(450);
+					rec.reopened = await st();
+					await t.key('Escape', 'Escape', 27);
+					await t.sleep(500);
+					rec.afterEscape = await st();
+				} else {
+					await t.key('Escape', 'Escape', 27);
+					await t.sleep(500);
+					rec.afterEscape = await st();
+				}
+				// after close, the pointer leaves the preview and rests 1.2 s (mouse path: a focused preview stays)
+				await K.mouse('mouseMoved', 700, 700);
+				await K.mouse('mouseMoved', 5, 300);
+				await t.sleep(1200);
+				rec.afterRest = await st();
+				// a real click outside closes the preview (mouse path: the popover's window click listener)
+				await K.click(`document.querySelector('.workspace-leaf.mod-active .view-header-title, .workspace-leaf.mod-active .view-header')`);
+				const t1 = Date.now();
+				while (Date.now() - t1 < 3000 && (await st()).popover) await t.sleep(100);
+				rec.afterOutside = await st();
+			}
+		}
+	} catch (e) {
+		rec.error = e.message;
+	} finally {
+		try {
+			rec.ev = await t.ev(`window.__sc597ev || []`);
+			rec.c = await t.ev(`window.__sc597c || []`);
+			rec.b = await t.ev(`window.__sc597b || []`);
+			rec.note = (t.read(src).match(/current_stamina: \d+/) || [null])[0];
+		} catch (e) {
+			rec.evErr = e.message;
+		}
+		await K.cleanup();
+		await t.ev(`(() => { window.__sc597 = null; return true; })()`);
+	}
+	return rec;
+}
+
+/** The block edit form opened while a KEYBOARD edit of the card is still pending (typed value + Enter in the counter's field, no click):
+ *  the pencil then opens the form only after the write (openAfterPendingWrite), i.e. outside any click. `how`: enter (Enter on the
+ *  focused pencil: a native click on a <button>) or mouse (a real click on the pencil). */
+async function sc597FormPendTrial(t, variant, mode, how) {
+	const K = gs83Kit(t);
+	const J = JSON.stringify;
+	const SRC = 'Lifecycle/gs83-src.md';
+	const HOST = 'Lifecycle/gs83-host.md';
+	const rec = { variant, mode, opener: 'form-pend-' + how };
+	const FORM = K.FORM;
+	const st = () =>
+		t.ev(`(() => { const pop = document.querySelector('.popover.hover-popover'); const hp = ${SC597_POP}; const a = document.activeElement; return { popover: !!pop, modal: !!${FORM}, modals: document.querySelectorAll('.modal-container').length, isFocused: hp ? !!hp.isFocused : null, editing: !!pop && pop.classList.contains('is-editing'), editor: !!pop && !!Array.from(pop.querySelectorAll('.markdown-source-view, .cm-editor')).find((e) => e.offsetParent !== null), active: a ? (a.tagName + '.' + String(a.className).split(' ')[0]).slice(0, 40) : null, t: Math.round(performance.now() - (window.__sc597t0 || 0)) }; })()`);
+	try {
+		await t.ev(`(() => { window.__sc597 = ${J(variant === 'none' ? null : variant)}; window.__sc597c = []; window.__sc597b = []; return true; })()`);
+		await t.reset(SRC);
+		await t.reset(HOST);
+		const link = await K.openHost(HOST, mode);
+		rec.hover = await K.hover(link, SRC);
+		const PENCIL = `(${K.ENTRY(SRC)}.root.querySelector('.dse-chrome button[data-dse-chrome-item="edit"], button[aria-label^="Edit "]'))`;
+		const INPUT = `(${K.ENTRY(SRC)}.root.querySelector('input.dse-stepper__input'))`;
+		await K.moveTo(`${K.ENTRY(SRC)}.root`);
+		await t.sleep(250);
+		await t.waitFor(`!!${PENCIL} && !!${INPUT}`, `${mode}: pencil and field drawn`, 8000);
+		await t.ev(`(() => { window.__sc597t0 = performance.now(); const hp = ${SC597_POP}; const ev = (window.__sc597ev = []); const T = () => Math.round(performance.now() - window.__sc597t0); if (hp && !hp.__sc597w) { hp.__sc597w = true; const orig = hp.hide; hp.hide = function () { const s = (new Error().stack || '').split('\\n').slice(2, 4).map((l) => l.trim().replace(/^at /, '').replace('app://obsidian.md/', '')).join(' <- '); ev.push({ k: 'HIDE', t: T(), ev: window.event ? window.event.type : null, isFocused: !!this.isFocused, from: s }); return orig.apply(this, arguments); }; } window.__sc597mo?.disconnect(); window.__sc597mo = new MutationObserver((ms) => { for (const m of ms) { for (const n of m.addedNodes) if (n.classList?.contains('modal-container')) ev.push({ k: 'modal+', t: T() }); for (const n of m.removedNodes) if (n.classList?.contains('modal-container')) ev.push({ k: 'modal-', t: T() }); } }); window.__sc597mo.observe(document.body, { childList: true }); return !!hp; })()`);
+		if (how === 'fast') {
+			// reveal the pencil with the pointer (card top edge, then straight up) and leave the pointer resting on it
+			const p = await t.ev(`(() => { const r = ${PENCIL}.getBoundingClientRect(); return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) }; })()`);
+			const from = await t.ev(`(() => { const r = ${PENCIL}.closest('[data-dse-element]').getBoundingClientRect(); return { x: ${p.x}, y: Math.round(r.top + 10) }; })()`);
+			await K.mouse('mouseMoved', from.x, from.y);
+			await t.sleep(120);
+			for (let i = 1; i <= 8; i++) {
+				await K.mouse('mouseMoved', from.x + ((p.x - from.x) * i) / 8, from.y + ((p.y - from.y) * i) / 8);
+				await t.sleep(30);
+			}
+			const t0 = Date.now();
+			while (!(await t.ev(`(() => { const el = ${PENCIL}; const h = document.elementFromPoint(${p.x}, ${p.y}); return !!(el && h && (el === h || el.contains(h))); })()`))) {
+				if (Date.now() - t0 > 4000) throw new Error('pencil never revealed');
+				await K.mouse('mouseMoved', p.x + ((Date.now() / 100) % 2), p.y);
+				await t.sleep(100);
+			}
+			rec.pencilPt = p;
+		}
+		// a keyboard edit: focus the value field, type 7, Enter (commits; the write waits out the 400 ms debounce)
+		await t.ev(`(() => { const i = ${INPUT}; i.focus(); i.select(); return true; })()`);
+		await t.cdp.call('Input.insertText', { text: '7' });
+		await t.key('Enter', 'Enter', 13);
+		await t.sleep(60);
+		rec.afterEdit = await st();
+		if (how === 'mouse') await K.clickRevealed(PENCIL);
+		else if (how === 'fast') {
+			// the pointer was parked ON the revealed pencil before the edit (see below); press there at once, inside the 400 ms debounce
+			await K.press(rec.pencilPt);
+		} else {
+			await t.ev(`(() => { ${PENCIL}.focus(); return true; })()`);
+			await t.key('Enter', 'Enter', 13);
+		}
+		await t.sleep(120);
+		rec.at120 = await st();
+		await t.sleep(1380);
+		rec.at1500 = await st();
+		rec.disk7 = /current_value: 7/.test(t.read(SRC));
+		if (rec.at1500.modal) {
+			await t.key('Escape', 'Escape', 27);
+			await t.sleep(500);
+			rec.afterEscape = await st();
+		}
+	} catch (e) {
+		rec.error = e.message;
+	} finally {
+		try {
+			rec.ev = await t.ev(`window.__sc597ev || []`);
+			rec.c = await t.ev(`window.__sc597c || []`);
+		} catch (e) {
+			rec.evErr = e.message;
+		}
+		await K.cleanup();
+		await t.ev(`(() => { window.__sc597 = null; return true; })()`);
+	}
+	return rec;
+}
+
+/** Control outside any preview: Enter on the stamina bar of a note open in the pane (Reading view / Live Preview). Variant (a) now routes it
+ *  through a click; check the modal opens once, Escape closes it, and in Live Preview the cursor stays put (no source reveal). */
+async function sc597MainTrial(t, variant, mode) {
+	const J = JSON.stringify;
+	const SRC = 'Lifecycle/gs83-stam.md';
+	const rec = { variant, mode, opener: 'main-stam-enter' };
+	try {
+		await t.ev(`(() => { window.__sc597 = ${J(variant === 'none' ? null : variant)}; return true; })()`);
+		await t.reset(SRC);
+		await t.ev(`(async () => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); const leaf = app.workspace.getLeavesOfType('markdown')[0] ?? app.workspace.getMostRecentLeaf(); await leaf.setViewState({ type: 'markdown', state: { file: ${J(SRC)}, mode: ${J(mode === 'lp' ? 'source' : 'preview')}, source: false }, active: true }); app.workspace.setActiveLeaf(leaf, { focus: true }); return true; })()`);
+		await t.sleep(1200);
+		if (mode === 'lp') await t.ev(`(() => { app.workspace.getMostRecentLeaf().view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+		const BAR = `Array.from(document.querySelectorAll('.workspace-leaf.mod-active [data-dse-control="stamina.bar"]')).find((b) => b.isConnected && b.offsetParent !== null)`;
+		await t.waitFor(`!!(${BAR})`, `${mode}: bar drawn`, 8000);
+		await t.ev(`(() => { window.__sc597cl = 0; window.__sc597clh = window.__sc597clh || ((e) => { window.__sc597cl++; }); window.removeEventListener('click', window.__sc597clh, true); window.addEventListener('click', window.__sc597clh, true); (${BAR}).focus(); return true; })()`);
+		await t.key('Enter', 'Enter', 13);
+		await t.sleep(600);
+		rec.opened = await t.ev(`({ modals: document.querySelectorAll('.modal-container .dse-modal').length, clicks: window.__sc597cl, cursor: ${J(mode)} === 'lp' ? JSON.stringify(app.workspace.getMostRecentLeaf().view.editor.getCursor()) : null, raw: !!document.querySelector('.workspace-leaf.mod-active .cm-content .cm-line') && Array.from(document.querySelectorAll('.workspace-leaf.mod-active .cm-content .cm-line')).some((l) => /current_stamina/.test(l.textContent)) })`);
+		await t.key('Escape', 'Escape', 27);
+		await t.sleep(400);
+		rec.afterEscape = await t.ev(`({ modals: document.querySelectorAll('.modal-container').length })`);
+	} catch (e) {
+		rec.error = e.message;
+	} finally {
+		await t.ev(`(() => { window.__sc597 = null; document.querySelectorAll('.modal-container').forEach((c) => c.querySelector('.modal-close-button')?.click()); return true; })()`);
+	}
+	return rec;
+}
+
+const SC597_SCENARIO = {
+	id: 'SC597-PROBE',
+	async run(t) {
+		const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+		await t.ev(`(() => { if (!document.getElementById('lc-gs83-notice')) { const st = document.createElement('style'); st.id = 'lc-gs83-notice'; st.textContent = '.notice-container { display: none !important; }'; document.head.appendChild(st); } return true; })()`);
+		await t.ev(`${prefs}.set('authoringControls', true)`);
+		const trials = (process.env.SC597_TRIALS || 'none:rv:stam-enter').split(',').filter(Boolean);
+		const t0 = Date.now();
+		for (const spec of trials) {
+			const [variant, mode, opener] = spec.split(':');
+			const s = Date.now();
+			const r = opener === 'main-stam-enter' ? await sc597MainTrial(t, variant, mode) : opener.startsWith('form-pend-') ? await sc597FormPendTrial(t, variant, mode, opener.slice('form-pend-'.length)) : await sc597Trial(t, variant, mode, opener);
+			r.ms = Date.now() - s;
+			console.log('SC597 TRIAL ' + JSON.stringify(r));
+		}
+		console.log('SC597 TOTAL_MS ' + (Date.now() - t0));
+		await t.ev(`${prefs}.set('authoringControls', false)`);
+		return `${trials.length} trials`;
+	},
+};
+// ===== end SC-597 r1 probe =====

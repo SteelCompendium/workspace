@@ -1,0 +1,4 @@
+180c180
+< 		this.contentEl.querySelector<HTMLElement>(FOCUSABLE)?.focus();
+---
+> 		window.setTimeout(() => this.contentEl.querySelector<HTMLElement>(FOCUSABLE)?.focus(), 0);

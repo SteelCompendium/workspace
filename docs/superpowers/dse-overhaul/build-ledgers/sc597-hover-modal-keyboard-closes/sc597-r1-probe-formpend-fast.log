@@ -1,0 +1,47 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :162, port 40761, 1 scenario(s)
+=== variant=none mode=rv opener=form-pend-fast hover=real hover ms=6809 note=None
+   disk7=True
+   afterEdit        {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=INPUT.dse-stepper__input t=501}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=TEXTAREA.dse-form__raw t=667}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=TEXTAREA.dse-form__raw t=2050}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=BODY.theme-dark t=2589}
+      600ms modal+
+     2056ms modal-
+=== variant=a mode=rv opener=form-pend-fast hover=real hover ms=6521 note=None
+   disk7=True
+   afterEdit        {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=INPUT.dse-stepper__input t=479}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=TEXTAREA.dse-form__raw t=630}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=TEXTAREA.dse-form__raw t=2013}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=BODY.theme-dark t=2525}
+      540ms modal+
+     2015ms modal-
+=== variant=c mode=rv opener=form-pend-fast hover=real hover ms=6719 note=None
+   disk7=True
+   afterEdit        {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=INPUT.dse-stepper__input t=552}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=True editor=True active=DIV.cm-content t=712}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=True editor=True active=DIV.cm-content t=2094}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=True editor=True active=DIV.cm-content t=2651}
+   proto-c: [{'t': 19427.400000095367, 'armed': True}]
+      610ms modal+
+     2096ms modal-
+=== variant=none mode=lp opener=form-pend-fast hover=real hover ms=6586 note=None
+   disk7=True
+   afterEdit        {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=INPUT.dse-stepper__input t=526}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=TEXTAREA.dse-form__raw t=659}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=TEXTAREA.dse-form__raw t=2043}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=BODY.theme-dark t=2554}
+      556ms modal+
+     2044ms modal-
+=== variant=c mode=lp opener=form-pend-fast hover=real hover ms=6573 note=None
+   disk7=True
+   afterEdit        {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=INPUT.dse-stepper__input t=498}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=True editor=True active=DIV.cm-content t=650}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=True editor=True active=DIV.cm-content t=2032}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=True editor=True active=DIV.cm-content t=2544}
+   proto-c: [{'t': 32613.400000095367, 'armed': True}]
+      552ms modal+
+     2034ms modal-
+SC597 TOTAL_MS 33208
+OBSIDIAN-LIFECYCLE SC597-PROBE ok (5 trials)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+PROBE_RC=0 WALL_S=37 BUNDLE=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc597-r1-D1/dse-proto

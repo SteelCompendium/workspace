@@ -1,0 +1,16 @@
+#!/bin/bash
+# Runs tsc, lint and the affected jest suites on the design-(a) scratch copy. Each gate's own exit code is recorded inside this file.
+D=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc597-r1-D1/dse-protoA
+L=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc597-r1-D1/jest-protoA.log
+cd "$D" || exit 9
+mv main.js main.js.bundle 2>/dev/null
+mv styles.css styles.css.bundle 2>/dev/null
+: > "$L"
+npx tsc --noEmit >> "$L" 2>&1
+echo "TSC_RC=$?" >> "$L"
+npx eslint src/framework/kit/StaminaBarPanel.ts src/elements/montage/BoardView.ts >> "$L" 2>&1
+echo "LINT_RC=$?" >> "$L"
+npx jest test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts test/dom/elements/hero test/dom/kit/managedModal.test.ts test/dom/views/stamina-edit-modal.test.ts >> "$L" 2>&1
+echo "JEST_RC=$?" >> "$L"
+mv main.js.bundle main.js 2>/dev/null
+mv styles.css.bundle styles.css 2>/dev/null

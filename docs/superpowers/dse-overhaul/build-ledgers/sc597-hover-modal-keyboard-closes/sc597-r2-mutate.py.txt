@@ -1,0 +1,91 @@
+"""SC-597 r2 mutant runner. usage: python3 -I sc597-r2-mutate.py <log> <id,id,...|all>
+Each mutant edits ONE source file in the worktree, runs the jest suite(s) that should catch it, records the failing test names,
+then restores the file from HEAD (git checkout HEAD -- file) and checks `git diff --stat` is empty."""
+import subprocess, sys, re, os
+
+W = '/home/scott/code/steelCompendium/worktrees/sc597-hover-modal-keyboard-closes/draw-steel-elements'
+S = 'src/framework/kit/StaminaBarPanel.ts'
+M = 'src/elements/montage/BoardView.ts'
+MM = 'src/framework/kit/managedModal.ts'
+TS = 'test/dom/elements/stamina-bar.test.ts'
+TM = 'test/dom/elements/montage.test.ts'
+TMM = 'test/dom/kit/managedModal.test.ts'
+
+STAM_CLICK = "bar.click(); // SC-597: the click listener opens the modal; see the doc above"
+MONT_CLICK = "cell.click();"
+G_STAM = "if (evt.target !== bar) return;"
+G_MONT = "if (evt.target !== cell) return;"
+STAM_MODS = "if (evt.ctrlKey || evt.metaKey || evt.altKey || evt.repeat || evt.defaultPrevented) return;"
+
+def mods_without(var, what, src_line):
+    parts = ['evt.ctrlKey', 'evt.metaKey', 'evt.altKey', 'evt.repeat', 'evt.defaultPrevented']
+    parts = [p for p in parts if p != what]
+    return src_line.replace(' || '.join(['evt.ctrlKey', 'evt.metaKey', 'evt.altKey', 'evt.repeat', 'evt.defaultPrevented']), ' || '.join(parts))
+
+BASE_S = None
+MUTANTS = []
+def add(mid, desc, file, old, new, tests):
+    MUTANTS.append((mid, desc, file, old, new, tests))
+
+# K1: revert to the base (the opener called directly). The base file is checked out whole.
+MUTANTS.append(('K1s', 'StaminaBarPanel.ts back to the 94133a5a base (open() called directly)', S, '@BASE@', None, [TS]))
+MUTANTS.append(('K1m', 'BoardView.ts back to the 94133a5a base (openThisCell() called directly, no guards)', M, '@BASE@', None, [TM]))
+add('K2s', "bar.dispatchEvent(new MouseEvent('click')) with no bubbles", S, STAM_CLICK, "bar.dispatchEvent(new MouseEvent('click'));", [TS])
+add('K2m', "cell.dispatchEvent(new MouseEvent('click')) with no bubbles", M, MONT_CLICK, "cell.dispatchEvent(new MouseEvent('click'));", [TM])
+add('K3s', 'click dispatched on the bar\'s parent (the opener\'s own listener never runs)', S, STAM_CLICK, "bar.parentElement!.click();", [TS])
+add('K3m', 'click dispatched on the cell\'s parent', M, MONT_CLICK, "cell.parentElement!.click();", [TM])
+add('K4s', 'two clicks (the opener opens twice)', S, STAM_CLICK, "bar.click(); bar.click();", [TS])
+add('K4m', 'two clicks (the opener opens twice)', M, MONT_CLICK, "cell.click(); cell.click();", [TM])
+add('K5s', 'deferred click: setTimeout(() => bar.click())', S, STAM_CLICK, "setTimeout(() => bar.click());", [TS])
+add('K5m', 'deferred click: setTimeout(() => cell.click())', M, MONT_CLICK, "setTimeout(() => cell.click());", [TM])
+add('K6', 'DseModal arms its keymap re-pushes at once, not from the opening click (managedModal.ts)', MM, "if (opening?.type === 'click') {", "if (false as boolean) {", [TS, TM])
+# O6 guards: each removed in turn (montage = the new ones, stamina = the same guards, now carrying a click)
+for tag, file, test, target_guard, target_var in (('m', M, TM, G_MONT, 'cell'), ('s', S, TS, G_STAM, 'bar')):
+    add('G1' + tag, f'drop the `evt.target !== {target_var}` guard', file, target_guard, '', [test])
+    for gid, what in (('G2', 'evt.ctrlKey'), ('G3', 'evt.metaKey'), ('G4', 'evt.altKey'), ('G5', 'evt.repeat'), ('G6', 'evt.defaultPrevented')):
+        add(gid + tag, f'drop `{what}` from the modifier/repeat/defaultPrevented guard', file, STAM_MODS, mods_without(None, what, STAM_MODS), [test])
+# the montage file wrote its guard line with the same text (checked below)
+
+def sh(*a, **k):
+    return subprocess.run(a, capture_output=True, text=True, **k)
+
+def main():
+    log, which = sys.argv[1], sys.argv[2]
+    want = None if which == 'all' else set(which.split(','))
+    out = open(log, 'a')
+    def w(s):
+        out.write(s + '\n'); out.flush()
+    for mid, desc, file, old, new, tests in MUTANTS:
+        if want is not None and mid not in want:
+            continue
+        path = os.path.join(W, file)
+        orig = open(path).read()
+        if old == '@BASE@':
+            r = sh('git', '-C', W, 'checkout', '94133a5a', '--', file)
+            assert r.returncode == 0, r.stderr
+        else:
+            assert orig.count(old) == 1, (mid, old, orig.count(old))
+            open(path, 'w').write(orig.replace(old, new))
+        r = sh('npx', 'jest', *tests, '--silent', cwd=W)
+        text = r.stdout + r.stderr
+        fails = []
+        for line in text.splitlines():
+            m = re.match(r'^\s+● (.+)$', line)
+            if m and m.group(1) not in fails and 'Test suite failed' not in m.group(1):
+                fails.append(m.group(1))
+        summ = [l for l in text.splitlines() if l.startswith('Tests:')]
+        # restore
+        rr = sh('git', '-C', W, 'checkout', 'HEAD', '--', file)
+        d = sh('git', '-C', W, 'diff', '--stat').stdout.strip()
+        w(f'## {mid}: {desc}')
+        w(f'file: {file}')
+        w('command: npx jest ' + ' '.join(tests) + ' --silent')
+        w(f'result: {"KILLED" if r.returncode != 0 and fails else "SURVIVED"} (jest rc {r.returncode}); {summ[0] if summ else "no Tests line"}')
+        for f in fails:
+            w('  red: ' + f)
+        w(f'restored: git diff --stat empty = {d == ""}' + ('' if d == '' else ' !!! ' + d))
+        w('')
+        assert d == '', d
+    out.close()
+
+main()

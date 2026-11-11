@@ -1,0 +1,46 @@
+# SC-597 r1: the RECOMMENDED design (a) in its final shape (no runtime switch): a keyboard activation of a non-<button> opener
+# dispatches a click on the very element the mouse clicks, so the existing click handler opens the modal and Obsidian's page-preview
+# popover sees the click it needs (it runs its own focus step `p()`), exactly as for the mouse.
+# usage: python3 -I sc597-r1-apply-protoA.py <dse copy root>
+import sys, os
+root = sys.argv[1]
+
+def patch(rel, pairs):
+    p = os.path.join(root, rel)
+    s = open(p).read()
+    for a, b in pairs:
+        assert s.count(a) == 1, (rel, a, s.count(a))
+        s = s.replace(a, b)
+    open(p, 'w').write(s)
+
+patch('src/framework/kit/StaminaBarPanel.ts', [
+    (
+        "\t\t\tif (opts.keyboard !== false) makeKeyboardOperable(bar, s, opts.owner, onBarClick);\n",
+        "\t\t\tif (opts.keyboard !== false) makeKeyboardOperable(bar, s, opts.owner);\n",
+    ),
+    (
+        " *  the browser still turns it into the button's click. */\nfunction makeKeyboardOperable(\n\tbar: HTMLElement,\n\ts: StaminaBarValues,\n\towner: Component,\n\topen: () => void,\n): void {\n",
+        " *  the browser still turns it into the button's click.\n"
+        " *\n"
+        " *  SC-597: the key ACTIVATES the bar with a click (`bar.click()`), the way a browser turns Enter or Space on a real\n"
+        " *  `<button>` into one, and the bar's own click listener above opens the modal. Calling the opener directly is not the\n"
+        " *  same thing: in a hover preview, Obsidian marks the preview focused (so its hover timer stops closing it) only when a\n"
+        " *  click goes through the preview, and with no click the preview, and the modal with it, closed about 300 ms after\n"
+        " *  the key. A click also lets DseModal's SC-595 keymap re-push order itself after the preview's own (it arms from\n"
+        " *  the opening click's window bubble phase). */\n"
+        "function makeKeyboardOperable(bar: HTMLElement, s: StaminaBarValues, owner: Component): void {\n",
+    ),
+    (
+        "\t\tevt.preventDefault(); // Space would otherwise scroll the page\n\t\topen();\n",
+        "\t\tevt.preventDefault(); // Space would otherwise scroll the page\n\t\tbar.click(); // SC-597: the click listener opens the modal; see the doc above\n",
+    ),
+])
+
+patch('src/elements/montage/BoardView.ts', [(
+    "\t\t\t\t\tif (evt.key !== 'Enter' && evt.key !== ' ') return;\n\t\t\t\t\tevt.preventDefault();\n\t\t\t\t\topenThisCell();\n",
+    "\t\t\t\t\tif (evt.key !== 'Enter' && evt.key !== ' ') return;\n\t\t\t\t\tevt.preventDefault();\n"
+    "\t\t\t\t\t// SC-597: activate with a click on the cell (its click listener opens the sheet), as Enter / Space does on a\n"
+    "\t\t\t\t\t// real button: in a hover preview only a click makes Obsidian keep the preview, and so the sheet, open.\n"
+    "\t\t\t\t\tcell.click();\n",
+)])
+print('patched', root)

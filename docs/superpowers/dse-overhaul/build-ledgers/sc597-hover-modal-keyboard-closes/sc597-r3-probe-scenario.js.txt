@@ -1,0 +1,179 @@
+// ===== SC-597 r3 (R1) probe, injected before `const SCENARIOS = [` and put first in SCENARIOS =====
+// Trials from R3_TRIALS (comma list):
+//   pv-esc40 / pv-esc200   hover preview RV, Enter (with text '\r') on the stamina bar; timers armed during the key are logged; Escape N ms after the key
+//   pv-stam-space          hover preview RV, Space (with text ' ') on the stamina bar; checks no space typed into the modal's focused input
+//   pv-mont-space / pv-mont-enter   hover preview RV, montage cell, key with text; checks no option chip got activated by the key
+//   lp-callout             pane, Live Preview, stamina bar first in a callout, cursor parked below; Enter (text '\r'): cursor / callout widget / modals
+//   lp-embed               pane, Live Preview, host embedding gs83-stam among filler; Enter: scrollTop / cursor / modals
+Object.assign(FIXTURES, {
+	'Lifecycle/r3-mont.md': `# r3 mont\n\nABOVE\n\n${fence('ds-montage', ['title: Probe', 'rounds: 3', 'participants:', '  - name: Kira', 'current_round: 2'])}\n\nBELOW\n`,
+	'Lifecycle/r3-mont-host.md': `# r3 mont host\n\nsee [[r3-mont]] here\n\nfiller\n`,
+	'Lifecycle/r3-embhost.md': `# r3 embhost\n\n${Array.from({ length: 40 }, (_, i) => `above paragraph ${i} lorem ipsum dolor sit amet`).join('\n\n')}\n\n![[gs83-stam]]\n\n${Array.from({ length: 40 }, (_, i) => `below paragraph ${i} lorem ipsum dolor sit amet`).join('\n\n')}\n`,
+});
+
+async function r3Key(t, which, withText) {
+	const k = which === 'space' ? [' ', 'Space', 32, ' '] : ['Enter', 'Enter', 13, '\r'];
+	const down = { type: 'keyDown', key: k[0], code: k[1], windowsVirtualKeyCode: k[2], nativeVirtualKeyCode: k[2] };
+	if (withText) Object.assign(down, { text: k[3], unmodifiedText: k[3] });
+	await t.cdp.call('Input.dispatchKeyEvent', down);
+	await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyUp', key: k[0], code: k[1], windowsVirtualKeyCode: k[2], nativeVirtualKeyCode: k[2] });
+}
+
+const R3_LOG = `(() => {
+	window.__r3 = [];
+	const T0 = performance.now();
+	window.__r3t0 = T0;
+	const push = (o) => window.__r3.push(Object.assign({ t: Math.round(performance.now() - T0) }, o));
+	if (!window.__r3inst) {
+		window.__r3inst = true;
+		for (const ty of ['keydown', 'keypress', 'keyup', 'click', 'beforeinput', 'input']) window.addEventListener(ty, (e) => window.__r3 && window.__r3.push({ t: Math.round(performance.now() - window.__r3t0), k: ty, key: e.key, trusted: e.isTrusted, detail: e.detail, tgt: (e.target && (e.target.tagName + '.' + String(e.target.className).split(' ')[0])).slice(0, 40), prevented: e.defaultPrevented }), true);
+		const origST = window.setTimeout;
+		window.setTimeout = function (fn, ms, ...rest) {
+			const ev = window.event;
+			if (window.__r3arm && ev && ev.type === 'click') {
+				const st = (new Error().stack || '').split('\\n').slice(2, 4).map((l) => l.trim().replace(/^at /, '').replace('app://obsidian.md/', '').replace(/plugin:draw-steel-elements.*?:(\\d+)/, 'dse:$1')).join(' <- ');
+				window.__r3.push({ t: Math.round(performance.now() - window.__r3t0), k: 'timer', ms, during: ev.type + '/' + ev.eventPhase + '/' + (ev.currentTarget === window ? 'window' : ev.currentTarget && ev.currentTarget.nodeName), from: st.slice(0, 160) });
+			}
+			return origST.call(this, fn, ms, ...rest);
+		};
+		const ps = app.keymap.pushScope.bind(app.keymap);
+		app.keymap.pushScope = function (s) { if (window.__r3) window.__r3.push({ t: Math.round(performance.now() - window.__r3t0), k: 'pushScope', from: (new Error().stack || '').split('\\n').slice(2, 3).map((l) => l.trim().replace(/^at /, '').replace('app://obsidian.md/', '').replace(/plugin:draw-steel-elements.*?:(\\d+)/, 'dse:$1')).join('').slice(0, 120) }); return ps(s); };
+	}
+	window.__r3arm = true;
+	return true;
+})()`;
+
+const R3_STATE = `(() => {
+	const pop = document.querySelector('.popover.hover-popover');
+	const a = document.activeElement;
+	const inp = document.querySelector('.modal-container input');
+	return {
+		popover: !!pop, editing: !!pop && pop.classList.contains('is-editing'),
+		modals: document.querySelectorAll('.modal-container').length,
+		dseModal: !!document.querySelector('.modal-container .dse-modal'),
+		active: a ? (a.tagName + '.' + String(a.className).split(' ')[0]).slice(0, 40) : null,
+		activeValue: a && 'value' in a ? String(a.value) : null,
+		firstInputValue: inp ? inp.value : null,
+		pressed: Array.from(document.querySelectorAll('.modal-container [aria-pressed="true"], .modal-container [aria-checked="true"], .modal-container .is-selected, .modal-container .is-active')).map((e) => (e.getAttribute('aria-label') || e.textContent || '').trim().slice(0, 30)),
+		t: Math.round(performance.now() - (window.__r3t0 || 0)),
+	};
+})()`;
+
+async function r3Trial(t, trial) {
+	const K = gs83Kit(t);
+	const rec = { trial };
+	try {
+		if (trial.startsWith('pv-')) {
+			const isMont = trial.startsWith('pv-mont');
+			const [src, host] = isMont ? ['Lifecycle/r3-mont.md', 'Lifecycle/r3-mont-host.md'] : ['Lifecycle/gs83-stam.md', 'Lifecycle/gs83-stam-host.md'];
+			const OPENER = isMont ? `(${K.ENTRY(src)}).root.querySelector('.dse-mt__cell[role="button"][tabindex="0"]')` : `(${K.ENTRY(src)}).root.querySelector('[data-dse-control="stamina.bar"]')`;
+			await t.reset(src);
+			await t.reset(host);
+			const link = await K.openHost(host, 'rv');
+			rec.hover = await K.hover(link, src);
+			await t.waitFor(`!!(${OPENER})`, `${trial}: opener drawn`, 8000);
+			await K.moveTo(`${K.ENTRY(src)}.root`);
+			await t.sleep(400);
+			await t.ev(`(() => { (${OPENER}).focus(); return true; })()`);
+			await t.ev(R3_LOG);
+			const which = trial.endsWith('space') ? 'space' : 'enter';
+			await r3Key(t, which, true);
+			await t.ev(`(() => { window.__r3arm = false; return true; })()`);
+			const escAt = trial === 'pv-esc40' ? 40 : trial === 'pv-esc200' ? 200 : null;
+			if (escAt !== null) {
+				await t.sleep(escAt);
+				rec.beforeEsc = await t.ev(R3_STATE);
+				await t.key('Escape', 'Escape', 27);
+				await t.sleep(600);
+				rec.afterEsc = await t.ev(R3_STATE);
+				await t.sleep(900);
+				rec.at1500 = await t.ev(R3_STATE);
+			} else {
+				await t.sleep(150);
+				rec.at150 = await t.ev(R3_STATE);
+				await t.sleep(1350);
+				rec.at1500 = await t.ev(R3_STATE);
+				await t.key('Escape', 'Escape', 27);
+				await t.sleep(500);
+				rec.afterEsc = await t.ev(R3_STATE);
+			}
+			rec.log = await t.ev(`window.__r3`);
+			rec.note = t.read(src);
+		} else if (trial === 'lp-callout') {
+			const rel = 'Lifecycle/callout-stamina-lp.md';
+			const LP = LC_MODES[1];
+			await enterMode(t, rel, LP, '[data-dse-element="stamina-bar"]');
+			const PARKED = FIXTURES[rel].split('\n').length - 2;
+			await t.ev(`app.workspace.getMostRecentLeaf().view.editor.setCursor({ line: ${PARKED}, ch: 0 })`);
+			await t.sleep(400);
+			const root = `Array.from(app.workspace.getMostRecentLeaf().view.containerEl.querySelectorAll('.markdown-source-view [data-dse-element="stamina-bar"]')).find((r) => r.isConnected)`;
+			const st = () => t.ev(`(() => { const r = ${root}; const ed = app.workspace.getMostRecentLeaf().view.editor; const sel = ed.listSelections()[0]; return { cursor: ed.getCursor().line, sel: [sel.anchor.line, sel.anchor.ch, sel.head.line, sel.head.ch], widget: !!(r && r.closest('.cm-callout')), interactiveChild: !!(r && r.classList.contains('interactive-child')), modals: document.querySelectorAll('.modal-container').length, scroll: Math.round(app.workspace.getMostRecentLeaf().view.containerEl.querySelector('.cm-scroller').scrollTop) }; })()`);
+			rec.before = await st();
+			await t.ev(`(() => { (${root}).querySelector('[data-dse-control="stamina.bar"]').focus(); return true; })()`);
+			await t.ev(R3_LOG);
+			await r3Key(t, 'enter', true);
+			await t.ev(`(() => { window.__r3arm = false; return true; })()`);
+			await t.sleep(800);
+			rec.afterKey = await st();
+			await t.key('Escape', 'Escape', 27);
+			await t.sleep(500);
+			rec.afterEsc = await st();
+			rec.log = await t.ev(`window.__r3`);
+		} else if (trial === 'lp-embed') {
+			const rel = 'Lifecycle/r3-embhost.md';
+			await t.reset('Lifecycle/gs83-stam.md');
+			await t.open(rel);
+			await t.reset(rel);
+			await t.ev(`(async () => { await app.workspace.getMostRecentLeaf().setViewState({ type: 'markdown', state: { file: ${JSON.stringify(rel)}, mode: 'source', source: false }, active: true }); })()`);
+			await t.sleep(1500);
+			await t.ev(`app.workspace.getMostRecentLeaf().view.editor.setCursor({ line: 0, ch: 0 })`);
+			const root = `Array.from(app.workspace.getMostRecentLeaf().view.containerEl.querySelectorAll('.markdown-source-view .internal-embed [data-dse-element="stamina-bar"]')).find((r) => r.isConnected)`;
+			// scroll the embed into the middle of the pane (the editor draws it lazily)
+			for (let i = 0; i < 20; i++) {
+				const ok = await t.ev(`(() => { const r = ${root}; if (r) { r.scrollIntoView({ block: 'center' }); return true; } const sc = app.workspace.getMostRecentLeaf().view.containerEl.querySelector('.cm-scroller'); sc.scrollTop += 400; return false; })()`);
+				await t.sleep(250);
+				if (ok) break;
+			}
+			await t.waitFor(`!!(${root})`, 'lp-embed: the embedded stamina bar is drawn', 8000);
+			await t.ev(`(() => { (${root}).scrollIntoView({ block: 'center' }); return true; })()`);
+			await t.sleep(600);
+			const st = () => t.ev(`(() => { const r = ${root}; const ed = app.workspace.getMostRecentLeaf().view.editor; const sel = ed.listSelections()[0]; return { cursor: ed.getCursor().line, sel: [sel.anchor.line, sel.anchor.ch, sel.head.line, sel.head.ch], drawn: !!r, interactiveChild: !!(r && r.classList.contains('interactive-child')), modals: document.querySelectorAll('.modal-container').length, scroll: Math.round(app.workspace.getMostRecentLeaf().view.containerEl.querySelector('.cm-scroller').scrollTop) }; })()`);
+			rec.before = await st();
+			await t.ev(`(() => { (${root}).querySelector('[data-dse-control="stamina.bar"]').focus({ preventScroll: true }); return true; })()`);
+			rec.afterFocus = await st();
+			await t.ev(R3_LOG);
+			await r3Key(t, 'enter', true);
+			await t.ev(`(() => { window.__r3arm = false; return true; })()`);
+			await t.sleep(800);
+			rec.afterKey = await st();
+			await t.key('Escape', 'Escape', 27);
+			await t.sleep(500);
+			rec.afterEsc = await st();
+			rec.log = await t.ev(`window.__r3`);
+		}
+	} catch (e) {
+		rec.error = e.message;
+	} finally {
+		await K.cleanup();
+	}
+	return rec;
+}
+
+const R3_SCENARIO = {
+	id: 'R3-PROBE',
+	async run(t) {
+		const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+		await t.ev(`(() => { if (!document.getElementById('lc-r3-notice')) { const st = document.createElement('style'); st.id = 'lc-r3-notice'; st.textContent = '.notice-container { display: none !important; }'; document.head.appendChild(st); } return true; })()`);
+		await t.ev(`${prefs}.set('authoringControls', true)`);
+		const trials = (process.env.R3_TRIALS || 'pv-esc40').split(',');
+		for (const tr of trials) {
+			const r = await r3Trial(t, tr);
+			console.log('R3-TRIAL ' + JSON.stringify(r));
+			await t.ev(`(() => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); return true; })()`);
+			await t.open('Lifecycle/other.md');
+			await t.sleep(300);
+		}
+		await t.ev(`${prefs}.set('authoringControls', false)`);
+		return 'probe done';
+	},
+};

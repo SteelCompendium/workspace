@@ -1,0 +1,80 @@
+"""SC-597 r3 (R1) mutant runner, independent of r2's. usage: python3 -I r3-mutate.py <log> <id,id,...|all>
+Each mutant edits ONE file in the worktree (in memory text replace, or the 4f0c87f2 base content via `git show`, never `git checkout <sha>`
+so the index is never touched), runs the named jest suite(s), records failing test names, then writes the original bytes back and
+checks `git status --porcelain` is empty."""
+import subprocess, sys, re, os
+
+W = '/home/scott/code/steelCompendium/worktrees/sc597-hover-modal-keyboard-closes/draw-steel-elements'
+S = 'src/framework/kit/StaminaBarPanel.ts'
+M = 'src/elements/montage/BoardView.ts'
+MM = 'src/framework/kit/managedModal.ts'
+TS = 'test/dom/elements/stamina-bar.test.ts'
+TM = 'test/dom/elements/montage.test.ts'
+
+STAM_CLICK = "bar.click(); // SC-597: the click listener opens the modal; see the doc above"
+MONT_CLICK = "cell.click();"
+GUARDS = "if (evt.ctrlKey || evt.metaKey || evt.altKey || evt.repeat || evt.defaultPrevented) return;"
+
+MUTANTS = [
+    ('K1s', 'StaminaBarPanel.ts = base 4f0c87f2 (open() called directly)', S, '@BASE@', None, [TS]),
+    ('K1m', 'BoardView.ts = base 4f0c87f2 (openThisCell() directly, no guards)', M, '@BASE@', None, [TM]),
+    ('K4s', 'two clicks on the bar', S, STAM_CLICK, "bar.click(); bar.click();", [TS]),
+    ('K4m', 'two clicks on the cell', M, MONT_CLICK, "cell.click(); cell.click();", [TM]),
+    ('K6', 'managedModal arms re-pushes at once (never from the opening click)', MM, "if (opening?.type === 'click') {", "if (false as boolean) {", [TS, TM]),
+    ('G5m', 'montage: drop evt.repeat', M, GUARDS, GUARDS.replace('evt.repeat || ', ''), [TM]),
+    ('G1m', 'montage: drop the evt.target !== cell guard', M, "if (evt.target !== cell) return;", "", [TM]),
+    ('G2s', 'stamina: drop evt.ctrlKey', S, GUARDS, GUARDS.replace('evt.ctrlKey || ', ''), [TS]),
+    ('P1m', 'montage: no preventDefault on the key (Space would scroll)', M, "evt.preventDefault();\n\t\t\t\t\t// SC-597", "// SC-597", [TM]),
+    ('X1s', 'stamina: click the bar AND call the opener again through a second listener dispatch (dispatchEvent bubbles + click)', S, STAM_CLICK,
+     "bar.dispatchEvent(new MouseEvent('click', { bubbles: true })); bar.click();", [TS]),
+    ('X2s', 'stamina: click dispatched on the card root (closest data-dse-element), not the bar', S, STAM_CLICK,
+     "(bar.closest('[data-dse-element]') as HTMLElement).click();", [TS]),
+]
+
+def sh(*a, **k):
+    return subprocess.run(a, capture_output=True, text=True, **k)
+
+def main():
+    log, which = sys.argv[1], sys.argv[2]
+    want = None if which == 'all' else set(which.split(','))
+    out = open(log, 'a')
+    def w(s):
+        out.write(s + '\n'); out.flush()
+    for mid, desc, file, old, new, tests in MUTANTS:
+        if want is not None and mid not in want:
+            continue
+        path = os.path.join(W, file)
+        orig = open(path, 'rb').read()
+        text = orig.decode()
+        if old == '@BASE@':
+            r = sh('git', '-C', W, 'show', '4f0c87f2:' + file)
+            assert r.returncode == 0, r.stderr
+            mutated = r.stdout
+        else:
+            assert text.count(old) == 1, (mid, old, text.count(old))
+            mutated = text.replace(old, new)
+        open(path, 'w').write(mutated)
+        try:
+            r = sh('npx', 'jest', *tests, '--silent', cwd=W)
+        finally:
+            open(path, 'wb').write(orig)
+        out_text = r.stdout + r.stderr
+        fails = []
+        for line in out_text.splitlines():
+            m = re.match(r'^\s+● (.+)$', line)
+            if m and m.group(1) not in fails and 'Test suite failed' not in m.group(1):
+                fails.append(m.group(1))
+        summ = [l for l in out_text.splitlines() if l.startswith('Tests:')]
+        st = sh('git', '-C', W, 'status', '--porcelain').stdout.strip()
+        w(f'## {mid}: {desc}')
+        w(f'file: {file}')
+        w('command: npx jest ' + ' '.join(tests) + ' --silent')
+        w(f'result: {"KILLED" if r.returncode != 0 and fails else "SURVIVED"} (jest rc {r.returncode}); {summ[0] if summ else "no Tests line"}')
+        for f in fails:
+            w('  red: ' + f)
+        w(f'restored: git status --porcelain empty = {st == ""}' + ('' if st == '' else ' !!! ' + st))
+        w('')
+        assert st == '', st
+    out.close()
+
+main()

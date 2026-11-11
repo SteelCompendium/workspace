@@ -1,0 +1,78 @@
+diff -ru dse-base/src/elements/montage/BoardView.ts dse-proto/src/elements/montage/BoardView.ts
+--- dse-base/src/elements/montage/BoardView.ts	2026-11-11 12:44:46.000000000 -0500
++++ dse-proto/src/elements/montage/BoardView.ts	2026-11-11 13:28:26.089911080 -0500
+@@ -378,7 +378,8 @@
+ 				this.owner.registerDomEvent(cell, 'keydown', (evt: KeyboardEvent) => {
+ 					if (evt.key !== 'Enter' && evt.key !== ' ') return;
+ 					evt.preventDefault();
+-					openThisCell();
++					if (((window as unknown as { __sc597?: string }).__sc597) === 'a') cell.click();
++					else openThisCell();
+ 				});
+ 			}
+ 		} else if (isEmptyCurrentCell && this.canPersist) {
+diff -ru dse-base/src/framework/kit/managedModal.ts dse-proto/src/framework/kit/managedModal.ts
+--- dse-base/src/framework/kit/managedModal.ts	2026-11-11 12:44:46.000000000 -0500
++++ dse-proto/src/framework/kit/managedModal.ts	2026-11-11 13:28:26.089911080 -0500
+@@ -174,10 +174,11 @@
+ 		const prefs = prefsForApp(this.app);
+ 		if (prefs) prefs.reflectCss(this.dialogEl(), this.lifecycle);
+ 		super.open();
+-		if (this.anchorEl?.closest('.hover-popover')) this.keepHoverPreviewAlive();
+ 		// §2.6: initial focus to the first control. Escape + the focus trap stay
+ 		// Obsidian Modal defaults — only the entry focus is DSE's.
++		// SC-597 proto: focus moved ABOVE keepHoverPreviewAlive (variant c needs the focus out of the preview before its click).
+ 		this.contentEl.querySelector<HTMLElement>(FOCUSABLE)?.focus();
++		if (this.anchorEl?.closest('.hover-popover')) this.keepHoverPreviewAlive();
+ 	}
+ 
+ 	/**
+@@ -251,6 +252,35 @@
+ 			};
+ 			win.addEventListener('click', onWindowBubble);
+ 			this.lifecycle.register(() => win.removeEventListener('click', onWindowBubble));
++		} else if (((window as unknown as { __sc597?: string }).__sc597) === 'c' && this.anchorEl) {
++			// SC-597 proto (c): make Obsidian run its own focus step for the preview, exactly as for a click on the card.
++			const click = new MouseEvent('click', { bubbles: true, cancelable: true, view: win });
++			let armed = false;
++			const onWindowBubble = (evt: Event): void => {
++				if (evt === click && !armed) { armed = true; arm(); }
++			};
++			win.addEventListener('click', onWindowBubble);
++			this.lifecycle.register(() => win.removeEventListener('click', onWindowBubble));
++			this.anchorEl.dispatchEvent(click);
++			if (!armed) { armed = true; arm(); }
++			(win as unknown as { __sc597c?: unknown[] }).__sc597c = [...((win as unknown as { __sc597c?: unknown[] }).__sc597c ?? []), { t: performance.now(), armed }];
++		} else if ((((window as unknown as { __sc597?: string }).__sc597) === 'b1' || ((window as unknown as { __sc597?: string }).__sc597) === 'b1r') && this.anchorEl) {
++			// SC-597 proto (b1): find the private HoverPopover instance and mark it focused.
++			const popEl = this.anchorEl.closest('.hover-popover');
++			type HP = { hoverEl?: HTMLElement; setIsFocused?: (f: boolean) => void };
++			let found: HP | null = null;
++			this.app.workspace.iterateAllLeaves((leaf) => {
++				const v = leaf.view as unknown as Record<string, { hoverPopover?: HP } | undefined> & { hoverPopover?: HP };
++				for (const o of [v, v?.previewMode, v?.editMode, v?.currentMode]) {
++					const hp = (o as { hoverPopover?: HP } | undefined)?.hoverPopover;
++					if (!found && hp && hp.hoverEl === popEl) found = hp;
++				}
++			});
++			const hp = found as HP | null;
++			hp?.setIsFocused?.(true);
++			if (hp && ((window as unknown as { __sc597?: string }).__sc597) === 'b1r') this.lifecycle.register(() => hp.setIsFocused?.(false));
++			(win as unknown as { __sc597b?: unknown[] }).__sc597b = [...((win as unknown as { __sc597b?: unknown[] }).__sc597b ?? []), { t: performance.now(), found: !!hp }];
++			arm();
+ 		} else arm();
+ 	}
+ 
+diff -ru dse-base/src/framework/kit/StaminaBarPanel.ts dse-proto/src/framework/kit/StaminaBarPanel.ts
+--- dse-base/src/framework/kit/StaminaBarPanel.ts	2026-11-11 12:44:46.000000000 -0500
++++ dse-proto/src/framework/kit/StaminaBarPanel.ts	2026-11-11 13:28:26.089911080 -0500
+@@ -196,7 +196,8 @@
+ 		// Not a shortcut, and not a held key: auto-repeat would otherwise re-fire into the modal.
+ 		if (evt.ctrlKey || evt.metaKey || evt.altKey || evt.repeat || evt.defaultPrevented) return;
+ 		evt.preventDefault(); // Space would otherwise scroll the page
+-		open();
++		if (((window as unknown as { __sc597?: string }).__sc597) === 'a') bar.click();
++		else open();
+ 	});
+ }
+ 

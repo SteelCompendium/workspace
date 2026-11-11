@@ -1,0 +1,112 @@
+## K1s: StaminaBarPanel.ts = base 4f0c87f2 (open() called directly)
+file: src/framework/kit/StaminaBarPanel.ts
+command: npx jest test/dom/elements/stamina-bar.test.ts --silent
+result: KILLED (jest rc 1); Tests:       4 failed, 37 passed, 41 total
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › "Enter" on the bar sends one click through the preview to the bar, and the modal is open at once
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › " " on the bar sends one click through the preview to the bar, and the modal is open at once
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › Escape closes the modal and leaves the preview: the modal is back on top of the preview's own scope push
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › control: outside a hover preview, Enter opens one modal from one click
+restored: git status --porcelain empty = True
+
+## K1m: BoardView.ts = base 4f0c87f2 (openThisCell() directly, no guards)
+file: src/elements/montage/BoardView.ts
+command: npx jest test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       11 failed, 122 passed, 133 total
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Enter on a logged cell sends one click through the preview to the cell, and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Space on a logged cell sends one click through the preview to the cell, and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Enter on an empty past-round cell sends one click through the preview to the cell, and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Space on an empty past-round cell sends one click through the preview to the cell, and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Escape closes the sheet and leaves the preview: the sheet is back on top of the preview's own scope push
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › control: outside a hover preview, Enter opens one sheet from one click
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Ctrl+Enter on a cell sends no click and opens no sheet
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Meta+Enter on a cell sends no click and opens no sheet
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Alt+Enter on a cell sends no click and opens no sheet
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › a held Enter on a cell sends no click and opens no sheet
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › an Enter that something else already handled sends no click, and one from a child of the cell is not the cell's
+restored: git status --porcelain empty = True
+
+## K4s: two clicks on the bar
+file: src/framework/kit/StaminaBarPanel.ts
+command: npx jest test/dom/elements/stamina-bar.test.ts --silent
+result: KILLED (jest rc 1); Tests:       5 failed, 36 passed, 41 total
+  red: D2 §3.5: stamina-bar rendered through the REAL ElementPipeline › click -> the unified managedModal StaminaEditModal (§3.5b) -> edit -> persist › SC-498: the bar is a keyboard tab stop; Enter on it opens the Stamina modal like a click
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › "Enter" on the bar sends one click through the preview to the bar, and the modal is open at once
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › " " on the bar sends one click through the preview to the bar, and the modal is open at once
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › Escape closes the modal and leaves the preview: the modal is back on top of the preview's own scope push
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › control: outside a hover preview, Enter opens one modal from one click
+restored: git status --porcelain empty = True
+
+## K4m: two clicks on the cell
+file: src/elements/montage/BoardView.ts
+command: npx jest test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       6 failed, 127 passed, 133 total
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Enter on a logged cell sends one click through the preview to the cell, and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Space on a logged cell sends one click through the preview to the cell, and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Enter on an empty past-round cell sends one click through the preview to the cell, and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Space on an empty past-round cell sends one click through the preview to the cell, and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Escape closes the sheet and leaves the preview: the sheet is back on top of the preview's own scope push
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › control: outside a hover preview, Enter opens one sheet from one click
+restored: git status --porcelain empty = True
+
+## K6: managedModal arms re-pushes at once (never from the opening click)
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       2 failed, 172 passed, 174 total
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › Escape closes the modal and leaves the preview: the modal is back on top of the preview's own scope push
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Escape closes the sheet and leaves the preview: the sheet is back on top of the preview's own scope push
+restored: git status --porcelain empty = True
+
+## G5m: montage: drop evt.repeat
+file: src/elements/montage/BoardView.ts
+command: npx jest test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       1 failed, 132 passed, 133 total
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › a held Enter on a cell sends no click and opens no sheet
+restored: git status --porcelain empty = True
+
+## G1m: montage: drop the evt.target !== cell guard
+file: src/elements/montage/BoardView.ts
+command: npx jest test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       1 failed, 132 passed, 133 total
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › an Enter that something else already handled sends no click, and one from a child of the cell is not the cell's
+restored: git status --porcelain empty = True
+
+## G2s: stamina: drop evt.ctrlKey
+file: src/framework/kit/StaminaBarPanel.ts
+command: npx jest test/dom/elements/stamina-bar.test.ts --silent
+result: KILLED (jest rc 1); Tests:       1 failed, 40 passed, 41 total
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › Ctrl+Enter on the bar sends no click and opens no modal
+restored: git status --porcelain empty = True
+
+## P1m: montage: no preventDefault on the key (Space would scroll)
+file: src/elements/montage/BoardView.ts
+command: npx jest test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       4 failed, 129 passed, 133 total
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Enter on a logged cell sends one click through the preview to the cell, and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Space on a logged cell sends one click through the preview to the cell, and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Enter on an empty past-round cell sends one click through the preview to the cell, and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Space on an empty past-round cell sends one click through the preview to the cell, and the sheet is open at once
+restored: git status --porcelain empty = True
+
+## X1s: stamina: click the bar AND call the opener again through a second listener dispatch (dispatchEvent bubbles + click)
+file: src/framework/kit/StaminaBarPanel.ts
+command: npx jest test/dom/elements/stamina-bar.test.ts --silent
+result: KILLED (jest rc 1); Tests:       5 failed, 36 passed, 41 total
+  red: D2 §3.5: stamina-bar rendered through the REAL ElementPipeline › click -> the unified managedModal StaminaEditModal (§3.5b) -> edit -> persist › SC-498: the bar is a keyboard tab stop; Enter on it opens the Stamina modal like a click
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › "Enter" on the bar sends one click through the preview to the bar, and the modal is open at once
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › " " on the bar sends one click through the preview to the bar, and the modal is open at once
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › Escape closes the modal and leaves the preview: the modal is back on top of the preview's own scope push
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › control: outside a hover preview, Enter opens one modal from one click
+restored: git status --porcelain empty = True
+
+## X2s: stamina: click dispatched on the card root (closest data-dse-element), not the bar
+file: src/framework/kit/StaminaBarPanel.ts
+command: npx jest test/dom/elements/stamina-bar.test.ts --silent
+result: KILLED (jest rc 1); Tests:       5 failed, 36 passed, 41 total
+  red: D2 §3.5: stamina-bar rendered through the REAL ElementPipeline › click -> the unified managedModal StaminaEditModal (§3.5b) -> edit -> persist › SC-498: the bar is a keyboard tab stop; Enter on it opens the Stamina modal like a click
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › "Enter" on the bar sends one click through the preview to the bar, and the modal is open at once
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › " " on the bar sends one click through the preview to the bar, and the modal is open at once
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › Escape closes the modal and leaves the preview: the modal is back on top of the preview's own scope push
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › control: outside a hover preview, Enter opens one modal from one click
+restored: git status --porcelain empty = True
+
+MUT_RC=0

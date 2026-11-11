@@ -1,0 +1,15 @@
+# Builds the R3 scratch probe harness: a copy of the worktree's visual-harness/obsidian-lifecycle.mjs with R3_SCENARIO injected
+# before `const SCENARIOS = [` and put first in SCENARIOS. Nothing in the worktree is changed.
+# usage: python3 -I r3-make-probe.py <worktree dse dir> <scenario.js> <out .mjs>
+import sys
+W, scen, dst = sys.argv[1:]
+s = open(W + '/visual-harness/obsidian-lifecycle.mjs').read()
+inj = open(scen).read()
+def rep(a, b):
+    global s
+    assert s.count(a) == 1, (a, s.count(a))
+    s = s.replace(a, b)
+rep("const repo = path.dirname(dir);", f"const repo = '{W}';")
+rep("const SCENARIOS = [", inj + "\nconst SCENARIOS = [\n\tR3_SCENARIO,")
+open(dst, 'w').write(s)
+print('wrote', dst)

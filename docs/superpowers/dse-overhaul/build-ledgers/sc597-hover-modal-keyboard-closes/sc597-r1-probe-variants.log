@@ -1,0 +1,401 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :162, port 43589, 1 scenario(s)
+=== variant=none mode=rv opener=stam-enter hover=real hover ms=5954 note=current_stamina: 15
+   focusedBefore    {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-stamina t=14}
+   at120            {popover=True modal=True modals=1 isFocused=False editing=False editor=False active=INPUT.dse-sedit__apply-input t=190}
+   at1500           {popover=False modal=False modals=0 isFocused=None editing=False editor=False active=BODY.theme-dark t=1574}
+       17ms key 'Enter'
+       60ms modal+
+      361ms HIDE event=None isFocused=False from app.js:509:107969
+      421ms modal-
+=== variant=a mode=rv opener=stam-enter hover=real hover ms=9922 note=current_stamina: 18
+   focusedBefore    {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-stamina t=8}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=173}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=1557}
+   afterTitleClick  {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=BODY.theme-dark t=2137}
+   afterApply       {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-stamina t=3404}
+   reopened         {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=3886}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-stamina t=4407}
+   afterRest        {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-stamina t=5617}
+   afterOutside     {popover=False modal=False modals=0 isFocused=None editing=False editor=False active=BUTTON.clickable-icon t=5726}
+   saved=True notices=[]
+        9ms key 'Enter'
+        9ms click trusted=False detail=0 target=dse-stamina
+       43ms modal+
+     1634ms click trusted=True detail=1 target=dse-modal__title-text
+     2251ms click trusted=True detail=1 target=dse-btn__icon
+     2584ms click trusted=True detail=1 target=dse-btn__text
+     2599ms modal-
+     3407ms key 'Enter'
+     3407ms click trusted=False detail=0 target=dse-stamina
+     3431ms modal+
+     3905ms modal-
+     3905ms key 'Escape'
+     5718ms click trusted=True detail=1 target=clickable-icon
+     5719ms HIDE event=click isFocused=True from app.js:509:193553
+=== variant=a mode=lp opener=stam-enter hover=real hover ms=9933 note=current_stamina: 18
+   focusedBefore    {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-stamina t=42}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=204}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=1587}
+   afterTitleClick  {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=BODY.theme-dark t=2166}
+   afterApply       {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-stamina t=3417}
+   reopened         {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=3898}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-stamina t=4419}
+   afterRest        {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-stamina t=5633}
+   afterOutside     {popover=False modal=False modals=0 isFocused=None editing=False editor=False active=BUTTON.clickable-icon t=5764}
+   saved=True notices=[]
+       46ms key 'Enter'
+       46ms click trusted=False detail=0 target=dse-stamina
+       73ms modal+
+     1665ms click trusted=True detail=1 target=dse-modal__title-text
+     2266ms click trusted=True detail=1 target=dse-btn__icon
+     2598ms click trusted=True detail=1 target=dse-btn__text
+     2613ms modal-
+     3419ms key 'Enter'
+     3419ms click trusted=False detail=0 target=dse-stamina
+     3443ms modal+
+     3915ms modal-
+     3915ms key 'Escape'
+     5741ms click trusted=True detail=1 target=clickable-icon
+     5759ms HIDE event=click isFocused=True from app.js:509:193553
+=== variant=a mode=rv opener=mont-enter hover=real hover ms=8501 note=None
+   focusedBefore    {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-mt__cell t=26}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=BUTTON.dse-optchip t=247}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=BUTTON.dse-optchip t=1631}
+   afterTitleClick  {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=BODY.theme-dark t=2220}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-mt__cell t=2833}
+   afterRest        {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-mt__cell t=4062}
+   afterOutside     {popover=False modal=False modals=0 isFocused=None editing=False editor=False active=BUTTON.clickable-icon t=4221}
+       27ms key 'Enter'
+       27ms click trusted=False detail=0 target=dse-mt__cell
+      102ms modal+
+     1717ms click trusted=True detail=1 target=dse-modal__title-text
+     2310ms modal-
+     2310ms key 'Escape'
+     4203ms click trusted=True detail=1 target=clickable-icon
+     4217ms HIDE event=click isFocused=True from app.js:509:193553
+=== variant=c mode=rv opener=stam-enter hover=real hover ms=9897 note=current_stamina: 18
+   focusedBefore    {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-stamina t=7}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=165}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=1547}
+   afterTitleClick  {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=BODY.theme-dark t=2135}
+   afterApply       {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-stamina t=3388}
+   reopened         {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=3873}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-stamina t=4395}
+   afterRest        {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-stamina t=5621}
+   afterOutside     {popover=False modal=False modals=0 isFocused=None editing=False editor=False active=BUTTON.clickable-icon t=5756}
+   saved=True notices=[]
+   proto-c: [{'t': 39826.299999952316, 'armed': True}, {'t': 43210.299999952316, 'armed': True}]
+        8ms key 'Enter'
+       33ms click trusted=False detail=0 target=block-language-ds-stamina-bar
+       34ms modal+
+     1634ms click trusted=True detail=1 target=dse-modal__title-text
+     2235ms click trusted=True detail=1 target=dse-btn__icon
+     2568ms click trusted=True detail=1 target=dse-btn__text
+     2584ms modal-
+     3391ms key 'Enter'
+     3417ms click trusted=False detail=0 target=block-language-ds-stamina-bar
+     3418ms modal+
+     3891ms modal-
+     3891ms key 'Escape'
+     5732ms click trusted=True detail=1 target=clickable-icon
+     5752ms HIDE event=click isFocused=True from app.js:509:193553
+=== variant=c mode=lp opener=stam-enter hover=real hover ms=9931 note=current_stamina: 18
+   focusedBefore    {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-stamina t=7}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=164}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=1546}
+   afterTitleClick  {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=BODY.theme-dark t=2136}
+   afterApply       {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-stamina t=3388}
+   reopened         {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=3884}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-stamina t=4434}
+   afterRest        {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-stamina t=5652}
+   afterOutside     {popover=False modal=False modals=0 isFocused=None editing=False editor=False active=BUTTON.clickable-icon t=5757}
+   saved=True notices=[]
+   proto-c: [{'t': 49760.39999985695, 'armed': True}, {'t': 53154.200000047684, 'armed': True}]
+        9ms key 'Enter'
+       33ms click trusted=False detail=0 target=block-language-ds-stamina-bar
+       34ms modal+
+     1634ms click trusted=True detail=1 target=dse-modal__title-text
+     2234ms click trusted=True detail=1 target=dse-btn__icon
+     2567ms click trusted=True detail=1 target=dse-btn__text
+     2583ms modal-
+     3390ms key 'Enter'
+     3427ms click trusted=False detail=0 target=block-language-ds-stamina-bar
+     3428ms modal+
+     3928ms modal-
+     3929ms key 'Escape'
+     5741ms click trusted=True detail=1 target=clickable-icon
+     5753ms HIDE event=click isFocused=True from app.js:509:193553
+=== variant=c mode=rv opener=mont-enter hover=real hover ms=8285 note=None
+   focusedBefore    {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-mt__cell t=24}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=BUTTON.dse-optchip t=221}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=BUTTON.dse-optchip t=1606}
+   afterTitleClick  {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=BODY.theme-dark t=2185}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-mt__cell t=2767}
+   afterRest        {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-mt__cell t=3993}
+   afterOutside     {popover=False modal=False modals=0 isFocused=None editing=False editor=False active=BUTTON.clickable-icon t=4109}
+   proto-c: [{'t': 59736.299999952316, 'armed': True}]
+       25ms key 'Enter'
+       76ms click trusted=False detail=0 target=block-language-ds-montage
+       77ms modal+
+     1684ms click trusted=True detail=1 target=dse-modal__title-text
+     2244ms modal-
+     2244ms key 'Escape'
+     4089ms click trusted=True detail=1 target=clickable-icon
+     4103ms HIDE event=click isFocused=True from app.js:509:193553
+=== variant=b1 mode=rv opener=stam-enter hover=real hover ms=13017 note=current_stamina: 18
+   focusedBefore    {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-stamina t=10}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=INPUT.dse-sedit__apply-input t=165}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=INPUT.dse-sedit__apply-input t=1547}
+   afterTitleClick  {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=BODY.theme-dark t=2137}
+   afterApply       {popover=True modal=False modals=0 isFocused=True editing=False editor=False active=DIV.dse-stamina t=3423}
+   reopened         {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=INPUT.dse-sedit__apply-input t=3906}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=False editor=False active=DIV.dse-stamina t=4430}
+   afterRest        {popover=True modal=False modals=0 isFocused=True editing=False editor=False active=DIV.dse-stamina t=5650}
+   afterOutside     {popover=True modal=False modals=0 isFocused=True editing=False editor=False active=BUTTON.clickable-icon t=8811}
+   saved=True notices=[]
+   proto-b1: [{'t': 67994.70000004768, 'found': True}, {'t': 71410.5, 'found': True}]
+       11ms key 'Enter'
+       36ms modal+
+     1634ms click trusted=True detail=1 target=dse-modal__title-text
+     2260ms click trusted=True detail=1 target=dse-btn__icon
+     2601ms click trusted=True detail=1 target=dse-btn__text
+     2617ms modal-
+     3426ms key 'Enter'
+     3452ms modal+
+     3926ms modal-
+     3926ms key 'Escape'
+     5741ms click trusted=True detail=1 target=clickable-icon
+=== variant=b1 mode=lp opener=stam-enter hover=real hover ms=12981 note=current_stamina: 18
+   focusedBefore    {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-stamina t=41}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=INPUT.dse-sedit__apply-input t=201}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=INPUT.dse-sedit__apply-input t=1583}
+   afterTitleClick  {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=BODY.theme-dark t=2170}
+   afterApply       {popover=True modal=False modals=0 isFocused=True editing=False editor=False active=DIV.dse-stamina t=3474}
+   reopened         {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=INPUT.dse-sedit__apply-input t=3963}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=False editor=False active=DIV.dse-stamina t=4489}
+   afterRest        {popover=True modal=False modals=0 isFocused=True editing=False editor=False active=DIV.dse-stamina t=5700}
+   afterOutside     {popover=True modal=False modals=0 isFocused=True editing=False editor=False active=BUTTON.clickable-icon t=8873}
+   saved=True notices=[]
+   proto-b1: [{'t': 80964.5, 'found': True}, {'t': 84400.59999990463, 'found': True}]
+       44ms key 'Enter'
+       71ms modal+
+     1667ms click trusted=True detail=1 target=dse-modal__title-text
+     2283ms click trusted=True detail=1 target=dse-btn__icon
+     2621ms click trusted=True detail=1 target=dse-btn__text
+     2664ms modal-
+     3480ms key 'Enter'
+     3507ms modal+
+     3984ms modal-
+     3984ms key 'Escape'
+     5789ms click trusted=True detail=1 target=clickable-icon
+=== variant=b1 mode=rv opener=mont-enter hover=real hover ms=11422 note=None
+   focusedBefore    {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-mt__cell t=62}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=BUTTON.dse-optchip t=263}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=BUTTON.dse-optchip t=1647}
+   afterTitleClick  {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=BODY.theme-dark t=2237}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=False editor=False active=DIV.dse-mt__cell t=2818}
+   afterRest        {popover=True modal=False modals=0 isFocused=True editing=False editor=False active=DIV.dse-mt__cell t=4078}
+   afterOutside     {popover=True modal=False modals=0 isFocused=True editing=False editor=False active=BUTTON.clickable-icon t=7268}
+   proto-b1: [{'t': 94026.89999985695, 'found': True}]
+       63ms key 'Enter'
+      119ms modal+
+     1735ms click trusted=True detail=1 target=dse-modal__title-text
+     2294ms modal-
+     2294ms key 'Escape'
+     4192ms click trusted=True detail=1 target=clickable-icon
+=== variant=b1r mode=rv opener=stam-enter hover=real hover ms=10009 note=current_stamina: 18
+   focusedBefore    {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-stamina t=8}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=INPUT.dse-sedit__apply-input t=169}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=INPUT.dse-sedit__apply-input t=1554}
+   afterTitleClick  {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=BODY.theme-dark t=2144}
+   afterApply       {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-stamina t=3433}
+   reopened         {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=INPUT.dse-sedit__apply-input t=3917}
+   afterEscape      {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-stamina t=4466}
+   afterRest        {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-stamina t=5684}
+   afterOutside     {popover=False modal=False modals=0 isFocused=None editing=False editor=False active=BUTTON.clickable-icon t=5906}
+   saved=True notices=[]
+   proto-b1: [{'t': 105328.09999990463, 'found': True}, {'t': 108751.09999990463, 'found': True}]
+        9ms key 'Enter'
+       38ms modal+
+     1640ms click trusted=True detail=1 target=dse-modal__title-text
+     2260ms click trusted=True detail=1 target=dse-btn__icon
+     2604ms click trusted=True detail=1 target=dse-btn__text
+     2625ms modal-
+     3436ms key 'Enter'
+     3462ms modal+
+     3962ms modal-
+     3962ms key 'Escape'
+     5800ms click trusted=True detail=1 target=clickable-icon
+     5822ms HIDE event=None isFocused=False from app.js:509:105839 <- Array.forEach (<anonymous>)
+=== variant=b1r mode=lp opener=stam-enter hover=real hover ms=10117 note=current_stamina: 18
+   focusedBefore    {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-stamina t=42}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=INPUT.dse-sedit__apply-input t=203}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=INPUT.dse-sedit__apply-input t=1587}
+   afterTitleClick  {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=BODY.theme-dark t=2176}
+   afterApply       {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-stamina t=3490}
+   reopened         {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=INPUT.dse-sedit__apply-input t=4012}
+   afterEscape      {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-stamina t=4565}
+   afterRest        {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-stamina t=5784}
+   afterOutside     {popover=False modal=False modals=0 isFocused=None editing=False editor=False active=BUTTON.clickable-icon t=5990}
+   saved=True notices=[]
+   proto-b1: [{'t': 115399.20000004768, 'found': True}, {'t': 118880.59999990463, 'found': True}]
+       46ms key 'Enter'
+       75ms modal+
+     1672ms click trusted=True detail=1 target=dse-modal__title-text
+     2292ms click trusted=True detail=1 target=dse-btn__icon
+     2641ms click trusted=True detail=1 target=dse-btn__text
+     2682ms modal-
+     3498ms key 'Enter'
+     3556ms modal+
+     4060ms modal-
+     4060ms key 'Escape'
+     5884ms click trusted=True detail=1 target=clickable-icon
+     5910ms HIDE event=None isFocused=False from app.js:509:105839 <- Array.forEach (<anonymous>)
+=== variant=b1r mode=rv opener=mont-enter hover=real hover ms=8587 note=None
+   focusedBefore    {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-mt__cell t=60}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=BUTTON.dse-optchip t=258}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=BUTTON.dse-optchip t=1644}
+   afterTitleClick  {popover=True modal=True modals=1 isFocused=True editing=False editor=False active=BODY.theme-dark t=2240}
+   afterEscape      {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-mt__cell t=2857}
+   afterRest        {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-mt__cell t=4118}
+   afterOutside     {popover=False modal=False modals=0 isFocused=None editing=False editor=False active=BUTTON.clickable-icon t=4369}
+   proto-b1: [{'t': 125636.59999990463, 'found': True}]
+       61ms key 'Enter'
+      112ms modal+
+     1736ms click trusted=True detail=1 target=dse-modal__title-text
+     2331ms modal-
+     2331ms key 'Escape'
+     4256ms click trusted=True detail=1 target=clickable-icon
+     4274ms HIDE event=None isFocused=False from app.js:509:105839 <- Array.forEach (<anonymous>)
+=== variant=a mode=rv opener=stam-space hover=real hover ms=10011 note=current_stamina: 18
+   focusedBefore    {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-stamina t=26}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=194}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=1577}
+   afterTitleClick  {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=BODY.theme-dark t=2152}
+   afterApply       {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-stamina t=3405}
+   reopened         {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=3917}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-stamina t=4463}
+   afterRest        {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-stamina t=5683}
+   afterOutside     {popover=False modal=False modals=0 isFocused=None editing=False editor=False active=BUTTON.clickable-icon t=5825}
+   saved=True notices=[]
+       28ms key ' '
+       28ms click trusted=False detail=0 target=dse-stamina
+       64ms modal+
+     1651ms click trusted=True detail=1 target=dse-modal__title-text
+     2251ms click trusted=True detail=1 target=dse-btn__icon
+     2584ms click trusted=True detail=1 target=dse-btn__text
+     2599ms modal-
+     3412ms key ' '
+     3412ms click trusted=False detail=0 target=dse-stamina
+     3462ms modal+
+     3959ms modal-
+     3959ms key 'Escape'
+     5801ms click trusted=True detail=1 target=clickable-icon
+     5820ms HIDE event=click isFocused=True from app.js:509:193553
+=== variant=c mode=lp opener=stam-space hover=real hover ms=9934 note=current_stamina: 18
+   focusedBefore    {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-stamina t=30}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=189}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=1572}
+   afterTitleClick  {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=BODY.theme-dark t=2160}
+   afterApply       {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-stamina t=3440}
+   reopened         {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=3954}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-stamina t=4470}
+   afterRest        {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-stamina t=5684}
+   afterOutside     {popover=False modal=False modals=0 isFocused=None editing=False editor=False active=BUTTON.clickable-icon t=5823}
+   saved=True notices=[]
+   proto-c: [{'t': 144082.39999985695, 'armed': True}, {'t': 147521.29999995232, 'armed': True}]
+       34ms key ' '
+       59ms click trusted=False detail=0 target=block-language-ds-stamina-bar
+       59ms modal+
+     1656ms click trusted=True detail=1 target=dse-modal__title-text
+     2276ms click trusted=True detail=1 target=dse-btn__icon
+     2616ms click trusted=True detail=1 target=dse-btn__text
+     2633ms modal-
+     3447ms key ' '
+     3498ms click trusted=False detail=0 target=block-language-ds-stamina-bar
+     3499ms modal+
+     3967ms modal-
+     3967ms key 'Escape'
+     5799ms click trusted=True detail=1 target=clickable-icon
+     5819ms HIDE event=click isFocused=True from app.js:509:193553
+=== variant=a mode=rv opener=stam-mouse hover=real hover ms=10667 note=current_stamina: 18
+   at120            {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=540}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=1923}
+   afterTitleClick  {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=BODY.theme-dark t=2502}
+   afterApply       {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.markdown-preview-view t=3781}
+   reopened         {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=4653}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.markdown-preview-view t=5201}
+   afterRest        {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.markdown-preview-view t=6436}
+   afterOutside     {popover=False modal=False modals=0 isFocused=None editing=False editor=False active=BUTTON.clickable-icon t=6565}
+   saved=True notices=[]
+      398ms click trusted=True detail=1 target=dse-stamina__cnums
+      418ms modal+
+     2001ms click trusted=True detail=1 target=dse-modal__title-text
+     2602ms click trusted=True detail=1 target=dse-btn__icon
+     2940ms click trusted=True detail=1 target=dse-btn__text
+     2975ms modal-
+     4180ms click trusted=True detail=1 target=dse-stamina__cnums
+     4199ms modal+
+     4688ms modal-
+     4688ms key 'Escape'
+     6534ms click trusted=True detail=1 target=clickable-icon
+     6561ms HIDE event=click isFocused=True from app.js:509:193553
+=== variant=c mode=rv opener=stam-mouse hover=real hover ms=10700 note=current_stamina: 18
+   at120            {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=550}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=1934}
+   afterTitleClick  {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=BODY.theme-dark t=2520}
+   afterApply       {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.markdown-preview-view t=3801}
+   reopened         {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=INPUT.dse-sedit__apply-input t=4728}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.markdown-preview-view t=5248}
+   afterRest        {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.markdown-preview-view t=6465}
+   afterOutside     {popover=False modal=False modals=0 isFocused=None editing=False editor=False active=BUTTON.clickable-icon t=6571}
+   saved=True notices=[]
+      396ms click trusted=True detail=1 target=dse-stamina__cnums
+      427ms modal+
+     2017ms click trusted=True detail=1 target=dse-modal__title-text
+     2642ms click trusted=True detail=1 target=dse-btn__icon
+     2983ms click trusted=True detail=1 target=dse-btn__text
+     2993ms modal-
+     4219ms click trusted=True detail=1 target=dse-stamina__cnums
+     4275ms modal+
+     4741ms modal-
+     4741ms key 'Escape'
+     6551ms click trusted=True detail=1 target=clickable-icon
+     6566ms HIDE event=click isFocused=True from app.js:509:193553
+=== variant=c mode=lp opener=mont-enter hover=real hover ms=8411 note=None
+   focusedBefore    {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-mt__cell t=65}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=BUTTON.dse-optchip t=262}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=BUTTON.dse-optchip t=1646}
+   afterTitleClick  {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=BODY.theme-dark t=2241}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-mt__cell t=2853}
+   afterRest        {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-mt__cell t=4078}
+   afterOutside     {popover=False modal=False modals=0 isFocused=None editing=False editor=False active=BUTTON.clickable-icon t=4205}
+   proto-c: [{'t': 175538.70000004768, 'armed': True}]
+       68ms key 'Enter'
+      116ms click trusted=False detail=0 target=block-language-ds-montage
+      116ms modal+
+     1738ms click trusted=True detail=1 target=dse-modal__title-text
+     2330ms modal-
+     2330ms key 'Escape'
+     4187ms click trusted=True detail=1 target=clickable-icon
+     4201ms HIDE event=click isFocused=True from app.js:509:193553
+=== variant=a mode=lp opener=mont-enter hover=real hover ms=8318 note=None
+   focusedBefore    {popover=True modal=False modals=0 isFocused=False editing=False editor=False active=DIV.dse-mt__cell t=58}
+   at120            {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=BUTTON.dse-optchip t=259}
+   at1500           {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=BUTTON.dse-optchip t=1643}
+   afterTitleClick  {popover=True modal=True modals=1 isFocused=True editing=True editor=False active=BODY.theme-dark t=2216}
+   afterEscape      {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-mt__cell t=2804}
+   afterRest        {popover=True modal=False modals=0 isFocused=True editing=True editor=False active=DIV.dse-mt__cell t=4065}
+   afterOutside     {popover=False modal=False modals=0 isFocused=None editing=False editor=False active=BUTTON.clickable-icon t=4189}
+       61ms key 'Enter'
+       61ms click trusted=False detail=0 target=dse-mt__cell
+      112ms modal+
+     1715ms click trusted=True detail=1 target=dse-modal__title-text
+     2279ms modal-
+     2279ms key 'Escape'
+     4173ms click trusted=True detail=1 target=clickable-icon
+     4185ms HIDE event=click isFocused=True from app.js:509:193553
+SC597 TOTAL_MS 186602
+OBSIDIAN-LIFECYCLE SC597-PROBE ok (19 trials)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+PROBE_RC=0 WALL_S=191 BUNDLE=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc597-r1-D1/dse-proto

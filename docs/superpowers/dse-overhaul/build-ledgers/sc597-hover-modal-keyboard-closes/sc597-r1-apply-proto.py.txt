@@ -1,0 +1,70 @@
+# SC-597 r1 prototype: one bundle, three candidate fixes behind a runtime switch window.__sc597 ('a' | 'b1' | 'b1r' | 'c'); unset = base behaviour.
+#   (a)   per-opener synthetic click: Enter/Space on the stamina bar / a montage cell calls el.click() instead of the open callback
+#   (b1)  DseModal: opened from a preview outside a click -> find the HoverPopover instance, setIsFocused(true) (never reset)
+#   (b1r) as b1, and setIsFocused(false) again when the modal closes
+#   (c)   DseModal: opened from a preview outside a click -> dispatch a synthetic click on the anchor AFTER focus moved into the modal,
+#         arm the 10/150 ms re-pushes from the window-bubble phase of that click (same ordering trick as a real opening click)
+# usage: python3 -I sc597-r1-apply-proto.py <dse copy root>
+import sys, os
+root = sys.argv[1]
+
+def patch(rel, pairs):
+    p = os.path.join(root, rel)
+    s = open(p).read()
+    for a, b in pairs:
+        assert s.count(a) == 1, (rel, a, s.count(a))
+        s = s.replace(a, b)
+    open(p, 'w').write(s)
+
+SW = "((window as unknown as { __sc597?: string }).__sc597)"
+
+patch('src/framework/kit/StaminaBarPanel.ts', [(
+    "\t\tevt.preventDefault(); // Space would otherwise scroll the page\n\t\topen();\n",
+    "\t\tevt.preventDefault(); // Space would otherwise scroll the page\n\t\tif (" + SW + " === 'a') bar.click();\n\t\telse open();\n",
+)])
+
+patch('src/elements/montage/BoardView.ts', [(
+    "\t\t\t\t\tif (evt.key !== 'Enter' && evt.key !== ' ') return;\n\t\t\t\t\tevt.preventDefault();\n\t\t\t\t\topenThisCell();\n",
+    "\t\t\t\t\tif (evt.key !== 'Enter' && evt.key !== ' ') return;\n\t\t\t\t\tevt.preventDefault();\n\t\t\t\t\tif (" + SW + " === 'a') cell.click();\n\t\t\t\t\telse openThisCell();\n",
+)])
+
+patch('src/framework/kit/managedModal.ts', [
+    (
+        "\t\tsuper.open();\n\t\tif (this.anchorEl?.closest('.hover-popover')) this.keepHoverPreviewAlive();\n\t\t// §2.6: initial focus to the first control. Escape + the focus trap stay\n\t\t// Obsidian Modal defaults — only the entry focus is DSE's.\n\t\tthis.contentEl.querySelector<HTMLElement>(FOCUSABLE)?.focus();\n",
+        "\t\tsuper.open();\n\t\t// §2.6: initial focus to the first control. Escape + the focus trap stay\n\t\t// Obsidian Modal defaults — only the entry focus is DSE's.\n\t\t// SC-597 proto: focus moved ABOVE keepHoverPreviewAlive (variant c needs the focus out of the preview before its click).\n\t\tthis.contentEl.querySelector<HTMLElement>(FOCUSABLE)?.focus();\n\t\tif (this.anchorEl?.closest('.hover-popover')) this.keepHoverPreviewAlive();\n",
+    ),
+    (
+        "\t\t} else arm();\n\t}\n",
+        "\t\t} else if (" + SW + " === 'c' && this.anchorEl) {\n"
+        "\t\t\t// SC-597 proto (c): make Obsidian run its own focus step for the preview, exactly as for a click on the card.\n"
+        "\t\t\tconst click = new MouseEvent('click', { bubbles: true, cancelable: true, view: win });\n"
+        "\t\t\tlet armed = false;\n"
+        "\t\t\tconst onWindowBubble = (evt: Event): void => {\n"
+        "\t\t\t\tif (evt === click && !armed) { armed = true; arm(); }\n"
+        "\t\t\t};\n"
+        "\t\t\twin.addEventListener('click', onWindowBubble);\n"
+        "\t\t\tthis.lifecycle.register(() => win.removeEventListener('click', onWindowBubble));\n"
+        "\t\t\tthis.anchorEl.dispatchEvent(click);\n"
+        "\t\t\tif (!armed) { armed = true; arm(); }\n"
+        "\t\t\t(win as unknown as { __sc597c?: unknown[] }).__sc597c = [...((win as unknown as { __sc597c?: unknown[] }).__sc597c ?? []), { t: performance.now(), armed }];\n"
+        "\t\t} else if ((" + SW + " === 'b1' || " + SW + " === 'b1r') && this.anchorEl) {\n"
+        "\t\t\t// SC-597 proto (b1): find the private HoverPopover instance and mark it focused.\n"
+        "\t\t\tconst popEl = this.anchorEl.closest('.hover-popover');\n"
+        "\t\t\ttype HP = { hoverEl?: HTMLElement; setIsFocused?: (f: boolean) => void };\n"
+        "\t\t\tlet found: HP | null = null;\n"
+        "\t\t\tthis.app.workspace.iterateAllLeaves((leaf) => {\n"
+        "\t\t\t\tconst v = leaf.view as unknown as Record<string, { hoverPopover?: HP } | undefined> & { hoverPopover?: HP };\n"
+        "\t\t\t\tfor (const o of [v, v?.previewMode, v?.editMode, v?.currentMode]) {\n"
+        "\t\t\t\t\tconst hp = (o as { hoverPopover?: HP } | undefined)?.hoverPopover;\n"
+        "\t\t\t\t\tif (!found && hp && hp.hoverEl === popEl) found = hp;\n"
+        "\t\t\t\t}\n"
+        "\t\t\t});\n"
+        "\t\t\tconst hp = found as HP | null;\n"
+        "\t\t\thp?.setIsFocused?.(true);\n"
+        "\t\t\tif (hp && " + SW + " === 'b1r') this.lifecycle.register(() => hp.setIsFocused?.(false));\n"
+        "\t\t\t(win as unknown as { __sc597b?: unknown[] }).__sc597b = [...((win as unknown as { __sc597b?: unknown[] }).__sc597b ?? []), { t: performance.now(), found: !!hp }];\n"
+        "\t\t\tarm();\n"
+        "\t\t} else arm();\n\t}\n",
+    ),
+])
+print('patched', root)
