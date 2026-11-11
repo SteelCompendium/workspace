@@ -22,6 +22,9 @@ go under an *Internal* sub-heading.
   hundreds-of-lines case above), the card keeps showing the click: the next click on that card saves it together with
   the new one, and leaving the note first drops it.
 
+- **DSE plugin: Reset encounter now clears a minion squad's pressed action pips (SC-575).**
+  A minion squad whose Move, Main, Maneuver, Second move or Triggered pip was pressed kept it pressed after Reset
+  encounter -> Yes, in the note and after a reload. Reset now clears the squad's pips along with every other creature's.
 - **DSE plugin: saving a block's edit form after that same block was changed or deleted elsewhere no longer writes your edit into another block (SC-556).**
   When a note has two or more blocks that read the same and you had a block's edit form open while that same block was
   edited or deleted from outside (Sync, another editor, a hand edit), Saving the form could write your edit into one of
