@@ -11,7 +11,7 @@ go under an *Internal* sub-heading.
 - **DSE plugin: Malice in the initiative tracker no longer goes below 0 (SC-577).**
   Pressing - on Malice at 0 wrote `value: -1` into the note, and a negative `round_gain` took Malice below 0 on Advance
   round and put "Advance round (+-3 Malice)" on the button. Now the - button is disabled at 0 (a hand-edited
-  value below 0 shows as 0), Advance round applies a negative `round_gain` but stops at 0 (the Malice log still shows the
+  value below 0 shows as 0 and counts as 0: Advance round or a +3 quick-add from a stored -2 gives 3), Advance round applies a negative `round_gain` but stops at 0 (the Malice log still shows the
   configured amount, as the quick-add does), and the button reads "Advance round (-3 Malice)".
 
 - **DSE plugin: deleting a block right after clicking it no longer sends the click into another block (SC-480).**
