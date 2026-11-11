@@ -22,6 +22,14 @@ go under an *Internal* sub-heading.
   bar in a preview) still closes by itself a moment later (SC-597), and + or - in a preview with an identical counter
   elsewhere is unchanged (SC-594).
 
+- **DSE plugin: conditions you typed as plain names stay plain names when the initiative tracker saves (SC-592).**
+  Removing one condition in a minion's pool window, or any other tracker action that saves (a turn, damage, Malice), rewrote
+  every condition you had written as `- grabbed` into `- key: grabbed`. Now those stay as you wrote them, and a removal
+  changes only the line you removed. A condition you give a colour, icon, effect or duration in the Conditions window still
+  becomes the longer form, since a plain name cannot hold that. Conditions the tracker adds itself, and ones you wrote as
+  `- key: hexed`, are written as before. Extra fields you put on a condition (`source: trap`) are no longer deleted, and the
+  fields keep your order. Quotes, comments and `[a, b]` lists in the block are still rewritten on a save (SC-599).
+
 - **DSE plugin: the Malice log records what the pool actually did (SC-578).**
   With Malice at 2, quick-adding -5 set Malice to 0 but the log said -5, so the log no longer added up to the pool;
   Advance round with a negative `round_gain` had the same gap. Now a log entry's amount is the change the pool really
