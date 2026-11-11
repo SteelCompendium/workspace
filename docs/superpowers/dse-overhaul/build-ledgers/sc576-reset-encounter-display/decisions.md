@@ -109,3 +109,7 @@ note file on disk is correct; only the rebuilt tracker is wrong."
   (RECOV-R07 double-write flake under load) → DROP here: already filed as SC-517 and SC-570.
 - 2026-11-10 — LAND-READY: plugin branch `sc576-reset-encounter-display` @ `fbaba3da` on dse
   develop `97a9c93b`. Reported to the dispatcher; owner does not land.
+- 2026-11-11 — DONE: landed by the dispatcher. dse develop `fbaba3da` (5 commits pushed),
+  workspace main `47732819` (pointer bump `7e1db7fc`), bookkeeping `88808a6a`; ledger preserved
+  at `docs/superpowers/dse-overhaul/build-ledgers/sc576-reset-encounter-display/`; worktree
+  removed. dse-verify CURRENT = fbaba3da (e2e 251/260, 0 failed, 9 known-bug, 161/161). SC-576 → Done.
