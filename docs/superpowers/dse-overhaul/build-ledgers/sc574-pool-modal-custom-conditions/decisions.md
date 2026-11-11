@@ -90,3 +90,8 @@ Jest carries two `test.failing` markers in
   5 known-bug, 164/164). Result comment posted (no ask; state left Awaiting). Reported land-ready
   to dispatcher: dse `ec26b709` on develop `c3fd8323`. After landing: set Done via
   `linear-post.py --state Done` and verify.
+- 2026-11-11 — LANDED by dispatcher: dse develop `ec26b709` (c3fd8323..ec26b709), workspace main
+  `f18fb885` (pointer bump 4b5185b1; bookkeeping 1697cd45). Ledger preserved at
+  `docs/superpowers/dse-overhaul/build-ledgers/sc574-pool-modal-custom-conditions/`. Landed comment
+  posted; SC-574 set Done via linear-post.py `--state Done`, verified via get_issue (status Done,
+  completedAt 2026-11-11T17:27:01Z). Effort closed.
