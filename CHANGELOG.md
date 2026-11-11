@@ -8,6 +8,14 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the Malice log records what the pool actually did (SC-578).**
+  With Malice at 2, quick-adding -5 set Malice to 0 but the log said -5, so the log no longer added up to the pool;
+  Advance round with a negative `round_gain` had the same gap. Now a log entry's amount is the change the pool really
+  made, and when the pool stopped at 0 the entry also keeps what was asked for (a new optional `requested` field) and the
+  log line says so: `R2: -2 — Spend (-5, capped at 0)`. A change that applies nothing (-5 from 0, or a negative
+  `round_gain` from 0) is still logged as `R3: 0 — Round gain (-3, capped at 0)`; a zero amount reads `0`, not `+0`.
+  Entries that were not capped are unchanged.
+
 - **DSE plugin: a block's edit form saves again in two cases that SC-556 refused although nothing was unclear (SC-584).**
   (1) Hover over a link to a note holding a counter (or see the counter in an embed of part of a note), press + on it and
   then its Edit pencil right away: Save was refused ("a change to a block in <note> was not saved — the block changed on
@@ -30,8 +38,8 @@ go under an *Internal* sub-heading.
 - **DSE plugin: Malice in the initiative tracker no longer goes below 0 (SC-577).**
   Pressing - on Malice at 0 wrote `value: -1` into the note, and a negative `round_gain` took Malice below 0 on Advance
   round and put "Advance round (+-3 Malice)" on the button. Now the - button is disabled at 0 (a hand-edited
-  value below 0 shows as 0 and counts as 0: Advance round or a +3 quick-add from a stored -2 gives 3), Advance round applies a negative `round_gain` but stops at 0 (the Malice log still shows the
-  configured amount, as the quick-add does), and the button reads "Advance round (-3 Malice)".
+  value below 0 shows as 0 and counts as 0: Advance round or a +3 quick-add from a stored -2 gives 3), Advance round applies a negative `round_gain` but stops at 0 (the Malice log shows the change it
+  made, see the SC-578 entry above), and the button reads "Advance round (-3 Malice)".
 
 - **DSE plugin: deleting a block right after clicking it no longer sends the click into another block (SC-480).**
   If you pressed + or − on a block and, before the click had been saved, that block was deleted from outside (Sync,
