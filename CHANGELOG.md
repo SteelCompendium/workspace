@@ -8,6 +8,14 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: a window opened from a hover preview with the keyboard stays open (SC-597).**
+  Hover over a link to a note that holds a Stamina bar, focus the bar in the preview and press Enter or Space: the Stamina
+  window used to open and then close by itself about a third of a second later, taking the preview with it. It now opens and
+  stays, exactly as it does for a mouse click: clicks inside it do not close it, Apply saves, Escape closes the window and
+  the preview stays until you click outside it. The same goes for pressing Enter or Space on a cell of a Montage board in a
+  preview, which opens the Montage log window. Enter and Space work as before outside a preview. On a Montage cell,
+  Ctrl, Cmd or Alt with Enter no longer opens the window, as on the Stamina bar.
+
 - **DSE plugin: a click inside a block's edit form opened from a hover preview no longer closes it and loses what you typed (SC-595).**
   Hover over a link to a note that holds a counter, press + and then the Edit pencil in the preview: the first mouse click
   anywhere in the form used to close the preview and the form together, and the typed edit was gone. It now stays open, the
@@ -18,9 +26,8 @@ go under an *Internal* sub-heading.
   that close it (Cancel, Confirm, Apply: a free-heal Confirm no longer takes the Stamina window and its staged heal with
   it). Escape now closes a form opened from a preview (before, it did nothing, and in Live Preview it
   moved the cursor into the note behind it). After you save or cancel, the preview stays until you click outside it, as
-  Obsidian does for any preview you have clicked into. A window opened from the keyboard alone (Enter or Space on a Stamina
-  bar in a preview) still closes by itself a moment later (SC-597), and + or - in a preview with an identical counter
-  elsewhere is unchanged (SC-594).
+  Obsidian does for any preview you have clicked into. + or - in a preview with an identical counter elsewhere is unchanged
+  (SC-594).
 
 - **DSE plugin: conditions you typed as plain names stay plain names when the initiative tracker saves (SC-592).**
   Removing one condition in a minion's pool window, or any other tracker action that saves (a turn, damage, Malice), rewrote
