@@ -14,7 +14,7 @@ go under an *Internal* sub-heading.
   stays, exactly as it does for a mouse click: clicks inside it do not close it, Apply saves, Escape closes the window and
   the preview stays until you click outside it. The same goes for pressing Enter or Space on a cell of a Montage board in a
   preview, which opens the Montage log window. Enter and Space work as before outside a preview. On a Montage cell,
-  Ctrl, Cmd or Alt with Enter, and a held-down Enter, no longer open the window, as on the Stamina bar.
+  Ctrl, Cmd or Alt with Enter no longer opens the window, as on the Stamina bar.
 
 - **DSE plugin: a click inside a block's edit form opened from a hover preview no longer closes it and loses what you typed (SC-595).**
   Hover over a link to a note that holds a counter, press + and then the Edit pencil in the preview: the first mouse click
