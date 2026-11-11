@@ -63,3 +63,7 @@ Cut from: dse develop `fbaba3da`, workspace main `9bb80e4b` (2026-11-10)
 | r3 | implementer (Sonnet, r1 identity resumed) — folds + rebase onto eeed5182 + full battery | a04a8b544a54e9c4c | sc575-r3-rebase-report.md — DONE plugin `3609e3e9`, superproject `776f7fad`; jest 7080/1, lifecycle 53/53, e2e 252/260 0F 8KB 161/161, shots 592 163/978 147, freeze 280/280, parity 0/0/24 |
 | r4 | scoped re-review of the r3 delta (reviewer, not an author) | a86fb519d4d8f1584 | sc575-r4-rereview-report.md — LAND-READY, range-diff clean, 1 LOW (superproject CHANGELOG conflict) |
 | r5 | implementer (r1 identity) — rebase onto a339e7b3 + superproject rebase + full battery | a04a8b544a54e9c4c | sc575-r5-rebase-report.md — DONE plugin `734d7745` (af86ec28 fix + 734d7745 folds) on a339e7b3, no conflict; superproject `ed94416f` on origin/main `b25d1a17`; jest 7085/1, lifecycle 53/53, e2e 255/262 0F 7KB 163/163, shots 592 163/978 modal 39/234 147, freeze 280/280, parity 0/0/24. Owner range-diff: both commits `=`. **LAND-READY 2026-11-11.** |
+
+## Done (2026-11-11)
+
+- LANDED by the dispatcher: dse develop `734d7745` (2 commits pushed: `af86ec28` fix, `734d7745` review fixes); workspace main `d2ef9b4d` (pointer bump `f18246a1`); bookkeeping `6a0c3cec`. The dse-verify proposal was applied: CURRENT `734d7745`, e2e 255/262 with 7 known-bug, 163/163, SC-575 removed from the known-bug list. Ledger preserved at `docs/superpowers/dse-overhaul/build-ledgers/sc575-reset-squad-pips/`. Worktree removed. SC-575 moved to Done.
