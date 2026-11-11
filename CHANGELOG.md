@@ -14,7 +14,9 @@ go under an *Internal* sub-heading.
   preview stays behind it, and Save writes the edit as usual. The same goes for the other Draw Steel windows opened from a
   preview (the Stamina window, the Conditions windows of the initiative tracker and of the conditions panel, the minion
   stamina pool, Reset encounter, the Montage log and setup windows, the hero sheet's Stamina and Edit definition windows, the
-  free-heal confirmation). Escape now closes a form opened from a preview (before, it did nothing, and in Live Preview it
+  free-heal confirmation), whatever you click in them, including buttons that redraw the window (Add condition) and the ones
+  that close it (Cancel, Confirm, Apply: a free-heal Confirm no longer takes the Stamina window and its staged heal with
+  it). Escape now closes a form opened from a preview (before, it did nothing, and in Live Preview it
   moved the cursor into the note behind it). After you save or cancel, the preview stays until you click outside it, as
   Obsidian does for any preview you have clicked into. A window opened from the keyboard alone (Enter or Space on a Stamina
   bar in a preview) still closes by itself a moment later (SC-597), and + or - in a preview with an identical counter
