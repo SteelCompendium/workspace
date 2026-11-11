@@ -10,8 +10,9 @@ go under an *Internal* sub-heading.
 
 - **DSE plugin: a second click inside a window opened from a hover preview, right after the opening click, no longer closes it (SC-598).**
   A second click inside a window opened from a hover preview, right after the click that opened it, no longer closes the
-  window and the preview. A quick double-click on the stamina bar's numbers in a preview still closes the window, as it does
-  in a note, but the preview now stays open.
+  window and the preview. Opening the window again from the same preview and clicking inside it at once no longer switches
+  the preview to the note's source text. A quick double-click on the stamina bar's numbers in a preview still closes the
+  window, as it does in a note, but the preview now stays open.
 
 - **DSE plugin: what you have typed in the initiative tracker's Malice quick-add boxes is no longer lost when the tracker rebuilds, in Reading view and in the pinned sidebar tracker (SC-589).**
   Type an amount and a label, then press Advance round (or Make/Relieve captain, Reset turns, Reset encounter, or any other
