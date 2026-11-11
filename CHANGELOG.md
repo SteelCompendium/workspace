@@ -8,6 +8,14 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: keyboard focus stays in the initiative tracker after Advance round, Make/Relieve captain, Reset turns, Reset encounter and the Malice quick-add, in Reading view (SC-588).**
+  Each of these rebuilds the whole tracker, and focus used to fall to the top of the page, so a keyboard user had to Tab back in
+  from the top of the note after every press. The control that replaced the one you pressed now takes focus: the same button
+  (Advance round, Reset turns, the Malice amount or label field, the Reset encounter item once its confirm window has closed),
+  or, for a captain badge, Make captain and Relieve captain trade places on the same creature. A mouse click never pulls focus
+  into the tracker, and neither does a rebuild that starts while focus is somewhere else. In Live Preview focus is still lost
+  when the note saves a moment later (SC-602).
+
 - **DSE plugin: a window opened from a hover preview with the keyboard stays open (SC-597).**
   Hover over a link to a note that holds a Stamina bar, focus the bar in the preview and press Enter or Space: the Stamina
   window used to open and then close by itself about a third of a second later, taking the preview with it. It now opens and
