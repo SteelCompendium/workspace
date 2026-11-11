@@ -154,3 +154,8 @@ Lifecycle runs in five `--only` parts: `G-S7a … G-S9a` 21; `G-S9b … G-S40` 1
   red on base; carry valid; CHANGELOG pure 8-line insertion. V1 gates on 79da77f8: tsc/lint clean · jest 7262/1 ·
   e2e 264/269 ok, 0 failed, 5 known-bug, 164/164.
 - 2026-11-11 — Land-ready comment posted to SC-592 (no ask; state left Awaiting). Reported LAND-READY to dispatcher: dse 79da77f8 on 4f0c87f2, superproject e9c9b6c9 on 3eb1adbd. After landing: Done via linear-post.py --state Done, verify.
+- 2026-11-11 — LANDED by dispatcher: dse develop `79da77f8` (4f0c87f2..79da77f8), workspace main `6c78d7fa`
+  (CHANGELOG e9c9b6c9; pointer bump 227f3013; bookkeeping b9deee8c). Worktree removed. Ledger preserved at
+  `docs/superpowers/dse-overhaul/build-ledgers/sc592-pool-modal-condition-rewrite/`. Landed comment posted; SC-592
+  set Done via linear-post.py `--state Done`, verified via get_issue (status Done, completedAt 2026-11-11T19:40:26Z).
+  Effort closed.
