@@ -8,6 +8,20 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: a click inside a block's edit form opened from a hover preview no longer closes it and loses what you typed (SC-595).**
+  Hover over a link to a note that holds a counter, press + and then the Edit pencil in the preview: the first mouse click
+  anywhere in the form used to close the preview and the form together, and the typed edit was gone. It now stays open, the
+  preview stays behind it, and Save writes the edit as usual. The same goes for the other Draw Steel windows opened from a
+  preview (the Stamina window, the Conditions windows of the initiative tracker and of the conditions panel, the minion
+  stamina pool, Reset encounter, the Montage log and setup windows, the hero sheet's Stamina and Edit definition windows, the
+  free-heal confirmation), whatever you click in them, including buttons that redraw the window (Add condition) and the ones
+  that close it (Cancel, Confirm, Apply: a free-heal Confirm no longer takes the Stamina window and its staged heal with
+  it). Escape now closes a form opened from a preview (before, it did nothing, and in Live Preview it
+  moved the cursor into the note behind it). After you save or cancel, the preview stays until you click outside it, as
+  Obsidian does for any preview you have clicked into. A window opened from the keyboard alone (Enter or Space on a Stamina
+  bar in a preview) still closes by itself a moment later (SC-597), and + or - in a preview with an identical counter
+  elsewhere is unchanged (SC-594).
+
 - **DSE plugin: the Malice log records what the pool actually did (SC-578).**
   With Malice at 2, quick-adding -5 set Malice to 0 but the log said -5, so the log no longer added up to the pool;
   Advance round with a negative `round_gain` had the same gap. Now a log entry's amount is the change the pool really
