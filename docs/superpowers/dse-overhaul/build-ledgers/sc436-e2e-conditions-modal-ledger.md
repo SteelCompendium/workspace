@@ -216,3 +216,12 @@ report any move in host-leak or DOM numbers).
   `32441332` (11 commits; src diff = `src/views/ConditionsModal.ts` +5/-1, attributes only).
   Skill proposal: `sc436-skill-proposal.md`. Filed from this ticket: SC-580, SC-581, SC-582,
   SC-583, SC-585, SC-586 (bugs, markers in tests), SC-587 (decision for Scott, not blocking).
+- **DONE (2026-11-10)** — landed by the dispatcher: dse develop `97a9c93b`, workspace main
+  `4b2a9aab` (merge) + `eb0de7ab` (bookkeeping; dse-verify e2e line → 249/260, 11 known-bug,
+  161/161, duplicate-scenario-id gotcha; CURRENT jest 7050/1). Ledger preserved at
+  `docs/superpowers/dse-overhaul/build-ledgers/sc436-e2e-conditions-modal/`. Worktree removed.
+  SC-436 → Done. Filed from this ticket: SC-580, SC-581, SC-582, SC-583, SC-585, SC-586 (bugs,
+  markers in tests), SC-587 (decision for Scott). For later rollouts: reuse
+  `e2e/driver/conditions.ts` (generalise `ROW_NTH` / `noteCondition` per r2 INFO-5), fixtures
+  `Initiative/conditions.md` / `two-trackers.md`; the ConditionsPanel host (hero sheet /
+  ds-conditions) still has no reach rows into the modal.
