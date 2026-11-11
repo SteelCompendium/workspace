@@ -1,0 +1,134 @@
+Info: New devbox available: 0.17.5 -> v0.20.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc584-embed-form-save-refusals/draw-steel-elements
+  console.log
+    Q1 false false ["Twin","Twin"] "# N\n\n```ds-counter\nname: Twin\ncurrent_value: 5\n```\n\np\n\n```ds-counter\nname: Twin\ncurrent_value: 5\n```\n^a\n\nEND"
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:79:11)
+
+  console.log
+    Q2 true "# N\n\n```ds-counter\nname: Edited\ncurrent_value: 7\n```\n^a\n\np\n\n```ds-counter\nname: Twin\ncurrent_value: 8\n```\n^b\n\nEND"
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:90:11)
+
+  console.log
+    Q3 false false "# N\n\n```ds-counter\nname: Twin\ncurrent_value: 9\n```\n^a\n\np\n\n```ds-counter\nname: Twin\ncurrent_value: 7\n```\n^b\n\nEND" "# N\n\n```ds-counter\nname: Twin\ncurrent_value: 9\n```\n^a\n\np\n\n```ds-counter\nname: Twin\ncurrent_value: 7\n```\n^b\n\nEND" ["Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first.","Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first."]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:104:11)
+
+  console.log
+    Q4 true ["Two","Twin"]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:116:11)
+
+  console.log
+    Q5 false ["Twin","Twin"] ["Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first."]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:129:11)
+
+  console.log
+    Q6 true ["Edited","Twin"] []
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:140:11)
+
+  console.log
+    Q7 pin null true ["Edited","Twin"]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:151:11)
+
+  console.log
+    Q8 pin true false "# N\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 6\n> ```\n> after text\n\nmid\n\n^cal\n\nEND" ["Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first."]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:164:11)
+
+  console.log
+    Q9 pin0 {"text":"> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 6\n> ```\n> mid\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> ```","lineStart":6}
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:175:11)
+
+  console.log
+    Q9 true true ["Twin","Edited"] []
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:179:11)
+
+  console.log
+    Q10 true false "# N\n\n```ds-counter\nname: Twin\ncurrent_value: 7\n```\n^a\n\np\n\n```ds-counter\nname: Twin\ncurrent_value: 7\n```\n^b\n\nEND" ["Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first."]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:189:11)
+
+  console.log
+    Q9h pin0 8
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:197:11)
+
+  console.log
+    Q9h pin1 10
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:200:11)
+
+  console.log
+    Q9h true true ["Twin","Edited"] []
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:202:11)
+
+  console.log
+    R1 7 true 2 true ["Edited","Twin"] []
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:222:11)
+
+  console.log
+    R1h 9 true 4 true ["Edited","Twin"] []
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:234:11)
+
+  console.log
+    R2 true 7 true ["Twin","Edited"] []
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:244:11)
+
+  console.log
+    R3 true 9 true ["Twin","Edited"] []
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:255:11)
+
+FAIL dom test/dom/framework/zz-sc584-r6-probe.test.ts
+  ● SC-584 r6 probes (the guard) › R1 ^id embed of a header-less quote with two counters, + on the lower, form: never the upper
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Twin"
+    Received: "Edited"
+
+      221 | 		const r = pin ? await save(host, pin, bodyOf(6, 'Edited')) : 'nopin';
+      222 | 		console.log('R1', JSON.stringify(pin0 && pin0.lineStart), r1, JSON.stringify(pin && pin.lineStart), r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+    > 223 | 		expect(names(app)[0]).toBe('Twin');
+          | 		                      ^
+      224 | 	});
+      225 | 	test('R1h heading embed of a section holding the header-less quote, + on the lower, form: never the upper', async () => {
+      226 | 		const pre = ['# N', '', '## Tracker', '', ...Q2(6, 5), '', '## After', 'END'].join('\n');
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:223:25)
+
+  ● SC-584 r6 probes (the guard) › R1h heading embed of a section holding the header-less quote, + on the lower, form: never the upper
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Twin"
+    Received: "Edited"
+
+      233 | 		const r = pin ? await save(host, pin, bodyOf(6, 'Edited')) : 'nopin';
+      234 | 		console.log('R1h', JSON.stringify(pin0 && pin0.lineStart), r1, JSON.stringify(pin && pin.lineStart), r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+    > 235 | 		expect(names(app)[0]).toBe('Twin');
+          | 		                      ^
+      236 | 	});
+      237 | 	test('R2 hover of a whole short note holding the header-less quote (+ lower, form): never the upper', async () => {
+      238 | 		const pre = ['# N', '', ...Q2(6, 5), '', 'END'];
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:235:25)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 13 passed, 15 total
+Snapshots:   0 total
+Time:        2.485 s
+Ran all test suites matching test/dom/framework/zz-sc584-r6-probe.test.ts.
+JEST_RC=1
+STATUS_DONE

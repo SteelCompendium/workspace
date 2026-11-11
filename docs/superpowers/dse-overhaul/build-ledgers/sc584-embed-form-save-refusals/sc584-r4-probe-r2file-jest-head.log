@@ -1,0 +1,186 @@
+Info: New devbox available: 0.17.5 -> v0.20.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc584-embed-form-save-refusals/draw-steel-elements
+  console.log
+    P1 false ["Twin","Twin"] ["Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first."]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:75:11)
+
+  console.log
+    P1d false ["Twin"] ["Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first."]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:86:11)
+
+  console.log
+    P2 false ["Twin","Twin"] ["Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first."]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:98:11)
+
+  console.log
+    P2n false ["Twin","Twin"] ["Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first."]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:109:11)
+
+  console.log
+    P3 false ["Twin","Twin"] ["Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first."]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:120:11)
+
+  console.log
+    P4 true ["Twin","Edited"] []
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:131:11)
+
+  console.log
+    P5 true ["Twin","Edited"] []
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:142:11)
+
+  console.log
+    P6 false "# N\r\n\r\nTOP\r\n\r\n```ds-counter\r\nname: Twin\r\ncurrent_value: 6\r\n```\r\n\r\nEND" ["Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first."]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:154:11)
+
+  console.log
+    P7 false ["Twin","Twin","Twin"]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:166:11)
+
+  console.log
+    P8 pin null
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:177:11)
+
+  console.log
+    P9 pin {"text":"# N\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 5\n","lineStart":4}
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:189:11)
+
+  console.log
+    P9 false "# N\n\nTOP\n\n```ds-counter\nname: Twin\ncurrent_value: 6\n" ["Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first."]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:192:11)
+
+  console.log
+    P10 false "# N\n\nTOP\n\nEND\n\n```ds-counter\nname: Twin\ncurrent_value: 6\n```\n" ["Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first."]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:205:11)
+
+  console.log
+    P11 false ["Twin","Twin"] ["Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first."]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:217:11)
+
+  console.log
+    P12 true ["Twin","Edited"] []
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:230:11)
+
+  console.log
+    P13 pin0 null
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:242:11)
+
+  console.log
+    P13 pin1 null
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:244:11)
+
+  console.log
+    P13 true ["Edited","Twin"] []
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:246:11)
+
+  console.log
+    P14 true "# N\n\n```ds-counter\nname: Twin\ncurrent_value: 9\n```\n^a\n\np\n\n```ds-counter\nname: Twin\ncurrent_value: 7\n```\n^b\n\nEND" []
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:256:11)
+
+FAIL dom test/dom/framework/zz-sc584-r2-probe.test.ts
+  ● SC-584 r2 probes › P4 (pre-existing) hover block link, section == known, A edited before open, B identical: Save must not write B
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      130 | 		const r = await save(host, pin, bodyOf(6, 'Edited'));
+      131 | 		console.log('P4', r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+    > 132 | 		expect(r).toBe(false);
+          | 		          ^
+      133 | 	});
+      134 |
+      135 | 	// P5: plain fenced ^id embed, the section text LONGER than the block now (a field removed, the embed not redrawn), a twin above. Base: lands (marker under the fence).
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:132:13)
+
+  ● SC-584 r2 probes › P6 CRLF short-note hover, + then pencil: lands
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      153 | 		const r = await save(host, pin, bodyOf(6, 'Edited'));
+      154 | 		console.log('P6', r, JSON.stringify(app.vault.getContent('Note.md')), JSON.stringify(Notice.notices));
+    > 155 | 		expect(r).toBe(true);
+          | 		          ^
+      156 | 		expect(app.vault.getContent('Note.md')).toBe(disk.replace('name: Twin', 'name: Edited'));
+      157 | 	});
+      158 |
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:155:13)
+
+  ● SC-584 r2 probes › P13 callout ^id embed, + landed, A edited from outside, upper callout holds the + body: Save must not write the upper
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      245 | 		const r = await save(host, pin, bodyOf(6, 'Edited'));
+      246 | 		console.log('P13', r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+    > 247 | 		expect(r).toBe(false);
+          | 		          ^
+      248 | 	});
+      249 |
+      250 | 	// P14: a CARD write (+, fromView) from a block-link hover, the same A-edited sequence: the card write must not land in B either (SC-480 guarantee).
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:247:13)
+
+  ● SC-584 r2 probes › P14 card write from a block-link hover, A edited from outside, B holds the known body: never B
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -8,10 +8,10 @@
+
+      p
+
+      ```ds-counter
+      name: Twin
+    - current_value: 6
+    + current_value: 7
+      ```
+      ^b
+
+      END
+
+      255 | 		const r = await host.replaceSource(bodyOf(7), { pin, fromView: true });
+      256 | 		console.log('P14', r, JSON.stringify(app.vault.getContent('Note.md')), JSON.stringify(Notice.notices));
+    > 257 | 		expect(app.vault.getContent('Note.md')).toBe(disk);
+          | 		                                        ^
+      258 | 	});
+      259 | });
+      260 |
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r2-probe.test.ts:257:43)
+
+Test Suites: 1 failed, 1 total
+Tests:       4 failed, 12 passed, 16 total
+Snapshots:   0 total
+Time:        2.107 s
+Ran all test suites matching test/dom/framework/zz-sc584-r2-probe.test.ts.
+JEST_RC=1
+STATUS_DONE

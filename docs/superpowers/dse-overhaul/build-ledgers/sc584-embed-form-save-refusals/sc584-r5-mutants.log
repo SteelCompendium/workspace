@@ -1,0 +1,74 @@
+# SC-584 r5 mutation runs (jest pin suite, 109 tests unmutated; script sc584-r5-mutate.py.txt). Run 1 had a wrong scratch path for the patch script (mS mS2 mT failed to patch; mK mC mF mM ran against the r3 patch list: valid); run 2 is the full set.
+## run 1
+applied mK
+== mK: Tests:       1 failed, 108 passed, 109 total
+the host is given a new mounted body (Obsidian hands its element to another block with the same body, remountReused): the old record is drop
+applied mC
+== mC: Tests:       4 failed, 105 passed, 109 total
+a cache that lags the note, so its ^blk line is now an identical block's fence (a long note): the marker is not there, nothing verifies, Sav
+a cache that lags the note, so its ^blk line is now an identical block's fence (a short note): the marker is not there, nothing verifies, Sa
+a cache that lags the note so that its callout is the identical one ABOVE: the id is not under it, so it is not taken and nothing is written
+the id is not the next line after the callout (a paragraph stands between): the marker is not the callout's, nothing places the pin, Save wr
+applied mF
+== mF: Tests:       109 passed, 109 total
+applied mM
+== mM: Tests:       1 failed, 108 passed, 109 total
+a plain fenced block embed (not in a callout) keeps its rule, the id under the closing fence, whatever the length of the stale part: a part 
+## run 2
+applied mS
+== mS: Tests:       5 failed, 104 passed, 109 total
+a block embed in Live Preview: Save lands in the lower counter, the upper one is untouched
+a block embed (![[note#^id]]) in Reading view: Save lands in the lower counter, the upper one is untouched
+a heading embed in Live Preview: Save lands in the lower counter, the upper one is untouched
+a heading embed (![[note#Tracker]]) in Reading view (the same write on base): Save lands in the lower counter, the upper one is untouched
+the lower counter edited from outside after the +: Save writes nothing, never the upper one
+applied mS2
+== mS2: Tests:       1 failed, 108 passed, 109 total
+the embed was redrawn after the +, so its part is current: the pin comes from the embed's own link, not from the + write, and a note changed
+applied mT
+== mT: Tests:       1 failed, 108 passed, 109 total
+the record is dropped when the section the host was drawn for unloads
+applied mK
+== mK: Tests:       1 failed, 108 passed, 109 total
+the host is given a new mounted body (Obsidian hands its element to another block with the same body, remountReused): the old record is drop
+applied mG
+== mG: Tests:       2 failed, 107 passed, 109 total
+a card (+/-) write's pin never uses the host's last write: a second + with the part still stale and an identical block in the note is refuse
+the pin is the position of the write the host had when the form opened, not of a write that lands while the note is read
+applied mG2
+== mG2: Tests:       1 failed, 108 passed, 109 total
+the pin is the position of the write the host had when the form opened, not of a write that lands while the note is read
+applied mL
+== mL: Tests:       109 passed, 109 total
+applied mN
+== mN: Tests:       109 passed, 109 total
+applied mO
+== mO: Tests:       2 failed, 107 passed, 109 total
+the lower callout edited from outside after the +, the upper one holding the + body: Save writes nothing, never the upper (control with teet
++ then the form: the form has a pin (the host's own write) and Save lands in the lower callout, never the upper
+applied mQ
+== mQ: Tests:       14 failed, 95 passed, 109 total
+the lower callout edited from outside after the +, the upper one holding the + body: Save writes nothing, never the upper (control with teet
++ then the form: the form has a pin (the host's own write) and Save lands in the lower callout, never the upper
+a heading hover of a long note: + then the form, Save lands in the Tracker counter
+a hover of a whole LONG note scrolled to the card (its section is the whole note): + then the form, Save lands
+an identical block is added to the note after the form opened: Save still lands in the block the form was opened on
+a short note, the only counter: + then the form, Save lands in it
+the same shape with no outside edit: Save lands in the block the + was pressed on, not in the one that reads the same
+the + made the block read like another block of the note: Save still lands in the block the + was pressed on (the position, not a search for
+the pin is the position of the write the host had when the form opened, not of a write that lands while the note is read
+a block embed in Live Preview: Save lands in the lower counter, the upper one is untouched
+a block embed (![[note#^id]]) in Reading view: Save lands in the lower counter, the upper one is untouched
+a heading embed in Live Preview: Save lands in the lower counter, the upper one is untouched
+a heading embed (![[note#Tracker]]) in Reading view (the same write on base): Save lands in the lower counter, the upper one is untouched
+the lower counter edited from outside after the +: Save writes nothing, never the upper one
+applied mR
+== mR: Tests:       1 failed, 108 passed, 109 total
+the embed was redrawn after the +, so its part is current: the pin comes from the embed's own link, not from the + write, and a note changed
+applied m-card
+== m-card: Tests:       1 failed, 108 passed, 109 total
+a card (+/-) write's pin never uses the host's last write: a second + with the part still stale and an identical block in the note is refuse
+applied m-sibling
+== m-sibling: Tests:       1 failed, 108 passed, 109 total
+a write by ANOTHER host of the block (a second pane) is not this host's position: nothing is found for this host's form
+## equivalent (survive by construction): mF (part end without max against the fence end: the part always contains the block's own fence), mL (no body equality record/known body: only a write, which replaces the record, or setMountedBody, which clears it, changes the known body), mN (record not verified by fenceAt: a block a splice just wrote is always found).

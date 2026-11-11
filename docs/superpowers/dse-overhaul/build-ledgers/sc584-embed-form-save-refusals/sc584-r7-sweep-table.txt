@@ -1,0 +1,36 @@
+callout | block embed | rv | refused | lower | lower
+callout | block embed | lp | refused | lower | lower
+callout | heading embed | rv | UPPER | lower | lower
+callout | heading embed | lp | UPPER | lower | lower
+header-less quote, first line is the upper fence | block embed | rv | refused | UPPER | lower
+header-less quote, first line is the upper fence | block embed | lp | refused | UPPER | lower
+header-less quote, first line is the upper fence | heading embed | rv | UPPER | UPPER | lower
+header-less quote, first line is the upper fence | heading embed | lp | UPPER | UPPER | lower
+header-less quote, text first | block embed | rv | refused | lower | lower
+header-less quote, text first | block embed | lp | refused | lower | lower
+header-less quote, text first | heading embed | rv | UPPER | lower | lower
+header-less quote, text first | heading embed | lp | UPPER | lower | lower
+nested callout | block embed | rv | refused | lower | lower
+nested callout | block embed | lp | refused | lower | lower
+nested callout | heading embed | rv | UPPER | lower | lower
+nested callout | heading embed | lp | UPPER | lower | lower
+nested quote, first line is the upper fence | block embed | rv | refused | UPPER | lower
+nested quote, first line is the upper fence | block embed | lp | refused | UPPER | lower
+nested quote, first line is the upper fence | heading embed | rv | UPPER | UPPER | lower
+nested quote, first line is the upper fence | heading embed | lp | UPPER | UPPER | lower
+list item, two fences | block embed | rv | refused | refused | refused
+list item, two fences | block embed | lp | refused | refused | refused
+list item, two fences | heading embed | rv | refused | refused | refused
+list item, two fences | heading embed | lp | refused | refused | refused
+ordered list item, two fences | block embed | rv | refused | refused | refused
+ordered list item, two fences | block embed | lp | refused | refused | refused
+ordered list item, two fences | heading embed | rv | refused | refused | refused
+ordered list item, two fences | heading embed | lp | refused | refused | refused
+quote inside a list item | block embed | rv | refused | lower | lower
+quote inside a list item | block embed | lp | refused | lower | lower
+quote inside a list item | heading embed | rv | UPPER | lower | lower
+quote inside a list item | heading embed | lp | UPPER | lower | lower
+footnote, two fences | block embed | rv | refused | refused | refused
+footnote, two fences | block embed | lp | refused | refused | refused
+footnote, two fences | heading embed | rv | refused | refused | refused
+footnote, two fences | heading embed | lp | refused | refused | refused

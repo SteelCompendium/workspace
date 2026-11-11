@@ -1,0 +1,259 @@
+// SC-584 r2 reviewer probes (scratch; copied into test/dom/framework/ only for the run, then removed).
+import { ReadingModeBlockHost } from '../../../src/framework/host/ReadingModeBlockHost';
+import { droppedWriteMessage, resetDroppedWriteNotices } from '../../../src/framework/host/droppedWriteNotice';
+import { App, Notice, Plugin } from '../../mocks/obsidian';
+import type { MarkdownPostProcessorContext } from '../../mocks/obsidian';
+
+type Section = { current: { text: string; lineStart: number; lineEnd: number } | null };
+function switchableCtx(section: Section): MarkdownPostProcessorContext {
+	return { docId: 'doc-pin', sourcePath: 'Note.md', frontmatter: undefined, addChild: () => {}, getSectionInfo: () => section.current } as never;
+}
+const CTR = (n: number, name = 'Twin'): string[] => ['```ds-counter', `name: ${name}`, `current_value: ${n}`, '```'];
+const bodyOf = (n: number, name = 'Twin'): string => `name: ${name}\ncurrent_value: ${n}`;
+const names = (app: App): string[] => [...app.vault.getContent('Note.md')!.matchAll(/name: (\w+)/g)].map((m) => m[1]);
+const pos = (line: number) => ({ start: { line, col: 0, offset: 0 }, end: { line, col: 0, offset: 0 } });
+function cacheOf(text: string) {
+	const lines = text.split(/\r?\n/);
+	const headings: Array<{ heading: string; level: number; position: unknown }> = [];
+	const blocks: Record<string, { id: string; position: unknown }> = {};
+	let fenced = false;
+	lines.forEach((l, i) => {
+		if (/^```/.test(l)) fenced = !fenced;
+		const h = !fenced && /^(#{1,6})\s+(.*)$/.exec(l);
+		if (h) headings.push({ heading: h[2], level: h[1].length, position: pos(i) });
+		const id = /^\^(\w+)$/.exec(l);
+		if (id) {
+			let end = i - 1;
+			while (end >= 0 && lines[end] === '') end--;
+			let start = end;
+			if (lines[end] === '```') for (start = end - 1; start >= 0 && !/^```\w/.test(lines[start]); start--);
+			blocks[id[1]] = { id: id[1], position: pos(start) };
+		}
+	});
+	return { headings, blocks };
+}
+const embedEl = (src: string): HTMLElement => {
+	const embed = document.createElement('div');
+	embed.className = 'internal-embed markdown-embed';
+	embed.setAttribute('src', src);
+	return embed.appendChild(document.createElement('div'));
+};
+const hoverEl = (): HTMLElement => {
+	const popover = document.createElement('div');
+	popover.className = 'popover hover-popover';
+	const embed = popover.appendChild(document.createElement('div'));
+	embed.className = 'markdown-embed';
+	return embed.appendChild(document.createElement('div'));
+};
+function embedded(full: string, section: { text: string; lineStart: number; lineEnd: number }, src: string, body: string, cacheText: string | object = full, el: HTMLElement = embedEl(src)) {
+	const app = new App();
+	app.vault.setFile('Note.md', full);
+	jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => (typeof cacheText === 'string' ? cacheOf(cacheText) : cacheText) as never);
+	const sec: Section = { current: section };
+	const host = new ReadingModeBlockHost(new Plugin(app) as never, el, switchableCtx(sec) as never, 'ds-counter');
+	host.setMountedBody(body);
+	return { app, host };
+}
+const save = (host: ReadingModeBlockHost, pin: ReturnType<ReadingModeBlockHost['pinPosition']>, body: string) => host.replaceSource(body, { pin, pinOnly: true });
+
+describe('SC-584 r2 probes', () => {
+	let warn: jest.SpyInstance;
+	beforeEach(() => {
+		resetDroppedWriteNotices();
+		Notice.notices.length = 0;
+		warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+	});
+	afterEach(() => warn.mockRestore());
+
+	// P1: a hover of a BLOCK link [[Note#^a]] (no src). The + on A landed (A 5 -> 6; the twin B already held 6). Then, before the pencil, an outside edit
+	// changed A to 9. The preview still shows the pre-+ block (5). knownBody = 6. The only block holding 6 is B: the form was opened on A.
+	test('P1 hover block link, A edited from outside after the + and before the pencil, B holds the + body: Save must not write B', async () => {
+		const disk = ['# N', '', ...CTR(9), '^a', '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n');
+		const { app, host } = embedded(disk, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'x', bodyOf(6), disk, hoverEl());
+		const pin = host.pinPosition()!;
+		const r = await save(host, pin, bodyOf(6, 'Edited'));
+		console.log('P1', r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+		expect(names(app)).toEqual(['Twin', 'Twin']);
+		expect(r).toBe(false);
+	});
+
+	// P1d: the same, A DELETED from outside (between the + and the pencil).
+	test('P1d hover block link, A deleted from outside after the +, B holds the + body: Save must not write B', async () => {
+		const disk = ['# N', '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n');
+		const { app, host } = embedded(disk, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'x', bodyOf(6), disk, hoverEl());
+		const pin = host.pinPosition()!;
+		const r = await save(host, pin, bodyOf(6, 'Edited'));
+		console.log('P1d', r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+		expect(names(app)).toEqual(['Twin']);
+		expect(r).toBe(false);
+	});
+
+	// P2: a Reading-view block EMBED ![[Note#^a]] (src). Same sequence. The cache is fresh (A still carries ^a, body 9): verifiedPinLine says no (body),
+	// the text search finds no 5; the open-time rule ignores the ^a marker.
+	test('P2 RV embed ![[Note#^a]], A edited from outside after the +, B holds the + body: Save must not write B', async () => {
+		const disk = ['# N', '', ...CTR(9), '^a', '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n');
+		const { app, host } = embedded(disk, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'Note#^a', bodyOf(6), disk);
+		const pin = host.pinPosition()!;
+		const r = await save(host, pin, bodyOf(6, 'Edited'));
+		console.log('P2', r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+		expect(names(app)).toEqual(['Twin', 'Twin']);
+		expect(r).toBe(false);
+	});
+
+	// P2n: the same, B carries NO ^id (an un-ided twin).
+	test('P2n RV embed ![[Note#^a]], twin without id', async () => {
+		const disk = ['# N', '', ...CTR(9), '^a', '', 'p', '', ...CTR(6), '', 'END'].join('\n');
+		const { app, host } = embedded(disk, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'Note#^a', bodyOf(6), disk);
+		const pin = host.pinPosition()!;
+		const r = await save(host, pin, bodyOf(6, 'Edited'));
+		console.log('P2n', r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+		expect(r).toBe(false);
+	});
+
+	// P3: a heading hover [[Note#Tracker]] of a note with TWO "## Tracker" sections. A (first) edited from outside after the +, B (second) holds the + body.
+	test('P3 heading hover, two sections of the same name, A edited after the +, B holds the + body: Save must not write B', async () => {
+		const disk = ['# N', '', '## Tracker', '', ...CTR(9), '', '## Mid', '', 'x', '', '## Tracker', '', ...CTR(6), '', 'END'].join('\n');
+		const section = { text: ['## Tracker', '', ...CTR(5), ''].join('\n'), lineStart: 2, lineEnd: 5 };
+		const { app, host } = embedded(disk, section, 'x', bodyOf(6), disk, hoverEl());
+		const pin = host.pinPosition()!;
+		const r = await save(host, pin, bodyOf(6, 'Edited'));
+		console.log('P3', r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+		expect(r).toBe(false);
+	});
+
+	// P4 (pre-existing, SC-556 searchedPinLine): hover of a block link, the section text is NOT stale (it equals the known body 6). A edited from outside to 9
+	// before the pencil (the preview not yet redrawn), B holds 6. The text search finds B's lines once.
+	test('P4 (pre-existing) hover block link, section == known, A edited before open, B identical: Save must not write B', async () => {
+		const disk = ['# N', '', ...CTR(9), '^a', '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n');
+		const { app, host } = embedded(disk, { text: CTR(6).join('\n'), lineStart: 0, lineEnd: 3 }, 'x', bodyOf(6), disk, hoverEl());
+		const pin = host.pinPosition()!;
+		const r = await save(host, pin, bodyOf(6, 'Edited'));
+		console.log('P4', r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+		expect(r).toBe(false);
+	});
+
+	// P5: plain fenced ^id embed, the section text LONGER than the block now (a field removed, the embed not redrawn), a twin above. Base: lands (marker under the fence).
+	test('P5 plain ^id embed, stale section one line longer than the block, a twin above: lands in the embedded block', async () => {
+		const disk = ['# N', '', ...CTR(5), '', 'p', '', ...CTR(5), '^a', '', 'END'].join('\n');
+		const stale = ['```ds-counter', 'name: Twin', 'current_value: 5', 'max_value: 9', '```'].join('\n');
+		const { app, host } = embedded(disk, { text: stale, lineStart: 0, lineEnd: 4 }, 'Note#^a', bodyOf(5), disk);
+		const pin = host.pinPosition()!;
+		const r = await save(host, pin, bodyOf(5, 'Edited'));
+		console.log('P5', r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+		expect(names(app)).toEqual(['Twin', 'Edited']);
+	});
+
+	// P6: CRLF note, hover of a short note, + then pencil (section LF, stale). Should land.
+	test('P6 CRLF short-note hover, + then pencil: lands', async () => {
+		const lf = ['# N', '', 'TOP', '', ...CTR(6), '', 'END'];
+		const disk = lf.join('\r\n');
+		const stale = lf.map((l) => l.replace('current_value: 6', 'current_value: 5')).join('\n');
+		const { app, host } = embedded(disk, { text: stale, lineStart: 4, lineEnd: 7 }, 'x', bodyOf(6), disk, hoverEl());
+		const pin = host.pinPosition()!;
+		const r = await save(host, pin, bodyOf(6, 'Edited'));
+		console.log('P6', r, JSON.stringify(app.vault.getContent('Note.md')), JSON.stringify(Notice.notices));
+		expect(r).toBe(true);
+		expect(app.vault.getContent('Note.md')).toBe(disk.replace('name: Twin', 'name: Edited'));
+	});
+
+	// P7: three identical blocks at open: refuse.
+	test('P7 three blocks hold the known body at open: refused', async () => {
+		const disk = ['# N', '', 'TOP', '', ...CTR(6), '', 'p', '', ...CTR(6), '', 'q', '', ...CTR(6), '', 'END'].join('\n');
+		const stale = disk.split('\n').map((l, i) => (i === 6 ? 'current_value: 5' : l)).join('\n');
+		const { app, host } = embedded(disk, { text: stale, lineStart: 4, lineEnd: 7 }, 'x', bodyOf(6), disk, hoverEl());
+		const pin = host.pinPosition()!;
+		const r = await save(host, pin, bodyOf(6, 'Edited'));
+		console.log('P7', r, JSON.stringify(names(app)));
+		expect(r).toBe(false);
+	});
+
+	// P8: quoted fence (callout) hover of a short note, + then pencil: lands in it.
+	test('P8 callout block in a short-note hover, + then pencil: lands', async () => {
+		const q = (n: number) => ['> [!note] Camp', ...CTR(n).map((l) => `> ${l}`)];
+		const disk = ['# N', '', 'TOP', '', ...q(6), '', 'END'].join('\n');
+		const stale = ['# N', '', 'TOP', '', ...q(5), '', 'END'].join('\n');
+		const { app, host } = embedded(disk, { text: stale, lineStart: 4, lineEnd: 8 }, 'x', bodyOf(6), disk, hoverEl());
+		const pin = host.pinPosition();
+		console.log('P8 pin', JSON.stringify(pin));
+		if (!pin) return;
+		const r = await save(host, pin, bodyOf(6, 'Edited'));
+		console.log('P8', r, JSON.stringify(app.vault.getContent('Note.md')), JSON.stringify(Notice.notices));
+	});
+
+	// P9: unterminated trailing fence, short-note hover, + then pencil.
+	test('P9 unterminated trailing fence, + then pencil', async () => {
+		const disk = ['# N', '', 'TOP', '', '```ds-counter', 'name: Twin', 'current_value: 6'].join('\n') + '\n';
+		const stale = ['# N', '', 'TOP', '', '```ds-counter', 'name: Twin', 'current_value: 5'].join('\n') + '\n';
+		const { app, host } = embedded(disk, { text: stale, lineStart: 4, lineEnd: 6 }, 'x', bodyOf(6), disk, hoverEl());
+		const pin = host.pinPosition();
+		console.log('P9 pin', JSON.stringify(pin));
+		if (!pin) return;
+		const r = await save(host, pin, bodyOf(6, 'Edited'));
+		console.log('P9', r, JSON.stringify(app.vault.getContent('Note.md')), JSON.stringify(Notice.notices));
+	});
+
+	// P10: the + then pencil, then the block MOVED by an outside edit after open (cut and pasted below other text): pinnedTarget via mapLine.
+	test('P10 short-note hover + then pencil, then the block moved below after open', async () => {
+		const full = ['# N', '', 'TOP', '', ...CTR(6), '', 'END'].join('\n');
+		const stale = full.replace('current_value: 6', 'current_value: 5');
+		const { app, host } = embedded(full, { text: stale, lineStart: 4, lineEnd: 7 }, 'x', bodyOf(6), full, hoverEl());
+		const pin = host.pinPosition()!;
+		await new Promise((r) => setTimeout(r, 25));
+		const moved = ['# N', '', 'TOP', '', 'END', '', ...CTR(6), ''].join('\n');
+		app.vault.setFile('Note.md', moved);
+		const r = await save(host, pin, bodyOf(6, 'Edited'));
+		console.log('P10', r, JSON.stringify(app.vault.getContent('Note.md')), JSON.stringify(Notice.notices));
+	});
+
+	// P11: case 2, both callouts carry ids (^up above, ^cal below), cache lags pointing at the upper one.
+	test('P11 callout ^id: both callouts carry ids, cache points at the upper: refused', async () => {
+		const CAL = (n: number): string[] => ['> [!note] Camp', ...CTR(n).map((l) => `> ${l}`), '> after text'];
+		const full = ['# N', '', 'TOP', '', ...CAL(5), '', '^up', '', 'mid', '', ...CAL(5), '', '^cal', '', 'END'].join('\n');
+		const upper = full.split('\n').indexOf('> [!note] Camp');
+		const cache = { headings: [], blocks: { cal: { id: 'cal', position: { start: { line: upper, col: 0, offset: 0 }, end: { line: upper + 5, col: 0, offset: 0 } } } } };
+		const { app, host } = embedded(full, { text: CAL(5).join('\n'), lineStart: 1, lineEnd: 4 }, 'Note#^cal', bodyOf(5), cache);
+		const pin = host.pinPosition()!;
+		const r = await save(host, pin, bodyOf(5, 'Edited'));
+		console.log('P11', r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+		expect(r).toBe(false);
+	});
+
+	// P12: case 2, the callout with a `^cal` line INSIDE the counter-free text after the fence ("> ^cal" as the callout's last line): refused, nothing into the other.
+	test('P12 callout ^id written inside the callout (> ^cal): refused or lands lower, never upper', async () => {
+		const CAL = (n: number, tail: string): string[] => ['> [!note] Camp', ...CTR(n).map((l) => `> ${l}`), '> after text', tail];
+		const full = ['# N', '', 'TOP', '', ...CAL(5, '> more'), '', 'mid', '', ...CAL(5, '> ^cal'), '', 'END'].join('\n');
+		const lower = full.split('\n').lastIndexOf('> [!note] Camp');
+		const cache = { headings: [], blocks: { cal: { id: 'cal', position: { start: { line: lower, col: 0, offset: 0 }, end: { line: lower + 6, col: 0, offset: 0 } } } } };
+		const { app, host } = embedded(full, { text: CAL(5, '> ^cal').join('\n'), lineStart: 1, lineEnd: 4 }, 'Note#^cal', bodyOf(5), cache);
+		const pin = host.pinPosition()!;
+		const r = await save(host, pin, bodyOf(5, 'Edited'));
+		console.log('P12', r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+		expect(names(app)[0]).toBe('Twin');
+	});
+
+	// P13: case 2 + case 1 together: callout embed, + then pencil (stale section 5, known 6), identical callout above with 6 already, A edited after +.
+	test('P13 callout ^id embed, + landed, A edited from outside, upper callout holds the + body: Save must not write the upper', async () => {
+		const CAL = (n: number): string[] => ['> [!note] Camp', ...CTR(n).map((l) => `> ${l}`), '> after text'];
+		const full = ['# N', '', 'TOP', '', ...CAL(6), '', 'mid', '', ...CAL(9), '', '^cal', '', 'END'].join('\n');
+		const lower = full.split('\n').lastIndexOf('> [!note] Camp');
+		const cache = { headings: [], blocks: { cal: { id: 'cal', position: { start: { line: lower, col: 0, offset: 0 }, end: { line: lower + 5, col: 0, offset: 0 } } } } };
+		const { app, host } = embedded(full, { text: CAL(5).join('\n'), lineStart: 1, lineEnd: 4 }, 'Note#^cal', bodyOf(6), cache);
+		const pin = host.pinPosition()!;
+		console.log('P13 pin0', JSON.stringify(pin));
+		await new Promise((res) => setTimeout(res, 25));
+		console.log('P13 pin1', JSON.stringify(pin));
+		const r = await save(host, pin, bodyOf(6, 'Edited'));
+		console.log('P13', r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+		expect(r).toBe(false);
+	});
+
+	// P14: a CARD write (+, fromView) from a block-link hover, the same A-edited sequence: the card write must not land in B either (SC-480 guarantee).
+	test('P14 card write from a block-link hover, A edited from outside, B holds the known body: never B', async () => {
+		const disk = ['# N', '', ...CTR(9), '^a', '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n');
+		const { app, host } = embedded(disk, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'x', bodyOf(6), disk, hoverEl());
+		const pin = host.pinPosition()!;
+		const r = await host.replaceSource(bodyOf(7), { pin, fromView: true });
+		console.log('P14', r, JSON.stringify(app.vault.getContent('Note.md')), JSON.stringify(Notice.notices));
+		expect(app.vault.getContent('Note.md')).toBe(disk);
+	});
+});

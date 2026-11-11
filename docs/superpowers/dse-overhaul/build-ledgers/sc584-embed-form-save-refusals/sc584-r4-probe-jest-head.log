@@ -1,0 +1,82 @@
+Info: New devbox available: 0.17.5 -> v0.20.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc584-embed-form-save-refusals/draw-steel-elements
+  console.log
+    Q1 false false ["Twin","Twin"] "# N\n\n```ds-counter\nname: Twin\ncurrent_value: 5\n```\n\np\n\n```ds-counter\nname: Twin\ncurrent_value: 5\n```\n^a\n\nEND"
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r4-probe.test.ts:79:11)
+
+  console.log
+    Q2 true "# N\n\n```ds-counter\nname: Edited\ncurrent_value: 7\n```\n^a\n\np\n\n```ds-counter\nname: Twin\ncurrent_value: 8\n```\n^b\n\nEND"
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r4-probe.test.ts:90:11)
+
+  console.log
+    Q3 false false "# N\n\n```ds-counter\nname: Twin\ncurrent_value: 9\n```\n^a\n\np\n\n```ds-counter\nname: Twin\ncurrent_value: 7\n```\n^b\n\nEND" "# N\n\n```ds-counter\nname: Twin\ncurrent_value: 9\n```\n^a\n\np\n\n```ds-counter\nname: Twin\ncurrent_value: 7\n```\n^b\n\nEND" ["Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first.","Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first."]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r4-probe.test.ts:104:11)
+
+  console.log
+    Q4 true ["Two","Twin"]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r4-probe.test.ts:116:11)
+
+  console.log
+    Q5 false ["Twin","Twin"] ["Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first."]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r4-probe.test.ts:129:11)
+
+  console.log
+    Q6 true ["Edited","Twin"] []
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r4-probe.test.ts:140:11)
+
+  console.log
+    Q7 pin null true ["Edited","Twin"]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r4-probe.test.ts:151:11)
+
+  console.log
+    Q8 pin true false "# N\n\nTOP\n\n> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 6\n> ```\n> after text\n\nmid\n\n^cal\n\nEND" ["Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first."]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r4-probe.test.ts:164:11)
+
+  console.log
+    Q9 pin0 {"text":"> [!note] Camp\n> ```ds-counter\n> name: Twin\n> current_value: 6\n> ```\n> mid\n> ```ds-counter\n> name: Twin\n> current_value: 5\n> ```","lineStart":6}
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r4-probe.test.ts:175:11)
+
+  console.log
+    Q9 true true ["Edited","Twin"] []
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r4-probe.test.ts:179:11)
+
+  console.log
+    Q10 true false "# N\n\n```ds-counter\nname: Twin\ncurrent_value: 7\n```\n^a\n\np\n\n```ds-counter\nname: Twin\ncurrent_value: 7\n```\n^b\n\nEND" ["Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first."]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r4-probe.test.ts:189:11)
+
+FAIL dom test/dom/framework/zz-sc584-r4-probe.test.ts
+  ● SC-584 r4 probes › Q9 a callout holding TWO identical counters (ambiguous own fence) in an embed, + on the lower one, then the form: lands in the lower only
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Twin"
+    Received: "Edited"
+
+      178 | 		const r = pin ? await save(host, pin, bodyOf(6, 'Edited')) : 'nopin';
+      179 | 		console.log('Q9', r1, r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+    > 180 | 		expect(names(app)[0]).toBe('Twin');
+          | 		                      ^
+      181 | 	});
+      182 |
+      183 | 	test('Q10 card pin after a + never takes the record (second + with stale part, B identical): refused as base', async () => {
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r4-probe.test.ts:180:25)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 9 passed, 10 total
+Snapshots:   0 total
+Time:        2.412 s
+Ran all test suites matching test/dom/framework/zz-sc584-r4-probe.test.ts.
+JEST_RC=1
+STATUS_DONE

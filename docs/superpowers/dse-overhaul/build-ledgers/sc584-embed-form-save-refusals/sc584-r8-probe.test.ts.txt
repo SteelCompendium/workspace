@@ -1,0 +1,299 @@
+// SC-584 r2 reviewer probes (scratch; copied into test/dom/framework/ only for the run, then removed).
+import { ReadingModeBlockHost } from '../../../src/framework/host/ReadingModeBlockHost';
+import { droppedWriteMessage, resetDroppedWriteNotices } from '../../../src/framework/host/droppedWriteNotice';
+import { App, Notice, Plugin } from '../../mocks/obsidian';
+import type { MarkdownPostProcessorContext } from '../../mocks/obsidian';
+
+type Section = { current: { text: string; lineStart: number; lineEnd: number } | null };
+function switchableCtx(section: Section): MarkdownPostProcessorContext {
+	return { docId: 'doc-pin', sourcePath: 'Note.md', frontmatter: undefined, addChild: () => {}, getSectionInfo: () => section.current } as never;
+}
+const CTR = (n: number, name = 'Twin'): string[] => ['```ds-counter', `name: ${name}`, `current_value: ${n}`, '```'];
+const bodyOf = (n: number, name = 'Twin'): string => `name: ${name}\ncurrent_value: ${n}`;
+const names = (app: App): string[] => [...app.vault.getContent('Note.md')!.matchAll(/name: (\w+)/g)].map((m) => m[1]);
+const pos = (line: number) => ({ start: { line, col: 0, offset: 0 }, end: { line, col: 0, offset: 0 } });
+function cacheOf(text: string) {
+	const lines = text.split(/\r?\n/);
+	const headings: Array<{ heading: string; level: number; position: unknown }> = [];
+	const blocks: Record<string, { id: string; position: unknown }> = {};
+	let fenced = false;
+	lines.forEach((l, i) => {
+		if (/^```/.test(l)) fenced = !fenced;
+		const h = !fenced && /^(#{1,6})\s+(.*)$/.exec(l);
+		if (h) headings.push({ heading: h[2], level: h[1].length, position: pos(i) });
+		const id = /^\^(\w+)$/.exec(l);
+		if (id) {
+			let end = i - 1;
+			while (end >= 0 && lines[end] === '') end--;
+			let start = end;
+			if (lines[end] === '```') for (start = end - 1; start >= 0 && !/^```\w/.test(lines[start]); start--);
+			blocks[id[1]] = { id: id[1], position: pos(start) };
+		}
+	});
+	return { headings, blocks };
+}
+const embedEl = (src: string): HTMLElement => {
+	const embed = document.createElement('div');
+	embed.className = 'internal-embed markdown-embed';
+	embed.setAttribute('src', src);
+	return embed.appendChild(document.createElement('div'));
+};
+const hoverEl = (): HTMLElement => {
+	const popover = document.createElement('div');
+	popover.className = 'popover hover-popover';
+	const embed = popover.appendChild(document.createElement('div'));
+	embed.className = 'markdown-embed';
+	return embed.appendChild(document.createElement('div'));
+};
+function embedded(full: string, section: { text: string; lineStart: number; lineEnd: number }, src: string, body: string, cacheText: string | object = full, el: HTMLElement = embedEl(src)) {
+	const app = new App();
+	app.vault.setFile('Note.md', full);
+	jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => (typeof cacheText === 'string' ? cacheOf(cacheText) : cacheText) as never);
+	const sec: Section = { current: section };
+	const host = new ReadingModeBlockHost(new Plugin(app) as never, el, switchableCtx(sec) as never, 'ds-counter');
+	host.setMountedBody(body);
+	return { app, host, sec };
+}
+const save = (host: ReadingModeBlockHost, pin: ReturnType<ReadingModeBlockHost['pinPosition']>, body: string) => host.replaceSource(body, { pin, pinOnly: true });
+
+
+const settle = () => new Promise((resolve) => setTimeout(resolve, 25));
+async function plus(host: ReadingModeBlockHost, to = bodyOf(6)): Promise<boolean> {
+	host.notePersistIntent();
+	await settle();
+	return host.replaceSource(to, { fromView: true });
+}
+const CAL = (n: number): string[] => ['> [!note] Camp', ...CTR(n).map((l) => `> ${l}`), '> after text'];
+
+describe('SC-584 r4 probes', () => {
+	let warn: jest.SpyInstance;
+	beforeEach(() => { resetDroppedWriteNotices(); Notice.notices.length = 0; warn = jest.spyOn(console, 'warn').mockImplementation(() => {}); });
+	afterEach(() => warn.mockRestore());
+
+	test('Q1 the + is refused (identical block above, SC-480): no record; the form then refuses', async () => {
+		const pre = ['# N', '', ...CTR(5), '', 'p', '', ...CTR(5), '^a', '', 'END'].join('\n');
+		const { app, host } = embedded(pre, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'x', bodyOf(5), pre, hoverEl());
+		const r1 = await plus(host);
+		const pin = host.pinPosition()!;
+		const r = await save(host, pin, bodyOf(5, 'Edited'));
+		console.log('Q1', r1, r, JSON.stringify(names(app)), JSON.stringify(app.vault.getContent('Note.md')));
+		expect(app.vault.getContent('Note.md')).toBe(pre);
+	});
+
+	test('Q2 two + rounds then the pencil (part stale): lands in A with the second body', async () => {
+		const pre = ['# N', '', ...CTR(5), '^a', '', 'p', '', ...CTR(8), '^b', '', 'END'].join('\n');
+		const { app, host } = embedded(pre, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'x', bodyOf(5), pre, hoverEl());
+		await plus(host, bodyOf(6));
+		await plus(host, bodyOf(7));
+		const pin = host.pinPosition()!;
+		const r = await save(host, pin, bodyOf(7, 'Edited'));
+		console.log('Q2', r, JSON.stringify(app.vault.getContent('Note.md')));
+		expect(r).toBe(true);
+		expect(names(app)).toEqual(['Edited', 'Twin']);
+	});
+
+	test('Q3 +, an outside edit of A to the twin\'s body (7), a second + on the stale card, then the pencil: never B', async () => {
+		const pre = ['# N', '', ...CTR(5), '^a', '', 'p', '', ...CTR(7), '^b', '', 'END'].join('\n');
+		const { app, host } = embedded(pre, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'x', bodyOf(5), pre, hoverEl());
+		await plus(host, bodyOf(6));
+		app.vault.setFile('Note.md', app.vault.getContent('Note.md')!.replace('current_value: 6', 'current_value: 9'));
+		const r2 = await plus(host, bodyOf(7));
+		const mid = app.vault.getContent('Note.md');
+		const pin = host.pinPosition()!;
+		const r = await save(host, pin, bodyOf(7, 'Edited'));
+		console.log('Q3', r2, r, JSON.stringify(mid), JSON.stringify(app.vault.getContent('Note.md')), JSON.stringify(Notice.notices));
+		expect(names(app)[1]).toBe('Twin');
+	});
+
+	test('Q4 a form Save, then a second form at once (part still stale): lands again in A', async () => {
+		const pre = ['# N', '', ...CTR(5), '^a', '', 'p', '', ...CTR(8), '^b', '', 'END'].join('\n');
+		const { app, host } = embedded(pre, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'x', bodyOf(5), pre, hoverEl());
+		await plus(host);
+		const p1 = host.pinPosition()!;
+		expect(await save(host, p1, bodyOf(6, 'One'))).toBe(true);
+		const p2 = host.pinPosition()!;
+		const r = await save(host, p2, bodyOf(6, 'Two'));
+		console.log('Q4', r, JSON.stringify(names(app)));
+		expect(names(app)).toEqual(['Two', 'Twin']);
+	});
+
+	test('Q5 an old record, the note changed by 600 lines since, part stale: refused (never a wrong block)', async () => {
+		const pre = ['# N', '', ...CTR(5), '^a', '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n');
+		const { app, host } = embedded(pre, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'x', bodyOf(5), pre, hoverEl());
+		await plus(host);
+		const now = app.vault.getContent('Note.md')!.split('\n');
+		const big = [...Array.from({ length: 300 }, (_, i) => `x ${i}`), ...now.slice(0, 6), ...Array.from({ length: 300 }, (_, i) => `y ${i}`), ...now.slice(6)].join('\n');
+		app.vault.setFile('Note.md', big);
+		const pin = host.pinPosition()!;
+		const r = await save(host, pin, bodyOf(6, 'Edited'));
+		console.log('Q5', r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+		expect(names(app)[1]).toBe('Twin');
+	});
+
+	test('Q6 after the +, the part is redrawn (fresh, A identical to B, block-only part): the form uses the record and lands in A', async () => {
+		const pre = ['# N', '', ...CTR(5), '^a', '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n');
+		const { app, host, sec } = embedded(pre, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'x', bodyOf(5), pre, hoverEl());
+		await plus(host);
+		sec.current = { text: CTR(6).join('\n'), lineStart: 0, lineEnd: 3 };
+		const pin = host.pinPosition()!;
+		const r = await save(host, pin, bodyOf(6, 'Edited'));
+		console.log('Q6', r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+		expect(names(app)[1]).toBe('Twin');
+	});
+
+	test('Q7 (P13, no +) callout embed, stale section 5, host knows 6 by mount, A edited, upper holds 6: still SC-596 (no pin)', async () => {
+		const full = ['# N', '', 'TOP', '', ...CAL(6), '', 'mid', '', ...CAL(9), '', '^cal', '', 'END'].join('\n');
+		const lower = full.split('\n').lastIndexOf('> [!note] Camp');
+		const cache = { headings: [], blocks: { cal: { id: 'cal', position: { start: { line: lower, col: 0, offset: 0 }, end: { line: lower + 5, col: 0, offset: 0 } } } } };
+		const { app, host } = embedded(full, { text: CAL(5).join('\n'), lineStart: 0, lineEnd: 5 }, 'Note#^cal', bodyOf(6), cache);
+		const pin = host.pinPosition();
+		const r = pin ? await save(host, pin, bodyOf(6, 'Edited')) : await host.replaceSource(bodyOf(6, 'Edited'));
+		console.log('Q7 pin', JSON.stringify(pin), r, JSON.stringify(names(app)));
+	});
+
+	test('Q8 (P13 with +) callout embed, + on lower, lower then edited from outside, upper holds + body: refused', async () => {
+		const pre = ['# N', '', 'TOP', '', ...CAL(6), '', 'mid', '', ...CAL(5), '', '^cal', '', 'END'].join('\n');
+		const lower = pre.split('\n').lastIndexOf('> [!note] Camp');
+		const cache = { headings: [], blocks: { cal: { id: 'cal', position: { start: { line: lower, col: 0, offset: 0 }, end: { line: lower + 5, col: 0, offset: 0 } } } } };
+		const { app, host } = embedded(pre, { text: CAL(5).join('\n'), lineStart: 0, lineEnd: 5 }, 'Note#^cal', bodyOf(5), cache);
+		expect(await plus(host)).toBe(true);
+		const outside = app.vault.getContent('Note.md')!.split('\n').filter((_, i) => i < lower || i > lower + 6).join('\n'); // lower callout deleted
+		app.vault.setFile('Note.md', outside);
+		const pin = host.pinPosition();
+		const r = pin ? await save(host, pin, bodyOf(6, 'Edited')) : await host.replaceSource(bodyOf(6, 'Edited'));
+		console.log('Q8 pin', !!pin, r, JSON.stringify(app.vault.getContent('Note.md')), JSON.stringify(Notice.notices));
+		expect(names(app)).toEqual(['Twin']);
+	});
+
+	test('Q9 a callout holding TWO identical counters (ambiguous own fence) in an embed, + on the lower one, then the form: lands in the lower only', async () => {
+		const C2 = (a: number, b: number) => ['> [!note] Camp', ...CTR(a).map((l) => `> ${l}`), '> mid', ...CTR(b).map((l) => `> ${l}`)];
+		const pre = ['# N', '', ...C2(6, 5), '', '^cal', '', 'END'].join('\n');
+		const cache = { headings: [], blocks: { cal: { id: 'cal', position: { start: { line: 2, col: 0, offset: 0 }, end: { line: 11, col: 0, offset: 0 } } } } };
+		const el = embedEl('Note#^cal');
+		const { app, host } = embedded(pre, { text: C2(6, 5).join('\n'), lineStart: 0, lineEnd: 9 }, 'Note#^cal', bodyOf(5), cache, el);
+		const pin0 = host.pinPosition();
+		console.log('Q9 pin0', JSON.stringify(pin0));
+		const r1 = await plus(host);
+		const pin = host.pinPosition();
+		const r = pin ? await save(host, pin, bodyOf(6, 'Edited')) : 'nopin';
+		console.log('Q9', r1, r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+		expect(names(app)[0]).toBe('Twin');
+	});
+
+	test('Q10 card pin after a + never takes the record (second + with stale part, B identical): refused as base', async () => {
+		const pre = ['# N', '', ...CTR(5), '^a', '', 'p', '', ...CTR(7), '^b', '', 'END'].join('\n');
+		const { app, host } = embedded(pre, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'x', bodyOf(5), pre, hoverEl());
+		await plus(host, bodyOf(6));
+		const r2 = await plus(host, bodyOf(7));
+		const r3 = await plus(host, bodyOf(8));
+		console.log('Q10', r2, r3, JSON.stringify(app.vault.getContent('Note.md')), JSON.stringify(Notice.notices));
+	});
+	test('Q9h heading embed of a section holding a callout with TWO counters, + on the lower one, then the form', async () => {
+		const C2 = (a: number, b: number) => ['> [!note] Camp', ...CTR(a).map((l) => `> ${l}`), '> mid', ...CTR(b).map((l) => `> ${l}`)];
+		const pre = ['# N', '', '## Tracker', '', ...C2(6, 5), '', '## After', 'END'].join('\n');
+		const part = ['## Tracker', '', ...C2(6, 5), ''].join('\n');
+		const { app, host } = embedded(pre, { text: part, lineStart: 2, lineEnd: 11 }, 'Note#Tracker', bodyOf(5), pre);
+		const pin0 = host.pinPosition();
+		console.log('Q9h pin0', JSON.stringify(pin0 && pin0.lineStart));
+		const r1 = await plus(host);
+		const pin = host.pinPosition();
+		console.log('Q9h pin1', JSON.stringify(pin && pin.lineStart));
+		const r = pin ? await save(host, pin, bodyOf(6, 'Edited')) : 'nopin';
+		console.log('Q9h', r1, r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+		expect(names(app)[0]).toBe('Twin');
+	});
+});
+
+describe('SC-584 r6 probes (the guard)', () => {
+	let warn: jest.SpyInstance;
+	beforeEach(() => { resetDroppedWriteNotices(); Notice.notices.length = 0; warn = jest.spyOn(console, 'warn').mockImplementation(() => {}); });
+	afterEach(() => warn.mockRestore());
+	// a blockquote with NO header line: its first line IS the upper counter's fence, so ownFence.lineStart === section.lineStart when the stale window's
+	// body match is the upper counter (the guard is false).
+	const Q2 = (a: number, b: number) => [...CTR(a).map((l) => `> ${l}`), '> mid', ...CTR(b).map((l) => `> ${l}`)];
+	test('R1 ^id embed of a header-less quote with two counters, + on the lower, form: never the upper', async () => {
+		const pre = ['# N', '', ...Q2(6, 5), '', '^q', '', 'END'].join('\n');
+		const cache = { headings: [], blocks: { q: { id: 'q', position: { start: { line: 2, col: 0, offset: 0 }, end: { line: 10, col: 0, offset: 0 } } } } };
+		const { app, host } = embedded(pre, { text: Q2(6, 5).join('\n'), lineStart: 0, lineEnd: 8 }, 'Note#^q', bodyOf(5), cache);
+		const pin0 = host.pinPosition();
+		const r1 = await plus(host);
+		const pin = host.pinPosition();
+		const r = pin ? await save(host, pin, bodyOf(6, 'Edited')) : 'nopin';
+		console.log('R1', JSON.stringify(pin0 && pin0.lineStart), r1, JSON.stringify(pin && pin.lineStart), r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+		expect(names(app)[0]).toBe('Twin');
+	});
+	test('R1h heading embed of a section holding the header-less quote, + on the lower, form: never the upper', async () => {
+		const pre = ['# N', '', '## Tracker', '', ...Q2(6, 5), '', '## After', 'END'].join('\n');
+		// the window Obsidian reports for the block is the quote (lines 2..10 of the part), the part is the heading section
+		const part = ['## Tracker', '', ...Q2(6, 5), ''].join('\n');
+		const { app, host } = embedded(pre, { text: part, lineStart: 2, lineEnd: 10 }, 'Note#Tracker', bodyOf(5), pre);
+		const pin0 = host.pinPosition();
+		const r1 = await plus(host);
+		const pin = host.pinPosition();
+		const r = pin ? await save(host, pin, bodyOf(6, 'Edited')) : 'nopin';
+		console.log('R1h', JSON.stringify(pin0 && pin0.lineStart), r1, JSON.stringify(pin && pin.lineStart), r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+		expect(names(app)[0]).toBe('Twin');
+	});
+	test('R2 hover of a whole short note holding the header-less quote (+ lower, form): never the upper', async () => {
+		const pre = ['# N', '', ...Q2(6, 5), '', 'END'];
+		const text = pre.join('\n');
+		const { app, host } = embedded(text, { text, lineStart: 2, lineEnd: 10 }, 'x', bodyOf(5), text, hoverEl());
+		const r1 = await plus(host);
+		const pin = host.pinPosition();
+		const r = pin ? await save(host, pin, bodyOf(6, 'Edited')) : 'nopin';
+		console.log('R2', r1, JSON.stringify(pin && pin.lineStart), r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+		expect(names(app)[0]).toBe('Twin');
+	});
+	test('R3 nested callout (> > ) with two counters inside the inner callout, ^id embed, + lower: never the upper', async () => {
+		const N2 = (a: number, b: number) => ['> [!note] Outer', '> > [!tip] Inner', ...CTR(a).map((l) => `> > ${l}`), '> > mid', ...CTR(b).map((l) => `> > ${l}`)];
+		const pre = ['# N', '', ...N2(6, 5), '', '^n', '', 'END'].join('\n');
+		const cache = { headings: [], blocks: { n: { id: 'n', position: { start: { line: 2, col: 0, offset: 0 }, end: { line: 12, col: 0, offset: 0 } } } } };
+		const { app, host } = embedded(pre, { text: N2(6, 5).join('\n'), lineStart: 0, lineEnd: 10 }, 'Note#^n', bodyOf(5), cache);
+		const r1 = await plus(host);
+		const pin = host.pinPosition();
+		const r = pin ? await save(host, pin, bodyOf(6, 'Edited')) : 'nopin';
+		console.log('R3', r1, JSON.stringify(pin && pin.lineStart), r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+		expect(names(app)[0]).toBe('Twin');
+	});
+});
+
+describe('SC-584 r8 probes', () => {
+	let warn: jest.SpyInstance;
+	beforeEach(() => { resetDroppedWriteNotices(); Notice.notices.length = 0; warn = jest.spyOn(console, 'warn').mockImplementation(() => {}); });
+	afterEach(() => warn.mockRestore());
+	// a callout inside a list item: every line '- > ' / '  > '
+	const LC = (a: number, b: number) => ['- > [!note] Camp', ...CTR(a).map((l) => `  > ${l}`), '  > mid', ...CTR(b).map((l) => `  > ${l}`)];
+	test('S1 heading embed, a callout inside a list item, two counters, + lower, form: never the upper', async () => {
+		const pre = ['# N', '', '## Tracker', '', ...LC(6, 5), '', '## After', 'END'].join('\n');
+		const part = ['## Tracker', '', ...LC(6, 5), ''].join('\n');
+		const { app, host } = embedded(pre, { text: part, lineStart: 2, lineEnd: 10 }, 'Note#Tracker', bodyOf(5), pre);
+		const pin0 = host.pinPosition();
+		const r1 = await plus(host);
+		const pin = host.pinPosition();
+		const r = pin ? await save(host, pin, bodyOf(6, 'Edited')) : 'nopin';
+		console.log('S1', JSON.stringify(pin0 && pin0.lineStart), r1, JSON.stringify(pin && pin.lineStart), r, JSON.stringify(app.vault.getContent('Note.md')), JSON.stringify(Notice.notices));
+		expect(names(app)[0]).toBe('Twin');
+	});
+	// a header-less quote whose first line is the upper fence, embedded in a HOVER of a heading (no src)
+	const Q2 = (a: number, b: number) => [...CTR(a).map((l) => `> ${l}`), '> mid', ...CTR(b).map((l) => `> ${l}`)];
+	test('S2 heading HOVER of the header-less quote, + lower, form: never the upper', async () => {
+		const pre = ['# N', '', '## Tracker', '', ...Q2(6, 5), '', '## After', 'END'].join('\n');
+		const part = ['## Tracker', '', ...Q2(6, 5), ''].join('\n');
+		const { app, host } = embedded(pre, { text: part, lineStart: 2, lineEnd: 10 }, 'x', bodyOf(5), pre, hoverEl());
+		const r1 = await plus(host);
+		const pin = host.pinPosition();
+		const r = pin ? await save(host, pin, bodyOf(6, 'Edited')) : 'nopin';
+		console.log('S2', r1, JSON.stringify(pin && pin.lineStart), r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+		expect(names(app)[0]).toBe('Twin');
+	});
+	// the plain-window path: a plain block ^id embed with an identical block above, + then form (r3 shape): lands in the + block
+	test('S3 plain ^id block embed, identical block above after the +, form: lands in the + block', async () => {
+		const pre = ['# N', '', ...CTR(6), '', 'p', '', ...CTR(5), '^a', '', 'END'].join('\n');
+		const { app, host } = embedded(pre, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'Note#^a', bodyOf(5), pre);
+		const r1 = await plus(host);
+		const pin = host.pinPosition();
+		const r = pin ? await save(host, pin, bodyOf(6, 'Edited')) : 'nopin';
+		console.log('S3', r1, r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+		expect(names(app)[0]).toBe('Twin');
+	});
+});

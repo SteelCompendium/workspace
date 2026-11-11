@@ -1,0 +1,91 @@
+FAIL dom test/dom/framework/reading-mode-host-pin.test.ts
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a cache that lags AND a section text that is stale, a long note (+ then the pencil): the pin is placed by the only block with the known body, Save lands in it (SC-584; before, it was refused)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      801 | 		const pin = host.pinPosition()!;
+      802 |
+    > 803 | 		expect(await save(host, pin, bodyOf(6, 'Edited'))).toBe(true);
+          | 		                                                   ^
+      804 | 		expect(app.vault.getContent('Note.md')).toBe(now.replace(/(## Tracker\n\n```ds-counter\nname: )Twin/, '$1Edited'));
+      805 | 		expect(names(app)).toEqual(['Twin', 'Edited']); // the identical-looking block above (value 5) is untouched
+      806 | 		expect(Notice.notices).toEqual([]);
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:803:54)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a hover preview or an embed whose pin only the known body can place › the + landed, the section text is stale, the block is the only one with that body: Save lands in it (a short note)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      942 | 			const pin = host.pinPosition()!;
+      943 |
+    > 944 | 			expect(await save(host, pin, bodyOf(6, 'Edited'))).toBe(true); // before: the pin stayed partial and every Save was refused
+          | 			                                                   ^
+      945 | 			expect(app.vault.getContent('Note.md')).toBe(edited(full));
+      946 | 			expect(Notice.notices).toEqual([]);
+      947 | 		});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:944:55)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a hover preview or an embed whose pin only the known body can place › the same with a long note and a heading hover: the section is the part, the block is the only one with that body
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      956 | 			const pin = host.pinPosition()!;
+      957 |
+    > 958 | 			expect(await save(host, pin, bodyOf(6, 'Edited'))).toBe(true);
+          | 			                                                   ^
+      959 | 			expect(app.vault.getContent('Note.md')).toBe(edited(full));
+      960 | 		});
+      961 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:958:55)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a hover preview or an embed whose pin only the known body can place › an identical block is added to the note after the form opened: Save still lands in the block the form was opened on
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1013 | 			app.vault.setFile('Note.md', outside);
+      1014 |
+    > 1015 | 			expect(await save(host, pin, bodyOf(6, 'Edited'))).toBe(true); // a count at Save time would see two blocks and refuse
+           | 			                                                   ^
+      1016 | 			expect(names(app)).toEqual(['Edited', 'Twin']);
+      1017 | 			expect(app.vault.getContent('Note.md')).toBe(edited(outside));
+      1018 | 		});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1015:55)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a block embed of a callout that holds the counter › an identical callout above: Save lands in the embedded (lower) callout, never the other
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1056 | 			const pin = host.pinPosition()!;
+      1057 |
+    > 1058 | 			expect(await save(host, pin)).toBe(true); // before: the marker was looked for under the counter's fence ("> after text"), nothing verified
+           | 			                              ^
+      1059 | 			expect(app.vault.getContent('Note.md')).toBe(renamedAt(full, lower));
+      1060 | 			expect(names(app)).toEqual(['Twin', 'Edited']);
+      1061 | 			expect(Notice.notices).toEqual([]);
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1058:34)
+
+Test Suites: 1 failed, 1 total
+Tests:       5 failed, 82 passed, 87 total
+Snapshots:   0 total
+Time:        1.865 s
+Ran all test suites matching test/dom/framework/reading-mode-host-pin.test.ts.

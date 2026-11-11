@@ -1,0 +1,175 @@
+FAIL dom test/dom/framework/reading-mode-host-pin.test.ts
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a short note, the only counter: + then the form, Save lands in it
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      953 | 			const pin = host.pinPosition()!;
+      954 |
+    > 955 | 			expect(await save(host, pin, bodyOf(6, 'Edited'))).toBe(true); // before: the part still said 5, the pin stayed partial and every Save was refused
+          | 			                                                   ^
+      956 | 			expect(app.vault.getContent('Note.md')).toBe(edited(NOTE(6).join('\n')));
+      957 | 			expect(Notice.notices).toEqual([]);
+      958 | 		});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:955:55)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a heading hover of a long note: + then the form, Save lands in the Tracker counter
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      965 | 			const pin = host.pinPosition()!;
+      966 |
+    > 967 | 			expect(await save(host, pin, bodyOf(6, 'Edited'))).toBe(true);
+          | 			                                                   ^
+      968 | 			expect(app.vault.getContent('Note.md')).toBe(edited(text.replace('current_value: 5', 'current_value: 6')));
+      969 | 		});
+      970 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:967:55)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a hover of a whole LONG note scrolled to the card (its section is the whole note): + then the form, Save lands
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      976 | 			const pin = host.pinPosition()!;
+      977 |
+    > 978 | 			expect(await save(host, pin, bodyOf(6, 'Edited'))).toBe(true);
+          | 			                                                   ^
+      979 | 			expect(app.vault.getContent('Note.md')).toBe(edited(pre.join('\n').replace('current_value: 5', 'current_value: 6')));
+      980 | 		});
+      981 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:978:55)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › the + made the block read like another block of the note: Save still lands in the block the + was pressed on (the position, not a search for the body)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      986 | 			const pin = host.pinPosition()!;
+      987 |
+    > 988 | 			expect(await save(host, pin, bodyOf(6, 'Edited'))).toBe(true);
+          | 			                                                   ^
+      989 | 			expect(names(app)).toEqual(['Twin', 'Edited']);
+      990 | 		});
+      991 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:988:55)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › an identical block is added to the note after the form opened: Save still lands in the block the form was opened on
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1010 | 			app.vault.setFile('Note.md', outside);
+      1011 |
+    > 1012 | 			expect(await save(host, pin, bodyOf(6, 'Edited'))).toBe(true);
+           | 			                                                   ^
+      1013 | 			expect(names(app)).toEqual(['Edited', 'Twin']);
+      1014 | 		});
+      1015 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1012:55)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › the pin is the position of the write the host had when the form opened, not of a write that lands while the note is read
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1049 | 			expect(await host.replaceSource(bodyOf(7), { fromView: true })).toBe(true); // lands before the open-time read comes back
+      1050 |
+    > 1051 | 			expect(await save(host, pin, bodyOf(7, 'Edited'))).toBe(true);
+           | 			                                                   ^
+      1052 | 			expect(pin.text).toBe(first);
+      1053 | 			expect(app.vault.getContent('Note.md')).toBe(edited(first.replace('current_value: 6', 'current_value: 7')));
+      1054 | 		});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1051:55)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › outside edits between the + and the form, an identical block holding the + body (r2 HIGH-1: nothing may be written into that block) › the same shape with no outside edit: Save lands in the block the + was pressed on, not in the one that reads the same
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1105 | 				const pin = host.pinPosition()!;
+      1106 |
+    > 1107 | 				expect(await save(host, pin, bodyOf(6, 'Edited'))).toBe(true);
+           | 				                                                   ^
+      1108 | 				expect(names(app)).toEqual(['Edited', 'Twin']);
+      1109 | 			});
+      1110 | 		});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1107:56)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a callout in an embed (its part is stale after the +, so its own fence is not found in it) › + then the form: the form has a pin (the host's own write) and Save lands in the lower callout, never the upper
+
+    expect(received).not.toBeNull()
+
+    Received: null
+
+      1165 | 				const afterPlus = noteOf6(app);
+      1166 | 				const pin = host.pinPosition();
+    > 1167 | 				expect(pin).not.toBeNull(); // before: no block with the known body in the stale callout, so no pin and the form saved without pinOnly
+           | 				                ^
+      1168 |
+      1169 | 				expect(await save(host, pin, bodyOf(6, 'Edited'))).toBe(true);
+      1170 | 				expect(app.vault.getContent('Note.md')).toBe(renamedAt(afterPlus, lower));
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1167:21)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a callout in an embed (its part is stale after the +, so its own fence is not found in it) › the lower callout edited from outside after the +, the upper one holding the + body: Save writes nothing, never the upper (control with teeth for the callout embed)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      1178 | 				const pin = host.pinPosition();
+      1179 |
+    > 1180 | 				expect(await save(host, pin, bodyOf(6, 'Edited'))).toBe(false);
+           | 				                                                   ^
+      1181 | 				refused(app, outside);
+      1182 | 			});
+      1183 | 		});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1180:56)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a block embed of a callout that holds the counter › an identical callout above: Save lands in the embedded (lower) callout, never the other
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1200 | 			const pin = host.pinPosition()!;
+      1201 |
+    > 1202 | 			expect(await save(host, pin)).toBe(true); // before: the marker was looked for under the counter's fence ("> after text"), nothing verified
+           | 			                              ^
+      1203 | 			expect(app.vault.getContent('Note.md')).toBe(renamedAt(full, lower));
+      1204 | 			expect(names(app)).toEqual(['Twin', 'Edited']);
+      1205 | 			expect(Notice.notices).toEqual([]);
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1202:34)
+
+Test Suites: 1 failed, 1 total
+Tests:       10 failed, 91 passed, 101 total
+Snapshots:   0 total
+Time:        4.061 s
+Ran all test suites matching test/dom/framework/reading-mode-host-pin.test.ts.

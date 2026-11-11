@@ -1,0 +1,41 @@
+import sys
+F = '/home/scott/code/steelCompendium/worktrees/sc584-embed-form-save-refusals/draw-steel-elements/src/framework/host/ReadingModeBlockHost.ts'
+M = {
+    # agreement check compares only the before-lines (the after-lines are not checked)
+    'mA': ("if (!fence || normalizeBody(fence.body) !== normalizeBody(known) || !sameAt(fence.lineEnd + 1, after)) continue;",
+           "if (!fence || normalizeBody(fence.body) !== normalizeBody(known)) continue;"),
+    # the count is taken on the part (section text) instead of the whole note
+    'mB': ("if (countByBody(whole, language, known) !== 1) return null;",
+           "if (countByBody(sectionText, language, known) > 1) return null;"),
+    # the ^id marker is searched anywhere after the block (unbounded)
+    'mC': ("if (next >= lines.length || lines[next].trim().toLowerCase() !== `^${at.blockId.toLowerCase()}`) return null;",
+           "if (!lines.slice(found.lineEnd + 1).some((l) => l.trim().toLowerCase() === `^${at.blockId!.toLowerCase()}`)) return null;"),
+    # the fence line itself is not compared
+    'mD': ("if (!sameAt(k, before) || lines[k + before.length] !== openLine) continue;",
+           "if (!sameAt(k, before)) continue;"),
+    # the first anchored match is taken (no refusal of two)
+    'mE': ("			if (found >= 0) return null;\n			found = fence.lineStart;",
+           "			if (found >= 0) continue;\n			found = fence.lineStart;"),
+    # the marker follows the part's end only (no max with the fence)
+    'mF': ("let next = Math.max(found.lineEnd, partEnd) + 1;",
+           "let next = partEnd + 1;"),
+    # the body known at open is read after the note read (inside openTimeBodyLine's call)
+    'mG': ("this.openTimeBodyLine(whole, sectionText, pin.lineStart, knownAtOpen);",
+           "this.openTimeBodyLine(whole, sectionText, pin.lineStart, this.knownBody);"),
+    # trailing blank lines of the part are not dropped from the after-run
+    'mH': ("		while (after.length > 0 && after[after.length - 1].trim() === '') after.pop();\n		const lines = splitLines(whole);",
+           "		const lines = splitLines(whole);"),
+    # the before-lines are not compared (only the fence line and after)
+    'mI': ("if (!sameAt(k, before) || lines[k + before.length] !== openLine) continue;",
+           "if (lines[k + before.length] !== openLine) continue;"),
+    # no agreement at all AND no count (place on the first fence holding known)
+    'mJ': ("if (countByBody(whole, language, known) !== 1) return null;",
+           "if (countByBody(whole, language, known) < 1) return null;"),
+}
+name = sys.argv[1]
+src = open(F).read()
+a, b = M[name]
+if src.count(a) != 1:
+    print('MUTANT_APPLY_FAIL', name, src.count(a)); sys.exit(3)
+open(F, 'w').write(src.replace(a, b))
+print('MUTANT_APPLIED', name)

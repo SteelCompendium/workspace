@@ -1,0 +1,21 @@
+# SC-584 r7 mutation runs (jest pin suite, 145 tests unmutated; script sc584-r7-mutate.py.txt)
+== mS: Tests:       29 failed, 116 passed, 145 total
+== mS5: Tests:       8 failed, 137 passed, 145 total
+== mS2: Tests:       1 failed, 144 passed, 145 total
+== mS6: Tests:       21 failed, 124 passed, 145 total
+== mT: Tests:       1 failed, 144 passed, 145 total
+== mK: Tests:       1 failed, 144 passed, 145 total
+== mC: Tests:       4 failed, 141 passed, 145 total
+== mM: Tests:       1 failed, 144 passed, 145 total
+== mG: Tests:       2 failed, 143 passed, 145 total
+== mG2: Tests:       1 failed, 144 passed, 145 total
+== mO: Tests:       2 failed, 143 passed, 145 total
+== mQ: Tests:       38 failed, 107 passed, 145 total
+== mR: Tests:       1 failed, 144 passed, 145 total
+== m-card: Tests:       1 failed, 144 passed, 145 total
+== m-sibling: Tests:       1 failed, 144 passed, 145 total
+== mF: Tests:       145 passed, 145 total
+== mL: Tests:       145 passed, 145 total
+== mN: Tests:       145 passed, 145 total
+## equivalent (survive by construction): mF (part end without max against the fence end: the part always contains the block's own fence), mL (no body equality on the record: only a write or setMountedBody changes the known body, and both replace or clear the record), mN (record not verified by fenceAt: a block a splice just wrote is always found).
+## mS5 restores the r5 guard (fence not on the window's first line): killed by the 8 first-line-fence sweep rows. mS6 (only a prefixed first line counts) is killed by 21: a callout header, list item or footnote window needs the record too.

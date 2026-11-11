@@ -1,0 +1,56 @@
+Info: New devbox available: 0.17.5 -> v0.20.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc584-embed-form-save-refusals/draw-steel-elements
+
+> draw-steel-elements@7.0.0 e2e
+> node e2e/run.mjs --only=RECOV-R07
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :201 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :201 (private Xvfb); 1 spec file(s), 1 shard(s); only RECOV-R07; run 20261111-124837-b811
+
+Execution of 1 workers started at 2026-11-11T12:48:42.741Z
+
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-recoveries.e2e.ts
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 3983348
+[0-0] Error in "ds-stamina-bar: the optional Recoveries popover editor (preference on).[RECOV-R07] a marker click opens a popover instead of committing; its buttons commit"
+Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 1
+Received: 2
+    at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc584-embed-form-save-refusals/draw-steel-elements/e2e/specs/stamina-bar/stamina-recoveries.e2e.ts:355:19)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc584-embed-form-save-refusals/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-0] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-recoveries.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: 6286e1723f16eb03066dc4f62cd809ce
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/stamina-bar/stamina-recoveries.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] ds-stamina-bar: the optional Recoveries popover editor (preference on)
+[chrome 150.0.7871.250 linux #0-0]    ✖ [RECOV-R07] a marker click opens a popover instead of committing; its buttons commit
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1 failing (5.7s)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1) ds-stamina-bar: the optional Recoveries popover editor (preference on) [RECOV-R07] a marker click opens a popover instead of committing; its buttons commit
+[chrome 150.0.7871.250 linux #0-0] expect(received).toBe(expected) // Object.is equality
+
+Expected: 1
+Received: 2
+[chrome 150.0.7871.250 linux #0-0] Error: expect(received).toBe(expected) // Object.is equality
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] Expected: 1
+[chrome 150.0.7871.250 linux #0-0] Received: 2
+[chrome 150.0.7871.250 linux #0-0]     at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc584-embed-form-save-refusals/draw-steel-elements/e2e/specs/stamina-bar/stamina-recoveries.e2e.ts:355:19)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc584-embed-form-save-refusals/draw-steel-elements/e2e/driver/session.ts:42:5)
+
+
+Spec Files:	 0 passed, 1 failed, 1 total (100% completed) in 00:00:14  
+
+OBSIDIAN-E2E RECOV-R07 FAIL: expect(received).toBe(expected) // Object.is equality | Expected: 1 | Received: 2 [bundle /home/scott/code/steelCompendium/worktrees/sc584-embed-form-save-refusals/draw-steel-elements/e2e/.out/20261111-124837-b811/RECOV-R07]
+OBSIDIAN-E2E done: 0/1 ok, 1 failed, 0 known-bug, coverage: 4/164 pairs (partial run: gate skipped)
+OBSIDIAN-E2E coverage driven: 4 (control, kind) pair(s) -> /home/scott/code/steelCompendium/worktrees/sc584-embed-form-save-refusals/draw-steel-elements/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 160 manifest pair(s) not exercised in this selection
+E2E_RC=1
+Error: error running script "bash" in Devbox: exit status 1
+

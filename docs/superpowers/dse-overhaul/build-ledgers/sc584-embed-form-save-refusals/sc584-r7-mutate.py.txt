@@ -1,0 +1,58 @@
+import sys
+p='/home/scott/code/steelCompendium/worktrees/sc584-embed-form-save-refusals/draw-steel-elements/src/framework/host/ReadingModeBlockHost.ts'
+m=sys.argv[1]
+s=open(p).read()
+def rep(old,new,count=1):
+    global s
+    assert s.count(old)==count, (m, s.count(old), old[:70])
+    s=s.replace(old,new)
+if m=='mC':   # ^id searched anywhere after the block
+    rep("if (next >= lines.length || lines[next].trim().toLowerCase() !== `^${at.blockId.toLowerCase()}`) return null;",
+        "if (!lines.slice(found.lineEnd + 1).some((l) => l.trim().toLowerCase() === `^${at.blockId!.toLowerCase()}`)) return null;")
+elif m=='mF':  # marker after the part's end only, no max
+    rep("(quoted ? Math.max(found.lineEnd, partEnd) : found.lineEnd) + 1","(quoted ? partEnd : found.lineEnd) + 1")
+elif m=='mM':  # the part's end for every block, not only a quoted one
+    rep("(quoted ? Math.max(found.lineEnd, partEnd) : found.lineEnd) + 1","Math.max(found.lineEnd, partEnd) + 1")
+elif m=='m-card':  # a card write's pin may use the last write
+    rep("const pin = this.takePin(false);","const pin = this.takePin(true);")
+elif m=='m-sibling':  # one record shared by every host
+    rep("	private lastWrite: { body: string; text: string; lineStart: number } | null = null;","	private static sharedLW: { body: string; text: string; lineStart: number } | null = null;")
+    s=s.replace('this.lastWrite','ReadingModeBlockHost.sharedLW')
+elif m=='mG':  # the record is read after the note read (a later write)
+    rep("""			if (write !== null && knownAtOpen !== null && normalizeBody(write.body) === normalizeBody(knownAtOpen)) {
+				pin.text = write.text;
+				pin.lineStart = write.lineStart;""","""			const late = this.lastWrite;
+			if (late !== null && knownAtOpen !== null && normalizeBody(late.body) === normalizeBody(knownAtOpen)) {
+				pin.text = late.text;
+				pin.lineStart = late.lineStart;""")
+elif m=='mG2':  # the known body is read after the note read
+    rep("		const knownAtOpen = this.knownBody;\n","")
+    rep("			if (write !== null && knownAtOpen !== null && normalizeBody(write.body) === normalizeBody(knownAtOpen)) {","			const knownAtOpen = this.knownBody;\n			if (write !== null && knownAtOpen !== null && normalizeBody(write.body) === normalizeBody(knownAtOpen)) {")
+elif m=='mK':  # record kept when the host is given a new mounted body
+    rep("		this.knownBody = source;\n		this.lastWrite = null;\n","		this.knownBody = source;\n")
+elif m=='mL':  # no body equality between the record and the body at open
+    rep("if (write !== null && knownAtOpen !== null && normalizeBody(write.body) === normalizeBody(knownAtOpen)) {","if (write !== null) {")
+    rep("if (w === null || this.knownBody === null || normalizeBody(w.body) !== normalizeBody(this.knownBody)) return null;","if (w === null) return null;")
+elif m=='mN':  # record not verified by fenceAt
+    rep("if (inEmbed && this.fenceAt(next, target.lineStart) !== null) this.lastWrite","if (inEmbed) this.lastWrite")
+elif m=='mO':  # no pin from the record when the own fence is not found (callout)
+    rep("return forForm && embedded ? this.pinFromLastWrite() : null;","return null;")
+elif m=='mQ':  # nothing is recorded
+    rep("if (inEmbed && this.fenceAt(next, target.lineStart) !== null) this.lastWrite","if (false) this.lastWrite")
+elif m=='mR':  # the record used even when the form's pin is not partial (always first)
+    rep("""			const line = this.verifiedPinLine(file, whole, sectionText, pin.lineStart) ?? this.searchedPinLine(whole, sectionText, pin.lineStart);
+			if (line !== null) {""","""			const line = write !== null ? null : this.verifiedPinLine(file, whole, sectionText, pin.lineStart) ?? this.searchedPinLine(whole, sectionText, pin.lineStart);
+			if (line !== null) {""")
+elif m=='mS':  # the guard dropped (a form in a multi-block window takes the by-body own fence)
+    rep("if (!(first && first.prefix === '')) {","if (false) {")
+elif m=='mS5':  # the r5 guard restored (the fence is not the window's first line)
+    rep("if (!(first && first.prefix === '')) {","if (this.ownFence.lineStart !== section.lineStart) {")
+elif m=='mS2':  # record-first for every form
+    rep("if (!(first && first.prefix === '')) {","if (true) {")
+elif m=='mS6':  # only a prefixed first line counts (a text first line - callout header, list item, footnote - does not)
+    rep("if (!(first && first.prefix === '')) {","if (first && first.prefix !== '') {")
+elif m=='mT':  # the record is not dropped on unload
+    rep("		this.lastWrite = null; // SC-584: the record of this host's own write (a whole note's text) is not kept past the section it was made for\n","")
+else: raise SystemExit('unknown '+m)
+open(p,'w').write(s)
+print('applied',m)

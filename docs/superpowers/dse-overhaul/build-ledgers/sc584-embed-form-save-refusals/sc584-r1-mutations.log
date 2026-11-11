@@ -1,0 +1,35 @@
+# SC-584 r1 mutation runs (jest, test/dom/framework/reading-mode-host-pin.test.ts); mutate.py in scratch patches ReadingModeBlockHost.ts, file restored with git checkout after each
+## first run (m1/m1b/m2) BEFORE the hover-test helper fix: m1 and m1b survived
+== m1: 0 failure headers; Tests:       85 passed, 85 total
+== m1b: 0 failure headers; Tests:       85 passed, 85 total
+== m2: 4 failure headers; Tests:       4 failed, 81 passed, 85 total
+a heading embed whose block was edited from outside BEFORE the form opened, while the embed still shows the old section, a twin above holding the old body: Save
+an identical block is added to the note after the form opened: Save still lands in the block the form was opened on
+the form's own block is edited from outside after it opened and the twin that is left is the only block with the old body: Save writes nothing, never the twin (
+the form's own block was edited from outside BEFORE it opened (the preview still shows the old text), a twin holding the old body: nothing places the pin, Save 
+?? visual-harness/zz-sc584-probe.mjs
+## m1 after the fix
+== m1: 2 failure headers; Tests:       2 failed, 83 passed, 85 total
+a card write (not a form Save) with a partial pin and a twin in the note is refused as before: the rule is for a form's open
+another block of the note holds the same body when the form opens: nothing places the pin, Save writes nothing
+ M test/dom/framework/reading-mode-host-pin.test.ts
+?? visual-harness/zz-sc584-probe.mjs
+## m2 m3 m4 m6 after the fix
+== m2: 4 failure headers; Tests:       4 failed, 81 passed, 85 total
+a heading embed whose block was edited from outside BEFORE the form opened, while the embed still shows the old section, a twin above holding the old body: Save
+an identical block is added to the note after the form opened: Save still lands in the block the form was opened on
+the form's own block is edited from outside after it opened and the twin that is left is the only block with the old body: Save writes nothing, never the twin (
+the form's own block was edited from outside BEFORE it opened (the preview still shows the old text), a twin holding the old body: nothing places the pin, Save 
+== m3: 1 failure headers; Tests:       1 failed, 84 passed, 85 total
+an identical callout above: Save lands in the embedded (lower) callout, never the other
+== m4: 2 failure headers; Tests:       2 failed, 83 passed, 85 total
+a heading embed whose block was edited from outside BEFORE the form opened, while the embed still shows the old section, a twin above holding the old body: Save
+the form's own block was edited from outside BEFORE it opened (the preview still shows the old text), a twin holding the old body: nothing places the pin, Save 
+== m6: 5 failure headers; Tests:       5 failed, 80 passed, 85 total
+a cache that lags the note, so its ^blk line is now an identical block's fence (a long note): the marker is not there, nothing verifies, Save writes nothing
+a cache that lags the note, so its ^blk line is now an identical block's fence (a short note): the marker is not there, nothing verifies, Save writes nothing
+a cache that lags the note so that its callout is the identical one ABOVE: the id is not under it, so it is not taken and nothing is written
+the id line names another block: the marker is not there, nothing places the pin, Save writes nothing
+there is no id line at all: the marker is not there, nothing places the pin, Save writes nothing
+ M test/dom/framework/reading-mode-host-pin.test.ts
+?? visual-harness/zz-sc584-probe.mjs

@@ -1,0 +1,48 @@
+Info: New devbox available: 0.17.5 -> v0.20.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc584-embed-form-save-refusals/draw-steel-elements
+
+> draw-steel-elements@7.0.0 e2e
+> node e2e/run.mjs --only=CENSUS-07,RECOV-R07
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :200 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :200 (private Xvfb); 2 spec file(s), 2 shard(s); only CENSUS-07,RECOV-R07; run 20261111-085011-a048
+
+Execution of 2 workers started at 2026-11-11T08:50:13.657Z
+
+[0-1] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-recoveries.e2e.ts
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/_census.e2e.ts
+[0-1] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 3590991
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 3590983
+[0-1] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-recoveries.e2e.ts
+[0-0] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/_census.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-1] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-1] Session ID: c6afac989eb37d1f3b3b14be3bc265de
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] » e2e/specs/stamina-bar/stamina-recoveries.e2e.ts
+[chrome 150.0.7871.250 linux #0-1] ds-stamina-bar: the optional Recoveries popover editor (preference on)
+[chrome 150.0.7871.250 linux #0-1]    ✓ [RECOV-R07] a marker click opens a popover instead of committing; its buttons commit
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] 1 passing (3.7s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: f02176d13ac8603cba5176609e3183b8
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/_census.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] real-Obsidian census (pilot surfaces)
+[chrome 150.0.7871.250 linux #0-0]    ✓ [CENSUS-07] the open title editor and a captained squad (SC-437): the textarea, the squad checklist and both captain buttons are identified controls (each rescanned with its row selected)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1 passing (13.7s)
+
+
+Spec Files:	 2 passed, 2 total (100% completed) in 00:00:19  
+
+OBSIDIAN-E2E CENSUS-07 ok (13429 ms)
+OBSIDIAN-E2E RECOV-R07 ok (2355 ms)
+OBSIDIAN-E2E done: 2/2 ok, 0 failed, 0 known-bug, coverage: 6/163 pairs (partial run: gate skipped)
+OBSIDIAN-E2E coverage driven: 6 (control, kind) pair(s) -> /home/scott/code/steelCompendium/worktrees/sc584-embed-form-save-refusals/draw-steel-elements/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 157 manifest pair(s) not exercised in this selection
+E2E_RC=0

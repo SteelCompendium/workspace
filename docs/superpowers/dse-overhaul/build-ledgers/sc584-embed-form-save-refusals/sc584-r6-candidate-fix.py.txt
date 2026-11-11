@@ -1,0 +1,6 @@
+F='/home/scott/code/steelCompendium/worktrees/sc584-embed-form-save-refusals/draw-steel-elements/src/framework/host/ReadingModeBlockHost.ts'
+s=open(F).read()
+a="if (forForm && embedded && this.ownFence.lineStart !== section.lineStart) {"
+assert s.count(a)==1
+s=s.replace(a,"if (forForm && embedded && (parseOpenFence(section.text, section.lineStart)?.prefix ?? 'x') !== '') {")
+open(F,'w').write(s); print('APPLIED')

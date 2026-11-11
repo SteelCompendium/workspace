@@ -1,0 +1,91 @@
+Info: New devbox available: 0.17.5 -> v0.20.0. Please run `devbox version update`.
+Info: Running script "env" on /home/scott/code/steelCompendium/worktrees/sc584-embed-form-save-refusals/draw-steel-elements
+  console.log
+    R1 7 true 0 false ["Twin","Twin"] ["Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first."]
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:222:11)
+
+  console.log
+    R1h 9 true 4 true ["Edited","Twin"] []
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:234:11)
+
+FAIL dom test/dom/framework/zz-sc584-r6-probe.test.ts
+  ● SC-584 r6 probes (the guard) › R1h heading embed of a section holding the header-less quote, + on the lower, form: never the upper
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Twin"
+    Received: "Edited"
+
+      233 | 		const r = pin ? await save(host, pin, bodyOf(6, 'Edited')) : 'nopin';
+      234 | 		console.log('R1h', JSON.stringify(pin0 && pin0.lineStart), r1, JSON.stringify(pin && pin.lineStart), r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+    > 235 | 		expect(names(app)[0]).toBe('Twin');
+          | 		                      ^
+      236 | 	});
+      237 | 	test('R2 hover of a whole short note holding the header-less quote (+ lower, form): never the upper', async () => {
+      238 | 		const pre = ['# N', '', ...Q2(6, 5), '', 'END'];
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:235:25)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 13 skipped, 1 passed, 15 total
+Snapshots:   0 total
+Time:        1.84 s, estimated 2 s
+Ran all test suites matching test/dom/framework/zz-sc584-r6-probe.test.ts with tests matching "R1".
+JEST_RC=1
+STATUS_DONE
+Info: New devbox available: 0.17.5 -> v0.20.0. Please run `devbox version update`.
+Info: Running script "env" on /home/scott/code/steelCompendium/worktrees/sc584-embed-form-save-refusals/draw-steel-elements
+  console.log
+    R1 7 true 2 true ["Edited","Twin"] []
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:222:11)
+
+  console.log
+    R1h 9 true 4 true ["Edited","Twin"] []
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:234:11)
+
+FAIL dom test/dom/framework/zz-sc584-r6-probe.test.ts
+  ● SC-584 r6 probes (the guard) › R1 ^id embed of a header-less quote with two counters, + on the lower, form: never the upper
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Twin"
+    Received: "Edited"
+
+      221 | 		const r = pin ? await save(host, pin, bodyOf(6, 'Edited')) : 'nopin';
+      222 | 		console.log('R1', JSON.stringify(pin0 && pin0.lineStart), r1, JSON.stringify(pin && pin.lineStart), r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+    > 223 | 		expect(names(app)[0]).toBe('Twin');
+          | 		                      ^
+      224 | 	});
+      225 | 	test('R1h heading embed of a section holding the header-less quote, + on the lower, form: never the upper', async () => {
+      226 | 		const pre = ['# N', '', '## Tracker', '', ...Q2(6, 5), '', '## After', 'END'].join('\n');
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:223:25)
+
+  ● SC-584 r6 probes (the guard) › R1h heading embed of a section holding the header-less quote, + on the lower, form: never the upper
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Twin"
+    Received: "Edited"
+
+      233 | 		const r = pin ? await save(host, pin, bodyOf(6, 'Edited')) : 'nopin';
+      234 | 		console.log('R1h', JSON.stringify(pin0 && pin0.lineStart), r1, JSON.stringify(pin && pin.lineStart), r, JSON.stringify(names(app)), JSON.stringify(Notice.notices));
+    > 235 | 		expect(names(app)[0]).toBe('Twin');
+          | 		                      ^
+      236 | 	});
+      237 | 	test('R2 hover of a whole short note holding the header-less quote (+ lower, form): never the upper', async () => {
+      238 | 		const pre = ['# N', '', ...Q2(6, 5), '', 'END'];
+
+      at Object.<anonymous> (test/dom/framework/zz-sc584-r6-probe.test.ts:235:25)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 13 skipped, 15 total
+Snapshots:   0 total
+Time:        1.493 s
+Ran all test suites matching test/dom/framework/zz-sc584-r6-probe.test.ts with tests matching "R1".
+JEST_RC=1
+STATUS_DONE

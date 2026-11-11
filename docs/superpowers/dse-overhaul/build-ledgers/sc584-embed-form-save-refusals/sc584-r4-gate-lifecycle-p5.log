@@ -1,0 +1,18 @@
+Info: New devbox available: 0.17.5 -> v0.20.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc584-embed-form-save-refusals/draw-steel-elements
+
+> draw-steel-elements@7.0.0 obsidian-lifecycle
+> npm run build-no-check && node visual-harness/obsidian-lifecycle.mjs --only=G-S59,G-S49,G-S73
+
+
+> draw-steel-elements@7.0.0 build-no-check
+> node esbuild.config.mjs production
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :160, port 43335, 3 scenario(s)
+OBSIDIAN-LIFECYCLE G-S59 ok ((a) Reading pane + Live Preview pane: write -> redraw 4097 ms (held 2779, waited 10200 ms), 7065 ms (held 2779, waited 9753 ms), 4081 ms (held 2779, waited 9293 ms); (b) Live Preview host embedding the tracker + a Reading pane of it: write -> redraw 5570 ms (other pane 4100 ms) (held 7486, waited 6762 ms), 4132 ms (other pane 4080 ms) (held 7486, waited 6757 ms), 4147 ms (other pane 4080 ms) (held 7486, waited 6269 ms); (c) scroll to the end: pin on 2449 ms after the write, scrollHeight stayed 7965 (arm 7965) through the collapse (reader at 6944, end 6944), sizer collapsed 29 ms and back 474 ms after the redraw was let go, pin released at 558 ms, scroll ended 541 ms after the write; (c) scroll down then up: pin on 2408 ms after the write, scrollHeight stayed 7965 (arm 7965) through the collapse (reader at 5144, end 5144), sizer collapsed 51 ms and back 536 ms after the redraw was let go, pin released at 571 ms, scroll ended 656 ms after the write; (c) scroll to the second tracker: pin on 2463 ms after the write, scrollHeight stayed 10620 (arm 10620) through the collapse (reader at 9599, end 9599), sizer collapsed 503 ms and back 1361 ms after the redraw was let go, pin released at 1445 ms, scroll ended 905 ms after the write; main thread busy 4000 ms after each of 3 writes per phase, no CPU throttle)
+OBSIDIAN-LIFECYCLE G-S49 ok (real mouse, block first in a callout: LP callout: 3 buttons hit-test to themselves; Edit pencil: only the edit form, cursor unmoved, callout still drawn; Collapse: collapsed, cursor unmoved, callout still drawn; Expand: expands, cursor unmoved; Collapse's right edge works; `</>` still opens the callout source, the title is reachable; foldable callout: pencil and Collapse leave it unfolded, the chevron still folds it; counter: 3 buttons reachable, height map = screen, Collapse/Expand work; feature: 3 buttons reachable, height map = screen, Collapse/Expand work; statblock: 3 buttons reachable, height map = screen, Collapse/Expand work; block second in the callout (control): unchanged; wide table (block first, Live Preview): scrolls on .callout; wide table (block second, Live Preview): scrolls on .callout-content; Reading view: both callouts reachable, Collapse/Expand work, callout not folded, wide table scrolls; no page errors)
+OBSIDIAN-LIFECYCLE G-S73 ok (18 trials: del-above/rv/leave: nothing written, one Notice; del-below/rv/leave: nothing written, one Notice; del-below-stay/rv/stay: nothing written, one Notice; ...; no page error)
+OBSIDIAN-LIFECYCLE done: 3/3 ok, 0 failed
+GATE=lc RC=0 WALL=260s LOADAVG=5.50 9.33 12.80
+5e5ff4884e05fb2a34b0acb84325483a240e67f0aab11f4869e4ccad1dfc2b27  styles.css

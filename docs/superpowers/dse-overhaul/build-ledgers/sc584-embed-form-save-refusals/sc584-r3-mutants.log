@@ -1,0 +1,66 @@
+# SC-584 r3 mutation runs (jest, reading-mode-host-pin.test.ts, 101 tests unmutated). Script: sc584-r3-mutate.py.txt. The r2 reviewer's mA B D E G H I J target openTimeBodyLine, which no longer exists; mC and mF still exist and are run here.
+## run 1 (m-sibling survived: its test had no recorded write on the other host; fixed)
+applied mC
+== mC: Tests:       4 failed, 96 passed, 100 total
+a cache that lags the note, so its ^blk line is now an identical block's fence (a long note): the marker is not there, nothing verifies, Sav
+a cache that lags the note, so its ^blk line is now an identical block's fence (a short note): the marker is not there, nothing verifies, Sa
+a cache that lags the note so that its callout is the identical one ABOVE: the id is not under it, so it is not taken and nothing is written
+the id is not the next line after the callout (a paragraph stands between): the marker is not the callout's, nothing places the pin, Save wr
+applied mF
+== mF: Tests:       100 passed, 100 total
+applied mM
+== mM: Tests:       1 failed, 99 passed, 100 total
+a plain fenced block embed (not in a callout) keeps its rule, the id under the closing fence, whatever the length of the stale part: a part 
+applied m-card
+== m-card: Tests:       1 failed, 99 passed, 100 total
+a card (+/-) write's pin never uses the host's last write: a second + with the part still stale and an identical block in the note is refuse
+applied m-sibling
+== m-sibling: Tests:       100 passed, 100 total
+ M visual-harness/obsidian-lifecycle.mjs
+## run 2 (m-sibling survived again: the other host was not in an embed so recorded nothing; fixed)
+applied m-sibling
+== m-sibling: Tests:       100 passed, 100 total
+applied mG
+== mG: Tests:       2 failed, 98 passed, 100 total
+a card (+/-) write's pin never uses the host's last write: a second + with the part still stale and an identical block in the note is refuse
+the pin is the position of the write the host had when the form opened, not of a write that lands while the note is read
+applied mG2
+== mG2: Tests:       1 failed, 99 passed, 100 total
+the pin is the position of the write the host had when the form opened, not of a write that lands while the note is read
+applied mK
+== mK: Tests:       100 passed, 100 total
+applied mL
+== mL: Tests:       100 passed, 100 total
+ M test/dom/framework/reading-mode-host-pin.test.ts
+ M visual-harness/obsidian-lifecycle.mjs
+## run 3 (after both fixes)
+applied m-sibling
+== m-sibling: Tests:       1 failed, 99 passed, 100 total
+a write by ANOTHER host of the block (a second pane) is not this host's position: nothing is found for this host's form
+applied mN
+== mN: Tests:       100 passed, 100 total
+applied mO
+== mO: Tests:       2 failed, 98 passed, 100 total
+the lower callout edited from outside after the +, the upper one holding the + body: Save writes nothing, never the upper (control with teet
++ then the form: the form has a pin (the host's own write) and Save lands in the lower callout, never the upper
+applied mQ
+== mQ: Tests:       9 failed, 91 passed, 100 total
+the lower callout edited from outside after the +, the upper one holding the + body: Save writes nothing, never the upper (control with teet
++ then the form: the form has a pin (the host's own write) and Save lands in the lower callout, never the upper
+a heading hover of a long note: + then the form, Save lands in the Tracker counter
+a hover of a whole LONG note scrolled to the card (its section is the whole note): + then the form, Save lands
+an identical block is added to the note after the form opened: Save still lands in the block the form was opened on
+a short note, the only counter: + then the form, Save lands in it
+the same shape with no outside edit: Save lands in the block the + was pressed on, not in the one that reads the same
+the + made the block read like another block of the note: Save still lands in the block the + was pressed on (the position, not a search for
+the pin is the position of the write the host had when the form opened, not of a write that lands while the note is read
+applied mR
+== mR: Tests:       100 passed, 100 total
+ M test/dom/framework/reading-mode-host-pin.test.ts
+ M visual-harness/obsidian-lifecycle.mjs
+## run 4 (mR, after adding the current-part test)
+applied mR
+== mR: Tests:       1 failed, 100 passed, 101 total
+the embed was redrawn after the +, so its part is current: the pin comes from the embed's own link, not from the + write, and a note changed
+ M test/dom/framework/reading-mode-host-pin.test.ts
+ M visual-harness/obsidian-lifecycle.mjs
