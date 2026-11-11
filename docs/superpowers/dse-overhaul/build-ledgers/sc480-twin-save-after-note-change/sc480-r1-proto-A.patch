@@ -1,0 +1,24 @@
+diff --git a/src/framework/host/ReadingModeBlockHost.ts b/src/framework/host/ReadingModeBlockHost.ts
+index a7de986f..dd672c5c 100644
+--- a/src/framework/host/ReadingModeBlockHost.ts
++++ b/src/framework/host/ReadingModeBlockHost.ts
+@@ -209,7 +209,8 @@ export function locateByBody(
+ 	}
+ 	// SC-455 review LOW-1: with no known position (a Live Preview callout written before its widget was
+ 	// ever attached) equal bodies cannot be told apart by distance - never guess one.
+-	if (nearLine === null && matched > 1) return 'ambiguous';
++	// SC-480 proto A: a body that more than one block holds is never placed by a search (identical twins cannot be told apart by text).
++	if (matched > 1) return 'ambiguous';
+ 	return best;
+ }
+ 
+@@ -1129,7 +1130,8 @@ export class ReadingModeBlockHost implements BlockHost {
+ 		}
+ 		if (!this.hasDurableIdentity) return 'abort';
+ 		const located = locateByBody(content, this.knownLanguage!, this.knownBody!, this.knownLineStart);
+-		if (located === 'ambiguous') return 'abort';
++		// SC-480 proto A: with a known position the refusal is the dropped-write Notice; with none (SC-455 LOW-1) the unsavable one, as before.
++		if (located === 'ambiguous') return this.knownLineStart === null ? 'abort' : 'miss';
+ 		if (!located) return 'miss';
+ 		this.knownLineStart = located.lineStart;
+ 		return located;

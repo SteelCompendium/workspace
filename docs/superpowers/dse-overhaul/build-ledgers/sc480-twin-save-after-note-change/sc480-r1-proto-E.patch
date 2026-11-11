@@ -1,0 +1,41 @@
+diff --git a/src/framework/host/ReadingModeBlockHost.ts b/src/framework/host/ReadingModeBlockHost.ts
+index a7de986f..49a03fcf 100644
+--- a/src/framework/host/ReadingModeBlockHost.ts
++++ b/src/framework/host/ReadingModeBlockHost.ts
+@@ -213,6 +213,19 @@ export function locateByBody(
+ 	return best;
+ }
+ 
++/** SC-480: how many blocks of `language` in `content` hold `body` (closed fences, plus the note's trailing fence that never closes). */
++export function countByBody(content: string, language: string, body: string): number {
++	const wanted = normalizeBody(body);
++	const lines = splitLines(content);
++	let n = 0;
++	for (const info of listFences(content, language)) {
++		if (normalizeBody(blockBodyLines(lines, info.lineStart, info.lineEnd).join('\n')) === wanted) n++;
++	}
++	const open = locateUnterminatedTrailingFence(lines, language);
++	if (open && normalizeBody(lines.slice(open.lineStart + 1, open.lineEnd + 1).join('\n')) === wanted) n++;
++	return n;
++}
++
+ /**
+  * SC-455: the `language` block inside a Reading-view / Live Preview SECTION WINDOW
+  * `[section.lineStart, section.lineEnd]` of `content` — the whole quote or callout Obsidian reports
+@@ -990,7 +1003,15 @@ export class ReadingModeBlockHost implements BlockHost {
+ 				// form's Save does (SC-556) - nowhere (the block changed on disk first).
+ 				const pinned = pin ? this.pinnedTarget(content, pin) : null;
+ 				if (pinned) this.knownLineStart = pinned.lineStart;
+-				const target = pinned ?? (pin && options?.pinOnly ? 'miss' : this.resolveWriteTarget(content, section));
++				// SC-480 proto E: a pin that misses falls back to today's placement only when the block's body was unique in the note
++				// as it was clicked (the pin's text) AND is unique in the note now. Identical twins: the pin is the only identity, so a
++				// pin miss writes nothing (the dropped-write Notice) instead of landing in a twin.
++				const twinned =
++					pin !== null &&
++					this.knownBody !== null &&
++					this.knownLanguage !== null &&
++					(countByBody(pin.text, this.knownLanguage, this.knownBody) > 1 || countByBody(content, this.knownLanguage, this.knownBody) > 1);
++				const target = pinned ?? (pin && (options?.pinOnly || twinned) ? 'miss' : this.resolveWriteTarget(content, section));
+ 				if (target === 'abort') {
+ 					unplaceable = true; // SC-455: a write that cannot land is never silent
+ 					listShape = this.looksLikeList(content, section);

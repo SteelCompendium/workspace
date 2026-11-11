@@ -1,0 +1,994 @@
+
+> draw-steel-elements@7.0.0 e2e
+> node e2e/run.mjs
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :201 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :201 (private Xvfb); 34 spec file(s), 4 shard(s); run 20261111-003628-f4fc
+
+Execution of 34 workers started at 2026-11-11T00:36:32.750Z
+
+[0-2] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/callout/callout-writes.e2e.ts
+[0-1] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/_driver.e2e.ts
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/_census.e2e.ts
+[0-3] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-add.e2e.ts
+[0-2] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2800802
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2800791
+[0-1] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2800794
+[0-3] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2800816
+[0-1] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/_driver.e2e.ts
+[0-4] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-editor.e2e.ts
+[0-4] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2801693
+[0-2] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/callout/callout-writes.e2e.ts
+[0-5] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-integrity.e2e.ts
+[0-5] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2802191
+[0-3] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-add.e2e.ts
+[0-6] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-open.e2e.ts
+[0-6] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2802612
+[0-6] 2026-11-11T00:37:57.762Z WARN webdriver: Request encountered a stale element - terminating request
+[0-0] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/_census.e2e.ts
+[0-5] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-integrity.e2e.ts
+[0-6] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-open.e2e.ts
+[0-7] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-rows.e2e.ts
+[0-4] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-editor.e2e.ts
+[0-8] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/counter/counter-focus.e2e.ts
+[0-7] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2803845
+[0-9] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/initiative/actions-conditions.e2e.ts
+[0-10] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/initiative/captain-selection.e2e.ts
+[0-8] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2804141
+[0-9] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2804172
+[0-10] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2804312
+[0-8] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/counter/counter-focus.e2e.ts
+[0-11] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/initiative/conditions-dropdown-click.e2e.ts
+[0-10] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/initiative/captain-selection.e2e.ts
+[0-7] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-rows.e2e.ts
+[0-11] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2805276
+[0-12] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/initiative/conditions-escape.e2e.ts
+[0-9] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/initiative/actions-conditions.e2e.ts
+[0-13] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/initiative/conditions-pick-focus.e2e.ts
+[0-12] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2805544
+[0-13] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2805650
+[0-14] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/initiative/default-keys.e2e.ts
+[0-12] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/initiative/conditions-escape.e2e.ts
+[0-14] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2806048
+[0-11] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/initiative/conditions-dropdown-click.e2e.ts
+[0-15] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/initiative/malice.e2e.ts
+[0-16] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/initiative/no-op-writes.e2e.ts
+[0-15] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2806719
+[0-14] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/initiative/default-keys.e2e.ts
+[0-16] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2806755
+[0-13] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/initiative/conditions-pick-focus.e2e.ts
+[0-17] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/initiative/reset-encounter.e2e.ts
+[0-18] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/initiative/round-turns.e2e.ts
+[0-16] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/initiative/no-op-writes.e2e.ts
+[0-17] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2807182
+[0-18] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2807239
+[0-19] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/initiative/stamina-entry.e2e.ts
+[0-19] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2807599
+[0-18] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/initiative/round-turns.e2e.ts
+[0-20] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/initiative/title-edit.e2e.ts
+[0-15] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/initiative/malice.e2e.ts
+[0-20] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2808497
+[0-21] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/minion-pool/pool-apply-kills.e2e.ts
+[0-21] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2808861
+[0-17] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/initiative/reset-encounter.e2e.ts
+[0-19] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/initiative/stamina-entry.e2e.ts
+[0-22] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/minion-pool/pool-conditions.e2e.ts
+[0-20] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/initiative/title-edit.e2e.ts
+[0-23] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/minion-pool/pool-open.e2e.ts
+[0-22] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2809447
+[0-24] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/minion-pool/pool-stepper.e2e.ts
+[0-23] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2809551
+[0-24] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2809639
+[0-22] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/minion-pool/pool-conditions.e2e.ts
+[0-23] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/minion-pool/pool-open.e2e.ts
+[0-25] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/roll-bar/roll-bar-stepper-focus.e2e.ts
+[0-21] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/minion-pool/pool-apply-kills.e2e.ts
+[0-26] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/sidebar/sidebar-unpin-focus.e2e.ts
+[0-25] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2810953
+[0-27] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/chrome-focus.e2e.ts
+[0-26] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2811250
+[0-24] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/minion-pool/pool-stepper.e2e.ts
+[0-25] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/roll-bar/roll-bar-stepper-focus.e2e.ts
+[0-27] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2811435
+[0-29] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-modal-focus.e2e.ts
+[0-28] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/chrome-live-preview.e2e.ts
+[0-26] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/sidebar/sidebar-unpin-focus.e2e.ts
+[0-29] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2811991
+[0-28] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2811977
+[0-30] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-modal-stepper-focus.e2e.ts
+[0-28] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/chrome-live-preview.e2e.ts
+[0-30] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2812242
+[0-31] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-modal-stepper.e2e.ts
+[0-29] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-modal-focus.e2e.ts
+[0-31] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2812692
+[0-27] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/chrome-focus.e2e.ts
+[0-30] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-modal-stepper-focus.e2e.ts
+[0-32] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-modal.e2e.ts
+[0-33] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-recoveries.e2e.ts
+[0-32] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2812984
+[0-33] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2813034
+[0-31] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-modal-stepper.e2e.ts
+[0-32] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-modal.e2e.ts
+[0-33] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/stamina-bar/stamina-recoveries.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-1] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-1] Session ID: 31443b34731eabbe33f0067c3f5b43e8
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] » e2e/specs/_driver.e2e.ts
+[chrome 150.0.7871.250 linux #0-1] driver: a block is declared edited only by input inside it
+[chrome 150.0.7871.250 linux #0-1]    ✓ [DRV-01] naming a block and reading it declares nothing
+[chrome 150.0.7871.250 linux #0-1]    ✓ [DRV-02] a real click inside block 1 declares block 1 only; hovering block 0 declares nothing
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] 2 passing (4.1s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-2] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-2] Session ID: fa9b106741167cf03f664d2748b7d41b
+[chrome 150.0.7871.250 linux #0-2]
+[chrome 150.0.7871.250 linux #0-2] » e2e/specs/callout/callout-writes.e2e.ts
+[chrome 150.0.7871.250 linux #0-2] a block inside a callout / blockquote saves its changes
+[chrome 150.0.7871.250 linux #0-2]    ✓ [CALL-R01] Reading view, callout with text above and below: the click lands and every block line keeps `> `
+[chrome 150.0.7871.250 linux #0-2]    ✓ [CALL-R02] Reading view, a callout nested in a callout: `> > ` on every written line
+[chrome 150.0.7871.250 linux #0-2]    ✓ [CALL-R03] Reading view, a plain blockquote
+[chrome 150.0.7871.250 linux #0-2]    ✓ [CALL-R04] Reading view, two IDENTICAL blocks in one callout: a click on the second writes only the second
+[chrome 150.0.7871.250 linux #0-2]    ✓ [CALL-L01] Live Preview, callout with text above and below: the click lands and every block line keeps `> `
+[chrome 150.0.7871.250 linux #0-2]    ✓ [CALL-L02] Live Preview, a callout nested in a callout: `> > ` on every written line
+[chrome 150.0.7871.250 linux #0-2]    ✓ [CALL-L03] Live Preview, two IDENTICAL blocks in one callout: a click on the second writes only the second
+[chrome 150.0.7871.250 linux #0-2]
+[chrome 150.0.7871.250 linux #0-2] a block in a shape DSE cannot edit yet says so
+[chrome 150.0.7871.250 linux #0-2]    ✓ [CALL-N01] Reading view, fence inside a list item: a click shows a "not saved" Notice and the note is untouched
+[chrome 150.0.7871.250 linux #0-2]    ✓ [CALL-N02] Live Preview, fence inside a list item: a click shows a "not saved" Notice and the note is untouched
+[chrome 150.0.7871.250 linux #0-2]
+[chrome 150.0.7871.250 linux #0-2] 9 passing (20.6s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-3] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-3] Session ID: c410ca495ecb71ffea14ad616d035b59
+[chrome 150.0.7871.250 linux #0-3]
+[chrome 150.0.7871.250 linux #0-3] » e2e/specs/conditions-modal/cond-add.e2e.ts
+[chrome 150.0.7871.250 linux #0-3] conditions-modal: the Add dropdown
+[chrome 150.0.7871.250 linux #0-3]    ✓ [COND-A01] "+ Add condition" opens the dropdown over the whole catalogue with the first option active, input focused, no write
+[chrome 150.0.7871.250 linux #0-3]    ✓ [COND-A02] typing filters the catalogue and always ends with the "Add custom" row; clearing restores it; no write
+[chrome 150.0.7871.250 linux #0-3]    ✓ [COND-A03] ArrowDown / ArrowUp move the active option (stopping at both ends) and Enter adds the active one: one write, dropdown stays open
+[chrome 150.0.7871.250 linux #0-3]    ✓ [COND-A04] clicking an option adds that condition with one write; the dropdown stays open, cleared and focused, for rapid multi-add
+[chrome 150.0.7871.250 linux #0-3]    ✓ [COND-A05] a click away from the dropdown (on the title) closes just the dropdown, back to "+ Add condition", no write
+[chrome 150.0.7871.250 linux #0-3]    ✓ [COND-A06] a condition the actor already has is not added twice: the pick is a no-op (no write), focus and text stay in the input
+[chrome 150.0.7871.250 linux #0-3]    ✓ [COND-A07] on the creature row the pick lands on the selected creature only: the hero and the other Ogres are untouched
+[chrome 150.0.7871.250 linux #0-3]
+[chrome 150.0.7871.250 linux #0-3] conditions-modal: custom conditions
+[chrome 150.0.7871.250 linux #0-3]    ✓ [COND-C01] typing a name nobody registered and pressing Enter adds a custom condition (slugged key, CUSTOM tag, fallback glyph in the tracker)
+[chrome 150.0.7871.250 linux #0-3]    ✓ [COND-C02] clicking the "Add custom" row adds the typed text as a condition, with one write
+[chrome 150.0.7871.250 linux #0-3]    ✓ [COND-C03] punctuation-only text slugs to nothing: Enter adds no row and writes nothing
+[chrome 150.0.7871.250 linux #0-3]
+[chrome 150.0.7871.250 linux #0-3] conditions-modal: known bugs on the Add dropdown
+[chrome 150.0.7871.250 linux #0-3]    ✓ [COND-C04] a custom condition named in a non-Latin script is added (it slugs to an empty key today and the pick is silently dropped) [known bug SC-257]
+[chrome 150.0.7871.250 linux #0-3]
+[chrome 150.0.7871.250 linux #0-3] 11 passing (38s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: ec9bb3fa56db2a73d86a3e99e480492c
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/_census.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] real-Obsidian census (pilot surfaces)
+[chrome 150.0.7871.250 linux #0-0]    ✓ [CENSUS-01] ds-stamina-bar with Recoveries: every node that listens for input is an identified control
+[chrome 150.0.7871.250 linux #0-0]    ✓ [CENSUS-02] the open StaminaEditModal: every node that listens for input is an identified control
+[chrome 150.0.7871.250 linux #0-0]    ✓ [CENSUS-03] the undo toast action is an identified control
+[chrome 150.0.7871.250 linux #0-0]    ✓ [CENSUS-04] the whole initiative tracker (SC-437, scoped by its root, chrome panel included): every node that listens for input is an identified control
+[chrome 150.0.7871.250 linux #0-0]    ✓ [CENSUS-07] the open title editor and a captained squad (SC-437): the textarea, the squad checklist and both captain buttons are identified controls (each rescanned with its row selected)
+[chrome 150.0.7871.250 linux #0-0]    ✓ [CENSUS-08] the open ResetEncounterModal (SC-437): every node that listens for input is an identified control
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] real-Obsidian census: the minion stamina pool modal
+[chrome 150.0.7871.250 linux #0-0]    ✓ [CENSUS-06] the open pool modal (a hurt squad with conditions): every node that listens for input is an identified control
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] real-Obsidian census: the Conditions window
+[chrome 150.0.7871.250 linux #0-0]    ✓ [CENSUS-09] the open Conditions window (rows, one editor open, then the Add dropdown): every node that listens for input is an identified control
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] real-Obsidian census: the optional popover editor
+[chrome 150.0.7871.250 linux #0-0]    ✓ [CENSUS-05] with the popover open its buttons are identified controls
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 9 passing (1m 13.9s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-5] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-5] Session ID: e4d0909070a9cc020d9df45b698bab66
+[chrome 150.0.7871.250 linux #0-5]
+[chrome 150.0.7871.250 linux #0-5] » e2e/specs/conditions-modal/cond-integrity.e2e.ts
+[chrome 150.0.7871.250 linux #0-5] conditions-modal: a second tracker in the same note
+[chrome 150.0.7871.250 linux #0-5]    ✓ [COND-N01] edits through the SECOND tracker's window (add, duration, remove) leave the first tracker and the prose byte-identical
+[chrome 150.0.7871.250 linux #0-5]    ✓ [COND-N02] edits through the FIRST tracker's window leave the second tracker (its conditions, spelling and all) and the prose byte-identical
+[chrome 150.0.7871.250 linux #0-5]    ✓ [COND-N03] a whole session on one tracker (custom add, Save Ends, removal) rewrites only the block body: the fence lines and the prose stay
+[chrome 150.0.7871.250 linux #0-5]
+[chrome 150.0.7871.250 linux #0-5] conditions-modal: what it writes is what the tracker reads back
+[chrome 150.0.7871.250 linux #0-5]    ✓ [COND-N06] a condition set up in the window (icon, duration, colour, effect) survives a re-render from the note: reopened, it shows every setting
+[chrome 150.0.7871.250 linux #0-5]
+[chrome 150.0.7871.250 linux #0-5] conditions-modal: tickets that reach it from outside
+[chrome 150.0.7871.250 linux #0-5]    ✓ [COND-N04] in Live Preview the window stays open when the write it caused lands [known bug SC-384]
+[chrome 150.0.7871.250 linux #0-5]    ✓ [COND-N07] typing a letter with focus on "+ Add condition" opens the dropdown, as the docs say ("or just start typing") [known bug SC-580]
+[chrome 150.0.7871.250 linux #0-5]    ✓ [COND-N05] the Conditions window is exposed to assistive technology as a dialog [known bug SC-355]
+[chrome 150.0.7871.250 linux #0-5]
+[chrome 150.0.7871.250 linux #0-5] 7 passing (48.2s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-6] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-6] Session ID: 138d63e745fcda0f85a90cd1eb299974
+[chrome 150.0.7871.250 linux #0-6]
+[chrome 150.0.7871.250 linux #0-6] » e2e/specs/conditions-modal/cond-open.e2e.ts
+[chrome 150.0.7871.250 linux #0-6] conditions-modal: opening it from the tracker
+[chrome 150.0.7871.250 linux #0-6]    ✓ [COND-O01] the hero row's "Add Condition" opens the window on that hero's conditions, focus on its first cog
+[chrome 150.0.7871.250 linux #0-6]    ✓ [COND-O02] the creature row's "Add Condition" opens the window on the selected creature's conditions, not the hero's
+[chrome 150.0.7871.250 linux #0-6]    ✓ [COND-O03] Tab to the hero's "Add Condition" and Enter opens the window
+[chrome 150.0.7871.250 linux #0-6]    ✓ [COND-O04] "+ Add condition" opens the dropdown on Enter, with the input focused, and writes nothing
+[chrome 150.0.7871.250 linux #0-6]
+[chrome 150.0.7871.250 linux #0-6] conditions-modal: leaving it
+[chrome 150.0.7871.250 linux #0-6]    ✓ [COND-X01] Done closes the window and writes nothing
+[chrome 150.0.7871.250 linux #0-6]    ✓ [COND-X02] Tab to Done and Enter closes the window and writes nothing
+[chrome 150.0.7871.250 linux #0-6]    ✓ [COND-X03] the X closes the window and writes nothing
+[chrome 150.0.7871.250 linux #0-6]    ✓ [COND-X04] Escape with focus on Done closes the window (no dropdown to back out of) and writes nothing
+[chrome 150.0.7871.250 linux #0-6]    ✓ [COND-X05] Escape with focus on a row's cog closes the whole window even with that row's editor open
+[chrome 150.0.7871.250 linux #0-6]    ✓ [COND-X06] a click on the backdrop closes the window and writes nothing
+[chrome 150.0.7871.250 linux #0-6]    ✓ [COND-X07] Escape in the icon search field of an open editor closes the whole window and writes nothing [current behaviour — SC-587 may change this]
+[chrome 150.0.7871.250 linux #0-6]    ✓ [COND-X08] after a write, Done closes the window with no further write and the tracker row shows the new condition
+[chrome 150.0.7871.250 linux #0-6]
+[chrome 150.0.7871.250 linux #0-6] 12 passing (29.1s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-4] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-4] Session ID: 6b162d61d49a5b957db8d2a2f27910aa
+[chrome 150.0.7871.250 linux #0-4]
+[chrome 150.0.7871.250 linux #0-4] » e2e/specs/conditions-modal/cond-editor.e2e.ts
+[chrome 150.0.7871.250 linux #0-4] conditions-modal: the editor shows each condition's current settings
+[chrome 150.0.7871.250 linux #0-4]    ✓ [COND-D01] opening an editor shows that row's duration, colour, effect and icon as pressed options, and writes nothing
+[chrome 150.0.7871.250 linux #0-4]
+[chrome 150.0.7871.250 linux #0-4] conditions-modal: the icon picker
+[chrome 150.0.7871.250 linux #0-4]    ✓ [COND-D02] typing in the search narrows the choices (or says none match) without a write; a click on one sets the icon, keeps the query and moves nothing else
+[chrome 150.0.7871.250 linux #0-4]    ✓ [COND-D03] "Use default condition icon" removes the icon from the note again
+[chrome 150.0.7871.250 linux #0-4]    ✓ [COND-D04] Tab to a choice and Enter picks it: one write, focus stays on that choice, which is now pressed
+[chrome 150.0.7871.250 linux #0-4]
+[chrome 150.0.7871.250 linux #0-4] conditions-modal: the duration chips
+[chrome 150.0.7871.250 linux #0-4]    ✓ [COND-D05] each duration chip writes its own value and badge; "Until removed" clears it (Hexed: none, then every chip in turn)
+[chrome 150.0.7871.250 linux #0-4]    ✓ [COND-D06] a duration pick keeps the condition's colour and effect (Dazed: End of Turn -> Save Ends)
+[chrome 150.0.7871.250 linux #0-4]    ✓ [COND-D07] an explicit duration pick on a legacy "save ends" effect text clears that text: "Until removed" really removes the duration
+[chrome 150.0.7871.250 linux #0-4]    ✓ [COND-D08] on the creature row a duration pick lands on that creature's condition (Ogre #1 Prone: Save Ends -> End of Encounter)
+[chrome 150.0.7871.250 linux #0-4]
+[chrome 150.0.7871.250 linux #0-4] conditions-modal: the colour swatches
+[chrome 150.0.7871.250 linux #0-4]    ✓ [COND-D09] a swatch click writes its hex and presses it; another swatch replaces it; a duration and effect set earlier stay
+[chrome 150.0.7871.250 linux #0-4]    ✓ [COND-D10] on a condition with no colour a swatch click sets one (Hexed -> amber); the row's glyph takes the colour
+[chrome 150.0.7871.250 linux #0-4]    ✓ [COND-D11] Tab to the custom colour input and Enter opens the browser's colour chooser: nothing is written and the window stays up
+[chrome 150.0.7871.250 linux #0-4]    ✓ [COND-D17] the colour chooser's commit (the chooser itself is out of CDP's reach, so its input + change events are dispatched page-side) writes the colour once, marks the pipette and leaves focus on the input
+[chrome 150.0.7871.250 linux #0-4]
+[chrome 150.0.7871.250 linux #0-4] conditions-modal: the effect chips
+[chrome 150.0.7871.250 linux #0-4]    ✓ [COND-D12] an effect chip writes its effect and a badge; "static" clears it; the glyph carries the effect class (Hexed)
+[chrome 150.0.7871.250 linux #0-4]    ✓ [COND-D13] an effect pick keeps the duration and colour (Dazed: glow -> blink)
+[chrome 150.0.7871.250 linux #0-4]    ✓ [COND-D14] an effect pick on a legacy "save ends" effect text moves that into the duration first, so it is not lost (Slowed -> glow)
+[chrome 150.0.7871.250 linux #0-4]    ✓ [COND-D15] a plain string condition becomes an object on its first edit: Bleeding -> Save Ends is written as { key, duration }
+[chrome 150.0.7871.250 linux #0-4]    ✓ [COND-D16] Tab to an effect chip and Enter writes once (the keyboard twin of the click)
+[chrome 150.0.7871.250 linux #0-4]
+[chrome 150.0.7871.250 linux #0-4] 17 passing (1m 4.9s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-8] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-8] Session ID: ebc74a8b265e73e805de21937b5679e0
+[chrome 150.0.7871.250 linux #0-8]
+[chrome 150.0.7871.250 linux #0-8] » e2e/specs/counter/counter-focus.e2e.ts
+[chrome 150.0.7871.250 linux #0-8] counter: the stepper keeps keyboard focus across the write when "-" reaches min (SC-495)
+[chrome 150.0.7871.250 linux #0-8]    ✓ [CTR-F01] Enter on "-" at 1 writes 0, focus stays in the stepper (number field, ring shown) after the redraw, and Tab reaches "+"
+[chrome 150.0.7871.250 linux #0-8]    ✓ [CTR-F02] Tab to "-" then a MOUSE click to 0: focus does not move into the number field, a wheel over it changes nothing, and clicking away writes nothing more
+[chrome 150.0.7871.250 linux #0-8]
+[chrome 150.0.7871.250 linux #0-8] 2 passing (6.2s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-10] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-10] Session ID: fe6b226ba5e53eb6ffb69bc4a2d79b16
+[chrome 150.0.7871.250 linux #0-10]
+[chrome 150.0.7871.250 linux #0-10] » e2e/specs/initiative/captain-selection.e2e.ts
+[chrome 150.0.7871.250 linux #0-10] initiative: selecting a roster cell
+[chrome 150.0.7871.250 linux #0-10]    ✓ [INIT-S01] clicking Ogre #3's cell selects it: the ring and label move, the detail row switches, the key is written
+[chrome 150.0.7871.250 linux #0-10]
+[chrome 150.0.7871.250 linux #0-10] initiative: the captain badge
+[chrome 150.0.7871.250 linux #0-10]    ✓ [INIT-K01] Make captain: the attached Warg Rider takes the role, the Goblin Captain becomes attached, the badge flips
+[chrome 150.0.7871.250 linux #0-10]    ✓ [INIT-K02] Relieve: the captain becomes attached (the squad keeps them) and the group no longer reports a captain
+[chrome 150.0.7871.250 linux #0-10]
+[chrome 150.0.7871.250 linux #0-10] 3 passing (9.3s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-7] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-7] Session ID: e19db0dd90745127a6a2ed95a8ee0e81
+[chrome 150.0.7871.250 linux #0-7]
+[chrome 150.0.7871.250 linux #0-7] » e2e/specs/conditions-modal/cond-rows.e2e.ts
+[chrome 150.0.7871.250 linux #0-7] conditions-modal: the row cog
+[chrome 150.0.7871.250 linux #0-7]    ✓ [COND-R01] a click on a cog opens that row's editor, another cog moves it (one at a time), the same cog closes it; no write, focus stays on the cog
+[chrome 150.0.7871.250 linux #0-7]    ✓ [COND-R02] Tab to a cog and Enter opens its editor; Enter again closes it; focus stays on the cog; no write
+[chrome 150.0.7871.250 linux #0-7]
+[chrome 150.0.7871.250 linux #0-7] conditions-modal: removing a condition
+[chrome 150.0.7871.250 linux #0-7]    ✓ [COND-R03] the trash button removes exactly its row: one write, the other rows and their settings stay, focus moves to the cog of the row that took its slot
+[chrome 150.0.7871.250 linux #0-7]    ✓ [COND-R04] Tab to a trash button and Enter removes it; removing the last row focuses the previous cog, removing the only row focuses "+ Add condition"
+[chrome 150.0.7871.250 linux #0-7]    ✓ [COND-R05] removing a row above an open editor keeps that editor open on the same condition
+[chrome 150.0.7871.250 linux #0-7]    ✓ [COND-R06] removing the row whose editor is open closes the editor; the removed condition leaves the note
+[chrome 150.0.7871.250 linux #0-7]
+[chrome 150.0.7871.250 linux #0-7] 6 passing (21.9s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-9] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-9] Session ID: 68d0689e8ea2316a15b1882c3dad2b25
+[chrome 150.0.7871.250 linux #0-9]
+[chrome 150.0.7871.250 linux #0-9] » e2e/specs/initiative/actions-conditions.e2e.ts
+[chrome 150.0.7871.250 linux #0-9] initiative: action pips
+[chrome 150.0.7871.250 linux #0-9]    ✓ [INIT-A01] a hero's Main and Move pips: pressed on screen, materialized on that hero only
+[chrome 150.0.7871.250 linux #0-9]    ✓ [INIT-A02] a creature's Triggered pip is stored on the selected instance, not on its siblings
+[chrome 150.0.7871.250 linux #0-9]    ✓ [INIT-A03] a squad's Main then Maneuver: the second replaces the first (they exclude each other), on screen and in the note
+[chrome 150.0.7871.250 linux #0-9]    ✓ [INIT-A04] Move and Triggered are independent of the exclusive three: Move + Main + Triggered stay pressed together
+[chrome 150.0.7871.250 linux #0-9]
+[chrome 150.0.7871.250 linux #0-9] initiative: removing a condition
+[chrome 150.0.7871.250 linux #0-9]    ✓ [INIT-C01] clicking a hero's condition icon removes it: the icon goes, the note's list empties, one write
+[chrome 150.0.7871.250 linux #0-9]    ✓ [INIT-C02] and a creature's: Ogre #1's Dazed icon removes only that condition from that instance
+[chrome 150.0.7871.250 linux #0-9]
+[chrome 150.0.7871.250 linux #0-9] 6 passing (20.9s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-12] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-12] Session ID: 9d697843f8c9c7a192572a19193058e5
+[chrome 150.0.7871.250 linux #0-12]
+[chrome 150.0.7871.250 linux #0-12] » e2e/specs/initiative/conditions-escape.e2e.ts
+[chrome 150.0.7871.250 linux #0-12] conditions-modal: Escape in the add-condition dropdown
+[chrome 150.0.7871.250 linux #0-12]    ✓ [COND-E01] Escape with the dropdown open closes only the dropdown; a second Escape closes the window; nothing is written
+[chrome 150.0.7871.250 linux #0-12]
+[chrome 150.0.7871.250 linux #0-12] 1 passing (5.8s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-11] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-11] Session ID: 0efe26374eb55a36d6f464e5e9f127f9
+[chrome 150.0.7871.250 linux #0-11]
+[chrome 150.0.7871.250 linux #0-11] » e2e/specs/initiative/conditions-dropdown-click.e2e.ts
+[chrome 150.0.7871.250 linux #0-11] conditions-modal: a mouse click with the add dropdown open still lands (SC-474)
+[chrome 150.0.7871.250 linux #0-11]    ✓ [COND-E04] clicking a row's cog with the dropdown open opens that row's editor and closes the dropdown
+[chrome 150.0.7871.250 linux #0-11]    ✓ [COND-E05] clicking a colour swatch with the dropdown open writes the colour, presses the swatch and closes the dropdown
+[chrome 150.0.7871.250 linux #0-11]    ✓ [COND-E06] clicking the icon search field with the dropdown open closes the dropdown and leaves focus in the field
+[chrome 150.0.7871.250 linux #0-11]
+[chrome 150.0.7871.250 linux #0-11] 3 passing (17.7s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-14] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-14] Session ID: 4573c97e7fa8cf132c853bbe4dd4bda0
+[chrome 150.0.7871.250 linux #0-14]
+[chrome 150.0.7871.250 linux #0-14] » e2e/specs/initiative/default-keys.e2e.ts
+[chrome 150.0.7871.250 linux #0-14] initiative: a write adds no default key the user never wrote
+[chrome 150.0.7871.250 linux #0-14]    ✓ [INIT-DEF-E01] toggling the hero turn writes only has_taken_turn: true
+[chrome 150.0.7871.250 linux #0-14]    ✓ [INIT-DEF-E02] damaging Ogre #1 writes the whole instances list and nothing else new
+[chrome 150.0.7871.250 linux #0-14]    ✓ [INIT-DEF-E03] a fully-authored block keeps every key: only the toggled line changes
+[chrome 150.0.7871.250 linux #0-14]    ✓ [INIT-DEF-E04] Reset encounter on an untouched block writes back only the source keys (Malice back to 0)
+[chrome 150.0.7871.250 linux #0-14]
+[chrome 150.0.7871.250 linux #0-14] 4 passing (13.5s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-13] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-13] Session ID: bbcaad51e0d859e9a54834513f69296d
+[chrome 150.0.7871.250 linux #0-13]
+[chrome 150.0.7871.250 linux #0-13] » e2e/specs/initiative/conditions-pick-focus.e2e.ts
+[chrome 150.0.7871.250 linux #0-13] conditions-modal: focus after a pick in the row editor (SC-468)
+[chrome 150.0.7871.250 linux #0-13]    ✓ [COND-E02] Enter on a duration chip, a swatch and an effect chip each keeps focus on the option just pressed, with a ring
+[chrome 150.0.7871.250 linux #0-13]    ✓ [COND-E03] a mouse click on a swatch also leaves focus on that swatch, and draws no focus ring
+[chrome 150.0.7871.250 linux #0-13]    ✓ [COND-E07] after a keyboard pick the focused, selected swatch shows both the focus ring and the check
+[chrome 150.0.7871.250 linux #0-13]
+[chrome 150.0.7871.250 linux #0-13] 3 passing (21.8s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-16] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-16] Session ID: 88901ae1be9b3ae73e5a47f20b7cebab
+[chrome 150.0.7871.250 linux #0-16]
+[chrome 150.0.7871.250 linux #0-16] » e2e/specs/initiative/no-op-writes.e2e.ts
+[chrome 150.0.7871.250 linux #0-16] initiative: actions that change nothing
+[chrome 150.0.7871.250 linux #0-16]    ✓ [INIT-NOOP-E01] clicking the roster cell that is already selected writes nothing
+[chrome 150.0.7871.250 linux #0-16]    ✓ [INIT-NOOP-E02] Reset turns on a tracker with no turn marked writes nothing
+[chrome 150.0.7871.250 linux #0-16]
+[chrome 150.0.7871.250 linux #0-16] 2 passing (8s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-18] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-18] Session ID: fc264530baf0427609fb445e7653930b
+[chrome 150.0.7871.250 linux #0-18]
+[chrome 150.0.7871.250 linux #0-18] » e2e/specs/initiative/round-turns.e2e.ts
+[chrome 150.0.7871.250 linux #0-18] initiative: round and turns
+[chrome 150.0.7871.250 linux #0-18]    ✓ [INIT-R01] Advance round: round 3, the round gain lands in Malice and the log, every turn mark clears, the screen follows
+[chrome 150.0.7871.250 linux #0-18]    ✓ [INIT-R02] Reset turns (this round), a chrome item: turn marks clear, the round, Malice and log stay
+[chrome 150.0.7871.250 linux #0-18]    ✓ [INIT-N01] the hero portrait overlay toggles the turn both ways and the two heroes keep their own state
+[chrome 150.0.7871.250 linux #0-18]    ✓ [INIT-N03] the enemy group header button toggles that group only
+[chrome 150.0.7871.250 linux #0-18]
+[chrome 150.0.7871.250 linux #0-18] initiative: round and turns, portraits off
+[chrome 150.0.7871.250 linux #0-18]    ✓ [INIT-N02] the checkbox toggles the hero turn, and the (stood-down) overlay agrees
+[chrome 150.0.7871.250 linux #0-18]
+[chrome 150.0.7871.250 linux #0-18] 5 passing (17.3s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-15] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-15] Session ID: 2a320b14d2a977445bce2fd5fc17b15c
+[chrome 150.0.7871.250 linux #0-15]
+[chrome 150.0.7871.250 linux #0-15] » e2e/specs/initiative/malice.e2e.ts
+[chrome 150.0.7871.250 linux #0-15] initiative: the Malice stepper
+[chrome 150.0.7871.250 linux #0-15]    ✓ [INIT-M01] - - + from 3 gives 2: the screen follows at once and the note holds the final value
+[chrome 150.0.7871.250 linux #0-15]    ✓ [INIT-M02] + raises Malice from 4 to 5 and writes it
+[chrome 150.0.7871.250 linux #0-15]    ✓ [INIT-M07] the Malice stepper stops at 0: pressing - four times from 3 leaves "Malice: 0" (never negative) [known bug SC-577]
+[chrome 150.0.7871.250 linux #0-15]
+[chrome 150.0.7871.250 linux #0-15] initiative: the Malice quick-add row
+[chrome 150.0.7871.250 linux #0-15]    ✓ [INIT-M03] amount 3, label "Feytouched", the Add button: Malice 6, one log entry, the fields clear
+[chrome 150.0.7871.250 linux #0-15]    ✓ [INIT-M04] Enter in the label field submits, and so does Enter in the amount field
+[chrome 150.0.7871.250 linux #0-15]    ✓ [INIT-M05] a rejected submit writes nothing, says why in words, and puts focus on the offending field
+[chrome 150.0.7871.250 linux #0-15]    ✓ [INIT-M08] a typed "+3" is accepted as 3 (the log itself shows gains as "+3")
+[chrome 150.0.7871.250 linux #0-15]    ✓ [INIT-M09] a quick-add that the pool clamps logs what it did: the entry matches the change in Malice, or says it was capped [known bug SC-578]
+[chrome 150.0.7871.250 linux #0-15]
+[chrome 150.0.7871.250 linux #0-15] initiative: keyboard focus after a rebuild
+[chrome 150.0.7871.250 linux #0-15]    ✓ [INIT-F01] after Enter in the quick-add label field, keyboard focus is still inside the tracker [known bug SC-588]
+[chrome 150.0.7871.250 linux #0-15]
+[chrome 150.0.7871.250 linux #0-15] initiative: the Malice log disclosure
+[chrome 150.0.7871.250 linux #0-15]    ✓ [INIT-M06] the header opens and closes the entry list; opening it writes nothing
+[chrome 150.0.7871.250 linux #0-15]
+[chrome 150.0.7871.250 linux #0-15] 10 passing (42.9s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-17] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-17] Session ID: cadf28807dac94438951b8cd694c7454
+[chrome 150.0.7871.250 linux #0-17]
+[chrome 150.0.7871.250 linux #0-17] » e2e/specs/initiative/reset-encounter.e2e.ts
+[chrome 150.0.7871.250 linux #0-17] initiative: Reset encounter state
+[chrome 150.0.7871.250 linux #0-17]    ✓ [INIT-X01] Yes, Reset: one write that clears the live state (round, Malice, log, turn, conditions) and keeps the title and round_gain; the modal closes
+[chrome 150.0.7871.250 linux #0-17]    ✓ [INIT-X02] Cancel closes the modal and changes nothing: no write, the round and Malice still show
+[chrome 150.0.7871.250 linux #0-17]    ✓ [INIT-X03] Escape, the X and a click on the backdrop each dismiss it without resetting
+[chrome 150.0.7871.250 linux #0-17]    ✓ [INIT-X04] the keyboard: Cancel has the initial focus and Enter on it dismisses; Tab to Yes, Reset and Enter resets
+[chrome 150.0.7871.250 linux #0-17]
+[chrome 150.0.7871.250 linux #0-17] initiative: what the screen shows after a reset
+[chrome 150.0.7871.250 linux #0-17]    ✓ [INIT-X05] after Yes, Reset the enemy groups still show their roster and detail row, back at full stamina [known bug SC-576]
+[chrome 150.0.7871.250 linux #0-17]    ✓ [INIT-X06] after Yes, Reset the heroes show full stamina, not "0 / 30" Dying [known bug SC-576]
+[chrome 150.0.7871.250 linux #0-17]    ✓ [INIT-X07] after Yes, Reset a minion squad's shared action pips are cleared in the note [known bug SC-575]
+[chrome 150.0.7871.250 linux #0-17]
+[chrome 150.0.7871.250 linux #0-17] 7 passing (43.7s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-19] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-19] Session ID: 95f9bbc2f149c2f5e53d7f2223c14e27
+[chrome 150.0.7871.250 linux #0-19]
+[chrome 150.0.7871.250 linux #0-19] » e2e/specs/initiative/stamina-entry.e2e.ts
+[chrome 150.0.7871.250 linux #0-19] initiative: heroes
+[chrome 150.0.7871.250 linux #0-19]    ✓ [INIT-STAM-E07] the hero numeric control (keyboard) opens a hero modal; Apply writes the hero and repaints the row
+[chrome 150.0.7871.250 linux #0-19]    ✓ [INIT-STAM-E08] clicking the hero row bar opens the same modal; Healing is capped at max and the bar repaints
+[chrome 150.0.7871.250 linux #0-19]
+[chrome 150.0.7871.250 linux #0-19] initiative: creatures
+[chrome 150.0.7871.250 linux #0-19]    ✓ [INIT-STAM-E09] the detail-row numeric control (keyboard) opens a creature modal; Apply writes that instance and repaints detail and cell
+[chrome 150.0.7871.250 linux #0-19]    ✓ [INIT-STAM-E10] clicking the detail-row bar opens the creature modal; a creature dies at 0, so Kill floors at 0
+[chrome 150.0.7871.250 linux #0-19]    ✓ [INIT-STAM-E21] the stood-down numeric control does not cover the row bar: a real press at the bar centre hits the bar
+[chrome 150.0.7871.250 linux #0-19]    ✓ [INIT-STAM-E11] a single click on a roster cell selects that instance: the detail row switches and the selection is saved
+[chrome 150.0.7871.250 linux #0-19]    ✓ [INIT-STAM-E20] a real double-click on a roster cell opens the modal for THAT instance, and the selection write does not disturb it
+[chrome 150.0.7871.250 linux #0-19]    ✓ [INIT-STAM-Q13] Spend Recovery is disabled for a creature, with the reason, and a click does nothing
+[chrome 150.0.7871.250 linux #0-19]    ✓ [INIT-STAM-Q13H] an initiative hero has no pool: the relabelled heal asks first, and Confirm stages it
+[chrome 150.0.7871.250 linux #0-19]    ✓ [INIT-STAM-B2] a roster-cell edit of the instance shown in the detail row updates the detail readout too
+[chrome 150.0.7871.250 linux #0-19]
+[chrome 150.0.7871.250 linux #0-19] 10 passing (38s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-20] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-20] Session ID: d08d63188a4f67c1e054fb9cc4db7d8c
+[chrome 150.0.7871.250 linux #0-20]
+[chrome 150.0.7871.250 linux #0-20] » e2e/specs/initiative/title-edit.e2e.ts
+[chrome 150.0.7871.250 linux #0-20] initiative: the title edit
+[chrome 150.0.7871.250 linux #0-20]    ✓ [INIT-T01] clicking an untitled tracker's title, typing a name and pressing Enter writes it first in the block and shows it
+[chrome 150.0.7871.250 linux #0-20]    ✓ [INIT-T02] Enter on the focused title text opens the editor seeded with the name; Escape closes it and writes nothing
+[chrome 150.0.7871.250 linux #0-20]    ✓ [INIT-T03] Space on the focused title text opens the editor too
+[chrome 150.0.7871.250 linux #0-20]    ✓ [INIT-T04] renaming a titled tracker: typed text replaces the name, Enter commits it, and the other keys of the block are untouched
+[chrome 150.0.7871.250 linux #0-20]    ✓ [INIT-T05] Shift+Enter commits as Enter does and never inserts a line break
+[chrome 150.0.7871.250 linux #0-20]    ✓ [INIT-T06] Escape reverts: the typed text is dropped, the old title stays and nothing is written
+[chrome 150.0.7871.250 linux #0-20]    ✓ [INIT-T07] a real blur (a click elsewhere in the tracker) commits the typed title
+[chrome 150.0.7871.250 linux #0-20]
+[chrome 150.0.7871.250 linux #0-20] 7 passing (20.1s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-22] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-22] Session ID: de67add4af1caa7327beccb49a5db70e
+[chrome 150.0.7871.250 linux #0-22]
+[chrome 150.0.7871.250 linux #0-22] » e2e/specs/minion-pool/pool-conditions.e2e.ts
+[chrome 150.0.7871.250 linux #0-22] minion pool: condition icons
+[chrome 150.0.7871.250 linux #0-22]    ✓ [POOL-C01] a click on an icon removes that one condition: one write at once, the modal stays open, the other icon stays
+[chrome 150.0.7871.250 linux #0-22]    ✓ [POOL-C02] DC-6: a condition removed and then damage applied in one session both land (the rebuild after the removal leaves the modal usable)
+[chrome 150.0.7871.250 linux #0-22]    ✓ [POOL-C03] removing both conditions empties the minion's row; staged damage survives each removal
+[chrome 150.0.7871.250 linux #0-22]
+[chrome 150.0.7871.250 linux #0-22] minion pool: condition icons by keyboard
+[chrome 150.0.7871.250 linux #0-22]    ✓ [POOL-C04] Tab reaches a condition icon and Enter removes that condition [known bug SC-572]
+[chrome 150.0.7871.250 linux #0-22]
+[chrome 150.0.7871.250 linux #0-22] 4 passing (21.9s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-23] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-23] Session ID: 0ea60a765053be96a23a5197492a99d8
+[chrome 150.0.7871.250 linux #0-23]
+[chrome 150.0.7871.250 linux #0-23] » e2e/specs/minion-pool/pool-open.e2e.ts
+[chrome 150.0.7871.250 linux #0-23] minion pool: opening
+[chrome 150.0.7871.250 linux #0-23]    ✓ [POOL-E01] a real double-click on a roster cell opens the squad pool modal on the full pool, with focus on the damage box (SC-429)
+[chrome 150.0.7871.250 linux #0-23]    ✓ [POOL-E02] Space and Enter pressed right after opening change nothing (SC-429: they used to decrement the pool)
+[chrome 150.0.7871.250 linux #0-23]    ✓ [POOL-E03] the detail row numeric control (keyboard: Tab + Enter) opens the pool modal
+[chrome 150.0.7871.250 linux #0-23]    ✓ [POOL-E04] clicking the detail row bar opens the pool modal; a dead minion is not selected, so its row has no kill box
+[chrome 150.0.7871.250 linux #0-23]    ✓ [POOL-E05] double-clicking a DEAD minion's cell opens the same squad pool modal
+[chrome 150.0.7871.250 linux #0-23]
+[chrome 150.0.7871.250 linux #0-23] minion pool: leaving without a write
+[chrome 150.0.7871.250 linux #0-23]    ✓ [POOL-F04] the X and a click on the backdrop each discard the staged edit: no write, the modal closes
+[chrome 150.0.7871.250 linux #0-23]    ✓ [POOL-F05] Escape closes the modal from the Apply box and writes nothing
+[chrome 150.0.7871.250 linux #0-23]
+[chrome 150.0.7871.250 linux #0-23] 7 passing (26s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-21] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-21] Session ID: 515ed927ec7ed492de0655a840427e69
+[chrome 150.0.7871.250 linux #0-21]
+[chrome 150.0.7871.250 linux #0-21] » e2e/specs/minion-pool/pool-apply-kills.e2e.ts
+[chrome 150.0.7871.250 linux #0-21] minion pool: the Apply Damage row
+[chrome 150.0.7871.250 linux #0-21]    ✓ [POOL-A01] 3 damage to 1 minion lowers the pool to 17, no kill owed; Apply writes it once and the tracker repaints
+[chrome 150.0.7871.250 linux #0-21]    ✓ [POOL-A02] a typed count past the living minions is capped and shown capped (SC-429); 99 damage x 5 empties the pool
+[chrome 150.0.7871.250 linux #0-21]    ✓ [POOL-A03] the count box's spinner stops at the LIVING minions: with 2 of 5 dead, ArrowUp from 1 reaches 3 and no further (SC-429)
+[chrome 150.0.7871.250 linux #0-21]    ✓ [POOL-A05] ArrowDown in the damage box steps down and stops at 0 (its min), nothing is staged
+[chrome 150.0.7871.250 linux #0-21]    ✓ [POOL-A04] at rest the info line is hidden (no "0 damage will kill 0 minion(s)", SC-429); damage shows it; Reset hides it again
+[chrome 150.0.7871.250 linux #0-21]
+[chrome 150.0.7871.250 linux #0-21] minion pool: the kill boxes
+[chrome 150.0.7871.250 linux #0-21]    ✓ [POOL-K01] two deaths owed: tick two boxes (the rest lock), a click on a locked box does nothing; Apply kills exactly those two
+[chrome 150.0.7871.250 linux #0-21]    ✓ [POOL-K02] a click on a minion's NAME ticks its box like the box does, and again unticks it
+[chrome 150.0.7871.250 linux #0-21]    ✓ [POOL-K03] SC-429 item 1: a pool lowered to 0 ticks and locks every box; raising it to 1 un-ticks them, and Apply is reachable by ticking 4
+[chrome 150.0.7871.250 linux #0-21]    ✓ [POOL-K04] the whole squad: pool 0 ticks all five and Apply kills them; the selected minion's detail row reads DEAD
+[chrome 150.0.7871.250 linux #0-21]    ✓ [POOL-K05] the whole job by keyboard: Tab to a kill box, Space ticks it, Tab to Apply, Enter writes once
+[chrome 150.0.7871.250 linux #0-21]
+[chrome 150.0.7871.250 linux #0-21] minion pool: Reset and a disabled Apply
+[chrome 150.0.7871.250 linux #0-21]    ✓ [POOL-F01] Reset throws away damage, ticks and the Apply row: the opening state is back and nothing is written
+[chrome 150.0.7871.250 linux #0-21]    ✓ [POOL-F02] Apply is dead while it is disabled: nothing staged, and a kill owed but not ticked; neither writes
+[chrome 150.0.7871.250 linux #0-21]
+[chrome 150.0.7871.250 linux #0-21] 12 passing (53.9s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-24] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-24] Session ID: 605da34aebf15c179fc2fa0945a35367
+[chrome 150.0.7871.250 linux #0-24]
+[chrome 150.0.7871.250 linux #0-24] » e2e/specs/minion-pool/pool-stepper.e2e.ts
+[chrome 150.0.7871.250 linux #0-24] minion pool: the stepper buttons
+[chrome 150.0.7871.250 linux #0-24]    ✓ [POOL-S01] - - + steps the pool to 19; Apply writes it once and the tracker repaints every cell
+[chrome 150.0.7871.250 linux #0-24]    ✓ [POOL-S02] a disabled stepper button does nothing: Increase at the full pool, Decrease at 0
+[chrome 150.0.7871.250 linux #0-24]    ✓ [POOL-S06] a keyboard user: Tab to Increase, Enter heals within the living minions' share, and the next Enter is refused with a reason
+[chrome 150.0.7871.250 linux #0-24]
+[chrome 150.0.7871.250 linux #0-24] minion pool: the typed pool value
+[chrome 150.0.7871.250 linux #0-24]    ✓ [POOL-S03] typing 12 and pressing Enter stages 8 damage = 2 deaths: label, info line and open boxes follow; Apply waits for two ticks
+[chrome 150.0.7871.250 linux #0-24]    ✓ [POOL-S04] typing then clicking elsewhere commits the same way as Enter (blur), and a half-typed value is a draft until then
+[chrome 150.0.7871.250 linux #0-24]    ✓ [POOL-S05] Escape on a typed draft puts the old value back and keeps the modal open; the next Escape closes it, with no write
+[chrome 150.0.7871.250 linux #0-24]    ✓ [POOL-S07] typing a value and clicking Apply straight away: the blur commits it and the click still lands, one write
+[chrome 150.0.7871.250 linux #0-24]
+[chrome 150.0.7871.250 linux #0-24] minion pool: heals
+[chrome 150.0.7871.250 linux #0-24]    ✓ [POOL-H01] a heal inside the share is staged with the warning icon and Apply raises the pool; the dead stay dead
+[chrome 150.0.7871.250 linux #0-24]    ✓ [POOL-H02] a heal past a dead minion's share is refused: the reason shows, Apply is disabled and a click on it writes nothing
+[chrome 150.0.7871.250 linux #0-24]
+[chrome 150.0.7871.250 linux #0-24] minion pool: a keyboard press that disables the focused button
+[chrome 150.0.7871.250 linux #0-24]    ✓ [POOL-S08] Enter on Decrease at pool 1 steps to 0, and focus moves to the pool field instead of falling to the page (SC-495 class)
+[chrome 150.0.7871.250 linux #0-24]
+[chrome 150.0.7871.250 linux #0-24] 10 passing (37.6s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-25] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-25] Session ID: a91b4d6da0daa8772ccb917b722bebfd
+[chrome 150.0.7871.250 linux #0-25]
+[chrome 150.0.7871.250 linux #0-25] » e2e/specs/roll-bar/roll-bar-stepper-focus.e2e.ts
+[chrome 150.0.7871.250 linux #0-25] roll bar: a read-only stepper keeps keyboard focus when "+" or "-" reaches a bound (SC-495)
+[chrome 150.0.7871.250 linux #0-25]    ✓ [ROLL-SF01] Edges "+" to 9 and "-" back to 0, Banes "+" to 9, all with Enter: focus goes to the value text (ring shown, not a Tab stop), and Tab / Shift+Tab continue in order
+[chrome 150.0.7871.250 linux #0-25]
+[chrome 150.0.7871.250 linux #0-25] 1 passing (9.9s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-26] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-26] Session ID: e4d5f12bbc9b3492cc9160f0d8187a10
+[chrome 150.0.7871.250 linux #0-26]
+[chrome 150.0.7871.250 linux #0-26] » e2e/specs/sidebar/sidebar-unpin-focus.e2e.ts
+[chrome 150.0.7871.250 linux #0-26] sidebar: keyboard "Unpin from sidebar" hands focus to a neighbour (SC-511)
+[chrome 150.0.7871.250 linux #0-26]    ✓ [SBR-F01] Enter on Unpin of the MIDDLE of three panels: focus lands on the note link of the panel that took its place (ring shown)
+[chrome 150.0.7871.250 linux #0-26]    ✓ [SBR-F02] Enter on Unpin of the LAST of three panels: focus lands on the note link of the panel above it
+[chrome 150.0.7871.250 linux #0-26]    ✓ [SBR-F03] Enter on Unpin of the ONLY panel: focus lands on the "No pinned blocks" message, which is no Tab stop (tabindex -1)
+[chrome 150.0.7871.250 linux #0-26]    ✓ [SBR-F04] a MOUSE click on Unpin of the middle panel removes it and moves focus to no neighbour
+[chrome 150.0.7871.250 linux #0-26]
+[chrome 150.0.7871.250 linux #0-26] 4 passing (10.3s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-28] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-28] Session ID: ee3aff62eb1c8fcaeae2857e2cc9a6e1
+[chrome 150.0.7871.250 linux #0-28]
+[chrome 150.0.7871.250 linux #0-28] » e2e/specs/stamina-bar/chrome-live-preview.e2e.ts
+[chrome 150.0.7871.250 linux #0-28] stamina bar chrome: the panel is clickable in Live Preview (SC-502)
+[chrome 150.0.7871.250 linux #0-28]    ✓ [CHR-L01] a real mouse click on Collapse in Live Preview collapses the block, a real click on Expand expands it, and the editor cursor stays where it was
+[chrome 150.0.7871.250 linux #0-28]
+[chrome 150.0.7871.250 linux #0-28] 1 passing (3.1s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-29] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-29] Session ID: e78df9d084494eb344eab8f709818eca
+[chrome 150.0.7871.250 linux #0-29]
+[chrome 150.0.7871.250 linux #0-29] » e2e/specs/stamina-bar/stamina-modal-focus.e2e.ts
+[chrome 150.0.7871.250 linux #0-29] stamina-edit-modal: focus stays in the modal when the heal button disables itself (SC-465)
+[chrome 150.0.7871.250 linux #0-29]    ✓ [STAM-Q14] a keyboard Spend Recovery that reaches max Stamina hands focus to Reset (ring shown), and Tab continues inside the modal
+[chrome 150.0.7871.250 linux #0-29]    ✓ [STAM-Q15] a keyboard Heal Recovery Value whose Confirm reaches max Stamina leaves focus on Reset (ring shown), and Tab continues inside the modal
+[chrome 150.0.7871.250 linux #0-29]    ✓ [STAM-Q16] a MOUSE Spend Recovery that reaches max Stamina also moves focus to Reset, with no ring
+[chrome 150.0.7871.250 linux #0-29]
+[chrome 150.0.7871.250 linux #0-29] 3 passing (11.6s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-27] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-27] Session ID: 55d94458ca9c8d8f19b15a0d26a8acaa
+[chrome 150.0.7871.250 linux #0-27]
+[chrome 150.0.7871.250 linux #0-27] » e2e/specs/stamina-bar/chrome-focus.e2e.ts
+[chrome 150.0.7871.250 linux #0-27] stamina bar chrome: keyboard focus follows Collapse and Expand (SC-505)
+[chrome 150.0.7871.250 linux #0-27]    ✓ [CHR-F01] Tab to Collapse + Enter: the block collapses and focus lands on the one-liner's Expand button (ring shown); Enter on it expands and focus returns to Collapse (ring shown, panel shown)
+[chrome 150.0.7871.250 linux #0-27]    ✓ [CHR-F02] Enter on Expand (reached by keyboard) expands the block and focus lands on the restored Collapse button (ring shown, panel shown)
+[chrome 150.0.7871.250 linux #0-27]    ✓ [CHR-F03] a MOUSE click on Collapse and on Expand moves focus nowhere new (no hand-off into the block)
+[chrome 150.0.7871.250 linux #0-27]
+[chrome 150.0.7871.250 linux #0-27] stamina bar chrome: keyboard focus stays on Pin to sidebar across the redraw (SC-505)
+[chrome 150.0.7871.250 linux #0-27]    ✓ [CHR-F05] Tab straight to Pin + Enter on a fresh note: the pin writes the note once and focus is on the (new) Pin button with the ring
+[chrome 150.0.7871.250 linux #0-27]    ✓ [CHR-F06] the same note open in two panes: Tab + Enter on Pin in the second pane leaves focus on that pane's Pin button, never the first pane's
+[chrome 150.0.7871.250 linux #0-27]    ✓ [CHR-F07] Tab to Pin + Enter, then Tab on to Collapse: an outside edit inside the hand-off window does not pull focus back to Pin
+[chrome 150.0.7871.250 linux #0-27]    ✓ [CHR-F08] a note embedding the same note twice: Tab + Enter on Pin in the second embed leaves focus on that embed's Pin button, never the first's
+[chrome 150.0.7871.250 linux #0-27]    ✓ [CHR-F09] a note embedding the same note twice: Tab + Enter on Pin in the first embed leaves focus on that embed's Pin button (not the page)
+[chrome 150.0.7871.250 linux #0-27]    ✓ [CHR-F04] Tab to Pin + Enter: the pin writes the note, the block redraws, and focus is on the (new) Pin button with the ring
+[chrome 150.0.7871.250 linux #0-27]
+[chrome 150.0.7871.250 linux #0-27] 9 passing (25.3s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-30] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-30] Session ID: 47480ee10506f21c5a48d8c4055f0bec
+[chrome 150.0.7871.250 linux #0-30]
+[chrome 150.0.7871.250 linux #0-30] » e2e/specs/stamina-bar/stamina-modal-stepper-focus.e2e.ts
+[chrome 150.0.7871.250 linux #0-30] stamina-edit-modal: a stepper keeps keyboard focus when "-" / "+" disables itself (SC-495)
+[chrome 150.0.7871.250 linux #0-30]    ✓ [STAM-SF01] Temporary Stamina "-" pressed with Enter down to 0: focus moves to the number field (ring shown), the next Tab reaches "+", and Enter there changes nothing
+[chrome 150.0.7871.250 linux #0-30]    ✓ [STAM-SF02] Stamina "+" pressed with Enter up to max: focus moves to the number field instead of <body>, and Tab stays in the modal
+[chrome 150.0.7871.250 linux #0-30]    ✓ [STAM-SF03] a MOUSE press that takes Temporary Stamina to 0 moves nothing: focus does not land in the number field, so a wheel over it changes nothing
+[chrome 150.0.7871.250 linux #0-30]
+[chrome 150.0.7871.250 linux #0-30] 3 passing (10.2s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-31] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-31] Session ID: 27d77182a4b8c9bdbaebdfc8cf8284f9
+[chrome 150.0.7871.250 linux #0-31]
+[chrome 150.0.7871.250 linux #0-31] » e2e/specs/stamina-bar/stamina-modal-stepper.e2e.ts
+[chrome 150.0.7871.250 linux #0-31] stamina-edit-modal: Stamina stepper
+[chrome 150.0.7871.250 linux #0-31]    ✓ [STAM-S01] the Stamina "+" and "-" step one at a time and the Apply label follows
+[chrome 150.0.7871.250 linux #0-31]    ✓ [STAM-S02] typing a Stamina value and pressing Enter commits it
+[chrome 150.0.7871.250 linux #0-31]    ✓ [STAM-S03] typing a Stamina value then clicking away commits it, once, with no write until Apply
+[chrome 150.0.7871.250 linux #0-31]    ✓ [STAM-S04] a decimal Stamina value is truncated: 7.5 commits 7
+[chrome 150.0.7871.250 linux #0-31]    ✓ [STAM-S05] an emptied Stamina draft reverts to the shown value instead of committing
+[chrome 150.0.7871.250 linux #0-31]    ✓ [STAM-S08] a typed Stamina above max: the Apply label says what will actually be applied
+[chrome 150.0.7871.250 linux #0-31]    ✓ [STAM-S14] typing a Stamina value then pressing Damage: the blur commits first, Damage applies on top
+[chrome 150.0.7871.250 linux #0-31]    ✓ [STAM-S13] type a new Stamina value, then click the edge of Apply: the first click applies
+[chrome 150.0.7871.250 linux #0-31]    ✓ [STAM-S13c] Damage 7, then type Temp 5 and click the edge of Apply: the first click applies
+[chrome 150.0.7871.250 linux #0-31]    ✓ [STAM-S13b] type a new Stamina value, then click the label of Apply: the first click applies
+[chrome 150.0.7871.250 linux #0-31]
+[chrome 150.0.7871.250 linux #0-31] stamina-edit-modal: closing without Apply never writes
+[chrome 150.0.7871.250 linux #0-31]    ✓ [STAM-S06] Escape on a half-typed Stamina draft reverts only the draft; the modal stays open with the Damage still pending
+[chrome 150.0.7871.250 linux #0-31]    ✓ [STAM-T12] Escape on a half-typed Temp Stamina draft reverts only the draft; the modal stays open with the Damage still pending
+[chrome 150.0.7871.250 linux #0-31]    ✓ [STAM-S07] Escape with a clean draft closes the modal without writing
+[chrome 150.0.7871.250 linux #0-31]    ✓ [STAM-F07a] Escape with a pending Damage edit discards it
+[chrome 150.0.7871.250 linux #0-31]    ✓ [STAM-F07b] the X button with a pending edit discards it
+[chrome 150.0.7871.250 linux #0-31]    ✓ [STAM-F07c] clicking the backdrop with a pending edit discards it
+[chrome 150.0.7871.250 linux #0-31]
+[chrome 150.0.7871.250 linux #0-31] stamina-edit-modal: what only a real Obsidian can answer
+[chrome 150.0.7871.250 linux #0-31]    ✓ [STAM-W08] an external edit while the modal is open closes it and is never overwritten
+[chrome 150.0.7871.250 linux #0-31]    ✓ [STAM-K03] a second modal stacks on the first and Escape closes only the top one
+[chrome 150.0.7871.250 linux #0-31]
+[chrome 150.0.7871.250 linux #0-31] 18 passing (31.6s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-32] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-32] Session ID: fa6a3e43fdf7ee6da6b31d7a2d0fcc58
+[chrome 150.0.7871.250 linux #0-32]
+[chrome 150.0.7871.250 linux #0-32] » e2e/specs/stamina-bar/stamina-modal.e2e.ts
+[chrome 150.0.7871.250 linux #0-32] stamina-edit-modal from ds-stamina-bar: open, Apply box, Damage, Healing
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-E01] clicking the bar opens the modal: titled, Apply box focused, Apply disabled, nothing written
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-D01] Damage less than temp: temp absorbs it, Stamina unchanged, exactly one write
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-D02] Damage more than temp: temp is spent first, the rest comes off Stamina
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-D03] Damage accumulates: three presses of 3 spend the 5 temp, then 4 Stamina
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-D07] Damage with an empty Apply box is a silent no-op
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-D08] a decimal amount is truncated: 2.9 damage is 2
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-D09] an exponent amount is read as a number: 1e3 damage is capped at the death floor
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-H01] Healing is capped at max Stamina and leaves temp alone
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-A16] Enter in the Apply box applies nothing (current behaviour, not a bug ruling)
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-A18] ArrowUp / ArrowDown step the Apply box and it never goes below 0
+[chrome 150.0.7871.250 linux #0-32]
+[chrome 150.0.7871.250 linux #0-32] stamina-edit-modal: two blocks in one note
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-W10] editing the second of two ds-stamina bars writes only that block; the first stays byte-identical
+[chrome 150.0.7871.250 linux #0-32]
+[chrome 150.0.7871.250 linux #0-32] stamina-edit-modal: a write adds no default keys the block never declared (SC-466)
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-W11] a legacy ds-stamina block with only the stamina fields: a Damage rewrites exactly those two keys
+[chrome 150.0.7871.250 linux #0-32]
+[chrome 150.0.7871.250 linux #0-32] stamina-edit-modal from ds-stamina-bar: quick actions and temporary Stamina
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-Q01] Kill drops a hero to the death floor and clears temp
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-Q04] Full Heal restores max Stamina and discards temp (current behaviour)
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-T01] the temp "+" grants 1 temp Stamina
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-T02] a typed temp value higher than the current is granted once the field blurs
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-T03] a typed temp value lower than the current is applied as typed: 3 over 5 is a loss of 2
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-T04] the temp "-" at temp 5 lowers it by one: Apply writes temp_stamina 4
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-T11] one temp "-" at 5 shows exactly 4 and "Lose 1 Temp Stamina", and nothing is written until Apply
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-T13] temp 5, "+" twice gives 7, "-" gives 6, and Apply writes temp_stamina 6
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-T14] a mistyped 50 is fixable: Apply writes 50, reopen, type 5, Apply writes 5
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-T05] the temp "-" is really disabled at 0 temp and a click does nothing
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-T09] a decimal temp value is truncated: 7.5 grants up to 7
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-T10] a negative typed temp value clamps to 0 and is applied as typed: temp goes to 0
+[chrome 150.0.7871.250 linux #0-32]
+[chrome 150.0.7871.250 linux #0-32] stamina-edit-modal from ds-stamina-bar: footer
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-F03] clicking the disabled Apply does nothing: no write, modal stays open
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-F05] Reset clears every pending change and disables Apply again
+[chrome 150.0.7871.250 linux #0-32]    ✓ [STAM-F06] Reset also clears the Apply box
+[chrome 150.0.7871.250 linux #0-32]
+[chrome 150.0.7871.250 linux #0-32] 27 passing (41.7s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-33] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-33] Session ID: 5171c026c3e76a79329ba4942d9bc3dd
+[chrome 150.0.7871.250 linux #0-33]
+[chrome 150.0.7871.250 linux #0-33] » e2e/specs/stamina-bar/stamina-recoveries.e2e.ts
+[chrome 150.0.7871.250 linux #0-33] ds-stamina-bar: Catch Breath
+[chrome 150.0.7871.250 linux #0-33]    ✓ [RECOV-R01] Catch Breath heals the recovery value, spends one Recovery, posts an undo toast, one write
+[chrome 150.0.7871.250 linux #0-33]    ✓ [RECOV-I01] a write keeps the extra words (and their spacing) on the opening fence line
+[chrome 150.0.7871.250 linux #0-33]    ✓ [RECOV-R02a] Catch Breath is really disabled with no Recoveries left and a click writes nothing
+[chrome 150.0.7871.250 linux #0-33]    ✓ [RECOV-R02b] Catch Breath is really disabled while dying (RR: "Can't Catch Breath")
+[chrome 150.0.7871.250 linux #0-33]    ✓ [RECOV-R03] Catch Breath at full Stamina is disabled, says why, and a click writes nothing
+[chrome 150.0.7871.250 linux #0-33]    ✓ [RECOV-R06] the undo toast restores Stamina and the Recovery, once
+[chrome 150.0.7871.250 linux #0-33]    ✓ [RECOV-W03] a modal Apply refreshes the Winded / Dying badge and Catch Breath state in place
+[chrome 150.0.7871.250 linux #0-33]
+[chrome 150.0.7871.250 linux #0-33] ds-stamina-bar: Recoveries markers (Model M: a click sets the count)
+[chrome 150.0.7871.250 linux #0-33]    ✓ [RECOV-R04] clicking a marker sets the count: later ones restore up to it, earlier ones spend down to it
+[chrome 150.0.7871.250 linux #0-33]    ✓ [RECOV-R05] the marker row is one keyboard slider: arrows step, Home / End jump
+[chrome 150.0.7871.250 linux #0-33]
+[chrome 150.0.7871.250 linux #0-33] ds-stamina-bar: keyboard focus after a marker click (SC-428)
+[chrome 150.0.7871.250 linux #0-33]    ✓ [RECOV-R10] a marker click leaves focus on the marker row, through the write, and Tab continues from it
+[chrome 150.0.7871.250 linux #0-33]    ✓ [RECOV-R11] a keyboard Catch Breath that reaches full Stamina leaves focus on the marker row, not <body>
+[chrome 150.0.7871.250 linux #0-33]
+[chrome 150.0.7871.250 linux #0-33] modal Spend Recovery
+[chrome 150.0.7871.250 linux #0-33]    ✓ [STAM-Q06] Spend Recovery heals the recovery value and spends one Recovery on Apply
+[chrome 150.0.7871.250 linux #0-33]    ✓ [STAM-Q08] two presses heal twice (the second capped at max) and spend two Recoveries
+[chrome 150.0.7871.250 linux #0-33]    ✓ [STAM-Q09] Spend Recovery is really disabled with none left, with the reason, and a click does nothing
+[chrome 150.0.7871.250 linux #0-33]    ✓ [STAM-Q10] Spend Recovery is disabled at full Stamina with the reason
+[chrome 150.0.7871.250 linux #0-33]    ✓ [STAM-R1X] Reset also returns a pending Spend Recovery: nothing is spent when only a later edit is applied
+[chrome 150.0.7871.250 linux #0-33]    ✓ [STAM-Q13] a hero bar with no pool: the button says it heals, the first press asks, Confirm stages the heal, later presses do not ask again, and nothing is spent
+[chrome 150.0.7871.250 linux #0-33]    ✓ [STAM-Q13C] Cancel on the confirmation adds nothing: the modal stays open, a pending edit survives, the next press asks again, no write
+[chrome 150.0.7871.250 linux #0-33]    ✓ [STAM-Q13E] Escape on the confirmation closes only the confirmation: the stamina modal and its pending edit stay, and Apply still writes it
+[chrome 150.0.7871.250 linux #0-33]    ✓ [STAM-Q13X] the confirmation X and a click outside it each close only the confirmation: nothing staged, the pending edit survives
+[chrome 150.0.7871.250 linux #0-33]    ✓ [STAM-Q13P] a hero WITH a pool is unchanged: still "Spend Recovery", the first press stages at once with no dialog
+[chrome 150.0.7871.250 linux #0-33]
+[chrome 150.0.7871.250 linux #0-33] ds-stamina-bar: the optional Recoveries popover editor (preference on)
+[chrome 150.0.7871.250 linux #0-33]    ✓ [RECOV-R07] a marker click opens a popover instead of committing; its buttons commit
+[chrome 150.0.7871.250 linux #0-33]    ✓ [RECOV-R12] the popover Catch breath pressed from the keyboard closes the popover and returns focus to the marker row
+[chrome 150.0.7871.250 linux #0-33]    ✓ [RECOV-R09] Escape closes the popover
+[chrome 150.0.7871.250 linux #0-33]    ✓ [RECOV-R08] the popover Catch breath is disabled with no Recoveries left, says why, and a click writes nothing
+[chrome 150.0.7871.250 linux #0-33]
+[chrome 150.0.7871.250 linux #0-33] 25 passing (39.1s)
+
+
+Spec Files:	 34 passed, 34 total (100% completed) in 00:05:57  
+
+OBSIDIAN-E2E CENSUS-01 ok (1895 ms)
+OBSIDIAN-E2E CENSUS-02 ok (3573 ms)
+OBSIDIAN-E2E CENSUS-03 ok (1774 ms)
+OBSIDIAN-E2E CENSUS-04 ok (9985 ms)
+OBSIDIAN-E2E CENSUS-07 ok (33225 ms)
+OBSIDIAN-E2E CENSUS-08 ok (2254 ms)
+OBSIDIAN-E2E CENSUS-06 ok (3511 ms)
+OBSIDIAN-E2E CENSUS-09 ok (13046 ms)
+OBSIDIAN-E2E CENSUS-05 ok (1915 ms)
+OBSIDIAN-E2E DRV-01 ok (1397 ms)
+OBSIDIAN-E2E DRV-02 ok (1960 ms)
+OBSIDIAN-E2E CALL-R01 ok (2585 ms)
+OBSIDIAN-E2E CALL-R02 ok (1936 ms)
+OBSIDIAN-E2E CALL-R03 ok (1812 ms)
+OBSIDIAN-E2E CALL-R04 ok (2602 ms)
+OBSIDIAN-E2E CALL-L01 ok (2051 ms)
+OBSIDIAN-E2E CALL-L02 ok (1969 ms)
+OBSIDIAN-E2E CALL-L03 ok (2465 ms)
+OBSIDIAN-E2E CALL-N01 ok (2248 ms)
+OBSIDIAN-E2E CALL-N02 ok (2068 ms)
+OBSIDIAN-E2E COND-A01 ok (3135 ms)
+OBSIDIAN-E2E COND-A02 ok (4063 ms)
+OBSIDIAN-E2E COND-A03 ok (3008 ms)
+OBSIDIAN-E2E COND-A04 ok (4989 ms)
+OBSIDIAN-E2E COND-A05 ok (3750 ms)
+OBSIDIAN-E2E COND-A06 ok (3720 ms)
+OBSIDIAN-E2E COND-A07 ok (3005 ms)
+OBSIDIAN-E2E COND-C01 ok (3331 ms)
+OBSIDIAN-E2E COND-C02 ok (2726 ms)
+OBSIDIAN-E2E COND-C03 ok (2123 ms)
+OBSIDIAN-E2E COND-C04 known-bug SC-257 (3354 ms)
+OBSIDIAN-E2E COND-D01 ok (3729 ms)
+OBSIDIAN-E2E COND-D02 ok (5175 ms)
+OBSIDIAN-E2E COND-D03 ok (4291 ms)
+OBSIDIAN-E2E COND-D04 ok (2512 ms)
+OBSIDIAN-E2E COND-D05 ok (5989 ms)
+OBSIDIAN-E2E COND-D06 ok (2721 ms)
+OBSIDIAN-E2E COND-D07 ok (2991 ms)
+OBSIDIAN-E2E COND-D08 ok (3854 ms)
+OBSIDIAN-E2E COND-D09 ok (3881 ms)
+OBSIDIAN-E2E COND-D10 ok (2806 ms)
+OBSIDIAN-E2E COND-D11 ok (4477 ms)
+OBSIDIAN-E2E COND-D17 ok (3189 ms)
+OBSIDIAN-E2E COND-D12 ok (4032 ms)
+OBSIDIAN-E2E COND-D13 ok (2787 ms)
+OBSIDIAN-E2E COND-D14 ok (2753 ms)
+OBSIDIAN-E2E COND-D15 ok (3349 ms)
+OBSIDIAN-E2E COND-D16 ok (5390 ms)
+OBSIDIAN-E2E COND-N01 ok (6081 ms)
+OBSIDIAN-E2E COND-N02 ok (3054 ms)
+OBSIDIAN-E2E COND-N03 ok (5496 ms)
+OBSIDIAN-E2E COND-N06 ok (11998 ms)
+OBSIDIAN-E2E COND-N04 known-bug SC-384 (9500 ms)
+OBSIDIAN-E2E COND-N07 known-bug SC-580 (8382 ms)
+OBSIDIAN-E2E COND-N05 known-bug SC-355 (3012 ms)
+OBSIDIAN-E2E COND-O01 ok (2914 ms)
+OBSIDIAN-E2E COND-O02 ok (2519 ms)
+OBSIDIAN-E2E COND-O03 ok (2393 ms)
+OBSIDIAN-E2E COND-O04 ok (1959 ms)
+OBSIDIAN-E2E COND-X01 ok (1264 ms)
+OBSIDIAN-E2E COND-X02 ok (1553 ms)
+OBSIDIAN-E2E COND-X03 ok (1595 ms)
+OBSIDIAN-E2E COND-X04 ok (2250 ms)
+OBSIDIAN-E2E COND-X05 ok (2360 ms)
+OBSIDIAN-E2E COND-X06 ok (2013 ms)
+OBSIDIAN-E2E COND-X07 ok (2798 ms)
+OBSIDIAN-E2E COND-X08 ok (4516 ms)
+OBSIDIAN-E2E COND-R01 ok (5161 ms)
+OBSIDIAN-E2E COND-R02 ok (3351 ms)
+OBSIDIAN-E2E COND-R03 ok (2765 ms)
+OBSIDIAN-E2E COND-R04 ok (3444 ms)
+OBSIDIAN-E2E COND-R05 ok (3050 ms)
+OBSIDIAN-E2E COND-R06 ok (3217 ms)
+OBSIDIAN-E2E CTR-F01 ok (2838 ms)
+OBSIDIAN-E2E CTR-F02 ok (2622 ms)
+OBSIDIAN-E2E INIT-A01 ok (5636 ms)
+OBSIDIAN-E2E INIT-A02 ok (2251 ms)
+OBSIDIAN-E2E INIT-A03 ok (3359 ms)
+OBSIDIAN-E2E INIT-A04 ok (4333 ms)
+OBSIDIAN-E2E INIT-C01 ok (2237 ms)
+OBSIDIAN-E2E INIT-C02 ok (2090 ms)
+OBSIDIAN-E2E INIT-S01 ok (3110 ms)
+OBSIDIAN-E2E INIT-K01 ok (2830 ms)
+OBSIDIAN-E2E INIT-K02 ok (2591 ms)
+OBSIDIAN-E2E COND-E04 ok (6022 ms)
+OBSIDIAN-E2E COND-E05 ok (6152 ms)
+OBSIDIAN-E2E COND-E06 ok (5070 ms)
+OBSIDIAN-E2E COND-E01 ok (5142 ms)
+OBSIDIAN-E2E COND-E02 ok (9637 ms)
+OBSIDIAN-E2E COND-E03 ok (5003 ms)
+OBSIDIAN-E2E COND-E07 ok (6339 ms)
+OBSIDIAN-E2E INIT-DEF-E01 ok (3080 ms)
+OBSIDIAN-E2E INIT-DEF-E02 ok (4509 ms)
+OBSIDIAN-E2E INIT-DEF-E03 ok (2145 ms)
+OBSIDIAN-E2E INIT-DEF-E04 ok (2984 ms)
+OBSIDIAN-E2E INIT-M01 ok (4801 ms)
+OBSIDIAN-E2E INIT-M02 ok (2439 ms)
+OBSIDIAN-E2E INIT-M07 known-bug SC-577 (8785 ms)
+OBSIDIAN-E2E INIT-M03 ok (3771 ms)
+OBSIDIAN-E2E INIT-M04 ok (5149 ms)
+OBSIDIAN-E2E INIT-M05 ok (3713 ms)
+OBSIDIAN-E2E INIT-M08 ok (3126 ms)
+OBSIDIAN-E2E INIT-M09 known-bug SC-578 (4517 ms)
+OBSIDIAN-E2E INIT-F01 known-bug SC-588 (3634 ms)
+OBSIDIAN-E2E INIT-M06 ok (2136 ms)
+OBSIDIAN-E2E INIT-NOOP-E01 ok (3818 ms)
+OBSIDIAN-E2E INIT-NOOP-E02 ok (3494 ms)
+OBSIDIAN-E2E INIT-X01 ok (3822 ms)
+OBSIDIAN-E2E INIT-X02 ok (3153 ms)
+OBSIDIAN-E2E INIT-X03 ok (6193 ms)
+OBSIDIAN-E2E INIT-X04 ok (4774 ms)
+OBSIDIAN-E2E INIT-X05 known-bug SC-576 (10246 ms)
+OBSIDIAN-E2E INIT-X06 known-bug SC-576 (9478 ms)
+OBSIDIAN-E2E INIT-X07 known-bug SC-575 (5213 ms)
+OBSIDIAN-E2E INIT-R01 ok (3287 ms)
+OBSIDIAN-E2E INIT-R02 ok (3206 ms)
+OBSIDIAN-E2E INIT-N01 ok (3376 ms)
+OBSIDIAN-E2E INIT-N03 ok (2041 ms)
+OBSIDIAN-E2E INIT-N02 ok (2522 ms)
+OBSIDIAN-E2E INIT-STAM-E07 ok (4652 ms)
+OBSIDIAN-E2E INIT-STAM-E08 ok (6273 ms)
+OBSIDIAN-E2E INIT-STAM-E09 ok (4367 ms)
+OBSIDIAN-E2E INIT-STAM-E10 ok (3387 ms)
+OBSIDIAN-E2E INIT-STAM-E21 ok (2278 ms)
+OBSIDIAN-E2E INIT-STAM-E11 ok (1990 ms)
+OBSIDIAN-E2E INIT-STAM-E20 ok (3501 ms)
+OBSIDIAN-E2E INIT-STAM-Q13 ok (2771 ms)
+OBSIDIAN-E2E INIT-STAM-Q13H ok (4189 ms)
+OBSIDIAN-E2E INIT-STAM-B2 ok (3674 ms)
+OBSIDIAN-E2E INIT-T01 ok (3353 ms)
+OBSIDIAN-E2E INIT-T02 ok (2211 ms)
+OBSIDIAN-E2E INIT-T03 ok (2167 ms)
+OBSIDIAN-E2E INIT-T04 ok (2954 ms)
+OBSIDIAN-E2E INIT-T05 ok (2659 ms)
+OBSIDIAN-E2E INIT-T06 ok (2699 ms)
+OBSIDIAN-E2E INIT-T07 ok (3291 ms)
+OBSIDIAN-E2E POOL-A01 ok (5188 ms)
+OBSIDIAN-E2E POOL-A02 ok (5596 ms)
+OBSIDIAN-E2E POOL-A03 ok (3166 ms)
+OBSIDIAN-E2E POOL-A05 ok (3273 ms)
+OBSIDIAN-E2E POOL-A04 ok (4346 ms)
+OBSIDIAN-E2E POOL-K01 ok (6092 ms)
+OBSIDIAN-E2E POOL-K02 ok (3604 ms)
+OBSIDIAN-E2E POOL-K03 ok (5699 ms)
+OBSIDIAN-E2E POOL-K04 ok (3710 ms)
+OBSIDIAN-E2E POOL-K05 ok (3590 ms)
+OBSIDIAN-E2E POOL-F01 ok (5139 ms)
+OBSIDIAN-E2E POOL-F02 ok (3632 ms)
+OBSIDIAN-E2E POOL-C01 ok (4938 ms)
+OBSIDIAN-E2E POOL-C02 ok (5175 ms)
+OBSIDIAN-E2E POOL-C03 ok (4751 ms)
+OBSIDIAN-E2E POOL-C04 known-bug SC-572 (6228 ms)
+OBSIDIAN-E2E POOL-E01 ok (4005 ms)
+OBSIDIAN-E2E POOL-E02 ok (3095 ms)
+OBSIDIAN-E2E POOL-E03 ok (3252 ms)
+OBSIDIAN-E2E POOL-E04 ok (2049 ms)
+OBSIDIAN-E2E POOL-E05 ok (2542 ms)
+OBSIDIAN-E2E POOL-F04 ok (6647 ms)
+OBSIDIAN-E2E POOL-F05 ok (3515 ms)
+OBSIDIAN-E2E POOL-S01 ok (5507 ms)
+OBSIDIAN-E2E POOL-S02 ok (4062 ms)
+OBSIDIAN-E2E POOL-S06 ok (3733 ms)
+OBSIDIAN-E2E POOL-S03 ok (2726 ms)
+OBSIDIAN-E2E POOL-S04 ok (3537 ms)
+OBSIDIAN-E2E POOL-S05 ok (2555 ms)
+OBSIDIAN-E2E POOL-S07 ok (3305 ms)
+OBSIDIAN-E2E POOL-H01 ok (4439 ms)
+OBSIDIAN-E2E POOL-H02 ok (3131 ms)
+OBSIDIAN-E2E POOL-S08 ok (3429 ms)
+OBSIDIAN-E2E ROLL-SF01 ok (6581 ms)
+OBSIDIAN-E2E SBR-F01 ok (2186 ms)
+OBSIDIAN-E2E SBR-F02 ok (2048 ms)
+OBSIDIAN-E2E SBR-F03 ok (1929 ms)
+OBSIDIAN-E2E SBR-F04 ok (1634 ms)
+OBSIDIAN-E2E CHR-F01 ok (1836 ms)
+OBSIDIAN-E2E CHR-F02 ok (1299 ms)
+OBSIDIAN-E2E CHR-F03 ok (2162 ms)
+OBSIDIAN-E2E CHR-F05 ok (2640 ms)
+OBSIDIAN-E2E CHR-F06 ok (2330 ms)
+OBSIDIAN-E2E CHR-F07 ok (2289 ms)
+OBSIDIAN-E2E CHR-F08 ok (2557 ms)
+OBSIDIAN-E2E CHR-F09 ok (2527 ms)
+OBSIDIAN-E2E CHR-F04 ok (3038 ms)
+OBSIDIAN-E2E CHR-L01 ok (2466 ms)
+OBSIDIAN-E2E STAM-Q14 ok (3899 ms)
+OBSIDIAN-E2E STAM-Q15 ok (3965 ms)
+OBSIDIAN-E2E STAM-Q16 ok (3057 ms)
+OBSIDIAN-E2E STAM-SF01 ok (3686 ms)
+OBSIDIAN-E2E STAM-SF02 ok (2467 ms)
+OBSIDIAN-E2E STAM-SF03 ok (3517 ms)
+OBSIDIAN-E2E STAM-S01 ok (4623 ms)
+OBSIDIAN-E2E STAM-S02 ok (2404 ms)
+OBSIDIAN-E2E STAM-S03 ok (2373 ms)
+OBSIDIAN-E2E STAM-S04 ok (1290 ms)
+OBSIDIAN-E2E STAM-S05 ok (1165 ms)
+OBSIDIAN-E2E STAM-S08 ok (2071 ms)
+OBSIDIAN-E2E STAM-S14 ok (1820 ms)
+OBSIDIAN-E2E STAM-S13 ok (1611 ms)
+OBSIDIAN-E2E STAM-S13c ok (2045 ms)
+OBSIDIAN-E2E STAM-S13b ok (1588 ms)
+OBSIDIAN-E2E STAM-S06 ok (1576 ms)
+OBSIDIAN-E2E STAM-T12 ok (2009 ms)
+OBSIDIAN-E2E STAM-S07 ok (1037 ms)
+OBSIDIAN-E2E STAM-F07a ok (1143 ms)
+OBSIDIAN-E2E STAM-F07b ok (1121 ms)
+OBSIDIAN-E2E STAM-F07c ok (1374 ms)
+OBSIDIAN-E2E STAM-W08 ok (1194 ms)
+OBSIDIAN-E2E STAM-K03 ok (584 ms)
+OBSIDIAN-E2E STAM-E01 ok (1836 ms)
+OBSIDIAN-E2E STAM-D01 ok (2192 ms)
+OBSIDIAN-E2E STAM-D02 ok (2002 ms)
+OBSIDIAN-E2E STAM-D03 ok (2612 ms)
+OBSIDIAN-E2E STAM-D07 ok (1382 ms)
+OBSIDIAN-E2E STAM-D08 ok (1341 ms)
+OBSIDIAN-E2E STAM-D09 ok (1221 ms)
+OBSIDIAN-E2E STAM-H01 ok (1692 ms)
+OBSIDIAN-E2E STAM-A16 ok (1438 ms)
+OBSIDIAN-E2E STAM-A18 ok (1489 ms)
+OBSIDIAN-E2E STAM-W10 ok (2011 ms)
+OBSIDIAN-E2E STAM-W11 ok (1606 ms)
+OBSIDIAN-E2E STAM-Q01 ok (1592 ms)
+OBSIDIAN-E2E STAM-Q04 ok (1550 ms)
+OBSIDIAN-E2E STAM-T01 ok (1357 ms)
+OBSIDIAN-E2E STAM-T02 ok (1601 ms)
+OBSIDIAN-E2E STAM-T03 ok (1403 ms)
+OBSIDIAN-E2E STAM-T04 ok (1286 ms)
+OBSIDIAN-E2E STAM-T11 ok (875 ms)
+OBSIDIAN-E2E STAM-T13 ok (1492 ms)
+OBSIDIAN-E2E STAM-T14 ok (2496 ms)
+OBSIDIAN-E2E STAM-T05 ok (886 ms)
+OBSIDIAN-E2E STAM-T09 ok (933 ms)
+OBSIDIAN-E2E STAM-T10 ok (1457 ms)
+OBSIDIAN-E2E STAM-F03 ok (801 ms)
+OBSIDIAN-E2E STAM-F05 ok (1411 ms)
+OBSIDIAN-E2E STAM-F06 ok (1309 ms)
+OBSIDIAN-E2E RECOV-R01 ok (1422 ms)
+OBSIDIAN-E2E RECOV-I01 ok (1407 ms)
+OBSIDIAN-E2E RECOV-R02a ok (1064 ms)
+OBSIDIAN-E2E RECOV-R02b ok (761 ms)
+OBSIDIAN-E2E RECOV-R03 ok (774 ms)
+OBSIDIAN-E2E RECOV-R06 ok (1956 ms)
+OBSIDIAN-E2E RECOV-W03 ok (3359 ms)
+OBSIDIAN-E2E RECOV-R04 ok (1170 ms)
+OBSIDIAN-E2E RECOV-R05 ok (1709 ms)
+OBSIDIAN-E2E RECOV-R10 ok (1855 ms)
+OBSIDIAN-E2E RECOV-R11 ok (1657 ms)
+OBSIDIAN-E2E STAM-Q06 ok (1858 ms)
+OBSIDIAN-E2E STAM-Q08 ok (1976 ms)
+OBSIDIAN-E2E STAM-Q09 ok (845 ms)
+OBSIDIAN-E2E STAM-Q10 ok (795 ms)
+OBSIDIAN-E2E STAM-R1X ok (1863 ms)
+OBSIDIAN-E2E STAM-Q13 ok (1863 ms)
+OBSIDIAN-E2E STAM-Q13C ok (1694 ms)
+OBSIDIAN-E2E STAM-Q13E ok (1615 ms)
+OBSIDIAN-E2E STAM-Q13X ok (2068 ms)
+OBSIDIAN-E2E STAM-Q13P ok (1416 ms)
+OBSIDIAN-E2E RECOV-R07 ok (1657 ms)
+OBSIDIAN-E2E RECOV-R12 ok (1345 ms)
+OBSIDIAN-E2E RECOV-R09 ok (926 ms)
+OBSIDIAN-E2E RECOV-R08 ok (766 ms)
+OBSIDIAN-E2E done: 249/260 ok, 0 failed, 11 known-bug, coverage: 161/161 pairs
+OBSIDIAN-E2E coverage driven: 167 (control, kind) pair(s) -> /home/scott/code/steelCompendium/worktrees/sc480-twin-save-after-note-change/draw-steel-elements/e2e/.out/coverage.json
+rc=0 secs=363 load=15.35 16.27 11.77

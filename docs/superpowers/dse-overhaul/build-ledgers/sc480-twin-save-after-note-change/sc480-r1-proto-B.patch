@@ -1,0 +1,14 @@
+diff --git a/src/framework/host/ReadingModeBlockHost.ts b/src/framework/host/ReadingModeBlockHost.ts
+index a7de986f..2cde5553 100644
+--- a/src/framework/host/ReadingModeBlockHost.ts
++++ b/src/framework/host/ReadingModeBlockHost.ts
+@@ -990,7 +990,8 @@ export class ReadingModeBlockHost implements BlockHost {
+ 				// form's Save does (SC-556) - nowhere (the block changed on disk first).
+ 				const pinned = pin ? this.pinnedTarget(content, pin) : null;
+ 				if (pinned) this.knownLineStart = pinned.lineStart;
+-				const target = pinned ?? (pin && options?.pinOnly ? 'miss' : this.resolveWriteTarget(content, section));
++				// SC-480 proto B: every pinned write (a card's round, a form's Save) goes to its pin or nowhere; only an unpinned write searches.
++				const target = pinned ?? (pin ? 'miss' : this.resolveWriteTarget(content, section));
+ 				if (target === 'abort') {
+ 					unplaceable = true; // SC-455: a write that cannot land is never silent
+ 					listShape = this.looksLikeList(content, section);

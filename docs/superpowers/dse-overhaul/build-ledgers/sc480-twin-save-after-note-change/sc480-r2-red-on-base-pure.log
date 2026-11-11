@@ -1,0 +1,168 @@
+FAIL dom test/dom/framework/reading-mode-host-pin.test.ts
+  ● SC-552: ReadingModeBlockHost pinned writes › SC-480: a pin that cannot be placed, with identical twins in the note: nothing is written (the dropped-write Notice), not the element's section
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      114 | 		const stale = { text: before, lineStart: 0 }; // line 0 is the heading, not a fence
+      115 |
+    > 116 | 		expect(await host.replaceSource(bodyOf(5, 'Edited'), { pin: stale })).toBe(false);
+          | 		                                                                      ^
+      117 | 		expect(app.vault.getContent('Note.md')).toBe(before);
+      118 | 		expect(Notice.notices).toEqual([droppedWriteMessage('Note')]);
+      119 | 		expect(host.lastWriteReported).toBe(true);
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:116:73)
+
+  ● SC-552: a view's own write is placed through the pin its round's first click took › SC-556 / SC-480: the view's own write is not pin-only, but a pin that cannot be placed (its block edited from outside) with identical twins in the note writes nothing
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      272 | 		section.current = sectionAt(after, fencesOf(after)[1]);
+      273 |
+    > 274 | 		expect(await host.replaceSource(bodyOf(6), own)).toBe(false); // twins: the pin was the only identity (before SC-480 the write landed in a twin)
+          | 		                                                 ^
+      275 | 		expect(Notice.notices).toEqual([droppedWriteMessage('Note')]);
+      276 | 		expect(app.vault.getContent('Note.md')).toBe(after); // the outside edit is kept, nothing else touched
+      277 | 	});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:274:52)
+
+  ● SC-480: a card write whose pin misses is never written into an identical twin › the clicked block deleted, its twins above it (the element handed to a twin): nothing is written, one Notice, the note is untouched
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      325 | 		const { app, host } = clicked([5, 5, 5], at, after, (t) => sectionAt(t, fencesOf(t)[handedTo]));
+      326 |
+    > 327 | 		expect(await host.replaceSource(bodyOf(6), own)).toBe(false);
+          | 		                                                 ^
+      328 | 		expect(app.vault.getContent('Note.md')).toBe(after);
+      329 | 		expect(Notice.notices).toEqual([droppedWriteMessage('Note')]);
+      330 | 		expect(host.lastWriteReported).toBe(true);
+
+      at test/dom/framework/reading-mode-host-pin.test.ts:327:52
+
+  ● SC-480: a card write whose pin misses is never written into an identical twin › the clicked block deleted, its twins below it (the element handed to a twin): nothing is written, one Notice, the note is untouched
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      325 | 		const { app, host } = clicked([5, 5, 5], at, after, (t) => sectionAt(t, fencesOf(t)[handedTo]));
+      326 |
+    > 327 | 		expect(await host.replaceSource(bodyOf(6), own)).toBe(false);
+          | 		                                                 ^
+      328 | 		expect(app.vault.getContent('Note.md')).toBe(after);
+      329 | 		expect(Notice.notices).toEqual([droppedWriteMessage('Note')]);
+      330 | 		expect(host.lastWriteReported).toBe(true);
+
+      at test/dom/framework/reading-mode-host-pin.test.ts:327:52
+
+  ● SC-480: a card write whose pin misses is never written into an identical twin › the clicked block deleted, the element has no section any more (the body search): nothing is written
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      335 | 		const { app, host } = clicked([5, 5, 5], 2, after, () => null);
+      336 |
+    > 337 | 		expect(await host.replaceSource(bodyOf(6), own)).toBe(false);
+          | 		                                                 ^
+      338 | 		expect(app.vault.getContent('Note.md')).toBe(after);
+      339 | 		expect(Notice.notices).toEqual([droppedWriteMessage('Note')]);
+      340 | 	});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:337:52)
+
+  ● SC-480: a card write whose pin misses is never written into an identical twin › two identical blocks, one deleted: the twin was there when the block was clicked (pin.text), though the body is unique now: nothing is written
+
+    TypeError: (0 , ReadingModeBlockHost_1.countByBody) is not a function
+
+      343 | 		const after = build([5, null]);
+      344 | 		const { app, host } = clicked([5, 5], 1, after, (t) => sectionAt(t, fencesOf(t)[0]));
+    > 345 | 		expect(countByBody(after, 'ds-counter', bodyOf(5))).toBe(1);
+          | 		                  ^
+      346 |
+      347 | 		expect(await host.replaceSource(bodyOf(6), own)).toBe(false);
+      348 | 		expect(app.vault.getContent('Note.md')).toBe(after);
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:345:21)
+
+  ● SC-480: a card write whose pin misses is never written into an identical twin › a unique block whose body now appears twice (an outside edit pasted copies): the twin is there now, nothing is written
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      354 | 		const { app, host } = clicked([5, 7, 5], 1, after, (t) => sectionAt(t, fencesOf(t)[0]));
+      355 |
+    > 356 | 		expect(await host.replaceSource(bodyOf(8), own)).toBe(false);
+          | 		                                                 ^
+      357 | 		expect(app.vault.getContent('Note.md')).toBe(after);
+      358 | 		expect(Notice.notices).toEqual([droppedWriteMessage('Note')]);
+      359 | 	});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:356:52)
+
+  ● SC-480: a card write whose pin misses is never written into an identical twin › the same long change with an identical twin above the block: refused (the pin was the only identity)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      385 | 		const { app, host } = clicked([5, 5], 1, after, (t) => sectionAt(t, fencesOf(t)[1]), { above: lines(210, 'a'), below: lines(210, 'b') });
+      386 |
+    > 387 | 		expect(await host.replaceSource(bodyOf(6), own)).toBe(false);
+          | 		                                                 ^
+      388 | 		expect(app.vault.getContent('Note.md')).toBe(after);
+      389 | 		expect(Notice.notices).toEqual([droppedWriteMessage('Note')]);
+      390 | 	});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:387:52)
+
+  ● SC-480: countByBody counts the blocks locateByBody searches › closed blocks of the language holding the body (the language and the body both count)
+
+    TypeError: (0 , ReadingModeBlockHost_1.countByBody) is not a function
+
+      419 | 	test('closed blocks of the language holding the body (the language and the body both count)', () => {
+      420 | 		const text = [blk(5), 'x', blk(5), 'x', blk(6), 'x', blk(5, 'ds-stamina')].join('\n');
+    > 421 | 		expect(countByBody(text, 'ds-counter', bodyOf(5))).toBe(2);
+          | 		                  ^
+      422 | 		expect(countByBody(text, 'ds-counter', bodyOf(6))).toBe(1);
+      423 | 		expect(countByBody(text, 'ds-counter', bodyOf(9))).toBe(0);
+      424 | 	});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:421:21)
+
+  ● SC-480: countByBody counts the blocks locateByBody searches › the note's trailing fence that never closes counts, quoted blocks and CRLF notes too
+
+    TypeError: (0 , ReadingModeBlockHost_1.countByBody) is not a function
+
+      426 | 	test('the note\'s trailing fence that never closes counts, quoted blocks and CRLF notes too', () => {
+      427 | 		const open = ['```ds-counter', 'name: Twin', 'current_value: 5', ''].join('\n');
+    > 428 | 		expect(countByBody([blk(5), 'x', open].join('\n'), 'ds-counter', bodyOf(5))).toBe(2);
+          | 		                  ^
+      429 | 		const quoted = blk(5).split('\n').map((l) => `> ${l}`).join('\n');
+      430 | 		expect(countByBody([quoted, 'x', blk(5)].join('\n'), 'ds-counter', bodyOf(5))).toBe(2);
+      431 | 		expect(countByBody([blk(5), 'x', blk(5)].join('\r\n'), 'ds-counter', bodyOf(5))).toBe(2);
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:428:21)
+
+Test Suites: 1 failed, 1 total
+Tests:       10 failed, 56 passed, 66 total
+Snapshots:   0 total
+Time:        1.782 s, estimated 2 s
+Ran all test suites matching test/dom/framework/reading-mode-host-pin.test.ts.
+rc=1

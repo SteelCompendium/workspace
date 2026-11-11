@@ -1,0 +1,24 @@
+FAIL dom test/dom/framework/reading-mode-host-pin.test.ts
+  ● SC-480: a card write whose pin misses is never written into an identical twin › one outside edit deletes the clicked block AND makes its neighbour read the same (no twin before or after): the fallback would land in the neighbour, so nothing is written
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      409 | 		const { app, host } = clicked([4, 5], 1, after, (t) => sectionAt(t, fencesOf(t)[0]));
+      410 |
+    > 411 | 		expect(await host.replaceSource(bodyOf(6), own)).toBe(false);
+          | 		                                                 ^
+      412 | 		expect(app.vault.getContent('Note.md')).toBe(after);
+      413 | 		expect(Notice.notices).toEqual([droppedWriteMessage('Note')]);
+      414 | 	});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:411:52)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 67 passed, 68 total
+Snapshots:   0 total
+Time:        1.759 s, estimated 2 s
+Ran all test suites matching test/dom/framework/reading-mode-host-pin.test.ts.
+rc=1

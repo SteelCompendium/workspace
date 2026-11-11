@@ -1,0 +1,75 @@
+FAIL dom test/dom/framework/reading-mode-host-pin.test.ts
+  ● SC-480: a card write whose pin misses is never written into an identical twin › X swaps places with a different block, no twin (its new place): the click lands in X
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      447 | 		section.current = mode === 'its new place' ? sectionAt(after, after.split('\n').indexOf('name: Solo') - 1) : null;
+      448 |
+    > 449 | 		expect(await host.replaceSource(bodyOf(6, 'Solo'), own)).toBe(true);
+          | 		                                                         ^
+      450 | 		expect(soloValue(app)).toBe(6);
+      451 | 		expect(Notice.notices).toEqual([]);
+      452 | 	});
+
+      at test/dom/framework/reading-mode-host-pin.test.ts:449:60
+
+  ● SC-480: a card write whose pin misses is never written into an identical twin › X swaps places with a different block, no twin (no section (the body search)): the click lands in X
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      447 | 		section.current = mode === 'its new place' ? sectionAt(after, after.split('\n').indexOf('name: Solo') - 1) : null;
+      448 |
+    > 449 | 		expect(await host.replaceSource(bodyOf(6, 'Solo'), own)).toBe(true);
+          | 		                                                         ^
+      450 | 		expect(soloValue(app)).toBe(6);
+      451 | 		expect(Notice.notices).toEqual([]);
+      452 | 	});
+
+      at test/dom/framework/reading-mode-host-pin.test.ts:449:60
+
+  ● SC-480: a card write whose pin misses is never written into an identical twin › X moves from last to first of three different blocks (its new place): the click lands in X
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      458 | 		section.current = mode === 'its new place' ? sectionAt(after, after.split('\n').indexOf('name: Solo') - 1) : null;
+      459 |
+    > 460 | 		expect(await host.replaceSource(bodyOf(6, 'Solo'), own)).toBe(true);
+          | 		                                                         ^
+      461 | 		expect(soloValue(app)).toBe(6);
+      462 | 		expect(Notice.notices).toEqual([]);
+      463 | 	});
+
+      at test/dom/framework/reading-mode-host-pin.test.ts:460:60
+
+  ● SC-480: a card write whose pin misses is never written into an identical twin › X moves from last to first of three different blocks (no section (the body search)): the click lands in X
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      458 | 		section.current = mode === 'its new place' ? sectionAt(after, after.split('\n').indexOf('name: Solo') - 1) : null;
+      459 |
+    > 460 | 		expect(await host.replaceSource(bodyOf(6, 'Solo'), own)).toBe(true);
+          | 		                                                         ^
+      461 | 		expect(soloValue(app)).toBe(6);
+      462 | 		expect(Notice.notices).toEqual([]);
+      463 | 	});
+
+      at test/dom/framework/reading-mode-host-pin.test.ts:460:60
+
+Test Suites: 1 failed, 1 total
+Tests:       4 failed, 70 passed, 74 total
+Snapshots:   0 total
+Time:        1.689 s
+Ran all test suites matching test/dom/framework/reading-mode-host-pin.test.ts.
+rc=1
