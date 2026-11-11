@@ -8,6 +8,20 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: deleting a block right after clicking it no longer sends the click into another block (SC-480).**
+  If you pressed + or − on a block and, before the click had been saved, that block was deleted from outside (Sync,
+  another editor, another pane), the click was saved into a different block of the note: an identical one that was left,
+  or a neighbour that the same outside edit had changed to read the same. You never touched that block. Now nothing is
+  saved and a Notice says so ("a change to a block in <note> was not saved — the block changed on disk first"); the
+  outside change is kept. A note with no identical block behaves as before, except that if the same outside edit deleted another block and moved this one into its place, the click is refused with the same Notice. Limits. If the block was cut and pasted
+  somewhere else in the note in that same moment and the note has another block that reads the same, the click is
+  refused with the same Notice although the block still exists. If hundreds of lines changed around the block in that
+  moment and an identical block exists, the click is refused the same way. Two identical blocks with only blank lines
+  between them: if one is deleted from outside the plugin cannot tell which, so a click on the upper block is saved into
+  the block that is left. When a click is refused but its block is still in the note (the cut and paste case and the
+  hundreds-of-lines case above), the card keeps showing the click: the next click on that card saves it together with
+  the new one, and leaving the note first drops it.
+
 - **DSE plugin: saving a block's edit form after that same block was changed or deleted elsewhere no longer writes your edit into another block (SC-556).**
   When a note has two or more blocks that read the same and you had a block's edit form open while that same block was
   edited or deleted from outside (Sync, another editor, a hand edit), Saving the form could write your edit into one of
