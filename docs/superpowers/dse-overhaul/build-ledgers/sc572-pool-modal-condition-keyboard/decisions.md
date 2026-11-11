@@ -108,3 +108,7 @@ Worktree: /home/scott/code/steelCompendium/worktrees/sc572-pool-modal-condition-
 - LAND-READY (2026-11-11): dse branch sc572-pool-modal-condition-keyboard @ a339e7b3 on develop eeed5182. Reported
   to dispatcher. dse-verify CURRENT numbers to record at landing: e2e 254/262 ok, 0 failed, 8 known-bug, 163/163;
   modal host-leak 39 kinds / 234 comparisons; known-bug list loses SC-572; jest 7082/1 (worktree with shots CSS cache).
+- DONE (2026-11-11): landed by the dispatcher — dse develop `a339e7b3` (5 commits), workspace main `450aa37e`
+  (pointer bump a50a4757, bookkeeping 0179fa98); dse-verify CURRENT updated (e2e 254/262 + 8 known-bug, 163/163;
+  modal host-leak 39/234). Ledger preserved at docs/superpowers/dse-overhaul/build-ledgers/sc572-pool-modal-condition-keyboard/;
+  worktree removed. SC-572 moved to Done. Follow-ups filed: SC-591, SC-592, SC-593.
