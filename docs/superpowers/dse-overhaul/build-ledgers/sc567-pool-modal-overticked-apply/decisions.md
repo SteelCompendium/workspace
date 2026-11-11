@@ -54,3 +54,4 @@ fewer kills than are ticked."
 - 2026-11-11 re-review r2: reviewer resumed on delta `dee48526..edd16374`.
 - 2026-11-11 re-review r2 done: LAND at `edd16374`, H0/M0/L0/I2 (mutant probe: bottom-row trim fails K06 + 3 matrix tests). INFO-r2-1 (K06 can't catch a top-row trim; matrix test does) -> no action. INFO-r2-2 ("every box ticked" ambiguous) -> fold as r3 CHANGELOG-only one-word edit; owner checks the docs-only diff.
 - 2026-11-11 r3 done: `f2889351` CHANGELOG-only (owner verified diff: 1 line). origin/develop still `b4e7b4f4`. Land-ready comment posted. Reported LAND-READY to dispatcher. Ticket stays Awaiting until landed.
+- 2026-11-11 DONE: landed by the dispatcher — dse develop `f2889351` (4 commits), workspace main `2ffcf99a` (pointer bump `0259c619`), bookkeeping `ff94c481`; ledger preserved at `docs/superpowers/dse-overhaul/build-ledgers/sc567-pool-modal-overticked-apply/`; worktree removed. SC-567 -> Done.
