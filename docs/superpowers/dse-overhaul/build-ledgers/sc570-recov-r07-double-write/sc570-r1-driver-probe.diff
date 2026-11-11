@@ -1,0 +1,101 @@
+diff --git a/e2e/driver/page.ts b/e2e/driver/page.ts
+index d1b50ca1..29fa3e4a 100644
+--- a/e2e/driver/page.ts
++++ b/e2e/driver/page.ts
+@@ -13,9 +13,14 @@ export async function ev<T = unknown>(expr: string): Promise<T> {
+ 	if (r.exceptionDetails) {
+ 		throw new Error(`page eval failed: ${r.exceptionDetails.exception?.description ?? r.exceptionDetails.text}`);
+ 	}
++	// SC570-K7Q2 PROBE: a slow reply from a loaded host (the eval already ran; the driver hears back late).
++	if (k7q2Probe.lagMs > 0) await new Promise((res) => setTimeout(res, k7q2Probe.lagMs));
+ 	return r.result?.value as T;
+ }
+ 
++/** SC570-K7Q2 PROBE (uncommitted): set by session.ts for the probed tests only. */
++export const k7q2Probe = { lagMs: 0 };
++
+ /** Poll `expr` (page-side) until truthy. Event-driven callers should prefer waitUntil on a
+  *  concrete state; this is for "the page reached X" checks, never a fixed sleep. */
+ export async function waitFor(expr: string, what: string, timeoutMs = 15000): Promise<void> {
+diff --git a/e2e/driver/recorders.ts b/e2e/driver/recorders.ts
+index 661c8d67..4592ee61 100644
+--- a/e2e/driver/recorders.ts
++++ b/e2e/driver/recorders.ts
+@@ -90,7 +90,8 @@ export interface PageEvents {
+ 	errs: Array<{ n: number; text: string }>;
+ }
+ 
+-export const mark = (): Promise<number> => ev<number>('window.__dse.n');
++export const mark = (): Promise<number> =>
++	ev<number>('(window.__sc570 && window.__sc570.push({ ev: "mark", t: Math.round(performance.now()), n: window.__dse.n }), window.__dse.n)');
+ 
+ export const eventsSince = (m: number): Promise<PageEvents> =>
+ 	ev<PageEvents>(
+diff --git a/e2e/driver/session.ts b/e2e/driver/session.ts
+index 6d15c032..56175abf 100644
+--- a/e2e/driver/session.ts
++++ b/e2e/driver/session.ts
+@@ -8,7 +8,7 @@ import { browser } from '@wdio/globals';
+ import { E2E } from './env';
+ import { writeBundle } from './artifacts';
+ import { invariantProblems } from './invariants';
+-import { ev, waitFor } from './page';
++import { ev, k7q2Probe, waitFor } from './page';
+ import { enableFocusEmulation, installRecorders, mark, setWindowSize } from './recorders';
+ import { appendRunLine, errText, resetTestState, state, testIdOf } from './state';
+ 
+@@ -50,6 +50,54 @@ beforeEach(async function () {
+ 	}
+ });
+ 
++// ---- SC570-K7Q2 PROBE (uncommitted): page-side write log + optional slow driver replies / CPU throttle ----
++const K7Q2_OUT = process.env.SC570_K7Q2_OUT ?? '';
++const K7Q2_TAG = process.env.SC570_K7Q2_TAG ?? 'untagged';
++const K7Q2_LAG = Number(process.env.SC570_K7Q2_LAG ?? '0');
++const K7Q2_CPU = Number(process.env.SC570_K7Q2_CPU ?? '0');
++const K7Q2_RE = /\[(RECOV-R07|PRB-K7Q2-[A-Za-z0-9-]+)\]/;
++const K7Q2_INSTALL = `(() => {
++	window.__sc570 = [];
++	if (window.__sc570hooked) return true;
++	window.__sc570hooked = true;
++	const v = app.vault;
++	const orig = v.process.bind(v);
++	const log = (o) => window.__sc570 && window.__sc570.push(Object.assign({ t: Math.round(performance.now()) }, o));
++	v.process = (file, fn, opts) => {
++		log({ ev: 'process-enter', path: file.path });
++		return orig(file, (c) => {
++			const out = fn(c);
++			log({ ev: 'process-cb', path: file.path, recoveries: (/^recoveries: (\\d+)$/m.exec(out) || [])[1], current_stamina: (/^current_stamina: (\\d+)$/m.exec(out) || [])[1], unchanged: out === c });
++			return out;
++		}, opts);
++	};
++	v.on('modify', (f) => log({ ev: 'modify', path: f.path, n: window.__dse.n }));
++	document.addEventListener('click', (e) => {
++		const c = e.target && e.target.closest ? e.target.closest('[data-dse-control]') : null;
++		log({ ev: 'click', control: c ? c.getAttribute('data-dse-control') : null });
++	}, true);
++	return true;
++})()`;
++beforeEach(async function () {
++	const test = this.currentTest;
++	if (!K7Q2_OUT || !test || !K7Q2_RE.test(test.title)) return;
++	await ev(K7Q2_INSTALL);
++	if (K7Q2_CPU > 1) await browser.sendCommandAndGetResult('Emulation.setCPUThrottlingRate', { rate: K7Q2_CPU });
++	k7q2Probe.lagMs = K7Q2_LAG;
++});
++afterEach(async function () {
++	const test = this.currentTest;
++	if (!K7Q2_OUT || !test || !K7Q2_RE.test(test.title)) return;
++	k7q2Probe.lagMs = 0;
++	if (K7Q2_CPU > 1) await browser.sendCommandAndGetResult('Emulation.setCPUThrottlingRate', { rate: 1 });
++	const log = await ev<unknown[]>('window.__sc570 || []');
++	const fs = await import('node:fs');
++	fs.appendFileSync(
++		`${K7Q2_OUT}/k7q2-events-${K7Q2_TAG}.jsonl`,
++		JSON.stringify({ tag: K7Q2_TAG, run: process.env.DSE_E2E_RUN_ID, pid: process.pid, title: test.title, state: test.state, lag: K7Q2_LAG, cpu: K7Q2_CPU, err: state.error ? String(state.error).slice(0, 300) : null, log }) + '\n',
++	);
++});
++
+ afterEach(async function () {
+ 	const test = this.currentTest;
+ 	if (!test) return;
