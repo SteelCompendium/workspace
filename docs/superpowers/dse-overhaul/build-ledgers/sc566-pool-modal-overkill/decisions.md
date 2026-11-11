@@ -78,3 +78,7 @@ Verbatim from the ticket:
 - 2026-11-11 (owner) ruling on r4 INFO-1 (hand-edited -5 pool, stepper + refusal names a negative
   ceiling): drop — identical on 734d7745, pre-existing, unreachable through the UI.
 - LAND-READY reported to dispatcher 2026-11-11: dse `sc566-pool-modal-overkill` @ b4e7b4f4.
+- DONE 2026-11-11: landed by dispatcher — dse develop `b4e7b4f4` (2 commits), workspace main
+  `349cb6e5` (pointer bump `2cda0c8d`, bookkeeping `6ee927e0`). Ledger preserved at
+  `docs/superpowers/dse-overhaul/build-ledgers/sc566-pool-modal-overkill/`; worktree removed.
+  SC-566 moved to Done.
