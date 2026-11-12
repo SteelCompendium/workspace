@@ -38,6 +38,14 @@ go under an *Internal* sub-heading.
   creature, and focus fell to the top of the page. Focus now moves to the creature you clicked. A click when focus was not already
   in the tracker still does not pull focus into it. Since SC-602 this holds in Live Preview too.
 
+- **DSE plugin: a + or - (or a form Save) in a hover preview or embed that stayed open while the note changed no longer writes a different, identical counter (SC-607).**
+  Open a hover preview or an embed of part of a note (`[[note#Tracker]]`, `![[note#^id]]`) and leave it open while something else
+  changes the note, for example Sync deleting the first of two identical `## Tracker` sections or swapping two heading names. A click on
+  its + used to be saved into the other, identical counter with no message. It is now saved into the counter the preview shows, or
+  refused with the "changed on disk first" Notice and nothing written. The rare new refusals are an identical block added or
+  deleted right next to the block you are editing, and a preview that could not be placed when it was drawn. Both are safe: a
+  Notice, nothing written.
+
 - **DSE plugin: clicking in the Compendium search no longer closes a hover preview you are editing, and a pick can no longer vanish silently (SC-601).**
   Open a hover preview of a note, click into its text to edit it, and run "Insert Draw Steel: compendium reference" or "compendium
   block (snapshot)". A click in the search box, on its list or on the dimmed background used to close the preview behind the
