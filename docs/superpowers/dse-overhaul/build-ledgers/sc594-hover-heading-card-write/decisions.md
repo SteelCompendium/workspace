@@ -183,3 +183,4 @@ G-S64 phases; sc584-r2-review-report.md INFO-2 = P14; sc584-r2-probe.test.ts.txt
 - 2026-11-11 owner: LAND-READY. Comment posted (sc594-comment-land-ready.md); ticket stays Awaiting until landed. Reported to the dispatcher.
   At landing: apply sc594-dse-verify-proposal.md (six lifecycle parts; CURRENT), preserve this ledger dir to build-ledgers/, then Done via
   linear-post.py `--state Done` and verify.
+- 2026-11-11 owner: DONE. Dispatcher landed dse develop da2bdbc6, workspace main 3d81d85d (39bc1364 CHANGELOG squash, 435e6287 pointer, 288e76d0 bookkeeping); dse-verify proposal applied. Landed comment posted via linear-post.py with `--state Done`; state verified Done (labels DSE Plugin, Bug unchanged). Follow-ups live: SC-607 (new), SC-596, SC-524 (Backlog).
