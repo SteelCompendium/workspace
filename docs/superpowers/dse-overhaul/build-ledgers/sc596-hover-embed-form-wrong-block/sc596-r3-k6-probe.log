@@ -1,0 +1,48 @@
+=== HEAD
+  console.log
+    K6PROBE {"first":true,"pendingPin":null,"second":true,"values":["7"],"notices":[]}
+
+      at Object.<anonymous> (test/dom/framework/sc596-r3-k6-probe.test.ts:42:10)
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        0.893 s
+Ran all test suites matching test/dom/framework/sc596-r3-k6-probe.test.ts.
+rc=0
+mutant k6
+=== k6
+  console.log
+    K6PROBE {"first":true,"pendingPin":"{\"text\":\"\",\"lineStart\":-1}","second":false,"values":["6"],"notices":["Draw Steel Elements: a change to a block in Note was not saved — the plugin can't tell where this block sits in the note."]}
+
+      at Object.<anonymous> (test/dom/framework/sc596-r3-k6-probe.test.ts:42:10)
+
+FAIL dom test/dom/framework/sc596-r3-k6-probe.test.ts
+  ● k6 probe: non-embedded callout card, second + while the window is stale, lands once the window is fresh
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   "7",
+    +   "6",
+      ]
+
+      41 | 	// eslint-disable-next-line no-console
+      42 | 	console.log('K6PROBE ' + JSON.stringify(out));
+    > 43 | 	expect(values).toEqual(['7']);
+         | 	               ^
+      44 | });
+      45 |
+
+      at Object.<anonymous> (test/dom/framework/sc596-r3-k6-probe.test.ts:43:17)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        0.764 s, estimated 1 s
+Ran all test suites matching test/dom/framework/sc596-r3-k6-probe.test.ts.
+rc=1
+status: 

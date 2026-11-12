@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+# mutate.py <mutant id>: apply the SC-596 r1 probe rule, then one mutation (worktree source; the caller restores with git checkout).
+import sys, subprocess
+S = '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc596-r1-design/'
+E = '/home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/'
+F = E + 'src/framework/host/ReadingModeBlockHost.ts'
+H = E + 'src/framework/host/hoverLinks.ts'
+m = sys.argv[1]
+subprocess.run(['python3', S + 'apply-rule.py'], check=True, stdout=subprocess.DEVNULL)
+M = {
+ # the rule's own guards
+ 'm1': (F, "if (!section) return forForm && embedded ? this.refusingPin() : null;", "if (!section) return null;"),
+ 'm2': (F, "return embedded ? (this.pinFromLastWrite() ?? (forForm ? this.refusingPin() : null)) : null;", "return embedded ? this.pinFromLastWrite() : null;"),
+ 'm3': (F, "if (pin !== null && refusingPins.has(pin)) {", "if (false && pin !== null && refusingPins.has(pin)) {"),
+ 'm4': (F, "partialPins.add(pin);\n\t\trefusingPins.add(pin);", "refusingPins.add(pin);"),
+ 'm5': (F, "const link = src ?? hoverLinkOf(this.plugin.app, this.containerEl)?.linktext;", "const link = src ?? (forForm ? undefined : hoverLinkOf(this.plugin.app, this.containerEl)?.linktext);"),
+ 'm6': (F, "pinRebased.set(pin, this.rebaseCardPin(pin, section.text, this.lastWrite));", "pinRebased.set(pin, forForm ? this.rebasePin(pin, section.text, this.lastWrite) : this.rebaseCardPin(pin, section.text, this.lastWrite));"),
+ 'm7': (F, "pinRebased.set(pin, this.rebaseCardPin(pin, section.text, this.lastWrite));", "pinRebased.set(pin, forForm ? this.rebasePin(pin, section.text, this.lastWrite) : this.rebaseCardPin(pin, section.text, this.lastWrite));",
+        F, "const line = this.verifiedPinLine(file, whole, sectionText, pin.lineStart) ?? this.searchedPinLine(whole, sectionText, pin.lineStart);", "const line = this.verifiedPinLine(file, whole, sectionText, pin.lineStart);"),
+ 'm8': (F, "if (typeof link !== 'string' || link.includes('#')) partialPins.add(pin);", "if (forForm || typeof link !== 'string' || link.includes('#')) partialPins.add(pin);"),
+ # the card guards (cardLinkLine / rebaseCardPin / hoverLinkOf) that a form's pin now depends on
+ 'm9': (F, "for (let i = 0; i < wholePart.length; i++) if (lines[partStart + i] !== wholePart[i]) return null;", ""),
+ 'm10': (F, "} else if (named.length !== 1) return null;", "}"),
+ 'm10b': (F, "if (lines.filter((l) => marker.test(l)).length !== 1) return null;", ""),
+ 'm11': (F, "if (next >= lines.length || lines[next].trim().toLowerCase() !== `^${blockId.toLowerCase()}`) return null;", ""),
+ 'm12': (F, "return normalizeBody(found.body) === normalizeBody(known ?? own) ? line : null;", "return line;"),
+ 'm13': (F, "if (write !== null && known !== null && normalizeBody(write.body) === normalizeBody(known)) {", "if (false && write !== null && known !== null && normalizeBody(write.body) === normalizeBody(known)) {"),
+ 'm14': (F, "hovered ? hovered.sourcePath : this.ctx.sourcePath);\n\t\tif (!dest || dest.path !== file.path) return null;", "hovered ? hovered.sourcePath : this.ctx.sourcePath);"),
+ 'm15': (H, "return link !== null && popoverShows(popover, link.linktext) ? link : null;", "return link;"),
+ 'm16': (F, "if (!named.includes(start)) return null;", ""),
+}
+spec = M[m]
+for i in range(0, len(spec), 3):
+    path, old, new = spec[i:i + 3]
+    s = open(path).read()
+    assert s.count(old) == 1, (m, s.count(old), old[:60])
+    s = s.replace(old, new)
+    open(path, 'w').write(s)
+print('mutant', m)

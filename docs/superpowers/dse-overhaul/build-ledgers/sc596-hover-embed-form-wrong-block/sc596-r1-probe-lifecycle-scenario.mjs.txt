@@ -1,0 +1,120 @@
+	// ---- SC-596 r1 reachability probe (scratch; never committed). Spliced at the front of SCENARIOS of a COPY of the harness.
+	{
+		id: 'P596',
+		async run(t) {
+			const J = JSON.stringify;
+			const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+			const out = [];
+			await t.ev(`${prefs}.set('authoringControls', true)`);
+			const K = gs83Kit(t);
+			/**
+			 * One cell: the edit form opened on counter A from an embed (`kind` 'embed') or a hover preview ('hover') of part of SRC, right after an outside edit
+			 * changed A (in the SAME page task: the vault write resolves, then a scripted click on A's pencil; the part is still the one drawn before).
+			 * `pane`: SRC is also open in a second pane (Reading view), so a form whose card unloads may stay open (SC-552 keepFormOpenOn).
+			 * `last`: A is the LAST `current_value: 5` of SRC (else the first).
+			 */
+			const cell = async ({ label, SRC, HOST, kind, mode, pane = false, last = true }) => {
+				const rec = { label };
+				const valuesOf = () => (t.read(SRC).match(/^[> ]*current_value: (\d+)$/gm) ?? []).map((x) => Number(x.replace(/^[> ]*current_value: /, '')));
+				const namesOf = () => (t.read(SRC).match(/^[> ]*name: (\w+)$/gm) ?? []).map((x) => x.replace(/^[> ]*name: /, ''));
+				try {
+					await t.reset(SRC);
+					await t.reset(HOST);
+					const inPart = kind === 'hover' ? `e.root.closest('.hover-popover')` : `e.root.closest('.internal-embed, .markdown-embed')`;
+					const ES = `app.plugins.plugins['draw-steel-elements'].viewRegistry.liveEntries().filter((e) => e.host.sourcePath === ${J(SRC)} && e.root.isConnected && ${inPart})`;
+					if (kind === 'hover') {
+						const link = await K.openHost(HOST, mode);
+						if (pane) {
+							await t.ev(`(async () => { const leaf = app.workspace.getLeaf('split'); await leaf.setViewState({ type: 'markdown', state: { file: ${J(SRC)}, mode: 'preview' }, active: false }); return true; })()`);
+							await t.sleep(600);
+							await t.ev(`(() => { const l = app.workspace.getLeavesOfType('markdown').find((x) => x.view.file?.path === ${J(HOST)}); app.workspace.setActiveLeaf(l, { focus: true }); return true; })()`);
+							await t.sleep(300);
+						}
+						rec.hover = await K.hover(link, SRC);
+						await t.sleep(400);
+						await K.moveTo(`(${ES})[0].root`);
+						await t.sleep(300);
+					} else {
+						const st = mode === 'rv' ? { mode: 'preview' } : { mode: 'source', source: false };
+						await t.ev(`(async () => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); const leaf = app.workspace.getLeavesOfType('markdown')[0] ?? app.workspace.getMostRecentLeaf(); await leaf.setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true }); await leaf.setViewState({ type: 'markdown', state: { file: ${J(HOST)}, ...${J(st)} }, active: true }); return true; })()`);
+						if (mode === 'lp') await t.ev(`(() => { app.workspace.getMostRecentLeaf().view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+						if (pane) {
+							await t.ev(`(async () => { const leaf = app.workspace.getLeaf('split'); await leaf.setViewState({ type: 'markdown', state: { file: ${J(SRC)}, mode: 'preview' }, active: false }); return true; })()`);
+							await t.sleep(600);
+						}
+						await t.waitFor(`(${ES}).length === 1`, `${label}: the embedded card is drawn`, 15000);
+					}
+					const PENCIL = `((${ES})[0].root.querySelector('.dse-chrome button[data-dse-chrome-item="edit"], button[aria-label^="Edit "]'))`;
+					await t.waitFor(`!!${PENCIL}`, `${label}: the pencil is drawn`, 8000);
+					rec.before = valuesOf();
+					const mk = await t.mark();
+					const EDIT = last
+						? `(c) => { const i = c.lastIndexOf('current_value: 5'); return c.slice(0, i) + 'current_value: 9' + c.slice(i + 'current_value: 5'.length); }`
+						: `(c) => c.replace('current_value: 5', 'current_value: 9')`;
+					rec.open = await t.ev(`(async () => {
+						const e = (${ES})[0];
+						const root = e.root;
+						const host = e.host;
+						await app.vault.process(app.vault.getAbstractFileByPath(${J(SRC)}), ${EDIT});
+						const b = ${PENCIL};
+						if (!b) return { clicked: false };
+						const sec = (() => { try { return host.ctx.getSectionInfo(host.containerEl); } catch (err) { return null; } })();
+						const t0 = performance.now();
+						b.click();
+						const opened = !!document.querySelector('.modal-container .dse-modal');
+						const w = (window.__s596 = { t0, closedAt: null, rootGoneAt: null });
+						const tick = () => {
+							const now = Math.round(performance.now() - t0);
+							if (w.closedAt === null && !document.querySelector('.modal-container .dse-modal')) w.closedAt = now;
+							if (w.rootGoneAt === null && !root.isConnected) w.rootGoneAt = now;
+							if (now < 2500) setTimeout(tick, 2);
+						};
+						setTimeout(tick, 0);
+						return { clicked: true, opened, staleAtOpen: !!sec && sec.text.includes('current_value: 5') && !sec.text.includes('current_value: 9'), secStart: sec ? sec.lineStart : null };
+					})()`);
+					await t.sleep(1500);
+					rec.timing = await t.ev(`window.__s596`);
+					rec.formOpen = await t.ev(`!!document.querySelector('.modal-container .dse-modal')`);
+					rec.afterEdit = valuesOf();
+					if (rec.formOpen) {
+						const FORM = `document.querySelector('.modal-container .dse-modal')`;
+						const SAVE = `Array.from(document.querySelectorAll('.modal-container .dse-modal button')).find((b) => b.getAttribute('aria-label') === 'Save')`;
+						rec.renamed = await t.ev(`(() => { const ta = ${FORM}.querySelector('textarea.dse-form__raw'); if (!ta) return false; ta.value = ta.value.replace('name: Twin', 'name: Edited'); ta.dispatchEvent(new Event('input', { bubbles: true })); return true; })()`);
+						await t.waitFor(`!!(${SAVE}) && !(${SAVE}).disabled`, `${label}: Save is enabled`, 5000);
+						await t.ev(`(${SAVE}).click()`);
+						const t0 = Date.now();
+						while (Date.now() - t0 < 3000 && !t.read(SRC).includes('name: Edited') && !(await t.noticesSince(mk)).length) await t.sleep(50);
+						await t.sleep(300);
+						rec.formOpenAfterSave = await t.ev(`!!document.querySelector('.modal-container .dse-modal')`);
+					}
+					rec.values = valuesOf();
+					rec.names = namesOf();
+					const aIdx = last ? rec.names.length - 1 : 0;
+					rec.wrote = !rec.names.includes('Edited') ? 'nothing' : rec.names.indexOf('Edited') === aIdx ? 'A (own)' : 'TWIN';
+					rec.notices = (await t.noticesSince(mk)).filter((x) => /Draw Steel Elements/.test(x)).map((x) => x.slice(0, 90));
+				} catch (e) {
+					rec.error = e.message;
+				} finally {
+					// a refused Save leaves the form open (and a kept-open form outlives its card): Cancel it, then Escape, until no modal is left
+					for (let i = 0; i < 5 && (await t.ev(`!!document.querySelector('.modal-container')`)); i++) {
+						await t.ev(`(() => { const b = Array.from(document.querySelectorAll('.modal-container .dse-modal button')).find((x) => x.getAttribute('aria-label') === 'Cancel'); if (b) b.click(); return true; })()`);
+						await t.sleep(200);
+						if (await t.ev(`!!document.querySelector('.modal-container')`)) await t.key('Escape', 'Escape', 27).catch(() => {});
+						await t.sleep(200);
+					}
+					rec.modalsLeft = await t.ev(`document.querySelectorAll('.modal-container').length`);
+					await K.cleanup();
+					await t.ev(`(() => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); return true; })()`);
+				}
+				console.log(`P596-REC ${J(rec)}`);
+				out.push(`${label}: ${rec.error ? 'ERROR ' + rec.error : `form ${rec.open && rec.open.opened ? 'opened' : 'NOT opened'} (stale part ${rec.open && rec.open.staleAtOpen}), closed at ${rec.timing ? rec.timing.closedAt : '?'} ms, card gone at ${rec.timing ? rec.timing.rootGoneAt : '?'} ms, wrote ${rec.wrote}`}`);
+			};
+			try {
+				for (const c of CELLS596) await cell(c);
+			} finally {
+				await t.ev(`${prefs}.set('authoringControls', false)`);
+				await t.open('Lifecycle/other.md');
+			}
+			return out.join('; ');
+		},
+	},

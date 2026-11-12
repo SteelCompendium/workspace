@@ -1,0 +1,33 @@
+#!/usr/bin/env python3
+import sys
+E='/home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/'
+F=E+'src/framework/host/ReadingModeBlockHost.ts'
+H=E+'src/framework/host/hoverLinks.ts'
+m=sys.argv[1]
+M={
+ 'm1':[(F,"if (!section) return embedded ? this.refusingPin() : null;","if (!section) return null;")],
+ 'm2':[(F,"return embedded ? (this.pinFromLastWrite() ?? this.refusingPin()) : null;","return embedded ? this.pinFromLastWrite() : null;")],
+ 'm3':[(F,"if (pin !== null && refusingPins.has(pin)) {","if (false && pin !== null && refusingPins.has(pin)) {")],
+ 'm4':[(F,"partialPins.add(pin);\n\t\trefusingPins.add(pin);","refusingPins.add(pin);")],
+ 'm5':[(F,"const link = src ?? hoverLinkOf(this.plugin.app, this.containerEl)?.linktext;","const link = src ?? undefined;")],
+ 'm6':[(F,"pinRebased.set(pin, this.rebaseCardPin(pin, section.text, this.lastWrite));","")],
+ 'm8':[(F,"if (typeof link !== 'string' || link.includes('#')) partialPins.add(pin);","partialPins.add(pin);")],
+ 'm9':[(F,"for (let i = 0; i < wholePart.length; i++) if (lines[partStart + i] !== wholePart[i]) return null;","")],
+ 'm10':[(F,"} else if (named.length !== 1) return null;","}")],
+ 'm10b':[(F,"if (lines.filter((l) => marker.test(l)).length !== 1) return null;","")],
+ 'm11':[(F,"if (next >= lines.length || lines[next].trim().toLowerCase() !== `^${blockId.toLowerCase()}`) return null;","")],
+ 'm12':[(F,"return normalizeBody(found.body) === normalizeBody(known ?? own) ? line : null;","return line;")],
+ 'm13':[(F,"if (write !== null && known !== null && normalizeBody(write.body) === normalizeBody(known)) {","if (false && write !== null && known !== null && normalizeBody(write.body) === normalizeBody(known)) {")],
+ 'm14':[(F,"hovered ? hovered.sourcePath : this.ctx.sourcePath);\n\t\tif (!dest || dest.path !== file.path) return null;","hovered ? hovered.sourcePath : this.ctx.sourcePath);")],
+ 'm15':[(H,"return link !== null && popoverShows(popover, link.linktext) ? link : null;","return link;")],
+ 'm16':[(F,"if (!named.includes(start)) return null;","")],
+ # m17: the pin's own-write fallback of the record path in takePin (the SC-584 r7 guard)
+ 'm17':[(F,"				const w = this.pinFromLastWrite();\n				if (w) return w;","")],
+ # m18: the refusing pin is taken for cards only in the no-fence branch (form keeps null) -> a card test must still kill, a form test too
+ 'm18':[(F,"if (pin !== null && refusingPins.has(pin)) {\n\t\t\t\t\tunplaceable = true;","if (pin !== null && refusingPins.has(pin) && options?.fromView !== true) {\n\t\t\t\t\tunplaceable = true;")],
+}
+for path,old,new in M[m]:
+    s=open(path).read()
+    assert s.count(old)==1,(m,s.count(old),old[:60])
+    open(path,'w').write(s.replace(old,new))
+print('mutant',m)

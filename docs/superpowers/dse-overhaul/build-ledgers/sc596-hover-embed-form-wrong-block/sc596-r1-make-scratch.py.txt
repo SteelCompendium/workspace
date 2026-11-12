@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+# make-scratch.py <tree>: copy <tree>/visual-harness/obsidian-lifecycle.mjs to <tree>/visual-harness/obsidian-lifecycle-s596.mjs with the SC-596 r1
+# fixtures and the P596 scenario at the front of SCENARIOS. <tree> is a git-archive export in the scratch dir (never the worktree).
+import sys
+T = sys.argv[1].rstrip('/') + '/'
+S = '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc596-r1-design/'
+src = open(T + 'visual-harness/obsidian-lifecycle.mjs').read()
+scen = open(S + 'scenario.mjs').read()
+fixtures = r'''
+const CELLS596 = [];
+{
+	// block: the twin B (^b) above, A (^a) below - A is the LAST `current_value: 5`
+	const blk = (id) => `# s596 ${id}\n\nTOP\n\n${COUNTER(5, 'Twin')}\n^b${id.replace(/\W/g, '')}\n\nmid\n\n${COUNTER(5, 'Twin')}\n^a${id.replace(/\W/g, '')}\n\nEND\n`;
+	// heading hover: the twin under ## Other above, A under ## Tracker - A is the LAST
+	const hd = (id) => `# s596 ${id}\n\nTOP\n\n## Other\n\n${COUNTER(5, 'Twin')}\n\n## Tracker\n\n${COUNTER(5, 'Twin')}\n\nEND\n`;
+	// heading embed: two `## Tracker` sections, A under the FIRST (the one the embed shows), the twin under the second - A is the FIRST
+	const hd2 = (id) => `# s596 ${id}\n\nTOP\n\n## Tracker\n\n${COUNTER(5, 'Twin')}\n\n## Mid\n\nmid\n\n## Tracker\n\n${COUNTER(5, 'Twin')}\n\nEND\n`;
+	const add = (id, body, host, cellDef) => {
+		FIXTURES[`Lifecycle/s596-${id}-src.md`] = body;
+		FIXTURES[`Lifecycle/s596-${id}-host.md`] = host;
+		CELLS596.push({ SRC: `Lifecycle/s596-${id}-src.md`, HOST: `Lifecycle/s596-${id}-host.md`, ...cellDef });
+	};
+	const ID = (id) => id.replace(/\W/g, '');
+	for (const [id, mode, pane] of [['be-rv', 'rv', false], ['be-lp', 'lp', false], ['be-rv-pane', 'rv', true]])
+		add(id, blk(id), `# s596 ${id} host\n\n![[s596-${id}-src#^a${ID(id)}]]\n\nafter\n`, { label: `block embed ${mode}${pane ? ', SRC open in a second pane' : ''}`, kind: 'embed', mode, pane, last: true });
+	for (const [id, mode, pane] of [['he-rv', 'rv', false], ['he-rv-pane', 'rv', true]])
+		add(id, hd2(id), `# s596 ${id} host\n\n![[s596-${id}-src#Tracker]]\n\nafter\n`, { label: `heading embed ${mode} (two ## Tracker)${pane ? ', SRC open in a second pane' : ''}`, kind: 'embed', mode, pane, last: false });
+	// heading hover where ## Tracker is NOT the last section (its body ends at ## After, so it reads exactly like the twin's body under ## Other)
+	const hd3 = (id) => `# s596 ${id}\n\nTOP\n\n## Other\n\n${COUNTER(5, 'Twin')}\n\n## Tracker\n\n${COUNTER(5, 'Twin')}\n\n## After\n\nEND\n`;
+	for (const [id, mode, pane] of [['hh3-rv', 'rv', false], ['hh3-rv-pane', 'rv', true], ['hh3-lp-pane', 'lp', true]])
+		add(id, hd3(id), `# s596 ${id} host\n\nsee [[s596-${id}-src#Tracker]] here\n\nfiller\n`, { label: `heading hover (section followed by ## After) ${mode}${pane ? ', SRC open in a second pane' : ''}`, kind: 'hover', mode, pane, last: true });
+	for (const [id, mode, pane] of [['bh-rv', 'rv', false], ['bh-rv-pane', 'rv', true]])
+		add(id, blk(id), `# s596 ${id} host\n\nsee [[s596-${id}-src#^a${ID(id)}]] here\n\nfiller\n`, { label: `block hover ${mode}${pane ? ', SRC open in a second pane' : ''}`, kind: 'hover', mode, pane, last: true });
+	for (const [id, mode, pane] of [['hh-rv', 'rv', false], ['hh-lp', 'lp', false], ['hh-rv-pane', 'rv', true]])
+		add(id, hd(id), `# s596 ${id} host\n\nsee [[s596-${id}-src#Tracker]] here\n\nfiller\n`, { label: `heading hover ${mode}${pane ? ', SRC open in a second pane' : ''}`, kind: 'hover', mode, pane, last: true });
+	const only = (process.env.S596_CELLS ?? '').split(',').filter(Boolean);
+	if (only.length) for (let i = CELLS596.length - 1; i >= 0; i--) if (!only.some((o) => CELLS596[i].SRC.includes(`s596-${o}-src`))) CELLS596.splice(i, 1);
+}
+'''
+anchor = '\nconst SCENARIOS = [\n'
+assert src.count(anchor) == 1
+src = src.replace(anchor, '\n' + fixtures + anchor + scen)
+open(T + 'visual-harness/obsidian-lifecycle-s596.mjs', 'w').write(src)
+print('ok')

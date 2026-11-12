@@ -1,0 +1,217 @@
+Info: New devbox available: 0.17.5 -> v0.20.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements
+FAIL dom test/dom/framework/sc596-r1-probe.test.ts (56.583 s)
+  ● SC-596 r1 named probes › P4 verbatim (no hover-link record): Save must not write B
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        "Twin",
+    -   "Twin",
+    +   "Edited",
+      ]
+
+      272 | 		const r = await formSave(host, pin, bodyOf(6, 'Edited'));
+      273 | 		record(`NAMED|${name}|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+    > 274 | 		expect(names(app)).toEqual(['Twin', 'Twin']);
+          | 		                   ^
+      275 | 	});
+      276 |
+      277 | 	// P4 for a block EMBED ![[Note#^a]] (src) and a heading hover / heading embed, the same shape (section == known, A edited, twin identical)
+
+      at test/dom/framework/sc596-r1-probe.test.ts:274:22
+
+  ● SC-596 r1 named probes › P4 with the hover-link record Obsidian sends: Save must not write B
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        "Twin",
+    -   "Twin",
+    +   "Edited",
+      ]
+
+      272 | 		const r = await formSave(host, pin, bodyOf(6, 'Edited'));
+      273 | 		record(`NAMED|${name}|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+    > 274 | 		expect(names(app)).toEqual(['Twin', 'Twin']);
+          | 		                   ^
+      275 | 	});
+      276 |
+      277 | 	// P4 for a block EMBED ![[Note#^a]] (src) and a heading hover / heading embed, the same shape (section == known, A edited, twin identical)
+
+      at test/dom/framework/sc596-r1-probe.test.ts:274:22
+
+  ● SC-596 r1 named probes › P4e block embed, fresh cache: Save must not write B
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "Edited"
+    Received array:     ["Twin", "Edited"]
+
+      303 | 		const r = await formSave(host, pin, bodyOf(6, 'Edited'));
+      304 | 		record(`NAMED|${name}|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+    > 305 | 		expect(names(app)).not.toContain('Edited');
+          | 		                       ^
+      306 | 	});
+      307 |
+      308 | 	// P13 (SC-584 r2 INFO-3), verbatim: a callout ^cal embed, the host knows 6 while its part still shows 5 and the host has NO record of a + (r2 modelled
+
+      at test/dom/framework/sc596-r1-probe.test.ts:305:26
+
+  ● SC-596 r1 named probes › P4h heading hover, record: Save must not write B
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "Edited"
+    Received array:     ["Edited", "Twin"]
+
+      303 | 		const r = await formSave(host, pin, bodyOf(6, 'Edited'));
+      304 | 		record(`NAMED|${name}|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+    > 305 | 		expect(names(app)).not.toContain('Edited');
+          | 		                       ^
+      306 | 	});
+      307 |
+      308 | 	// P13 (SC-584 r2 INFO-3), verbatim: a callout ^cal embed, the host knows 6 while its part still shows 5 and the host has NO record of a + (r2 modelled
+
+      at test/dom/framework/sc596-r1-probe.test.ts:305:26
+
+  ● SC-596 r1 named probes › P13 verbatim (no + record): never the upper callout
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   "Twin",
+    +   "Edited",
+        "Twin",
+      ]
+
+      317 | 		const r = await formSave(host, pin, bodyOf(6, 'Edited'));
+      318 | 		record(`NAMED|P13 verbatim|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+    > 319 | 		expect(names(app)).toEqual(['Twin', 'Twin']);
+          | 		                   ^
+      320 | 	});
+      321 |
+      322 | 	// P13 faithful: the same with a REAL + by this host first (so a record exists), then A edited from outside, then the pencil.
+
+      at Object.<anonymous> (test/dom/framework/sc596-r1-probe.test.ts:319:22)
+
+  ● SC-596 r1 named probes › N1 callout embed, the block written by another host (no record), part stale, twin callout holds the known body
+
+    expect(received).not.toEqual(expected) // deep equality
+
+    Expected: not ["Edited", "Twin"]
+
+      406 | 		const r = await formSave(host, pin, bodyOf(6, 'Edited'));
+      407 | 		record(`NAMED|N1 callout stale window, no record|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+    > 408 | 		expect(names(app)).not.toEqual(['Edited', 'Twin']);
+          | 		                       ^
+      409 | 	});
+      410 | 	// N2: two identical counters in one callout in an embed, DOM ordinal unreadable (-1): 'ambiguous' -> no own fence -> null pin.
+      411 | 	test('N2 two identical counters in one callout embed, no DOM ordinal: null pin', async () => {
+
+      at Object.<anonymous> (test/dom/framework/sc596-r1-probe.test.ts:408:26)
+
+  ● SC-596 r1 named probes › N3b embed host, section resolved at build then null at the pencil, own edited, twin elsewhere: null pin
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   "Twin",
+    +   "Edited",
+        "Twin",
+      ]
+
+      446 | 		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+      447 | 		record(`NAMED|N3b embed, section null at the pencil, own edited|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+    > 448 | 		expect(names(app)).toEqual(['Twin', 'Twin']);
+          | 		                   ^
+      449 | 	});
+      450 | 	// N4: a hover card on a heading-hover callout, + by this host, then the record dropped (the host's section unloaded and it was rebound: setMountedBody),
+      451 | 	// the part stale, the twin callout holding the body: null pin, Save without pinOnly.
+
+      at Object.<anonymous> (test/dom/framework/sc596-r1-probe.test.ts:448:22)
+
+  ● SC-596 r1 named probes › N4 heading hover callout, + then setMountedBody (record dropped), twin holds the known body
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   "Twin",
+    +   "Edited",
+        "Twin",
+      ]
+
+      461 | 		const r = await formSave(host, pin, bodyOf(6, 'Edited'));
+      462 | 		record(`NAMED|N4 heading hover callout, stale part, no record, own edited|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+    > 463 | 		expect(names(app)).toEqual(['Twin', 'Twin']);
+          | 		                   ^
+      464 | 	});
+      465 | 	// ---- the existing tests the rule flips, re-modelled as Obsidian draws them (an embed always has its `src`; a page preview always sends
+      466 | 	// `hover-link`; a real + leaves this host's record; the cache follows an outside edit within ~45 ms). Each must save on base AND under the rule.
+
+      at Object.<anonymous> (test/dom/framework/sc596-r1-probe.test.ts:463:22)
+
+  ● SC-596 r1 named probes › Y1e heading embed: an identical ## Tracker section pasted directly above the own one from outside, the cache lags: never the pasted copy
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   7,
+    + ]
+
+      619 | 		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+      620 | 		record(`NAMED|${name}|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(writtenAt(app))}|notices ${Notice.notices.length}`);
+    > 621 | 		expect(writtenAt(app)).toEqual([]); // the two places read the same: refused, never a guess // line 8 = the pasted copy's name line (the own one moved to line 14)
+          | 		                       ^
+      622 | 	});
+      623 | 	test.each([
+      624 | 		['Y2e block embed', 'embed'],
+
+      at test/dom/framework/sc596-r1-probe.test.ts:621:26
+
+  ● SC-596 r1 named probes › Y2e block embed: a copy of the block WITH its ^a pasted above it from outside, the cache lags: never the copy
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   5,
+    + ]
+
+      635 | 		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+      636 | 		record(`NAMED|${name}|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(writtenAt(app))}|notices ${Notice.notices.length}`);
+    > 637 | 		expect(writtenAt(app)).toEqual([]); // the two places read the same: refused, never a guess
+          | 		                       ^
+      638 | 	});
+      639 | 	test.each([
+      640 | 		['Y3e block embed', 'embed'],
+
+      at test/dom/framework/sc596-r1-probe.test.ts:637:26
+
+Test Suites: 1 failed, 1 total
+Tests:       10 failed, 2908 passed, 2918 total
+Snapshots:   0 total
+Time:        57.121 s
+probe_rc=1

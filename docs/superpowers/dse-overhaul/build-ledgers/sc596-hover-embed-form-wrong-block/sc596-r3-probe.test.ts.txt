@@ -1,0 +1,431 @@
+// SC-596 r3 reviewer probe (scratch; copied into test/dom/framework/ for a run and deleted by its literal path). Records outcomes; asserts nothing
+// except that the probe itself ran. Output: one `NAME|json` line per probe to $SC596_R3_OUT.
+import * as fs from 'fs';
+import { ReadingModeBlockHost } from '../../../src/framework/host/ReadingModeBlockHost';
+import { noteHoverLink } from '../../../src/framework/host/hoverLinks';
+import { resetDroppedWriteNotices } from '../../../src/framework/host/droppedWriteNotice';
+import { App, Notice, Plugin } from '../../mocks/obsidian';
+
+type Sec = { text: string; lineStart: number; lineEnd: number };
+const OUT = process.env.SC596_R3_OUT;
+const rec = (name: string, obj: unknown) => {
+	if (OUT) fs.appendFileSync(OUT, `${name}|${JSON.stringify(obj)}\n`);
+};
+const CTR = (n: number, name = 'Twin'): string[] => ['```ds-counter', `name: ${name}`, `current_value: ${n}`, '```'];
+const bodyOf = (n: number, name = 'Twin'): string => `name: ${name}\ncurrent_value: ${n}`;
+const pos = (line: number) => ({ line, col: 0, offset: 0 });
+const settle = () => new Promise((r) => setTimeout(r, 25));
+const noticeKind = (n: string): string =>
+	n.includes('changed on disk first') ? 'dropped' : n.includes("can't be edited yet") ? 'unsavable-list' : n.includes("can't tell where") ? 'unsavable' : 'other:' + n.slice(0, 60);
+const kinds = (): string[] => (Notice.notices as unknown[]).map((n) => noticeKind(String(n)));
+function ctxOf(section: { current: Sec | null }, path = 'Note.md'): any {
+	return { docId: 'doc-r3', sourcePath: path, frontmatter: undefined, addChild: () => {}, getSectionInfo: () => section.current };
+}
+function cacheOfText(text: string, omitHeadingAt: number[] = []) {
+	const lines = text.split(/\r?\n/);
+	const headings: Array<{ heading: string; level: number; position: unknown }> = [];
+	const blocks: Record<string, { id: string; position: unknown }> = {};
+	let fenced = false;
+	lines.forEach((l, i) => {
+		if (/^[> ]*```/.test(l)) fenced = !fenced;
+		const h = !fenced && /^(#{1,6})\s+(.*?)\s*$/.exec(l);
+		if (h && !omitHeadingAt.includes(i)) headings.push({ heading: h[2], level: h[1].length, position: { start: pos(i), end: pos(i) } });
+		const id = /^\^(\w+)$/.exec(l);
+		if (id) {
+			let end = i - 1;
+			while (end >= 0 && lines[end] === '') end--;
+			let start = end;
+			if (lines[end] === '```') for (start = end - 1; start >= 0 && !/^```\w/.test(lines[start]); start--);
+			else if (/^>/.test(lines[end])) for (start = end; start > 0 && /^>/.test(lines[start - 1]); start--);
+			blocks[id[1]] = { id: id[1], position: { start: pos(start), end: pos(end) } };
+		}
+	});
+	return { headings, blocks };
+}
+function popoverEl(app: App, link: string | null): { popover: HTMLElement; embed: HTMLElement; el: HTMLElement } {
+	const popover = document.createElement('div');
+	popover.className = 'popover hover-popover';
+	const embed = popover.appendChild(document.createElement('div'));
+	embed.className = 'markdown-embed';
+	const sub = link !== null && link.includes('#') ? link.slice(link.indexOf('#')) : null;
+	if (sub !== null && sub.startsWith('#^')) embed.setAttribute('data-type', 'block');
+	else if (sub !== null) {
+		embed.setAttribute('data-type', 'heading');
+		const h = embed.appendChild(document.createElement('h2'));
+		h.setAttribute('data-heading', sub.split('#').pop()!.split('|')[0]);
+	}
+	const el = embed.appendChild(document.createElement('div'));
+	document.body.appendChild(popover);
+	if (link !== null) noteHoverLink(app, { linktext: link, sourcePath: 'Host.md', hoverParent: { hoverPopover: { hoverEl: popover } } });
+	return { popover, embed, el };
+}
+function embedEl(src: string): HTMLElement {
+	const embed = document.createElement('div');
+	embed.className = 'internal-embed markdown-embed';
+	embed.setAttribute('src', src);
+	return embed.appendChild(document.createElement('div'));
+}
+function hostOf(app: App, el: HTMLElement, sec: Sec | null, body: string, path = 'Note.md') {
+	const section = { current: sec };
+	const host = new ReadingModeBlockHost(new Plugin(app) as never, el, ctxOf(section, path) as never, 'ds-counter');
+	host.setMountedBody(body);
+	return { host, section };
+}
+const formSave = (host: ReadingModeBlockHost, pin: any, body: string) => (pin ? host.replaceSource(body, { pin, pinOnly: true }) : host.replaceSource(body));
+const names = (app: App): string[] => [...app.vault.getContent('Note.md')!.matchAll(/name: (\w+)/g)].map((m) => m[1]);
+const values = (app: App): string[] => [...app.vault.getContent('Note.md')!.matchAll(/current_value: (\d+)/g)].map((m) => m[1]);
+function freshApp(full: string, cache: () => unknown): App {
+	const app = new App();
+	app.vault.setFile('Note.md', full);
+	jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => cache() as never);
+	return app;
+}
+/** the text outside lines [a, a+n) of `text` */
+const outside = (text: string, a: number, n: number) => {
+	const l = text.split('\n');
+	return [...l.slice(0, a), ...l.slice(a + n)].join('\n');
+};
+
+beforeEach(() => {
+	resetDroppedWriteNotices();
+	Notice.notices.length = 0;
+	jest.spyOn(console, 'warn').mockImplementation(() => {});
+});
+afterEach(() => {
+	jest.restoreAllMocks();
+	document.body.innerHTML = '';
+});
+
+// a note: B (twin, ^b) above, A (^a) under ## Tracker, ## After
+const BLK = (a: number | null, b = 5) => ['# N', '', 'TOP', '', ...CTR(b), '^b', '', 'mid', '', '## Tracker', '', ...(a === null ? [] : [...CTR(a), '^a', '']), '## After', '', 'END'];
+
+describe('r3 probes', () => {
+	// ---- link shapes with an alias (a src / linktext that carries `|x`; Obsidian strips it, but if it did not)
+	test.each([
+		['ALIAS block embed none', 'embed', 'Note#^a|x', 'none'],
+		['ALIAS block embed edited', 'embed', 'Note#^a|x', 'edited'],
+		['ALIAS block hover none', 'hover', 'Note#^a|x', 'none'],
+		['ALIAS heading hover none', 'hover', 'Note#Tracker|x', 'none'],
+		['ALIAS heading embed edited', 'embed', 'Note#Tracker|x', 'edited'],
+		['NOALIAS block hover none', 'hover', 'Note#^a', 'none'],
+		['NOALIAS heading hover none', 'hover', 'Note#Tracker', 'none'],
+	])('%s', async (name, kind, link, edit) => {
+		const drawn = BLK(5);
+		const now = BLK(edit === 'edited' ? 9 : 5);
+		const app = freshApp(now.join('\n'), () => cacheOfText(now.join('\n')));
+		const aAt = drawn.lastIndexOf('```ds-counter');
+		const isHeading = !link.includes('^');
+		let sec: Sec;
+		if (kind === 'hover') sec = isHeading ? { text: ['', ...CTR(5), '^a', '', ''].join('\n'), lineStart: 1, lineEnd: 4 } : { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 };
+		else sec = isHeading ? { text: ['## Tracker', '', ...CTR(5), '^a', ''].join('\n'), lineStart: 2, lineEnd: 5 } : { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 };
+		const el = kind === 'hover' ? popoverEl(app, link).el : embedEl(link);
+		const { host } = hostOf(app, el, sec, bodyOf(5));
+		const pin = host.pinPosition();
+		await formSave(host, pin, bodyOf(5, 'Edited'));
+		rec(name, { pin: pin ? 'pin' : null, names: names(app), kinds: kinds(), aAt });
+	});
+
+	// ---- heading text shapes: trailing spaces, punctuation, nested subpath
+	test.each([
+		['HEAD trailing spaces none', '## Tracker   ', 'Note#Tracker', 'none'],
+		['HEAD trailing spaces edited', '## Tracker   ', 'Note#Tracker', 'edited'],
+		['HEAD punctuation none', '## Tracker (camp)!', 'Note#Tracker (camp)!', 'none'],
+		['HEAD punctuation edited', '## Tracker (camp)!', 'Note#Tracker (camp)!', 'edited'],
+		['HEAD trailing # none', '## Tracker ##', 'Note#Tracker', 'none'],
+	])('%s (heading hover and embed)', async (name, headLine, link, edit) => {
+		for (const kind of ['hover', 'embed']) {
+			resetDroppedWriteNotices();
+			Notice.notices.length = 0;
+			const mk = (a: number) => ['# N', '', '## Other', '', ...CTR(5), '', headLine, '', ...CTR(a), '', '## After', '', 'END'];
+			const now = mk(edit === 'edited' ? 9 : 5).join('\n');
+			const app = freshApp(now, () => cacheOfText(now));
+			const sec = kind === 'hover' ? { text: ['', ...CTR(5), '', ''].join('\n'), lineStart: 1, lineEnd: 4 } : { text: [headLine, '', ...CTR(5), ''].join('\n'), lineStart: 2, lineEnd: 5 };
+			const el = kind === 'hover' ? popoverEl(app, link).el : embedEl(link);
+			const { host } = hostOf(app, el, sec, bodyOf(5));
+			const pin = host.pinPosition();
+			await formSave(host, pin, bodyOf(5, 'Edited'));
+			rec(`${name} ${kind}`, { names: names(app), kinds: kinds() });
+		}
+	});
+	test.each([
+		['NESTED two same-name subheadings, link names P2', true],
+		['NESTED unique subheading', false],
+	])('%s', async (name, dup) => {
+		for (const kind of ['embed', 'hover']) {
+			resetDroppedWriteNotices();
+			Notice.notices.length = 0;
+			const lines = ['# P1', '', dup ? '## Tracker' : '## Camp', '', ...CTR(5), '', '# P2', '', '## Tracker', '', ...CTR(5), '', '# P3', '', 'END'];
+			const now = lines.join('\n');
+			const p1t = 2;
+			// real Obsidian resolves `#P2#Tracker` to P2's Tracker: the mock takes the first heading of that name, so P1's is left out of the cache
+			const app = freshApp(now, () => cacheOfText(now, dup ? [p1t] : []));
+			const sec = kind === 'hover' ? { text: ['', ...CTR(5), '', ''].join('\n'), lineStart: 1, lineEnd: 4 } : { text: ['## Tracker', '', ...CTR(5), ''].join('\n'), lineStart: 2, lineEnd: 5 };
+			const el = kind === 'hover' ? popoverEl(app, 'Note#P2#Tracker').el : embedEl('Note#P2#Tracker');
+			const { host } = hostOf(app, el, sec, bodyOf(5));
+			const pin = host.pinPosition();
+			await formSave(host, pin, bodyOf(5, 'Edited'));
+			rec(`${name} ${kind}`, { names: names(app), kinds: kinds() });
+		}
+	});
+
+	// ---- timing: an outside edit while the form is open (after its pin was placed)
+	test.each([
+		['OPEN then A edited', (t: string[]) => t.map((l, i, a) => (i === a.lastIndexOf('current_value: 5') ? 'current_value: 9' : l))],
+		['OPEN then identical counter inserted above A', (t: string[]) => { const i = t.indexOf('## Tracker'); return [...t.slice(0, i), ...CTR(5), '', ...t.slice(i)]; }],
+		['OPEN then B deleted', (t: string[]) => { const i = t.indexOf('```ds-counter'); return [...t.slice(0, i), ...t.slice(i + 5)]; }],
+		['OPEN then A deleted', (t: string[]) => { const i = t.lastIndexOf('```ds-counter'); return [...t.slice(0, i), ...t.slice(i + 5)]; }],
+		['OPEN then A and B swapped values (A 9, B 5)', (t: string[]) => t.map((l, i, a) => (i === a.lastIndexOf('current_value: 5') ? 'current_value: 9' : l))],
+	])('%s (block embed, block hover, heading hover)', async (name, edit) => {
+		for (const kind of ['block embed', 'block hover', 'heading hover']) {
+			resetDroppedWriteNotices();
+			Notice.notices.length = 0;
+			const drawn = BLK(5);
+			const app = freshApp(drawn.join('\n'), () => cacheOfText(app.vault.getContent('Note.md')!));
+			const sec = kind === 'heading hover' ? { text: ['', ...CTR(5), '^a', '', ''].join('\n'), lineStart: 1, lineEnd: 4 } : { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 };
+			const el = kind === 'block embed' ? embedEl('Note#^a') : popoverEl(app, kind === 'block hover' ? 'Note#^a' : 'Note#Tracker').el;
+			const { host } = hostOf(app, el, sec, bodyOf(5));
+			const pin = host.pinPosition();
+			await settle();
+			const after = edit(drawn).join('\n');
+			app.vault.setFile('Note.md', after);
+			await formSave(host, pin, bodyOf(5, 'Edited'));
+			const final = app.vault.getContent('Note.md')!;
+			// integrity: for an accepted Save only the Edited block changed
+			const i = final.split('\n').indexOf('name: Edited');
+			const intact = i < 0 ? final === after : outside(final, i, 1) === outside(after, i, 1);
+			rec(`${name} ${kind}`, { names: names(app), values: values(app), kinds: kinds(), intact });
+		}
+	});
+
+	// ---- + then pencil, two + then pencil (each + its own write), with and without an outside edit after the +es
+	test.each([
+		['PLUS1 then pencil', 1, false],
+		['PLUS2 then pencil', 2, false],
+		['PLUS2 then A edited outside then pencil', 2, true],
+	])('%s', async (name, n, outsideEdit) => {
+		for (const [cname, build, plainOff] of [
+			['plain', (v: number) => CTR(v), -1],
+			['callout', (v: number) => ['> [!note] Camp', ...CTR(v).map((l) => `> ${l}`), '> after'], 1],
+		] as Array<[string, (v: number) => string[], number]>) {
+			for (const kind of ['heading hover', 'heading embed']) {
+				resetDroppedWriteNotices();
+				Notice.notices.length = 0;
+				const mk = (a: number, b: number) => ['# N', '', '## Other', '', ...build(b), '', '## Tracker', '', ...build(a), '', '## After', '', 'END'];
+				// the twin holds the value A will hold after the +es (so after them A reads like the twin)
+				const target = 5 + n;
+				const drawn = mk(5, target);
+				const app = freshApp(drawn.join('\n'), () => cacheOfText(app.vault.getContent('Note.md')!));
+				const off = plainOff < 0 ? 0 : plainOff;
+				const blen = build(5).length;
+				const part = (v: number) =>
+					kind === 'heading hover'
+						? { text: ['', ...build(v), '', ''].join('\n'), lineStart: 1 + off, lineEnd: plainOff < 0 ? 4 : blen }
+						: { text: ['## Tracker', '', ...build(v), ''].join('\n'), lineStart: 2 + off, lineEnd: plainOff < 0 ? 5 : 1 + blen };
+				const el = kind === 'heading hover' ? popoverEl(app, 'Note#Tracker').el : embedEl('Note#Tracker');
+				const { host } = hostOf(app, el, part(5), bodyOf(5));
+				let ok = true;
+				for (let k = 1; k <= n; k++) {
+					host.notePersistIntent();
+					await settle();
+					ok = (await host.replaceSource(bodyOf(5 + k), { fromView: true })) && ok;
+				}
+				// the part is still the one from before the +es
+				let disk = app.vault.getContent('Note.md')!;
+				if (outsideEdit) {
+					const l = disk.split('\n');
+					const i = l.lastIndexOf(plainOff < 0 ? `current_value: ${target}` : `> current_value: ${target}`);
+					l[i] = plainOff < 0 ? 'current_value: 9' : '> current_value: 9';
+					disk = l.join('\n');
+					app.vault.setFile('Note.md', disk);
+				}
+				Notice.notices.length = 0;
+				resetDroppedWriteNotices();
+				const pin = host.pinPosition();
+				await formSave(host, pin, bodyOf(target, 'Edited'));
+				rec(`${name} ${cname} ${kind}`, { plusOk: ok, names: names(app), values: values(app), kinds: kinds(), unchanged: app.vault.getContent('Note.md') === disk });
+			}
+		}
+	});
+
+	// ---- a write from a second host (a pane showing the note itself), then the embed's form
+	test('SECOND HOST writes A, then the embed form (part stale)', async () => {
+		for (const kind of ['block embed', 'heading hover']) {
+			resetDroppedWriteNotices();
+			Notice.notices.length = 0;
+			const drawn = BLK(5, 6);
+			const app = freshApp(drawn.join('\n'), () => cacheOfText(app.vault.getContent('Note.md')!));
+			const aAt = drawn.lastIndexOf('```ds-counter');
+			const pane = hostOf(app, document.createElement('div'), { text: drawn.join('\n'), lineStart: aAt, lineEnd: aAt + 3 }, bodyOf(5));
+			const sec = kind === 'heading hover' ? { text: ['', ...CTR(5), '^a', '', ''].join('\n'), lineStart: 1, lineEnd: 4 } : { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 };
+			const el = kind === 'block embed' ? embedEl('Note#^a') : popoverEl(app, 'Note#Tracker').el;
+			const { host } = hostOf(app, el, sec, bodyOf(5));
+			pane.host.notePersistIntent();
+			const wrote = await pane.host.replaceSource(bodyOf(6), { fromView: true });
+			const disk = app.vault.getContent('Note.md')!;
+			Notice.notices.length = 0;
+			resetDroppedWriteNotices();
+			// the embed host still knows 5 (no redraw yet); the pane's + made A read like the twin B (6)
+			const pin = host.pinPosition();
+			await formSave(host, pin, bodyOf(5, 'Edited'));
+			rec(`SECOND HOST ${kind}`, { paneWrote: wrote, names: names(app), values: values(app), kinds: kinds(), unchanged: app.vault.getContent('Note.md') === disk });
+		}
+	});
+
+	// ---- cachedRead lags the note (returns the text before the outside edit) - "cache lag the other way"
+	test.each([
+		['CACHEDREAD stale, A edited, cache fresh', 'edit', 'fresh'],
+		['CACHEDREAD stale, A edited, cache stale', 'edit', 'stale'],
+		['CACHEDREAD stale, twin inserted above A, cache fresh', 'insert', 'fresh'],
+		['CACHE ahead of cachedRead and part: twin inserted above, part current', 'insert-partnow', 'fresh'],
+	])('%s', async (name, edit, cacheKind) => {
+		for (const kind of ['block embed', 'heading hover', 'heading embed']) {
+			resetDroppedWriteNotices();
+			Notice.notices.length = 0;
+			const drawn = BLK(5);
+			let now: string[];
+			if (edit === 'edit') now = BLK(9);
+			else {
+				const i = drawn.indexOf('## Tracker');
+				now = [...drawn.slice(0, i), ...CTR(5), '', 'ins', '', ...drawn.slice(i)];
+			}
+			const app = freshApp(now.join('\n'), () => cacheOfText((cacheKind === 'fresh' ? now : drawn).join('\n')));
+			jest.spyOn(app.vault, 'cachedRead').mockImplementation(async () => {
+				await new Promise((r) => setTimeout(r, 0));
+				return drawn.join('\n');
+			});
+			const sec =
+				kind === 'heading hover'
+					? { text: ['', ...CTR(5), '^a', '', ''].join('\n'), lineStart: 1, lineEnd: 4 }
+					: kind === 'heading embed'
+						? { text: ['## Tracker', '', ...CTR(5), '^a', ''].join('\n'), lineStart: 2, lineEnd: 5 }
+						: { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 };
+			const el = kind === 'block embed' ? embedEl('Note#^a') : kind === 'heading embed' ? embedEl('Note#Tracker') : popoverEl(app, 'Note#Tracker').el;
+			const { host } = hostOf(app, el, sec, bodyOf(5));
+			const pin = host.pinPosition();
+			await formSave(host, pin, bodyOf(5, 'Edited'));
+			const final = app.vault.getContent('Note.md')!;
+			const ed = final.split('\n').indexOf('name: Edited');
+			const which = ed < 0 ? 'nothing' : ed === now.lastIndexOf('```ds-counter') + 1 ? 'A' : 'OTHER@' + ed;
+			rec(`${name} ${kind}`, { which, kinds: kinds() });
+		}
+	});
+
+	// ---- two identical embeds of the same part in one host note; two embeds of different identical blocks (no cross-talk)
+	test('TWO EMBEDS of the same block, both forms open, Save one then the other', async () => {
+		const drawn = BLK(5);
+		const app = freshApp(drawn.join('\n'), () => cacheOfText(app.vault.getContent('Note.md')!));
+		const s = { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 };
+		const h1 = hostOf(app, embedEl('Note#^a'), s, bodyOf(5)).host;
+		const h2 = hostOf(app, embedEl('Note#^a'), s, bodyOf(5)).host;
+		const p1 = h1.pinPosition();
+		const p2 = h2.pinPosition();
+		const r1 = await formSave(h1, p1, bodyOf(5, 'Edited'));
+		const mid = names(app);
+		const r2 = await formSave(h2, p2, bodyOf(5, 'Second'));
+		rec('TWO EMBEDS same block', { r1, r2, mid, names: names(app), kinds: kinds() });
+	});
+	test('TWO EMBEDS of different identical blocks (^a, ^b), forms open on both, Save b then a', async () => {
+		const drawn = BLK(5);
+		const app = freshApp(drawn.join('\n'), () => cacheOfText(app.vault.getContent('Note.md')!));
+		const s = { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 };
+		const ha = hostOf(app, embedEl('Note#^a'), s, bodyOf(5)).host;
+		const hb = hostOf(app, embedEl('Note#^b'), s, bodyOf(5)).host;
+		const pa = ha.pinPosition();
+		const pb = hb.pinPosition();
+		const rb = await formSave(hb, pb, bodyOf(5, 'Bee'));
+		const ra = await formSave(ha, pa, bodyOf(5, 'Ay'));
+		rec('TWO EMBEDS a and b', { rb, ra, names: names(app), kinds: kinds() });
+	});
+
+	// ---- a block hover whose popover is bound to the OTHER block's link (`^b` while it shows A; both data-type=block): jest-only per SC-594 r3
+	test('WRONG BLOCK LINK block hover bound to ^b while it shows A', async () => {
+		const drawn = BLK(5);
+		const app = freshApp(drawn.join('\n'), () => cacheOfText(drawn.join('\n')));
+		const el = popoverEl(app, 'Note#^b').el;
+		const { host } = hostOf(app, el, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, bodyOf(5));
+		const pin = host.pinPosition();
+		await formSave(host, pin, bodyOf(5, 'Edited'));
+		rec('WRONG BLOCK LINK', { names: names(app), kinds: kinds() });
+	});
+
+	// ---- a callout with two identical counters in a heading HOVER (DOM ordinal), form on the lower
+	test('ORDINAL heading hover callout two identical counters, form on lower', async () => {
+		const q = (l: string) => `> ${l}`;
+		const cal = ['> [!note] Camp', ...CTR(5).map(q), '> mid', ...CTR(5).map(q)];
+		const full = ['# N', '', 'TOP', '', '## Tracker', '', ...cal, '', '## After', 'END'].join('\n');
+		const app = freshApp(full, () => cacheOfText(full));
+		const { popover, embed } = popoverEl(app, 'Note#Tracker');
+		popover.remove();
+		const callout = embed.appendChild(document.createElement('div'));
+		callout.className = 'callout';
+		callout.appendChild(document.createElement('div')).className = 'block-language-ds-counter';
+		const lower = callout.appendChild(document.createElement('div'));
+		lower.className = 'block-language-ds-counter';
+		document.body.appendChild(popover);
+		const { host } = hostOf(app, lower, { text: ['', ...cal, '', ''].join('\n'), lineStart: 1, lineEnd: 10 }, bodyOf(5));
+		const pin = host.pinPosition();
+		await formSave(host, pin, bodyOf(5, 'Edited'));
+		rec('ORDINAL hover callout lower', { names: names(app), kinds: kinds() });
+	});
+
+	// ---- cards: null-pin shapes with NO twin (a unique body): did they write the right block at base? (the Q4 fold's saved -> refused side)
+	test('CARD stale callout window, block written by another pane (no record), NO twin', async () => {
+		const CAL = (n: number) => ['> [!note] Camp', ...CTR(n).map((l) => `> ${l}`), '> after text'];
+		const full = ['# N', '', 'TOP', '', ...CAL(3).map((l) => l.replace('Twin', 'Other')), '', 'mid', '', ...CAL(6), '', '^cal', '', 'END'].join('\n');
+		const app = freshApp(full, () => cacheOfText(full));
+		const { host } = hostOf(app, embedEl('Note#^cal'), { text: CAL(5).join('\n'), lineStart: 1, lineEnd: 4 }, bodyOf(6));
+		host.notePersistIntent();
+		const ok = await host.replaceSource(bodyOf(7), { fromView: true });
+		rec('CARD stale callout no twin', { ok, values: values(app), kinds: kinds() });
+	});
+	test('CARD section gone at the click, NO twin', async () => {
+		const full = ['# N', '', 'TOP', '', ...CTR(5), '^a', '', 'END'].join('\n');
+		const app = freshApp(full, () => cacheOfText(full));
+		const { host, section } = hostOf(app, embedEl('Note#^a'), { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, bodyOf(5));
+		host.pinPosition(); // section resolved once
+		section.current = null;
+		host.notePersistIntent();
+		const ok = await host.replaceSource(bodyOf(7), { fromView: true });
+		rec('CARD section gone no twin', { ok, values: values(app), kinds: kinds() });
+	});
+	test('FORM stale callout window, no record, NO twin', async () => {
+		const CAL = (n: number) => ['> [!note] Camp', ...CTR(n).map((l) => `> ${l}`), '> after text'];
+		const full = ['# N', '', 'TOP', '', ...CAL(3).map((l) => l.replace('Twin', 'Other')), '', 'mid', '', ...CAL(6), '', '^cal', '', 'END'].join('\n');
+		const app = freshApp(full, () => cacheOfText(full));
+		const { host } = hostOf(app, embedEl('Note#^cal'), { text: CAL(5).join('\n'), lineStart: 1, lineEnd: 4 }, bodyOf(6));
+		const pin = host.pinPosition();
+		await formSave(host, pin, bodyOf(6, 'Edited'));
+		rec('FORM stale callout no twin', { pin: pin ? 'pin' : null, names: names(app), kinds: kinds() });
+	});
+
+	// ---- a refusing pin passed WITHOUT pinOnly (a caller that forgets it), as a form and as a card's write: never mapped, never searched
+	test('REFUSING pin without pinOnly', async () => {
+		const full = ['# N', '', ...CTR(5), '', 'p', '', '- item', ...CTR(5).map((l) => `  ${l}`), '', 'END'].join('\n');
+		const app = freshApp(full, () => cacheOfText(full));
+		const { host } = hostOf(app, embedEl('Note#Tracker'), { text: ['- item', ...CTR(5).map((l) => `  ${l}`)].join('\n'), lineStart: 1, lineEnd: 4 }, bodyOf(5));
+		const pin = host.pinPosition();
+		const r1 = await host.replaceSource(bodyOf(5, 'Edited'), { pin: pin! });
+		const r2 = await host.replaceSource(bodyOf(5, 'Edited'), { pin: pin!, fromView: true } as never);
+		rec('REFUSING without pinOnly', { pin: pin ? JSON.stringify(pin) : null, r1, r2, names: names(app), kinds: kinds() });
+	});
+
+	// ---- non-embedded forms: unchanged
+	test.each([
+		['PLAIN non-embedded none', 'none'],
+		['PLAIN non-embedded A edited', 'edited'],
+		['PLAIN non-embedded section null', 'nosec'],
+	])('%s', async (name, edit) => {
+		const drawn = BLK(5);
+		const aAt = drawn.lastIndexOf('```ds-counter');
+		const app = freshApp(drawn.join('\n'), () => cacheOfText(drawn.join('\n')));
+		const { host, section } = hostOf(app, document.createElement('div'), { text: drawn.join('\n'), lineStart: aAt, lineEnd: aAt + 3 }, bodyOf(5));
+		if (edit === 'edited') app.vault.setFile('Note.md', BLK(9).join('\n'));
+		if (edit === 'nosec') {
+			host.pinPosition();
+			section.current = null;
+		}
+		const pin = host.pinPosition();
+		await formSave(host, pin, bodyOf(5, 'Edited'));
+		rec(name, { pin: pin ? 'pin' : null, names: names(app), kinds: kinds() });
+	});
+});

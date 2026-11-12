@@ -1,0 +1,67 @@
+#!/usr/bin/env python3
+# summarize.py <sweep.txt> [<sweep2.txt>]: pivot the form sweep. One file: the table. Two files (base, probe): the transition counts + cells that changed.
+import sys, collections
+
+def code(out):
+    if 'TWIN' in out and 'A' in out.split(':')[-1].replace('TWIN', ''):
+        return 'A+T'
+    if 'TWIN' in out:
+        return 'T'
+    if out.endswith(': A') or ': A' in out and 'refused' not in out:
+        return 'A'
+    if 'refused' in out:
+        return 'R'
+    return '?' + out
+
+def load(p):
+    rows = {}
+    for line in open(p):
+        f = line.rstrip('\n').split('|')
+        if f[1] == 'NAMED':
+            continue
+        tag, layout, cname, shape, host, edit, plus, cache, out = f
+        rows[(layout, cname, shape, host, edit, plus, cache)] = (code(out), out)
+    return rows
+
+def table(rows, title):
+    print(f'# {title}')
+    print('# A = written into the form\'s own block; T = written into the identical twin; R = nothing written (Notice); '
+          'a cell lists every outcome over rv/lp x cache fresh/lagging x twin layout (elsewhere / same-name section)')
+    cols = [(e, p) for e in ('none', 'own edited', 'own deleted') for p in ('no +', '+ (part pre-+)', '+ (part redrawn after +)')]
+    short = {'no +': 'no+', '+ (part pre-+)': '+pre', '+ (part redrawn after +)': '+redrawn'}
+    hdr = ['construct', 'shape'] + [f"{e.replace('own ', '')}/{short[p]}" for e, p in cols]
+    print(' | '.join(hdr))
+    keys = sorted({(k[1], k[2]) for k in rows}, key=lambda x: (x[0], x[1]))
+    cons = []
+    for k in rows:
+        if k[1] not in cons:
+            cons.append(k[1])
+    shapes = []
+    for k in rows:
+        if k[2] not in shapes:
+            shapes.append(k[2])
+    for c in cons:
+        for s in shapes:
+            cells = []
+            for e, p in cols:
+                got = collections.Counter(v[0] for k, v in rows.items() if k[1] == c and k[2] == s and k[4] == e and k[5] == p)
+                cells.append('/'.join(f'{x}' for x in sorted(got)) if got else '-')
+            print(' | '.join([c, s] + cells))
+    tot = collections.Counter(v[0] for v in rows.values())
+    print(f'# totals: {dict(tot)} over {len(rows)} cells')
+
+if len(sys.argv) == 2:
+    table(load(sys.argv[1]), sys.argv[1])
+else:
+    b, p = load(sys.argv[1]), load(sys.argv[2])
+    tr = collections.Counter((b[k][0], p[k][0]) for k in b)
+    print('# base -> probe transitions')
+    for (x, y), n in sorted(tr.items()):
+        print(f'{x} -> {y}: {n}')
+    print('# cells that changed (base -> probe), grouped by everything but host/cache')
+    g = collections.Counter()
+    for k in b:
+        if b[k][0] != p[k][0]:
+            g[(k[0], k[1], k[2], k[4], k[5], b[k][0], p[k][0])] += 1
+    for (lay, c, s, e, pl, x, y), n in sorted(g.items()):
+        print(f'{x} -> {y} x{n}: {lay} | {c} | {s} | {e} | {pl}')

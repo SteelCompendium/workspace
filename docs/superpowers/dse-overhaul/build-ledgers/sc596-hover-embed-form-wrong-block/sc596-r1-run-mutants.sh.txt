@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# run-mutants.sh <id>...: for each mutant: rule + mutant, run the probe, restore both files (git checkout of literal paths), compare to the probe golden.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc596-r1-design
+E=/home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements
+for m in "$@"; do
+  python3 "$S/mutate.py" "$m" || { echo "MUTANT $m apply failed"; git -C "$E" checkout -- src/framework/host/ReadingModeBlockHost.ts src/framework/host/hoverLinks.ts; continue; }
+  bash "$S/run-probe.sh" "$m" "$S/mut-$m.txt" > "$S/mut-$m.log" 2>&1
+  git -C "$E" checkout -- src/framework/host/ReadingModeBlockHost.ts src/framework/host/hoverLinks.ts
+  tests=$(grep '^Tests:' "$S/mut-$m.log")
+  failed=$(grep '●' "$S/mut-$m.log" | grep 'named probes' | sed 's/.*named probes › //' | cut -c1-60 | tr '\n' ';')
+  cmp=$(python3 "$S/cmp-mutant.py" "$S/sweep-probe.txt" "$S/mut-$m.txt")
+  echo "MUTANT $m | $tests | named failed: ${failed:-none} | sweep: $cmp"
+done
+git -C "$E" status --porcelain

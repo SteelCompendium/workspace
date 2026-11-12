@@ -1,0 +1,687 @@
+// SC-596 r1 design probe (scratch; NOT committed; copied into test/dom/framework/ only for a run, then deleted by literal path).
+// The FORM-Save sweep: a block edit form opened on counter A in an embed / hover preview of a note, an identical counter (the twin, B)
+// elsewhere; A edited (or deleted) from outside just BEFORE the form opens (the part Obsidian reports is still the one drawn before).
+// Records every cell to $SC596_SWEEP_OUT; the sweep asserts nothing (it is a measurement); the named probes assert.
+import * as fs from 'fs';
+import { ReadingModeBlockHost } from '../../../src/framework/host/ReadingModeBlockHost';
+import { noteHoverLink } from '../../../src/framework/host/hoverLinks';
+import { resetDroppedWriteNotices } from '../../../src/framework/host/droppedWriteNotice';
+import { App, Notice, Plugin } from '../../mocks/obsidian';
+import type { MarkdownPostProcessorContext } from '../../mocks/obsidian';
+
+type Sec = { text: string; lineStart: number; lineEnd: number };
+type Section = { current: Sec | null };
+const OUT = process.env.SC596_SWEEP_OUT ?? '';
+const TAG = process.env.SC596_TAG ?? 'run';
+const record = (line: string) => {
+	if (OUT) fs.appendFileSync(OUT, `${TAG}|${line}\n`);
+};
+
+function switchableCtx(section: Section): MarkdownPostProcessorContext {
+	return { docId: 'doc-596', sourcePath: 'Note.md', frontmatter: undefined, addChild: () => {}, getSectionInfo: () => section.current } as never;
+}
+const CTR = (n: number, name = 'Twin'): string[] => ['```ds-counter', `name: ${name}`, `current_value: ${n}`, '```'];
+const bodyOf = (n: number, name = 'Twin'): string => `name: ${name}\ncurrent_value: ${n}`;
+const q = (l: string) => `> ${l}`;
+const qq = (l: string) => `> > ${l}`;
+const ind = (n: number) => (l: string) => `${' '.repeat(n)}${l}`;
+// [name, build(value) -> lines, offset of the counter's fence inside the construct, plain (its section IS the fence)]
+type Construct = [string, (v: number) => string[], number, boolean];
+const CONSTRUCTS: Construct[] = [
+	['plain fence', (v) => CTR(v), 0, true],
+	['callout', (v) => ['> [!note] Camp', ...CTR(v).map(q), '> after'], 1, false],
+	['header-less quote', (v) => ['> intro', ...CTR(v).map(q)], 1, false],
+	['quote, first line is the fence', (v) => [...CTR(v).map(q), '> after'], 0, false],
+	['nested callout', (v) => ['> [!note] Outer', '> > [!tip] Inner', ...CTR(v).map(qq)], 2, false],
+	['nested quote, first line is the fence', (v) => [...CTR(v).map(qq), '> > after'], 0, false],
+	['list item', (v) => ['- item', ...CTR(v).map(ind(2))], 1, false],
+	['footnote', (v) => ['[^1]: note', ...CTR(v).map(ind(4))], 1, false],
+];
+type Shape = 'heading hover' | 'block hover' | 'heading embed' | 'block embed' | 'whole-note hover' | 'whole-note embed';
+const SHAPES: Shape[] = ['heading hover', 'block hover', 'heading embed', 'block embed', 'whole-note hover', 'whole-note embed'];
+type Edit = 'none' | 'own edited' | 'own deleted';
+const EDITS: Edit[] = ['none', 'own edited', 'own deleted'];
+type Plus = 'no +' | '+ (part pre-+)' | '+ (part redrawn after +)';
+const PLUSES: Plus[] = ['no +', '+ (part pre-+)', '+ (part redrawn after +)'];
+type Cache = 'fresh' | 'lagging';
+
+/**
+ * The note. Layout 'twin elsewhere': the twin B in the top section, then `## Tracker` holding A. Layout 'same-name section': A under the FIRST
+ * `## Tracker` (the one Obsidian embeds / a heading link names first), B under a SECOND `## Tracker` below. Block shapes carry ids (`^a` names A).
+ * `a === null`: A deleted.
+ */
+type Layout = 'twin elsewhere' | 'same-name section';
+const LAYOUTS: Layout[] = ['twin elsewhere', 'same-name section'];
+function noteOf(build: (v: number) => string[], plain: boolean, a: number | null, b: number, ids: boolean, layout: Layout = 'twin elsewhere'): { lines: string[]; aStart: number; bStart: number } {
+	const idLines = (id: string) => (!ids ? [] : plain ? [`^${id}`] : ['', `^${id}`]);
+	const lines = ['# N', ''];
+	let aStart = -1;
+	let bStart = -1;
+	const pushA = () => {
+		aStart = a === null ? -1 : lines.length;
+		if (a !== null) lines.push(...build(a), ...idLines('a'), '');
+	};
+	if (layout === 'twin elsewhere') {
+		bStart = lines.length;
+		lines.push(...build(b), ...idLines('b'), '', 'p-twin', '', '## Tracker', '');
+		pushA();
+	} else {
+		lines.push('## Tracker', '');
+		pushA();
+		lines.push('## Mid', '', 'p-mid', '', '## Tracker', '');
+		bStart = lines.length;
+		lines.push(...build(b), ...idLines('b'), '');
+	}
+	lines.push('## After', '', 'END');
+	return { lines, aStart, bStart };
+}
+const pos = (line: number) => ({ line, col: 0, offset: 0 });
+function cacheFor(lines: string[], aStart: number, bStart: number, len: number) {
+	const headings: Array<{ heading: string; level: number; position: unknown }> = [];
+	let fenced = false;
+	lines.forEach((l, i) => {
+		if (/^```/.test(l)) fenced = !fenced;
+		const h = !fenced && /^(#{1,6})\s+(.*)$/.exec(l);
+		if (h) headings.push({ heading: h[2], level: h[1].length, position: { start: pos(i), end: pos(i) } });
+	});
+	const blocks: Record<string, unknown> = { b: { id: 'b', position: { start: pos(bStart), end: pos(bStart + len - 1) } } };
+	if (aStart >= 0) blocks.a = { id: 'a', position: { start: pos(aStart), end: pos(aStart + len - 1) } };
+	return { headings, blocks };
+}
+/** A hover preview card, with the DOM Obsidian draws for its link (data-type / data-heading, measured 1.15.1) and the hover-link event noted. */
+function popoverEl(app: App, link: string | null): { popover: HTMLElement; el: HTMLElement } {
+	const popover = document.createElement('div');
+	popover.className = 'popover hover-popover';
+	const embed = popover.appendChild(document.createElement('div'));
+	embed.className = 'markdown-embed';
+	const sub = link !== null && link.includes('#') ? link.slice(link.indexOf('#')) : null;
+	if (sub !== null && sub.startsWith('#^')) embed.setAttribute('data-type', 'block');
+	else if (sub !== null) {
+		embed.setAttribute('data-type', 'heading');
+		const h = embed.appendChild(document.createElement('h2'));
+		h.setAttribute('data-heading', sub.split('#').pop()!);
+	}
+	const el = embed.appendChild(document.createElement('div'));
+	document.body.appendChild(popover);
+	if (link !== null) noteHoverLink(app, { linktext: link, sourcePath: 'Host.md', hoverParent: { hoverPopover: { hoverEl: popover } } });
+	return { popover, el };
+}
+function embedEl(src: string, lp: boolean): HTMLElement {
+	const embed = document.createElement('div');
+	embed.className = 'internal-embed markdown-embed';
+	embed.setAttribute('src', src);
+	const el = embed.appendChild(document.createElement('div'));
+	if (lp) document.createElement('div').appendChild(embed).parentElement!.className = 'cm-embed-block';
+	return el;
+}
+const settle = () => new Promise((r) => setTimeout(r, 25));
+/** The block edit form's Save, exactly FormModal.save (FormModal.ts:543-545): pin-only through its pin, or a plain write with NO pin. */
+const formSave = (host: ReadingModeBlockHost, pin: ReturnType<ReadingModeBlockHost['pinPosition']>, body: string) =>
+	pin ? host.replaceSource(body, { pin, pinOnly: true }) : host.replaceSource(body);
+
+/** The part Obsidian reports for the card on A, drawn from `drawn` (A at `aStart`). */
+function partOf(shape: Shape, drawn: { lines: string[]; aStart: number }, aLines: string[], off: number, plain: boolean): Sec {
+	const len = aLines.length;
+	const winStart = plain ? off : 0;
+	const winEnd = plain ? off + 3 : len - 1;
+	if (shape === 'heading hover') return { text: ['', ...aLines, '', ''].join('\n'), lineStart: 1 + winStart, lineEnd: 1 + winEnd }; // the heading's BODY, measured
+	if (shape === 'block hover' || shape === 'block embed') return { text: aLines.join('\n'), lineStart: winStart, lineEnd: winEnd };
+	if (shape === 'heading embed') return { text: ['## Tracker', '', ...aLines, ''].join('\n'), lineStart: 2 + winStart, lineEnd: 2 + winEnd };
+	return { text: drawn.lines.join('\n'), lineStart: drawn.aStart + winStart, lineEnd: drawn.aStart + winEnd };
+}
+
+/** One cell. 'A' (the form's block), 'TWIN', 'refused+Notice', 'refused (no Notice)', with the pin kind noted. */
+async function cell(c: Construct, shape: Shape, hostKind: 'rv' | 'lp', edit: Edit, plus: Plus, cache: Cache, layout: Layout): Promise<string> {
+	const [, build, off, plain] = c;
+	resetDroppedWriteNotices();
+	Notice.notices.length = 0;
+	const ids = shape.startsWith('block');
+	const withPlus = plus !== 'no +';
+	const len = build(5).length;
+	// before: A 5; the twin B 5 (no +) or 6 (the + will make A read like B)
+	const pre = noteOf(build, plain, 5, withPlus ? 6 : 5, ids, layout);
+	const app = new App();
+	app.vault.setFile('Note.md', pre.lines.join('\n'));
+	let cacheNote = pre;
+	jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => cacheFor(cacheNote.lines, cacheNote.aStart, cacheNote.bStart, len) as never);
+	const section: Section = { current: partOf(shape, pre, build(5), off, plain) };
+	let el: HTMLElement;
+	let popover: HTMLElement | null = null;
+	const linktext = shape === 'heading hover' ? 'Note#Tracker' : shape === 'block hover' ? 'Note#^a' : shape === 'whole-note hover' ? 'Note' : null;
+	if (shape.endsWith('hover')) ({ popover, el } = popoverEl(app, linktext));
+	else el = embedEl(shape === 'heading embed' ? 'Note#Tracker' : shape === 'block embed' ? 'Note#^a' : 'Note', hostKind === 'lp');
+	const host = new ReadingModeBlockHost(new Plugin(app) as never, el, switchableCtx(section) as never, 'ds-counter');
+	host.setMountedBody(bodyOf(5));
+	let plusOut = '';
+	let known = 5;
+	if (withPlus) {
+		host.notePersistIntent();
+		await settle();
+		const ok = await host.replaceSource(bodyOf(6), { fromView: true });
+		const afterPlus = app.vault.getContent('Note.md')!;
+		const plusLanded = ok && afterPlus.split('\n').slice(pre.aStart, pre.aStart + len).some((l) => /current_value: 6/.test(l));
+		plusOut = plusLanded ? '' : '[+ not written] ';
+		if (plusLanded) known = 6;
+		const post = noteOf(build, plain, known, 6, ids, layout);
+		cacheNote = post;
+		if (plus === '+ (part redrawn after +)') section.current = partOf(shape, post, build(known), off, plain);
+		Notice.notices.length = 0;
+		resetDroppedWriteNotices();
+	}
+	// the outside edit, just BEFORE the form opens (the part is not redrawn yet)
+	const now = noteOf(build, plain, edit === 'own edited' ? 9 : edit === 'own deleted' ? null : known, withPlus ? 6 : 5, ids, layout);
+	const nowText = now.lines.join('\n');
+	app.vault.setFile('Note.md', nowText);
+	if (cache === 'fresh') cacheNote = now;
+	const pin = host.pinPosition();
+	const pinKind = pin === null ? 'null-pin' : 'pin';
+	const wrote = await formSave(host, pin, bodyOf(known, 'Edited'));
+	popover?.remove();
+	const after = app.vault.getContent('Note.md')!;
+	const kind = (Notice.notices as unknown[]).map((n) => String(n)).map((n) => (n.includes('changed on disk first') ? 'dropped' : n.includes("can't be edited yet") ? 'unsavable-list' : n.includes("can't tell where") ? 'unsavable' : 'other')).join(',');
+	if (after === nowText) return `${plusOut}${pinKind}: ${Notice.notices.length ? 'refused+Notice' : 'refused (no Notice)'} [${kind}]`;
+	const al = after.split('\n');
+	const editedIn = (start: number) => start >= 0 && al.slice(start, start + len).some((l) => /name: Edited/.test(l));
+	const got: string[] = [];
+	if (editedIn(now.aStart)) got.push('A');
+	if (editedIn(now.bStart)) got.push('TWIN');
+	return `${plusOut}${pinKind}: ${got.join('+') || 'OTHER'}${wrote ? '' : '(false)'}${Notice.notices.length ? '+Notice' : ''}`;
+}
+
+describe('SC-596 r1 form sweep', () => {
+	let warn: jest.SpyInstance;
+	beforeEach(() => {
+		warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+	});
+	afterEach(() => {
+		warn.mockRestore();
+		jest.restoreAllMocks();
+	});
+	const cases = LAYOUTS.flatMap((layout) => CONSTRUCTS.flatMap((c) =>
+		SHAPES.flatMap((shape) =>
+			(['rv', 'lp'] as const).flatMap((hostKind) =>
+				EDITS.flatMap((edit) =>
+					PLUSES.flatMap((plus) => ((edit === 'none' ? ['fresh'] : ['fresh', 'lagging']) as Cache[]).map((cache) => ({ layout, c, cname: c[0], shape, hostKind, edit, plus, cache }))),
+				),
+			),
+		),
+	));
+	test.each(cases)('$layout | $cname | $shape | $hostKind | $edit | $plus | $cache', async ({ layout, c, cname, shape, hostKind, edit, plus, cache }) => {
+		const out = await cell(c, shape, hostKind, edit, plus, cache, layout);
+		record(`${layout}|${cname}|${shape}|${hostKind}|${edit}|${plus}|cache ${cache}|${out}`);
+	});
+});
+
+// ---- named probes ----
+describe('SC-596 r1 named probes', () => {
+	let warn: jest.SpyInstance;
+	beforeEach(() => {
+		resetDroppedWriteNotices();
+		Notice.notices.length = 0;
+		warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+	});
+	afterEach(() => {
+		warn.mockRestore();
+		jest.restoreAllMocks();
+	});
+	const names = (app: App): string[] => [...app.vault.getContent('Note.md')!.matchAll(/name: (\w+)/g)].map((m) => m[1]);
+	function cacheOfText(text: string) {
+		const lines = text.split(/\r?\n/);
+		const headings: Array<{ heading: string; level: number; position: unknown }> = [];
+		const blocks: Record<string, { id: string; position: unknown }> = {};
+		let fenced = false;
+		lines.forEach((l, i) => {
+			if (/^```/.test(l)) fenced = !fenced;
+			const h = !fenced && /^(#{1,6})\s+(.*)$/.exec(l);
+			if (h) headings.push({ heading: h[2], level: h[1].length, position: { start: pos(i), end: pos(i) } });
+			const id = /^\^(\w+)$/.exec(l);
+			if (id) {
+				let end = i - 1;
+				while (end >= 0 && lines[end] === '') end--;
+				let start = end;
+				if (lines[end] === '```') for (start = end - 1; start >= 0 && !/^```\w/.test(lines[start]); start--);
+				blocks[id[1]] = { id: id[1], position: { start: pos(start), end: pos(end) } };
+			}
+		});
+		return { headings, blocks };
+	}
+	function make(full: string, sec: Sec, el: HTMLElement, body: string, cache: string | object = full) {
+		const app = new App();
+		app.vault.setFile('Note.md', full);
+		jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => (typeof cache === 'string' ? cacheOfText(cache) : cache) as never);
+		const section: Section = { current: sec };
+		const host = new ReadingModeBlockHost(new Plugin(app) as never, el, switchableCtx(section) as never, 'ds-counter');
+		host.setMountedBody(body);
+		return { app, host, section };
+	}
+	const hoverIn = (app: App, link: string | null) => popoverEl(app, link).el;
+
+	// P4 (SC-584 r2 INFO-1), verbatim shape: a [[Note#^a]] hover (r2 had no hover-link record: a hover whose record is missing), section == known 6,
+	// A edited to 9 from outside before the pencil, B identical (6).
+	test.each([
+		['P4 verbatim (no hover-link record)', null],
+		['P4 with the hover-link record Obsidian sends', 'Note#^a'],
+	])('%s: Save must not write B', async (name, link) => {
+		const disk = ['# N', '', ...CTR(9), '^a', '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n');
+		const app0 = new App();
+		const el = hoverIn(app0, null);
+		const { app, host } = make(disk, { text: CTR(6).join('\n'), lineStart: 0, lineEnd: 3 }, el, bodyOf(6));
+		if (link) noteHoverLink(app, { linktext: link, sourcePath: 'Host.md', hoverParent: { hoverPopover: { hoverEl: el.closest('.hover-popover') } } });
+		if (link) el.closest('.hover-popover')!.querySelector('.markdown-embed')!.setAttribute('data-type', 'block');
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(6, 'Edited'));
+		record(`NAMED|${name}|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+		expect(names(app)).toEqual(['Twin', 'Twin']);
+	});
+
+	// P4 for a block EMBED ![[Note#^a]] (src) and a heading hover / heading embed, the same shape (section == known, A edited, twin identical)
+	test.each([
+		['P4e block embed, fresh cache', 'embed', 'Note#^a'],
+		['P4h heading hover, record', 'hover', 'Note#Tracker'],
+		['P4he heading embed, fresh cache', 'embed', 'Note#Tracker'],
+	])('%s: Save must not write B', async (name, kind, link) => {
+		const isBlock = link.includes('^');
+		const disk = isBlock
+			? ['# N', '', ...CTR(9), '^a', '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n')
+			: ['# N', '', ...CTR(6), '', 'p', '', '## Tracker', '', ...CTR(9), '', '## After', 'END'].join('\n');
+		const sec = isBlock
+			? { text: CTR(6).join('\n'), lineStart: 0, lineEnd: 3 }
+			: kind === 'hover'
+				? { text: ['', ...CTR(6), '', ''].join('\n'), lineStart: 1, lineEnd: 4 }
+				: { text: ['## Tracker', '', ...CTR(6), ''].join('\n'), lineStart: 2, lineEnd: 5 };
+		const app0 = new App();
+		const el = kind === 'hover' ? hoverIn(app0, null) : embedEl(link, false);
+		const { app, host } = make(disk, sec, el, bodyOf(6));
+		if (kind === 'hover') {
+			const pop = el.closest('.hover-popover')!;
+			noteHoverLink(app, { linktext: link, sourcePath: 'Host.md', hoverParent: { hoverPopover: { hoverEl: pop } } });
+			const emb = pop.querySelector('.markdown-embed')!;
+			emb.setAttribute('data-type', isBlock ? 'block' : 'heading');
+			if (!isBlock) emb.insertBefore(Object.assign(document.createElement('h2'), {}), el).setAttribute('data-heading', 'Tracker');
+		}
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(6, 'Edited'));
+		record(`NAMED|${name}|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+		expect(names(app)).not.toContain('Edited');
+	});
+
+	// P13 (SC-584 r2 INFO-3), verbatim: a callout ^cal embed, the host knows 6 while its part still shows 5 and the host has NO record of a + (r2 modelled
+	// "+ then pencil" without the + itself), A edited to 9, the upper callout holds 6. The pin is null; FormModal then saves WITHOUT pinOnly.
+	test('P13 verbatim (no + record): never the upper callout', async () => {
+		const CAL = (n: number): string[] => ['> [!note] Camp', ...CTR(n).map((l) => `> ${l}`), '> after text'];
+		const full = ['# N', '', 'TOP', '', ...CAL(6), '', 'mid', '', ...CAL(9), '', '^cal', '', 'END'].join('\n');
+		const lower = full.split('\n').lastIndexOf('> [!note] Camp');
+		const cache = { headings: [], blocks: { cal: { id: 'cal', position: { start: pos(lower), end: pos(lower + 5) } } } };
+		const { app, host } = make(full, { text: CAL(5).join('\n'), lineStart: 1, lineEnd: 4 }, embedEl('Note#^cal', false), bodyOf(6), cache);
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(6, 'Edited'));
+		record(`NAMED|P13 verbatim|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+		expect(names(app)).toEqual(['Twin', 'Twin']);
+	});
+
+	// P13 faithful: the same with a REAL + by this host first (so a record exists), then A edited from outside, then the pencil.
+	test('P13 with a real + first: never the upper callout', async () => {
+		const CAL = (n: number): string[] => ['> [!note] Camp', ...CTR(n).map((l) => `> ${l}`), '> after text'];
+		const pre = ['# N', '', 'TOP', '', ...CAL(6), '', 'mid', '', ...CAL(5), '', '^cal', '', 'END'].join('\n');
+		const lower = pre.split('\n').lastIndexOf('> [!note] Camp');
+		const cache = { headings: [], blocks: { cal: { id: 'cal', position: { start: pos(lower), end: pos(lower + 5) } } } };
+		const { app, host } = make(pre, { text: CAL(5).join('\n'), lineStart: 0, lineEnd: 5 }, embedEl('Note#^cal', false), bodyOf(5), cache);
+		host.notePersistIntent();
+		await settle();
+		expect(await host.replaceSource(bodyOf(6), { fromView: true })).toBe(true);
+		const outside = app.vault.getContent('Note.md')!.split('\n').map((l, i) => (i === lower + 3 ? '> current_value: 9' : l)).join('\n');
+		app.vault.setFile('Note.md', outside);
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(6, 'Edited'));
+		record(`NAMED|P13 real +|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+		expect(names(app)).toEqual(['Twin', 'Twin']);
+	});
+
+	// The shapes that save today and must keep saving (SC-584 r5): two IDENTICAL counters, NO + first, the pencil on the LOWER one, no outside edit.
+	// (a) two plain counters in one `## Tracker` section, heading embed (RV / LP-style wrapper) and heading hover; (b) two counters in one callout,
+	// block embed and heading embed, RV / LP (the DOM ordinal).
+	test.each([
+		['r5a heading embed rv', 'embed', false],
+		['r5a heading embed lp', 'embed', true],
+		['r5a heading hover', 'hover', false],
+	] as const)('%s: two identical plain counters in the section, form on the lower: Save writes the lower', async (name, kind, lp) => {
+		const full = ['# N', '', 'TOP', '', '## Tracker', '', ...CTR(5), '', ...CTR(5), '', '## After', 'END'].join('\n');
+		const sec = kind === 'embed' ? { text: ['## Tracker', '', ...CTR(5), '', ...CTR(5), ''].join('\n'), lineStart: 7, lineEnd: 10 } : { text: ['', ...CTR(5), '', ...CTR(5), '', ''].join('\n'), lineStart: 6, lineEnd: 9 };
+		const app0 = new App();
+		const el = kind === 'embed' ? embedEl('Note#Tracker', lp) : hoverIn(app0, null);
+		const { app, host } = make(full, sec, el, bodyOf(5));
+		if (kind === 'hover') {
+			const pop = el.closest('.hover-popover')!;
+			noteHoverLink(app, { linktext: 'Note#Tracker', sourcePath: 'Host.md', hoverParent: { hoverPopover: { hoverEl: pop } } });
+			const emb = pop.querySelector('.markdown-embed')!;
+			emb.setAttribute('data-type', 'heading');
+			emb.insertBefore(document.createElement('h2'), el).setAttribute('data-heading', 'Tracker');
+		}
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+		record(`NAMED|${name}|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+		expect(names(app)).toEqual(['Twin', 'Edited']);
+	});
+
+	test.each([
+		['r5b callout block embed rv', 'block', false],
+		['r5b callout block embed lp', 'block', true],
+		['r5b callout heading embed rv', 'heading', false],
+		['r5b callout heading embed lp', 'heading', true],
+	] as const)('%s: two identical counters in one callout, form on the lower (DOM ordinal): Save writes the lower', async (name, kind, lp) => {
+		const qf = (l: string) => `> ${l}`;
+		const calLines = ['> [!note] Camp', ...CTR(5).map(qf), '> mid', ...CTR(5).map(qf)];
+		const pre = kind === 'block' ? ['# N', '', ...calLines, '', '^cal', '', 'END'] : ['# N', '', '## Tracker', '', ...calLines, '', '## After', 'END'];
+		const head = pre.indexOf('> [!note] Camp');
+		const src = kind === 'block' ? 'Note#^cal' : 'Note#Tracker';
+		const cache = kind === 'block' ? { headings: [], blocks: { cal: { id: 'cal', position: { start: pos(head), end: pos(head + 9) } } } } : pre.join('\n');
+		const sec = kind === 'block' ? { text: calLines.join('\n'), lineStart: 0, lineEnd: 9 } : { text: ['## Tracker', '', ...calLines, ''].join('\n'), lineStart: 2, lineEnd: 11 };
+		const inner = embedEl(src, lp);
+		const outer = inner.closest('.internal-embed') as HTMLElement;
+		inner.remove();
+		const callout = outer.appendChild(document.createElement('div'));
+		callout.className = 'callout';
+		callout.appendChild(document.createElement('div')).className = 'block-language-ds-counter';
+		const lower = callout.appendChild(document.createElement('div'));
+		lower.className = 'block-language-ds-counter';
+		const root = (outer.parentElement ?? outer) as HTMLElement;
+		document.body.appendChild(root);
+		const { app, host } = make(pre.join('\n'), sec, lower, bodyOf(5), cache);
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+		record(`NAMED|${name}|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+		root.remove();
+		expect(names(app)).toEqual(['Twin', 'Edited']);
+	});
+
+	// Null-pin shapes: a form whose host is in an embed / hover and gets NO pin. What does Save do there (no pinOnly)?
+	// N1: a callout's stale window (+ by ANOTHER host, a second pane: no record of this host) with the twin callout holding the known body.
+	test('N1 callout embed, the block written by another host (no record), part stale, twin callout holds the known body', async () => {
+		const CAL = (n: number): string[] => ['> [!note] Camp', ...CTR(n).map((l) => `> ${l}`), '> after text'];
+		const disk = ['# N', '', 'TOP', '', ...CAL(6), '', 'mid', '', ...CAL(6), '', '^cal', '', 'END'].join('\n');
+		const lower = disk.split('\n').lastIndexOf('> [!note] Camp');
+		const cache = { headings: [], blocks: { cal: { id: 'cal', position: { start: pos(lower), end: pos(lower + 5) } } } };
+		const { app, host } = make(disk, { text: CAL(5).join('\n'), lineStart: 0, lineEnd: 5 }, embedEl('Note#^cal', false), bodyOf(6), cache);
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(6, 'Edited'));
+		record(`NAMED|N1 callout stale window, no record|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+		expect(names(app)).not.toEqual(['Edited', 'Twin']);
+	});
+	// N2: two identical counters in one callout in an embed, DOM ordinal unreadable (-1): 'ambiguous' -> no own fence -> null pin.
+	test('N2 two identical counters in one callout embed, no DOM ordinal: null pin', async () => {
+		const qf = (l: string) => `> ${l}`;
+		const calLines = ['> [!note] Camp', ...CTR(5).map(qf), '> mid', ...CTR(5).map(qf)];
+		const pre = ['# N', '', ...calLines, '', '^cal', '', 'END'];
+		const head = pre.indexOf('> [!note] Camp');
+		const cache = { headings: [], blocks: { cal: { id: 'cal', position: { start: pos(head), end: pos(head + 9) } } } };
+		const { app, host } = make(pre.join('\n'), { text: calLines.join('\n'), lineStart: 0, lineEnd: 9 }, embedEl('Note#^cal', false), bodyOf(5), cache);
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+		record(`NAMED|N2 two counters one callout, no ordinal|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+	});
+	// N3: an embed host whose section is null (getSectionInfo null).
+	test('N3 embed host with no section info: null pin', async () => {
+		const full = ['# N', '', ...CTR(5), '', 'p', '', ...CTR(5), '^a', '', 'END'].join('\n');
+		const app = new App();
+		app.vault.setFile('Note.md', full);
+		const section: Section = { current: null };
+		const host = new ReadingModeBlockHost(new Plugin(app) as never, embedEl('Note#^a', false), switchableCtx(section) as never, 'ds-counter');
+		host.setMountedBody(bodyOf(5));
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+		record(`NAMED|N3 embed, no section|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+	});
+	// N3b: an embed host whose section resolved when it was built and is null when the pencil is pressed; A edited from outside, the twin holds the body.
+	test('N3b embed host, section resolved at build then null at the pencil, own edited, twin elsewhere: null pin', async () => {
+		const drawn = ['# N', '', ...CTR(5), '', 'p', '', ...CTR(5), '^a', '', 'END'].join('\n');
+		const disk = ['# N', '', ...CTR(5), '', 'p', '', ...CTR(9), '^a', '', 'END'].join('\n');
+		const app = new App();
+		app.vault.setFile('Note.md', drawn);
+		const section: Section = { current: { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 } };
+		const host = new ReadingModeBlockHost(new Plugin(app) as never, embedEl('Note#^a', false), switchableCtx(section) as never, 'ds-counter');
+		host.setMountedBody(bodyOf(5));
+		app.vault.setFile('Note.md', disk);
+		section.current = null;
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+		record(`NAMED|N3b embed, section null at the pencil, own edited|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+		expect(names(app)).toEqual(['Twin', 'Twin']);
+	});
+	// N4: a hover card on a heading-hover callout, + by this host, then the record dropped (the host's section unloaded and it was rebound: setMountedBody),
+	// the part stale, the twin callout holding the body: null pin, Save without pinOnly.
+	test('N4 heading hover callout, + then setMountedBody (record dropped), twin holds the known body', async () => {
+		const CAL = (n: number): string[] => ['> [!note] Camp', ...CTR(n).map((l) => `> ${l}`), '> after'];
+		const disk = ['# N', '', ...CAL(6), '', 'p', '', '## Tracker', '', ...CAL(9), '', '## After', 'END'].join('\n');
+		const app0 = new App();
+		const el = hoverIn(app0, null);
+		const { app, host } = make(disk, { text: ['', ...CAL(5), '', ''].join('\n'), lineStart: 1, lineEnd: 6 }, el, bodyOf(6));
+		const pop = el.closest('.hover-popover')!;
+		noteHoverLink(app, { linktext: 'Note#Tracker', sourcePath: 'Host.md', hoverParent: { hoverPopover: { hoverEl: pop } } });
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(6, 'Edited'));
+		record(`NAMED|N4 heading hover callout, stale part, no record, own edited|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+		expect(names(app)).toEqual(['Twin', 'Twin']);
+	});
+	// ---- the existing tests the rule flips, re-modelled as Obsidian draws them (an embed always has its `src`; a page preview always sends
+	// `hover-link`; a real + leaves this host's record; the cache follows an outside edit within ~45 ms). Each must save on base AND under the rule.
+	const para = (n: number, tag: string): string[] => Array.from({ length: n }, (_, i) => `${tag} ${i}`);
+	const SUB = ['## Tracker', '', ...CTR(5), ''];
+	const subPart = { text: SUB.join('\n'), lineStart: 2, lineEnd: 5 };
+	const hoverWith = (app: App, el: HTMLElement, link: string) => {
+		const pop = el.closest('.hover-popover')!;
+		noteHoverLink(app, { linktext: link, sourcePath: 'Host.md', hoverParent: { hoverPopover: { hoverEl: pop } } });
+		const emb = pop.querySelector('.markdown-embed')!;
+		if (link.includes('#^')) emb.setAttribute('data-type', 'block');
+		else if (link.includes('#')) {
+			emb.setAttribute('data-type', 'heading');
+			emb.insertBefore(document.createElement('h2'), el).setAttribute('data-heading', link.split('#').pop()!);
+		}
+	};
+	test.each([
+		['V1 (SC-556 heading embed, long note, nothing changed) with src', 500, 500, false],
+		['V2 (an identical block above the embedded section) with src', 0, 500, true],
+	] as const)('%s: lands', async (name, above, below, twinAbove) => {
+		const full = ['# N', '', ...(twinAbove ? [...CTR(5), '', 'x'] : para(above, 'above')), '', ...SUB, '## After', '', ...para(below, 'below'), 'END'].join('\n');
+		const { app, host } = make(full, subPart, embedEl('Note#Tracker', false), bodyOf(5));
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+		record(`NAMED|${name}|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+		expect(r).toBe(true);
+		expect(names(app)[names(app).length - 1]).toBe('Edited');
+	});
+	test('V3 (an outside edit above and below the section while the form is open) with src: lands', async () => {
+		const full = ['# N', '', ...para(100, 'above'), '', ...SUB, '## After', '', ...para(100, 'below'), 'END'].join('\n');
+		const { app, host } = make(full, subPart, embedEl('Note#Tracker', false), bodyOf(5));
+		const pin = host.pinPosition();
+		await settle();
+		const outside = full.replace('above 0', 'above 0, edited\nand a new line').replace('below 99', 'below 99, edited');
+		app.vault.setFile('Note.md', outside);
+		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+		record(`NAMED|V3 outside edit while open, with src|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+		expect(app.vault.getContent('Note.md')).toBe(outside.replace('name: Twin', 'name: Edited'));
+	});
+	test('V5 (a block hover whose text is unique) with the hover-link record: lands', async () => {
+		const other = ['```ds-counter', 'name: Other', 'current_value: 1', 'max_value: 20', 'min_value: 0', '```'];
+		const full = ['# N', '', ...other, '', 'p', '', ...CTR(5), '^blk', '', 'END'].join('\n');
+		const app0 = new App();
+		const el = hoverIn(app0, null);
+		const { app, host } = make(full, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, el, bodyOf(5));
+		hoverWith(app, el, 'Note#^blk');
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+		record(`NAMED|V5 unique block hover, record|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+		expect(names(app)).toEqual(['Other', 'Edited']);
+	});
+	test('V8 (the embed redrawn after the +, 1000 lines inserted since) with a cache that follows the note: lands', async () => {
+		const pre = ['# N', '', ...para(300, 'above'), '', ...SUB, '## After', '', ...para(300, 'below')].join('\n');
+		let cacheText = pre;
+		const app = new App();
+		app.vault.setFile('Note.md', pre);
+		jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => cacheOfText(cacheText) as never);
+		const section: Section = { current: subPart };
+		const host = new ReadingModeBlockHost(new Plugin(app) as never, embedEl('Note#Tracker', false), switchableCtx(section) as never, 'ds-counter');
+		host.setMountedBody(bodyOf(5));
+		host.notePersistIntent();
+		await settle();
+		expect(await host.replaceSource(bodyOf(6), { fromView: true })).toBe(true);
+		section.current = { text: ['## Tracker', '', ...CTR(6), ''].join('\n'), lineStart: 2, lineEnd: 5 };
+		const outside = ['# N', '', ...para(500, 'inserted above'), ...app.vault.getContent('Note.md')!.split('\n').slice(1), ...para(500, 'inserted below')].join('\n');
+		app.vault.setFile('Note.md', outside);
+		cacheText = outside;
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(6, 'Edited'));
+		record(`NAMED|V8 redrawn after +, 1000 lines, fresh cache|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+		expect(r).toBe(true);
+	});
+	test('V9 (+ then the pencil, a long note, heading embed) with a REAL + by this host: lands', async () => {
+		const full = ['# N', '', ...para(500, 'above'), '', ...SUB, '## After', '', ...para(500, 'below'), 'END'].join('\n');
+		const { app, host } = make(full, subPart, embedEl('Note#Tracker', false), bodyOf(5));
+		host.notePersistIntent();
+		await settle();
+		expect(await host.replaceSource(bodyOf(6), { fromView: true })).toBe(true);
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(6, 'Edited'));
+		record(`NAMED|V9 real + then pencil, long note|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+		expect(r).toBe(true);
+	});
+	test('V10 (the part reports more trailing blank lines than the note has) with src: lands', async () => {
+		const full = ['# N', '', ...para(500, 'above'), '', '## Tracker', '', ...CTR(5)].join('\n') + '\n';
+		const { app, host } = make(full, { text: ['## Tracker', '', ...CTR(5), '', ''].join('\n'), lineStart: 2, lineEnd: 5 }, embedEl('Note#Tracker', false), bodyOf(5));
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+		record(`NAMED|V10 trailing blanks, with src|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+		expect(r).toBe(true);
+	});
+	// W1: a whole-note hover, an identical block ADDED above from outside before the pencil (the form's own block untouched): the hover's link (no #)
+	// makes the pin a pin of the note as drawn; base: partial, the whole-note text is not one run of the note any more -> refused.
+	test('W1 whole-note hover, identical block added above before the pencil: lands in the hovered block (never the added one)', async () => {
+		const drawn = ['# N', '', 'TOP', '', ...CTR(5), '', 'END'];
+		const now = ['# N', '', ...CTR(5), '', 'added', '', 'TOP', '', ...CTR(5), '', 'END'].join('\n');
+		const app0 = new App();
+		const el = hoverIn(app0, null);
+		const { app, host } = make(now, { text: drawn.join('\n'), lineStart: 4, lineEnd: 7 }, el, bodyOf(5));
+		hoverWith(app, el, 'Note');
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+		record(`NAMED|W1 whole-note hover, identical added above|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+		expect(names(app)).not.toEqual(['Edited', 'Twin']);
+	});
+	// X1: saved -> refused by design: other text of the embedded section edited from outside before the pencil (the block itself untouched): the part
+	// no longer equals the note where the link starts.
+	test('X1 heading embed, a paragraph inside the embedded section edited from outside before the pencil (block untouched)', async () => {
+		const drawnSub = ['## Tracker', '', 'intro', '', ...CTR(5), ''];
+		const now = ['# N', '', ...CTR(5), '', 'x', '', '## Tracker', '', 'intro, edited', '', ...CTR(5), '', '## After', 'END'].join('\n');
+		const { app, host } = make(now, { text: drawnSub.join('\n'), lineStart: 4, lineEnd: 7 }, embedEl('Note#Tracker', false), bodyOf(5));
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+		record(`NAMED|X1 section paragraph edited before open (block untouched)|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+		expect(names(app)).not.toEqual(['Edited', 'Twin']);
+	});
+	// X2: the cache lags (2 lines inserted above, not yet re-read) - base places the pin by the text search
+	test('X2 heading embed, the cache lags an insertion above (a twin under ## Other): never the twin', async () => {
+		const twin = ['## Other', '', ...CTR(5), ''];
+		const now = ['# N', '', 'inserted 1', 'inserted 2', ...twin, ...SUB, '## After', '', 'tail'].join('\n');
+		const before = ['# N', '', ...twin, ...SUB, '## After', '', 'tail'].join('\n');
+		const { app, host } = make(now, subPart, embedEl('Note#Tracker', false), bodyOf(5), before);
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+		record(`NAMED|X2 cache lags insertion, twin under Other|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+		expect(names(app)).not.toEqual(['Edited', 'Twin']);
+	});
+	// D1 (SC-607 shape, record only): a heading hover of `## Tracker` in a note with TWO identical `## Tracker` sections; the hovered (first) one deleted from
+	// outside while the preview stays open (its part text is unchanged, so Obsidian never redraws it; the cache is fresh). Then the form, then Save.
+	test('D1 SC-607 shape for a form: the hovered of two identical sections deleted, preview not redrawn, fresh cache', async () => {
+		const sec = ['## Tracker', '', ...CTR(5), ''];
+		const now = ['# N', '', 'TOP', '', '## Mid', '', 'm', '', ...sec, '## After', 'END'].join('\n');
+		const app0 = new App();
+		const el = hoverIn(app0, null);
+		const { app, host } = make(now, { text: ['', ...CTR(5), '', ''].join('\n'), lineStart: 1, lineEnd: 4 }, el, bodyOf(5));
+		hoverWith(app, el, 'Note#Tracker');
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+		record(`NAMED|D1 SC-607 shape (hovered section deleted, other identical one left)|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(names(app))}|notices ${Notice.notices.length}`);
+	});
+	// ---- Y: lagging-cache / wrong-link shapes for the guards a form's pin now shares with the card path (cardLinkLine, hoverLinkOf). Never the other block.
+	const writtenAt = (app: App): number[] => app.vault.getContent('Note.md')!.split('\n').map((l, i) => (l === 'name: Edited' ? i : -1)).filter((i) => i >= 0);
+	test.each([
+		['Y1e heading embed', 'embed'],
+		['Y1h heading hover', 'hover'],
+	] as const)('%s: an identical ## Tracker section pasted directly above the own one from outside, the cache lags: never the pasted copy', async (name, kind) => {
+		const own = ['## Tracker', '', ...CTR(5), ''];
+		const pre = ['# N', '', 'TOP', '', ...own, '## After', 'END'].join('\n');
+		const now = ['# N', '', 'TOP', '', ...own, ...own, '## After', 'END'].join('\n');
+		const app0 = new App();
+		const el = kind === 'embed' ? embedEl('Note#Tracker', false) : hoverIn(app0, null);
+		const sec = kind === 'embed' ? { text: own.join('\n'), lineStart: 2, lineEnd: 5 } : { text: ['', ...CTR(5), '', ''].join('\n'), lineStart: 1, lineEnd: 4 };
+		const { app, host } = make(now, sec, el, bodyOf(5), pre);
+		if (kind === 'hover') hoverWith(app, el, 'Note#Tracker');
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+		record(`NAMED|${name}|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(writtenAt(app))}|notices ${Notice.notices.length}`);
+		expect(writtenAt(app)).toEqual([]); // the two places read the same: refused, never a guess // line 8 = the pasted copy's name line (the own one moved to line 14)
+	});
+	test.each([
+		['Y2e block embed', 'embed'],
+		['Y2h block hover', 'hover'],
+	] as const)('%s: a copy of the block WITH its ^a pasted above it from outside, the cache lags: never the copy', async (name, kind) => {
+		const A = [...CTR(5), '^a'];
+		const pre = ['# N', '', 'TOP', '', ...A, '', 'END'].join('\n');
+		const now = ['# N', '', 'TOP', '', ...A, '', ...A, '', 'END'].join('\n');
+		const app0 = new App();
+		const el = kind === 'embed' ? embedEl('Note#^a', false) : hoverIn(app0, null);
+		const { app, host } = make(now, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, el, bodyOf(5), pre);
+		if (kind === 'hover') hoverWith(app, el, 'Note#^a');
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+		record(`NAMED|${name}|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(writtenAt(app))}|notices ${Notice.notices.length}`);
+		expect(writtenAt(app)).toEqual([]); // the two places read the same: refused, never a guess
+	});
+	test.each([
+		['Y3e block embed', 'embed'],
+		['Y3h block hover', 'hover'],
+	] as const)('%s: lines inserted at the top move the twin B (^b) onto the line the lagging cache gives ^a: never B', async (name, kind) => {
+		const pre = ['# N', '', ...CTR(5), '^b', '', 'p', '', ...CTR(5), '^a', '', 'END'];
+		const aLine = pre.indexOf('^a') - 4; // A's fence in pre
+		const bLine = 2;
+		const ins = Array.from({ length: aLine - bLine }, (_, i) => `ins ${i}`);
+		const now = ['# N', ...ins, '', ...CTR(5), '^b', '', 'p', '', ...CTR(5), '^a', '', 'END'];
+		// what the shift does: B's fence now sits at aLine (+1 for the '# N' kept above the inserted lines) - check and align
+		const bNow = now.indexOf('^b') - 4;
+		const cache = { headings: [], blocks: { a: { id: 'a', position: { start: pos(bNow), end: pos(bNow + 3) } }, b: { id: 'b', position: { start: pos(bLine), end: pos(bLine + 3) } } } };
+		const app0 = new App();
+		const el = kind === 'embed' ? embedEl('Note#^a', false) : hoverIn(app0, null);
+		const { app, host } = make(now.join('\n'), { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, el, bodyOf(5), cache);
+		if (kind === 'hover') hoverWith(app, el, 'Note#^a');
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+		record(`NAMED|${name}|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(writtenAt(app))}|notices ${Notice.notices.length}`);
+		expect(writtenAt(app)).toEqual([]); // the two places read the same: refused, never a guess
+	});
+	test('Y5 heading hover of ## Tracker whose popover is bound to the link of ## Other (another link\'s event): never the counter under ## Other', async () => {
+		const full = ['# N', '', 'TOP', '', '## Other', '', ...CTR(5), '', '## Tracker', '', ...CTR(5), '', 'END'].join('\n');
+		const app0 = new App();
+		const el = hoverIn(app0, null);
+		const { app, host } = make(full, { text: ['', ...CTR(5), '', ''].join('\n'), lineStart: 1, lineEnd: 4 }, el, bodyOf(5));
+		const pop = el.closest('.hover-popover')!;
+		noteHoverLink(app, { linktext: 'Note#Other', sourcePath: 'Host.md', hoverParent: { hoverPopover: { hoverEl: pop } } });
+		const emb = pop.querySelector('.markdown-embed')!;
+		emb.setAttribute('data-type', 'heading');
+		emb.insertBefore(document.createElement('h2'), el).setAttribute('data-heading', 'Tracker');
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+		record(`NAMED|Y5 popover bound to another link|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(writtenAt(app))}|notices ${Notice.notices.length}`);
+		expect(writtenAt(app)).toEqual([]); // the two places read the same: refused, never a guess
+	});
+	test('Y6 heading hover, ## Tracker and ## Other swapped from outside, the cache lags (Tracker still at the old line, now ## Other): never the counter under ## Other', async () => {
+		const pre = ['# N', '', '## Tracker', '', ...CTR(5), '', '## Other', '', ...CTR(5), '', 'END'].join('\n');
+		const now = ['# N', '', '## Other', '', ...CTR(5), '', '## Tracker', '', ...CTR(5), '', 'END'].join('\n');
+		const app0 = new App();
+		const el = hoverIn(app0, null);
+		const { app, host } = make(now, { text: ['', ...CTR(5), '', ''].join('\n'), lineStart: 1, lineEnd: 4 }, el, bodyOf(5), pre);
+		hoverWith(app, el, 'Note#Tracker');
+		const pin = host.pinPosition();
+		const r = await formSave(host, pin, bodyOf(5, 'Edited'));
+		record(`NAMED|Y6 sections swapped, cache lags|pin ${pin ? 'yes' : 'null'}|${r}|${JSON.stringify(writtenAt(app))}|notices ${Notice.notices.length}`);
+		expect(writtenAt(app)).toEqual([]); // the two places read the same: refused, never a guess
+	});
+});

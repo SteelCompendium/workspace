@@ -1,0 +1,73 @@
+ALIAS block embed none|{"pin":"pin","names":["Twin","Twin"],"kinds":["dropped"],"aAt":14}
+ALIAS block embed edited|{"pin":"pin","names":["Twin","Twin"],"kinds":["dropped"],"aAt":14}
+ALIAS block hover none|{"pin":"pin","names":["Twin","Twin"],"kinds":["dropped"],"aAt":14}
+ALIAS heading hover none|{"pin":"pin","names":["Twin","Twin"],"kinds":["dropped"],"aAt":14}
+ALIAS heading embed edited|{"pin":"pin","names":["Twin","Twin"],"kinds":["dropped"],"aAt":14}
+NOALIAS block hover none|{"pin":"pin","names":["Twin","Edited"],"kinds":[],"aAt":14}
+NOALIAS heading hover none|{"pin":"pin","names":["Twin","Edited"],"kinds":[],"aAt":14}
+HEAD trailing spaces none hover|{"names":["Twin","Edited"],"kinds":[]}
+HEAD trailing spaces none embed|{"names":["Twin","Edited"],"kinds":[]}
+HEAD trailing spaces edited hover|{"names":["Twin","Twin"],"kinds":["dropped"]}
+HEAD trailing spaces edited embed|{"names":["Twin","Twin"],"kinds":["dropped"]}
+HEAD punctuation none hover|{"names":["Twin","Edited"],"kinds":[]}
+HEAD punctuation none embed|{"names":["Twin","Edited"],"kinds":[]}
+HEAD punctuation edited hover|{"names":["Twin","Twin"],"kinds":["dropped"]}
+HEAD punctuation edited embed|{"names":["Twin","Twin"],"kinds":["dropped"]}
+HEAD trailing # none hover|{"names":["Twin","Twin"],"kinds":["dropped"]}
+HEAD trailing # none embed|{"names":["Twin","Twin"],"kinds":["dropped"]}
+NESTED two same-name subheadings, link names P2 embed|{"names":["Twin","Twin"],"kinds":["dropped"]}
+NESTED two same-name subheadings, link names P2 hover|{"names":["Twin","Twin"],"kinds":["dropped"]}
+NESTED unique subheading embed|{"names":["Twin","Edited"],"kinds":[]}
+NESTED unique subheading hover|{"names":["Twin","Edited"],"kinds":[]}
+OPEN then A edited block embed|{"names":["Twin","Twin"],"values":["5","9"],"kinds":["dropped"],"intact":true}
+OPEN then A edited block hover|{"names":["Twin","Twin"],"values":["5","9"],"kinds":["dropped"],"intact":true}
+OPEN then A edited heading hover|{"names":["Twin","Twin"],"values":["5","9"],"kinds":["dropped"],"intact":true}
+OPEN then identical counter inserted above A block embed|{"names":["Twin","Twin","Edited"],"values":["5","5","5"],"kinds":[],"intact":true}
+OPEN then identical counter inserted above A block hover|{"names":["Twin","Twin","Edited"],"values":["5","5","5"],"kinds":[],"intact":true}
+OPEN then identical counter inserted above A heading hover|{"names":["Twin","Twin","Edited"],"values":["5","5","5"],"kinds":[],"intact":true}
+OPEN then B deleted block embed|{"names":["Edited"],"values":["5"],"kinds":[],"intact":true}
+OPEN then B deleted block hover|{"names":["Edited"],"values":["5"],"kinds":[],"intact":true}
+OPEN then B deleted heading hover|{"names":["Edited"],"values":["5"],"kinds":[],"intact":true}
+OPEN then A deleted block embed|{"names":["Twin"],"values":["5"],"kinds":["dropped"],"intact":true}
+OPEN then A deleted block hover|{"names":["Twin"],"values":["5"],"kinds":["dropped"],"intact":true}
+OPEN then A deleted heading hover|{"names":["Twin"],"values":["5"],"kinds":["dropped"],"intact":true}
+OPEN then A and B swapped values (A 9, B 5) block embed|{"names":["Twin","Twin"],"values":["5","9"],"kinds":["dropped"],"intact":true}
+OPEN then A and B swapped values (A 9, B 5) block hover|{"names":["Twin","Twin"],"values":["5","9"],"kinds":["dropped"],"intact":true}
+OPEN then A and B swapped values (A 9, B 5) heading hover|{"names":["Twin","Twin"],"values":["5","9"],"kinds":["dropped"],"intact":true}
+PLUS1 then pencil plain heading hover|{"plusOk":true,"names":["Twin","Edited"],"values":["6","6"],"kinds":[],"unchanged":false}
+PLUS1 then pencil plain heading embed|{"plusOk":true,"names":["Twin","Edited"],"values":["6","6"],"kinds":[],"unchanged":false}
+PLUS1 then pencil callout heading hover|{"plusOk":true,"names":["Twin","Edited"],"values":["6","6"],"kinds":[],"unchanged":false}
+PLUS1 then pencil callout heading embed|{"plusOk":true,"names":["Twin","Edited"],"values":["6","6"],"kinds":[],"unchanged":false}
+PLUS2 then pencil plain heading hover|{"plusOk":true,"names":["Twin","Edited"],"values":["7","7"],"kinds":[],"unchanged":false}
+PLUS2 then pencil plain heading embed|{"plusOk":true,"names":["Twin","Edited"],"values":["7","7"],"kinds":[],"unchanged":false}
+PLUS2 then pencil callout heading hover|{"plusOk":true,"names":["Twin","Edited"],"values":["7","7"],"kinds":[],"unchanged":false}
+PLUS2 then pencil callout heading embed|{"plusOk":true,"names":["Twin","Edited"],"values":["7","7"],"kinds":[],"unchanged":false}
+PLUS2 then A edited outside then pencil plain heading hover|{"plusOk":true,"names":["Twin","Twin"],"values":["7","9"],"kinds":["dropped"],"unchanged":true}
+PLUS2 then A edited outside then pencil plain heading embed|{"plusOk":true,"names":["Twin","Twin"],"values":["7","9"],"kinds":["dropped"],"unchanged":true}
+PLUS2 then A edited outside then pencil callout heading hover|{"plusOk":true,"names":["Twin","Twin"],"values":["7","9"],"kinds":["dropped"],"unchanged":true}
+PLUS2 then A edited outside then pencil callout heading embed|{"plusOk":true,"names":["Twin","Twin"],"values":["7","9"],"kinds":["dropped"],"unchanged":true}
+SECOND HOST block embed|{"paneWrote":true,"names":["Twin","Twin"],"values":["6","6"],"kinds":["dropped"],"unchanged":true}
+SECOND HOST heading hover|{"paneWrote":true,"names":["Twin","Twin"],"values":["6","6"],"kinds":["dropped"],"unchanged":true}
+CACHEDREAD stale, A edited, cache fresh block embed|{"which":"nothing","kinds":["dropped"]}
+CACHEDREAD stale, A edited, cache fresh heading hover|{"which":"nothing","kinds":["dropped"]}
+CACHEDREAD stale, A edited, cache fresh heading embed|{"which":"nothing","kinds":["dropped"]}
+CACHEDREAD stale, A edited, cache stale block embed|{"which":"nothing","kinds":["dropped"]}
+CACHEDREAD stale, A edited, cache stale heading hover|{"which":"nothing","kinds":["dropped"]}
+CACHEDREAD stale, A edited, cache stale heading embed|{"which":"nothing","kinds":["dropped"]}
+CACHEDREAD stale, twin inserted above A, cache fresh block embed|{"which":"nothing","kinds":["dropped"]}
+CACHEDREAD stale, twin inserted above A, cache fresh heading hover|{"which":"nothing","kinds":["dropped"]}
+CACHEDREAD stale, twin inserted above A, cache fresh heading embed|{"which":"nothing","kinds":["dropped"]}
+CACHE ahead of cachedRead and part: twin inserted above, part current block embed|{"which":"nothing","kinds":["dropped"]}
+CACHE ahead of cachedRead and part: twin inserted above, part current heading hover|{"which":"nothing","kinds":["dropped"]}
+CACHE ahead of cachedRead and part: twin inserted above, part current heading embed|{"which":"nothing","kinds":["dropped"]}
+TWO EMBEDS same block|{"r1":true,"r2":false,"mid":["Twin","Edited"],"names":["Twin","Edited"],"kinds":["dropped"]}
+TWO EMBEDS a and b|{"rb":true,"ra":true,"names":["Bee","Ay"],"kinds":[]}
+WRONG BLOCK LINK|{"names":["Edited","Twin"],"kinds":[]}
+ORDINAL hover callout lower|{"names":["Twin","Edited"],"kinds":[]}
+CARD stale callout no twin|{"ok":false,"values":["3","6"],"kinds":["unsavable"]}
+CARD section gone no twin|{"ok":false,"values":["5"],"kinds":["unsavable"]}
+FORM stale callout no twin|{"pin":"pin","names":["Other","Twin"],"kinds":["unsavable"]}
+REFUSING without pinOnly|{"pin":"{\"text\":\"\",\"lineStart\":-1}","r1":false,"r2":false,"names":["Twin","Twin"],"kinds":["unsavable"]}
+PLAIN non-embedded none|{"pin":"pin","names":["Twin","Edited"],"kinds":[]}
+PLAIN non-embedded A edited|{"pin":"pin","names":["Twin","Twin"],"kinds":["dropped"]}
+PLAIN non-embedded section null|{"pin":null,"names":["Twin","Edited"],"kinds":[]}

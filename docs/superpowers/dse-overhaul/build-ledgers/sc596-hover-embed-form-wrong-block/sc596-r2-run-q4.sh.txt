@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc596-r2-impl
+E=/home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements
+L=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc596-hover-embed-form-wrong-block
+cd "$E" || exit 9
+cp "$S/q4-card-named.test.ts" "$E/test/dom/framework/sc596-r2-q4-scratch.test.ts"
+: > "$L/sc596-r2-q4-card-named-base.log"
+SC596_SWEEP_OUT="$L/sc596-r2-q4-card-named-base.log" SC596_TAG=base npx jest test/dom/framework/sc596-r2-q4-scratch.test.ts --silent > "$S/q4-jest.out" 2>&1
+rc=$?
+rm -f "$E/test/dom/framework/sc596-r2-q4-scratch.test.ts"
+echo "q4_rc=$rc"
+tail -6 "$S/q4-jest.out"

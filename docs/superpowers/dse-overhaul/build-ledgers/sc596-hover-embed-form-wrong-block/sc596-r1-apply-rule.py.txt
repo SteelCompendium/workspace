@@ -1,0 +1,79 @@
+#!/usr/bin/env python3
+# apply-rule.py: apply the SC-596 r1 probe rule to the dse worktree's ReadingModeBlockHost.ts (uncommitted; the caller restores with git checkout).
+F = '/home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/src/framework/host/ReadingModeBlockHost.ts'
+s = open(F).read()
+
+def rep(old, new):
+    global s
+    assert s.count(old) == 1, (s.count(old), old[:80])
+    s = s.replace(old, new)
+
+# 1. a module-level set of pins that are a refusal (a form that could not be pinned in an embed / hover preview)
+rep("""const partialPins = new WeakSet<object>();
+""", """const partialPins = new WeakSet<object>();
+/**
+ * SC-596: the pin of a block edit form drawn inside an embed or hover preview whose block could not be pinned at all (no section, or no own
+ * fence in the part and no own write to stand in). Before, such a form had NO pin and its Save wrote without `pinOnly`: the part's line numbers
+ * and the body against the whole note (`resolveWriteTarget` -> `locateByBody`), which finds the identical twin when the form's block was edited
+ * from outside. A refusing pin writes nothing and says so (the "can't tell where" Notice, as an unplaceable write).
+ */
+const refusingPins = new WeakSet<object>();
+""")
+
+# 2. takePin: a form in an embed / hover always gets a pin (a refusing one when nothing places it)
+rep("""	private takePin(forForm: boolean): BlockPin | null {
+		const section = this.readSection();
+		if (!section) return null;
+		const embedded = this.containerEl.closest('.markdown-embed, .internal-embed') !== null;
+		if (!this.ownFence) {
+			// SC-584: a callout in an embed or hover preview whose part is stale (right after a + on its card) holds no block with the body this
+			// host knows, so its own fence cannot be found in it; the host's own last write still says where the block is.
+			// SC-594: a card write takes it too (the same stale window right after its own +).
+			return embedded ? this.pinFromLastWrite() : null;
+		}""", """	private takePin(forForm: boolean): BlockPin | null {
+		const section = this.readSection();
+		const embedded = this.containerEl.closest('.markdown-embed, .internal-embed') !== null;
+		if (!section) return forForm && embedded ? this.refusingPin() : null;
+		if (!this.ownFence) {
+			// SC-584: a callout in an embed or hover preview whose part is stale (right after a + on its card) holds no block with the body this
+			// host knows, so its own fence cannot be found in it; the host's own last write still says where the block is.
+			// SC-594: a card write takes it too (the same stale window right after its own +).
+			// SC-596: a FORM with neither is given a refusing pin (never no pin: see `refusingPins`).
+			return embedded ? (this.pinFromLastWrite() ?? (forForm ? this.refusingPin() : null)) : null;
+		}""")
+
+# 3. takePin: a form's pin in an embed / hover is placed exactly like a card's (the link: src or the bound hover-link; the own write; else refused)
+rep("""			const link = src ?? (forForm ? undefined : hoverLinkOf(this.plugin.app, this.containerEl)?.linktext);
+			if (typeof link !== 'string' || link.includes('#')) partialPins.add(pin);
+			pinRebased.set(pin, forForm ? this.rebasePin(pin, section.text, this.lastWrite) : this.rebaseCardPin(pin, section.text, this.lastWrite));""",
+"""			const link = src ?? hoverLinkOf(this.plugin.app, this.containerEl)?.linktext;
+			if (typeof link !== 'string' || link.includes('#')) partialPins.add(pin);
+			// SC-596: a form's pin too (was `rebasePin`: `verifiedPinLine ?? searchedPinLine`, whose search for the part's text finds the twin's
+			// lines when the form's own block was edited from outside before the form opened).
+			pinRebased.set(pin, this.rebaseCardPin(pin, section.text, this.lastWrite));""")
+
+# 4. the refusing pin itself
+rep("""	/** SC-584: a pin of the note as this host's own last write left it, when that write is of the body this host knows now; else null. */""",
+"""	/** SC-596: a pin that places nothing (see `refusingPins`). */
+	private refusingPin(): BlockPin {
+		const pin = { text: '', lineStart: -1 };
+		partialPins.add(pin);
+		refusingPins.add(pin);
+		return pin;
+	}
+
+	/** SC-584: a pin of the note as this host's own last write left it, when that write is of the body this host knows now; else null. */""")
+
+# 5. replaceSource: a refusing pin is an unplaceable write (its Notice; list shapes keep theirs)
+rep("""				const pinned = pin ? this.pinnedTarget(content, pin) : null;
+				if (pinned) this.knownLineStart = pinned.lineStart;""",
+"""				if (pin !== null && refusingPins.has(pin)) {
+					unplaceable = true; // SC-596: a form in an embed / hover preview that could not be pinned writes nothing
+					listShape = this.looksLikeList(content, section);
+					return content;
+				}
+				const pinned = pin ? this.pinnedTarget(content, pin) : null;
+				if (pinned) this.knownLineStart = pinned.lineStart;""")
+
+open(F, 'w').write(s)
+print('rule applied')

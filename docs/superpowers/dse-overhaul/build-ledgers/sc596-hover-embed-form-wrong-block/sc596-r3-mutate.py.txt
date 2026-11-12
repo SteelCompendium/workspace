@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+# SC-596 r3 reviewer mutants (k-series, distinct from r2's m-series). Applies one mutant to the worktree source; the runner restores it.
+import sys
+E = '/home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/'
+F = E + 'src/framework/host/ReadingModeBlockHost.ts'
+m = sys.argv[1]
+M = {
+    # the refusing pin is only partial, not refusing: a form's Save then misses ('dropped'), a card's partialCard misses
+    'k1': [(F, "partialPins.add(pin);\n\t\trefusingPins.add(pin);", "partialPins.add(pin);")],
+    # the refusing branch loses the list wording
+    'k2': [(F, "unplaceable = true; // SC-596: a block in an embed / hover preview that could not be pinned writes nothing\n\t\t\t\t\tlistShape = this.looksLikeList(content, section);",
+            "unplaceable = true; // SC-596: a block in an embed / hover preview that could not be pinned writes nothing\n\t\t\t\t\tlistShape = false;")],
+    # the refusing branch is silent (nothing written, no Notice)
+    'k3': [(F, "unplaceable = true; // SC-596: a block in an embed / hover preview that could not be pinned writes nothing",
+            "unplaceable = false; // SC-596: a block in an embed / hover preview that could not be pinned writes nothing")],
+    # a refusing pin for NON-embedded hosts without a section too (cards / forms outside embeds must be unchanged)
+    'k4': [(F, "if (!section) return embedded ? this.refusingPin() : null;", "if (!section) return this.refusingPin();")],
+    # the own-write record is ignored when there is no own fence (always refusing)
+    'k5': [(F, "return embedded ? (this.pinFromLastWrite() ?? this.refusingPin()) : null;", "return embedded ? this.refusingPin() : null;")],
+    # no-own-fence refusing pin for NON-embedded hosts too
+    'k6': [(F, "return embedded ? (this.pinFromLastWrite() ?? this.refusingPin()) : null;", "return this.pinFromLastWrite() ?? this.refusingPin();")],
+    # a hover with no recorded link is taken for a whole-note pin (not partial)
+    'k7': [(F, "if (typeof link !== 'string' || link.includes('#')) partialPins.add(pin);", "if (typeof link === 'string' && link.includes('#')) partialPins.add(pin);")],
+    # the hanging-heading (part is the heading's BODY) branch is allowed for block links too
+    'k8': [(F, "else if (blockId === null && lines[start + 1] === part[0]) {", "else if (lines[start + 1] === part[0]) {")],
+    # always the strict one-place check, even with a unique body (stricter: safe; measures whether tests pin the relaxation)
+    'k9': [(F, "const twin = known !== null && countByBody(whole, this.knownLanguage ?? this.alias, known) > 1;", "const twin = true;")],
+    # the refusing branch only for pin-only callers (forms): a card's refusing pin falls to partialCard
+    'k13': [(F, "if (pin !== null && refusingPins.has(pin)) {", "if (pin !== null && refusingPins.has(pin) && options?.pinOnly === true) {")],
+    # record-first for every embedded pin (the r7 guard without its plain-fence exception)
+    'k14': [(F, "\t\t\tif (!(first && first.prefix === '')) {\n\t\t\t\tconst w = this.pinFromLastWrite();", "\t\t\tif (true) {\n\t\t\t\tconst w = this.pinFromLastWrite();")],
+    # the record is used whatever body it wrote
+    'k15': [(F, "if (w === null || this.knownBody === null || normalizeBody(w.body) !== normalizeBody(this.knownBody)) return null;", "if (w === null) return null;")],
+    # Save does not wait for the pin's rebase
+    'k20': [(F, "if (options?.pin) await pinRebased.get(options.pin); // SC-556", "if (false) await pinRebased.get(options!.pin!); // SC-556")],
+    # a hover preview (.markdown-embed only) is not taken for an embed
+    'k24': [(F, "const embedded = this.containerEl.closest('.markdown-embed, .internal-embed') !== null;\n\t\tif (!section)", "const embedded = this.containerEl.closest('.internal-embed') !== null;\n\t\tif (!section)")],
+}
+for path, old, new in M[m]:
+    s = open(path).read()
+    assert s.count(old) == 1, (m, s.count(old), old[:70])
+    open(path, 'w').write(s.replace(old, new))
+print('mutant', m)

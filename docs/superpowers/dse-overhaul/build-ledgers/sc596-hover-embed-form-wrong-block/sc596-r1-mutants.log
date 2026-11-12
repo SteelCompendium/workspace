@@ -1,0 +1,40 @@
+# SC-596 r1 mutants: each = the probe rule (sc596-r1-apply-rule.py.txt) + one mutation (sc596-r1-mutate.py.txt), run with sc596-r1-run-mutants.sh.txt.
+# Killed = a named probe fails, OR a named record or a sweep cell differs from the probe golden (sc596-r1-jest-sweep-probe.log; outcome AND notice kind compared).
+# Batches 1-3 ran before the Y probes were added; batch 4 re-ran m10 m10b m11 m12 m14 m15 m16 with them (it supersedes batch 3 for those).
+## batch 1
+MUTANT m1 | Tests:       1 failed, 2908 passed, 2909 total | named failed: N3b embed host, section resolved at build then null at the p; | sweep: 0 cells differ {}; twin cells 0
+MUTANT m2 | Tests:       3 failed, 2906 passed, 2909 total | named failed: P13 verbatim (no + record): never the upper callout;N1 callout embed, the block written by another host (no reco;N4 heading hover callout, + then setMountedBody (record drop; | sweep: 720 cells differ {'R->R (notice)': 720}; twin cells 0; e.g. twin elsewhere | list item | heading hover | rv | none | no + | cache fresh: pin: refused+Notice [unsavable-list] -> null-pin: refused+Notice [unsavable-list]
+MUTANT m3 | Tests:       2909 passed, 2909 total | named failed: none | sweep: 720 cells differ {'R->R (notice)': 720}; twin cells 0; e.g. twin elsewhere | list item | heading hover | rv | none | no + | cache fresh: pin: refused+Notice [unsavable-list] -> pin: refused+Notice [dropped]
+MUTANT m4 | Tests:       2909 passed, 2909 total | named failed: none | sweep: 0 cells differ {}; twin cells 0
+## batch 2
+MUTANT m5 | Tests:       2909 passed, 2909 total | named failed: none | sweep: 0 cells differ {}; twin cells 0
+MUTANT m6 | Tests:       4 failed, 2905 passed, 2909 total | named failed: P4 verbatim (no hover-link record): Save must not write B;P4 with the hover-link record Obsidian sends: Save must not ;P4e block embed, fresh cache: Save must not write B;P4h heading hover, record: Save must not write B; | sweep: 440 cells differ {'A->R': 36, 'R->T': 392, 'R->A': 12}; twin cells 392; e.g. twin elsewhere | plain fence | heading hover | rv | none | no + | cache fresh: pin: A -> pin: refused+Notice [dropped]
+MUTANT m7 | Tests:       2 failed, 2907 passed, 2909 total | named failed: r5a heading hover: two identical plain counters in the secti;V5 (a block hover whose text is unique) with the hover-link ; | sweep: 48 cells differ {'A->R': 36, 'R->A': 12}; twin cells 0; e.g. twin elsewhere | plain fence | heading hover | rv | none | no + | cache fresh: pin: A -> pin: refused+Notice [dropped]
+MUTANT m8 | Tests:       2909 passed, 2909 total | named failed: none | sweep: 0 cells differ {}; twin cells 0
+## batch 3
+MUTANT m9 | Tests:       2910 passed, 2910 total | named failed: none | sweep: named records differ: ['X1 section paragraph edited before open (block untouched)']; 0 cells differ {}; twin cells 0
+MUTANT m10 | Tests:       2910 passed, 2910 total | named failed: none | sweep: named records differ: none; 24 cells differ {'R->A': 24}; twin cells 0; e.g. same-name section | plain fence | heading hover | rv | none | no + | cache fresh: pin: refused+Notice [dropped] -> pin: A
+MUTANT m10b | Tests:       2910 passed, 2910 total | named failed: none | sweep: named records differ: none; 0 cells differ {}; twin cells 0
+MUTANT m11 | Tests:       2910 passed, 2910 total | named failed: none | sweep: named records differ: none; 0 cells differ {}; twin cells 0
+MUTANT m12 | Tests:       2910 passed, 2910 total | named failed: none | sweep: named records differ: none; 0 cells differ {}; twin cells 0
+MUTANT m13 | Tests:       1 failed, 2909 passed, 2910 total | named failed: V9 (+ then the pencil, a long note, heading embed) with a RE; | sweep: named records differ: ['V9 real + then pencil, long note']; 20 cells differ {'A->R': 20}; twin cells 0; e.g. twin elsewhere | plain fence | heading hover | rv | none | + (part pre-+) | cache fresh: pin: A -> pin: refused+Notice [dropped]
+MUTANT m14 | Tests:       2910 passed, 2910 total | named failed: none | sweep: named records differ: none; 0 cells differ {}; twin cells 0
+MUTANT m15 | Tests:       2910 passed, 2910 total | named failed: none | sweep: named records differ: none; 0 cells differ {}; twin cells 0
+MUTANT m16 | Tests:       2910 passed, 2910 total | named failed: none | sweep: named records differ: none; 0 cells differ {}; twin cells 0
+## batch 4
+MUTANT m10 | Tests:       2 failed, 2916 passed, 2918 total | named failed: Y1e heading embed: an identical ## Tracker section pasted di;Y1h heading hover: an identical ## Tracker section pasted di; | sweep: named records differ: ['Y1e heading embed', 'Y1h heading hover']; 24 cells differ {'R->A': 24}; twin cells 0; e.g. same-name section | plain fence | heading hover | rv | none | no + | cache fresh: pin: refused+Notice [dropped] -> pin: A
+MUTANT m10b | Tests:       2 failed, 2916 passed, 2918 total | named failed: Y2e block embed: a copy of the block WITH its ^a pasted abov;Y2h block hover: a copy of the block WITH its ^a pasted abov; | sweep: named records differ: ['Y2e block embed', 'Y2h block hover']; 0 cells differ {}; twin cells 0
+MUTANT m11 | Tests:       2 failed, 2916 passed, 2918 total | named failed: Y3e block embed: lines inserted at the top move the twin B (;Y3h block hover: lines inserted at the top move the twin B (; | sweep: named records differ: ['Y3e block embed', 'Y3h block hover']; 0 cells differ {}; twin cells 0
+MUTANT m12 | Tests:       2918 passed, 2918 total | named failed: none | sweep: named records differ: none; 0 cells differ {}; twin cells 0
+MUTANT m14 | Tests:       2918 passed, 2918 total | named failed: none | sweep: named records differ: none; 0 cells differ {}; twin cells 0
+MUTANT m15 | Tests:       1 failed, 2917 passed, 2918 total | named failed: Y5 heading hover of ## Tracker whose popover is bound to the; | sweep: named records differ: ['Y5 popover bound to another link']; 0 cells differ {}; twin cells 0
+MUTANT m16 | Tests:       1 failed, 2917 passed, 2918 total | named failed: Y6 heading hover, ## Tracker and ## Other swapped from outsi; | sweep: named records differ: ['Y6 sections swapped, cache lags']; 0 cells differ {}; twin cells 0
+## recomparison of batches 1-2 including named records (cmp-mutant.py after the named-record compare was added)
+m1: named records differ: ['N3 embed, no section', 'N3b embed, section null at the pencil, own edited']; 0 cells differ {}; twin cells 0
+m2: named records differ: ['P13 verbatim', 'N1 callout stale window, no record', 'N4 heading hover callout, stale part, no record, own edited']; 720 cells differ {'R->R (notice)': 720}; twin cells 0; e.g. twin elsewhere | list item | heading hover | rv | none | no + | cache fresh: pin: refused+Notice [unsavable-list] -> null-pin: refused+Notice [unsavable-list]
+m3: named records differ: none; 720 cells differ {'R->R (notice)': 720}; twin cells 0; e.g. twin elsewhere | list item | heading hover | rv | none | no + | cache fresh: pin: refused+Notice [unsavable-list] -> pin: refused+Notice [dropped]
+m4: named records differ: none; 0 cells differ {}; twin cells 0
+m5: named records differ: ['W1 whole-note hover, identical added above']; 0 cells differ {}; twin cells 0
+m6: named records differ: ['P4 verbatim (no hover-link record)', 'P4 with the hover-link record Obsidian sends', 'P4e block embed, fresh cache', 'P4h heading hover, record', 'X1 section paragraph edited before open (block untouched)', 'X2 cache lags insertion, twin under Other']; 440 cells differ {'A->R': 36, 'R->T': 392, 'R->A': 12}; twin cells 392; e.g. twin elsewhere | plain fence | heading hover | rv | none | no + | cache fresh: pin: A -> pin: refused+Notice [dropped]
+m7: named records differ: ['r5a heading hover', 'V5 unique block hover, record', 'X1 section paragraph edited before open (block untouched)']; 48 cells differ {'A->R': 36, 'R->A': 12}; twin cells 0; e.g. twin elsewhere | plain fence | heading hover | rv | none | no + | cache fresh: pin: A -> pin: refused+Notice [dropped]
+m8: named records differ: ['W1 whole-note hover, identical added above']; 0 cells differ {}; twin cells 0

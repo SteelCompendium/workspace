@@ -1,0 +1,87 @@
+// SC-596 r3 reviewer: Q4 (card null-pin path) measured independently: where does a card write land at base / head in four null-pin shapes.
+import * as fs from 'fs';
+import { ReadingModeBlockHost } from '../../../src/framework/host/ReadingModeBlockHost';
+import { noteHoverLink } from '../../../src/framework/host/hoverLinks';
+import { resetDroppedWriteNotices } from '../../../src/framework/host/droppedWriteNotice';
+import { App, Notice, Plugin } from '../../mocks/obsidian';
+
+const OUT = process.env.SC596_R3_OUT;
+const rec = (name: string, obj: unknown) => {
+	if (OUT) fs.appendFileSync(OUT, `${name}|${JSON.stringify(obj)}\n`);
+};
+const CTR = (n: number, name: string): string[] => ['```ds-counter', `name: ${name}`, `current_value: ${n}`, '```'];
+const CAL = (n: number, name: string) => ['> [!note] Camp', ...CTR(n, name).map((l) => `> ${l}`), '> after'];
+const bodyOf = (n: number, name: string) => `name: ${name}\ncurrent_value: ${n}`;
+const pos = (line: number) => ({ line, col: 0, offset: 0 });
+const named = (app: App) => [...app.vault.getContent('Note.md')!.matchAll(/name: (\w+)\n> current_value: (\d+)|name: (\w+)\ncurrent_value: (\d+)/g)].map((m) => `${m[1] ?? m[3]}=${m[2] ?? m[4]}`);
+
+function setup(full: string, sec: any, el: HTMLElement, body: string, cache: object) {
+	const app = new App();
+	app.vault.setFile('Note.md', full);
+	jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => cache as never);
+	const section = { current: sec };
+	const ctx = { docId: 'd', sourcePath: 'Note.md', frontmatter: undefined, addChild: () => {}, getSectionInfo: () => section.current } as never;
+	const host = new ReadingModeBlockHost(new Plugin(app) as never, el, ctx, 'ds-counter');
+	host.setMountedBody(body);
+	return { app, host, section };
+}
+function embedEl(src: string): HTMLElement {
+	const e = document.createElement('div');
+	e.className = 'internal-embed markdown-embed';
+	e.setAttribute('src', src);
+	return e.appendChild(document.createElement('div'));
+}
+beforeEach(() => {
+	resetDroppedWriteNotices();
+	Notice.notices.length = 0;
+	jest.spyOn(console, 'warn').mockImplementation(() => {});
+});
+afterEach(() => jest.restoreAllMocks());
+
+// the twin is named Up (above), the card's own block Own (lower, ^cal); both read the same apart from the name? No: the NAME is part of the body, so
+// "identical" means same name: both are named T; the twin's position is told by the value (upper first)
+test('Q4a callout ^cal embed, host knows 6, part shows 5, no record, own (lower) edited to 9, upper holds 6', async () => {
+	const full = ['# N', '', ...CAL(6, 'T'), '', 'mid', '', ...CAL(9, 'T'), '', '^cal', '', 'END'].join('\n');
+	const lower = full.split('\n').lastIndexOf('> [!note] Camp');
+	const { app, host } = setup(full, { text: CAL(5, 'T').join('\n'), lineStart: 1, lineEnd: 4 }, embedEl('Note#^cal'), bodyOf(6, 'T'), { headings: [], blocks: { cal: { id: 'cal', position: { start: pos(lower), end: pos(lower + 5) } } } });
+	host.notePersistIntent();
+	const ok = await host.replaceSource(bodyOf(7, 'T'), { fromView: true });
+	rec('Q4a', { ok, blocks: named(app), notices: (Notice.notices as unknown[]).length });
+});
+test('Q4b heading embed callout, part stale (5), host knows 6, no record, own edited to 9, twin callout under ## Other holds 6', async () => {
+	const full = ['# N', '', '## Other', '', ...CAL(6, 'T'), '', '## Tracker', '', ...CAL(9, 'T'), '', '## After', '', 'END'].join('\n');
+	const lines = full.split('\n');
+	const cache = { headings: ['Other', 'Tracker', 'After'].map((h) => ({ heading: h, level: 2, position: { start: pos(lines.indexOf(`## ${h}`)), end: pos(lines.indexOf(`## ${h}`)) } })), blocks: {} };
+	const { app, host } = setup(full, { text: ['## Tracker', '', ...CAL(5, 'T'), ''].join('\n'), lineStart: 3, lineEnd: 6 }, embedEl('Note#Tracker'), bodyOf(6, 'T'), cache);
+	host.notePersistIntent();
+	const ok = await host.replaceSource(bodyOf(7, 'T'), { fromView: true });
+	rec('Q4b', { ok, blocks: named(app), notices: (Notice.notices as unknown[]).length });
+});
+test('Q4c block hover of a callout, record dropped, part stale, twin callout above holds the known body', async () => {
+	const full = ['# N', '', ...CAL(6, 'T'), '', 'mid', '', ...CAL(9, 'T'), '', '^cal', '', 'END'].join('\n');
+	const lower = full.split('\n').lastIndexOf('> [!note] Camp');
+	const pop = document.createElement('div');
+	pop.className = 'popover hover-popover';
+	const emb = pop.appendChild(document.createElement('div'));
+	emb.className = 'markdown-embed';
+	emb.setAttribute('data-type', 'block');
+	const el = emb.appendChild(document.createElement('div'));
+	document.body.appendChild(pop);
+	const { app, host } = setup(full, { text: CAL(5, 'T').join('\n'), lineStart: 1, lineEnd: 4 }, el, bodyOf(6, 'T'), { headings: [], blocks: { cal: { id: 'cal', position: { start: pos(lower), end: pos(lower + 5) } } } });
+	noteHoverLink(app, { linktext: 'Note#^cal', sourcePath: 'Host.md', hoverParent: { hoverPopover: { hoverEl: pop } } });
+	host.notePersistIntent();
+	const ok = await host.replaceSource(bodyOf(7, 'T'), { fromView: true });
+	pop.remove();
+	rec('Q4c', { ok, blocks: named(app), notices: (Notice.notices as unknown[]).length });
+});
+test('Q4d block embed (plain), section gone at the click, own edited to 9, twin above holds 5', async () => {
+	const drawn = ['# N', '', ...CTR(5, 'T'), '', 'p', '', ...CTR(5, 'T'), '^a', '', 'END'].join('\n');
+	const disk = ['# N', '', ...CTR(5, 'T'), '', 'p', '', ...CTR(9, 'T'), '^a', '', 'END'].join('\n');
+	const { app, host, section } = setup(drawn, { text: CTR(5, 'T').join('\n'), lineStart: 0, lineEnd: 3 }, embedEl('Note#^a'), bodyOf(5, 'T'), { headings: [], blocks: { a: { id: 'a', position: { start: pos(7), end: pos(10) } } } });
+	host.pinPosition();
+	app.vault.setFile('Note.md', disk);
+	section.current = null;
+	host.notePersistIntent();
+	const ok = await host.replaceSource(bodyOf(7, 'T'), { fromView: true });
+	rec('Q4d', { ok, blocks: named(app), notices: (Notice.notices as unknown[]).length });
+});

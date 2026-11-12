@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# run-mutants.sh <log> <mutant>... : each mutant applied, the host / hover / form tests run, the source restored
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc596-r3-review
+E=/home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements
+cd "$E" || exit 9
+log="$1"; shift
+for m in "$@"; do
+  python3 -I "$S/sc596-r3-mutate.py.txt" "$m" > "$S/mut-$m.apply" 2>&1 || { echo "MUTANT $m apply failed: $(cat $S/mut-$m.apply)" >> "$log"; git -C "$E" checkout -- src/framework/host/ReadingModeBlockHost.ts; continue; }
+  t0=$(date +%s)
+  npx jest test/dom/framework/reading-mode-host test/dom/framework/hover test/dom/authoring/formModal > "$S/mut-$m.log" 2>&1
+  git -C "$E" checkout -- src/framework/host/ReadingModeBlockHost.ts
+  tests=$(grep '^Tests:' "$S/mut-$m.log")
+  failed=$(grep '●' "$S/mut-$m.log" | sed 's/^ *● //' | grep -v '^Test suite' | cut -c1-140 | sort -u | head -3 | tr '\n' ';')
+  nfail=$(grep '●' "$S/mut-$m.log" | sed 's/^ *● //' | sort -u | wc -l)
+  echo "MUTANT $m | $tests | $nfail distinct failing | $(( $(date +%s) - t0 ))s | e.g. ${failed:-none}" >> "$log"
+done
+echo "status: $(git -C "$E" status --porcelain | tr '\n' ' ')" >> "$log"

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# lc.sh <log> <only-ids> [bundle-dir]: one lifecycle run from the worktree (builds the worktree bundle first when no bundle dir is given)
+E=/home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements
+cd "$E" || exit 9
+t0=$(date +%s)
+echo "head $(git -C "$E" rev-parse HEAD) load $(cat /proc/loadavg)" > "$1"
+if [ -n "$3" ]; then
+  export DSE_LIFECYCLE_BUNDLE="$3"
+  sha256sum "$3/main.js" "$3/styles.css" >> "$1"
+else
+  npm run build-no-check >> "$1" 2>&1
+  echo "build_rc=$?" >> "$1"
+  sha256sum main.js styles.css >> "$1"
+fi
+node visual-harness/obsidian-lifecycle.mjs --only="$2" >> "$1" 2>&1
+rc=$?
+echo "lc_rc=$rc wall=$(( $(date +%s) - t0 ))s" >> "$1"

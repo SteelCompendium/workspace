@@ -1,0 +1,313 @@
+# BASE da2bdbc6 (sc596-r1-jest-sweep-base.log)
+# A = written into the form's own block; T = written into the identical twin; R = nothing written (Notice); a cell lists every outcome over rv/lp x cache fresh/lagging x twin layout (elsewhere / same-name section)
+construct | shape | none/no+ | none/+pre | none/+redrawn | edited/no+ | edited/+pre | edited/+redrawn | deleted/no+ | deleted/+pre | deleted/+redrawn
+plain fence | heading hover | R | A | A | T | R | T | T | R | T
+plain fence | block hover | R | A | A | T | R | T | T | R | T
+plain fence | heading embed | A | A | A | R/T | R | R/T | R/T | R | R/T
+plain fence | block embed | A | A | A | T | R | T | T | R | T
+plain fence | whole-note hover | A | A | A | R | R | R | R | R | R
+plain fence | whole-note embed | A | A | A | R | R | R | R | R | R
+callout | heading hover | R | A | A | T | R | R | T | R | R
+callout | block hover | R | A | A | T | R | R | T | R | R
+callout | heading embed | A | A | A | R/T | R | R | R/T | R | R
+callout | block embed | A | A | A | T | R | R | T | R | R
+callout | whole-note hover | A | A | A | R | R | R | R | R | R
+callout | whole-note embed | A | A | A | R | R | R | R | R | R
+header-less quote | heading hover | R | A | A | T | R | R | T | R | R
+header-less quote | block hover | R | A | A | T | R | R | T | R | R
+header-less quote | heading embed | A | A | A | R/T | R | R | R/T | R | R
+header-less quote | block embed | A | A | A | T | R | R | T | R | R
+header-less quote | whole-note hover | A | A | A | R | R | R | R | R | R
+header-less quote | whole-note embed | A | A | A | R | R | R | R | R | R
+quote, first line is the fence | heading hover | R | A | A | T | R | R | T | R | R
+quote, first line is the fence | block hover | R | A | A | T | R | R | T | R | R
+quote, first line is the fence | heading embed | A | A | A | R/T | R | R | R/T | R | R
+quote, first line is the fence | block embed | A | A | A | T | R | R | T | R | R
+quote, first line is the fence | whole-note hover | A | A | A | R | R | R | R | R | R
+quote, first line is the fence | whole-note embed | A | A | A | R | R | R | R | R | R
+nested callout | heading hover | R | A | A | T | R | R | T | R | R
+nested callout | block hover | R | A | A | T | R | R | T | R | R
+nested callout | heading embed | A | A | A | R/T | R | R | R/T | R | R
+nested callout | block embed | A | A | A | T | R | R | T | R | R
+nested callout | whole-note hover | A | A | A | R | R | R | R | R | R
+nested callout | whole-note embed | A | A | A | R | R | R | R | R | R
+nested quote, first line is the fence | heading hover | R | A | A | T | R | R | T | R | R
+nested quote, first line is the fence | block hover | R | A | A | T | R | R | T | R | R
+nested quote, first line is the fence | heading embed | A | A | A | R/T | R | R | R/T | R | R
+nested quote, first line is the fence | block embed | A | A | A | T | R | R | T | R | R
+nested quote, first line is the fence | whole-note hover | A | A | A | R | R | R | R | R | R
+nested quote, first line is the fence | whole-note embed | A | A | A | R | R | R | R | R | R
+list item | heading hover | R | R | R | R | R | R | R | R | R
+list item | block hover | R | R | R | R | R | R | R | R | R
+list item | heading embed | R | R | R | R | R | R | R | R | R
+list item | block embed | R | R | R | R | R | R | R | R | R
+list item | whole-note hover | R | R | R | R | R | R | R | R | R
+list item | whole-note embed | R | R | R | R | R | R | R | R | R
+footnote | heading hover | R | R | R | R | R | R | R | R | R
+footnote | block hover | R | R | R | R | R | R | R | R | R
+footnote | heading embed | R | R | R | R | R | R | R | R | R
+footnote | block embed | R | R | R | R | R | R | R | R | R
+footnote | whole-note hover | R | R | R | R | R | R | R | R | R
+footnote | whole-note embed | R | R | R | R | R | R | R | R | R
+# totals: {'R': 2104, 'A': 384, 'T': 392} over 2880 cells
+
+# PROBE RULE (sc596-r1-jest-sweep-probe.log)
+# A = written into the form's own block; T = written into the identical twin; R = nothing written (Notice); a cell lists every outcome over rv/lp x cache fresh/lagging x twin layout (elsewhere / same-name section)
+construct | shape | none/no+ | none/+pre | none/+redrawn | edited/no+ | edited/+pre | edited/+redrawn | deleted/no+ | deleted/+pre | deleted/+redrawn
+plain fence | heading hover | A/R | A | A | R | R | R | R | R | R
+plain fence | block hover | A | A | A | R | R | R | R | R | R
+plain fence | heading embed | A/R | A | A | R | R | R | R | R | R
+plain fence | block embed | A | A | A | R | R | R | R | R | R
+plain fence | whole-note hover | A | A | A | R | R | R | R | R | R
+plain fence | whole-note embed | A | A | A | R | R | R | R | R | R
+callout | heading hover | A/R | A | A | R | R | R | R | R | R
+callout | block hover | A | A | A | R | R | R | R | R | R
+callout | heading embed | A/R | A | A | R | R | R | R | R | R
+callout | block embed | A | A | A | R | R | R | R | R | R
+callout | whole-note hover | A | A | A | R | R | R | R | R | R
+callout | whole-note embed | A | A | A | R | R | R | R | R | R
+header-less quote | heading hover | A/R | A | A | R | R | R | R | R | R
+header-less quote | block hover | A | A | A | R | R | R | R | R | R
+header-less quote | heading embed | A/R | A | A | R | R | R | R | R | R
+header-less quote | block embed | A | A | A | R | R | R | R | R | R
+header-less quote | whole-note hover | A | A | A | R | R | R | R | R | R
+header-less quote | whole-note embed | A | A | A | R | R | R | R | R | R
+quote, first line is the fence | heading hover | A/R | A | A | R | R | R | R | R | R
+quote, first line is the fence | block hover | A | A | A | R | R | R | R | R | R
+quote, first line is the fence | heading embed | A/R | A | A | R | R | R | R | R | R
+quote, first line is the fence | block embed | A | A | A | R | R | R | R | R | R
+quote, first line is the fence | whole-note hover | A | A | A | R | R | R | R | R | R
+quote, first line is the fence | whole-note embed | A | A | A | R | R | R | R | R | R
+nested callout | heading hover | A/R | A | A | R | R | R | R | R | R
+nested callout | block hover | A | A | A | R | R | R | R | R | R
+nested callout | heading embed | A/R | A | A | R | R | R | R | R | R
+nested callout | block embed | A | A | A | R | R | R | R | R | R
+nested callout | whole-note hover | A | A | A | R | R | R | R | R | R
+nested callout | whole-note embed | A | A | A | R | R | R | R | R | R
+nested quote, first line is the fence | heading hover | A/R | A | A | R | R | R | R | R | R
+nested quote, first line is the fence | block hover | A | A | A | R | R | R | R | R | R
+nested quote, first line is the fence | heading embed | A/R | A | A | R | R | R | R | R | R
+nested quote, first line is the fence | block embed | A | A | A | R | R | R | R | R | R
+nested quote, first line is the fence | whole-note hover | A | A | A | R | R | R | R | R | R
+nested quote, first line is the fence | whole-note embed | A | A | A | R | R | R | R | R | R
+list item | heading hover | R | R | R | R | R | R | R | R | R
+list item | block hover | R | R | R | R | R | R | R | R | R
+list item | heading embed | R | R | R | R | R | R | R | R | R
+list item | block embed | R | R | R | R | R | R | R | R | R
+list item | whole-note hover | R | R | R | R | R | R | R | R | R
+list item | whole-note embed | R | R | R | R | R | R | R | R | R
+footnote | heading hover | R | R | R | R | R | R | R | R | R
+footnote | block hover | R | R | R | R | R | R | R | R | R
+footnote | heading embed | R | R | R | R | R | R | R | R | R
+footnote | block embed | R | R | R | R | R | R | R | R | R
+footnote | whole-note hover | R | R | R | R | R | R | R | R | R
+footnote | whole-note embed | R | R | R | R | R | R | R | R | R
+# totals: {'A': 408, 'R': 2472} over 2880 cells
+
+# base -> probe transitions
+A -> A: 372
+A -> R: 12
+R -> A: 36
+R -> R: 2068
+T -> R: 392
+# cells that changed (base -> probe), grouped by everything but host/cache
+T -> R x4: same-name section | callout | block embed | own deleted | no +
+T -> R x4: same-name section | callout | block embed | own edited | no +
+R -> A x2: same-name section | callout | block hover | none | no +
+T -> R x4: same-name section | callout | block hover | own deleted | no +
+T -> R x4: same-name section | callout | block hover | own edited | no +
+A -> R x2: same-name section | callout | heading embed | none | no +
+T -> R x4: same-name section | callout | heading embed | own deleted | no +
+T -> R x4: same-name section | callout | heading embed | own edited | no +
+T -> R x4: same-name section | callout | heading hover | own deleted | no +
+T -> R x4: same-name section | callout | heading hover | own edited | no +
+T -> R x4: same-name section | header-less quote | block embed | own deleted | no +
+T -> R x4: same-name section | header-less quote | block embed | own edited | no +
+R -> A x2: same-name section | header-less quote | block hover | none | no +
+T -> R x4: same-name section | header-less quote | block hover | own deleted | no +
+T -> R x4: same-name section | header-less quote | block hover | own edited | no +
+A -> R x2: same-name section | header-less quote | heading embed | none | no +
+T -> R x4: same-name section | header-less quote | heading embed | own deleted | no +
+T -> R x4: same-name section | header-less quote | heading embed | own edited | no +
+T -> R x4: same-name section | header-less quote | heading hover | own deleted | no +
+T -> R x4: same-name section | header-less quote | heading hover | own edited | no +
+T -> R x4: same-name section | nested callout | block embed | own deleted | no +
+T -> R x4: same-name section | nested callout | block embed | own edited | no +
+R -> A x2: same-name section | nested callout | block hover | none | no +
+T -> R x4: same-name section | nested callout | block hover | own deleted | no +
+T -> R x4: same-name section | nested callout | block hover | own edited | no +
+A -> R x2: same-name section | nested callout | heading embed | none | no +
+T -> R x4: same-name section | nested callout | heading embed | own deleted | no +
+T -> R x4: same-name section | nested callout | heading embed | own edited | no +
+T -> R x4: same-name section | nested callout | heading hover | own deleted | no +
+T -> R x4: same-name section | nested callout | heading hover | own edited | no +
+T -> R x4: same-name section | nested quote, first line is the fence | block embed | own deleted | no +
+T -> R x4: same-name section | nested quote, first line is the fence | block embed | own edited | no +
+R -> A x2: same-name section | nested quote, first line is the fence | block hover | none | no +
+T -> R x4: same-name section | nested quote, first line is the fence | block hover | own deleted | no +
+T -> R x4: same-name section | nested quote, first line is the fence | block hover | own edited | no +
+A -> R x2: same-name section | nested quote, first line is the fence | heading embed | none | no +
+T -> R x4: same-name section | nested quote, first line is the fence | heading embed | own deleted | no +
+T -> R x4: same-name section | nested quote, first line is the fence | heading embed | own edited | no +
+T -> R x4: same-name section | nested quote, first line is the fence | heading hover | own deleted | no +
+T -> R x4: same-name section | nested quote, first line is the fence | heading hover | own edited | no +
+T -> R x4: same-name section | plain fence | block embed | own deleted | + (part redrawn after +)
+T -> R x4: same-name section | plain fence | block embed | own deleted | no +
+T -> R x4: same-name section | plain fence | block embed | own edited | + (part redrawn after +)
+T -> R x4: same-name section | plain fence | block embed | own edited | no +
+R -> A x2: same-name section | plain fence | block hover | none | no +
+T -> R x4: same-name section | plain fence | block hover | own deleted | + (part redrawn after +)
+T -> R x4: same-name section | plain fence | block hover | own deleted | no +
+T -> R x4: same-name section | plain fence | block hover | own edited | + (part redrawn after +)
+T -> R x4: same-name section | plain fence | block hover | own edited | no +
+A -> R x2: same-name section | plain fence | heading embed | none | no +
+T -> R x4: same-name section | plain fence | heading embed | own deleted | + (part redrawn after +)
+T -> R x4: same-name section | plain fence | heading embed | own deleted | no +
+T -> R x4: same-name section | plain fence | heading embed | own edited | + (part redrawn after +)
+T -> R x4: same-name section | plain fence | heading embed | own edited | no +
+T -> R x4: same-name section | plain fence | heading hover | own deleted | + (part redrawn after +)
+T -> R x4: same-name section | plain fence | heading hover | own deleted | no +
+T -> R x4: same-name section | plain fence | heading hover | own edited | + (part redrawn after +)
+T -> R x4: same-name section | plain fence | heading hover | own edited | no +
+T -> R x4: same-name section | quote, first line is the fence | block embed | own deleted | no +
+T -> R x4: same-name section | quote, first line is the fence | block embed | own edited | no +
+R -> A x2: same-name section | quote, first line is the fence | block hover | none | no +
+T -> R x4: same-name section | quote, first line is the fence | block hover | own deleted | no +
+T -> R x4: same-name section | quote, first line is the fence | block hover | own edited | no +
+A -> R x2: same-name section | quote, first line is the fence | heading embed | none | no +
+T -> R x4: same-name section | quote, first line is the fence | heading embed | own deleted | no +
+T -> R x4: same-name section | quote, first line is the fence | heading embed | own edited | no +
+T -> R x4: same-name section | quote, first line is the fence | heading hover | own deleted | no +
+T -> R x4: same-name section | quote, first line is the fence | heading hover | own edited | no +
+T -> R x4: twin elsewhere | callout | block embed | own deleted | no +
+T -> R x4: twin elsewhere | callout | block embed | own edited | no +
+R -> A x2: twin elsewhere | callout | block hover | none | no +
+T -> R x4: twin elsewhere | callout | block hover | own deleted | no +
+T -> R x4: twin elsewhere | callout | block hover | own edited | no +
+R -> A x2: twin elsewhere | callout | heading hover | none | no +
+T -> R x4: twin elsewhere | callout | heading hover | own deleted | no +
+T -> R x4: twin elsewhere | callout | heading hover | own edited | no +
+T -> R x4: twin elsewhere | header-less quote | block embed | own deleted | no +
+T -> R x4: twin elsewhere | header-less quote | block embed | own edited | no +
+R -> A x2: twin elsewhere | header-less quote | block hover | none | no +
+T -> R x4: twin elsewhere | header-less quote | block hover | own deleted | no +
+T -> R x4: twin elsewhere | header-less quote | block hover | own edited | no +
+R -> A x2: twin elsewhere | header-less quote | heading hover | none | no +
+T -> R x4: twin elsewhere | header-less quote | heading hover | own deleted | no +
+T -> R x4: twin elsewhere | header-less quote | heading hover | own edited | no +
+T -> R x4: twin elsewhere | nested callout | block embed | own deleted | no +
+T -> R x4: twin elsewhere | nested callout | block embed | own edited | no +
+R -> A x2: twin elsewhere | nested callout | block hover | none | no +
+T -> R x4: twin elsewhere | nested callout | block hover | own deleted | no +
+T -> R x4: twin elsewhere | nested callout | block hover | own edited | no +
+R -> A x2: twin elsewhere | nested callout | heading hover | none | no +
+T -> R x4: twin elsewhere | nested callout | heading hover | own deleted | no +
+T -> R x4: twin elsewhere | nested callout | heading hover | own edited | no +
+T -> R x4: twin elsewhere | nested quote, first line is the fence | block embed | own deleted | no +
+T -> R x4: twin elsewhere | nested quote, first line is the fence | block embed | own edited | no +
+R -> A x2: twin elsewhere | nested quote, first line is the fence | block hover | none | no +
+T -> R x4: twin elsewhere | nested quote, first line is the fence | block hover | own deleted | no +
+T -> R x4: twin elsewhere | nested quote, first line is the fence | block hover | own edited | no +
+R -> A x2: twin elsewhere | nested quote, first line is the fence | heading hover | none | no +
+T -> R x4: twin elsewhere | nested quote, first line is the fence | heading hover | own deleted | no +
+T -> R x4: twin elsewhere | nested quote, first line is the fence | heading hover | own edited | no +
+T -> R x4: twin elsewhere | plain fence | block embed | own deleted | + (part redrawn after +)
+T -> R x4: twin elsewhere | plain fence | block embed | own deleted | no +
+T -> R x4: twin elsewhere | plain fence | block embed | own edited | + (part redrawn after +)
+T -> R x4: twin elsewhere | plain fence | block embed | own edited | no +
+R -> A x2: twin elsewhere | plain fence | block hover | none | no +
+T -> R x4: twin elsewhere | plain fence | block hover | own deleted | + (part redrawn after +)
+T -> R x4: twin elsewhere | plain fence | block hover | own deleted | no +
+T -> R x4: twin elsewhere | plain fence | block hover | own edited | + (part redrawn after +)
+T -> R x4: twin elsewhere | plain fence | block hover | own edited | no +
+R -> A x2: twin elsewhere | plain fence | heading hover | none | no +
+T -> R x4: twin elsewhere | plain fence | heading hover | own deleted | + (part redrawn after +)
+T -> R x4: twin elsewhere | plain fence | heading hover | own deleted | no +
+T -> R x4: twin elsewhere | plain fence | heading hover | own edited | + (part redrawn after +)
+T -> R x4: twin elsewhere | plain fence | heading hover | own edited | no +
+T -> R x4: twin elsewhere | quote, first line is the fence | block embed | own deleted | no +
+T -> R x4: twin elsewhere | quote, first line is the fence | block embed | own edited | no +
+R -> A x2: twin elsewhere | quote, first line is the fence | block hover | none | no +
+T -> R x4: twin elsewhere | quote, first line is the fence | block hover | own deleted | no +
+T -> R x4: twin elsewhere | quote, first line is the fence | block hover | own edited | no +
+R -> A x2: twin elsewhere | quote, first line is the fence | heading hover | none | no +
+T -> R x4: twin elsewhere | quote, first line is the fence | heading hover | own deleted | no +
+T -> R x4: twin elsewhere | quote, first line is the fence | heading hover | own edited | no +
+
+# named probes (base | probe): name | pin | Save returned | names / lines written | notices
+base|NAMED|P4 verbatim (no hover-link record)|pin yes|true|["Twin","Edited"]|notices 0
+probe|NAMED|P4 verbatim (no hover-link record)|pin yes|false|["Twin","Twin"]|notices 1
+base|NAMED|P4 with the hover-link record Obsidian sends|pin yes|true|["Twin","Edited"]|notices 0
+probe|NAMED|P4 with the hover-link record Obsidian sends|pin yes|false|["Twin","Twin"]|notices 1
+base|NAMED|P4e block embed, fresh cache|pin yes|true|["Twin","Edited"]|notices 0
+probe|NAMED|P4e block embed, fresh cache|pin yes|false|["Twin","Twin"]|notices 1
+base|NAMED|P4h heading hover, record|pin yes|true|["Edited","Twin"]|notices 0
+probe|NAMED|P4h heading hover, record|pin yes|false|["Twin","Twin"]|notices 1
+base|NAMED|P4he heading embed, fresh cache|pin yes|false|["Twin","Twin"]|notices 1
+probe|NAMED|P4he heading embed, fresh cache|pin yes|false|["Twin","Twin"]|notices 1
+base|NAMED|P13 verbatim|pin null|true|["Edited","Twin"]|notices 0
+probe|NAMED|P13 verbatim|pin yes|false|["Twin","Twin"]|notices 1
+base|NAMED|P13 real +|pin yes|false|["Twin","Twin"]|notices 1
+probe|NAMED|P13 real +|pin yes|false|["Twin","Twin"]|notices 1
+base|NAMED|r5a heading embed rv|pin yes|true|["Twin","Edited"]|notices 0
+probe|NAMED|r5a heading embed rv|pin yes|true|["Twin","Edited"]|notices 0
+base|NAMED|r5a heading embed lp|pin yes|true|["Twin","Edited"]|notices 0
+probe|NAMED|r5a heading embed lp|pin yes|true|["Twin","Edited"]|notices 0
+base|NAMED|r5a heading hover|pin yes|true|["Twin","Edited"]|notices 0
+probe|NAMED|r5a heading hover|pin yes|true|["Twin","Edited"]|notices 0
+base|NAMED|r5b callout block embed rv|pin yes|true|["Twin","Edited"]|notices 0
+probe|NAMED|r5b callout block embed rv|pin yes|true|["Twin","Edited"]|notices 0
+base|NAMED|r5b callout block embed lp|pin yes|true|["Twin","Edited"]|notices 0
+probe|NAMED|r5b callout block embed lp|pin yes|true|["Twin","Edited"]|notices 0
+base|NAMED|r5b callout heading embed rv|pin yes|true|["Twin","Edited"]|notices 0
+probe|NAMED|r5b callout heading embed rv|pin yes|true|["Twin","Edited"]|notices 0
+base|NAMED|r5b callout heading embed lp|pin yes|true|["Twin","Edited"]|notices 0
+probe|NAMED|r5b callout heading embed lp|pin yes|true|["Twin","Edited"]|notices 0
+base|NAMED|N1 callout stale window, no record|pin null|true|["Edited","Twin"]|notices 0
+probe|NAMED|N1 callout stale window, no record|pin yes|false|["Twin","Twin"]|notices 1
+base|NAMED|N2 two counters one callout, no ordinal|pin yes|true|["Edited","Twin"]|notices 0
+probe|NAMED|N2 two counters one callout, no ordinal|pin yes|true|["Edited","Twin"]|notices 0
+base|NAMED|N3 embed, no section|pin null|false|["Twin","Twin"]|notices 0
+probe|NAMED|N3 embed, no section|pin yes|false|["Twin","Twin"]|notices 0
+base|NAMED|N3b embed, section null at the pencil, own edited|pin null|true|["Edited","Twin"]|notices 0
+probe|NAMED|N3b embed, section null at the pencil, own edited|pin yes|false|["Twin","Twin"]|notices 1
+base|NAMED|N4 heading hover callout, stale part, no record, own edited|pin null|true|["Edited","Twin"]|notices 0
+probe|NAMED|N4 heading hover callout, stale part, no record, own edited|pin yes|false|["Twin","Twin"]|notices 1
+base|NAMED|V1 (SC-556 heading embed, long note, nothing changed) with src|pin yes|true|["Edited"]|notices 0
+probe|NAMED|V1 (SC-556 heading embed, long note, nothing changed) with src|pin yes|true|["Edited"]|notices 0
+base|NAMED|V2 (an identical block above the embedded section) with src|pin yes|true|["Twin","Edited"]|notices 0
+probe|NAMED|V2 (an identical block above the embedded section) with src|pin yes|true|["Twin","Edited"]|notices 0
+base|NAMED|V3 outside edit while open, with src|pin yes|true|["Edited"]|notices 0
+probe|NAMED|V3 outside edit while open, with src|pin yes|true|["Edited"]|notices 0
+base|NAMED|V5 unique block hover, record|pin yes|true|["Other","Edited"]|notices 0
+probe|NAMED|V5 unique block hover, record|pin yes|true|["Other","Edited"]|notices 0
+base|NAMED|V8 redrawn after +, 1000 lines, fresh cache|pin yes|true|["Edited"]|notices 0
+probe|NAMED|V8 redrawn after +, 1000 lines, fresh cache|pin yes|true|["Edited"]|notices 0
+base|NAMED|V9 real + then pencil, long note|pin yes|true|["Edited"]|notices 0
+probe|NAMED|V9 real + then pencil, long note|pin yes|true|["Edited"]|notices 0
+base|NAMED|V10 trailing blanks, with src|pin yes|true|["Edited"]|notices 0
+probe|NAMED|V10 trailing blanks, with src|pin yes|true|["Edited"]|notices 0
+base|NAMED|W1 whole-note hover, identical added above|pin yes|false|["Twin","Twin"]|notices 1
+probe|NAMED|W1 whole-note hover, identical added above|pin yes|true|["Twin","Edited"]|notices 0
+base|NAMED|X1 section paragraph edited before open (block untouched)|pin yes|true|["Twin","Edited"]|notices 0
+probe|NAMED|X1 section paragraph edited before open (block untouched)|pin yes|false|["Twin","Twin"]|notices 1
+base|NAMED|X2 cache lags insertion, twin under Other|pin yes|true|["Twin","Edited"]|notices 0
+probe|NAMED|X2 cache lags insertion, twin under Other|pin yes|false|["Twin","Twin"]|notices 1
+base|NAMED|D1 SC-607 shape (hovered section deleted, other identical one left)|pin yes|true|["Edited"]|notices 0
+probe|NAMED|D1 SC-607 shape (hovered section deleted, other identical one left)|pin yes|true|["Edited"]|notices 0
+base|NAMED|Y1e heading embed|pin yes|true|[7]|notices 0
+probe|NAMED|Y1e heading embed|pin yes|false|[]|notices 1
+base|NAMED|Y1h heading hover|pin yes|false|[]|notices 1
+probe|NAMED|Y1h heading hover|pin yes|false|[]|notices 1
+base|NAMED|Y2e block embed|pin yes|true|[5]|notices 0
+probe|NAMED|Y2e block embed|pin yes|false|[]|notices 1
+base|NAMED|Y2h block hover|pin yes|false|[]|notices 1
+probe|NAMED|Y2h block hover|pin yes|false|[]|notices 1
+base|NAMED|Y3e block embed|pin yes|false|[]|notices 1
+probe|NAMED|Y3e block embed|pin yes|false|[]|notices 1
+base|NAMED|Y3h block hover|pin yes|false|[]|notices 1
+probe|NAMED|Y3h block hover|pin yes|false|[]|notices 1
+base|NAMED|Y5 popover bound to another link|pin yes|false|[]|notices 1
+probe|NAMED|Y5 popover bound to another link|pin yes|false|[]|notices 1
+base|NAMED|Y6 sections swapped, cache lags|pin yes|false|[]|notices 1
+probe|NAMED|Y6 sections swapped, cache lags|pin yes|false|[]|notices 1

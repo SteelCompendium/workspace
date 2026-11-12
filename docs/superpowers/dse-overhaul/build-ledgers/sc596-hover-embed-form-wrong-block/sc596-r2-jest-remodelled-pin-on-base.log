@@ -1,0 +1,163 @@
+Info: New devbox available: 0.17.5 -> v0.20.0. Please run `devbox version update`.
+Info: Running script "npx" on /home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements
+FAIL dom test/dom/framework/reading-mode-host-pin.test.ts
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a heading embed of a note with two identical sections: the link names two places, so Save writes nothing and says why
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      773 | 		const pin = host.pinPosition()!;
+      774 |
+    > 775 | 		expect(await save(host, pin)).toBe(false);
+          | 		                              ^
+      776 | 		expect(app.vault.getContent('Note.md')).toBe(full);
+      777 | 		expect(Notice.notices).toEqual([droppedWriteMessage('Note')]);
+      778 | 	});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:775:33)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a cache that lags the note (its position verifies nothing): the pin is not taken from it, nothing is written into the identical block it points at, and nothing is written at all
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      788 | 		// SC-596: the cache's heading line is not the heading's line in the note text, so the link places nothing (the text search used to find the
+      789 | 		// part's one run). Obsidian catches up with an outside edit within ~45 ms; until then a form is refused, a Notice says so, and the form stays open.
+    > 790 | 		expect(await save(host, pin)).toBe(false);
+          | 		                              ^
+      791 | 		expect(app.vault.getContent('Note.md')).toBe(now);
+      792 | 		expect(Notice.notices).toEqual([droppedWriteMessage('Note')]);
+      793 | 	});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:790:33)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a cache whose heading line is a line that is NOT the heading (it points at the identical block above the section): not taken, nothing places the pin, nothing is written
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      801 | 		const pin = host.pinPosition()!;
+      802 |
+    > 803 | 		expect(await save(host, pin)).toBe(false); // SC-596: refused (the text search used to find the one run); the cache catches up within ms
+          | 		                              ^
+      804 | 		expect(app.vault.getContent('Note.md')).toBe(full);
+      805 | 		expect(Notice.notices).toEqual([droppedWriteMessage('Note')]);
+      806 | 	});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:803:33)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › no src on the embed: the link places nothing: Save writes nothing and says why
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      842 | 		const pin = host.pinPosition()!;
+      843 |
+    > 844 | 		expect(await save(host, pin)).toBe(false);
+          | 		                              ^
+      845 | 		expect(app.vault.getContent('Note.md')).toBe(full);
+      846 | 		expect(Notice.notices).toEqual([droppedWriteMessage('Note')]);
+      847 | 	});
+
+      at test/dom/framework/reading-mode-host-pin.test.ts:844:33
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a link without a subpath: the link places nothing: Save writes nothing and says why
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      842 | 		const pin = host.pinPosition()!;
+      843 |
+    > 844 | 		expect(await save(host, pin)).toBe(false);
+          | 		                              ^
+      845 | 		expect(app.vault.getContent('Note.md')).toBe(full);
+      846 | 		expect(Notice.notices).toEqual([droppedWriteMessage('Note')]);
+      847 | 	});
+
+      at test/dom/framework/reading-mode-host-pin.test.ts:844:33
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a link to another note: the link places nothing: Save writes nothing and says why
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      842 | 		const pin = host.pinPosition()!;
+      843 |
+    > 844 | 		expect(await save(host, pin)).toBe(false);
+          | 		                              ^
+      845 | 		expect(app.vault.getContent('Note.md')).toBe(full);
+      846 | 		expect(Notice.notices).toEqual([droppedWriteMessage('Note')]);
+      847 | 	});
+
+      at test/dom/framework/reading-mode-host-pin.test.ts:844:33
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a subpath that does not resolve: the link places nothing: Save writes nothing and says why
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      842 | 		const pin = host.pinPosition()!;
+      843 |
+    > 844 | 		expect(await save(host, pin)).toBe(false);
+          | 		                              ^
+      845 | 		expect(app.vault.getContent('Note.md')).toBe(full);
+      846 | 		expect(Notice.notices).toEqual([droppedWriteMessage('Note')]);
+      847 | 	});
+
+      at test/dom/framework/reading-mode-host-pin.test.ts:844:33
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › no metadata cache for the note (a note Obsidian has not indexed yet): nothing places the pin, Save writes nothing and says why
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      939 | 		const pin = host.pinPosition()!;
+      940 |
+    > 941 | 		expect(await save(host, pin)).toBe(false); // SC-596: the text search used to place it
+          | 		                              ^
+      942 | 		expect(app.vault.getContent('Note.md')).toBe(full);
+      943 | 		expect(Notice.notices).toEqual([droppedWriteMessage('Note')]);
+      944 | 	});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:941:33)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a block embed of a callout that holds the counter › a plain fenced block embed whose block lost a field from outside while the embed still shows the old part, a twin above: Save writes nothing and says why
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      1427 | 			const pin = host.pinPosition()!;
+      1428 |
+    > 1429 | 			expect(await save(host, pin)).toBe(false);
+           | 			                              ^
+      1430 | 			expect(app.vault.getContent('Note.md')).toBe(disk);
+      1431 | 			expect(Notice.notices).toEqual([droppedWriteMessage('Note')]);
+      1432 | 		});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1429:34)
+
+Test Suites: 1 failed, 1 total
+Tests:       9 failed, 136 passed, 145 total
+Snapshots:   0 total
+Time:        2.838 s, estimated 3 s
+Ran all test suites matching test/dom/framework/reading-mode-host-pin.test.ts.
+Error: error running script "npx" in Devbox: exit status 1
+

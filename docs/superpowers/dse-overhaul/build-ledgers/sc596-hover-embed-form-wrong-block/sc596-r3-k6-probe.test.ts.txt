@@ -1,0 +1,44 @@
+// SC-596 r3 reviewer: does any test pin "non-embedded hosts unchanged" for the no-own-fence branch of takePin (mutant k6)?
+// A card in a CALLOUT of the note itself (no embed): a + lands; the callout's window is still the one from before the + (stale, ~20 ms);
+// a second + in that moment: no own fence (the window holds no block with the body the host knows). Before SC-596 and at HEAD: no pin, the
+// view's write is placed by today's path once the window is fresh. Under k6: a refusing pin, the click is dropped with a Notice.
+import { ReadingModeBlockHost } from '../../../src/framework/host/ReadingModeBlockHost';
+import { resetDroppedWriteNotices } from '../../../src/framework/host/droppedWriteNotice';
+import { App, Notice, Plugin } from '../../mocks/obsidian';
+
+const CTR = (n: number): string[] => ['```ds-counter', 'name: C', `current_value: ${n}`, '```'];
+const CAL = (n: number) => ['> [!note] Camp', ...CTR(n).map((l) => `> ${l}`), '> after'];
+const bodyOf = (n: number) => `name: C\ncurrent_value: ${n}`;
+const settle = () => new Promise((r) => setTimeout(r, 25));
+
+test('k6 probe: non-embedded callout card, second + while the window is stale, lands once the window is fresh', async () => {
+	resetDroppedWriteNotices();
+	Notice.notices.length = 0;
+	jest.spyOn(console, 'warn').mockImplementation(() => {});
+	const note = (n: number) => ['# N', '', 'TOP', '', ...CAL(n), '', 'END'];
+	const app = new App();
+	app.vault.setFile('Note.md', note(5).join('\n'));
+	const win = (n: number) => ({ text: note(n).join('\n'), lineStart: 4, lineEnd: 9 });
+	const section: { current: any } = { current: win(5) };
+	const callout = document.createElement('div');
+	callout.className = 'callout';
+	const el = callout.appendChild(document.createElement('div'));
+	el.className = 'block-language-ds-counter';
+	document.body.appendChild(callout);
+	const ctx = { docId: 'd', sourcePath: 'Note.md', frontmatter: undefined, addChild: () => {}, getSectionInfo: () => section.current } as never;
+	const host = new ReadingModeBlockHost(new Plugin(app) as never, el, ctx, 'ds-counter');
+	host.setMountedBody(bodyOf(5));
+	host.notePersistIntent();
+	const first = await host.replaceSource(bodyOf(6), { fromView: true });
+	// the window is still the one drawn before the + (5); the second + comes now
+	host.notePersistIntent();
+	const pin = (host as unknown as { pendingPin: unknown }).pendingPin;
+	await settle();
+	section.current = win(6); // the redraw: the window is fresh by the time the debounced write runs
+	const second = await host.replaceSource(bodyOf(7), { fromView: true });
+	const values = [...app.vault.getContent('Note.md')!.matchAll(/current_value: (\d+)/g)].map((m) => m[1]);
+	const out = { first, pendingPin: pin === null ? null : JSON.stringify(pin), second, values, notices: (Notice.notices as unknown[]).map(String) };
+	// eslint-disable-next-line no-console
+	console.log('K6PROBE ' + JSON.stringify(out));
+	expect(values).toEqual(['7']);
+});

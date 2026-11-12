@@ -1,0 +1,50 @@
+c02598c1343feebb1a74ca4d44c2e05392f68374
+3.44 2.32 2.22 13/3326 1688147
+file:///home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got object and undefined)
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got undefined and object)
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/visual-harness/obsidian-light-island.mjs:245
+			throw new TypeError(`findDriftedTokens: "${t}" is missing from ${!(t in oursMap) ? 'oursMap' : 'targetMap'}`);
+			      ^
+
+TypeError: findDriftedTokens: "--b" is missing from oursMap
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/visual-harness/obsidian-light-island.mjs:245:10)
+    at file:///home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+
+Test Suites: 1 skipped, 265 passed, 265 of 266 total
+Tests:       2 skipped, 10600 passed, 10602 total
+Snapshots:   3 passed, 3 total
+Time:        75.887 s
+Ran all test suites in 2 projects.
+rc=0 wall=77s
+18.85 7.30 3.96 19/3467 1691591

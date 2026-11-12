@@ -1,0 +1,95 @@
+Info: New devbox available: 0.17.5 -> v0.20.0. Please run `devbox version update`.
+Info: Running script "npx" on /home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements
+FAIL dom test/dom/framework/reading-mode-host-form-pin.test.ts
+  ● SC-596: a card write in an embed or hover preview that cannot be pinned is refused, never written into an identical twin › a card + on a callout embed whose host knows 6 while the part shows 5, no own-write record, the lower callout edited to 9, the upper holding 6: nothing is written
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      612 | 		const full = ['# N', '', 'TOP', '', ...CAL(6), '', 'mid', '', ...CAL(9), '', '^cal', '', 'END'].join('\n');
+      613 | 		const { app, host } = make(full, { text: CAL(5).join('\n'), lineStart: 1, lineEnd: 4 }, embedEl('Note#^cal', false), bodyOf(6), calCache(full));
+    > 614 | 		expect(await cardWrite(host, to)).toBe(false);
+          | 		                                  ^
+      615 | 		expect(app.vault.getContent('Note.md')).toBe(full);
+      616 | 		expect(Notice.notices).toHaveLength(1);
+      617 | 	});
+
+      at test/dom/framework/reading-mode-host-form-pin.test.ts:614:37
+
+  ● SC-596: a card write in an embed or hover preview that cannot be pinned is refused, never written into an identical twin › a card - on a callout embed whose host knows 6 while the part shows 5, no own-write record, the lower callout edited to 9, the upper holding 6: nothing is written
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      612 | 		const full = ['# N', '', 'TOP', '', ...CAL(6), '', 'mid', '', ...CAL(9), '', '^cal', '', 'END'].join('\n');
+      613 | 		const { app, host } = make(full, { text: CAL(5).join('\n'), lineStart: 1, lineEnd: 4 }, embedEl('Note#^cal', false), bodyOf(6), calCache(full));
+    > 614 | 		expect(await cardWrite(host, to)).toBe(false);
+          | 		                                  ^
+      615 | 		expect(app.vault.getContent('Note.md')).toBe(full);
+      616 | 		expect(Notice.notices).toHaveLength(1);
+      617 | 	});
+
+      at test/dom/framework/reading-mode-host-form-pin.test.ts:614:37
+
+  ● SC-596: a card write in an embed or hover preview that cannot be pinned is refused, never written into an identical twin › a card + on a callout embed whose block another pane wrote (no own-write record), part stale, a twin callout holding the known body: nothing is written
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      619 | 		const full = ['# N', '', 'TOP', '', ...CAL(6), '', 'mid', '', ...CAL(6), '', '^cal', '', 'END'].join('\n');
+      620 | 		const { app, host } = make(full, { text: CAL(5).join('\n'), lineStart: 0, lineEnd: 5 }, embedEl('Note#^cal', false), bodyOf(6), calCache(full));
+    > 621 | 		expect(await cardWrite(host, 7)).toBe(false);
+          | 		                                 ^
+      622 | 		expect(values(app)).toEqual(['6', '6']);
+      623 | 		expect(Notice.notices).toHaveLength(1);
+      624 | 	});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-form-pin.test.ts:621:36)
+
+  ● SC-596: a card write in an embed or hover preview that cannot be pinned is refused, never written into an identical twin › a card + on a heading hover callout, stale part, no own-write record, a twin callout holding the known body: nothing is written
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      628 | 		const { app, host } = make(disk, { text: ['', ...CAL(5, '> after'), '', ''].join('\n'), lineStart: 1, lineEnd: 6 }, el, bodyOf(6), cacheFor(disk.split('\n'), -1, -1, 4));
+      629 | 		noteHoverLink(app, { linktext: 'Note#Tracker', sourcePath: 'Host.md', hoverParent: { hoverPopover: { hoverEl: el.closest('.hover-popover')! } } });
+    > 630 | 		expect(await cardWrite(host, 7)).toBe(false);
+          | 		                                 ^
+      631 | 		expect(app.vault.getContent('Note.md')).toBe(disk);
+      632 | 		expect(Notice.notices).toHaveLength(1);
+      633 | 	});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-form-pin.test.ts:630:36)
+
+  ● SC-596: a card write in an embed or hover preview that cannot be pinned is refused, never written into an identical twin › a card + on a block embed whose section resolved when it was built and is gone at the click, the block edited from outside, a twin elsewhere: nothing is written
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      642 | 		app.vault.setFile('Note.md', disk);
+      643 | 		section.current = null;
+    > 644 | 		expect(await cardWrite(host, 7)).toBe(false);
+          | 		                                 ^
+      645 | 		expect(app.vault.getContent('Note.md')).toBe(disk);
+      646 | 		expect(Notice.notices).toHaveLength(1);
+      647 | 	});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-form-pin.test.ts:644:36)
+
+Test Suites: 1 failed, 1 total
+Tests:       5 failed, 2909 skipped, 1 passed, 2915 total
+Snapshots:   0 total
+Time:        1.13 s, estimated 59 s
+Ran all test suites matching test/dom/framework/reading-mode-host-form-pin.test.ts with tests matching "SC-596: a card write".
+Error: error running script "npx" in Devbox: exit status 1
+

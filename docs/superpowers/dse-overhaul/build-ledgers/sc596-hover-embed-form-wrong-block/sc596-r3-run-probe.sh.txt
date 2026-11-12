@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# run-probe.sh <tag head|base> : runs the r3 probe on HEAD src or on the base 5f7c5336 host source; restores the tree after
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc596-r3-review
+E=/home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements
+L=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc596-hover-embed-form-wrong-block
+cd "$E" || exit 9
+tag="$1"
+cp "$S/sc596-r3-probe.test.ts.txt" "$E/test/dom/framework/sc596-r3-probe.test.ts"
+if [ "$tag" = base ]; then git -C "$E" checkout 5f7c5336 -- src/framework/host/ReadingModeBlockHost.ts; fi
+: > "$L/sc596-r3-probe-$tag.log"
+SC596_R3_OUT="$L/sc596-r3-probe-$tag.log" npx jest test/dom/framework/sc596-r3-probe.test.ts > "$S/probe-$tag.out" 2>&1
+rc=$?
+rm -f /home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/test/dom/framework/sc596-r3-probe.test.ts
+if [ "$tag" = base ]; then git -C "$E" checkout HEAD -- src/framework/host/ReadingModeBlockHost.ts; fi
+echo "probe_rc=$rc"
+grep -E "^Tests:" "$S/probe-$tag.out"
+grep -E "●" "$S/probe-$tag.out" | head -20
+echo "status:"; git -C "$E" status --porcelain

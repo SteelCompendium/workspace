@@ -1,0 +1,596 @@
+Info: New devbox available: 0.17.5 -> v0.20.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements
+FAIL dom test/dom/framework/reading-mode-host-pin.test.ts
+  ● SC-556: a block edit form in a heading embed › a long note (500 lines on each side of the section), nothing changed: Save lands in the embedded block and the rest is byte for byte
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      611 | 		const pin = host.pinPosition()!;
+      612 |
+    > 613 | 		expect(await save(host, pin)).toBe(true); // before the fix: false and the "changed on disk first" Notice
+          | 		                              ^
+      614 | 		expect(app.vault.getContent('Note.md')).toBe(full.replace('name: Twin', 'name: Edited'));
+      615 | 		expect(Notice.notices).toEqual([]);
+      616 | 	});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:613:33)
+
+  ● SC-556: a block edit form in a heading embed › an identical block outside the embedded section (above it): Save writes the embedded block, never the twin
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      620 | 		const pin = host.pinPosition()!;
+      621 |
+    > 622 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      623 | 		const note = app.vault.getContent('Note.md')!;
+      624 | 		expect(names(app)).toEqual(['Twin', 'Edited']);
+      625 | 		expect(note).toBe(full.replace(/(## Tracker\n\n```ds-counter\nname: )Twin/, '$1Edited'));
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:622:33)
+
+  ● SC-556: a block edit form in a heading embed › an outside edit elsewhere in the source note (above and below the section) while the form is open: Save still lands in the embedded block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      654 | 		app.vault.setFile('Note.md', outside);
+      655 |
+    > 656 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      657 | 		expect(app.vault.getContent('Note.md')).toBe(outside.replace('name: Twin', 'name: Edited'));
+      658 | 	});
+      659 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:656:33)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › + then the pencil: the section text is stale (old value) when the form opens, a long note: Save lands in the embedded block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      738 | 		const pin = host.pinPosition()!;
+      739 |
+    > 740 | 		expect(await save(host, pin, bodyOf(6, 'Edited'))).toBe(true); // before: the section text was not found, the partial pin was refused
+          | 		                                                   ^
+      741 | 		expect(app.vault.getContent('Note.md')).toBe(full.replace('name: Twin', 'name: Edited'));
+      742 | 		expect(Notice.notices).toEqual([]);
+      743 | 	});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:740:54)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a heading embed of a note with two identical sections: Save writes the section Obsidian embeds (the first heading of that name)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      762 | 		const pin = host.pinPosition()!;
+      763 |
+    > 764 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      765 | 		expect(names(app)).toEqual(['Edited', 'Twin']);
+      766 | 	});
+      767 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:764:33)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a cache that lags the note (its position verifies nothing): the pin is not taken from it, and nothing is written into the identical block it points at
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      774 | 		const pin = host.pinPosition()!;
+      775 |
+    > 776 | 		expect(await save(host, pin)).toBe(true); // the text search (one run) places it: the embedded block, not the twin
+          | 		                              ^
+      777 | 		expect(names(app)).toEqual(['Twin', 'Edited']);
+      778 | 	});
+      779 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:776:33)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a cache whose heading line is a line that is NOT the heading (it points at the identical block above the section): not taken, the text search places the pin, the twin is not written
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      786 | 		const pin = host.pinPosition()!;
+      787 |
+    > 788 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      789 | 		expect(names(app)).toEqual(['Twin', 'Edited']);
+      790 | 	});
+      791 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:788:33)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › no src on the embed: the text search places the pin (one run), as before
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      823 | 		const pin = host.pinPosition()!;
+      824 |
+    > 825 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      826 | 		expect(app.vault.getContent('Note.md')).toBe(full.replace('name: Twin', 'name: Edited'));
+      827 | 	});
+      828 |
+
+      at test/dom/framework/reading-mode-host-pin.test.ts:825:33
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a link without a subpath: the text search places the pin (one run), as before
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      823 | 		const pin = host.pinPosition()!;
+      824 |
+    > 825 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      826 | 		expect(app.vault.getContent('Note.md')).toBe(full.replace('name: Twin', 'name: Edited'));
+      827 | 	});
+      828 |
+
+      at test/dom/framework/reading-mode-host-pin.test.ts:825:33
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a link to another note: the text search places the pin (one run), as before
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      823 | 		const pin = host.pinPosition()!;
+      824 |
+    > 825 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      826 | 		expect(app.vault.getContent('Note.md')).toBe(full.replace('name: Twin', 'name: Edited'));
+      827 | 	});
+      828 |
+
+      at test/dom/framework/reading-mode-host-pin.test.ts:825:33
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a subpath that does not resolve: the text search places the pin (one run), as before
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      823 | 		const pin = host.pinPosition()!;
+      824 |
+    > 825 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      826 | 		expect(app.vault.getContent('Note.md')).toBe(full.replace('name: Twin', 'name: Edited'));
+      827 | 	});
+      828 |
+
+      at test/dom/framework/reading-mode-host-pin.test.ts:825:33
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a hover preview (no src) of a block whose text is unique in the note: the text search places the pin and Save lands
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      879 | 		const pin = host.pinPosition()!;
+      880 |
+    > 881 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      882 | 		expect(names(app)).toEqual(['Other', 'Edited']);
+      883 | 	});
+      884 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:881:33)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › no metadata cache for the note: the text search places the pin
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      919 | 		const pin = host.pinPosition()!;
+      920 |
+    > 921 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      922 | 		expect(app.vault.getContent('Note.md')).toBe(full.replace('name: Twin', 'name: Edited'));
+      923 | 	});
+      924 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:921:33)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › the text search drops the part's own trailing blank lines (Obsidian can report more of them than the note has)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      936 | 		const pin = host.pinPosition()!;
+      937 |
+    > 938 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      939 | 		expect(app.vault.getContent('Note.md')).toBe(full.replace('name: Twin', 'name: Edited'));
+      940 | 	});
+      941 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:938:33)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › the embed was redrawn after the +, so its part is current: the pin comes from the embed's own link, not from the + write, and a note changed by hundreds of lines since still saves
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1137 | 			const pin = host.pinPosition()!;
+      1138 |
+    > 1139 | 			expect(await save(host, pin, bodyOf(6, 'Edited'))).toBe(true); // the + write's position would be 1000 lines from the note now (the line diff gives up beyond 400 on both sides)
+           | 			                                                   ^
+      1140 | 			expect(app.vault.getContent('Note.md')).toBe(edited(outside));
+      1141 | 		});
+      1142 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1139:55)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a block embed of a callout that holds the counter › a plain fenced block embed (not in a callout) keeps its rule, the id under the closing fence, whatever the length of the stale part: a part one line longer than the block, a twin above: Save lands in the embedded block (SC-584 r3, r2 LOW-1)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1406 | 			const pin = host.pinPosition()!;
+      1407 |
+    > 1408 | 			expect(await save(host, pin)).toBe(true); // before r3: refused (the marker was looked for after the part's last line, which is the id itself)
+           | 			                              ^
+      1409 | 			expect(names(app)).toEqual(['Twin', 'Edited']);
+      1410 | 		});
+      1411 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1408:34)
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+file:///home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got object and undefined)
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got undefined and object)
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/visual-harness/obsidian-light-island.mjs:245
+			throw new TypeError(`findDriftedTokens: "${t}" is missing from ${!(t in oursMap) ? 'oursMap' : 'targetMap'}`);
+			      ^
+
+TypeError: findDriftedTokens: "--b" is missing from oursMap
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/visual-harness/obsidian-light-island.mjs:245:10)
+    at file:///home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+
+Summary of all failing tests
+FAIL test/dom/framework/reading-mode-host-pin.test.ts
+  ● SC-556: a block edit form in a heading embed › a long note (500 lines on each side of the section), nothing changed: Save lands in the embedded block and the rest is byte for byte
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      611 | 		const pin = host.pinPosition()!;
+      612 |
+    > 613 | 		expect(await save(host, pin)).toBe(true); // before the fix: false and the "changed on disk first" Notice
+          | 		                              ^
+      614 | 		expect(app.vault.getContent('Note.md')).toBe(full.replace('name: Twin', 'name: Edited'));
+      615 | 		expect(Notice.notices).toEqual([]);
+      616 | 	});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:613:33)
+
+  ● SC-556: a block edit form in a heading embed › an identical block outside the embedded section (above it): Save writes the embedded block, never the twin
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      620 | 		const pin = host.pinPosition()!;
+      621 |
+    > 622 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      623 | 		const note = app.vault.getContent('Note.md')!;
+      624 | 		expect(names(app)).toEqual(['Twin', 'Edited']);
+      625 | 		expect(note).toBe(full.replace(/(## Tracker\n\n```ds-counter\nname: )Twin/, '$1Edited'));
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:622:33)
+
+  ● SC-556: a block edit form in a heading embed › an outside edit elsewhere in the source note (above and below the section) while the form is open: Save still lands in the embedded block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      654 | 		app.vault.setFile('Note.md', outside);
+      655 |
+    > 656 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      657 | 		expect(app.vault.getContent('Note.md')).toBe(outside.replace('name: Twin', 'name: Edited'));
+      658 | 	});
+      659 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:656:33)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › + then the pencil: the section text is stale (old value) when the form opens, a long note: Save lands in the embedded block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      738 | 		const pin = host.pinPosition()!;
+      739 |
+    > 740 | 		expect(await save(host, pin, bodyOf(6, 'Edited'))).toBe(true); // before: the section text was not found, the partial pin was refused
+          | 		                                                   ^
+      741 | 		expect(app.vault.getContent('Note.md')).toBe(full.replace('name: Twin', 'name: Edited'));
+      742 | 		expect(Notice.notices).toEqual([]);
+      743 | 	});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:740:54)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a heading embed of a note with two identical sections: Save writes the section Obsidian embeds (the first heading of that name)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      762 | 		const pin = host.pinPosition()!;
+      763 |
+    > 764 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      765 | 		expect(names(app)).toEqual(['Edited', 'Twin']);
+      766 | 	});
+      767 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:764:33)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a cache that lags the note (its position verifies nothing): the pin is not taken from it, and nothing is written into the identical block it points at
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      774 | 		const pin = host.pinPosition()!;
+      775 |
+    > 776 | 		expect(await save(host, pin)).toBe(true); // the text search (one run) places it: the embedded block, not the twin
+          | 		                              ^
+      777 | 		expect(names(app)).toEqual(['Twin', 'Edited']);
+      778 | 	});
+      779 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:776:33)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a cache whose heading line is a line that is NOT the heading (it points at the identical block above the section): not taken, the text search places the pin, the twin is not written
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      786 | 		const pin = host.pinPosition()!;
+      787 |
+    > 788 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      789 | 		expect(names(app)).toEqual(['Twin', 'Edited']);
+      790 | 	});
+      791 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:788:33)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › no src on the embed: the text search places the pin (one run), as before
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      823 | 		const pin = host.pinPosition()!;
+      824 |
+    > 825 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      826 | 		expect(app.vault.getContent('Note.md')).toBe(full.replace('name: Twin', 'name: Edited'));
+      827 | 	});
+      828 |
+
+      at test/dom/framework/reading-mode-host-pin.test.ts:825:33
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a link without a subpath: the text search places the pin (one run), as before
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      823 | 		const pin = host.pinPosition()!;
+      824 |
+    > 825 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      826 | 		expect(app.vault.getContent('Note.md')).toBe(full.replace('name: Twin', 'name: Edited'));
+      827 | 	});
+      828 |
+
+      at test/dom/framework/reading-mode-host-pin.test.ts:825:33
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a link to another note: the text search places the pin (one run), as before
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      823 | 		const pin = host.pinPosition()!;
+      824 |
+    > 825 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      826 | 		expect(app.vault.getContent('Note.md')).toBe(full.replace('name: Twin', 'name: Edited'));
+      827 | 	});
+      828 |
+
+      at test/dom/framework/reading-mode-host-pin.test.ts:825:33
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a subpath that does not resolve: the text search places the pin (one run), as before
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      823 | 		const pin = host.pinPosition()!;
+      824 |
+    > 825 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      826 | 		expect(app.vault.getContent('Note.md')).toBe(full.replace('name: Twin', 'name: Edited'));
+      827 | 	});
+      828 |
+
+      at test/dom/framework/reading-mode-host-pin.test.ts:825:33
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › a hover preview (no src) of a block whose text is unique in the note: the text search places the pin and Save lands
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      879 | 		const pin = host.pinPosition()!;
+      880 |
+    > 881 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      882 | 		expect(names(app)).toEqual(['Other', 'Edited']);
+      883 | 	});
+      884 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:881:33)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › no metadata cache for the note: the text search places the pin
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      919 | 		const pin = host.pinPosition()!;
+      920 |
+    > 921 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      922 | 		expect(app.vault.getContent('Note.md')).toBe(full.replace('name: Twin', 'name: Edited'));
+      923 | 	});
+      924 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:921:33)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › the text search drops the part's own trailing blank lines (Obsidian can report more of them than the note has)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      936 | 		const pin = host.pinPosition()!;
+      937 |
+    > 938 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      939 | 		expect(app.vault.getContent('Note.md')).toBe(full.replace('name: Twin', 'name: Edited'));
+      940 | 	});
+      941 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:938:33)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › the embed was redrawn after the +, so its part is current: the pin comes from the embed's own link, not from the + write, and a note changed by hundreds of lines since still saves
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1137 | 			const pin = host.pinPosition()!;
+      1138 |
+    > 1139 | 			expect(await save(host, pin, bodyOf(6, 'Edited'))).toBe(true); // the + write's position would be 1000 lines from the note now (the line diff gives up beyond 400 on both sides)
+           | 			                                                   ^
+      1140 | 			expect(app.vault.getContent('Note.md')).toBe(edited(outside));
+      1141 | 		});
+      1142 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1139:55)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a block embed of a callout that holds the counter › a plain fenced block embed (not in a callout) keeps its rule, the id under the closing fence, whatever the length of the stale part: a part one line longer than the block, a twin above: Save lands in the embedded block (SC-584 r3, r2 LOW-1)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1406 | 			const pin = host.pinPosition()!;
+      1407 |
+    > 1408 | 			expect(await save(host, pin)).toBe(true); // before r3: refused (the marker was looked for after the part's last line, which is the id itself)
+           | 			                              ^
+      1409 | 			expect(names(app)).toEqual(['Twin', 'Edited']);
+      1410 | 		});
+      1411 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1408:34)
+
+
+Test Suites: 1 failed, 1 skipped, 263 passed, 264 of 265 total
+Tests:       16 failed, 2 skipped, 7655 passed, 7673 total
+Snapshots:   3 passed, 3 total
+Time:        79.92 s
+jest_rc=1

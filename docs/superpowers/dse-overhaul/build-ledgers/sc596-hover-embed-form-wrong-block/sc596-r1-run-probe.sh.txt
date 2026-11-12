@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# run-probe.sh <tag> <out-file> : copy the probe into the dse test dir, run it, delete it (literal path). Records rc.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc596-r1-design
+E=/home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements
+cd "$E" || exit 9
+cp "$S/sc596-r1-probe.test.ts" "$E/test/dom/framework/sc596-r1-probe.test.ts"
+: > "$2"
+SC596_SWEEP_OUT="$2" SC596_TAG="$1" npx jest test/dom/framework/sc596-r1-probe.test.ts --silent
+rc=$?
+rm -f "$E/test/dom/framework/sc596-r1-probe.test.ts"
+echo "probe_rc=$rc"

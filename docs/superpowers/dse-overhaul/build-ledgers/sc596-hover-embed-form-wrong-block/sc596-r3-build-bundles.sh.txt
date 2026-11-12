@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# build-bundles.sh <log>: scratch exports (git archive) of base 5f7c5336 and of HEAD + mutant k25, each built; the worktree is never touched
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc596-r3-review
+E=/home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements
+mkdir -p "$S/base-tree" "$S/k25-tree"
+git -C "$E" archive 5f7c5336 | tar -x -C "$S/base-tree"
+git -C "$E" archive HEAD | tar -x -C "$S/k25-tree"
+ln -sfn "$E/node_modules" "$S/base-tree/node_modules"
+ln -sfn "$E/node_modules" "$S/k25-tree/node_modules"
+# k25: a hover / embed pin is never partial and never rebased (pre-r8 shape: the part's lines mapped against the whole note)
+python3 -I - "$S/k25-tree/src/framework/host/ReadingModeBlockHost.ts" >> "$1" 2>&1 <<'EOF'
+import sys
+p = sys.argv[1]
+s = open(p).read()
+a = "if (typeof link !== 'string' || link.includes('#')) partialPins.add(pin);"
+b = "pinRebased.set(pin, this.rebaseCardPin(pin, section.text, this.lastWrite));"
+assert s.count(a) == 1 and s.count(b) == 1
+s = s.replace(a, "void link;").replace(b, "")
+open(p, 'w').write(s)
+print('k25 applied')
+EOF
+for t in base-tree k25-tree; do
+  (cd "$S/$t" && node esbuild.config.mjs production) >> "$1" 2>&1
+  echo "$t build_rc=$?" >> "$1"
+  sha256sum "$S/$t/main.js" "$S/$t/styles.css" >> "$1"
+done

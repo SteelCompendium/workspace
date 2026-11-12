@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+# cmp-mutant.py <golden> <mutant>: sweep cells whose outcome string differs from the probe golden; twin writes counted separately.
+import sys, collections
+def load(p):
+    d = {}
+    for line in open(p):
+        f = line.rstrip('\n').split('|')
+        if f[1] == 'NAMED':
+            d[('NAMED', f[2])] = '|'.join(f[3:])
+        else:
+            d[tuple(f[1:-1])] = f[-1]
+    return d
+g, m = load(sys.argv[1]), load(sys.argv[2])
+diff = [k for k in g if k[0] != 'NAMED' and m.get(k) != g[k]]
+twins = sum(1 for k in m if k[0] != 'NAMED' and 'TWIN' in m[k])
+kinds = collections.Counter()
+for k in diff:
+    a, b = g[k], m.get(k, 'MISSING')
+    ca = 'T' if 'TWIN' in a else 'A' if a.endswith(': A') else 'R'
+    cb = 'T' if 'TWIN' in b else 'A' if b.endswith(': A') else 'R'
+    kinds[f'{ca}->{cb}' + ('' if ca != cb else ' (notice)')] += 1
+ex = diff[0] if diff else None
+nd = [k[1] for k in g if k[0] == 'NAMED' and k in m and m[k] != g[k]]
+print(f"named records differ: {nd or 'none'}; ", end='')
+print(f"{len(diff)} cells differ {dict(kinds)}; twin cells {twins}" + (f"; e.g. {' | '.join(ex)}: {g[ex]} -> {m.get(ex)}" if ex else ''))

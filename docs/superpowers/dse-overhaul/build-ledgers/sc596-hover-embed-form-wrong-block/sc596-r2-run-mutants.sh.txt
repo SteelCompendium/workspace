@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc596-r2-impl
+E=/home/scott/code/steelCompendium/worktrees/sc596-hover-embed-form-wrong-block/draw-steel-elements
+for m in "$@"; do
+  python3 "$S/mutate.py" "$m" > "$S/mut-$m.apply" 2>&1 || { echo "MUTANT $m apply failed: $(cat $S/mut-$m.apply)"; git -C "$E" checkout -- src/framework/host/ReadingModeBlockHost.ts src/framework/host/hoverLinks.ts; continue; }
+  (cd "$E" && npx jest test/dom/framework/reading-mode-host test/dom/framework/hover > "$S/mut-$m.log" 2>&1)
+  git -C "$E" checkout -- src/framework/host/ReadingModeBlockHost.ts src/framework/host/hoverLinks.ts
+  tests=$(grep '^Tests:' "$S/mut-$m.log")
+  failed=$(grep '●' "$S/mut-$m.log" | sed 's/^ *● //' | grep -v '^Test suite' | cut -c1-110 | sort -u | head -4 | tr '\n' ';')
+  nfail=$(grep '●' "$S/mut-$m.log" | sed 's/^ *● //' | sort -u | wc -l)
+  echo "MUTANT $m | $tests | $nfail distinct failing | e.g. ${failed:-none}"
+done
+git -C "$E" status --porcelain

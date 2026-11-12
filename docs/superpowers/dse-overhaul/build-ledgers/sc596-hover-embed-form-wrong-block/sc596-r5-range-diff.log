@@ -1,0 +1,8 @@
+1:  83417942 = 1:  5a0c912f test: a block edit form in an embed or hover preview of part of a note never saves into an identical twin (red on base: sweep of 2880 cells and named shapes)
+2:  033a1e22 = 2:  f51bb60a fix: a block edit form in an embed or hover preview of part of a note is placed like a card (the link, else its own last write, else refused), never by a text search; a form that cannot be pinned is refused
+3:  a65207fc = 3:  6f4b7991 fix: a card write in an embed or hover preview that cannot be pinned is refused too (same refusing pin as a form; measured: 5 of 5 shapes wrote the twin at base)
+4:  2c0bc7a3 = 4:  aa4701c1 test: card refusal tests assert the Notice kind (kills the mutant that dropped the refusing branch for card writes)
+5:  05fcfc76 = 5:  4d5803d8 test: lifecycle G-S96 - the edit form of a counter in an embed or hover preview, kept open by a second pane, never saves into the identical counter (red on base: 7 pane cells wrote the twin, no Notice)
+6:  f142ae87 = 6:  9ada1cfc test: G-S64 (zh) now expects the hover form to save into the linked block (the hover's link places it); sweep asserts a form always has a pin
+7:  c02598c1 = 7:  d93fe5a7 docs: G-S64 comment names rebaseCardPin (rebasePin is deleted)
+-:  -------- > 8:  c6077860 test: a non-embedded callout card keeps its no-pin path and a non-embedded list-item form has no pin (kills the mutant that dropped the embedded guard of takePin)
