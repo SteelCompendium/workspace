@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: in Live Preview, keyboard focus now stays on the button you pressed when the element saves and Obsidian redraws it (SC-602).**
+  Press Enter on a counter's + (or Advance round, Make captain, Catch Breath, and so on) and the element saves; before, focus fell to the page
+  about half a second later. Focus now stays on the pressed button, or on the control that replaced it (else on the element itself), with the keyboard ring
+  when you were using the keyboard. This is done once for every element, not per element. A mouse click still never pulls focus into an element. Reading view is unchanged. Not covered: the half-typed Malice quick-add draft is still lost when the
+  tracker saves (SC-605), and the Conditions window still closes when a write lands (SC-384).
+
 - **DSE plugin: a hand-written condition key in capitals, such as `key: Dazed`, is now the standard condition (SC-583).**
   Condition keys used to match only in lowercase, so `Dazed` showed as a custom condition, and picking Dazed in the Conditions
   window added a second, lowercase `dazed`. A standard condition key now matches whatever its capitals: `Dazed` shows Dazed's
@@ -25,7 +31,7 @@ go under an *Internal* sub-heading.
 - **DSE plugin: clicking another creature in the initiative roster while using the keyboard keeps focus in the tracker, in Reading view (SC-609).**
   With the keyboard focus on the detail row's Stamina control, a mouse click on another roster cell switched the detail row to that
   creature, and focus fell to the top of the page. Focus now moves to the creature you clicked. A click when focus was not already
-  in the tracker still does not pull focus into it. In Live Preview focus is still lost when the note saves a moment later (SC-602).
+  in the tracker still does not pull focus into it. Since SC-602 this holds in Live Preview too.
 
 - **DSE plugin: clicking in the Compendium search no longer closes a hover preview you are editing, and a pick can no longer vanish silently (SC-601).**
   Open a hover preview of a note, click into its text to edit it, and run "Insert Draw Steel: compendium reference" or "compendium
@@ -60,7 +66,8 @@ go under an *Internal* sub-heading.
   focus fell to the top of the page. The window now gives focus back to the control that replaced it: the detail row's Stamina
   control, the roster cell of the same minion, or the Add Condition button. Cancel and Escape still return to the button you
   pressed. A mouse click never pulls focus into the tracker, and neither does a window opened while focus was somewhere else.
-  In Live Preview focus is still lost when the note saves a moment later (SC-602).
+  Since SC-602 the pool window's Apply keeps focus in Live Preview too (the Conditions window route there is not covered: it closes when the write
+  lands, SC-384).
 
 - **DSE plugin: + and - in a hover preview of a heading or block link now save when an identical counter sits elsewhere in the note (SC-594).**
   Hover over a link such as `[[long note#Tracker]]` or `[[note#^id]]` and press + or - on a counter in the preview: if the note
@@ -98,8 +105,7 @@ go under an *Internal* sub-heading.
   from the top of the note after every press. The control that replaced the one you pressed now takes focus: the same button
   (Advance round, Reset turns, the Malice amount or label field, the Reset encounter item once its confirm window has closed),
   or, for a captain badge, Make captain and Relieve captain trade places on the same creature. A mouse click never pulls focus
-  into the tracker, and neither does a rebuild that starts while focus is somewhere else. In Live Preview focus is still lost
-  when the note saves a moment later (SC-602).
+  into the tracker, and neither does a rebuild that starts while focus is somewhere else. Since SC-602 this holds in Live Preview too.
 
 - **DSE plugin: a window opened from a hover preview with the keyboard stays open (SC-597).**
   Hover over a link to a note that holds a Stamina bar, focus the bar in the preview and press Enter or Space: the Stamina
