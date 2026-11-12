@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: ability-card crests now draw the site's solid action icons (SC-563).**
+  In the Steel look, the shield on an ability, trait or kit signature card used a thin outline icon, while the site shows a filled glyph. The plugin now
+  bundles MCDM's Draw Steel Glyphs font (unmodified, CC BY-SA 4.0) and draws the same glyph per action: main action, maneuver, triggered action, move,
+  no action and trait. As on the site, "no action" and "trait" share one star, and several glyphs are placeholders until MCDM ships official action icons.
+  A villain action keeps its skull outline. Printing is unchanged (crests are not printed). The trait eyebrow label stays grey.
+
 - **DSE plugin: in Live Preview, a half-typed Malice quick-add (amount and label) now survives the initiative tracker's own save (SC-605).**
   Type an amount and a label, then press Advance round, the Malice - / + stepper, or any other tracker action that saves, and in Live
   Preview both boxes used to keep your text for a moment and then empty about half a second later when the note was written. They now
