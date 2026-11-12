@@ -1,0 +1,25 @@
+diff --cc CHANGELOG.md
+index 94fa8fad,f2a3ee0c..00000000
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@@ -8,13 -8,10 +8,20 @@@ go under an *Internal* sub-heading
+  
+  ## Unreleased
+  
+++<<<<<<< HEAD
+ +- **DSE plugin: keyboard focus stays in the initiative tracker after Advance round, Make/Relieve captain, Reset turns, Reset encounter and the Malice quick-add, in Reading view (SC-588).**
+ +  Each of these rebuilds the whole tracker, and focus used to fall to the top of the page, so a keyboard user had to Tab back in
+ +  from the top of the note after every press. The control that replaced the one you pressed now takes focus: the same button
+ +  (Advance round, Reset turns, the Malice amount or label field, the Reset encounter item once its confirm window has closed),
+ +  or, for a captain badge, Make captain and Relieve captain trade places on the same creature. A mouse click never pulls focus
+ +  into the tracker, and neither does a rebuild that starts while focus is somewhere else. In Live Preview focus is still lost
+ +  when the note saves a moment later (SC-602).
+++=======
++ - **DSE plugin: a second click inside a window opened from a hover preview, right after the opening click, no longer closes it (SC-598).**
++   A second click inside a window opened from a hover preview, right after the click that opened it, no longer closes the
++   window and the preview. A quick double-click on the stamina bar's numbers in a preview still closes the window, as it does
++   in a note, but the preview now stays open.
+++>>>>>>> 2a8b0b36 (docs(SC-598): CHANGELOG, a second click inside a window opened from a hover preview no longer closes it)
+  
+  - **DSE plugin: a window opened from a hover preview with the keyboard stays open (SC-597).**
+    Hover over a link to a note that holds a Stamina bar, focus the bar in the preview and press Enter or Space: the Stamina

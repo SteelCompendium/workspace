@@ -1,0 +1,13 @@
+#!/bin/bash
+# r3 setup: archive copies of dse head (47950f45) and base (e0e49d4d), node_modules symlinked, built.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1
+G=/home/scott/code/steelCompendium/worktrees/sc598-hover-modal-fast-second-click/draw-steel-elements
+for pair in "r3head:47950f45" "r3base:e0e49d4d"; do
+  name=${pair%%:*}; rev=${pair##*:}
+  mkdir -p "$S/$name"
+  git -C "$G" archive "$rev" | tar -x -C "$S/$name"
+  ln -sfn "$G/node_modules" "$S/$name/node_modules"
+  ( cd "$S/$name" && node esbuild.config.mjs production ) > "$S/$name-build.log" 2>&1
+  echo "BUILD_RC=$? $name $rev" >> "$S/$name-build.log"
+  sha256sum "$S/$name/main.js" "$S/$name/styles.css" >> "$S/$name-build.log" 2>&1
+done

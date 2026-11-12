@@ -1,0 +1,94 @@
+--- dse-base/src/framework/kit/managedModal.ts	2026-11-11 14:56:57.000000000 -0500
++++ dse-proto/src/framework/kit/managedModal.ts	2026-11-11 16:02:51.333197974 -0500
+@@ -246,13 +246,89 @@
+ 		// `window.event` is the click being dispatched while a handler runs (deprecated in lib.dom, still how a modal learns it
+ 		// was opened from one; a modal opened outside any event sees undefined).
+ 		const opening = (win as unknown as { event?: Event }).event;
++		// SC-598 r1 PROTOTYPE switch, window.__sc598:
++		//   'off' base behaviour | 'a0' synthetic click only | 'a' (default) synthetic click + preventDefault on the opening click |
++		//   'ap' as 'a' + private setIsFocused(true) at open | 'a2' as 'a' and also for a modal opened outside a click
++		const sw = (win as unknown as { __sc598?: string }).__sc598 ?? 'a';
++		if (sw === 'ap' || sw === 'bp') this.setPreviewFocusedPrivate();
+ 		if (opening?.type === 'click') {
+ 			const onWindowBubble = (evt: Event): void => {
+-				if (evt === opening) arm();
++				if (evt !== opening) return;
++				if (sw === 'b' || sw === 'bp') this.focusHoverPreviewB(opening, win);
++				else if (sw !== 'off' && this.focusHoverPreviewNow(doc, win) && sw !== 'a0') {
++					// the helper's own timer for the opening click would run the preview's focus step a second time, 150 ms after a
++					// click on text, and switch the preview into a source editor when focus is no longer on a button or input by then
++					// (a second click on the modal title or backdrop moved it): its timer callback skips a default-prevented event.
++					opening.preventDefault();
++				}
++				arm();
+ 			};
+ 			win.addEventListener('click', onWindowBubble);
+ 			this.lifecycle.register(() => win.removeEventListener('click', onWindowBubble));
+-		} else arm();
++		} else {
++			if (sw === 'a2') this.focusHoverPreviewNow(doc, win);
++			arm();
++		}
++	}
++
++	/**
++	 * SC-598 (prototype): Obsidian's window-CAPTURE click listener (`T3`) hides every shown preview that is not "focused" and does not
++	 * contain the click; the preview only becomes focused when its click-to-edit helper's timer runs (10 ms after the click that opened
++	 * this modal, 150 ms when that click landed on text). A second click inside this modal within that window closed the preview and
++	 * the modal. So, for a preview not yet focused (`.is-editing` absent), send the embed container one synthetic, NON-bubbling click
++	 * (no coordinates, so never "on text"): the helper arms its 10 ms timer for it. Only when the focused element is a button or an
++	 * input: that is the helper's own test for "do not switch the preview into a source editor" (with a textarea or select focused it
++	 * would switch).
++	 */
++	/**
++	 * Variant b: no focus gate. The opening click is default-prevented (the helper's own timer for it then does nothing: no second
++	 * focus step, no 150 ms editor switch), and ONE synthetic, bubbling click is sent from the anchor, which carries Obsidian's
++	 * `interactive-child` class until the helper's 10 ms timer has run: the helper then focuses the preview and, seeing the class on
++	 * the click's target, never switches it into a source editor, whatever has the focus by then.
++	 */
++	private focusHoverPreviewB(opening: Event, win: Window): void {
++		const anchor = this.anchorEl;
++		const pop = anchor?.closest('.hover-popover');
++		if (!anchor || !pop || pop.classList.contains('is-editing')) return;
++		opening.preventDefault();
++		const added = !anchor.classList.contains('interactive-child');
++		if (added) anchor.classList.add('interactive-child');
++		const w = win as unknown as { __sc598log?: unknown[] };
++		(w.__sc598log ??= []).push({ k: 'synthetic-b', t: Math.round(performance.now()), cls: anchor.className });
++		anchor.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: win }));
++		// armed after the helper's 10 ms timer (armed inside the dispatch above), so it runs after it at any load
++		win.setTimeout(() => {
++			if (added) anchor.classList.remove('interactive-child');
++		}, 10);
++	}
++
++	private setPreviewFocusedPrivate(): void {
++		const pop = this.anchorEl?.closest('.hover-popover');
++		if (!pop || pop.classList.contains('is-editing')) return;
++		let found: { setIsFocused?: (v: boolean) => void } | null = null;
++		this.app.workspace.iterateAllLeaves((l) => {
++			const v = l.view as unknown as Record<string, unknown>;
++			for (const o of [v, v?.previewMode, v?.editMode, v?.currentMode] as Array<Record<string, unknown> | undefined>) {
++				const hp = o?.hoverPopover as { hoverEl?: Element; setIsFocused?: (v: boolean) => void } | undefined;
++				if (hp && hp.hoverEl === pop) found = hp;
++			}
++		});
++		const w = window as unknown as { __sc598log?: unknown[] };
++		(w.__sc598log ??= []).push({ k: 'private', t: Math.round(performance.now()), found: !!found });
++		(found as { setIsFocused?: (v: boolean) => void } | null)?.setIsFocused?.(true);
++	}
++
++	private focusHoverPreviewNow(doc: Document, win: Window): boolean {
++		const pop = this.anchorEl?.closest('.hover-popover');
++		if (!pop || pop.classList.contains('is-editing')) return false;
++		if (!doc.activeElement?.closest('button, input')) return false;
++		let embed: HTMLElement | null = this.anchorEl;
++		while (embed && embed.parentElement !== pop) embed = embed.parentElement;
++		if (!embed) return false;
++		const w = win as unknown as { __sc598log?: unknown[] };
++		(w.__sc598log ??= []).push({ k: 'synthetic', t: Math.round(performance.now()), cls: embed.className });
++		embed.dispatchEvent(new MouseEvent('click', { bubbles: false, cancelable: true, view: win }));
++		return true;
+ 	}
+ 
+ 	close(): void {

@@ -1,0 +1,39 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :161, port 42893, 1 scenario(s)
+== monttext:rv:100: (5589 ms) hover=real hover pt='Nature' on dse-mt__cell-skill opener=DIV.dse-mt__cell hasDefault=False p2Hit=dse-modal__title-text
+   gap(click2-click1)=197 ms; trusted clicks=2 synthetic clicks=0 (on anchor: 0); modal+ during trial=1; opening click defaultPrevented=True
+   before       pop=Y modals=0 foc=False is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-mont-host.md leaves=1 anchorIC=False
+   at30         pop=n modals=0 foc=None is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-mont-host.md leaves=1 anchorIC=None
+   at700        pop=n modals=0 foc=None is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-mont.md leaves=1 anchorIC=None
+   events: 8 click[dse-mt__cell-skill d1 cx567 dp winBub] | 24 ERR[Uncaught TypeError: Cannot read properties of undefined (reading 'slice') @ TypeError: Cannot read properties of undefined (reading 'slice') <-     at N4 (plugin:draw-steel-elements:1303:3641) <-     at vp.refreshSkillWarning (plugin:draw-steel-elements:1303:26301) <-     at vp.renderSkillField (plugin:draw-steel-elements:1303:26169) <-     at vp.onOpen (plugin:draw-steel-elements:1303:24213) <-     at vp.open (app://obsidian.md/app.js:245:25721)] | 25 modal+[Kira · round 1] | 202 mousedown[dse-modal__title-text inModal d1 cx537] | 205 click[dse-modal__title-text inModal d1 cx537 winBub] | 210 HIDE[ev=None foc=False] | 289 modal- | 291 setIsFocused
+== monttext:rv:400: (5737 ms) hover=real hover pt='Nature' on dse-mt__cell-skill opener=DIV.dse-mt__cell hasDefault=False p2Hit=dse-modal__title-text
+   gap(click2-click1)=475 ms; trusted clicks=2 synthetic clicks=0 (on anchor: 0); modal+ during trial=1; opening click defaultPrevented=True
+   before       pop=Y modals=0 foc=False is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   at30         pop=n modals=0 foc=None is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-mont-host.md leaves=1 anchorIC=None
+   at700        pop=n modals=0 foc=None is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-mont-host.md leaves=1 anchorIC=None
+   events: 6 click[dse-mt__cell-skill d1 cx567 dp winBub] | 10 ERR[Uncaught TypeError: Cannot read properties of undefined (reading 'slice') @ TypeError: Cannot read properties of undefined (reading 'slice') <-     at N4 (plugin:draw-steel-elements:1303:3641) <-     at vp.refreshSkillWarning (plugin:draw-steel-elements:1303:26301) <-     at vp.renderSkillField (plugin:draw-steel-elements:1303:26169) <-     at vp.onOpen (plugin:draw-steel-elements:1303:24213) <-     at vp.open (app://obsidian.md/app.js:245:25721)] | 11 modal+[Kira · round 1] | 76 HIDE[ev=click foc=True] | 227 setIsFocused | 480 mousedown[dse-modal__title-text inModal d1 cx537] | 481 click[dse-modal__title-text inModal d1 cx537 winBub] | 481 HIDE[ev=click foc=True] | 481 HIDE[ev=click foc=True] | 482 HIDE[ev=click foc=True] | 529 modal-
+== initnum:rv:100: (4404 ms) hover=real hover pt=None on None opener=None hasDefault=None p2Hit=None
+   gap(click2-click1)=None ms; trusted clicks=0 synthetic clicks=0 (on anchor: 0); modal+ during trial=0; opening click defaultPrevented=None
+   ERROR initnum:rv:100:: no text point in the opener on its own element
+   DBG {"html": "<button class=\"dse-btn dse-init__stamina\" type=\"button\" data-dse-control=\"init.hero.stamina\" aria-label=\"Edit Stamina: Alice Alpha\" aria-live=\"polite\">30/30</button>", "r": [471, 442, 35, 20], "pr": [404, 191, 452, 402], "hitCenter": "dse-init__row"}
+   events: 
+== hero:rv:100: (16977 ms) hover=None pt=None on None opener=None hasDefault=None p2Hit=None
+   gap(click2-click1)=None ms; trusted clicks=0 synthetic clicks=0 (on anchor: 0); modal+ during trial=0; opening click defaultPrevented=None
+   ERROR no preview card
+   DBG {"pop": null, "exists": true, "pane": "r3 hero\n\nABOVE\n\nHero sheet: failed to render (schema)\nThe block did not match its schema:\n#/required: required: must have required property 'characteristics'\n\nBELOW", "entries": 0}
+   events: 
+== stam:rv:400:again100 (9064 ms) hover=real hover pt='15' on dse-stamina__ccur opener=DIV.dse-stamina hasDefault=False p2Hit=dse-modal__title-text
+   gap(click2-click1)=439 ms; trusted clicks=2 synthetic clicks=1 (on anchor: 1); modal+ during trial=1; opening click defaultPrevented=True
+   before       pop=Y modals=0 foc=False is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/gs83-stam-host.md leaves=1 anchorIC=False
+   at30         pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   at700        pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   afterEsc     pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   again700     pop=Y modals=1 foc=True is-editing=Y editor=Y active=DIV.cm-content file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   againEsc     pop=Y modals=0 foc=True is-editing=Y editor=Y active=DIV.markdown-preview-view file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   afterRest    pop=Y modals=0 foc=True is-editing=Y editor=Y active=DIV.markdown-preview-view file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   afterOutside pop=n modals=0 foc=None is-editing=n editor=n active=BUTTON.clickable-icon file=Lifecycle/gs83-stam-host.md leaves=1 anchorIC=None
+   events: 2 click[dse-stamina__ccur d1 cx447 dp dp0 winBub] | 27 modal+[Stamina] | 27 HIDE[ev=click foc=True] | 27 click[block-language-ds-stamina-bar ANCHOR d0 cx0 SYN dp] | 27 HIDE[ev=click foc=True] | 37 setIsFocused | 435 mousedown[dse-modal__title-text inModal d1 cx497] | 441 click[dse-modal__title-text inModal d1 cx497 NOwinBub]
+   again: trusted=2 synthetic=0 opening dp=True; events: 6 click[dse-stamina__ccur d1 cx447 dp winBub] | 61 modal+[Stamina] | 61 HIDE[ev=click foc=True] | 168 mousedown[dse-modal__title-text inModal d1 cx497] | 173 click[dse-modal__title-text inModal d1 cx497 NOwinBub] | 211 setIsFocused
+R3 PAGE_ERRORS ["Uncaught TypeError: Cannot read properties of undefined (reading 'slice')","Uncaught TypeError: Cannot read properties of undefined (reading 'slice')"]
+OBSIDIAN-LIFECYCLE SC598-R3-PROBE ok (5 trials)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+LIFECYCLE_RC=0 WALL_S=46 BUNDLE=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/r3head HARNESS=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/harness/visual-harness/r3-probe-lifecycle.mjs LOAD=0.93 1.79 3.22 2/3196 1126563

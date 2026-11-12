@@ -1,0 +1,8 @@
+#!/bin/bash
+# r5 MEDIUM-1 gesture probe: open (press on "15"), Escape, re-open from the same preview, title press 1 ms / 100 ms after. RV and LP.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r5-R1
+python3 -I "$S/r5-make-probe.py" /home/scott/code/steelCompendium/worktrees/sc598-hover-modal-fast-second-click/draw-steel-elements "$S/r5-probe-scenario.js" "$S/harness/visual-harness/r5-probe-lifecycle.mjs"
+bash "$S/r5-probe-run.sh" "$S/r5head" "stam:rv:400:again1,stam:rv:400:again100,stam:lp:400:again1,stam:lp:400:again100,logbtn:rv:400:again100,stam:rv:0,stam:lp:0" "$S/r5-probe-head-raw.log" "$S/cam-pr-h"
+bash "$S/r5-probe-run.sh" "$S/r5base" "stam:lp:400:again1,stam:lp:400:again100" "$S/r5-probe-base-raw.log" "$S/cam-pr-b"
+python3 -I "$S/r5-summarize.py" "$S/r5-probe-head-raw.log" > "$S/r5-probe-head.log"
+python3 -I "$S/r5-summarize.py" "$S/r5-probe-base-raw.log" > "$S/r5-probe-base.log"

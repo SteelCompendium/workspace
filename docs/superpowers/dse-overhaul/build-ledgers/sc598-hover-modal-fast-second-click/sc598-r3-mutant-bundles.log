@@ -1,0 +1,13 @@
+## R1: drop preventDefault on the opening click -> bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/mutbundles/R1 (build rc 0)
+## R2: drop the synthetic click (no dispatch at all; class still added/removed) -> bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/mutbundles/R2 (build rc 0)
+## R6: remove interactive-child at 0 ms -> bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/mutbundles/R6 (build rc 0)
+## R7: focusHoverPreviewNow called after arm() -> bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/mutbundles/R7 (build rc 0)
+## R12: removal at 11 ms (after the helper by margin, not by order) -> bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/mutbundles/R12 (build rc 0)
+BUILD_MUTANTS_RC=0
+3a86556e7770d87dc26686e52a377285c2dbbbc578069544a09caf527a460a30  /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/mutbundles/R12/main.js
+32147844abf79c5ee5e38ca1e4eca8a42eebc4cae002ddddfaa3bbfbf2249f75  /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/mutbundles/R1/main.js
+ac57cd26c9f1a06d6fb1e62bad114a801ce72574624c2e57f5278373195d8354  /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/mutbundles/R2/main.js
+931199f67f02db56cb796845df8a5ae472d7c12330c530637b3ce0956b55252a  /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/mutbundles/R6/main.js
+be26196b06efb0943eeb694297b656b3a7c369a4df3a9e877c5d0df532c279f6  /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/mutbundles/R7/main.js
+## R8: drop the .is-editing gate -> bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/mutbundles/R8 (build rc 0)
+## R14: PROPOSED FIX SHAPE (not a mutant): for an .is-editing preview, preventDefault the opening click only (no synthetic click) -> bundle /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/mutbundles/R14 (build rc 0)

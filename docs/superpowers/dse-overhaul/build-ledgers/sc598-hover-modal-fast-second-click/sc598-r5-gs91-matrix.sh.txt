@@ -1,0 +1,8 @@
+#!/bin/bash
+# G-S91 (worktree harness at eafbcce5, six trials) against the e0e49d4d base bundle and the E1-E3 mutant bundles.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r5-R1
+for b in "base:$S/r5base" "E1:$S/mutbundles/E1" "E2:$S/mutbundles/E2" "E3:$S/mutbundles/E3"; do
+  name=${b%%:*}; dir=${b#*:}
+  bash "$S/r5-lifecycle.sh" "$dir" G-S91 "$S/r5-gs91-$name.log" "$S/cam-gs91-$name"
+  echo "$name rc=$?" >> "$S/r5-gs91-matrix.txt"
+done

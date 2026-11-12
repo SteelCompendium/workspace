@@ -1,0 +1,17 @@
+## E1: the .is-editing branch returns without preventDefault (the r2 code)
+result: KILLED (jest rc 1); Tests:       1 failed, 238 passed, 239 total
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a preview that is already focused (.is-editing) gets only the opening click, default-prevented: no synthetic click, no class, and the helper does nothing for it even when a press moved the focus
+
+## E2: no .is-editing branch: a focused preview gets the full treatment (synthetic click + class)
+result: KILLED (jest rc 1); Tests:       1 failed, 238 passed, 239 total
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a preview that is already focused (.is-editing) gets only the opening click, default-prevented: no synthetic click, no class, and the helper does nothing for it even when a press moved the focus
+
+## E3: the .is-editing branch also sends the synthetic click (no class)
+result: KILLED (jest rc 1); Tests:       1 failed, 238 passed, 239 total
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a preview that is already focused (.is-editing) gets only the opening click, default-prevented: no synthetic click, no class, and the helper does nothing for it even when a press moved the focus
+
+## E4: the .is-editing test reads the popover of the opener, not the anchor (gate always false: is-editing checked on the anchor)
+result: KILLED (jest rc 1); Tests:       1 failed, 238 passed, 239 total
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a preview that is already focused (.is-editing) gets only the opening click, default-prevented: no synthetic click, no class, and the helper does nothing for it even when a press moved the focus
+
+MUTATE_RC=0 WALL_S=33

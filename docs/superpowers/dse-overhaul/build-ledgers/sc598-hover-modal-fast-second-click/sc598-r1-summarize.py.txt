@@ -1,0 +1,30 @@
+# Summarizes an SC-598 probe log: one block per trial. usage: python3 -I sc598-r1-summarize.py <probe log>
+import json, sys
+
+def s(st):
+    if not st: return '-'
+    f = lambda k: 'Y' if st.get(k) else 'n'
+    return f"pop={f('popover')} modal={f('modal')}({st.get('modals')}) foc={st.get('isFocused')} edit={f('editing')} editor={f('editor')} active={st.get('active')} hp={st.get('hpId')}"
+
+for line in open(sys.argv[1]):
+    if line.startswith('OBSIDIAN-LIFECYCLE') or line.startswith('PROBE_RC') or line.startswith('SC598 TOTAL'):
+        print(line.rstrip()); continue
+    if not line.startswith('SC598 TRIAL '): continue
+    r = json.loads(line[len('SC598 TRIAL '):])
+    ev = r.get('ev') or []
+    clicks = [e for e in ev if e['k'] == 'click' and e.get('trusted')]
+    gap = clicks[1]['t'] - clicks[0]['t'] if len(clicks) >= 2 else None
+    cur = (r.get('at700') or {}).get('hpId')
+    print(f"== {r['spec']}  ({r.get('ms')} ms) hover={r.get('hover')} pt={ (r.get('pt') or {}).get('hit') } p2Hit={r.get('p2Hit')} gap(click2-click1)={gap} ms")
+    if r.get('error'): print('   ERROR', r['error'])
+    for k in ['at30', 'at700', 'afterApply', 'afterEsc', 'afterEsc2', 'afterRest', 'afterOutside']:
+        if k in r: print(f"   {k:12s} {s(r[k])}")
+    if 'saved' in r: print(f"   saved={r['saved']} notices={r.get('notices')} note={r.get('note')}")
+    if 'cursor' in r: print(f"   lp cursor={r['cursor']}")
+    print('   events: ' + ' | '.join(
+        f"{e['t']} {e['k']}" + (f"[{e.get('tgt')} d{e.get('detail')}{'' if e.get('trusted') else ' SYN'}{'' if e.get('bubbles', True) else ' nobub'}]" if e['k'] in ('click', 'dblclick', 'mousedown') else '')
+        + (f"[id{e.get('id')} ev={e.get('ev')} foc={e.get('isFocused')} {e.get('from')}]" if e['k'] == 'HIDE' else '')
+        + (f"[id{e.get('id')}]" if e['k'] == 'setIsFocused' else '')
+        + (f"[{e.get('key')}]" if e['k'] == 'key' else '')
+        for e in ev))
+    if r.get('syn'): print('   synthetic: ' + json.dumps(r['syn']))

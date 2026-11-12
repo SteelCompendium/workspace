@@ -1,0 +1,77 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :161, port 37493, 1 scenario(s)
+== x:rv:stamtext:title:0:1  (7168 ms) hover=real hover pt=dse-stamina__ccur p2Hit=dse-modal__title-text gap(click2-click1)=97 ms
+   at30         pop=Y modal=Y(1) foc=True edit=Y editor=n active=BODY.theme-dark hp=1
+   at700        pop=Y modal=Y(1) foc=True edit=Y editor=n active=BODY.theme-dark hp=1
+   afterEsc     pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=1
+   afterRest    pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=1
+   afterOutside pop=n modal=n(0) foc=None edit=n editor=n active=BUTTON.clickable-icon hp=None
+   events: 218 click[dse-stamina__ccur d1] | 276 modal+ | 276 click[block-language-ds-stamina-bar d0 SYN] | 288 setIsFocused[id1] | 313 mousedown[dse-modal__title-text d1] | 315 click[dse-modal__title-text d1] | 1066 modal- | 1066 key[Escape] | 2865 mousedown[clickable-icon d1] | 2867 click[clickable-icon d1] | 2868 HIDE[id1 ev=click foc=True app.js:509:193553]
+== x:rv:stamtext:input:0:1  (7033 ms) hover=real hover pt=dse-stamina__ccur p2Hit=dse-sedit__apply-input gap(click2-click1)=73 ms
+   at30         pop=Y modal=Y(1) foc=True edit=Y editor=n active=INPUT.dse-sedit__apply-input hp=2
+   at700        pop=Y modal=Y(1) foc=True edit=Y editor=n active=INPUT.dse-sedit__apply-input hp=2
+   afterEsc     pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=2
+   afterRest    pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=2
+   afterOutside pop=n modal=n(0) foc=None edit=n editor=n active=BUTTON.clickable-icon hp=None
+   events: 220 click[dse-stamina__ccur d1] | 275 modal+ | 276 click[block-language-ds-stamina-bar d0 SYN] | 286 setIsFocused[id2] | 291 mousedown[dse-sedit__apply-input d1] | 293 click[dse-sedit__apply-input d1] | 1034 modal- | 1034 key[Escape] | 2839 mousedown[clickable-icon d1] | 2847 click[clickable-icon d1] | 2876 HIDE[id2 ev=click foc=True app.js:509:193553]
+== x:rv:stamtext:backdrop:0:1  (6480 ms) hover=real hover pt=dse-stamina__ccur p2Hit=modal-bg gap(click2-click1)=33 ms
+   at30         pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=3
+   at700        pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=3
+   afterRest    pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=3
+   afterOutside pop=n modal=n(0) foc=None edit=n editor=n active=BUTTON.clickable-icon hp=None
+   events: 217 click[dse-stamina__ccur d1] | 237 modal+ | 237 click[block-language-ds-stamina-bar d0 SYN] | 247 setIsFocused[id3] | 248 mousedown[modal-bg d1] | 250 click[modal-bg d1] | 271 modal- | 2283 mousedown[clickable-icon d1] | 2285 click[clickable-icon d1] | 2286 HIDE[id3 ev=click foc=True app.js:509:193553]
+== x:rv:stamtext:dblq:10:1  (6651 ms) hover=real hover pt=dse-stamina__ccur p2Hit=queued (same point) gap(click2-click1)=135 ms
+   at30         pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=4
+   at700        pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=4
+   afterRest    pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=4
+   afterOutside pop=n modal=n(0) foc=None edit=n editor=n active=BUTTON.clickable-icon hp=None
+   events: 290 click[dse-stamina__ccur d1] | 346 modal+ | 346 click[block-language-ds-stamina-bar d0 SYN] | 347 mousedown[modal-bg d2] | 356 setIsFocused[id4] | 425 click[modal-bg d2] | 460 modal- | 2481 mousedown[clickable-icon d1] | 2483 click[clickable-icon d1] | 2483 HIDE[id4 ev=click foc=True app.js:509:193553]
+== x:rv:stamtext:apply:40:1  (7954 ms) hover=real hover pt=dse-stamina__ccur p2Hit=dse-sedit__apply-input gap(click2-click1)=66 ms
+   at30         pop=Y modal=Y(1) foc=True edit=Y editor=n active=INPUT.dse-sedit__apply-input hp=5
+   at700        pop=Y modal=Y(1) foc=True edit=Y editor=n active=INPUT.dse-sedit__apply-input hp=5
+   afterApply   pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=5
+   afterRest    pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=5
+   afterOutside pop=n modal=n(0) foc=None edit=n editor=n active=BUTTON.clickable-icon hp=None
+   saved=True notices=[] note=current_stamina: 18
+   events: 216 click[dse-stamina__ccur d1] | 236 modal+ | 236 click[block-language-ds-stamina-bar d0 SYN] | 246 setIsFocused[id5] | 280 mousedown[dse-sedit__apply-input d1] | 282 click[dse-sedit__apply-input d1] | 1100 mousedown[dse-btn__icon d1] | 1108 click[dse-btn__icon d1] | 1449 mousedown[dse-btn__text d1] | 1455 click[dse-btn__text d1] | 1506 modal- | 3673 mousedown[clickable-icon d1] | 3681 click[clickable-icon d1] | 3681 HIDE[id5 ev=click foc=True app.js:509:193553]
+== x:lp:stamtext:title:0:1  (7046 ms) hover=real hover pt=dse-stamina__ccur p2Hit=dse-modal__title-text gap(click2-click1)=94 ms
+   at30         pop=Y modal=Y(1) foc=True edit=Y editor=n active=BODY.theme-dark hp=6
+   at700        pop=Y modal=Y(1) foc=True edit=Y editor=n active=BODY.theme-dark hp=6
+   afterEsc     pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.cm-content hp=6
+   afterRest    pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.cm-content hp=6
+   afterOutside pop=n modal=n(0) foc=None edit=n editor=n active=BUTTON.clickable-icon hp=None
+   events: 220 click[dse-stamina__ccur d1] | 259 modal+ | 259 click[block-language-ds-stamina-bar d0 SYN] | 280 setIsFocused[id6] | 305 mousedown[dse-modal__title-text d1] | 314 click[dse-modal__title-text d1] | 1063 modal- | 1063 key[Escape] | 2902 mousedown[clickable-icon d1] | 2905 click[clickable-icon d1] | 2905 HIDE[id6 ev=click foc=True app.js:509:193553]
+== x:lp:stamtext:input:0:1  (7071 ms) hover=real hover pt=dse-stamina__ccur p2Hit=dse-sedit__apply-input gap(click2-click1)=66 ms
+   at30         pop=Y modal=Y(1) foc=True edit=Y editor=n active=INPUT.dse-sedit__apply-input hp=7
+   at700        pop=Y modal=Y(1) foc=True edit=Y editor=n active=INPUT.dse-sedit__apply-input hp=7
+   afterEsc     pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.cm-content hp=7
+   afterRest    pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.cm-content hp=7
+   afterOutside pop=n modal=n(0) foc=None edit=n editor=n active=BUTTON.clickable-icon hp=None
+   events: 218 click[dse-stamina__ccur d1] | 244 modal+ | 245 click[block-language-ds-stamina-bar d0 SYN] | 268 setIsFocused[id7] | 283 mousedown[dse-sedit__apply-input d1] | 284 click[dse-sedit__apply-input d1] | 998 modal- | 998 key[Escape] | 2840 mousedown[clickable-icon d1] | 2849 click[clickable-icon d1] | 2878 HIDE[id7 ev=click foc=True app.js:509:193553]
+== x:lp:stamtext:backdrop:0:1  (6529 ms) hover=real hover pt=dse-stamina__ccur p2Hit=modal-bg gap(click2-click1)=66 ms
+   at30         pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.cm-content hp=8
+   at700        pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.cm-content hp=8
+   afterRest    pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.cm-content hp=8
+   afterOutside pop=n modal=n(0) foc=None edit=n editor=n active=BUTTON.clickable-icon hp=None
+   events: 215 click[dse-stamina__ccur d1] | 255 modal+ | 255 click[block-language-ds-stamina-bar d0 SYN] | 276 setIsFocused[id8] | 280 mousedown[modal-bg d1] | 281 click[modal-bg d1] | 290 modal- | 2340 mousedown[clickable-icon d1] | 2351 click[clickable-icon d1] | 2377 HIDE[id8 ev=click foc=True app.js:509:193553]
+== x:lp:stamtext:dblq:10:1  (6695 ms) hover=real hover pt=dse-stamina__ccur p2Hit=queued (same point) gap(click2-click1)=134 ms
+   at30         pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.cm-content hp=9
+   at700        pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.cm-content hp=9
+   afterRest    pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.cm-content hp=9
+   afterOutside pop=n modal=n(0) foc=None edit=n editor=n active=BUTTON.clickable-icon hp=None
+   events: 293 click[dse-stamina__ccur d1] | 348 modal+ | 348 click[block-language-ds-stamina-bar d0 SYN] | 349 mousedown[modal-bg d2] | 369 setIsFocused[id9] | 427 click[modal-bg d2] | 436 modal- | 2492 mousedown[clickable-icon d1] | 2503 click[clickable-icon d1] | 2503 HIDE[id9 ev=click foc=True app.js:509:193553]
+== x:lp:stamtext:apply:40:1  (7884 ms) hover=real hover pt=dse-stamina__ccur p2Hit=dse-sedit__apply-input gap(click2-click1)=84 ms
+   at30         pop=Y modal=Y(1) foc=True edit=Y editor=n active=INPUT.dse-sedit__apply-input hp=10
+   at700        pop=Y modal=Y(1) foc=True edit=Y editor=n active=INPUT.dse-sedit__apply-input hp=10
+   afterApply   pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.cm-content hp=10
+   afterRest    pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.cm-content hp=10
+   afterOutside pop=n modal=n(0) foc=None edit=n editor=n active=BUTTON.clickable-icon hp=None
+   saved=True notices=[] note=current_stamina: 18
+   events: 215 click[dse-stamina__ccur d1] | 238 modal+ | 239 click[block-language-ds-stamina-bar d0 SYN] | 261 setIsFocused[id10] | 297 mousedown[dse-sedit__apply-input d1] | 299 click[dse-sedit__apply-input d1] | 1131 mousedown[dse-btn__icon d1] | 1134 click[dse-btn__icon d1] | 1484 mousedown[dse-btn__text d1] | 1490 click[dse-btn__text d1] | 1522 modal- | 3667 mousedown[clickable-icon d1] | 3670 click[clickable-icon d1] | 3685 HIDE[id10 ev=click foc=True app.js:509:193553]
+== x:rv:stamtext:dblqq:0:4  (5375 ms) hover=real hover pt=dse-stamina__ccur p2Hit=queued down+up (same point) gap(click2-click1)=110 ms
+   at30         pop=n modal=n(0) foc=None edit=n editor=n active=DIV.markdown-preview-view hp=None
+   at700        pop=n modal=n(0) foc=None edit=n editor=n active=DIV.markdown-preview-view hp=None
+   events: 298 click[dse-stamina__ccur d1] | 380 modal+ | 380 click[block-language-ds-stamina-bar d0 SYN] | 384 mousedown[modal-bg d2] | 408 click[modal-bg d2] | 444 modal- | 471 setIsFocused[id11] | 530 HIDE[id11 ev=None foc=True app.js:509:105839 <- Array.forEach (<anonymous>)]
+SC598 TOTAL_MS 75889
+OBSIDIAN-LIFECYCLE SC598-PROBE ok (11 trials)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+PROBE_RC=0 WALL_S=80 BUNDLE=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r1-D1/dse-clean LOAD=1.01 2.45 2.33 2/3205 928512

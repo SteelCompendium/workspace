@@ -1,0 +1,7 @@
+#!/bin/bash
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1
+python3 -I "$S/r3-make-probe.py" /home/scott/code/steelCompendium/worktrees/sc598-hover-modal-fast-second-click/draw-steel-elements "$S/r3-probe-scenario.js" "$S/harness/visual-harness/r3-probe-lifecycle.mjs"
+bash "$S/r3-probe-run.sh" "$S/r3head" "stam:rv:0:again0,stam:lp:0,hero:rv:0,initbar:rv:0,initnum:rv:0,monttext:rv:0,monttext:lp:0,logbtn:rv:0,logbtn:lp:0,initdbl:rv:100,initdbl:lp:100,monttextns:rv:0" "$S/r3-probe-final-head-raw.log" "$S/cam-probe-fh"
+bash "$S/r3-probe-run.sh" "$S/r3base" "stam:rv:0,hero:rv:0,initbar:rv:0,monttext:rv:0,logbtn:rv:0,initdbl:rv:100,stam:rv:400:again0,monttextns:rv:0" "$S/r3-probe-final-base-raw.log" "$S/cam-probe-fb"
+python3 -I "$S/r3-summarize.py" "$S/r3-probe-final-head-raw.log" > "$S/r3-probe-final-head.log"
+python3 -I "$S/r3-summarize.py" "$S/r3-probe-final-base-raw.log" > "$S/r3-probe-final-base.log"

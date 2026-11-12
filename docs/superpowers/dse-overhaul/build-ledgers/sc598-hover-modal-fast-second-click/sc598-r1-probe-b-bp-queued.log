@@ -1,0 +1,91 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :161, port 41341, 1 scenario(s)
+== off:rv:stamtext:dblqq:0:1  (5465 ms) hover=real hover pt=dse-stamina__ccur p2Hit=queued down+up (same point) gap(click2-click1)=71 ms
+   at30         pop=n modal=n(0) foc=None edit=n editor=n active=DIV.markdown-preview-view hp=None
+   at700        pop=n modal=n(0) foc=None edit=n editor=n active=DIV.markdown-preview-view hp=None
+   events: 294 click[dse-stamina__ccur d1] | 352 modal+ | 354 mousedown[modal-bg d2] | 365 click[modal-bg d2] | 373 modal- | 381 HIDE[id1 ev=None foc=False app.js:509:105839 <- Array.forEach (<anonymous>)] | 503 setIsFocused[id1]
+== b:rv:stamtext:dblqq:0:1  (6628 ms) hover=real hover pt=dse-stamina__ccur p2Hit=queued down+up (same point) gap(click2-click1)=72 ms
+   at30         pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=2
+   at700        pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=2
+   afterRest    pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=2
+   afterOutside pop=n modal=n(0) foc=None edit=n editor=n active=BUTTON.clickable-icon hp=None
+   events: 292 click[dse-stamina__ccur d1] | 342 modal+ | 343 HIDE[id1 ev=click foc=True app.js:509:193553] | 343 click[block-language-ds-stamina-bar d0 SYN] | 345 HIDE[id1 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 346 mousedown[modal-bg d2] | 353 setIsFocused[id2] | 364 click[modal-bg d2] | 373 modal- | 2401 mousedown[clickable-icon d1] | 2404 click[clickable-icon d1] | 2405 HIDE[id1 ev=click foc=True app.js:509:193553] | 2405 HIDE[id2 ev=click foc=True app.js:509:193553]
+   synthetic: [{"k": "synthetic-b", "t": 343, "cls": "block-language-ds-stamina-bar interactive-child"}]
+== bp:rv:stamtext:dblqq:0:1  (6640 ms) hover=real hover pt=dse-stamina__ccur p2Hit=queued down+up (same point) gap(click2-click1)=75 ms
+   at30         pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=3
+   at700        pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=3
+   afterRest    pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=3
+   afterOutside pop=n modal=n(0) foc=None edit=n editor=n active=BUTTON.clickable-icon hp=None
+   events: 291 click[dse-stamina__ccur d1] | 346 setIsFocused[id3] | 347 modal+ | 347 HIDE[id1 ev=click foc=True app.js:509:193553] | 347 click[block-language-ds-stamina-bar d0 SYN] | 347 HIDE[id1 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 348 mousedown[modal-bg d2] | 357 setIsFocused[id3] | 366 click[modal-bg d2] | 376 modal- | 2392 mousedown[clickable-icon d1] | 2400 click[clickable-icon d1] | 2401 HIDE[id1 ev=click foc=True app.js:509:193553] | 2401 HIDE[id3 ev=click foc=True app.js:509:193553]
+   synthetic: [{"k": "private", "t": 347, "found": true}, {"k": "synthetic-b", "t": 347, "cls": "block-language-ds-stamina-bar interactive-child"}]
+== off:rv:stamtext:dblqq:0:4  (5471 ms) hover=real hover pt=dse-stamina__ccur p2Hit=queued down+up (same point) gap(click2-click1)=198 ms
+   at30         pop=n modal=n(0) foc=None edit=n editor=n active=DIV.markdown-preview-view hp=None
+   at700        pop=n modal=n(0) foc=None edit=n editor=n active=DIV.markdown-preview-view hp=None
+   events: 291 click[dse-stamina__ccur d1] | 409 modal+ | 462 HIDE[id1 ev=click foc=True app.js:509:193553] | 466 mousedown[modal-bg d2] | 489 click[modal-bg d2] | 521 modal- | 546 HIDE[id4 ev=None foc=False app.js:509:105839 <- Array.forEach (<anonymous>)] | 560 setIsFocused[id4]
+== b:rv:stamtext:dblqq:0:4  (5451 ms) hover=real hover pt=dse-stamina__ccur p2Hit=queued down+up (same point) gap(click2-click1)=180 ms
+   at30         pop=n modal=n(0) foc=None edit=n editor=n active=DIV.markdown-preview-view hp=None
+   at700        pop=n modal=n(0) foc=None edit=n editor=n active=DIV.markdown-preview-view hp=None
+   events: 291 click[dse-stamina__ccur d1] | 387 modal+ | 437 HIDE[id1 ev=click foc=True app.js:509:193553] | 438 HIDE[id4 ev=click foc=True app.js:509:193553] | 438 click[block-language-ds-stamina-bar d0 SYN] | 438 HIDE[id1 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 439 HIDE[id4 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 443 mousedown[modal-bg d2] | 471 click[modal-bg d2] | 507 modal- | 535 setIsFocused[id5] | 535 HIDE[id5 ev=None foc=True app.js:509:105839 <- Array.forEach (<anonymous>)]
+   synthetic: [{"k": "synthetic-b", "t": 438, "cls": "block-language-ds-stamina-bar interactive-child"}]
+== bp:rv:stamtext:dblqq:0:4  (6843 ms) hover=real hover pt=dse-stamina__ccur p2Hit=queued down+up (same point) gap(click2-click1)=185 ms
+   at30         pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=6
+   at700        pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=6
+   afterRest    pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=6
+   afterOutside pop=n modal=n(0) foc=None edit=n editor=n active=BUTTON.clickable-icon hp=None
+   events: 293 click[dse-stamina__ccur d1] | 392 setIsFocused[id6] | 393 modal+ | 444 HIDE[id1 ev=click foc=True app.js:509:193553] | 445 HIDE[id4 ev=click foc=True app.js:509:193553] | 445 click[block-language-ds-stamina-bar d0 SYN] | 446 HIDE[id1 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 446 HIDE[id4 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 451 mousedown[modal-bg d2] | 478 click[modal-bg d2] | 516 modal- | 546 setIsFocused[id6] | 2590 mousedown[clickable-icon d1] | 2598 click[clickable-icon d1] | 2598 HIDE[id1 ev=click foc=True app.js:509:193553] | 2598 HIDE[id4 ev=click foc=True app.js:509:193553] | 2598 HIDE[id6 ev=click foc=True app.js:509:193553]
+   synthetic: [{"k": "private", "t": 392, "found": true}, {"k": "synthetic-b", "t": 445, "cls": "block-language-ds-stamina-bar interactive-child"}]
+== b:rv:stamtext:dblqq:0:8  (5681 ms) hover=real hover pt=dse-stamina__ccur p2Hit=queued down+up (same point) gap(click2-click1)=338 ms
+   at30         pop=n modal=n(0) foc=None edit=n editor=n active=DIV.markdown-preview-view hp=None
+   at700        pop=n modal=n(0) foc=None edit=n editor=n active=DIV.markdown-preview-view hp=None
+   events: 303 click[dse-stamina__ccur d1] | 482 modal+ | 584 HIDE[id1 ev=click foc=True app.js:509:193553] | 584 HIDE[id4 ev=click foc=True app.js:509:193553] | 586 click[block-language-ds-stamina-bar d0 SYN] | 587 HIDE[id1 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 587 HIDE[id4 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 596 mousedown[modal-bg d2] | 641 click[modal-bg d2] | 716 modal- | 798 setIsFocused[id7] | 799 HIDE[id7 ev=None foc=True app.js:509:105839 <- Array.forEach (<anonymous>)]
+   synthetic: [{"k": "synthetic-b", "t": 584, "cls": "block-language-ds-stamina-bar interactive-child"}]
+== bp:rv:stamtext:dblqq:0:8  (7076 ms) hover=real hover pt=dse-stamina__ccur p2Hit=queued down+up (same point) gap(click2-click1)=331 ms
+   at30         pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=8
+   at700        pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=8
+   afterRest    pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=8
+   afterOutside pop=n modal=n(0) foc=None edit=n editor=n active=BUTTON.clickable-icon hp=None
+   events: 306 click[dse-stamina__ccur d1] | 480 setIsFocused[id8] | 483 modal+ | 579 HIDE[id1 ev=click foc=True app.js:509:193553] | 580 HIDE[id4 ev=click foc=True app.js:509:193553] | 580 click[block-language-ds-stamina-bar d0 SYN] | 582 HIDE[id1 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 582 HIDE[id4 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 589 mousedown[modal-bg d2] | 637 click[modal-bg d2] | 707 modal- | 767 setIsFocused[id8] | 2806 mousedown[clickable-icon d1] | 2815 click[clickable-icon d1] | 2843 HIDE[id1 ev=click foc=True app.js:509:193553] | 2843 HIDE[id4 ev=click foc=True app.js:509:193553] | 2843 HIDE[id8 ev=click foc=True app.js:509:193553]
+   synthetic: [{"k": "private", "t": 480, "found": true}, {"k": "synthetic-b", "t": 580, "cls": "block-language-ds-stamina-bar interactive-child"}]
+== b:lp:stamtext:dblqq:0:4  (5334 ms) hover=real hover pt=dse-stamina__ccur p2Hit=queued down+up (same point) gap(click2-click1)=119 ms
+   at30         pop=n modal=n(0) foc=None edit=n editor=n active=DIV.cm-content hp=None
+   at700        pop=n modal=n(0) foc=None edit=n editor=n active=DIV.cm-content hp=None
+   events: 302 click[dse-stamina__ccur d1] | 392 modal+ | 393 HIDE[id1 ev=click foc=True app.js:509:193553] | 393 HIDE[id4 ev=click foc=True app.js:509:193553] | 393 click[block-language-ds-stamina-bar d0 SYN] | 393 HIDE[id1 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 393 HIDE[id4 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 397 mousedown[modal-bg d2] | 421 click[modal-bg d2] | 457 modal- | 491 setIsFocused[id9] | 491 HIDE[id9 ev=None foc=True app.js:509:105839 <- Array.forEach (<anonymous>)]
+   synthetic: [{"k": "synthetic-b", "t": 393, "cls": "block-language-ds-stamina-bar interactive-child"}]
+== bp:lp:stamtext:dblqq:0:4  (6785 ms) hover=real hover pt=dse-stamina__ccur p2Hit=queued down+up (same point) gap(click2-click1)=130 ms
+   at30         pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.cm-content hp=10
+   at700        pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.cm-content hp=10
+   afterRest    pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.cm-content hp=10
+   afterOutside pop=n modal=n(0) foc=None edit=n editor=n active=BUTTON.clickable-icon hp=None
+   events: 292 click[dse-stamina__ccur d1] | 390 setIsFocused[id10] | 391 modal+ | 392 HIDE[id1 ev=click foc=True app.js:509:193553] | 392 HIDE[id4 ev=click foc=True app.js:509:193553] | 392 click[block-language-ds-stamina-bar d0 SYN] | 393 HIDE[id1 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 393 HIDE[id4 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 399 mousedown[modal-bg d2] | 422 click[modal-bg d2] | 460 modal- | 506 setIsFocused[id10] | 2574 mousedown[clickable-icon d1] | 2584 click[clickable-icon d1] | 2585 HIDE[id1 ev=click foc=True app.js:509:193553] | 2585 HIDE[id4 ev=click foc=True app.js:509:193553] | 2585 HIDE[id10 ev=click foc=True app.js:509:193553]
+   synthetic: [{"k": "private", "t": 390, "found": true}, {"k": "synthetic-b", "t": 392, "cls": "block-language-ds-stamina-bar interactive-child"}]
+== bp:rv:stamtext:title:0:1  (6946 ms) hover=real hover pt=dse-stamina__ccur p2Hit=dse-modal__title-text gap(click2-click1)=87 ms
+   at30         pop=Y modal=Y(1) foc=True edit=Y editor=n active=BODY.theme-dark hp=11
+   at700        pop=Y modal=Y(1) foc=True edit=Y editor=n active=BODY.theme-dark hp=11
+   afterEsc     pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=11
+   afterRest    pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=11
+   afterOutside pop=n modal=n(0) foc=None edit=n editor=n active=BUTTON.clickable-icon hp=None
+   events: 218 click[dse-stamina__ccur d1] | 244 setIsFocused[id11] | 244 modal+ | 257 HIDE[id1 ev=click foc=True app.js:509:193553] | 257 HIDE[id4 ev=click foc=True app.js:509:193553] | 257 click[block-language-ds-stamina-bar d0 SYN] | 258 HIDE[id1 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 258 HIDE[id4 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 268 setIsFocused[id11] | 296 mousedown[dse-modal__title-text d1] | 305 click[dse-modal__title-text d1] | 1021 modal- | 1021 key[Escape] | 2816 mousedown[clickable-icon d1] | 2818 click[clickable-icon d1] | 2818 HIDE[id1 ev=click foc=True app.js:509:193553] | 2818 HIDE[id4 ev=click foc=True app.js:509:193553] | 2818 HIDE[id11 ev=click foc=True app.js:509:193553]
+   synthetic: [{"k": "private", "t": 244, "found": true}, {"k": "synthetic-b", "t": 257, "cls": "block-language-ds-stamina-bar interactive-child"}]
+== bp:lp:stamtext:input:0:1  (7004 ms) hover=real hover pt=dse-stamina__ccur p2Hit=dse-sedit__apply-input gap(click2-click1)=68 ms
+   at30         pop=Y modal=Y(1) foc=True edit=Y editor=n active=INPUT.dse-sedit__apply-input hp=12
+   at700        pop=Y modal=Y(1) foc=True edit=Y editor=n active=INPUT.dse-sedit__apply-input hp=12
+   afterEsc     pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.cm-content hp=12
+   afterRest    pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.cm-content hp=12
+   afterOutside pop=n modal=n(0) foc=None edit=n editor=n active=BUTTON.clickable-icon hp=None
+   events: 218 click[dse-stamina__ccur d1] | 240 setIsFocused[id12] | 240 modal+ | 253 HIDE[id1 ev=click foc=True app.js:509:193553] | 253 HIDE[id4 ev=click foc=True app.js:509:193553] | 253 click[block-language-ds-stamina-bar d0 SYN] | 253 HIDE[id1 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 253 HIDE[id4 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 275 setIsFocused[id12] | 284 mousedown[dse-sedit__apply-input d1] | 286 click[dse-sedit__apply-input d1] | 1005 modal- | 1005 key[Escape] | 2843 mousedown[clickable-icon d1] | 2852 click[clickable-icon d1] | 2877 HIDE[id1 ev=click foc=True app.js:509:193553] | 2877 HIDE[id4 ev=click foc=True app.js:509:193553] | 2877 HIDE[id12 ev=click foc=True app.js:509:193553]
+   synthetic: [{"k": "private", "t": 240, "found": true}, {"k": "synthetic-b", "t": 253, "cls": "block-language-ds-stamina-bar interactive-child"}]
+== b:rv:stamtext:dblqq:40:1  (6544 ms) hover=real hover pt=dse-stamina__ccur p2Hit=queued down+up (same point) gap(click2-click1)=110 ms
+   at30         pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=13
+   at700        pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=13
+   afterRest    pop=Y modal=n(0) foc=True edit=Y editor=n active=DIV.markdown-preview-view hp=13
+   afterOutside pop=n modal=n(0) foc=None edit=n editor=n active=BUTTON.clickable-icon hp=None
+   events: 291 click[dse-stamina__ccur d1] | 346 modal+ | 358 HIDE[id1 ev=click foc=True app.js:509:193553] | 359 HIDE[id4 ev=click foc=True app.js:509:193553] | 359 click[block-language-ds-stamina-bar d0 SYN] | 359 HIDE[id1 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 359 HIDE[id4 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 360 mousedown[modal-bg d2] | 369 setIsFocused[id13] | 401 click[modal-bg d2] | 409 modal- | 2411 mousedown[clickable-icon d1] | 2418 click[clickable-icon d1] | 2419 HIDE[id1 ev=click foc=True app.js:509:193553] | 2419 HIDE[id4 ev=click foc=True app.js:509:193553] | 2419 HIDE[id13 ev=click foc=True app.js:509:193553]
+   synthetic: [{"k": "synthetic-b", "t": 359, "cls": "block-language-ds-stamina-bar interactive-child"}]
+== b:rv:stamtext:dblqq:40:4  (5355 ms) hover=real hover pt=dse-stamina__ccur p2Hit=queued down+up (same point) gap(click2-click1)=161 ms
+   at30         pop=n modal=n(0) foc=None edit=n editor=n active=DIV.markdown-preview-view hp=None
+   at700        pop=n modal=n(0) foc=None edit=n editor=n active=DIV.markdown-preview-view hp=None
+   events: 292 click[dse-stamina__ccur d1] | 378 modal+ | 426 HIDE[id1 ev=click foc=True app.js:509:193553] | 426 HIDE[id4 ev=click foc=True app.js:509:193553] | 427 click[block-language-ds-stamina-bar d0 SYN] | 428 HIDE[id1 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 428 HIDE[id4 ev=click foc=True app.js:509:193553 <- fs.focusHoverPreviewB (plugin:draw-steel-elements:367:24447)] | 432 mousedown[modal-bg d2] | 453 click[modal-bg d2] | 484 modal- | 511 setIsFocused[id14] | 512 HIDE[id14 ev=None foc=True app.js:509:105839 <- Array.forEach (<anonymous>)]
+   synthetic: [{"k": "synthetic-b", "t": 426, "cls": "block-language-ds-stamina-bar interactive-child"}]
+SC598 TOTAL_MS 87227
+OBSIDIAN-LIFECYCLE SC598-PROBE ok (14 trials)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+PROBE_RC=0 WALL_S=92 BUNDLE=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r1-D1/dse-proto LOAD=1.02 1.08 1.74 2/3338 916470

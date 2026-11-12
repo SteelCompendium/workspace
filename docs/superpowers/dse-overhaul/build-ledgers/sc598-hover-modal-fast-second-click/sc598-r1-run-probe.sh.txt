@@ -1,0 +1,14 @@
+#!/bin/bash
+# usage: sc598-r1-run-probe.sh <bundle dir> <trials> <logfile> <camtmp dir>
+# TMPDIR left default: a long TMPDIR makes Electron exit at start-up (socket path length). DSE_CAMERA_TMP for private scratch.
+export DSE_LIFECYCLE_BUNDLE="$1"
+export SC598_TRIALS="$2"
+export DSE_CAMERA_TMP="$4"
+mkdir -p "$4"
+cd /home/scott/code/steelCompendium/worktrees/sc598-hover-modal-fast-second-click/draw-steel-elements || exit 9
+start=$(date +%s)
+node /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r1-D1/harness/visual-harness/sc598-r1-probe-lifecycle.mjs --only=SC598-PROBE > "$3" 2>&1
+rc=$?
+end=$(date +%s)
+echo "PROBE_RC=$rc WALL_S=$((end-start)) BUNDLE=$1 LOAD=$(cat /proc/loadavg)" >> "$3"
+exit $rc

@@ -1,0 +1,41 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :160, port 39219, 1 scenario(s)
+== stam:rv:400:again1 (9143 ms) hover=real hover pt='15' on dse-stamina__ccur opener=DIV.dse-stamina hasDefault=False p2Hit=dse-modal__title-text
+   window check: modal+ at 39 ms, second click at 446 ms -> margin inside the opening click's 150 ms helper timer (armed when the opener's handler returns) = -257 ms (positive = second press lands before the base would have focused the preview)
+   gap(click2-click1)=443 ms; trusted clicks=2 synthetic clicks=0 (on anchor: 0); modal+ during trial=1; opening click defaultPrevented=True
+   before       pop=Y modals=0 foc=False is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/gs83-stam-host.md leaves=1 anchorIC=False
+   at30         pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   at700        pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   afterEsc     pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   again700     pop=Y modals=1 foc=True is-editing=Y editor=Y active=DIV.cm-content file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   againEsc     pop=Y modals=0 foc=True is-editing=Y editor=Y active=DIV.markdown-preview-view file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   afterRest    pop=Y modals=0 foc=True is-editing=Y editor=Y active=DIV.markdown-preview-view file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   afterOutside pop=n modals=0 foc=None is-editing=n editor=n active=BUTTON.clickable-icon file=Lifecycle/gs83-stam-host.md leaves=1 anchorIC=None
+   events: 3 click[dse-stamina__ccur d1 cx447 dp winBub] | 39 modal+[Stamina] | 189 setIsFocused | 443 mousedown[dse-modal__title-text inModal d1 cx497] | 446 click[dse-modal__title-text inModal d1 cx497 NOwinBub]
+   again: trusted=2 synthetic=0 opening dp=True; events: 4 click[dse-stamina__ccur d1 cx447 dp winBub] | 41 modal+[Stamina] | 58 mousedown[dse-modal__title-text inModal d1 cx497] | 65 click[dse-modal__title-text inModal d1 cx497 NOwinBub] | 191 setIsFocused
+== stam:rv:400:again100 (8979 ms) hover=real hover pt='15' on dse-stamina__ccur opener=DIV.dse-stamina hasDefault=False p2Hit=dse-modal__title-text
+   window check: modal+ at 38 ms, second click at 445 ms -> margin inside the opening click's 150 ms helper timer (armed when the opener's handler returns) = -257 ms (positive = second press lands before the base would have focused the preview)
+   gap(click2-click1)=443 ms; trusted clicks=2 synthetic clicks=0 (on anchor: 0); modal+ during trial=1; opening click defaultPrevented=True
+   before       pop=Y modals=0 foc=False is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/gs83-stam-host.md leaves=1 anchorIC=False
+   at30         pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   at700        pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   afterEsc     pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   again700     pop=Y modals=1 foc=True is-editing=Y editor=Y active=DIV.cm-content file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   againEsc     pop=Y modals=0 foc=True is-editing=Y editor=Y active=DIV.markdown-preview-view file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   afterRest    pop=Y modals=0 foc=True is-editing=Y editor=Y active=DIV.markdown-preview-view file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   afterOutside pop=n modals=0 foc=None is-editing=n editor=n active=BUTTON.clickable-icon file=Lifecycle/gs83-stam-host.md leaves=1 anchorIC=None
+   events: 2 click[dse-stamina__ccur d1 cx447 dp winBub] | 38 modal+[Stamina] | 190 setIsFocused | 442 mousedown[dse-modal__title-text inModal d1 cx497] | 445 click[dse-modal__title-text inModal d1 cx497 NOwinBub]
+   again: trusted=2 synthetic=0 opening dp=True; events: 4 click[dse-stamina__ccur d1 cx447 dp winBub] | 43 modal+[Stamina] | 147 mousedown[dse-modal__title-text inModal d1 cx497] | 149 click[dse-modal__title-text inModal d1 cx497 NOwinBub] | 193 setIsFocused
+== initdblm:rv:100: (7898 ms) hover=real hover pt='12/12 (4)' on dse-init__stamina dse-init__cell-stamina opener=BUTTON.dse-btn hasDefault=False p2Hit=dse-modal__title-text
+   window check: modal+ at 286 ms, second click at 119 ms -> margin inside the opening click's 150 ms helper timer (armed when the opener's handler returns) = 317 ms (positive = second press lands before the base would have focused the preview)
+   gap(click2-click1)=115 ms; trusted clicks=3 synthetic clicks=0 (on anchor: 0); modal+ during trial=1; opening click defaultPrevented=True
+   before       pop=Y modals=0 foc=False is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/gs83-trk-host.md leaves=1 anchorIC=False
+   at30         pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/tracker.md leaves=1 anchorIC=False
+   at700        pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/tracker.md leaves=1 anchorIC=False
+   afterEsc     pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/tracker.md leaves=1 anchorIC=False
+   afterRest    pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/tracker.md leaves=1 anchorIC=False
+   afterOutside pop=n modals=0 foc=None is-editing=n editor=n active=BUTTON.clickable-icon file=Lifecycle/gs83-trk-host.md leaves=1 anchorIC=None
+   events: 4 click[dse-init__stamina d1 cx624 dp winBub] | 119 click[dse-init__stamina d2 cx624 winBub] | 124 dblclick[dse-init__stamina d2 cx624] | 286 modal+[Goblin Squad - Minion Stamina ] | 374 setIsFocused | 402 mousedown[dse-modal__title-text inModal d1 cx497] | 404 click[dse-modal__title-text inModal d1 cx497 NOwinBub]
+R3 PAGE_ERRORS []
+OBSIDIAN-LIFECYCLE SC598-R3-PROBE ok (3 trials)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+LIFECYCLE_RC=0 WALL_S=31 BUNDLE=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/r3base HARNESS=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/harness/visual-harness/r3-probe-lifecycle.mjs LOAD=8.43 4.35 3.58 7/3580 1140117

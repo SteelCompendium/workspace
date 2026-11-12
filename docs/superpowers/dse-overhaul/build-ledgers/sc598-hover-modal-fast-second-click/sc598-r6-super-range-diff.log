@@ -1,0 +1,20 @@
+1:  37e5f245 ! 1:  d84a1bd7 docs(SC-598): CHANGELOG, a second click inside a window opened from a hover preview no longer closes it
+    @@ CHANGELOG.md: go under an *Internal* sub-heading.
+     +  window and the preview. A quick double-click on the stamina bar's numbers in a preview still closes the window, as it does
+     +  in a note, but the preview now stays open.
+     +
+    - - **DSE plugin: keyboard focus stays in the initiative tracker after Advance round, Make/Relieve captain, Reset turns, Reset encounter and the Malice quick-add, in Reading view (SC-588).**
+    -   Each of these rebuilds the whole tracker, and focus used to fall to the top of the page, so a keyboard user had to Tab back in
+    -   from the top of the note after every press. The control that replaced the one you pressed now takes focus: the same button
+    + - **DSE plugin: what you have typed in the initiative tracker's Malice quick-add boxes is no longer lost when the tracker rebuilds, in Reading view and in the pinned sidebar tracker (SC-589).**
+    +   Type an amount and a label, then press Advance round (or Make/Relieve captain, Reset turns, Reset encounter, or any other
+    +   action that rebuilds the whole tracker), and both boxes used to come back empty. They now keep what you typed, with the caret
+2:  7cb0fdaf ! 2:  5453d331 docs(SC-598): CHANGELOG, a re-open from the same preview no longer switches it to source
+    @@ CHANGELOG.md: go under an *Internal* sub-heading.
+     +  the preview to the note's source text. A quick double-click on the stamina bar's numbers in a preview still closes the
+     +  window, as it does in a note, but the preview now stays open.
+      
+    - - **DSE plugin: keyboard focus stays in the initiative tracker after Advance round, Make/Relieve captain, Reset turns, Reset encounter and the Malice quick-add, in Reading view (SC-588).**
+    -   Each of these rebuilds the whole tracker, and focus used to fall to the top of the page, so a keyboard user had to Tab back in
+    + - **DSE plugin: what you have typed in the initiative tracker's Malice quick-add boxes is no longer lost when the tracker rebuilds, in Reading view and in the pinned sidebar tracker (SC-589).**
+    +   Type an amount and a label, then press Advance round (or Make/Relieve captain, Reset turns, Reset encounter, or any other

@@ -1,0 +1,10 @@
+#!/bin/bash
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1
+cd "$S/r3mut" && python3 -I "$S/r3-mutate.py" "$S/r3mut" "$S/r3-mutant-bundles.log" R8,R14 --build "$S/mutbundles"
+cd "$S/r3mut" && rm -f main.js styles.css && python3 -I "$S/r3-mutate.py" "$S/r3mut" "$S/r3-mutants-R14.log" R14
+python3 -I "$S/r3-make-probe.py" /home/scott/code/steelCompendium/worktrees/sc598-hover-modal-fast-second-click/draw-steel-elements "$S/r3-probe-scenario.js" "$S/harness/visual-harness/r3-probe-lifecycle.mjs"
+bash "$S/r3-probe-run.sh" "$S/r3head" "stam:rv:400:again1,stam:rv:400:again100,initdblm:rv:100,initdblm:lp:100" "$S/r3-probe-again-head-raw.log" "$S/cam-pa-h"
+bash "$S/r3-probe-run.sh" "$S/r3base" "stam:rv:400:again1,stam:rv:400:again100,initdblm:rv:100" "$S/r3-probe-again-base-raw.log" "$S/cam-pa-b"
+bash "$S/r3-probe-run.sh" "$S/mutbundles/R8" "stam:rv:400:again100,stam:rv:0" "$S/r3-probe-again-R8-raw.log" "$S/cam-pa-r8"
+bash "$S/r3-probe-run.sh" "$S/mutbundles/R14" "stam:rv:400:again1,stam:rv:400:again100,stam:rv:0,logbtn:rv:400:again100" "$S/r3-probe-again-R14-raw.log" "$S/cam-pa-r14"
+for n in head base R8 R14; do python3 -I "$S/r3-summarize.py" "$S/r3-probe-again-$n-raw.log" > "$S/r3-probe-again-$n.log"; done

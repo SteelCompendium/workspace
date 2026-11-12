@@ -1,0 +1,129 @@
+// SC-598 r3 (R1) scratch probes, copied into a scratch archive copy at test/dom/kit/r3probe.test.ts. Never committed.
+import { DseModal, openManagedModal } from '../../../src/framework/kit/managedModal';
+import { previewStandIn } from '../_hoverPreviewStandIn';
+import { App, Component, Scope } from '../../mocks/obsidian';
+
+function fakeOwner(): any {
+	const owner = new Component();
+	owner.load();
+	return owner;
+}
+
+describe('r3 probes', () => {
+	beforeEach(() => jest.useFakeTimers());
+	afterEach(() => {
+		jest.useRealTimers();
+		document.body.innerHTML = '';
+	});
+
+	function setup() {
+		const app: any = new App();
+		const owner = fakeOwner();
+		const popoverScope = new Scope();
+		const preview = previewStandIn({ app, scope: popoverScope, onHide: () => owner.unload() });
+		const anchor = preview.embed.appendChild(document.createElement('div'));
+		const opener = anchor.appendChild(document.createElement('button'));
+		const text = opener.appendChild(document.createElement('span'));
+		text.textContent = 'Fifteen';
+		const modals: DseModal[] = [];
+		opener.addEventListener('click', () => {
+			modals.push(
+				openManagedModal(
+					owner,
+					() => {
+						const m = new DseModal(app);
+						m.setDseTitle('Edit');
+						const b = m.body.createEl('button');
+						b.textContent = 'child';
+						// a nested modal opened by a click inside this one, inheriting the anchor (FreeHealConfirmModal's shape)
+						b.addEventListener('click', () => {
+							modals.push(
+								openManagedModal(
+									owner,
+									() => {
+										const c = new DseModal(app);
+										c.setDseTitle('Child');
+										c.body.createEl('input');
+										return c;
+									},
+									m.anchor,
+								),
+							);
+						});
+						return m;
+					},
+					anchor,
+				),
+			);
+		});
+		const open = (): MouseEvent => {
+			const evt = new MouseEvent('click', { bubbles: true, cancelable: true, clientX: 5, clientY: 5 });
+			text.dispatchEvent(evt);
+			return evt;
+		};
+		return { app, preview, popoverScope, anchor, text, open, modals };
+	}
+
+	test('P1 close within 10 ms of the open: class removed, no stray scope, preview focused, not hidden, not an editor', () => {
+		const s = setup();
+		s.open();
+		jest.advanceTimersByTime(3);
+		s.modals[0].close();
+		expect(s.anchor.classList.contains('interactive-child')).toBe(true);
+		jest.advanceTimersByTime(300);
+		expect(s.anchor.classList.contains('interactive-child')).toBe(false);
+		expect(s.app.keymap.scopes).toEqual([s.popoverScope]);
+		expect(s.preview.state.hidden).toBe(false);
+		expect(s.preview.state.editor).toBe(false);
+		expect(s.preview.state.isFocused).toBe(true);
+	});
+
+	test('P2 nested: a child modal opened from a click inside the preview-opened parent sends no further synthetic click', () => {
+		const s = setup();
+		s.open();
+		jest.advanceTimersByTime(200);
+		expect(s.preview.clicks).toHaveLength(2);
+		(s.modals[0].contentEl.querySelector('button') as HTMLElement).click();
+		jest.advanceTimersByTime(200);
+		expect(s.modals).toHaveLength(2);
+		expect(s.preview.clicks).toHaveLength(2);
+		expect(s.anchor.classList.contains('interactive-child')).toBe(false);
+		expect(s.preview.state.hidden).toBe(false);
+		expect(document.querySelectorAll('.modal-container')).toHaveLength(2);
+	});
+
+	test('P3 second open from the same (now focused) preview after close: no synthetic click, not default-prevented', () => {
+		const s = setup();
+		s.open();
+		jest.advanceTimersByTime(200);
+		s.modals[0].close();
+		jest.advanceTimersByTime(5);
+		const second = s.open();
+		expect(second.defaultPrevented).toBe(false); // read at once: the helper's own timer default-prevents it later, as Obsidian's does
+		expect(s.anchor.classList.contains('interactive-child')).toBe(false);
+		jest.advanceTimersByTime(200);
+		expect(s.preview.clicks).toHaveLength(3);
+		expect(s.modals).toHaveLength(2);
+	});
+
+	test('P4 re-entrancy: the synthetic click opens no second modal, and focusHoverPreviewNow runs once per open', () => {
+		const s = setup();
+		const spy = jest.spyOn(DseModal.prototype as any, 'focusHoverPreviewNow');
+		s.open();
+		jest.advanceTimersByTime(200);
+		expect(spy).toHaveBeenCalledTimes(1);
+		expect(document.querySelectorAll('.modal-container')).toHaveLength(1);
+		spy.mockRestore();
+	});
+
+	test('P5 the opener re-renders (anchor content replaced) inside its own click: still one synthetic click from the anchor', () => {
+		const s = setup();
+		s.text.addEventListener('click', () => {
+			// a card rebuilt inside the opening click (the anchor itself stays: it is the host container)
+			queueMicrotask(() => undefined);
+		});
+		s.open();
+		jest.advanceTimersByTime(200);
+		expect(s.preview.clicks.filter((c) => c.target === s.anchor)).toHaveLength(1);
+	});
+});

@@ -1,0 +1,14 @@
+
+> draw-steel-elements@7.0.0 obsidian-lifecycle
+> npm run build-no-check && node visual-harness/obsidian-lifecycle.mjs --only=G-S91
+
+
+> draw-steel-elements@7.0.0 build-no-check
+> node esbuild.config.mjs production
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :160, port 40819, 1 scenario(s)
+OBSIDIAN-LIFECYCLE G-S91 FAIL: title rv: 700 ms after the second press the preview was gone {"popover":false,"modal":false,"editing":false,"editor":false,"focusInPreview":false} | apply rv: 700 ms after the second press the preview was gone {"popover":false,"modal":false,"editing":false,"editor":false,"focusInPreview":false} -- passed: title lp (real hover; press on "15" on dse-stamina__ccur, second press 77 ms later on dse-modal__title-text): the preview stayed, no source editor, the modal stayed, Escape closed only the modal, the preview stayed with the pointer away, a click outside closed it; dblq rv (real hover; press on "15" on dse-stamina__ccur, second press 99 ms later): the preview stayed, no source editor, the backdrop press closed the modal and left the preview, the preview stayed with the pointer away, a click outside closed it; dblq lp (real hover; press on "15" on dse-stamina__ccur, second press 103 ms later): the preview stayed, no source editor, the backdrop press closed the modal and left the preview, the preview stayed with the pointer away, a click outside closed it; reopen rv (real hover; press on "15" on dse-stamina__ccur, second press 68 ms later on dse-modal__title-text): the preview stayed, no source editor, opened a second time from the focused preview (open, Escape, open again) the modal stayed, the focus stayed out of the preview, Escape closed only the modal, the preview stayed with the pointer away, a click outside closed it [shot /tmp/dse-obsidian-lifecycle-f1mO66/shots/G-S91-FAIL.png]
+OBSIDIAN-LIFECYCLE temp dir kept (has FAIL screenshot(s)): /tmp/dse-obsidian-lifecycle-f1mO66
+OBSIDIAN-LIFECYCLE done: 0/1 ok, 1 failed
+LIFECYCLE_RC=1 WALL_S=47 BUNDLE=- LOAD=1.35 2.28 2.88 1/3209 1280330

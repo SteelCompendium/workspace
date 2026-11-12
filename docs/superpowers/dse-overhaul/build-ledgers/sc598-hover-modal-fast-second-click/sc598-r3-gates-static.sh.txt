@@ -1,0 +1,14 @@
+#!/bin/bash
+# r3: tsc (incl. e2e project via npm run tsc), lint, jest in the worktree's dse dir. rc of each recorded by this file.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1
+cd /home/scott/code/steelCompendium/worktrees/sc598-hover-modal-fast-second-click/draw-steel-elements || exit 9
+echo "LOAD_START=$(cat /proc/loadavg)" > "$S/r3-gate-summary.txt"
+ls -la visual-harness/dist/obsidian-app.css >> "$S/r3-gate-summary.txt" 2>&1
+npm run tsc > "$S/r3-gate-tsc.log" 2>&1; echo "TSC_RC=$?" >> "$S/r3-gate-summary.txt"
+npm run lint > "$S/r3-gate-lint.log" 2>&1; echo "LINT_RC=$?" >> "$S/r3-gate-summary.txt"
+rm -f main.js styles.css
+start=$(date +%s)
+npx jest > "$S/r3-gate-jest.log" 2>&1; rc=$?
+end=$(date +%s)
+echo "JEST_RC=$rc JEST_WALL_S=$((end-start)) LOAD_END=$(cat /proc/loadavg)" >> "$S/r3-gate-summary.txt"
+grep -E "^(Tests|Test Suites):" "$S/r3-gate-jest.log" >> "$S/r3-gate-summary.txt"

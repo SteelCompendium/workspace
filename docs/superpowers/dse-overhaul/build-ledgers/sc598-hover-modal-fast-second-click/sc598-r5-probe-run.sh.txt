@@ -1,0 +1,5 @@
+#!/bin/bash
+# usage: r5-probe-run.sh <bundle dir> <trials> <logfile> <camtmp dir>
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r5-R1
+export R3_TRIALS="$2"
+bash "$S/r5-lifecycle.sh" "$1" SC598-R3-PROBE "$3" "$4" "$S/harness/visual-harness/r5-probe-lifecycle.mjs"

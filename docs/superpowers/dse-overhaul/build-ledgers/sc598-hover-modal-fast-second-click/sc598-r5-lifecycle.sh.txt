@@ -1,0 +1,15 @@
+#!/bin/bash
+# usage: r5-lifecycle.sh <bundle dir or -> <only ids> <logfile> <camtmp dir> [harness .mjs]
+# "-" = npm run obsidian-lifecycle in the worktree (builds the worktree head). A bundle dir pins that bundle (G-S83 footgun 9).
+# Optional 5th arg: run a scratch harness copy instead of the worktree's.
+if [ "$1" != "-" ]; then export DSE_LIFECYCLE_BUNDLE="$1"; fi
+export DSE_CAMERA_TMP="$4"
+mkdir -p "$4"
+cd /home/scott/code/steelCompendium/worktrees/sc598-hover-modal-fast-second-click/draw-steel-elements || exit 9
+H=${5:-visual-harness/obsidian-lifecycle.mjs}
+start=$(date +%s)
+if [ "$1" = "-" ] && [ -z "$5" ]; then npm run obsidian-lifecycle -- --only="$2" > "$3" 2>&1; else node "$H" --only="$2" > "$3" 2>&1; fi
+rc=$?
+end=$(date +%s)
+echo "LIFECYCLE_RC=$rc WALL_S=$((end-start)) BUNDLE=$1 HARNESS=$H LOAD=$(cat /proc/loadavg)" >> "$3"
+exit $rc

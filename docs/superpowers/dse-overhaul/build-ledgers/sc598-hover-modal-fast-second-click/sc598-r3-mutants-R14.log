@@ -1,0 +1,5 @@
+## R14: PROPOSED FIX SHAPE (not a mutant): for an .is-editing preview, preventDefault the opening click only (no synthetic click)
+file: src/framework/kit/managedModal.ts; command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       1 failed, 238 passed, 239 total
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a preview that is already focused (.is-editing) gets only the opening click, which is not default-prevented
+

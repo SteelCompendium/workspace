@@ -1,0 +1,44 @@
+# SC-598 r3 brief — independent adversarial review (orchestration:reviewer, fresh identity R1)
+
+You review ticket SC-598's implementation. You did not design it (that was D1) or write it (I1). Your final text goes to the ticket-owner, not a human. **Workers never call the tracker** (Linear) — not to read history, not to post. **Execute and probe, don't just read.** You edit nothing on the worktree branch: mutants and probes run in `git archive` copies in your scratch folder.
+
+## 1. Context loading
+
+- Ledger: `/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc598-hover-modal-fast-second-click/decisions.md` — the spec and owner rulings O1–O11. Read it in full.
+- Design: `.../sc598-r1-design-report.md` (exec summary, §1 mechanism, §2 survey, §3 (b), §4, §6). Harness: `sc598-r1-probe-scenario.js.txt`, `sc598-r1-make-probe.py.txt`, `sc598-r1-run-probe.sh.txt`, `sc598-r1-summarize.py.txt`, Obsidian excerpts `sc598-r1-obsidian-excerpts.txt`. Extracted app.js and r1 scratch copies may still be under `/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r1-D1/` (read-only for you; copy what you need into your own folder).
+- Implementation report: `.../sc598-r2-impl-report.md` (exec summary first), `sc598-r2-mutants.log`, gate logs `sc598-r2-*`, `sc598-dse-verify-proposal.md`.
+- `dse-verify` skill `/home/scott/code/steelCompendium/workspace/.claude/skills/dse-verify/SKILL.md` (~330 KB, read in parts): "The battery, in order", "Hover preview modals (SC-595)".
+- Worktree: `/home/scott/code/steelCompendium/worktrees/sc598-hover-modal-fast-second-click`, dse branch `sc598-hover-modal-fast-second-click` at `47950f45` (base `e0e49d4d` = origin/develop at dispatch; the plugin source at e0e49d4d is identical to e5b6f9f2 for `managedModal.ts`); superproject branch of the same name at `2a8b0b36` (cut from `a2874ce2`; check in a scratch clone that it rebases cleanly onto current workspace `origin/main`, whose CHANGELOG `## Unreleased` gained SC-570/SC-588 bullets since). `git -C <wt>/draw-steel-elements fetch origin` first and report `origin/develop`.
+
+## 2. What to attack
+
+1. **Correctness of design (b) as built** (`src/framework/kit/managedModal.ts` diff): the ordering (`focusHoverPreviewNow` before `arm()`; the helper's timer before the 10 ms re-push; the `interactive-child` removal timer after the helper's), the `.is-editing` gate, `interactive-child` only-if-absent, popout safety (`MouseEvent` from the anchor's window), nested modals (a child opened from a preview-opened parent), a modal opened from an already-focused preview (must be a no-op), close-before-10 ms (modal closed within 10 ms of opening: timers/classes left behind?), re-entrancy (the synthetic click re-entering DseModal's own window-bubble listener or the SC-595 document guard).
+2. **O8 (verbatim):** "(b) adds two new side effects the r1 probe did not survey; r2 must check them by reading code, r3 by probing: (i) `preventDefault()` on the opening click cancels that click's default action — list every preview opener's element and confirm none relies on a default action (`<a href>`, `<label>`, checkbox/radio, `<summary>`, form submit); (ii) the synthetic click on the anchor bubbles through the anchor and its ancestors — list every DSE click listener on the anchor (cx.host.containerEl) or an ancestor and confirm none acts on it (target === anchor), and that it never opens a second modal." Verify I1's tables, and probe in real Obsidian at least: the stamina bar, the hero-sheet stamina bar, an initiative numeric stamina control, a montage cell's text, and "Log an action…", each opened from a preview by a press on text, then a second press inside the modal at ~100 ms (RV; LP for at least two).
+3. **O10 probe (verbatim):** "r3 probes it once (fast double-click on an initiative grid cell's text in a preview, then a second click inside the modal at ~100 ms); if red, owner rules then; otherwise dropped."
+4. **Regressions:** SC-595 (G-S83 + its 32 jest tests; Escape closes only the modal after a text-opened and a bar-opened modal; free-heal Confirm / form Cancel keep the parent and preview), SC-597 (G-S87 + its 22 jest tests, as updated under O7 — check the updates did not weaken them: re-run SC-597's K1-K6 mutants), SC-552, SC-556, SC-584. The preview after the modal closes: stays with the pointer away, closes on the next outside click, never turned into a source editor.
+5. **Tests:** are the new jest tests meaningful (do they model `T3` as a window CAPTURE listener and the helper's 10/150 ms as literals)? Run your own mutants of `focusHoverPreviewNow` (drop preventDefault; drop the synthetic click; dispatch on the popover instead of the anchor; non-bubbling; leave `interactive-child` on; remove it at 0 ms; call after `arm()`; drop the `.is-editing` gate) against jest AND, for the ones jest cannot see, against G-S91. Is G-S91 red on e0e49d4d's bundle (build it yourself) and green on head? Does each G-S91 trial assert what its name says (`elementFromPoint` on the number's own element; the second press really lands within 150 ms — read the measured gaps)?
+6. **Gates — re-run yourself:** tsc, lint, jest (expect 7317 passed / 2 skipped in a fresh tree), lifecycle part 5 (`G-S59 G-S49 G-S73 G-S77 G-S83 G-S87 G-S91`, 7/7, wall time ≤ ~420 s), e2e (`270/274 ok, 0 failed, 4 known-bug, coverage: 169/169 pairs` at e0e49d4d, SC-588 landed; RECOV-R07 is no longer a known load flake since SC-570 landed — a red there is real), `styles.css` sha equal to a e0e49d4d build. Parts 1-4 only if the diff touches anything they exercise.
+7. **Docs:** CHANGELOG bullet is exactly O11's text, in the worktree superproject; the dse-verify proposal is accurate and ready to apply. O9, O10 and O12 are settled rulings: report new evidence against them, but do not re-raise them as findings without it.
+
+## 3. Footguns (every one has cost real time)
+
+- **Devbox:** Node is not on PATH. `devbox run -c /home/scott/code/steelCompendium/worktrees/sc598-hover-modal-fast-second-click/draw-steel-elements -- bash /abs/path/script.sh` (for a scratch copy, `-c` that copy or the worktree's dse dir). Never `cd X && devbox run …` in a compound command; never trust an echoed `$?` inside `bash -c` (record exit codes inside a script file). No `| tail` on a gate.
+- **Every git command uses `git -C <absolute path>`**, never `cd X; git …`. You edit nothing in the worktree. The only writes allowed under `/home/scott/code/steelCompendium/workspace/` are your report/evidence files in the ledger dir, all prefixed `sc598-r3-`.
+- **Scratch:** private subfolder `/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/` with uniquely named scripts/logs. Use the Write tool for scratch files (no heredocs). No `rm` with a shell-variable target; no glob `rm`.
+- **Never `rm -rf` a `/tmp` glob** (a worker did `rm -rf /tmp/dse-obsidian-lifecycle-*` today and wiped other efforts' kept lifecycle FAIL dirs). Delete only the literal path your own run printed, or leave it.
+- **Never `pkill`/`killall` by pattern** — other efforts (SC-588, SC-570) run the same commands concurrently. Kill only by PID, after `readlink /proc/<pid>/cwd` shows your own path.
+- **Never `rm -rf` the shared `.superpowers/` dir.**
+- The main checkout's dse dirt (modified `demo-vault/Welcome.md`, untracked `compendium-manifest.json` / `demo-vault/*.md`) is Scott's live vault — expected, not yours.
+- Run each gate/probe as one **blocking foreground** Bash call (timeout up to 600000 ms), output redirected to a file, then read the file. No `run_in_background`, no Monitor.
+- Never key a wait-loop on a scratch filename or its contents. Use per-run unique paths.
+- Redirect long output to files — the 600 s stream watchdog kills silent agents.
+- The e2e runner reads test titles for scenario ids: a bracketed ticket id in a test title is a defect.
+- You cannot `SendMessage` me. If you need input, end your turn with `STATUS: NEEDS_CONTEXT` and the question. If you ever message anyway, its first word must be `SC-598:`.
+
+## 4. Report
+
+Write `.../sc598-hover-modal-fast-second-click/sc598-r3-review-report.md`. It **opens with a ≤10-line executive summary**: verdict (LAND / FIX FIRST), counts by severity, gate numbers you measured, G-S91 red/green, mutants killed/total. Body: findings by severity (CRITICAL/HIGH/MEDIUM/LOW/INFO) with file:line, a failure scenario, and a prescribed fix; the O8/O10 probe tables; the regression checks. Copy evidence into the ledger dir prefixed `sc598-r3-`. If the report-file write is blocked by your harness, return the report inline.
+
+## 5. Return contract
+
+Final text: raw facts only — verdict, severity counts, shas, measured numbers, and the absolute path of every evidence file you produced. No prose.

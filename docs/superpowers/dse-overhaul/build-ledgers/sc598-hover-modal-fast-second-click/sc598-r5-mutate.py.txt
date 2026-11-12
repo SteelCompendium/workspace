@@ -1,0 +1,62 @@
+"""SC-598 r5 (R1) mutant runner for the r4 delta (the .is-editing branch). Runs in a SCRATCH archive copy (never the worktree).
+usage: python3 -I r5-mutate.py <copy dir> <log> <id,id,...|all> [--build <out bundle dir>]"""
+import subprocess, sys, re, os, shutil
+
+MM = 'src/framework/kit/managedModal.ts'
+ALL = ['test/dom/kit/managedModal.test.ts', 'test/dom/elements/stamina-bar.test.ts', 'test/dom/elements/montage.test.ts']
+BR = "\t\tif (pop.classList.contains('is-editing')) {\n\t\t\topening.preventDefault();\n\t\t\treturn;\n\t\t}\n"
+MUTANTS = [
+    ('E1', 'the .is-editing branch returns without preventDefault (the r2 code)', MM, BR, "\t\tif (pop.classList.contains('is-editing')) return;\n", ALL),
+    ('E2', 'no .is-editing branch: a focused preview gets the full treatment (synthetic click + class)', MM, BR, '', ALL),
+    ('E3', 'the .is-editing branch also sends the synthetic click (no class)', MM, BR,
+     "\t\tif (pop.classList.contains('is-editing')) {\n\t\t\topening.preventDefault();\n\t\t\tanchor.dispatchEvent(new (anchor.ownerDocument.defaultView ?? win).MouseEvent('click', { bubbles: true, cancelable: true, view: anchor.ownerDocument.defaultView ?? win }));\n\t\t\treturn;\n\t\t}\n", ALL),
+    ('E4', 'the .is-editing test reads the popover of the opener, not the anchor (gate always false: is-editing checked on the anchor)', MM, BR, BR.replace('pop.classList', 'anchor.classList'), ALL),
+]
+
+def sh(*a, **k):
+    return subprocess.run(a, capture_output=True, text=True, **k)
+
+def main():
+    C, log, which = sys.argv[1], sys.argv[2], sys.argv[3]
+    build = sys.argv[5] if len(sys.argv) > 5 and sys.argv[4] == '--build' else None
+    want = None if which == 'all' else set(which.split(','))
+    out = open(log, 'a')
+    def w(s):
+        out.write(s + '\n'); out.flush()
+    for mid, desc, file, old, new, tests in MUTANTS:
+        if want is not None and mid not in want:
+            continue
+        path = os.path.join(C, file)
+        orig = open(path).read()
+        assert orig.count(old) == 1, (mid, orig.count(old))
+        open(path, 'w').write(orig.replace(old, new))
+        try:
+            if build:
+                r = sh('node', 'esbuild.config.mjs', 'production', cwd=C)
+                dst = os.path.join(build, mid)
+                os.makedirs(dst, exist_ok=True)
+                for f in ('main.js', 'styles.css', 'manifest.json'):
+                    shutil.copy(os.path.join(C, f), os.path.join(dst, f))
+                w(f'## {mid}: {desc} -> bundle {dst} (build rc {r.returncode})')
+                continue
+            for f in ('main.js', 'styles.css'):
+                p = os.path.join(C, f)
+                if os.path.exists(p): os.remove(p)
+            r = sh('npx', 'jest', *tests, '--silent', cwd=C)
+            text = r.stdout + r.stderr
+            fails = []
+            for line in text.splitlines():
+                m = re.match(r'^\s+● (.+)$', line)
+                if m and m.group(1) not in fails:
+                    fails.append(m.group(1))
+            summ = [l for l in text.splitlines() if l.startswith('Tests:')]
+            w(f'## {mid}: {desc}')
+            w(f'result: {"KILLED" if r.returncode != 0 else "SURVIVED"} (jest rc {r.returncode}); {summ[0] if summ else "no Tests line"}')
+            for f in fails:
+                w('  red: ' + f)
+            w('')
+        finally:
+            open(path, 'w').write(orig)
+    out.close()
+
+main()

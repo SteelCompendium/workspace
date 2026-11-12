@@ -1,0 +1,12 @@
+#!/bin/bash
+# usage: sc598-r1-jest-clean.sh <dse copy dir> <log>
+# tsc + eslint on the touched file + the hover-preview-related jest suites, on a scratch copy of dse with the prototype applied.
+cd "$1" || exit 9
+rm -f main.js styles.css
+{
+	echo "== tsc"; npx tsc --noEmit -p . ; echo "TSC_RC=$?"
+	echo "== eslint managedModal.ts"; npx eslint src/framework/kit/managedModal.ts ; echo "ESLINT_RC=$?"
+	echo "== jest (hover-preview suites)"
+	npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts test/dom/views/stamina-edit-modal.test.ts test/dom/elements/initiative.test.ts test/dom/elements/conditions.test.ts test/dom/authoring/formModalHoverPreview.test.ts 2>&1
+	echo "JEST_RC=$?"
+} > "$2" 2>&1

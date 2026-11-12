@@ -1,0 +1,116 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :161, port 34007, 1 scenario(s)
+== stam:rv:0: (7222 ms) hover=real hover pt='15' on dse-stamina__ccur opener=DIV.dse-stamina hasDefault=False p2Hit=dse-modal__title-text
+   window check: modal+ at 66 ms, second click at 89 ms -> margin inside the opening click's 150 ms helper timer (armed when the opener's handler returns) = 127 ms (positive = second press lands before the base would have focused the preview)
+   gap(click2-click1)=81 ms; trusted clicks=2 synthetic clicks=1 (on anchor: 1); modal+ during trial=1; opening click defaultPrevented=True
+   before       pop=Y modals=0 foc=False is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/gs83-stam-host.md leaves=1 anchorIC=False
+   at30         pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   at700        pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   afterEsc     pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   afterRest    pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   afterOutside pop=n modals=0 foc=None is-editing=n editor=n active=BUTTON.clickable-icon file=Lifecycle/gs83-stam-host.md leaves=1 anchorIC=None
+   events: 8 click[dse-stamina__ccur d1 cx447 dp dp0 winBub] | 66 modal+[Stamina] | 66 click[block-language-ds-stamina-bar ANCHOR d0 cx0 SYN dp] | 77 setIsFocused | 85 mousedown[dse-modal__title-text inModal d1 cx497] | 89 click[dse-modal__title-text inModal d1 cx497 NOwinBub]
+== stam:lp:0: (7013 ms) hover=real hover pt='15' on dse-stamina__ccur opener=DIV.dse-stamina hasDefault=False p2Hit=dse-modal__title-text
+   window check: modal+ at 26 ms, second click at 52 ms -> margin inside the opening click's 150 ms helper timer (armed when the opener's handler returns) = 124 ms (positive = second press lands before the base would have focused the preview)
+   gap(click2-click1)=49 ms; trusted clicks=2 synthetic clicks=1 (on anchor: 1); modal+ during trial=1; opening click defaultPrevented=True
+   before       pop=Y modals=0 foc=False is-editing=n editor=n active=DIV.cm-content file=Lifecycle/gs83-stam-host.md leaves=1 anchorIC=False
+   at30         pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   at700        pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   afterEsc     pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.cm-content file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   afterRest    pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.cm-content file=Lifecycle/gs83-stam.md leaves=1 anchorIC=False
+   afterOutside pop=n modals=0 foc=None is-editing=n editor=n active=BUTTON.clickable-icon file=Lifecycle/gs83-stam-host.md leaves=1 anchorIC=None
+   events: 3 click[dse-stamina__ccur d1 cx447 dp dp0 winBub] | 26 modal+[Stamina] | 27 click[block-language-ds-stamina-bar ANCHOR d0 cx0 SYN dp] | 45 setIsFocused | 50 mousedown[dse-modal__title-text inModal d1 cx497] | 52 click[dse-modal__title-text inModal d1 cx497 NOwinBub]
+== hero:rv:0: (7148 ms) hover=real hover pt='31' on dse-stamina__ccur opener=DIV.dse-stamina hasDefault=False p2Hit=dse-modal__title-text
+   window check: modal+ at 37 ms, second click at 80 ms -> margin inside the opening click's 150 ms helper timer (armed when the opener's handler returns) = 107 ms (positive = second press lands before the base would have focused the preview)
+   gap(click2-click1)=78 ms; trusted clicks=2 synthetic clicks=1 (on anchor: 1); modal+ during trial=1; opening click defaultPrevented=True
+   before       pop=Y modals=0 foc=False is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-hero-host.md leaves=1 anchorIC=False
+   at30         pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/r3-hero.md leaves=1 anchorIC=False
+   at700        pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/r3-hero.md leaves=1 anchorIC=False
+   afterEsc     pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-hero.md leaves=1 anchorIC=False
+   afterRest    pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-hero.md leaves=1 anchorIC=False
+   afterOutside pop=n modals=0 foc=None is-editing=n editor=n active=BUTTON.clickable-icon file=Lifecycle/r3-hero-host.md leaves=1 anchorIC=None
+   events: 2 click[dse-stamina__ccur d1 cx711 dp dp0 winBub] | 37 modal+[Torin Stonefist Stamina] | 37 click[block-language-ds-hero ANCHOR d0 cx0 SYN dp] | 57 setIsFocused | 78 mousedown[dse-modal__title-text inModal d1 cx497] | 80 click[dse-modal__title-text inModal d1 cx497 NOwinBub]
+== initbar:rv:0: (7419 ms) hover=real hover pt='30' on dse-stamina__ccur opener=DIV.dse-stamina hasDefault=False p2Hit=dse-modal__title-text
+   window check: modal+ at 103 ms, second click at 181 ms -> margin inside the opening click's 150 ms helper timer (armed when the opener's handler returns) = 72 ms (positive = second press lands before the base would have focused the preview)
+   gap(click2-click1)=175 ms; trusted clicks=2 synthetic clicks=1 (on anchor: 1); modal+ during trial=1; opening click defaultPrevented=True
+   before       pop=Y modals=0 foc=False is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/gs83-trk-host.md leaves=1 anchorIC=False
+   at30         pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/tracker.md leaves=1 anchorIC=False
+   at700        pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/tracker.md leaves=1 anchorIC=False
+   afterEsc     pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/tracker.md leaves=1 anchorIC=False
+   afterRest    pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/tracker.md leaves=1 anchorIC=False
+   afterOutside pop=n modals=0 foc=None is-editing=n editor=n active=BUTTON.clickable-icon file=Lifecycle/gs83-trk-host.md leaves=1 anchorIC=None
+   events: 6 click[dse-stamina__ccur d1 cx732 dp dp0 winBub] | 103 modal+[Alice Alpha Stamina] | 103 click[block-language-ds-initiative ANCHOR d0 cx0 SYN dp] | 153 setIsFocused | 180 mousedown[dse-modal__title-text inModal d1 cx497] | 181 click[dse-modal__title-text inModal d1 cx497 NOwinBub]
+== initnum:rv:0: (4325 ms) hover=real hover pt=None on None opener=None hasDefault=None p2Hit=None
+   window check: modal+ at None ms, second click at None ms -> margin inside the opening click's 150 ms helper timer (armed when the opener's handler returns) = None ms (positive = second press lands before the base would have focused the preview)
+   gap(click2-click1)=None ms; trusted clicks=0 synthetic clicks=0 (on anchor: 0); modal+ during trial=0; opening click defaultPrevented=None
+   ERROR initnum:rv:0:: no text point in the opener on its own element
+   DBG {"html": "<button class=\"dse-btn dse-init__stamina\" type=\"button\" data-dse-control=\"init.hero.stamina\" aria-label=\"Edit Stamina: Alice Alpha\" aria-live=\"polite\">30/30</button>", "r": [471, 442, 35, 20], "pr": [404, 191, 452, 402], "hitCenter": "dse-init__row", "stack": ["DIV.dse-init__row", "DIV.dse-init__entry", "DIV.dse-init__group", "DIV.dse-init", "DIV.dse-chrome-anchor", "DIV.block-language-ds-initiative"], "cs": "auto,visible,inline-flex,1"}
+   events: 
+== monttext:rv:0: (7105 ms) hover=real hover pt='Nature' on dse-mt__cell-skill opener=DIV.dse-mt__cell hasDefault=False p2Hit=dse-modal__title-text
+   window check: modal+ at 58 ms, second click at 110 ms -> margin inside the opening click's 150 ms helper timer (armed when the opener's handler returns) = 98 ms (positive = second press lands before the base would have focused the preview)
+   gap(click2-click1)=108 ms; trusted clicks=2 synthetic clicks=1 (on anchor: 1); modal+ during trial=1; opening click defaultPrevented=True
+   before       pop=Y modals=0 foc=False is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-mont-host.md leaves=1 anchorIC=False
+   at30         pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   at700        pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   afterEsc     pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   afterRest    pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   afterOutside pop=n modals=0 foc=None is-editing=n editor=n active=BUTTON.clickable-icon file=Lifecycle/r3-mont-host.md leaves=1 anchorIC=None
+   events: 2 click[dse-mt__cell-skill d1 cx567 dp dp0 winBub] | 58 modal+[Kira · round 1] | 58 click[block-language-ds-montage ANCHOR d0 cx0 SYN dp] | 88 setIsFocused | 109 mousedown[dse-modal__title-text inModal d1 cx537] | 110 click[dse-modal__title-text inModal d1 cx537 NOwinBub]
+== monttext:lp:0: (7170 ms) hover=real hover pt='Nature' on dse-mt__cell-skill opener=DIV.dse-mt__cell hasDefault=False p2Hit=dse-modal__title-text
+   window check: modal+ at 40 ms, second click at 102 ms -> margin inside the opening click's 150 ms helper timer (armed when the opener's handler returns) = 88 ms (positive = second press lands before the base would have focused the preview)
+   gap(click2-click1)=100 ms; trusted clicks=2 synthetic clicks=1 (on anchor: 1); modal+ during trial=1; opening click defaultPrevented=True
+   before       pop=Y modals=0 foc=False is-editing=n editor=n active=DIV.cm-content file=Lifecycle/r3-mont-host.md leaves=1 anchorIC=False
+   at30         pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   at700        pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   afterEsc     pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.cm-content file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   afterRest    pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.cm-content file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   afterOutside pop=n modals=0 foc=None is-editing=n editor=n active=BUTTON.clickable-icon file=Lifecycle/r3-mont-host.md leaves=1 anchorIC=None
+   events: 2 click[dse-mt__cell-skill d1 cx567 dp dp0 winBub] | 40 modal+[Kira · round 1] | 41 click[block-language-ds-montage ANCHOR d0 cx0 SYN dp] | 88 setIsFocused | 101 mousedown[dse-modal__title-text inModal d1 cx537] | 102 click[dse-modal__title-text inModal d1 cx537 NOwinBub]
+== logbtn:rv:0: (7237 ms) hover=real hover pt='Log an action…' on dse-btn__text opener=BUTTON.dse-btn hasDefault=False p2Hit=dse-modal__title-text
+   window check: modal+ at 40 ms, second click at 97 ms -> margin inside the opening click's 150 ms helper timer (armed when the opener's handler returns) = 93 ms (positive = second press lands before the base would have focused the preview)
+   gap(click2-click1)=94 ms; trusted clicks=2 synthetic clicks=1 (on anchor: 1); modal+ during trial=1; opening click defaultPrevented=True
+   before       pop=Y modals=0 foc=False is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-mont-host.md leaves=1 anchorIC=False
+   at30         pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   at700        pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   afterEsc     pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   afterRest    pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   afterOutside pop=n modals=0 foc=None is-editing=n editor=n active=BUTTON.clickable-icon file=Lifecycle/r3-mont-host.md leaves=1 anchorIC=None
+   events: 3 click[dse-btn__text d1 cx593 dp dp0 winBub] | 40 modal+[Kira · round 2] | 40 click[block-language-ds-montage ANCHOR d0 cx0 SYN dp] | 72 setIsFocused | 97 mousedown[dse-modal__title-text inModal d1 cx537] | 97 click[dse-modal__title-text inModal d1 cx537 NOwinBub]
+== logbtn:lp:0: (7159 ms) hover=real hover pt='Log an action…' on dse-btn__text opener=BUTTON.dse-btn hasDefault=False p2Hit=dse-modal__title-text
+   window check: modal+ at 42 ms, second click at 98 ms -> margin inside the opening click's 150 ms helper timer (armed when the opener's handler returns) = 94 ms (positive = second press lands before the base would have focused the preview)
+   gap(click2-click1)=95 ms; trusted clicks=2 synthetic clicks=1 (on anchor: 1); modal+ during trial=1; opening click defaultPrevented=True
+   before       pop=Y modals=0 foc=False is-editing=n editor=n active=DIV.cm-content file=Lifecycle/r3-mont-host.md leaves=1 anchorIC=False
+   at30         pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   at700        pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   afterEsc     pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.cm-content file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   afterRest    pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.cm-content file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   afterOutside pop=n modals=0 foc=None is-editing=n editor=n active=BUTTON.clickable-icon file=Lifecycle/r3-mont-host.md leaves=1 anchorIC=None
+   events: 3 click[dse-btn__text d1 cx593 dp dp0 winBub] | 42 modal+[Kira · round 2] | 42 click[block-language-ds-montage ANCHOR d0 cx0 SYN dp] | 90 setIsFocused | 97 mousedown[dse-modal__title-text inModal d1 cx537] | 98 click[dse-modal__title-text inModal d1 cx537 NOwinBub]
+== initdbl:rv:100: (6652 ms) hover=real hover pt='Captain' on dse-init__captain-word opener=BUTTON.dse-btn hasDefault=False p2Hit=no modal title (modal not open?)
+   window check: modal+ at None ms, second click at 90 ms -> margin inside the opening click's 150 ms helper timer (armed when the opener's handler returns) = None ms (positive = second press lands before the base would have focused the preview)
+   gap(click2-click1)=87 ms; trusted clicks=2 synthetic clicks=0 (on anchor: 0); modal+ during trial=0; opening click defaultPrevented=True
+   before       pop=Y modals=0 foc=False is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/gs83-trk-host.md leaves=1 anchorIC=False
+   at30         pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/tracker.md leaves=1 anchorIC=False
+   at700        pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/tracker.md leaves=1 anchorIC=False
+   afterRest    pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/tracker.md leaves=1 anchorIC=False
+   afterOutside pop=n modals=0 foc=None is-editing=n editor=n active=BUTTON.clickable-icon file=Lifecycle/gs83-trk-host.md leaves=1 anchorIC=None
+   events: 3 click[dse-init__captain-word d1 cx534 dp winBub] | 37 setIsFocused | 90 click[dse-init__detail d2 cx534 winBub] | 91 dblclick[dse-init__detail d2 cx534]
+== initdbl:lp:100: (6648 ms) hover=real hover pt='Captain' on dse-init__captain-word opener=BUTTON.dse-btn hasDefault=False p2Hit=no modal title (modal not open?)
+   window check: modal+ at None ms, second click at 128 ms -> margin inside the opening click's 150 ms helper timer (armed when the opener's handler returns) = None ms (positive = second press lands before the base would have focused the preview)
+   gap(click2-click1)=118 ms; trusted clicks=2 synthetic clicks=0 (on anchor: 0); modal+ during trial=0; opening click defaultPrevented=True
+   before       pop=Y modals=0 foc=False is-editing=n editor=n active=DIV.cm-content file=Lifecycle/gs83-trk-host.md leaves=1 anchorIC=False
+   at30         pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.cm-content file=Lifecycle/tracker.md leaves=1 anchorIC=False
+   at700        pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.cm-content file=Lifecycle/tracker.md leaves=1 anchorIC=False
+   afterRest    pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.cm-content file=Lifecycle/tracker.md leaves=1 anchorIC=False
+   afterOutside pop=n modals=0 foc=None is-editing=n editor=n active=BUTTON.clickable-icon file=Lifecycle/gs83-trk-host.md leaves=1 anchorIC=None
+   events: 10 click[dse-init__captain-word d1 cx534 dp winBub] | 75 setIsFocused | 128 click[dse-init__detail d2 cx534 winBub] | 128 dblclick[dse-init__detail d2 cx534]
+== monttextns:rv:0: (5311 ms) hover=real hover pt='Nature' on dse-mt__cell-skill opener=DIV.dse-mt__cell hasDefault=False p2Hit=dse-modal__title-text
+   window check: modal+ at 24 ms, second click at 98 ms -> margin inside the opening click's 150 ms helper timer (armed when the opener's handler returns) = 76 ms (positive = second press lands before the base would have focused the preview)
+   gap(click2-click1)=96 ms; trusted clicks=2 synthetic clicks=0 (on anchor: 0); modal+ during trial=1; opening click defaultPrevented=True
+   before       pop=Y modals=0 foc=False is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-montns-host.md leaves=1 anchorIC=False
+   at30         pop=n modals=0 foc=None is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-montns-host.md leaves=1 anchorIC=None
+   at700        pop=n modals=0 foc=None is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-montns.md leaves=1 anchorIC=None
+   events: 2 click[dse-mt__cell-skill d1 cx567 dp winBub] | 24 ERR[Uncaught TypeError: Cannot read properties of undefined (reading 'slice') @ TypeError: Cannot read properties of undefined (reading 'slice') <-     at N4 (plugin:draw-steel-elements:1303:3641) <-     at vp.refreshSkillWarning (plugin:draw-steel-elements:1303:26301) <-     at vp.renderSkillField (plugin:draw-steel-elements:1303:26169) <-     at vp.onOpen (plugin:draw-steel-elements:1303:24213) <-     at vp.open (app://obsidian.md/app.js:245:25721)] | 24 modal+[Kira · round 1] | 98 mousedown[dse-modal__title-text inModal d1 cx537] | 98 click[dse-modal__title-text inModal d1 cx537 winBub] | 103 HIDE[ev=None foc=False] | 160 modal- | 214 setIsFocused
+R3 PAGE_ERRORS ["Uncaught TypeError: Cannot read properties of undefined (reading 'slice')"]
+OBSIDIAN-LIFECYCLE SC598-R3-PROBE ok (12 trials)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+LIFECYCLE_RC=0 WALL_S=85 BUNDLE=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/r3head HARNESS=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/harness/visual-harness/r3-probe-lifecycle.mjs LOAD=0.84 1.26 2.70 1/3082 1131166

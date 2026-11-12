@@ -1,0 +1,157 @@
+// ===== SC-598 r3 (R1) probe, injected by r5-make-probe.py before `const SCENARIOS = [`; the scenario is put first in SCENARIOS =====
+// O8 / O10 probe: each preview opener, opened in a hover preview by a REAL press on its TEXT, then a SECOND real press on the modal title
+// ~100 ms after the opening click (Node clock; the in-page gap is logged). Records every click at the window (capture) with
+// trusted / detail / target-is-anchor and, afterwards, defaultPrevented; modal additions; popover hide/setIsFocused; active file and leaf count.
+// R3_TRIALS="opener:mode[:delay][:again],..."  opener = stam | hero | initnum | monttext | logbtn | initdbl
+Object.assign(FIXTURES, {
+	'Lifecycle/r5-hero.md': `# r3 hero\n\nABOVE\n\n${fence('ds-hero', ['name: Torin Stonefist', 'level: 3', 'characteristics: { might: 2, agility: 2, reason: -1, intuition: 0, presence: 1 }', 'max_stamina: 48', 'recoveries_max: 10', 'state:', '  stamina: { current: 31, temp: 0 }', '  recoveries: 6'])}\n\nBELOW\n`,
+	'Lifecycle/r5-hero-host.md': `# r3 hero host\n\nsee [[r5-hero]] here\n\nfiller\n`,
+	'Lifecycle/r5-montns.md': `# r3 montns\n\nABOVE\n\n${fence('ds-montage', ['title: Probe', 'rounds: 3', 'participants:', '  - name: Kira', '  - name: Bram', 'entries:', '  - hero: Kira', '    round: 1', '    result: success', '    skill: Nature', 'current_round: 2'])}\n\nBELOW\n`,
+	'Lifecycle/r5-montns-host.md': `# r3 montns host\n\nsee [[r5-montns]] here\n\nfiller\n`,
+	'Lifecycle/r5-mont.md': `# r3 mont\n\nABOVE\n\n${fence('ds-montage', ['title: Probe', 'rounds: 3', 'participants:', '  - name: Kira', '    skills_used: [Nature]', '  - name: Bram', '    skills_used: []', 'entries:', '  - hero: Kira', '    round: 1', '    result: success', '    skill: Nature', 'current_round: 2'])}\n\nBELOW\n`,
+	'Lifecycle/r5-mont-host.md': `# r3 mont host\n\nsee [[r5-mont]] here\n\nfiller\n`,
+});
+const R3_OPENERS = {
+	stam: { src: 'Lifecycle/gs83-stam.md', host: 'Lifecycle/gs83-stam-host.md', op: (R) => `${R}.querySelector('[data-dse-control="stamina.bar"]')`, rx: '\\d' },
+	hero: { src: 'Lifecycle/r5-hero.md', host: 'Lifecycle/r5-hero-host.md', op: (R) => `${R}.querySelector('.dse-stamina')`, rx: '\\d' },
+	initnum: { src: 'Lifecycle/tracker.md', host: 'Lifecycle/gs83-trk-host.md', op: (R) => `${R}.querySelector('[data-dse-control="init.hero.stamina"]')`, rx: '\\d' },
+	monttext: { src: 'Lifecycle/r5-mont.md', host: 'Lifecycle/r5-mont-host.md', op: (R) => `${R}.querySelector('.dse-mt__cell[data-hero="Kira"][data-round="1"]')`, rx: '[A-Za-z]' },
+	initbar: { src: 'Lifecycle/tracker.md', host: 'Lifecycle/gs83-trk-host.md', op: (R) => `${R}.querySelector('.dse-init__row .dse-stamina')`, rx: '\\d' },
+	initdblm: { src: 'Lifecycle/tracker.md', host: 'Lifecycle/gs83-trk-host.md', op: (R) => `Array.from(${R}.querySelectorAll('.dse-init__cell')).find((c) => /Goblin/.test(c.getAttribute('aria-label') || c.textContent) && !/Captain/.test(c.getAttribute('aria-label') || c.textContent))`, rx: '\\w', dbl: true },
+	monttextns: { src: 'Lifecycle/r5-montns.md', host: 'Lifecycle/r5-montns-host.md', op: (R) => `${R}.querySelector('.dse-mt__cell[data-hero="Kira"][data-round="1"]')`, rx: '[A-Za-z]' },
+	logbtn: { src: 'Lifecycle/r5-mont.md', host: 'Lifecycle/r5-mont-host.md', op: (R) => `Array.from(${R}.querySelectorAll('button')).find((b) => /Log an action/.test(b.textContent))`, rx: '[A-Za-z]' },
+	initdbl: { src: 'Lifecycle/tracker.md', host: 'Lifecycle/gs83-trk-host.md', op: (R) => `Array.from(${R}.querySelectorAll('.dse-init__cell')).find((c) => /Captain/.test(c.getAttribute('aria-label') || c.textContent))`, rx: '\\w', dbl: true },
+};
+const R3_POP = `(() => { const v = app.workspace.getMostRecentLeaf().view; for (const o of [v.previewMode, v, v.editMode]) { if (o && o.hoverPopover) return o.hoverPopover; } return null; })()`;
+
+async function r3Trial(t, openerId, mode, delay, again) {
+	const K = gs83Kit(t);
+	const J = JSON.stringify;
+	const O = R3_OPENERS[openerId];
+	const ROOT = `(${K.ENTRY(O.src)}).root`;
+	const OPENER = O.op(ROOT);
+	const rec = { spec: [openerId, mode, delay, again ? 'again' + again : ''].join(':') };
+	const st = () =>
+		t.ev(`(() => { const pop = document.querySelector('.popover.hover-popover'); const hp = ${R3_POP}; const a = document.activeElement; return { popover: !!pop, modals: document.querySelectorAll('.modal-container').length, isFocused: hp ? !!hp.isFocused : null, editing: !!pop && pop.classList.contains('is-editing'), editor: !!pop && !!Array.from(pop.querySelectorAll('.markdown-source-view, .cm-editor')).find((e) => e.offsetParent !== null), active: a ? (a.tagName + '.' + String(a.className).split(' ')[0]).slice(0, 40) : null, focusInPreview: !!(a && a.closest('.hover-popover')), file: app.workspace.getActiveFile()?.path ?? null, leaves: app.workspace.getLeavesOfType('markdown').length, anchorIC: (() => { const e = (${K.E(O.src)})[0]; return e ? e.host.containerEl.classList.contains('interactive-child') : null; })() }; })()`);
+	try {
+		await t.reset(O.src);
+		await t.reset(O.host);
+		const link = await K.openHost(O.host, mode);
+		try { rec.hover = await K.hover(link, O.src); } catch (e) { rec.dbg = await t.ev(`(async () => { const pop = document.querySelector('.popover.hover-popover'); const out = { pop: pop ? pop.innerText.slice(0, 400) : null, exists: !!app.vault.getAbstractFileByPath(${J(O.src)}) }; const leaf = app.workspace.getMostRecentLeaf(); await leaf.setViewState({ type: 'markdown', state: { file: ${J(O.src)}, mode: 'preview' }, active: true }); await new Promise((r) => setTimeout(r, 1500)); const v = document.querySelector('.workspace-leaf.mod-active .markdown-reading-view'); out.pane = v ? v.innerText.slice(0, 500) : null; out.entries = app.plugins.plugins['draw-steel-elements'].viewRegistry.liveEntries().filter((x) => x.host.sourcePath === ${J(O.src)}).length; return out; })()`); throw e; }
+		await t.waitFor(`!!(${OPENER})`, `${rec.spec}: the opener is drawn`, 8000);
+		await K.moveTo(`${K.ENTRY(O.src)}.root`);
+		await t.sleep(400);
+		rec.instr = await t.ev(`(() => {
+			const hp = ${R3_POP};
+			window.__r3t0 = performance.now();
+			window.__r3ev = []; window.__r3refs = [];
+			const T = () => Math.round(performance.now() - window.__r3t0);
+			const anchorOf = () => { const e = (${K.E(O.src)})[0]; return e ? e.host.containerEl : null; };
+			window.__r3anchor = anchorOf;
+			if (hp && !hp.__r3w) { hp.__r3w = true; const oh = hp.hide; hp.hide = function () { window.__r3ev.push({ k: 'HIDE', t: T(), ev: window.event ? window.event.type : null, foc: !!this.isFocused }); return oh.apply(this, arguments); }; const of = hp.setIsFocused; hp.setIsFocused = function (v) { window.__r3ev.push({ k: 'setIsFocused', t: T(), v }); return of.apply(this, arguments); }; }
+			window.__r3mo?.disconnect();
+			window.__r3mo = new MutationObserver((ms) => { for (const m of ms) { for (const n of m.addedNodes) if (n.classList?.contains('modal-container')) window.__r3ev.push({ k: 'modal+', t: T(), title: (n.querySelector('.modal-title')?.textContent || '').slice(0, 30) }); for (const n of m.removedNodes) if (n.classList?.contains('modal-container')) window.__r3ev.push({ k: 'modal-', t: T() }); } });
+			window.__r3mo.observe(document.body, { childList: true });
+			if (!window.__r3l) { window.__r3l = true;
+				window.addEventListener('error', (e) => window.__r3ev?.push({ k: 'ERR', t: T(), msg: String(e.message).slice(0, 120), stack: String(e.error?.stack || '').split(String.fromCharCode(10)).slice(0, 6).join(' <- ').slice(0, 700) }));
+				for (const ty of ['click', 'dblclick', 'mousedown']) window.addEventListener(ty, (e) => { if (!window.__r3ev) return; const a = window.__r3anchor?.(); window.__r3refs.push(e); const rec = { k: ty, i: window.__r3refs.length - 1, trusted: e.isTrusted, detail: e.detail, cx: e.clientX, tgt: String(e.target?.className || e.target?.nodeName).split(' ')[0].slice(0, 30), isAnchor: !!a && e.target === a, inModal: !!e.target?.closest?.('.modal-container'), t: T() }; window.__r3ev.push(rec); if (ty === 'click' && e.isTrusted) { window.addEventListener('click', (b) => { if (b === e) rec.reachedWinBubble = true; }, { once: true }); setTimeout(() => { rec.dp0 = e.defaultPrevented; }, 0); } }, true);
+			}
+			return { hp: !!hp };
+		})()`);
+		const pt = await t.ev(`(() => { const op = ${OPENER}; if (!op) return null; op.scrollIntoView({ block: 'nearest' }); const w = document.createTreeWalker(op, NodeFilter.SHOW_TEXT); let n; while ((n = w.nextNode())) { if (!/${O.rx}/.test(n.textContent)) continue; const r = new Range(); r.selectNodeContents(n); const q = r.getClientRects()[0]; if (q && q.width > 2) { let x = 0, y = 0, h = null; search: for (let fy = 0.5; fy > 0.1; fy -= 0.15) for (let fx = 0.5; fx < 0.95; fx += 0.1) { x = Math.round(q.left + q.width * fx); y = Math.round(q.top + q.height * fy); h = document.elementFromPoint(x, y); if (h && h === n.parentElement) break search; x = Math.round(q.left + q.width * (1 - fx)); h = document.elementFromPoint(x, y); if (h && h === n.parentElement) break search; } if (!(h && h === n.parentElement)) continue; return { x, y, text: n.textContent.trim().slice(0, 20), onText: true, opTag: op.tagName + '.' + String(op.className).split(' ')[0], hit: String(h.className || h.nodeName).slice(0, 40), hasDefault: !!op.closest('a[href], label, summary, form') || ['A', 'LABEL', 'SUMMARY', 'INPUT'].includes(op.tagName) || (op.tagName === 'BUTTON' && op.type !== 'button') }; } } return null; })()`);
+		if (!pt) rec.dbg = await t.ev(`(() => { const op = ${OPENER}; const pop = document.querySelector('.popover.hover-popover'); if (!op) return { op: null, pop: pop ? pop.innerText.slice(0, 300) : null }; const r = op.getBoundingClientRect(); const pr = pop?.getBoundingClientRect(); return { html: op.outerHTML.slice(0, 500), r: [r.left, r.top, r.width, r.height].map(Math.round), pr: pr ? [pr.left, pr.top, pr.width, pr.height].map(Math.round) : null, hitCenter: String(document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2)?.className).slice(0, 60), stack: document.elementsFromPoint(r.left + r.width / 2, r.top + r.height / 2).slice(0, 6).map((e) => e.tagName + '.' + String(e.className).split(' ')[0]), cs: (() => { const c = getComputedStyle(op); return [c.pointerEvents, c.visibility, c.display, c.opacity].join(','); })() }; })()`);
+		t.expect(!!pt, `${rec.spec}: no text point in the opener on its own element`);
+		rec.pt = pt;
+		rec.before = await st();
+		await K.mouse('mouseMoved', pt.x, pt.y);
+		await t.sleep(200);
+		await t.ev(`(() => { window.__r3ev = []; window.__r3refs = []; window.__r3t0 = performance.now(); return true; })()`);
+		let tOpen;
+		if (O.dbl) {
+			const b1 = { button: 'left', clickCount: 1 };
+			const b2 = { button: 'left', clickCount: 2 };
+			await K.mouse('mousePressed', pt.x, pt.y, { buttons: 1, ...b1 });
+			await K.mouse('mouseReleased', pt.x, pt.y, { buttons: 0, ...b1 });
+			await t.sleep(60);
+			await K.mouse('mousePressed', pt.x, pt.y, { buttons: 1, ...b2 });
+			await K.mouse('mouseReleased', pt.x, pt.y, { buttons: 0, ...b2 });
+		} else await K.press(pt);
+		tOpen = Date.now();
+		const p2 = await t.ev(`(() => { const el = document.querySelector('.modal-container .modal-title'); if (!el) return null; const r = el.getBoundingClientRect(); return { x: Math.round(r.left + Math.min(r.width / 2, 40)), y: Math.round(r.top + r.height / 2) }; })()`);
+		rec.p2Hit = p2 ? await t.ev(`(() => { const h = document.elementFromPoint(${p2.x}, ${p2.y}); return h ? String(h.className || h.nodeName).slice(0, 40) : null; })()`) : 'no modal title (modal not open?)';
+		if (p2) {
+			while (Date.now() - tOpen < delay) await new Promise((r) => setTimeout(r, 1));
+			await K.mouse('mouseMoved', p2.x, p2.y);
+			await K.press(p2);
+		}
+		await t.sleep(30);
+		rec.at30 = await st();
+		await t.sleep(670);
+		rec.at700 = await st();
+		rec.ev = await t.ev(`(window.__r3ev || []).map((e) => (e.i !== undefined ? { ...e, dp: window.__r3refs[e.i].defaultPrevented } : e))`);
+		if (rec.at700.modals > 0) {
+			await t.key('Escape', 'Escape', 27);
+			await t.sleep(500);
+			rec.afterEsc = await st();
+		}
+		if (again && (await st()).popover) {
+			// the preview is focused now (.is-editing): open again from it, second press at the same delay; (b) must be a no-op
+			await K.mouse('mouseMoved', pt.x, pt.y);
+			await t.sleep(200);
+			await t.ev(`(() => { window.__r3ev = []; window.__r3refs = []; window.__r3t0 = performance.now(); return true; })()`);
+			await K.press(pt);
+			const t2 = Date.now();
+			const q2 = await t.ev(`(() => { const el = document.querySelector('.modal-container .modal-title'); if (!el) return null; const r = el.getBoundingClientRect(); return { x: Math.round(r.left + Math.min(r.width / 2, 40)), y: Math.round(r.top + r.height / 2) }; })()`);
+			if (q2) {
+				while (Date.now() - t2 < again) await new Promise((r) => setTimeout(r, 1));
+				await K.mouse('mouseMoved', q2.x, q2.y);
+				await K.press(q2);
+			}
+			await t.sleep(700);
+			rec.again700 = await st();
+			rec.againEv = await t.ev(`(window.__r3ev || []).map((e) => (e.i !== undefined ? { ...e, dp: window.__r3refs[e.i].defaultPrevented } : e))`);
+			if (rec.again700.modals > 0) {
+				await t.key('Escape', 'Escape', 27);
+				await t.sleep(500);
+				rec.againEsc = await st();
+			}
+		}
+		if ((await st()).popover) {
+			await K.mouse('mouseMoved', 700, 700);
+			await K.mouse('mouseMoved', 5, 300);
+			await t.sleep(1200);
+			rec.afterRest = await st();
+			await K.click(`document.querySelector('.workspace-leaf.mod-active .view-header-title, .workspace-leaf.mod-active .view-header')`);
+			const t1 = Date.now();
+			while (Date.now() - t1 < 3000 && (await st()).popover) await t.sleep(100);
+			rec.afterOutside = await st();
+		}
+	} catch (e) {
+		rec.error = e.message;
+	} finally {
+		await K.cleanup();
+	}
+	return rec;
+}
+
+const R3_SCENARIO = {
+	id: 'SC598-R3-PROBE',
+	async run(t) {
+		const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+		const m = await t.mark();
+		await t.ev(`(() => { if (!document.getElementById('lc-gs83-notice')) { const st = document.createElement('style'); st.id = 'lc-gs83-notice'; st.textContent = '.notice-container { display: none !important; }'; document.head.appendChild(st); } return true; })()`);
+		await t.ev(`${prefs}.set('authoringControls', true)`);
+		const trials = (process.env.R3_TRIALS || 'stam:rv').split(',').filter(Boolean);
+		for (const spec of trials) {
+			const [op, mode, delay, again] = spec.split(':');
+			const s = Date.now();
+			const r = await r3Trial(t, op, mode, Number(delay || 100), again ? Number(again.replace('again', '') || delay || 100) : 0);
+			r.ms = Date.now() - s;
+			console.log('R3 TRIAL ' + JSON.stringify(r));
+		}
+		console.log('R3 PAGE_ERRORS ' + JSON.stringify(await t.errorsSince(m)));
+		await t.ev(`${prefs}.set('authoringControls', false)`);
+		return `${trials.length} trials`;
+	},
+};
+// ===== end SC-598 r3 probe =====

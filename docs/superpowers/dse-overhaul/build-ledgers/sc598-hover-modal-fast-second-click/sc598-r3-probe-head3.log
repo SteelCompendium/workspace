@@ -1,0 +1,37 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :161, port 37871, 1 scenario(s)
+== monttext:rv:100: (7523 ms) hover=real hover pt='Nature' on dse-mt__cell-skill opener=DIV.dse-mt__cell hasDefault=False p2Hit=dse-modal__title-text
+   gap(click2-click1)=197 ms; trusted clicks=2 synthetic clicks=1 (on anchor: 1); modal+ during trial=1; opening click defaultPrevented=True
+   before       pop=Y modals=0 foc=False is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-mont-host.md leaves=1 anchorIC=False
+   at30         pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   at700        pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   afterEsc     pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   afterRest    pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   afterOutside pop=n modals=0 foc=None is-editing=n editor=n active=BUTTON.clickable-icon file=Lifecycle/r3-mont-host.md leaves=1 anchorIC=None
+   events: 8 click[dse-mt__cell-skill d1 cx567 dp dp0 winBub] | 96 modal+[Kira · round 1] | 96 click[block-language-ds-montage ANCHOR d0 cx0 SYN dp] | 126 setIsFocused | 202 mousedown[dse-modal__title-text inModal d1 cx537] | 205 click[dse-modal__title-text inModal d1 cx537 NOwinBub]
+== monttext:lp:100: (7298 ms) hover=real hover pt='Nature' on dse-mt__cell-skill opener=DIV.dse-mt__cell hasDefault=False p2Hit=dse-modal__title-text
+   gap(click2-click1)=158 ms; trusted clicks=2 synthetic clicks=1 (on anchor: 1); modal+ during trial=1; opening click defaultPrevented=True
+   before       pop=Y modals=0 foc=False is-editing=n editor=n active=DIV.cm-content file=Lifecycle/r3-mont-host.md leaves=1 anchorIC=False
+   at30         pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   at700        pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   afterEsc     pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.cm-content file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   afterRest    pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.cm-content file=Lifecycle/r3-mont.md leaves=1 anchorIC=False
+   afterOutside pop=n modals=0 foc=None is-editing=n editor=n active=BUTTON.clickable-icon file=Lifecycle/r3-mont-host.md leaves=1 anchorIC=None
+   events: 2 click[dse-mt__cell-skill d1 cx567 dp dp0 winBub] | 55 modal+[Kira · round 1] | 55 click[block-language-ds-montage ANCHOR d0 cx0 SYN dp] | 105 setIsFocused | 159 mousedown[dse-modal__title-text inModal d1 cx537] | 160 click[dse-modal__title-text inModal d1 cx537 NOwinBub]
+== initnum:rv:100: (4342 ms) hover=real hover pt=None on None opener=None hasDefault=None p2Hit=None
+   gap(click2-click1)=None ms; trusted clicks=0 synthetic clicks=0 (on anchor: 0); modal+ during trial=0; opening click defaultPrevented=None
+   ERROR initnum:rv:100:: no text point in the opener on its own element
+   DBG {"html": "<button class=\"dse-btn dse-init__stamina\" type=\"button\" data-dse-control=\"init.hero.stamina\" aria-label=\"Edit Stamina: Alice Alpha\" aria-live=\"polite\">30/30</button>", "r": [471, 442, 35, 20], "pr": [404, 191, 452, 402], "hitCenter": "dse-init__row", "stack": ["DIV.dse-init__row", "DIV.dse-init__entry", "DIV.dse-init__group", "DIV.dse-init", "DIV.dse-chrome-anchor", "DIV.block-language-ds-initiative"], "cs": "auto,visible,inline-flex,1"}
+   events: 
+== hero:rv:100: (7271 ms) hover=real hover pt='31' on dse-stamina__ccur opener=DIV.dse-stamina hasDefault=False p2Hit=dse-modal__title-text
+   gap(click2-click1)=144 ms; trusted clicks=2 synthetic clicks=1 (on anchor: 1); modal+ during trial=1; opening click defaultPrevented=True
+   before       pop=Y modals=0 foc=False is-editing=n editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-hero-host.md leaves=1 anchorIC=False
+   at30         pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/r3-hero.md leaves=1 anchorIC=False
+   at700        pop=Y modals=1 foc=True is-editing=Y editor=n active=BODY.theme-dark file=Lifecycle/r3-hero.md leaves=1 anchorIC=False
+   afterEsc     pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-hero.md leaves=1 anchorIC=False
+   afterRest    pop=Y modals=0 foc=True is-editing=Y editor=n active=DIV.markdown-preview-view file=Lifecycle/r3-hero.md leaves=1 anchorIC=False
+   afterOutside pop=n modals=0 foc=None is-editing=n editor=n active=BUTTON.clickable-icon file=Lifecycle/r3-hero-host.md leaves=1 anchorIC=None
+   events: 2 click[dse-stamina__ccur d1 cx711 dp dp0 winBub] | 40 modal+[Torin Stonefist Stamina] | 40 click[block-language-ds-hero ANCHOR d0 cx0 SYN dp] | 61 setIsFocused | 144 mousedown[dse-modal__title-text inModal d1 cx497] | 146 click[dse-modal__title-text inModal d1 cx497 NOwinBub]
+R3 PAGE_ERRORS []
+OBSIDIAN-LIFECYCLE SC598-R3-PROBE ok (4 trials)
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+LIFECYCLE_RC=0 WALL_S=31 BUNDLE=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/r3head HARNESS=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1/harness/visual-harness/r3-probe-lifecycle.mjs LOAD=0.95 1.58 3.02 1/3178 1128176

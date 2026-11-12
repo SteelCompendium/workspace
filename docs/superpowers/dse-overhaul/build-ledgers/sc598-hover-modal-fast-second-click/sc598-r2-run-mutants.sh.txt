@@ -1,0 +1,6 @@
+#!/bin/bash
+# usage: run-mutants.sh <log> <ids>
+cd /home/scott/code/steelCompendium/worktrees/sc598-hover-modal-fast-second-click/draw-steel-elements || exit 9
+rm -f main.js styles.css
+python3 -I /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r2-I1/sc598-r2-mutate.py "$1" "$2"
+echo "MUTATE_RC=$?" >> "$1"

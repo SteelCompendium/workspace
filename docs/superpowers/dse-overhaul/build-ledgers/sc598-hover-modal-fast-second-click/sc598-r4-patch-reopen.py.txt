@@ -1,0 +1,56 @@
+"""Adds the G-S91 trial `reopen rv` (SC-598 r4, O13 MEDIUM-1) to the worktree's visual-harness/obsidian-lifecycle.mjs."""
+P = '/home/scott/code/steelCompendium/worktrees/sc598-hover-modal-fast-second-click/draw-steel-elements/visual-harness/obsidian-lifecycle.mjs'
+s = open(P).read()
+
+def rep(a, b):
+    global s
+    assert s.count(a) == 1, (a[:70], s.count(a))
+    s = s.replace(a, b)
+
+rep("The double-click's backdrop press closes the modal (as in a pane) and leaves the preview.",
+    "The double-click's backdrop press closes the modal (as in a pane) and leaves the preview. A sixth trial opens the modal a SECOND time from the same, now focused, preview (open, Escape, open again) and presses the title within 150 ms: no source editor, the keyboard focus stays out of the preview, Escape closes only the modal (r3 measured the base switching the preview to source here).")
+
+# trial doc
+rep(" * Apply input, then Healing 3 + a real click on Apply). The in-page gap",
+    " * Apply input, then Healing 3 + a real click on Apply) or 'reopen' (open, wait past the helper's 150 ms, Escape, then open AGAIN from the now focused preview with the same press and press the title: the base turned the preview into a source editor, keyboard focus inside it behind the open window). The in-page gap")
+
+# st: focus
+rep("return { popover: !!pop, modal: !!${MODAL}, editor: !!pop && !!Array.from(pop.querySelectorAll('.markdown-source-view, .cm-editor')).find((e) => e.offsetParent !== null) }; })()`);\n	try {\n		await t.reset(src);\n		await t.reset(host);\n		const link = await K.openHost(host, mode);\n		rec.hover = await K.hover(link, src);\n		await t.waitFor(`!!(${OPENER})`, `${mode} ${target}: the bar is drawn`, 8000);",
+    "const a = document.activeElement; return { popover: !!pop, modal: !!${MODAL}, editor: !!pop && !!Array.from(pop.querySelectorAll('.markdown-source-view, .cm-editor')).find((e) => e.offsetParent !== null), focusInPreview: !!(a && a.closest('.hover-popover')) }; })()`);\n	try {\n		await t.reset(src);\n		await t.reset(host);\n		const link = await K.openHost(host, mode);\n		rec.hover = await K.hover(link, src);\n		await t.waitFor(`!!(${OPENER})`, `${mode} ${target}: the bar is drawn`, 8000);")
+
+# first open for reopen, before the click log
+rep("		// every click at the window, to measure the gap between the two trusted ones in the page's own clock\n",
+"""		if (target === 'reopen') {
+			// the first open: a real press on the number, past the helper's 150 ms (the preview is focused, `.is-editing`), then Escape closes only the modal
+			await K.press(pt);
+			await t.waitFor(`!!${MODAL}`, `${mode} ${target}: the first open did not open the modal`, 8000);
+			await t.sleep(450);
+			rec.firstOpen = await st();
+			await t.key('Escape', 'Escape', 27);
+			await t.sleep(500);
+			rec.afterFirstClose = await st();
+			await K.mouse('mouseMoved', pt.x, pt.y);
+			await t.sleep(200);
+		}
+		// every click at the window, to measure the gap between the two trusted ones in the page's own clock
+""")
+
+rep("				target === 'title'\n					? `(() => { const el = document.querySelector('.modal-container .modal-title');",
+    "				target === 'title' || target === 'reopen'\n					? `(() => { const el = document.querySelector('.modal-container .modal-title');")
+rep("		} else if (target === 'title' && rec.at700.modal) {", "		} else if ((target === 'title' || target === 'reopen') && rec.at700.modal) {")
+
+# scenario: trial list and checks
+rep("[['rv', 'title'], ['lp', 'title'], ['rv', 'dblq'], ['lp', 'dblq'], ['rv', 'apply']]", "[['rv', 'title'], ['lp', 'title'], ['rv', 'dblq'], ['lp', 'dblq'], ['rv', 'apply'], ['rv', 'reopen']]")
+rep("							if (target === 'title' && !(r.afterEscape.popover && !r.afterEscape.modal)) bad.push(`Escape must close only the modal ${J(r.afterEscape)}`);",
+"""							if ((target === 'title' || target === 'reopen') && !(r.afterEscape.popover && !r.afterEscape.modal)) bad.push(`Escape must close only the modal ${J(r.afterEscape)}`);
+							if (target === 'reopen') {
+								if (!(r.firstOpen.popover && r.firstOpen.modal)) bad.push(`the first open must leave the preview and the modal open ${J(r.firstOpen)}`);
+								if (!(r.afterFirstClose.popover && !r.afterFirstClose.modal)) bad.push(`Escape after the first open must close only the modal ${J(r.afterFirstClose)}`);
+								if (r.at700.focusInPreview) bad.push(`the keyboard focus moved into the preview behind the open modal ${J(r.at700)}`);
+							}""")
+rep("(target === 'title' ? ', the modal stayed, Escape closed only the modal' :",
+    "(target === 'title' ? ', the modal stayed, Escape closed only the modal' : target === 'reopen' ? ', opened a second time from the focused preview (open, Escape, open again) the modal stayed, the focus stayed out of the preview, Escape closed only the modal' :")
+rep("Five trials: Reading view and Live Preview title, Reading view and Live Preview\n		// double-click, Reading view apply.",
+    "Six trials: Reading view and Live Preview title, Reading view and Live Preview\n		// double-click, Reading view apply, and Reading view reopen (open, Escape, open again from the focused preview, title press within 150 ms: no source editor, focus not in the preview, Escape closes only the modal).")
+open(P, 'w').write(s)
+print('ok')

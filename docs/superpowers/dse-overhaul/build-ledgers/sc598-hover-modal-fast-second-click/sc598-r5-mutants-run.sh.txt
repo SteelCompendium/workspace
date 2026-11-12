@@ -1,0 +1,14 @@
+#!/bin/bash
+# r5 mutants: jest on all four, then bundles for E1-E3 (for G-S91 runs).
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r5-R1
+G=/home/scott/code/steelCompendium/worktrees/sc598-hover-modal-fast-second-click/draw-steel-elements
+C=$S/r5mut
+mkdir -p "$C"
+git -C "$G" archive eafbcce5 | tar -x -C "$C"
+ln -sfn "$G/node_modules" "$C/node_modules"
+cd "$C" || exit 9
+start=$(date +%s)
+python3 -I "$S/r5-mutate.py" "$C" "$S/r5-mutants.log" all
+echo "MUTATE_RC=$? WALL_S=$(( $(date +%s) - start ))" >> "$S/r5-mutants.log"
+python3 -I "$S/r5-mutate.py" "$C" "$S/r5-mutant-bundles.log" E1,E2,E3 --build "$S/mutbundles"
+sha256sum "$S"/mutbundles/*/main.js >> "$S/r5-mutant-bundles.log"

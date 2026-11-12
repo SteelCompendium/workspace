@@ -1,0 +1,11 @@
+#!/bin/bash
+# usage: r3-run-mutants.sh <log> <ids|all>
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1
+C=$S/r3mut
+cd "$C" || exit 9
+rm -f main.js styles.css
+npx jest test/dom/kit/r3probe.test.ts > "$S/r3-probe-jest.log" 2>&1
+echo "R3PROBE_JEST_RC=$?" >> "$S/r3-probe-jest.log"
+start=$(date +%s)
+python3 -I "$S/r3-mutate.py" "$C" "$1" "$2"
+echo "MUTATE_RC=$? WALL_S=$(( $(date +%s) - start ))" >> "$1"

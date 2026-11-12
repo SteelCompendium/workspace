@@ -1,0 +1,119 @@
+"""SC-598 r2 mutant runner. usage: python3 -I sc598-r2-mutate.py <log> <id,id,...|all>
+Each mutant edits ONE source file in the worktree, runs the jest suites that should catch it, records the failing test names,
+then restores the file from HEAD (git checkout HEAD -- file) and checks `git diff --stat` is empty.
+Series: N = SC-598 (managedModal.ts), K/G = the 23 SC-597 mutants (StaminaBarPanel.ts, BoardView.ts, managedModal.ts)."""
+import subprocess, sys, re, os
+
+W = '/home/scott/code/steelCompendium/worktrees/sc598-hover-modal-fast-second-click/draw-steel-elements'
+S = 'src/framework/kit/StaminaBarPanel.ts'
+M = 'src/elements/montage/BoardView.ts'
+MM = 'src/framework/kit/managedModal.ts'
+TS = 'test/dom/elements/stamina-bar.test.ts'
+TM = 'test/dom/elements/montage.test.ts'
+TMM = 'test/dom/kit/managedModal.test.ts'
+ALL = [TMM, TS, TM]
+
+STAM_CLICK = "bar.click(); // SC-597: the click listener opens the modal; see the doc above"
+MONT_CLICK = "cell.click();"
+G_STAM = "if (evt.target !== bar) return;"
+G_MONT = "if (evt.target !== cell) return;"
+STAM_MODS = "if (evt.ctrlKey || evt.metaKey || evt.altKey || evt.repeat || evt.defaultPrevented) return;"
+
+def mods_without(what, src_line):
+    full = ['evt.ctrlKey', 'evt.metaKey', 'evt.altKey', 'evt.repeat', 'evt.defaultPrevented']
+    return src_line.replace(' || '.join(full), ' || '.join(p for p in full if p != what))
+
+MUTANTS = []
+def add(mid, desc, file, old, new, tests):
+    MUTANTS.append((mid, desc, file, old, new, tests))
+
+# ---- SC-598 (managedModal.ts) -----------------------------------------------------------------------------------------------
+CALL = "\t\t\t\tthis.focusHoverPreviewNow(opening, win); // before arm(): the helper's timer, armed inside this dispatch, must precede the re-pushes\n\t\t\t\tarm();\n"
+GUARD = "if (!anchor || !pop || pop.classList.contains('is-editing')) return;"
+PD = "\t\topening.preventDefault();\n"
+ADD = "\t\tif (added) anchor.classList.add('interactive-child');\n"
+DISP = "\t\tanchor.dispatchEvent(new anchorWin.MouseEvent('click', { bubbles: true, cancelable: true, view: anchorWin }));\n"
+REM = "\t\tif (added) win.setTimeout(() => anchor.classList.remove('interactive-child'), 10);\n"
+MUTANTS.append(('N1', 'managedModal.ts back to the e5b6f9f2 base (no SC-598 change)', MM, '@BASE@', None, ALL))
+add('N2', 'no preventDefault on the opening click (the not-yet-focused path)', MM, "\t\t}\n\t\topening.preventDefault();\n\t\tconst anchorWin", "\t\t}\n\t\tconst anchorWin", ALL)
+add('N3a', 'synthetic click not bubbling', MM, DISP, DISP.replace('bubbles: true', 'bubbles: false'), ALL)
+add('N3b', "synthetic click dispatched on the anchor's first child (the opener) instead of the anchor", MM, DISP, DISP.replace('anchor.dispatchEvent', '(anchor.firstElementChild ?? anchor).dispatchEvent'), ALL)
+add('N4a', 'no interactive-child on the anchor (neither added nor removed)', MM, ADD + DISP + REM, DISP, ALL)
+add('N4b', 'interactive-child removal timer armed BEFORE the synthetic click', MM, DISP + REM, REM + DISP, ALL)
+add('N5', 'focusHoverPreviewNow called AFTER arm()', MM, CALL, "\t\t\t\tarm();\n\t\t\t\tthis.focusHoverPreviewNow(opening, win);\n", ALL)
+EDIT_BLOCK = "\t\tif (pop.classList.contains('is-editing')) {\n\t\t\topening.preventDefault();\n\t\t\treturn;\n\t\t}\n"
+add('N6', '.is-editing branch without preventDefault (the r2 behaviour: return only)', MM, EDIT_BLOCK, "\t\tif (pop.classList.contains('is-editing')) return;\n", ALL)
+add('N6b', 'no .is-editing branch at all (an already-focused preview gets the full treatment, synthetic click and class)', MM, EDIT_BLOCK, '', ALL)
+add('N6c', ".is-editing branch also sends the synthetic click (preventDefault + one bubbling click on the anchor, no class)", MM, EDIT_BLOCK, "\t\tif (pop.classList.contains('is-editing')) {\n\t\t\topening.preventDefault();\n\t\t\tanchor.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));\n\t\t\treturn;\n\t\t}\n", ALL)
+add('N7', 'preventDefault outside a preview (moved above the preview guard)', MM, "\t\tconst anchor = this.anchorEl;\n\t\tconst pop = anchor?.closest('.hover-popover');\n", "\t\topening.preventDefault();\n\t\tconst anchor = this.anchorEl;\n\t\tconst pop = anchor?.closest('.hover-popover');\n", ALL)
+add('N8', 'interactive-child never removed', MM, REM, '', ALL)
+add('N9', "synthetic click carries the opening click's coordinates", MM, DISP, "\t\tanchor.dispatchEvent(new anchorWin.MouseEvent('click', { bubbles: true, cancelable: true, view: anchorWin, clientX: (opening as MouseEvent).clientX, clientY: (opening as MouseEvent).clientY }));\n", ALL)
+add('N10', 'HOVER_HELPER_DELAYS_MS = [10] (SC-595 M16)', MM, "export const HOVER_HELPER_DELAYS_MS: readonly number[] = [10, 150];", "export const HOVER_HELPER_DELAYS_MS: readonly number[] = [10];", ALL)
+add('N11', 'the synthetic click also for a modal opened outside a click (non-click branch)', MM, "\t\t} else arm();\n\t}\n\n\t/**\n\t * SC-598", "\t\t} else {\n\t\t\tthis.focusHoverPreviewNow(new Event('click'), win);\n\t\t\tarm();\n\t\t}\n\t}\n\n\t/**\n\t * SC-598", ALL)
+add('N12', 'interactive-child removed even when the anchor had it before the open (the `added` guard on the removal dropped)', MM, REM, REM.replace('if (added) ', ''), ALL)
+add('N13', 'interactive-child removal after 50 ms, not 10', MM, REM, REM.replace(', 10);', ', 50);'), ALL)
+add('N14', 'interactive-child removal at once (0 ms: before the helper reads it)', MM, REM, REM.replace(', 10);', ', 0);'), ALL)
+add('N15', 'interactive-child added even when present (added = true): a pre-existing class is stripped', MM, "const added = !anchor.classList.contains('interactive-child');", "const added = true;", ALL)
+add('N16', 'synthetic click not cancelable', MM, DISP, DISP.replace('cancelable: true', 'cancelable: false'), ALL)
+add('N17', 'synthetic click without `view`', MM, DISP, DISP.replace(', view: anchorWin', ''), ALL)
+
+# ---- SC-597 (23 mutants, same edits as sc597-r2-mutate.py) ----------------------------------------------------------------------
+MUTANTS.append(('K1s', 'StaminaBarPanel.ts back to the 94133a5a base (open() called directly)', S, '@BASE597@', None, [TS]))
+MUTANTS.append(('K1m', 'BoardView.ts back to the 94133a5a base (openThisCell() called directly, no guards)', M, '@BASE597@', None, [TM]))
+add('K2s', "bar.dispatchEvent(new MouseEvent('click')) with no bubbles", S, STAM_CLICK, "bar.dispatchEvent(new MouseEvent('click'));", [TS])
+add('K2m', "cell.dispatchEvent(new MouseEvent('click')) with no bubbles", M, MONT_CLICK, "cell.dispatchEvent(new MouseEvent('click'));", [TM])
+add('K3s', "click dispatched on the bar's parent (the opener's own listener never runs)", S, STAM_CLICK, "bar.parentElement!.click();", [TS])
+add('K3m', "click dispatched on the cell's parent", M, MONT_CLICK, "cell.parentElement!.click();", [TM])
+add('K4s', 'two clicks (the opener opens twice)', S, STAM_CLICK, "bar.click(); bar.click();", [TS])
+add('K4m', 'two clicks (the opener opens twice)', M, MONT_CLICK, "cell.click(); cell.click();", [TM])
+add('K5s', 'deferred click: setTimeout(() => bar.click())', S, STAM_CLICK, "setTimeout(() => bar.click());", [TS])
+add('K5m', 'deferred click: setTimeout(() => cell.click())', M, MONT_CLICK, "setTimeout(() => cell.click());", [TM])
+add('K6', 'DseModal arms its keymap re-pushes at once, not from the opening click (managedModal.ts)', MM, "if (opening?.type === 'click') {", "if (false as boolean) {", [TS, TM])
+for tag, file, test, target_guard, target_var in (('m', M, TM, G_MONT, 'cell'), ('s', S, TS, G_STAM, 'bar')):
+    add('G1' + tag, f'drop the `evt.target !== {target_var}` guard', file, target_guard, '', [test])
+    for gid, what in (('G2', 'evt.ctrlKey'), ('G3', 'evt.metaKey'), ('G4', 'evt.altKey'), ('G5', 'evt.repeat'), ('G6', 'evt.defaultPrevented')):
+        add(gid + tag, f'drop `{what}` from the modifier/repeat/defaultPrevented guard', file, STAM_MODS, mods_without(what, STAM_MODS), [test])
+
+def sh(*a, **k):
+    return subprocess.run(a, capture_output=True, text=True, **k)
+
+def main():
+    log, which = sys.argv[1], sys.argv[2]
+    want = None if which == 'all' else set(which.split(','))
+    out = open(log, 'a')
+    def w(s):
+        out.write(s + '\n'); out.flush()
+    for mid, desc, file, old, new, tests in MUTANTS:
+        if want is not None and mid not in want:
+            continue
+        path = os.path.join(W, file)
+        orig = open(path).read()
+        if old == '@BASE@':
+            r = sh('git', '-C', W, 'checkout', 'e5b6f9f2', '--', file); assert r.returncode == 0, r.stderr
+        elif old == '@BASE597@':
+            r = sh('git', '-C', W, 'checkout', '94133a5a', '--', file); assert r.returncode == 0, r.stderr
+        else:
+            assert orig.count(old) == 1, (mid, old, orig.count(old))
+            open(path, 'w').write(orig.replace(old, new))
+        r = sh('npx', 'jest', *tests, '--silent', cwd=W)
+        text = r.stdout + r.stderr
+        fails = []
+        for line in text.splitlines():
+            m = re.match(r'^\s+● (.+)$', line)
+            if m and m.group(1) not in fails:
+                fails.append(m.group(1))
+        summ = [l for l in text.splitlines() if l.startswith('Tests:')]
+        sh('git', '-C', W, 'checkout', 'HEAD', '--', file)
+        d = sh('git', '-C', W, 'diff', '--stat').stdout.strip()
+        w(f'## {mid}: {desc}')
+        w(f'file: {file}')
+        w('command: npx jest ' + ' '.join(tests) + ' --silent')
+        w(f'result: {"KILLED" if r.returncode != 0 else "SURVIVED"} (jest rc {r.returncode}); {summ[0] if summ else "no Tests line"}')
+        for f in fails:
+            w('  red: ' + f)
+        w(f'restored: git diff --stat empty = {d == ""}' + ('' if d == '' else ' !!! ' + d))
+        w('')
+        assert d == '', d
+    out.close()
+
+main()

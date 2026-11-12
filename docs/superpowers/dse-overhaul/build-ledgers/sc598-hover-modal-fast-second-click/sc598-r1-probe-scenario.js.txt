@@ -1,0 +1,223 @@
+// ===== SC-598 r1 probe (injected by sc598-r1-make-probe.py before `const SCENARIOS = [`; the scenario object is put first in SCENARIOS) =====
+// A DSE modal opened from a hover preview by a REAL press (CDP Input.dispatchMouseEvent), then a SECOND real press `delay` ms after the
+// opening click (on the modal title, the Apply input, the backdrop, or the same point with clickCount 2 = a true double-click).
+// Trials from SC598_TRIALS="variant:mode:opener:target:delay,...":
+//   variant  off | a | a2   (window.__sc598, read by the prototype bundle only; the base bundle ignores it)
+//   mode     rv | lp
+//   opener   stamtext (press on the bar's "15" text: 150 ms helper) | bar (press on the bar, not on text: 10 ms helper) |
+//            kbd (script focus + Enter: SC-597 path) | panetext (the note open in the pane, no preview: control) |
+//            initdbl (double-click on the Goblin Captain's grid cell in the tracker preview: opens a stamina modal on dblclick)
+//   target   title | input | backdrop | dbl | apply | none
+//   delay    ms after the opening click (the second press is sent when the Node-side clock says so; the in-page gap is logged)
+const SC598_POP = `(() => { const v = app.workspace.getMostRecentLeaf().view; for (const o of [v.previewMode, v, v.editMode]) { if (o && o.hoverPopover) return o.hoverPopover; } return null; })()`;
+
+async function sc598Trial(t, variant, mode, opener, target, delay, cpu) {
+	const K = gs83Kit(t);
+	const J = JSON.stringify;
+	const isInit = opener.startsWith('init');
+	const [src, host] = isInit ? ['Lifecycle/tracker.md', 'Lifecycle/gs83-trk-host.md'] : ['Lifecycle/gs83-stam.md', 'Lifecycle/gs83-stam-host.md'];
+	const MODAL = `document.querySelector('.modal-container .dse-modal')`;
+	const rec = { spec: [variant, mode, opener, target, delay, cpu].join(':') };
+	const st = () =>
+		t.ev(`(() => { const pop = document.querySelector('.popover.hover-popover'); const hp = ${SC598_POP}; const a = document.activeElement; return { hpId: hp ? hp.__sc598id ?? 'unwrapped' : null, popover: !!pop, modal: !!${MODAL}, modals: document.querySelectorAll('.modal-container').length, isFocused: hp ? !!hp.isFocused : null, editing: !!pop && pop.classList.contains('is-editing'), editor: !!pop && !!Array.from(pop.querySelectorAll('.markdown-source-view, .cm-editor')).find((e) => e.offsetParent !== null), active: a ? (a.tagName + '.' + String(a.className).split(' ')[0]).slice(0, 40) : null, t: Math.round(performance.now() - (window.__sc598t0 || 0)) }; })()`);
+	try {
+		await t.ev(`(() => { window.__sc598 = ${J(variant)}; window.__sc598log = []; return true; })()`);
+		await t.reset(src);
+		let OPENER;
+		if (opener === 'panetext') {
+			await t.ev(`(async () => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); const leaf = app.workspace.getLeavesOfType('markdown')[0] ?? app.workspace.getMostRecentLeaf(); await leaf.setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true }); await leaf.setViewState({ type: 'markdown', state: { file: ${J(src)}, mode: ${J(mode === 'lp' ? 'source' : 'preview')}, source: false }, active: true }); app.workspace.setActiveLeaf(leaf, { focus: true }); return true; })()`);
+			await t.sleep(1200);
+			OPENER = `Array.from(document.querySelectorAll('.workspace-leaf.mod-active [data-dse-control="stamina.bar"]')).find((b) => b.isConnected && b.offsetParent !== null)`;
+			await t.waitFor(`!!(${OPENER})`, `${mode}: bar drawn in the pane`, 8000);
+		} else {
+			await t.reset(host);
+			const link = await K.openHost(host, mode);
+			rec.hover = await K.hover(link, src);
+			OPENER = isInit
+				? `Array.from((${K.ENTRY(src)}).root.querySelectorAll('.dse-init__cell')).find((c) => /Captain/.test(c.getAttribute('aria-label') || c.textContent))`
+				: `(${K.ENTRY(src)}).root.querySelector('[data-dse-control="stamina.bar"]')`;
+			await t.waitFor(`!!(${OPENER})`, `${mode} ${opener}: the opener is drawn`, 8000);
+			await K.moveTo(`${K.ENTRY(src)}.root`);
+			await t.sleep(400);
+		}
+		// instrumentation: hide() of the popover instance (event + caller), modal add/remove, every click at the window (capture), keydown
+		rec.instr = await t.ev(`(() => {
+			const hp = ${SC598_POP};
+			window.__sc598t0 = performance.now();
+			const ev = (window.__sc598ev = []);
+			const T = () => Math.round(performance.now() - window.__sc598t0);
+			if (hp && !hp.__sc598w) { hp.__sc598w = true; hp.__sc598id = (window.__sc598ids = (window.__sc598ids || 0) + 1); const orig = hp.hide; hp.hide = function () { const s = (new Error().stack || '').split('\\n').slice(2, 4).map((l) => l.trim().replace(/^at /, '').replace('app://obsidian.md/', '')).join(' <- '); window.__sc598ev.push({ k: 'HIDE', t: Math.round(performance.now() - window.__sc598t0), id: this.__sc598id, ev: window.event ? window.event.type : null, isFocused: !!this.isFocused, from: s }); return orig.apply(this, arguments); }; }
+			if (hp && !hp.__sc598f) { hp.__sc598f = true; const of = hp.setIsFocused; hp.setIsFocused = function (v) { window.__sc598ev.push({ k: 'setIsFocused', id: this.__sc598id, v, t: Math.round(performance.now() - window.__sc598t0) }); return of.apply(this, arguments); }; }
+			window.__sc598mo?.disconnect();
+			window.__sc598mo = new MutationObserver((ms) => { for (const m of ms) { for (const n of m.addedNodes) if (n.classList?.contains('modal-container')) window.__sc598ev.push({ k: 'modal+', t: T() }); for (const n of m.removedNodes) if (n.classList?.contains('modal-container')) window.__sc598ev.push({ k: 'modal-', t: T() }); } });
+			window.__sc598mo.observe(document.body, { childList: true });
+			if (!window.__sc598l) { window.__sc598l = true;
+				window.addEventListener('keydown', (e) => window.__sc598ev?.push({ k: 'key', key: e.key, t: Math.round(performance.now() - window.__sc598t0) }), true);
+				for (const ty of ['click', 'dblclick', 'mousedown']) window.addEventListener(ty, (e) => window.__sc598ev?.push({ k: ty, trusted: e.isTrusted, detail: e.detail, bubbles: e.bubbles, tgt: String(e.target?.className || e.target?.nodeName).split(' ')[0].slice(0, 30), t: Math.round(performance.now() - window.__sc598t0) }), true);
+			}
+			return { hp: !!hp };
+		})()`);
+		// the opening point
+		let pt = null;
+		if (opener === 'stamtext' || opener === 'panetext' || opener === 'inittext') {
+			pt = await t.ev(`(() => { const op = ${OPENER}; op.scrollIntoView({ block: 'nearest' }); const w = document.createTreeWalker(op, NodeFilter.SHOW_TEXT); let n; while ((n = w.nextNode())) { if (!/${opener === 'inittext' ? '\\w' : '\\d'}/.test(n.textContent)) continue; const r = new Range(); r.selectNodeContents(n); const q = r.getClientRects()[0]; if (q && q.width > 2) { const x = Math.round(q.left + q.width / 2); const y = Math.round(q.top + q.height / 2); const h = document.elementFromPoint(x, y); return { x, y, text: n.textContent.trim().slice(0, 20), onText: !!h && h === n.parentElement, hit: h ? String(h.className || h.nodeName).slice(0, 40) : null }; } } return null; })()`);
+			t.expect(pt && pt.onText, `${rec.spec}: no number text to press: ${J(pt)}`);
+		} else if (opener === 'bar' || opener === 'initdbl') {
+			// a point inside the opener whose hit element has no direct text node under it (the helper's 10 ms path)
+			pt = await t.ev(`(() => { const op = ${OPENER}; op.scrollIntoView({ block: 'nearest' }); const r = op.getBoundingClientRect(); const y = Math.round(r.top + r.height / 2); for (let x = Math.round(r.left + 3); x < r.right - 3; x += 3) { const h = document.elementFromPoint(x, y); if (!h || !op.contains(h)) continue; let onText = false; for (const c of h.childNodes) { if (c.nodeType !== 3) continue; const rg = new Range(); rg.selectNodeContents(c); for (const q of rg.getClientRects()) if (q.left <= x && x <= q.right && q.top <= y && y <= q.bottom) onText = true; } if (!onText) return { x, y, onText, hit: String(h.className || h.nodeName).slice(0, 40) }; } return null; })()`);
+			t.expect(!!pt, `${rec.spec}: no non-text point in the opener`);
+		}
+		rec.pt = pt;
+		if (pt) {
+			await K.mouse('mouseMoved', pt.x, pt.y);
+			await t.sleep(200);
+		}
+		// open
+		let tOpen;
+		if (opener === 'kbd') {
+			await t.ev(`(() => { (${OPENER}).focus(); return true; })()`);
+			await t.key('Enter', 'Enter', 13);
+			tOpen = Date.now();
+		} else if (isInit) {
+			const b1 = { button: 'left', clickCount: 1 };
+			const b2 = { button: 'left', clickCount: 2 };
+			await K.mouse('mousePressed', pt.x, pt.y, { buttons: 1, ...b1 });
+			await K.mouse('mouseReleased', pt.x, pt.y, { buttons: 0, ...b1 });
+			await t.sleep(60);
+			await K.mouse('mousePressed', pt.x, pt.y, { buttons: 1, ...b2 });
+			await K.mouse('mouseReleased', pt.x, pt.y, { buttons: 0, ...b2 });
+			tOpen = Date.now();
+		} else {
+			if (cpu > 1) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: cpu });
+			if (target === 'dblqq') {
+				// the whole second press (down, 70 ms hold, up) is sent without waiting for the renderer: on a busy renderer (the modal
+				// opening) all of it queues behind the first click
+				const b1 = { button: 'left', clickCount: 1 };
+				const b2 = { button: 'left', clickCount: 2 };
+				await K.mouse('mousePressed', pt.x, pt.y, { buttons: 1, ...b1 });
+				await t.sleep(70);
+				const ps = [K.mouse('mouseReleased', pt.x, pt.y, { buttons: 0, ...b1 })];
+				await new Promise((r) => setTimeout(r, delay));
+				ps.push(K.mouse('mousePressed', pt.x, pt.y, { buttons: 1, ...b2 }));
+				await new Promise((r) => setTimeout(r, 70));
+				ps.push(K.mouse('mouseReleased', pt.x, pt.y, { buttons: 0, ...b2 }));
+				await Promise.all(ps);
+				rec.p2Hit = 'queued down+up (same point)';
+			} else if (target === 'dblq') {
+				// a double-click whose second press is QUEUED while the first click is still being handled (the modal opening): the
+				// release is not awaited, the second press is sent `delay` ms later (Node clock), held 70 ms
+				const b1 = { button: 'left', clickCount: 1 };
+				const b2 = { button: 'left', clickCount: 2 };
+				await K.mouse('mousePressed', pt.x, pt.y, { buttons: 1, ...b1 });
+				await t.sleep(70);
+				const rel1 = K.mouse('mouseReleased', pt.x, pt.y, { buttons: 0, ...b1 });
+				await new Promise((r) => setTimeout(r, delay));
+				const pr2 = K.mouse('mousePressed', pt.x, pt.y, { buttons: 1, ...b2 });
+				await rel1;
+				await pr2;
+				await t.sleep(70);
+				await K.mouse('mouseReleased', pt.x, pt.y, { buttons: 0, ...b2 });
+				rec.p2Hit = 'queued (same point)';
+			} else if (target === 'dblh') {
+				// a human-like double-click: each press held 70 ms, the second press `delay` ms after the first release
+				const b1 = { button: 'left', clickCount: 1 };
+				await K.mouse('mousePressed', pt.x, pt.y, { buttons: 1, ...b1 });
+				await t.sleep(70);
+				await K.mouse('mouseReleased', pt.x, pt.y, { buttons: 0, ...b1 });
+			} else await K.press(pt);
+			tOpen = Date.now();
+		}
+		// the second press
+		if (target !== 'none' && target !== 'dblq' && target !== 'dblqq') {
+			let p2 = null;
+			if (target === 'dbl' || target === 'dblh') p2 = pt;
+			else if (target === 'title') p2 = await t.ev(`(() => { const el = document.querySelector('.modal-container .modal-title'); if (!el) return null; const r = el.getBoundingClientRect(); return { x: Math.round(r.left + Math.min(r.width / 2, 40)), y: Math.round(r.top + r.height / 2) }; })()`);
+			else if (target === 'input' || target === 'apply') p2 = await t.ev(`(() => { const el = document.querySelector('.modal-container [data-dse-control="sedit.apply-amount"]'); if (!el) return null; const r = el.getBoundingClientRect(); return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) }; })()`);
+			else if (target === 'backdrop') p2 = await t.ev(`(() => { const x = 20, y = window.innerHeight - 20; const h = document.elementFromPoint(x, y); return { x, y, hit: h ? String(h.className).slice(0, 30) : null }; })()`);
+			rec.p2Hit = p2 ? await t.ev(`(() => { const h = document.elementFromPoint(${p2.x}, ${p2.y}); return h ? String(h.className || h.nodeName).slice(0, 40) : null; })()`) : 'no target (modal not open?)';
+			if (p2) {
+				while (Date.now() - tOpen < delay) await new Promise((r) => setTimeout(r, 1));
+				const b = { button: 'left', clickCount: target === 'dbl' || target === 'dblh' ? 2 : 1 };
+				if (target !== 'dbl' && target !== 'dblh') await K.mouse('mouseMoved', p2.x, p2.y);
+				await K.mouse('mousePressed', p2.x, p2.y, { buttons: 1, ...b });
+				if (target === 'dblh') await t.sleep(70);
+				await K.mouse('mouseReleased', p2.x, p2.y, { buttons: 0, ...b });
+			}
+		}
+		if (cpu > 1) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: 1 });
+		await t.sleep(30);
+		rec.at30 = await st();
+		await t.sleep(670);
+		rec.at700 = await st();
+		if (target === 'apply' && rec.at700.popover && rec.at700.modal) {
+			await t.ev(`(() => { const i = document.querySelector('.modal-container [data-dse-control="sedit.apply-amount"]'); i.focus(); i.select(); return true; })()`);
+			await t.cdp.call('Input.insertText', { text: '3' });
+			await K.click(`document.querySelector('.modal-container [data-dse-control="sedit.healing"]')`);
+			await t.sleep(250);
+			const m = await t.mark();
+			await K.click(`document.querySelector('.modal-container [data-dse-control="sedit.apply"]')`);
+			const t0 = Date.now();
+			while (Date.now() - t0 < 4000 && !/current_stamina: 18/.test(t.read(src))) await t.sleep(50);
+			await t.sleep(400);
+			rec.saved = /current_stamina: 18/.test(t.read(src));
+			rec.notices = await t.noticesSince(m);
+			rec.afterApply = await st();
+		} else if (rec.at700.modal) {
+			await t.key('Escape', 'Escape', 27);
+			await t.sleep(500);
+			rec.afterEsc = await st();
+			if (rec.afterEsc.modal) {
+				await t.key('Escape', 'Escape', 27);
+				await t.sleep(400);
+				rec.afterEsc2 = await st();
+			}
+		}
+		if (opener !== 'panetext' && (await st()).popover) {
+			await K.mouse('mouseMoved', 700, 700);
+			await K.mouse('mouseMoved', 5, 300);
+			await t.sleep(1200);
+			rec.afterRest = await st();
+			await K.click(`document.querySelector('.workspace-leaf.mod-active .view-header-title, .workspace-leaf.mod-active .view-header')`);
+			const t1 = Date.now();
+			while (Date.now() - t1 < 3000 && (await st()).popover) await t.sleep(100);
+			rec.afterOutside = await st();
+		}
+		if (opener === 'panetext' && mode === 'lp') rec.cursor = await t.ev(`JSON.stringify(app.workspace.getMostRecentLeaf().view.editor.getCursor())`);
+	} catch (e) {
+		rec.error = e.message;
+	} finally {
+		try {
+			await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: 1 });
+			rec.ev = await t.ev(`window.__sc598ev || []`);
+			rec.syn = await t.ev(`(window.__sc598log || []).map((x) => ({ ...x, t: Math.round(x.t - (window.__sc598t0 || 0)) }))`);
+			rec.note = (t.read(src).match(/current_stamina: \d+/) || [null])[0];
+		} catch (e) {
+			rec.evErr = e.message;
+		}
+		await K.cleanup();
+		await t.ev(`(() => { window.__sc598 = undefined; document.querySelectorAll('.modal-container').forEach((c) => c.querySelector('.modal-close-button')?.click()); return true; })()`);
+	}
+	return rec;
+}
+
+const SC598_SCENARIO = {
+	id: 'SC598-PROBE',
+	async run(t) {
+		const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+		await t.ev(`(() => { if (!document.getElementById('lc-gs83-notice')) { const st = document.createElement('style'); st.id = 'lc-gs83-notice'; st.textContent = '.notice-container { display: none !important; }'; document.head.appendChild(st); } return true; })()`);
+		await t.ev(`${prefs}.set('authoringControls', true)`);
+		const trials = (process.env.SC598_TRIALS || 'off:rv:stamtext:title:80').split(',').filter(Boolean);
+		const t0 = Date.now();
+		for (const spec of trials) {
+			const [variant, mode, opener, target, delay, cpu] = spec.split(':');
+			const s = Date.now();
+			const r = await sc598Trial(t, variant, mode, opener, target, Number(delay || 0), Number(cpu || 1));
+			r.ms = Date.now() - s;
+			console.log('SC598 TRIAL ' + JSON.stringify(r));
+		}
+		console.log('SC598 TOTAL_MS ' + (Date.now() - t0));
+		await t.ev(`${prefs}.set('authoringControls', false)`);
+		return `${trials.length} trials`;
+	},
+};
+// ===== end SC-598 r1 probe =====

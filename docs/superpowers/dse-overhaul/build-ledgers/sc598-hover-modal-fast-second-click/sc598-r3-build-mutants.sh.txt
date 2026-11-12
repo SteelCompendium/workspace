@@ -1,0 +1,10 @@
+#!/bin/bash
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc598-r3-R1
+C=$S/r3mut
+cd "$C" || exit 9
+rm -f main.js styles.css
+npx jest test/dom/kit/r3probe.test.ts > "$S/r3-probe-jest2.log" 2>&1
+echo "R3PROBE_JEST_RC=$?" >> "$S/r3-probe-jest2.log"
+python3 -I "$S/r3-mutate.py" "$C" "$S/r3-mutant-bundles.log" R1,R2,R6,R7,R12 --build "$S/mutbundles"
+echo "BUILD_MUTANTS_RC=$?" >> "$S/r3-mutant-bundles.log"
+sha256sum "$S"/mutbundles/*/main.js >> "$S/r3-mutant-bundles.log"

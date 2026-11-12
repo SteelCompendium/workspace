@@ -1,0 +1,8 @@
+#!/bin/bash
+# usage: build.sh <dse copy dir> <log>
+cd "$1" || exit 9
+node esbuild.config.mjs production > "$2" 2>&1
+rc=$?
+echo "BUILD_RC=$rc" >> "$2"
+ls -la "$1/main.js" "$1/styles.css" "$1/manifest.json" >> "$2" 2>&1
+exit $rc

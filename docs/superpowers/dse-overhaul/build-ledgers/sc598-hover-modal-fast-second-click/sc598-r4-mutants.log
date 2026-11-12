@@ -1,0 +1,232 @@
+SC-598 r4 mutants (identity I1). Source under test: dse eafbcce5 (managedModal.ts as of a6425a41: the `.is-editing` branch now default-prevents the opening click and returns). Runner: sc598-r4-mutate.py.txt (the r2 runner with N2 re-anchored to the non-editing preventDefault, N6 redefined, N6b and N6c added). Same method as sc598-r2-mutants.log: one file edited, jest on managedModal.test.ts + stamina-bar.test.ts + montage.test.ts, restore with `git checkout HEAD -- file`, `git diff --stat` verified empty.
+Re-run in r4: N1-N17 and K6 (the managedModal.ts mutants). The 22 SC-597 mutants of the opener files (K1s-K5m, G1-G6 x2) are unchanged in r4: the opener files, the SC-597 tests and the stand-in did not change, so sc598-r2-mutants.log stands for them.
+New for the changed branch: N6 (the `.is-editing` branch returns without preventDefault = the r2 code = MEDIUM-1), N6b (no `.is-editing` branch at all), N6c (the branch also sends a synthetic click).
+Result: 21 SC-598 mutants (N1, N2, N3a, N3b, N4a, N4b, N5, N6, N6b, N6c, N7-N17) + K6 = 22 run. 21 KILLED, 1 SURVIVED: N7, argued equivalent since r4 (the method is not reached for an anchor outside a preview, and the `.is-editing` branch default-prevents anyway, so moving preventDefault above the preview guard changes nothing reachable). N17's red is 'Test suite failed to run' (jsdom throws without `view`), as in r2.
+The reopen G-S91 trial kills N6 in real Obsidian: the r2 head (the N6 code) is red on `reopen rv` and green on every other trial (sc598-r4-red-on-r2head-G-S91.log).
+
+## N1: managedModal.ts back to the e5b6f9f2 base (no SC-598 change)
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       15 failed, 224 passed, 239 total
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a click on the modal title 20 ms after the opening click (before the helper's 150 ms) closes neither the modal nor the preview
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a click on the modal title 100 ms after the opening click (before the helper's 150 ms) closes neither the modal nor the preview
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › the modal's scope is on top of the preview's 20 ms and 200 ms after the opening click, and the preview's is back on top after close
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › exactly two clicks reach the preview: the opening click, default-prevented, then one synthetic bubbling click from the anchor that carries interactive-child; one modal
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a preview that is already focused (.is-editing) gets only the opening click, default-prevented: no synthetic click, no class, and the helper does nothing for it even when a press moved the focus
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › the anchor's interactive-child class (already there: false) is the one it had before the open, from 10 ms on, and not earlier
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › "Enter" on the bar sends one click through the preview to the bar (and the modal's own synthetic click from the anchor, SC-598), and the modal is open at once
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › " " on the bar sends one click through the preview to the bar (and the modal's own synthetic click from the anchor, SC-598), and the modal is open at once
+  red: SC-598: the Stamina modal opened by a click on the bar's numbers in a hover preview › a click on the title 20 ms after the opening click closes neither the modal nor the preview
+  red: SC-598: the Stamina modal opened by a click on the bar's numbers in a hover preview › a click on the Apply input 20 ms after the opening click closes neither the modal nor the preview
+  red: SC-598: the Stamina modal opened by a click on the bar's numbers in a hover preview › a press that moves the focus off the modal's input before the helper's timer does not turn the preview into a source editor
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Enter on a logged cell sends one click through the preview to the cell (and the sheet's own synthetic click from the anchor, SC-598), and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Space on a logged cell sends one click through the preview to the cell (and the sheet's own synthetic click from the anchor, SC-598), and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Enter on an empty past-round cell sends one click through the preview to the cell (and the sheet's own synthetic click from the anchor, SC-598), and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Space on an empty past-round cell sends one click through the preview to the cell (and the sheet's own synthetic click from the anchor, SC-598), and the sheet is open at once
+restored: git diff --stat empty = True
+
+## N2: no preventDefault on the opening click (the not-yet-focused path)
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       3 failed, 236 passed, 239 total
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › the modal's scope is on top of the preview's 20 ms and 200 ms after the opening click, and the preview's is back on top after close
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › exactly two clicks reach the preview: the opening click, default-prevented, then one synthetic bubbling click from the anchor that carries interactive-child; one modal
+  red: SC-598: the Stamina modal opened by a click on the bar's numbers in a hover preview › a press that moves the focus off the modal's input before the helper's timer does not turn the preview into a source editor
+restored: git diff --stat empty = True
+
+## N3a: synthetic click not bubbling
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       8 failed, 231 passed, 239 total
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a click on the modal title 20 ms after the opening click (before the helper's 150 ms) closes neither the modal nor the preview
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a click on the modal title 100 ms after the opening click (before the helper's 150 ms) closes neither the modal nor the preview
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a press that moves the focus off the modal's input before the helper's timer does not turn the preview into a source editor
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › the modal's scope is on top of the preview's 20 ms and 200 ms after the opening click, and the preview's is back on top after close
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › exactly two clicks reach the preview: the opening click, default-prevented, then one synthetic bubbling click from the anchor that carries interactive-child; one modal
+  red: SC-598: the Stamina modal opened by a click on the bar's numbers in a hover preview › a click on the title 20 ms after the opening click closes neither the modal nor the preview
+  red: SC-598: the Stamina modal opened by a click on the bar's numbers in a hover preview › a click on the Apply input 20 ms after the opening click closes neither the modal nor the preview
+  red: SC-598: the Stamina modal opened by a click on the bar's numbers in a hover preview › a press that moves the focus off the modal's input before the helper's timer does not turn the preview into a source editor
+restored: git diff --stat empty = True
+
+## N3b: synthetic click dispatched on the anchor's first child (the opener) instead of the anchor
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       15 failed, 224 passed, 239 total
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › "Enter" on the bar sends one click through the preview to the bar (and the modal's own synthetic click from the anchor, SC-598), and the modal is open at once
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › " " on the bar sends one click through the preview to the bar (and the modal's own synthetic click from the anchor, SC-598), and the modal is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Enter on a logged cell sends one click through the preview to the cell (and the sheet's own synthetic click from the anchor, SC-598), and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Space on a logged cell sends one click through the preview to the cell (and the sheet's own synthetic click from the anchor, SC-598), and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Enter on an empty past-round cell sends one click through the preview to the cell (and the sheet's own synthetic click from the anchor, SC-598), and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Space on an empty past-round cell sends one click through the preview to the cell (and the sheet's own synthetic click from the anchor, SC-598), and the sheet is open at once
+  red: SC-595: a modal opened from a hover preview › keymap scope › opened from a click, the popover arms its 10 ms push after the opener has opened the modal: the modal is on top whatever the order of the two re-pushes
+  red: SC-595: a modal opened from a hover preview › keymap scope › opened from a click, the popover arms its 150 ms push after the opener has opened the modal: the modal is on top whatever the order of the two re-pushes
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a click on the modal title 20 ms after the opening click (before the helper's 150 ms) closes neither the modal nor the preview
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a click on the modal title 100 ms after the opening click (before the helper's 150 ms) closes neither the modal nor the preview
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a press that moves the focus off the modal's input before the helper's timer does not turn the preview into a source editor
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › the modal's scope is on top of the preview's 20 ms and 200 ms after the opening click, and the preview's is back on top after close
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › exactly two clicks reach the preview: the opening click, default-prevented, then one synthetic bubbling click from the anchor that carries interactive-child; one modal
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › the anchor's interactive-child class (already there: false) is the one it had before the open, from 10 ms on, and not earlier
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › the anchor's interactive-child class (already there: true) is the one it had before the open, from 10 ms on, and not earlier
+restored: git diff --stat empty = True
+
+## N4a: no interactive-child on the anchor (neither added nor removed)
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       4 failed, 235 passed, 239 total
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a press that moves the focus off the modal's input before the helper's timer does not turn the preview into a source editor
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › exactly two clicks reach the preview: the opening click, default-prevented, then one synthetic bubbling click from the anchor that carries interactive-child; one modal
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › the anchor's interactive-child class (already there: false) is the one it had before the open, from 10 ms on, and not earlier
+  red: SC-598: the Stamina modal opened by a click on the bar's numbers in a hover preview › a press that moves the focus off the modal's input before the helper's timer does not turn the preview into a source editor
+restored: git diff --stat empty = True
+
+## N4b: interactive-child removal timer armed BEFORE the synthetic click
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       2 failed, 237 passed, 239 total
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a press that moves the focus off the modal's input before the helper's timer does not turn the preview into a source editor
+  red: SC-598: the Stamina modal opened by a click on the bar's numbers in a hover preview › a press that moves the focus off the modal's input before the helper's timer does not turn the preview into a source editor
+restored: git diff --stat empty = True
+
+## N5: focusHoverPreviewNow called AFTER arm()
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       5 failed, 234 passed, 239 total
+  red: SC-595: a modal opened from a hover preview › keymap scope › opened from a click, the popover arms its 10 ms push after the opener has opened the modal: the modal is on top whatever the order of the two re-pushes
+  red: SC-595: a modal opened from a hover preview › keymap scope › opened from a click, the popover arms its 150 ms push after the opener has opened the modal: the modal is on top whatever the order of the two re-pushes
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › the modal's scope is on top of the preview's 20 ms and 200 ms after the opening click, and the preview's is back on top after close
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › Escape closes the modal and leaves the preview: the modal is back on top of the preview's own scope push
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Escape closes the sheet and leaves the preview: the sheet is back on top of the preview's own scope push
+restored: git diff --stat empty = True
+
+## N6: .is-editing branch without preventDefault (the r2 behaviour: return only)
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       1 failed, 238 passed, 239 total
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a preview that is already focused (.is-editing) gets only the opening click, default-prevented: no synthetic click, no class, and the helper does nothing for it even when a press moved the focus
+restored: git diff --stat empty = True
+
+## N6b: no .is-editing branch at all (an already-focused preview gets the full treatment, synthetic click and class)
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       1 failed, 238 passed, 239 total
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a preview that is already focused (.is-editing) gets only the opening click, default-prevented: no synthetic click, no class, and the helper does nothing for it even when a press moved the focus
+restored: git diff --stat empty = True
+
+## N6c: .is-editing branch also sends the synthetic click (preventDefault + one bubbling click on the anchor, no class)
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       1 failed, 238 passed, 239 total
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a preview that is already focused (.is-editing) gets only the opening click, default-prevented: no synthetic click, no class, and the helper does nothing for it even when a press moved the focus
+restored: git diff --stat empty = True
+
+## N7: preventDefault outside a preview (moved above the preview guard)
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: SURVIVED (jest rc 0); Tests:       239 passed, 239 total
+restored: git diff --stat empty = True
+
+## N8: interactive-child never removed
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       1 failed, 238 passed, 239 total
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › the anchor's interactive-child class (already there: false) is the one it had before the open, from 10 ms on, and not earlier
+restored: git diff --stat empty = True
+
+## N9: synthetic click carries the opening click's coordinates
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       8 failed, 231 passed, 239 total
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a click on the modal title 20 ms after the opening click (before the helper's 150 ms) closes neither the modal nor the preview
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a click on the modal title 100 ms after the opening click (before the helper's 150 ms) closes neither the modal nor the preview
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a press that moves the focus off the modal's input before the helper's timer does not turn the preview into a source editor
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › the modal's scope is on top of the preview's 20 ms and 200 ms after the opening click, and the preview's is back on top after close
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › exactly two clicks reach the preview: the opening click, default-prevented, then one synthetic bubbling click from the anchor that carries interactive-child; one modal
+  red: SC-598: the Stamina modal opened by a click on the bar's numbers in a hover preview › a click on the title 20 ms after the opening click closes neither the modal nor the preview
+  red: SC-598: the Stamina modal opened by a click on the bar's numbers in a hover preview › a click on the Apply input 20 ms after the opening click closes neither the modal nor the preview
+  red: SC-598: the Stamina modal opened by a click on the bar's numbers in a hover preview › a press that moves the focus off the modal's input before the helper's timer does not turn the preview into a source editor
+restored: git diff --stat empty = True
+
+## N10: HOVER_HELPER_DELAYS_MS = [10] (SC-595 M16)
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       2 failed, 237 passed, 239 total
+  red: SC-595: a modal opened from a hover preview › keymap scope › opened from a click, the popover arms its 150 ms push after the opener has opened the modal: the modal is on top whatever the order of the two re-pushes
+  red: SC-595: a modal opened from a hover preview › keymap scope › the popover pushes its scope above the modal's at 150 ms: the modal's goes back on top at that same tick, and the popover's is on top again after close
+restored: git diff --stat empty = True
+
+## N11: the synthetic click also for a modal opened outside a click (non-click branch)
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       9 failed, 230 passed, 239 total
+  red: SC-595: a modal opened from a hover preview › a click inside never reaches a window bubble listener (the popover's hide), a document listener still sees it
+  red: SC-595: a modal opened from a hover preview › the click is stopped, never default-prevented: an Obsidian-shaped label.checkbox-container > input still toggles and fires change
+  red: SC-595: a modal opened from a hover preview › a click OUTSIDE the modal (the popover itself, another element) still reaches the window
+  red: SC-595: a modal opened from a hover preview › after close (and the one task the guard outlives it) the guard is gone: the same container, attached again, lets a click through
+  red: SC-595: a modal opened from a hover preview › a modal opened from a modal that is anchored in a preview inherits the anchor (FreeHealConfirmModal)
+  red: SC-595: a modal opened from a hover preview › a click on a control the modal REDRAWS in its own click handler (the target is detached when the click reaches the document) never reaches the window
+  red: SC-595: a modal opened from a hover preview › the click that CLOSES the modal (Cancel, backdrop shape) never reaches the window; once the guard is gone a click outside does, so the preview can be dismissed
+  red: SC-595: a modal opened from a hover preview › a nested confirmation: Confirm closes the child; the click never reaches the window and the parent stays open
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a modal opened from a preview outside any click (a delayed open) sends no click through the preview
+restored: git diff --stat empty = True
+
+## N12: interactive-child removed even when the anchor had it before the open (the `added` guard on the removal dropped)
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       1 failed, 238 passed, 239 total
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › the anchor's interactive-child class (already there: true) is the one it had before the open, from 10 ms on, and not earlier
+restored: git diff --stat empty = True
+
+## N13: interactive-child removal after 50 ms, not 10
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       1 failed, 238 passed, 239 total
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › the anchor's interactive-child class (already there: false) is the one it had before the open, from 10 ms on, and not earlier
+restored: git diff --stat empty = True
+
+## N14: interactive-child removal at once (0 ms: before the helper reads it)
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       3 failed, 236 passed, 239 total
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › a press that moves the focus off the modal's input before the helper's timer does not turn the preview into a source editor
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › the anchor's interactive-child class (already there: false) is the one it had before the open, from 10 ms on, and not earlier
+  red: SC-598: the Stamina modal opened by a click on the bar's numbers in a hover preview › a press that moves the focus off the modal's input before the helper's timer does not turn the preview into a source editor
+restored: git diff --stat empty = True
+
+## N15: interactive-child added even when present (added = true): a pre-existing class is stripped
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       1 failed, 238 passed, 239 total
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › the anchor's interactive-child class (already there: true) is the one it had before the open, from 10 ms on, and not earlier
+restored: git diff --stat empty = True
+
+## N16: synthetic click not cancelable
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       1 failed, 238 passed, 239 total
+  red: SC-598: a click inside a modal opened from a hover preview, right after the click that opened it › exactly two clicks reach the preview: the opening click, default-prevented, then one synthetic bubbling click from the anchor that carries interactive-child; one modal
+restored: git diff --stat empty = True
+
+## N17: synthetic click without `view`
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/kit/managedModal.test.ts test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       177 passed, 177 total
+  red: Test suite failed to run
+restored: git diff --stat empty = True
+
+## K6: DseModal arms its keymap re-pushes at once, not from the opening click (managedModal.ts)
+file: src/framework/kit/managedModal.ts
+command: npx jest test/dom/elements/stamina-bar.test.ts test/dom/elements/montage.test.ts --silent
+result: KILLED (jest rc 1); Tests:       11 failed, 166 passed, 177 total
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › "Enter" on the bar sends one click through the preview to the bar (and the modal's own synthetic click from the anchor, SC-598), and the modal is open at once
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › " " on the bar sends one click through the preview to the bar (and the modal's own synthetic click from the anchor, SC-598), and the modal is open at once
+  red: SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › Escape closes the modal and leaves the preview: the modal is back on top of the preview's own scope push
+  red: SC-598: the Stamina modal opened by a click on the bar's numbers in a hover preview › a click on the title 20 ms after the opening click closes neither the modal nor the preview
+  red: SC-598: the Stamina modal opened by a click on the bar's numbers in a hover preview › a click on the Apply input 20 ms after the opening click closes neither the modal nor the preview
+  red: SC-598: the Stamina modal opened by a click on the bar's numbers in a hover preview › a press that moves the focus off the modal's input before the helper's timer does not turn the preview into a source editor
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Enter on a logged cell sends one click through the preview to the cell (and the sheet's own synthetic click from the anchor, SC-598), and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Space on a logged cell sends one click through the preview to the cell (and the sheet's own synthetic click from the anchor, SC-598), and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Enter on an empty past-round cell sends one click through the preview to the cell (and the sheet's own synthetic click from the anchor, SC-598), and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Space on an empty past-round cell sends one click through the preview to the cell (and the sheet's own synthetic click from the anchor, SC-598), and the sheet is open at once
+  red: SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Escape closes the sheet and leaves the preview: the sheet is back on top of the preview's own scope push
+restored: git diff --stat empty = True
+

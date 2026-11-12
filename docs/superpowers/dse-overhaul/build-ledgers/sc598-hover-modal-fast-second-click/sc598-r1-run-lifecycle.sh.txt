@@ -1,0 +1,13 @@
+#!/bin/bash
+# usage: sc598-r1-run-lifecycle.sh <bundle dir> <only ids> <logfile> <camtmp dir>
+# The WORKTREE's own harness (unchanged), with another bundle (dse-verify G-S83 footgun 9).
+export DSE_LIFECYCLE_BUNDLE="$1"
+export DSE_CAMERA_TMP="$4"
+mkdir -p "$4"
+cd /home/scott/code/steelCompendium/worktrees/sc598-hover-modal-fast-second-click/draw-steel-elements || exit 9
+start=$(date +%s)
+node visual-harness/obsidian-lifecycle.mjs --only="$2" > "$3" 2>&1
+rc=$?
+end=$(date +%s)
+echo "LIFECYCLE_RC=$rc WALL_S=$((end-start)) BUNDLE=$1 LOAD=$(cat /proc/loadavg)" >> "$3"
+exit $rc

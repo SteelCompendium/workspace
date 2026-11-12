@@ -1,0 +1,50 @@
+# Summarizes an r3 probe log: one block per trial. usage: python3 -I r3-summarize.py <raw log>
+import json, sys
+
+def s(st):
+    if not st: return '-'
+    f = lambda k: 'Y' if st.get(k) else 'n'
+    return (f"pop={f('popover')} modals={st.get('modals')} foc={st.get('isFocused')} is-editing={f('editing')} editor={f('editor')} "
+            f"active={st.get('active')} file={st.get('file')} leaves={st.get('leaves')} anchorIC={st.get('anchorIC')}")
+
+def evs(ev):
+    out = []
+    for e in ev or []:
+        k = e['k']
+        if k in ('click', 'dblclick', 'mousedown'):
+            out.append(f"{e['t']} {k}[{e.get('tgt')}{' ANCHOR' if e.get('isAnchor') else ''}{' inModal' if e.get('inModal') else ''} d{e.get('detail')} cx{e.get('cx')}{'' if e.get('trusted') else ' SYN'}{' dp' if e.get('dp') else ''}{' dp0' if e.get('dp0') else ''}{' winBub' if e.get('reachedWinBubble') else (' NOwinBub' if e.get('trusted') and k == 'click' else '')}]")
+        elif k == 'HIDE':
+            out.append(f"{e['t']} HIDE[ev={e.get('ev')} foc={e.get('foc')}]")
+        elif k == 'ERR':
+            out.append(f"{e['t']} ERR[{e.get('msg')} @ {e.get('stack')}]")
+        elif k == 'modal+':
+            out.append(f"{e['t']} modal+[{e.get('title')}]")
+        else:
+            out.append(f"{e['t']} {k}")
+    return ' | '.join(out)
+
+for line in open(sys.argv[1]):
+    if line.startswith('OBSIDIAN-LIFECYCLE') or line.startswith('LIFECYCLE_RC') or line.startswith('R3 PAGE'):
+        print(line.rstrip()[:400]); continue
+    if not line.startswith('R3 TRIAL '): continue
+    r = json.loads(line[len('R3 TRIAL '):])
+    ev = r.get('ev') or []
+    tr = [e for e in ev if e['k'] == 'click' and e.get('trusted')]
+    syn = [e for e in ev if e['k'] == 'click' and not e.get('trusted')]
+    gap = tr[1]['t'] - tr[0]['t'] if len(tr) >= 2 else None
+    mplus = [e for e in ev if e['k'] == 'modal+']
+    print(f"== {r['spec']} ({r.get('ms')} ms) hover={r.get('hover')} pt={(r.get('pt') or {}).get('text')!r} on {(r.get('pt') or {}).get('hit')} opener={(r.get('pt') or {}).get('opTag')} hasDefault={(r.get('pt') or {}).get('hasDefault')} p2Hit={r.get('p2Hit')}")
+    mp = mplus[0]['t'] if mplus else None
+    margin = (mp + 150 - tr[1]['t']) if (mp is not None and len(tr) >= 2) else None
+    print(f"   window check: modal+ at {mp} ms, second click at {tr[1]['t'] if len(tr) >= 2 else None} ms -> margin inside the opening click's 150 ms helper timer (armed when the opener's handler returns) = {margin} ms (positive = second press lands before the base would have focused the preview)")
+    print(f"   gap(click2-click1)={gap} ms; trusted clicks={len(tr)} synthetic clicks={len(syn)} (on anchor: {sum(1 for e in syn if e.get('isAnchor'))}); modal+ during trial={len(mplus)}; opening click defaultPrevented={tr[0].get('dp') if tr else None}")
+    if r.get('error'): print('   ERROR', r['error'])
+    if r.get('dbg'): print('   DBG', json.dumps(r['dbg'])[:900])
+    for k in ['before', 'at30', 'at700', 'afterEsc', 'again700', 'againEsc', 'afterRest', 'afterOutside']:
+        if k in r: print(f"   {k:12s} {s(r[k])}")
+    print('   events: ' + evs(ev))
+    if r.get('againEv') is not None:
+        ae = r['againEv']
+        atr = [e for e in ae if e['k'] == 'click' and e.get('trusted')]
+        asyn = [e for e in ae if e['k'] == 'click' and not e.get('trusted')]
+        print(f"   again: trusted={len(atr)} synthetic={len(asyn)} opening dp={atr[0].get('dp') if atr else None}; events: " + evs(ae))

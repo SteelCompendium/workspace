@@ -1,0 +1,108 @@
+"""SC-598 r3 (R1) mutant runner. Runs in a SCRATCH archive copy (never the worktree).
+usage: python3 -I r3-mutate.py <copy dir> <log> <id,id,...|all> [--build <out bundle dir>]
+Each mutant edits ONE file in the copy, runs the jest suites, records failing tests, restores the original text.
+With --build, instead of jest it builds a bundle (node esbuild.config.mjs production) for each listed mutant into
+<out>/<id>/ (main.js, styles.css, manifest.json), for G-S91 runs with DSE_LIFECYCLE_BUNDLE."""
+import subprocess, sys, re, os, shutil
+
+W = '/home/scott/code/steelCompendium/worktrees/sc598-hover-modal-fast-second-click/draw-steel-elements'
+S = 'src/framework/kit/StaminaBarPanel.ts'
+M = 'src/elements/montage/BoardView.ts'
+MM = 'src/framework/kit/managedModal.ts'
+TS = 'test/dom/elements/stamina-bar.test.ts'
+TM = 'test/dom/elements/montage.test.ts'
+TMM = 'test/dom/kit/managedModal.test.ts'
+ALL = [TMM, TS, TM]
+
+CALL = "\t\t\t\tthis.focusHoverPreviewNow(opening, win); // before arm(): the helper's timer, armed inside this dispatch, must precede the re-pushes\n\t\t\t\tarm();\n"
+GUARD = "if (!anchor || !pop || pop.classList.contains('is-editing')) return;"
+PD = "\t\topening.preventDefault();\n"
+DISP = "\t\tanchor.dispatchEvent(new anchorWin.MouseEvent('click', { bubbles: true, cancelable: true, view: anchorWin }));\n"
+REM = "\t\tif (added) win.setTimeout(() => anchor.classList.remove('interactive-child'), 10);\n"
+STAM_CLICK = "bar.click(); // SC-597: the click listener opens the modal; see the doc above"
+MONT_CLICK = "cell.click();"
+
+MUTANTS = []
+def add(mid, desc, file, old, new, tests):
+    MUTANTS.append((mid, desc, file, old, new, tests))
+
+# the brief's eight (r3 section 2.5) and extras
+add('R1', 'drop preventDefault on the opening click', MM, PD, '', ALL)
+add('R2', 'drop the synthetic click (no dispatch at all; class still added/removed)', MM, DISP, '', ALL)
+add('R3', 'dispatch the synthetic click on the popover instead of the anchor', MM, DISP, DISP.replace('anchor.dispatchEvent', '(pop as HTMLElement).dispatchEvent'), ALL)
+add('R4', 'synthetic click non-bubbling', MM, DISP, DISP.replace('bubbles: true', 'bubbles: false'), ALL)
+add('R5', 'leave interactive-child on (never removed)', MM, REM, '', ALL)
+add('R6', 'remove interactive-child at 0 ms', MM, REM, REM.replace(', 10);', ', 0);'), ALL)
+add('R7', 'focusHoverPreviewNow called after arm()', MM, CALL, "\t\t\t\tarm();\n\t\t\t\tthis.focusHoverPreviewNow(opening, win);\n", ALL)
+add('R8', 'drop the .is-editing gate', MM, GUARD, "if (!anchor || !pop) return;", ALL)
+add('R9', "dispatch on the anchor's PARENT (class on the anchor, so the target never carries interactive-child)", MM, DISP, DISP.replace('anchor.dispatchEvent', 'anchor.parentElement!.dispatchEvent'), ALL)
+add('R10', 'interactive-child put on the popover instead of the anchor', MM, "\t\tif (added) anchor.classList.add('interactive-child');\n", "\t\tif (added) (pop as HTMLElement).classList.add('interactive-child');\n", ALL)
+add('R11', 'synthetic click carries detail: 2 (the helper skips detail > 1)', MM, DISP, DISP.replace('view: anchorWin }', 'view: anchorWin, detail: 2 }'), ALL)
+add('R12', 'removal at 11 ms (after the helper by margin, not by order)', MM, REM, REM.replace(', 10);', ', 11);'), ALL)
+add('R13', 'gate on the opening click being trusted (keyboard el.click() openers skipped)', MM, GUARD, GUARD + "\n\t\tif (!opening.isTrusted) return;", ALL)
+add('R14', 'PROPOSED FIX SHAPE (not a mutant): for an .is-editing preview, preventDefault the opening click only (no synthetic click)', MM, GUARD, "if (!anchor || !pop) return;\n\t\tif (pop.classList.contains('is-editing')) {\n\t\t\topening.preventDefault();\n\t\t\treturn;\n\t\t}", ALL)
+# SC-597 K-series (same edits as sc597-r2-mutate.py / sc598-r2-mutate.py), against the UPDATED SC-597 tests
+MUTANTS.append(('K1s', 'StaminaBarPanel.ts back to the 94133a5a base (open() called directly)', S, '@BASE597@', None, [TS]))
+MUTANTS.append(('K1m', 'BoardView.ts back to the 94133a5a base (openThisCell() called directly, no guards)', M, '@BASE597@', None, [TM]))
+add('K2s', "bar.dispatchEvent(new MouseEvent('click')) with no bubbles", S, STAM_CLICK, "bar.dispatchEvent(new MouseEvent('click'));", [TS])
+add('K2m', "cell.dispatchEvent(new MouseEvent('click')) with no bubbles", M, MONT_CLICK, "cell.dispatchEvent(new MouseEvent('click'));", [TM])
+add('K3s', "click dispatched on the bar's parent", S, STAM_CLICK, "bar.parentElement!.click();", [TS])
+add('K3m', "click dispatched on the cell's parent", M, MONT_CLICK, "cell.parentElement!.click();", [TM])
+add('K4s', 'two clicks', S, STAM_CLICK, "bar.click(); bar.click();", [TS])
+add('K4m', 'two clicks', M, MONT_CLICK, "cell.click(); cell.click();", [TM])
+add('K5s', 'deferred click', S, STAM_CLICK, "setTimeout(() => bar.click());", [TS])
+add('K5m', 'deferred click', M, MONT_CLICK, "setTimeout(() => cell.click());", [TM])
+add('K6', 'DseModal arms its re-pushes at once, not from the opening click', MM, "if (opening?.type === 'click') {", "if (false as boolean) {", [TS, TM])
+
+def sh(*a, **k):
+    return subprocess.run(a, capture_output=True, text=True, **k)
+
+def main():
+    C, log, which = sys.argv[1], sys.argv[2], sys.argv[3]
+    build = sys.argv[5] if len(sys.argv) > 5 and sys.argv[4] == '--build' else None
+    want = None if which == 'all' else set(which.split(','))
+    out = open(log, 'a')
+    def w(s):
+        out.write(s + '\n'); out.flush()
+    for mid, desc, file, old, new, tests in MUTANTS:
+        if want is not None and mid not in want:
+            continue
+        path = os.path.join(C, file)
+        orig = open(path).read()
+        if old == '@BASE597@':
+            r = sh('git', '-C', W, 'show', '94133a5a:' + file); assert r.returncode == 0, r.stderr
+            open(path, 'w').write(r.stdout)
+        else:
+            assert orig.count(old) == 1, (mid, old, orig.count(old))
+            open(path, 'w').write(orig.replace(old, new))
+        try:
+            if build:
+                r = sh('node', 'esbuild.config.mjs', 'production', cwd=C)
+                dst = os.path.join(build, mid)
+                os.makedirs(dst, exist_ok=True)
+                for f in ('main.js', 'styles.css', 'manifest.json'):
+                    shutil.copy(os.path.join(C, f), os.path.join(dst, f))
+                w(f'## {mid}: {desc} -> bundle {dst} (build rc {r.returncode})')
+                continue
+            for f in ('main.js', 'styles.css'):
+                p = os.path.join(C, f)
+                if os.path.exists(p): os.remove(p)
+            r = sh('npx', 'jest', *tests, '--silent', cwd=C)
+            text = r.stdout + r.stderr
+            fails = []
+            for line in text.splitlines():
+                m = re.match(r'^\s+● (.+)$', line)
+                if m and m.group(1) not in fails:
+                    fails.append(m.group(1))
+            summ = [l for l in text.splitlines() if l.startswith('Tests:')]
+            w(f'## {mid}: {desc}')
+            w(f'file: {file}; command: npx jest ' + ' '.join(tests) + ' --silent')
+            w(f'result: {"KILLED" if r.returncode != 0 else "SURVIVED"} (jest rc {r.returncode}); {summ[0] if summ else "no Tests line"}')
+            for f in fails:
+                w('  red: ' + f)
+            w('')
+        finally:
+            open(path, 'w').write(orig)
+    out.close()
+
+main()

@@ -1,0 +1,189 @@
+== tsc
+TSC_RC=0
+== eslint managedModal.ts
+(node:920525) ESLintIgnoreWarning: The ".eslintignore" file is no longer supported. Switch to using the "ignores" property in "eslint.config.js": https://eslint.org/docs/latest/use/configure/migration-guide#ignoring-files
+(Use `node --trace-warnings ...` to show where the warning was created)
+ESLINT_RC=0
+== jest (hover-preview suites)
+FAIL dom test/dom/elements/stamina-bar.test.ts (8.807 s)
+  ● SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › "Enter" on the bar sends one click through the preview to the bar, and the modal is open at once
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 2
+    Received array:  [{"isTrusted": false}, {"isTrusted": false}]
+
+      784 | 		const evt = press(bar, key);
+      785 |
+    > 786 | 		expect(clicks).toHaveLength(1);
+          | 		               ^
+      787 | 		expect(clicks[0].target).toBe(bar);
+      788 | 		expect(clicks[0].bubbles).toBe(true);
+      789 | 		expect(modalCount()).toBe(1);
+
+      at test/dom/elements/stamina-bar.test.ts:786:18
+
+  ● SC-597: the Stamina modal opened by the keyboard from a bar in a hover preview › " " on the bar sends one click through the preview to the bar, and the modal is open at once
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 2
+    Received array:  [{"isTrusted": false}, {"isTrusted": false}]
+
+      784 | 		const evt = press(bar, key);
+      785 |
+    > 786 | 		expect(clicks).toHaveLength(1);
+          | 		               ^
+      787 | 		expect(clicks[0].target).toBe(bar);
+      788 | 		expect(clicks[0].bubbles).toBe(true);
+      789 | 		expect(modalCount()).toBe(1);
+
+      at test/dom/elements/stamina-bar.test.ts:786:18
+
+FAIL dom test/dom/elements/montage.test.ts (14.585 s)
+  ● Console
+
+    console.warn
+      Draw Steel Elements: montage entry for "Osric" round 1 has an unrecognised result "sucess" — preserved as-is, rendered as unrecorded { hero: 'Osric', round: 1, result: 'sucess', note: 'Turned an ankle.' }
+
+      139 | 		}
+      140 | 		if (!isKnownMontageResult(entry.result)) {
+    > 141 | 			console.warn(
+          | 			        ^
+      142 | 				`Draw Steel Elements: montage entry for "${entry.hero}" round ${entry.round} has an unrecognised result "${entry.result}" — preserved as-is, rendered as unrecorded`,
+      143 | 				item,
+      144 | 			);
+
+      at sanitizeEntries (src/elements/montage/model.ts:141:12)
+      at parseModel (src/elements/montage/model.ts:166:18)
+      at Object.parse (src/elements/shared/undeclaredDefaults.ts:52:17)
+      at src/framework/pipeline.ts:388:40
+      at runStage (src/framework/pipeline.ts:92:10)
+      at prepareModel (src/framework/pipeline.ts:388:11)
+      at ElementPipeline.run (src/framework/pipeline.ts:482:74)
+      at renderMontage (test/dom/elements/montage.test.ts:98:17)
+      at Object.<anonymous> (test/dom/elements/montage.test.ts:461:26)
+
+    console.warn
+      Draw Steel Elements: montage entry for "Osric" round 1 has an unrecognised result "sucess" — preserved as-is, rendered as unrecorded { hero: 'Osric', round: 1, result: 'sucess', note: 'Turned an ankle.' }
+
+      139 | 		}
+      140 | 		if (!isKnownMontageResult(entry.result)) {
+    > 141 | 			console.warn(
+          | 			        ^
+      142 | 				`Draw Steel Elements: montage entry for "${entry.hero}" round ${entry.round} has an unrecognised result "${entry.result}" — preserved as-is, rendered as unrecorded`,
+      143 | 				item,
+      144 | 			);
+
+      at sanitizeEntries (src/elements/montage/model.ts:141:12)
+      at parseModel (src/elements/montage/model.ts:166:18)
+      at Object.parse (src/elements/shared/undeclaredDefaults.ts:52:17)
+      at src/framework/pipeline.ts:388:40
+      at runStage (src/framework/pipeline.ts:92:10)
+      at prepareModel (src/framework/pipeline.ts:388:11)
+      at ElementPipeline.run (src/framework/pipeline.ts:482:74)
+      at renderMontage (test/dom/elements/montage.test.ts:98:17)
+      at Object.<anonymous> (test/dom/elements/montage.test.ts:862:26)
+
+    console.warn
+      Draw Steel Elements: montage entry for "Osric" round 1 has an unrecognised result "sucess" — preserved as-is, rendered as unrecorded { hero: 'Osric', round: 1, result: 'sucess' }
+
+      139 | 		}
+      140 | 		if (!isKnownMontageResult(entry.result)) {
+    > 141 | 			console.warn(
+          | 			        ^
+      142 | 				`Draw Steel Elements: montage entry for "${entry.hero}" round ${entry.round} has an unrecognised result "${entry.result}" — preserved as-is, rendered as unrecorded`,
+      143 | 				item,
+      144 | 			);
+
+      at sanitizeEntries (src/elements/montage/model.ts:141:12)
+      at parseModel (src/elements/montage/model.ts:166:18)
+      at Object.parse (src/elements/shared/undeclaredDefaults.ts:52:17)
+      at src/framework/pipeline.ts:388:40
+      at runStage (src/framework/pipeline.ts:92:10)
+      at prepareModel (src/framework/pipeline.ts:388:11)
+      at ElementPipeline.run (src/framework/pipeline.ts:482:74)
+      at renderMontage (test/dom/elements/montage.test.ts:98:17)
+      at Object.<anonymous> (test/dom/elements/montage.test.ts:1683:26)
+
+  ● SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Enter on a logged cell sends one click through the preview to the cell, and the sheet is open at once
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 2
+    Received array:  [{"isTrusted": false}, {"isTrusted": false}]
+
+      2332 | 		const evt = press(cell, key);
+      2333 |
+    > 2334 | 		expect(clicks).toHaveLength(1);
+           | 		               ^
+      2335 | 		expect(clicks[0].target).toBe(cell);
+      2336 | 		expect(clicks[0].bubbles).toBe(true);
+      2337 | 		expect(sheets()).toBe(1);
+
+      at test/dom/elements/montage.test.ts:2334:18
+
+  ● SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Space on a logged cell sends one click through the preview to the cell, and the sheet is open at once
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 2
+    Received array:  [{"isTrusted": false}, {"isTrusted": false}]
+
+      2332 | 		const evt = press(cell, key);
+      2333 |
+    > 2334 | 		expect(clicks).toHaveLength(1);
+           | 		               ^
+      2335 | 		expect(clicks[0].target).toBe(cell);
+      2336 | 		expect(clicks[0].bubbles).toBe(true);
+      2337 | 		expect(sheets()).toBe(1);
+
+      at test/dom/elements/montage.test.ts:2334:18
+
+  ● SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Enter on an empty past-round cell sends one click through the preview to the cell, and the sheet is open at once
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 2
+    Received array:  [{"isTrusted": false}, {"isTrusted": false}]
+
+      2332 | 		const evt = press(cell, key);
+      2333 |
+    > 2334 | 		expect(clicks).toHaveLength(1);
+           | 		               ^
+      2335 | 		expect(clicks[0].target).toBe(cell);
+      2336 | 		expect(clicks[0].bubbles).toBe(true);
+      2337 | 		expect(sheets()).toBe(1);
+
+      at test/dom/elements/montage.test.ts:2334:18
+
+  ● SC-597: the Montage sheet opened by the keyboard from a board cell in a hover preview › Space on an empty past-round cell sends one click through the preview to the cell, and the sheet is open at once
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 2
+    Received array:  [{"isTrusted": false}, {"isTrusted": false}]
+
+      2332 | 		const evt = press(cell, key);
+      2333 |
+    > 2334 | 		expect(clicks).toHaveLength(1);
+           | 		               ^
+      2335 | 		expect(clicks[0].target).toBe(cell);
+      2336 | 		expect(clicks[0].bubbles).toBe(true);
+      2337 | 		expect(sheets()).toBe(1);
+
+      at test/dom/elements/montage.test.ts:2334:18
+
+
+Test Suites: 2 failed, 5 passed, 7 total
+Tests:       6 failed, 488 passed, 494 total
+Snapshots:   0 total
+Time:        44.009 s
+Ran all test suites matching test/dom/kit/managedModal.test.ts|test/dom/elements/stamina-bar.test.ts|test/dom/elements/montage.test.ts|test/dom/views/stamina-edit-modal.test.ts|test/dom/elements/initiative.test.ts|test/dom/elements/conditions.test.ts|test/dom/authoring/formModalHoverPreview.test.ts.
+JEST_RC=1

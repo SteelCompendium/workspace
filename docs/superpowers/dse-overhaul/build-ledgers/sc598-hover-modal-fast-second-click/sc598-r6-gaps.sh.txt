@@ -1,0 +1,3 @@
+#!/bin/bash
+# usage: gaps.sh <log>: one line per trial with its gap
+grep -o "[a-z]* [a-z]* (real hover; press on \"15\" on dse-stamina__ccur, second press [0-9]* ms later\|second click [0-9]* ms after" "$1" | sed 's/(real hover; press on "15" on dse-stamina__ccur,//' | tr '\n' ';'
