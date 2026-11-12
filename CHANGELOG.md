@@ -8,6 +8,14 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: keyboard focus stays in the initiative tracker after Apply in the minion Stamina pool window, and after closing the Conditions window, in Reading view and in the pinned sidebar tracker (SC-603).**
+  Apply in the pool window rebuilds the whole tracker (and so does a captain's Stamina edit that turns its squad's bonus on or off),
+  and an edit in the Conditions window rebuilds that conditions row, so the button you had used to open the window was gone and
+  focus fell to the top of the page. The window now gives focus back to the control that replaced it: the detail row's Stamina
+  control, the roster cell of the same minion, or the Add Condition button. Cancel and Escape still return to the button you
+  pressed. A mouse click never pulls focus into the tracker, and neither does a window opened while focus was somewhere else.
+  In Live Preview focus is still lost when the note saves a moment later (SC-602).
+
 - **DSE plugin: + and - in a hover preview of a heading or block link now save when an identical counter sits elsewhere in the note (SC-594).**
   Hover over a link such as `[[long note#Tracker]]` or `[[note#^id]]` and press + or - on a counter in the preview: if the note
   held a counter with the same contents elsewhere, the click was not saved and the "changed on disk first" Notice showed,
