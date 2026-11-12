@@ -8,6 +8,11 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: Conditions window: each colour swatch is now announced by its colour name (SC-582).**
+  A screen reader said "Color #1e8449" for the green swatch, and the colour's name was only in the hover tooltip. It now says
+  "Green" (and Red, Amber, Blue, Purple) inside the Color group. The tooltip is unchanged, and after you pick a swatch
+  keyboard focus stays on it. The custom colour picker's labels are unchanged, since a custom colour has no name.
+
 - **DSE plugin: in Live Preview, keyboard focus now stays on the button you pressed when the element saves and Obsidian redraws it (SC-602).**
   Press Enter on a counter's + (or Advance round, Make captain, Catch Breath, and so on) and the element saves; before, focus fell to the page
   about half a second later. Focus now stays on the pressed button, or on the control that replaced it (else on the element itself), with the keyboard ring
