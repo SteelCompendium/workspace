@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: in Live Preview, keyboard focus now stays on the button you pressed when the element saves and Obsidian redraws it (SC-602).**
+  Press Enter on a counter's + (or Advance round, Make captain, Catch Breath, and so on) and the element saves; before, focus fell to the page
+  about half a second later. Focus now stays on the pressed button, or on the control that replaced it, with the keyboard ring. A mouse click
+  still never pulls focus into an element. Reading view is unchanged. Not covered: the half-typed Malice quick-add draft is still lost when the
+  tracker saves (SC-605), and the Conditions window still closes when a write lands (SC-384).
+
 - **DSE plugin: a hand-written condition key in capitals, such as `key: Dazed`, is now the standard condition (SC-583).**
   Condition keys used to match only in lowercase, so `Dazed` showed as a custom condition, and picking Dazed in the Conditions
   window added a second, lowercase `dazed`. A standard condition key now matches whatever its capitals: `Dazed` shows Dazed's
