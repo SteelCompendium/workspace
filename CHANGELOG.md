@@ -8,6 +8,14 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: Conditions window: typing a letter now opens the Add search with it typed (SC-580).**
+  The docs said "Click + Add condition (or just start typing)", but typing did nothing. With the window open and focus on a button
+  (the first thing focused is + Add condition), typing a letter now opens the search with that letter in it, so typing `daz`
+  shows Dazed. If the search is already open and focus has moved to another control in the window, the next letter goes to the
+  end of what you typed and focus returns to the search. Space, Enter, Tab, the arrow keys, Escape, shortcuts held with Ctrl,
+  Cmd or Alt, and anything typed into a text field keep working as before. Pressing Escape in a search that a typed letter
+  opened (nothing picked) closes just the search and puts focus back on the control you typed from.
+
 - **DSE plugin: clicking another creature in the initiative roster while using the keyboard keeps focus in the tracker, in Reading view (SC-609).**
   With the keyboard focus on the detail row's Stamina control, a mouse click on another roster cell switched the detail row to that
   creature, and focus fell to the top of the page. Focus now moves to the creature you clicked. A click when focus was not already
