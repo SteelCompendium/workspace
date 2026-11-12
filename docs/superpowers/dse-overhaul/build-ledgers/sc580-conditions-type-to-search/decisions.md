@@ -50,3 +50,4 @@ Parallel owners elsewhere: SC-601, SC-607.
   - Owner ruling: planned r6 reviewer pass **dropped** — delta is test-only, rebase clean and range-diff-identical, and the mutant kills are logged. The owner checked range-diff, the diffstat and the mutant logs directly.
 - Workspace main moved to `02dbf30c` (handoff docs only); chore rebasing the superproject branch onto it. Then land-ready.
 - Superproject rebased (chore) onto `02dbf30c`: head `6d68df08`, pointer `93e8e48c`, clean. LAND-READY 2026-11-12.
+- DONE 2026-11-12: landed by dispatcher — dse develop `93e8e48c` (622b0904..93e8e48c), workspace main `27c0fff9` (CHANGELOG `0b6ab3da` + pointer `0891b815`); ledger preserved at `docs/superpowers/dse-overhaul/build-ledgers/sc580-conditions-type-to-search/`. SC-580 moved to Done via linear-post.py `--state Done`; verified status Done (completedAt 2026-11-12T11:32:56Z). Follow-up: SC-613 (Backlog).
