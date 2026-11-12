@@ -8,6 +8,11 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: Montage: clicking a logged action to edit it now opens its window when the hero's entry has no skills list (SC-606).**
+  The window used to open half-built and throw an error, and in a hover preview the half-built window and the preview then
+  closed on the next click. A hero with no `skills_used` list now works everywhere on the board (editing, logging,
+  correcting, removing, resetting), and your note only gains a `skills_used` list for a hero once a skill is logged for them.
+
 - **DSE plugin: keyboard focus stays in the initiative tracker after Apply in the minion Stamina pool window, and after closing the Conditions window, in Reading view and in the pinned sidebar tracker (SC-603).**
   Apply in the pool window rebuilds the whole tracker (and so does a captain's Stamina edit that turns its squad's bonus on or off),
   and an edit in the Conditions window rebuilds that conditions row, so the button you had used to open the window was gone and
