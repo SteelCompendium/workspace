@@ -8,6 +8,24 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: + and - in a hover preview of a heading or block link now save when an identical counter sits elsewhere in the note (SC-594).**
+  Hover over a link such as `[[long note#Tracker]]` or `[[note#^id]]` and press + or - on a counter in the preview: if the note
+  held a counter with the same contents elsewhere, the click was not saved and the "changed on disk first" Notice showed,
+  although nothing had changed. The click is now saved into the counter you hovered, and the identical one is left alone (also
+  for a second click in the same preview, a counter in a callout, Reading view and Live Preview, and `![[note#Heading]]` and
+  `![[note#^id]]` embeds). The click is saved only when the note itself confirms where the hovered counter is; otherwise nothing
+  is written and the Notice shows. So a click is no longer written into a counter you did not hover when the note was edited
+  from outside (Sync, another app) just before your click. Not saved, with the Notice: a counter in a list item or a footnote; a
+  counter edited from outside just before the click (the preview still shows its old value); a hovered section moved, pasted
+  over or removed from outside just before the click, before Obsidian has re-read the note; a preview Obsidian did not open from
+  a link hover, one already open when the plugin loaded, or (heading links) one that shows another heading than its link names;
+  a link that names two places (two headings of that name, or two `^id` lines) while the counter's contents also occur twice; a
+  heading hover where the heading is written with an underline (`Tracker` over `=====`) or differs from the link's name
+  (formatting, a colon); and a whole-note hover whose counter was edited from outside. Known limit (SC-607, as before this
+  fix): a preview left open after the section it shows was deleted or renamed from outside follows what its link names now, so
+  with two sections of the same name and identical counters the click can be saved in the other one. The Edit form opened from
+  a preview is unchanged (SC-596).
+
 - **DSE plugin: a second click inside a window opened from a hover preview, right after the opening click, no longer closes it (SC-598).**
   A second click inside a window opened from a hover preview, right after the click that opened it, no longer closes the
   window and the preview. Opening the window again from the same preview and clicking inside it at once no longer switches
@@ -47,8 +65,7 @@ go under an *Internal* sub-heading.
   that close it (Cancel, Confirm, Apply: a free-heal Confirm no longer takes the Stamina window and its staged heal with
   it). Escape now closes a form opened from a preview (before, it did nothing, and in Live Preview it
   moved the cursor into the note behind it). After you save or cancel, the preview stays until you click outside it, as
-  Obsidian does for any preview you have clicked into. + or - in a preview with an identical counter elsewhere is unchanged
-  (SC-594).
+  Obsidian does for any preview you have clicked into.
 
 - **DSE plugin: conditions you typed as plain names stay plain names when the initiative tracker saves (SC-592).**
   Removing one condition in a minion's pool window, or any other tracker action that saves (a turn, damage, Malice), rewrote
