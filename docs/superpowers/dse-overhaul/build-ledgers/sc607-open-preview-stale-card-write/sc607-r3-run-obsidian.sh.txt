@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# r3-run-obsidian.sh <tree> <log> [cells]: build <tree> (a scratch worktree), splice the R607 harness copy there and run --only=R607 (the branch worktree is untouched)
+R=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc607-r3-reviewer
+T="$1"
+case "$T" in "$R"/*) ;; *) echo "not a scratch tree: $T"; exit 9;; esac
+cd "$T" || exit 9
+t0=$(date +%s)
+echo "tree $T head $(git -C "$T" rev-parse --short HEAD) load $(cat /proc/loadavg)" > "$2"
+node esbuild.config.mjs production >> "$2" 2>&1
+echo "build_rc=$?" >> "$2"
+sha256sum "$T/main.js" "$T/styles.css" >> "$2"
+python3 -I "$R/r3-make-scratch.py" "$T" >> "$2" 2>&1
+R607_CELLS="$3" node visual-harness/obsidian-lifecycle-r607.mjs --only=R607 >> "$2" 2>&1
+rc=$?
+echo "lc_rc=$rc wall=$(( $(date +%s) - t0 ))s" >> "$2"

@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+# r3-make-scratch.py <tree>: copy <tree>/visual-harness/obsidian-lifecycle.mjs to obsidian-lifecycle-r607.mjs (same dir) with the r3 fixtures and the R607
+# scenario at the front of SCENARIOS. <tree> is a scratch worktree in the r3 scratch folder (never the branch worktree).
+import sys
+T = sys.argv[1].rstrip('/') + '/'
+assert '/scratchpad/sc607-r5-reviewer/' in T
+R = '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc607-r5-reviewer/'
+src = open(T + 'visual-harness/obsidian-lifecycle.mjs').read()
+scen = open(R + 'r5-scenario.mjs').read()
+fixtures = r'''
+{
+	const C = COUNTER(5, 'Twin');
+	const sec = (n, v) => `## ${n}\n\n${COUNTER(v, 'Twin')}\n\n`;
+	const notes = {
+		swap: (id) => `# r607 ${id}\n\nTOP\n\n${sec('Tracker', 5)}${sec('Other', 5)}## After\n\nEND\n`,
+		adj: (id) => `# r607 ${id}\n\nTOP\n\n${sec('Tracker', 5)}${sec('Tracker', 5)}## After\n\nEND\n`,
+		three: (id) => `# r607 ${id}\n\nTOP\n\n${sec('Tracker', 5)}${sec('Tracker', 5)}${sec('Tracker', 5)}## After\n\nEND\n`,
+		uniq: (id) => `# r607 ${id}\n\nTOP\n\n${sec('Tracker', 5)}${sec('Other', 9)}## After\n\nEND\n`,
+		adj56: (id) => `# r607 ${id}\n\nTOP\n\n${sec('Tracker', 5)}${sec('Tracker', 6)}## After\n\nEND\n`,
+		odd: (id) => `---\ntags: [a]\n---\n# r607 ${id}\n\nTOP\n\n## Tom &amp; Jerry\n\n## **Bold** _it_ \x60code\x60\n\n## Link [[other|alias]] and #tag\n\n## Trailing ##\n\nSetext\n======\n\n## Caf\u00e9 \u2014 \ud83d\ude00\n\n${sec('Tracker', 5)}${sec('Other', 5)}## After\n\nEND\n`,
+		short: (id) => `# r607 ${id}\n\nTOP\n\n## Tracker\n\n\x60\x60\x60ds-counter\nname: Twin\ncurrent_value: 5\n\x60\x60\x60\n\n## Other\n\n\x60\x60\x60ds-counter\nname: Twin\ncurrent_value: 9\n\x60\x60\x60\n\n## After\n\nEND\n`,
+		cmt: (id) => `# r607 ${id}\n\nTOP\n\n## Tracker\n\n\x60\x60\x60ds-counter\n# a comment\nname: Twin\n\ncurrent_value: 5\nmax_value: 20\n\x60\x60\x60\n\n## Other\n\n\x60\x60\x60ds-counter\nname: Twin\ncurrent_value: 9\n\x60\x60\x60\n\n## After\n\nEND\n`,
+		crlf: (id) => `# r607 ${id}\n\nTOP\n\n${sec('Tracker', 5)}${sec('Other', 5)}## After\n\nEND\n`.replace(/\n/g, '\r\n'),
+	};
+	void C;
+	for (const [id, n, kind] of [
+		['race-guard', 'swap', 'hover'], ['race-noguard', 'swap', 'hover'], ['race-adj', 'adj', 'hover'], ['race-unrel', 'swap', 'hover'], ['race-lp', 'swap', 'hover'],
+		['emb3-lp', 'three', 'embed'], ['embform-swap', 'swap', 'embed'], ['embmove-rv', 'uniq', 'embed'], ['hovmove-rv', 'uniq', 'hover'],
+		['plus-del', 'adj56', 'hover'], ['gap-hover', 'uniq', 'hover'], ['gap-embed', 'uniq', 'embed'], ['crlf-ctl', 'crlf', 'hover'], ['ctl', 'swap', 'hover'], ['odd-ctl', 'odd', 'hover'], ['odd-emb', 'odd', 'embed'], ['short-rv', 'short', 'hover'], ['short-rv2', 'short', 'hover'], ['short-emb', 'short', 'embed'], ['short-lp', 'short', 'hover'], ['cmt-rv', 'cmt', 'hover'], ['cmt-emb', 'cmt', 'embed'], ['plain-rv', 'swap', 'plain'], ['plain-lp', 'swap', 'plain'],
+	]) {
+		FIXTURES[`Lifecycle/r607-${id}-src.md`] = notes[n](id);
+		FIXTURES[`Lifecycle/r607-${id}-host.md`] = kind === 'embed' ? `# r607 ${id} host\n\n![[r607-${id}-src#Tracker]]\n\nafter\n` : `# r607 ${id} host\n\nsee [[r607-${id}-src#Tracker]] here\n\nfiller\n`;
+	}
+}
+'''
+anchor = '\nconst SCENARIOS = [\n'
+assert src.count(anchor) == 1
+src = src.replace(anchor, '\n' + fixtures + anchor + scen)
+open(T + 'visual-harness/obsidian-lifecycle-r607.mjs', 'w').write(src)
+print('ok')

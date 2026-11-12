@@ -1,0 +1,77 @@
+Traceback (most recent call last):
+  File "/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc607-r2-impl/r2-mutate.py", line 37, in <module>
+    p, a, b = M[mid]
+              ~^^^^^
+KeyError: 'M0x'
+M0x mutate_failed
+M1 applied
+M1 jest_rc=1 Tests:       17 failed, 4174 passed, 4191 total
+M1b applied
+M1b jest_rc=1 Tests:       50 failed, 4141 passed, 4191 total
+M2 applied
+M2 jest_rc=1 Tests:       67 failed, 4124 passed, 4191 total
+M3 applied
+M3 jest_rc=1 Tests:       64 failed, 4127 passed, 4191 total
+M4 applied
+M4 jest_rc=1 Tests:       1 failed, 4190 passed, 4191 total
+M5 applied
+M5 jest_rc=0 Tests:       4191 passed, 4191 total
+M6 applied
+M6 jest_rc=1 Tests:       1 failed, 4190 passed, 4191 total
+M7 applied
+M7 jest_rc=0 Tests:       4191 passed, 4191 total
+M8 applied
+M8 jest_rc=0 Tests:       4191 passed, 4191 total
+M9 applied
+M9 jest_rc=1 Tests:       1 failed, 4190 passed, 4191 total
+M10 applied
+M10 jest_rc=1 Tests:       1 failed, 4190 passed, 4191 total
+M11 applied
+M11 jest_rc=1 Tests:       10 failed, 4181 passed, 4191 total
+M12 applied
+M12 jest_rc=1 Tests:       247 failed, 3944 passed, 4191 total
+M13 applied
+M13 jest_rc=1 Tests:       25 failed, 4166 passed, 4191 total
+M14 applied
+M14 jest_rc=1 Tests:       3 failed, 4188 passed, 4191 total
+M15 applied
+M15 jest_rc=1 Tests:       1 failed, 4190 passed, 4191 total
+M16 applied
+M16 jest_rc=1 Tests:       1 failed, 4190 passed, 4191 total
+M17 applied
+M17 jest_rc=1 Tests:       2 failed, 4189 passed, 4191 total
+M18 applied
+M18 jest_rc=0 Tests:       4191 passed, 4191 total
+M19 applied
+M19 jest_rc=0 Tests:       4191 passed, 4191 total
+M20 applied
+M20 jest_rc=1 Tests:       220 failed, 3971 passed, 4191 total
+M21 applied
+M21 jest_rc=1 Tests:       1 failed, 4190 passed, 4191 total
+M22 applied
+M22 jest_rc=0 Tests:       4191 passed, 4191 total
+M23 applied
+M23 jest_rc=0 Tests:       4191 passed, 4191 total
+M24 applied
+M24 jest_rc=1 Tests:       220 failed, 3971 passed, 4191 total
+M25 applied
+M25 jest_rc=1 Tests:       1 failed, 4190 passed, 4191 total
+M23b jest_rc=1 Tests:       1 failed, 784 skipped, 785 total
+M23b-unmutated jest_rc=0 Tests:       784 skipped, 1 passed, 785 total
+--- second mutation round after the guard change (M20-M27)
+M20 applied
+M20 jest_rc=1 Tests:       220 failed, 3974 passed, 4194 total
+M21 applied
+M21 jest_rc=1 Tests:       1 failed, 4193 passed, 4194 total
+M22 applied
+M22 jest_rc=0 Tests:       4194 passed, 4194 total
+M23 applied
+M23 jest_rc=0 Tests:       4194 passed, 4194 total
+M25 applied
+M25 jest_rc=1 Tests:       1 failed, 4193 passed, 4194 total
+M26 applied
+M26 jest_rc=1 Tests:       1 failed, 4193 passed, 4194 total
+M27 applied
+M27 jest_rc=1 Tests:       53 failed, 4141 passed, 4194 total
+M23b jest_rc=1 Tests:       1 failed, 786 skipped, 787 total
+M23b-unmutated jest_rc=0 Tests:       786 skipped, 1 passed, 787 total

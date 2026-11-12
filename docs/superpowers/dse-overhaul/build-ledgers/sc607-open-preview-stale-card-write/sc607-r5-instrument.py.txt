@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+# r3-instrument.py: instrument the SCRATCH worktree inst-1daa (1daa7d8a) for the r3 real-Obsidian probes. Never the branch worktree.
+#  - globalThis.__r3Delay (ms): the card's drawn snapshot (the metadata cache AND the cachedRead) is taken that much later (opens the hover mount window wide)
+#  - globalThis.__r3NoGuard: skip the hover window guard (to prove a cell reached the race shape)
+#  - globalThis.__r3Trace(rec): snapshot call / done, and the guard decision
+R = '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc607-r5-reviewer/inst-c329/'
+p = R + 'src/framework/host/ReadingModeBlockHost.ts'
+s = open(p).read()
+def rep(a, b):
+	global s
+	assert s.count(a) == 1, a[:80]
+	s = s.replace(a, b)
+G = "(globalThis as unknown as { __r3Delay?: number; __r3NoGuard?: boolean; __r3Trace?: (r: object) => void })"
+rep("""		const meta = this.plugin.app.metadataCache.getFileCache(file);
+		this.drawnRead = this.plugin.app.vault.cachedRead(file).then(
+			(text) => {
+				if (this.drawnToken !== token) return;""", """		const g = """ + G + """;
+		const delay = g.__r3Delay ?? 0;
+		g.__r3Trace?.({ ev: 'snap-call', t: performance.now(), path: this.ctx.sourcePath, seq, rebound, delay, inPopover: this.containerEl.closest('.hover-popover') !== null });
+		let meta = this.plugin.app.metadataCache.getFileCache(file);
+		const readNow = (): Promise<string> => {
+			meta = this.plugin.app.metadataCache.getFileCache(file);
+			g.__r3Trace?.({ ev: 'snap-read', t: performance.now(), path: this.ctx.sourcePath, seq });
+			return this.plugin.app.vault.cachedRead(file);
+		};
+		const read = delay > 0 ? new Promise<void>((r) => window.setTimeout(r, delay)).then(readNow) : this.plugin.app.vault.cachedRead(file);
+		this.drawnRead = read.then(
+			(text) => {
+				g.__r3Trace?.({ ev: 'snap-done', t: performance.now(), path: this.ctx.sourcePath, seq, len: text.length, metaOk: metaMatchesText(meta, text), whole: partText !== null && text === partText });
+				if (this.drawnToken !== token) return;""")
+rep("""				if (fromDrawn !== null && drawn?.text != null && !drawn.rebound && this.embedSrc() === null) {
+					const shown = hoverDrawnText(this.plugin.app, this.containerEl);
+					const part = sectionText.trim();""", """				const g = """ + G + """;
+				g.__r3Trace?.({ ev: 'rebase', t: performance.now(), path: this.ctx.sourcePath, linkLine, from: from === null ? null : from.line, fromDrawn: fromDrawn !== null, drawnText: drawn === null ? null : drawn.text === null ? 'whole' : 'part', rebound: drawn?.rebound ?? null, ownFirst, strict: from === null ? null : JSON.stringify(mapLineStrict(from.text, whole, from.line)) });
+				if (!g.__r3NoGuard && fromDrawn !== null && drawn?.text != null && !drawn.rebound && this.embedSrc() === null) {
+					const shown = hoverDrawnText(this.plugin.app, this.containerEl);
+					const part = sectionText.trim();
+					g.__r3Trace?.({ ev: 'guard', path: this.ctx.sourcePath, shown: shown === null ? null : shown.length, eq: shown === drawn.text, holdsPart: shown !== null && shown.includes(part), partCount: shown === null ? 0 : shown.split(part).length - 1, crlfShown: shown !== null && shown.includes('\\r'), crlfDrawn: drawn.text.includes('\\r'), crlfPart: part.includes('\\r') });""")
+open(p, 'w').write(s)
+print('instrumented')

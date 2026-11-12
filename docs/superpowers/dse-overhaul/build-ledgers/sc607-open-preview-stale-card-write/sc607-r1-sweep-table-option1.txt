@@ -1,0 +1,153 @@
+cells 768
+base: A 440, TWIN 160, refused 168
+probe: A 528, refused 240
+transitions base -> probe: A->A 424, A->refused 16, TWIN->A 64, TWIN->refused 96, refused->A 40, refused->refused 128
+
+TWIN at base, by (kind, shape, upper, edit, cache, plus):
+      4  ('block', 'embed', 'lower', 'swap', 'fresh', '+ redrawn')
+      4  ('block', 'embed', 'lower', 'swap', 'fresh', 'no +')
+      4  ('block', 'embed', 'upper', 'del-upper-adj', 'fresh', '+ redrawn')
+      4  ('block', 'embed', 'upper', 'del-upper-adj', 'fresh', '+ stale')
+      4  ('block', 'embed', 'upper', 'del-upper-adj', 'lagging', '+ redrawn')
+      4  ('block', 'embed', 'upper', 'del-upper-adj', 'lagging', '+ stale')
+      4  ('block', 'embed', 'upper', 'swap', 'fresh', '+ redrawn')
+      4  ('block', 'embed', 'upper', 'swap', 'fresh', 'no +')
+      4  ('block', 'hover', 'lower', 'swap', 'fresh', '+ redrawn')
+      4  ('block', 'hover', 'lower', 'swap', 'fresh', 'no +')
+      4  ('block', 'hover', 'upper', 'del-upper-adj', 'fresh', '+ redrawn')
+      4  ('block', 'hover', 'upper', 'del-upper-adj', 'fresh', '+ stale')
+      4  ('block', 'hover', 'upper', 'del-upper-adj', 'lagging', '+ redrawn')
+      4  ('block', 'hover', 'upper', 'del-upper-adj', 'lagging', '+ stale')
+      4  ('block', 'hover', 'upper', 'swap', 'fresh', '+ redrawn')
+      4  ('block', 'hover', 'upper', 'swap', 'fresh', 'no +')
+      4  ('heading', 'embed', 'lower', 'swap', 'fresh', '+ redrawn')
+      4  ('heading', 'embed', 'lower', 'swap', 'fresh', 'no +')
+      4  ('heading', 'embed', 'upper', 'del-upper-adj', 'fresh', '+ redrawn')
+      4  ('heading', 'embed', 'upper', 'del-upper-adj', 'fresh', '+ stale')
+      4  ('heading', 'embed', 'upper', 'del-upper-adj', 'fresh', 'no +')
+      4  ('heading', 'embed', 'upper', 'del-upper-adj', 'lagging', '+ redrawn')
+      4  ('heading', 'embed', 'upper', 'del-upper-adj', 'lagging', '+ stale')
+      4  ('heading', 'embed', 'upper', 'del-upper-adj', 'lagging', 'no +')
+      4  ('heading', 'embed', 'upper', 'del-upper-sep', 'fresh', '+ redrawn')
+      4  ('heading', 'embed', 'upper', 'del-upper-sep', 'fresh', 'no +')
+      4  ('heading', 'embed', 'upper', 'swap', 'fresh', '+ redrawn')
+      4  ('heading', 'embed', 'upper', 'swap', 'fresh', 'no +')
+      4  ('heading', 'hover', 'lower', 'swap', 'fresh', '+ redrawn')
+      4  ('heading', 'hover', 'lower', 'swap', 'fresh', 'no +')
+      4  ('heading', 'hover', 'upper', 'del-upper-adj', 'fresh', '+ redrawn')
+      4  ('heading', 'hover', 'upper', 'del-upper-adj', 'fresh', '+ stale')
+      4  ('heading', 'hover', 'upper', 'del-upper-adj', 'fresh', 'no +')
+      4  ('heading', 'hover', 'upper', 'del-upper-adj', 'lagging', '+ redrawn')
+      4  ('heading', 'hover', 'upper', 'del-upper-adj', 'lagging', '+ stale')
+      4  ('heading', 'hover', 'upper', 'del-upper-adj', 'lagging', 'no +')
+      4  ('heading', 'hover', 'upper', 'del-upper-sep', 'fresh', '+ redrawn')
+      4  ('heading', 'hover', 'upper', 'del-upper-sep', 'fresh', 'no +')
+      4  ('heading', 'hover', 'upper', 'swap', 'fresh', '+ redrawn')
+      4  ('heading', 'hover', 'upper', 'swap', 'fresh', 'no +')
+
+TWIN at base, by (click, edit):
+     40  ('card', 'del-upper-adj')
+      8  ('card', 'del-upper-sep')
+     32  ('card', 'swap')
+     40  ('form', 'del-upper-adj')
+      8  ('form', 'del-upper-sep')
+     32  ('form', 'swap')
+
+saved(A) -> refused, by (kind, shape, upper, edit, cache, plus, click):
+      2  ('block', 'embed', 'lower', 'del-upper-adj', 'fresh', '+ redrawn', 'card')
+      2  ('block', 'embed', 'lower', 'del-upper-adj', 'fresh', '+ redrawn', 'form')
+      2  ('block', 'embed', 'lower', 'del-upper-adj', 'fresh', 'no +', 'card')
+      2  ('block', 'embed', 'lower', 'del-upper-adj', 'fresh', 'no +', 'form')
+      2  ('block', 'hover', 'lower', 'del-upper-adj', 'fresh', '+ redrawn', 'card')
+      2  ('block', 'hover', 'lower', 'del-upper-adj', 'fresh', '+ redrawn', 'form')
+      2  ('block', 'hover', 'lower', 'del-upper-adj', 'fresh', 'no +', 'card')
+      2  ('block', 'hover', 'lower', 'del-upper-adj', 'fresh', 'no +', 'form')
+
+refused -> saved(A), by (kind, shape, upper, edit, cache, plus, click):
+      2  ('block', 'embed', 'lower', 'del-upper-sep', 'lagging', 'no +', 'card')
+      2  ('block', 'embed', 'lower', 'del-upper-sep', 'lagging', 'no +', 'form')
+      2  ('block', 'embed', 'lower', 'swap', 'lagging', 'no +', 'card')
+      2  ('block', 'embed', 'lower', 'swap', 'lagging', 'no +', 'form')
+      2  ('block', 'embed', 'upper', 'swap', 'lagging', 'no +', 'card')
+      2  ('block', 'embed', 'upper', 'swap', 'lagging', 'no +', 'form')
+      2  ('block', 'hover', 'lower', 'del-upper-sep', 'lagging', 'no +', 'card')
+      2  ('block', 'hover', 'lower', 'del-upper-sep', 'lagging', 'no +', 'form')
+      2  ('block', 'hover', 'lower', 'swap', 'lagging', 'no +', 'card')
+      2  ('block', 'hover', 'lower', 'swap', 'lagging', 'no +', 'form')
+      2  ('block', 'hover', 'upper', 'swap', 'lagging', 'no +', 'card')
+      2  ('block', 'hover', 'upper', 'swap', 'lagging', 'no +', 'form')
+      2  ('heading', 'embed', 'lower', 'swap', 'lagging', 'no +', 'card')
+      2  ('heading', 'embed', 'lower', 'swap', 'lagging', 'no +', 'form')
+      2  ('heading', 'embed', 'upper', 'swap', 'lagging', 'no +', 'card')
+      2  ('heading', 'embed', 'upper', 'swap', 'lagging', 'no +', 'form')
+      2  ('heading', 'hover', 'lower', 'swap', 'lagging', 'no +', 'card')
+      2  ('heading', 'hover', 'lower', 'swap', 'lagging', 'no +', 'form')
+      2  ('heading', 'hover', 'upper', 'swap', 'lagging', 'no +', 'card')
+      2  ('heading', 'hover', 'upper', 'swap', 'lagging', 'no +', 'form')
+
+TWIN -> outcome under probe, by edit:
+     80  ('del-upper-adj', 'refused')
+     16  ('del-upper-sep', 'refused')
+     64  ('swap', 'A')
+
+no outside edit (none) cells: probe outcomes Counter({'A': 96}) base Counter({'A': 96})
+unrelated edit cells: probe Counter({('A', 'fresh'): 96, ('A', 'lagging'): 96}) base Counter({('A', 'fresh'): 96, ('A', 'lagging'): 96})
+
+probe refusals by notice kind: Counter({('dropped',): 240})
+probe saves with a notice: 0
+
+probe outcome by (kind, upper, edit, plus) [cells across shape x mode x click x cache]:
+   ('block', 'lower', 'del-upper-adj', '+ redrawn'): {'refused': 16}
+   ('block', 'lower', 'del-upper-adj', '+ stale'): {'refused': 16}
+   ('block', 'lower', 'del-upper-adj', 'no +'): {'refused': 16}
+   ('block', 'lower', 'del-upper-sep', '+ redrawn'): {'A': 16}
+   ('block', 'lower', 'del-upper-sep', '+ stale'): {'A': 16}
+   ('block', 'lower', 'del-upper-sep', 'no +'): {'A': 16}
+   ('block', 'lower', 'none', '+ redrawn'): {'A': 8}
+   ('block', 'lower', 'none', '+ stale'): {'A': 8}
+   ('block', 'lower', 'none', 'no +'): {'A': 8}
+   ('block', 'lower', 'swap', '+ redrawn'): {'A': 16}
+   ('block', 'lower', 'swap', '+ stale'): {'A': 16}
+   ('block', 'lower', 'swap', 'no +'): {'A': 16}
+   ('block', 'lower', 'unrelated', '+ redrawn'): {'A': 16}
+   ('block', 'lower', 'unrelated', '+ stale'): {'A': 16}
+   ('block', 'lower', 'unrelated', 'no +'): {'A': 16}
+   ('block', 'upper', 'del-upper-adj', '+ redrawn'): {'refused': 16}
+   ('block', 'upper', 'del-upper-adj', '+ stale'): {'refused': 16}
+   ('block', 'upper', 'del-upper-adj', 'no +'): {'refused': 16}
+   ('block', 'upper', 'del-upper-sep', '+ redrawn'): {'refused': 16}
+   ('block', 'upper', 'del-upper-sep', '+ stale'): {'refused': 16}
+   ('block', 'upper', 'del-upper-sep', 'no +'): {'refused': 16}
+   ('block', 'upper', 'none', '+ redrawn'): {'A': 8}
+   ('block', 'upper', 'none', '+ stale'): {'A': 8}
+   ('block', 'upper', 'none', 'no +'): {'A': 8}
+   ('block', 'upper', 'swap', '+ redrawn'): {'A': 16}
+   ('block', 'upper', 'swap', '+ stale'): {'A': 16}
+   ('block', 'upper', 'swap', 'no +'): {'A': 16}
+   ('block', 'upper', 'unrelated', '+ redrawn'): {'A': 16}
+   ('block', 'upper', 'unrelated', '+ stale'): {'A': 16}
+   ('block', 'upper', 'unrelated', 'no +'): {'A': 16}
+   ('heading', 'lower', 'none', '+ redrawn'): {'A': 8}
+   ('heading', 'lower', 'none', '+ stale'): {'A': 8}
+   ('heading', 'lower', 'none', 'no +'): {'A': 8}
+   ('heading', 'lower', 'swap', '+ redrawn'): {'A': 16}
+   ('heading', 'lower', 'swap', '+ stale'): {'A': 16}
+   ('heading', 'lower', 'swap', 'no +'): {'A': 16}
+   ('heading', 'lower', 'unrelated', '+ redrawn'): {'A': 16}
+   ('heading', 'lower', 'unrelated', '+ stale'): {'A': 16}
+   ('heading', 'lower', 'unrelated', 'no +'): {'A': 16}
+   ('heading', 'upper', 'del-upper-adj', '+ redrawn'): {'refused': 16}
+   ('heading', 'upper', 'del-upper-adj', '+ stale'): {'refused': 16}
+   ('heading', 'upper', 'del-upper-adj', 'no +'): {'refused': 16}
+   ('heading', 'upper', 'del-upper-sep', '+ redrawn'): {'refused': 16}
+   ('heading', 'upper', 'del-upper-sep', '+ stale'): {'refused': 16}
+   ('heading', 'upper', 'del-upper-sep', 'no +'): {'refused': 16}
+   ('heading', 'upper', 'none', '+ redrawn'): {'A': 8}
+   ('heading', 'upper', 'none', '+ stale'): {'A': 8}
+   ('heading', 'upper', 'none', 'no +'): {'A': 8}
+   ('heading', 'upper', 'swap', '+ redrawn'): {'A': 16}
+   ('heading', 'upper', 'swap', '+ stale'): {'A': 16}
+   ('heading', 'upper', 'swap', 'no +'): {'A': 16}
+   ('heading', 'upper', 'unrelated', '+ redrawn'): {'A': 16}
+   ('heading', 'upper', 'unrelated', '+ stale'): {'A': 16}
+   ('heading', 'upper', 'unrelated', 'no +'): {'A': 16}

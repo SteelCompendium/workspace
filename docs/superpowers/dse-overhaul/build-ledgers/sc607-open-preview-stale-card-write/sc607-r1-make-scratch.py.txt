@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+# sc607-r1-make-scratch.py <tree>: copy <tree>/visual-harness/obsidian-lifecycle.mjs to <tree>/visual-harness/obsidian-lifecycle-s607.mjs with the SC-607 r1
+# fixtures and the P607 scenario at the front of SCENARIOS. <tree> is a git-archive export in the scratch dir (never the worktree).
+import sys
+T = sys.argv[1].rstrip('/') + '/'
+S = '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc607-r1-reviewer/'
+src = open(T + 'visual-harness/obsidian-lifecycle.mjs').read()
+scen = open(S + 'scenario.mjs').read()
+fixtures = r'''
+{
+	const C = COUNTER(5, 'Twin');
+	const ADJ = (id) => `# p607 ${id}\n\nTOP\n\n## Tracker\n\n${C}\n\n## Tracker\n\n${C}\n\n## After\n\nEND\n`;
+	const NEST = () => `# P1\n\nTOP\n\n## Tracker\n\n${C}\n\n# P2\n\n## Tracker\n\n${C}\n\n## After\n\nEND\n`;
+	const SWAP = (id) => `# p607 ${id}\n\nTOP\n\n## Tracker\n\n${C}\n\n## Other\n\n${C}\n\n## After\n\nEND\n`;
+	const BLK = (id) => `# p607 ${id}\n\nTOP\n\n${C}\n^pa\n\nmid\n\n${C}\n^pb\n\nEND\n`;
+	const BADJ = (id) => `# p607 ${id}\n\nTOP\n\n${C}\n^pa\n\n${C}\n^pb\n\nEND\n`;
+	const hover = (id, link) => `# p607 ${id} host\n\nsee [[p607-${id}-src${link}]] here\n\nfiller\n`;
+	const embed = (id, link) => `# p607 ${id} host\n\n![[p607-${id}-src${link}]]\n\nafter\n`;
+	for (const [id, body, host] of [
+		['hh-adj-rv', ADJ, hover], ['hh-adj-lp', ADJ, hover], ['he-adj-rv', ADJ, embed], ['he-adj-lp', ADJ, embed], ['fh-adj-rv-pane', ADJ, hover],
+		['hh-swap-rv', SWAP, hover], ['hh-swap-lp', SWAP, hover], ['he-swap-rv', SWAP, embed], ['fh-swap-after-rv', SWAP, hover],
+		['bh-handle-hover', SWAP, hover], ['bh-handle-embed', SWAP, embed],
+		...[1, 2, 3].flatMap((i) => [[`tm-h-rv-${i}`, SWAP, hover], [`tm-h-lp-${i}`, SWAP, hover]]),
+		...[1, 2].flatMap((i) => [[`tm-e-rv-${i}`, SWAP, embed], [`tm-e-lp-${i}`, SWAP, embed]]),
+		...[0, 1, 3, 6, 10, 20].map((d) => [`race-${d}`, SWAP, embed]),
+	]) {
+		FIXTURES[`Lifecycle/p607-${id}-src.md`] = body(id);
+		FIXTURES[`Lifecycle/p607-${id}-host.md`] = host(id, '#Tracker');
+	}
+	FIXTURES['Lifecycle/p607-hh-nest-rv-src.md'] = NEST();
+	FIXTURES['Lifecycle/p607-hh-nest-rv-host.md'] = hover('hh-nest-rv', '#P2#Tracker');
+	FIXTURES['Lifecycle/p607-bh-swap-rv-src.md'] = BLK('bh-swap-rv');
+	FIXTURES['Lifecycle/p607-bh-swap-rv-host.md'] = hover('bh-swap-rv', '#^pa');
+	FIXTURES['Lifecycle/p607-fb-adj-rv-pane-src.md'] = BADJ('fb-adj-rv-pane');
+	FIXTURES['Lifecycle/p607-fb-adj-rv-pane-host.md'] = hover('fb-adj-rv-pane', '#^pa');
+}
+'''
+anchor = '\nconst SCENARIOS = [\n'
+assert src.count(anchor) == 1
+src = src.replace(anchor, '\n' + fixtures + anchor + scen)
+open(T + 'visual-harness/obsidian-lifecycle-s607.mjs', 'w').write(src)
+print('ok')

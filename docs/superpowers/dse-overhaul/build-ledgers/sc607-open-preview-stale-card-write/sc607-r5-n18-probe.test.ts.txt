@@ -1,0 +1,77 @@
+// r5 reviewer scratch probe (copied in for a run, removed by its literal path). Can a state Obsidian produces reach the own-write-first branch with the link placing (N18)?
+// The + re-serializes the block with MORE lines (the plugin writes its own keys), Obsidian redraws and adopts the view (rebind) while the metadata cache still
+// describes the note before the + (it lags a write by 6-45 ms): the re-bind snapshot is discarded (metaMatchesText), so the host's own write is the only position.
+import { ReadingModeBlockHost } from '../../../src/framework/host/ReadingModeBlockHost';
+import { noteHoverLink } from '../../../src/framework/host/hoverLinks';
+import { resetDroppedWriteNotices } from '../../../src/framework/host/droppedWriteNotice';
+import { App, Notice, Plugin } from '../../mocks/obsidian';
+
+type Sec = { text: string; lineStart: number; lineEnd: number };
+const settle = () => new Promise((r) => setTimeout(r, 25));
+const pos = (line: number) => ({ line, col: 0, offset: 0 });
+const SHORT = (n: number) => ['```ds-counter', 'name: Twin', `current_value: ${n}`, '```'];
+const LONGB = (n: number) => ['```ds-counter', 'max_value: 20', `current_value: ${n}`, 'min_value: 0', 'name: Twin', '```'];
+function cacheOf(lines: string[]) {
+	const headings: unknown[] = [];
+	let fenced = false;
+	lines.forEach((l, i) => {
+		if (/^```/.test(l)) fenced = !fenced;
+		const h = !fenced && /^(#{1,6})\s+(.*)$/.exec(l);
+		if (h) headings.push({ heading: h[2], level: h[1].length, position: { start: pos(i), end: pos(i) } });
+	});
+	const text = lines.join('\n');
+	return { headings, blocks: {}, sections: [{ type: 'paragraph', position: { start: pos(0), end: { line: lines.length - 1, col: 0, offset: text.length } } }] };
+}
+function popover(app: App, link: string, data: string): HTMLElement {
+	const hoverEl = document.body.appendChild(document.createElement('div'));
+	hoverEl.className = 'popover hover-popover';
+	const embed = hoverEl.appendChild(document.createElement('div'));
+	embed.className = 'markdown-embed';
+	embed.setAttribute('data-type', 'heading');
+	embed.appendChild(document.createElement('h2')).setAttribute('data-heading', 'Tracker');
+	const el = embed.appendChild(document.createElement('div'));
+	noteHoverLink(app, { linktext: link, sourcePath: 'Host.md', hoverParent: { hoverPopover: { hoverEl, embed: { data } } } });
+	return el;
+}
+const note = (a: string[], b: string[]) => ['# N', '', 'TOP', '', '## Tracker', '', ...a, '', '## Other', '', ...b, '', '## After', '', 'END'];
+
+describe('r5 probe: own-write-first with the link placing', () => {
+	beforeEach(() => {
+		resetDroppedWriteNotices();
+		Notice.notices.length = 0;
+	});
+	test.each([
+		['cache caught up at the re-bind (control)', false],
+		['cache still lagging at the re-bind (the re-bind snapshot is discarded)', true],
+	])('+ (the write adds lines), redraw + rebind, %s, then a second +: saved in the hovered counter', async (_n, lagging) => {
+		const app = new App();
+		const pre = note(SHORT(5), SHORT(5));
+		app.vault.setFile('Note.md', pre.join('\n'));
+		let cacheLines = pre;
+		jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => cacheOf(cacheLines) as never);
+		const section = { current: { text: ['', ...SHORT(5), ''].join('\n'), lineStart: 1, lineEnd: 4 } as Sec };
+		const ctx = () => ({ docId: 'd', sourcePath: 'Note.md', frontmatter: undefined, addChild: () => {}, getSectionInfo: () => section.current }) as never;
+		const el = popover(app, 'Note#Tracker', pre.join('\n'));
+		const host = new ReadingModeBlockHost(new Plugin(app) as never, el, ctx(), 'ds-counter');
+		host.setMountedBody('name: Twin\ncurrent_value: 5');
+		await settle();
+		host.notePersistIntent();
+		await settle();
+		const b6 = 'max_value: 20\ncurrent_value: 6\nmin_value: 0\nname: Twin';
+		expect(await host.replaceSource(b6, { fromView: true })).toBe(true);
+		const post = note(LONGB(6), SHORT(5));
+		expect(app.vault.getContent('Note.md')).toBe(post.join('\n'));
+		if (!lagging) cacheLines = post;
+		section.current = { text: ['', ...LONGB(6), ''].join('\n'), lineStart: 1, lineEnd: 6 };
+		host.rebind(el, ctx());
+		await settle();
+		cacheLines = post; // caught up before the second click
+		host.notePersistIntent();
+		await settle();
+		const ok = await host.replaceSource('max_value: 20\ncurrent_value: 7\nmin_value: 0\nname: Twin', { fromView: true });
+		el.closest('.hover-popover')?.remove();
+		expect(Notice.notices).toEqual([]);
+		expect(ok).toBe(true);
+		expect(app.vault.getContent('Note.md')).toBe(note(LONGB(7), SHORT(5)).join('\n'));
+	});
+});

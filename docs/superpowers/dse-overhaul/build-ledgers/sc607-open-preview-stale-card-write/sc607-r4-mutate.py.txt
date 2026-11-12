@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+# r4-mutate.py <id>: apply one mutant of the SC-607 r4 code (M1-M27 from r2, N1-N18 from the r3 review) to the worktree (committed state must be checked out).
+import sys
+E = '/home/scott/code/steelCompendium/worktrees/sc607-open-preview-stale-card-write/draw-steel-elements/src/framework/host/'
+H = E + 'ReadingModeBlockHost.ts'
+L = E + 'lineMap.ts'
+K = E + 'hoverLinks.ts'
+M = {
+ 'M1': (L, "	return head !== null && head === tail ? { line: head } : 'disagree';", "	return head !== null ? { line: head } : 'deleted';"),
+ 'M1b': (H, "		if (strictPins.has(pin) && mapLineFromTail(pin.text, content, pin.lineStart) !== line) return null;\n", "\n"),
+ 'M2': (L, "	const r = mapLineOf(a.slice().reverse(), b.slice().reverse(), a.length - 1 - line);\n	return r === null || r === GAVE_UP ? r : b.length - 1 - r;", "	return mapLineOf(a, b, line);"),
+ 'M3': (H, "} else if (typeof at === 'string' || at.line !== linkLine) return;", "} else if (typeof at === 'string') return;"),
+ 'M4': (H, "function metaMatchesText(meta: CachedMetadata | null, text: string): boolean {\n	if (!meta) return false;", "function metaMatchesText(meta: CachedMetadata | null, text: string): boolean {\n	if (meta || !meta) return true;"),
+ 'M5': (H, "				if (partText !== null && text === partText) {", "				if (false && partText !== null && text === partText) {"),
+ 'M6': (H, "			const ownFirst = own !== null && (drawn === null || own.seq > drawn.seq);", "			const ownFirst = own !== null;"),
+ 'M7': (H, "			const ownFirst = own !== null && (drawn === null || own.seq > drawn.seq);", "			const ownFirst = false;"),
+ 'M8': (H, "				const partialCard = !pinned && pin !== null && (partialPins.has(pin) || strictPins.has(pin));", "				const partialCard = !pinned && pin !== null && partialPins.has(pin);"),
+ 'M9': (H, "		this.readSection();\n		this.snapshotDrawn(true); // SC-607: drawn again\n", "		this.readSection();\n"),
+ 'M10': (H, "		if (typeof link !== 'string' || link.includes('#')) strictPins.add(pin);\n		return pin;", "		void link;\n		return pin;"),
+ 'M11': (H, "				const line = this.cardLinkLine(file, drawn.text, sectionText, pin.lineStart, known, drawn.meta);", "				const line = this.cardLinkLine(file, drawn.text, sectionText, pin.lineStart, known, this.plugin.app.metadataCache.getFileCache(file));"),
+ 'M12': (H, "			const o = ownFrom();\n			if (o !== null) {", "			const o = ownFrom();\n			if (o !== null && o === null) {"),
+ 'M13': (H, "				if (from === null) return; // nothing says which block the card was drawn from: refused", "				if (from === null) {\n					pin.text = whole;\n					pin.lineStart = linkLine;\n					partialPins.delete(pin);\n					return;\n				}"),
+ 'M14': (H, "if (known === null || countByBody(from.text, language, known) !== 1 || countByBody(whole, language, known) !== 1) return;", "if (known === null) return;"),
+ 'M15': (H, "if (known === null || countByBody(from.text, language, known) !== 1 || countByBody(whole, language, known) !== 1) return;", "if (known === null || countByBody(from.text, language, known) !== 1) return;"),
+ 'M16': (H, "if (known === null || countByBody(from.text, language, known) !== 1 || countByBody(whole, language, known) !== 1) return;", "if (known === null || countByBody(whole, language, known) !== 1) return;"),
+ 'M17': (H, "if (known === null || countByBody(from.text, language, known) !== 1 || countByBody(whole, language, known) !== 1) return;", "void language;\n					return;"),
+ 'M18': (H, "if (known === null || countByBody(from.text, language, known) !== 1 || countByBody(whole, language, known) !== 1) return;", "if (known === null || countByBody(from.text, language, known) > 1 || countByBody(whole, language, known) > 1) return;"),
+ 'M19': (H, "				if (at === 'gave up') {", "				if (typeof at === 'string') {"),
+ 'M20': (H, "if (shown !== null && shown !== drawn.text && part !== '' && shown.includes(part)) return;", "if (shown === null || (shown !== drawn.text && part !== '' && shown.includes(part))) return;"),
+ 'M21': (H, "if (shown !== null && shown !== drawn.text && part !== '' && shown.includes(part)) return;", "if (shown !== null && shown === null) return;"),
+ 'M22': (H, "if (fromDrawn !== null && drawn?.text != null && !drawn.rebound && this.embedSrc() === null) {", "if (drawn?.text != null && !drawn.rebound && this.embedSrc() === null) {"),
+ 'M23': (H, "if (fromDrawn !== null && drawn?.text != null && !drawn.rebound && this.embedSrc() === null) {", "if (fromDrawn !== null && drawn?.text != null && !drawn.rebound) {"),
+ 'M24': (K, "		return typeof data === 'string' ? data : null;", "		return data as string;"),
+ 'M25': (H, "if (fromDrawn !== null && drawn?.text != null && !drawn.rebound && this.embedSrc() === null) {", "if (false && fromDrawn !== null) {"),
+ 'M26': (H, "if (shown !== null && shown !== drawn.text && part !== '' && shown.includes(part)) return;", "if (shown !== null && shown !== drawn.text && part !== '') return;"),
+ 'M27': (H, "if (fromDrawn !== null && drawn?.text != null && !drawn.rebound && this.embedSrc() === null) {", "if (fromDrawn !== null && drawn?.text != null && this.embedSrc() === null) {"),
+ 'N1': (H, "			const drawn = this.drawn !== null && this.drawn.seq <= seqAtPin ? this.drawn : null;", "			const drawn = this.drawn;"),
+ 'N2': (H, "				if (this.drawnToken !== token) return;\n", "\n"),
+ 'N4': (H, "			if (reading) await reading;\n", "\n"),
+ 'N6': (H, "				pin.lineStart = linkLine;\n				partialPins.delete(pin);\n				strictPins.add(pin);", "				pin.lineStart = linkLine;\n				partialPins.delete(pin);"),
+ 'N7': (H, "				partialPins.delete(pin); // the part IS the note\n				strictPins.add(pin);", "				partialPins.delete(pin); // the part IS the note"),
+ 'N8': (H, "				pin.lineStart = o.line;\n				partialPins.delete(pin);\n				strictPins.add(pin);", "				pin.lineStart = o.line;\n				partialPins.delete(pin);"),
+ 'N9': (H, "		if (l === undefined || !l.includes(h.heading)) return false;", "		void l;"),
+ 'N10': (H, "		if (end.line >= lines.length || text.slice(end.offset).trim() !== '') return false;", "		void end;"),
+ 'N11': (L, "	if (head === GAVE_UP || tail === GAVE_UP) return 'gave up';", "	if (head === GAVE_UP && tail === GAVE_UP) return 'gave up';"),
+ 'N14': (H, "				if (drawn.text === null) return { text: sectionText, line: pin.lineStart }; // the part was the whole note as drawn", "				if (drawn.text === null) return null;"),
+ 'N15': (H, "lineStart: target.lineStart, seq: ++this.drawnSeq };", "lineStart: target.lineStart, seq: 0 };"),
+ 'N16': (H, "				this.drawn = { text, meta, seq, rebound };", "				this.drawn = { text, meta, seq, rebound: true };"),
+ 'N18': (H, "				const fromOwn = ownFirst ? ownFrom() : null;\n				const fromDrawn = fromOwn === null ? drawnFrom() : null;\n				const from = fromOwn ?? fromDrawn ?? ownFrom();", "				const fromOwn = null;\n				const fromDrawn = drawnFrom();\n				const from = fromOwn ?? fromDrawn;"),
+}
+mid = sys.argv[1]
+p, a, b = M[mid]
+s = open(p).read()
+assert s.count(a) == 1, f'{mid}: anchor count {s.count(a)}'
+open(p, 'w').write(s.replace(a, b))
+print(f'{mid} applied')

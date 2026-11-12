@@ -1,0 +1,365 @@
+// r3 reviewer scratch probe (copied into test/dom/framework/ for a run, removed by its literal path). Not committed.
+// Each probe records { name, outcome, wrote, notices } to a JSONL file and asserts only "never a write into a counter other than the one named as drawn-from".
+import { appendFileSync } from 'fs';
+import { ReadingModeBlockHost } from '../../../src/framework/host/ReadingModeBlockHost';
+import { noteHoverLink } from '../../../src/framework/host/hoverLinks';
+import { mapLine, mapLineFromTail, mapLineStrict } from '../../../src/framework/host/lineMap';
+import { resetDroppedWriteNotices } from '../../../src/framework/host/droppedWriteNotice';
+import { App, Notice, Plugin } from '../../mocks/obsidian';
+
+const OUT = process.env.SC607R3_OUT ?? '/dev/null';
+type Sec = { text: string; lineStart: number; lineEnd: number };
+type Section = { current: Sec | null };
+const ctxOf = (section: Section) =>
+	({ docId: 'doc-r3', sourcePath: 'Note.md', frontmatter: undefined, addChild: () => {}, getSectionInfo: () => section.current }) as never;
+const CTR = (n: number, name = 'Twin'): string[] => ['```ds-counter', `name: ${name}`, `current_value: ${n}`, '```'];
+const bodyOf = (n: number, name = 'Twin'): string => `name: ${name}\ncurrent_value: ${n}`;
+const settle = () => new Promise((r) => setTimeout(r, 25));
+const pos = (line: number) => ({ line, col: 0, offset: 0 });
+function cacheOf(lines: string[]) {
+	const headings: Array<{ heading: string; level: number; position: unknown }> = [];
+	const blocks: Record<string, unknown> = {};
+	let fenced = false;
+	lines.forEach((l, i) => {
+		if (/^```/.test(l)) fenced = !fenced;
+		const h = !fenced && /^(#{1,6})\s+(.*)$/.exec(l);
+		if (h) headings.push({ heading: h[2], level: h[1].length, position: { start: pos(i), end: pos(i) } });
+		const id = /^\^(\w+)$/.exec(l);
+		if (id) {
+			let s = i - 1;
+			while (s >= 0 && lines[s] !== '```') s--;
+			for (s = s - 1; s >= 0 && !/^```\w/.test(lines[s]); s--);
+			blocks[id[1]] = { id: id[1], position: { start: pos(s), end: pos(i - 1) } };
+		}
+	});
+	// a last section ending where the text ends (metaMatchesText reads it)
+	const sections = [{ type: 'paragraph', position: { start: pos(0), end: { line: lines.length - 1, col: lines[lines.length - 1].length, offset: lines.join('\n').length } } }];
+	return { headings, blocks, sections };
+}
+function popoverEl(app: App, link: string, data?: unknown): HTMLElement {
+	const hoverEl = document.createElement('div');
+	hoverEl.className = 'popover hover-popover';
+	const embed = hoverEl.appendChild(document.createElement('div'));
+	embed.className = 'markdown-embed';
+	const sub = link.includes('#') ? link.slice(link.indexOf('#')) : null;
+	if (sub === null) {
+		// a whole note: neither data-type
+	} else if (sub.startsWith('#^')) embed.setAttribute('data-type', 'block');
+	else {
+		embed.setAttribute('data-type', 'heading');
+		const h = embed.appendChild(document.createElement('h2'));
+		h.setAttribute('data-heading', sub!.split('#').pop()!);
+	}
+	const el = embed.appendChild(document.createElement('div'));
+	document.body.appendChild(hoverEl);
+	const popover = data === undefined ? { hoverEl } : { hoverEl, embed: { data } };
+	noteHoverLink(app, { linktext: link, sourcePath: 'Host.md', hoverParent: { hoverPopover: popover } });
+	return el;
+}
+function embedEl(src: string): HTMLElement {
+	const embed = document.createElement('div');
+	embed.className = 'internal-embed markdown-embed';
+	embed.setAttribute('src', src);
+	const el = embed.appendChild(document.createElement('div'));
+	document.body.appendChild(embed);
+	return el;
+}
+const fenceStarts = (lines: string[]): number[] => lines.flatMap((l, i) => (l.startsWith('```ds-counter') ? [i] : []));
+const noticeKind = (n: string): string => (n.includes('changed on disk first') ? 'dropped' : n.includes("can't tell where") ? 'unsavable' : 'other');
+
+type Step =
+	| { do: 'outside'; lines: string[]; cache?: 'fresh' | 'lagging' }
+	| { do: 'cache' } // the cache catches up
+	| { do: 'formopen' } // the pencil: the form's pin is taken (and rebased) now
+	| { do: 'formsave' } // Save of the form opened earlier
+	| { do: 'click'; card: 'card' | 'form'; value?: number }
+	| { do: 'redraw'; sec: Sec; via: 'rebind' | 'mount'; data?: unknown; known?: number };
+type Probe = {
+	name: string;
+	shape: 'hover' | 'embed' | 'plain';
+	link: string;
+	drawn: string[]; // the note Obsidian drew the part from (embed.data)
+	snapshot?: string[]; // what the card's mount read sees (default drawn)
+	snapshotCache?: string[]; // the cache at the mount read (default snapshot)
+	data?: unknown; // embed.data (default drawn text; 'absent' = no embed object)
+	sec: Sec;
+	known: number;
+	steps: Step[];
+	// the fence line (in the FINAL note) of the counter the card was drawn from, or -1 if it is gone; the probe judges every write against it
+	drawnFromNow: number;
+};
+
+async function runProbe(p: Probe): Promise<{ outcome: string; wrote: number[]; notices: string[] }> {
+	const app = new App();
+	const snap = p.snapshot ?? p.drawn;
+	app.vault.setFile('Note.md', snap.join('\n'));
+	let cacheLines = p.snapshotCache ?? snap;
+	jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => cacheOf(cacheLines) as never);
+	const section: Section = { current: p.sec };
+	const data = p.data === 'absent' ? undefined : p.data === undefined ? p.drawn.join('\n') : p.data;
+	const mk = (): HTMLElement => (p.shape === 'hover' ? popoverEl(app, p.link, data) : p.shape === 'plain' ? document.body.appendChild(document.createElement('div')) : embedEl(p.link));
+	let el = mk();
+	let host = new ReadingModeBlockHost(new Plugin(app) as never, el, ctxOf(section), 'ds-counter');
+	host.setMountedBody(bodyOf(p.known));
+	await settle();
+	if (p.snapshot) {
+		// the snapshot read is done; the note now is what the snapshot saw (the outside edit landed before it)
+	}
+	let known = p.known;
+	let lastBefore = app.vault.getContent('Note.md')!;
+	let wrote: number[] = [];
+	let formPin: ReturnType<ReadingModeBlockHost['pinPosition']> = null;
+	for (const s of p.steps) {
+		if (s.do === 'outside') {
+			app.vault.setFile('Note.md', s.lines.join('\n'));
+			if (s.cache !== 'lagging') cacheLines = s.lines;
+		} else if (s.do === 'formopen') {
+			formPin = host.pinPosition();
+			await settle();
+		} else if (s.do === 'formsave') {
+			Notice.notices.length = 0;
+			resetDroppedWriteNotices();
+			lastBefore = app.vault.getContent('Note.md')!;
+			const ok = await (formPin ? host.replaceSource(bodyOf(known, 'Edited'), { pin: formPin, pinOnly: true }) : host.replaceSource(bodyOf(known, 'Edited')));
+			const after = app.vault.getContent('Note.md')!;
+			const bl = lastBefore.split('\n');
+			const al = after.split('\n');
+			wrote = after === lastBefore ? [] : fenceStarts(bl).filter((f) => bl.slice(f, f + 4).join('\n') !== al.slice(f, f + 4).join('\n'));
+			if (ok) cacheLines = al;
+		} else if (s.do === 'cache') {
+			cacheLines = app.vault.getContent('Note.md')!.split('\n');
+		} else if (s.do === 'redraw') {
+			if (s.known !== undefined) known = s.known;
+			section.current = s.sec;
+			if (s.via === 'rebind') host.rebind(el, ctxOf(section));
+			else {
+				el.closest('.hover-popover, .internal-embed')?.remove();
+				el = p.shape === 'hover' ? popoverEl(app, p.link, s.data === undefined ? data : s.data) : embedEl(p.link);
+				host = new ReadingModeBlockHost(new Plugin(app) as never, el, ctxOf(section), 'ds-counter');
+				host.setMountedBody(bodyOf(known));
+			}
+			await settle();
+		} else {
+			Notice.notices.length = 0;
+			resetDroppedWriteNotices();
+			lastBefore = app.vault.getContent('Note.md')!;
+			let ok: boolean;
+			if (s.card === 'card') {
+				host.notePersistIntent();
+				await settle();
+				ok = await host.replaceSource(bodyOf(s.value ?? known + 1), { fromView: true });
+			} else {
+				const pin = host.pinPosition();
+				ok = await (pin ? host.replaceSource(bodyOf(known, 'Edited'), { pin, pinOnly: true }) : host.replaceSource(bodyOf(known, 'Edited')));
+			}
+			const after = app.vault.getContent('Note.md')!;
+			const bl = lastBefore.split('\n');
+			const al = after.split('\n');
+			wrote = after === lastBefore ? [] : fenceStarts(bl).filter((f) => bl.slice(f, f + 4).join('\n') !== al.slice(f, f + 4).join('\n'));
+			if (ok && s.card === 'card') known = s.value ?? known + 1;
+			if (ok) {
+				cacheLines = al;
+			}
+		}
+	}
+	el.closest('.hover-popover, .internal-embed')?.remove();
+	const notices = (Notice.notices as unknown[]).map((n) => noticeKind(String(n)));
+	const outcome = wrote.length === 0 ? 'refused' : wrote.length === 1 && wrote[0] === p.drawnFromNow ? 'SAME' : 'DIFFERENT';
+	return { outcome, wrote, notices };
+}
+
+// ---------- notes ----------
+const H = (name: string, n: number): string[] => [`## ${name}`, '', ...CTR(n), ''];
+const note = (...parts: string[][]): string[] => ['# N', '', 'TOP', '', ...parts.flat(), '## After', '', 'END'];
+const hoverSec = (n: number): Sec => ({ text: ['', ...CTR(n), ''].join('\n'), lineStart: 1, lineEnd: 4 });
+const embedSec = (name: string, n: number): Sec => ({ text: [`## ${name}`, '', ...CTR(n), ''].join('\n'), lineStart: 2, lineEnd: 5 });
+const blkSec = (n: number): Sec => ({ text: CTR(n).join('\n'), lineStart: 0, lineEnd: 3 });
+const B = (n: number, id: string): string[] => [...CTR(n), `^${id}`, ''];
+const para = (n: number, tag: string): string[] => Array.from({ length: n }, (_, i) => `${tag} ${i}`);
+const at = (lines: string[], k: number) => fenceStarts(lines)[k];
+
+const probes: Probe[] = [];
+for (const shape of ['hover', 'embed'] as const) {
+	const sec = shape === 'hover' ? hoverSec(5) : embedSec('Tracker', 5);
+	const three = note(H('Tracker', 5), H('Tracker', 5), H('Tracker', 5));
+	// P1 three identical adjacent sections; the link names the first. Delete the first / middle / last.
+	probes.push({ name: `P1a ${shape} three identical, the first deleted`, shape, link: 'Note#Tracker', drawn: three, sec, known: 5, steps: [{ do: 'outside', lines: note(H('Tracker', 5), H('Tracker', 5)) }, { do: 'click', card: 'card' }], drawnFromNow: -1 });
+	probes.push({ name: `P1b ${shape} three identical, the middle deleted`, shape, link: 'Note#Tracker', drawn: three, sec, known: 5, steps: [{ do: 'outside', lines: note(H('Tracker', 5), H('Tracker', 5)) }, { do: 'click', card: 'card' }], drawnFromNow: at(note(H('Tracker', 5), H('Tracker', 5)), 0) });
+	// P1c three identical sections separated by unique paragraphs; first deleted / third deleted
+	const threeSep = note(H('Tracker', 5), ['m1', ''], H('Tracker', 5), ['m2', ''], H('Tracker', 5));
+	const sepDelFirst = note(['m1', ''], H('Tracker', 5), ['m2', ''], H('Tracker', 5));
+	probes.push({ name: `P1c ${shape} three identical with paragraphs between, the first deleted`, shape, link: 'Note#Tracker', drawn: threeSep, sec, known: 5, steps: [{ do: 'outside', lines: sepDelFirst }, { do: 'click', card: 'card' }], drawnFromNow: -1 });
+	const sepDelLast = note(H('Tracker', 5), ['m1', ''], H('Tracker', 5), ['m2', '']);
+	probes.push({ name: `P1d ${shape} three identical with paragraphs between, the last deleted`, shape, link: 'Note#Tracker', drawn: threeSep, sec, known: 5, steps: [{ do: 'outside', lines: sepDelLast }, { do: 'click', card: 'card' }], drawnFromNow: at(sepDelLast, 0) });
+	// P2 the hovered section moves (cut, pasted below After) and an unrelated line is edited; an identical `## Other` stays
+	const sw = note(H('Tracker', 5), H('Other', 5));
+	const moved = ['# N', '', 'TOP edited', '', ...H('Other', 5), '## After', '', 'END', '', ...H('Tracker', 5)];
+	probes.push({ name: `P2a ${shape} Tracker section moved to the end + TOP edited`, shape, link: 'Note#Tracker', drawn: sw, sec, known: 5, steps: [{ do: 'outside', lines: moved }, { do: 'click', card: 'card' }], drawnFromNow: at(moved, 1) });
+	probes.push({ name: `P2b ${shape} Tracker section moved to the end + TOP edited, form`, shape, link: 'Note#Tracker', drawn: sw, sec, known: 5, steps: [{ do: 'outside', lines: moved }, { do: 'click', card: 'form' }], drawnFromNow: at(moved, 1) });
+	// P2c the Tracker section moves below Other (identical bodies: the same text as the two names swapped)
+	const movedBelow = note(H('Other', 5), H('Tracker', 5));
+	probes.push({ name: `P2c ${shape} Tracker moved below an identical Other (= names swapped as text)`, shape, link: 'Note#Tracker', drawn: sw, sec, known: 5, steps: [{ do: 'outside', lines: movedBelow }, { do: 'click', card: 'card' }], drawnFromNow: at(movedBelow, 1) });
+	// P2d a pure MOVE of the hovered section, its body unique (no identical counter anywhere): base saves
+	{
+		const u0 = note(H('Tracker', 5), H('Other', 9));
+		const u1 = ['# N', '', 'TOP', '', ...H('Other', 9), '## After', '', 'END', '', ...H('Tracker', 5)];
+		probes.push({ name: `P2d ${shape} unique Tracker section moved to the end`, shape, link: 'Note#Tracker', drawn: u0, sec, known: 5, steps: [{ do: 'outside', lines: u1 }, { do: 'click', card: 'card' }], drawnFromNow: at(u1, 1) });
+		const u2 = note(H('Other', 9), H('Tracker', 5));
+		probes.push({ name: `P2e ${shape} unique Tracker section moved below Other`, shape, link: 'Note#Tracker', drawn: u0, sec, known: 5, steps: [{ do: 'outside', lines: u2 }, { do: 'click', card: 'card' }], drawnFromNow: at(u2, 1) });
+		const u3 = ['# N', '', 'TOP', '', ...H('Other', 9), ...para(30, 'filler'), '', ...H('Tracker', 5), '## After', '', 'END'];
+		const u3d = ['# N', '', 'TOP', '', ...H('Tracker', 5), ...H('Other', 9), ...para(30, 'filler'), '', '## After', '', 'END'];
+		probes.push({ name: `P2f ${shape} unique Tracker section moved below 30 lines of filler`, shape, link: 'Note#Tracker', drawn: u3d, sec, known: 5, steps: [{ do: 'outside', lines: u3 }, { do: 'click', card: 'card' }], drawnFromNow: at(u3, 1) });
+		const u4 = ['# N', '', 'TOP', '', 'para', '', ...H('Tracker', 5), ...H('Other', 9), '## After', '', 'END'];
+		probes.push({ name: `P2g ${shape} control: a paragraph added above (the section moves down by lines)`, shape, link: 'Note#Tracker', drawn: u0, sec, known: 5, steps: [{ do: 'outside', lines: u4 }, { do: 'click', card: 'card' }], drawnFromNow: at(u4, 0) });
+	}
+	// P11c the marker-rename N5 without the give-up
+	if (shape === 'hover') {
+		const c0 = ['# N', '', 'TOP', '', ...B(5, 'pa'), 'mid', '', ...B(7, 'pb'), 'END'];
+		const c1 = ['# N', '', 'TOP', '', 'mid', '', ...B(5, 'pa'), 'END'];
+		probes.push({ name: `P11c ${shape} no give-up N5 + marker renamed`, shape, link: 'Note#^pa', drawn: c0, sec: blkSec(5), known: 5, steps: [{ do: 'outside', lines: c1 }, { do: 'click', card: 'card' }], drawnFromNow: -1 });
+	}
+	// P19 a form opened BEFORE the outside edit (its pin placed through the link and made strict), then the hovered (upper) of two adjacent identical
+	// sections / blocks deleted, then Save: refused (the pin's strictness at write time, `strictPins` after the link placement, is what refuses it)
+	{
+		const adjH = note(H('Tracker', 5), H('Tracker', 5));
+		probes.push({ name: `P19a ${shape} form open, then the upper of two adjacent identical sections deleted, Save`, shape, link: 'Note#Tracker', drawn: adjH, sec, known: 5, steps: [{ do: 'formopen' }, { do: 'outside', lines: note(H('Tracker', 5)) }, { do: 'formsave' }], drawnFromNow: -1 });
+		const bAdj = ['# N', '', 'TOP', '', ...B(5, 'pa'), ...B(5, 'pb'), 'END'];
+		const bNow = ['# N', '', 'TOP', '', ...B(5, 'pb'), 'END'];
+		probes.push({ name: `P19b ${shape} block form open on ^pa, then ^pa (upper of two adjacent identical) deleted, Save`, shape, link: 'Note#^pa', drawn: bAdj, sec: blkSec(5), known: 5, steps: [{ do: 'formopen' }, { do: 'outside', lines: bNow }, { do: 'formsave' }], drawnFromNow: -1 });
+		const sw2 = note(H('Tracker', 5), H('Other', 5));
+		probes.push({ name: `P19c ${shape} form open, then names swapped, Save`, shape, link: 'Note#Tracker', drawn: sw2, sec, known: 5, steps: [{ do: 'formopen' }, { do: 'outside', lines: note(H('Other', 5), H('Tracker', 5)) }, { do: 'formsave' }], drawnFromNow: at(note(H('Other', 5), H('Tracker', 5)), 0) });
+	}
+	// P3 own + (stale part), an unrelated outside edit, a second + (stale; the two counters now identical), the names swapped, a third +
+	{
+		const p3 = note(H('Tracker', 5), H('Other', 7));
+		const p3u = ['# N', '', 'TOP x', '', ...H('Tracker', 6), ...H('Other', 7), '## After', '', 'END'];
+		const p3s = ['# N', '', 'TOP x', '', ...H('Other', 7), ...H('Tracker', 7), '## After', '', 'END'];
+		probes.push({
+			name: `P3 ${shape} +, unrelated edit, + (stale), names swapped, + (stale)`, shape, link: 'Note#Tracker', drawn: p3, sec, known: 5,
+			steps: [{ do: 'click', card: 'card' }, { do: 'outside', lines: p3u }, { do: 'click', card: 'card' }, { do: 'outside', lines: p3s }, { do: 'click', card: 'card' }],
+			drawnFromNow: at(p3s, 0),
+		});
+	}
+	// P4 own + redrawn (rebind), then the upper of two now-identical adjacent sections deleted, then +
+	const adj56 = note(H('Tracker', 5), H('Tracker', 6));
+	probes.push({
+		name: `P4 ${shape} + redrawn (rebind), the first of two now-identical adjacent sections deleted, +`, shape, link: 'Note#Tracker', drawn: adj56, sec, known: 5,
+		steps: [{ do: 'click', card: 'card' }, { do: 'redraw', sec: shape === 'hover' ? hoverSec(6) : embedSec('Tracker', 6), via: 'rebind' }, { do: 'outside', lines: note(H('Tracker', 6)) }, { do: 'click', card: 'card' }],
+		drawnFromNow: -1,
+	});
+	// P5 the same, but the redraw is a NEW card (a mount, not an adoption)
+	probes.push({
+		name: `P5 ${shape} + redrawn (new card), the first of two now-identical adjacent sections deleted, +`, shape, link: 'Note#Tracker', drawn: adj56, sec, known: 5,
+		steps: [{ do: 'click', card: 'card' }, { do: 'redraw', sec: shape === 'hover' ? hoverSec(6) : embedSec('Tracker', 6), via: 'mount' }, { do: 'outside', lines: note(H('Tracker', 6)) }, { do: 'click', card: 'card' }],
+		drawnFromNow: -1,
+	});
+	// P6 the snapshot race: the names are swapped after Obsidian's read and before the card's read; the cache is fresh at the card's read
+	const swapped = note(H('Other', 5), H('Tracker', 5));
+	for (const data of ['drawn', 'absent', 'nonstring', 'snapshot'] as const) {
+		probes.push({
+			name: `P6 ${shape} race: swap before the card's read, cache fresh, data=${data}`, shape, link: 'Note#Tracker', drawn: sw, snapshot: swapped, sec, known: 5,
+			data: data === 'drawn' ? undefined : data === 'absent' ? 'absent' : data === 'nonstring' ? 42 : swapped.join('\n'),
+			steps: [{ do: 'click', card: 'card' }], drawnFromNow: data === 'snapshot' ? at(swapped, 1) : at(swapped, 0),
+		});
+	}
+	// P7 the race with the first of two adjacent identical sections deleted (the part occurs twice in the stale data)
+	const adj = note(H('Tracker', 5), H('Tracker', 5));
+	probes.push({ name: `P7 ${shape} race: the first of two adjacent identical deleted before the card's read, cache fresh`, shape, link: 'Note#Tracker', drawn: adj, snapshot: note(H('Tracker', 5)), sec, known: 5, steps: [{ do: 'click', card: 'card' }], drawnFromNow: -1 });
+	// P8 the race with an UNRELATED edit (base saved): a guard refusal? and does it persist for later clicks?
+	const unrel = ['# N', '', 'TOP edited', '', ...H('Tracker', 5), ...H('Other', 5), '## After', '', 'END'];
+	probes.push({ name: `P8 ${shape} race: unrelated edit before the card's read, then + twice`, shape, link: 'Note#Tracker', drawn: sw, snapshot: unrel, sec, known: 5, steps: [{ do: 'click', card: 'card' }, { do: 'click', card: 'card' }], drawnFromNow: at(unrel, 0) });
+	// P9 the REDRAW race: the hovered counter edited from outside (part changes: a new card), and a second outside write before the new card's read
+	// deletes that section and edits a counter below a unique paragraph to read like it. The stale popover data never held the new part.
+	const r0 = note(H('Tracker', 4), ['mid', ''], H('Tracker', 9));
+	const r1 = note(H('Tracker', 5), ['mid', ''], H('Tracker', 9));
+	const r2 = note(['mid', ''], H('Tracker', 5));
+	probes.push({
+		name: `P9 ${shape} redraw race: part edited (new card), section deleted + the lower edited to match before the new card's read`, shape, link: 'Note#Tracker', drawn: r0, sec: shape === 'hover' ? hoverSec(4) : embedSec('Tracker', 4), known: 4,
+		steps: [{ do: 'outside', lines: r2 }, { do: 'redraw', sec: shape === 'hover' ? hoverSec(5) : embedSec('Tracker', 5), via: 'mount', known: 5 }, { do: 'click', card: 'card', value: 6 }],
+		drawnFromNow: -1,
+	});
+	// P9-control: the same with the new card's read seeing r1 (no race): refused or same
+	probes.push({
+		name: `P9c ${shape} redraw control: the new card read r1, then the second write`, shape, link: 'Note#Tracker', drawn: r0, sec: shape === 'hover' ? hoverSec(4) : embedSec('Tracker', 4), known: 4,
+		steps: [{ do: 'outside', lines: r1 }, { do: 'redraw', sec: shape === 'hover' ? hoverSec(5) : embedSec('Tracker', 5), via: 'mount', known: 5 }, { do: 'outside', lines: r2 }, { do: 'click', card: 'card', value: 6 }],
+		drawnFromNow: -1,
+	});
+	// P10 give-up (R-Q2c): N5-like with headings: the Tracker section deleted, a unique paragraph kept, Other renamed Tracker + set to 5, 500 lines in and below
+	const g0 = ['# N', '', ...para(300, 'above'), '', ...H('Tracker', 5), 'uniq para', '', ...H('Other', 9), '## After', '', ...para(300, 'below')];
+	const g1 = ['# N', '', ...para(500, 'ins above'), ...para(300, 'above'), '', 'uniq para', '', ...H('Tracker', 5), '## After', '', ...para(300, 'below'), ...para(500, 'ins below')];
+	probes.push({ name: `P10 ${shape} give-up: Tracker deleted, Other renamed Tracker and edited to match, 1000 lines added`, shape, link: 'Note#Tracker', drawn: g0, sec, known: 5, steps: [{ do: 'outside', lines: g1 }, { do: 'click', card: 'card' }], drawnFromNow: -1 });
+	// P10b same without the 1000 lines (the line map does not give up)
+	const g0s = note(H('Tracker', 5), ['uniq para', ''], H('Other', 9));
+	const g1s = note(['uniq para', ''], H('Tracker', 5));
+	probes.push({ name: `P10b ${shape} no give-up: Tracker deleted, Other renamed Tracker and edited to match`, shape, link: 'Note#Tracker', drawn: g0s, sec, known: 5, steps: [{ do: 'outside', lines: g1s }, { do: 'click', card: 'card' }], drawnFromNow: -1 });
+	// P11 give-up with a block link: N5 exact (markers kept) + 1000 lines
+	const k0 = ['# N', '', ...para(300, 'above'), '', ...B(5, 'pa'), 'mid', '', ...B(7, 'pb'), ...para(300, 'below')];
+	const k1 = ['# N', '', ...para(500, 'ins above'), ...para(300, 'above'), '', 'mid', '', ...B(5, 'pb'), ...para(300, 'below'), ...para(500, 'ins below')];
+	if (shape === 'hover') probes.push({ name: `P11 ${shape} give-up N5: ^pa deleted, ^pb edited to read like it, 1000 lines`, shape, link: 'Note#^pa', drawn: k0, sec: blkSec(5), known: 5, steps: [{ do: 'outside', lines: k1 }, { do: 'click', card: 'card' }], drawnFromNow: -1 });
+	// P11b the marker moved too (^pb renamed ^pa) + 1000 lines
+	const k2 = k1.map((l) => (l === '^pb' ? '^pa' : l));
+	if (shape === 'hover') probes.push({ name: `P11b ${shape} give-up N5 + marker renamed: ^pa deleted, ^pb edited and renamed ^pa, 1000 lines`, shape, link: 'Note#^pa', drawn: k0, sec: blkSec(5), known: 5, steps: [{ do: 'outside', lines: k2 }, { do: 'click', card: 'card' }], drawnFromNow: -1 });
+	// P12 forms: the form opened, then the names swapped, then Save (form-before)
+	probes.push({ name: `P12 ${shape} form pin taken, names swapped, Save`, shape, link: 'Note#Tracker', drawn: sw, sec, known: 5, steps: [{ do: 'outside', lines: swapped }, { do: 'click', card: 'form' }], drawnFromNow: at(swapped, 0) });
+	// P13 the cache lags at the click (link resolves by the old cache), swap
+	probes.push({ name: `P13 ${shape} names swapped, cache lagging at the click`, shape, link: 'Note#Tracker', drawn: sw, sec, known: 5, steps: [{ do: 'outside', lines: swapped, cache: 'lagging' }, { do: 'click', card: 'card' }], drawnFromNow: at(swapped, 0) });
+	// P14 no edit: 3 + in a row with rebind redraws (no regression)
+	probes.push({
+		name: `P14 ${shape} no edit, + rebind + rebind +`, shape, link: 'Note#Tracker', drawn: sw, sec, known: 5,
+		steps: [
+			{ do: 'click', card: 'card' }, { do: 'redraw', sec: shape === 'hover' ? hoverSec(6) : embedSec('Tracker', 6), via: 'rebind' },
+			{ do: 'click', card: 'card' }, { do: 'redraw', sec: shape === 'hover' ? hoverSec(7) : embedSec('Tracker', 7), via: 'rebind' },
+			{ do: 'click', card: 'card' },
+		],
+		drawnFromNow: at(sw, 0),
+	});
+	// P15 no edit: + then a NEW-card redraw (a mount, popover data still the first-drawn note) then + (residual (2) of the amended guard when the new part is in the old data)
+	probes.push({
+		name: `P15 ${shape} no edit, + then new-card redraw (data stale) then +; Other=6 so the new part is in the stale data`, shape, link: 'Note#Tracker', drawn: note(H('Tracker', 5), H('Other', 6)), sec, known: 5,
+		steps: [{ do: 'click', card: 'card' }, { do: 'redraw', sec: shape === 'hover' ? hoverSec(6) : embedSec('Tracker', 6), via: 'mount' }, { do: 'click', card: 'card' }],
+		drawnFromNow: at(note(H('Tracker', 5), H('Other', 6)), 0),
+	});
+}
+
+// P16-P18: whole-note hover, whole-note embed, plain card; edits none / unrelated / identical block added above / the twin deleted / the card's own block deleted
+{
+	const W0 = note(H('Tracker', 5), H('Other', 5));
+	const Wsec = (lines: string[], k: number): Sec => ({ text: lines.join('\n'), lineStart: fenceStarts(lines)[k], lineEnd: fenceStarts(lines)[k] + 3 });
+	const edits: Array<[string, string[], number]> = [
+		['none', W0, at(W0, 0)],
+		['unrelated', ['# N', '', 'TOP edited', '', ...H('Tracker', 5), ...H('Other', 5), '## After', '', 'END'], 6],
+		['identical added above', ['# N', '', 'TOP', '', ...CTR(5), '', ...H('Tracker', 5), ...H('Other', 5), '## After', '', 'END'], 11],
+		['the other deleted', note(H('Tracker', 5)), 6],
+		['names swapped', note(H('Other', 5), H('Tracker', 5)), 6],
+	];
+	for (const [shape, link] of [['hover', 'Note'], ['embed', 'Note'], ['plain', 'Note']] as const)
+		for (const [name, now, A] of edits)
+			for (const click of ['card', 'form'] as const)
+				probes.push({ name: `P16 whole-note ${shape} ${click}: ${name}`, shape, link, drawn: W0, sec: Wsec(W0, 0), known: 5, steps: [...(name === 'none' ? [] : [{ do: 'outside' as const, lines: now }]), { do: 'click', card: click }], drawnFromNow: A });
+}
+
+describe('r3 probes', () => {
+	beforeEach(() => {
+		resetDroppedWriteNotices();
+		Notice.notices.length = 0;
+		jest.spyOn(console, 'warn').mockImplementation(() => {});
+	});
+	afterEach(() => jest.restoreAllMocks());
+	test('line map debug', () => {
+		const show = (name: string, a: string[], b: string[], k: number) => {
+			const line = fenceStarts(a)[k];
+			appendFileSync(OUT, JSON.stringify({ name: 'MAP ' + name, from: line, head: mapLine(a.join('\n'), b.join('\n'), line), tail: mapLineFromTail(a.join('\n'), b.join('\n'), line), strict: mapLineStrict(a.join('\n'), b.join('\n'), line), fencesNow: fenceStarts(b) }) + '\n');
+		};
+		const threeSep = note(H('Tracker', 5), ['m1', ''], H('Tracker', 5), ['m2', ''], H('Tracker', 5));
+		show('P1d', threeSep, note(H('Tracker', 5), ['m1', ''], H('Tracker', 5), ['m2', '']), 0);
+		show('P2a', note(H('Tracker', 5), H('Other', 5)), ['# N', '', 'TOP edited', '', ...H('Other', 5), '## After', '', 'END', '', ...H('Tracker', 5)], 0);
+		show('P2d', note(H('Tracker', 5), H('Other', 9)), ['# N', '', 'TOP', '', ...H('Other', 9), '## After', '', 'END', '', ...H('Tracker', 5)], 0);
+		show('P2e', note(H('Tracker', 5), H('Other', 9)), note(H('Other', 9), H('Tracker', 5)), 0);
+	});
+
+	test.each(probes.map((p) => [p.name, p] as const))('%s', async (_n, p) => {
+		const r = await runProbe(p);
+		appendFileSync(OUT, JSON.stringify({ name: p.name, ...r }) + '\n');
+		if (p.drawnFromNow !== -2) expect(r.outcome).not.toBe('DIFFERENT');
+	});
+});

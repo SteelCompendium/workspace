@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# r3-probe-mut.sh <mutant|none> <tag>: apply one mutant (or none) to the SCRATCH head worktree, run the r3 probe there, restore the sources; the probe copy is removed by its literal path
+R=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc607-r3-reviewer
+E="$R/head-1daa"
+cd "$E" || exit 9
+rm -f main.js styles.css
+git -C "$E" checkout -- src/framework/host/ReadingModeBlockHost.ts src/framework/host/lineMap.ts src/framework/host/hoverLinks.ts
+if [ "$1" != none ]; then python3 -I "$R/r3-mutate.py" "$1" > "$R/r3-probe-mut-$2.log" 2>&1; else : > "$R/r3-probe-mut-$2.log"; fi
+cp "$R/sc607r3-probe.test.ts" /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc607-r3-reviewer/head-1daa/test/dom/framework/sc607r3-probe.test.ts
+: > "$R/r3-probe-mut-$2.jsonl"
+SC607R3_OUT="$R/r3-probe-mut-$2.jsonl" npx jest test/dom/framework/sc607r3-probe.test.ts >> "$R/r3-probe-mut-$2.log" 2>&1
+echo "probe_rc=$?" >> "$R/r3-probe-mut-$2.log"
+rm /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc607-r3-reviewer/head-1daa/test/dom/framework/sc607r3-probe.test.ts
+git -C "$E" checkout -- src/framework/host/ReadingModeBlockHost.ts src/framework/host/lineMap.ts src/framework/host/hoverLinks.ts

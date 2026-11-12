@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# sc607-r1-lc-probe.sh <tree> <log> <only>: one lifecycle run of the tree's own harness and bundle (a scratch export; the worktree is untouched)
+cd "$1" || exit 9
+t0=$(date +%s)
+echo "tree $1 load $(cat /proc/loadavg)" > "$2"
+sha256sum "$1/main.js" "$1/styles.css" >> "$2"
+node visual-harness/obsidian-lifecycle.mjs --only="$3" >> "$2" 2>&1
+rc=$?
+echo "lc_rc=$rc wall=$(( $(date +%s) - t0 ))s" >> "$2"

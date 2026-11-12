@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# sc607-r1-build-base.sh <log>: scratch export (git archive) of c6077860 as base-tree, built; the worktree is never touched
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc607-r1-reviewer
+E=/home/scott/code/steelCompendium/worktrees/sc607-open-preview-stale-card-write/draw-steel-elements
+mkdir -p "$S/base-tree"
+git -C "$E" archive c6077860 | tar -x -C "$S/base-tree"
+ln -sfn "$E/node_modules" "$S/base-tree/node_modules"
+cd "$S/base-tree" || exit 9
+node esbuild.config.mjs production >> "$1" 2>&1
+echo "base build_rc=$?" >> "$1"
+sha256sum "$S/base-tree/main.js" "$S/base-tree/styles.css" >> "$1"

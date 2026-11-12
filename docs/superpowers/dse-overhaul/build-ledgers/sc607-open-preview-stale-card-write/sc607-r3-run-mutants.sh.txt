@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# r3-run-mutants.sh <id>...: per mutant restore the 3 src files of the scratch head worktree, apply it, run the SC-607 suites, record into mut-results.log
+R=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc607-r3-reviewer
+E="$R/head-1daa"
+cd "$E" || exit 9
+mkdir -p "$R/mut"
+rm -f main.js styles.css
+for m in "$@"; do
+  git -C "$E" checkout -- src/framework/host/ReadingModeBlockHost.ts src/framework/host/lineMap.ts src/framework/host/hoverLinks.ts
+  python3 -I "$R/r3-mutate.py" "$m" >> "$R/mut-results.log" 2>&1 || { echo "$m mutate_failed" >> "$R/mut-results.log"; continue; }
+  npx jest test/dom/framework/reading-mode-host-drawn-pin.test.ts test/dom/framework/reading-mode-host-pin.test.ts test/dom/framework/reading-mode-host-hover-card.test.ts test/dom/framework/reading-mode-host-form-pin.test.ts test/unit/framework/lineMap.test.ts --silent > "$R/mut/mut-$m.log" 2>&1
+  rc=$?
+  echo "$m jest_rc=$rc $(grep -E '^Tests:' "$R/mut/mut-$m.log")" >> "$R/mut-results.log"
+done
+git -C "$E" checkout -- src/framework/host/ReadingModeBlockHost.ts src/framework/host/lineMap.ts src/framework/host/hoverLinks.ts

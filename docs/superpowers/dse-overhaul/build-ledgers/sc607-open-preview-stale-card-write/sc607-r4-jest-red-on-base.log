@@ -1,0 +1,3562 @@
+FAIL unit test/unit/framework/lineMap.test.ts
+  ● SC-607: mapLineStrict › the identity for identical texts, and the line where both alignments put it
+
+    TypeError: (0 , lineMap_1.mapLineStrict) is not a function
+
+      79 | 	it('the identity for identical texts, and the line where both alignments put it', () => {
+      80 | 		const a = note([5, 5, 5]);
+    > 81 | 		expect(mapLineStrict(a, a, 12)).toEqual({ line: 12 });
+         | 		                    ^
+      82 | 		const f = fencesOf(a);
+      83 | 		expect(mapLineStrict(a, note([6, 5, 5]), f[1])).toEqual({ line: f[1] });
+      84 | 		expect(mapLineStrict(a, ['added', ...a.split('\n')].join('\n'), f[1])).toEqual({ line: f[1] + 1 });
+
+      at Object.<anonymous> (test/unit/framework/lineMap.test.ts:81:23)
+
+  ● SC-607: mapLineStrict › a changed line is deleted (both alignments), and so is a line that is not in the old text
+
+    TypeError: (0 , lineMap_1.mapLineStrict) is not a function
+
+      88 | 		const a = note([5, 6, 7]);
+      89 | 		const f = fencesOf(a);
+    > 90 | 		expect(mapLineStrict(a, note([5, 8, 7]), f[1] + 2)).toBe('deleted');
+         | 		                    ^
+      91 | 		expect(mapLineStrict('a\nb', 'a\nb\nc', 5)).toBe('deleted');
+      92 | 		expect(mapLineStrict('a\nb', 'a\nb\nc', -1)).toBe('deleted');
+      93 | 	});
+
+      at Object.<anonymous> (test/unit/framework/lineMap.test.ts:90:23)
+
+  ● SC-607: mapLineStrict › two adjacent identical blocks, one deleted: the lower is deleted head-first and kept tail-first, so it is a tie ("disagree"), and the upper maps to the survivor head-first only
+
+    TypeError: (0 , lineMap_1.mapLineFromTail) is not a function
+
+       98 | 		const [upper, lower] = fencesOf(a);
+       99 | 		expect(mapLine(a, b, upper)).toBe(upper);
+    > 100 | 		expect(mapLineFromTail(a, b, upper)).toBeNull();
+          | 		                      ^
+      101 | 		expect(mapLineStrict(a, b, upper)).toBe('disagree');
+      102 | 		expect(mapLine(a, b, lower)).toBeNull();
+      103 | 		expect(mapLineFromTail(a, b, lower)).toBe(upper);
+
+      at Object.<anonymous> (test/unit/framework/lineMap.test.ts:100:25)
+
+  ● SC-607: mapLineStrict › the same deletion with something between the blocks is no tie: the lower maps to the survivor, the upper is deleted
+
+    TypeError: (0 , lineMap_1.mapLineStrict) is not a function
+
+      110 | 		const b = withMid(1); // the upper block deleted
+      111 | 		const [upper, lower] = fencesOf(a);
+    > 112 | 		expect(mapLineStrict(a, b, lower)).toEqual({ line: fencesOf(b)[0] });
+          | 		                    ^
+      113 | 		expect(mapLineStrict(a, b, upper)).toBe('deleted');
+      114 | 	});
+      115 |
+
+      at Object.<anonymous> (test/unit/framework/lineMap.test.ts:112:23)
+
+  ● SC-607: mapLineStrict › "gave up" when more than LINE_MAP_MAX_EDITS lines changed around the line; mapLine and mapLineFromTail still say null for it
+
+    TypeError: (0 , lineMap_1.mapLineStrict) is not a function
+
+      118 | 		const a = Array.from({ length: n }, (_, i) => `a${i}`).join('\n');
+      119 | 		const b = Array.from({ length: n }, (_, i) => `b${i}`).join('\n');
+    > 120 | 		expect(mapLineStrict(a, b, Math.floor(n / 2))).toBe('gave up');
+          | 		                    ^
+      121 | 		expect(mapLine(a, b, Math.floor(n / 2))).toBeNull();
+      122 | 		expect(mapLineFromTail(a, b, Math.floor(n / 2))).toBeNull();
+      123 | 	});
+
+      at Object.<anonymous> (test/unit/framework/lineMap.test.ts:120:23)
+
+  ● SC-607: mapLineStrict › a line in the common head or tail is placed however much changed in between (no give-up)
+
+    TypeError: (0 , lineMap_1.mapLineStrict) is not a function
+
+      128 | 		const a = ['top', ...mid('a'), 'bottom'].join('\n');
+      129 | 		const b = ['top', ...mid('b'), 'bottom'].join('\n');
+    > 130 | 		expect(mapLineStrict(a, b, 0)).toEqual({ line: 0 });
+          | 		                    ^
+      131 | 		expect(mapLineStrict(a, b, n + 1)).toEqual({ line: n + 1 });
+      132 | 	});
+      133 | });
+
+      at Object.<anonymous> (test/unit/framework/lineMap.test.ts:130:23)
+
+FAIL dom test/dom/framework/reading-mode-host-drawn-pin.test.ts (53.52 s)
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv card upper=true swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv card upper=true swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv card upper=true del-upper-adj fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv card upper=true del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv card upper=true del-upper-adj fresh + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv card upper=true del-upper-adj lagging no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv card upper=true del-upper-adj lagging + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv card upper=true del-upper-adj lagging + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv card upper=true del-upper-sep fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv card upper=true del-upper-sep fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv card upper=false swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv card upper=false swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv form upper=true swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv form upper=true swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv form upper=true del-upper-adj fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv form upper=true del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv form upper=true del-upper-adj fresh + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv form upper=true del-upper-adj lagging no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv form upper=true del-upper-adj lagging + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv form upper=true del-upper-adj lagging + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv form upper=true del-upper-sep fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv form upper=true del-upper-sep fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv form upper=false swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover rv form upper=false swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp card upper=true swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp card upper=true swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp card upper=true del-upper-adj fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp card upper=true del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp card upper=true del-upper-adj fresh + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp card upper=true del-upper-adj lagging no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp card upper=true del-upper-adj lagging + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp card upper=true del-upper-adj lagging + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp card upper=true del-upper-sep fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp card upper=true del-upper-sep fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp card upper=false swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp card upper=false swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp form upper=true swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp form upper=true swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp form upper=true del-upper-adj fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp form upper=true del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp form upper=true del-upper-adj fresh + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp form upper=true del-upper-adj lagging no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp form upper=true del-upper-adj lagging + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp form upper=true del-upper-adj lagging + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp form upper=true del-upper-sep fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp form upper=true del-upper-sep fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp form upper=false swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading hover lp form upper=false swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv card upper=true swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv card upper=true swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv card upper=true del-upper-adj fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv card upper=true del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv card upper=true del-upper-adj fresh + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv card upper=true del-upper-adj lagging no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv card upper=true del-upper-adj lagging + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv card upper=true del-upper-adj lagging + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv card upper=true del-upper-sep fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv card upper=true del-upper-sep fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv card upper=false swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv card upper=false swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv form upper=true swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv form upper=true swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv form upper=true del-upper-adj fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv form upper=true del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv form upper=true del-upper-adj fresh + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv form upper=true del-upper-adj lagging no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv form upper=true del-upper-adj lagging + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv form upper=true del-upper-adj lagging + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv form upper=true del-upper-sep fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv form upper=true del-upper-sep fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv form upper=false swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed rv form upper=false swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp card upper=true swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp card upper=true swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp card upper=true del-upper-adj fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp card upper=true del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp card upper=true del-upper-adj fresh + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp card upper=true del-upper-adj lagging no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp card upper=true del-upper-adj lagging + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp card upper=true del-upper-adj lagging + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp card upper=true del-upper-sep fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp card upper=true del-upper-sep fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp card upper=false swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp card upper=false swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp form upper=true swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp form upper=true swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp form upper=true del-upper-adj fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp form upper=true del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp form upper=true del-upper-adj fresh + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp form upper=true del-upper-adj lagging no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp form upper=true del-upper-adj lagging + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp form upper=true del-upper-adj lagging + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp form upper=true del-upper-sep fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp form upper=true del-upper-sep fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp form upper=false swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › heading embed lp form upper=false swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover rv card upper=true swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover rv card upper=true swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover rv card upper=true del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover rv card upper=true del-upper-adj fresh + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover rv card upper=true del-upper-adj lagging + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover rv card upper=true del-upper-adj lagging + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover rv card upper=false swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover rv card upper=false swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover rv card upper=false del-upper-adj fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "A"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover rv card upper=false del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "A"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover rv form upper=true swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover rv form upper=true swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover rv form upper=true del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover rv form upper=true del-upper-adj fresh + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover rv form upper=true del-upper-adj lagging + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover rv form upper=true del-upper-adj lagging + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover rv form upper=false swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover rv form upper=false swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover rv form upper=false del-upper-adj fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "A"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover rv form upper=false del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "A"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover lp card upper=true swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover lp card upper=true swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover lp card upper=true del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover lp card upper=true del-upper-adj fresh + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover lp card upper=true del-upper-adj lagging + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover lp card upper=true del-upper-adj lagging + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover lp card upper=false swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover lp card upper=false swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover lp card upper=false del-upper-adj fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "A"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover lp card upper=false del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "A"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover lp form upper=true swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover lp form upper=true swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover lp form upper=true del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover lp form upper=true del-upper-adj fresh + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover lp form upper=true del-upper-adj lagging + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover lp form upper=true del-upper-adj lagging + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover lp form upper=false swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover lp form upper=false swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover lp form upper=false del-upper-adj fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "A"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block hover lp form upper=false del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "A"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed rv card upper=true swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed rv card upper=true swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed rv card upper=true del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed rv card upper=true del-upper-adj fresh + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed rv card upper=true del-upper-adj lagging + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed rv card upper=true del-upper-adj lagging + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed rv card upper=false swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed rv card upper=false swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed rv card upper=false del-upper-adj fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "A"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed rv card upper=false del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "A"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed rv form upper=true swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed rv form upper=true swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed rv form upper=true del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed rv form upper=true del-upper-adj fresh + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed rv form upper=true del-upper-adj lagging + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed rv form upper=true del-upper-adj lagging + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed rv form upper=false swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed rv form upper=false swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed rv form upper=false del-upper-adj fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "A"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed rv form upper=false del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "A"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed lp card upper=true swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed lp card upper=true swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed lp card upper=true del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed lp card upper=true del-upper-adj fresh + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed lp card upper=true del-upper-adj lagging + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed lp card upper=true del-upper-adj lagging + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed lp card upper=false swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed lp card upper=false swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed lp card upper=false del-upper-adj fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "A"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed lp card upper=false del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "A"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed lp form upper=true swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed lp form upper=true swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed lp form upper=true del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed lp form upper=true del-upper-adj fresh + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed lp form upper=true del-upper-adj lagging + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed lp form upper=true del-upper-adj lagging + stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed lp form upper=false swap fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed lp form upper=false swap fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "TWIN"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed lp form upper=false del-upper-adj fresh no +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "A"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › block embed lp form upper=false del-upper-adj fresh + redrawn
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "refused"
+    Received: "A"
+
+      226 | 		const r = await run(c);
+      227 | 		const want = expected(c);
+    > 228 | 		expect(r.outcome).toBe(want);
+          | 		                  ^
+      229 | 		// a save shows no Notice; a refusal shows exactly the one "changed on disk first" Notice (never "can't tell where")
+      230 | 		expect(r.kinds).toEqual(want === 'A' ? [] : ['dropped']);
+      231 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:228:21
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › N1: the upper of two identical sections deleted between Obsidian's read and the card's note read, the cache still lagging at that read: the click is refused
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -4,11 +4,11 @@
+
+      ## Tracker
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      ## After
+
+      END
+
+      261 | 		el.closest('.hover-popover')?.remove();
+      262 |
+    > 263 | 		expect(app.vault.getContent('Note.md')).toBe(now.lines.join('\n')); // the hovered (upper) counter is gone: any write would be the other one
+          | 		                                        ^
+      264 | 		expect(Notice.notices).toEqual(dropped);
+      265 | 	});
+      266 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-drawn-pin.test.ts:263:43)
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › N3: a block hover of the upper of two adjacent identical callouts, a + (the part stays stale), the upper deleted from outside, then the form Save: refused
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -2,11 +2,11 @@
+
+      TOP
+
+      > [!note] Camp
+      > ```ds-counter
+    - > name: Twin
+    + > name: Edited
+      > current_value: 6
+      > ```
+
+      ^cb
+      ↵
+
+      308 | 		el.closest('.hover-popover')?.remove();
+      309 |
+    > 310 | 		expect(app.vault.getContent('Note.md')).toBe(now.join('\n')); // the surviving callout is the twin of the one the + was pressed on
+          | 		                                        ^
+      311 | 		expect(Notice.notices).toEqual(dropped);
+      312 | 	});
+      313 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-drawn-pin.test.ts:310:43)
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › the line map gives up: the link places the pin only while the body is unique › control: an identical counter under another heading, as drawn and now: refused (the link is not enough once the line map cannot say which counter the card was drawn from)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      445 | 			const { app, outside, ok } = await bigRewrite(drawnOther, nowOther);
+      446 |
+    > 447 | 			expect(ok).toBe(false);
+          | 			           ^
+      448 | 			expect(app.vault.getContent('Note.md')).toBe(outside);
+      449 | 			expect(Notice.notices).toEqual(dropped);
+      450 | 		});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:447:15
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › the line map gives up: the link places the pin only while the body is unique › the body was twice in the note as drawn and is unique now: refused (the link is not enough once the line map cannot say which counter the card was drawn from)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      445 | 			const { app, outside, ok } = await bigRewrite(drawnOther, nowOther);
+      446 |
+    > 447 | 			expect(ok).toBe(false);
+          | 			           ^
+      448 | 			expect(app.vault.getContent('Note.md')).toBe(outside);
+      449 | 			expect(Notice.notices).toEqual(dropped);
+      450 | 		});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:447:15
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › the line map gives up: the link places the pin only while the body is unique › the body was unique in the note as drawn and is twice now: refused (the link is not enough once the line map cannot say which counter the card was drawn from)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      445 | 			const { app, outside, ok } = await bigRewrite(drawnOther, nowOther);
+      446 |
+    > 447 | 			expect(ok).toBe(false);
+          | 			           ^
+      448 | 			expect(app.vault.getContent('Note.md')).toBe(outside);
+      449 | 			expect(Notice.notices).toEqual(dropped);
+      450 | 		});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:447:15
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › the hover window guard: hoverPopover.embed.data is what the preview was drawn from › data is a string that is not the text the card read: refused (the card was drawn from the note as Obsidian read it, the link names the other counter now)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -11,11 +11,11 @@
+
+      ## Tracker
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      ## After
+
+      END
+
+      475 | 			const { app, now } = await swappedBeforeTheCardRead('old note');
+      476 |
+    > 477 | 			expect(app.vault.getContent('Note.md')).toBe(now.lines.join('\n'));
+          | 			                                        ^
+      478 | 			expect(Notice.notices).toEqual(dropped);
+      479 | 		});
+      480 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-drawn-pin.test.ts:477:44)
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › a moved section whose preview stays open is refused, never written › hover heading link, moved to the end
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -15,8 +15,8 @@
+
+      ## Tracker
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+      ↵
+
+      638 | 			c.done();
+      639 |
+    > 640 | 			expect(c.app.vault.getContent('Note.md')).toBe(moved.join('\n'));
+          | 			                                          ^
+      641 | 			expect(Notice.notices).toEqual(dropped);
+      642 | 		});
+      643 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:640:46
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › a moved section whose preview stays open is refused, never written › hover heading link, moved below another section
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -11,11 +11,11 @@
+
+      ## Tracker
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      ## After
+
+      END
+
+      638 | 			c.done();
+      639 |
+    > 640 | 			expect(c.app.vault.getContent('Note.md')).toBe(moved.join('\n'));
+          | 			                                          ^
+      641 | 			expect(Notice.notices).toEqual(dropped);
+      642 | 		});
+      643 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:640:46
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › a moved section whose preview stays open is refused, never written › hover block link, moved to the end
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -12,9 +12,9 @@
+
+      END
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+      ^pa
+      ↵
+
+      638 | 			c.done();
+      639 |
+    > 640 | 			expect(c.app.vault.getContent('Note.md')).toBe(moved.join('\n'));
+          | 			                                          ^
+      641 | 			expect(Notice.notices).toEqual(dropped);
+      642 | 		});
+      643 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:640:46
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › a moved section whose preview stays open is refused, never written › hover block link, moved below another section
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -10,10 +10,10 @@
+      ```
+      ^pb
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+      ^pa
+
+      END
+
+      638 | 			c.done();
+      639 |
+    > 640 | 			expect(c.app.vault.getContent('Note.md')).toBe(moved.join('\n'));
+          | 			                                          ^
+      641 | 			expect(Notice.notices).toEqual(dropped);
+      642 | 		});
+      643 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:640:46
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › a moved section whose preview stays open is refused, never written › embed heading link, moved to the end
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -15,8 +15,8 @@
+
+      ## Tracker
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+      ↵
+
+      638 | 			c.done();
+      639 |
+    > 640 | 			expect(c.app.vault.getContent('Note.md')).toBe(moved.join('\n'));
+          | 			                                          ^
+      641 | 			expect(Notice.notices).toEqual(dropped);
+      642 | 		});
+      643 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:640:46
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › a moved section whose preview stays open is refused, never written › embed heading link, moved below another section
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -11,11 +11,11 @@
+
+      ## Tracker
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      ## After
+
+      END
+
+      638 | 			c.done();
+      639 |
+    > 640 | 			expect(c.app.vault.getContent('Note.md')).toBe(moved.join('\n'));
+          | 			                                          ^
+      641 | 			expect(Notice.notices).toEqual(dropped);
+      642 | 		});
+      643 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:640:46
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › a moved section whose preview stays open is refused, never written › embed block link, moved to the end
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -12,9 +12,9 @@
+
+      END
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+      ^pa
+      ↵
+
+      638 | 			c.done();
+      639 |
+    > 640 | 			expect(c.app.vault.getContent('Note.md')).toBe(moved.join('\n'));
+          | 			                                          ^
+      641 | 			expect(Notice.notices).toEqual(dropped);
+      642 | 		});
+      643 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:640:46
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › a moved section whose preview stays open is refused, never written › embed block link, moved below another section
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -10,10 +10,10 @@
+      ```
+      ^pb
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+      ^pa
+
+      END
+
+      638 | 			c.done();
+      639 |
+    > 640 | 			expect(c.app.vault.getContent('Note.md')).toBe(moved.join('\n'));
+          | 			                                          ^
+      641 | 			expect(Notice.notices).toEqual(dropped);
+      642 | 		});
+      643 | 	});
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:640:46
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › a block form opened on the upper of two adjacent identical blocks (hover), the upper deleted from outside, Save: refused, the twin is not written
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      653 | 		await settle();
+      654 | 		c.outside(now);
+    > 655 | 		expect(await c.host.replaceSource(bodyOf(5, 'Edited'), { pin: pin!, pinOnly: true })).toBe(false);
+          | 		                                                                                      ^
+      656 | 		c.done();
+      657 |
+      658 | 		expect(c.app.vault.getContent('Note.md')).toBe(now.join('\n'));
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:655:89
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › a block form opened on the upper of two adjacent identical blocks (embed), the upper deleted from outside, Save: refused, the twin is not written
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      653 | 		await settle();
+      654 | 		c.outside(now);
+    > 655 | 		expect(await c.host.replaceSource(bodyOf(5, 'Edited'), { pin: pin!, pinOnly: true })).toBe(false);
+          | 		                                                                                      ^
+      656 | 		c.done();
+      657 |
+      658 | 		expect(c.app.vault.getContent('Note.md')).toBe(now.join('\n'));
+
+      at test/dom/framework/reading-mode-host-drawn-pin.test.ts:655:89
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › a form in an embed whose part is the whole note, on the upper of two adjacent identical blocks, the upper deleted, Save: refused
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      670 | 		await settle();
+      671 | 		c.outside(now);
+    > 672 | 		expect(await c.host.replaceSource(bodyOf(5, 'Edited'), { pin: pin!, pinOnly: true })).toBe(false);
+          | 		                                                                                      ^
+      673 |
+      674 | 		expect(c.app.vault.getContent('Note.md')).toBe(now.join('\n'));
+      675 | 		expect(Notice.notices).toEqual(dropped);
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-drawn-pin.test.ts:672:89)
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › the cache the card's read was taken with ends before the text it read (a paragraph appended, every heading on its line): the snapshot is dropped and the click refused
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -4,11 +4,11 @@
+
+      ## Tracker
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      ## Other
+
+      ```ds-counter
+
+      705 | 		await plusOn(host);
+      706 |
+    > 707 | 		expect(app.vault.getContent('Note.md')).toBe(t1.join('\n'));
+          | 		                                        ^
+      708 | 		expect(Notice.notices).toEqual(dropped);
+      709 | 	});
+      710 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-drawn-pin.test.ts:707:43)
+
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › a card unloaded before its note read resolved holds no snapshot afterwards
+
+    expect(received).toBeNull()
+
+    Received: undefined
+
+      718 | 		const held = c.host as unknown as { drawn: unknown; drawnRead: unknown; drawnToken: unknown };
+      719 |
+    > 720 | 		expect(held.drawn).toBeNull();
+          | 		                   ^
+      721 | 		expect(held.drawnRead).toBeNull();
+      722 | 		expect(held.drawnToken).toBeNull();
+      723 | 	});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-drawn-pin.test.ts:720:22)
+
+Test Suites: 2 failed, 2 total
+Tests:       201 failed, 615 passed, 816 total
+Snapshots:   0 total
+Time:        54.871 s, estimated 59 s
+Ran all test suites matching test/dom/framework/reading-mode-host-drawn-pin.test.ts|test/unit/framework/lineMap.test.ts in 2 projects.
+jest_rc=1

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# sc607-r1-jest.sh <log> [jest args...]: run jest in the worktree (stale main.js/styles.css removed first), rc recorded
+cd /home/scott/code/steelCompendium/worktrees/sc607-open-preview-stale-card-write/draw-steel-elements || exit 9
+rm -f main.js styles.css
+log="$1"; shift
+npx jest "$@" > "$log" 2>&1
+echo "jest_rc=$?" >> "$log"

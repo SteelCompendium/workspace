@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+# sc607-r1-instrument.py <tree>: add B-measurement trace calls (window.__sc607Trace, installed by the P607 scenario) to the probe rule in a SCRATCH
+# export <tree>. Not part of the rule diff.
+import sys
+p = sys.argv[1].rstrip('/') + '/src/framework/host/ReadingModeBlockHost.ts'
+s = open(p).read()
+def rep(a, b):
+	global s
+	assert s.count(a) == 1, a[:70]
+	s = s.replace(a, b)
+T = "(globalThis as unknown as { __sc607Trace?: (r: object) => void }).__sc607Trace?.("
+rep("""		const meta = this.plugin.app.metadataCache.getFileCache(file);
+		this.drawnRead = this.plugin.app.vault.cachedRead(file).then(
+			(text) => {
+				if (this.drawnToken !== token) return;
+				if (partText !== null && text === partText) {
+					this.drawn = { text: null, meta: null, seq };
+					return;
+				}
+				if (!metaMatchesText(meta, text)) return;
+				this.drawn = { text, meta, seq };""", """		const meta = this.plugin.app.metadataCache.getFileCache(file);
+		""" + T + """{ ev: 'snap-call', path: this.ctx.sourcePath, seq, partLen: partText === null ? null : partText.length, embedded: this.containerEl.closest('.markdown-embed, .internal-embed') !== null, inPopover: this.containerEl.closest('.hover-popover') !== null, connected: this.containerEl.isConnected, heads: (meta?.headings ?? []).map((h) => h.heading + '@' + h.position.start.line).join(',') });
+		this.drawnRead = this.plugin.app.vault.cachedRead(file).then(
+			(text) => {
+				if (this.drawnToken !== token) return;
+				if (partText !== null && text === partText) {
+					this.drawn = { text: null, meta: null, seq };
+					""" + T + """{ ev: 'snap-done', path: this.ctx.sourcePath, seq, kept: 'whole' });
+					return;
+				}
+				if (!metaMatchesText(meta, text)) {
+					""" + T + """{ ev: 'snap-done', path: this.ctx.sourcePath, seq, kept: 'discarded', len: text.length });
+					return;
+				}
+				this.drawn = { text, meta, seq };
+				""" + T + """{ ev: 'snap-done', path: this.ctx.sourcePath, seq, kept: 'part', len: text.length, embedded: this.containerEl.closest('.markdown-embed, .internal-embed') !== null, inPopover: this.containerEl.closest('.hover-popover') !== null });""")
+rep("""				const from = ownFirst ? (ownFrom() ?? drawnFrom()) : (drawnFrom() ?? ownFrom());
+""", """				const from = ownFirst ? (ownFrom() ?? drawnFrom()) : (drawnFrom() ?? ownFrom());
+				""" + T + """{ ev: 'rebase', path: this.ctx.sourcePath, drawn: drawn === null ? null : drawn.text === null ? 'whole' : 'part', own: own !== null, ownFirst, linkLine, from: from === null ? null : from.line, at: from === null ? null : mapLine(from.text, whole, from.line), tail: from === null ? null : mapLineFromTail(from.text, whole, from.line) });
+""")
+rep("""			const o = ownFrom();
+			if (o !== null) {""", """			const o = ownFrom();
+			""" + T + """{ ev: 'rebase-nolink', path: this.ctx.sourcePath, drawn: drawn === null ? null : drawn.text === null ? 'whole' : 'part', own: o !== null });
+			if (o !== null) {""")
+open(p, 'w').write(s)
+print('instrumented')

@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+# sc607-r1-summarize.py <base.jsonl> <probe.jsonl>: base vs probe outcome table of the SC-607 r1 sweep
+import sys, json, collections
+def load(p):
+    out = {}
+    for l in open(p):
+        r = json.loads(l)
+        k = (r['kind'], r['shape'], r['mode'], r['click'], r['upper'], r['edit'], r['cache'], r['plus'])
+        out[k] = r
+    return out
+B = load(sys.argv[1]); P = load(sys.argv[2])
+assert B.keys() == P.keys(), 'cell sets differ'
+print(f'cells {len(B)}')
+for name, D in (('base', B), ('probe', P)):
+    c = collections.Counter(r['outcome'] for r in D.values())
+    print(f'{name}: ' + ', '.join(f'{k} {v}' for k, v in sorted(c.items())))
+trans = collections.Counter((B[k]['outcome'], P[k]['outcome']) for k in B)
+print('transitions base -> probe: ' + ', '.join(f'{a}->{b} {n}' for (a, b), n in sorted(trans.items())))
+def group(sel, keyf):
+    g = collections.Counter(keyf(k) for k in B if sel(k))
+    for k, n in sorted(g.items(), key=lambda x: str(x)): print(f'   {n:4d}  {k}')
+print('\nTWIN at base, by (kind, shape, upper, edit, cache, plus):')
+group(lambda k: B[k]['outcome'] == 'TWIN', lambda k: (k[0], k[1], 'upper' if k[4] else 'lower', k[5], k[6], k[7]))
+print('\nTWIN at base, by (click, edit):')
+group(lambda k: B[k]['outcome'] == 'TWIN', lambda k: (k[3], k[5]))
+print('\nsaved(A) -> refused, by (kind, shape, upper, edit, cache, plus, click):')
+group(lambda k: B[k]['outcome'] == 'A' and P[k]['outcome'] == 'refused', lambda k: (k[0], k[1], 'upper' if k[4] else 'lower', k[5], k[6], k[7], k[3]))
+print('\nrefused -> saved(A), by (kind, shape, upper, edit, cache, plus, click):')
+group(lambda k: B[k]['outcome'] == 'refused' and P[k]['outcome'] == 'A', lambda k: (k[0], k[1], 'upper' if k[4] else 'lower', k[5], k[6], k[7], k[3]))
+print('\nTWIN -> outcome under probe, by edit:')
+group(lambda k: B[k]['outcome'] == 'TWIN', lambda k: (k[5], P[k]['outcome']))
+print('\nno outside edit (none) cells: probe outcomes', collections.Counter(P[k]['outcome'] for k in P if k[5] == 'none'), 'base', collections.Counter(B[k]['outcome'] for k in B if k[5] == 'none'))
+print('unrelated edit cells: probe', collections.Counter((P[k]['outcome'], k[6]) for k in P if k[5] == 'unrelated'), 'base', collections.Counter((B[k]['outcome'], k[6]) for k in B if k[5] == 'unrelated'))
+print('\nprobe refusals by notice kind:', collections.Counter(tuple(P[k]['kinds']) for k in P if P[k]['outcome'] == 'refused'))
+print('probe saves with a notice:', sum(1 for k in P if P[k]['outcome'] == 'A' and P[k]['kinds']))
+print('\nprobe outcome by (kind, upper, edit, plus) [cells across shape x mode x click x cache]:')
+g = collections.defaultdict(collections.Counter)
+for k in P: g[(k[0], 'upper' if k[4] else 'lower', k[5], k[7])][P[k]['outcome']] += 1
+for k in sorted(g): print(f'   {k}: {dict(g[k])}')

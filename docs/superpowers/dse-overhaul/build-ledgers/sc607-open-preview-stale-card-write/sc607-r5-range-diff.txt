@@ -1,0 +1,19 @@
+1:  530ff3ab = 1:  259f42f2 test: a preview that stayed open while the note changed never writes a different identical counter (sweep, named shapes, line-map give-up, hover window guard); red on 3ad68185
+2:  4b5e9f4d = 2:  2687ba23 fix: a card write or form Save in a hover preview or embed of part of a note is placed through the link only when the block the card was drawn from maps strictly to that line (line map says why it gave up; unique-body fallback; hover window guard); re-model two pin tests
+3:  4fcc0d87 = 3:  f4abf2f8 docs: rebaseCardPin comment names the drawn-from check
+4:  65726891 = 4:  36121897 test: an embed inside a hover preview of another note is not checked against the popover's data
+5:  306e3afa = 5:  26bb86e1 test(lifecycle): G-S99, a preview of part of a note left open while the note changes writes nothing into an identical counter (8 cells)
+6:  9989ac32 = 6:  aa9057bf test: type the rebind context in the re-modelled redraw test
+7:  192cfdb1 ! 7:  c33d3bb3 fix: the hover window guard checks a mount snapshot only, and only while the popover's data still holds the part (the data is not refreshed by a redraw: a second + after the first was refused)
+    @@ Commit message
+     
+      ## CHANGELOG.md ##
+     @@ CHANGELOG.md: for what needs action.
+    -   does not replace (Advance round, say) stays where it was. In Live Preview focus is still lost when the note saves a moment later
+    -   (SC-602). Not covered: a click while the cursor is in a Malice quick-add box (SC-615) and a click that removes a condition from
+    +   does not replace (Advance round, say) stays where it was. Since SC-602 this holds in Live Preview too.
+    +   Not covered: a click while the cursor is in a Malice quick-add box (SC-615) and a click that removes a condition from
+        the row focus was in (SC-614).
+     +
+     +- [FIX] **A + / - or a form Save in a hover preview or an embed that stayed open while the note changed no longer writes a different, identical counter** (SC-607).
+8:  1daa7d8a = 8:  7f8a0dc3 test: the embed-in-hover control's popover data holds the embedded part

@@ -1,0 +1,190 @@
+	{
+		// r3 reviewer probe (scratch harness copy only; never committed). Records one R607-REC JSON line per cell; judged offline.
+		id: 'R607',
+		async run(t) {
+			const J = JSON.stringify;
+			const K = gs83Kit(t);
+			const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+			const EDITS = {
+				delFirstTracker: String.raw`(c) => c.replace(/## Tracker\r?\n\r?\n\x60\x60\x60ds-counter[\s\S]*?\x60\x60\x60\r?\n\r?\n/, '')`,
+				swapNames: String.raw`(c) => c.replace('## Tracker\n', '## @@\n').replace('## Other\n', '## Tracker\n').replace('## @@\n', '## Other\n')`,
+				moveTrackerToEnd: String.raw`(c) => { const m = c.match(/## Tracker\n\n\x60\x60\x60ds-counter[\s\S]*?\x60\x60\x60\n\n/); return c.replace(m[0], '') + '\n' + m[0]; }`,
+				bumpFirst: String.raw`(c) => c.replace('current_value: 5', 'current_value: 7')`,
+				topEdited: String.raw`(c) => c.replace('TOP', 'TOP edited')`,
+			};
+			const ALL = (process.env.R607_CELLS ?? '').split(',').filter(Boolean);
+			const cells = [
+				{ id: 'race-guard', note: 'swap', kind: 'hover', mode: 'rv', how: 'race', edit: 'swapNames', delay: 1500 },
+				{ id: 'race-noguard', note: 'swap', kind: 'hover', mode: 'rv', how: 'race', edit: 'swapNames', delay: 1500, noGuard: true },
+				{ id: 'race-adj', note: 'adj', kind: 'hover', mode: 'rv', how: 'race', edit: 'delFirstTracker', delay: 1500 },
+				{ id: 'race-unrel', note: 'swap', kind: 'hover', mode: 'rv', how: 'race', edit: 'topEdited', delay: 1500, twice: true },
+				{ id: 'race-lp', note: 'swap', kind: 'hover', mode: 'lp', how: 'race', edit: 'swapNames', delay: 1500 },
+				{ id: 'emb3-lp', note: 'three', kind: 'embed', mode: 'lp', how: 'card', edit: 'delFirstTracker' },
+				{ id: 'embform-swap', note: 'swap', kind: 'embed', mode: 'rv', how: 'form-after', edit: 'swapNames' },
+				{ id: 'embmove-rv', note: 'uniq', kind: 'embed', mode: 'rv', how: 'card', edit: 'moveTrackerToEnd' },
+				{ id: 'hovmove-rv', note: 'uniq', kind: 'hover', mode: 'rv', how: 'card', edit: 'moveTrackerToEnd' },
+				{ id: 'plus-del', note: 'adj56', kind: 'hover', mode: 'rv', how: 'plus-then', edit: 'delFirstTracker' },
+				{ id: 'gap-hover', note: 'uniq', kind: 'hover', mode: 'rv', how: 'gap', edit: 'bumpFirst' },
+				{ id: 'gap-embed', note: 'uniq', kind: 'embed', mode: 'rv', how: 'gap', edit: 'bumpFirst' },
+				{ id: 'crlf-ctl', note: 'crlf', kind: 'hover', mode: 'rv', how: 'control' },
+				{ id: 'ctl', note: 'swap', kind: 'hover', mode: 'rv', how: 'control' },
+				{ id: 'short-rv', note: 'short', kind: 'hover', mode: 'rv', how: 'twice' },
+				{ id: 'short-rv2', note: 'short', kind: 'hover', mode: 'rv', how: 'twice' },
+				{ id: 'short-emb', note: 'short', kind: 'embed', mode: 'rv', how: 'twice' },
+				{ id: 'short-lp', note: 'short', kind: 'hover', mode: 'lp', how: 'twice' },
+				{ id: 'cmt-rv', note: 'cmt', kind: 'hover', mode: 'rv', how: 'twice' },
+				{ id: 'cmt-emb', note: 'cmt', kind: 'embed', mode: 'rv', how: 'twice' },
+				{ id: 'odd-ctl', note: 'odd', kind: 'hover', mode: 'rv', how: 'control' },
+				{ id: 'odd-emb', note: 'odd', kind: 'embed', mode: 'rv', how: 'control' },
+				{ id: 'plain-rv', note: 'swap', kind: 'plain', mode: 'rv', how: 'plain' },
+				{ id: 'plain-lp', note: 'swap', kind: 'plain', mode: 'lp', how: 'plain' },
+			].filter((c) => ALL.length === 0 || ALL.includes(c.id));
+			await t.ev(`(() => { if (!document.getElementById('lc-r607-notice')) { const st = document.createElement('style'); st.id = 'lc-r607-notice'; st.textContent = '.notice-container { display: none !important; }'; document.head.appendChild(st); } return true; })()`);
+			await t.ev(`${prefs}.set('authoringControls', true)`);
+			// page-side logs: the plugin's trace (instrumented bundles only) and every vault read with its time
+			await t.ev(`(() => {
+  window.__r3Log = []; globalThis.__r3Trace = (r) => window.__r3Log.push(r);
+  if (!window.__r3Wrapped) {
+    window.__r3Wrapped = true;
+    for (const k of ['cachedRead', 'read']) { const o = app.vault[k].bind(app.vault); app.vault[k] = (f, ...a) => { window.__r3Log.push({ ev: 'vault.' + k, t: performance.now(), path: f?.path }); return o(f, ...a); }; }
+  }
+  return true; })()`);
+			const outcomes = [];
+			for (const c of cells) {
+				const SRC = `Lifecycle/r607-${c.id}-src.md`;
+				const HOST = `Lifecycle/r607-${c.id}-host.md`;
+				const rec = { id: c.id, kind: c.kind, mode: c.mode, how: c.how, edit: c.edit };
+				const valuesOf = () => (t.read(SRC).match(/^[> ]*current_value: (\d+)\r?$/gm) ?? []).map((x) => Number(x.replace(/^[> ]*current_value: /, '')));
+				const headsOf = () => (t.read(SRC).match(/^## \w+\r?$/gm) ?? []).map((x) => x.trim());
+				const inPart = c.kind === 'hover' ? `e.root.closest('.hover-popover')` : c.kind === 'plain' ? `!e.root.closest('.hover-popover, .internal-embed, .markdown-embed')` : `e.root.closest('.internal-embed, .markdown-embed')`;
+				const ES = `app.plugins.plugins['draw-steel-elements'].viewRegistry.liveEntries().filter((e) => e.host.sourcePath === ${J(SRC)} && e.root.isConnected && ${inPart})`;
+				const BTN = `(${ES})[0].root.querySelector('button[aria-label^="Increase"]')`;
+				const PENCIL = `((${ES})[0].root.querySelector('.dse-chrome button[data-dse-chrome-item="edit"], button[aria-label^="Edit "]'))`;
+				const FORM = `document.querySelector('.modal-container .dse-modal')`;
+				const OUTSIDE = `await app.vault.process(app.vault.getAbstractFileByPath(${J(SRC)}), ${EDITS[c.edit] ?? 'null'});`;
+				const SIG = `(() => { const f = app.vault.getAbstractFileByPath(${J(SRC)}); const m = app.metadataCache.getFileCache(f) ?? {}; return (m.headings ?? []).map((h) => h.heading + '@' + h.position.start.line).join(',') + '|' + Object.entries(m.blocks ?? {}).map(([k, v]) => k + '@' + v.position.start.line).join(','); })()`;
+				const SCRIPTED = (target) => `(async () => {
+  const sig = () => ${SIG};
+  const b = ${target}; const before = sig(); const t0 = performance.now();
+  ${OUTSIDE}
+  let tCache = null, clicked = false;
+  while (performance.now() - t0 < 1500 && !clicked) {
+    if (tCache === null && sig() !== before) tCache = performance.now() - t0;
+    if (tCache !== null && b.isConnected) { b.click(); clicked = true; }
+    if (!b.isConnected) break;
+    await new Promise((r) => setTimeout(r, 0));
+  }
+  return { tCache: tCache === null ? null : Math.round(tCache), clicked, oldCardGone: !b.isConnected };
+})()`;
+				try {
+					await t.reset(SRC);
+					await t.reset(HOST);
+					await t.ev(`(() => { window.__r3Log.length = 0; globalThis.__r3Delay = ${c.delay ?? 0}; globalThis.__r3NoGuard = ${!!c.noGuard}; return true; })()`);
+					rec.before = valuesOf();
+					const mk = await t.mark();
+					let raceT = null;
+					if (c.kind === 'hover') {
+						const link = await K.openHost(HOST, c.mode);
+						await K.mouse('mouseMoved', 5, 5);
+						await t.sleep(200);
+						await K.moveTo(link, 2);
+						const t0 = Date.now();
+						// the race: the outside write as soon as the card is on the page (its snapshot read is delayed by __r3Delay)
+						while (!(await t.ev(`(${ES}).length > 0`))) {
+							if (Date.now() - t0 > 6000) throw new Error('no preview card');
+							await t.sleep(10);
+						}
+						if (c.how === 'race') {
+							raceT = await t.ev(`(async () => { const t = performance.now(); ${OUTSIDE} return t; })()`);
+							rec.raceEditT = raceT;
+							await t.sleep((c.delay ?? 0) + 800);
+						} else await t.sleep(700);
+						await K.moveTo(`(${ES})[0].root`);
+						await t.sleep(300);
+					} else {
+						const st = c.mode === 'rv' ? { mode: 'preview' } : { mode: 'source', source: false };
+						await t.ev(`(async () => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); const leaf = app.workspace.getLeavesOfType('markdown')[0] ?? app.workspace.getMostRecentLeaf(); await leaf.setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true }); await leaf.setViewState({ type: 'markdown', state: { file: ${J(c.kind === 'plain' ? SRC : HOST)}, ...${J(st)} }, active: true }); return true; })()`);
+						if (c.mode === 'lp') await t.ev(`(() => { app.workspace.getMostRecentLeaf().view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+						await t.waitFor(`(${ES}).length >= 1`, `${c.id}: the embedded card is drawn`, 15000);
+						await t.sleep(800);
+					}
+					rec.cards = await t.ev(`(${ES}).length`);
+					if (c.how === 'twice') {
+						await K.click(BTN);
+						await t.sleep(450);
+						rec.afterFirst = valuesOf();
+						rec.linesAfterFirst = t.read(SRC).split('\n').length;
+						await K.click(BTN);
+						await t.sleep(1500);
+					} else if (c.how === 'plain') {
+						await t.sleep(500);
+					} else if (c.how === 'control') {
+						await K.click(BTN);
+						await t.sleep(1500);
+					} else if (c.how === 'race') {
+						rec.edited = t.read(SRC);
+						rec.run = await t.ev(`(async () => { const b = ${BTN}; if (!b || !b.isConnected) return { clicked: false }; b.click(); return { clicked: true }; })()`);
+						await t.sleep(1500);
+						if (c.twice) {
+							rec.run2 = await t.ev(`(async () => { const b = ${BTN}; if (!b || !b.isConnected) return { clicked: false }; b.click(); return { clicked: true }; })()`);
+							await t.sleep(1500);
+						}
+					} else if (c.how === 'card') {
+						rec.run = await t.ev(SCRIPTED(BTN));
+						rec.edited = t.read(SRC);
+						await t.sleep(1800);
+						rec.oldCardStillThere = await t.ev(`(${ES}).length`);
+					} else if (c.how === 'plus-then') {
+						await K.click(BTN);
+						await t.sleep(1500);
+						rec.afterPlus = valuesOf();
+						rec.cardsAfterPlus = await t.ev(`(${ES}).length`);
+						rec.run = await t.ev(SCRIPTED(BTN));
+						rec.edited = t.read(SRC);
+						await t.sleep(1800);
+					} else if (c.how === 'gap') {
+						await t.ev(`(() => { window.__r3Log.length = 0; return true; })()`);
+						rec.gapEditT = await t.ev(`(async () => { const t = performance.now(); ${OUTSIDE} return t; })()`);
+						await t.sleep(1500);
+						rec.cardsAfter = await t.ev(`(${ES}).length`);
+					} else if (c.how === 'form-after') {
+						await t.waitFor(`!!${PENCIL}`, `${c.id}: the pencil is drawn`, 8000);
+						rec.run = await t.ev(SCRIPTED(PENCIL));
+						await t.sleep(400);
+						rec.edited = t.read(SRC);
+						rec.formOpen = await t.ev(`!!${FORM}`);
+						if (rec.formOpen) {
+							const SAVE = `Array.from(document.querySelectorAll('.modal-container .dse-modal button')).find((b) => b.getAttribute('aria-label') === 'Save')`;
+							rec.renamed = await t.ev(`(() => { const ta = ${FORM}.querySelector('textarea.dse-form__raw'); if (!ta) return false; ta.value = ta.value.replace('name: Twin', 'name: Edited'); ta.dispatchEvent(new Event('input', { bubbles: true })); return true; })()`);
+							await t.waitFor(`!!(${SAVE}) && !(${SAVE}).disabled`, `${c.id}: Save is enabled`, 5000);
+							await t.ev(`(${SAVE}).click()`);
+							await t.sleep(1500);
+							rec.formOpenAfterSave = await t.ev(`!!${FORM}`);
+						}
+					}
+					rec.note = t.read(SRC);
+					rec.values = valuesOf();
+					rec.heads = headsOf();
+					rec.notices = (await t.noticesSince(mk)).filter((x) => /Draw Steel Elements/.test(x));
+					rec.log = await t.ev(`window.__r3Log.filter((r) => !r.path || r.path === ${J(SRC)}).map((r) => ({ ...r, t: r.t === undefined ? undefined : Math.round(r.t * 10) / 10 }))`);
+				} catch (e) {
+					rec.error = e.message;
+				} finally {
+					for (let i = 0; i < 5 && (await t.ev(`!!document.querySelector('.modal-container')`)); i++) {
+						await t.ev(`(() => { const b = Array.from(document.querySelectorAll('.modal-container .dse-modal button')).find((x) => x.getAttribute('aria-label') === 'Cancel'); if (b) b.click(); return true; })()`);
+						await t.sleep(200);
+						if (await t.ev(`!!document.querySelector('.modal-container')`)) await t.key('Escape', 'Escape', 27).catch(() => {});
+						await t.sleep(200);
+					}
+					await K.cleanup();
+					await t.ev(`(() => { globalThis.__r3Delay = 0; globalThis.__r3NoGuard = false; app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); return true; })()`);
+				}
+				console.log('R607-REC ' + J(rec));
+				outcomes.push(`${c.id}: values ${J(rec.before)} -> ${J(rec.values)} notices ${rec.notices ? rec.notices.length : '?'}${rec.error ? ' ERROR ' + rec.error : ''}`);
+			}
+			await t.ev(`${prefs}.set('authoringControls', false)`);
+			await t.ev(`document.getElementById('lc-r607-notice')?.remove()`);
+			await t.open('Lifecycle/other.md');
+			return outcomes.join('; ');
+		},
+	},

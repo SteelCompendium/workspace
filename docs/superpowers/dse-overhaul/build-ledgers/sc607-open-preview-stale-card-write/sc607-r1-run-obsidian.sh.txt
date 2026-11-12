@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# sc607-r1-run-obsidian.sh <tree> <log> [cells]: build the P607 harness copy in a scratch export <tree> and run --only=P607 there (worktree untouched)
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc607-r1-reviewer
+T="$1"
+cd "$T" || exit 9
+t0=$(date +%s)
+echo "tree $T load $(cat /proc/loadavg)" > "$2"
+sha256sum "$T/main.js" "$T/styles.css" >> "$2"
+python3 -I "$S/sc607-r1-make-scratch.py" "$T" >> "$2" 2>&1
+P607_CELLS="$3" node visual-harness/obsidian-lifecycle-s607.mjs --only=P607 >> "$2" 2>&1
+rc=$?
+echo "lc_rc=$rc wall=$(( $(date +%s) - t0 ))s" >> "$2"

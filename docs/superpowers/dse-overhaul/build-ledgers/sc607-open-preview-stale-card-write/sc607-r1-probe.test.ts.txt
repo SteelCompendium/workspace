@@ -1,0 +1,376 @@
+// SC-607 r1 probe sweep (scratch; copied into test/dom/framework/ for a run and deleted by its literal path after). Records one JSON line per
+// cell into $SC607_SWEEP_OUT; asserts only when SC607_ASSERT=1 (the probe run): no cell writes the other (identical) counter.
+import * as fs from 'fs';
+import { ReadingModeBlockHost } from '../../../src/framework/host/ReadingModeBlockHost';
+import { noteHoverLink } from '../../../src/framework/host/hoverLinks';
+import { resetDroppedWriteNotices } from '../../../src/framework/host/droppedWriteNotice';
+import { App, Notice, Plugin } from '../../mocks/obsidian';
+
+type Sec = { text: string; lineStart: number; lineEnd: number };
+type Section = { current: Sec | null };
+const ctxOf = (section: Section) =>
+	({ docId: 'doc-607', sourcePath: 'Note.md', frontmatter: undefined, addChild: () => {}, getSectionInfo: () => section.current }) as never;
+const CTR = (n: number, name = 'Twin'): string[] => ['```ds-counter', `name: ${name}`, `current_value: ${n}`, '```'];
+const bodyOf = (n: number, name = 'Twin'): string => `name: ${name}\ncurrent_value: ${n}`;
+const settle = () => new Promise((r) => setTimeout(r, 25));
+const pos = (line: number) => ({ line, col: 0, offset: 0 });
+function cacheOf(lines: string[]) {
+	const headings: Array<{ heading: string; level: number; position: unknown }> = [];
+	const blocks: Record<string, unknown> = {};
+	let fenced = false;
+	lines.forEach((l, i) => {
+		if (/^```/.test(l)) fenced = !fenced;
+		const h = !fenced && /^(#{1,6})\s+(.*)$/.exec(l);
+		if (h) headings.push({ heading: h[2], level: h[1].length, position: { start: pos(i), end: pos(i) } });
+		const id = /^\^(\w+)$/.exec(l);
+		if (id) {
+			let s = i - 1;
+			while (s >= 0 && lines[s] !== '```') s--;
+			for (s = s - 1; s >= 0 && !/^```\w/.test(lines[s]); s--);
+			blocks[id[1]] = { id: id[1], position: { start: pos(s), end: pos(i - 1) } };
+		}
+	});
+	return { headings, blocks };
+}
+
+type Kind = 'heading' | 'block';
+type Shape = 'hover' | 'embed';
+type Edit = 'none' | 'unrelated' | 'swap' | 'del-upper-adj' | 'del-upper-sep';
+type Plus = 'no +' | '+ redrawn' | '+ stale';
+/** The note: the upper (U) and lower (L) counters. `del` drops U (with its heading / marker). Returns the lines and the fence line of U and L (-1: gone). */
+function noteOf(kind: Kind, edit: Edit, after: boolean, u: number, l: number): { lines: string[]; U: number; L: number } {
+	const lines = ['# N', '', after && edit === 'unrelated' ? 'TOP edited' : 'TOP', ''];
+	let U = -1;
+	let L = -1;
+	const del = after && edit.startsWith('del');
+	const swapped = after && edit === 'swap';
+	if (kind === 'heading') {
+		const [hu, hl] = edit.startsWith('del') ? ['## Tracker', '## Tracker'] : swapped ? ['## Other', '## Tracker'] : ['## Tracker', '## Other'];
+		if (!del) {
+			lines.push(hu, '');
+			U = lines.length;
+			lines.push(...CTR(u), '');
+		}
+		if (edit === 'del-upper-sep') lines.push('## Mid', '', 'p-mid', '');
+		lines.push(hl, '');
+		L = lines.length;
+		lines.push(...CTR(l), '', '## After', '', 'END');
+	} else {
+		const [mu, ml] = swapped ? ['^pb', '^pa'] : ['^pa', '^pb'];
+		if (!del) {
+			U = lines.length;
+			lines.push(...CTR(u), mu, '');
+		}
+		if (edit !== 'del-upper-adj') lines.push('p-mid', '');
+		L = lines.length;
+		lines.push(...CTR(l), ml, '', 'END');
+	}
+	return { lines, U, L };
+}
+/** The part Obsidian draws for the hovered counter (value `v`) and the link. */
+function partOf(kind: Kind, shape: Shape, edit: Edit, upper: boolean, v: number): { sec: Sec; link: string } {
+	if (kind === 'block') return { sec: { text: CTR(v).join('\n'), lineStart: 0, lineEnd: 3 }, link: upper ? 'Note#^pa' : 'Note#^pb' };
+	const name = edit.startsWith('del') ? 'Tracker' : upper ? 'Tracker' : 'Other';
+	if (shape === 'hover') return { sec: { text: ['', ...CTR(v), ''].join('\n'), lineStart: 1, lineEnd: 4 }, link: `Note#${name}` };
+	return { sec: { text: [`## ${name}`, '', ...CTR(v), ''].join('\n'), lineStart: 2, lineEnd: 5 }, link: `Note#${name}` };
+}
+function popoverEl(app: App, link: string): HTMLElement {
+	const popover = document.createElement('div');
+	popover.className = 'popover hover-popover';
+	const embed = popover.appendChild(document.createElement('div'));
+	embed.className = 'markdown-embed';
+	const sub = link.slice(link.indexOf('#'));
+	if (sub.startsWith('#^')) embed.setAttribute('data-type', 'block');
+	else {
+		embed.setAttribute('data-type', 'heading');
+		const h = embed.appendChild(document.createElement('h2'));
+		h.setAttribute('data-heading', sub.split('#').pop()!);
+	}
+	const el = embed.appendChild(document.createElement('div'));
+	document.body.appendChild(popover);
+	noteHoverLink(app, { linktext: link, sourcePath: 'Host.md', hoverParent: { hoverPopover: { hoverEl: popover } } });
+	return el;
+}
+function embedEl(src: string, lp: boolean): HTMLElement {
+	const embed = document.createElement('div');
+	embed.className = 'internal-embed markdown-embed';
+	embed.setAttribute('src', src);
+	const el = embed.appendChild(document.createElement('div'));
+	if (lp) document.createElement('div').appendChild(embed).parentElement!.className = 'cm-embed-block';
+	return el;
+}
+const noticeKind = (n: string): string => (n.includes('changed on disk first') ? 'dropped' : n.includes("can't tell where") ? 'unsavable' : 'other');
+
+type Cell = { kind: Kind; shape: Shape; mode: 'rv' | 'lp'; click: 'card' | 'form'; upper: boolean; edit: Edit; cache: 'fresh' | 'lagging'; plus: Plus };
+async function run(c: Cell): Promise<{ outcome: string; kinds: string[] }> {
+	resetDroppedWriteNotices();
+	Notice.notices.length = 0;
+	const app = new App();
+	const plus = c.plus !== 'no +';
+	// before the outside edit the twin reads like the hovered counter will (after its own +: 6)
+	const hovV = 5;
+	const twinV = plus ? 6 : 5;
+	const mount = noteOf(c.kind, c.edit, false, c.upper ? hovV : twinV, c.upper ? twinV : hovV);
+	app.vault.setFile('Note.md', mount.lines.join('\n'));
+	let cacheLines = mount.lines;
+	jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => cacheOf(cacheLines) as never);
+	const p = partOf(c.kind, c.shape, c.edit, c.upper, hovV);
+	const section: Section = { current: p.sec };
+	const el = c.shape === 'hover' ? popoverEl(app, p.link) : embedEl(p.link, c.mode === 'lp');
+	const host = new ReadingModeBlockHost(new Plugin(app) as never, el, ctxOf(section), 'ds-counter');
+	host.setMountedBody(bodyOf(hovV));
+	await settle(); // the card is on screen: the note as drawn has been read
+	let known = hovV;
+	if (plus) {
+		host.notePersistIntent();
+		await settle();
+		const ok = await host.replaceSource(bodyOf(6), { fromView: true });
+		if (ok) known = 6;
+		const post = noteOf(c.kind, c.edit, false, c.upper ? known : twinV, c.upper ? twinV : known);
+		cacheLines = post.lines;
+		if (c.plus === '+ redrawn' && ok) {
+			// Obsidian redraws the part from the note as the + left it and the view is adopted into it (rebind)
+			section.current = partOf(c.kind, c.shape, c.edit, c.upper, known).sec;
+			host.rebind(el, ctxOf(section));
+			await settle();
+		}
+		Notice.notices.length = 0;
+		resetDroppedWriteNotices();
+	}
+	const now = noteOf(c.kind, c.edit, true, c.upper ? known : twinV, c.upper ? twinV : known);
+	const nowText = now.lines.join('\n');
+	app.vault.setFile('Note.md', nowText);
+	if (c.cache === 'fresh') cacheLines = now.lines;
+	if (c.click === 'card') {
+		host.notePersistIntent();
+		await settle();
+		await host.replaceSource(bodyOf(known + 1), { fromView: true });
+	} else {
+		const pin = host.pinPosition();
+		await (pin ? host.replaceSource(bodyOf(known, 'Edited'), { pin, pinOnly: true }) : host.replaceSource(bodyOf(known, 'Edited')));
+	}
+	el.closest('.hover-popover')?.remove();
+	const after = app.vault.getContent('Note.md')!;
+	const kinds = (Notice.notices as unknown[]).map((n) => noticeKind(String(n)));
+	if (after === nowText) return { outcome: 'refused', kinds };
+	const al = after.split('\n');
+	const changed = (start: number) => start >= 0 && al.slice(start, start + 4).join('\n') !== now.lines.slice(start, start + 4).join('\n');
+	const A = c.upper ? now.U : now.L;
+	const B = c.upper ? now.L : now.U;
+	return { outcome: changed(B) ? 'TWIN' : changed(A) ? 'A' : 'OTHER', kinds };
+}
+
+const cells: Cell[] = [];
+for (const kind of ['heading', 'block'] as Kind[])
+	for (const shape of ['hover', 'embed'] as Shape[])
+		for (const mode of ['rv', 'lp'] as const)
+			for (const click of ['card', 'form'] as const)
+				for (const upper of [true, false])
+					for (const edit of ['none', 'unrelated', 'swap', 'del-upper-adj', 'del-upper-sep'] as Edit[]) {
+						if (kind === 'heading' && !upper && edit.startsWith('del')) continue; // a heading link names the FIRST of two same-name sections
+						for (const cache of (edit === 'none' ? ['fresh'] : ['fresh', 'lagging']) as Array<'fresh' | 'lagging'>)
+							for (const plus of ['no +', '+ redrawn', '+ stale'] as Plus[]) cells.push({ kind, shape, mode, click, upper, edit, cache, plus });
+					}
+
+describe('SC-607 r1 probe sweep', () => {
+	let warn: jest.SpyInstance;
+	beforeEach(() => {
+		warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+	});
+	afterEach(() => {
+		warn.mockRestore();
+		jest.restoreAllMocks();
+	});
+	test.each(cells)('$kind $shape $mode $click upper=$upper $edit $cache $plus', async (c) => {
+		const r = await run(c);
+		if (process.env.SC607_SWEEP_OUT) fs.appendFileSync(process.env.SC607_SWEEP_OUT, JSON.stringify({ ...c, ...r, tag: process.env.SC607_TAG ?? '' }) + '\n');
+		if (process.env.SC607_ASSERT === '1') expect(r.outcome).not.toBe('TWIN');
+	});
+});
+
+/** Named shapes (recorded like the sweep; `kind` 'named'). */
+describe('SC-607 r1 probe named shapes', () => {
+	let warn: jest.SpyInstance;
+	beforeEach(() => {
+		resetDroppedWriteNotices();
+		Notice.notices.length = 0;
+		warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+	});
+	afterEach(() => {
+		warn.mockRestore();
+		jest.restoreAllMocks();
+	});
+	const rec = (name: string, r: { outcome: string; kinds: string[] }) => {
+		if (process.env.SC607_SWEEP_OUT) fs.appendFileSync(process.env.SC607_SWEEP_OUT, JSON.stringify({ kind: 'named', shape: name, mode: '', click: '', upper: '', edit: '', cache: '', plus: '', ...r }) + '\n');
+	};
+	const judge = (app: App, nowText: string, A: number, B: number) => {
+		const after = app.vault.getContent('Note.md')!;
+		const kinds = (Notice.notices as unknown[]).map((n) => noticeKind(String(n)));
+		if (after === nowText) return { outcome: 'refused', kinds };
+		const al = after.split('\n');
+		const nl = nowText.split('\n');
+		const changed = (s: number) => s >= 0 && al.slice(s, s + 4).join('\n') !== nl.slice(s, s + 4).join('\n');
+		return { outcome: changed(B) ? 'TWIN' : changed(A) ? 'A' : 'OTHER', kinds };
+	};
+	test('N1 heading hover: the upper of two identical sections deleted between the draw and the mount read, the cache still lagging at the mount read', async () => {
+		const pre = noteOf('heading', 'del-upper-adj', false, 5, 5);
+		const now = noteOf('heading', 'del-upper-adj', true, 5, 5);
+		const app = new App();
+		app.vault.setFile('Note.md', now.lines.join('\n')); // the read at mount already sees the edit
+		let cacheLines = pre.lines; // the cache does not yet
+		jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => cacheOf(cacheLines) as never);
+		const p = partOf('heading', 'hover', 'del-upper-adj', true, 5);
+		const el = popoverEl(app, p.link);
+		const host = new ReadingModeBlockHost(new Plugin(app) as never, el, ctxOf({ current: p.sec }), 'ds-counter');
+		host.setMountedBody(bodyOf(5));
+		await settle();
+		cacheLines = now.lines; // caught up before the click
+		host.notePersistIntent();
+		await settle();
+		await host.replaceSource(bodyOf(6), { fromView: true });
+		el.closest('.hover-popover')?.remove();
+		const r = judge(app, now.lines.join('\n'), now.U, now.L); // the hovered (upper) is gone: any write is the other counter
+		rec('N1', r);
+		if (process.env.SC607_ASSERT === '1') expect(r.outcome).toBe('refused');
+	});
+	const blockHover = (app: App, lines: string[], link: string, sec: Sec) => {
+		app.vault.setFile('Note.md', lines.join('\n'));
+		const section: Section = { current: sec };
+		const el = popoverEl(app, link);
+		const host = new ReadingModeBlockHost(new Plugin(app) as never, el, ctxOf(section), 'ds-counter');
+		return { host, el, section };
+	};
+	const q = (l: string) => `> ${l}`;
+	const CAL = (n: number): string[] => ['> [!note] Camp', ...CTR(n).map(q)];
+	test('N3 block hover of the upper of two adjacent identical callouts, a + (the part stays stale), the upper deleted from outside, then the form Save', async () => {
+		const pre = ['# N', '', 'TOP', '', ...CAL(5), '', '^ca', '', ...CAL(6), '', '^cb', '', 'END'];
+		const now = ['# N', '', 'TOP', '', ...CAL(6), '', '^cb', '', 'END'];
+		const app = new App();
+		let cacheLines = pre;
+		jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => ({ headings: [], blocks: Object.fromEntries(cacheLines.flatMap((l, i) => (/^\^c\w$/.test(l) ? [[l.slice(1), { id: l.slice(1), position: { start: pos(i - 6), end: pos(i - 2) } }]] : []))) }) as never);
+		const { host, el } = blockHover(app, pre, 'Note#^ca', { text: CAL(5).join('\n'), lineStart: 0, lineEnd: 4 });
+		host.setMountedBody(bodyOf(5));
+		await settle();
+		host.notePersistIntent();
+		await settle();
+		const plusOk = await host.replaceSource(bodyOf(6), { fromView: true });
+		Notice.notices.length = 0;
+		resetDroppedWriteNotices();
+		app.vault.setFile('Note.md', now.join('\n'));
+		cacheLines = now;
+		const pin = host.pinPosition();
+		await (pin ? host.replaceSource(bodyOf(6, 'Edited'), { pin, pinOnly: true }) : host.replaceSource(bodyOf(6, 'Edited')));
+		el.closest('.hover-popover')?.remove();
+		const r = judge(app, now.join('\n'), -1, 4);
+		rec('N3' + (plusOk ? '' : ' (the + was refused)'), r);
+		if (process.env.SC607_ASSERT === '1') expect(r.outcome).toBe('refused');
+	});
+	test('N4 block hover of the lower of two adjacent identical blocks, a +, the upper deleted from outside before the redraw, redrawn from the edited note, then a +', async () => {
+		const pre = ['# N', '', 'TOP', '', ...CTR(6), '^pa', '', ...CTR(5), '^pb', '', 'END'];
+		const now = ['# N', '', 'TOP', '', ...CTR(6), '^pb', '', 'END'];
+		const app = new App();
+		let cacheLines = pre;
+		jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => cacheOf(cacheLines) as never);
+		const { host, el, section } = blockHover(app, pre, 'Note#^pb', { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 });
+		host.setMountedBody(bodyOf(5));
+		await settle();
+		host.notePersistIntent();
+		await settle();
+		const plusOk = await host.replaceSource(bodyOf(6), { fromView: true });
+		app.vault.setFile('Note.md', now.join('\n'));
+		cacheLines = now;
+		section.current = { text: CTR(6).join('\n'), lineStart: 0, lineEnd: 3 };
+		host.rebind(el, ctxOf(section));
+		await settle();
+		Notice.notices.length = 0;
+		resetDroppedWriteNotices();
+		host.notePersistIntent();
+		await settle();
+		await host.replaceSource(bodyOf(7), { fromView: true });
+		el.closest('.hover-popover')?.remove();
+		const r = judge(app, now.join('\n'), 4, -1);
+		rec('N4' + (plusOk ? '' : ' (the + was refused)'), r);
+		if (process.env.SC607_ASSERT === '1') expect(r.outcome).toBe('A');
+	});
+	test('N5 block hover of a unique counter, deleted from outside while another counter is edited to read like it: the + is not written there', async () => {
+		const pre = ['# N', '', 'TOP', '', ...CTR(5), '^pa', '', 'mid', '', ...CTR(7), '^pb', '', 'END'];
+		const now = ['# N', '', 'TOP', '', 'mid', '', ...CTR(5), '^pb', '', 'END'];
+		const app = new App();
+		let cacheLines = pre;
+		jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => cacheOf(cacheLines) as never);
+		const { host, el } = blockHover(app, pre, 'Note#^pa', { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 });
+		host.setMountedBody(bodyOf(5));
+		await settle();
+		app.vault.setFile('Note.md', now.join('\n'));
+		cacheLines = now;
+		host.notePersistIntent();
+		await settle();
+		await host.replaceSource(bodyOf(6), { fromView: true });
+		el.closest('.hover-popover')?.remove();
+		const r = judge(app, now.join('\n'), -1, 6);
+		rec('N5', r);
+		if (process.env.SC607_ASSERT === '1') expect(r.outcome).toBe('refused');
+	});
+	test('N6 block hover of a unique counter, deleted from outside while an identical counter is pasted elsewhere: the + is not written into the pasted one', async () => {
+		const pre = ['# N', '', 'TOP', '', ...CTR(5), '^pa', '', 'mid', '', 'END'];
+		const now = ['# N', '', 'TOP', '', 'mid', '', 'pasted', '', ...CTR(5), '', 'END'];
+		const app = new App();
+		let cacheLines = pre;
+		jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => cacheOf(cacheLines) as never);
+		const { host, el } = blockHover(app, pre, 'Note#^pa', { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 });
+		host.setMountedBody(bodyOf(5));
+		await settle();
+		app.vault.setFile('Note.md', now.join('\n'));
+		cacheLines = now;
+		host.notePersistIntent();
+		await settle();
+		await host.replaceSource(bodyOf(6), { fromView: true });
+		el.closest('.hover-popover')?.remove();
+		const r = judge(app, now.join('\n'), -1, 8);
+		rec('N6', r);
+		if (process.env.SC607_ASSERT === '1') expect(r.outcome).toBe('refused');
+	});
+	test('N7 heading hover, lines inserted above the sections from outside (every line below moves), the cache fresh: the + is saved in the hovered counter', async () => {
+		const pre = noteOf('heading', 'swap', false, 5, 5);
+		const now = { lines: ['# N', '', 'added 1', 'added 2', ...pre.lines.slice(2)], U: pre.U + 2, L: pre.L + 2 };
+		const app = new App();
+		app.vault.setFile('Note.md', pre.lines.join('\n'));
+		let cacheLines = pre.lines;
+		jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => cacheOf(cacheLines) as never);
+		const p = partOf('heading', 'hover', 'swap', true, 5);
+		const el = popoverEl(app, p.link);
+		const host = new ReadingModeBlockHost(new Plugin(app) as never, el, ctxOf({ current: p.sec }), 'ds-counter');
+		host.setMountedBody(bodyOf(5));
+		await settle();
+		app.vault.setFile('Note.md', now.lines.join('\n'));
+		cacheLines = now.lines;
+		host.notePersistIntent();
+		await settle();
+		await host.replaceSource(bodyOf(6), { fromView: true });
+		el.closest('.hover-popover')?.remove();
+		const r = judge(app, now.lines.join('\n'), now.U, now.L);
+		rec('N7', r);
+		if (process.env.SC607_ASSERT === '1') expect(r.outcome).toBe('A');
+	});
+	test('N2 a hover with no recorded link whose section is the whole note, nothing edited: the + is saved', async () => {
+		const pre = noteOf('block', 'none', false, 5, 5);
+		const text = pre.lines.join('\n');
+		const app = new App();
+		app.vault.setFile('Note.md', text);
+		jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => cacheOf(pre.lines) as never);
+		const popover = document.createElement('div');
+		popover.className = 'popover hover-popover';
+		const el = popover.appendChild(document.createElement('div'));
+		document.body.appendChild(popover);
+		const host = new ReadingModeBlockHost(new Plugin(app) as never, el, ctxOf({ current: { text, lineStart: pre.U, lineEnd: pre.U + 3 } }), 'ds-counter');
+		host.setMountedBody(bodyOf(5));
+		await settle();
+		host.notePersistIntent();
+		await settle();
+		await host.replaceSource(bodyOf(6), { fromView: true });
+		popover.remove();
+		const r = judge(app, text, pre.U, pre.L);
+		rec('N2', r);
+		if (process.env.SC607_ASSERT === '1') expect(r.outcome).toBe('A');
+	});
+});

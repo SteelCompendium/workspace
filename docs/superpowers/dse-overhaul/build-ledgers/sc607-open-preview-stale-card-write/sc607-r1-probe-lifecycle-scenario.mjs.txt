@@ -1,0 +1,289 @@
+	// ---- SC-607 r1 probe (scratch; never committed). Spliced at the front of SCENARIOS of a COPY of the harness in a scratch export.
+	{
+		id: 'P607',
+		async run(t) {
+			const J = JSON.stringify;
+			const K = gs83Kit(t);
+			const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+			const ONLY = (process.env.P607_CELLS ?? '').split(',').filter(Boolean);
+			const out = [];
+			await t.ev(`(() => { if (!document.getElementById('lc-607-notice')) { const st = document.createElement('style'); st.id = 'lc-607-notice'; st.textContent = '.notice-container { opacity: 0 !important; pointer-events: none !important; }'; document.head.appendChild(st); } return true; })()`);
+			await t.ev(`${prefs}.set('authoringControls', true)`);
+			// read log: every vault.cachedRead / vault.read with its time (B: when does Obsidian read the note it draws, when does the card read it)
+			await t.ev(`(() => { if (window.__p607wrapped) return true; window.__p607wrapped = true; window.__p607reads = [];
+  for (const k of ['cachedRead', 'read']) { const orig = app.vault[k].bind(app.vault); app.vault[k] = async (f) => { const t0 = performance.now(); const st = (new Error().stack || '').split('\\n').slice(2, 6).join(' | ').replace(/\\s+/g, ' ').slice(0, 300); const r = await orig(f); window.__p607reads.push({ k, path: f && f.path, t0: Math.round(t0 * 10) / 10, t1: Math.round(performance.now() * 10) / 10, len: typeof r === 'string' ? r.length : null, ti: typeof r === 'string' ? r.indexOf('## Tracker') : null, st }); return r; }; }
+  window.__p607trace = []; window.__sc607Trace = (rec) => window.__p607trace.push({ t: Math.round(performance.now() * 10) / 10, ...rec });
+  return true; })()`);
+			const valuesOf = (src) => (t.read(src).match(/^[> ]*current_value: (\d+)$/gm) ?? []).map((x) => Number(x.replace(/^[> ]*current_value: /, '')));
+			const namesOf = (src) => (t.read(src).match(/^[> ]*name: (\w+)$/gm) ?? []).map((x) => x.replace(/^[> ]*name: /, ''));
+			const SIG = (src) => `(() => { const f = app.vault.getAbstractFileByPath(${J(src)}); const m = app.metadataCache.getFileCache(f) ?? {}; return (m.headings ?? []).map((h) => h.heading + '@' + h.position.start.line).join(',') + '|' + Object.entries(m.blocks ?? {}).map(([k, v]) => k + '@' + v.position.start.line).join(','); })()`;
+			const EDITS = {
+				// the FIRST of two `## Tracker` sections (heading + counter + blank)
+				delFirstTracker: String.raw`(c) => c.replace(/## Tracker\n\n\x60\x60\x60ds-counter[\s\S]*?\x60\x60\x60\n\n/, '')`,
+				swapNames: String.raw`(c) => c.replace('## Tracker\n', '## @@\n').replace('## Other\n', '## Tracker\n').replace('## @@\n', '## Other\n')`,
+				swapMarkers: String.raw`(c) => c.replace('^pa\n', '^@@\n').replace('^pb\n', '^pa\n').replace('^@@\n', '^pb\n')`,
+				// the UPPER block (fence + ^a marker + blank) of two adjacent identical blocks
+				delUpperBlock: String.raw`(c) => c.replace(/\x60\x60\x60ds-counter[\s\S]*?\x60\x60\x60\n\^pa\n\n/, '')`,
+			};
+			const inPart = (kind) => (kind === 'hover' ? `e.root.closest('.hover-popover')` : `e.root.closest('.internal-embed, .markdown-embed')`);
+			const ESx = (src, kind) => `app.plugins.plugins['draw-steel-elements'].viewRegistry.liveEntries().filter((e) => e.host.sourcePath === ${J(src)} && e.root.isConnected && ${inPart(kind)})`;
+			const openCell = async (c) => {
+				const ES = ESx(c.SRC, c.kind);
+				await t.reset(c.SRC);
+				await t.reset(c.HOST);
+				await t.ev(`(() => { window.__p607reads = []; window.__p607trace = []; return true; })()`);
+				const rec = {};
+				if (c.kind === 'hover') {
+					const link = await K.openHost(c.HOST, c.mode);
+					if (c.pane) {
+						await t.ev(`(async () => { const leaf = app.workspace.getLeaf('split'); await leaf.setViewState({ type: 'markdown', state: { file: ${J(c.SRC)}, mode: 'preview' }, active: false }); return true; })()`);
+						await t.sleep(600);
+						await t.ev(`(() => { const l = app.workspace.getLeavesOfType('markdown').find((x) => x.view.file?.path === ${J(c.HOST)}); app.workspace.setActiveLeaf(l, { focus: true }); return true; })()`);
+						await t.sleep(300);
+					}
+					await t.ev(`(() => { window.__p607reads = []; window.__p607trace = []; window.__p607hoverAt = performance.now(); return true; })()`);
+					rec.hover = await K.hover(link, c.SRC);
+					await t.sleep(400);
+					await K.moveTo(`(${ES})[0].root`);
+					await t.sleep(300);
+				} else {
+					const st = c.mode === 'rv' ? { mode: 'preview' } : { mode: 'source', source: false };
+					await t.ev(`(async () => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); const leaf = app.workspace.getLeavesOfType('markdown')[0] ?? app.workspace.getMostRecentLeaf(); await leaf.setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true }); window.__p607reads = []; window.__p607trace = []; await leaf.setViewState({ type: 'markdown', state: { file: ${J(c.HOST)}, ...${J(st)} }, active: true }); return true; })()`);
+					if (c.mode === 'lp') await t.ev(`(() => { app.workspace.getMostRecentLeaf().view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+					await t.waitFor(`(${ES}).length >= 1`, `${c.label}: the embedded card is drawn`, 15000);
+					await t.sleep(600);
+				}
+				rec.cards = await t.ev(`(${ES}).length`);
+				rec.reads = await t.ev(`window.__p607reads.filter((r) => r.path === ${J(c.SRC)})`);
+				rec.trace = await t.ev(`window.__p607trace`);
+				return rec;
+			};
+			/** card cell: outside edit, then (in the same page task) poll every macrotask; once the metadata cache has caught up while the OLD card is still connected, a scripted click on its +. */
+			const cardCell = async (c) => {
+				const rec = { label: c.label };
+				const ES = ESx(c.SRC, c.kind);
+				try {
+					Object.assign(rec, await openCell(c));
+					rec.before = valuesOf(c.SRC);
+					const mk = await t.mark();
+					const BTN = `(${ES})[${c.idx ?? 0}].root.querySelector('button[aria-label^="Increase"]')`;
+					rec.run = await t.ev(`(async () => {
+  const f = app.vault.getAbstractFileByPath(${J(c.SRC)});
+  const sig = () => ${SIG(c.SRC)};
+  const b = ${BTN}; const root = (${ES})[${c.idx ?? 0}].root; const before = sig(); const t0 = performance.now();
+  const emb = (() => { for (const l of app.workspace.getLeavesOfType('markdown')) { const v = l.view; for (const o of [v, v.previewMode, v.editMode]) { const e = o && o.hoverPopover && o.hoverPopover.embed; if (e) return e; } } return null; })();
+  const text0 = await app.vault.cachedRead(f); const data0 = emb ? emb.data === text0 : null; window.__p607reads = [];
+  await app.vault.process(f, ${EDITS[c.edit]});
+  const tw = performance.now() - t0; let tCache = null, tGone = null, clicked = false;
+  while (performance.now() - t0 < 1500 && (tCache === null || tGone === null)) {
+    if (tCache === null && sig() !== before) tCache = performance.now() - t0;
+    if (tGone === null && !b.isConnected) tGone = performance.now() - t0;
+    if (!clicked && tCache !== null && tGone === null) { b.click(); clicked = true; }
+    await new Promise((r) => setTimeout(r, 0));
+  }
+  const text1 = await app.vault.cachedRead(f);
+  return { before, after: sig(), tWrite: Math.round(tw), tCache: tCache === null ? null : Math.round(tCache), tGone: tGone === null ? null : Math.round(tGone), rootGone: !root.isConnected, clicked, embedData: emb ? { atMountEqNote: data0, afterEditEqNewNote: emb.data === text1, afterEditEqOldNote: emb.data === text0 } : null, readsAfterEdit: window.__p607reads.filter((r) => r.path === ${J(c.SRC)}).map((r) => r.st.slice(0, 40)) };
+})()`);
+					rec.edited = t.read(c.SRC);
+					rec.editedValues = valuesOf(c.SRC);
+					await t.sleep(2500);
+					rec.after = valuesOf(c.SRC);
+					rec.wrote = t.read(c.SRC) !== rec.edited;
+					rec.notices = (await t.noticesSince(mk)).filter((x) => /Draw Steel Elements/.test(x)).map((x) => x.slice(-70));
+					rec.trace2 = await t.ev(`window.__p607trace`);
+				} catch (e) {
+					rec.error = e.message;
+				} finally {
+					await K.cleanup();
+					await t.ev(`(() => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); return true; })()`);
+				}
+				return rec;
+			};
+			/** form cell: `when` 'before' = pencil, then the outside edit, Save; 'after' = the outside edit, wait for the cache, pencil on the OLD card, Save. */
+			const formCell = async (c) => {
+				const rec = { label: c.label };
+				const ES = ESx(c.SRC, c.kind);
+				const FORM = `document.querySelector('.modal-container .dse-modal')`;
+				try {
+					Object.assign(rec, await openCell(c));
+					const PENCIL = `((${ES})[0].root.querySelector('.dse-chrome button[data-dse-chrome-item="edit"], button[aria-label^="Edit "]'))`;
+					await t.waitFor(`!!${PENCIL}`, `${c.label}: the pencil is drawn`, 8000);
+					rec.before = valuesOf(c.SRC);
+					const mk = await t.mark();
+					if (c.when === 'before') {
+						await t.ev(`(${PENCIL}).click()`);
+						await t.sleep(400);
+						rec.formOpenAtEdit = await t.ev(`!!${FORM}`);
+						rec.run = await t.ev(`(async () => { const root = (${ES})[0].root; const t0 = performance.now(); await app.vault.process(app.vault.getAbstractFileByPath(${J(c.SRC)}), ${EDITS[c.edit]}); let tGone = null; while (performance.now() - t0 < 1500) { if (tGone === null && !root.isConnected) tGone = performance.now() - t0; await new Promise((r) => setTimeout(r, 5)); } return { tGone: tGone === null ? null : Math.round(tGone) }; })()`);
+					} else {
+						rec.run = await t.ev(`(async () => {
+  const f = app.vault.getAbstractFileByPath(${J(c.SRC)}); const sig = () => ${SIG(c.SRC)};
+  const b = ${PENCIL}; const before = sig(); const t0 = performance.now();
+  await app.vault.process(f, ${EDITS[c.edit]});
+  let tCache = null, tGone = null, clicked = false;
+  while (performance.now() - t0 < 1500 && (tCache === null || tGone === null)) {
+    if (tCache === null && sig() !== before) tCache = performance.now() - t0;
+    if (tGone === null && !b.isConnected) tGone = performance.now() - t0;
+    if (!clicked && tCache !== null && tGone === null) { b.click(); clicked = true; }
+    await new Promise((r) => setTimeout(r, 0));
+  }
+  return { tCache: tCache === null ? null : Math.round(tCache), tGone: tGone === null ? null : Math.round(tGone), clicked };
+})()`);
+						await t.sleep(400);
+					}
+					rec.edited = t.read(c.SRC);
+					rec.editedValues = valuesOf(c.SRC);
+					rec.formOpenBeforeSave = await t.ev(`!!${FORM}`);
+					if (rec.formOpenBeforeSave) {
+						const SAVE = `Array.from(document.querySelectorAll('.modal-container .dse-modal button')).find((b) => b.getAttribute('aria-label') === 'Save')`;
+						rec.renamed = await t.ev(`(() => { const ta = ${FORM}.querySelector('textarea.dse-form__raw'); if (!ta) return false; ta.value = ta.value.replace('name: Twin', 'name: Edited'); ta.dispatchEvent(new Event('input', { bubbles: true })); return true; })()`);
+						await t.waitFor(`!!(${SAVE}) && !(${SAVE}).disabled`, `${c.label}: Save is enabled`, 5000);
+						await t.ev(`(${SAVE}).click()`);
+						const t0 = Date.now();
+						while (Date.now() - t0 < 3000 && !t.read(c.SRC).includes('name: Edited') && !(await t.noticesSince(mk)).length) await t.sleep(50);
+						await t.sleep(400);
+						rec.formOpenAfterSave = await t.ev(`!!${FORM}`);
+					}
+					rec.after = valuesOf(c.SRC);
+					rec.names = namesOf(c.SRC);
+					rec.notices = (await t.noticesSince(mk)).filter((x) => /Draw Steel Elements/.test(x)).map((x) => x.slice(-70));
+				} catch (e) {
+					rec.error = e.message;
+				} finally {
+					for (let i = 0; i < 5 && (await t.ev(`!!document.querySelector('.modal-container')`)); i++) {
+						await t.ev(`(() => { const b = Array.from(document.querySelectorAll('.modal-container .dse-modal button')).find((x) => x.getAttribute('aria-label') === 'Cancel'); if (b) b.click(); return true; })()`);
+						await t.sleep(200);
+						if (await t.ev(`!!document.querySelector('.modal-container')`)) await t.key('Escape', 'Escape', 27).catch(() => {});
+						await t.sleep(200);
+					}
+					await K.cleanup();
+					await t.ev(`(() => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); return true; })()`);
+				}
+				return rec;
+			};
+			/** B: the object graph of the open hover popover / the host view, searched for a string equal to the note's text or containing the drawn part. */
+			const handleCell = async (c) => {
+				const rec = { label: c.label };
+				try {
+					Object.assign(rec, await openCell(c));
+					rec.found = await t.ev(`(() => {
+  const text = ${J(t.read(c.SRC))};
+  const roots = [];
+  const leaf = app.workspace.getLeavesOfType('markdown').find((l) => l.view.file?.path === ${J(c.HOST)});
+  const v = leaf && leaf.view;
+  for (const [n, o] of [['view', v], ['view.previewMode', v && v.previewMode], ['view.editMode', v && v.editMode], ['view.hoverPopover', v && v.hoverPopover], ['previewMode.hoverPopover', v && v.previewMode && v.previewMode.hoverPopover], ['editMode.hoverPopover', v && v.editMode && v.editMode.hoverPopover]]) if (o) roots.push([n, o]);
+  const seen = new Set(); const hits = []; let nodes = 0;
+  const walk = (o, p, d) => {
+    if (o === null || typeof o !== 'object' || seen.has(o) || d > 7 || nodes > 60000) return;
+    if (o instanceof Node || o === window || o === app) return;
+    seen.add(o); nodes++;
+    let keys; try { keys = Object.keys(o); } catch (e) { return; }
+    if (o instanceof Map) keys = [];
+    for (const k of keys) {
+      let x; try { x = o[k]; } catch (e) { continue; }
+      if (typeof x === 'string') { if (x.length > 40 && (x === text || text.includes(x) && x.includes('ds-counter'))) hits.push({ path: p + '.' + k, len: x.length, whole: x === text }); }
+      else if (x && typeof x === 'object') walk(x, p + '.' + k, d + 1);
+    }
+  };
+  for (const [n, o] of roots) walk(o, n, 0);
+  const hp = (v && (v.hoverPopover || (v.previewMode && v.previewMode.hoverPopover) || (v.editMode && v.editMode.hoverPopover))) || null;
+  return { nodes, hits: hits.slice(0, 40), hpKeys: hp ? Object.keys(hp).slice(0, 40) : null, hpCtor: hp ? hp.constructor.name : null };
+})()`);
+				} catch (e) {
+					rec.error = e.message;
+				} finally {
+					await K.cleanup();
+				}
+				return rec;
+			};
+			const timingCell = async (c) => {
+				const rec = { label: c.label };
+				try {
+					Object.assign(rec, await openCell(c));
+				} catch (e) {
+					rec.error = e.message;
+				} finally {
+					await K.cleanup();
+				}
+				return rec;
+			};
+			/** B race: open the host note (heading embed, Reading view) and, `c.delay` ms after the open starts, swap the two heading names from outside. Then a + on the card. */
+			const raceCell = async (c) => {
+				const rec = { label: c.label, delay: c.delay };
+				const ES = ESx(c.SRC, 'embed');
+				try {
+					await t.reset(c.SRC);
+					await t.reset(c.HOST);
+					const mk = await t.mark();
+					rec.race = await t.ev(`(async () => {
+  app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach());
+  const leaf = app.workspace.getLeavesOfType('markdown')[0] ?? app.workspace.getMostRecentLeaf();
+  await leaf.setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true });
+  window.__p607reads = []; window.__p607trace = [];
+  const t0 = performance.now();
+  const p = leaf.setViewState({ type: 'markdown', state: { file: ${J(c.HOST)}, mode: 'preview' }, active: true });
+  await new Promise((r) => setTimeout(r, ${c.delay}));
+  const te0 = performance.now();
+  await app.vault.process(app.vault.getAbstractFileByPath(${J(c.SRC)}), ${EDITS.swapNames});
+  const te1 = performance.now();
+  await p;
+  return { t0: Math.round(t0 * 10) / 10, te0: Math.round(te0 * 10) / 10, te1: Math.round(te1 * 10) / 10 };
+})()`);
+					await t.waitFor(`(${ES}).length >= 1`, `${c.label}: the embedded card is drawn`, 15000);
+					await t.sleep(800);
+					rec.reads = await t.ev(`window.__p607reads.filter((r) => r.path === ${J(c.SRC)}).map((r) => ({ t0: r.t0, t1: r.t1, ti: r.ti, st: r.st.slice(0, 50) }))`);
+					rec.trace = await t.ev(`window.__p607trace`);
+					rec.shown = await t.ev(`(${ES}).map((e) => (e.root.closest('.markdown-embed') || e.root).textContent.slice(0, 0) + e.host.ctx.getSectionInfo(e.host.containerEl)?.text?.slice(0, 12))`);
+					rec.before = valuesOf(c.SRC);
+					rec.clicked = await t.ev(`(() => { const b = (${ES})[0].root.querySelector('button[aria-label^="Increase"]'); if (!b) return false; b.click(); return true; })()`);
+					await t.sleep(2500);
+					rec.after = valuesOf(c.SRC);
+					rec.trace2 = await t.ev(`window.__p607trace.filter((x) => x.ev && x.ev.startsWith('rebase'))`);
+					rec.notices = (await t.noticesSince(mk)).filter((x) => /Draw Steel Elements/.test(x)).map((x) => x.slice(-50));
+				} catch (e) {
+					rec.error = e.message;
+				} finally {
+					await K.cleanup();
+				}
+				return rec;
+			};
+			const CELLS = [
+				// A: card cells
+				['hh-adj-rv', 'card', { kind: 'hover', mode: 'rv', edit: 'delFirstTracker', label: '(a) heading hover, first of two adjacent identical ## Tracker deleted, RV' }],
+				['hh-adj-lp', 'card', { kind: 'hover', mode: 'lp', edit: 'delFirstTracker', label: '(a) heading hover, first of two adjacent identical ## Tracker deleted, LP' }],
+				['hh-nest-rv', 'card', { kind: 'hover', mode: 'rv', edit: 'delFirstTracker', label: '(a ctl) heading hover of the SECOND ## Tracker ([[#P2#Tracker]]), the first deleted, RV' }],
+				['hh-swap-rv', 'card', { kind: 'hover', mode: 'rv', edit: 'swapNames', label: '(b) heading hover, ## Tracker / ## Other names swapped, RV' }],
+				['hh-swap-lp', 'card', { kind: 'hover', mode: 'lp', edit: 'swapNames', label: '(b) heading hover, names swapped, LP' }],
+				['he-adj-rv', 'card', { kind: 'embed', mode: 'rv', edit: 'delFirstTracker', label: '(c) heading embed, first of two adjacent identical ## Tracker deleted, RV' }],
+				['he-adj-lp', 'card', { kind: 'embed', mode: 'lp', edit: 'delFirstTracker', label: '(c) heading embed, first deleted, LP' }],
+				['he-swap-rv', 'card', { kind: 'embed', mode: 'rv', edit: 'swapNames', label: '(c) heading embed, names swapped, RV' }],
+				['bh-swap-rv', 'card', { kind: 'hover', mode: 'rv', edit: 'swapMarkers', label: '(d) block hover [[#^a]], ^a / ^b markers swapped between identical blocks, RV' }],
+				// A: form cells
+				['fh-adj-rv-pane', 'form', { kind: 'hover', mode: 'rv', pane: true, when: 'before', edit: 'delFirstTracker', label: '(e) heading hover, FORM open, first ## Tracker deleted, Save (SRC in a 2nd pane), RV' }],
+				['fb-adj-rv-pane', 'form', { kind: 'hover', mode: 'rv', pane: true, when: 'before', edit: 'delUpperBlock', label: '(e2) block hover [[#^a]] upper of two adjacent blocks, FORM open, upper deleted, Save (SRC in a 2nd pane), RV' }],
+				['fh-swap-after-rv', 'form', { kind: 'hover', mode: 'rv', when: 'after', edit: 'swapNames', label: '(e3) heading hover, names swapped, cache fresh, THEN the pencil on the old card, Save, RV' }],
+				// B: handle search (no write)
+				['bh-handle-hover', 'handle', { kind: 'hover', mode: 'rv', label: 'B handle search, heading hover RV' }],
+				['bh-handle-embed', 'handle', { kind: 'embed', mode: 'rv', label: 'B handle search, heading embed RV' }],
+				...[1, 2, 3].map((i) => [`tm-h-rv-${i}`, 'timing', { kind: 'hover', mode: 'rv', label: `B timing, heading hover RV #${i}` }]),
+				...[1, 2, 3].map((i) => [`tm-h-lp-${i}`, 'timing', { kind: 'hover', mode: 'lp', label: `B timing, heading hover LP #${i}` }]),
+				...[1, 2].map((i) => [`tm-e-rv-${i}`, 'timing', { kind: 'embed', mode: 'rv', label: `B timing, heading embed RV #${i}` }]),
+				...[1, 2].map((i) => [`tm-e-lp-${i}`, 'timing', { kind: 'embed', mode: 'lp', label: `B timing, heading embed LP #${i}` }]),
+				...[0, 1, 3, 6, 10, 20].map((d) => [`race-${d}`, 'race', { delay: d, label: `B race, heading embed RV, names swapped ${d} ms after the open starts` }]),
+			];
+			try {
+				for (const [id, type, c] of CELLS) {
+					if (ONLY.length && !ONLY.includes(id)) continue;
+					const cell = { ...c, SRC: `Lifecycle/p607-${id}-src.md`, HOST: `Lifecycle/p607-${id}-host.md` };
+					const rec = type === 'card' ? await cardCell(cell) : type === 'form' ? await formCell(cell) : type === 'timing' ? await timingCell(cell) : type === 'race' ? await raceCell(cell) : await handleCell(cell);
+					rec.id = id;
+					console.log(`P607-REC ${J(rec)}`);
+					out.push(`${id}: ${rec.error ? 'ERROR ' + rec.error : type === 'timing' ? 'timing' : type === 'race' ? `race ${J(rec.before)} -> ${J(rec.after)}` : type === 'handle' ? `hits ${J(rec.found && rec.found.hits.length)}` : `values ${J(rec.before)} -> edit ${J(rec.editedValues)} -> ${J(rec.after)}${rec.names ? ' names ' + J(rec.names) : ''}, notices ${rec.notices ? rec.notices.length : '?'}`}`);
+				}
+			} finally {
+				await t.ev(`${prefs}.set('authoringControls', false)`);
+				await t.open('Lifecycle/other.md');
+			}
+			return out.join('; ');
+		},
+	},

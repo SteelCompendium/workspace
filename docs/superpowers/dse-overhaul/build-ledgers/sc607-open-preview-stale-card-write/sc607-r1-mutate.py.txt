@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+# sc607-r1-mutate.py <mutant-id>: apply one mutant of the SC-607 r1 probe rule to the worktree files (the probe diff must already be applied).
+import sys
+E = '/home/scott/code/steelCompendium/worktrees/sc607-open-preview-stale-card-write/draw-steel-elements/src/framework/host/'
+H = E + 'ReadingModeBlockHost.ts'
+L = E + 'lineMap.ts'
+M = {
+	'M0': (H, 'const strictPins = new WeakSet<object>();', 'const strictPins = new WeakSet<object>();'),
+	'M1': (H, "				if (at === null || at !== mapLineFromTail(from.text, whole, from.line) || at !== linkLine) return;", "				if (at === null || at !== linkLine) return;"),
+	'M1b': (H, "		if (strictPins.has(pin) && mapLineFromTail(pin.text, content, pin.lineStart) !== line) return null;\n", "\n"),
+	'M2': (L, "	const r = mapLineOf(a.slice().reverse(), b.slice().reverse(), a.length - 1 - line);\n	return r === null ? null : b.length - 1 - r;", "	return mapLineOf(a, b, line);"),
+	'M3': (H, "				if (at === null || at !== mapLineFromTail(from.text, whole, from.line) || at !== linkLine) return;", "				if (at === null || at !== mapLineFromTail(from.text, whole, from.line)) return;"),
+	'M4': (H, "function metaMatchesText(meta: CachedMetadata | null, text: string): boolean {\n	if (!meta) return false;", "function metaMatchesText(meta: CachedMetadata | null, text: string): boolean {\n	if (meta || !meta) return true;"),
+	'M5': (H, "				if (partText !== null && text === partText) {", "				if (false && partText !== null && text === partText) {"),
+	'M6': (H, "			const ownFirst = own !== null && (drawn === null || own.seq > drawn.seq);", "			const ownFirst = own !== null;"),
+	'M7': (H, "			const ownFirst = own !== null && (drawn === null || own.seq > drawn.seq);", "			const ownFirst = false;"),
+	'M8': (H, "				const partialCard = !pinned && pin !== null && (partialPins.has(pin) || strictPins.has(pin));", "				const partialCard = !pinned && pin !== null && partialPins.has(pin);"),
+	'M9': (H, "		this.readSection();\n		this.snapshotDrawn(); // SC-607: drawn again\n", "		this.readSection();\n"),
+	'M10': (H, "		if (typeof link !== 'string' || link.includes('#')) strictPins.add(pin);\n		return pin;", "		void link;\n		return pin;"),
+	'M11': (H, "				const line = this.cardLinkLine(file, drawn.text, sectionText, pin.lineStart, known, drawn.meta);", "				const line = this.cardLinkLine(file, drawn.text, sectionText, pin.lineStart, known, this.plugin.app.metadataCache.getFileCache(file));"),
+	'M12': (H, "			const o = ownFrom();\n			if (o !== null) {", "			const o = ownFrom();\n			if (o !== null && o === null) {"),
+	'M13': (H, "				if (from === null) return; // nothing says which block the card was drawn from: refused", "				if (from === null) {\n					pin.text = whole;\n					pin.lineStart = linkLine;\n					partialPins.delete(pin);\n					return;\n				}"),
+}
+mid = sys.argv[1]
+p, a, b = M[mid]
+s = open(p).read()
+assert s.count(a) == 1, f'{mid}: anchor count {s.count(a)}'
+open(p, 'w').write(s.replace(a, b))
+print(f'{mid} applied')

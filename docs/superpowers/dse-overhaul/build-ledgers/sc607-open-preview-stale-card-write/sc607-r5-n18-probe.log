@@ -1,0 +1,51 @@
+Test Suites: 1 passed, 1 total
+Tests:       2 passed, 2 total
+Snapshots:   0 total
+Time:        1.598 s
+Ran all test suites matching test/dom/framework/sc607r5-probe.test.ts.
+probe_rc=0
+N18 applied
+  console.warn
+    Draw Steel Elements: dropped a write to Note.md — the block was not found by its last known body.
+
+      38 |  */
+      39 | export function notifyDroppedWrite(sourcePath: string, noteName: string, now: number = Date.now(), force = false): boolean {
+    > 40 | 	console.warn(
+         | 	        ^
+      41 | 		`Draw Steel Elements: dropped a write to ${sourcePath} — the block was not found by its last known body.`,
+      42 | 	);
+      43 | 	const previous = lastShownAt.get(sourcePath);
+
+      at notifyDroppedWrite (src/framework/host/droppedWriteNotice.ts:40:10)
+      at ReadingModeBlockHost.replaceSource (src/framework/host/ReadingModeBlockHost.ts:1346:34)
+      at test/dom/framework/sc607r5-probe.test.ts:71:14
+
+FAIL dom test/dom/framework/sc607r5-probe.test.ts
+  ● r5 probe: own-write-first with the link placing › + (the write adds lines), redraw + rebind, cache still lagging at the re-bind (the re-bind snapshot is discarded), then a second +: saved in the hovered counter
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first.",
+    + ]
+
+      71 | 		const ok = await host.replaceSource('max_value: 20\ncurrent_value: 7\nmin_value: 0\nname: Twin', { fromView: true });
+      72 | 		el.closest('.hover-popover')?.remove();
+    > 73 | 		expect(Notice.notices).toEqual([]);
+         | 		                       ^
+      74 | 		expect(ok).toBe(true);
+      75 | 		expect(app.vault.getContent('Note.md')).toBe(note(LONGB(7), SHORT(5)).join('\n'));
+      76 | 	});
+
+      at test/dom/framework/sc607r5-probe.test.ts:73:26
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 passed, 2 total
+Snapshots:   0 total
+Time:        1.421 s
+Ran all test suites matching test/dom/framework/sc607r5-probe.test.ts.
+probe_rc=1

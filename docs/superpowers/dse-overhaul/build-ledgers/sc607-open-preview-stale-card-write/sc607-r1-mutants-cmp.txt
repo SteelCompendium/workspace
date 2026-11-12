@@ -1,0 +1,52 @@
+== M1: sweep cells changed 16 (TWIN 16) {('refused', 'TWIN'): 16}; host tests newly failing 0, probe flips now passing 0
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-adj', 'fresh', '+ redrawn'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-adj', 'lagging', '+ redrawn'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'form', 'True', 'del-upper-adj', 'fresh', '+ redrawn'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'form', 'True', 'del-upper-adj', 'lagging', '+ redrawn'): refused -> TWIN
+== M1b: sweep cells changed 49 (TWIN 49) {('refused', 'TWIN'): 49}; host tests newly failing 0, probe flips now passing 1
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-adj', 'fresh', '+ stale'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-adj', 'lagging', '+ stale'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'form', 'True', 'del-upper-adj', 'fresh', '+ stale'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'form', 'True', 'del-upper-adj', 'lagging', '+ stale'): refused -> TWIN
+     passes again: SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › an identical block is added to the note after the
+== M2: sweep cells changed 65 (TWIN 65) {('refused', 'TWIN'): 65}; host tests newly failing 0, probe flips now passing 1
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-adj', 'fresh', '+ redrawn'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-adj', 'fresh', '+ stale'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-adj', 'lagging', '+ redrawn'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-adj', 'lagging', '+ stale'): refused -> TWIN
+     passes again: SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › an identical block is added to the note after the
+== M3: sweep cells changed 64 (TWIN 64) {('refused', 'TWIN'): 64}; host tests newly failing 0, probe flips now passing 0
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'swap', 'fresh', 'no +'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'swap', 'fresh', '+ redrawn'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'card', 'False', 'swap', 'fresh', 'no +'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'card', 'False', 'swap', 'fresh', '+ redrawn'): refused -> TWIN
+== M4: sweep cells changed 1 (TWIN 1) {('refused', 'TWIN'): 1}; host tests newly failing 0, probe flips now passing 0
+     cell ('named', 'N1', '', '', '', '', '', ''): refused -> TWIN
+== M5: sweep cells changed 0 (TWIN 0) {}; host tests newly failing 0, probe flips now passing 0
+== M6: sweep cells changed 1 (TWIN 0) {('A', 'refused'): 1}; host tests newly failing 0, probe flips now passing 0
+     cell ('named', 'N4', '', '', '', '', '', ''): A -> refused
+== M7: sweep cells changed 0 (TWIN 0) {}; host tests newly failing 0, probe flips now passing 0
+== M8: sweep cells changed 0 (TWIN 0) {}; host tests newly failing 0, probe flips now passing 0
+== M9: sweep cells changed 1 (TWIN 0) {('A', 'refused'): 1}; host tests newly failing 0, probe flips now passing 0
+     cell ('named', 'N4', '', '', '', '', '', ''): A -> refused
+== M10: sweep cells changed 1 (TWIN 1) {('refused', 'TWIN'): 1}; host tests newly failing 0, probe flips now passing 0
+     cell ('named', 'N3', '', '', '', '', '', ''): refused -> TWIN
+== M11: sweep cells changed 9 (TWIN 0) {('A', 'refused'): 9}; host tests newly failing 0, probe flips now passing 0
+     cell ('block', 'hover', 'rv', 'card', 'False', 'del-upper-sep', 'fresh', 'no +'): A -> refused
+     cell ('block', 'hover', 'rv', 'form', 'False', 'del-upper-sep', 'fresh', 'no +'): A -> refused
+     cell ('block', 'hover', 'lp', 'card', 'False', 'del-upper-sep', 'fresh', 'no +'): A -> refused
+     cell ('block', 'hover', 'lp', 'form', 'False', 'del-upper-sep', 'fresh', 'no +'): A -> refused
+== M12: sweep cells changed 216 (TWIN 0) {('A', 'refused'): 216}; host tests newly failing 30, probe flips now passing 0
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'none', 'fresh', '+ stale'): A -> refused
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'unrelated', 'fresh', '+ stale'): A -> refused
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'unrelated', 'lagging', '+ stale'): A -> refused
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'swap', 'fresh', '+ stale'): A -> refused
+     new fail: SC-556 r6: an embedded block's pin is rebased by the embed's link › + then the pencil: the section text is stale (old value) when the form opens, a long note: Save lands in the embedded block
+     new fail: SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a card (+/-) write's pin uses the host's last wri
+     new fail: SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a heading hover of a long note: + then the form, 
+     new fail: SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a hover of a whole LONG note scrolled to the card
+== M13: sweep cells changed 25 (TWIN 25) {('refused', 'TWIN'): 25}; host tests newly failing 0, probe flips now passing 0
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-adj', 'fresh', 'no +'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-adj', 'lagging', 'no +'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-sep', 'fresh', 'no +'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'form', 'True', 'del-upper-adj', 'fresh', 'no +'): refused -> TWIN

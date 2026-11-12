@@ -1,0 +1,50 @@
+== M1: sweep cells changed 80 (TWIN 80) {('refused', 'TWIN'): 80}; host tests newly failing 0, probe flips now passing 1
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-adj', 'fresh', '+ redrawn'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-adj', 'fresh', '+ stale'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-adj', 'lagging', '+ redrawn'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-adj', 'lagging', '+ stale'): refused -> TWIN
+     passes again: SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › an identical block is added to the note after the
+== M2: sweep cells changed 80 (TWIN 80) {('refused', 'TWIN'): 80}; host tests newly failing 0, probe flips now passing 1
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-adj', 'fresh', '+ redrawn'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-adj', 'fresh', '+ stale'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-adj', 'lagging', '+ redrawn'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-adj', 'lagging', '+ stale'): refused -> TWIN
+     passes again: SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › an identical block is added to the note after the
+== M3: sweep cells changed 105 (TWIN 57) {('A', 'TWIN'): 32, ('A', 'refused'): 40, ('refused', 'TWIN'): 25, ('refused', 'A'): 8}; host tests newly failing 0, probe flips now passing 2
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'swap', 'fresh', 'no +'): A -> TWIN
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'swap', 'lagging', 'no +'): A -> refused
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-adj', 'fresh', 'no +'): refused -> TWIN
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'del-upper-adj', 'lagging', 'no +'): refused -> TWIN
+     passes again: SC-556 r6: an embedded block's pin is rebased by the embed's link › no metadata cache for the note (a note Obsidian has not indexed yet): nothing places the pin, Save writes nothing and says why
+     passes again: SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a write by ANOTHER host of the block (a second pa
+== M4: sweep cells changed 1 (TWIN 1) {('refused', 'TWIN'): 1}; host tests newly failing 0, probe flips now passing 0
+     cell ('named', 'N1', '', '', '', '', '', ''): refused -> TWIN
+== M5: sweep cells changed 0 (TWIN 0) {}; host tests newly failing 9, probe flips now passing 1
+     new fail: SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a card (+/-) write's pin uses the host's last wri
+     new fail: SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a hover of a whole LONG note scrolled to the card
+     new fail: SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a short note, the only counter: + then the form, 
+     new fail: SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › the + made the block read like another block of t
+     passes again: SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a write by ANOTHER host of the block (a second pa
+== M6: sweep cells changed 0 (TWIN 0) {}; host tests newly failing 0, probe flips now passing 0
+== M7: sweep cells changed 0 (TWIN 0) {}; host tests newly failing 1, probe flips now passing 1
+     new fail: SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › the pin is the position of the write the host had
+     passes again: SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › an identical block is added to the note after the
+== M8: sweep cells changed 0 (TWIN 0) {}; host tests newly failing 0, probe flips now passing 0
+== M9: sweep cells changed 0 (TWIN 0) {}; host tests newly failing 0, probe flips now passing 0
+== M10: sweep cells changed 0 (TWIN 0) {}; host tests newly failing 0, probe flips now passing 0
+== M11: sweep cells changed 40 (TWIN 0) {('A', 'refused'): 40}; host tests newly failing 0, probe flips now passing 1
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'swap', 'fresh', 'no +'): A -> refused
+     cell ('heading', 'hover', 'rv', 'card', 'False', 'swap', 'fresh', 'no +'): A -> refused
+     cell ('heading', 'hover', 'rv', 'form', 'True', 'swap', 'fresh', 'no +'): A -> refused
+     cell ('heading', 'hover', 'rv', 'form', 'False', 'swap', 'fresh', 'no +'): A -> refused
+     passes again: SC-556 r6: an embedded block's pin is rebased by the embed's link › no metadata cache for the note (a note Obsidian has not indexed yet): nothing places the pin, Save writes nothing and says why
+== M12: sweep cells changed 176 (TWIN 0) {('A', 'refused'): 176}; host tests newly failing 40, probe flips now passing 1
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'none', 'fresh', '+ stale'): A -> refused
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'unrelated', 'fresh', '+ stale'): A -> refused
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'unrelated', 'lagging', '+ stale'): A -> refused
+     cell ('heading', 'hover', 'rv', 'card', 'True', 'swap', 'fresh', '+ stale'): A -> refused
+     new fail: SC-556 r6: an embedded block's pin is rebased by the embed's link › + then the pencil: the section text is stale (old value) when the form opens, a long note: Save lands in the embedded block
+     new fail: SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a heading hover of a long note: + then the form, 
+     new fail: SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › outside edits between the + and the form, an iden
+     new fail: SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › the pin is the position of the write the host had
+     passes again: SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › an identical block is added to the note after the

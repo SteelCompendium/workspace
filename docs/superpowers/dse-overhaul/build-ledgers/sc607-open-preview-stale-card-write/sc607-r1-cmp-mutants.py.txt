@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+# sc607-r1-cmp-mutants.py: per mutant, the sweep cells whose outcome differs from the unmutated probe, and the host-suite tests that fail beyond the unmutated probe (M0)
+import sys, json, re, collections
+S = '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc607-r1-reviewer/'
+def load(p):
+    out = {}
+    for l in open(p):
+        r = json.loads(l)
+        out[(r['kind'], r['shape'], r['mode'], r['click'], str(r['upper']), r['edit'], r['cache'], r['plus'])] = r['outcome']
+    return out
+P = load(S + 'mut-M0.jsonl')
+def fails(log):
+    return sorted(set(re.sub(r'\s+', ' ', l.strip()[2:])[:200] for l in open(log) if l.strip().startswith('●')))
+PF = set(fails(S + 'mut-M0.log'))
+for m in sys.argv[1:]:
+    R = load(S + f'mut-{m}.jsonl')
+    diff = [(k, P.get(k), R.get(k)) for k in P if P.get(k) != R.get(k)]
+    twins = sum(1 for v in R.values() if v == 'TWIN')
+    tr = collections.Counter((a, b) for _, a, b in diff)
+    F = fails(S + f'mut-{m}.log')
+    new = [f for f in F if f not in PF]
+    gone = [f for f in PF if f not in F]
+    print(f'== {m}: sweep cells changed {len(diff)} (TWIN {twins}) {dict(tr)}; host tests newly failing {len(new)}, probe flips now passing {len(gone)}')
+    for k, a, b in diff[:4]: print(f'     cell {k}: {a} -> {b}')
+    for f in new[:4]: print(f'     new fail: {f}')
+    for f in gone: print(f'     passes again: {f}')

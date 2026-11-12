@@ -1,0 +1,94 @@
+base      -> head      head-notices  probe
+refused   -> refused   ['dropped']  P1a hover three identical, the first deleted
+refused   -> refused   ['dropped']  P1b hover three identical, the middle deleted
+refused   -> refused   ['dropped']  P1c hover three identical with paragraphs between, the first deleted
+refused   -> refused   ['dropped']  P1d hover three identical with paragraphs between, the last deleted
+SAME      -> refused   ['dropped']  P2a hover Tracker section moved to the end + TOP edited
+SAME      -> refused   ['dropped']  P2b hover Tracker section moved to the end + TOP edited, form
+SAME      -> refused   ['dropped']  P2c hover Tracker moved below an identical Other (= names swapped as text)
+SAME      -> refused   ['dropped']  P2d hover unique Tracker section moved to the end
+SAME      -> refused   ['dropped']  P2e hover unique Tracker section moved below Other
+SAME      -> refused   ['dropped']  P2f hover unique Tracker section moved below 30 lines of filler
+SAME      -> SAME      []           P2g hover control: a paragraph added above (the section moves down by lines)
+DIFFERENT -> refused   ['dropped']  P11c hover no give-up N5 + marker renamed
+SAME      -> SAME      []           P3 hover +, unrelated edit, + (stale), names swapped, + (stale)
+DIFFERENT -> refused   ['dropped']  P4 hover + redrawn (rebind), the first of two now-identical adjacent sections deleted, +
+DIFFERENT -> refused   ['dropped']  P5 hover + redrawn (new card), the first of two now-identical adjacent sections deleted, +
+DIFFERENT -> refused   ['dropped']  P6 hover race: swap before the card's read, cache fresh, data=drawn
+DIFFERENT -> DIFFERENT []           P6 hover race: swap before the card's read, cache fresh, data=absent
+DIFFERENT -> DIFFERENT []           P6 hover race: swap before the card's read, cache fresh, data=nonstring
+SAME      -> SAME      []           P6 hover race: swap before the card's read, cache fresh, data=snapshot
+DIFFERENT -> refused   ['dropped']  P7 hover race: the first of two adjacent identical deleted before the card's read, cache fresh
+SAME      -> refused   ['dropped']  P8 hover race: unrelated edit before the card's read, then + twice
+DIFFERENT -> DIFFERENT []           P9 hover redraw race: part edited (new card), section deleted + the lower edited to match before the new card's read
+DIFFERENT -> refused   ['dropped']  P9c hover redraw control: the new card read r1, then the second write
+DIFFERENT -> DIFFERENT []           P10 hover give-up: Tracker deleted, Other renamed Tracker and edited to match, 1000 lines added
+DIFFERENT -> refused   ['dropped']  P10b hover no give-up: Tracker deleted, Other renamed Tracker and edited to match
+refused   -> refused   ['dropped']  P11 hover give-up N5: ^pa deleted, ^pb edited to read like it, 1000 lines
+DIFFERENT -> DIFFERENT []           P11b hover give-up N5 + marker renamed: ^pa deleted, ^pb edited and renamed ^pa, 1000 lines
+DIFFERENT -> refused   ['dropped']  P12 hover form pin taken, names swapped, Save
+refused   -> refused   ['dropped']  P13 hover names swapped, cache lagging at the click
+SAME      -> SAME      []           P14 hover no edit, + rebind + rebind +
+SAME      -> refused   ['dropped']  P15 hover no edit, + then new-card redraw (data stale) then +; Other=6 so the new part is in the stale data
+refused   -> refused   ['dropped']  P1a embed three identical, the first deleted
+refused   -> refused   ['dropped']  P1b embed three identical, the middle deleted
+refused   -> refused   ['dropped']  P1c embed three identical with paragraphs between, the first deleted
+refused   -> refused   ['dropped']  P1d embed three identical with paragraphs between, the last deleted
+SAME      -> refused   ['dropped']  P2a embed Tracker section moved to the end + TOP edited
+SAME      -> refused   ['dropped']  P2b embed Tracker section moved to the end + TOP edited, form
+SAME      -> refused   ['dropped']  P2c embed Tracker moved below an identical Other (= names swapped as text)
+SAME      -> refused   ['dropped']  P2d embed unique Tracker section moved to the end
+SAME      -> refused   ['dropped']  P2e embed unique Tracker section moved below Other
+SAME      -> refused   ['dropped']  P2f embed unique Tracker section moved below 30 lines of filler
+SAME      -> SAME      []           P2g embed control: a paragraph added above (the section moves down by lines)
+SAME      -> SAME      []           P3 embed +, unrelated edit, + (stale), names swapped, + (stale)
+DIFFERENT -> refused   ['dropped']  P4 embed + redrawn (rebind), the first of two now-identical adjacent sections deleted, +
+DIFFERENT -> refused   ['dropped']  P5 embed + redrawn (new card), the first of two now-identical adjacent sections deleted, +
+DIFFERENT -> DIFFERENT []           P6 embed race: swap before the card's read, cache fresh, data=drawn
+DIFFERENT -> DIFFERENT []           P6 embed race: swap before the card's read, cache fresh, data=absent
+DIFFERENT -> DIFFERENT []           P6 embed race: swap before the card's read, cache fresh, data=nonstring
+SAME      -> SAME      []           P6 embed race: swap before the card's read, cache fresh, data=snapshot
+DIFFERENT -> DIFFERENT []           P7 embed race: the first of two adjacent identical deleted before the card's read, cache fresh
+SAME      -> SAME      []           P8 embed race: unrelated edit before the card's read, then + twice
+DIFFERENT -> DIFFERENT []           P9 embed redraw race: part edited (new card), section deleted + the lower edited to match before the new card's read
+DIFFERENT -> refused   ['dropped']  P9c embed redraw control: the new card read r1, then the second write
+DIFFERENT -> DIFFERENT []           P10 embed give-up: Tracker deleted, Other renamed Tracker and edited to match, 1000 lines added
+DIFFERENT -> refused   ['dropped']  P10b embed no give-up: Tracker deleted, Other renamed Tracker and edited to match
+DIFFERENT -> refused   ['dropped']  P12 embed form pin taken, names swapped, Save
+refused   -> refused   ['dropped']  P13 embed names swapped, cache lagging at the click
+SAME      -> SAME      []           P14 embed no edit, + rebind + rebind +
+SAME      -> SAME      []           P15 embed no edit, + then new-card redraw (data stale) then +; Other=6 so the new part is in the stale data
+SAME      -> SAME      []           P16 whole-note hover card: none
+SAME      -> SAME      []           P16 whole-note hover form: none
+SAME      -> SAME      []           P16 whole-note hover card: unrelated
+SAME      -> SAME      []           P16 whole-note hover form: unrelated
+SAME      -> SAME      []           P16 whole-note hover card: identical added above
+SAME      -> SAME      []           P16 whole-note hover form: identical added above
+SAME      -> SAME      []           P16 whole-note hover card: the other deleted
+SAME      -> SAME      []           P16 whole-note hover form: the other deleted
+SAME      -> SAME      []           P16 whole-note hover card: names swapped
+SAME      -> SAME      []           P16 whole-note hover form: names swapped
+SAME      -> SAME      []           P16 whole-note embed card: none
+SAME      -> SAME      []           P16 whole-note embed form: none
+SAME      -> SAME      []           P16 whole-note embed card: unrelated
+SAME      -> SAME      []           P16 whole-note embed form: unrelated
+SAME      -> SAME      []           P16 whole-note embed card: identical added above
+SAME      -> SAME      []           P16 whole-note embed form: identical added above
+SAME      -> SAME      []           P16 whole-note embed card: the other deleted
+SAME      -> SAME      []           P16 whole-note embed form: the other deleted
+SAME      -> SAME      []           P16 whole-note embed card: names swapped
+SAME      -> SAME      []           P16 whole-note embed form: names swapped
+SAME      -> SAME      []           P16 whole-note plain card: none
+SAME      -> SAME      []           P16 whole-note plain form: none
+SAME      -> SAME      []           P16 whole-note plain card: unrelated
+SAME      -> SAME      []           P16 whole-note plain form: unrelated
+SAME      -> SAME      []           P16 whole-note plain card: identical added above
+SAME      -> SAME      []           P16 whole-note plain form: identical added above
+SAME      -> SAME      []           P16 whole-note plain card: the other deleted
+SAME      -> SAME      []           P16 whole-note plain form: the other deleted
+SAME      -> SAME      []           P16 whole-note plain card: names swapped
+SAME      -> SAME      []           P16 whole-note plain form: names swapped
+{"name":"MAP P1d","from":6,"head":6,"tail":6,"strict":{"line":6},"fencesNow":[6,15]}
+{"name":"MAP P2a","from":6,"head":6,"tail":6,"strict":{"line":6},"fencesNow":[6,17]}
+{"name":"MAP P2d","from":6,"head":null,"tail":6,"strict":"disagree","fencesNow":[6,17]}
+{"name":"MAP P2e","from":6,"head":6,"tail":6,"strict":{"line":6},"fencesNow":[6,13]}

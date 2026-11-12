@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# sc607-r1-run-mutants.sh <mutant-id>...: for each mutant: restore the two host files, apply the probe diff, apply the mutant, run the probe sweep
+# plus the three host suites (one jest call), record; restore the two files to the PROBE state at the end (the caller restores base).
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc607-r1-reviewer
+E=/home/scott/code/steelCompendium/worktrees/sc607-open-preview-stale-card-write/draw-steel-elements
+cd "$E" || exit 9
+rm -f main.js styles.css
+for m in "$@"; do
+  git -C "$E" checkout -- src/framework/host/ReadingModeBlockHost.ts src/framework/host/lineMap.ts
+  git -C "$E" apply "$S/probe-rule.diff" || { echo "$m apply_failed" >> "$S/mutants.log"; continue; }
+  python3 -I "$S/sc607-r1-mutate.py" "$m" >> "$S/mutants.log" 2>&1 || { echo "$m mutate_failed" >> "$S/mutants.log"; continue; }
+  cp "$S/sc607-r1-probe.test.ts" "$E/test/dom/framework/sc607-r1-probe.test.ts"
+  : > "$S/mut-$m.jsonl"
+  SC607_SWEEP_OUT="$S/mut-$m.jsonl" SC607_TAG="$m" SC607_ASSERT=0 npx jest test/dom/framework/sc607-r1-probe.test.ts test/dom/framework/reading-mode-host-pin.test.ts test/dom/framework/reading-mode-host-hover-card.test.ts test/dom/framework/reading-mode-host-form-pin.test.ts --silent > "$S/mut-$m.log" 2>&1
+  rc=$?
+  rm -f "$E/test/dom/framework/sc607-r1-probe.test.ts"
+  echo "$m jest_rc=$rc $(grep -E '^Tests:' "$S/mut-$m.log")" >> "$S/mutants.log"
+done
+git -C "$E" checkout -- src/framework/host/ReadingModeBlockHost.ts src/framework/host/lineMap.ts
+git -C "$E" apply "$S/probe-rule.diff"
