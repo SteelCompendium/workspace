@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: Montage: a hand-typed block whose hero list has an empty item, a bare word or number, or a hero with no name no longer breaks the board (SC-610).**
+  An empty item (`- `) used to stop the board drawing at all. The other shapes drew a row labelled "undefined" and could leave
+  the Log an action button with nothing to open. Such an item is now skipped on the board and reported in the developer console.
+  When you change the board, the note keeps the item as you typed it, in its place. An item with nothing in it (`- `, `- {}`, or
+  `- name:` with no value) is removed when the board next saves the note.
+
 - **DSE plugin: the Edit form opened from an embed or hover preview of part of a note no longer saves into an identical counter elsewhere in the note (SC-596).**
   If the counter was changed from outside (Sync, another app, another pane) just before the form opened, Save could write into the
   identical counter and say nothing. It is now placed like a + / - click (SC-594): when the note does not confirm which counter
