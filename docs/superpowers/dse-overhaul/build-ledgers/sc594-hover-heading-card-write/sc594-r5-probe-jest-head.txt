@@ -1,0 +1,17 @@
+HEAD c36973e56af159ad06f7f7e280633a29cc9e789a ?? test/dom/framework/sc594-r5-probe.test.ts 
+  ● SC-594 r5 probes › R1 residual with block links (^a preview bound to ^b): records whether the twin is written
+    - Expected  - 1
+    + Received  + 1
+  ● SC-594 r5 probes › R2 fresh cache, hovered first ## Tracker deleted, an identical ## Tracker section left: records whether it is written
+    - Expected  - 1
+    + Received  + 1
+  ● SC-594 r5 probes › R3 fresh cache, heading names swapped (hovered counter now under ## Other): records which is written
+    Expected: not [5, 6]
+  ● SC-594 r5 probes › R4 Note#Tracker with DOM heading:Tracker lands in the hovered counter
+    Expected: true
+    Received: false
+  ● SC-594 r5 probes › R4 Note#tracker  log with DOM heading:Tracker Log lands in the hovered counter
+    Expected: true
+    Received: false
+Tests:       5 failed, 7 passed, 12 total
+rc=1

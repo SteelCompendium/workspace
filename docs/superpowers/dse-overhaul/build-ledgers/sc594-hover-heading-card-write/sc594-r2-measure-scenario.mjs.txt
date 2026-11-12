@@ -1,0 +1,59 @@
+	{
+		id: 'P594M',
+		async run(t) {
+			const J = JSON.stringify;
+			const K = gs83Kit(t);
+			const SRC = 'Lifecycle/p594m-src.md';
+			const HOST = 'Lifecycle/p594m-host.md';
+			const out = [];
+			await t.ev(`(() => { if (!document.getElementById('lc-p594-notice')) { const st = document.createElement('style'); st.id = 'lc-p594-notice'; st.textContent = '.notice-container { opacity: 0 !important; pointer-events: none !important; }'; document.head.appendChild(st); } return true; })()`);
+			await t.ev(`app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs.set('authoringControls', true)`);
+			const INSTALL = `(() => {
+  window.__p594look = []; window.__p594ev = []; window.__p594pop = [];
+  if (!window.__p594hook) { window.__p594hook = true; app.workspace.on('hover-link', (ev) => window.__p594ev.push({ t: performance.now(), linktext: ev.linktext, parentHasPop: !!(ev.hoverParent && ev.hoverParent.hoverPopover), source: ev.source })); 
+    new MutationObserver((ms) => { for (const m of ms) for (const n of m.addedNodes) { if (n.nodeType === 1 && n.classList && n.classList.contains('hover-popover')) window.__p594pop.push({ t: performance.now(), what: 'popover added', connected: n.isConnected }); if (n.nodeType === 1 && n.querySelector && n.querySelector('[data-dse-element]') && n.closest('.hover-popover')) window.__p594pop.push({ t: performance.now(), what: 'card added in popover' }); } }).observe(document.body, { childList: true, subtree: true }); }
+  return true; })()`;
+			await t.ev(INSTALL);
+			const trial = async (label, passOver) => {
+				await t.reset(SRC); await t.reset(HOST);
+				await t.ev(INSTALL);
+				const link = await K.openHost(HOST, 'rv');
+				await K.mouse('mouseMoved', 5, 5);
+				await t.sleep(200);
+				await K.moveTo(link, 2);
+				const t0 = Date.now();
+				while (!(await t.ev(`(${K.E(SRC)}).length > 0`))) { if (Date.now() - t0 > 10000) throw new Error('no card'); await t.sleep(30); }
+				await t.sleep(300);
+				const rec = { label };
+				if (passOver) {
+					rec.beforePass = await t.ev(`window.__p594look.length`);
+					// pass over Y (second link) for ~120 ms, then back onto X's popover
+					const p = await t.ev(`(() => { const a = document.querySelectorAll('.workspace-leaf.mod-active .markdown-reading-view a.internal-link')[1]; const r = a.getBoundingClientRect(); return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) }; })()`);
+					for (let i = 0; i < 4; i++) await K.mouse('mouseMoved', p.x - 8 + i * 5, p.y, { modifiers: 2 });
+					await t.sleep(120);
+					await K.moveTo(`(${K.E(SRC)})[0].root`);
+					await t.sleep(600);
+				}
+				rec.ev = await t.ev(`window.__p594ev`);
+				rec.pop = await t.ev(`window.__p594pop`);
+				rec.look = await t.ev(`window.__p594look`);
+				rec.popCount = await t.ev(`document.querySelectorAll('.hover-popover').length`);
+				const mk = await t.mark();
+				await K.click(`(${K.E(SRC)})[0].root.querySelector('button[aria-label^="Increase"]')`);
+				await t.sleep(1500);
+				rec.after = (t.read(SRC).match(/current_value: (\d+)/g) ?? []).join(',');
+				rec.notices = (await t.noticesSince(mk)).length;
+				await K.cleanup();
+				console.log('P594M-REC ' + J(rec));
+				out.push(label);
+			};
+			try {
+				await trial('normal hover', false);
+				await t.sleep(6000);
+				await trial('pass over Y', true);
+			} finally {
+				await t.ev(`app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs.set('authoringControls', false)`);
+			}
+			return out.join(';');
+		},
+	},

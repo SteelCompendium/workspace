@@ -1,0 +1,255 @@
+FAIL dom test/dom/framework/reading-mode-host-pin.test.ts
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a heading hover of a long note: + then the form, Save lands in the Tracker counter
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      962 | 			const text = pre.join('\n');
+      963 | 			const { app, host } = embedded(text, part(SUB, 2), 'x', bodyOf(5), text, hoverEl());
+    > 964 | 			expect(await plus(host)).toBe(true);
+          | 			                         ^
+      965 | 			const pin = host.pinPosition()!;
+      966 |
+      967 | 			expect(await save(host, pin, bodyOf(6, 'Edited'))).toBe(true);
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:964:29)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › outside edits between the + and the form, an identical block holding the + body (r2 HIGH-1: nothing may be written into that block) › P1 a hover of a block link: A edited to 9
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1067 | 				const pre = ['# N', '', ...A5('a'), '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n');
+      1068 | 				const { app, host } = embedded(pre, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'x', bodyOf(5), pre, hoverEl());
+    > 1069 | 				expect(await plus(host)).toBe(true);
+           | 				                         ^
+      1070 | 				await asked(app, host, after6(app, '9'));
+      1071 | 			});
+      1072 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1069:30)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › outside edits between the + and the form, an identical block holding the + body (r2 HIGH-1: nothing may be written into that block) › P1d a hover of a block link: A deleted
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1074 | 				const pre = ['# N', '', ...A5('a'), '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n');
+      1075 | 				const { app, host } = embedded(pre, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'x', bodyOf(5), pre, hoverEl());
+    > 1076 | 				expect(await plus(host)).toBe(true);
+           | 				                         ^
+      1077 | 				await asked(app, host, ['# N', '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n'));
+      1078 | 			});
+      1079 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1076:30)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › outside edits between the + and the form, an identical block holding the + body (r2 HIGH-1: nothing may be written into that block) › P3 a heading hover with two sections of the same name: the first one's block edited to 9
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1095 | 				const pre = ['# N', '', '## Tracker', '', ...CTR(5), '', '## Mid', '', 'x', '', '## Tracker', '', ...CTR(6), '', 'END'].join('\n');
+      1096 | 				const { app, host } = embedded(pre, part(SUB, 2), 'x', bodyOf(5), pre, hoverEl());
+    > 1097 | 				expect(await plus(host)).toBe(true);
+           | 				                         ^
+      1098 | 				await asked(app, host, after6(app, '9'));
+      1099 | 			});
+      1100 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1097:30)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › outside edits between the + and the form, an identical block holding the + body (r2 HIGH-1: nothing may be written into that block) › the same shape with no outside edit: Save lands in the block the + was pressed on, not in the one that reads the same
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1102 | 				const pre = ['# N', '', ...A5('a'), '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n');
+      1103 | 				const { app, host } = embedded(pre, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'x', bodyOf(5), pre, hoverEl());
+    > 1104 | 				expect(await plus(host)).toBe(true);
+           | 				                         ^
+      1105 | 				const pin = host.pinPosition()!;
+      1106 |
+      1107 | 				expect(await save(host, pin, bodyOf(6, 'Edited'))).toBe(true);
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1104:30)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a card (+/-) write's pin never uses the host's last write: a second + with the part still stale and an identical block in the note is refused as before (SC-480)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      1131 | 			await settle();
+      1132 |
+    > 1133 | 			expect(await host.replaceSource(bodyOf(7), { fromView: true })).toBe(false);
+           | 			                                                                ^
+      1134 | 			refused(app, both);
+      1135 | 		});
+      1136 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1133:68)
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+file:///home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got object and undefined)
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got undefined and object)
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/visual-harness/obsidian-light-island.mjs:245
+			throw new TypeError(`findDriftedTokens: "${t}" is missing from ${!(t in oursMap) ? 'oursMap' : 'targetMap'}`);
+			      ^
+
+TypeError: findDriftedTokens: "--b" is missing from oursMap
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/visual-harness/obsidian-light-island.mjs:245:10)
+    at file:///home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+
+Summary of all failing tests
+FAIL test/dom/framework/reading-mode-host-pin.test.ts
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a heading hover of a long note: + then the form, Save lands in the Tracker counter
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      962 | 			const text = pre.join('\n');
+      963 | 			const { app, host } = embedded(text, part(SUB, 2), 'x', bodyOf(5), text, hoverEl());
+    > 964 | 			expect(await plus(host)).toBe(true);
+          | 			                         ^
+      965 | 			const pin = host.pinPosition()!;
+      966 |
+      967 | 			expect(await save(host, pin, bodyOf(6, 'Edited'))).toBe(true);
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:964:29)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › outside edits between the + and the form, an identical block holding the + body (r2 HIGH-1: nothing may be written into that block) › P1 a hover of a block link: A edited to 9
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1067 | 				const pre = ['# N', '', ...A5('a'), '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n');
+      1068 | 				const { app, host } = embedded(pre, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'x', bodyOf(5), pre, hoverEl());
+    > 1069 | 				expect(await plus(host)).toBe(true);
+           | 				                         ^
+      1070 | 				await asked(app, host, after6(app, '9'));
+      1071 | 			});
+      1072 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1069:30)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › outside edits between the + and the form, an identical block holding the + body (r2 HIGH-1: nothing may be written into that block) › P1d a hover of a block link: A deleted
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1074 | 				const pre = ['# N', '', ...A5('a'), '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n');
+      1075 | 				const { app, host } = embedded(pre, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'x', bodyOf(5), pre, hoverEl());
+    > 1076 | 				expect(await plus(host)).toBe(true);
+           | 				                         ^
+      1077 | 				await asked(app, host, ['# N', '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n'));
+      1078 | 			});
+      1079 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1076:30)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › outside edits between the + and the form, an identical block holding the + body (r2 HIGH-1: nothing may be written into that block) › P3 a heading hover with two sections of the same name: the first one's block edited to 9
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1095 | 				const pre = ['# N', '', '## Tracker', '', ...CTR(5), '', '## Mid', '', 'x', '', '## Tracker', '', ...CTR(6), '', 'END'].join('\n');
+      1096 | 				const { app, host } = embedded(pre, part(SUB, 2), 'x', bodyOf(5), pre, hoverEl());
+    > 1097 | 				expect(await plus(host)).toBe(true);
+           | 				                         ^
+      1098 | 				await asked(app, host, after6(app, '9'));
+      1099 | 			});
+      1100 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1097:30)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › outside edits between the + and the form, an identical block holding the + body (r2 HIGH-1: nothing may be written into that block) › the same shape with no outside edit: Save lands in the block the + was pressed on, not in the one that reads the same
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1102 | 				const pre = ['# N', '', ...A5('a'), '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n');
+      1103 | 				const { app, host } = embedded(pre, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'x', bodyOf(5), pre, hoverEl());
+    > 1104 | 				expect(await plus(host)).toBe(true);
+           | 				                         ^
+      1105 | 				const pin = host.pinPosition()!;
+      1106 |
+      1107 | 				expect(await save(host, pin, bodyOf(6, 'Edited'))).toBe(true);
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1104:30)
+
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a card (+/-) write's pin never uses the host's last write: a second + with the part still stale and an identical block in the note is refused as before (SC-480)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      1131 | 			await settle();
+      1132 |
+    > 1133 | 			expect(await host.replaceSource(bodyOf(7), { fromView: true })).toBe(false);
+           | 			                                                                ^
+      1134 | 			refused(app, both);
+      1135 | 		});
+      1136 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1133:68)
+
+
+Test Suites: 1 failed, 1 skipped, 262 passed, 263 of 264 total
+Tests:       6 failed, 2 skipped, 7584 passed, 7592 total
+Snapshots:   3 passed, 3 total
+Time:        70.139 s
+Ran all test suites in 2 projects.
+jest rc=1

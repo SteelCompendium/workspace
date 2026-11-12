@@ -1,0 +1,40 @@
+# mutate.py <id>: apply one mutation to the committed source of SC-594 r2 (the caller restores with git checkout --)
+import sys
+D = '/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/'
+H = D + 'src/framework/host/ReadingModeBlockHost.ts'
+L = D + 'src/framework/host/hoverLinks.ts'
+R = D + 'src/framework/registerFrameworkElements.ts'
+m = sys.argv[1]
+M = {
+ 'mA': (H, "options?.pinOnly || twinned || partialCard)", "options?.pinOnly || twinned)"),
+ 'mB': (H, "const line = this.cardLinkLine(file, whole, sectionText, pin.lineStart, known);", "const line = this.cardLinkLine(file, whole, sectionText, pin.lineStart, known) ?? this.searchedPinLine(whole, sectionText, pin.lineStart);"),
+ 'mC': (H, "else if (blockId === null && lines[start + 1] === part[0]) partStart = start + 1;", ""),
+ 'mD': (H, "for (let i = 0; i < wholePart.length; i++) if (lines[partStart + i] !== wholePart[i]) return null;", ""),
+ 'mE': (H, "if (known !== null && countByBody(whole, this.knownLanguage ?? this.alias, known) > 1) {", "if (false) {"),
+ 'mF': (H, "if (known !== null && countByBody(whole, this.knownLanguage ?? this.alias, known) > 1) {", "if (true) {"),
+ 'mG': (L, "if (log.events[i].hoverParent?.hoverPopover?.hoverEl === popover) link", "if (true) link"),
+ 'mH': (H, "if (write !== null && known !== null && normalizeBody(write.body) === normalizeBody(known)) {\n\t\t\t\tpin.text = write.text;", "if (false && write !== null && known !== null && normalizeBody(write.body) === normalizeBody(known)) {\n\t\t\t\tpin.text = write.text;"),
+ 'mI': (H, "const link = src ?? (forForm ? undefined : hoverLinkOf(this.plugin.app, this.containerEl)?.linktext);", "const link = src ?? undefined;"),
+ 'mJ': (H, "if (cardRebase) await cardRebase;", "if (cardRebase) void cardRebase;"),
+ 'mK': (H, "if (next >= lines.length || lines[next].trim().toLowerCase() !== `^${blockId.toLowerCase()}`) return null;\n\t\t}\n\t\tconst own = blockBodyLines(part,", "\n\t\t}\n\t\tconst own = blockBodyLines(part,"),
+ 'mL': (H, "			return embedded ? this.pinFromLastWrite() : null;", "			return forForm && embedded ? this.pinFromLastWrite() : null;"),
+ 'mL2': (H, "		if (embedded) {\n			const first = parseOpenFence(section.text, section.lineStart);", "		if (forForm && embedded) {\n			const first = parseOpenFence(section.text, section.lineStart);"),
+ 'mM': (H, "return normalizeBody(found.body) === normalizeBody(known ?? own) ? line : null;\n\t}\n\n\t/**\n\t * SC-556: where the embedded part starts", "return line;\n\t}\n\n\t/**\n\t * SC-556: where the embedded part starts"),
+ 'mN': (L, "	log.bound.set(popover, link);\n	return link;", "	return link;"),
+ 'mO': (L, "	for (let i = log.events.length - 1; i >= 0; i--) {\n		const popover = log.events[i].hoverParent?.hoverPopover?.hoverEl;", "	for (let i = -1; i >= 0; i--) {\n		const popover = log.events[i].hoverParent?.hoverPopover?.hoverEl;"),
+ 'mP': (R, "	registerHoverLinks(plugin);\n", ""),
+ 'mQ': (L, "	if (log.events.length > LOG_SIZE) log.events.shift();", ""),
+ 'mR': (H, "const quoted = (parseOpenFenceLine(lines[found.lineStart])?.prefix ?? '') !== '';\n\t\t\tconst partEnd = partStart", "const quoted = false;\n\t\t\tconst partEnd = partStart"),
+ 'mS': (H, "if (whole === sectionText) {\n				partialPins.delete(pin); // the part IS the note\n				return;\n			}\n			const line = this.cardLinkLine", "const line = this.cardLinkLine"),
+ 'mX6': (H, "else if (blockId === null && lines[start + 1] === part[0]) partStart = start + 1;", "else if (lines[start + 1] === part[0]) partStart = start + 1;"),
+ 'mX7': (H, "if (!dest || dest.path !== file.path) return null;", "if (!dest) return null;"),
+ 'mX10': (H, "const dest = cache.getFirstLinkpathDest(link.slice(0, hash), hovered ? hovered.sourcePath : this.ctx.sourcePath);", "const dest = file;"),
+ 'mX11': (H, "if ((meta.headings ?? []).filter((h) => h.heading.toLowerCase() === name).length !== 1) return null;", ""),
+ 'mX12': (H, "if (lines.filter((l) => marker.test(l)).length !== 1) return null;", ""),
+ 'mX13': (H, "const cardRebase = pin && !options?.pin ? pinRebased.get(pin) : undefined;\n\t\tif (cardRebase) await cardRebase;", "await (pin && !options?.pin ? pinRebased.get(pin) : undefined);"),
+}
+f, old, new = M[m]
+s = open(f).read()
+assert s.count(old) == 1, (m, s.count(old))
+open(f, 'w').write(s.replace(old, new))
+print('mutant', m)

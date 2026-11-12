@@ -1,0 +1,240 @@
+mutant mL2
+mL2 rc=1 Tests:       7 failed, 482 passed, 489 total
+SC-594 r3 probes › P1 block hover: second + after an outside revert of the first + in a stale callout window is never written into the sibling
+SC-594 r3 probes › P1 heading hover: second + after an outside revert of the first + in a stale callout window is never written into the sibling
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+mutant mA
+mA rc=1 Tests:       51 failed, 438 passed, 489 total
+a hover preview card write with an identical counter elsewhere in the note › J3 a block hover, the hovered block edited from outside before the click (no + before it), 
+a hover preview card write with an identical counter elsewhere in the note › J3 a block hover, the + landed (the part still shows 5), then the hovered block is edited f
+a hover preview card write with an identical counter elsewhere in the note › J3 the same with no hover-link record for the preview: nothing is written
+a hover preview card write with an identical counter elsewhere in the note › J4 a heading hover, the hovered counter edited from outside before the click, the identical
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+SC-594 r3 probes › P5 callout, twin below, own edited before the click: refused; nothing edited: lands in A
+SC-594 r3 probes › P5 plain, twin below, own edited before the click: refused; nothing edited: lands in A
+mutant mB
+mB rc=1 Tests:       39 failed, 450 passed, 489 total
+a hover preview card write with an identical counter elsewhere in the note › J3 a block hover, the hovered block edited from outside before the click (no + before it), 
+a hover preview card write with an identical counter elsewhere in the note › J4 a heading hover, the hovered counter edited from outside before the click, the identical
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+SC-594 r3 probes › P5 callout, twin below, own edited before the click: refused; nothing edited: lands in A
+SC-594 r3 probes › P5 plain, twin below, own edited before the click: refused; nothing edited: lands in A
+mutant mC
+mC rc=1 Tests:       51 failed, 438 passed, 489 total
+a hover preview card write with an identical counter elsewhere in the note › J14 the write comes at once after the click (an unload flush, no debounce): the card's pin 
+a hover preview card write with an identical counter elsewhere in the note › J16 a callout under the heading and an identical callout above it already reading 6: a + an
+a hover preview card write with an identical counter elsewhere in the note › J18 two counters in one callout, + on the lower one, then a second + (heading hover, window
+a hover preview card write with an identical counter elsewhere in the note › J18 two counters in one callout, + on the lower one, then a second + (heading hover, window
+a hover preview card write with an identical counter elsewhere in the note › J1 the same in a short note
+a hover preview card write with an identical counter elsewhere in the note › J1 the ticket: [[long note#Tracker]] hover, an identical counter under another heading: the
+a hover preview card write with an identical counter elsewhere in the note › J5 a second + in the same heading hover while its part still shows the old value (the ticke
+a hover preview card write with an identical counter elsewhere in the note › J5 the second + after the preview was redrawn (its part shows the new value): it lands in t
+a hover preview card write with an identical counter elsewhere in the note › J6 the + made the hovered counter read like the identical one (it holds 6): the second + st
+a hover preview card write with an identical counter elsewhere in the note › J7 a heading name used twice, the hovered counter's body unique in the note: the + lands in
+a hover preview card write with an identical counter elsewhere in the note › J9 two previews open, the card in the second, the newest event is the first one's: the card
+a hover preview card write with an identical counter elsewhere in the note › the link is bound to the preview once › J17 the pointer passes over another link on the s
+mutant mD
+mD rc=1 Tests:       6 failed, 483 passed, 489 total
+a hover preview card write with an identical counter elsewhere in the note › J13 the part holds two counters separated by a blank line, the hovered one deleted from out
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+mutant mE
+mE rc=1 Tests:       6 failed, 483 passed, 489 total
+a hover preview card write with an identical counter elsewhere in the note › J8 a section of the same name pasted ABOVE before the click, a counter with the same body e
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+mutant mF
+mF rc=1 Tests:       8 failed, 481 passed, 489 total
+a hover preview card write with an identical counter elsewhere in the note › J11 a Reading-view heading embed ![[Note#Tracker]], a heading name used twice, the body uni
+a hover preview card write with an identical counter elsewhere in the note › J7 a heading name used twice, the hovered counter's body unique in the note: the + lands in
+SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › outside edits b
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+mutant mG
+mG rc=1 Tests:       8 failed, 481 passed, 489 total
+a hover preview card write with an identical counter elsewhere in the note › J10 the only event names another preview (the card's preview was opened some other way): no
+a hover preview card write with an identical counter elsewhere in the note › the link is bound to the preview once › an event for a preview that was never opened (its
+a hover preview card write with an identical counter elsewhere in the note › the link is bound to the preview once › the log keeps the newest 16 events: the link of a
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+mutant mH
+mH rc=1 Tests:       8 failed, 481 passed, 489 total
+a hover preview card write with an identical counter elsewhere in the note › J5 a second + in the same heading hover while its part still shows the old value (the ticke
+a hover preview card write with an identical counter elsewhere in the note › J6 the + made the hovered counter read like the identical one (it holds 6): the second + st
+SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a card (+/-) wr
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+mutant mI
+mI rc=1 Tests:       24 failed, 465 passed, 489 total
+a hover preview card write with an identical counter elsewhere in the note › J12 a whole-note hover [[Note]], an identical counter added above before the click: the + l
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+mutant mJ
+mJ rc=1 Tests:       6 failed, 483 passed, 489 total
+a hover preview card write with an identical counter elsewhere in the note › J14 the write comes at once after the click (an unload flush, no debounce): the card's pin 
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+done
+?? test/dom/framework/sc594-r3-probe.test.ts
+mutant mK
+mK rc=1 Tests:       6 failed, 483 passed, 489 total
+a hover preview card write with an identical counter elsewhere in the note › J15 a block hover whose metadata cache lags and points ^a at the identical block (which car
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+mutant mL
+mL rc=1 Tests:       6 failed, 483 passed, 489 total
+a hover preview card write with an identical counter elsewhere in the note › J16 a callout under the heading and an identical callout above it already reading 6: a + an
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+mutant mM
+mM rc=1 Tests:       5 failed, 484 passed, 489 total
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+mutant mN
+mN rc=1 Tests:       6 failed, 483 passed, 489 total
+a hover preview card write with an identical counter elsewhere in the note › the link is bound to the preview once › J17 a preview no event named when it was first lo
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+mutant mO
+mO rc=1 Tests:       6 failed, 483 passed, 489 total
+a hover preview card write with an identical counter elsewhere in the note › the link is bound to the preview once › J17 the pointer passes over another link on the s
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P7 X opened and closed, Y opened on the same parent, pass-over Z while Y open: Y's card uses Y
+mutant mP
+mP rc=1 Tests:       6 failed, 483 passed, 489 total
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+T-10: main.ts framework v2 wiring (F1 §2.3 / §5) › onload() registers a hover-link listener that records the link of the preview a card is drawn in
+mutant mQ
+mQ rc=1 Tests:       6 failed, 483 passed, 489 total
+a hover preview card write with an identical counter elsewhere in the note › the link is bound to the preview once › the log keeps the newest 16 events: the link of a
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+mutant mR
+mR rc=1 Tests:       32 failed, 457 passed, 489 total
+SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a callout in an
+SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a callout in an
+SC-594 r3 probes › P1 block hover: second + after an outside revert of the first + in a stale callout window is never written into the sibling
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+mutant mS
+mS rc=1 Tests:       14 failed, 475 passed, 489 total
+SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a card (+/-) wr
+SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a hover of a wh
+SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › an identical bl
+SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a short note, t
+SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › the form's own 
+SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › the host is giv
+SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › the + made the 
+SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › the pin is the 
+SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › the record is d
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+mutant mX6
+mX6 rc=1 Tests:       5 failed, 484 passed, 489 total
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+Traceback (most recent call last):
+  File "/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc594-r3-review/mutate.py", line 38, in <module>
+    assert s.count(old) == 1, (m, s.count(old))
+           ^^^^^^^^^^^^^^^^^
+AssertionError: ('mX7', 2)
+mX7 APPLY-FAILED
+mutant mX10
+mX10 rc=1 Tests:       5 failed, 484 passed, 489 total
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+mutant mX11
+mX11 rc=1 Tests:       6 failed, 483 passed, 489 total
+a hover preview card write with an identical counter elsewhere in the note › J8 a section of the same name pasted ABOVE before the click, a counter with the same body e
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+mutant mX12
+mX12 rc=1 Tests:       5 failed, 484 passed, 489 total
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+mutant mX13
+mX13 rc=1 Tests:       5 failed, 484 passed, 489 total
+SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+done
+?? test/dom/framework/sc594-r3-probe.test.ts
+Info: New devbox available: 0.17.5 -> v0.20.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements
+mutant mX13
+mX13 rc=1 Tests:       3 failed, 2 skipped, 7613 passed, 7618 total
+SC-340 §10.1/§10.2: release flushes a pending ConditionsModal write and closes the modal › unloading the CURRENT render child before the persist debounce still flushes the pending condition and cl
+SC-544: a second click before the first block's write › a nested flush (a sibling's own write) does not flush the writer's own waiting view; the siblings are written in registry order
+SC-544: a second click before the first block's write › the sibling's section is read before the writer's Vault.process runs
+?? test/dom/framework/sc594-r3-probe.test.ts

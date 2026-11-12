@@ -1,0 +1,48 @@
+# mutate.py <id>: apply one mutation to the committed source of SC-594 r2 (the caller restores with git checkout --)
+import sys
+D = '/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/'
+H = D + 'src/framework/host/ReadingModeBlockHost.ts'
+L = D + 'src/framework/host/hoverLinks.ts'
+R = D + 'src/framework/registerFrameworkElements.ts'
+HN = D + 'src/framework/host/headingNames.ts'
+m = sys.argv[1]
+M = {
+ 'mA': (H, "options?.pinOnly || twinned || partialCard)", "options?.pinOnly || twinned)"),
+ 'mB': (H, "const line = this.cardLinkLine(file, whole, sectionText, pin.lineStart, known);", "const line = this.cardLinkLine(file, whole, sectionText, pin.lineStart, known) ?? this.searchedPinLine(whole, sectionText, pin.lineStart);"),
+ 'mC': (H, "else if (blockId === null && lines[start + 1] === part[0]) {", "else if (false) {"),
+ 'mD': (H, "for (let i = 0; i < wholePart.length; i++) if (lines[partStart + i] !== wholePart[i]) return null;", ""),
+ 'mE': (H, "		if (twin) {\n			if (blockId !== null) {", "		if (false) {\n			if (blockId !== null) {"),
+ 'mF': (H, "		if (twin) {\n			if (blockId !== null) {", "		if (true) {\n			if (blockId !== null) {"),
+ 'mG': (L, "if (log.events[i].hoverParent?.hoverPopover?.hoverEl === popover) link", "if (true) link"),
+ 'mH': (H, "if (write !== null && known !== null && normalizeBody(write.body) === normalizeBody(known)) {\n\t\t\t\tpin.text = write.text;", "if (false && write !== null && known !== null && normalizeBody(write.body) === normalizeBody(known)) {\n\t\t\t\tpin.text = write.text;"),
+ 'mI': (H, "const link = src ?? (forForm ? undefined : hoverLinkOf(this.plugin.app, this.containerEl)?.linktext);", "const link = src ?? undefined;"),
+ 'mJ': (H, "if (cardRebase) await cardRebase;", "if (cardRebase) void cardRebase;"),
+ 'mK': (H, "if (next >= lines.length || lines[next].trim().toLowerCase() !== `^${blockId.toLowerCase()}`) return null;\n\t\t}\n\t\tconst own = blockBodyLines(part,", "\n\t\t}\n\t\tconst own = blockBodyLines(part,"),
+ 'mL': (H, "			return embedded ? this.pinFromLastWrite() : null;", "			return forForm && embedded ? this.pinFromLastWrite() : null;"),
+ 'mL2': (H, "		if (embedded) {\n			const first = parseOpenFence(section.text, section.lineStart);", "		if (forForm && embedded) {\n			const first = parseOpenFence(section.text, section.lineStart);"),
+ 'mM': (H, "return normalizeBody(found.body) === normalizeBody(known ?? own) ? line : null;\n\t}\n\n\t/**\n\t * SC-556: where the embedded part starts", "return line;\n\t}\n\n\t/**\n\t * SC-556: where the embedded part starts"),
+ 'mN': (L, "		log.bound.set(popover, link);\n	}", "	}"),
+ 'mO': (L, "	for (let i = log.events.length - 1; i >= 0; i--) {\n		const popover = log.events[i].hoverParent?.hoverPopover?.hoverEl;", "	for (let i = -1; i >= 0; i--) {\n		const popover = log.events[i].hoverParent?.hoverPopover?.hoverEl;"),
+ 'mP': (R, "	registerHoverLinks(plugin);\n", ""),
+ 'mQ': (L, "	if (log.events.length > LOG_SIZE) log.events.shift();", ""),
+ 'mR': (H, "const quoted = (parseOpenFenceLine(lines[found.lineStart])?.prefix ?? '') !== '';\n\t\t\tconst partEnd = partStart", "const quoted = false;\n\t\t\tconst partEnd = partStart"),
+ 'mS': (H, "if (whole === sectionText) {\n				partialPins.delete(pin); // the part IS the note\n				return;\n			}\n			const line = this.cardLinkLine", "const line = this.cardLinkLine"),
+ 'mX10': (H, "const dest = cache.getFirstLinkpathDest(link.slice(0, hash), hovered ? hovered.sourcePath : this.ctx.sourcePath);", "const dest = file;"),
+ 'mX12': (H, "if (lines.filter((l) => marker.test(l)).length !== 1) return null;", ""),
+ 'mY1': (H, "			if (!named.includes(start)) return null;\n", ""),
+ 'mY2': (H, "} else if (named.length !== 1) return null;", "} else if ((meta.headings ?? []).filter((h) => normalizeHeadingName(h.heading) === normalizeHeadingName(subpath.split('#').pop() ?? '')).length !== 1) return null;"),
+ 'mY3': (HN, "const f = /^ {0,3}(`{3,}|~{3,})/.exec(l);", "const f = null as RegExpExecArray | null;"),
+ 'mY4': (H, "} else if (named.length !== 1) return null;", "} else if (false) return null;"),
+ 'mY5': (H, "named = atxHeadings(lines).filter((h) => normalizeHeadingName(h.name) === name).map((h) => h.line);", "named = atxHeadings(lines).map((h) => h.line);"),
+ 'mD1': (L, "return link !== null && popoverShows(popover, link.linktext) ? link : null;", "return link;"),
+ 'mD2': (L, "normalizeHeadingName(shown) === normalizeHeadingName(subpath.split('#').pop() ?? '')", "true"),
+ 'mD3': (L, "	if (type !== 'heading') return false;\n", ""),
+ 'mD4': (L, "if (hash < 0) return type !== 'heading' && type !== 'block';", "if (hash < 0) return true;"),
+ 'mD5': (L, "if (subpath.startsWith('#^')) return type === 'block';", "if (subpath.startsWith('#^')) return true;"),
+ 'mD6': (L, "	if (typeof activeDocument !== 'undefined') activeDocument.querySelectorAll('.hover-popover').forEach((open) => log.bound.set(open, null));\n", ""),
+}
+f, old, new = M[m]
+s = open(f).read()
+assert s.count(old) == 1, (m, s.count(old))
+open(f, 'w').write(s.replace(old, new))
+print('mutant', m)

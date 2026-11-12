@@ -1,0 +1,27 @@
+# mutate.py <mutant id>: apply the probe rule, then one mutation (worktree source; reverted by the caller)
+import sys, subprocess
+S = '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc594-r1-design/'
+F = '/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/src/framework/host/ReadingModeBlockHost.ts'
+m = sys.argv[1]
+subprocess.run(['python3', S + 'apply-rule.py', 'full'], check=True, stdout=subprocess.DEVNULL)
+s = open(F).read()
+M = {
+ 'mA': ("options?.pinOnly || twinned || partialCard)", "options?.pinOnly || twinned)"),
+ 'mB': ("const line = this.cardLinkLine(file, whole, sectionText, pin.lineStart, known);", "const line = this.cardLinkLine(file, whole, sectionText, pin.lineStart, known) ?? this.searchedPinLine(whole, sectionText, pin.lineStart);"),
+ 'mC': ("else if (blockId === null && lines[start + 1] === part[0]) partStart = start + 1;", ""),
+ 'mD': ("for (let i = 0; i < trimmed.length; i++) if (lines[partStart + i] !== trimmed[i]) return null;", ""),
+ 'mE': ("const twin = known !== null && countByBody(whole, this.knownLanguage ?? this.alias, known) > 1;", "const twin = false;"),
+ 'mF': ("const twin = known !== null && countByBody(whole, this.knownLanguage ?? this.alias, known) > 1;", "const twin = true;"),
+ 'mG': ("if (ev.hoverParent?.hoverPopover?.hoverEl === pop) return", "if (ev) return"),
+ 'mH': ("if (write !== null && known !== null && normalizeBody(write.body) === normalizeBody(known)) {\n\t\t\t\tpin.text = write.text;", "if (false && write !== null && known !== null && normalizeBody(write.body) === normalizeBody(known)) {\n\t\t\t\tpin.text = write.text;"),
+ 'mI': ("const WHOLE_HOVER = true;", "const WHOLE_HOVER = false;"),
+ 'mJ': ("if (cardRebase) await cardRebase;", "if (cardRebase) void cardRebase;"),
+ 'mK': ("if (next >= lines.length || lines[next].trim().toLowerCase() !== `^${blockId.toLowerCase()}`) return null;\n\t\t}\n\t\tconst own = blockBodyLines(part,", "\n\t\t}\n\t\tconst own = blockBodyLines(part,"),
+ 'mL': ("			return embedded ? this.pinFromLastWrite() : null;", "			return forForm && embedded ? this.pinFromLastWrite() : null;"),
+ 'mM': ("return normalizeBody(found.body) === normalizeBody(known ?? own) ? line : null;\n\t}\n\n\t/**\n\t * SC-556: where", "return line;\n\t}\n\n\t/**\n\t * SC-556: where"),
+}
+old, new = M[m]
+assert s.count(old) == 1, (m, s.count(old))
+s = s.replace(old, new)
+open(F, 'w').write(s)
+print('mutant', m)

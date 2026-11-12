@@ -1,0 +1,164 @@
+Info: New devbox available: 0.17.5 -> v0.20.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements
+ M src/framework/host/ReadingModeBlockHost.ts
+ M src/framework/host/hoverLinks.ts
+Running one project: dom
+FAIL dom test/dom/framework/reading-mode-host-hover-card.test.ts (9.473 s)
+  ● a hover preview card write with an identical counter elsewhere in the note › a heading hover whose metadata cache lags an outside edit › J20 the hovered section deleted from outside (the cache still has it): nothing is written, never the counter under the next heading
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      366 | 			const { app, host } = lagging(disk);
+      367 |
+    > 368 | 			expect(await plus(host, bodyOf(6))).toBe(false);
+          | 			                                    ^
+      369 | 			refused(app, disk);
+      370 | 		});
+      371 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:368:40)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › a heading hover whose metadata cache lags an outside edit › J20 the next section moved ABOVE the hovered one from outside: nothing is written, never the counter that is now under the old line
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      374 | 			const { app, host } = lagging(disk);
+      375 |
+    > 376 | 			expect(await plus(host, bodyOf(6))).toBe(false);
+          | 			                                    ^
+      377 | 			refused(app, disk);
+      378 | 		});
+      379 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:376:40)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › a heading hover whose metadata cache lags an outside edit › J20 an identical section of the same name pasted ABOVE from outside (the cache has one): nothing is written (the text names two places)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      382 | 			const { app, host } = lagging(disk);
+      383 |
+    > 384 | 			expect(await plus(host, bodyOf(6))).toBe(false);
+          | 			                                    ^
+      385 | 			refused(app, disk);
+      386 | 		});
+      387 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:384:40)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › a heading hover whose metadata cache lags an outside edit › J20 a heading-looking line inside a code fence is no heading: the one real heading of that name still places the +
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      398 | 			const { app, host } = hovered(disk, heading, 'Note#Tracker');
+      399 |
+    > 400 | 			expect(await plus(host, bodyOf(6))).toBe(true);
+          | 			                                    ^
+      401 | 			expect(valuesOf(app)).toEqual([6, 5]);
+      402 | 		});
+      403 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:400:40)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › the bound link must be what the preview shows › J21 a preview of ## Tracker bound to the link of ## Other (an identical-body heading): nothing is written
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      443 | 			const { app, host } = mismatched(TWO, 'Note#Tracker', 'Note#Other');
+      444 |
+    > 445 | 			expect(await plus(host, bodyOf(6))).toBe(false);
+          | 			                                    ^
+      446 | 			refused(app, TWO);
+      447 | 		});
+      448 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:445:40)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › the bound link must be what the preview shows › J21 a preview of a heading bound to a whole-note link ([[Note]]), the identical counter above: nothing is written (a whole-note pin would be mapped against the note)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      450 | 			const { app, host } = mismatched(LONGA, 'Note#Tracker', 'Note');
+      451 |
+    > 452 | 			expect(await plus(host, bodyOf(6))).toBe(false);
+          | 			                                    ^
+      453 | 			refused(app, LONGA);
+      454 | 		});
+      455 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:452:40)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › the bound link must be what the preview shows › J21 a preview of a heading bound to a block link, and a preview of a block bound to a heading link: nothing is written
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      462 | 			resetDroppedWriteNotices();
+      463 | 			const two = mismatched(TWO, 'Note#^a', 'Note#Tracker');
+    > 464 | 			expect(await plus(two.host, bodyOf(6))).toBe(false);
+          | 			                                        ^
+      465 | 			refused(two.app, TWO);
+      466 | 		});
+      467 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:464:44)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › the bound link must be what the preview shows › J21 the residual: another link's event before the preview exists, then the preview of ## Tracker opens (the parent names it): the card is not placed at the other link
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      487 | 			host.setMountedBody(bodyOf(5));
+      488 |
+    > 489 | 			expect(await plus(host, bodyOf(6))).toBe(false);
+          | 			                                    ^
+      490 | 			refused(app, TWO);
+      491 | 		});
+      492 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:489:40)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › the bound link must be what the preview shows › J21 a preview that is already open when the listener registers gets no link, even from a later event that names it the way its DOM shows
+
+    expect(received).toBeNull()
+
+    Received: {"linktext": "Note#Tracker", "sourcePath": "Host.md"}
+
+      498 | 			noteHoverLink(app, hoverEvent('Note#Tracker', open.popover));
+      499 |
+    > 500 | 			expect(hoverLinkOf(app, open.el)).toBeNull();
+          | 			                                  ^
+      501 | 		});
+      502 | 	});
+      503 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:500:38)
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       9 failed, 486 passed, 495 total
+Snapshots:   0 total
+Time:        10.774 s
+Ran all test suites matching test/dom/framework/reading-mode-host-hover-card.test.ts|test/dom/framework/reading-mode-host-pin.test.ts|test/dom/framework/plugin-wiring.test.ts.
+rc=1

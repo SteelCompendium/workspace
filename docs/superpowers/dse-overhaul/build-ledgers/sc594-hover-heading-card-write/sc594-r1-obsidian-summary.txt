@@ -1,0 +1,144 @@
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :160, port 42673, 1 scenario(s)
+== A1 long heading hover RV | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 5] notices 1 card shows ['6'] link None
+== A1 long heading hover LP | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 5] notices 1 card shows ['6'] link None
+== A1 longa (twin ABOVE) heading hover RV | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 5] notices 1 card shows ['6'] link None
+== A1 short heading hover RV | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 5] notices 1 card shows ['6'] link None
+== A1 short heading hover LP | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 5] notices 1 card shows ['6'] link None
+== A1 whole long-note hover RV (scrolled) | real hover | err: page eval failed: TypeError: Cannot read properties of undefined (reading 'root')
+    at <anonymous>:1:286
+    at <anonymous>:1:882
+   before [5, 5] afterPre None beforeSecond None AFTER None notices 0 card shows None link None
+== A1 block hover RV (twin, no edit) | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 5] notices 1 card shows ['6'] link None
+probe rc=0 wall=61s
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :160, port 45337, 1 scenario(s)
+== A1 long heading hover RV | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 5] notices 1 card shows ['6'] link p594-long#Tracker
+== A1 long heading hover LP | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 5] notices 1 card shows ['6'] link p594-long#Tracker
+== A1 longa (twin ABOVE) heading hover RV | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 5] notices 1 card shows ['6'] link p594-longa#Tracker
+== A1 short heading hover RV | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 5] notices 1 card shows ['6'] link p594-short#Tracker
+== A1 short heading hover LP | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 5] notices 1 card shows ['6'] link p594-short#Tracker
+== A1 whole long-note hover RV (scrolled) | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [6, 5] notices 0 card shows ['6'] link p594-long
+== A1 block hover RV (twin, no edit) | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 5] notices 1 card shows ['6'] link p594-blk#^p594a
+== A3 block hover RV, A edited to 9 then scripted click | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [9, 6] notices 0 card shows ['9'] link p594-blk#^p594a
+== A3 block hover RV, A edited to 9 then real click | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [9, 5] notices 0 card shows ['9'] link p594-blk#^p594a
+== A3 block hover LP, A edited to 9 then scripted click | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [9, 6] notices 0 card shows ['9'] link p594-blk#^p594a
+== A3 P14-exact block hover RV, + lands, then A edited, scripted + | real hover | err: None
+   before [5, 6] afterPre [6, 6] beforeSecond None AFTER [9, 7] notices 0 card shows ['9'] link p594-blk14#^p594c
+== A4 long heading hover RV, A edited to 9 then scripted click | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [9, 6] notices 0 card shows ['9'] link p594-long#Tracker
+== A4 long heading hover RV, A edited to 9 then real click | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [9, 5] notices 0 card shows ['9'] link p594-long#Tracker
+== A4 long heading hover LP, A edited to 9 then scripted click | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [9, 6] notices 0 card shows ['9'] link p594-long#Tracker
+== A4 short heading hover RV, A edited to 9 then scripted click | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [9, 6] notices 0 card shows ['9'] link p594-short#Tracker
+== A4 longa heading hover RV, A (2nd) edited to 9 then scripted click | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [6, 9] notices 0 card shows ['9'] link p594-longa#Tracker
+probe rc=0 wall=142s
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :162, port 40381, 1 scenario(s)
+== B second + 1500 ms later, ticket shape RV | real hover | err: None
+   before [5, 5] afterPre None beforeSecond [5, 5] AFTER [5, 5] notices 1 card shows ['7'] link p594-long#Tracker
+== B second + 450 ms later (just after the first write), ticket shape RV | real hover | err: None
+   before [5, 5] afterPre None beforeSecond [5, 5] AFTER [5, 5] notices 1 card shows ['7'] link p594-long#Tracker
+== B callout in a heading hover, twin callout elsewhere, RV | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 5] notices 1 card shows ['6'] link p594-cal#Tracker
+== B callout in a heading hover, LP | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 5] notices 1 card shows ['6'] link p594-cal#Tracker
+== B whole-note hover, identical block added from outside, scripted click | real hover | err: None
+   before [5] afterPre None beforeSecond None AFTER [5, 5] notices 1 card shows ['6', '5'] link p594-wsh
+== B whole-note hover, own block edited from outside, scripted click | real hover | err: None
+   before [5] afterPre None beforeSecond None AFTER [9] notices 1 card shows ['9'] link p594-wsh
+== B callout heading hover, own callout edited, scripted click | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [6, 9] notices 0 card shows ['9'] link p594-cal#Tracker
+== W redraw window, block hover RV #0 | real hover | err: measured
+   redraw window: {'ms': 20, 'connected': False, 'polls': 5}
+== W redraw window, block hover RV #1 | real hover | err: measured
+   redraw window: {'ms': 19, 'connected': False, 'polls': 5}
+== W redraw window, block hover RV #2 | real hover | err: measured
+   redraw window: {'ms': 43, 'connected': False, 'polls': 5}
+== W redraw window, block hover RV #3 | real hover | err: measured
+   redraw window: {'ms': 44, 'connected': False, 'polls': 5}
+== W redraw window, heading hover RV #0 | real hover | err: measured
+   redraw window: {'ms': 17, 'connected': False, 'polls': 5}
+== W redraw window, heading hover RV #1 | real hover | err: measured
+   redraw window: {'ms': 22, 'connected': False, 'polls': 5}
+== W redraw window, heading hover RV #2 | real hover | err: measured
+   redraw window: {'ms': 26, 'connected': False, 'polls': 5}
+== W redraw window, heading hover RV #3 | real hover | err: measured
+   redraw window: {'ms': 43, 'connected': False, 'polls': 5}
+== W redraw window, heading hover LP #0 | real hover | err: measured
+   redraw window: {'ms': 44, 'connected': False, 'polls': 6}
+== W redraw window, heading hover LP #1 | real hover | err: measured
+   redraw window: {'ms': 19, 'connected': False, 'polls': 6}
+probe rc=0 wall=154s
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :162, port 43635, 1 scenario(s)
+== A1 long heading hover RV | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 5] notices 1 card shows ['6'] link p594-long#Tracker
+== A1 long heading hover LP | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [6, 5] notices 0 card shows ['6'] link p594-long#Tracker
+== A1 longa (twin ABOVE) heading hover RV | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 6] notices 0 card shows ['6'] link p594-longa#Tracker
+== A1 short heading hover RV | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [6, 5] notices 0 card shows ['6'] link p594-short#Tracker
+== A1 short heading hover LP | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [6, 5] notices 0 card shows ['6'] link p594-short#Tracker
+== A1 whole long-note hover RV (scrolled) | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [6, 5] notices 0 card shows ['6'] link p594-long
+== A1 block hover RV (twin, no edit) | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [6, 5] notices 0 card shows ['6'] link p594-blk#^p594a
+== A3 block hover RV, A edited to 9 then scripted click | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [9, 5] notices 1 card shows ['9'] link p594-blk#^p594a
+== A3 block hover RV, A edited to 9 then real click | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [9, 5] notices 0 card shows ['9'] link p594-blk#^p594a
+== A3 block hover LP, A edited to 9 then scripted click | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [9, 5] notices 1 card shows ['9'] link p594-blk#^p594a
+== A3 P14-exact block hover RV, + lands, then A edited, scripted + | real hover | err: None
+   before [5, 6] afterPre [6, 6] beforeSecond None AFTER [9, 6] notices 1 card shows ['9'] link p594-blk14#^p594c
+== A4 long heading hover RV, A edited to 9 then scripted click | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [9, 5] notices 1 card shows ['9'] link p594-long#Tracker
+== A4 long heading hover RV, A edited to 9 then real click | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [9, 5] notices 0 card shows ['9'] link p594-long#Tracker
+== A4 long heading hover LP, A edited to 9 then scripted click | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [9, 5] notices 1 card shows ['9'] link p594-long#Tracker
+== A4 short heading hover RV, A edited to 9 then scripted click | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [9, 5] notices 1 card shows ['9'] link p594-short#Tracker
+== A4 longa heading hover RV, A (2nd) edited to 9 then scripted click | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 9] notices 1 card shows ['9'] link p594-longa#Tracker
+== B second + 1500 ms later, ticket shape RV | real hover | err: None
+   before [5, 5] afterPre None beforeSecond [6, 5] AFTER [7, 5] notices 0 card shows ['7'] link p594-long#Tracker
+== B second + 450 ms later (just after the first write), ticket shape RV | real hover | err: None
+   before [5, 5] afterPre None beforeSecond [6, 5] AFTER [7, 5] notices 0 card shows ['7'] link p594-long#Tracker
+== B callout in a heading hover, twin callout elsewhere, RV | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 6] notices 0 card shows ['6'] link p594-cal#Tracker
+== B callout in a heading hover, LP | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 6] notices 0 card shows ['6'] link p594-cal#Tracker
+== B whole-note hover, identical block added from outside, scripted click | real hover | err: None
+   before [5] afterPre None beforeSecond None AFTER [5, 6] notices 0 card shows ['5', '6'] link p594-wsh
+== B whole-note hover, own block edited from outside, scripted click | real hover | err: None
+   before [5] afterPre None beforeSecond None AFTER [9] notices 1 card shows ['9'] link p594-wsh
+== B callout heading hover, own callout edited, scripted click | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 9] notices 1 card shows ['9'] link p594-cal#Tracker
+probe rc=0 wall=203s
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :162, port 38819, 1 scenario(s)
+== WARM-UP (the probe registers its hover-link listener when the first host is built; production registers at onload) | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [5, 5] notices 1 card shows ['6'] link p594-short#Tracker
+== A1 long heading hover RV (re-run) | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [6, 5] notices 0 card shows ['6'] link p594-long#Tracker
+== A1 long heading hover LP (re-run) | real hover | err: None
+   before [5, 5] afterPre None beforeSecond None AFTER [6, 5] notices 0 card shows ['6'] link p594-long#Tracker
+probe rc=0 wall=28s

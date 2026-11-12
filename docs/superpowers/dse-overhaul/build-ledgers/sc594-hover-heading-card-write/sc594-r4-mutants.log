@@ -1,0 +1,45 @@
+# SC-594 r4 mutants against the final r4 source + tests (dse sc594 branch on b5d18f79; suites: reading-mode-host-hover-card, reading-mode-host-pin, plugin-wiring; 496 tests, all green unmutated).
+# r2 mutants (mA-mS, see sc594-r2-mutants.log for what each is; strings adapted to the r4 code): mL2 is the card r7 guard, now killed by J19.
+# r3 reviewer mutants: mX10 no link-destination check (J22 another note), mX12 no duplicate-^id count (J22 two ids).
+# text-heading check: mY1 no hanging-line check, mY2 one-place count from the metadata cache instead of the text, mY3 fences not skipped in atxHeadings, mY4 no one-place requirement,
+#   mY5 heading lines not filtered by the link's name.
+# DOM cross-check (popoverShows / registration): mD1 check not applied, mD2 heading name not compared, mD3 heading link accepted without data-type=heading, mD4 whole-note link accepted
+#   for any preview, mD5 block link accepted for any preview, mD6 previews already open at registration not bound to null.
+
+mN rc=1 Tests:       1 failed, 495 passed, 496 total
+mO rc=1 Tests:       1 failed, 495 passed, 496 total
+mP rc=1 Tests:       1 failed, 495 passed, 496 total
+mQ rc=1 Tests:       1 failed, 495 passed, 496 total
+mR rc=1 Tests:       27 failed, 469 passed, 496 total
+mS rc=1 Tests:       9 failed, 487 passed, 496 total
+mX10 rc=1 Tests:       1 failed, 495 passed, 496 total
+mX12 rc=1 Tests:       1 failed, 495 passed, 496 total
+mY1 rc=1 Tests:       2 failed, 494 passed, 496 total
+mY2 rc=1 Tests:       2 failed, 494 passed, 496 total
+mY3 rc=1 Tests:       2 failed, 494 passed, 496 total
+mY4 rc=1 Tests:       2 failed, 494 passed, 496 total
+mY5 rc=1 Tests:       49 failed, 447 passed, 496 total
+mD1 rc=1 Tests:       4 failed, 492 passed, 496 total
+mD2 rc=1 Tests:       2 failed, 494 passed, 496 total
+mD3 rc=1 Tests:       1 failed, 495 passed, 496 total
+mD4 rc=1 Tests:       1 failed, 495 passed, 496 total
+mD5 rc=1 Tests:       1 failed, 495 passed, 496 total
+mD6 rc=1 Tests:       1 failed, 495 passed, 496 total
+mA rc=1 Tests:       46 failed, 450 passed, 496 total
+mB rc=1 Tests:       34 failed, 462 passed, 496 total
+mC rc=1 Tests:       47 failed, 449 passed, 496 total
+mD rc=1 Tests:       1 failed, 495 passed, 496 total
+mE rc=1 Tests:       3 failed, 493 passed, 496 total
+mF rc=1 Tests:       3 failed, 493 passed, 496 total
+mG rc=1 Tests:       1 failed, 495 passed, 496 total
+mH rc=1 Tests:       3 failed, 493 passed, 496 total
+mI rc=1 Tests:       21 failed, 475 passed, 496 total
+mJ rc=1 Tests:       1 failed, 495 passed, 496 total
+mK rc=1 Tests:       1 failed, 495 passed, 496 total
+mL rc=1 Tests:       1 failed, 495 passed, 496 total
+mL2 rc=1 Tests:       2 failed, 494 passed, 496 total
+mM rc=0 Tests:       496 passed, 496 total
+
+# killed: all except mM (no known-body check in cardLinkLine: equivalent, pinnedTarget checks the body at write time). mL2 is no longer a survivor.
+# history within r4: mG, mN, mQ first survived after the DOM check landed (the DOM check refused those cases before the identity / memo / log bound could); J10, J17 (no announced link) and the log-bound test
+# were rebuilt so the DOM shows the right link and only the mutated rule can refuse; then all three die.

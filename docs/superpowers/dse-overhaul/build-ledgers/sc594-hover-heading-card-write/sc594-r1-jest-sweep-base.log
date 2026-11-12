@@ -1,0 +1,1038 @@
+FAIL dom test/dom/framework/sc594-probe.test.ts (8.83 s)
+  ● SC-594 r1 sweep › plain fence | heading hover | rv | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › plain fence | heading hover | lp | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › plain fence | block hover | rv | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › plain fence | block hover | lp | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › plain fence | heading embed | rv | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › plain fence | heading embed | lp | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › plain fence | block embed | rv | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › plain fence | block embed | lp | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › callout | heading hover | rv | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › callout | heading hover | lp | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › callout | block hover | rv | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › callout | block hover | lp | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › callout | heading embed | rv | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › callout | heading embed | lp | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › callout | block embed | rv | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › callout | block embed | lp | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › header-less quote | heading hover | rv | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › header-less quote | heading hover | lp | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › header-less quote | block hover | rv | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › header-less quote | block hover | lp | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › header-less quote | heading embed | rv | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › header-less quote | heading embed | lp | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › header-less quote | block embed | rv | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › header-less quote | block embed | lp | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › quote, first line is the fence | heading hover | rv | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › quote, first line is the fence | heading hover | lp | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › quote, first line is the fence | block hover | rv | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › quote, first line is the fence | block hover | lp | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › quote, first line is the fence | heading embed | rv | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › quote, first line is the fence | heading embed | lp | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › quote, first line is the fence | block embed | rv | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › quote, first line is the fence | block embed | lp | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › nested callout | heading hover | rv | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › nested callout | heading hover | lp | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › nested callout | block hover | rv | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › nested callout | block hover | lp | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › nested callout | heading embed | rv | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › nested callout | heading embed | lp | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › nested callout | block embed | rv | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 sweep › nested callout | block embed | lp | own edited
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /TWIN|ADDED/
+    Received string:      "TWIN"
+
+      164 | 		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+      165 | 		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+    > 166 | 		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+          | 		                ^
+      167 | 	});
+      168 | 	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+      169 | 	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+
+      at test/dom/framework/sc594-probe.test.ts:166:19
+
+  ● SC-594 r1 named probes › T1 the ticket: [[long note#Tracker]] hover, an identical counter elsewhere: + lands in the hovered counter
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   6,
+    +   5,
+        5,
+      ]
+
+      224 | 		const r = await plus(host, bodyOf(6));
+      225 | 		rec('T1 ticket heading hover long', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+    > 226 | 		expect(vals(app)).toEqual([6, 5]);
+          | 		                  ^
+      227 | 	});
+      228 | 	test('T2 the same in a SHORT note', async () => {
+      229 | 		const disk = ['# N', '', 'TOP', '', '## Tracker', '', ...CTR(5), '', '## Other', '', 'mid', '', ...CTR(5), '', 'END'].join('\n');
+
+      at Object.<anonymous> (test/dom/framework/sc594-probe.test.ts:226:21)
+
+  ● SC-594 r1 named probes › T2 the same in a SHORT note
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   6,
+    +   5,
+        5,
+      ]
+
+      231 | 		const r = await plus(host, bodyOf(6));
+      232 | 		rec('T2 ticket heading hover short', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+    > 233 | 		expect(vals(app)).toEqual([6, 5]);
+          | 		                  ^
+      234 | 	});
+      235 | 	test('T3 P14 (r2): [[Note#^a]] hover, + landed (known 6, part still 5), A edited to 9, B holds 6: never B', async () => {
+      236 | 		const disk = ['# N', '', ...CTR(9), '^a', '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n');
+
+      at Object.<anonymous> (test/dom/framework/sc594-probe.test.ts:233:21)
+
+  ● SC-594 r1 named probes › T3 P14 (r2): [[Note#^a]] hover, + landed (known 6, part still 5), A edited to 9, B holds 6: never B
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -8,10 +8,10 @@
+
+      p
+
+      ```ds-counter
+      name: Twin
+    - current_value: 6
+    + current_value: 7
+      ```
+      ^b
+
+      END
+
+      238 | 		const r = await plus(host, bodyOf(7));
+      239 | 		rec('T3 P14 block hover (record)', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+    > 240 | 		expect(app.vault.getContent('Note.md')).toBe(disk);
+          | 		                                        ^
+      241 | 	});
+      242 | 	test('T3b P14 with no hover-link record: never B', async () => {
+      243 | 		const disk = ['# N', '', ...CTR(9), '^a', '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n');
+
+      at Object.<anonymous> (test/dom/framework/sc594-probe.test.ts:240:43)
+
+  ● SC-594 r1 named probes › T3b P14 with no hover-link record: never B
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -8,10 +8,10 @@
+
+      p
+
+      ```ds-counter
+      name: Twin
+    - current_value: 6
+    + current_value: 7
+      ```
+      ^b
+
+      END
+
+      245 | 		const r = await plus(host, bodyOf(7));
+      246 | 		rec('T3b P14 block hover (no record)', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+    > 247 | 		expect(app.vault.getContent('Note.md')).toBe(disk);
+          | 		                                        ^
+      248 | 	});
+      249 | 	test('T3c P14 at click (no + before): [[Note#^a]] hover shows 5, A edited to 9 before the click, B holds 5: never B', async () => {
+      250 | 		const disk = ['# N', '', ...CTR(9), '^a', '', 'p', '', ...CTR(5), '^b', '', 'END'].join('\n');
+
+      at Object.<anonymous> (test/dom/framework/sc594-probe.test.ts:247:43)
+
+  ● SC-594 r1 named probes › T3c P14 at click (no + before): [[Note#^a]] hover shows 5, A edited to 9 before the click, B holds 5: never B
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -8,10 +8,10 @@
+
+      p
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+      ^b
+
+      END
+
+      252 | 		const r = await plus(host, bodyOf(6));
+      253 | 		rec('T3c block hover, own edited before click', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+    > 254 | 		expect(app.vault.getContent('Note.md')).toBe(disk);
+          | 		                                        ^
+      255 | 	});
+      256 | 	test('T4 heading hover, A edited to 9 before the click, B holds 5: never B', async () => {
+      257 | 		const { app, host } = hovered(LONG(9, 5), { text: HPART.join('\n'), lineStart: 1, lineEnd: 4 }, 'Note#Tracker');
+
+      at Object.<anonymous> (test/dom/framework/sc594-probe.test.ts:254:43)
+
+  ● SC-594 r1 named probes › T4 heading hover, A edited to 9 before the click, B holds 5: never B
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        9,
+    -   5,
+    +   6,
+      ]
+
+      258 | 		const r = await plus(host, bodyOf(6));
+      259 | 		rec('T4 heading hover, own edited before click', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+    > 260 | 		expect(vals(app)).toEqual([9, 5]);
+          | 		                  ^
+      261 | 	});
+      262 | 	test('T5 second + in the same preview, part still stale (ticket shape): lands in A again (the own-write record)', async () => {
+      263 | 		const { app, host } = hovered(LONG(5, 5), { text: HPART.join('\n'), lineStart: 1, lineEnd: 4 }, 'Note#Tracker');
+
+      at Object.<anonymous> (test/dom/framework/sc594-probe.test.ts:260:21)
+
+  ● SC-594 r1 named probes › T5 second + in the same preview, part still stale (ticket shape): lands in A again (the own-write record)
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   7,
+    +   5,
+        5,
+      ]
+
+      265 | 		const r2 = await plus(host, bodyOf(7));
+      266 | 		rec('T5 second + stale part', `${r1} ${r2} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+    > 267 | 		expect(vals(app)).toEqual([7, 5]);
+          | 		                  ^
+      268 | 	});
+      269 | 	test('T5b second + after the preview was redrawn (part fresh): lands in A again', async () => {
+      270 | 		const { app, host, section } = hovered(LONG(5, 5), { text: HPART.join('\n'), lineStart: 1, lineEnd: 4 }, 'Note#Tracker');
+
+      at Object.<anonymous> (test/dom/framework/sc594-probe.test.ts:267:21)
+
+  ● SC-594 r1 named probes › T5b second + after the preview was redrawn (part fresh): lands in A again
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   7,
+    +   5,
+        5,
+      ]
+
+      273 | 		const r2 = await plus(host, bodyOf(7));
+      274 | 		rec('T5b second + fresh part', `${r1} ${r2} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+    > 275 | 		expect(vals(app)).toEqual([7, 5]);
+          | 		                  ^
+      276 | 	});
+      277 | 	test('T6 the + made A read like B (B holds 6), then a second + with the part stale: lands in A, never B', async () => {
+      278 | 		const { app, host } = hovered(LONG(5, 6), { text: HPART.join('\n'), lineStart: 1, lineEnd: 4 }, 'Note#Tracker');
+
+      at Object.<anonymous> (test/dom/framework/sc594-probe.test.ts:275:21)
+
+  ● SC-594 r1 named probes › T6 the + made A read like B (B holds 6), then a second + with the part stale: lands in A, never B
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   7,
+    +   6,
+        6,
+      ]
+
+      280 | 		const r2 = await plus(host, bodyOf(7));
+      281 | 		rec('T6 second + after A reads like B', `${r1} ${r2} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+    > 282 | 		expect(vals(app)).toEqual([7, 6]);
+          | 		                  ^
+      283 | 	});
+      284 | 	test('T6b the same, A edited from outside between the two +: never B', async () => {
+      285 | 		const { app, host } = hovered(LONG(5, 6), { text: HPART.join('\n'), lineStart: 1, lineEnd: 4 }, 'Note#Tracker');
+
+      at Object.<anonymous> (test/dom/framework/sc594-probe.test.ts:282:21)
+
+  ● SC-594 r1 named probes › T6b the same, A edited from outside between the two +: never B
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -173,11 +173,11 @@
+
+      ## Other
+
+      ```ds-counter
+      name: Twin
+    - current_value: 6
+    + current_value: 7
+      ```
+
+      below 0
+      below 1
+      below 2
+
+      289 | 		const r2 = await plus(host, bodyOf(7));
+      290 | 		rec('T6b second + after outside edit of A', `${r2} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+    > 291 | 		expect(app.vault.getContent('Note.md')).toBe(outside);
+          | 		                                        ^
+      292 | 	});
+      293 | 	test('T7 a repeated heading name, the body unique: + lands in the first section (the one the link names)', async () => {
+      294 | 		const disk = ['# N', '', '## Tracker', '', ...CTR(5), '', '## Mid', '', 'x', '', '## Tracker', '', ...CTR(3), '', 'END'].join('\n');
+
+      at Object.<anonymous> (test/dom/framework/sc594-probe.test.ts:291:43)
+
+  ● SC-594 r1 named probes › T9 two previews open, the card in the second: its own popover's link is used
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   6,
+    +   5,
+        5,
+      ]
+
+      315 | 		other.popover.remove();
+      316 | 		rec('T9 two popovers', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+    > 317 | 		expect(vals(app)).toEqual([6, 5]);
+          | 		                  ^
+      318 | 	});
+      319 | 	test('T10 a hover-link record whose parent now shows ANOTHER popover (the card\'s popover was replaced): refused', async () => {
+      320 | 		const disk = LONG(5, 5);
+
+      at Object.<anonymous> (test/dom/framework/sc594-probe.test.ts:317:21)
+
+  ● SC-594 r1 named probes › T14 the write comes at once after the click (an unload flush, no 400 ms debounce): the card pin is placed before the write
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   6,
+    +   5,
+        5,
+      ]
+
+      354 | 		const r = await host.replaceSource(bodyOf(6), { fromView: true });
+      355 | 		rec('T14 immediate flush', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+    > 356 | 		expect(vals(app)).toEqual([6, 5]);
+          | 		                  ^
+      357 | 	});
+      358 | 	test('T15 [[Note#^a]] hover, the cache lags and points ^a at the twin B (which carries ^b): never B', async () => {
+      359 | 		const disk = ['# N', '', ...CTR(5), '^a', '', 'p', '', ...CTR(5), '^b', '', 'END'].join('\n');
+
+      at Object.<anonymous> (test/dom/framework/sc594-probe.test.ts:356:21)
+
+  ● SC-594 r1 named probes › T16 a callout counter under ## Tracker, an identical callout elsewhere already reading 6: +, then a second + with the window still stale: lands in A both times
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   6,
+        7,
+    +   6,
+      ]
+
+      371 | 		const r2 = await plus(host, bodyOf(7));
+      372 | 		rec('T16 callout, second + stale window', `${r1} ${r2} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+    > 373 | 		expect(vals(app)).toEqual([6, 7]);
+          | 		                  ^
+      374 | 	});
+      375 | 	test('T12 a whole-note hover [[Note]], an identical counter added from outside before the click: lands in A, never the added one', async () => {
+      376 | 		const pre = ['# N', '', 'TOP', '', ...CTR(5), '', 'END'];
+
+      at Object.<anonymous> (test/dom/framework/sc594-probe.test.ts:373:21)
+
+  ● SC-594 r1 named probes › T12 a whole-note hover [[Note]], an identical counter added from outside before the click: lands in A, never the added one
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        5,
+    -   6,
+    +   5,
+      ]
+
+      379 | 		const r = await plus(host, bodyOf(6));
+      380 | 		rec('T12 whole-note hover, identical added', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+    > 381 | 		expect(vals(app)).toEqual([5, 6]);
+          | 		                  ^
+      382 | 	});
+      383 | });
+      384 |
+
+      at Object.<anonymous> (test/dom/framework/sc594-probe.test.ts:381:21)
+
+Test Suites: 1 failed, 1 total
+Tests:       54 failed, 250 passed, 304 total
+Snapshots:   0 total
+Time:        9.373 s
+Ran all test suites matching test/dom/framework/sc594-probe.test.ts.
+jest rc=1

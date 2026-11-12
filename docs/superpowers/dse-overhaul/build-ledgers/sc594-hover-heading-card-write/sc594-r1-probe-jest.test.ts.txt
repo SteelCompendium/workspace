@@ -1,0 +1,383 @@
+// SC-594 r1 design probe (scratch; NOT committed): the construct sweep for a card (+) write from a hover preview / embed of PART of a note,
+// with an identical counter (the twin) elsewhere in the note. Records the outcome of every cell to $SC594_SWEEP_OUT; asserts only in the named tests.
+import * as fs from 'fs';
+import * as hostMod from '../../../src/framework/host/ReadingModeBlockHost';
+import { ReadingModeBlockHost } from '../../../src/framework/host/ReadingModeBlockHost';
+import { resetDroppedWriteNotices } from '../../../src/framework/host/droppedWriteNotice';
+import { App, Notice, Plugin } from '../../mocks/obsidian';
+import type { MarkdownPostProcessorContext } from '../../mocks/obsidian';
+
+type Sec = { text: string; lineStart: number; lineEnd: number };
+type Section = { current: Sec | null };
+const OUT = process.env.SC594_SWEEP_OUT ?? '';
+const TAG = process.env.SC594_TAG ?? 'run';
+const record = (line: string) => {
+	if (OUT) fs.appendFileSync(OUT, `${TAG}|${line}\n`);
+};
+const noteLink = (ev: unknown) => (hostMod as unknown as { noteHoverLink?: (e: unknown) => void }).noteHoverLink?.(ev);
+const resetLinks = () => (hostMod as unknown as { resetHoverLinks?: () => void }).resetHoverLinks?.();
+
+function switchableCtx(section: Section): MarkdownPostProcessorContext {
+	return { docId: 'doc-594', sourcePath: 'Note.md', frontmatter: undefined, addChild: () => {}, getSectionInfo: () => section.current } as never;
+}
+const CTR = (n: number, name = 'Twin'): string[] => ['```ds-counter', `name: ${name}`, `current_value: ${n}`, '```'];
+const bodyOf = (n: number, name = 'Twin'): string => `name: ${name}\ncurrent_value: ${n}`;
+const q = (l: string) => `> ${l}`;
+const qq = (l: string) => `> > ${l}`;
+const ind = (n: number) => (l: string) => `${' '.repeat(n)}${l}`;
+// [name, build(value) -> lines, offset of the counter's fence inside the construct, plain (its section IS the fence)]
+const CONSTRUCTS: Array<[string, (v: number) => string[], number, boolean]> = [
+	['plain fence', (v) => CTR(v), 0, true],
+	['callout', (v) => ['> [!note] Camp', ...CTR(v).map(q), '> after'], 1, false],
+	['header-less quote', (v) => ['> intro', ...CTR(v).map(q)], 1, false],
+	['quote, first line is the fence', (v) => [...CTR(v).map(q), '> after'], 0, false],
+	['nested callout', (v) => ['> [!note] Outer', '> > [!tip] Inner', ...CTR(v).map(qq)], 2, false],
+	['list item', (v) => ['- item', ...CTR(v).map(ind(2))], 1, false],
+	['footnote', (v) => ['[^1]: note', ...CTR(v).map(ind(4))], 1, false],
+];
+type Shape = 'heading hover' | 'block hover' | 'heading embed' | 'block embed' | 'whole-note hover';
+const SHAPES: Shape[] = ['heading hover', 'block hover', 'heading embed', 'block embed', 'whole-note hover'];
+type Edit = 'none' | 'own edited' | 'twin edited' | 'identical added';
+const EDITS: Edit[] = ['none', 'own edited', 'twin edited', 'identical added'];
+
+/** The note: an identical construct (the twin, B) above the `## Tracker` section that holds A. Block shapes carry ids (`^a` names A). */
+function noteOf(build: (v: number) => string[], plain: boolean, a: number, b: number, added: boolean, ids: boolean): { lines: string[]; aStart: number; bStart: number; cStart: number } {
+	const idLines = (id: string) => (!ids ? [] : plain ? [`^${id}`] : ['', `^${id}`]);
+	const lines = ['# N', ''];
+	let cStart = -1;
+	if (added) {
+		cStart = lines.length;
+		lines.push(...build(a === 9 ? 5 : a), '', 'p-added', '');
+	}
+	const bStart = lines.length;
+	lines.push(...build(b), ...idLines('b'), '', 'p-twin', '', '## Tracker', '');
+	const aStart = lines.length;
+	lines.push(...build(a), ...idLines('a'), '', '## After', '', 'END');
+	return { lines, aStart, bStart, cStart };
+}
+const pos = (line: number) => ({ line, col: 0, offset: 0 });
+function cacheFor(lines: string[], aStart: number, aEnd: number, bStart: number, bEnd: number) {
+	const headings: Array<{ heading: string; level: number; position: unknown }> = [];
+	lines.forEach((l, i) => {
+		const h = /^(#{1,6})\s+(.*)$/.exec(l);
+		if (h) headings.push({ heading: h[2], level: h[1].length, position: { start: pos(i), end: pos(i) } });
+	});
+	return { headings, blocks: { a: { id: 'a', position: { start: pos(aStart), end: pos(aEnd) } }, b: { id: 'b', position: { start: pos(bStart), end: pos(bEnd) } } } };
+}
+function popoverEl(): { popover: HTMLElement; el: HTMLElement } {
+	const popover = document.createElement('div');
+	popover.className = 'popover hover-popover';
+	const embed = popover.appendChild(document.createElement('div'));
+	embed.className = 'markdown-embed';
+	const el = embed.appendChild(document.createElement('div'));
+	document.body.appendChild(popover);
+	return { popover, el };
+}
+function embedEl(src: string, lp: boolean): HTMLElement {
+	const embed = document.createElement('div');
+	embed.className = 'internal-embed markdown-embed';
+	embed.setAttribute('src', src);
+	const el = embed.appendChild(document.createElement('div'));
+	if (lp) document.createElement('div').appendChild(embed).parentElement!.className = 'cm-embed-block';
+	return el;
+}
+const settle = () => new Promise((r) => setTimeout(r, 25));
+
+/** One cell. Returns 'A' (the clicked block), 'TWIN', 'ADDED', 'refused+Notice', 'refused (no Notice)'. */
+async function cell(cname: string, build: (v: number) => string[], off: number, plain: boolean, shape: Shape, hostKind: 'rv' | 'lp', edit: Edit, link = true): Promise<string> {
+	resetDroppedWriteNotices();
+	Notice.notices.length = 0;
+	resetLinks();
+	const ids = shape.startsWith('block');
+	const pre = noteOf(build, plain, 5, 5, false, ids);
+	const len = build(5).length;
+	const preText = pre.lines.join('\n');
+	const now = noteOf(build, plain, edit === 'own edited' ? 9 : 5, edit === 'twin edited' ? 9 : 5, edit === 'identical added', ids);
+	const nowText = now.lines.join('\n');
+	const app = new App();
+	app.vault.setFile('Note.md', nowText);
+	jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => cacheFor(now.lines, now.aStart, now.aStart + len - 1, now.bStart, now.bStart + len - 1) as never);
+	// the part Obsidian drew BEFORE the outside edit (the preview / embed is not redrawn yet)
+	const aLines = build(5);
+	let sec: Sec;
+	let el: HTMLElement;
+	let linktext: string | null = null;
+	const winStart = plain ? off : 0;
+	const winEnd = plain ? off + 3 : len - 1;
+	if (shape === 'heading hover') {
+		const part = ['', ...aLines, '', ''];
+		sec = { text: part.join('\n'), lineStart: 1 + winStart, lineEnd: 1 + winEnd };
+		linktext = 'Note#Tracker';
+	} else if (shape === 'block hover') {
+		sec = { text: aLines.join('\n'), lineStart: winStart, lineEnd: winEnd };
+		linktext = 'Note#^a';
+	} else if (shape === 'heading embed') {
+		const part = ['## Tracker', '', ...aLines, ''];
+		sec = { text: part.join('\n'), lineStart: 2 + winStart, lineEnd: 2 + winEnd };
+	} else if (shape === 'block embed') {
+		sec = { text: aLines.join('\n'), lineStart: winStart, lineEnd: winEnd };
+	} else {
+		sec = { text: preText, lineStart: pre.aStart + winStart, lineEnd: pre.aStart + winEnd };
+		linktext = 'Note';
+	}
+	let popover: HTMLElement | null = null;
+	if (shape.endsWith('hover')) {
+		const p = popoverEl();
+		popover = p.popover;
+		el = p.el;
+	} else el = embedEl(shape === 'heading embed' ? 'Note#Tracker' : 'Note#^a', hostKind === 'lp');
+	if (link && linktext && popover) noteLink({ linktext, sourcePath: 'Host.md', hoverParent: { hoverPopover: { hoverEl: popover } } });
+	const section: Section = { current: sec };
+	const host = new ReadingModeBlockHost(new Plugin(app) as never, el, switchableCtx(section) as never, 'ds-counter');
+	host.setMountedBody(bodyOf(5));
+	host.notePersistIntent();
+	await settle();
+	const wrote = await host.replaceSource(bodyOf(6), { fromView: true });
+	popover?.remove();
+	const after = app.vault.getContent('Note.md')!;
+	if (after === nowText) return Notice.notices.length ? 'refused+Notice' : 'refused (no Notice)';
+	const al = after.split('\n');
+	const valueAt = (start: number) => {
+		for (let i = start; i < start + len; i++) {
+			const m = /current_value: (\d+)/.exec(al[i] ?? '');
+			if (m) return Number(m[1]);
+		}
+		return -1;
+	};
+	const got: string[] = [];
+	if (valueAt(now.aStart) === 6) got.push('A');
+	if (valueAt(now.bStart) === 6) got.push('TWIN');
+	if (now.cStart >= 0 && valueAt(now.cStart) === 6) got.push('ADDED');
+	return `${got.join('+') || 'OTHER'}${wrote ? '' : '(false)'}${Notice.notices.length ? '+Notice' : ''}`;
+}
+
+describe('SC-594 r1 sweep', () => {
+	let warn: jest.SpyInstance;
+	beforeEach(() => {
+		warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+	});
+	afterEach(() => warn.mockRestore());
+	const cases = CONSTRUCTS.flatMap(([cname, build, off, plain]) =>
+		SHAPES.flatMap((shape) => (['rv', 'lp'] as const).flatMap((hostKind) => EDITS.map((edit) => ({ cname, build, off, plain, shape, hostKind, edit })))),
+	);
+	test.each(cases)('$cname | $shape | $hostKind | $edit', async ({ cname, build, off, plain, shape, hostKind, edit }) => {
+		const out = await cell(cname, build, off, plain, shape, hostKind, edit);
+		record(`${cname}|${shape}|${hostKind}|${edit}|${out}`);
+		expect(out).not.toMatch(/TWIN|ADDED/); // the invariant (recorded either way)
+	});
+	// the hover-link record absent (a popover the page preview did not open): what the rule falls back to
+	test.each(CONSTRUCTS.slice(0, 2).flatMap(([cname, build, off, plain]) => (['heading hover', 'block hover'] as const).map((shape) => ({ cname, build, off, plain, shape }))))(
+		'no hover-link record | $cname | $shape',
+		async ({ cname, build, off, plain, shape }) => {
+			const out = await cell(cname, build, off, plain, shape, 'rv', 'none', false);
+			record(`${cname}|${shape}|rv|none, NO hover-link record|${out}`);
+		},
+	);
+});
+
+// ---- named probes (the design's claims) ----
+describe('SC-594 r1 named probes', () => {
+	let warn: jest.SpyInstance;
+	beforeEach(() => {
+		resetDroppedWriteNotices();
+		Notice.notices.length = 0;
+		resetLinks();
+		warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+	});
+	afterEach(() => warn.mockRestore());
+	const para = (n: number, tag: string): string[] => Array.from({ length: n }, (_, i) => `${tag} ${i}`);
+	function cacheOfText(text: string, blocks: Record<string, [number, number]> = {}) {
+		const lines = text.split('\n');
+		const headings: Array<{ heading: string; level: number; position: unknown }> = [];
+		lines.forEach((l, i) => {
+			const h = /^(#{1,6})\s+(.*)$/.exec(l);
+			if (h) headings.push({ heading: h[2], level: h[1].length, position: { start: pos(i), end: pos(i) } });
+		});
+		const bl: Record<string, unknown> = {};
+		for (const [id, [s, e]] of Object.entries(blocks)) bl[id] = { id, position: { start: pos(s), end: pos(e) } };
+		return { headings, blocks: bl };
+	}
+	/** A hover preview card: `linktext` recorded for its popover (null: no record), the part `sec`, the note `disk`. */
+	function hovered(disk: string, sec: Sec, linktext: string | null, known = bodyOf(5), blocks: Record<string, [number, number]> = {}) {
+		const app = new App();
+		app.vault.setFile('Note.md', disk);
+		jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => cacheOfText(app.vault.getContent('Note.md')!, blocks) as never);
+		const { popover, el } = popoverEl();
+		if (linktext) noteLink({ linktext, sourcePath: 'Host.md', hoverParent: { hoverPopover: { hoverEl: popover } } });
+		const section: Section = { current: sec };
+		const host = new ReadingModeBlockHost(new Plugin(app) as never, el, switchableCtx(section) as never, 'ds-counter');
+		host.setMountedBody(known);
+		return { app, host, section, popover };
+	}
+	async function plus(host: ReadingModeBlockHost, to: string): Promise<boolean> {
+		host.notePersistIntent();
+		await settle();
+		return host.replaceSource(to, { fromView: true });
+	}
+	const vals = (app: App) => [...app.vault.getContent('Note.md')!.matchAll(/current_value: (\d+)/g)].map((m) => Number(m[1]));
+	const HPART = ['', ...CTR(5), '', ''];
+	const LONG = (a: number, b: number) => ['# N', '', ...para(120, 'above'), '', '## Tracker', '', ...CTR(a), '', '## After', '', ...para(40, 'mid'), '', '## Other', '', ...CTR(b), '', ...para(80, 'below')].join('\n');
+	const rec = (name: string, v: string) => record(`NAMED|${name}|-|-|${v}`);
+
+	test('T1 the ticket: [[long note#Tracker]] hover, an identical counter elsewhere: + lands in the hovered counter', async () => {
+		const { app, host } = hovered(LONG(5, 5), { text: HPART.join('\n'), lineStart: 1, lineEnd: 4 }, 'Note#Tracker');
+		const r = await plus(host, bodyOf(6));
+		rec('T1 ticket heading hover long', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+		expect(vals(app)).toEqual([6, 5]);
+	});
+	test('T2 the same in a SHORT note', async () => {
+		const disk = ['# N', '', 'TOP', '', '## Tracker', '', ...CTR(5), '', '## Other', '', 'mid', '', ...CTR(5), '', 'END'].join('\n');
+		const { app, host } = hovered(disk, { text: HPART.join('\n'), lineStart: 1, lineEnd: 4 }, 'Note#Tracker');
+		const r = await plus(host, bodyOf(6));
+		rec('T2 ticket heading hover short', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+		expect(vals(app)).toEqual([6, 5]);
+	});
+	test('T3 P14 (r2): [[Note#^a]] hover, + landed (known 6, part still 5), A edited to 9, B holds 6: never B', async () => {
+		const disk = ['# N', '', ...CTR(9), '^a', '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n');
+		const { app, host } = hovered(disk, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'Note#^a', bodyOf(6), { a: [2, 5], b: [10, 13] });
+		const r = await plus(host, bodyOf(7));
+		rec('T3 P14 block hover (record)', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+		expect(app.vault.getContent('Note.md')).toBe(disk);
+	});
+	test('T3b P14 with no hover-link record: never B', async () => {
+		const disk = ['# N', '', ...CTR(9), '^a', '', 'p', '', ...CTR(6), '^b', '', 'END'].join('\n');
+		const { app, host } = hovered(disk, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, null, bodyOf(6), { a: [2, 5], b: [10, 13] });
+		const r = await plus(host, bodyOf(7));
+		rec('T3b P14 block hover (no record)', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+		expect(app.vault.getContent('Note.md')).toBe(disk);
+	});
+	test('T3c P14 at click (no + before): [[Note#^a]] hover shows 5, A edited to 9 before the click, B holds 5: never B', async () => {
+		const disk = ['# N', '', ...CTR(9), '^a', '', 'p', '', ...CTR(5), '^b', '', 'END'].join('\n');
+		const { app, host } = hovered(disk, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'Note#^a', bodyOf(5), { a: [2, 5], b: [10, 13] });
+		const r = await plus(host, bodyOf(6));
+		rec('T3c block hover, own edited before click', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+		expect(app.vault.getContent('Note.md')).toBe(disk);
+	});
+	test('T4 heading hover, A edited to 9 before the click, B holds 5: never B', async () => {
+		const { app, host } = hovered(LONG(9, 5), { text: HPART.join('\n'), lineStart: 1, lineEnd: 4 }, 'Note#Tracker');
+		const r = await plus(host, bodyOf(6));
+		rec('T4 heading hover, own edited before click', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+		expect(vals(app)).toEqual([9, 5]);
+	});
+	test('T5 second + in the same preview, part still stale (ticket shape): lands in A again (the own-write record)', async () => {
+		const { app, host } = hovered(LONG(5, 5), { text: HPART.join('\n'), lineStart: 1, lineEnd: 4 }, 'Note#Tracker');
+		const r1 = await plus(host, bodyOf(6));
+		const r2 = await plus(host, bodyOf(7));
+		rec('T5 second + stale part', `${r1} ${r2} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+		expect(vals(app)).toEqual([7, 5]);
+	});
+	test('T5b second + after the preview was redrawn (part fresh): lands in A again', async () => {
+		const { app, host, section } = hovered(LONG(5, 5), { text: HPART.join('\n'), lineStart: 1, lineEnd: 4 }, 'Note#Tracker');
+		const r1 = await plus(host, bodyOf(6));
+		section.current = { text: ['', ...CTR(6), '', ''].join('\n'), lineStart: 1, lineEnd: 4 };
+		const r2 = await plus(host, bodyOf(7));
+		rec('T5b second + fresh part', `${r1} ${r2} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+		expect(vals(app)).toEqual([7, 5]);
+	});
+	test('T6 the + made A read like B (B holds 6), then a second + with the part stale: lands in A, never B', async () => {
+		const { app, host } = hovered(LONG(5, 6), { text: HPART.join('\n'), lineStart: 1, lineEnd: 4 }, 'Note#Tracker');
+		const r1 = await plus(host, bodyOf(6));
+		const r2 = await plus(host, bodyOf(7));
+		rec('T6 second + after A reads like B', `${r1} ${r2} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+		expect(vals(app)).toEqual([7, 6]);
+	});
+	test('T6b the same, A edited from outside between the two +: never B', async () => {
+		const { app, host } = hovered(LONG(5, 6), { text: HPART.join('\n'), lineStart: 1, lineEnd: 4 }, 'Note#Tracker');
+		await plus(host, bodyOf(6));
+		const outside = app.vault.getContent('Note.md')!.replace('current_value: 6', 'current_value: 9');
+		app.vault.setFile('Note.md', outside);
+		const r2 = await plus(host, bodyOf(7));
+		rec('T6b second + after outside edit of A', `${r2} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+		expect(app.vault.getContent('Note.md')).toBe(outside);
+	});
+	test('T7 a repeated heading name, the body unique: + lands in the first section (the one the link names)', async () => {
+		const disk = ['# N', '', '## Tracker', '', ...CTR(5), '', '## Mid', '', 'x', '', '## Tracker', '', ...CTR(3), '', 'END'].join('\n');
+		const { app, host } = hovered(disk, { text: HPART.join('\n'), lineStart: 1, lineEnd: 4 }, 'Note#Tracker');
+		const r = await plus(host, bodyOf(6));
+		rec('T7 repeated heading, unique body', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+		expect(vals(app)).toEqual([6, 3]);
+	});
+	test('T8 an identical "## Tracker" section inserted ABOVE before the click (B a twin elsewhere): never the inserted one', async () => {
+		const pre = LONG(5, 5);
+		const outside = pre.replace('# N\n\n', '# N\n\n## Tracker\n\n' + CTR(5).join('\n') + '\n\n## Pasted\n\n');
+		const { app, host } = hovered(outside, { text: HPART.join('\n'), lineStart: 1, lineEnd: 4 }, 'Note#Tracker');
+		const r = await plus(host, bodyOf(6));
+		rec('T8 same-name section inserted above', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+		expect(vals(app)[0]).toBe(5);
+	});
+	test('T9 two previews open, the card in the second: its own popover\'s link is used', async () => {
+		const disk = LONG(5, 5);
+		const other = popoverEl();
+		noteLink({ linktext: 'Note#Other', sourcePath: 'Host.md', hoverParent: { hoverPopover: { hoverEl: other.popover } } });
+		const { app, host } = hovered(disk, { text: HPART.join('\n'), lineStart: 1, lineEnd: 4 }, 'Note#Tracker');
+		noteLink({ linktext: 'Note#Other', sourcePath: 'Host.md', hoverParent: { hoverPopover: { hoverEl: other.popover } } }); // newest event is for the OTHER popover
+		const r = await plus(host, bodyOf(6));
+		other.popover.remove();
+		rec('T9 two popovers', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+		expect(vals(app)).toEqual([6, 5]);
+	});
+	test('T10 a hover-link record whose parent now shows ANOTHER popover (the card\'s popover was replaced): refused', async () => {
+		const disk = LONG(5, 5);
+		const { app, host } = hovered(disk, { text: HPART.join('\n'), lineStart: 1, lineEnd: 4 }, null);
+		const elsewhere = popoverEl();
+		noteLink({ linktext: 'Note#Tracker', sourcePath: 'Host.md', hoverParent: { hoverPopover: { hoverEl: elsewhere.popover } } });
+		const r = await plus(host, bodyOf(6));
+		elsewhere.popover.remove();
+		rec('T10 record of another popover', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+		expect(vals(app)).toEqual([5, 5]);
+	});
+	test('T11 an RV heading embed ![[Note#Tracker]], repeated heading name, unique body: lands (no regression)', async () => {
+		const disk = ['# N', '', '## Tracker', '', ...CTR(5), '', '## Mid', '', 'x', '', '## Tracker', '', ...CTR(3), '', 'END'].join('\n');
+		const app = new App();
+		app.vault.setFile('Note.md', disk);
+		jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => cacheOfText(disk) as never);
+		const sec: Section = { current: { text: ['## Tracker', '', ...CTR(5), ''].join('\n'), lineStart: 2, lineEnd: 5 } };
+		const host = new ReadingModeBlockHost(new Plugin(app) as never, embedEl('Note#Tracker', false), switchableCtx(sec) as never, 'ds-counter');
+		host.setMountedBody(bodyOf(5));
+		const r = await plus(host, bodyOf(6));
+		rec('T11 RV heading embed repeated heading', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+		expect(vals(app)).toEqual([6, 3]);
+	});
+	test('T13 the part holds A and B separated by blank lines only; A deleted from outside before the click (B moves onto A\'s line): never B', async () => {
+		const disk0 = ['# N', '', '## Tracker', '', ...CTR(5), '', ...CTR(5), '', '## After', '', 'END'];
+		const part = ['', ...CTR(5), '', ...CTR(5), '', ''];
+		const outside = ['# N', '', '## Tracker', '', ...CTR(5), '', '## After', '', 'END'].join('\n');
+		const { app, host } = hovered(outside, { text: part.join('\n'), lineStart: 1, lineEnd: 4 }, 'Note#Tracker');
+		void disk0;
+		const r = await plus(host, bodyOf(6));
+		rec('T13 A deleted, B moved onto its line', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+		expect(app.vault.getContent('Note.md')).toBe(outside);
+	});
+	test('T14 the write comes at once after the click (an unload flush, no 400 ms debounce): the card pin is placed before the write', async () => {
+		const { app, host } = hovered(LONG(5, 5), { text: HPART.join('\n'), lineStart: 1, lineEnd: 4 }, 'Note#Tracker');
+		host.notePersistIntent();
+		const r = await host.replaceSource(bodyOf(6), { fromView: true });
+		rec('T14 immediate flush', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+		expect(vals(app)).toEqual([6, 5]);
+	});
+	test('T15 [[Note#^a]] hover, the cache lags and points ^a at the twin B (which carries ^b): never B', async () => {
+		const disk = ['# N', '', ...CTR(5), '^a', '', 'p', '', ...CTR(5), '^b', '', 'END'].join('\n');
+		const { app, host } = hovered(disk, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'Note#^a', bodyOf(5), { a: [10, 13], b: [10, 13] });
+		const r = await plus(host, bodyOf(6));
+		rec('T15 cache points ^a at B', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+		expect(vals(app)).toEqual([5, 5]);
+	});
+	test('T16 a callout counter under ## Tracker, an identical callout elsewhere already reading 6: +, then a second + with the window still stale: lands in A both times', async () => {
+		const CAL = (n: number) => ['> [!note] Camp', ...CTR(n).map(q)];
+		const disk = ['# N', '', 'TOP', '', ...CAL(6), '', 'p', '', '## Tracker', '', ...CAL(5), '', '## After', '', 'END'].join('\n');
+		const part = ['', ...CAL(5), '', ''];
+		const { app, host } = hovered(disk, { text: part.join('\n'), lineStart: 1, lineEnd: 5 }, 'Note#Tracker');
+		const r1 = await plus(host, bodyOf(6));
+		const r2 = await plus(host, bodyOf(7));
+		rec('T16 callout, second + stale window', `${r1} ${r2} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+		expect(vals(app)).toEqual([6, 7]);
+	});
+	test('T12 a whole-note hover [[Note]], an identical counter added from outside before the click: lands in A, never the added one', async () => {
+		const pre = ['# N', '', 'TOP', '', ...CTR(5), '', 'END'];
+		const outside = ['# N', '', ...CTR(5), '', 'added', '', 'TOP', '', ...CTR(5), '', 'END'].join('\n');
+		const { app, host } = hovered(outside, { text: pre.join('\n'), lineStart: 4, lineEnd: 7 }, 'Note');
+		const r = await plus(host, bodyOf(6));
+		rec('T12 whole-note hover, identical added', `${r} ${JSON.stringify(vals(app))} notices ${Notice.notices.length}`);
+		expect(vals(app)).toEqual([5, 6]);
+	});
+});

@@ -1,0 +1,2399 @@
+Running one project: dom
+FAIL dom test/dom/framework/plugin-wiring.test.ts
+  ● Console
+
+    console.warn
+      Draw Steel Elements: failed to register framework dependency schema "bad-schema"; continuing without it. YAMLParseError: Nested mappings are not allowed in compact mappings at line 1, column 6:
+      
+      not: valid: yaml: [
+           ^
+      
+          at Composer.onError (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/yaml/dist/compose/composer.js:70:34)
+          at Object.resolveBlockMap (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/yaml/dist/compose/resolve-block-map.js:78:21)
+          at resolveCollection (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/yaml/dist/compose/compose-collection.js:13:27)
+          at Object.composeCollection (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/yaml/dist/compose/compose-collection.js:59:16)
+          at Object.composeNode (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/yaml/dist/compose/compose-node.js:34:42)
+          at Object.composeDoc (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/yaml/dist/compose/compose-doc.js:35:23)
+          at Composer.next (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/yaml/dist/compose/composer.js:152:40)
+          at next (<anonymous>)
+          at Composer.compose (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/yaml/dist/compose/composer.js:134:25)
+          at compose.next (<anonymous>)
+          at parseDocument (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/yaml/dist/public-api.js:46:16)
+          at parse (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/yaml/dist/public-api.js:68:17)
+          at parseYaml (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/test/mocks/obsidian-core.ts:28:14)
+          at AjvValidationService.addDependencySchema (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/src/framework/validation.ts:59:27)
+          at initializeElementFrameworkV2 (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/main.ts:239:15)
+          at /home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/test/dom/framework/plugin-wiring.test.ts:187:33
+          at Object.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/expect/build/index.js:1824:9)
+          at Object.throwingMatcher [as toThrow] (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/expect/build/index.js:2235:93)
+          at Object.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/test/dom/framework/plugin-wiring.test.ts:190:10)
+          at Promise.finally.completed (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/jest-circus/build/jestAdapterInit.js:1561:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/jest-circus/build/jestAdapterInit.js:1501:10)
+          at _callCircusTest (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/jest-circus/build/jestAdapterInit.js:1011:40)
+          at processTicksAndRejections (node:internal/process/task_queues:103:5)
+          at _runTest (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/jest-circus/build/jestAdapterInit.js:951:3)
+          at /home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/jest-circus/build/jestAdapterInit.js:853:7
+          at _runTestsForDescribeBlock (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/jest-circus/build/jestAdapterInit.js:866:11)
+          at _runTestsForDescribeBlock (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/jest-circus/build/jestAdapterInit.js:861:11)
+          at _runTestsForDescribeBlock (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/jest-circus/build/jestAdapterInit.js:861:11)
+          at run (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/jest-circus/build/jestAdapterInit.js:765:3)
+          at runAndTransformResultsToJestFormat (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/jest-circus/build/jestAdapterInit.js:1993:21)
+          at jestAdapter (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/jest-circus/build/runner.js:111:19)
+          at runTestInternal (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/jest-runner/build/testWorker.js:276:16)
+          at runTest (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/jest-runner/build/testWorker.js:344:7)
+          at Object.worker (/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/node_modules/jest-runner/build/testWorker.js:498:12) {
+        code: 'BLOCK_AS_IMPLICIT_KEY',
+        pos: [ 5, 6 ],
+        linePos: [ { line: 1, col: 6 }, { line: 1, col: 7 } ]
+      }
+
+      239 | 			validation.addDependencySchema(id, schema);
+      240 | 		} catch (error) {
+    > 241 | 			console.warn(
+          | 			        ^
+      242 | 				`Draw Steel Elements: failed to register framework dependency schema "${id}"; continuing without it.`,
+      243 | 				error,
+      244 | 			);
+
+      at initializeElementFrameworkV2 (main.ts:241:12)
+      at test/dom/framework/plugin-wiring.test.ts:187:33
+      at Object.<anonymous> (node_modules/expect/build/index.js:1824:9)
+      at Object.throwingMatcher [as toThrow] (node_modules/expect/build/index.js:2235:93)
+      at Object.<anonymous> (test/dom/framework/plugin-wiring.test.ts:190:10)
+
+  ● T-10: main.ts framework v2 wiring (F1 §2.3 / §5) › onload() registers a hover-link listener that records the link of the preview a card is drawn in
+
+    expect(received).toBeDefined()
+
+    Received: undefined
+
+      154 |
+      155 | 		const registered = on.mock.calls.find((call) => call[0] === 'hover-link');
+    > 156 | 		expect(registered).toBeDefined();
+          | 		                   ^
+      157 | 		const popover = document.createElement('div');
+      158 | 		popover.className = 'popover hover-popover';
+      159 | 		const card = popover.appendChild(document.createElement('div'));
+
+      at Object.<anonymous> (test/dom/framework/plugin-wiring.test.ts:156:22)
+
+FAIL dom test/dom/framework/reading-mode-host-pin.test.ts
+  ● SC-556 r6: an embedded block's pin is rebased by the embed's link › SC-584: a form opened right after the + on a card in a hover preview or an embed › a card (+/-) write's pin uses the host's last write when the part is stale: a second + lands in the block the first + was pressed on, never in the block that now reads the same
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1139 | 			await settle();
+      1140 |
+    > 1141 | 			expect(await host.replaceSource(bodyOf(7), { fromView: true })).toBe(true); // before the card write never used the record and was refused
+           | 			                                                                ^
+      1142 | 			expect(values(app)).toEqual([6, 7]);
+      1143 | 			expect(Notice.notices).toEqual([]);
+      1144 | 		});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:1141:68)
+
+FAIL dom test/dom/framework/reading-mode-host-hover-card.test.ts (8.768 s)
+  ● a hover preview card write with an identical counter elsewhere in the note › J1 the ticket: [[long note#Tracker]] hover, an identical counter under another heading: the + lands in the hovered counter
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      108 | 		const { app, host } = hovered(LONG(5, 5), heading, 'Note#Tracker');
+      109 |
+    > 110 | 		expect(await plus(host, bodyOf(6))).toBe(true);
+          | 		                                    ^
+      111 | 		expect(valuesOf(app)).toEqual([6, 5]);
+      112 | 		expect(Notice.notices).toEqual([]);
+      113 | 	});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:110:39)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › J1 the same in a short note
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      117 | 		const { app, host } = hovered(disk, heading, 'Note#Tracker');
+      118 |
+    > 119 | 		expect(await plus(host, bodyOf(6))).toBe(true);
+          | 		                                    ^
+      120 | 		expect(valuesOf(app)).toEqual([6, 5]);
+      121 | 	});
+      122 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:119:39)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › J2 a block hover [[Note#^a]] whose identical block carries another id, nothing edited: the + lands in the hovered block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      125 | 		const { app, host } = hovered(disk, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'Note#^a', bodyOf(5), { a: [2, 5], b: [10, 13] });
+      126 |
+    > 127 | 		expect(await plus(host, bodyOf(6))).toBe(true);
+          | 		                                    ^
+      128 | 		expect(valuesOf(app)).toEqual([6, 5]);
+      129 | 	});
+      130 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:127:39)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › J3 a block hover, the + landed (the part still shows 5), then the hovered block is edited from outside while the identical block holds what the + made: the next + writes nothing
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      133 | 		const { app, host } = hovered(disk, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'Note#^a', bodyOf(6), { a: [2, 5], b: [10, 13] });
+      134 |
+    > 135 | 		expect(await plus(host, bodyOf(7))).toBe(false);
+          | 		                                    ^
+      136 | 		refused(app, disk);
+      137 | 	});
+      138 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:135:39)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › J3 the same with no hover-link record for the preview: nothing is written
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      141 | 		const { app, host } = hovered(disk, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, null, bodyOf(6), { a: [2, 5], b: [10, 13] });
+      142 |
+    > 143 | 		expect(await plus(host, bodyOf(7))).toBe(false);
+          | 		                                    ^
+      144 | 		refused(app, disk);
+      145 | 	});
+      146 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:143:39)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › J3 a block hover, the hovered block edited from outside before the click (no + before it), an identical block holding the old value: nothing is written
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      149 | 		const { app, host } = hovered(disk, { text: CTR(5).join('\n'), lineStart: 0, lineEnd: 3 }, 'Note#^a', bodyOf(5), { a: [2, 5], b: [10, 13] });
+      150 |
+    > 151 | 		expect(await plus(host, bodyOf(6))).toBe(false);
+          | 		                                    ^
+      152 | 		refused(app, disk);
+      153 | 	});
+      154 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:151:39)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › J4 a heading hover, the hovered counter edited from outside before the click, the identical one under another heading holding the old value: nothing is written
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      156 | 		const { app, host } = hovered(LONG(9, 5), heading, 'Note#Tracker');
+      157 |
+    > 158 | 		expect(await plus(host, bodyOf(6))).toBe(false);
+          | 		                                    ^
+      159 | 		refused(app, LONG(9, 5));
+      160 | 	});
+      161 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:158:39)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › J5 a second + in the same heading hover while its part still shows the old value (the ticket's shape): it lands in the hovered counter again
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      163 | 		const { app, host } = hovered(LONG(5, 5), heading, 'Note#Tracker');
+      164 |
+    > 165 | 		expect(await plus(host, bodyOf(6))).toBe(true);
+          | 		                                    ^
+      166 | 		expect(await plus(host, bodyOf(7))).toBe(true);
+      167 | 		expect(valuesOf(app)).toEqual([7, 5]);
+      168 | 		expect(Notice.notices).toEqual([]);
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:165:39)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › J5 the second + after the preview was redrawn (its part shows the new value): it lands in the hovered counter
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      174 | 		section.current = { text: ['', ...CTR(6), '', ''].join('\n'), lineStart: 1, lineEnd: 4 };
+      175 |
+    > 176 | 		expect(await plus(host, bodyOf(7))).toBe(true);
+          | 		                                    ^
+      177 | 		expect(valuesOf(app)).toEqual([7, 5]);
+      178 | 	});
+      179 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:176:39)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › J6 the + made the hovered counter read like the identical one (it holds 6): the second + still lands in the hovered counter
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      182 |
+      183 | 		expect(await plus(host, bodyOf(6))).toBe(true);
+    > 184 | 		expect(await plus(host, bodyOf(7))).toBe(true);
+          | 		                                    ^
+      185 | 		expect(valuesOf(app)).toEqual([7, 6]);
+      186 | 	});
+      187 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:184:39)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › J6 the hovered counter edited from outside between the two +: the second writes nothing
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      192 | 		app.vault.setFile('Note.md', outside);
+      193 |
+    > 194 | 		expect(await plus(host, bodyOf(7))).toBe(false);
+          | 		                                    ^
+      195 | 		refused(app, outside);
+      196 | 	});
+      197 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:194:39)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › J9 two previews open, the card in the second, the newest event is the first one's: the card uses its own preview's link
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      226 | 		host.setMountedBody(bodyOf(5));
+      227 |
+    > 228 | 		expect(await plus(host, bodyOf(6))).toBe(true);
+          | 		                                    ^
+      229 | 		expect(valuesOf(app)).toEqual([6, 5]);
+      230 | 	});
+      231 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:228:39)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › J12 a whole-note hover [[Note]], an identical counter added above before the click: the + lands in the hovered counter, not the added one
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      258 | 		const { app, host } = hovered(outside, { text: pre.join('\n'), lineStart: 4, lineEnd: 7 }, 'Note');
+      259 |
+    > 260 | 		expect(await plus(host, bodyOf(6))).toBe(true);
+          | 		                                    ^
+      261 | 		expect(valuesOf(app)).toEqual([5, 6]);
+      262 | 	});
+      263 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:260:39)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › J14 the write comes at once after the click (an unload flush, no debounce): the card's pin is placed before the write
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      275 | 		host.notePersistIntent();
+      276 |
+    > 277 | 		expect(await host.replaceSource(bodyOf(6), { fromView: true })).toBe(true);
+          | 		                                                                ^
+      278 | 		expect(valuesOf(app)).toEqual([6, 5]);
+      279 | 	});
+      280 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:277:67)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › J16 a callout under the heading and an identical callout above it already reading 6: a + and a second + with the window still stale both land in the hovered callout
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   6,
+        7,
+    +   6,
+      ]
+
+      294 | 		expect(await plus(host, bodyOf(6))).toBe(true);
+      295 | 		expect(await plus(host, bodyOf(7))).toBe(true);
+    > 296 | 		expect(valuesOf(app)).toEqual([6, 7]);
+          | 		                      ^
+      297 | 	});
+      298 |
+      299 | 	describe('the link is bound to the preview once', () => {
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:296:25)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › the link is bound to the preview once › J17 the pointer passes over another link on the same parent while the preview is open (an event for a heading with the identical body, its preview never opens), then the +: it lands in the hovered counter
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      306 | 			noteHoverLink(app, hoverEvent('Note#Other', popover));
+      307 |
+    > 308 | 			expect(await plus(host, bodyOf(6))).toBe(true);
+          | 			                                    ^
+      309 | 			expect(valuesOf(app)).toEqual([6, 5]);
+      310 | 			expect(Notice.notices).toEqual([]);
+      311 | 		});
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:308:40)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › the link is bound to the preview once › J17 the same pass-over after the first + (its link already looked up), the part redrawn with the new value, the identical counter holding it too: the second + lands in the hovered counter
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      318 | 			noteHoverLink(app, hoverEvent('Note#Other', popover));
+      319 |
+    > 320 | 			expect(await plus(host, bodyOf(7))).toBe(true);
+          | 			                                    ^
+      321 | 			expect(valuesOf(app)).toEqual([7, 6]);
+      322 | 		});
+      323 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-hover-card.test.ts:320:40)
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: plain fence | heading hover | rv | none
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: plain fence | heading hover | rv | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: plain fence | heading hover | rv | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: plain fence | heading hover | lp | none
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: plain fence | heading hover | lp | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: plain fence | heading hover | lp | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: plain fence | block hover | rv | none
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: plain fence | block hover | rv | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: plain fence | block hover | rv | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: plain fence | block hover | lp | none
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: plain fence | block hover | lp | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: plain fence | block hover | lp | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: plain fence | heading embed | rv | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: plain fence | heading embed | lp | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: plain fence | block embed | rv | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: plain fence | block embed | lp | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: plain fence | whole-note hover | rv | twin edited
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: plain fence | whole-note hover | rv | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: plain fence | whole-note hover | lp | twin edited
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: plain fence | whole-note hover | lp | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: callout | heading hover | rv | none
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: callout | heading hover | rv | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: callout | heading hover | rv | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: callout | heading hover | lp | none
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: callout | heading hover | lp | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: callout | heading hover | lp | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: callout | block hover | rv | none
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: callout | block hover | rv | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: callout | block hover | rv | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: callout | block hover | lp | none
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: callout | block hover | lp | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: callout | block hover | lp | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: callout | heading embed | rv | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: callout | heading embed | lp | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: callout | block embed | rv | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: callout | block embed | lp | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: callout | whole-note hover | rv | twin edited
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: callout | whole-note hover | rv | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: callout | whole-note hover | lp | twin edited
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: callout | whole-note hover | lp | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: header-less quote | heading hover | rv | none
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: header-less quote | heading hover | rv | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: header-less quote | heading hover | rv | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: header-less quote | heading hover | lp | none
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: header-less quote | heading hover | lp | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: header-less quote | heading hover | lp | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: header-less quote | block hover | rv | none
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: header-less quote | block hover | rv | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: header-less quote | block hover | rv | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: header-less quote | block hover | lp | none
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: header-less quote | block hover | lp | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: header-less quote | block hover | lp | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: header-less quote | heading embed | rv | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: header-less quote | heading embed | lp | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: header-less quote | block embed | rv | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: header-less quote | block embed | lp | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: header-less quote | whole-note hover | rv | twin edited
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: header-less quote | whole-note hover | rv | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: header-less quote | whole-note hover | lp | twin edited
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: header-less quote | whole-note hover | lp | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: quote, first line is the fence | heading hover | rv | none
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: quote, first line is the fence | heading hover | rv | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: quote, first line is the fence | heading hover | rv | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: quote, first line is the fence | heading hover | lp | none
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: quote, first line is the fence | heading hover | lp | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: quote, first line is the fence | heading hover | lp | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: quote, first line is the fence | block hover | rv | none
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: quote, first line is the fence | block hover | rv | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: quote, first line is the fence | block hover | rv | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: quote, first line is the fence | block hover | lp | none
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: quote, first line is the fence | block hover | lp | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: quote, first line is the fence | block hover | lp | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: quote, first line is the fence | heading embed | rv | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: quote, first line is the fence | heading embed | lp | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: quote, first line is the fence | block embed | rv | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: quote, first line is the fence | block embed | lp | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: quote, first line is the fence | whole-note hover | rv | twin edited
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: quote, first line is the fence | whole-note hover | rv | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: quote, first line is the fence | whole-note hover | lp | twin edited
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: quote, first line is the fence | whole-note hover | lp | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: nested callout | heading hover | rv | none
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: nested callout | heading hover | rv | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: nested callout | heading hover | rv | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: nested callout | heading hover | lp | none
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: nested callout | heading hover | lp | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: nested callout | heading hover | lp | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: nested callout | block hover | rv | none
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: nested callout | block hover | rv | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: nested callout | block hover | rv | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: nested callout | block hover | lp | none
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: nested callout | block hover | lp | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: nested callout | block hover | lp | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: nested callout | heading embed | rv | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: nested callout | heading embed | lp | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: nested callout | block embed | rv | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: nested callout | block embed | lp | own edited
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "TWIN"
+    Received array:     ["TWIN"]
+
+      450 | 		const out = await sweepCell(build, off, plain, shape, host === 'lp', edit);
+      451 |
+    > 452 | 		expect(out.landed).not.toContain('TWIN');
+          | 		                       ^
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+      455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:452:26
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: nested callout | whole-note hover | rv | twin edited
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: nested callout | whole-note hover | rv | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: nested callout | whole-note hover | lp | twin edited
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+  ● a hover preview card write with an identical counter elsewhere in the note › sweep: nested callout | whole-note hover | lp | identical added
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "A",
+    - ]
+    + Array []
+
+      453 | 		expect(out.landed).not.toContain('ADDED');
+      454 | 		const refusedCell = edit === 'own edited' || cname === 'list item' || cname === 'footnote';
+    > 455 | 		expect(out.landed).toEqual(refusedCell ? [] : ['A']);
+          | 		                   ^
+      456 | 		expect(out.notices).toBe(refusedCell ? 1 : 0);
+      457 | 	});
+      458 | });
+
+      at test/dom/framework/reading-mode-host-hover-card.test.ts:455:22
+
+Test Suites: 3 failed, 3 total
+Tests:       119 failed, 354 passed, 473 total
+Snapshots:   0 total
+Time:        10.214 s
+Ran all test suites matching test/dom/framework/reading-mode-host-hover-card.test.ts|test/dom/framework/reading-mode-host-pin.test.ts|test/dom/framework/plugin-wiring.test.ts.

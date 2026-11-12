@@ -1,0 +1,312 @@
+	{
+		// SC-594 r3 reviewer probe (scratch harness copy only; never committed).
+		id: 'P594R3',
+		async run(t) {
+			const J = JSON.stringify;
+			const K = gs83Kit(t);
+			const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+			const ONLY_TRIALS = (process.env.R3_TRIALS ?? 'T1rv,T1lp,T3up,T3low,T4,T5').split(',');
+			await t.ev(`(() => { if (!document.getElementById('lc-r3-notice')) { const st = document.createElement('style'); st.id = 'lc-r3-notice'; st.textContent = '.notice-container { opacity: 0 !important; pointer-events: none !important; }'; document.head.appendChild(st); } return true; })()`);
+			await t.ev(`${prefs}.set('authoringControls', true)`);
+			const INSTALL = `(() => { window.__r3ev = []; window.__r3n = window.__r3n || 0;
+  if (!window.__r3hook) { window.__r3hook = true; app.workspace.on('hover-link', (ev) => { const p = ev.hoverParent && ev.hoverParent.hoverPopover; const el = p && p.hoverEl; if (el && !el.dataset.r3) el.dataset.r3 = 'p' + (++window.__r3n); (window.__r3ev = window.__r3ev || []).push({ t: Math.round(performance.now()), linktext: ev.linktext, source: ev.source, pop: el ? el.dataset.r3 : null, popConnected: el ? el.isConnected : null, popShown: el ? getComputedStyle(el).display : null }); }); }
+  return true; })()`;
+			const vals = (src) => (t.read(src).match(/^[> ]*current_value: (\d+)$/gm) ?? []).map((x) => Number(x.replace(/^[> ]*current_value: /, '')));
+			const LINK = (mode, word) =>
+				mode === 'lp'
+					? `Array.from(document.querySelectorAll('.workspace-leaf.mod-active .cm-content .cm-hmd-internal-link')).find((a) => a.textContent.includes(${J(word)}))`
+					: `Array.from(document.querySelectorAll('.workspace-leaf.mod-active .markdown-reading-view a.internal-link')).find((a) => (a.getAttribute('data-href') || '').includes(${J(word)}))`;
+			const POPS = `Array.from(document.querySelectorAll('.popover.hover-popover'))`;
+			const popWith = (word) => `${POPS}.find((p) => Array.from(p.querySelectorAll('h1,h2,h3')).some((h) => h.textContent.includes(${J(word)})) && p.querySelector('[data-dse-element]'))`;
+			const cardsIn = (popExpr) => `Array.from((${popExpr}).querySelectorAll('.block-language-ds-counter'))`;
+			const stats = `({ ...app.plugins.plugins['draw-steel-elements'].viewRegistry.stats })`;
+			const out = [];
+			const log = (rec) => {
+				console.log('P594R3-REC ' + J(rec));
+				out.push(rec.trial);
+			};
+			const waitVals = async (src, before, ms = 3000) => {
+				const t0 = Date.now();
+				while (Date.now() - t0 < ms && t.read(src) === before) await t.sleep(50);
+				await t.sleep(1200);
+			};
+
+			// T1: hover X, then hover Y (X's preview open) until Y's preview opens; + in Y. Both headings hold the identical counter.
+			const t1 = async (id, mode) => {
+				const SRC = `Lifecycle/p594r3-${id}-src.md`;
+				const HOST = `Lifecycle/p594r3-${id}-host.md`;
+				const rec = { trial: `T1 X then Y ${mode}` };
+				try {
+					await t.reset(SRC);
+					await t.reset(HOST);
+					await t.ev(INSTALL);
+					await K.openHost(HOST, mode);
+					rec.hoverX = await K.hover(LINK(mode, 'Tracker'), SRC);
+					await t.waitFor(`!!${popWith('Tracker')}`, 'X preview', 6000);
+					await t.sleep(500);
+					rec.evAfterX = await t.ev('window.__r3ev');
+					await K.moveTo(LINK(mode, 'Other'), 2);
+					const t0 = Date.now();
+					while (!(await t.ev(`!!${popWith('Other')}`))) {
+						if (Date.now() - t0 > 6000) throw new Error('Y preview never opened');
+						await K.mouse('mouseMoved', ...(await t.ev(`(() => { const r = (${LINK(mode, 'Other')}).getBoundingClientRect(); return [Math.round(r.left + 10 + (Date.now() / 50) % 3), Math.round(r.top + r.height / 2)]; })()`)), { modifiers: 2 });
+						await t.sleep(100);
+					}
+					await t.sleep(500);
+					rec.ev = await t.ev('window.__r3ev');
+					rec.pops = await t.ev(`${POPS}.map((p) => ({ tag: p.dataset.r3 || null, heading: (p.querySelector('h2') || {}).textContent || null, shown: getComputedStyle(p).display, connected: p.isConnected }))`);
+					const before = t.read(SRC);
+					const mk = await t.mark();
+					await K.moveTo(`(${cardsIn(popWith('Other'))})[0]`);
+					await t.sleep(250);
+					await K.click(`(${cardsIn(popWith('Other'))})[0].querySelector('button[aria-label^="Increase"]')`);
+					await waitVals(SRC, before);
+					rec.after = vals(SRC);
+					rec.want = [5, 6];
+					rec.notices = (await t.noticesSince(mk)).length;
+				} catch (e) {
+					rec.error = e.message;
+				} finally {
+					await K.cleanup();
+				}
+				log(rec);
+			};
+
+			// T3: a callout under ## Tracker with two counters (upper 6, lower 5); + on the LOWER, wait for the redraw, then + on `second` (0 upper, 1 lower).
+			const t3 = async (id, second) => {
+				const SRC = `Lifecycle/p594r3-${id}-src.md`;
+				const HOST = `Lifecycle/p594r3-${id}-host.md`;
+				const rec = { trial: `T3 callout two counters, + lower then + ${second === 0 ? 'UPPER' : 'lower'}` };
+				try {
+					await t.reset(SRC);
+					await t.reset(HOST);
+					await t.ev(INSTALL);
+					await K.openHost(HOST, 'rv');
+					rec.hover = await K.hover(LINK('rv', 'Tracker'), SRC);
+					const POP = popWith('Tracker');
+					await t.waitFor(`(${cardsIn(POP)}).length === 2 && (${cardsIn(POP)}).every((c) => c.querySelector('button[aria-label^="Increase"]'))`, 'two cards', 6000);
+					await t.sleep(400);
+					rec.statsBefore = await t.ev(stats);
+					await t.ev(`(() => { (${cardsIn(POP)})[1].querySelector('[data-dse-element]').dataset.r3root = 'H'; (${cardsIn(POP)})[0].querySelector('[data-dse-element]').dataset.r3root = 'U'; return true; })()`);
+					rec.before = vals(SRC);
+					let before = t.read(SRC);
+					const mk = await t.mark();
+					await K.moveTo(`(${cardsIn(POP)})[1]`);
+					await t.sleep(200);
+					await K.click(`(${cardsIn(POP)})[1].querySelector('button[aria-label^="Increase"]')`);
+					await waitVals(SRC, before);
+					await t.sleep(800);
+					rec.afterFirst = vals(SRC);
+					rec.statsMid = await t.ev(stats);
+					rec.rootsAfterRedraw = await t.ev(`(${cardsIn(POP)}).map((c) => { const r = c.querySelector('[data-dse-element]'); return r ? (r.dataset.r3root || 'fresh') : 'none'; })`);
+					before = t.read(SRC);
+					await t.waitFor(`(${cardsIn(POP)}).length === 2 && (${cardsIn(POP)}).every((c) => c.querySelector('button[aria-label^="Increase"]'))`, 'two cards again', 6000);
+					await K.moveTo(`(${cardsIn(POP)})[${second}]`);
+					await t.sleep(200);
+					rec.clickedRoot = await t.ev(`(() => { const r = (${cardsIn(POP)})[${second}].querySelector('[data-dse-element]'); return r ? (r.dataset.r3root || 'fresh') : 'none'; })()`);
+					rec.shownBeforeSecond = await t.ev(`(${cardsIn(POP)}).map((c) => (c.textContent.match(/\\d+/g) || []).slice(0, 3).join('/'))`);
+					await K.click(`(${cardsIn(POP)})[${second}].querySelector('button[aria-label^="Increase"]')`);
+					await waitVals(SRC, before);
+					rec.after = vals(SRC);
+					rec.want = second === 0 ? [7, 6] : [6, 7];
+					rec.statsAfter = await t.ev(stats);
+					rec.notices = (await t.noticesSince(mk)).length;
+				} catch (e) {
+					rec.error = e.message;
+				} finally {
+					await K.cleanup();
+				}
+				log(rec);
+			};
+
+			// T4: Live Preview, hover X WITHOUT Ctrl (no preview), then press Ctrl on the link: the preview opens; + in it.
+			const t4 = async (id) => {
+				const SRC = `Lifecycle/p594r3-${id}-src.md`;
+				const HOST = `Lifecycle/p594r3-${id}-host.md`;
+				const rec = { trial: 'T4 LP hover then Ctrl key' };
+				try {
+					await t.reset(SRC);
+					await t.reset(HOST);
+					await t.ev(INSTALL);
+					await K.openHost(HOST, 'lp');
+					await K.mouse('mouseMoved', 5, 5);
+					await t.sleep(200);
+					await K.moveTo(LINK('lp', 'Other'), 0); // pass over Y without Ctrl
+					await t.sleep(300);
+					const p = await K.moveTo(LINK('lp', 'Tracker'), 0);
+					await t.sleep(900);
+					rec.popsNoCtrl = await t.ev(`${POPS}.length`);
+					rec.evNoCtrl = await t.ev('window.__r3ev');
+					await t.cdp.call('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'Control', code: 'ControlLeft', windowsVirtualKeyCode: 17, modifiers: 2 });
+					const t0 = Date.now();
+					while (!(await t.ev(`!!${popWith('Tracker')}`))) {
+						if (Date.now() - t0 > 4000) break;
+						await K.mouse('mouseMoved', p.x + ((Date.now() / 50) % 2), p.y, { modifiers: 2 });
+						await t.sleep(100);
+					}
+					await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Control', code: 'ControlLeft', windowsVirtualKeyCode: 17, modifiers: 0 });
+					rec.opened = await t.ev(`!!${popWith('Tracker')}`);
+					rec.ev = await t.ev('window.__r3ev');
+					if (rec.opened) {
+						const before = t.read(SRC);
+						const mk = await t.mark();
+						await K.moveTo(`(${cardsIn(popWith('Tracker'))})[0]`);
+						await t.sleep(250);
+						await K.click(`(${cardsIn(popWith('Tracker'))})[0].querySelector('button[aria-label^="Increase"]')`);
+						await waitVals(SRC, before);
+						rec.after = vals(SRC);
+						rec.want = [6, 5];
+						rec.notices = (await t.noticesSince(mk)).length;
+					}
+				} catch (e) {
+					rec.error = e.message;
+				} finally {
+					await K.cleanup();
+				}
+				log(rec);
+			};
+
+			// T5: Reading view, preview X open, the plugin turned off and on (its events are gone), the pointer passes over Y and comes back; + in X.
+			const t5 = async (id) => {
+				const SRC = `Lifecycle/p594r3-${id}-src.md`;
+				const HOST = `Lifecycle/p594r3-${id}-host.md`;
+				const ID = 'draw-steel-elements';
+				const rec = { trial: 'T5 plugin reloaded while X open, pass-over Y, + in X' };
+				try {
+					await t.reset(SRC);
+					await t.reset(HOST);
+					await t.ev(INSTALL);
+					await K.openHost(HOST, 'rv');
+					rec.hover = await K.hover(LINK('rv', 'Tracker'), SRC);
+					await t.waitFor(`!!${popWith('Tracker')}`, 'X preview', 6000);
+					await K.moveTo(`(${cardsIn(popWith('Tracker'))})[0]`);
+					await t.sleep(400);
+					await t.ev(`(async () => { await app.plugins.disablePlugin('${ID}'); return true; })()`);
+					await t.sleep(500);
+					await t.ev(`(async () => { await app.plugins.enablePlugin('${ID}'); return true; })()`);
+					await t.sleep(2000);
+					await t.ev(`${prefs}.set('authoringControls', true)`);
+					rec.popOpenAfterReload = await t.ev(`!!${popWith('Tracker')}`);
+					rec.liveEntriesInPop = await t.ev(`(${K.E(SRC)}).length`);
+					await t.ev(INSTALL);
+					const y = await t.ev(`(() => { const r = (${LINK('rv', 'Other')}).getBoundingClientRect(); return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) }; })()`);
+					for (let i = 0; i < 4; i++) await K.mouse('mouseMoved', y.x - 8 + i * 5, y.y, { modifiers: 2 });
+					await t.sleep(120);
+					await K.moveTo(`(${cardsIn(popWith('Tracker'))})[0]`);
+					await t.sleep(700);
+					rec.ev = await t.ev('window.__r3ev');
+					rec.pops = await t.ev(`${POPS}.map((p) => ({ tag: p.dataset.r3 || null, heading: (p.querySelector('h2') || {}).textContent || null }))`);
+					const before = t.read(SRC);
+					const mk = await t.mark();
+					await K.click(`(${cardsIn(popWith('Tracker'))})[0].querySelector('button[aria-label^="Increase"]')`);
+					await waitVals(SRC, before);
+					rec.after = vals(SRC);
+					rec.want = [5, 5];
+					rec.notices = (await t.noticesSince(mk)).length;
+				} catch (e) {
+					rec.error = e.message;
+				} finally {
+					await K.cleanup();
+				}
+				log(rec);
+			};
+
+			// T7: heading hover [[src#Tracker]]; an outside edit moves / deletes sections and + is clicked by a script in the SAME task (as G-S92 (h));
+			// the metadata cache at click time is recorded. `kind`: 'delete' (the ## Tracker section removed), 'swap' (## Other moved above ## Tracker),
+			// 'paste' (an identical ## Tracker section pasted above, J8's shape).
+			const t7 = async (id, kind, mode = 'rv') => {
+				const SRC = `Lifecycle/p594r3-${id}-src.md`;
+				const HOST = `Lifecycle/p594r3-${id}-host.md`;
+				const rec = { trial: `T7 ${kind} ${mode}, scripted + in the same task` };
+				const EDITS = {
+					delete: String.raw`(c) => c.replace(/## Tracker\n\n\x60\x60\x60ds-counter[\s\S]*?\x60\x60\x60\n\n/, '')`,
+					swap: String.raw`(c) => c.replace(/(## Tracker\n\n\x60\x60\x60ds-counter[\s\S]*?\x60\x60\x60\n\n)(## Other\n\n\x60\x60\x60ds-counter[\s\S]*?\x60\x60\x60\n\n)/, '$2$1')`,
+					paste: String.raw`(c) => c.replace(/(## Tracker\n\n\x60\x60\x60ds-counter[\s\S]*?\x60\x60\x60\n\n)/, '$1## Pasted\n\n$1')`,
+				};
+				try {
+					await t.reset(SRC);
+					await t.reset(HOST);
+					await t.ev(INSTALL);
+					await K.openHost(HOST, mode);
+					rec.hover = await K.hover(LINK(mode, 'Tracker'), SRC);
+					await t.waitFor(`!!${popWith('Tracker')}`, 'preview', 6000);
+					await K.moveTo(`(${cardsIn(popWith('Tracker'))})[0]`);
+					await t.sleep(400);
+					rec.before = vals(SRC);
+					const mk = await t.mark();
+					const BTN = `(${cardsIn(popWith('Tracker'))})[0].querySelector('button[aria-label^="Increase"]')`;
+					rec.click = await t.ev(`(async () => { const f = app.vault.getAbstractFileByPath(${J(SRC)}); await app.vault.process(f, ${EDITS[kind]}); const hd = () => (app.metadataCache.getFileCache(f)?.headings ?? []).map((h) => h.heading + '@' + h.position.start.line).join(','); const atClick = hd(); const b = ${BTN}; if (!b) return { clicked: false, atClick }; const connected = b.isConnected; b.click(); await new Promise((r) => setTimeout(r, 0)); return { clicked: true, connected, atClick, nextTask: hd(), text: (await app.vault.cachedRead(f)).split('\\n').map((l, i) => l.startsWith('#') ? l + '@' + i : null).filter(Boolean).join(',') }; })()`);
+					rec.edited = t.read(SRC);
+					await t.sleep(2500);
+					rec.after = vals(SRC);
+					rec.wrote = t.read(SRC) !== rec.edited;
+					rec.notices = (await t.noticesSince(mk)).filter((x) => /changed on disk first|can't tell where/.test(x)).length;
+					rec.cacheLater = await t.ev(`(app.metadataCache.getFileCache(app.vault.getAbstractFileByPath(${J(SRC)}))?.headings ?? []).map((h) => h.heading + '@' + h.position.start.line).join(',')`);
+				} catch (e) {
+					rec.error = e.message;
+				} finally {
+					await K.cleanup();
+				}
+				log(rec);
+			};
+
+			// T8: the preview switched to editing (a click on its text, not a button), then + on the card drawn in the preview's editor. T6: a heading with a
+			// colon, linked the way Obsidian writes it. Both: identical counters under two headings; want the hovered (first) one written.
+			const t8 = async (id, mode, word, enterEdit) => {
+				const SRC = `Lifecycle/p594r3-${id}-src.md`;
+				const HOST = `Lifecycle/p594r3-${id}-host.md`;
+				const rec = { trial: `${enterEdit ? 'T8 preview in editing' : 'T6 heading ' + word} ${mode}` };
+				try {
+					await t.reset(SRC);
+					await t.reset(HOST);
+					await t.ev(INSTALL);
+					await K.openHost(HOST, mode);
+					rec.hover = await K.hover(LINK(mode, word), SRC);
+					await t.sleep(500);
+					const POP = `${POPS}.find((p) => p.querySelector('[data-dse-element]'))`;
+					if (enterEdit) {
+						await K.click(`(${POP}).querySelector('h2, .HyperMD-header, p')`);
+						await t.sleep(1500);
+						rec.editing = await t.ev(`(${POP}).classList.contains('is-editing')`);
+						rec.cm = await t.ev(`!!(${POP}).querySelector('.cm-editor')`);
+					}
+					rec.cards = await t.ev(`(${POP}).querySelectorAll('[data-dse-element="counter"]').length`);
+					const before = t.read(SRC);
+					const mk = await t.mark();
+					const BTN = `(${POP}).querySelector('[data-dse-element="counter"] button[aria-label^="Increase"]')`;
+					await K.moveTo(BTN);
+					await t.sleep(250);
+					await K.click(BTN);
+					await waitVals(SRC, before);
+					rec.after = vals(SRC);
+					rec.want = [6, 5];
+					rec.notices = (await t.noticesSince(mk)).length;
+				} catch (e) {
+					rec.error = e.message;
+				} finally {
+					await K.cleanup();
+				}
+				log(rec);
+			};
+
+			try {
+				if (ONLY_TRIALS.includes('T8rv')) await t8('t8-a', 'rv', 'Tracker', true);
+				if (ONLY_TRIALS.includes('T8lp')) await t8('t8-b', 'lp', 'Tracker', true);
+				if (ONLY_TRIALS.includes('T6')) await t8('t6-a', 'rv', 'Tracker', false);
+				if (ONLY_TRIALS.includes('T7del')) await t7('t7-a', 'delete');
+				if (ONLY_TRIALS.includes('T7swap')) await t7('t7-b', 'swap');
+				if (ONLY_TRIALS.includes('T7paste')) await t7('t7-c', 'paste');
+				if (ONLY_TRIALS.includes('T7dellp')) await t7('t7-d', 'delete', 'lp');
+				if (ONLY_TRIALS.includes('T7swaplp')) await t7('t7-e', 'swap', 'lp');
+				if (ONLY_TRIALS.includes('T1rv')) await t1('two-a', 'rv');
+				if (ONLY_TRIALS.includes('T1lp')) await t1('two-b', 'lp');
+				if (ONLY_TRIALS.includes('T3up')) await t3('cal-a', 0);
+				if (ONLY_TRIALS.includes('T3low')) await t3('cal-b', 1);
+				if (ONLY_TRIALS.includes('T4')) await t4('two-c');
+				if (ONLY_TRIALS.includes('T5')) await t5('two-d');
+			} finally {
+				await t.ev(`app.plugins.plugins['draw-steel-elements']?.frameworkV2?.services?.prefs?.set('authoringControls', false)`);
+			}
+			return out.join('; ');
+		},
+	},

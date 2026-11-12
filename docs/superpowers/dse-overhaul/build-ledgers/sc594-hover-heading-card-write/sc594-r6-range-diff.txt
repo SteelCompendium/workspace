@@ -1,0 +1,125 @@
+ 1:  46f42255 =  1:  3354263c fix(host): a hover preview card's + / - is placed through the link its preview was opened for, never by a search that can pick an identical counter (SC-594)
+ 2:  dc10b3ec =  2:  4bbccc52 test(host): a hover preview card's + / - lands in the hovered counter and never in an identical one (SC-594)
+ 3:  88830cc8 =  3:  53b47846 test(host): two counters in one callout and a preview with no announced link (SC-594)
+ 4:  ec64b48a =  4:  296b1959 test(host): the second + in a two-counter callout also after a redraw (SC-594)
+ 5:  6141877a !  5:  c849e09c test(lifecycle): G-S92 a card's + in a hover preview of a heading or block link saves into the hovered counter, never an identical one
+    @@ Commit message
+     
+      ## visual-harness/obsidian-lifecycle.mjs ##
+     @@
+    - // preview AND the modal are open; a real click on the modal's title keeps both; stamina: Healing 3 and a real click on Apply put `current_stamina: 18` in the note with no Notice (modal closed, preview shown), a reopen by the same key and Escape 450 ms
+    - // later close only the modal; montage: Escape closes the sheet (preview shown); with the pointer away for 1.2 s the preview is still shown; a real click outside closes it.
+    + // hide the preview 5 ms after that second press, and the modal with it. Now the preview stays in every trial (Reading view and Live Preview), never turns into a source editor, a title or input press keeps the modal as well, Escape closes only the
+    + // modal, Healing 3 + Apply writes `current_stamina: 18` with no Notice, with the pointer away for 1.2 s the preview is still shown and a real click outside closes it. The double-click's backdrop press closes the modal (as in a pane) and leaves the preview. A sixth trial opens the modal a SECOND time from the same, now focused, preview (open, Escape, open again) and presses the title within 150 ms: no source editor, the keyboard focus stays out of the preview, Escape closes only the modal (r3 measured the base switching the preview to source here).
+      //
+     +// SC-594 appends G-S92 (57 scenarios in all; it sits after G-S87 and before G-S56, and runs in the fifth `--only` part): a card's + / - in a hover preview of a HEADING or a BLOCK link (`[[note#Tracker]]`,
+     +// `[[note#^id]]`) of a note that holds an identical counter elsewhere. Obsidian gives that card the heading's BODY (no heading line) or the block's own lines, which the identical counter repeats, so the
+    @@ visual-harness/obsidian-lifecycle.mjs: Object.assign(FIXTURES, {
+     +		const BLK = `# gs92 blk\n\nTOP\n\n${COUNTER(5, 'Twin')}\n^gs92a\n\nmid prose\n\n${COUNTER(5, 'Twin')}\n^gs92b\n\nEND\n`;
+     +		const CAL = `# gs92 cal\n\nTOP\n\n${QUOTED(['[!note] Camp'], 5, 'Twin')}\n\nmid prose\n\n## Tracker\n\n${QUOTED(['[!note] Camp'], 5, 'Twin')}\n\n## After\n\nEND\n`;
+     +		const WSH = `# gs92 wsh\n\nTOP\n\n${COUNTER(5, 'Twin')}\n\nEND\n`;
+    ++		const TWO = `# gs92 two\n\nTOP\n\n## Tracker\n\n${COUNTER(5, 'Twin')}\n\n## Other\n\n${COUNTER(5, 'Twin')}\n\nEND\n`;
+     +		for (const [id, name, text, link] of [
+     +			['a', 'long', LONG, 'gs92-a-src#Tracker'],
+     +			['b', 'long', LONG, 'gs92-b-src#Tracker'],
+    @@ visual-harness/obsidian-lifecycle.mjs: Object.assign(FIXTURES, {
+     +			['g', 'blk', BLK, 'gs92-g-src#^gs92a'],
+     +			['h', 'long', LONG, 'gs92-h-src#Tracker'],
+     +			['i', 'wsh', WSH, 'gs92-i-src'],
+    ++			['j', 'two', TWO, 'gs92-j-src#Tracker'],
+    ++			// the host of (k) links both headings: `[[...#Tracker]] and [[...#Other]]`
+    ++			['k', 'two', TWO, 'gs92-k-src#Tracker]] and [[gs92-k-src#Other'],
+     +		]) {
+     +			FIXTURES[`Lifecycle/gs92-${id}-src.md`] = text.replace(`# gs92 ${name}`, `# gs92 ${id}`);
+     +			FIXTURES[`Lifecycle/gs92-${id}-host.md`] = `# gs92 ${id} host\n\nsee [[${link}]] here\n\nfiller\n`;
+    @@ visual-harness/obsidian-lifecycle.mjs: Object.assign(FIXTURES, {
+      	Object.assign(FIXTURES, {
+      		'Lifecycle/gs77-cal-src.md': `# gs77 cal src\n\n${CAL2()}\n\n^gs77cal\n\nend\n`,
+      		'Lifecycle/gs77-cal-host.md': `# gs77 cal host\n\n![[gs77-cal-src#^gs77cal]]\n\nafter\n`,
+    -@@ visual-harness/obsidian-lifecycle.mjs: async function gs87Trial(t, mode, opener) {
+    +@@ visual-harness/obsidian-lifecycle.mjs: async function gs91Trial(t, mode, target) {
+      	return rec;
+      }
+      
+     +/**
+     + * SC-594 (G-S92): one card write from a hover preview of a heading / block / whole-note link. A real Ctrl-hover shows the preview (gs83Kit), the pointer rests on the card, then `how`:
+     + *  - 'click': a real mouse click on + (`second` > 0: a second real click that many ms later, once the card is redrawn);
+    -+ *  - 'edit-script': the hovered counter is edited from outside (`vault.process`, A -> 9, or an identical counter added above the first counter when `add`) and + is clicked by a SCRIPT in the SAME page task,
+    ++ *  - 'x-then-y': the pointer goes from the first link's preview onto the second link (T1 shape: both previews are real, the second opens with the first still the parent's popover), then a real click on + in the SECOND preview;
+    ++ *  - 'edit-script': the hovered counter is edited from outside (`vault.process`, A -> 9, or an identical counter added above the first counter when `add`, or the `## Other` section moved above `## Tracker` when `swap`: the metadata cache then lags and the hovered heading's old line holds `## Other`) and + is clicked by a SCRIPT in the SAME page task,
+     + *    inside the 17-44 ms before the preview redraws (measured, SC-594 r1: a real mouse click sent after the edit lands after the redraw and writes nothing).
+     + * Returns the record; the scenario judges it. Footgun: the + button is looked up AFTER the edit resolved, inside the same task (the old card is still on screen then).
+     + */
+    -+async function gs92Trial(t, { id, mode, how = 'click', second = 0, add = false }) {
+    ++async function gs92Trial(t, { id, mode, how = 'click', second = 0, add = false, swap = false }) {
+     +	const K = gs83Kit(t);
+     +	const J = JSON.stringify;
+     +	const SRC = `Lifecycle/gs92-${id}-src.md`;
+    @@ visual-harness/obsidian-lifecycle.mjs: async function gs87Trial(t, mode, opener)
+     +		const link = await K.openHost(HOST, mode);
+     +		rec.hover = await K.hover(link, SRC);
+     +		await t.sleep(400);
+    ++		if (how === 'x-then-y') {
+    ++			const Y = `document.querySelectorAll('.workspace-leaf.mod-active .markdown-reading-view a.internal-link')[1]`;
+    ++			await K.moveTo(Y, 2);
+    ++			const ty = Date.now();
+    ++			while (!(await t.ev(`Array.from(document.querySelectorAll('.hover-popover h2')).some((h) => h.textContent === 'Other') && (${K.E(SRC)}).length > 0`))) {
+    ++				if (Date.now() - ty > 8000) throw new Error('the second preview never opened');
+    ++				const r = await t.ev(`(() => { const b = (${Y}).getBoundingClientRect(); return [Math.round(b.left + 10 + (Date.now() / 50) % 3), Math.round(b.top + b.height / 2)]; })()`);
+    ++				await K.mouse('mouseMoved', r[0], r[1], { modifiers: 2 });
+    ++				await t.sleep(100);
+    ++			}
+    ++			await t.sleep(500);
+    ++		}
+     +		await K.moveTo(`(${K.E(SRC)})[0].root`);
+     +		await t.sleep(300);
+     +		rec.before = valuesOf();
+     +		const before = t.read(SRC);
+     +		const mk = await t.mark();
+     +		if (how === 'edit-script') {
+    -+			const EDIT = add
+    ++			const EDIT = swap
+    ++				? String.raw`(c) => c.replace(/(## Tracker\n\n\x60\x60\x60ds-counter[\s\S]*?\x60\x60\x60\n\n)(## Other\n\n\x60\x60\x60ds-counter[\s\S]*?\x60\x60\x60\n\n)/, '$2$1')`
+    ++				: add
+     +				? `(c) => c.replace('TOP\\n', '\x60\x60\x60ds-counter\\nname: Twin\\ncurrent_value: 5\\nmax_value: 20\\nmin_value: 0\\n\x60\x60\x60\\n\\nadded\\n\\nTOP\\n')`
+     +				: `(c) => c.replace('current_value: 5', 'current_value: 9')`;
+     +			rec.clicked = await t.ev(`(async () => { await app.vault.process(app.vault.getAbstractFileByPath(${J(SRC)}), ${EDIT}); const b = ${BTN}; if (!b) return false; b.click(); return true; })()`);
+    @@ visual-harness/obsidian-lifecycle.mjs: const SCENARIOS = [
+     +		// untouched, no Notice. (a) `[[long#Tracker]]`, Reading view; (b) the same, Live Preview; (c) a short note; (d) `[[note#^id]]` with an identical block carrying another id; (e) a second real + 450 ms after the first (the
+     +		// ticket's shape: the preview's part is still the old one); (f) a callout under the heading, an identical callout elsewhere. With teeth: (g) a block hover and (h) a heading hover whose counter is edited from outside and
+     +		// + is clicked by a script in the SAME page task (inside the 17-44 ms before the preview redraws): nothing is written, one dropped-write Notice, never the identical counter; (i) a whole-note hover, an identical block added
+    -+		// above from outside, + by script: the hovered block is written, not the added one. Each trial has its own note (a card Notice is rate limited per note). It sits before G-S56, which runs last.
+    ++		// above from outside, + by script: the hovered block is written, not the added one; (j) a heading hover, the identical `## Other` section moved ABOVE `## Tracker` from outside and + by script in the same task (the metadata cache still
+    ++		// has the old lines): nothing is written, one Notice, never the counter that now sits under the old line (the 0bf5989d bundle wrote it, no Notice); (k) hover `[[#Tracker]]`, then `[[#Other]]` with the first preview open: a real + in the
+    ++		// second preview lands in ITS counter. Each trial has its own note (a card Notice is rate limited per note). It sits before G-S56, which runs last.
+     +		id: 'G-S92',
+     +		async run(t) {
+     +			const m = await t.mark();
+    @@ visual-harness/obsidian-lifecycle.mjs: const SCENARIOS = [
+     +			const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+     +			const problems = [];
+     +			const outcomes = [];
+    -+			const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'].flatMap((k) => [`Lifecycle/gs92-${k}-src.md`, `Lifecycle/gs92-${k}-host.md`]);
+    ++			const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k'].flatMap((k) => [`Lifecycle/gs92-${k}-src.md`, `Lifecycle/gs92-${k}-host.md`]);
+     +			const dropped = (id) => `Draw Steel Elements: a change to a block in gs92-${id}-src was not saved \u2014 the block changed on disk first.`;
+     +			await t.ev(`(() => { if (!document.getElementById('lc-gs92-notice')) { const st = document.createElement('style'); st.id = 'lc-gs92-notice'; st.textContent = '.notice-container { display: none !important; }'; document.head.appendChild(st); } return true; })()`);
+     +			await t.ev(`${prefs}.set('authoringControls', true)`);
+    @@ visual-harness/obsidian-lifecycle.mjs: const SCENARIOS = [
+     +					['(g) block hover, the counter edited from outside, scripted + in the same task', { id: 'g', mode: 'rv', how: 'edit-script' }, { refused: true }],
+     +					['(h) heading hover, the counter edited from outside, scripted + in the same task', { id: 'h', mode: 'rv', how: 'edit-script' }, { refused: true }],
+     +					['(i) whole-note hover, an identical block added above, scripted + in the same task', { id: 'i', mode: 'rv', how: 'edit-script', add: true }, { after: [5, 6] }],
+    ++					['(j) heading hover, the identical section moved above it from outside (the metadata cache lags), scripted + in the same task', { id: 'j', mode: 'rv', how: 'edit-script', swap: true }, { refused: true }],
+    ++					['(k) hover [[#Tracker]], then [[#Other]] while the first preview is open, real + in the second preview, Reading view', { id: 'k', mode: 'rv', how: 'x-then-y' }, { after: [5, 6] }],
+     +				]) {
+     +					const r = await gs92Trial(t, spec);
+     +					const bad = [];
+ 6:  e4d96a0d =  6:  f63ac509 docs(SC-594): changelog Unreleased entry
+ 7:  422152f4 =  7:  1d2ac56c fix(host): a heading hover card is placed from the note text, and the bound hover link must match what the preview shows (SC-594)
+ 8:  eaa5c615 =  8:  55e3ddf3 test(host): lagging-cache heading hovers, bound-link vs preview DOM, the card guard (J19), another note's link, duplicate ids (SC-594)
+ 9:  2bb7e06d =  9:  124fd418 test(host): the bound-link DOM check is killed per kind (block / heading) (SC-594)
+10:  a6851aa4 = 10:  9ddf9a6d test(host): J10 / J17 / log-bound tests refuse by identity, not by the DOM check (SC-594)
+11:  3105038f <  -:  -------- test(lifecycle): G-S92 (j) a heading hover with a lagging cache after a section swap, (k) hover one link then another (SC-594)
+12:  436e042f = 11:  929898cf docs(SC-594): changelog states exactly what is still refused; test: setext heading hover
+13:  c36973e5 = 12:  0e27b1b5 fix(lint): hoverLinks uses activeDocument; test typing (SC-594)
+ -:  -------- > 13:  ed247b38 test(host): a #tag line is no heading in atxHeadings (SC-594)
+ -:  -------- > 14:  f21c0da3 docs(SC-594): changelog: what is refused is only what the note confirms; known limit SC-607

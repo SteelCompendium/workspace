@@ -1,0 +1,15 @@
+# mutants.sh <log> <ids...>: apply each mutant, run the three suites, record the summary, restore the files
+D=/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc594-r2-impl
+LOG=$1; shift
+cd $D
+for m in "$@"; do
+  python3 $S/mutate.py $m >> $LOG 2>&1 || { echo "$m APPLY-FAILED" >> $LOG; git checkout -- src; continue; }
+  npx jest test/dom/framework/reading-mode-host-hover-card.test.ts test/dom/framework/reading-mode-host-pin.test.ts test/dom/framework/plugin-wiring.test.ts --selectProjects dom > $S/mut-$m.log 2>&1
+  rc=$?
+  echo "$m rc=$rc $(grep -E '^Tests:' $S/mut-$m.log)" >> $LOG
+  grep -E "●.*›" $S/mut-$m.log | sed 's/^ *● //' | sort -u | grep -v 'sweep:' | cut -c1-160 | head -6 >> $LOG
+  git checkout -- src
+done
+echo done >> $LOG
+git status --short src >> $LOG

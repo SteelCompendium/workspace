@@ -1,0 +1,231 @@
+
+// ===== SC-594 r1 probe fixtures (uncommitted) =====
+{
+	const fl = (n, p) => Array.from({ length: n }, (_, i) => `${p} ${i}`).join('\n\n');
+	const C6 = fence('ds-counter', ['max_value: 20', 'current_value: 6', 'min_value: 0', 'name: Twin']);
+	Object.assign(FIXTURES, {
+		// A1: long note, `## Tracker` holds counter A, identical counter B BELOW under other prose
+		'Lifecycle/p594-long.md': `# p594 long\n\nTOP\n\n${fl(120, 'above')}\n\n## Tracker\n\n${COUNTER(5, 'Twin')}\n\n## After\n\n${fl(40, 'mid')}\n\n## Other\n\n${COUNTER(5, 'Twin')}\n\n${fl(80, 'below')}\n`,
+		// the same, B ABOVE the section
+		'Lifecycle/p594-longa.md': `# p594 longa\n\nTOP\n\n${COUNTER(5, 'Twin')}\n\n${fl(120, 'above')}\n\n## Tracker\n\n${COUNTER(5, 'Twin')}\n\n## After\n\n${fl(120, 'below')}\n`,
+		'Lifecycle/p594-short.md': `# p594 short\n\nTOP\n\n## Tracker\n\n${COUNTER(5, 'Twin')}\n\n## Other\n\nmid prose\n\n${COUNTER(5, 'Twin')}\n\nEND\n`,
+		// A3: block link hover, B a twin of A (same body), both with ids, prose between
+		'Lifecycle/p594-blk.md': `# p594 blk\n\nTOP\n\n${COUNTER(5, 'Twin')}\n^p594a\n\nmid prose\n\n${COUNTER(5, 'Twin')}\n^p594b\n\nEND\n`,
+		// A3 P14-exact: B already holds the body a + on A gives (plugin key order)
+		'Lifecycle/p594-blk14.md': `# p594 blk14\n\nTOP\n\n${COUNTER(5, 'Twin')}\n^p594c\n\nmid prose\n\n${C6}\n^p594d\n\nEND\n`,
+		// a callout counter under ## Tracker, an identical callout elsewhere
+		'Lifecycle/p594-cal.md': `# p594 cal\n\nTOP\n\n${QUOTED(['[!note] Camp'], 5, 'Twin')}\n\nmid prose\n\n## Tracker\n\n${QUOTED(['[!note] Camp'], 5, 'Twin')}\n\n## After\n\nEND\n`,
+		'Lifecycle/p594-host-cal.md': `# p594 host cal\n\nsee [[p594-cal#Tracker]] here\n\nfiller\n`,
+		// whole-note hover, short: A and nothing else (an identical block is added from outside before the click)
+		'Lifecycle/p594-wsh.md': `# p594 wsh\n\nTOP\n\n${COUNTER(5, 'Twin')}\n\nEND\n`,
+		'Lifecycle/p594-host-wsh.md': `# p594 host wsh\n\nsee [[p594-wsh]] here\n\nfiller\n`,
+		'Lifecycle/p594-host-long.md': `# p594 host long\n\nsee [[p594-long#Tracker]] here\n\nfiller\n`,
+		'Lifecycle/p594-host-longa.md': `# p594 host longa\n\nsee [[p594-longa#Tracker]] here\n\nfiller\n`,
+		'Lifecycle/p594-host-short.md': `# p594 host short\n\nsee [[p594-short#Tracker]] here\n\nfiller\n`,
+		'Lifecycle/p594-host-whole.md': `# p594 host whole\n\nsee [[p594-long]] here\n\nfiller\n`,
+		'Lifecycle/p594-host-blk.md': `# p594 host blk\n\nsee [[p594-blk#^p594a]] here\n\nfiller\n`,
+		'Lifecycle/p594-host-blk14.md': `# p594 host blk14\n\nsee [[p594-blk14#^p594c]] here\n\nfiller\n`,
+	});
+}
+
+	// ===== SC-594 r1 probe scenario (uncommitted) =====
+	{
+		id: 'P594',
+		async run(t) {
+			const J = JSON.stringify;
+			const K = gs83Kit(t);
+			const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+			const TRIALS = (process.env.P594_TRIALS ?? 'A1').split(',');
+			const lastOn = {};
+			const valuesOf = (rel) => (t.read(rel).match(/^[> ]*current_value: (\d+)$/gm) ?? []).map((x) => Number(x.replace(/^[> ]*current_value: /, '')));
+			const namesOf = (rel) => (t.read(rel).match(/^name: (\w+)$/gm) ?? []).map((x) => x.replace('name: ', ''));
+			const E = (src) => `app.plugins.plugins['draw-steel-elements'].viewRegistry.liveEntries().filter((e) => e.host.sourcePath === ${J(src)} && e.root.isConnected && e.root.closest('.hover-popover')).sort((a, b) => (a.root.compareDocumentPosition(b.root) & 4 ? -1 : 1))`;
+			const DUMP = (SRC) => `(async () => {
+  const es = ${E(SRC)};
+  const f = app.vault.getAbstractFileByPath(${J(SRC)});
+  const whole = await app.vault.cachedRead(f);
+  const wl = whole.split('\\n');
+  const out = { n: es.length, cards: [] };
+  for (const e of es) {
+    const h = e.host; const el = h.containerEl;
+    let sec = null; try { sec = h.ctx.getSectionInfo(el); } catch (x) { sec = 'throw ' + x.message; }
+    const c = {};
+    if (sec && typeof sec === 'object') {
+      const sl = sec.text.split('\\n');
+      c.sec = { textLines: sl.length, wholeLines: wl.length, lineStart: sec.lineStart, lineEnd: sec.lineEnd, first: sl[0], atStart: sl[sec.lineStart], atEnd: sl[sec.lineEnd], isWhole: sec.text === whole, includesTrackerHeading: sl.some((l) => /^## Tracker/.test(l)), firstLines: sl.slice(0, 3), lastLines: sl.slice(-3) };
+      const s2 = sl.slice(); while (s2.length && s2[s2.length - 1] === '') s2.pop();
+      const occ = [];
+      for (let k = 0; k + s2.length <= wl.length; k++) { let ok = true; for (let i = 0; i < s2.length && ok; i++) ok = wl[k + i] === s2[i]; if (ok) occ.push(k); }
+      c.sec.textOccursInNoteAt = occ.slice(0, 5);
+    } else c.sec = sec;
+    c.known = { body: h.knownBody, line: h.knownLineStart, ownFence: h.ownFence, lastWriteLine: h.lastWriteLine };
+    c.ctxKeys = Object.keys(h.ctx).map((k) => k + ':' + typeof h.ctx[k] + (h.ctx[k] && typeof h.ctx[k] === 'object' ? ':' + ((h.ctx[k].constructor && h.ctx[k].constructor.name) || '?') : ''));
+    const emb = el.closest('.markdown-embed'); c.embedExpandos = emb ? Object.getOwnPropertyNames(emb).slice(0, 20) : null;
+    const popEl = el.closest('.hover-popover'); c.popExpandos = popEl ? Object.getOwnPropertyNames(popEl).slice(0, 20) : null;
+    const hl = (window.__p594hl || []).slice().reverse().find((x) => x.parent && x.parent.hoverPopover && x.parent.hoverPopover.hoverEl && x.parent.hoverPopover.hoverEl.contains(el));
+    c.hoverLink = hl ? { linktext: hl.linktext, sourcePath: hl.sourcePath, source: hl.source, parentCtor: hl.parentCtor, events: window.__p594hl.length } : { none: true, events: (window.__p594hl || []).map((x) => x.linktext + '@' + x.parentCtor + ':' + !!(x.parent && x.parent.hoverPopover)) };
+    if (hl) { try { const lt = hl.linktext; const i = lt.indexOf('#'); const dest = app.metadataCache.getFirstLinkpathDest(i < 0 ? lt : lt.slice(0, i), hl.sourcePath); const sub = i < 0 ? null : require('obsidian').resolveSubpath(app.metadataCache.getFileCache(dest), lt.slice(i)); c.hoverLink.dest = dest && dest.path; c.hoverLink.sub = sub && { type: sub.type, start: sub.start && sub.start.line, end: sub.end && sub.end.line }; } catch (x) { c.hoverLink.resolveErr = String(x); } }
+    const anc = [];
+    for (let n = el; n && n !== document.body; n = n.parentElement) {
+      const attrs = Array.from(n.attributes).filter((a) => a.name !== 'class' && a.name !== 'style').map((a) => a.name + '=' + String(a.value).slice(0, 60));
+      anc.push(n.tagName.toLowerCase() + (typeof n.className === 'string' && n.className.trim() ? '.' + n.className.trim().split(/\\s+/).join('.') : '') + (attrs.length ? '[' + attrs.join(' ') + ']' : ''));
+      if (n.classList.contains('hover-popover')) break;
+    }
+    c.anc = anc;
+    out.cards.push(c);
+  }
+  const v = app.workspace.getMostRecentLeaf().view;
+  const pops = [];
+  for (const [nm, o] of [['view', v], ['previewMode', v.previewMode], ['editMode', v.editMode]]) { if (o && o.hoverPopover) pops.push([nm, o.hoverPopover]); }
+  const desc = (o, depth) => { const r = { ctor: o && o.constructor && o.constructor.name, keys: {} }; if (!o) return r; for (const k of Object.keys(o)) { const val = o[k]; let d; if (val == null) d = String(val); else if (typeof val === 'string') d = 'str:' + val.slice(0, 80); else if (typeof val === 'number' || typeof val === 'boolean') d = typeof val + ':' + val; else if (val instanceof HTMLElement) d = 'el:' + val.tagName + '.' + val.className; else if (Array.isArray(val)) d = 'arr' + val.length; else if (typeof val === 'function') d = 'fn'; else d = 'obj:' + ((val.constructor && val.constructor.name) || '?') + (val.path ? ' path=' + val.path : ''); r.keys[k] = d; } if (depth > 0 && Array.isArray(o._children)) r.children = o._children.map((ch) => desc(ch, depth - 1)); return r; };
+  out.pops = pops.map(([nm, p]) => ({ where: nm, d: desc(p, 3) }));
+  const pop = document.querySelector('.popover.hover-popover');
+  if (pop) out.popDom = { headings: Array.from(pop.querySelectorAll('h1,h2,h3,h4,h5,h6')).map((h) => h.tagName + ':' + h.textContent + ':' + (h.getAttribute('data-heading') || '')), embedAttrs: Array.from(pop.querySelectorAll('.markdown-embed, .internal-embed')).map((x) => x.className + ' | ' + Array.from(x.attributes).filter((a) => a.name !== 'class').map((a) => a.name + '=' + a.value.slice(0, 60)).join(' ')), popAttrs: Array.from(pop.attributes).map((a) => a.name + '=' + a.value.slice(0, 60)).join(' '), cardAndHeadingOrder: Array.from(pop.querySelectorAll('h2, [data-dse-element]')).map((n) => n.tagName === 'H2' ? 'h2:' + n.textContent : 'card') };
+  return out;
+})()`;
+			const outcomes = [];
+			const doTrial = async (label, { SRC, HOST, mode, edit = null, how = 'mouse', pre = false, scroll = false, second = 0, measure = false }) => {
+				const rec = { label };
+				const since = Date.now() - (lastOn[SRC] ?? 0);
+				if (since < 6000) await t.sleep(6000 - since);
+				try {
+					await t.reset(SRC);
+					await t.reset(HOST);
+					const link = await K.openHost(HOST, mode);
+					await K.mouse('mouseMoved', 5, 5);
+					await t.sleep(200);
+					await K.moveTo(link, 2);
+					const t0 = Date.now();
+					let triggered = false;
+					while (!(await t.ev(`!!document.querySelector('.popover.hover-popover')`))) {
+						if (Date.now() - t0 > 4000 && !triggered) {
+							triggered = true;
+							await t.ev(`(() => { const a = ${link}; const leaf = app.workspace.getMostRecentLeaf(); app.workspace.trigger('hover-link', { event: new MouseEvent('mouseover', { ctrlKey: true, clientX: 200, clientY: 200 }), source: 'preview', hoverParent: leaf.view, targetEl: a, linktext: a.getAttribute('data-href') || a.textContent, sourcePath: leaf.view.file.path }); return true; })()`);
+						}
+						if (Date.now() - t0 > 10000) throw new Error('no popover');
+						await t.sleep(80);
+					}
+					rec.hover = triggered ? 'hover-link trigger' : 'real hover';
+					const t1 = Date.now();
+					while (!(await t.ev(`${E(SRC)}.length > 0`))) {
+						if (scroll) await t.ev(`(() => { const s = Array.from(document.querySelectorAll('.popover.hover-popover *')).find((n) => n.scrollHeight > n.clientHeight + 20 && getComputedStyle(n).overflowY !== 'visible'); if (s) s.scrollTop += 400; return true; })()`);
+						if (Date.now() - t1 > 15000) { rec.dumpNoCard = await t.ev(DUMP(SRC)); throw new Error('no card in the popover'); }
+						await t.sleep(150);
+					}
+					await t.sleep(400);
+					if (scroll) { await t.ev(`(() => { const e = (${E(SRC)})[0]; if (e) e.root.scrollIntoView({ block: 'center' }); return true; })()`); await t.sleep(500); await t.waitFor(`${E(SRC)}.length > 0`, 'card after scrollIntoView', 8000); }
+					const ENTRY = `(${E(SRC)})[0]`;
+					await K.moveTo(`${ENTRY}.root`);
+					await t.sleep(300);
+					rec.dump = await t.ev(DUMP(SRC));
+					const before = t.read(SRC);
+					rec.before = valuesOf(SRC);
+					if (pre) {
+						// P14-exact: one + first (lands: A 5 -> 6; B already 6), wait for the write and the redraw
+						await K.click(`${ENTRY}.root.querySelector('button[aria-label^="Increase"]')`);
+						const tp = Date.now();
+						while (Date.now() - tp < 3000 && t.read(SRC) === before) await t.sleep(50);
+						await t.sleep(800);
+						rec.afterPre = valuesOf(SRC);
+						rec.dumpAfterPre = await t.ev(DUMP(SRC));
+					}
+					const mk = await t.mark();
+					const BTN = `${ENTRY}.root.querySelector('button[aria-label^="Increase"]')`;
+					if (edit) {
+						// edit block number edit.idx (0-based among the counters) to 9 from outside, then click at once
+						const p = await t.ev(`(() => { const el = ${BTN}; const r = el.getBoundingClientRect(); return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) }; })()`);
+						const EDIT = edit.add ? `await app.vault.process(app.vault.getAbstractFileByPath(${J(SRC)}), (c) => c.replace('TOP\\n', '\x60\x60\x60ds-counter\\nname: Twin\\ncurrent_value: 5\\nmax_value: 20\\nmin_value: 0\\n\x60\x60\x60\\n\\nadded\\n\\nTOP\\n'));` : `await app.vault.process(app.vault.getAbstractFileByPath(${J(SRC)}), (c) => { let i = -1; return c.replace(/^(> )?current_value: (\\d+)$/gm, (m0, p1) => (++i === ${edit.idx} ? (p1 || '') + 'current_value: 9' : m0)); });`;
+						if (measure) {
+							rec.window = await t.ev(`(async () => { const e = ${ENTRY}; const root = e.root; const h = e.host; ${EDIT} const t0 = performance.now(); let n = 0; while (performance.now() - t0 < 3000) { const fresh = !root.isConnected || h.knownBody !== ${J('x')} && /current_value: 9/.test(h.knownBody || '') || Array.from(root.querySelectorAll('input')).some((i) => i.value === '9'); if (fresh) return { ms: Math.round(performance.now() - t0), connected: root.isConnected, polls: n }; n++; await new Promise((r) => setTimeout(r, 0)); } return { ms: 'none in 3 s', polls: n }; })()`);
+							throw new Error('measured');
+						}
+						if (how === 'script') {
+							rec.click = await t.ev(`(async () => { const e = ${ENTRY}; const h = e.host; ${EDIT} const sec0 = h.ctx.getSectionInfo(h.containerEl); const kb = h.knownBody; ${BTN}.click(); return { knownAtClick: kb, secStart: sec0 && sec0.lineStart, secText: sec0 && sec0.text.split('\\n').slice(sec0.lineStart, sec0.lineEnd + 1).join(' / ') }; })()`);
+						} else {
+							await t.ev(`(async () => { ${EDIT} return true; })()`);
+							await K.press(p);
+							rec.click = 'mouse after the edit';
+						}
+					} else {
+						await K.click(BTN);
+						if (second) {
+							await t.sleep(second);
+							rec.secondAt = second;
+							rec.beforeSecond = valuesOf(SRC);
+							await t.waitFor(`!!(${E(SRC)})[0]`, 'card for the second click', 5000);
+							await K.click(`(${E(SRC)})[0].root.querySelector('button[aria-label^="Increase"]')`);
+						}
+					}
+					await t.sleep(120);
+					rec.pin = await t.ev(`(async () => { const e = (${E(SRC)})[0]; if (!e) return 'no entry'; const h = e.host; const p = h.pendingPin; const whole = await app.vault.cachedRead(app.vault.getAbstractFileByPath(${J(SRC)})); if (!p) return { pending: null, knownBody: h.knownBody }; return { textIsWhole: p.text === whole, textLines: p.text.split('\\n').length, lineStart: p.lineStart, lineAt: p.text.split('\\n')[p.lineStart] }; })()`);
+					const t2 = Date.now();
+					while (Date.now() - t2 < 3000 && !(await t.noticesSince(mk)).length && t.read(SRC) === (rec.afterPre ? null : before)) await t.sleep(50);
+					await t.sleep(1200);
+					rec.after = valuesOf(SRC);
+					rec.names = namesOf(SRC);
+					rec.notices = await t.noticesSince(mk);
+					rec.cardsAfter = await t.ev(`(${E(SRC)}).map((e) => Array.from(e.root.querySelectorAll('input')).map((i) => i.value).join('/'))`);
+				} catch (e) {
+					rec.error = e.message;
+				} finally {
+					lastOn[SRC] = Date.now();
+					await K.cleanup();
+				}
+				console.log('P594-REC ' + J(rec));
+				outcomes.push(`${label}: ${J({ before: rec.before, after: rec.after, notices: rec.notices && rec.notices.length, err: rec.error })}`);
+			};
+			await t.ev(`(() => { if (!document.getElementById('lc-p594-notice')) { const st = document.createElement('style'); st.id = 'lc-p594-notice'; st.textContent = '.notice-container { opacity: 0 !important; pointer-events: none !important; }'; document.head.appendChild(st); } return true; })()`);
+			await t.ev(`${prefs}.set('authoringControls', true)`);
+			await t.ev(`(() => { if (!window.__p594hl) { window.__p594hl = []; app.workspace.on('hover-link', (ev) => window.__p594hl.push({ linktext: ev.linktext, sourcePath: ev.sourcePath, source: ev.source, parentCtor: ev.hoverParent && ev.hoverParent.constructor && ev.hoverParent.constructor.name, parent: ev.hoverParent })); } return true; })()`);
+			const L = (k) => [`Lifecycle/p594-${k}.md`, `Lifecycle/p594-host-${k}.md`];
+			try {
+				for (const tr of TRIALS) {
+					if (tr === 'A1') {
+						await doTrial('A1 long heading hover RV', { SRC: L('long')[0], HOST: L('long')[1], mode: 'rv' });
+						await doTrial('A1 long heading hover LP', { SRC: L('long')[0], HOST: L('long')[1], mode: 'lp' });
+						await doTrial('A1 longa (twin ABOVE) heading hover RV', { SRC: L('longa')[0], HOST: L('longa')[1], mode: 'rv' });
+						await doTrial('A1 short heading hover RV', { SRC: L('short')[0], HOST: L('short')[1], mode: 'rv' });
+						await doTrial('A1 short heading hover LP', { SRC: L('short')[0], HOST: L('short')[1], mode: 'lp' });
+						await doTrial('A1 whole long-note hover RV (scrolled)', { SRC: L('long')[0], HOST: 'Lifecycle/p594-host-whole.md', mode: 'rv', scroll: true });
+						await doTrial('A1 block hover RV (twin, no edit)', { SRC: L('blk')[0], HOST: L('blk')[1], mode: 'rv' });
+					}
+					if (tr === 'A3') {
+						await doTrial('A3 block hover RV, A edited to 9 then scripted click', { SRC: L('blk')[0], HOST: L('blk')[1], mode: 'rv', edit: { idx: 0 }, how: 'script' });
+						await doTrial('A3 block hover RV, A edited to 9 then real click', { SRC: L('blk')[0], HOST: L('blk')[1], mode: 'rv', edit: { idx: 0 }, how: 'mouse' });
+						await doTrial('A3 block hover LP, A edited to 9 then scripted click', { SRC: L('blk')[0], HOST: L('blk')[1], mode: 'lp', edit: { idx: 0 }, how: 'script' });
+						await doTrial('A3 P14-exact block hover RV, + lands, then A edited, scripted +', { SRC: L('blk14')[0], HOST: L('blk14')[1], mode: 'rv', pre: true, edit: { idx: 0 }, how: 'script' });
+					}
+					if (tr === 'WARM') await doTrial('WARM-UP (the probe registers its hover-link listener when the first host is built; production registers at onload)', { SRC: L('short')[0], HOST: L('short')[1], mode: 'rv' });
+					if (tr === 'A1R') {
+						await doTrial('A1 long heading hover RV (re-run)', { SRC: L('long')[0], HOST: L('long')[1], mode: 'rv' });
+						await doTrial('A1 long heading hover LP (re-run)', { SRC: L('long')[0], HOST: L('long')[1], mode: 'lp' });
+					}
+					if (tr === 'B') {
+						await doTrial('B second + 1500 ms later, ticket shape RV', { SRC: L('long')[0], HOST: L('long')[1], mode: 'rv', second: 1500 });
+						await doTrial('B second + 450 ms later (just after the first write), ticket shape RV', { SRC: L('long')[0], HOST: L('long')[1], mode: 'rv', second: 450 });
+						await doTrial('B callout in a heading hover, twin callout elsewhere, RV', { SRC: L('cal')[0], HOST: L('cal')[1], mode: 'rv' });
+						await doTrial('B callout in a heading hover, LP', { SRC: L('cal')[0], HOST: L('cal')[1], mode: 'lp' });
+						await doTrial('B whole-note hover, identical block added from outside, scripted click', { SRC: L('wsh')[0], HOST: L('wsh')[1], mode: 'rv', edit: { add: true }, how: 'script' });
+						await doTrial('B whole-note hover, own block edited from outside, scripted click', { SRC: L('wsh')[0], HOST: L('wsh')[1], mode: 'rv', edit: { idx: 0 }, how: 'script' });
+						await doTrial('B callout heading hover, own callout edited, scripted click', { SRC: L('cal')[0], HOST: L('cal')[1], mode: 'rv', edit: { idx: 1 }, how: 'script' });
+					}
+					if (tr === 'W') {
+						for (let i = 0; i < 4; i++) await doTrial(`W redraw window, block hover RV #${i}`, { SRC: L('blk')[0], HOST: L('blk')[1], mode: 'rv', edit: { idx: 0 }, how: 'script', measure: true });
+						for (let i = 0; i < 4; i++) await doTrial(`W redraw window, heading hover RV #${i}`, { SRC: L('long')[0], HOST: L('long')[1], mode: 'rv', edit: { idx: 0 }, how: 'script', measure: true });
+						for (let i = 0; i < 2; i++) await doTrial(`W redraw window, heading hover LP #${i}`, { SRC: L('long')[0], HOST: L('long')[1], mode: 'lp', edit: { idx: 0 }, how: 'script', measure: true });
+					}
+					if (tr === 'A4') {
+						await doTrial('A4 long heading hover RV, A edited to 9 then scripted click', { SRC: L('long')[0], HOST: L('long')[1], mode: 'rv', edit: { idx: 0 }, how: 'script' });
+						await doTrial('A4 long heading hover RV, A edited to 9 then real click', { SRC: L('long')[0], HOST: L('long')[1], mode: 'rv', edit: { idx: 0 }, how: 'mouse' });
+						await doTrial('A4 long heading hover LP, A edited to 9 then scripted click', { SRC: L('long')[0], HOST: L('long')[1], mode: 'lp', edit: { idx: 0 }, how: 'script' });
+						await doTrial('A4 short heading hover RV, A edited to 9 then scripted click', { SRC: L('short')[0], HOST: L('short')[1], mode: 'rv', edit: { idx: 0 }, how: 'script' });
+						await doTrial('A4 longa heading hover RV, A (2nd) edited to 9 then scripted click', { SRC: L('longa')[0], HOST: L('longa')[1], mode: 'rv', edit: { idx: 1 }, how: 'script' });
+					}
+				}
+			} finally {
+				await t.ev(`${prefs}.set('authoringControls', false)`);
+				await t.ev(`document.getElementById('lc-p594-notice')?.remove()`);
+			}
+			return outcomes.join(' ;; ');
+		},
+	},

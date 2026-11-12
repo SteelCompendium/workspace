@@ -1,0 +1,180 @@
+# SC-594 r1 probe patch: the proposed click-time rule for a card write whose pin is partial. Applied to the worktree for a run, reverted after.
+import sys
+F = '/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/src/framework/host/ReadingModeBlockHost.ts'
+s = open(F).read()
+VARIANT = sys.argv[1] if len(sys.argv) > 1 else 'full'
+
+def rep(old, new, n=1):
+    global s
+    assert s.count(old) == n, (old[:80], s.count(old))
+    s = s.replace(old, new)
+
+# (1) the hover-link record: the link a hover preview was opened for (public `hover-link` event + public HoverParent.hoverPopover.hoverEl)
+rep("const partialPins = new WeakSet<object>();\n", """const partialPins = new WeakSet<object>();
+
+/** SC-594 probe: the `hover-link` events seen (the link text and the HoverParent whose popover shows it), newest last, bounded. */
+type HoverLinkEvent = { linktext?: unknown; sourcePath?: unknown; hoverParent?: { hoverPopover?: { hoverEl?: HTMLElement } | null } | null };
+const hoverLinks: HoverLinkEvent[] = [];
+export function noteHoverLink(ev: HoverLinkEvent): void {
+	if (!ev || typeof ev.linktext !== 'string') return;
+	hoverLinks.push(ev);
+	if (hoverLinks.length > 16) hoverLinks.shift();
+}
+export function resetHoverLinks(): void {
+	hoverLinks.length = 0;
+}
+const hoverLinkApps = new WeakSet<object>();
+/** SC-594 probe: the link of the hover preview `el` is drawn in: the newest `hover-link` event whose parent's popover IS that preview. */
+function hoverLinkOf(el: HTMLElement): { linktext: string; sourcePath: string } | null {
+	const pop = el.closest('.hover-popover');
+	if (!pop) return null;
+	for (let i = hoverLinks.length - 1; i >= 0; i--) {
+		const ev = hoverLinks[i];
+		if (ev.hoverParent?.hoverPopover?.hoverEl === pop) return { linktext: ev.linktext as string, sourcePath: typeof ev.sourcePath === 'string' ? ev.sourcePath : '' };
+	}
+	return null;
+}
+""")
+
+# register the listener once per app (probe only: production would do it in onload)
+rep("""		this.ctx = ctx;
+		this.el = el;
+		this.renderChild = this.makeRenderChild(el, ctx);
+		this.readSection();
+	}
+""", """		this.ctx = ctx;
+		this.el = el;
+		this.renderChild = this.makeRenderChild(el, ctx);
+		this.readSection();
+		const app = plugin.app as unknown as { workspace?: { on?: (n: string, cb: (ev: HoverLinkEvent) => void) => unknown } };
+		if (app && !hoverLinkApps.has(app) && typeof app.workspace?.on === 'function') {
+			hoverLinkApps.add(app);
+			plugin.registerEvent(app.workspace.on('hover-link', (ev: HoverLinkEvent) => noteHoverLink(ev)) as never);
+		}
+	}
+""")
+
+# (2) takePin: card pins in an embed get the same own-write record logic as forms (multi-block window guard; no own fence)
+if VARIANT in ('full', 'norecord-guard') :
+    rep("""			return forForm && embedded ? this.pinFromLastWrite() : null;""", """			return embedded ? this.pinFromLastWrite() : null;""")
+    rep("""		if (forForm && embedded) {
+			const first = parseOpenFence(section.text, section.lineStart);""", """		if (embedded) {
+			const first = parseOpenFence(section.text, section.lineStart);""")
+rep("""			pinRebased.set(pin, this.rebasePin(pin, section.text, forForm ? this.lastWrite : null));""",
+    """			pinRebased.set(pin, forForm ? this.rebasePin(pin, section.text, this.lastWrite) : this.rebaseCardPin(pin, section.text, this.lastWrite));""")
+
+# (3) the card pin's rebase: the link (src or the hover's link), verified over the WHOLE part; else this host's own last write; never a text search
+rep("""	/**
+	 * SC-556: where the embedded part starts in the note, from the embed element's `src`""", """	/** SC-594 probe: a CARD write's pin in an embed / hover preview. The link, verified over the whole part; else this host's own last write; else partial (refused). */
+	private async rebaseCardPin(pin: { text: string; lineStart: number }, sectionText: string, write: { body: string; text: string; lineStart: number } | null): Promise<void> {
+		const known = this.knownBody;
+		try {
+			const file = this.plugin.app.vault.getAbstractFileByPath(this.ctx.sourcePath);
+			if (!(file instanceof TFile)) return;
+			const whole = await this.plugin.app.vault.cachedRead(file);
+			if (whole === sectionText) {
+				partialPins.delete(pin);
+				return;
+			}
+			const line = this.cardLinkLine(file, whole, sectionText, pin.lineStart, known);
+			if (line !== null) {
+				pin.text = whole;
+				pin.lineStart = line;
+				partialPins.delete(pin);
+				return;
+			}
+			if (write !== null && known !== null && normalizeBody(write.body) === normalizeBody(known)) {
+				pin.text = write.text;
+				pin.lineStart = write.lineStart;
+				partialPins.delete(pin);
+			}
+		} catch {
+			// no readable note: the pin stays partial
+		}
+	}
+
+	/**
+	 * SC-594 probe: the card's line in `whole` through the part's LINK: the embed's `src`, or for a hover preview the link it was opened for
+	 * (`hover-link`). The link must name exactly ONE heading / block id in the note now; the part's lines (trailing blanks dropped) must equal the note's
+	 * lines where the part starts (a hover of a heading part starts on the line after the heading: measured, the part Obsidian gives a hover card holds the
+	 * heading's body only); the fence at the card's line must hold the known body; a `#^id` link needs its `^id` marker (as verifiedPinLine).
+	 */
+	private cardLinkLine(file: TFile, whole: string, sectionText: string, relLine: number, known: string | null): number | null {
+		const src = this.containerEl.closest('.internal-embed[src], .markdown-embed[src]')?.getAttribute('src') ?? null;
+		const hov = src === null ? hoverLinkOf(this.containerEl) : null;
+		const link = src ?? hov?.linktext ?? null;
+		if (!link) return null;
+		const hash = link.indexOf('#');
+		if (hash < 0) return null;
+		const cache = this.plugin.app.metadataCache;
+		const meta = cache.getFileCache(file);
+		if (!meta) return null;
+		const dest = cache.getFirstLinkpathDest(link.slice(0, hash), hov ? hov.sourcePath : this.ctx.sourcePath);
+		if (!dest || dest.path !== file.path) return null;
+		const subpath = link.slice(hash);
+		const sub = resolveSubpath(meta, subpath);
+		const start = sub?.start?.line;
+		if (typeof start !== 'number' || start < 0) return null;
+		const lines = splitLines(whole);
+		const blockId = subpath.startsWith('#^') ? subpath.slice(2) : null;
+		// the link must name ONE place only while the known body has a twin in the note (a section of the same name inserted above the clicked one
+		// would otherwise be taken); with a unique body the verified line below is the only block that can hold it
+		const twin = known !== null && countByBody(whole, this.knownLanguage ?? this.alias, known) > 1;
+		if (!twin) {
+			// no uniqueness needed
+		} else if (blockId !== null) {
+			const re = new RegExp(`(^|\\\\s)\\\\^${blockId.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')}\\\\s*$`, 'i');
+			if (lines.filter((l) => re.test(l)).length !== 1) return null;
+		} else {
+			const name = (subpath.split('#').pop() ?? '').toLowerCase();
+			if ((meta.headings ?? []).filter((h) => h.heading.toLowerCase() === name).length !== 1) return null;
+		}
+		const part = splitLines(sectionText);
+		const trimmed = part.slice();
+		while (trimmed.length > 0 && trimmed[trimmed.length - 1].trim() === '') trimmed.pop();
+		if (trimmed.length === 0) return null;
+		let partStart: number | null = null;
+		if (lines[start] === part[0]) partStart = start;
+		else if (blockId === null && lines[start + 1] === part[0]) partStart = start + 1;
+		if (partStart === null) return null;
+		for (let i = 0; i < trimmed.length; i++) if (lines[partStart + i] !== trimmed[i]) return null;
+		const line = partStart + relLine;
+		const found = this.fenceAt(whole, line);
+		if (!found) return null;
+		if (blockId !== null) {
+			const quoted = (parseOpenFenceLine(lines[found.lineStart])?.prefix ?? '') !== '';
+			const partEnd = partStart + trimmed.length - 1;
+			let next = (quoted ? Math.max(found.lineEnd, partEnd) : found.lineEnd) + 1;
+			while (next < lines.length && lines[next].trim() === '') next++;
+			if (next >= lines.length || lines[next].trim().toLowerCase() !== `^${blockId.toLowerCase()}`) return null;
+		}
+		const own = blockBodyLines(part, relLine, relLine + (found.lineEnd - found.lineStart)).join('\\n');
+		return normalizeBody(found.body) === normalizeBody(known ?? own) ? line : null;
+	}
+
+	/**
+	 * SC-556: where the embedded part starts in the note, from the embed element's `src`""")
+
+rep('''			const link = this.containerEl.closest('.internal-embed[src], .markdown-embed[src]')?.getAttribute('src');
+			if (typeof link !== 'string' || link.includes('#')) partialPins.add(pin);''', '''			const src = this.containerEl.closest('.internal-embed[src], .markdown-embed[src]')?.getAttribute('src');
+			// SC-594 probe: a hover preview of a WHOLE note (its recorded link has no `#`) is given the note as drawn: a pin of the note, mapped to now
+			const link = typeof src === 'string' ? src : !forForm && WHOLE_HOVER ? hoverLinkOf(this.containerEl)?.linktext : undefined;
+			if (typeof link !== 'string' || link.includes('#')) partialPins.add(pin);''')
+rep('const partialPins = new WeakSet<object>();\n', 'const partialPins = new WeakSet<object>();\nconst WHOLE_HOVER = ' + ('true' if VARIANT != 'nowhole' else 'false') + ';\n')
+# (4) replaceSource: wait for the card pin's rebase too; a card write whose pin is still partial is refused (never the body fallback)
+rep("""		const pin = options?.pin ?? (options?.fromView === true ? this.pendingPin : null);
+		if (options?.fromView === true) this.pendingPin = null;
+""", """		const pin = options?.pin ?? (options?.fromView === true ? this.pendingPin : null);
+		if (options?.fromView === true) this.pendingPin = null;
+		const cardRebase = pin && !options?.pin ? pinRebased.get(pin) : undefined;
+		if (cardRebase) await cardRebase; // SC-594 probe: the card pin's rebase is done before the write (only an embedded pin has one)
+""")
+rep("""				const twinned = !pinned && pin !== null && !options?.pinOnly && this.twinned(content, pin);
+				let target = pinned ?? (pin && (options?.pinOnly || twinned) ? 'miss' : this.resolveWriteTarget(content, section));""",
+    """				const twinned = !pinned && pin !== null && !options?.pinOnly && this.twinned(content, pin);
+				// SC-594 probe: a card write whose pin is still in the part's coordinates has no place in the note: refused, never the body fallback
+				const partialCard = !pinned && pin !== null && partialPins.has(pin);
+				let target = pinned ?? (pin && (options?.pinOnly || twinned || partialCard) ? 'miss' : this.resolveWriteTarget(content, section));""")
+
+open(F, 'w').write(s)
+print('applied', VARIANT)

@@ -1,0 +1,23 @@
+Info: New devbox available: 0.17.5 -> v0.20.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements
+HEAD 0bf5989dd48816caefb8fa74444e757a11b66ef5 ?? test/dom/framework/sc594-r3-probe.test.ts 
+  ● SC-594 r3 probes › P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter
+    Expected: not [5, 6]
+  ● SC-594 r3 probes › P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter
+    Expected: not [6, 5]
+  ● SC-594 r3 probes › P3 residual: X event, then Y event (identical-body heading) before X's popover exists, X opens: not written into Y
+    Expected: not [5, 6]
+  ● SC-594 r3 probes › P3b residual with a whole-note Y ([[Note]]) and the twin above
+    Expected: not [6, 5]
+  ● SC-594 r3 probes › P4 Y hovered while X open, parent already points at Y's new popover when Y's event is recorded: Y's card is not written at X
+    Expected: "Note#Other"
+    Received: "Note#Tracker"
+  ● SC-594 r3 probes › P9a the hovered ## Tracker section DELETED from outside, cache lags: the + is not written into the identical counter under ## Other
+    - Expected  - 1
+    + Received  + 1
+  ● SC-594 r3 probes › P9b ## Other moved ABOVE ## Tracker from outside, cache lags: the + is not written into the counter under ## Other
+    Expected: not [6, 5]
+  ● SC-594 r3 probes › P9c an identical ## Tracker section pasted above from outside (J8 shape), cache lags: the + is not written into the pasted counter
+    Expected: not 6
+Tests:       8 failed, 6 passed, 14 total
+rc=1

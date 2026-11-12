@@ -1,0 +1,256 @@
+// SC-594 r3 reviewer probes (UNCOMMITTED; copy kept in the ledger dir as sc594-r3-probe-jest.test.ts.txt).
+import { ReadingModeBlockHost } from '../../../src/framework/host/ReadingModeBlockHost';
+import { hoverLinkOf, noteHoverLink } from '../../../src/framework/host/hoverLinks';
+import { droppedWriteMessage, resetDroppedWriteNotices } from '../../../src/framework/host/droppedWriteNotice';
+import { App, Notice, Plugin } from '../../mocks/obsidian';
+import type { MarkdownPostProcessorContext } from '../../mocks/obsidian';
+
+type Sec = { text: string; lineStart: number; lineEnd: number };
+type Section = { current: Sec | null };
+
+function switchableCtx(section: Section): MarkdownPostProcessorContext {
+	return { docId: 'doc-594', sourcePath: 'Note.md', frontmatter: undefined, addChild: () => {}, getSectionInfo: () => section.current } as never;
+}
+const CTR = (n: number, name = 'Twin'): string[] => ['```ds-counter', `name: ${name}`, `current_value: ${n}`, '```'];
+const bodyOf = (n: number, name = 'Twin'): string => `name: ${name}\ncurrent_value: ${n}`;
+const q = (l: string) => `> ${l}`;
+const para = (n: number, tag: string): string[] => Array.from({ length: n }, (_, i) => `${tag} ${i}`);
+const pos = (line: number) => ({ line, col: 0, offset: 0 });
+const settle = () => new Promise((r) => setTimeout(r, 25));
+
+function cacheFor(lines: string[], blocks: Record<string, [number, number]> = {}) {
+	const headings: Array<{ heading: string; level: number; position: unknown }> = [];
+	lines.forEach((l, i) => {
+		const h = /^(#{1,6})\s+(.*)$/.exec(l);
+		if (h) headings.push({ heading: h[2], level: h[1].length, position: { start: pos(i), end: pos(i) } });
+	});
+	const bl: Record<string, unknown> = {};
+	for (const [id, [s, e]] of Object.entries(blocks)) bl[id] = { id, position: { start: pos(s), end: pos(e) } };
+	return { headings, blocks: bl };
+}
+function popoverEl(): { popover: HTMLElement; el: HTMLElement } {
+	const popover = document.createElement('div');
+	popover.className = 'popover hover-popover';
+	const embed = popover.appendChild(document.createElement('div'));
+	embed.className = 'markdown-embed';
+	const el = embed.appendChild(document.createElement('div'));
+	document.body.appendChild(popover);
+	return { popover, el };
+}
+type Parent = { hoverPopover: { hoverEl: HTMLElement } | null };
+const ev = (linktext: string, parent: Parent) => ({ linktext, sourcePath: 'Host.md', hoverParent: parent });
+const valuesOf = (app: App): number[] => [...app.vault.getContent('Note.md')!.matchAll(/current_value: (\d+)/g)].map((m) => Number(m[1]));
+
+describe('SC-594 r3 probes', () => {
+	let warn: jest.SpyInstance;
+	const popovers: HTMLElement[] = [];
+	beforeEach(() => {
+		resetDroppedWriteNotices();
+		Notice.notices.length = 0;
+		warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+	});
+	afterEach(() => {
+		warn.mockRestore();
+		popovers.splice(0).forEach((p) => p.remove());
+	});
+
+	function mk(disk: string, sec: Sec, known = bodyOf(5), blocks: Record<string, [number, number]> = {}) {
+		const app = new App();
+		app.vault.setFile('Note.md', disk);
+		jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => cacheFor(app.vault.getContent('Note.md')!.split('\n'), blocks) as never);
+		const { popover, el } = popoverEl();
+		popovers.push(popover);
+		const parent: Parent = { hoverPopover: null };
+		const section: Section = { current: sec };
+		const host = new ReadingModeBlockHost(new Plugin(app) as never, el, switchableCtx(section) as never, 'ds-counter');
+		host.setMountedBody(known);
+		return { app, host, section, popover, el, parent };
+	}
+	async function plus(host: ReadingModeBlockHost, to: string): Promise<boolean> {
+		host.notePersistIntent();
+		await settle();
+		return host.replaceSource(to, { fromView: true });
+	}
+	const TWO = ['# N', '', '## Tracker', '', ...CTR(5), '', '## Other', '', ...CTR(5), '', 'END'].join('\n');
+	const heading: Sec = { text: ['', ...CTR(5), '', ''].join('\n'), lineStart: 1, lineEnd: 4 };
+
+	// ---- P1: mL2 (the r7 guard for cards) is NOT equivalent -------------------------------------------------------------------------
+	// A callout holding two counters (upper 5, lower 6) under ## Tracker; + on the UPPER one (5 -> 6: it now reads like the lower one).
+	// Before the preview redraws, an outside edit (Sync / another app) puts the upper one back to 5: the note now reads exactly like the
+	// stale part again. The second + : the host knows body 6; the stale window holds body 6 only in the LOWER counter, so the own fence
+	// found by body is the twin. Guard: the own last write (upper) is taken -> its fence now holds 5 -> refused. Without the guard (mL2):
+	// the part matches the note, the fence there (lower) holds the known body -> written into the LOWER counter.
+	test.each([
+		['heading hover', 'Note#Tracker', true],
+		['block hover', 'Note#^cal', false],
+	] as const)('P1 %s: second + after an outside revert of the first + in a stale callout window is never written into the sibling', async (_n, link, byHeading) => {
+		const C2 = (a: number, b: number): string[] => ['> [!note] Camp', ...CTR(a).map(q), '> mid', ...CTR(b).map(q)];
+		const lines = byHeading ? ['# N', '', '## Tracker', '', ...C2(5, 6), '', '## After', 'END'] : ['# N', '', ...C2(5, 6), '', '^cal', '', 'END'];
+		const head = lines.indexOf('> [!note] Camp');
+		const sec: Sec = byHeading ? { text: ['', ...C2(5, 6), '', ''].join('\n'), lineStart: 1, lineEnd: 10 } : { text: C2(5, 6).join('\n'), lineStart: 0, lineEnd: 9 };
+		const { app, host, popover, parent } = mk(lines.join('\n'), sec, bodyOf(5), { cal: [head, head + 9] });
+		parent.hoverPopover = { hoverEl: popover };
+		noteHoverLink(app, ev(link, parent));
+
+		expect(await plus(host, bodyOf(6))).toBe(true);
+		expect(valuesOf(app)).toEqual([6, 6]);
+		const reverted = app.vault.getContent('Note.md')!.replace('current_value: 6', 'current_value: 5'); // upper back to 5
+		app.vault.setFile('Note.md', reverted);
+		expect(valuesOf(app)).toEqual([5, 6]);
+
+		await plus(host, bodyOf(7));
+		expect(valuesOf(app)).not.toEqual([5, 7]); // the sibling (lower) written = wrong block
+		expect(app.vault.getContent('Note.md')).toBe(reverted);
+	});
+
+	// ---- P2: the plugin loaded while a preview was open, then a pass-over on the same parent -------------------------------------
+	// CHANGELOG: "Still not saved ... a preview ... that was already open when the plugin loaded". The preview X (## Tracker) has no event of its
+	// own in the log; the pointer passes over [[Note#Other]] (identical body) on the same parent; Obsidian's pass-over event names X's popover
+	// (hoverParent.hoverPopover is still X: measured r2). The first lookup binds X to Other's link.
+	test('P2 preview open before the plugin loaded + pass-over of an identical-body heading link: not written into the other counter', async () => {
+		const { app, host, popover, parent } = mk(TWO, heading);
+		parent.hoverPopover = { hoverEl: popover }; // X is open (its event fired before our listener existed)
+		noteHoverLink(app, ev('Note#Other', parent)); // pass-over, Y's preview never opens
+
+		await plus(host, bodyOf(6));
+		expect(valuesOf(app)).not.toEqual([5, 6]);
+		expect(valuesOf(app)).toEqual([5, 5]);
+	});
+
+	// P2b: the same with a WHOLE-NOTE pass-over link ([[Note]]): the pin is then taken as a pin of the note although it is the part's coordinates.
+	test('P2b preview open before the plugin loaded + pass-over of [[Note]] (whole note): not written into the other counter', async () => {
+		const LONGA = ['# N', '', 'TOP', '', '## Other', '', ...CTR(5), '', '## Tracker', '', ...CTR(5), '', 'END'].join('\n'); // twin ABOVE
+		const { app, host, popover, parent } = mk(LONGA, heading);
+		parent.hoverPopover = { hoverEl: popover };
+		noteHoverLink(app, ev('Note', parent));
+
+		await plus(host, bodyOf(6));
+		const v = valuesOf(app);
+		expect(v).not.toEqual([6, 5]); // the twin above
+		expect(v).toEqual([5, 5]);
+	});
+
+	// ---- P3: the residual the r2 report names: Y's event BEFORE X's popover exists, X's popover still opens --------------------------
+	test('P3 residual: X event, then Y event (identical-body heading) before X\'s popover exists, X opens: not written into Y', async () => {
+		const { app, host, popover, parent } = mk(TWO, heading);
+		noteHoverLink(app, ev('Note#Tracker', parent)); // X: parent has no popover yet
+		noteHoverLink(app, ev('Note#Other', parent)); // Y: still no popover
+		parent.hoverPopover = { hoverEl: popover }; // X's popover opens
+
+		await plus(host, bodyOf(6));
+		expect(valuesOf(app)).not.toEqual([5, 6]);
+	});
+	test('P3b residual with a whole-note Y ([[Note]]) and the twin above', async () => {
+		const LONGA = ['# N', '', 'TOP', '', '## Other', '', ...CTR(5), '', '## Tracker', '', ...CTR(5), '', 'END'].join('\n');
+		const { app, host, popover, parent } = mk(LONGA, heading);
+		noteHoverLink(app, ev('Note#Tracker', parent));
+		noteHoverLink(app, ev('Note', parent));
+		parent.hoverPopover = { hoverEl: popover };
+
+		await plus(host, bodyOf(6));
+		expect(valuesOf(app)).not.toEqual([6, 5]);
+	});
+
+	// ---- P4: Y's event while X is open, when Obsidian has ALREADY swapped the parent's popover to Y's (unshown) one before our listener -----
+	// If page-preview's listener runs before ours and creates Y's HoverPopover synchronously, the bind step binds Y's NEW popover element to
+	// the newest event naming it = X's event. Then Y opens and its card is placed through X's link.
+	test('P4 Y hovered while X open, parent already points at Y\'s new popover when Y\'s event is recorded: Y\'s card is not written at X', async () => {
+		const { app, popover: xPop, parent } = mk(TWO, heading);
+		parent.hoverPopover = { hoverEl: xPop };
+		noteHoverLink(app, ev('Note#Tracker', parent)); // X
+		const y = popoverEl();
+		popovers.push(y.popover);
+		parent.hoverPopover = { hoverEl: y.popover }; // page-preview made Y's popover first
+		noteHoverLink(app, ev('Note#Other', parent)); // Y recorded after
+		expect(hoverLinkOf(app, y.el)?.linktext).toBe('Note#Other');
+	});
+
+	// ---- P5: the twin BELOW the hovered section (the sweep only puts it above) ------------------------------------------------------
+	test.each([
+		['plain', (v: number) => CTR(v), true],
+		['callout', (v: number) => ['> [!note] Camp', ...CTR(v).map(q), '> after'], false],
+	] as const)('P5 %s, twin below, own edited before the click: refused; nothing edited: lands in A', async (_n, build, plain) => {
+		for (const edit of ['none', 'own', 'twin-added-below'] as const) {
+			resetDroppedWriteNotices();
+			Notice.notices.length = 0;
+			const note = (a: number, extra: boolean) => ['# N', '', 'TOP', '', '## Tracker', '', ...build(a), '', '## After', '', ...build(5), '', ...(extra ? [...build(5), ''] : []), 'END'].join('\n');
+			const disk = note(edit === 'own' ? 9 : 5, edit === 'twin-added-below');
+			const part = ['', ...build(5), '', ''];
+			const sec: Sec = plain ? { text: part.join('\n'), lineStart: 1, lineEnd: 4 } : { text: part.join('\n'), lineStart: 1, lineEnd: build(5).length };
+			const { app, host, popover, parent } = mk(disk, sec);
+			parent.hoverPopover = { hoverEl: popover };
+			noteHoverLink(app, ev('Note#Tracker', parent));
+			await plus(host, bodyOf(6));
+			const v = valuesOf(app);
+			if (edit === 'own') expect(v).toEqual([9, 5]);
+			else expect(v[0]).toBe(6);
+			expect(v.slice(1).every((x) => x === 5)).toBe(true);
+		}
+	});
+
+	// ---- P6: a heading whose name Obsidian links with characters stripped (resolveSubpath is laxer than the exact-name count) -----------
+	// Mock resolveSubpath is exact, so this only shows the count rule: an exact-name heading count of 0 refuses (never a twin).
+	test('P6 heading "Tracker: one" linked as Note#Tracker one, body twinned: count is 0 -> refused (a refusal, not a twin)', async () => {
+		const disk = ['# N', '', '## Tracker: one', '', ...CTR(5), '', '## Other', '', ...CTR(5), '', 'END'].join('\n');
+		const { app, host, popover, parent } = mk(disk, heading);
+		parent.hoverPopover = { hoverEl: popover };
+		noteHoverLink(app, ev('Note#Tracker one', parent));
+		await plus(host, bodyOf(6));
+		expect(valuesOf(app)).toEqual([5, 5]);
+		expect(Notice.notices).toEqual([droppedWriteMessage('Note')]);
+	});
+
+	// ---- P9: a heading hover whose metadata cache LAGS an outside edit (the block analogue is J15; there the ^id marker check refuses) ------
+	// The cache still says `## Tracker` is at its old line. The part is the heading's BODY, so `cardLinkLine` takes `start + 1` without ever checking
+	// that line `start` is still the `## Tracker` heading: if the identical `## Other` section now sits there, the whole-part check passes at Other.
+	const C6 = (n: number): string[] => ['```ds-counter', 'name: Twin', `current_value: ${n}`, 'max_value: 20', 'min_value: 0', '```'];
+	const ORIG = ['# N', '', 'TOP', '', '## Tracker', '', ...C6(5), '', '## Other', '', ...C6(5), '', 'END'];
+	const hpart6: Sec = { text: ['', ...C6(5), '', ''].join('\n'), lineStart: 1, lineEnd: 6 };
+	function staleCache(disk: string) {
+		const app = new App();
+		app.vault.setFile('Note.md', disk);
+		jest.spyOn(app.metadataCache, 'getFileCache').mockImplementation(() => cacheFor(ORIG) as never); // the cache of the note BEFORE the edit
+		const { popover, el } = popoverEl();
+		popovers.push(popover);
+		const parent: Parent = { hoverPopover: { hoverEl: popover } };
+		noteHoverLink(app, ev('Note#Tracker', parent));
+		const host = new ReadingModeBlockHost(new Plugin(app) as never, el, switchableCtx({ current: hpart6 }) as never, 'ds-counter');
+		host.setMountedBody('name: Twin\ncurrent_value: 5\nmax_value: 20\nmin_value: 0');
+		return { app, host };
+	}
+	const to6 = 'name: Twin\ncurrent_value: 6\nmax_value: 20\nmin_value: 0';
+	test('P9a the hovered ## Tracker section DELETED from outside, cache lags: the + is not written into the identical counter under ## Other', async () => {
+		const disk = ['# N', '', 'TOP', '', '## Other', '', ...C6(5), '', 'END'].join('\n');
+		const { app, host } = staleCache(disk);
+		await plus(host, to6);
+		expect(app.vault.getContent('Note.md')).toBe(disk);
+	});
+	test('P9b ## Other moved ABOVE ## Tracker from outside, cache lags: the + is not written into the counter under ## Other', async () => {
+		const disk = ['# N', '', 'TOP', '', '## Other', '', ...C6(5), '', '## Tracker', '', ...C6(5), '', 'END'].join('\n');
+		const { app, host } = staleCache(disk);
+		await plus(host, to6);
+		const v = valuesOf(app);
+		expect(v).not.toEqual([6, 5]); // [Other, Tracker]: Other written = wrong block
+	});
+	test('P9c an identical ## Tracker section pasted above from outside (J8 shape), cache lags: the + is not written into the pasted counter', async () => {
+		const disk = ['# N', '', 'TOP', '', '## Tracker', '', ...C6(5), '', '## Pasted', '', '## Tracker', '', ...C6(5), '', '## Other', '', ...C6(5), '', 'END'].join('\n');
+		const { app, host } = staleCache(disk);
+		await plus(host, to6);
+		const v = valuesOf(app);
+		expect(v[0]).not.toBe(6); // the pasted one
+	});
+
+	// ---- P7: two hovers in a row on the same parent, card redrawn in Y after X closed (popover elements are new per hover) ----------
+	test('P7 X opened and closed, Y opened on the same parent, pass-over Z while Y open: Y\'s card uses Y', async () => {
+		const { app, popover: xPop, parent } = mk(TWO, heading);
+		noteHoverLink(app, ev('Note#Tracker', parent));
+		parent.hoverPopover = { hoverEl: xPop };
+		parent.hoverPopover = null; // X closed, never clicked
+		const y = popoverEl();
+		popovers.push(y.popover);
+		noteHoverLink(app, ev('Note#Other', parent));
+		parent.hoverPopover = { hoverEl: y.popover };
+		noteHoverLink(app, ev('Note#Tracker', parent)); // pass-over Z = Tracker while Y open
+		expect(hoverLinkOf(app, y.el)?.linktext).toBe('Note#Other');
+	});
+});

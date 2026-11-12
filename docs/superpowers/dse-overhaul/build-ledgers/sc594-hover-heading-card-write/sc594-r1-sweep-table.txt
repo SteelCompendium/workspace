@@ -1,0 +1,324 @@
+# SC-594 r1 jest construct sweep: card + (fromView) on counter A, an identical counter (the twin) elsewhere in the note
+# columns: construct | link shape | host style | outside edit before the click | base ce4937ef | probe rule
+# outcome: A = written into the clicked block; TWIN = written into the identical block (wrong-block write); refused+Notice = nothing written, the dropped-write Notice
+plain fence | heading hover | rv | none | refused+Notice | A
+plain fence | heading hover | rv | own edited | TWIN | refused+Notice
+plain fence | heading hover | rv | twin edited | A | A
+plain fence | heading hover | rv | identical added | refused+Notice | A
+plain fence | heading hover | lp | none | refused+Notice | A
+plain fence | heading hover | lp | own edited | TWIN | refused+Notice
+plain fence | heading hover | lp | twin edited | A | A
+plain fence | heading hover | lp | identical added | refused+Notice | A
+plain fence | block hover | rv | none | refused+Notice | A
+plain fence | block hover | rv | own edited | TWIN | refused+Notice
+plain fence | block hover | rv | twin edited | A | A
+plain fence | block hover | rv | identical added | refused+Notice | A
+plain fence | block hover | lp | none | refused+Notice | A
+plain fence | block hover | lp | own edited | TWIN | refused+Notice
+plain fence | block hover | lp | twin edited | A | A
+plain fence | block hover | lp | identical added | refused+Notice | A
+plain fence | heading embed | rv | none | A | A
+plain fence | heading embed | rv | own edited | TWIN | refused+Notice
+plain fence | heading embed | rv | twin edited | A | A
+plain fence | heading embed | rv | identical added | A | A
+plain fence | heading embed | lp | none | A | A
+plain fence | heading embed | lp | own edited | TWIN | refused+Notice
+plain fence | heading embed | lp | twin edited | A | A
+plain fence | heading embed | lp | identical added | A | A
+plain fence | block embed | rv | none | A | A
+plain fence | block embed | rv | own edited | TWIN | refused+Notice
+plain fence | block embed | rv | twin edited | A | A
+plain fence | block embed | rv | identical added | A | A
+plain fence | block embed | lp | none | A | A
+plain fence | block embed | lp | own edited | TWIN | refused+Notice
+plain fence | block embed | lp | twin edited | A | A
+plain fence | block embed | lp | identical added | A | A
+plain fence | whole-note hover | rv | none | A | A
+plain fence | whole-note hover | rv | own edited | refused+Notice | refused+Notice
+plain fence | whole-note hover | rv | twin edited | refused+Notice | A
+plain fence | whole-note hover | rv | identical added | refused+Notice | A
+plain fence | whole-note hover | lp | none | A | A
+plain fence | whole-note hover | lp | own edited | refused+Notice | refused+Notice
+plain fence | whole-note hover | lp | twin edited | refused+Notice | A
+plain fence | whole-note hover | lp | identical added | refused+Notice | A
+callout | heading hover | rv | none | refused+Notice | A
+callout | heading hover | rv | own edited | TWIN | refused+Notice
+callout | heading hover | rv | twin edited | A | A
+callout | heading hover | rv | identical added | refused+Notice | A
+callout | heading hover | lp | none | refused+Notice | A
+callout | heading hover | lp | own edited | TWIN | refused+Notice
+callout | heading hover | lp | twin edited | A | A
+callout | heading hover | lp | identical added | refused+Notice | A
+callout | block hover | rv | none | refused+Notice | A
+callout | block hover | rv | own edited | TWIN | refused+Notice
+callout | block hover | rv | twin edited | A | A
+callout | block hover | rv | identical added | refused+Notice | A
+callout | block hover | lp | none | refused+Notice | A
+callout | block hover | lp | own edited | TWIN | refused+Notice
+callout | block hover | lp | twin edited | A | A
+callout | block hover | lp | identical added | refused+Notice | A
+callout | heading embed | rv | none | A | A
+callout | heading embed | rv | own edited | TWIN | refused+Notice
+callout | heading embed | rv | twin edited | A | A
+callout | heading embed | rv | identical added | A | A
+callout | heading embed | lp | none | A | A
+callout | heading embed | lp | own edited | TWIN | refused+Notice
+callout | heading embed | lp | twin edited | A | A
+callout | heading embed | lp | identical added | A | A
+callout | block embed | rv | none | A | A
+callout | block embed | rv | own edited | TWIN | refused+Notice
+callout | block embed | rv | twin edited | A | A
+callout | block embed | rv | identical added | A | A
+callout | block embed | lp | none | A | A
+callout | block embed | lp | own edited | TWIN | refused+Notice
+callout | block embed | lp | twin edited | A | A
+callout | block embed | lp | identical added | A | A
+callout | whole-note hover | rv | none | A | A
+callout | whole-note hover | rv | own edited | refused+Notice | refused+Notice
+callout | whole-note hover | rv | twin edited | refused+Notice | A
+callout | whole-note hover | rv | identical added | refused+Notice | A
+callout | whole-note hover | lp | none | A | A
+callout | whole-note hover | lp | own edited | refused+Notice | refused+Notice
+callout | whole-note hover | lp | twin edited | refused+Notice | A
+callout | whole-note hover | lp | identical added | refused+Notice | A
+header-less quote | heading hover | rv | none | refused+Notice | A
+header-less quote | heading hover | rv | own edited | TWIN | refused+Notice
+header-less quote | heading hover | rv | twin edited | A | A
+header-less quote | heading hover | rv | identical added | refused+Notice | A
+header-less quote | heading hover | lp | none | refused+Notice | A
+header-less quote | heading hover | lp | own edited | TWIN | refused+Notice
+header-less quote | heading hover | lp | twin edited | A | A
+header-less quote | heading hover | lp | identical added | refused+Notice | A
+header-less quote | block hover | rv | none | refused+Notice | A
+header-less quote | block hover | rv | own edited | TWIN | refused+Notice
+header-less quote | block hover | rv | twin edited | A | A
+header-less quote | block hover | rv | identical added | refused+Notice | A
+header-less quote | block hover | lp | none | refused+Notice | A
+header-less quote | block hover | lp | own edited | TWIN | refused+Notice
+header-less quote | block hover | lp | twin edited | A | A
+header-less quote | block hover | lp | identical added | refused+Notice | A
+header-less quote | heading embed | rv | none | A | A
+header-less quote | heading embed | rv | own edited | TWIN | refused+Notice
+header-less quote | heading embed | rv | twin edited | A | A
+header-less quote | heading embed | rv | identical added | A | A
+header-less quote | heading embed | lp | none | A | A
+header-less quote | heading embed | lp | own edited | TWIN | refused+Notice
+header-less quote | heading embed | lp | twin edited | A | A
+header-less quote | heading embed | lp | identical added | A | A
+header-less quote | block embed | rv | none | A | A
+header-less quote | block embed | rv | own edited | TWIN | refused+Notice
+header-less quote | block embed | rv | twin edited | A | A
+header-less quote | block embed | rv | identical added | A | A
+header-less quote | block embed | lp | none | A | A
+header-less quote | block embed | lp | own edited | TWIN | refused+Notice
+header-less quote | block embed | lp | twin edited | A | A
+header-less quote | block embed | lp | identical added | A | A
+header-less quote | whole-note hover | rv | none | A | A
+header-less quote | whole-note hover | rv | own edited | refused+Notice | refused+Notice
+header-less quote | whole-note hover | rv | twin edited | refused+Notice | A
+header-less quote | whole-note hover | rv | identical added | refused+Notice | A
+header-less quote | whole-note hover | lp | none | A | A
+header-less quote | whole-note hover | lp | own edited | refused+Notice | refused+Notice
+header-less quote | whole-note hover | lp | twin edited | refused+Notice | A
+header-less quote | whole-note hover | lp | identical added | refused+Notice | A
+quote, first line is the fence | heading hover | rv | none | refused+Notice | A
+quote, first line is the fence | heading hover | rv | own edited | TWIN | refused+Notice
+quote, first line is the fence | heading hover | rv | twin edited | A | A
+quote, first line is the fence | heading hover | rv | identical added | refused+Notice | A
+quote, first line is the fence | heading hover | lp | none | refused+Notice | A
+quote, first line is the fence | heading hover | lp | own edited | TWIN | refused+Notice
+quote, first line is the fence | heading hover | lp | twin edited | A | A
+quote, first line is the fence | heading hover | lp | identical added | refused+Notice | A
+quote, first line is the fence | block hover | rv | none | refused+Notice | A
+quote, first line is the fence | block hover | rv | own edited | TWIN | refused+Notice
+quote, first line is the fence | block hover | rv | twin edited | A | A
+quote, first line is the fence | block hover | rv | identical added | refused+Notice | A
+quote, first line is the fence | block hover | lp | none | refused+Notice | A
+quote, first line is the fence | block hover | lp | own edited | TWIN | refused+Notice
+quote, first line is the fence | block hover | lp | twin edited | A | A
+quote, first line is the fence | block hover | lp | identical added | refused+Notice | A
+quote, first line is the fence | heading embed | rv | none | A | A
+quote, first line is the fence | heading embed | rv | own edited | TWIN | refused+Notice
+quote, first line is the fence | heading embed | rv | twin edited | A | A
+quote, first line is the fence | heading embed | rv | identical added | A | A
+quote, first line is the fence | heading embed | lp | none | A | A
+quote, first line is the fence | heading embed | lp | own edited | TWIN | refused+Notice
+quote, first line is the fence | heading embed | lp | twin edited | A | A
+quote, first line is the fence | heading embed | lp | identical added | A | A
+quote, first line is the fence | block embed | rv | none | A | A
+quote, first line is the fence | block embed | rv | own edited | TWIN | refused+Notice
+quote, first line is the fence | block embed | rv | twin edited | A | A
+quote, first line is the fence | block embed | rv | identical added | A | A
+quote, first line is the fence | block embed | lp | none | A | A
+quote, first line is the fence | block embed | lp | own edited | TWIN | refused+Notice
+quote, first line is the fence | block embed | lp | twin edited | A | A
+quote, first line is the fence | block embed | lp | identical added | A | A
+quote, first line is the fence | whole-note hover | rv | none | A | A
+quote, first line is the fence | whole-note hover | rv | own edited | refused+Notice | refused+Notice
+quote, first line is the fence | whole-note hover | rv | twin edited | refused+Notice | A
+quote, first line is the fence | whole-note hover | rv | identical added | refused+Notice | A
+quote, first line is the fence | whole-note hover | lp | none | A | A
+quote, first line is the fence | whole-note hover | lp | own edited | refused+Notice | refused+Notice
+quote, first line is the fence | whole-note hover | lp | twin edited | refused+Notice | A
+quote, first line is the fence | whole-note hover | lp | identical added | refused+Notice | A
+nested callout | heading hover | rv | none | refused+Notice | A
+nested callout | heading hover | rv | own edited | TWIN | refused+Notice
+nested callout | heading hover | rv | twin edited | A | A
+nested callout | heading hover | rv | identical added | refused+Notice | A
+nested callout | heading hover | lp | none | refused+Notice | A
+nested callout | heading hover | lp | own edited | TWIN | refused+Notice
+nested callout | heading hover | lp | twin edited | A | A
+nested callout | heading hover | lp | identical added | refused+Notice | A
+nested callout | block hover | rv | none | refused+Notice | A
+nested callout | block hover | rv | own edited | TWIN | refused+Notice
+nested callout | block hover | rv | twin edited | A | A
+nested callout | block hover | rv | identical added | refused+Notice | A
+nested callout | block hover | lp | none | refused+Notice | A
+nested callout | block hover | lp | own edited | TWIN | refused+Notice
+nested callout | block hover | lp | twin edited | A | A
+nested callout | block hover | lp | identical added | refused+Notice | A
+nested callout | heading embed | rv | none | A | A
+nested callout | heading embed | rv | own edited | TWIN | refused+Notice
+nested callout | heading embed | rv | twin edited | A | A
+nested callout | heading embed | rv | identical added | A | A
+nested callout | heading embed | lp | none | A | A
+nested callout | heading embed | lp | own edited | TWIN | refused+Notice
+nested callout | heading embed | lp | twin edited | A | A
+nested callout | heading embed | lp | identical added | A | A
+nested callout | block embed | rv | none | A | A
+nested callout | block embed | rv | own edited | TWIN | refused+Notice
+nested callout | block embed | rv | twin edited | A | A
+nested callout | block embed | rv | identical added | A | A
+nested callout | block embed | lp | none | A | A
+nested callout | block embed | lp | own edited | TWIN | refused+Notice
+nested callout | block embed | lp | twin edited | A | A
+nested callout | block embed | lp | identical added | A | A
+nested callout | whole-note hover | rv | none | A | A
+nested callout | whole-note hover | rv | own edited | refused+Notice | refused+Notice
+nested callout | whole-note hover | rv | twin edited | refused+Notice | A
+nested callout | whole-note hover | rv | identical added | refused+Notice | A
+nested callout | whole-note hover | lp | none | A | A
+nested callout | whole-note hover | lp | own edited | refused+Notice | refused+Notice
+nested callout | whole-note hover | lp | twin edited | refused+Notice | A
+nested callout | whole-note hover | lp | identical added | refused+Notice | A
+list item | heading hover | rv | none | refused+Notice | refused+Notice
+list item | heading hover | rv | own edited | refused+Notice | refused+Notice
+list item | heading hover | rv | twin edited | refused+Notice | refused+Notice
+list item | heading hover | rv | identical added | refused+Notice | refused+Notice
+list item | heading hover | lp | none | refused+Notice | refused+Notice
+list item | heading hover | lp | own edited | refused+Notice | refused+Notice
+list item | heading hover | lp | twin edited | refused+Notice | refused+Notice
+list item | heading hover | lp | identical added | refused+Notice | refused+Notice
+list item | block hover | rv | none | refused+Notice | refused+Notice
+list item | block hover | rv | own edited | refused+Notice | refused+Notice
+list item | block hover | rv | twin edited | refused+Notice | refused+Notice
+list item | block hover | rv | identical added | refused+Notice | refused+Notice
+list item | block hover | lp | none | refused+Notice | refused+Notice
+list item | block hover | lp | own edited | refused+Notice | refused+Notice
+list item | block hover | lp | twin edited | refused+Notice | refused+Notice
+list item | block hover | lp | identical added | refused+Notice | refused+Notice
+list item | heading embed | rv | none | refused+Notice | refused+Notice
+list item | heading embed | rv | own edited | refused+Notice | refused+Notice
+list item | heading embed | rv | twin edited | refused+Notice | refused+Notice
+list item | heading embed | rv | identical added | refused+Notice | refused+Notice
+list item | heading embed | lp | none | refused+Notice | refused+Notice
+list item | heading embed | lp | own edited | refused+Notice | refused+Notice
+list item | heading embed | lp | twin edited | refused+Notice | refused+Notice
+list item | heading embed | lp | identical added | refused+Notice | refused+Notice
+list item | block embed | rv | none | refused+Notice | refused+Notice
+list item | block embed | rv | own edited | refused+Notice | refused+Notice
+list item | block embed | rv | twin edited | refused+Notice | refused+Notice
+list item | block embed | rv | identical added | refused+Notice | refused+Notice
+list item | block embed | lp | none | refused+Notice | refused+Notice
+list item | block embed | lp | own edited | refused+Notice | refused+Notice
+list item | block embed | lp | twin edited | refused+Notice | refused+Notice
+list item | block embed | lp | identical added | refused+Notice | refused+Notice
+list item | whole-note hover | rv | none | refused+Notice | refused+Notice
+list item | whole-note hover | rv | own edited | refused+Notice | refused+Notice
+list item | whole-note hover | rv | twin edited | refused+Notice | refused+Notice
+list item | whole-note hover | rv | identical added | refused+Notice | refused+Notice
+list item | whole-note hover | lp | none | refused+Notice | refused+Notice
+list item | whole-note hover | lp | own edited | refused+Notice | refused+Notice
+list item | whole-note hover | lp | twin edited | refused+Notice | refused+Notice
+list item | whole-note hover | lp | identical added | refused+Notice | refused+Notice
+footnote | heading hover | rv | none | refused+Notice | refused+Notice
+footnote | heading hover | rv | own edited | refused+Notice | refused+Notice
+footnote | heading hover | rv | twin edited | refused+Notice | refused+Notice
+footnote | heading hover | rv | identical added | refused+Notice | refused+Notice
+footnote | heading hover | lp | none | refused+Notice | refused+Notice
+footnote | heading hover | lp | own edited | refused+Notice | refused+Notice
+footnote | heading hover | lp | twin edited | refused+Notice | refused+Notice
+footnote | heading hover | lp | identical added | refused+Notice | refused+Notice
+footnote | block hover | rv | none | refused+Notice | refused+Notice
+footnote | block hover | rv | own edited | refused+Notice | refused+Notice
+footnote | block hover | rv | twin edited | refused+Notice | refused+Notice
+footnote | block hover | rv | identical added | refused+Notice | refused+Notice
+footnote | block hover | lp | none | refused+Notice | refused+Notice
+footnote | block hover | lp | own edited | refused+Notice | refused+Notice
+footnote | block hover | lp | twin edited | refused+Notice | refused+Notice
+footnote | block hover | lp | identical added | refused+Notice | refused+Notice
+footnote | heading embed | rv | none | refused+Notice | refused+Notice
+footnote | heading embed | rv | own edited | refused+Notice | refused+Notice
+footnote | heading embed | rv | twin edited | refused+Notice | refused+Notice
+footnote | heading embed | rv | identical added | refused+Notice | refused+Notice
+footnote | heading embed | lp | none | refused+Notice | refused+Notice
+footnote | heading embed | lp | own edited | refused+Notice | refused+Notice
+footnote | heading embed | lp | twin edited | refused+Notice | refused+Notice
+footnote | heading embed | lp | identical added | refused+Notice | refused+Notice
+footnote | block embed | rv | none | refused+Notice | refused+Notice
+footnote | block embed | rv | own edited | refused+Notice | refused+Notice
+footnote | block embed | rv | twin edited | refused+Notice | refused+Notice
+footnote | block embed | rv | identical added | refused+Notice | refused+Notice
+footnote | block embed | lp | none | refused+Notice | refused+Notice
+footnote | block embed | lp | own edited | refused+Notice | refused+Notice
+footnote | block embed | lp | twin edited | refused+Notice | refused+Notice
+footnote | block embed | lp | identical added | refused+Notice | refused+Notice
+footnote | whole-note hover | rv | none | refused+Notice | refused+Notice
+footnote | whole-note hover | rv | own edited | refused+Notice | refused+Notice
+footnote | whole-note hover | rv | twin edited | refused+Notice | refused+Notice
+footnote | whole-note hover | rv | identical added | refused+Notice | refused+Notice
+footnote | whole-note hover | lp | none | refused+Notice | refused+Notice
+footnote | whole-note hover | lp | own edited | refused+Notice | refused+Notice
+footnote | whole-note hover | lp | twin edited | refused+Notice | refused+Notice
+footnote | whole-note hover | lp | identical added | refused+Notice | refused+Notice
+plain fence | heading hover | rv | none, NO hover-link record | refused+Notice | refused+Notice
+plain fence | block hover | rv | none, NO hover-link record | refused+Notice | refused+Notice
+callout | heading hover | rv | none, NO hover-link record | refused+Notice | refused+Notice
+callout | block hover | rv | none, NO hover-link record | refused+Notice | refused+Notice
+NAMED | T1 ticket heading hover long | - | - | false [5,5] notices 1 | true [6,5] notices 0
+NAMED | T2 ticket heading hover short | - | - | false [5,5] notices 1 | true [6,5] notices 0
+NAMED | T3 P14 block hover (record) | - | - | true [9,7] notices 0 | false [9,6] notices 1
+NAMED | T3b P14 block hover (no record) | - | - | true [9,7] notices 0 | false [9,6] notices 1
+NAMED | T3c block hover, own edited before click | - | - | true [9,6] notices 0 | false [9,5] notices 1
+NAMED | T4 heading hover, own edited before click | - | - | true [9,6] notices 0 | false [9,5] notices 1
+NAMED | T5 second + stale part | - | - | false false [5,5] notices 1 | true true [7,5] notices 0
+NAMED | T5b second + fresh part | - | - | false false [5,5] notices 1 | true true [7,5] notices 0
+NAMED | T6 second + after A reads like B | - | - | true false [6,6] notices 1 | true true [7,6] notices 0
+NAMED | T6b second + after outside edit of A | - | - | true [9,7] notices 0 | false [9,6] notices 1
+NAMED | T7 repeated heading, unique body | - | - | true [6,3] notices 0 | true [6,3] notices 0
+NAMED | T8 same-name section inserted above | - | - | false [5,5,5] notices 1 | false [5,5,5] notices 1
+NAMED | T9 two popovers | - | - | false [5,5] notices 1 | true [6,5] notices 0
+NAMED | T10 record of another popover | - | - | false [5,5] notices 1 | false [5,5] notices 1
+NAMED | T11 RV heading embed repeated heading | - | - | true [6,3] notices 0 | true [6,3] notices 0
+NAMED | T13 A deleted, B moved onto its line | - | - | false [5] notices 1 | false [5] notices 1
+NAMED | T14 immediate flush | - | - | false [5,5] notices 1 | true [6,5] notices 0
+NAMED | T15 cache points ^a at B | - | - | false [5,5] notices 1 | false [5,5] notices 1
+NAMED | T16 callout, second + stale window | - | - | true true [7,6] notices 0 | true true [6,7] notices 0
+NAMED | T12 whole-note hover, identical added | - | - | false [5,5] notices 1 | true [5,6] notices 0
+
+# totals (base -> probe):
+#     90  A -> A
+#     40  TWIN -> refused+Notice
+#      1  false [5,5,5] notices 1 -> false [5,5,5] notices 1
+#      2  false [5,5] notices 1 -> false [5,5] notices 1
+#      1  false [5,5] notices 1 -> true [5,6] notices 0
+#      4  false [5,5] notices 1 -> true [6,5] notices 0
+#      1  false [5] notices 1 -> false [5] notices 1
+#      2  false false [5,5] notices 1 -> true true [7,5] notices 0
+#     60  refused+Notice -> A
+#     94  refused+Notice -> refused+Notice
+#      2  true [6,3] notices 0 -> true [6,3] notices 0
+#      2  true [9,6] notices 0 -> false [9,5] notices 1
+#      3  true [9,7] notices 0 -> false [9,6] notices 1
+#      1  true false [6,6] notices 1 -> true true [7,6] notices 0
+#      1  true true [7,6] notices 0 -> true true [6,7] notices 0

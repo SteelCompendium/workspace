@@ -1,0 +1,36 @@
+# SC-594 r2 mutants against the committed fix + tests (suites: reading-mode-host-hover-card, reading-mode-host-pin, plugin-wiring; dom project).
+# baseline with the fix: all green. Each mutant is applied to the source, the three suites run, the source restored with git checkout.
+# mA no partial-card refusal; mB searchedPinLine kept for cards; mC no start+1 (heading body part); mD no whole-part check; mE no one-place check;
+# mF one-place check unconditional; mG newest event regardless of popover; mH no own-write record in rebaseCardPin; mI whole-note hover still partial;
+# mJ card rebase not awaited; mK no ^id marker; mL card takePin without the own-write record (no ownFence); mL2 the r7 guard for cards removed;
+# mM no known-body check in cardLinkLine (equivalent: pinnedTarget checks it at write time); mN the lookup does not memoize the link;
+# mO no binding at the next event (lazy memo at the first lookup only); mP hover-link listener not registered at load; mQ log not bounded; mR quoted-block marker rule off;
+# mS no 'part IS the note' shortcut
+
+mI rc=1 Tests:       21 failed, 452 passed, 473 total
+mJ rc=1 Tests:       1 failed, 472 passed, 473 total
+mK rc=1 Tests:       1 failed, 472 passed, 473 total
+mL rc=1 Tests:       1 failed, 472 passed, 473 total
+mL2 rc=0 Tests:       473 passed, 473 total
+mM rc=0 Tests:       473 passed, 473 total
+mN rc=0 Tests:       473 passed, 473 total
+mO rc=1 Tests:       1 failed, 472 passed, 473 total
+mP rc=1 Tests:       1 failed, 472 passed, 473 total
+mQ rc=1 Tests:       1 failed, 472 passed, 473 total
+mR rc=1 Tests:       26 failed, 447 passed, 473 total
+mS rc=1 Tests:       9 failed, 464 passed, 473 total
+mA rc=1 Tests:       44 failed, 429 passed, 473 total
+mB rc=1 Tests:       32 failed, 441 passed, 473 total
+mC rc=1 Tests:       43 failed, 430 passed, 473 total
+mD rc=1 Tests:       1 failed, 472 passed, 473 total
+mE rc=1 Tests:       1 failed, 472 passed, 473 total
+mF rc=1 Tests:       3 failed, 470 passed, 473 total
+mG rc=1 Tests:       3 failed, 470 passed, 473 total
+mH rc=1 Tests:       3 failed, 470 passed, 473 total
+-- rerun after adding J17 (no announced link) and J18 (two counters in one callout):
+mL2 rc=0 Tests:       476 passed, 476 total
+mN rc=1 Tests:       1 failed, 475 passed, 476 total
+mL2 rc=0 Tests:       478 passed, 478 total
+
+# killed: mA mB mC mD mE mF mG mH mI mJ mK mL mN mO mP mQ mR mS. Survivors: mM (equivalent, as in r1), mL2 (the guard is defence in depth: with it removed a card whose window
+# is stale or fresh still ends at the same pin, because rebaseCardPin's whole-part check falls through to the same own-write record).

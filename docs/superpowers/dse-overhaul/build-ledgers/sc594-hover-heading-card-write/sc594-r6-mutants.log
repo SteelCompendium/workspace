@@ -1,0 +1,8 @@
+# SC-594 r6 mutants (dse sc594 branch on 8b84b635; suites reading-mode-host-hover-card, reading-mode-host-pin, plugin-wiring; 496 tests, all green unmutated).
+# The code under test is unchanged since r4 (git range-diff: every fix/test commit '='); r4's 33 mutants (sc594-r4-mutants.log) were reproduced by the r5 reviewer with identical counts.
+# mZ6 (r5 reviewer, sc594-r5-probe-mutate.py.txt): the heading regex in atxHeadings accepts a '#Tracker' tag line (`#{1,6}[ \\t]*` instead of `[ \\t]+`).
+# r5: survived. r6: the atxHeadings unit test now lists '#Tracker' and '#tag more' (tag lines, no space) as non-headings.
+
+mZ6 rc=1 Tests:       1 failed, 495 passed, 496 total
+
+# killed. Survivors in the whole set: mM only (equivalent, as in r1-r4).

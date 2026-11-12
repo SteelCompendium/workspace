@@ -1,0 +1,33 @@
+# make-scratch.py: copy the lifecycle harness to visual-harness/obsidian-lifecycle-scratch594r3.mjs (uncommitted, deleted by literal path after),
+# adding the r3 fixtures and the P594R3 scenario at the front of SCENARIOS.
+D = '/home/scott/code/steelCompendium/worktrees/sc594-hover-heading-card-write/draw-steel-elements/'
+S = '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc594-r3-review/'
+src = open(D + 'visual-harness/obsidian-lifecycle.mjs').read()
+scen = open(S + 'scenario.mjs').read()
+fixtures = r'''
+{
+	const two = (id) => `# p594r3 ${id}\n\nTOP\n\n## Tracker\n\n${COUNTER(5, 'Twin')}\n\n## Other\n\n${COUNTER(5, 'Twin')}\n\nEND\n`;
+	const twoHost = (id) => `# p594r3 ${id} host\n\n[[p594r3-${id}-src#Tracker]] and words [[p594r3-${id}-src#Other]]\n\nfiller\n`;
+	const cal = (id) => `# p594r3 ${id}\n\nTOP\n\n## Tracker\n\n${['[!note] Camp', '```ds-counter', ...counterLines(6, 'Twin'), '```', 'mid', '```ds-counter', ...counterLines(5, 'Twin'), '```'].map((l) => `> ${l}`).join('\n')}\n\n## After\n\nEND\n`;
+	const calHost = (id) => `# p594r3 ${id} host\n\nsee [[p594r3-${id}-src#Tracker]] here\n\nfiller\n`;
+	for (const id of ['two-a', 'two-b', 'two-c', 'two-d', 't7-a', 't7-b', 't7-c', 't7-d', 't7-e']) {
+		FIXTURES[`Lifecycle/p594r3-${id}-src.md`] = two(id);
+		FIXTURES[`Lifecycle/p594r3-${id}-host.md`] = twoHost(id);
+	}
+	for (const id of ['t8-a', 't8-b']) {
+		FIXTURES[`Lifecycle/p594r3-${id}-src.md`] = two(id);
+		FIXTURES[`Lifecycle/p594r3-${id}-host.md`] = `# p594r3 ${id} host\n\nsee [[p594r3-${id}-src#Tracker]] here\n\nfiller\n`;
+	}
+	FIXTURES['Lifecycle/p594r3-t6-a-src.md'] = two('t6-a').replace('## Tracker', '## Tracker: one');
+	FIXTURES['Lifecycle/p594r3-t6-a-host.md'] = `# p594r3 t6-a host\n\nsee [[p594r3-t6-a-src#Tracker one]] here\n\nfiller\n`;
+	for (const id of ['cal-a', 'cal-b']) {
+		FIXTURES[`Lifecycle/p594r3-${id}-src.md`] = cal(id);
+		FIXTURES[`Lifecycle/p594r3-${id}-host.md`] = calHost(id);
+	}
+}
+'''
+anchor = '\nconst SCENARIOS = [\n'
+assert src.count(anchor) == 1
+src = src.replace(anchor, '\n' + fixtures + anchor + scen)
+open(D + 'visual-harness/obsidian-lifecycle-scratch594r3.mjs', 'w').write(src)
+print('ok')
