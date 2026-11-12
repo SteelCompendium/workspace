@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: initiative tracker: hand-editing a creature's `amount` now keeps the existing creatures (SC-600).**
+  Change `amount: 3` to `amount: 4` in an encounter that is already running and the tracker used to throw away every creature of that
+  type: conditions gone, stamina back to full. Now the creatures you already have keep their conditions and stamina. New ones are added
+  at the end (full stamina, no conditions) and, if you lower the number, creatures are removed from the end of the list. This applies the
+  same way to squad minions (they keep their conditions; the squad's shared stamina pool is not changed), captains and regular creatures.
+
 - **DSE plugin: Conditions window: each colour swatch is now announced by its colour name (SC-582).**
   A screen reader said "Color #1e8449" for the green swatch, and the colour's name was only in the hover tooltip. It now says
   "Green" (and Red, Amber, Blue, Purple) inside the Color group. The tooltip is unchanged, and after you pick a swatch
