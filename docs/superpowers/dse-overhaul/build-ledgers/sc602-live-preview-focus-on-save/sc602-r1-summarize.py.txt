@@ -1,0 +1,23 @@
+import json, sys
+for line in open(sys.argv[1]):
+    r = json.loads(line)
+    p, step, d = r['probe'], r['step'], r['data']
+    if step == 'result':
+        log = d['log']
+        # compact: focus changes, modify, focusouts
+        parts = []
+        for e in log:
+            if e[1] == 'focus':
+                parts.append(f"{e[0]}:{e[2]}")
+            elif e[1] == 'modify':
+                parts.append(f"{e[0]}:WRITE")
+            elif e[1] == 'out':
+                parts.append(f"{e[0]}:out({e[2]})")
+        print(f"{p} FINAL={d['final']} roots={d['roots']}")
+        print("   " + " | ".join(parts))
+        for e in d.get('dbg', []):
+            print("      dbg", json.dumps(e))
+    elif step == 'note':
+        continue
+    else:
+        print(f"{p} {step}: {json.dumps(d)}")

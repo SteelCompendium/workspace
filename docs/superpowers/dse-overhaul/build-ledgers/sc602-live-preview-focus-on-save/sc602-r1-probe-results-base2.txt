@@ -1,0 +1,7 @@
+G02 FINAL=cm-content@rootnull/idx-1+ring roots=[2]
+   0:counter.inc@root1/idx0+ring | 118:out(counter.inc) | 132:cm-content@rootnull/idx-1+ring | 441:WRITE
+G02b FINAL=cm-content@rootnull/idx-1+ring roots=[2]
+   0:init.round.advance@root1/idx0+ring | 25:out(init.round.advance) | 176:out(init.round.advance) | 186:cm-content@rootnull/idx-1+ring | 463:WRITE
+G04b afterOwn: "body"
+G04b FINAL=body roots=[2]
+   0:counter.inc@root1/idx0+ring | 426:WRITE | 430:out(counter.inc) | 439:body | 1668:WRITE

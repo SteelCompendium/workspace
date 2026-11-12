@@ -1,0 +1,22 @@
+A01 focused: true
+A01 FINAL=counter.inc@root2/idx0+ring roots=[2]
+   0:counter.inc@root1/idx0+ring | 439:WRITE | 445:out(counter.inc) | 469:counter.inc@root2/idx0+ring
+A02 focused: true
+A02 FINAL=init.round.advance@root2/idx0+ring roots=[2]
+   0:init.round.advance@root1/idx0+ring | 23:out(init.round.advance) | 610:WRITE | 616:out(init.round.advance) | 837:init.round.advance@root2/idx0+ring
+A03 focused: true
+A03 FINAL=recov.catch-breath@root2/idx0+ring roots=[2]
+   0:recov.catch-breath@root1/idx0+ring | 424:WRITE | 429:out(recov.catch-breath) | 469:recov.catch-breath@root2/idx0+ring
+G03b focused: true
+G03b FINAL=counter.inc@root3/idx0+ring roots=[3, 4]
+   0:counter.inc@root1/idx0+ring | 427:WRITE | 431:out(counter.inc) | 458:counter.inc@root3/idx0+ring
+G04b afterOwn: "counter.inc@root2/idx0+ring"
+G04b FINAL=body roots=[3]
+   0:counter.inc@root1/idx0+ring | 427:WRITE | 429:out(counter.inc) | 452:counter.inc@root2/idx0+ring | 1670:WRITE | 1673:out(counter.inc) | 1693:body
+L05 focused: true
+L05 FINAL=init.reset-encounter@root2/idx0+ring roots=[2]
+   0:init.reset-encounter@root1/idx0+ring | 34:out(init.reset-encounter) | 103:init.reset-encounter.cancel@rootnull/idx-1+ring | 177:out(init.reset-encounter.cancel) | 180:init.reset-encounter.confirm@rootnull/idx-1+ring | 204:out(init.reset-encounter.confirm) | 494:init.reset-encounter@root1/idx0+ring | 510:WRITE | 514:out(init.reset-encounter) | 774:init.reset-encounter@root2/idx0+ring
+L05 focus: {"ctl": "init.reset-encounter", "inTracker": true, "ring": true}
+L06 FINAL=cm-content@rootnull/idx-1+ring roots=[2]
+   0:cm-content@rootnull/idx-1+ring | 527:WRITE
+L06 focus: {"ctl": null, "inTracker": false, "ring": true}

@@ -1,0 +1,34 @@
+// SC-602 r1 scratch: registry entry lifetime in Live Preview vs Reading view.
+import * as fs from 'fs';
+import { browser } from '@wdio/globals';
+import { dse } from '../../driver/dse';
+
+const OUT = process.env.ZZ_PROBE_OUT ?? '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc602-r1-reviewer/probe-x-default.jsonl';
+const rec = (probe: string, step: string, data: unknown): void => fs.appendFileSync(OUT, JSON.stringify({ probe, step, data }) + '\n');
+const REG = `app.plugins.plugins['draw-steel-elements'].viewRegistry`;
+const snap = (view: string) => dse.page(`(() => {
+	const reg = ${REG};
+	const roots = Array.from(document.querySelectorAll('.workspace-leaf.mod-active ${view} [data-dse-element]'));
+	return { live: reg.liveEntries().length, stats: { ...reg.stats }, rootsInView: roots.length, rootsOwned: roots.filter((r) => reg.liveEntries().some((e) => e.root === r)).length,
+		entries: reg.liveEntries().map((e) => ({ el: e.root.getAttribute('data-dse-element'), conn: e.root.isConnected, inLP: !!e.root.closest('.markdown-source-view'), inRV: !!e.root.closest('.markdown-reading-view'), docId: e.host.docId, t: e.tickets.length })) };
+})()`);
+
+describe('zz SC-602 r1 probe X', () => {
+	const run = async (mode: 'live-preview' | 'reading'): Promise<void> => {
+		const view = mode === 'reading' ? '.markdown-reading-view' : '.markdown-source-view';
+		await dse.openNote('Counter/counter.md', { mode });
+		rec(mode, 'afterOpen', await snap(view));
+		await browser.pause(600);
+		rec(mode, 'after600', await snap(view));
+		await dse.page(`(() => { const reg = ${REG}; window.__dse602 = []; window.__rel = []; const orig = reg.release.bind(reg); if (!reg.__patched) { reg.__patched = true; reg.release = (e, why) => { window.__rel.push([Math.round(performance.now()), why, e.root.isConnected, document.activeElement?.getAttribute?.('data-dse-control') ?? null, new Error().stack.split('\\n').slice(1, 14).map((l) => l.trim().slice(0, 140))]); return orig(e, why); }; } const t0 = performance.now(); window.__t0 = t0; return true; })()`);
+		await dse.page(`(() => { const c = document.querySelector('.workspace-leaf.mod-active ${view} [data-dse-control="counter.inc"]'); c.focus({ focusVisible: true }); return true; })()`);
+		await dse.press('Enter', dse.block('ds-counter').control('counter.inc'));
+		rec(mode, 'afterPress', await snap(view));
+		await dse.settle();
+		await browser.pause(600);
+		rec(mode, 'afterWrite', await snap(view));
+		rec(mode, 'releases', await dse.page(`({ rel: window.__rel, dbg: window.__dse602 })`));
+	};
+	it('[ZZ602-X01] registry entries, Live Preview', async () => run('live-preview'));
+	it('[ZZ602-X02] registry entries, Reading view', async () => run('reading'));
+});

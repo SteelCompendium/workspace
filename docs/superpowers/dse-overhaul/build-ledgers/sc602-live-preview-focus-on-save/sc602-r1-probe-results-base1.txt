@@ -1,0 +1,67 @@
+A01 focused: true
+A01 FINAL=body roots=[2]
+   0:counter.inc@root1/idx0+ring | 446:WRITE | 452:out(counter.inc) | 462:body
+A02 focused: true
+A02 FINAL=body roots=[2]
+   0:init.round.advance@root1/idx0+ring | 26:out(init.round.advance) | 463:WRITE | 468:out(init.round.advance) | 498:body
+A03 focused: true
+A03 FINAL=body roots=[2]
+   0:recov.catch-breath@root1/idx0+ring | 435:WRITE | 445:out(recov.catch-breath) | 476:body
+A04 focused: true
+A04 FINAL=body roots=[2]
+   0:recov.catch-breath@root1/idx0+ring | 432:WRITE | 438:out(recov.catch-breath) | 452:body
+A05 mid: "body"
+A05 FINAL=body roots=[2]
+   0:counter.dec@root1/idx0+ring | 25:out(counter.dec) | 38:counter.input@root1/idx0+ring | 435:WRITE | 444:out(counter.input) | 465:body
+G01 FINAL=cm-content@rootnull/idx-1+ring roots=[2]
+   0:cm-content@rootnull/idx-1+ring | 570:WRITE
+G01b FINAL=body roots=[2]
+   0:body | 491:WRITE
+G02b FINAL=cm-content@rootnull/idx-1+ring roots=[2]
+   0:init.round.advance@root1/idx0+ring | 23:out(init.round.advance) | 462:WRITE | 477:out(init.round.advance) | 532:body | 548:cm-content@rootnull/idx-1+ring
+G03 focused: true
+G03 FINAL=body roots=[1, 3]
+   0:init.round.advance@root2/idx1+ring | 29:out(init.round.advance) | 457:WRITE | 461:out(init.round.advance) | 482:body
+G03b focused: true
+G03b FINAL=body roots=[3, 4]
+   0:counter.inc@root1/idx0+ring | 426:WRITE | 429:out(counter.inc) | 440:body
+G03c focused: true
+G03c FINAL=body roots=[1, 3]
+   0:counter.inc@root2/idx1+ring | 426:WRITE | 429:out(counter.inc) | 433:body
+G04 focused: true
+G04 FINAL=body roots=[2]
+   0:counter.inc@root1/idx0+ring | 4:WRITE | 10:out(counter.inc) | 20:body
+G04b afterOwn: "body"
+G04b FINAL=body roots=[2]
+   0:counter.inc@root1/idx0+ring | 426:WRITE | 428:out(counter.inc) | 433:body | 1706:WRITE
+G05 modalOpen: "cond.add@rootnull/idx-1+ring"
+G05 modalStillOpen: false
+G05 FINAL=cm-content@rootnull/idx-1+ring roots=[2]
+   0:cm-content@rootnull/idx-1+ring | 103:out(cm-content cm-lineWrapping) | 117:cond.add@rootnull/idx-1+ring | 261:out(cond.add) | 282:cond.input@rootnull/idx-1+ring | 832:WRITE | 833:out(cond.input) | 848:cm-content@rootnull/idx-1+ring
+L01 FINAL=body roots=[2]
+   0:init.malice.quickadd.label@root1/idx0+ring | 21:out(init.malice.quickadd.label) | 450:WRITE | 460:out(init.malice.quickadd.label) | 500:body
+L01 focus: {"ctl": null, "inTracker": false, "ring": false}
+L03 focused: true
+L03 FINAL=body roots=[2]
+   0:init.reset-turns@root1/idx0+ring | 27:out(init.reset-turns) | 463:WRITE | 469:out(init.reset-turns) | 501:body
+L03 focus: {"ctl": null, "inTracker": false, "ring": false}
+L04 focused: true
+L04 focus1: {"ctl": null, "inTracker": false, "ring": false}
+L04 FINAL=body roots=[2]
+   0:init.captain.relieve@root1/idx0+ring | 29:out(init.captain.relieve) | 65:init.captain.make@root1/idx0+ring | 461:WRITE | 473:out(init.captain.make) | 524:body
+L04 focus2: {"ctl": null, "inTracker": false, "ring": false}
+L05 focused: true
+L05 FINAL=body roots=[2]
+   0:init.reset-encounter@root1/idx0+ring | 25:out(init.reset-encounter) | 74:init.reset-encounter.cancel@rootnull/idx-1+ring | 137:out(init.reset-encounter.cancel) | 144:init.reset-encounter.confirm@rootnull/idx-1+ring | 169:out(init.reset-encounter.confirm) | 254:init.reset-encounter@root1/idx0+ring | 265:WRITE | 271:out(init.reset-encounter) | 335:body
+L05 focus: {"ctl": null, "inTracker": false, "ring": false}
+L06 FINAL=cm-content@rootnull/idx-1+ring roots=[2]
+   0:cm-content@rootnull/idx-1+ring | 543:WRITE
+L06 focus: {"ctl": null, "inTracker": false, "ring": true}
+D01 atClick: {"amount": "2", "label": "Feytouched"}
+D01 FINAL=body roots=[2]
+   0:init.malice.quickadd.label@root1/idx0+ring | 100:out(init.malice.quickadd.label) | 123:body | 516:WRITE
+D01 after: {"amount": "", "label": ""}
+D02 atPress: {"amount": "2", "label": "Feytouched"}
+D02 FINAL=body roots=[2]
+   0:init.round.advance@root1/idx0+ring | 20:out(init.round.advance) | 451:WRITE | 460:out(init.round.advance) | 507:body
+D02 after: {"amount": "", "label": ""}

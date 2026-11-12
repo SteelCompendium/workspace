@@ -1,0 +1,66 @@
+# SC-602 decisions ledger — Live Preview: keyboard focus drops to the page when an element's own save redraws its block
+
+Owner: ticket-owner (Opus 5.5), session be71a0a9-199f-4e14-967b-191935312b05
+Worktree: /home/scott/code/steelCompendium/worktrees/sc602-live-preview-focus-on-save (every submodule on branch `sc602-live-preview-focus-on-save`)
+Base: dse `develop` @ `622b0904`; superproject branch cut from workspace `origin/main` @ `02dbf30c`
+Lifecycle id reserved for this effort if needed: **G-S104** (part 6 has room for about one ~60 s scenario; anything bigger gets its own part 7; G-S56 stays last in SCENARIOS order; never a new G-S64 phase).
+
+## Spec (ticket description, verbatim, 2026-11-12)
+
+> In Live Preview, a keyboard user who presses a button inside a DSE element loses focus to the page body about half a second later. The element saves its change to the note, Obsidian redraws the block with a new root, and the focused button is gone.
+>
+> It happens in every element, not one: a counter's + button loses focus the same way. In Reading view the SC-588 fix keeps focus on the initiative tracker; in Live Preview that focus is restored and then lost again when the save lands.
+>
+> Found by the SC-588 review. Medium (accessibility).
+>
+> Agent notes: SC-588 review r2 MEDIUM-1 (`docs/superpowers/dse-overhaul/build-ledgers/sc588-initiative-focus-after-rebuild/sc588-r2-review-report.md`). Measured in real Obsidian on dse `d62803db`: focus restored at ~83 ms, then the tracker's own save at ~515 ms redraws the Live Preview widget with a new root and focus falls to `<body>`. Base (`79da77f8`) is `<body>` at ~65 ms, so SC-588 does not change the LP end state. Spot: `src/elements/initiative/view.ts:201-204` (cause outside it, in the LP widget redraw). Fix shape: carry the focused control's `data-dse-control` id + instance key across the widget redraw (SC-588's `src/framework/kit/controlFocus.ts` helpers) at the framework level, so every element benefits. e2e needs a Live Preview variant of the SC-588 INIT-F tests and a counter + button case. Related LP redraw family: SC-384, SC-523.
+
+## Baseline at `622b0904` (dse-verify CURRENT)
+
+tsc/lint clean · jest 10715 passed / 2 skipped (fresh worktree; 10716 / 1 with shots cache) · lifecycle 60/60 (21 + 16 + 9 + 4 + 7 + 3) · e2e `280/284 ok, 0 failed, 4 known-bug, coverage: 171/171 pairs` (known bugs SC-257, SC-355, SC-384, SC-580) · shots 592, host-leak 163/978, modal host-leak 39/234, capture clip 147 · freeze 280/280 · parity 0/0/24.
+
+## Scott rulings
+
+(none yet)
+
+## Owner rulings
+
+- 2026-11-12 — Scope: keyboard focus across an element's OWN save redraw in Live Preview, at the framework level (every persisted element: counter +, initiative actions, …). Reading view behaviour must not change.
+- 2026-11-12 — SC-605 (Live Preview loses the half-typed Malice quick-add draft on the tracker's own save; same cause) is OUT of scope unless the dispatcher agrees to widen. The r1 design round reports whether the same mechanism covers it cheaply; the owner raises it with the dispatcher before any widening.
+- 2026-11-12 — SC-607 (parallel owner) edits `src/framework/host/ReadingModeBlockHost.ts`, `hoverLinks.ts`, `lineMap.ts` and `visual-harness/obsidian-lifecycle.mjs`. Avoid those files; if the design needs one, the owner coordinates through the dispatcher first. SC-580 edits `src/views/ConditionsModal.ts` — avoid.
+- 2026-11-12 — Real-Obsidian coverage goes in e2e (LP variants of INIT-F + a counter + case). A lifecycle scenario only if e2e cannot express it (then G-S104, part 6).
+- 2026-11-12 — Mouse behaviour unchanged: a mouse click never pulls focus into an element (SC-588/SC-609 rule). Restore only when focus was inside the redrawn block at the moment of the save.
+
+## Rounds
+
+- r1 (2026-11-12) — design + probe round: reviewer (orchestration:reviewer, identity R1) on `sc602-brief-r1-design.md`; report → `sc602-r1-design-report.md`, prototype → `sc602-r1-prototype.diff`. No product commits. Next: implementer (identity I1) on the chosen design; independent review by a reviewer identity other than R1 (R1 designed it).
+- r1 DONE (2026-11-12) — design delivered (R1). Root cause: in LP an own save is a fresh mount, never an adoption (`viewRegistry.ts:173` docId mismatch; render child released inside Obsidian's StateField before the DOM update). Mechanism: `ViewRegistry.beforeRelease` hook + a CM ViewPlugin (twin hand-off) arm a one-shot `armSuccessorFocus` request keyed by the written block key, claimed by the existing SC-518 `claimChromeFocus` via `controlSuccessor`. Prototype: counter +, Advance round, Catch Breath, LP INIT-F01/F03/F04/F05 all body → successor + ring; guards same or better; full e2e 280/284 · 0 failed · 4 known-bug · 171/171 with the prototype. No SC-607 / SC-580 file touched. No lifecycle scenario (G-S104 unused). No CSS change.
+- Owner rulings on r1 (2026-11-12):
+  - Design ACCEPTED as §3 of `sc602-r1-design-report.md`, including R1's five implementer adjustments (drop the nested-element line; disabled successor → root; name the `item: ''` constant; pin `blockKey()` format in jest; funky-logic comment + doc note).
+  - SC-605 verdict NO (the SC-605 press is a mouse click, so nothing arms; the draft needs a view-to-view hand-off, ~50-70 lines over 4-5 files) → stays OUT of scope. No widening; dispatcher told.
+  - Follow-up "LP embed of another note not measured" → FOLD into r2 as a probe (report-only). If focus is wrong (not merely body as base), the owner rules then.
+  - Follow-up "move `writtenBlockKey` into `ReadingModeBlockHost` after SC-607 lands" → DROP: a 3-line refactor, pinned by jest; not worth a ticket.
+- r2 (2026-11-12) — implementer (orchestration:implementer, identity I1) on `sc602-brief-r2-impl.md`; report → `sc602-r2-impl-report.md`. Review r3 → a fresh reviewer identity R2 (not R1, who designed it).
+- 2026-11-12 — Base moved: SC-580 landed, dse `develop` is now `93e8e48c` (supersedes `622b0904`; `ConditionsModal.ts`: a printable key opens the Add search, Escape on a key-opened search hands focus back; e2e COND-N07..N10). New CURRENT at `93e8e48c`: jest 10746 passed / 2 skipped (fresh) · lifecycle 60/60 (21 + 16 + 9 + 4 + 7 + 3) · e2e `285/288 ok, 0 failed, 3 known-bug, coverage: 172/172 pairs` (known bugs SC-257, SC-355, SC-384) · shots 592, host-leak 163/978, modal host-leak 39/234, capture clip 147 · freeze 280/280 · parity 0/0/24. Branch must rebase onto `93e8e48c` (superproject onto current workspace origin/main) before land-ready. SC-583 (dispatcher starting next) is in the conditions model / Conditions window — still avoid `ConditionsModal.ts`. Implementer I1 told mid-round by SendMessage.
+- r2 DONE (2026-11-12) — I1: dse HEAD `2848e7eb` on `93e8e48c` (feat `19a50c78`, jest `67b7a558`, e2e `12a9ab17`, docs `2848e7eb`); superproject `6b0f9a7e` on origin/main `eccfe90e` (CHANGELOG only; dse pointer unstaged). Gates: tsc/lint clean · jest 10771 / 2 (10746 + 25) · lifecycle 60/60 (walls 185/326/406/299/391/230 s) · e2e `299/302 ok, 0 failed, 3 known-bug, coverage: 174/174 pairs` (+14 tests: INIT-L01..L08, CTR-L01..L05, CALL-L04; +2 pairs) · no CSS source change → shots/freeze/parity carry. Vacuity: e2e new tests 10 red / 4 guards green with product reverted; 10 jest mutations each red. Embed probe: LP embed counter + keeps focus on base and branch alike — nothing to fix. No SC-607/SC-580/SC-583 file touched.
+- Owner rulings on r2 follow-ups (2026-11-12):
+  - SC-609 (and SC-588 / SC-589 / SC-603 if they say so) CHANGELOG sentences "in Live Preview focus is still lost … (SC-602)" go stale when this lands → FOLD into the post-review fix round: edit those sentences in both dse and workspace CHANGELOGs so they no longer claim LP focus is lost (keep SC-605 draft-loss sentences — still true).
+  - `e2e/README.md` missing a `Counter/counter.md` row (pre-existing) → FOLD (one line) into the fix round.
+- r3 (2026-11-12) — independent review: reviewer identity R2 (fresh; not R1 the designer, not I1) on `sc602-brief-r3-review.md`; report → `sc602-r3-review-report.md`.
+- 2026-11-12 — Base moved again: SC-583 landed, dse `develop` is now `d0561a68` (supersedes `93e8e48c`; condition keys match regardless of case; e2e COND-K01..K05). New CURRENT at `d0561a68`: jest about 10759 passed / 2 skipped fresh (10760 / 1 with shots cache) · lifecycle 60/60 · e2e `290/293 ok, 0 failed, 3 known-bug, coverage: 172/172 pairs` · shots 592, host-leak 163/978, modal host-leak 39/234, capture clip 147 · freeze 280/280 · parity 0/0/24. SC-582 (dispatcher starting next) works in `ConditionsModal.ts` — still off-limits. Plan: r3 review continues on `2848e7eb`; the post-review round (r4, implementer I1) rebases onto `d0561a68` (superproject onto current workspace origin/main, one pointer bump) and re-runs the full battery there. Expected on branch after rebase: jest ~10784 / 2 (10759 + 25) · lifecycle 60/60 · e2e `304/307 ok, 0 failed, 3 known-bug, coverage: 174/174 pairs`.
+- r3 DONE (2026-11-12) — R2 verdict LAND-READY after the CHANGELOG fold; 0 HIGH / 0 MEDIUM / 3 LOW / 6 INFO. R2 re-ran at `2848e7eb`: tsc/lint rc 0 · jest 10771 / 2 · lifecycle 60/60 (186/325/403/298/394/230 s) · e2e `299/302 ok, 0 failed, 3 known-bug, coverage: 174/174 pairs` · styles.css `5e5ff488…2b27` = clean 93e8e48c build. Vacuity: e2e 10 red / 4 guards green; jest 7/8 own mutants red (1 equivalent). 25 real-Obsidian probes all pass on branch, incl. popout, twins, two panes, note switch, rapid Enter; SC-609 cell press and SC-603 pool Apply now keep focus in LP.
+- Owner rulings on r3 (2026-11-12):
+  - LOW-1 (stale "In Live Preview focus is still lost … (SC-602)" sentences: dse CHANGELOG :37-38 SC-609, :46-47 SC-603, :77 SC-588; workspace :28, :63, :101-102) → FOLD per R2's fix: replace with "Since SC-602 this holds in Live Preview too." For SC-603, claim only the pool Apply route (the Conditions-window route in LP was not measured; it closes on the write, SC-384). Keep the SC-605/SC-589 draft-loss sentences.
+  - LOW-2 (SC-602 wording overclaims) → FOLD per R2's fix: "…or on the control that replaced it (else on the element itself), with the keyboard ring when you were using the keyboard."; "This holds for every element that saves" → "This is done once for every element, not per element."
+  - LOW-3 (e2e focus checks at write-idle, not settle + 1 s) → FOLD: `await browser.pause(1000)` (or a 1 s focus-stable waitUntil) before each focus expect at the listed lines.
+  - INFO-4 (wasted `[data-dse-chrome-item=""]` query for a `find` request) → FOLD (skip the query when `req.find` is set; local, one line).
+  - INFO-1, INFO-2, INFO-3, INFO-5 → no action (correct as is / within ruling / no failing case). INFO-6 (Canvas, SC-603 Conditions-window route not measured) → DROP: not claimed in the CHANGELOG; Canvas is outside LP note scope.
+  - Earlier r2 FOLD (`e2e/README.md` `Counter/counter.md` row) still applies.
+- r4 (2026-11-12) — implementer I1 resumed: rebase onto dse `d0561a68`, superproject onto workspace origin/main (`5d4611a3` at dispatch), fold LOW-1/2/3 + INFO-4 + README row, full battery at `d0561a68`. Then r5 scoped re-review by R2 (it did not author code).
+- r4 DONE (2026-11-12) — I1: dse HEAD `711844f3` on `d0561a68` (r2 commits rebased `=`: `344d2fb5` feat, `2a4b4c25` jest, `de34c37a` e2e, `bad99c46` docs; folds `774e7286` INFO-4, `e8ac6d85` LOW-3 + README row, `711844f3` LOW-1/LOW-2 wording); superproject `0594056f` on workspace origin/main `5d4611a3` (`8d0d9b61` entry, `0594056f` fold; dse pointer unstaged). Gates: tsc/lint rc 0 · jest 10784 / 2 · e2e `304/307 ok, 0 failed, 3 known-bug, coverage: 174/174 pairs` · lifecycle 60/60 (part 5 first run 6/7: G-S91 Reading-view hover-preview timing fail — no LP root, no carry; G-S91 alone ok, part 5 re-run 7/7; G-S91 also flaked on base in SC-607's runs, `sc607-r2-gs91-flake-on-base-run4.log`) · styles.css `5e5ff488…2b27` = clean d0561a68 build → shots/freeze/parity carry.
+- Owner ruling (2026-11-12): G-S91 single fail → load flake, not this branch (Reading-view hover path, untouched files, base flake on record, re-run green). No action.
+- r5 (2026-11-12) — scoped re-review of the fold delta: R2 resumed.
+- r5 DONE (2026-11-12) — R2 scoped re-review: LAND-READY, 0 HIGH/MEDIUM/LOW, 1 INFO. range-diff r2 commits all `=`; folds match prescriptions; tsc/lint rc 0; jest chromeFocusHandoff + livePreviewFocusCarry 45/45; e2e --only (INIT-L01..L08, CTR-L01..L05, CALL-L04, INIT-F01..F14, CTR-F01/F02) 30/30.
+- Owner ruling on r5 INFO-1 ("this" → "all of this" in SC-609/SC-588 sentences) → DROP: true either way; not worth another commit + re-check cycle.
+- LAND-READY (2026-11-12): dse `711844f3` on `d0561a68`; superproject `0594056f` on workspace origin/main `5d4611a3`; dse pointer unstaged.
+- 2026-11-12 — Land-ready comment posted to SC-602 (state left Awaiting; Done is set at landing via linear-post.py --state Done, verified). Reported land-ready to dispatcher.

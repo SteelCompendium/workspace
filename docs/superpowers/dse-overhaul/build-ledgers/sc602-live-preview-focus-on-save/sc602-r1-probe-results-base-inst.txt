@@ -1,0 +1,10 @@
+A01 focused: true
+A01 FINAL=body roots=[2]
+   0:counter.inc@root1/idx0+ring | 438:WRITE | 443:out(counter.inc) | 464:body
+A02 focused: true
+A02 FINAL=body roots=[2]
+   0:init.round.advance@root1/idx0+ring | 21:out(init.round.advance) | 593:WRITE | 601:out(init.round.advance) | 718:body
+L05 focused: true
+L05 FINAL=body roots=[2]
+   0:init.reset-encounter@root1/idx0+ring | 24:out(init.reset-encounter) | 88:init.reset-encounter.cancel@rootnull/idx-1+ring | 168:out(init.reset-encounter.cancel) | 170:init.reset-encounter.confirm@rootnull/idx-1+ring | 198:out(init.reset-encounter.confirm) | 479:init.reset-encounter@root1/idx0+ring | 494:WRITE | 498:out(init.reset-encounter) | 705:body
+L05 focus: {"ctl": null, "inTracker": false, "ring": false}

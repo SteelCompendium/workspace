@@ -1,0 +1,325 @@
+// SC-602 r1 reviewer probe (SCRATCH ONLY, never committed): Live Preview focus timeline across an element's own save.
+// Copied into e2e/specs/zz602/ for a run, removed afterwards. Ids ZZ602-* are scratch ids.
+import * as fs from 'fs';
+import { $, browser } from '@wdio/globals';
+import { dse } from '../../driver/dse';
+import { openFrom, addByKeyboard } from '../../driver/conditions';
+
+const OUT = process.env.ZZ_PROBE_OUT ?? '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc602-r1-reviewer/probe-default.jsonl';
+const rec = (probe: string, step: string, data: unknown): void => fs.appendFileSync(OUT, JSON.stringify({ probe, step, data }) + '\n');
+
+const COUNTER_NOTE = 'Counter/counter.md';
+const TWINS_NOTE = 'Counter/zz602-twins.md';
+const RICH = 'Initiative/rich.md';
+const CAP = 'Initiative/captain.md';
+const TRACKER = 'Initiative/tracker.md';
+const TWO = 'Initiative/two-trackers.md';
+const RECOV = 'Stamina/recoveries.md';
+const CALLOUT = 'Callout/callout.md';
+
+/** Install a page-side sampler: every 5 ms record what holds focus (control id @ root id, ring), plus focus events and vault modifies. */
+const install = (el: string, view = '.markdown-source-view') =>
+	dse.page(`(() => {
+		if (window.__zz602?.timer) clearInterval(window.__zz602.timer);
+		if (window.__zz602?.ref) app.vault.offref(window.__zz602.ref);
+		const ids = new WeakMap(); let next = 1;
+		const rid = (r) => { if (!r) return null; if (!ids.has(r)) ids.set(r, next++); return ids.get(r); };
+		const sel = '.workspace-leaf.mod-active ${view} [data-dse-element="${el}"]';
+		const roots = () => Array.from(document.querySelectorAll(sel)).filter((r) => !r.parentElement.closest('[data-dse-element]'));
+		const t0 = performance.now();
+		const T = () => (performance.now() - t0) | 0;
+		const desc = () => {
+			const a = document.activeElement;
+			if (!a || a === document.body) return 'body';
+			const root = a.closest('[data-dse-element]');
+			const ctl = a.closest('[data-dse-control]')?.getAttribute('data-dse-control');
+			const what = ctl ?? (a.classList.contains('cm-content') ? 'cm-content' : a.tagName + '.' + String(a.className).slice(0, 30));
+			const idx = root ? roots().indexOf(root) : -1;
+			return what + '@root' + rid(root) + '/idx' + idx + (a.matches(':focus-visible') ? '+ring' : '');
+		};
+		roots().forEach(rid);
+		const z = { t0, log: [], last: null, desc, roots, rid };
+		z.timer = setInterval(() => { const d = desc(); if (d !== z.last) { z.log.push([T(), 'focus', d]); z.last = d; } }, 5);
+		z.ref = app.vault.on('modify', (f) => z.log.push([T(), 'modify', f.path]));
+		document.addEventListener('focusout', (e) => window.__zz602 === z && z.log.push([T(), 'out', e.target?.getAttribute?.('data-dse-control') ?? String(e.target?.className ?? e.target?.tagName).slice(0, 30)]), true);
+		window.__zz602 = z; window.__dse602 = [];
+		z.log.push([0, 'focus', desc()]); z.last = desc();
+		return true;
+	})()`);
+const finish = async (probe: string): Promise<void> => {
+	await dse.settle();
+	await browser.pause(1000);
+	const out = await dse.page(`(() => { const z = window.__zz602; clearInterval(z.timer); app.vault.offref(z.ref); return { final: z.desc(), roots: z.roots().map(z.rid), log: z.log, dbg: (window.__dse602 ?? []).map((e) => [Math.round(e[0] - z.t0), ...e.slice(1)]) }; })()`);
+	rec(probe, 'result', out);
+};
+/** Programmatic keyboard-style focus (Tab in a CodeMirror editor would indent the note). */
+const focusCtl = (el: string, ctl: string, nth = 0, view = '.markdown-source-view') =>
+	dse.page<boolean>(`(() => { const roots = Array.from(document.querySelectorAll('.workspace-leaf.mod-active ${view} [data-dse-element="${el}"]')).filter((r) => !r.parentElement.closest('[data-dse-element]')); const c = roots[${nth}]?.querySelector('[data-dse-control="${ctl}"]'); if (!c) return false; c.focus({ focusVisible: true }); return document.activeElement === c; })()`);
+
+describe('zz SC-602 r1 probe: Live Preview, keyboard press, own save', () => {
+	it('[ZZ602-A01] counter + by Enter (Live Preview)', async () => {
+		await dse.openNote(COUNTER_NOTE, { mode: 'live-preview' });
+		const root = dse.block('ds-counter');
+		rec('A01', 'focused', await focusCtl('counter', 'counter.inc'));
+		await install('counter');
+		await dse.press('Enter', root.control('counter.inc'));
+		await finish('A01');
+		rec('A01', 'note', await dse.noteText(COUNTER_NOTE));
+	});
+
+	it('[ZZ602-A02] initiative Advance round by Enter (Live Preview)', async () => {
+		await dse.openNote(RICH, { mode: 'live-preview' });
+		const root = dse.block('ds-initiative');
+		rec('A02', 'focused', await focusCtl('initiative', 'init.round.advance'));
+		await install('initiative');
+		await dse.press('Enter', root.control('init.round.advance'));
+		await finish('A02');
+	});
+
+	it('[ZZ602-A03] stamina bar Catch Breath by Enter (Live Preview)', async () => {
+		await dse.openNote(RECOV, { mode: 'live-preview' });
+		const root = dse.block('ds-stamina-bar');
+		rec('A03', 'focused', await focusCtl('stamina-bar', 'recov.catch-breath'));
+		await install('stamina-bar');
+		await dse.press('Enter', root.control('recov.catch-breath'));
+		await finish('A03');
+		rec('A03', 'note', await dse.noteText(RECOV));
+	});
+
+	it('[ZZ602-A04] stamina bar Catch Breath by Enter, block inside a callout (Live Preview)', async () => {
+		await dse.openNote(CALLOUT, { mode: 'live-preview' });
+		const root = dse.block('ds-stamina-bar');
+		rec('A04', 'focused', await focusCtl('stamina-bar', 'recov.catch-breath'));
+		await install('stamina-bar');
+		await dse.press('Enter', root.control('recov.catch-breath'));
+		await finish('A04');
+	});
+
+	it('[ZZ602-A05] counter + by Enter three times in a row, 150 ms apart (Live Preview)', async () => {
+		await dse.openNote(COUNTER_NOTE, { mode: 'live-preview' });
+		const root = dse.block('ds-counter');
+		await dse.page(`(() => { const r = document.querySelector('.workspace-leaf.mod-active .markdown-source-view [data-dse-element="counter"] [data-dse-control="counter.dec"]'); r.focus({ focusVisible: true }); return true; })()`);
+		await install('counter');
+		await dse.press('Enter', root.control('counter.dec')); // 1 -> 0
+		await dse.settle();
+		await browser.pause(300);
+		rec('A05', 'mid', await dse.page('window.__zz602.desc()'));
+		await finish('A05');
+	});
+});
+
+describe('zz SC-602 r1 probe: guards', () => {
+	it('[ZZ602-G01] mouse click on counter + with focus in the editor text: focus is not pulled into the block', async () => {
+		await dse.openNote(COUNTER_NOTE, { mode: 'live-preview' });
+		const root = dse.block('ds-counter');
+		await install('counter');
+		await dse.click(root.control('counter.inc'));
+		await finish('G01');
+	});
+
+	it('[ZZ602-G01b] mouse click on counter + with focus on body: focus is not pulled into the block', async () => {
+		await dse.openNote(COUNTER_NOTE, { mode: 'live-preview' });
+		const root = dse.block('ds-counter');
+		await dse.page(`(() => { document.activeElement?.blur(); return document.activeElement === document.body; })()`);
+		await install('counter');
+		await dse.click(root.control('counter.inc'));
+		await finish('G01b');
+	});
+
+	it('[ZZ602-G02] Enter on counter +, then a click into the note text inside the debounce: the save does not take focus back', async () => {
+		await dse.openNote(COUNTER_NOTE, { mode: 'live-preview' });
+		const root = dse.block('ds-counter');
+		await focusCtl('counter', 'counter.inc');
+		await install('counter');
+		await dse.press('Enter', root.control('counter.inc'));
+		await $('//div[contains(@class,"workspace-leaf") and contains(@class,"mod-active")]//div[contains(@class,"markdown-source-view")]//div[contains(@class,"cm-line") and contains(., "BELOW")]').click();
+		await finish('G02');
+	});
+
+	it('[ZZ602-G02b] Enter on Advance round, then focus moved to the editor text (programmatic, like a Tab out) before the write lands', async () => {
+		await dse.openNote(RICH, { mode: 'live-preview' });
+		const root = dse.block('ds-initiative');
+		await focusCtl('initiative', 'init.round.advance');
+		await install('initiative');
+		await dse.press('Enter', root.control('init.round.advance'));
+		await browser.pause(100);
+		await dse.page(`(() => { document.querySelector('.workspace-leaf.mod-active .markdown-source-view .cm-content').focus(); return true; })()`);
+		await finish('G02b');
+	});
+
+	it('[ZZ602-G03] two trackers: Enter on the SECOND tracker Advance round keeps focus in the second', async () => {
+		await dse.openNote(TWO, { mode: 'live-preview' });
+		const root = dse.block('ds-initiative', 1);
+		rec('G03', 'focused', await focusCtl('initiative', 'init.round.advance', 1));
+		await install('initiative');
+		await dse.press('Enter', root.control('init.round.advance'));
+		await finish('G03');
+	});
+
+	it('[ZZ602-G03b] identical twin counters: Enter on the FIRST counter + keeps focus in the first, never the second', async () => {
+		await dse.openNote(TWINS_NOTE, { mode: 'live-preview' });
+		const root = dse.block('ds-counter', 0);
+		rec('G03b', 'focused', await focusCtl('counter', 'counter.inc', 0));
+		await install('counter');
+		await dse.press('Enter', root.control('counter.inc'));
+		await finish('G03b');
+		rec('G03b', 'note', await dse.noteText(TWINS_NOTE));
+	});
+
+	it('[ZZ602-G03c] identical twin counters: Enter on the SECOND counter + keeps focus in the second', async () => {
+		await dse.openNote(TWINS_NOTE, { mode: 'live-preview' });
+		const root = dse.block('ds-counter', 1);
+		rec('G03c', 'focused', await focusCtl('counter', 'counter.inc', 1));
+		await install('counter');
+		await dse.press('Enter', root.control('counter.inc'));
+		await finish('G03c');
+		rec('G03c', 'note', await dse.noteText(TWINS_NOTE));
+	});
+
+	it('[ZZ602-G06] the same note in two Live Preview panes: Enter on counter + in the RIGHT pane keeps focus in that pane', async () => {
+		await dse.openNote(COUNTER_NOTE, { mode: 'live-preview' });
+		// a second pane (split right) on the same note, Live Preview; it becomes the active leaf
+		await dse.page(`(async () => { const leaf = app.workspace.getLeaf('split', 'vertical'); await leaf.setViewState({ type: 'markdown', state: { file: '${COUNTER_NOTE}', mode: 'source', source: false }, active: true }); app.workspace.setActiveLeaf(leaf, { focus: true }); return true; })()`);
+		await dse.waitFor(`document.querySelectorAll('.markdown-source-view [data-dse-element="counter"] [data-dse-control="counter.inc"]').length >= 2`, 'two panes drawn');
+		const leafIdx = `(() => { const a = document.activeElement; const leaf = a?.closest('.workspace-leaf'); return { leaf: leaf ? Array.from(document.querySelectorAll('.workspace-leaf')).indexOf(leaf) : -1, active: leaf?.classList.contains('mod-active') ?? false, ctl: a?.closest('[data-dse-control]')?.getAttribute('data-dse-control') ?? (a === document.body ? 'body' : a?.className?.toString().slice(0, 30)) }; })()`;
+		rec('G06', 'focused', await focusCtl('counter', 'counter.inc'));
+		rec('G06', 'before', await dse.page(leafIdx));
+		await install('counter');
+		await dse.press('Enter', dse.block('ds-counter').control('counter.inc'));
+		await finish('G06');
+		rec('G06', 'after', await dse.page(leafIdx));
+		rec('G06', 'counters', await dse.page(`Array.from(document.querySelectorAll('.markdown-source-view [data-dse-element="counter"] input')).map((i) => i.value)`));
+	});
+
+	it('[ZZ602-G04] external edit with keyboard focus on counter +: no claim (fresh rebuild, as today)', async () => {
+		await dse.openNote(COUNTER_NOTE, { mode: 'live-preview' });
+		rec('G04', 'focused', await focusCtl('counter', 'counter.inc'));
+		await install('counter');
+		await dse.externalEdit(COUNTER_NOTE, `c.replace('current_value: 1', 'current_value: 3')`);
+		await finish('G04');
+	});
+
+	it('[ZZ602-G04b] own save, then an external edit 1.2 s later, focus on counter + throughout', async () => {
+		await dse.openNote(COUNTER_NOTE, { mode: 'live-preview' });
+		const root = dse.block('ds-counter');
+		await focusCtl('counter', 'counter.inc');
+		await install('counter');
+		await dse.press('Enter', root.control('counter.inc'));
+		await dse.settle();
+		await browser.pause(1200);
+		rec('G04b', 'afterOwn', await dse.page('window.__zz602.desc()'));
+		await dse.externalEdit(COUNTER_NOTE, `c.replace('current_value: 2', 'current_value: 0')`);
+		await finish('G04b');
+	});
+
+	it('[ZZ602-G05] Conditions window open from the tracker by keyboard, a condition added: where focus ends when the write lands', async () => {
+		await dse.openNote(TRACKER, { mode: 'live-preview' });
+		await install('initiative');
+		const root = dse.block('ds-initiative');
+		// open the hero's conditions window from the detail row (same route as COND-N04's openFrom)
+		const modal = await openFrom(root, 'hero');
+		rec('G05', 'modalOpen', await dse.page('window.__zz602.desc()'));
+		await addByKeyboard(modal, 'daz');
+		await dse.settle();
+		await browser.pause(1000);
+		rec('G05', 'modalStillOpen', await dse.page(`!!document.querySelector('.modal-container .dse-condal__addwrap')`));
+		await finish('G05');
+		await dse.closeModals();
+	});
+});
+
+describe('zz SC-602 r1 probe: Live Preview variants of INIT-F + SC-605 draft', () => {
+	const lpFocus = () =>
+		dse.page<{ ctl: string | null; inTracker: boolean; ring: boolean }>(`(() => {
+			const a = document.activeElement;
+			return { ctl: a?.closest('[data-dse-control]')?.getAttribute('data-dse-control') ?? null, inTracker: !!a?.closest('.markdown-source-view [data-dse-element="initiative"]'), ring: !!a && a.matches(':focus-visible') };
+		})()`);
+
+	it('[ZZ602-L01] LP quick-add Enter in the label field', async () => {
+		await dse.openNote(TRACKER, { mode: 'live-preview' });
+		const root = dse.block('ds-initiative');
+		await dse.type(root.control('init.malice.quickadd.amount'), '2', { replace: true });
+		await dse.type(root.control('init.malice.quickadd.label'), 'Kbd', { replace: true });
+		await install('initiative');
+		await dse.waitForWrite(TRACKER, () => dse.press('Enter', root.control('init.malice.quickadd.label')));
+		await finish('L01');
+		rec('L01', 'focus', await lpFocus());
+	});
+
+	it('[ZZ602-L03] LP Reset turns by Enter', async () => {
+		await dse.openNote(RICH, { mode: 'live-preview' });
+		const root = dse.block('ds-initiative');
+		rec('L03', 'focused', await focusCtl('initiative', 'init.reset-turns'));
+		await install('initiative');
+		await dse.waitForWrite(RICH, () => dse.press('Enter', root.control('init.reset-turns')));
+		await finish('L03');
+		rec('L03', 'focus', await lpFocus());
+	});
+
+	it('[ZZ602-L04] LP Relieve captain then Make captain by Enter', async () => {
+		await dse.openNote(CAP, { mode: 'live-preview' });
+		const root = dse.block('ds-initiative');
+		rec('L04', 'focused', await focusCtl('initiative', 'init.captain.relieve'));
+		await install('initiative');
+		await dse.waitForWrite(CAP, () => dse.press('Enter', root.control('init.captain.relieve')));
+		await dse.settle();
+		await browser.pause(800);
+		rec('L04', 'focus1', await lpFocus());
+		const f = await lpFocus();
+		if (f.ctl === 'init.captain.make') {
+			await dse.waitForWrite(CAP, () => dse.press('Enter', root.control('init.captain.make')));
+		}
+		await finish('L04');
+		rec('L04', 'focus2', await lpFocus());
+	});
+
+	it('[ZZ602-L05] LP Reset encounter -> Yes by keyboard', async () => {
+		await dse.openNote(RICH, { mode: 'live-preview' });
+		const root = dse.block('ds-initiative');
+		rec('L05', 'focused', await focusCtl('initiative', 'init.reset-encounter'));
+		await install('initiative');
+		await dse.press('Enter', root.control('init.reset-encounter'));
+		const modal = await dse.modal('reset-encounter');
+		const confirm = modal.control('init.reset-encounter.confirm');
+		await dse.tabTo(confirm, 6);
+		await dse.waitForWrite(RICH, () => dse.press('Enter', confirm));
+		await finish('L05');
+		rec('L05', 'focus', await lpFocus());
+	});
+
+	it('[ZZ602-L06] LP mouse press on Advance round with focus in the editor: no focus pulled in', async () => {
+		await dse.openNote(RICH, { mode: 'live-preview' });
+		const root = dse.block('ds-initiative');
+		await install('initiative');
+		await dse.waitForWrite(RICH, () => dse.click(root.control('init.round.advance')));
+		await finish('L06');
+		rec('L06', 'focus', await lpFocus());
+	});
+
+	it('[ZZ602-D01] SC-605: type a quick-add draft, then a mouse click on Advance round (Live Preview)', async () => {
+		await dse.openNote(TRACKER, { mode: 'live-preview' });
+		const root = dse.block('ds-initiative');
+		await dse.type(root.control('init.malice.quickadd.amount'), '2', { replace: true });
+		await dse.type(root.control('init.malice.quickadd.label'), 'Feytouched', { replace: true });
+		await install('initiative');
+		await dse.click(root.control('init.round.advance'));
+		const boxes = `(() => { const r = document.querySelector('.workspace-leaf.mod-active .markdown-source-view [data-dse-element="initiative"]'); return { amount: r?.querySelector('[data-dse-control="init.malice.quickadd.amount"]')?.value, label: r?.querySelector('[data-dse-control="init.malice.quickadd.label"]')?.value }; })()`;
+		rec('D01', 'atClick', await dse.page(boxes));
+		await finish('D01');
+		rec('D01', 'after', await dse.page(boxes));
+	});
+
+	it('[ZZ602-D02] SC-605 keyboard: type a quick-add draft, focus Advance round, Enter (Live Preview)', async () => {
+		await dse.openNote(TRACKER, { mode: 'live-preview' });
+		const root = dse.block('ds-initiative');
+		await dse.type(root.control('init.malice.quickadd.amount'), '2', { replace: true });
+		await dse.type(root.control('init.malice.quickadd.label'), 'Feytouched', { replace: true });
+		await focusCtl('initiative', 'init.round.advance');
+		await install('initiative');
+		await dse.press('Enter', root.control('init.round.advance'));
+		const boxes = `(() => { const r = document.querySelector('.workspace-leaf.mod-active .markdown-source-view [data-dse-element="initiative"]'); return { amount: r?.querySelector('[data-dse-control="init.malice.quickadd.amount"]')?.value, label: r?.querySelector('[data-dse-control="init.malice.quickadd.label"]')?.value }; })()`;
+		rec('D02', 'atPress', await dse.page(boxes));
+		await finish('D02');
+		rec('D02', 'after', await dse.page(boxes));
+	});
+});

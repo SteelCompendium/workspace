@@ -1,0 +1,6 @@
+G06 focused: true
+G06 before: {"active": true, "ctl": "counter.inc", "leaf": 4}
+G06 FINAL=counter.inc@root2/idx0+ring roots=[2]
+   0:counter.inc@root1/idx0+ring | 474:WRITE | 501:out(counter.inc) | 515:counter.inc@root2/idx0+ring
+G06 after: {"active": true, "ctl": "counter.inc", "leaf": 4}
+G06 counters: ["2", "2"]
