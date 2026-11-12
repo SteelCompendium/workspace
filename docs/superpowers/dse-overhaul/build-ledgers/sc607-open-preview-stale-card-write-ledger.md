@@ -82,3 +82,8 @@ jest 10624 passed / 2 skipped · lifecycle 59/59 (21 + 16 + 9 + 4 + 7 + 2) · e2
 - **L1 (LOW) — reword only, no new test.** The proposal's N18 reason is reworded by the owner (ledger-file bookkeeping): "unreached in measured runs; reachable only when the cache lags this host's own + at a re-bind and the write changed the block's line count". The optional test is DROPPED: the state was not reached in 6/6 real re-binds, a test-only round would cost another review cycle for a mutant on a defence branch, and the probe is preserved in the ledger (`sc607-r5-n18-probe.test.ts.txt`).
 - NIT N1 (CHANGELOGs don't name F4): no change, consistent with the F4 ruling and the "in the shapes below" headline. NIT N2 (no fresh-jest log): land-ready reports the logged warm number 11596 / 1 and the r4-reported fresh 11595 / 2 as unlogged. NIT N3 ("an unique"): already absent in the current proposal text.
 - **LAND-READY** 2026-11-12: dse `sc607-open-preview-stale-card-write` c329ff35 on develop dcc53f0f; superproject 807cec69 on main f108e5e9 (CHANGELOG only; the dse pointer is unstaged; one pointer bump at landing). Both verified on tip at report time.
+
+## Done (2026-11-12)
+
+- LANDED by the dispatcher: dse develop c329ff35 (dcc53f0f..c329ff35); workspace main 71b17faa (CHANGELOG commits; pointer bump cf834cd4); worktree removed; ledger preserved at `docs/superpowers/dse-overhaul/build-ledgers/sc607-open-preview-stale-card-write/` (bookkeeping 8c4f06b9); dse-verify proposal applied ("The drawn-from rule (SC-607)", lifecycle 61/61, part 6 `G-S92 G-S96 G-S97 G-S99`, CURRENT at c329ff35).
+- SC-607 moved to **Done** via linear-post.py `--state Done` (Done comment posted); state verified Done with get_issue. Follow-ups in Backlog: SC-612, SC-616, SC-619.
