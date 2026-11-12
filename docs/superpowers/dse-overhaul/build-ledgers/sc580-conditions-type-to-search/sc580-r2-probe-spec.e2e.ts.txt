@@ -1,0 +1,306 @@
+// THROWAWAY SC-580 r2 reviewer probe. Not committed. Each probe logs what it saw (RVW-LOG lines) and asserts only the hard rules.
+import { $, browser, expect } from '@wdio/globals';
+import { dse } from '../../driver/dse';
+import { CONDITIONS, TRACKER, menuOptions, openConditionsModal } from '../../driver/conditions';
+
+const log = (id: string, what: unknown): void => console.log(`RVW-LOG ${id} ${JSON.stringify(what)}`);
+const state = (): Promise<unknown> =>
+	dse.page(`(() => {
+		const mc = document.querySelectorAll('.modal-container');
+		const inp = document.querySelector('.modal-container .dse-condal__input');
+		const a = document.activeElement;
+		return {
+			modals: mc.length,
+			input: inp ? inp.value : null,
+			focus: a ? (a.getAttribute('data-dse-control') || a.tagName + '.' + a.className) : null,
+			editorOpen: !!document.querySelector('.modal-container .dse-condal__editor'),
+			rows: Array.from(document.querySelectorAll('.modal-container .dse-condal__name')).map((n) => n.textContent),
+		};
+	})()`);
+const inputValue = (): Promise<string | null> => dse.page<string | null>(`(() => { const i = document.querySelector('.modal-container .dse-condal__input'); return i ? i.value : null; })()`);
+const focused = (): Promise<string | null> => dse.page<string | null>(`document.activeElement?.getAttribute('data-dse-control') ?? (document.activeElement?.tagName + '.' + document.activeElement?.className)`);
+
+/** Fire key events through CDP without awaiting each one: a no-pause burst. */
+async function burst(text: string): Promise<void> {
+	const sends: Promise<unknown>[] = [];
+	for (const ch of text) {
+		const code = /[a-z]/i.test(ch) ? `Key${ch.toUpperCase()}` : '';
+		const vk = ch.toUpperCase().charCodeAt(0);
+		sends.push(browser.sendCommandAndGetResult('Input.dispatchKeyEvent', { type: 'keyDown', key: ch, code, text: ch, unmodifiedText: ch, windowsVirtualKeyCode: vk, nativeVirtualKeyCode: vk }));
+		sends.push(browser.sendCommandAndGetResult('Input.dispatchKeyEvent', { type: 'keyUp', key: ch, code, windowsVirtualKeyCode: vk, nativeVirtualKeyCode: vk }));
+	}
+	await Promise.all(sends);
+}
+
+describe('SC-580 r2 reviewer probes', () => {
+	const instrument = (): Promise<unknown> => dse.page(`(() => {
+		window.__rvw = [];
+		const rec = (e) => window.__rvw.push([e.type, e.key ?? e.data ?? '', e.target?.getAttribute?.('data-dse-control') ?? e.target?.tagName, (document.activeElement && document.activeElement.selectionStart !== undefined) ? document.activeElement.selectionStart : '-', e.defaultPrevented, Math.round(performance.now())]);
+		if (!window.__rvwOn) { window.__rvwOn = true; for (const t of ['keydown', 'keypress', 'beforeinput', 'input', 'focusin', 'selectionchange']) document.addEventListener(t, (e) => window.__rvw && rec(e), true); }
+	})()`);
+	const trace = (): Promise<unknown> => dse.page(`JSON.stringify(window.__rvw)`);
+
+	it('[RVW-P01] a no-pause CDP burst "dazed" from the focused + Add condition', async () => {
+		const { modal } = await openConditionsModal(TRACKER, 'hero');
+		await expect(modal.control('cond.add')).toBeFocused();
+		await instrument();
+		await burst('dazed');
+		await browser.pause(300);
+		log('P01', { state: await state(), trace: await trace() });
+		await dse.closeModals();
+	});
+
+	it('[RVW-P01e] sequential CDP keys (each sent as soon as the previous is acknowledged), x5 trials', async () => {
+		for (let t = 0; t < 5; t++) {
+			const { modal } = await openConditionsModal(TRACKER, 'hero');
+			await expect(modal.control('cond.add')).toBeFocused();
+			const t0 = Date.now();
+			for (const ch of 'dazed') {
+				const code = `Key${ch.toUpperCase()}`; const vk = ch.toUpperCase().charCodeAt(0);
+				await browser.sendCommandAndGetResult('Input.dispatchKeyEvent', { type: 'keyDown', key: ch, code, text: ch, unmodifiedText: ch, windowsVirtualKeyCode: vk, nativeVirtualKeyCode: vk });
+				await browser.sendCommandAndGetResult('Input.dispatchKeyEvent', { type: 'keyUp', key: ch, code, windowsVirtualKeyCode: vk, nativeVirtualKeyCode: vk });
+			}
+			const ms = Date.now() - t0;
+			await browser.pause(100);
+			log(`P01e-${t}`, { ms, value: await inputValue(), menu: (await menuOptions()).names });
+			expect(await inputValue()).toBe('dazed');
+			await dse.closeModals();
+		}
+	});
+
+	it('[RVW-P01b] control: click + Add condition first, then the same burst into the already-focused input', async () => {
+		const { modal } = await openConditionsModal(TRACKER, 'hero');
+		await dse.click(modal.control('cond.add'));
+		await browser.pause(200);
+		await burst('dazed');
+		await browser.pause(300);
+		log('P01b', await state());
+		await dse.closeModals();
+	});
+
+	it('[RVW-P01c] spaced bursts: one key, then the rest after a delay', async () => {
+		for (const gap of [0, 1, 5, 10, 20, 35, 60, 120]) {
+			const { modal } = await openConditionsModal(TRACKER, 'hero');
+			await expect(modal.control('cond.add')).toBeFocused();
+			await instrument();
+			const p1 = burst('d');
+			if (gap) await new Promise((r) => setTimeout(r, gap));
+			await burst('azed');
+			await p1;
+			await browser.pause(250);
+			const st = (await state()) as { input: string };
+			log(`P01c-gap-${gap}`, st.input);
+			if (gap === 0) log('P01c-trace-0', await trace());
+			await dse.closeModals();
+		}
+	});
+
+	it('[RVW-P01d] page-timed: dispatch the second key from a timer N ms after the first via CDP in-page? (measure when the caret lands)', async () => {
+		const { modal } = await openConditionsModal(TRACKER, 'hero');
+		await expect(modal.control('cond.add')).toBeFocused();
+		await dse.page(`(() => {
+			window.__sel = [];
+			const t0 = performance.now();
+			const poll = () => { const a = document.activeElement; window.__sel.push([Math.round(performance.now() - t0), a?.getAttribute?.('data-dse-control') ?? a?.tagName, a?.selectionStart, a?.value]); if (performance.now() - t0 < 400) setTimeout(poll, 0); };
+			setTimeout(poll, 0);
+		})()`);
+		await burst('d');
+		await browser.pause(450);
+		log('P01d-sel', await dse.page(`JSON.stringify(window.__sel.filter((x, i, arr) => i === 0 || JSON.stringify(x.slice(1)) !== JSON.stringify(arr[i-1].slice(1))))`));
+		await dse.closeModals();
+	});
+
+	it('[RVW-P02] Space / Enter on a row cog toggle the editor and open no search; letter on a duration chip', async () => {
+		const { modal } = await openConditionsModal(CONDITIONS, 'hero');
+		await dse.page(`document.querySelectorAll('.modal-container [data-dse-control="cond.edit"]')[0].focus()`);
+		await dse.press('Space', modal.control('cond.edit', { nth: 0 }));
+		log('P02-space-cog', await state());
+		expect(await inputValue()).toBeNull();
+		await dse.press('Enter', modal.control('cond.edit', { nth: 0 }));
+		log('P02-enter-cog', await state());
+		expect(await inputValue()).toBeNull();
+		await dse.press('Enter', modal.control('cond.edit', { nth: 0 })); // reopen editor
+		await dse.page(`document.querySelector('.modal-container [data-dse-control="cond.duration"]').focus()`);
+		log('P02-before-letter-chip', await state());
+		await dse.expectNoWrite(CONDITIONS, async () => {
+			await dse.press('Space', modal.control('cond.duration', { nth: 0 })).catch((e) => log('P02-space-chip-err', String(e)));
+		}).catch((e) => log('P02-space-chip-wrote', String(e)));
+		log('P02-after-space-chip', await state());
+		await dse.page(`document.querySelector('.modal-container [data-dse-control="cond.duration"]').focus()`);
+		await dse.press('d');
+		log('P02-after-letter-chip', await state());
+		await dse.press('Escape');
+		log('P02-after-escape', await state());
+		await dse.closeModals();
+	});
+
+	it('[RVW-P03] Escape: dropdown opened by typing closes on Escape, window stays; second Escape closes window', async () => {
+		const { modal } = await openConditionsModal(TRACKER, 'hero');
+		await dse.press('d');
+		expect(await inputValue()).toBe('d');
+		await dse.press('Escape');
+		const s1 = await state();
+		log('P03-esc1', s1);
+		expect(await inputValue()).toBeNull();
+		await expect(modal.control('cond.add')).toBeFocused();
+		await dse.press('Escape');
+		const s2 = await state();
+		log('P03-esc2', s2);
+		expect((s2 as { modals: number }).modals).toBe(0);
+	});
+
+	it('[RVW-P04] a real modal stacked above (command palette): typing there never reaches this window', async () => {
+		const { modal } = await openConditionsModal(TRACKER, 'hero');
+		await dse.page(`app.commands.executeCommandById('command-palette:open')`);
+		await browser.pause(300);
+		log('P04-palette-open', await state());
+		await dse.press('daz');
+		await browser.pause(200);
+		const s = await state();
+		log('P04-after-typing', s);
+		expect(await dse.page(`document.querySelectorAll('.modal-container .dse-condal__input').length`)).toBe(0);
+		await dse.press('Escape');
+		await browser.pause(200);
+		log('P04-after-palette-escape', await state());
+		await dse.page(`(() => {
+			const pal = app.internalPlugins.plugins['command-palette'].instance.modal;
+			let proto = Object.getPrototypeOf(pal);
+			while (Object.getPrototypeOf(proto) && Object.getPrototypeOf(proto) !== Object.prototype) proto = Object.getPrototypeOf(proto);
+			const M = proto.constructor;
+			const m = new M(app);
+			m.contentEl.createEl('button', { text: 'Stacked button', cls: 'rvw-stacked-btn' });
+			m.open();
+			window.__rvwStacked = m;
+			setTimeout(() => document.querySelector('.rvw-stacked-btn').focus(), 0);
+		})()`);
+		await browser.pause(300);
+		log('P04-stacked-open', { s: await state(), containers: await dse.page(`Array.from(document.querySelectorAll('.modal-container')).map((c) => c.className)`), focusText: await dse.page(`document.activeElement?.textContent`) });
+		await dse.press('q');
+		await browser.pause(150);
+		log('P04-stacked-after-q', await state());
+		const leaked = await dse.page(`document.querySelectorAll('.modal-container .dse-condal__input').length`);
+		log('P04-leaked', leaked);
+		await dse.page(`window.__rvwStacked.close()`);
+		await browser.pause(300);
+		log('P04-after-stacked-close', await state());
+		await dse.press('w');
+		log('P04-after-stacked-close-w', await state());
+		void modal;
+		await dse.closeModals();
+	});
+
+	it('[RVW-P05] close and reopen four times: one key is one char; keys after close do nothing', async () => {
+		for (let i = 0; i < 4; i++) {
+			const { modal } = await openConditionsModal(TRACKER, 'hero');
+			await expect(modal.control('cond.add')).toBeFocused();
+			await dse.press('Escape');
+			await browser.pause(150);
+			log(`P05-after-close-${i}`, await state());
+			await dse.press('x'); // after close: focus wherever the window handed it
+			await browser.pause(150);
+			const s = (await state()) as { modals: number };
+			log(`P05-after-x-${i}`, s);
+			expect(s.modals).toBe(0);
+		}
+		const { modal } = await openConditionsModal(TRACKER, 'hero');
+		await expect(modal.control('cond.add')).toBeFocused();
+		await dse.press('g');
+		expect(await inputValue()).toBe('g');
+		await dse.closeModals();
+		await dse.press('h');
+		expect(await dse.page(`document.querySelectorAll('.modal-container').length`)).toBe(0);
+	});
+
+	it('[RVW-P06] Shift+letter is uppercase; digits and punctuation do not throw', async () => {
+		const { modal } = await openConditionsModal(TRACKER, 'hero');
+		await dse.press('Shift+d');
+		log('P06-shift-d', await state());
+		expect(await inputValue()).toBe('D');
+		await dse.press('Escape');
+		await expect(modal.control('cond.add')).toBeFocused();
+		await dse.press('7');
+		expect(await inputValue()).toBe('7');
+		await dse.press('Escape');
+		await dse.press('Shift+/');
+		log('P06-shift-slash', await state());
+		await dse.press('Escape');
+		await dse.press('-');
+		log('P06-dash', await state());
+		await dse.press('Escape');
+		await dse.press('é').catch((e) => log('P06-e-acute-err', String(e)));
+		log('P06-e-acute', await state());
+		await dse.closeModals();
+	});
+
+	it('[RVW-P07] Ctrl+P / Ctrl+Z / Tab / Shift+Tab / arrows from the focused + Add condition', async () => {
+		const { modal } = await openConditionsModal(TRACKER, 'hero');
+		await dse.press('Control+z');
+		log('P07-ctrl-z', await state());
+		expect(await inputValue()).toBeNull();
+		await dse.press('Tab');
+		log('P07-tab', await state());
+		expect(await inputValue()).toBeNull();
+		await dse.press('Shift+Tab');
+		log('P07-shift-tab', await state());
+		await dse.press('ArrowDown');
+		await dse.press('ArrowUp');
+		log('P07-arrows', await state());
+		expect(await inputValue()).toBeNull();
+		await dse.press('Control+p');
+		await browser.pause(300);
+		log('P07-ctrl-p', await state());
+		expect(await dse.page(`document.querySelectorAll('.modal-container .dse-condal__input').length`)).toBe(0);
+		await dse.press('Escape');
+		await browser.pause(200);
+		log('P07-after-esc', await state());
+		await expect(modal.control('cond.add')).toBeExisting();
+		await dse.closeModals();
+	});
+
+	it('[RVW-P08] after a click on the title (neutral chrome), a letter', async () => {
+		const { modal } = await openConditionsModal(TRACKER, 'hero');
+		await dse.page(`(() => {})()`);
+		await $('.modal-container .dse-modal__title').click();
+		log('P08-after-title-click', await state());
+		await dse.press('d');
+		log('P08-after-letter', await state());
+		await $('.modal-container .dse-modal__body').click();
+		log('P08-after-body-click', await state());
+		await dse.press('d');
+		log('P08-after-letter-2', await state());
+		void modal;
+		await dse.closeModals();
+	});
+
+	it('[RVW-P09] Live Preview: daz from the focused + Add condition', async () => {
+		await dse.openNote(TRACKER, { mode: 'live-preview' });
+		const root = dse.block('ds-initiative', 0);
+		await dse.click(root.control('init.cond.add', { nth: 0 }));
+		const modal = await dse.modal('conditions');
+		log('P09-open', await state());
+		await expect(modal.control('cond.add')).toBeFocused();
+		await dse.expectNoWrite(TRACKER, async () => {
+			await dse.press('daz');
+			log('P09-after', await state());
+			expect(await inputValue()).toBe('daz');
+		});
+		await dse.closeModals();
+	});
+
+	it('[RVW-P10] the custom colour input, the icon search and an icon choice', async () => {
+		const { modal } = await openConditionsModal(CONDITIONS, 'hero');
+		await dse.click(modal.control('cond.edit', { nth: 0 }));
+		await dse.page(`document.querySelector('.modal-container [data-dse-control="cond.color-custom"]').focus()`);
+		await dse.press('d');
+		log('P10-color-input', await state());
+		expect(await inputValue()).toBeNull();
+		await dse.page(`document.querySelector('.modal-container [data-dse-control="cond.icon-search"]').focus()`);
+		await dse.press('fla');
+		log('P10-icon-search', { s: await state(), q: await dse.page(`document.querySelector('.modal-container [data-dse-control="cond.icon-search"]').value`) });
+		expect(await inputValue()).toBeNull();
+		await dse.page(`document.querySelector('.modal-container [data-dse-control="cond.icon"]').focus()`);
+		await dse.press('s');
+		log('P10-icon-choice', await state());
+		await dse.closeModals();
+	});
+});

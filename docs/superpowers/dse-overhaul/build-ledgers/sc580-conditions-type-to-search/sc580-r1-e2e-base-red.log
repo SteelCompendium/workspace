@@ -1,0 +1,79 @@
+
+> draw-steel-elements@7.0.0 e2e
+> node e2e/run.mjs --only=COND-N07,COND-N08,COND-N09,COND-N10
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :200 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :200 (private Xvfb); 1 spec file(s), 1 shard(s); only COND-N07,COND-N08,COND-N09,COND-N10; run 20261112-074709-f7b8
+
+Execution of 1 workers started at 2026-11-12T07:47:10.642Z
+
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-integrity.e2e.ts
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 1947418
+[0-0] Error in "conditions-modal: "or just start typing" opens the Add search (SC-580).[COND-N07] typing "daz" with focus on "+ Add condition" opens the dropdown with it typed, as the docs say ("or just start typing"): nothing lost, nothing doubled, Dazed offered"
+Error: Can't call isFocused on element with selector "[data-dse-control="cond.input"]" because element wasn't found
+    at async singleElementCompare (file:///home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/node_modules/expect-webdriverio/lib/utils.js:77:32)
+    at async multipleElementResultsStrategy (file:///home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/node_modules/expect-webdriverio/lib/util/executeCommand.js:91:31)
+    at async waitUntil.wait (file:///home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/node_modules/expect-webdriverio/lib/utils.js:73:16)
+    at async waitUntil (file:///home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/node_modules/expect-webdriverio/lib/util/waitUntil.js:17:26)
+    at async Object.executeCommandBe (file:///home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/node_modules/expect-webdriverio/lib/utils.js:72:74)
+    at async Object.toBeFocused (file:///home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/node_modules/expect-webdriverio/lib/matchers/element/toBeFocused.js:9:20)
+    at async <anonymous> (/home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/specs/conditions-modal/cond-integrity.e2e.ts:102:4)
+[0-0] Error in "conditions-modal: "or just start typing" opens the Add search (SC-580).[COND-N10] with the dropdown already open and focus elsewhere in the window, a letter goes to the end of the typed text and focus returns to the input"
+Error: Expect $(`.modal-container .dse-modal:has(.dse-condal__addwrap)`).$(`[data-dse-control="cond.input"]`) to be focused
+
+Expected: "focused"
+Received: "not focused"
+    at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/specs/conditions-modal/cond-integrity.e2e.ts:138:45)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-0] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-integrity.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: 116368892cf2e138edac4eb09e433010
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/conditions-modal/cond-integrity.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] conditions-modal: "or just start typing" opens the Add search (SC-580)
+[chrome 150.0.7871.250 linux #0-0]    ✖ [COND-N07] typing "daz" with focus on "+ Add condition" opens the dropdown with it typed, as the docs say ("or just start typing"): nothing lost, nothing doubled, Dazed offered
+[chrome 150.0.7871.250 linux #0-0]    ✓ [COND-N08] Space on the focused "+ Add condition" activates the button as it always did: the dropdown opens empty, no space is typed
+[chrome 150.0.7871.250 linux #0-0]    ✓ [COND-N09] a Ctrl or Meta chord with focus on "+ Add condition" is not typing: the dropdown stays closed, focus stays, nothing is written
+[chrome 150.0.7871.250 linux #0-0]    ✖ [COND-N10] with the dropdown already open and focus elsewhere in the window, a letter goes to the end of the typed text and focus returns to the input
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 2 passing (13.1s)
+[chrome 150.0.7871.250 linux #0-0] 2 failing
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1) conditions-modal: "or just start typing" opens the Add search (SC-580) [COND-N07] typing "daz" with focus on "+ Add condition" opens the dropdown with it typed, as the docs say ("or just start typing"): nothing lost, nothing doubled, Dazed offered
+[chrome 150.0.7871.250 linux #0-0] Can't call isFocused on element with selector "[data-dse-control="cond.input"]" because element wasn't found
+[chrome 150.0.7871.250 linux #0-0] Error: Can't call isFocused on element with selector "[data-dse-control="cond.input"]" because element wasn't found
+[chrome 150.0.7871.250 linux #0-0]     at async singleElementCompare (file:///home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/node_modules/expect-webdriverio/lib/utils.js:77:32)
+[chrome 150.0.7871.250 linux #0-0]     at async multipleElementResultsStrategy (file:///home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/node_modules/expect-webdriverio/lib/util/executeCommand.js:91:31)
+[chrome 150.0.7871.250 linux #0-0]     at async waitUntil.wait (file:///home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/node_modules/expect-webdriverio/lib/utils.js:73:16)
+[chrome 150.0.7871.250 linux #0-0]     at async waitUntil (file:///home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/node_modules/expect-webdriverio/lib/util/waitUntil.js:17:26)
+[chrome 150.0.7871.250 linux #0-0]     at async Object.executeCommandBe (file:///home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/node_modules/expect-webdriverio/lib/utils.js:72:74)
+[chrome 150.0.7871.250 linux #0-0]     at async Object.toBeFocused (file:///home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/node_modules/expect-webdriverio/lib/matchers/element/toBeFocused.js:9:20)
+[chrome 150.0.7871.250 linux #0-0]     at async <anonymous> (/home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/specs/conditions-modal/cond-integrity.e2e.ts:102:4)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 2) conditions-modal: "or just start typing" opens the Add search (SC-580) [COND-N10] with the dropdown already open and focus elsewhere in the window, a letter goes to the end of the typed text and focus returns to the input
+[chrome 150.0.7871.250 linux #0-0] Expect $(`.modal-container .dse-modal:has(.dse-condal__addwrap)`).$(`[data-dse-control="cond.input"]`) to be focused
+
+Expected: "focused"
+Received: "not focused"
+[chrome 150.0.7871.250 linux #0-0] Error: Expect $(`.modal-container .dse-modal:has(.dse-condal__addwrap)`).$(`[data-dse-control="cond.input"]`) to be focused
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] Expected: "focused"
+[chrome 150.0.7871.250 linux #0-0] Received: "not focused"
+[chrome 150.0.7871.250 linux #0-0]     at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/specs/conditions-modal/cond-integrity.e2e.ts:138:45)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/driver/session.ts:42:5)
+
+
+Spec Files:	 0 passed, 1 failed, 1 total (100% completed) in 00:00:15  
+
+OBSIDIAN-E2E COND-N07 FAIL: Can't call isFocused on element with selector "[data-dse-control="cond.input"]" because element wasn't found [bundle /home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/.out/20261112-074709-f7b8/COND-N07]
+OBSIDIAN-E2E COND-N08 ok (406 ms)
+OBSIDIAN-E2E COND-N09 ok (448 ms)
+OBSIDIAN-E2E COND-N10 FAIL: Expect $(`.modal-container .dse-modal:has(.dse-condal__addwrap)`).$(`[data-dse-control="cond.input"]`) to be focused | Expected: "focused" | Received: "not focused" [bundle /home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/.out/20261112-074709-f7b8/COND-N10]
+OBSIDIAN-E2E done: 2/4 ok, 2 failed, 0 known-bug, coverage: 4/172 pairs (partial run: gate skipped)
+OBSIDIAN-E2E coverage driven: 9 (control, kind) pair(s) -> /home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 168 manifest pair(s) not exercised in this selection
+rc=1

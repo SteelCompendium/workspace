@@ -1,0 +1,76 @@
+
+> draw-steel-elements@7.0.0 e2e
+> node e2e/run.mjs --only=RVW4-Q1,RVW4-Q2,RVW4-Q3,RVW4-Q4,RVW4-Q5,RVW4-Q6,RVW4-Q7,COND-N11 --shards=1
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :200 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :200 (private Xvfb); 2 spec file(s), 1 shard(s); only RVW4-Q1,RVW4-Q2,RVW4-Q3,RVW4-Q4,RVW4-Q5,RVW4-Q6,RVW4-Q7,COND-N11; run 20261112-103359-a37f
+
+Execution of 2 workers started at 2026-11-12T10:34:00.808Z
+
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-integrity.e2e.ts
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2172062
+[0-0] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-integrity.e2e.ts
+[0-1] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/zz-rvw4-probe.e2e.ts
+[0-1] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2172247
+[0-1] RVW4-LOG Q1-typed {"editorOpen":false,"focus":"cond.input","focusLabel":"Add condition","input":"d","modals":1}
+[0-1] RVW4-LOG Q1-esc1 {"editorOpen":false,"focus":"cond.done","focusLabel":"Done","input":null,"modals":1}
+[0-1] RVW4-LOG Q1-esc2 {"editorOpen":false,"focus":"DIV","focusLabel":null,"input":null,"modals":0}
+[0-1] RVW4-LOG Q2-typed {"editorOpen":true,"focus":"cond.input","focusLabel":"Add condition","input":"d","modals":1}
+[0-1] RVW4-LOG Q2-after-space {"editorOpen":true,"focus":"cond.effect","focusLabel":"blink","input":"d","modals":1}
+[0-1] RVW4-LOG Q2-after-a {"editorOpen":true,"focus":"cond.input","focusLabel":"Add condition","input":"da","modals":1}
+[0-1] RVW4-LOG Q2-esc {"editorOpen":true,"focus":"cond.add","focusLabel":"Add condition","input":null,"modals":1}
+[0-1] RVW4-LOG Q3-after-enter {"editorOpen":false,"focus":"cond.edit","focusLabel":"Customize Bleeding","input":"d","modals":1}
+[0-1] RVW4-LOG Q3-after-a {"editorOpen":false,"focus":"cond.input","focusLabel":"Add condition","input":"da","modals":1}
+[0-1] RVW4-LOG Q3-esc {"editorOpen":false,"focus":"cond.add","focusLabel":"Add condition","input":null,"modals":1}
+[0-1] RVW4-LOG Q4-typed {"editorOpen":false,"focus":"cond.input","focusLabel":"Add condition","input":"daz","modals":1}
+[0-1] RVW4-LOG Q4-picked {"editorOpen":false,"focus":"cond.input","focusLabel":"Add condition","input":"","modals":1}
+[0-1] RVW4-LOG Q4-esc {"editorOpen":false,"focus":"cond.add","focusLabel":"Add condition","input":null,"modals":1}
+[0-1] RVW4-LOG Q5-after-title-click {"editorOpen":true,"focus":"cond.add","focusLabel":"Add condition","input":null,"modals":1}
+[0-1] RVW4-LOG Q6-typed {"editorOpen":true,"focus":"cond.input","focusLabel":"Add condition","input":"d","modals":1}
+[0-1] RVW4-LOG Q6-esc {"editorOpen":true,"focus":"cond.add","focusLabel":"Add condition","input":null,"modals":1}
+[0-1] RVW4-LOG Q7-esc1 {"editorOpen":false,"focus":"cond.remove","focusLabel":"Remove Bleeding","input":null,"modals":1}
+[0-1] RVW4-LOG Q7-esc2 {"editorOpen":false,"focus":"DIV","focusLabel":null,"input":null,"modals":0}
+[0-1] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/zz-rvw4-probe.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: 75898e8f53ec83184c3e41663b5861f2
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/conditions-modal/cond-integrity.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] conditions-modal: "or just start typing" opens the Add search (SC-580)
+[chrome 150.0.7871.250 linux #0-0]    ✓ [COND-N11] a letter on a focused Duration chip opens the search over the open editor, and Escape closes just the search and gives focus back to the chip; a second Escape closes the window
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1 passing (2.2s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-1] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-1] Session ID: 7d0c2d3aeb06efa855af5393b08b9606
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] » e2e/specs/conditions-modal/zz-rvw4-probe.e2e.ts
+[chrome 150.0.7871.250 linux #0-1] SC-580 r4 reviewer probes
+[chrome 150.0.7871.250 linux #0-1]    ✓ [RVW4-Q1] typed from Done: Escape returns to Done, second Escape closes the window
+[chrome 150.0.7871.250 linux #0-1]    ✓ [RVW4-Q2] stale: the chip is re-rendered (a Space on an Effect chip) while the search is open; Escape goes to + Add condition
+[chrome 150.0.7871.250 linux #0-1]    ✓ [RVW4-Q3] stale: the editor is closed (Enter on the row cog) while the search is open; Escape goes to + Add condition
+[chrome 150.0.7871.250 linux #0-1]    ✓ [RVW4-Q4] typed from Done, a pick (Enter), then Escape: + Add condition (the pick clears the return target)
+[chrome 150.0.7871.250 linux #0-1]    ✓ [RVW4-Q5] typed from a chip, then a real click on the title (outside close): focus is not handed back to the chip
+[chrome 150.0.7871.250 linux #0-1]    ✓ [RVW4-Q6] opened by click, focus to a chip, a routed letter, Escape: + Add condition (implementer choice)
+[chrome 150.0.7871.250 linux #0-1]    ✓ [RVW4-Q7] typed from a remove button, Escape returns to it; Escape again closes the window (nothing removed)
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] 7 passing (4.6s)
+
+
+Spec Files:	 2 passed, 2 total (100% completed) in 00:00:12  
+
+OBSIDIAN-E2E COND-N11 ok (2149 ms)
+OBSIDIAN-E2E RVW4-Q1 ok (557 ms)
+OBSIDIAN-E2E RVW4-Q2 ok (985 ms)
+OBSIDIAN-E2E RVW4-Q3 ok (436 ms)
+OBSIDIAN-E2E RVW4-Q4 ok (817 ms)
+OBSIDIAN-E2E RVW4-Q5 ok (618 ms)
+OBSIDIAN-E2E RVW4-Q6 ok (503 ms)
+OBSIDIAN-E2E RVW4-Q7 ok (556 ms)
+OBSIDIAN-E2E done: 8/8 ok, 0 failed, 0 known-bug, coverage: 7/172 pairs (partial run: gate skipped)
+OBSIDIAN-E2E coverage driven: 14 (control, kind) pair(s) -> /home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 165 manifest pair(s) not exercised in this selection
+e2e rc=0

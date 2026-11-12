@@ -1,0 +1,46 @@
+FAIL dom test/dom/views/conditions-modal-matrix.test.ts
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Escape on a search a routed key opened returns focus to the control that had it › only Escape hands focus back: a click away (on the title) closes the search and focus goes to "+ Add condition"
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 12
+    + Received  +  5
+
+      <button
+    -   aria-label="Add condition"
+    -   class="dse-btn dse-condal__add"
+    -   data-dse-control="cond.add"
+    +   aria-label="End of Turn"
+    +   aria-pressed="false"
+    +   class="dse-optchip"
+    +   data-dse-control="cond.duration"
+        type="button"
+      >
+    -   <span
+    -     class="dse-btn__icon"
+    -     data-icon="plus"
+    -   />
+    -   <span
+    -     class="dse-btn__text"
+    -   >
+    -     Add condition
+    -   </span>
+    +   End of Turn
+      </button>
+
+      757 | 			title.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 }));
+      758 | 			expect(searchInput(o.container)).toBeNull();
+    > 759 | 			expect(document.activeElement).toBe(addButton(o.container));
+          | 			                               ^
+      760 | 		});
+      761 |
+      762 | 		test('the control is gone by Escape: focus goes to "+ Add condition"', () => {
+
+      at Object.<anonymous> (test/dom/views/conditions-modal-matrix.test.ts:759:35)
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 failed, 395 passed, 396 total
+Snapshots:   0 total
+Time:        4.129 s
+Ran all test suites matching test/dom/views/conditions-modal-matrix.test.ts|test/dom/views/conditions-modal.test.ts.
+rc=1

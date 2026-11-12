@@ -1,0 +1,52 @@
+
+> draw-steel-elements@7.0.0 e2e
+> node e2e/run.mjs --only=COND-N11
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :200 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :200 (private Xvfb); 1 spec file(s), 1 shard(s); only COND-N11; run 20261112-094103-95de
+
+Execution of 1 workers started at 2026-11-12T09:41:04.488Z
+
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-integrity.e2e.ts
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2091460
+[0-0] Error in "conditions-modal: "or just start typing" opens the Add search (SC-580).[COND-N11] a letter on a focused Duration chip opens the search over the open editor, and Escape closes just the search and gives focus back to the chip; a second Escape closes the window"
+Error: Expect $(`.modal-container .dse-modal:has(.dse-condal__addwrap)`).$$(`[data-dse-control="cond.duration"]`)[... to be focused
+
+Expected: "focused"
+Received: "not focused"
+    at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/specs/conditions-modal/cond-integrity.e2e.ts:159:60)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-0] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-integrity.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: 0aee6c2d060854cc0edb402b0a09e5c6
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/conditions-modal/cond-integrity.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] conditions-modal: "or just start typing" opens the Add search (SC-580)
+[chrome 150.0.7871.250 linux #0-0]    ✖ [COND-N11] a letter on a focused Duration chip opens the search over the open editor, and Escape closes just the search and gives focus back to the chip; a second Escape closes the window
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1 failing (7.7s)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1) conditions-modal: "or just start typing" opens the Add search (SC-580) [COND-N11] a letter on a focused Duration chip opens the search over the open editor, and Escape closes just the search and gives focus back to the chip; a second Escape closes the window
+[chrome 150.0.7871.250 linux #0-0] Expect $(`.modal-container .dse-modal:has(.dse-condal__addwrap)`).$$(`[data-dse-control="cond.duration"]`)[... to be focused
+
+Expected: "focused"
+Received: "not focused"
+[chrome 150.0.7871.250 linux #0-0] Error: Expect $(`.modal-container .dse-modal:has(.dse-condal__addwrap)`).$$(`[data-dse-control="cond.duration"]`)[... to be focused
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] Expected: "focused"
+[chrome 150.0.7871.250 linux #0-0] Received: "not focused"
+[chrome 150.0.7871.250 linux #0-0]     at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/specs/conditions-modal/cond-integrity.e2e.ts:159:60)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/driver/session.ts:42:5)
+
+
+Spec Files:	 0 passed, 1 failed, 1 total (100% completed) in 00:00:10  
+
+OBSIDIAN-E2E COND-N11 FAIL: Expect $(`.modal-container .dse-modal:has(.dse-condal__addwrap)`).$$(`[data-dse-control="cond.duration"]`)[... to be focused | Expected: "focused" | Received: "not focused" [bundle /home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/.out/20261112-094103-95de/COND-N11]
+OBSIDIAN-E2E done: 0/1 ok, 1 failed, 0 known-bug, coverage: 7/172 pairs (partial run: gate skipped)
+OBSIDIAN-E2E coverage driven: 8 (control, kind) pair(s) -> /home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 165 manifest pair(s) not exercised in this selection
+rc=1

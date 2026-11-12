@@ -1,0 +1,68 @@
+=== R1-no-escape-flag-check.log
+applied R1-no-escape-flag-check
+jest rc=0
+Tests:       394 passed, 394 total
+=== R2-no-clear-in-closeAdd.log
+applied R2-no-clear-in-closeAdd
+jest rc=1
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Escape on a search a routed key opened returns focus to the control that had it › a stale return target does not outlive a close: the next search opened by click returns to "+ Add condition"
+Tests:       1 failed, 393 passed, 394 total
+=== R3-no-clear-on-pick.log
+applied R3-no-clear-on-pick
+jest rc=0
+Tests:       394 passed, 394 total
+=== R4-no-isConnected.log
+applied R4-no-isConnected
+jest rc=1
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Escape on a search a routed key opened returns focus to the control that had it › opened from "+ Add condition" itself (its button is replaced), or by a click: "+ Add condition" as today
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Escape on a search a routed key opened returns focus to the control that had it › the control is gone by Escape: focus goes to "+ Add condition"
+Tests:       2 failed, 392 passed, 394 total
+=== R5-consumer-not-escape.log
+applied R5-consumer-not-escape
+jest rc=1
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Escape on a search a routed key opened returns focus to the control that had it › a Duration chip: the letter opens the search, the editor stays open, Escape closes just the search and focuses the same chip
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Escape on a search a routed key opened returns focus to the control that had it › an icon choice in the icon picker
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Escape on a search a routed key opened returns focus to the control that had it › a stale return target does not outlive a close: the next search opened by click returns to "+ Add condition"
+Tests:       3 failed, 391 passed, 394 total
+=== R6-input-handler-not-escape.log
+applied R6-input-handler-not-escape
+jest rc=1
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Escape on a search a routed key opened returns focus to the control that had it › the input's own Escape handler (no Scope in front of it) does the same
+Tests:       1 failed, 393 passed, 394 total
+=== R7-record-even-when-open.log
+applied R7-record-even-when-open
+jest rc=1
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Escape on a search a routed key opened returns focus to the control that had it › opened from "+ Add condition" itself (its button is replaced), or by a click: "+ Add condition" as today
+Tests:       1 failed, 393 passed, 394 total
+=== R8-never-record.log
+applied R8-never-record
+jest rc=1
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Escape on a search a routed key opened returns focus to the control that had it › a Duration chip: the letter opens the search, the editor stays open, Escape closes just the search and focuses the same chip
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Escape on a search a routed key opened returns focus to the control that had it › an icon choice in the icon picker
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Escape on a search a routed key opened returns focus to the control that had it › a stale return target does not outlive a close: the next search opened by click returns to "+ Add condition"
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Escape on a search a routed key opened returns focus to the control that had it › the input's own Escape handler (no Scope in front of it) does the same
+Tests:       4 failed, 390 passed, 394 total
+=== e2e-R1-no-escape-flag-check.log
+applied R1-no-escape-flag-check
+e2e rc=1
+OBSIDIAN-E2E COND-N11 ok (2136 ms)
+OBSIDIAN-E2E done: 3/4 ok, 1 failed, 0 known-bug, coverage: 7/172 pairs (partial run: gate skipped)
+OBSIDIAN-E2E RVW4-Q1 ok (566 ms)
+OBSIDIAN-E2E RVW4-Q4 ok (855 ms)
+OBSIDIAN-E2E RVW4-Q5 FAIL: expect(received).not.toBe(expected) // Object.is equality | Expected: not "End of Turn" [bundle /home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/.out/20261112-103426-cc2d/RVW4-Q5]
+=== e2e-R3-no-clear-on-pick.log
+applied R3-no-clear-on-pick
+e2e rc=1
+OBSIDIAN-E2E COND-N11 ok (2121 ms)
+OBSIDIAN-E2E done: 3/4 ok, 1 failed, 0 known-bug, coverage: 7/172 pairs (partial run: gate skipped)
+OBSIDIAN-E2E RVW4-Q1 ok (651 ms)
+OBSIDIAN-E2E RVW4-Q4 FAIL: expect(received).toBe(expected) // Object.is equality | Expected: "cond.add" | Received: "cond.done" [bundle /home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/.out/20261112-103438-b4c7/RVW4-Q4]
+OBSIDIAN-E2E RVW4-Q5 ok (576 ms)
+=== e2e-R5-consumer-not-escape.log
+applied R5-consumer-not-escape
+e2e rc=1
+OBSIDIAN-E2E COND-N11 FAIL: Expect $(`.modal-container .dse-modal:has(.dse-condal__addwrap)`).$$(`[data-dse-control="cond.duration"]`)[... to be focused | Expected: "focused" | Received: "not focused" [bundle /home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-eleme
+OBSIDIAN-E2E done: 2/4 ok, 2 failed, 0 known-bug, coverage: 7/172 pairs (partial run: gate skipped)
+OBSIDIAN-E2E RVW4-Q1 FAIL: expect(received).toBe(expected) // Object.is equality | Expected: "cond.done" | Received: "cond.add" [bundle /home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/.out/20261112-103451-92b9/RVW4-Q1]
+OBSIDIAN-E2E RVW4-Q4 ok (1169 ms)
+OBSIDIAN-E2E RVW4-Q5 ok (1017 ms)

@@ -1,0 +1,201 @@
+
+> draw-steel-elements@7.0.0 e2e
+> node e2e/run.mjs --only=RVW-P01,RVW-P01b,RVW-P01c,RVW-P01d,RVW-P02,RVW-P03,RVW-P04,RVW-P05,RVW-P06,RVW-P07,RVW-P08,RVW-P09,RVW-P10 --shards=1
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :200 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :200 (private Xvfb); 1 spec file(s), 1 shard(s); only RVW-P01,RVW-P01b,RVW-P01c,RVW-P01d,RVW-P02,RVW-P03,RVW-P04,RVW-P05,RVW-P06,RVW-P07,RVW-P08,RVW-P09,RVW-P10; run 20261112-084743-1901
+
+Execution of 1 workers started at 2026-11-12T08:47:44.898Z
+
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/zz-rvw-probe.e2e.ts
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2030276
+[0-0] RVW-LOG P01 {"state":{"editorOpen":false,"focus":"cond.input","input":"azedd","modals":1,"rows":[]},"trace":"[[\"keydown\",\"a\",\"cond.add\",\"-\",false,1569],[\"focusin\",\"\",\"cond.input\",0,false,1574],[\"input\",\"\",\"cond.input\",1,false,1575],[\"selectionchange\",\"\",\"cond.input\",1,false,1580],[\"keydown\",\"z\",\"cond.input\",1,false,1583],[\"keypress\",\"z\",\"cond.input\",1,false,1584],[\"beforeinput\",\"z\",\"cond.input\",1,false,1584],[\"input\",\"z\",\"cond.input\",2,false,1584],[\"selectionchange\",\"\",\"cond.input\",2,false,1589],[\"keydown\",\"e\",\"cond.input\",2,false,1592],[\"keypress\",\"e\",\"cond.input\",2,false,1592],[\"beforeinput\",\"e\",\"cond.input\",2,false,1592],[\"input\",\"e\",\"cond.input\",3,false,1592],[\"selectionchange\",\"\",\"cond.input\",3,false,1599],[\"keydown\",\"d\",\"cond.input\",3,false,1600],[\"keypress\",\"d\",\"cond.input\",3,false,1600],[\"beforeinput\",\"d\",\"cond.input\",3,false,1600],[\"input\",\"d\",\"cond.input\",4,false,1601],[\"keydown\",\"d\",\"cond.input\",4,false,1605],[\"keypress\",\"d\",\"cond.input\",4,false,1605],[\"beforeinput\",\"d\",\"cond.input\",4,false,1605],[\"input\",\"d\",\"cond.input\",5,false,1606],[\"selectionchange\",\"\",\"cond.input\",5,false,1612]]"}
+[0-0] RVW-LOG P01b {"editorOpen":false,"focus":"cond.input","input":"azedd","modals":1,"rows":[]}
+[0-0] RVW-LOG P01c-gap-0 "azedd"
+[0-0] RVW-LOG P01c-trace-0 "[[\"keydown\",\"a\",\"cond.add\",\"-\",false,3273],[\"focusin\",\"\",\"cond.input\",0,false,3278],[\"input\",\"\",\"cond.input\",1,false,3278],[\"selectionchange\",\"\",\"cond.input\",1,false,3283],[\"keydown\",\"z\",\"cond.input\",1,false,3286],[\"keypress\",\"z\",\"cond.input\",1,false,3287],[\"beforeinput\",\"z\",\"cond.input\",1,false,3287],[\"input\",\"z\",\"cond.input\",2,false,3287],[\"selectionchange\",\"\",\"cond.input\",2,false,3290],[\"keydown\",\"e\",\"cond.input\",2,false,3293],[\"keypress\",\"e\",\"cond.input\",2,false,3293],[\"beforeinput\",\"e\",\"cond.input\",2,false,3293],[\"input\",\"e\",\"cond.input\",3,false,3293],[\"selectionchange\",\"\",\"cond.input\",3,false,3298],[\"keydown\",\"d\",\"cond.input\",3,false,3300],[\"keypress\",\"d\",\"cond.input\",3,false,3300],[\"beforeinput\",\"d\",\"cond.input\",3,false,3300],[\"input\",\"d\",\"cond.input\",4,false,3301],[\"keydown\",\"d\",\"cond.input\",4,false,3305],[\"keypress\",\"d\",\"cond.input\",4,false,3305],[\"beforeinput\",\"d\",\"cond.input\",4,false,3305],[\"input\",\"d\",\"cond.input\",5,false,3306],[\"selectionchange\",\"\",\"cond.input\",5,false,3311]]"
+[0-0] RVW-LOG P01c-gap-1 "dzeda"
+[0-0] RVW-LOG P01c-gap-5 "dzeda"
+[0-0] RVW-LOG P01c-gap-10 "dzeda"
+[0-0] RVW-LOG P01c-gap-20 "dzeda"
+[0-0] RVW-LOG P01c-gap-35 "dzeda"
+[0-0] RVW-LOG P01c-gap-60 "dzeda"
+[0-0] RVW-LOG P01c-gap-120 "dzeda"
+[0-0] RVW-LOG P01d-sel "[[0,\"cond.add\",null,\"\"],[19,\"cond.input\",1,\"d\"]]"
+[0-0] RVW-LOG P02-space-cog {"editorOpen":true,"focus":"cond.edit","input":null,"modals":1,"rows":["Bleeding","Dazed","Hexed","Slowed"]}
+[0-0] RVW-LOG P02-enter-cog {"editorOpen":false,"focus":"cond.edit","input":null,"modals":1,"rows":["Bleeding","Dazed","Hexed","Slowed"]}
+[0-0] RVW-LOG P02-before-letter-chip {"editorOpen":true,"focus":"cond.duration","input":null,"modals":1,"rows":["Bleeding","Dazed","Hexed","Slowed"]}
+[0-0] RVW-LOG P02-after-space-chip {"editorOpen":true,"focus":"cond.duration","input":null,"modals":1,"rows":["Bleeding","Dazed","Hexed","Slowed"]}
+[0-0] RVW-LOG P02-after-letter-chip {"editorOpen":true,"focus":"cond.input","input":"d","modals":1,"rows":["Bleeding","Dazed","Hexed","Slowed"]}
+[0-0] RVW-LOG P02-after-escape {"editorOpen":true,"focus":"cond.add","input":null,"modals":1,"rows":["Bleeding","Dazed","Hexed","Slowed"]}
+[0-0] RVW-LOG P03-esc1 {"editorOpen":false,"focus":"cond.add","input":null,"modals":1,"rows":[]}
+[0-0] RVW-LOG P03-esc2 {"editorOpen":false,"focus":"DIV.markdown-preview-view markdown-rendered node-insert-event is-readable-line-width allow-fold-headings allow-fold-lists show-indentation-guide show-properties","input":null,"modals":0,"rows":[]}
+[0-0] RVW-LOG P04-palette-open {"editorOpen":false,"focus":"INPUT.prompt-input","input":null,"modals":2,"rows":[]}
+[0-0] RVW-LOG P04-after-typing {"editorOpen":false,"focus":"INPUT.prompt-input","input":null,"modals":2,"rows":[]}
+[0-0] RVW-LOG P04-after-palette-escape {"editorOpen":false,"focus":"cond.add","input":null,"modals":1,"rows":[]}
+[0-0] RVW-LOG P04-settings-focused {"editorOpen":false,"focus":"cond.add","input":null,"modals":1,"rows":[]}
+[0-0] RVW-LOG P04-settings-after-q {"editorOpen":false,"focus":"cond.input","input":"q","modals":1,"rows":[]}
+[0-0] RVW-LOG P04-leaked 1
+[0-0] RVW-LOG P04-after-settings-close {"editorOpen":false,"focus":"cond.input","input":"q","modals":1,"rows":[]}
+[0-0] RVW-LOG P05-after-close-0 {"editorOpen":false,"focus":"DIV.markdown-preview-view markdown-rendered node-insert-event is-readable-line-width allow-fold-headings allow-fold-lists show-indentation-guide show-properties","input":null,"modals":0,"rows":[]}
+[0-0] RVW-LOG P05-after-x-0 {"editorOpen":false,"focus":"DIV.markdown-preview-view markdown-rendered node-insert-event is-readable-line-width allow-fold-headings allow-fold-lists show-indentation-guide show-properties","input":null,"modals":0,"rows":[]}
+[0-0] RVW-LOG P05-after-close-1 {"editorOpen":false,"focus":"DIV.markdown-preview-view markdown-rendered node-insert-event is-readable-line-width allow-fold-headings allow-fold-lists show-indentation-guide show-properties","input":null,"modals":0,"rows":[]}
+[0-0] RVW-LOG P05-after-x-1 {"editorOpen":false,"focus":"DIV.markdown-preview-view markdown-rendered node-insert-event is-readable-line-width allow-fold-headings allow-fold-lists show-indentation-guide show-properties","input":null,"modals":0,"rows":[]}
+[0-0] RVW-LOG P05-after-close-2 {"editorOpen":false,"focus":"DIV.markdown-preview-view markdown-rendered node-insert-event is-readable-line-width allow-fold-headings allow-fold-lists show-indentation-guide show-properties","input":null,"modals":0,"rows":[]}
+[0-0] RVW-LOG P05-after-x-2 {"editorOpen":false,"focus":"DIV.markdown-preview-view markdown-rendered node-insert-event is-readable-line-width allow-fold-headings allow-fold-lists show-indentation-guide show-properties","input":null,"modals":0,"rows":[]}
+[0-0] RVW-LOG P05-after-close-3 {"editorOpen":false,"focus":"DIV.markdown-preview-view markdown-rendered node-insert-event is-readable-line-width allow-fold-headings allow-fold-lists show-indentation-guide show-properties","input":null,"modals":0,"rows":[]}
+[0-0] RVW-LOG P05-after-x-3 {"editorOpen":false,"focus":"DIV.markdown-preview-view markdown-rendered node-insert-event is-readable-line-width allow-fold-headings allow-fold-lists show-indentation-guide show-properties","input":null,"modals":0,"rows":[]}
+[0-0] RVW-LOG P06-shift-d {"editorOpen":false,"focus":"cond.input","input":"D","modals":1,"rows":[]}
+[0-0] RVW-LOG P06-shift-slash {"editorOpen":false,"focus":"cond.input","input":"?","modals":1,"rows":[]}
+[0-0] RVW-LOG P06-dash {"editorOpen":false,"focus":"cond.input","input":"-","modals":1,"rows":[]}
+[0-0] RVW-LOG P06-e-acute {"editorOpen":false,"focus":"cond.input","input":"é","modals":1,"rows":[]}
+[0-0] RVW-LOG P07-ctrl-z {"editorOpen":false,"focus":"cond.add","input":null,"modals":1,"rows":[]}
+[0-0] RVW-LOG P07-tab {"editorOpen":false,"focus":"cond.done","input":null,"modals":1,"rows":[]}
+[0-0] RVW-LOG P07-shift-tab {"editorOpen":false,"focus":"cond.add","input":null,"modals":1,"rows":[]}
+[0-0] RVW-LOG P07-arrows {"editorOpen":false,"focus":"cond.add","input":null,"modals":1,"rows":[]}
+[0-0] RVW-LOG P07-ctrl-p {"editorOpen":false,"focus":"cond.add","input":null,"modals":1,"rows":[]}
+[0-0] RVW-LOG P07-after-esc {"editorOpen":false,"focus":"DIV.markdown-preview-view markdown-rendered node-insert-event is-readable-line-width allow-fold-headings allow-fold-lists show-indentation-guide show-properties","input":null,"modals":0,"rows":[]}
+[0-0] 2026-11-12T08:48:04.853Z WARN webdriver: Request encountered a stale element - terminating request
+[0-0] stale element reference in "SC-580 r2 reviewer probes.[RVW-P07] Ctrl+P / Ctrl+Z / Tab / Shift+Tab / arrows from the focused + Add condition"
+stale element reference: WebDriverError: stale element reference: stale element not found in the current frame
+  (Session info: chrome=150.0.7871.250) when running "element/f.1AE1856183DB1A3F3DC08D34177D9747.d.B3D8E375C32E94205D9FC4B53C28C221.e.894/element" with method "POST"
+[0-0] RVW-LOG P08-after-title-click {"editorOpen":false,"focus":"BODY.theme-dark mod-linux is-frameless is-hidden-frameless obsidian-app styled-scrollbars show-inline-title is-floating-nav auto-full-screen show-ribbon show-view-header","input":null,"modals":1,"rows":[]}
+[0-0] RVW-LOG P08-after-letter {"editorOpen":false,"focus":"BODY.theme-dark mod-linux is-frameless is-hidden-frameless obsidian-app styled-scrollbars show-inline-title is-floating-nav auto-full-screen show-ribbon show-view-header","input":null,"modals":1,"rows":[]}
+[0-0] RVW-LOG P08-after-body-click {"editorOpen":false,"focus":"cond.input","input":"","modals":1,"rows":[]}
+[0-0] RVW-LOG P08-after-letter-2 {"editorOpen":false,"focus":"cond.input","input":"d","modals":1,"rows":[]}
+[0-0] RVW-LOG P09-open {"editorOpen":false,"focus":"cond.add","input":null,"modals":1,"rows":[]}
+[0-0] RVW-LOG P09-after {"editorOpen":false,"focus":"cond.input","input":"daz","modals":1,"rows":[]}
+[0-0] RVW-LOG P10-color-input {"editorOpen":true,"focus":"cond.color-custom","input":null,"modals":1,"rows":["Bleeding","Dazed","Hexed","Slowed"]}
+[0-0] RVW-LOG P10-icon-search {"s":{"editorOpen":true,"focus":"cond.icon-search","input":null,"modals":1,"rows":["Bleeding","Dazed","Hexed","Slowed"]},"q":"fla"}
+[0-0] RVW-LOG P10-icon-choice {"editorOpen":true,"focus":"cond.input","input":"s","modals":1,"rows":["Bleeding","Dazed","Hexed","Slowed"]}
+[0-0] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/zz-rvw-probe.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: 6b3af8b08b2f275450b283d96b2bfa82
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/conditions-modal/zz-rvw-probe.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] SC-580 r2 reviewer probes
+[chrome 150.0.7871.250 linux #0-0]    ✓ [RVW-P01] a no-pause CDP burst "dazed" from the focused + Add condition
+[chrome 150.0.7871.250 linux #0-0]    ✓ [RVW-P01b] control: click + Add condition first, then the same burst into the already-focused input
+[chrome 150.0.7871.250 linux #0-0]    ✓ [RVW-P01c] spaced bursts: one key, then the rest after a delay
+[chrome 150.0.7871.250 linux #0-0]    ✓ [RVW-P01d] page-timed: dispatch the second key from a timer N ms after the first via CDP in-page? (measure when the caret lands)
+[chrome 150.0.7871.250 linux #0-0]    ✓ [RVW-P02] Space / Enter on a row cog toggle the editor and open no search; letter on a duration chip
+[chrome 150.0.7871.250 linux #0-0]    ✓ [RVW-P03] Escape: dropdown opened by typing closes on Escape, window stays; second Escape closes window
+[chrome 150.0.7871.250 linux #0-0]    ✓ [RVW-P04] a real modal stacked above (command palette): typing there never reaches this window
+[chrome 150.0.7871.250 linux #0-0]    ✓ [RVW-P05] close and reopen four times: one key is one char; keys after close do nothing
+[chrome 150.0.7871.250 linux #0-0]    ✓ [RVW-P06] Shift+letter is uppercase; digits and punctuation do not throw
+[chrome 150.0.7871.250 linux #0-0]    ✖ [RVW-P07] Ctrl+P / Ctrl+Z / Tab / Shift+Tab / arrows from the focused + Add condition
+[chrome 150.0.7871.250 linux #0-0]    ✓ [RVW-P08] after a click on the title (neutral chrome), a letter
+[chrome 150.0.7871.250 linux #0-0]    ✓ [RVW-P09] Live Preview: daz from the focused + Add condition
+[chrome 150.0.7871.250 linux #0-0]    ✓ [RVW-P10] the custom colour input, the icon search and an icon choice
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 12 passing (29.2s)
+[chrome 150.0.7871.250 linux #0-0] 1 failing
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1) SC-580 r2 reviewer probes [RVW-P07] Ctrl+P / Ctrl+Z / Tab / Shift+Tab / arrows from the focused + Add condition
+[chrome 150.0.7871.250 linux #0-0] WebDriverError: stale element reference: stale element not found in the current frame
+  (Session info: chrome=150.0.7871.250) when running "element/f.1AE1856183DB1A3F3DC08D34177D9747.d.B3D8E375C32E94205D9FC4B53C28C221.e.894/element" with method "POST"
+[chrome 150.0.7871.250 linux #0-0] stale element reference: WebDriverError: stale element reference: stale element not found in the current frame
+[chrome 150.0.7871.250 linux #0-0]   (Session info: chrome=150.0.7871.250) when running "element/f.1AE1856183DB1A3F3DC08D34177D9747.d.B3D8E375C32E94205D9FC4B53C28C221.e.894/element" with method "POST"
+
+
+Spec Files:	 0 passed, 1 failed, 1 total (100% completed) in 00:00:32  
+
+OBSIDIAN-E2E RVW-P01 ok (934 ms)
+OBSIDIAN-E2E RVW-P01b ok (987 ms)
+OBSIDIAN-E2E RVW-P01c ok (5199 ms)
+OBSIDIAN-E2E RVW-P01d ok (834 ms)
+OBSIDIAN-E2E RVW-P02 ok (1055 ms)
+OBSIDIAN-E2E RVW-P03 ok (437 ms)
+OBSIDIAN-E2E RVW-P04 ok (2368 ms)
+OBSIDIAN-E2E RVW-P05 ok (3433 ms)
+OBSIDIAN-E2E RVW-P06 ok (526 ms)
+OBSIDIAN-E2E RVW-P07 FAIL: WebDriverError: stale element reference: stale element not found in the current frame | (Session info: chrome=150.0.7871.250) when running "element/f.1AE1856183DB1A3F3DC08D34177D9747.d.B3D8E375C32E94205D9FC4B53C28C221.e.894/element" with method "POST" [bundle /home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/.out/20261112-084743-1901/RVW-P07]
+OBSIDIAN-E2E RVW-P08 ok (509 ms)
+OBSIDIAN-E2E RVW-P09 ok (525 ms)
+OBSIDIAN-E2E RVW-P10 ok (554 ms)
+OBSIDIAN-E2E done: 12/13 ok, 1 failed, 0 known-bug, coverage: 4/172 pairs (partial run: gate skipped)
+OBSIDIAN-E2E coverage driven: 26 (control, kind) pair(s) -> /home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 168 manifest pair(s) not exercised in this selection
+e2e rc=1
+
+> draw-steel-elements@7.0.0 e2e
+> node e2e/run.mjs --only=RVW-P04 --shards=1
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :201 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :201 (private Xvfb); 1 spec file(s), 1 shard(s); only RVW-P04; run 20261112-084935-9966
+
+Execution of 1 workers started at 2026-11-12T08:49:37.141Z
+
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/zz-rvw-probe.e2e.ts
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2033605
+[0-0] RVW-LOG P04-palette-open {"editorOpen":false,"focus":"INPUT.prompt-input","input":null,"modals":2,"rows":[]}
+[0-0] RVW-LOG P04-after-typing {"editorOpen":false,"focus":"INPUT.prompt-input","input":null,"modals":2,"rows":[]}
+[0-0] RVW-LOG P04-after-palette-escape {"editorOpen":false,"focus":"cond.add","input":null,"modals":1,"rows":[]}
+[0-0] RVW-LOG P04-stacked-open {"s":{"editorOpen":false,"focus":"BUTTON.rvw-stacked-btn","input":null,"modals":2,"rows":[]},"containers":["modal-container mod-dim","modal-container mod-dim"],"focusText":"Stacked button"}
+[0-0] RVW-LOG P04-stacked-after-q {"editorOpen":false,"focus":"BUTTON.rvw-stacked-btn","input":null,"modals":2,"rows":[]}
+[0-0] RVW-LOG P04-leaked 0
+[0-0] RVW-LOG P04-after-stacked-close {"editorOpen":false,"focus":"cond.add","input":null,"modals":1,"rows":[]}
+[0-0] RVW-LOG P04-after-stacked-close-w {"editorOpen":false,"focus":"cond.input","input":"w","modals":1,"rows":[]}
+[0-0] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/zz-rvw-probe.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: bc6662b9f38ee695188294893496b832
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/conditions-modal/zz-rvw-probe.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] SC-580 r2 reviewer probes
+[chrome 150.0.7871.250 linux #0-0]    ✓ [RVW-P04] a real modal stacked above (command palette): typing there never reaches this window
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1 passing (2.3s)
+
+
+Spec Files:	 1 passed, 1 total (100% completed) in 00:00:05  
+
+OBSIDIAN-E2E RVW-P04 ok (2210 ms)
+OBSIDIAN-E2E done: 1/1 ok, 0 failed, 0 known-bug, coverage: 1/172 pairs (partial run: gate skipped)
+OBSIDIAN-E2E coverage driven: 5 (control, kind) pair(s) -> /home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 171 manifest pair(s) not exercised in this selection
+e2e rc=0
+
+> draw-steel-elements@7.0.0 e2e
+> node e2e/run.mjs --only=RVW-P01e --shards=1
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :200 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :200 (private Xvfb); 1 spec file(s), 1 shard(s); only RVW-P01e; run 20261112-084956-1bf6
+
+Execution of 1 workers started at 2026-11-12T08:49:57.798Z
+
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/zz-rvw-probe.e2e.ts
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 2034324
+[0-0] RVW-LOG P01e-0 {"ms":55,"value":"dazed","menu":["Dazed","Add custom: \"dazed\""]}
+[0-0] RVW-LOG P01e-1 {"ms":64,"value":"dazed","menu":["Dazed","Add custom: \"dazed\""]}
+[0-0] RVW-LOG P01e-2 {"ms":56,"value":"dazed","menu":["Dazed","Add custom: \"dazed\""]}
+[0-0] RVW-LOG P01e-3 {"ms":56,"value":"dazed","menu":["Dazed","Add custom: \"dazed\""]}
+[0-0] RVW-LOG P01e-4 {"ms":53,"value":"dazed","menu":["Dazed","Add custom: \"dazed\""]}
+[0-0] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/zz-rvw-probe.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: 186bba837a2c1acfe7a0917ee19d4866
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/conditions-modal/zz-rvw-probe.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] SC-580 r2 reviewer probes
+[chrome 150.0.7871.250 linux #0-0]    ✓ [RVW-P01e] sequential CDP keys (each sent as soon as the previous is acknowledged), x5 trials
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1 passing (2.9s)
+
+
+Spec Files:	 1 passed, 1 total (100% completed) in 00:00:05  
+
+OBSIDIAN-E2E RVW-P01e ok (2800 ms)
+OBSIDIAN-E2E done: 1/1 ok, 0 failed, 0 known-bug, coverage: 1/172 pairs (partial run: gate skipped)
+OBSIDIAN-E2E coverage driven: 1 (control, kind) pair(s) -> /home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 171 manifest pair(s) not exercised in this selection
+e2e rc=0

@@ -1,0 +1,134 @@
+// THROWAWAY SC-580 r4 reviewer probe. Not committed.
+import { $, browser, expect } from '@wdio/globals';
+import { dse } from '../../driver/dse';
+import { CONDITIONS, TRACKER, openConditionsModal } from '../../driver/conditions';
+
+const log = (id: string, what: unknown): void => console.log(`RVW4-LOG ${id} ${JSON.stringify(what)}`);
+const state = (): Promise<{ modals: number; input: string | null; focus: string | null; focusLabel: string | null; editorOpen: boolean }> =>
+	dse.page(`(() => {
+		const inp = document.querySelector('.modal-container .dse-condal__input');
+		const a = document.activeElement;
+		return {
+			modals: document.querySelectorAll('.modal-container').length,
+			input: inp ? inp.value : null,
+			focus: a ? (a.getAttribute('data-dse-control') || a.tagName) : null,
+			focusLabel: a ? a.getAttribute('aria-label') : null,
+			editorOpen: !!document.querySelector('.modal-container .dse-condal__editor'),
+		};
+	})()`);
+const focusSel = (sel: string): Promise<unknown> => dse.page(`document.querySelector(${JSON.stringify(sel)}).focus()`);
+
+describe('SC-580 r4 reviewer probes', () => {
+	it('[RVW4-Q1] typed from Done: Escape returns to Done, second Escape closes the window', async () => {
+		await openConditionsModal(TRACKER, 'hero');
+		await focusSel('.modal-container [data-dse-control="cond.done"]');
+		await dse.press('d');
+		log('Q1-typed', await state());
+		await dse.press('Escape');
+		const s1 = await state();
+		log('Q1-esc1', s1);
+		expect(s1.focus).toBe('cond.done');
+		expect(s1.modals).toBe(1);
+		await dse.press('Escape');
+		const s2 = await state();
+		log('Q1-esc2', s2);
+		expect(s2.modals).toBe(0);
+	});
+
+	it('[RVW4-Q2] stale: the chip is re-rendered (a Space on an Effect chip) while the search is open; Escape goes to + Add condition', async () => {
+		await openConditionsModal(CONDITIONS, 'hero');
+		await dse.page(`document.querySelectorAll('.modal-container [data-dse-control="cond.edit"]')[0].click()`);
+		await focusSel('.modal-container [role="group"][aria-label="Duration"] button[aria-label="End of Turn"]');
+		await dse.press('d');
+		log('Q2-typed', await state());
+		await focusSel('.modal-container [role="group"][aria-label="Effect"] button:not([aria-pressed="true"])');
+		await dse.waitForWrite(CONDITIONS, () => dse.press('Space'));
+		log('Q2-after-space', await state());
+		await dse.press('a');
+		log('Q2-after-a', await state());
+		await dse.press('Escape');
+		const s = await state();
+		log('Q2-esc', s);
+		expect(s.modals).toBe(1);
+		expect(s.input).toBeNull();
+		expect(s.focus).toBe('cond.add');
+		await dse.closeModals();
+	});
+
+	it('[RVW4-Q3] stale: the editor is closed (Enter on the row cog) while the search is open; Escape goes to + Add condition', async () => {
+		await openConditionsModal(CONDITIONS, 'hero');
+		await dse.page(`document.querySelectorAll('.modal-container [data-dse-control="cond.edit"]')[0].click()`);
+		await focusSel('.modal-container [role="group"][aria-label="Duration"] button[aria-label="End of Turn"]');
+		await dse.press('d');
+		await focusSel('.modal-container [data-dse-control="cond.edit"]');
+		await dse.press('Enter');
+		log('Q3-after-enter', await state());
+		await dse.press('a');
+		log('Q3-after-a', await state());
+		await dse.press('Escape');
+		const s = await state();
+		log('Q3-esc', s);
+		expect(s.modals).toBe(1);
+		expect(s.input).toBeNull();
+		expect(s.focus).toBe('cond.add');
+		await dse.closeModals();
+	});
+
+	it('[RVW4-Q4] typed from Done, a pick (Enter), then Escape: + Add condition (the pick clears the return target)', async () => {
+		await openConditionsModal(TRACKER, 'hero');
+		await focusSel('.modal-container [data-dse-control="cond.done"]');
+		await dse.press('daz');
+		log('Q4-typed', await state());
+		await dse.waitForWrite(TRACKER, () => dse.press('Enter'));
+		log('Q4-picked', await state());
+		await dse.press('Escape');
+		const s = await state();
+		log('Q4-esc', s);
+		expect(s.modals).toBe(1);
+		expect(s.focus).toBe('cond.add');
+		await dse.closeModals();
+	});
+
+	it('[RVW4-Q5] typed from a chip, then a real click on the title (outside close): focus is not handed back to the chip', async () => {
+		await openConditionsModal(CONDITIONS, 'hero');
+		await dse.page(`document.querySelectorAll('.modal-container [data-dse-control="cond.edit"]')[0].click()`);
+		await focusSel('.modal-container [role="group"][aria-label="Duration"] button[aria-label="End of Turn"]');
+		await dse.press('d');
+		await $('.modal-container .dse-modal__title').click();
+		await browser.pause(100);
+		const s = await state();
+		log('Q5-after-title-click', s);
+		expect(s.input).toBeNull();
+		expect(s.focusLabel).not.toBe('End of Turn');
+		await dse.closeModals();
+	});
+
+	it('[RVW4-Q6] opened by click, focus to a chip, a routed letter, Escape: + Add condition (implementer choice)', async () => {
+		const { modal } = await openConditionsModal(CONDITIONS, 'hero');
+		await dse.page(`document.querySelectorAll('.modal-container [data-dse-control="cond.edit"]')[0].click()`);
+		await dse.click(modal.control('cond.add'));
+		await focusSel('.modal-container [role="group"][aria-label="Duration"] button[aria-label="End of Turn"]');
+		await dse.press('d');
+		log('Q6-typed', await state());
+		await dse.press('Escape');
+		const s = await state();
+		log('Q6-esc', s);
+		expect(s.modals).toBe(1);
+		expect(s.focus).toBe('cond.add');
+		await dse.closeModals();
+	});
+
+	it('[RVW4-Q7] typed from a remove button, Escape returns to it; Escape again closes the window (nothing removed)', async () => {
+		await openConditionsModal(CONDITIONS, 'hero');
+		await dse.expectNoWrite(CONDITIONS, async () => {
+			await focusSel('.modal-container [data-dse-control="cond.remove"]');
+			await dse.press('x');
+			await dse.press('Escape');
+			const s = await state();
+			log('Q7-esc1', s);
+			expect(s.focus).toBe('cond.remove');
+			await dse.press('Escape');
+			log('Q7-esc2', await state());
+		});
+	});
+});

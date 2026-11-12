@@ -1,0 +1,121 @@
+=== M10-no-input-dispatch.log
+applied M10-no-input-dispatch
+  ● SC-580: a printable key in the window opens the Add search with that key typed › a letter on the focused "+ Add condition" opens the search by the click path: letter typed, input focused, dropdown filtered, key swallowed
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Shift is fine: a capital letter opens with the capital, and the filter ignores case
+  ● SC-580: a printable key in the window opens the Add search with that key typed › the search is already open and focus is elsewhere: the key goes to the END of the typed text and focus moves to the input
+Tests:       3 failed, 383 passed, 386 total
+jest rc=1
+=== M11-replace-not-append.log
+applied M11-replace-not-append
+  ● SC-580: a printable key in the window opens the Add search with that key typed › the search is already open and focus is elsewhere: the key goes to the END of the typed text and focus moves to the input
+Tests:       1 failed, 385 passed, 386 total
+jest rc=1
+=== M12-no-focus.log
+applied M12-no-focus
+  ● SC-580: a printable key in the window opens the Add search with that key typed › the search is already open and focus is elsewhere: the key goes to the END of the typed text and focus moves to the input
+Tests:       1 failed, 385 passed, 386 total
+jest rc=1
+=== M13-keylen-any.log
+applied M13-keylen-any
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Enter opens nothing and is not swallowed
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Tab opens nothing and is not swallowed
+  ● SC-580: a printable key in the window opens the Add search with that key typed › an arrow opens nothing and is not swallowed
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Escape opens nothing and is not swallowed
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Backspace opens nothing and is not swallowed
+Tests:       5 failed, 381 passed, 386 total
+jest rc=1
+=== M1-no-handler.log
+applied M1-no-handler
+  ● SC-580: a printable key in the window opens the Add search with that key typed › a letter on the focused "+ Add condition" opens the search by the click path: letter typed, input focused, dropdown filtered, key swallowed
+  ● SC-580: a printable key in the window opens the Add search with that key typed › typing "daz" fast: the first key opens, the next two are the input's own (not routed, not lost, not doubled) and Dazed is offered
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Shift is fine: a capital letter opens with the capital, and the filter ignores case
+  ● SC-580: a printable key in the window opens the Add search with that key typed › a digit and a punctuation key are printable too
+  ● SC-580: a printable key in the window opens the Add search with that key typed › from any other control of the window (a row's remove button, Done), not just "+ Add condition"
+  ● SC-580: a printable key in the window opens the Add search with that key typed › the search is already open and focus is elsewhere: the key goes to the END of the typed text and focus moves to the input
+  ● SC-580: a printable key in the window opens the Add search with that key typed › contenteditable="false" is not text entry: a key from it routes
+Tests:       7 failed, 379 passed, 386 total
+jest rc=1
+=== M2-no-textentry-guard.log
+applied M2-no-textentry-guard
+  ● SC-580: a printable key in the window opens the Add search with that key typed › typing "daz" fast: the first key opens, the next two are the input's own (not routed, not lost, not doubled) and Dazed is offered
+  ● SC-580: a printable key in the window opens the Add search with that key typed › a text-entry control keeps its keys: the editor's icon search input, a select, a textarea, a contenteditable
+Tests:       2 failed, 384 passed, 386 total
+jest rc=1
+=== M3-no-modifier-guard.log
+applied M3-no-modifier-guard
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Ctrl+letter opens nothing and is not swallowed
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Meta+letter opens nothing and is not swallowed
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Alt+letter opens nothing and is not swallowed
+Tests:       3 failed, 383 passed, 386 total
+jest rc=1
+=== M4-no-space-guard.log
+applied M4-no-space-guard
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Space (a focused button's own activation) opens nothing and is not swallowed
+Tests:       1 failed, 385 passed, 386 total
+jest rc=1
+=== M5-no-ime-guard.log
+applied M5-no-ime-guard
+  ● SC-580: a printable key in the window opens the Add search with that key typed › a key inside an IME composition opens nothing and is not swallowed
+Tests:       1 failed, 385 passed, 386 total
+jest rc=1
+=== M6-no-defaultPrevented-guard.log
+applied M6-no-defaultPrevented-guard
+  ● SC-580: a printable key in the window opens the Add search with that key typed › a key something else already handled (defaultPrevented before it reaches the window) is left alone
+Tests:       1 failed, 385 passed, 386 total
+jest rc=1
+=== M7-listener-on-document.log
+applied M7-listener-on-document
+  ● SC-580: a printable key in the window opens the Add search with that key typed › a letter on the focused "+ Add condition" opens the search by the click path: letter typed, input focused, dropdown filtered, key swallowed
+  ● SC-580: a printable key in the window opens the Add search with that key typed › typing "daz" fast: the first key opens, the next two are the input's own (not routed, not lost, not doubled) and Dazed is offered
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Shift is fine: a capital letter opens with the capital, and the filter ignores case
+  ● SC-580: a printable key in the window opens the Add search with that key typed › a digit and a punctuation key are printable too
+  ● SC-580: a printable key in the window opens the Add search with that key typed › from any other control of the window (a row's remove button, Done), not just "+ Add condition"
+  ● SC-580: a printable key in the window opens the Add search with that key typed › the search is already open and focus is elsewhere: the key goes to the END of the typed text and focus moves to the input
+  ● SC-580: a printable key in the window opens the Add search with that key typed › contenteditable="false" is not text entry: a key from it routes
+  ● SC-580: a printable key in the window opens the Add search with that key typed › the listener lives on the window's own element and dies with it: after close a key is no longer routed, and nothing is on the document
+Tests:       8 failed, 378 passed, 386 total
+jest rc=1
+=== M8-listener-outside-lifecycle.log
+applied M8-listener-outside-lifecycle
+  ● SC-580: a printable key in the window opens the Add search with that key typed › the listener lives on the window's own element and dies with it: after close a key is no longer routed, and nothing is on the document
+Tests:       1 failed, 385 passed, 386 total
+jest rc=1
+=== M9-no-preventDefault.log
+applied M9-no-preventDefault
+  ● SC-580: a printable key in the window opens the Add search with that key typed › a letter on the focused "+ Add condition" opens the search by the click path: letter typed, input focused, dropdown filtered, key swallowed
+  ● SC-580: a printable key in the window opens the Add search with that key typed › from any other control of the window (a row's remove button, Done), not just "+ Add condition"
+  ● SC-580: a printable key in the window opens the Add search with that key typed › the search is already open and focus is elsewhere: the key goes to the END of the typed text and focus moves to the input
+Tests:       3 failed, 383 passed, 386 total
+jest rc=1
+=== e2e-M10-no-input-dispatch.log
+applied M10-no-input-dispatch
+OBSIDIAN-E2E COND-N07 ok (1201 ms)
+OBSIDIAN-E2E COND-N08 ok (429 ms)
+OBSIDIAN-E2E COND-N09 ok (570 ms)
+OBSIDIAN-E2E COND-N10 FAIL: expect(received).toEqual(expected) // deep equality | - Expected  - 1 | + Received  + 1 | Array [ | "Dazed", | -   "Add custom: \"daz\"", | +   "Add custom: \"da\"", | ] [bundle /home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements
+OBSIDIAN-E2E done: 3/4 ok, 1 failed, 0 known-bug, coverage: 5/172 pairs (partial run: gate skipped)
+e2e rc=1
+=== e2e-M12-no-focus.log
+applied M12-no-focus
+OBSIDIAN-E2E COND-N07 ok (1191 ms)
+OBSIDIAN-E2E COND-N08 ok (490 ms)
+OBSIDIAN-E2E COND-N09 ok (433 ms)
+OBSIDIAN-E2E COND-N10 FAIL: Expect $(`.modal-container .dse-modal:has(.dse-condal__addwrap)`).$(`[data-dse-control="cond.input"]`) to be focused | Expected: "focused" | Received: "not focused" [bundle /home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/
+OBSIDIAN-E2E done: 3/4 ok, 1 failed, 0 known-bug, coverage: 5/172 pairs (partial run: gate skipped)
+e2e rc=1
+=== e2e-M2-no-textentry-guard.log
+applied M2-no-textentry-guard
+OBSIDIAN-E2E COND-N07 ok (1329 ms)
+OBSIDIAN-E2E COND-N08 ok (391 ms)
+OBSIDIAN-E2E COND-N09 ok (521 ms)
+OBSIDIAN-E2E COND-N10 ok (916 ms)
+OBSIDIAN-E2E done: 4/4 ok, 0 failed, 0 known-bug, coverage: 5/172 pairs (partial run: gate skipped)
+e2e rc=0
+=== e2e-M9-no-preventDefault.log
+applied M9-no-preventDefault
+OBSIDIAN-E2E COND-N07 FAIL: Expect $(`.modal-container .dse-modal:has(.dse-condal__addwrap)`).$(`[data-dse-control="cond.input"]`) to have property value | Expected: "daz" | Received: "ddaz" [bundle /home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/.o
+OBSIDIAN-E2E COND-N08 ok (417 ms)
+OBSIDIAN-E2E COND-N09 ok (432 ms)
+OBSIDIAN-E2E COND-N10 FAIL: Expect $(`.modal-container .dse-modal:has(.dse-condal__addwrap)`).$(`[data-dse-control="cond.input"]`) to have property value | Expected: "daz" | Received: "dazz" [bundle /home/scott/code/steelCompendium/worktrees/sc580-conditions-type-to-search/draw-steel-elements/e2e/.o
+OBSIDIAN-E2E done: 2/4 ok, 2 failed, 0 known-bug, coverage: 4/172 pairs (partial run: gate skipped)
+e2e rc=1
