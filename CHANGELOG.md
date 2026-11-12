@@ -8,6 +8,15 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: clicking in the Compendium search no longer closes a hover preview you are editing, and a pick can no longer vanish silently (SC-601).**
+  Open a hover preview of a note, click into its text to edit it, and run "Insert Draw Steel: compendium reference" or "compendium
+  block (snapshot)". A click in the search box, on its list or on the dimmed background used to close the preview behind the
+  search, and the entry you then picked was written into the closed preview and lost, with no message. The preview now stays open
+  while the search is open, and the pick lands in the note you were editing. Clicking the dimmed background still closes just the
+  search. If the note you were editing is closed some other way while the search is open, picking an entry now shows "The note you
+  were editing was closed, so nothing was inserted." instead of doing nothing. Obsidian's own Quick switcher, Command palette and
+  Insert template still close an editing preview, as they did before.
+
 - **DSE plugin: Montage: a hand-typed block whose hero list has an empty item, a bare word or number, or a hero with no name no longer breaks the board (SC-610).**
   An empty item (`- `) used to stop the board drawing at all. The other shapes drew a row labelled "undefined" and could leave
   the Log an action button with nothing to open. Such an item is now skipped on the board and reported in the developer console.
