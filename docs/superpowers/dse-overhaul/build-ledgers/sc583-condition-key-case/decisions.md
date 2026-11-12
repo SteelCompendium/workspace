@@ -71,3 +71,5 @@ in every submodule). Base: dse develop `93e8e48c`, workspace origin/main `eccfe9
 - r4 scoped re-review (r2 reviewer resumed) of the r3 delta: report `sc583-r4-rereview.md`.
 - r4 APPROVE 2026-11-12 (no HIGH/MEDIUM/LOW). INFO-A (comment wording at model.ts:173 could also name the window's duplicate check) → drop: not misleading, and a change would cost a new pointer bump + re-gates.
 - LAND-READY 2026-11-12: dse d0561a68, superproject bbbe6d79 on origin/main eccfe90e.
+- LANDED 2026-11-12 (dispatcher): dse develop d0561a68 (93e8e48c..d0561a68), workspace main aced7fb4. Worktree removed; ledger preserved at docs/superpowers/dse-overhaul/build-ledgers/sc583-condition-key-case/.
+- DONE 2026-11-12: Done comment posted via linear-post.py `--state Done`; verified status Done (completedAt 2026-11-12T12:48:02Z), labels DSE Plugin + Bug unchanged.
