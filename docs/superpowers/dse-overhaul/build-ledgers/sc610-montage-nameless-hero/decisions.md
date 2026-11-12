@@ -1,0 +1,44 @@
+# SC-610 decisions ledger
+
+Ticket: SC-610 — DSE: a Montage block with an empty or nameless hero entry throws when the board looks a hero up.
+Owner: ticket-owner (Opus 5.5), session be71a0a9-199f-4e14-967b-191935312b05.
+Worktree: /home/scott/code/steelCompendium/worktrees/sc610-montage-nameless-hero (branch sc610-montage-nameless-hero), dse base develop 7866426e, superproject wt b6734913.
+
+## Scott rulings (verbatim, dated)
+
+(none yet — the ticket thread had 0 comments at pickup, 2026-11-12)
+
+## Ticket text (verbatim)
+
+"A hand-typed Montage block whose `participants` list holds an empty item (`- `) or an entry with no `name` throws when the board looks a hero up. The board should skip or show such an entry instead."
+Agent notes: "`parseModel` in `src/elements/montage/model.ts` takes `participants` verbatim; `findParticipant` reads `p.name` and throws on a null item. Suggested fix: a `sanitizeParticipants` beside the existing `sanitizeEntries`, with a no-churn rule (a write must not rewrite entries the user did not change; see SC-606's ledger O2)."
+
+## Owner decisions (2026-11-12)
+
+- O1. Scope: every site in `src/elements/montage/` (and anything else) that reads a montage participant must survive a `participants` item that is null / not an object (`- `, `- 7`, `- Ash` as a bare string), an object with no `name`, an empty-string `name`, or a non-string `name` (`name: 7`). No throw anywhere: render (board, head, outcome band), the cell keyboard opener, log / edit / remove an action, the reuse warning, reset, add hero, tally, the "next hero" pick.
+- O2. Display: such an item is SKIPPED on the board (no hero row, no tally, not offered in the log window's hero picker) and reported once per parse with `console.warn`, in the same style as `sanitizeEntries`. Exception, implementer's call with a reason: a bare scalar string item (`- Ash`) or a scalar number `name: 7` may be read as that hero's name ONLY if the write path then leaves that item's text unchanged on disk (O3).
+- O3. No churn (carries SC-606 O2 forward): a write the user makes (log, edit, remove, reset, add hero, any counter) must not delete, reorder, or rewrite a `participants` item they did not change. In particular an unusable item that carries content (`- nmae: Ash`, `- skills_used: [Climb]`, `- 7`) round-trips through parse -> any write -> serialize with its content intact and in its original position. A truly empty item (`- ` / null, `{}`) MAY be dropped on write (it carries no information; §B.5 omit-empty) — implementer's call, stated in the report. `serialize` keeps §B.5 key order. Precedent: the L-2 rule in `MontageEntry`'s doc comment (an unrecognised `result` is preserved, not dropped, because it is the shape a typo takes).
+- O4. Regression coverage: jest only (model unit tests per crashing site + a DOM test that renders a board with each bad shape and logs/edits an action for a good hero, asserting no throw, the bad item absent from the board, and the note text for the bad items unchanged after the write). Real-Obsidian evidence by an uncommitted probe (red on base 7866426e, green on head), NOT a committed lifecycle scenario: part 5 is full and the crash is pure data, deterministic in jsdom. G-S98 reserved if a worker believes a committed real-Obsidian check is needed — it reports back instead of adding one.
+- O5. No dse-verify SKILL.md edit expected (jest count only). Any SKILL proposal goes in this dir as a file.
+- O6. No Scott decision needed at pickup: the ticket text already says "skip or show", and O2/O3 follow the montage element's own precedents. Revisit only if the survey finds a real product trade-off.
+
+## Rounds
+
+- r1 implementer (survey + fix + tests + battery + probe): brief sc610-brief-r1-impl.md. Dispatched 2026-11-12, agent a5c1a3d4d0104af42 (author; must not review).
+- r1 result 2026-11-12: DONE. dse 3a0f3079 (tests 7bd2ea25, fix 3a0f3079) on 7866426e; superproject wt 2bd2a2f6 (CHANGELOG). Option (b): raw list kept, reads via exported `montageRoster(m)`; empty items (`- `, `{}`, `''`, `[]`) dropped on write; bare scalars / `name: 7` NOT read as names. +40 tests (34 red on base). jest 7747/2 fresh (7748/1 post-shots), lifecycle 58/58 (six parts), e2e 278/282 0 failed 4 known-bug 171/171, shots 592 163/978 39/234 147, freeze 280/280, parity 0/0/24. Probe base: `- ` -> card "failed to render ... reading 'name'"; other shapes draw rows `undefined` / `""` / `7`; head clean, content-bearing items unchanged in place. plugin node_modules is a git-ignored symlink to the main checkout's.
+  - Follow-up 1 (non-list `participants: Ash` warned + dropped on next write): DROP — not a list item; base crashed on it; matches `sanitizeEntries` treatment of a non-array. Reviewer may challenge.
+  - Follow-up 2 (whitespace-only `name: ' '` still a hero): DROP — unchanged from base, not a crash, a visible row the user can fix.
+- r2 independent review: brief sc610-brief-r2-review.md -> orchestration:reviewer agent a80d391b699382dff (not the author), dispatched 2026-11-12.
+- 2026-11-12 dispatcher: SC-596 landed, dse develop now c6077860 (supersedes 7866426e). "Rebase onto c6077860 before you report land-ready." New CURRENT: jest 10624 passed / 2 skipped (a 2880-cell sweep suite, ~58 s alone) · lifecycle 59/59 (21 + 16 + 9 + 4 + 7 + 2; part 6 is `G-S92 G-S96`, ~175 s, `--only=G-S92,G-S96` comma-separated; G-S56 still last in SCENARIOS order) · e2e 278/282 ok, 0 failed, 4 known-bug, coverage 171/171 · shots 592, 163/978, 39/234, 147 · freeze 280/280 · parity 0/0/24. Plan: r2 review continues on 7866426e base; r3 = fix round (if any) + rebase onto c6077860 + full battery by the r1 author; r4 scoped re-review uses c6077860 as base.
+- r2 result 2026-11-12 (reviewer a80d391b699382dff): LAND, 0 C / 0 H / 0 M / 2 L / 3 INFO (sc610-r2-review-report.md). Probe 25 cases x 9 shapes: head 25/25, base 13 failed. O1 and O3 (a)-(f) hold; §B.5 and SC-606 hold. jest 7748/1 (post-shots), e2e 278/282 0 failed 171/171, lifecycle p5 7/7. Author's tests 34 red on base.
+  Owner rulings on r2 findings:
+  - LOW-1 (non-list `participants: Kira` silently deleted by the first write): FOLD — supersedes r1 Follow-up 1 DROP above (~~DROP — not a list item~~ superseded). Take the reviewer's fix: keep the raw non-list value and write it back as typed; "Add a hero" wraps it as the list's first item (so a mapping with a `name` becomes a real hero). Tests: string, mapping and number forms survive an unrelated write; add-hero wraps.
+  - LOW-2 (`- name:` / `- name: ~` / `- {name: }` / `- skills_used:` written back with `null`; `- [~]` as `- - null`): FOLD — a mapping whose every value is null counts as empty and is dropped on write like `{}`; a list item whose every element is null likewise. Nothing with a non-null value is ever dropped (keep `0`, `false`, `" "`). Tests per shape.
+  - INFO-1 (`participants` typed `MontageParticipant[]` though it holds non-hero items): FOLD — type the raw list so that a `.name` read on it does not compile (e.g. `unknown[]`), reads only via `montageRoster`; confined to montage src + tests. If it ripples outside `src/elements/montage/` and its tests, stop and report instead.
+  - INFO-2 (Reset leaves a non-hero item's `skills_used` as typed): DROP — correct under O3.
+  - INFO-3 (CHANGELOG wording): FOLD — replace the bullet with the owner's exact text in the r3 brief.
+- r3 = fix round + rebase onto c6077860 + full battery, by r1 author a5c1a3d4d0104af42 (resumed). Scoped re-review of the delta by r2 reviewer a80d391b699382dff (not an author).
+- r3 result 2026-11-12: DONE. dse 3ad68185 on c6077860 (474ab25f r1 tests, 4eff6128 r1 fix, 2b2e5009 r3 tests, 3ad68185 r3 fix); superproject wt f18fad5a. Clean rebase, package files unchanged. INFO-1 landed as `participants?: unknown` (non-list kept raw); ripple only model.ts + montage-tally test. +12 tests (11 red pre-fix). jest 10676/2 fresh-equivalent (10677/1 measured with shots cache), lifecycle 59/59 (21+16+9+4+7+2), e2e 278/282 0 failed 4 known-bug 171/171, shots 592 163/978 39/234 147, freeze 280/280, parity 0/0/24. r4 scoped re-review -> a80d391b699382dff.
+- r4 result 2026-11-12 (a80d391b699382dff): LAND, 0 C/H/M/L, 3 INFO (sc610-r4-rereview-report.md). range-diff: r1 commits identical. All folds closed by probe (51/51 head). `participants?: unknown` judged sound. jest 10677/1 post-shots (10676/2 fresh), e2e 278/282 0 failed 171/171, lifecycle p5 7/7, p6 2/2.
+  - INFO-A (all-null list `[~, ~]` dropped without a warn), INFO-B (mixed null+content item still writes null — per ruling, pinned by a test), INFO-C (`participants: Kira` explained only by the console warn): DROP all — no data loss, behaviour as ruled; not worth a ticket.
+- LAND-READY 2026-11-12: dse 3ad68185 on c6077860; superproject wt f18fad5a (CHANGELOG; dse pointer bump unstaged for the land step).
