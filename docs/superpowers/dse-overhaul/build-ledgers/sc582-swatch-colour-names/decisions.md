@@ -43,3 +43,4 @@ Agent notes (verbatim): `src/views/ConditionsModal.ts` `renderSwatches`: `aria-l
 - Chore: rebase superproject branch onto current origin/main.
 - Superproject rebased (chore) onto origin/main 91a05435: ad6914b5 CHANGELOG, 4e79049f single bump to dcc53f0f; status clean.
 - LAND-READY (2026-11-12): plugin dcc53f0f on develop 711844f3; superproject 4e79049f on main 91a05435. Land-ready comment posted. Ticket stays Awaiting until the dispatcher lands; then Done via linear-post.py --state Done.
+- DONE (2026-11-12): landed by the dispatcher — dse develop dcc53f0f (711844f3..dcc53f0f), workspace main 57390031 (both superproject commits as-is); ledger preserved at docs/superpowers/dse-overhaul/build-ledgers/sc582-swatch-colour-names/ (bookkeeping 712c02dc). SC-582 moved to Done via linear-post.py --state Done with a closing comment; state verified Done (labels DSE Plugin, Bug unchanged).
