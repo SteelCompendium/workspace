@@ -38,6 +38,17 @@ go under an *Internal* sub-heading.
   creature, and focus fell to the top of the page. Focus now moves to the creature you clicked. A click when focus was not already
   in the tracker still does not pull focus into it. Since SC-602 this holds in Live Preview too.
 
+- **DSE plugin: a + or - (or a form Save) in a hover preview or embed that stayed open while the note changed no longer writes into a different, identical counter in the shapes below (SC-607).**
+  Open a hover preview or an embed of part of a note (`[[note#Tracker]]`, `![[note#^id]]`) and leave it open while something else
+  changes the note, for example Sync deleting the first of two identical `## Tracker` sections or swapping two heading names. A click on
+  its + used to be saved into the other, identical counter with no message. It is now saved into the counter the preview shows, or
+  refused with the "changed on disk first" Notice and nothing written. Rare timing races remain, as before: a change that lands
+  within a few hundredths of a second of Obsidian drawing or redrawing a preview can still be missed. New refusals, all safe (a
+  Notice, nothing written): a section moved to another place in the note while its preview is open (reopen the preview to click
+  again); an identical block added or deleted right next to the block you are editing; a change of more than 400 lines around the
+  block while an identical counter exists; an outside edit within about a tenth of a second of opening a hover preview (that
+  preview then refuses until reopened); and a preview that could not be placed when it was drawn.
+
 - **DSE plugin: clicking in the Compendium search no longer closes a hover preview you are editing, and a pick can no longer vanish silently (SC-601).**
   Open a hover preview of a note, click into its text to edit it, and run "Insert Draw Steel: compendium reference" or "compendium
   block (snapshot)". A click in the search box, on its list or on the dimmed background used to close the preview behind the
@@ -87,10 +98,8 @@ go under an *Internal* sub-heading.
   a link hover, one already open when the plugin loaded, or (heading links) one that shows another heading than its link names;
   a link that names two places (two headings of that name, or two `^id` lines) while the counter's contents also occur twice; a
   heading hover where the heading is written with an underline (`Tracker` over `=====`) or differs from the link's name
-  (formatting, a colon); and a whole-note hover whose counter was edited from outside. Known limit (SC-607, as before this
-  fix): a preview left open after the section it shows was deleted or renamed from outside follows what its link names now, so
-  with two sections of the same name and identical counters the click can be saved in the other one. The Edit form opened from
-  a preview is unchanged (SC-596).
+  (formatting, a colon); and a whole-note hover whose counter was edited from outside. The Edit form opened from a preview is
+  placed the same way (SC-596; the preview-left-open case is fixed by SC-607).
 
 - **DSE plugin: a second click inside a window opened from a hover preview, right after the opening click, no longer closes it (SC-598).**
   A second click inside a window opened from a hover preview, right after the click that opened it, no longer closes the
