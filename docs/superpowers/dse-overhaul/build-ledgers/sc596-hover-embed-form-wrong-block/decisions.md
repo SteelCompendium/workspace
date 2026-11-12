@@ -122,3 +122,7 @@ SC-595, SC-598.
   sc596-dse-verify-proposal.md for the dispatcher to apply. Gates: tsc/lint 0; jest 10624 / 2 skipped; lifecycle 59/59 (six parts,
   part 6 `G-S92,G-S96` 175 s); e2e `278/282 ok, 0 failed, 4 known-bug, coverage: 171/171 pairs`; styles.css unchanged -> shots 592,
   host-leak 163/978, modal host-leak 39/234, capture clip 147, freeze 280/280, parity 0/0/24 carry.
+- 2026-11-12 owner: DONE. Dispatcher landed dse develop c6077860 (7866426e..c6077860, 8 commits), workspace main 91e55314 (dbe7b9b7
+  CHANGELOG re-applied after a superproject merge conflict, b6a0c6f8 pointer, 443d7595 bookkeeping); dse-verify proposal applied
+  (59/59, part 6 `G-S92 G-S96`, CURRENT at c6077860); worktree removed; ledger preserved in build-ledgers/. Done comment posted via
+  linear-post.py `--state Done`; state verified Done (labels DSE Plugin, Bug unchanged). Follow-ups live: SC-607 (Backlog).
