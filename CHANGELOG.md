@@ -124,7 +124,7 @@ go under an *Internal* sub-heading.
   Type an amount and a label, then press Advance round (or Make/Relieve captain, Reset turns, Reset encounter, or any other
   action that rebuilds the whole tracker), and both boxes used to come back empty. They now keep what you typed, with the caret
   where it was if you were still in one of them, and the sidebar tracker keeps your place in a box when the note changes from
-  outside. Only a successful Add (the button or Enter) empties them, and what you have typed is never written to the note. In
+  outside. Only a successful Add (the button or Enter) empties them, and what you have typed is never written to the note.
   Since SC-605 this holds in Live Preview too.
 
 - **DSE plugin: keyboard focus stays in the initiative tracker after Advance round, Make/Relieve captain, Reset turns, Reset encounter and the Malice quick-add, in Reading view (SC-588).**
