@@ -1,0 +1,418 @@
+commit 0da7e1d3bf62937614add1540c5a73db039bb3cd
+Author: Scott Tomaszewski <scottTomaszewski@gmail.com>
+Date:   Wed Nov 11 22:47:34 2026 -0500
+
+    test(lifecycle): G-S97 probe, the compendium search opened from an editing hover preview (SC-601)
+    
+    A measuring probe, not a landing test: a real hover, a real press on the
+    preview's prose (source editor, activeEditor = the embed), the compendium
+    search opened by executeCommandById, a real Ctrl+Shift+Y and the command
+    palette; real presses on its input, backdrop, box and a suggestion; where
+    the chosen reference lands. Controls: the note in a pane, Obsidian's quick
+    switcher / command palette / Insert template from the editing preview, and
+    a DseModal (the stamina bar) opened inside it. One G-S97-REC line per trial;
+    it asserts only that every trial ran. Run with --only=G-S97.
+
+diff --git a/visual-harness/obsidian-lifecycle.mjs b/visual-harness/obsidian-lifecycle.mjs
+index e8dbc6af..4d866edb 100644
+--- a/visual-harness/obsidian-lifecycle.mjs
++++ b/visual-harness/obsidian-lifecycle.mjs
+@@ -189,6 +189,9 @@
+ // and the + clicked by a script in the SAME page task (inside the 17-44 ms before the preview redraws; a real mouse click cannot land in it): nothing is written, one Notice, never the identical counter (the
+ // pre-fix bundle wrote it); and a whole-note hover where an identical block was added above before the click writes the hovered block, not the added one.
+ //
++// SC-601 appends G-S97 (59 scenarios in all; a PROBE, run alone with `--only=G-S97`; it sits after G-S92 and before G-S56): the compendium search opened while a hover preview is a source editor, real presses in it,
++// where the chosen reference lands, and three controls (the note in a pane, Obsidian's own quick switcher / command palette, a DseModal opened inside the preview). It prints one `G-S97-REC` line per trial and asserts only that each ran.
++//
+ // SC-480 appends G-S73 (53 scenarios before G-S77; it sits after G-S49 and before G-S56, which stays last, and runs in the fifth `--only` part with G-S59 and G-S49): a card write whose pin
+ // cannot be placed because its block was DELETED from outside is never written into an identical twin. Click + on one of two identical counters (Reading view and Live Preview),
+ // delete that block from outside at once, then leave the note (the unload flush) or wait out the 400 ms debounce: nothing is written, the note stays as the outside edit left it, and
+@@ -1909,6 +1912,336 @@ async function gs92Trial(t, { id, mode, how = 'click', second = 0, add = false,
+ 	return rec;
+ }
+ 
++// SC-601 (G-S97, PROBE, not a landing test): the compendium search (an Obsidian SuggestModal, not a DseModal) opened while a hover
++// preview is a source editor. Two compendium entries for the search to offer, and a stamina note for the DseModal contrast (iii).
++Object.assign(FIXTURES, {
++	'Compendium/gs97/gsprobe-goblin.md': '---\nscc: mcdm.monsters.v1/monster.statblock/gsprobe-goblin\ntype: statblock\nitem_name: Gsprobe Goblin\nsource: mcdm.monsters.v1\n---\n\nprobe entry one\n',
++	'Compendium/gs97/gsprobe-kobold.md': '---\nscc: mcdm.monsters.v1/monster.statblock/gsprobe-kobold\ntype: statblock\nitem_name: Gsprobe Kobold\nsource: mcdm.monsters.v1\n---\n\nprobe entry two\n',
++});
++const GS97_CMD = 'draw-steel-elements:insert-compendium-reference';
++const GS97_BLOCK_CMD = 'draw-steel-elements:insert-compendium-block';
++const GS97_SRC_TEXT = (k) => `# gs97 ${k}\n\nalpha line one for the probe\n\nbeta line two of the probe body\n\nEND\n`;
++const GS97_STAM_TEXT = (k) => `# gs97 ${k}\n\nalpha line one for the probe\n\nbeta line two of the probe body\n\n${fence('ds-stamina-bar', ['max_stamina: 20', 'current_stamina: 15', 'temp_stamina: 5'])}\n\nEND\n`;
++let gs97Seq = 0;
++let gs97Rep = 0; // screenshots are taken in the first repetition only
++
++/**
++ * SC-601 (G-S97): the shared pieces. A real hover (gs83Kit's mouse), a real press on the preview's prose (Obsidian's click-to-edit helper turns it
++ * into a source editor and sets `workspace.activeEditor` to the embed), a spy on the popover instance's `hide()` (who closed it, with a stack), a
++ * window BUBBLE click recorder (registered after Obsidian's own listener, so `defaultPrevented` is what that listener saw), and the state reader.
++ */
++function gs97Kit(t) {
++	const K = gs83Kit(t);
++	const J = JSON.stringify;
++	const OURS = `Array.from(document.querySelectorAll('.modal-container .prompt')).find((p) => (p.querySelector('input.prompt-input')?.placeholder ?? '').startsWith('Search '))`;
++	const ANY_PROMPT = `document.querySelector('.modal-container .prompt')`;
++	const desc = `(h) => h ? h.tagName + '.' + String(h.className).replace(/\\s+/g, '.').slice(0, 48) : null`;
++	const st = () =>
++		t.ev(`(() => { const d = ${desc}; const pops = Array.from(document.querySelectorAll('.popover.hover-popover')); const pop = pops[0]; const a = document.activeElement; const ae = app.workspace.activeEditor; const ours = ${OURS}; const leafView = app.workspace.getMostRecentLeaf()?.view;
++			return { popover: !!pop, popovers: pops.length, shown: !!pop && pop.isConnected && getComputedStyle(pop).display !== 'none' && pop.getBoundingClientRect().width > 0,
++				editing: !!pop && pop.classList.contains('is-editing'), editor: !!pop && !!Array.from(pop.querySelectorAll('.cm-editor')).find((e) => e.offsetParent !== null),
++				modal: !!ours, dseModal: !!document.querySelector('.modal-container .dse-modal'), prompts: document.querySelectorAll('.modal-container .prompt').length, modals: document.querySelectorAll('.modal-container').length,
++				focus: a ? d(a) + (a.closest('.hover-popover') ? ' [in preview]' : '') + (a.closest('.modal-container') ? ' [in modal]' : '') : null,
++				activeEditor: ae ? { path: ae.file?.path ?? null, inPreview: !!ae.containerEl?.closest?.('.hover-popover'), connected: !!ae.containerEl?.isConnected, paneView: ae === leafView } : null }; })()`);
++	const point = (expr, xFrac = 0.5) =>
++		t.ev(`(() => { const d = ${desc}; const el = ${expr}; if (!el) return null; const r = el.getBoundingClientRect(); if (!(r.width > 0)) return null; const x = Math.round(r.left + Math.min(r.width * ${xFrac}, 80)); const y = Math.round(r.top + r.height / 2); return { x, y, hit: d(document.elementFromPoint(x, y)) }; })()`);
++	/** a point inside the prompt box that is not its input nor a suggestion (padding, the input's container, the results' empty area) */
++	const BOX_PT = `(() => { const d = ${desc}; const pr = ${ANY_PROMPT}; if (!pr) return null; const r = pr.getBoundingClientRect(); const bad = (h) => !h || !pr.contains(h) || h.matches('input') || !!h.closest('.suggestion-item'); const c = [];
++		for (let dy = 2; dy < r.height; dy += 3) c.push([r.left + 3, r.top + dy], [r.right - 3, r.top + dy]); for (let dx = 6; dx < r.width; dx += 20) c.push([r.left + dx, r.bottom - 3], [r.left + dx, r.top + 2]);
++		for (const [x0, y0] of c) { const x = Math.round(x0), y = Math.round(y0); const h = document.elementFromPoint(x, y); if (!bad(h)) return { x, y, hit: d(h) }; } return null; })()`;
++	const BG_PT = `(() => { const bg = document.querySelector('.modal-container .modal-bg'); if (!bg) return null; const pop = document.querySelector('.popover.hover-popover'); const pr = pop ? pop.getBoundingClientRect() : null; const iw = innerWidth, ih = innerHeight;
++		for (const [x, y] of [[20, ih - 20], [iw - 20, ih - 20], [iw - 20, 60], [20, 60], [Math.round(iw / 2), ih - 20]]) { if (pr && x >= pr.left && x <= pr.right && y >= pr.top && y <= pr.bottom) continue; if (document.elementFromPoint(x, y) === bg) return { x, y, hit: 'DIV.modal-bg' }; } return null; })()`;
++	const pressAt = async (p) => {
++		await K.mouse('mouseMoved', p.x, p.y);
++		await K.press(p);
++	};
++	const key = async (k, code, vk, modifiers = 0, text) => {
++		await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyDown', key: k, code, windowsVirtualKeyCode: vk, nativeVirtualKeyCode: vk, modifiers, ...(text ? { text } : {}) });
++		await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyUp', key: k, code, windowsVirtualKeyCode: vk, nativeVirtualKeyCode: vk, modifiers });
++	};
++	const enter = () => key('Enter', 'Enter', 13, 0, '\r');
++	const makeNotes = async (stam = false) => {
++		const k = `${++gs97Seq}`;
++		const src = `Lifecycle/gs97-${k}-src.md`;
++		const host = `Lifecycle/gs97-${k}-host.md`;
++		await t.ev(`(async () => { await app.vault.create(${J(src)}, ${J(stam ? GS97_STAM_TEXT(k) : GS97_SRC_TEXT(k))}); await app.vault.create(${J(host)}, ${J(`# gs97 ${k} host\n\nsee [[gs97-${k}-src]] here\n\nfiller\n`)}); return true; })()`);
++		await t.waitFor(`!!app.metadataCache.resolvedLinks[${J(host)}]?.[${J(src)}]`, `gs97 ${k}: the host's link resolves`, 8000);
++		return { k, src, host };
++	};
++	const hoverPlain = async (link) => {
++		await K.mouse('mouseMoved', 5, 5);
++		await t.sleep(200);
++		await K.moveTo(link, 2);
++		const has = `Array.from(document.querySelectorAll('.popover.hover-popover')).some((p) => p.textContent.includes('beta line two'))`;
++		const t0 = Date.now();
++		let triggered = false;
++		while (!(await t.ev(has))) {
++			if (Date.now() - t0 > 4000 && !triggered) {
++				triggered = true;
++				await t.ev(`(() => { const a = ${link}; const leaf = app.workspace.getMostRecentLeaf(); app.workspace.trigger('hover-link', { event: new MouseEvent('mouseover', { ctrlKey: true, clientX: 200, clientY: 200 }), source: 'preview', hoverParent: leaf.view, targetEl: a, linktext: a.getAttribute('data-href') || a.textContent, sourcePath: leaf.view.file.path }); return true; })()`);
++			}
++			if (Date.now() - t0 > 12000) throw new Error('no hover preview');
++			await t.sleep(80);
++		}
++		await t.sleep(300);
++		return triggered ? 'hover-link trigger' : 'real hover';
++	};
++	/** a real press on the prose "beta line two" inside the preview: the helper turns the preview into a source editor (150 ms after a click on text) */
++	const editPreview = async () => {
++		const p = await t.ev(`(() => { const pop = document.querySelector('.popover.hover-popover'); if (!pop) return null; const w = document.createTreeWalker(pop, NodeFilter.SHOW_TEXT); let n; while ((n = w.nextNode())) { if (!n.textContent.includes('beta line two')) continue; const r = new Range(); r.selectNodeContents(n); const q = r.getClientRects()[0]; if (!q) return null; const x = Math.round(q.left + q.width * 0.6); const y = Math.round(q.top + q.height / 2); const h = document.elementFromPoint(x, y); return { x, y, inPop: !!h && pop.contains(h), hit: h ? h.tagName + '.' + String(h.className).slice(0, 30) : null }; } return null; })()`);
++		t.expect(p && p.inPop, `no prose to press in the preview: ${J(p)}`);
++		await K.mouse('mouseMoved', p.x - 15, p.y);
++		await t.sleep(80);
++		await K.mouse('mouseMoved', p.x, p.y);
++		await t.sleep(150);
++		await K.press(p);
++		await t.waitFor(`(() => { const pop = document.querySelector('.popover.hover-popover'); return !!pop && !!Array.from(pop.querySelectorAll('.cm-editor')).find((e) => e.offsetParent !== null); })()`, 'the preview became a source editor', 5000);
++		await t.sleep(500);
++		return p;
++	};
++	/** spy on hide() of every popover instance the leaf holds, watch the popover element's removal, record window-bubble clicks */
++	const spy = () =>
++		t.ev(`(() => { window.__gs97 = { hides: [], clicks: [], gone: null }; const v = app.workspace.getMostRecentLeaf().view; const hps = [v.previewMode?.hoverPopover, v.hoverPopover, v.editMode?.hoverPopover].filter(Boolean);
++			for (const hp of hps) { if (hp.__gs97) continue; hp.__gs97 = true; const orig = hp.hide; hp.hide = function (...a) { window.__gs97?.hides.push({ t: Math.round(performance.now()), stack: String(new Error().stack).split('\\n').slice(2, 7).map((s) => s.trim().replace(/app:\\/\\/obsidian\\.md\\//g, '')).join(' < ') }); return orig.apply(this, a); }; }
++			if (!window.__gs97l) { window.__gs97l = true; window.addEventListener('click', (e) => window.__gs97?.clicks.push({ t: Math.round(performance.now()), trusted: e.isTrusted, dp: e.defaultPrevented, target: e.target ? e.target.tagName + '.' + String(e.target.className).slice(0, 30) : null })); }
++			const pop = document.querySelector('.popover.hover-popover'); if (pop) new MutationObserver((rs, o) => { if (!pop.isConnected) { if (window.__gs97) window.__gs97.gone = Math.round(performance.now()); o.disconnect(); } }).observe(document.body, { childList: true, subtree: true });
++			window.__gs97ed = app.workspace.activeEditor?.editor ?? null; return hps.length; })()`);
++	const spyRead = () => t.ev(`(() => { const s = window.__gs97 || {}; const c = (s.clicks || []).filter((x) => x.trusted); return { clicks: c, hides: s.hides || [], goneAfterLastClickMs: s.gone && c.length ? s.gone - c[c.length - 1].t : null, gone: s.gone }; })()`);
++	const landing = async (src, host, mark) => {
++		const t0 = Date.now();
++		while (Date.now() - t0 < 5000 && !t.read(src).includes('gsprobe-') && !t.read(host).includes('gsprobe-')) await t.sleep(100);
++		await t.sleep(1500);
++		const srcText = t.read(src);
++		return {
++			srcDisk: srcText.includes('gsprobe-'),
++			srcVault: await t.ev(`app.vault.read(app.vault.getAbstractFileByPath(${J(src)})).then((s) => s.includes('gsprobe-'))`),
++			hostDisk: t.read(host).includes('gsprobe-'),
++			capturedEditorHas: await t.ev(`(() => { try { return window.__gs97ed ? window.__gs97ed.getValue().includes('gsprobe-') : null; } catch (e) { return 'throws: ' + e.message; } })()`),
++			capturedEditorConnected: await t.ev(`(() => { try { return window.__gs97ed ? !!window.__gs97ed.cm?.dom?.isConnected : null; } catch (e) { return 'throws: ' + e.message; } })()`),
++			inserted: (srcText.match(/gsprobe-[a-z]+/g) ?? []).join(','),
++			mods: await t.ev(`__lc.mods.filter((m) => m.n > ${mark}).map((m) => m.path)`),
++			errors: await t.errorsSince(mark),
++			notices: await t.noticesSince(mark),
++		};
++	};
++	const closeAll = async () => {
++		for (let i = 0; i < 4 && (await t.ev(`!!document.querySelector('.modal-container')`)); i++) {
++			await key('Escape', 'Escape', 27);
++			await t.sleep(200);
++		}
++		await K.cleanup();
++	};
++	/** a screenshot into GS97_SHOTS (the probe's own folder; never the lifecycle's shots dir, whose existence keeps the temp vault) */
++	const shot = async (name) => {
++		const dirOut = process.env.GS97_SHOTS;
++		if (!dirOut || gs97Rep !== 1) return null;
++		const r = await t.cdp.call('Page.captureScreenshot', { format: 'png' });
++		fs.mkdirSync(dirOut, { recursive: true });
++		const f = path.join(dirOut, `${name}.png`);
++		fs.writeFileSync(f, Buffer.from(r.data, 'base64'));
++		return f;
++	};
++	return { K, J, OURS, ANY_PROMPT, st, point, shot, BOX_PT, BG_PT, pressAt, key, enter, makeNotes, hoverPlain, editPreview, spy, spyRead, landing, closeAll };
++}
++
++/**
++ * SC-601 (G-S97): one trial. `where`: 'hover' (a hover preview made a source editor by a real press on its prose) or 'pane' (control i: the note in a pane, source mode).
++ * `open`: 'cmd' (executeCommandById with the focus in the preview's editor: what a hotkey runs), 'hotkey' (a real Ctrl+Shift+Y bound to the command), 'palette' (a real
++ * Ctrl+P, typed name, Enter), 'block' (the snapshot command, executeCommandById). `click`: 'input' | 'bg' | 'box' | 'suggestion' | 'none' (real CDP presses).
++ * `choose`: 'click' (a real press on the first suggestion) | 'keys' (ArrowDown + Enter) | null. Returns the record; the scenario prints it.
++ */
++async function gs97Trial(t, { where = 'hover', mode = 'rv', open = 'cmd', click, choose = null, lpConfig = false }) {
++	const G = gs97Kit(t);
++	const { K, J } = G;
++	const rec = { where, mode, open, click, choose, lpConfig };
++	const PROMPT = open === 'template' ? G.ANY_PROMPT : G.OURS; // 'template': Obsidian's own Templates "Insert template" (a SuggestModal that inserts into the active editor)
++	let notes;
++	try {
++		if (lpConfig) await t.ev(`(() => { app.vault.setConfig('livePreview', true); return true; })()`);
++		notes = await G.makeNotes();
++		rec.k = notes.k;
++		if (where === 'pane') {
++			await t.ev(`(async () => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); const leaf = app.workspace.getLeavesOfType('markdown')[0] ?? app.workspace.getMostRecentLeaf(); await leaf.setViewState({ type: 'markdown', state: { file: ${J(notes.src)}, mode: 'source', source: true }, active: true }); app.workspace.setActiveLeaf(leaf, { focus: true }); return true; })()`);
++			await t.waitFor(`app.workspace.getMostRecentLeaf()?.view?.file?.path === ${J(notes.src)} && !!app.workspace.getMostRecentLeaf().view.editor`, 'pane: the note is open in source mode', 8000);
++			await t.sleep(400);
++			// a real press on the prose, as in the preview
++			const p = await G.point(`Array.from(document.querySelectorAll('.workspace-leaf.mod-active .cm-line')).find((l) => l.textContent.includes('beta line two'))`, 0.4);
++			t.expect(!!p, 'pane: no prose line to press');
++			await G.pressAt(p);
++			await t.sleep(400);
++		} else {
++			const link = await K.openHost(notes.host, mode);
++			rec.hover = await G.hoverPlain(link);
++			rec.pressedProse = (await G.editPreview()).hit;
++		}
++		rec.before = await G.st();
++		rec.spied = await G.spy();
++		const mark = await t.mark();
++		// ---- open the compendium search
++		if (open === 'template') rec.cmdResult = await t.ev(`app.commands.executeCommandById('insert-template')`);
++		else if (open === 'cmd' || open === 'block') rec.cmdResult = await t.ev(`app.commands.executeCommandById(${J(open === 'block' ? GS97_BLOCK_CMD : GS97_CMD)})`);
++		else if (open === 'hotkey') await G.key('Y', 'KeyY', 89, 10);
++		else if (open === 'palette') {
++			await G.key('p', 'KeyP', 80, 2);
++			await t.waitFor(`!!${G.ANY_PROMPT}`, 'Ctrl+P opened the command palette', 5000);
++			await t.sleep(300);
++			rec.paletteOpen = await G.st();
++			await t.cdp.call('Input.insertText', { text: 'compendium reference' });
++			await t.sleep(400);
++			rec.paletteList = await t.ev(`Array.from(document.querySelectorAll('.modal-container .prompt .suggestion-item')).map((s) => s.textContent.trim().slice(0, 60)).slice(0, 4)`);
++			await G.enter();
++		}
++		const t0 = Date.now();
++		while (Date.now() - t0 < 4000 && !(await t.ev(`!!${PROMPT}`))) await t.sleep(60);
++		rec.opened = !!(await t.ev(`!!${PROMPT}`));
++		if (!rec.opened) {
++			rec.atOpen = await G.st();
++			return rec;
++		}
++		await t.sleep(400);
++		rec.atOpen = await G.st();
++		rec.suggestions = await t.ev(`Array.from((${PROMPT}).querySelectorAll('.suggestion-item')).map((s) => s.textContent.trim().slice(0, 40))`);
++		// ---- the click
++		if (click !== 'none') {
++			const p =
++				click === 'box' ? await t.ev(G.BOX_PT) : click === 'bg' ? await t.ev(G.BG_PT) : await G.point(click === 'input' ? `(${PROMPT})?.querySelector('input.prompt-input')` : `(${PROMPT})?.querySelector('.suggestion-item')`);
++			t.expect(!!p, `no point for the ${click} click`);
++			rec.clickHit = p.hit;
++			const shotName = `gs97-${where}-${mode}-${open}-${click}-${choose}${lpConfig ? '-lpcfg' : ''}-k${notes.k}`;
++			rec.shotBefore = await G.shot(`${shotName}-1-before-click`);
++			await G.pressAt(p);
++			await t.sleep(1500);
++			rec.at1500 = await G.st();
++			rec.spyAfterClick = await G.spyRead();
++			rec.shotAfter = await G.shot(`${shotName}-2-after-click-1500ms`);
++		}
++		// ---- the choice
++		if (choose && (await t.ev(`!!${PROMPT}`))) {
++			if (choose === 'click') {
++				const p = await G.point(`(${PROMPT})?.querySelector('.suggestion-item')`);
++				rec.chooseHit = p?.hit ?? null;
++				if (p) await G.pressAt(p);
++			} else {
++				await G.key('ArrowDown', 'ArrowDown', 40);
++				await t.sleep(150);
++				await G.enter();
++			}
++			await t.sleep(600);
++			rec.afterChoose = await G.st();
++		} else if (choose) rec.chooseSkipped = 'the search was already closed';
++		rec.land = await G.landing(notes.src, notes.host, mark);
++		rec.spyEnd = await G.spyRead();
++	} catch (e) {
++		rec.error = e.message;
++	} finally {
++		try {
++			await G.closeAll();
++		} catch (e) {
++			rec.cleanupError = e.message;
++		}
++		if (lpConfig) await t.ev(`(() => { app.vault.setConfig('livePreview', false); return true; })()`);
++	}
++	return rec;
++}
++
++/**
++ * SC-601 (G-S97) controls ii and iii: from a preview made a source editor, (ii) an Obsidian NATIVE SuggestModal (`switcher:open`, `command-palette:open`) and a real press in its
++ * input or box; (iii) a DseModal opened from an element inside the editing preview (the stamina bar, Live Preview config so the popover's editor draws the card), a real press on its title and its Apply input.
++ */
++async function gs97Control(t, { kind, click }) {
++	const G = gs97Kit(t);
++	const { K, J } = G;
++	const rec = { control: kind, click };
++	const lp = kind === 'stamina';
++	try {
++		if (lp) await t.ev(`(() => { app.vault.setConfig('livePreview', true); return true; })()`);
++		const notes = await G.makeNotes(kind === 'stamina');
++		rec.k = notes.k;
++		const link = await K.openHost(notes.host, 'rv');
++		rec.hover = await G.hoverPlain(link);
++		rec.pressedProse = (await G.editPreview()).hit;
++		rec.before = await G.st();
++		rec.spied = await G.spy();
++		if (kind === 'switcher' || kind === 'palette') {
++			rec.cmdResult = await t.ev(`app.commands.executeCommandById(${J(kind === 'switcher' ? 'switcher:open' : 'command-palette:open')})`);
++			await t.waitFor(`!!${G.ANY_PROMPT}`, `${kind} opened`, 5000);
++			await t.sleep(400);
++			rec.atOpen = await G.st();
++			const p = click === 'box' ? await t.ev(G.BOX_PT) : await G.point(`document.querySelector('.modal-container .prompt input.prompt-input')`);
++			t.expect(!!p, `no point for the ${click} click`);
++			rec.clickHit = p.hit;
++			await G.pressAt(p);
++		} else {
++			const OPENER = `Array.from(document.querySelectorAll('.popover.hover-popover [data-dse-control="stamina.bar"]')).find((e) => e.getBoundingClientRect().width > 0)`;
++			await t.waitFor(`!!${OPENER}`, 'the stamina bar is drawn in the editing preview (Live Preview config)', 8000);
++			const p0 = await G.point(OPENER, 0.3);
++			rec.openerHit = p0.hit;
++			await G.pressAt(p0);
++			await t.waitFor(`!!document.querySelector('.modal-container .dse-modal')`, 'the stamina modal opened from the editing preview', 6000);
++			await t.sleep(500);
++			rec.atOpen = await G.st();
++			const p = await G.point(click === 'title' ? `document.querySelector('.modal-container .modal-title')` : `document.querySelector('.modal-container [data-dse-control="sedit.apply-amount"]')`);
++			t.expect(!!p, `no point for the ${click} click`);
++			rec.clickHit = p.hit;
++			await G.pressAt(p);
++		}
++		await t.sleep(1500);
++		rec.at1500 = await G.st();
++		rec.at1500.anyModal = await t.ev(`!!document.querySelector('.modal-container')`);
++		rec.spyAfterClick = await G.spyRead();
++	} catch (e) {
++		rec.error = e.message;
++	} finally {
++		try {
++			await G.closeAll();
++		} catch (e) {
++			rec.cleanupError = e.message;
++		}
++		if (lp) await t.ev(`(() => { app.vault.setConfig('livePreview', false); return true; })()`);
++	}
++	return rec;
++}
++
++/** SC-601 (G-S97): the plan. GS97_REPS (default 3) and GS97_PLAN ('full' default; 'smoke' runs one of each kind) shape it. */
++function gs97Plan() {
++	const reps = Number(process.env.GS97_REPS ?? 3);
++	const smoke = process.env.GS97_PLAN === 'smoke';
++	const main = [];
++	const clicks = [
++		['input', 'click'],
++		['input', 'keys'],
++		['box', 'click'],
++		['box', 'keys'],
++		['bg', null],
++		['suggestion', null],
++	];
++	for (const open of ['cmd', 'hotkey', 'palette']) for (const [click, choose] of clicks) main.push({ where: 'hover', open, click, choose });
++	main.push({ where: 'hover', open: 'cmd', click: 'none', choose: 'keys' }); // no click at all: Enter on the open search
++	main.push({ where: 'hover', open: 'cmd', mode: 'lp', click: 'input', choose: 'click' }); // the host in Live Preview
++	main.push({ where: 'hover', open: 'cmd', lpConfig: true, click: 'input', choose: 'click' }); // the vault's Live Preview on (the preview's editor is LP)
++	main.push({ where: 'hover', open: 'block', click: 'input', choose: null }); // the snapshot command: the same modal
++	for (const [click, choose] of clicks) main.push({ where: 'pane', open: 'cmd', click, choose });
++	const controls = [
++		{ kind: 'switcher', click: 'input' },
++		{ kind: 'switcher', click: 'box' },
++		{ kind: 'palette', click: 'input' },
++		{ kind: 'stamina', click: 'title' },
++		{ kind: 'stamina', click: 'input' },
++	];
++	const template = [
++		{ where: 'hover', open: 'template', click: 'input', choose: 'click' },
++		{ where: 'hover', open: 'template', click: 'suggestion', choose: null },
++		{ where: 'hover', open: 'template', click: 'none', choose: 'keys' },
++		{ where: 'pane', open: 'template', click: 'input', choose: 'click' },
++		{ where: 'hover', open: 'template', mode: 'lp', click: 'input', choose: 'click' }, // the host in Live Preview: an editor of its own for the template to land in
++	];
++	if (process.env.GS97_PLAN === 'extra') return { reps, main: template, controls: [] };
++	if (process.env.GS97_PLAN === 'extra-lp') return { reps, main: template.slice(-1), controls: [] };
++	main.push(...template);
++	if (smoke) return { reps: 1, main: [main[2], main[4], main[7], main[13], main[18], main[19], main[20]], controls: [controls[2], controls[3], controls[4]] };
++	return { reps, main, controls };
++}
++
+ const SCENARIOS = [
+ 	{
+ 		// SC-343: identical twins, 4 lines inserted above — the SECTION path writes the right twin.
+@@ -7957,6 +8290,51 @@ const SCENARIOS = [
+ 			return outcomes.join('; ');
+ 		},
+ 	},
++	{
++		// G-S97 (SC-601, PROBE: it measures and prints, it asserts only that every trial ran). The compendium search (`CompendiumSearchModal`, an Obsidian SuggestModal, not a DseModal)
++		// opened by its editor command while a hover preview is a source editor (a real hover, a real press on the preview's prose): a real press in the search input, on its backdrop,
++		// on the box, on a suggestion; then a choice (a real press on a suggestion, or ArrowDown + Enter); where the reference block lands. Opened by executeCommandById (what a hotkey
++		// runs), a real Ctrl+Shift+Y bound to the command, and the command palette (real Ctrl+P, typed name, Enter). Controls: the note in a pane; Obsidian's own quick switcher and
++		// command palette opened from the editing preview; a DseModal (the stamina bar) opened from inside it. One `G-S97-REC <json>` line per trial. It sits before G-S56, which runs last.
++		id: 'G-S97',
++		async run(t) {
++			const J = JSON.stringify;
++			const plan = gs97Plan();
++			const harnessErrors = [];
++			const rows = [];
++			await t.ev(`(() => { if (!document.getElementById('lc-gs97-notice')) { const st = document.createElement('style'); st.id = 'lc-gs97-notice'; st.textContent = '.notice-container { display: none !important; }'; document.head.appendChild(st); } return true; })()`);
++			rows.push(`hotkey ${J(await t.ev(`(() => { app.hotkeyManager.setHotkeys(${J(GS97_CMD)}, [{ modifiers: ['Mod', 'Shift'], key: 'Y' }]); return app.hotkeyManager.getHotkeys(${J(GS97_CMD)}); })()`))}`);
++			rows.push(`loadavg ${fs.readFileSync('/proc/loadavg', 'utf8').trim()}`);
++			rows.push(`livePreview ${J(await t.ev(`app.vault.getConfig('livePreview')`))}`);
++			// Obsidian's own Templates plugin, for the native insert-into-editor control: a template folder and one template
++			rows.push(`templates ${J(await t.ev(`(async () => { if (!app.vault.getAbstractFileByPath('Templates')) await app.vault.createFolder('Templates'); if (!app.vault.getAbstractFileByPath('Templates/gs97-tpl.md')) await app.vault.create('Templates/gs97-tpl.md', 'gsprobe-tpl text\\n'); const p = app.internalPlugins.getPluginById('templates'); if (p && !p.enabled) await p.enable(true); if (p?.instance?.options) p.instance.options.folder = 'Templates'; return { enabled: !!p?.enabled, folder: p?.instance?.options?.folder ?? null, cmd: !!app.commands.findCommand('insert-template'), ids: Object.keys(app.commands.commands).filter((k) => /templat/i.test(k)) }; })()`))}`);
++			try {
++				for (let rep = 1; rep <= plan.reps; rep++) {
++					gs97Rep = rep;
++					for (const spec of plan.main) {
++						const r = await gs97Trial(t, spec);
++						r.rep = rep;
++						console.log(`G-S97-REC ${J(r)}`);
++						if (r.error) harnessErrors.push(`${spec.where}/${spec.open}/${spec.click}/${spec.choose} rep ${rep}: ${r.error}`);
++					}
++					for (const spec of plan.controls) {
++						const r = await gs97Control(t, spec);
++						r.rep = rep;
++						console.log(`G-S97-REC ${J(r)}`);
++						if (r.error) harnessErrors.push(`control ${spec.kind}/${spec.click} rep ${rep}: ${r.error}`);
++					}
++					rows.push(`rep ${rep} done, loadavg ${fs.readFileSync('/proc/loadavg', 'utf8').trim()}`);
++				}
++			} finally {
++				await t.ev(`(() => { app.hotkeyManager.removeHotkeys(${J(GS97_CMD)}); return true; })()`);
++				await t.ev(`document.getElementById('lc-gs97-notice')?.remove()`);
++				await t.ev(`(() => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); return true; })()`);
++				await t.open('Lifecycle/other.md');
++			}
++			t.expect(harnessErrors.length === 0, `probe trials that did not run: ${harnessErrors.join(' | ')}`);
++			return rows.join('; ');
++		},
++	},
+ 	{
+ 		// G-S56 (SC-536): the reference guard follows the DOM, not the block's identity. A card that references itself stops at one
+ 		// "Reference loop" card nested inside it (Reading view and Live Preview), a chain of seven distinct references stops at five

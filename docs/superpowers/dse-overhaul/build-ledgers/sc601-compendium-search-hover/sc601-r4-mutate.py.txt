@@ -1,0 +1,114 @@
+#!/usr/bin/env python3
+# SC-601 r4 mutation runner (r2's 14 plus the r3 survivors and the late re-check). Applies one mutant at a time to the committed source, runs the relevant jest files, restores the file.
+import os, subprocess, sys
+
+ROOT = '/home/scott/code/steelCompendium/worktrees/sc601-compendium-search-hover/draw-steel-elements'
+S = '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc601-r2-adc7b64beb5b40fd5'
+SEARCH = 'src/authoring/CompendiumSearchModal.ts'
+INSERT = 'src/authoring/compendiumInsert.ts'
+GUARD = 'src/framework/kit/hoverPreviewGuard.ts'
+TESTS = [
+    'test/dom/authoring/compendiumSearchHoverPreview.test.ts',
+    'test/dom/authoring/compendiumSearchModal.test.ts',
+    'test/dom/kit/managedModal.test.ts',
+]
+
+MUTANTS = [
+    ('M1 no guard installed', SEARCH,
+     [("if (this.opts.anchor?.closest('.hover-popover')) guardHoverPreviewClicks(this.containerEl, this.prefsOwner);",
+       "if (false as boolean) guardHoverPreviewClicks(this.containerEl, this.prefsOwner);")]),
+    ('M2 preventDefault instead of stopPropagation', GUARD,
+     [("evt.stopPropagation();", "evt.preventDefault();")]),
+    ('M3 guard removed synchronously at close', GUARD,
+     [("win.setTimeout(() => doc.removeEventListener('click', guard), 0);", "doc.removeEventListener('click', guard); void win;")]),
+    ('M4 connected check dropped (isOpen always true)', INSERT,
+     [("isOpen: () => els.every((el) => el.isConnected)", "isOpen: () => true")]),
+    ('M5 re-target activeEditor when the editor is gone', INSERT,
+     [("(entry, evt) => dispatchReferenceChoice(editor, entry, evt, target.isOpen),",
+       "(entry, evt) => dispatchReferenceChoice(target.isOpen() ? editor : ((plugin.app as any).workspace.activeEditor?.editor ?? editor), entry, evt),"),
+      ("(entry) => void dispatchBlockChoice(editor, index, entry, target.isOpen),",
+       "(entry) => void dispatchBlockChoice(target.isOpen() ? editor : ((plugin.app as any).workspace.activeEditor?.editor ?? editor), index, entry),")]),
+    ('M6 commands do not pass the anchor', INSERT,
+     [("anchor: target.anchor", "anchor: null")]),
+    ('M7 guard installed unconditionally (no .hover-popover test)', SEARCH,
+     [("if (this.opts.anchor?.closest('.hover-popover')) guardHoverPreviewClicks(this.containerEl, this.prefsOwner);",
+       "guardHoverPreviewClicks(this.containerEl, this.prefsOwner);")]),
+    ('M8 guard stops every click (no composedPath test)', GUARD,
+     [("if (evt.composedPath().includes(containerEl)) evt.stopPropagation();", "evt.stopPropagation();")]),
+    ('M9 ctrl copy gated by the connected check too', INSERT,
+     [("\tif (!evt.shiftKey && (evt.ctrlKey || evt.metaKey)) {\n\t\tvoid copyCode(entry); // never touches the editor, so it needs no live editor\n\t\treturn;\n\t}\n\tif (!refuseClosedEditor(isOpen)) return;\n",
+       "\tif (!refuseClosedEditor(isOpen)) return;\n\tif (!evt.shiftKey && (evt.ctrlKey || evt.metaKey)) {\n\t\tvoid copyCode(entry);\n\t\treturn;\n\t}\n")]),
+    ('M10 block choice: check dropped', INSERT,
+     [("\tisOpen: () => boolean = () => true,\n): Promise<void> {\n\tif (!refuseClosedEditor(isOpen)) return;\n",
+       "\tisOpen: () => boolean = () => true,\n): Promise<void> {\n\tvoid isOpen;\n")]),
+    ('M11 reference choice: check dropped', INSERT,
+     [("\tif (!refuseClosedEditor(isOpen)) return;\n\tif (evt.shiftKey) insertInlineLink", "\tvoid isOpen;\n\tif (evt.shiftKey) insertInlineLink")]),
+    ('M12 connection test ignores the CodeMirror element', INSERT,
+     [("const els = [containerEl, cmDom].filter(isElement);\n\treturn { anchor: els[0] ?? null,", "const els = [containerEl].filter(isElement);\n\treturn { anchor: els[0] ?? null,")]),
+    ('M13 refusal without a Notice', INSERT,
+     [("\tnew Notice(CLOSED_EDITOR_NOTICE);\n\treturn false;", "\treturn false;")]),
+    ('M14 DseModal: guard not installed (shared helper call dropped)', 'src/framework/kit/managedModal.ts',
+     [("\t\tguardHoverPreviewClicks(this.containerEl, this.lifecycle);\n", "")]),
+    ('R2 write target re-taken from activeEditor at choose time (checks kept)', INSERT,
+     [("(entry, evt) => dispatchReferenceChoice(editor, entry, evt, target.isOpen),",
+       "(entry, evt) => dispatchReferenceChoice(((plugin.app as any).workspace.activeEditor)?.editor ?? editor, entry, evt, target.isOpen),"),
+      ("(entry) => void dispatchBlockChoice(editor, index, entry, target.isOpen),",
+       "(entry) => void dispatchBlockChoice(((plugin.app as any).workspace.activeEditor)?.editor ?? editor, index, entry, target.isOpen),")]),
+    ('R4a connected check: some() instead of every()', INSERT,
+     [("isOpen: () => els.every((el) => el.isConnected)", "isOpen: () => els.some((el) => el.isConnected) || els.length === 0")]),
+    ('R4c connected check only for a preview editor (a closed pane writes)', INSERT,
+     [("isOpen: () => els.every((el) => el.isConnected)", "isOpen: () => !els[0]?.closest('.hover-popover') || els.every((el) => el.isConnected)")]),
+    ('R5 guard bound to the global document (popout)', GUARD,
+     [("const doc = containerEl.ownerDocument;", "const doc = document; void containerEl.ownerDocument;")]),
+    ('L1 late re-check dropped (insertFullBlock never re-checks)', INSERT,
+     [("\tif (!refuseClosedEditor(isOpen)) return false;\n\teditor.replaceSelection(wrapFence(alias, body)", "\teditor.replaceSelection(wrapFence(alias, body)")]),
+    ('L2 isOpen not passed on to insertFullBlock', INSERT,
+     [("if (entity) await insertFullBlock(editor, entity, isOpen);", "if (entity) await insertFullBlock(editor, entity);")]),
+    ('L3 early check dropped (only the late one remains)', INSERT,
+     [("\tif (!refuseClosedEditor(isOpen)) return;\n\tconst entity = await index.getEntity(entry.scc);", "\tconst entity = await index.getEntity(entry.scc);")]),
+    ('L4 late re-check without the Notice', INSERT,
+     [("\tif (!refuseClosedEditor(isOpen)) return false;\n\teditor.replaceSelection(wrapFence(alias, body)", "\tif (!isOpen()) return false;\n\teditor.replaceSelection(wrapFence(alias, body)")]),
+    ('L5 late re-check refuses but still writes', INSERT,
+     [("\tif (!refuseClosedEditor(isOpen)) return false;\n\teditor.replaceSelection(wrapFence(alias, body)", "\trefuseClosedEditor(isOpen);\n\teditor.replaceSelection(wrapFence(alias, body)")]),
+]
+
+
+def run(tag):
+    p = subprocess.run(['npx', 'jest', *TESTS], cwd=ROOT, capture_output=True, text=True)
+    out = p.stdout + p.stderr
+    open(f'{S}/mut4-{tag}.log', 'w').write(out)
+    tests = [l for l in out.splitlines() if l.startswith('Tests:')]
+    failed = sorted({l.strip()[2:] for l in out.splitlines() if l.startswith('  ● ')})
+    return p.returncode, (tests[0] if tests else '?'), failed
+
+
+def main():
+    only = set(sys.argv[1:])
+    rows = []
+    for name, rel, edits in MUTANTS:
+        tag = name.split()[0]
+        if only and tag not in only:
+            continue
+        path = os.path.join(ROOT, rel)
+        orig = open(path).read()
+        new = orig
+        for a, b in edits:
+            if a not in new:
+                rows.append(f'{name}: NOT APPLIED (pattern missing)')
+                new = None
+                break
+            new = new.replace(a, b)
+        if new is None:
+            continue
+        open(path, 'w').write(new)
+        try:
+            rc, tests, failed = run(tag)
+        finally:
+            open(path, 'w').write(orig)
+        verdict = 'KILLED' if rc != 0 else 'SURVIVED'
+        rows.append(f'{name}: {verdict} ({tests}); failing: {failed[:4]}{" ..." if len(failed) > 4 else ""}')
+        print(rows[-1], flush=True)
+    open(f'{S}/mutants4-summary.txt', 'a').write('\n'.join(rows) + '\n')
+
+
+main()
