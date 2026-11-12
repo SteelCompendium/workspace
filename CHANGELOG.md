@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the Edit form opened from an embed or hover preview of part of a note no longer saves into an identical counter elsewhere in the note (SC-596).**
+  If the counter was changed from outside (Sync, another app, another pane) just before the form opened, Save could write into the
+  identical counter and say nothing. It is now placed like a + / - click (SC-594): when the note does not confirm which counter
+  is yours, nothing is written, the form stays open and a Notice says why ("the block changed on disk first", or "can't tell where
+  this block sits" for a stale callout or a vanished section). Rare shapes that saved before now refuse, even with no identical
+  counter: a stale callout or a section gone at the click (also for + / -), a heading link whose name occurs twice with identical counters.
+
 - **DSE plugin: Montage: clicking a logged action to edit it now opens its window when the hero's entry has no skills list (SC-606).**
   The window used to open half-built and throw an error, and in a hover preview the half-built window and the preview then
   closed on the next click. A hero with no `skills_used` list now works everywhere on the board (editing, logging,
