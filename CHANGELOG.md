@@ -8,10 +8,10 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
-- **DSE plugin: clicking another creature in the initiative roster while using the keyboard keeps focus in the tracker (SC-609).**
+- **DSE plugin: clicking another creature in the initiative roster while using the keyboard keeps focus in the tracker, in Reading view (SC-609).**
   With the keyboard focus on the detail row's Stamina control, a mouse click on another roster cell switched the detail row to that
   creature, and focus fell to the top of the page. Focus now moves to the creature you clicked. A click when focus was not already
-  in the tracker still does not pull focus into it.
+  in the tracker still does not pull focus into it. In Live Preview focus is still lost when the note saves a moment later (SC-602).
 
 - **DSE plugin: clicking in the Compendium search no longer closes a hover preview you are editing, and a pick can no longer vanish silently (SC-601).**
   Open a hover preview of a note, click into its text to edit it, and run "Insert Draw Steel: compendium reference" or "compendium
