@@ -241,3 +241,13 @@ Workers read THIS file, never the tracker.
   jest 11692/2 clean; shots 592/0 FAIL/163/978/39/234/147 (PNGs byte-identical to r3); freeze
   280/280; parity 0/0/24; lifecycle part 6 4/4. INFO R5-I1 = SC-623 (filed); R5-I2/I3 DROP (cosmetic).
 - LAND-READY reported to dispatcher.
+
+## DONE (2026-11-13)
+
+- Landed by the dispatcher: dse develop 1516f894, workspace main bb149285 (ledger-preserve commit
+  99ac8319; preserved at docs/superpowers/dse-overhaul/build-ledgers/sc563-crest-fill-eyebrow-tint/).
+  Worktree removed.
+- Closing comment posted (`sc563-comment-3-done.md`); SC-563 moved to Done via linear-post.py `--state Done`.
+- Open offer to Scott (no action pending): villain crest could use MCDM glyph `d`.
+- Follow-ups filed: SC-565 (site shared star / placeholders), SC-622 (camera dirties demo-vault; G-S97),
+  SC-623 (Source Serif 4 subset vs OFL RFN).
