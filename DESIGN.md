@@ -130,7 +130,18 @@ Lucide/Heroicons/Font-Awesome.
 
 - **DrawSteelGlyphs** (`reference/DrawSteelGlyphs/`, loaded by the site): ASCII →
   game glyphs — `!` `@` `#` are the power-roll tier badges (≤11 / 12–16 / 17+),
-  `0`–`9` boxed numbers, `^` star (passive), `d` skull (villain), `b`/`c` area marks.
+  `0`–`9` boxed numbers, `*` star (trait), `d` skull (villain action / malice), `b`/`c` area marks.
+- **Crest action icons (SC-563)**: the shield on an ability / trait / kit-signature card draws
+  its icon from DrawSteelGlyphs in both the site and the plugin, solid and tinted with the
+  action colour. The codepoints are the site's own
+  (`steel-etl/internal/site/ability_cards.go`): main `l`, maneuver `f`, triggered `)`, move `o`,
+  none `*`, trait `*`. The site marks these as placeholders until MCDM ships official action
+  glyphs (SC-565), so the plugin follows the site's table: change both together. The one
+  exception is **villain**, which keeps the plugin's Lucide `skull` outline (the site has no
+  villain crest on ability cards; its statblock villain glyph is the same `*` placeholder).
+  The same glyphs show on the abilities inside a statblock. Every other crest icon (statblock role, stamina, kit head, display families) is
+  still a Lucide icon; that outline set is the plugin's one departure from "glyph font first".
+  The font ships unmodified, CC BY-SA 4.0 (`draw-steel-elements/assets/fonts/`).
 - **Emoji are a typed taxonomy, not decoration**: source markdown prefixes ability
   blockquotes with 🗡 🏹 👤 ❗ ❇ ⭐ ☠ 🌀 to classify them; 📏 distance / 🎯 target label
   info-table cells. JS/CSS swap them for styling. Outside this system, avoid emoji.
