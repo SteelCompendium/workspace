@@ -66,3 +66,6 @@ No thread comments as of 2026-11-13.
   one bump to 2074a152, clean; conditions-modal jest 445/445).
 - 2026-11-13 Result comment posted (3 images: before, after with Blue set, after Default pointer-away). No Scott ask
   (ticket allowed any fix). Ticket stays Awaiting until landing. LAND-READY reported to the dispatcher.
+- 2026-11-13 LANDED by the dispatcher: dse develop `2074a152`, workspace main `8fc885a3` (ledger-preserve commit
+  `019d804e`; worktree removed). Landed comment posted; state -> Done via linear-post.py `--state Done`,
+  verified with get_issue (status Done, completedAt 2026-11-13T15:39:50Z).
