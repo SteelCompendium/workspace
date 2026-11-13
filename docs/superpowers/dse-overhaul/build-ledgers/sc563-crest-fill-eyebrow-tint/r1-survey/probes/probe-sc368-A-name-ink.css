@@ -1,0 +1,5 @@
+/* SC-563 r1 probe (addStyleTag only; never in source) */
+
+:is([data-dse-element], .dse-modal)[data-dse-theme="steel"] { --sc368-steel-lighter: #cdd1d4; }
+.theme-light :is([data-dse-element], .dse-modal)[data-dse-theme="steel"] { --sc368-steel-lighter: #5f686d; }
+[data-dse-theme='steel']:not([data-dse-print="on"])[data-dse-element='feature'] > .dse-feature > .dse-head > .dse-head__primary--left { color: var(--sc368-steel-lighter) !important; }

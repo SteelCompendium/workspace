@@ -1,0 +1,12 @@
+/* SC-563 r1 probe (addStyleTag only; never in source) */
+@font-face { font-family: "DrawSteelGlyphs"; src: url("file:///home/scott/code/steelCompendium/worktrees/sc563-crest-fill-eyebrow-tint/v2/docs/fonts/DrawSteelGlyphs-Regular.otf") format("opentype"); font-display: block; }
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-feature[data-dse-act]:not([data-dse-act='villain']) > .dse-head > .dse-crest .dse-crest__glyph svg { display: none; }
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-feature[data-dse-act]:not([data-dse-act='villain']) > .dse-head > .dse-crest .dse-crest__glyph::before {
+	font-family: "DrawSteelGlyphs", sans-serif; font-size: 1.25em; line-height: 1; -webkit-font-smoothing: antialiased;
+}
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-feature[data-dse-act='main'] > .dse-head > .dse-crest .dse-crest__glyph::before { content: "l"; }
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-feature[data-dse-act='maneuver'] > .dse-head > .dse-crest .dse-crest__glyph::before { content: "f"; }
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-feature[data-dse-act='triggered'] > .dse-head > .dse-crest .dse-crest__glyph::before { content: ")"; }
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-feature[data-dse-act='move'] > .dse-head > .dse-crest .dse-crest__glyph::before { content: "o"; }
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-feature[data-dse-act='none'] > .dse-head > .dse-crest .dse-crest__glyph::before { content: "*"; }
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-feature[data-dse-act='trait'] > .dse-head > .dse-crest .dse-crest__glyph::before { content: "*"; }

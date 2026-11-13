@@ -1,0 +1,3 @@
+/* SC-563 r1 probe (addStyleTag only; never in source) */
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-feature[data-dse-act='trait']:not(:is(.dse-sb, .dse-fb) .dse-feature) > .dse-head > .dse-head__eyebrow--left { color: var(--dse-act); }
+[data-dse-theme='steel']:not([data-dse-print="on"]) .dse-feature[data-dse-act='trait']:not(:is(.dse-sb, .dse-fb) .dse-feature) > .dse-head > .dse-head__eyebrow--left::before { background: var(--dse-act); }
