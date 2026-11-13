@@ -104,3 +104,6 @@ The two markers live in `test/dom/views/conditions-modal-matrix.test.ts` (~l.982
   (no runtime code; reviewer's r4 LAND covers all product code).
 - LAND-READY 2026-11-13: dse `14521bf0` on develop `df92a3f6`; superproject `a65d2ab9` on
   workspace main `fd727403`. Reported to dispatcher.
+- DONE 2026-11-13: landed by the dispatcher on dse develop `14521bf0`, workspace main
+  `bc4754b0` (ledger preserved + dse-verify updated in `85f7d100`; worktree removed). Ticket
+  set Done via linear-post.py `--state Done`; verified status Done.
