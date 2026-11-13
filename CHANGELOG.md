@@ -22,6 +22,15 @@ go under an *Internal* sub-heading.
   at the end (full stamina, no conditions) and, if you lower the number, creatures are removed from the end of the list. This applies the
   same way to squad minions (they keep their conditions; the squad's shared stamina pool is not changed), captains and regular creatures.
 
+- **DSE plugin: an outside change to the note while an initiative tracker window is open now closes the window with a Notice and returns keyboard focus to the tracker (SC-608).**
+  The windows are the minion Stamina pool, hero and creature Stamina, Conditions and the Reset encounter confirm; the views are Reading view, Live Preview and the pinned sidebar tracker.
+  A change from outside (Sync, another device) that alters the tracker redraws it; the window used to vanish silently and focus fell to the top of the page.
+  Now a Notice says "The note changed outside, so this window closed without saving" (what you typed or staged in it is dropped, so it can never overwrite the outside change)
+  and focus goes to the same control in the reloaded tracker, the one you opened the window from. A window opened with the mouse shows the Notice but moves no focus.
+  A change elsewhere in the note that leaves the tracker alone keeps the window open, and the tracker's own Apply, Done and Escape are unchanged (no Notice).
+  **In the pinned sidebar, a window's Apply (or Add condition) after an outside change was silently lost:** the window stayed open, wrote into a stale copy of the tracker, and nothing reached the note.
+  It now closes the same way when the tracker changed, and when the change was elsewhere in the note the window stays open and its Apply writes.
+
 - **DSE plugin: Conditions window: each colour swatch is now announced by its colour name (SC-582).**
   A screen reader said "Color #1e8449" for the green swatch, and the colour's name was only in the hover tooltip. It now says
   "Green" (and Red, Amber, Blue, Purple) inside the Color group. The tooltip is unchanged, and after you pick a swatch
