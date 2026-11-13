@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# run-mutants.sh <log>: for each mutant of R: apply R + the mutant to the worktree, run the sweep, restore. Records per mutant.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc612-r1-designer
+E=/home/scott/code/steelCompendium/worktrees/sc612-twin-deleted-wholenote-pin/draw-steel-elements
+cd "$E" || exit 9
+[ "$(git -C "$E" branch --show-current)" = sc612-twin-deleted-wholenote-pin ] || exit 9
+: > "$1"
+rm -f "$E/main.js" "$E/styles.css"
+for m in M1 M2 M3 M4 M5 M6 M7 M8; do
+  python3 -I "$S/patch.py" R "$E" >> "$1" 2>&1 && python3 -I "$S/mutate.py" "$m" "$E" >> "$1" 2>&1
+  cp "$S/sc612-r1-sweep.test.ts" "$E/test/dom/framework/sc612-r1-sweep.test.ts"
+  : > "$S/sweep-R$m.jsonl"
+  SC612_OUT="$S/sweep-R$m.jsonl" SC612_TAG="R$m" npx jest test/dom/framework/sc612-r1-sweep.test.ts > "$S/sweep-R$m.log" 2>&1
+  echo "$m sweep_rc=$? records=$(wc -l < "$S/sweep-R$m.jsonl")" >> "$1"
+  rm -f "$E/test/dom/framework/sc612-r1-sweep.test.ts"
+  git -C "$E" checkout -- src/framework/host/ReadingModeBlockHost.ts src/framework/host/lineMap.ts
+done
+git -C "$E" status --porcelain >> "$1"

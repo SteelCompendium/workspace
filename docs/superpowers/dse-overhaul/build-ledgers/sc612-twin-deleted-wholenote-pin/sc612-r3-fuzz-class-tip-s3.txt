@@ -1,0 +1,56 @@
+stats {'cells': 78016, 'ambiguous': 15700}
+flips base->tip {"A->A": 39821, "A->refused": 5128, "OTHER->OTHER": 7451, "OTHER->refused": 5800, "refused->refused": 19816}
+
+== A-in-ambiguous (lucky): 44
+   by op-set: [["del,prose", 9], ["del,moveP", 6], ["del,maketwin", 4], ["dup,edit", 4], ["del,maketwin,prose", 4], ["del,diff,maketwin", 4], ["del", 4], ["del,diff,edit", 3], ["del,edit,prose", 3], ["bump,del,prose", 3]]
+   {"k": ["5081", "form"], "tag": "nb3-unterm", "ops": ["maketwin:b0", "del:b0"], "outcome": "A", "base": "A", "opts": [3, "deleted"], "pA": 3, "twins": 2}
+   {"k": ["5081", "card-identity"], "tag": "nb3-unterm", "ops": ["maketwin:b0", "del:b0"], "outcome": "A", "base": "A", "opts": [3, "deleted"], "pA": 3, "twins": 2}
+   {"k": ["5081", "card-ordinal"], "tag": "nb3-unterm", "ops": ["maketwin:b0", "del:b0"], "outcome": "A", "base": "A", "opts": [3, "deleted"], "pA": 3, "twins": 2}
+   {"k": ["5081", "card-null"], "tag": "nb3-unterm", "ops": ["maketwin:b0", "del:b0"], "outcome": "A", "base": "A", "opts": [3, "deleted"], "pA": 3, "twins": 2}
+   {"k": ["5133", "form"], "tag": "nb2", "ops": ["edit:# N", "dup:P@5", "dup:b0@4"], "outcome": "A", "base": "A", "opts": [13, 18], "pA": 18, "twins": 2}
+   {"k": ["5133", "card-identity"], "tag": "nb2", "ops": ["edit:# N", "dup:P@5", "dup:b0@4"], "outcome": "A", "base": "A", "opts": [13, 18], "pA": 18, "twins": 2}
+
+== NEW-refusal-unambiguous: 164
+   by op-set: [["del,edit", 24], ["dup,edit", 16], ["dup", 16], ["del", 12], ["del,edit,maketwin", 12], ["dup,maketwin", 8], ["del,diff", 8], ["diff,dup,moveP", 8], ["dup,prose", 8], ["dup,edit,maketwin", 4], ["bump,dup", 4], ["delblank,dup,edit", 4]]
+   {"k": ["451", "form"], "tag": "nb4-unterm", "ops": ["maketwin:b2", "dup:b1@10", "dup:b1@7"], "outcome": "refused", "base": "A", "opts": [29], "pA": 29, "twins": 6}
+   {"k": ["451", "card-identity"], "tag": "nb4-unterm", "ops": ["maketwin:b2", "dup:b1@10", "dup:b1@7"], "outcome": "refused", "base": "A", "opts": [29], "pA": 29, "twins": 6}
+   {"k": ["451", "card-ordinal"], "tag": "nb4-unterm", "ops": ["maketwin:b2", "dup:b1@10", "dup:b1@7"], "outcome": "refused", "base": "A", "opts": [29], "pA": 29, "twins": 6}
+   {"k": ["451", "card-null"], "tag": "nb4-unterm", "ops": ["maketwin:b2", "dup:b1@10", "dup:b1@7"], "outcome": "refused", "base": "A", "opts": [29], "pA": 29, "twins": 6}
+   {"k": ["480", "form"], "tag": "nb2-unterm", "ops": ["edit:TOP", "maketwin:b0", "dup:P@4"], "outcome": "refused", "base": "A", "opts": [13], "pA": 13, "twins": 3}
+   {"k": ["480", "card-identity"], "tag": "nb2-unterm", "ops": ["edit:TOP", "maketwin:b0", "dup:P@4"], "outcome": "refused", "base": "A", "opts": [13], "pA": 13, "twins": 3}
+
+== OTHER-in-ambiguous: 65
+   by op-set: [["delP,edit", 24], ["del,edit", 8], ["delP,maketwin", 6], ["del,moveP", 4], ["del,dup", 4], ["bump,delP", 4], ["del,delP,dup", 4], ["delP,edit,prose", 4], ["delP,diff,edit", 4], ["delP,dup", 3]]
+   {"k": ["2470", "card-identity"], "tag": "nb3", "ops": ["maketwin:b1", "delP"], "outcome": "OTHER:b1", "base": "OTHER:b1", "opts": [5, "deleted"], "pA": null, "twins": 1, "wl": 5}
+   {"k": ["2470", "card-ordinal"], "tag": "nb3", "ops": ["maketwin:b1", "delP"], "outcome": "OTHER:b1", "base": "OTHER:b1", "opts": [5, "deleted"], "pA": null, "twins": 1, "wl": 5}
+   {"k": ["2470", "card-null"], "tag": "nb3", "ops": ["maketwin:b1", "delP"], "outcome": "OTHER:b1", "base": "OTHER:b1", "opts": [5, "deleted"], "pA": null, "twins": 1, "wl": 5}
+   {"k": ["3741", "form"], "tag": "nb4-crlf", "ops": ["del:b1", "moveP@3"], "outcome": "OTHER:b0", "base": "OTHER:b0", "opts": [9, "deleted"], "pA": 3, "twins": 3, "wl": 9}
+   {"k": ["3741", "card-identity"], "tag": "nb4-crlf", "ops": ["del:b1", "moveP@3"], "outcome": "OTHER:b0", "base": "OTHER:b0", "opts": [9, "deleted"], "pA": 3, "twins": 3, "wl": 9}
+   {"k": ["3741", "card-ordinal"], "tag": "nb4-crlf", "ops": ["del:b1", "moveP@3"], "outcome": "OTHER:b0", "base": "OTHER:b0", "opts": [9, "deleted"], "pA": 3, "twins": 3, "wl": 9}
+
+== OTHER-oracle-disagrees (oracle unique != written block): 167
+   by op-set: [["delP,dup", 63], ["delP,dup,edit", 24], ["del,dup", 15], ["dup,editP", 10], ["delP,diff,dup", 9], ["dup,editP,maketwin", 6], ["delblank,dup,editP", 6], ["delP,dup,prose", 6], ["delP,dup,maketwin", 6], ["bump,delP,maketwin", 4], ["del,edit,maketwin", 3], ["delP,maketwin,prose", 3]]
+   {"k": ["194", "card-identity"], "tag": "nb4-unterm", "ops": ["dup:b1@4", "maketwin:b3", "editP"], "outcome": "OTHER:b3", "base": "OTHER:b3", "opts": [], "pA": 18, "twins": 1, "wl": 25}
+   {"k": ["194", "card-ordinal"], "tag": "nb4-unterm", "ops": ["dup:b1@4", "maketwin:b3", "editP"], "outcome": "OTHER:b3", "base": "OTHER:b3", "opts": [], "pA": 18, "twins": 1, "wl": 25}
+   {"k": ["194", "card-null"], "tag": "nb4-unterm", "ops": ["dup:b1@4", "maketwin:b3", "editP"], "outcome": "OTHER:b3", "base": "OTHER:b3", "opts": [], "pA": 18, "twins": 1, "wl": 25}
+   {"k": ["595", "card-identity"], "tag": "nb3", "ops": ["dup:P@12", "del:P"], "outcome": "OTHER:n268", "base": "OTHER:n268", "opts": ["deleted"], "pA": null, "twins": 1, "wl": 16}
+   {"k": ["595", "card-ordinal"], "tag": "nb3", "ops": ["dup:P@12", "del:P"], "outcome": "OTHER:n268", "base": "OTHER:n268", "opts": ["deleted"], "pA": null, "twins": 1, "wl": 16}
+   {"k": ["595", "card-null"], "tag": "nb3", "ops": ["dup:P@12", "del:P"], "outcome": "OTHER:n268", "base": "OTHER:n268", "opts": ["deleted"], "pA": null, "twins": 1, "wl": 16}
+
+== OTHER-residual (oracle unique = written block: text-identical move/paste): 7219
+   by op-set: [["delP,dup", 1812], ["del,dup", 959], ["moveP", 544], ["delP,dup,edit", 468], ["dup,moveP", 276], ["del,dup,edit", 244], ["delP,diff", 168], ["edit,moveP", 164], ["delP,delblank,dup", 160], ["delP,dup,prose", 128], ["del,delP,dup", 124], ["dup,edit,moveP", 112]]
+   {"k": ["3", "form"], "tag": "nb2", "ops": ["moveP@5"], "outcome": "OTHER:b1", "base": "OTHER:b1", "opts": [4], "pA": 8, "twins": 2, "wl": 4}
+   {"k": ["3", "card-identity"], "tag": "nb2", "ops": ["moveP@5"], "outcome": "OTHER:b1", "base": "OTHER:b1", "opts": [4], "pA": 8, "twins": 2, "wl": 4}
+   {"k": ["3", "card-ordinal"], "tag": "nb2", "ops": ["moveP@5"], "outcome": "OTHER:b1", "base": "OTHER:b1", "opts": [4], "pA": 8, "twins": 2, "wl": 4}
+   {"k": ["3", "card-null"], "tag": "nb2", "ops": ["moveP@5"], "outcome": "OTHER:b1", "base": "OTHER:b1", "opts": [4], "pA": 8, "twins": 2, "wl": 4}
+   {"k": ["6", "form"], "tag": "nb2", "ops": ["prose@4", "moveP@2"], "outcome": "OTHER:b0", "base": "OTHER:b0", "opts": [11], "pA": 2, "twins": 2, "wl": 11}
+   {"k": ["6", "card-identity"], "tag": "nb2", "ops": ["prose@4", "moveP@2"], "outcome": "OTHER:b0", "base": "OTHER:b0", "opts": [11], "pA": 2, "twins": 2, "wl": 11}
+
+== new-refusal-ambiguous (cost class): 4964
+   by op-set: [["dup", 1680], ["dup,edit", 732], ["del", 584], ["del,edit", 220], ["diff,dup", 208], ["dup,maketwin", 196], ["dup,prose", 172], ["bump,dup", 116], ["delblank,dup", 108], ["bump,del", 76], ["del,delblank", 68], ["del,maketwin", 68]]
+   {"k": ["38", "form"], "tag": "nb3", "ops": ["dup:P@4"], "outcome": "refused", "base": "A", "opts": [13, 17], "pA": 17, "twins": 4}
+   {"k": ["38", "card-identity"], "tag": "nb3", "ops": ["dup:P@4"], "outcome": "refused", "base": "A", "opts": [13, 17], "pA": 17, "twins": 4}
+   {"k": ["38", "card-ordinal"], "tag": "nb3", "ops": ["dup:P@4"], "outcome": "refused", "base": "A", "opts": [13, 17], "pA": 17, "twins": 4}
+   {"k": ["38", "card-null"], "tag": "nb3", "ops": ["dup:P@4"], "outcome": "refused", "base": "A", "opts": [13, 17], "pA": 17, "twins": 4}
+   {"k": ["42", "form"], "tag": "nb2", "ops": ["edit:# N", "del:b0"], "outcome": "refused", "base": "A", "opts": [4, "deleted"], "pA": 4, "twins": 2}
+   {"k": ["42", "card-identity"], "tag": "nb2", "ops": ["edit:# N", "del:b0"], "outcome": "refused", "base": "A", "opts": [4, "deleted"], "pA": 4, "twins": 2}

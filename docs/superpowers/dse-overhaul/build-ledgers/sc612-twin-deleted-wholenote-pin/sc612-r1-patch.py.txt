@@ -1,0 +1,193 @@
+#!/usr/bin/env python3
+# patch.py <variant> <tree>: apply an SC-612 r1 probe rule to <tree>/src/framework/host/ReadingModeBlockHost.ts (in place).
+# Variants:
+#   S       every whole-note pin strict in pinnedTarget (head-first and tail-first maps must agree); a miss is handled as today.
+#   N       narrow: the tail-first check only for strictPins or when the known body is twinned (in pin.text or now).
+#   Snofb   S + a strict-only miss of a card write skips the resolveWriteTarget fallback ('miss').
+#   Ntwin1  N but twinned only in pin.text (mutant: drops the "now" half).
+#   Nnow    N but twinned only now (mutant: drops the pin.text half).
+import sys
+
+variant, tree = sys.argv[1], sys.argv[2].rstrip('/')
+if variant == 'R':
+    # the recommended rule, written as r2 would (tsc-clean): see sc612-r1-design-report.md section B
+    lm = tree + '/src/framework/host/lineMap.ts'
+    t = open(lm).read()
+    a1 = "function mapLineOf(a: readonly string[], b: readonly string[], line: number): number | null | typeof GAVE_UP {"
+    assert t.count(a1) == 1
+    t = t.replace(a1, "function mapLineOf(a: readonly string[], b: readonly string[], line: number, trimTail = true): number | null | typeof GAVE_UP {")
+    a2 = "\tlet tail = 0;\n\twhile (tail < a.length - head"
+    assert t.count(a2) == 1
+    t = t.replace(a2, "\tlet tail = 0;\n\t// SC-612: a greedy map (`mapLineGreedy`) trims only its own side\n\twhile (trimTail && tail < a.length - head")
+    a3 = "function fromTail(a: readonly string[], b: readonly string[], line: number): number | null | typeof GAVE_UP {"
+    assert t.count(a3) == 1
+    t = t.replace(a3, '''/**
+ * SC-612: the line of `after` that is line `line` of `before` by one GREEDY alignment: 'head' trims only the common head and runs the forward diff over
+ * everything after it (no common-tail trim), so a run of identical lines is paired as EARLY as the diff allows; 'tail' is the mirror (only the common
+ * tail trimmed, the diff over the reversed rest: as LATE as it allows). `mapLine` and `mapLineFromTail` trim BOTH ends, so an unrelated edit on one
+ * side of a run of identical blocks (a heading above them edited) stops one trim at the same place for both, and both read a deletion in the run the
+ * same way; these two still see the tie. Null when the line was changed or removed (or is not a line of `before`); 'gave up' past LINE_MAP_MAX_EDITS
+ * (with no trim on one side a large one-sided edit counts in full).
+ */
+export function mapLineGreedy(before: string, after: string, line: number, from: 'head' | 'tail'): number | null | typeof GAVE_UP {
+	if (before === after) return line;
+	const a = splitLines(before);
+	const b = splitLines(after);
+	if (line < 0 || line >= a.length) return null;
+	if (from === 'head') return mapLineOf(a, b, line, false);
+	const r = mapLineOf(a.slice().reverse(), b.slice().reverse(), a.length - 1 - line, false);
+	return r === null || r === GAVE_UP ? r : b.length - 1 - r;
+}
+
+''' + a3)
+    open(lm, 'w').write(t)
+    f = tree + '/src/framework/host/ReadingModeBlockHost.ts'
+    src = open(f).read()
+    imp = "import { mapLine, mapLineFromTail, mapLineStrict } from './lineMap';"
+    assert src.count(imp) == 1
+    src = src.replace(imp, "import { mapLine, mapLineFromTail, mapLineGreedy, mapLineStrict } from './lineMap';")
+    OLD = "\t\tif (strictPins.has(pin) && mapLineFromTail(pin.text, content, pin.lineStart) !== line) return null;\n"
+    assert src.count(OLD) == 1
+    src = src.replace(OLD, '''\t\t// SC-612: a whole-note pin is strict too while the known body occurs twice (in the note as pinned or now): of two identical blocks separated only
+\t\t// by blank lines, a deletion of one reads exactly like a deletion of the other, and the head-first map's guess must not place a write (the form or
+\t\t// card would land in a block that only looks like its own). The greedy maps see the same tie when an unrelated edit elsewhere fixed the trims.
+\t\tconst twin = this.twinned(content, pin);
+\t\tif ((strictPins.has(pin) || twin) && mapLineFromTail(pin.text, content, pin.lineStart) !== line) return null;
+\t\tif (twin && (this.greedyDissents(content, pin, line, 'head') || this.greedyDissents(content, pin, line, 'tail'))) return null;
+''')
+    A2 = "\t/** SC-480: another block holds this block's body, in the note as the pin was taken (`pin.text`) or in `content` now. */\n"
+    assert src.count(A2) == 1
+    src = src.replace(A2, '''\t/**
+\t * SC-612: whether the greedy alignment `from` (`mapLineGreedy`) puts the pinned block anywhere but `line`: deleted, or on another block that holds the
+\t * known body (an identical twin). Not counted: an alignment that pairs the fence line with the fence of a block of ANOTHER body (every fence line reads
+\t * the same, so a block of another kind inserted right above reads that way; it says nothing about twins), and one that gave up.
+\t */
+\tprivate greedyDissents(content: string, pin: BlockPin, line: number, from: 'head' | 'tail'): boolean {
+\t\tconst at = mapLineGreedy(pin.text, content, pin.lineStart, from);
+\t\tif (at === line || at === 'gave up') return false;
+\t\tif (at === null || this.knownBody === null) return true;
+\t\tconst fence = this.fenceAt(content, at);
+\t\treturn !(fence && normalizeBody(fence.body) !== normalizeBody(this.knownBody));
+\t}
+
+''' + A2)
+    open(f, 'w').write(src)
+    print('patched R')
+    raise SystemExit(0)
+PURE = variant in ('N2', 'S2', 'N2all', 'N3', 'N3b')
+if PURE:
+    lm = tree + '/src/framework/host/lineMap.ts'
+    t = open(lm).read()
+    a1 = "function mapLineOf(a: readonly string[], b: readonly string[], line: number): number | null | typeof GAVE_UP {"
+    assert t.count(a1) == 1
+    t = t.replace(a1, "function mapLineOf(a: readonly string[], b: readonly string[], line: number, trimTail = true): number | null | typeof GAVE_UP {")
+    a2 = "\tlet tail = 0;\n\twhile (tail < a.length - head"
+    assert t.count(a2) == 1, 'lm a2'
+    t = t.replace(a2, "\tlet tail = 0;\n\twhile (trimTail && tail < a.length - head")
+    t += '''
+/** SC-612 r1 probe: one greedy extreme ('head': only the common head trimmed, the forward diff over the rest; 'tail': the mirror). Null: changed or removed; 'gave up': more than LINE_MAP_MAX_EDITS. */
+export function mapLineGreedy(before: string, after: string, line: number, dir: 'head' | 'tail'): number | null | 'gave up' {
+	if (before === after) return line;
+	const a = splitLines(before);
+	const b = splitLines(after);
+	if (line < 0 || line >= a.length) return null;
+	if (dir === 'head') {
+		return mapLineOf(a, b, line, false);
+	}
+	const r = mapLineOf(a.slice().reverse(), b.slice().reverse(), a.length - 1 - line, false);
+	return r === null || r === GAVE_UP ? r : b.length - 1 - r;
+}
+
+/** SC-612 r1 probe: the two GREEDY extremes - head-first trims only the common head and runs the forward diff over the rest (the earliest
+ * pairing), tail-first trims only the common tail and runs the diff over the reversed rest (the latest pairing). A tie between identical
+ * blocks is seen even when an unrelated edit elsewhere stops one of the trims. */
+export function mapLineStrictPure(before: string, after: string, line: number): StrictLine {
+	if (before === after) return { line };
+	const a = splitLines(before);
+	const b = splitLines(after);
+	if (line < 0 || line >= a.length) return 'deleted';
+	const head = mapLineOf(a, b, line, false);
+	const r = mapLineOf(a.slice().reverse(), b.slice().reverse(), a.length - 1 - line, false);
+	const tail = r === null || r === GAVE_UP ? r : b.length - 1 - r;
+	if (head === GAVE_UP || tail === GAVE_UP) return 'gave up';
+	if (head === null && tail === null) return 'deleted';
+	return head !== null && head === tail ? { line: head } : 'disagree';
+}
+'''
+    if variant == 'N2all':
+        a3 = "\tconst head = mapLineOf(a, b, line);\n\tconst tail = fromTail(a, b, line);\n"
+        assert t.count(a3) == 1, 'lm a3'
+        t = t.replace(a3, "\tconst pure = mapLineStrictPure(before, after, line);\n\tif (typeof pure === 'string' && pure !== 'gave up') return pure;\n\tconst head = mapLineOf(a, b, line);\n\tconst tail = fromTail(a, b, line);\n\tif (typeof pure !== 'string' && head !== pure.line) return 'disagree';\n")
+    open(lm, 'w').write(t)
+
+f = tree + '/src/framework/host/ReadingModeBlockHost.ts'
+src = open(f).read()
+OLD = "\t\tif (strictPins.has(pin) && mapLineFromTail(pin.text, content, pin.lineStart) !== line) return null;\n"
+assert src.count(OLD) == 1, 'anchor 1'
+if variant in ('S', 'Snofb'):
+    new = (
+        "\t\t// SC-612: every pin is mapped strictly: of two identical blocks with identical surroundings, a deletion of one reads the same as a deletion of\n"
+        "\t\t// the other, and the head-first map's guess (the LOWER one deleted) must not place a write.\n"
+        + ("\t\tif (mapLineFromTail(pin.text, content, pin.lineStart) !== line) {\n"
+           "\t\t\tif (!strictPins.has(pin)) this.wholeStrictMiss = true;\n"
+           "\t\t\treturn null;\n"
+           "\t\t}\n" if variant == 'Snofb' else
+           "\t\tif (mapLineFromTail(pin.text, content, pin.lineStart) !== line) return null;\n")
+    )
+elif variant in ('N3', 'N3b'):
+    tailchk = ("\t\t\tif (dissent(mapLineFromTail(pin.text, content, pin.lineStart))) return null;\n" if variant == 'N3b'
+               else "\t\t\tif (mapLineFromTail(pin.text, content, pin.lineStart) !== line) return null;\n")
+    new = (
+        "\t\t// SC-612 r1 probe (N3): while the known body occurs twice, every alignment must put the block on `line`; an alignment that pairs the\n"
+        "\t\t// fence line with the fence of a block of ANOTHER body (fence lines are all alike) says nothing about twins and is not counted.\n"
+        "\t\tif (strictPins.has(pin) || this.twinned(content, pin)) {\n"
+        "\t\t\tconst known = this.knownBody;\n"
+        "\t\t\tconst dissent = (r: number | null | 'gave up'): boolean => {\n"
+        "\t\t\t\tif (r === line || r === 'gave up') return false; // a map with no answer says nothing about twins\n"
+        "\t\t\t\tif (r === null || known === null) return true;\n"
+        "\t\t\t\tconst f = this.fenceAt(content, r);\n"
+        "\t\t\t\treturn !(f && normalizeBody(f.body) !== normalizeBody(known));\n"
+        "\t\t\t};\n"
+        + tailchk +
+        "\t\t\tif (dissent(mapLineGreedy(pin.text, content, pin.lineStart, 'head')) || dissent(mapLineGreedy(pin.text, content, pin.lineStart, 'tail'))) return null;\n"
+        "\t\t}\n"
+    )
+elif PURE:
+    cond = 'true' if variant == 'S2' else '(strictPins.has(pin) || this.twinned(content, pin))'
+    new = (
+        "\t\t// SC-612 r1 probe (pure): the head-first answer must also be the answer of both greedy extremes\n"
+        f"\t\tif ({cond}) {{\n"
+        "\t\t\tconst pure = mapLineStrictPure(pin.text, content, pin.lineStart);\n"
+        "\t\t\tif (typeof pure === 'string' ? pure !== 'gave up' : pure.line !== line) return null;\n"
+        "\t\t\tif (mapLineFromTail(pin.text, content, pin.lineStart) !== line) return null;\n"
+        "\t\t}\n"
+    )
+elif variant in ('N', 'Ntwin1', 'Nnow'):
+    tw = {'N': 'this.twinned(content, pin)',
+          'Ntwin1': '(this.knownBody !== null && this.knownLanguage !== null && countByBody(pin.text, this.knownLanguage, this.knownBody) > 1)',
+          'Nnow': '(this.knownBody !== null && this.knownLanguage !== null && countByBody(content, this.knownLanguage, this.knownBody) > 1)'}[variant]
+    new = (
+        "\t\t// SC-612: a whole-note pin is mapped strictly too while the known body occurs twice (in the note as pinned or now): of two identical blocks\n"
+        "\t\t// with identical surroundings, a deletion of one reads the same as a deletion of the other, and the head-first guess must not place a write.\n"
+        f"\t\tif ((strictPins.has(pin) || {tw}) && mapLineFromTail(pin.text, content, pin.lineStart) !== line) return null;\n"
+    )
+else:
+    raise SystemExit('unknown variant ' + variant)
+src = src.replace(OLD, new)
+if PURE:
+    imp = "import { mapLine, mapLineFromTail, mapLineStrict } from './lineMap';"
+    assert src.count(imp) == 1
+    src = src.replace(imp, "import { mapLine, mapLineFromTail, mapLineGreedy, mapLineStrict, mapLineStrictPure } from './lineMap';")
+if variant == 'Snofb':
+    A2 = "\tprivate pinnedTarget(content: string, pin: BlockPin): { lineStart: number; lineEnd: number } | null {\n"
+    assert src.count(A2) == 1, 'anchor 2'
+    src = src.replace(A2, "\t/** SC-612 r1 probe: the last pinnedTarget miss was the strict check of a non-strict pin. */\n\tprivate wholeStrictMiss = false;\n" + A2)
+    A3 = "\t\t\t\tconst pinned = pin ? this.pinnedTarget(content, pin) : null;\n"
+    assert src.count(A3) == 1, 'anchor 3'
+    src = src.replace(A3, "\t\t\t\tthis.wholeStrictMiss = false;\n" + A3)
+    if True:
+        A4 = "\t\t\t\tconst partialCard = !pinned && pin !== null && (partialPins.has(pin) || strictPins.has(pin));\n"
+        assert src.count(A4) == 1, 'anchor 4'
+        src = src.replace(A4, "\t\t\t\tconst partialCard = !pinned && pin !== null && (partialPins.has(pin) || strictPins.has(pin) || this.wholeStrictMiss);\n")
+open(f, 'w').write(src)
+print('patched', variant)

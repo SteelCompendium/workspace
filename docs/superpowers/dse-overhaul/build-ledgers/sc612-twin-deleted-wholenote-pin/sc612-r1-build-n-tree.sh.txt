@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# build-n-tree.sh <log>: scratch export n-tree (63e00d7e + probe N, the ticket's idea narrowed), built; worktree untouched.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc612-r1-designer
+E=/home/scott/code/steelCompendium/worktrees/sc612-twin-deleted-wholenote-pin/draw-steel-elements
+mkdir -p "$S/n-tree"
+git -C "$E" archive 63e00d7e | tar -x -C "$S/n-tree"
+ln -sfn "$E/node_modules" "$S/n-tree/node_modules"
+python3 -I "$S/patch.py" N "$S/n-tree" >> "$1" 2>&1
+(cd "$S/n-tree" && node esbuild.config.mjs production) >> "$1" 2>&1
+echo "n-tree build_rc=$?" >> "$1"
+sha256sum "$S/n-tree/main.js" "$S/n-tree/styles.css" >> "$1"
+python3 -I "$S/make-scratch.py" "$S/n-tree" >> "$1" 2>&1

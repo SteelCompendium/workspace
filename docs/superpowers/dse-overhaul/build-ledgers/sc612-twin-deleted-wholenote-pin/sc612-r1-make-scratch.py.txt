@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+# make-scratch.py <tree>: copy <tree>/visual-harness/obsidian-lifecycle.mjs to obsidian-lifecycle-p612.mjs (same dir) with the P612 fixtures,
+# cells and edits, and the P612 scenario at the front of SCENARIOS. <tree> is a scratch export in the r1 designer folder (never the worktree).
+import sys
+R = '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc612-r1-designer/'
+T = sys.argv[1].rstrip('/') + '/'
+assert T.startswith(R), T
+src = open(T + 'visual-harness/obsidian-lifecycle.mjs').read()
+scen = open(R + 'p612-scenario.mjs').read()
+fixtures = r'''
+const P612_C = COUNTER(5, 'Twin');
+const P612_EDIT = {
+	'del-0': (s) => s.replace(`${P612_C}\n\n`, ''),
+	'del-1': (s) => { const i = s.lastIndexOf(`${P612_C}\n\n`); return s.slice(0, i) + s.slice(i + P612_C.length + 2); },
+	'del-1+top': (s) => P612_EDIT['del-1'](s).replace('TOP\n', 'TOP edited\n'),
+	'add': (s) => s.replace(`${P612_C}\n\n`, `${P612_C}\n\n${P612_C}\n\n`),
+};
+const P612_CELLS = [];
+for (const mode of ['rv', 'lp']) {
+	for (const [id, how, target, edit] of [
+		['f-up-del0', 'form', 0, 'del-0'], ['f-lo-del1', 'form', 1, 'del-1'], ['c-up-del0', 'card', 0, 'del-0'], ['c-lo-del1', 'card', 1, 'del-1'],
+		['f-lo-del1top', 'form', 1, 'del-1+top'], ['c-lo-del1top', 'card', 1, 'del-1+top'], ['f-up-add', 'form', 0, 'add'],
+		['f-ctl', 'form', 0, null], ['c-ctl', 'card', 0, null], ['c-twice', 'card-twice', 0, null], ['sib', 'sibling-then', 0, null],
+	]) {
+		P612_CELLS.push({ id, mode, how, target, edit });
+		FIXTURES[`Lifecycle/p612-${id}-${mode}.md`] = `# p612 ${id} ${mode}\n\nTOP\n\n${P612_C}\n\n${P612_C}\n\nBOTTOM\n`;
+	}
+}
+'''
+anchor = '\nconst SCENARIOS = [\n'
+assert src.count(anchor) == 1
+src = src.replace(anchor, '\n' + fixtures + anchor + scen)
+open(T + 'visual-harness/obsidian-lifecycle-p612.mjs', 'w').write(src)
+print('ok')

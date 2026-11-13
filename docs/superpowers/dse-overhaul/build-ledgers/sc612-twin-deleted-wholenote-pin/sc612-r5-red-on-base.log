@@ -1,0 +1,32 @@
+Tests:       31 failed, 866 passed, 897 total
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › a form in an embed whose part is the whole note, on the upper of two blank-line twins, the upper deleted and the last line edited, Save: refused (the greedy maps)
+  ● SC-612: editDistance › a changed line costs a deletion and an insertion
+  ● SC-612: editDistance › defaults to LINE_MAP_MAX_EDITS: a rewrite of more lines than that has no distance, an insertion of a few hundred lines has
+  ● SC-612: editDistance › is 0 for equal lines and the number of lines for an insertion or a deletion
+  ● SC-612: editDistance › is symmetric and counts the minimal diff, not the first one found (a repeated line)
+  ● SC-612: editDistance › null when the distance is more than the cap, the value when it is exactly the cap
+  ● SC-612: whole-note pin fuzz › seed 1: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+  ● SC-612: whole-note pin fuzz › seed 2: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+  ● SC-612: whole-note pin fuzz › seed 3: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+  ● SC-612: whole-note pins of identical blocks › card on the pinned UNTERMINATED trailing fence, an identical but CLOSED copy pasted above it: refused (the base wrote the copy)
+  ● SC-612: whole-note pins of identical blocks › form on the pinned UNTERMINATED trailing fence, an identical but CLOSED copy pasted above it: refused (the base wrote the copy)
+  ● SC-612: whole-note pins of identical blocks › H1b card on the lower twin, the lower deleted and the blank line under TOP deleted, a different counter below: refused
+  ● SC-612: whole-note pins of identical blocks › H1b form on the lower twin, the lower deleted and the blank line under TOP deleted, a different counter below: refused
+  ● SC-612: whole-note pins of identical blocks › H1 card on the lower twin, the lower deleted and TOP edited, a different counter below the run: refused
+  ● SC-612: whole-note pins of identical blocks › H1c card on the lower of the twins, the upper twin deleted and BOTTOM edited, a different counter above the run: refused
+  ● SC-612: whole-note pins of identical blocks › H1c form on the lower of the twins, the upper twin deleted and BOTTOM edited, a different counter above the run: refused
+  ● SC-612: whole-note pins of identical blocks › H1 form on the lower twin, the lower deleted and TOP edited, a different counter below the run: refused
+  ● SC-612: whole-note pins of identical blocks › T13 card on the MIDDLE of a run of three identical counters, the upper deleted: refused (the base writes the lowest one)
+  ● SC-612: whole-note pins of identical blocks › T13 form on the MIDDLE of a run of three identical counters, the upper deleted: refused (the base writes the lowest one)
+  ● SC-612: whole-note pins of identical blocks › T1/T2 card on the upper twin, the upper deleted from outside: nothing written, the Notice shows
+  ● SC-612: whole-note pins of identical blocks › T1/T2 form on the upper twin, the upper deleted from outside: nothing written, the Notice shows
+  ● SC-612: whole-note pins of identical blocks › T3 card on the lower twin, the lower deleted and TOP edited in the same write: refused (a tie: the lower twin deleted reads the same as the upper)
+  ● SC-612: whole-note pins of identical blocks › T3 form on the lower twin, the lower deleted and TOP edited in the same write: refused (a tie: the lower twin deleted reads the same as the upper)
+  ● SC-612: whole-note pins of identical blocks › T4 card on the upper twin, the upper deleted and BOTTOM edited in the same write: refused (a tie, with the unrelated edit on the other side)
+  ● SC-612: whole-note pins of identical blocks › T4 form on the upper twin, the upper deleted and BOTTOM edited in the same write: refused (a tie, with the unrelated edit on the other side)
+  ● SC-612: whole-note pins of identical blocks › T5b card on the upper twin, the lower deleted: refused too (the note reads the same as T1)
+  ● SC-612: whole-note pins of identical blocks › T5b form on the upper twin, the lower deleted: refused too (the note reads the same as T1)
+  ● SC-612: whole-note pins of identical blocks › T6 an identical counter added right below the form: refused, then the form reopened on the note as it is now saves into that block (not persistent)
+  ● SC-612: whole-note pins of identical blocks › T6b card on the upper twin: an identical counter added ABOVE the run with prose between: refused too (the new block and the pinned one are interchangeable, the accepted cost)
+  ● SC-612: whole-note pins of identical blocks › T6b form on the upper twin: an identical counter added ABOVE the run with prose between: refused too (the new block and the pinned one are interchangeable, the accepted cost)
+  ● SC-612: whole-note pin sweep › every cell: no write where the oracle sees a tie, one Notice per refusal, the next round saves, no refusal where nothing is ambiguous or changed

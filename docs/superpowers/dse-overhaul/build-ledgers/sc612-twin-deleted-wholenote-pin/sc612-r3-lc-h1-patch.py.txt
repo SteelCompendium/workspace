@@ -1,0 +1,30 @@
+#!/usr/bin/env python3
+# r3: turn G-S108 in a SCRATCH export into the H1 probe: a different counter (9) below the twin run; cells (e) form / (f) card on the lower twin,
+# the lower deleted + TOP edited, RV and LP each; plus (a) form upper / upper deleted (must stay refused). Expected on the tip: (e)/(f) write the survivor.
+import sys
+p = sys.argv[1]
+s = open(p).read()
+def rep(old, new, count=1):
+    global s
+    i = s.index("id: 'G-S108'") if 'cards(' in old or 'let b = 0' in old else 0
+    head, tail = s[:i], s[i:]
+    j = s.index("id: 'G-S56'", i) if i else len(s)
+    seg = s[i:j]
+    assert seg.count(old) == count, (old[:80], seg.count(old))
+    s = s[:i] + seg.replace(old, new) + s[j:]
+rep("FIXTURES[`Lifecycle/gs108-${id}.md`] = `# gs108 ${id}\\n\\nTOP\\n\\n${COUNTER(5, 'Twin')}\\n\\n${COUNTER(5, 'Twin')}\\n\\nBOTTOM\\n`;",
+    "FIXTURES[`Lifecycle/gs108-${id}.md`] = `# gs108 ${id}\\n\\nTOP\\n\\n${COUNTER(5, 'Twin')}\\n\\n${COUNTER(5, 'Twin')}\\n\\n${COUNTER(9, 'Other')}\\n\\nBOTTOM\\n`;")
+start = s.index("			const cells = [\n				['a-rv', 'rv', 'form', 0, 'del0'")
+end = s.index("			];", start)
+s = s[:start] + """			const cells = [
+				['a-rv', 'rv', 'form', 0, 'del0', 'H1d form on the upper twin, the upper deleted, a different counter below, Reading view'],
+				['e-rv', 'rv', 'form', 1, 'del1top', 'H1 form on the lower twin, the lower deleted and TOP edited, a different counter below, Reading view'],
+				['b-lp', 'lp', 'form', 1, 'del1top', 'H1 form on the lower twin, the lower deleted and TOP edited, a different counter below, Live Preview'],
+				['c-rv', 'rv', 'card', 1, 'del1top', 'H1 + on the lower twin, the lower deleted and TOP edited, a different counter below, Reading view'],
+				['f-lp', 'lp', 'card', 1, 'del1top', 'H1 + on the lower twin, the lower deleted and TOP edited, a different counter below, Live Preview'],
+""" + s[end:]
+rep("await t.waitFor(`window.__gs64.cards(${A}).length === 2`, `${label}: both cards are drawn`);", "await t.waitFor(`window.__gs64.cards(${A}).length === 3`, `${label}: all three cards are drawn`);")
+rep("							for (let b = 0; b < 2; b++) {\n								await t.ev(`(() => { const L = ${A}; const cm = L.view.editor.cm; const fl = window.__gs64.fences(cm); const pos = cm.state.doc.line(fl[${b}] + 1).from;",
+    "							for (let b = 0; b < 3; b++) {\n								await t.ev(`(() => { const L = ${A}; const cm = L.view.editor.cm; const fl = window.__gs64.fences(cm); const pos = cm.state.doc.line(fl[${b}] + 1).from;")
+open(p, 'w').write(s)
+print('patched')

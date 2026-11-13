@@ -1,0 +1,109 @@
+	{
+		// SC-612 r1 designer probe (scratch harness copy only; never committed). A note open in its OWN pane, two identical counters separated only by
+		// a blank line (TOP / BOTTOM prose around them). One P612-REC JSON line per cell; judged offline. One note per cell (card Notices are rate limited).
+		id: 'P612',
+		async run(t) {
+			const J = JSON.stringify;
+			const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+			const { FORM, SAVE } = formKit(t);
+			await t.ev(`(() => { if (!document.getElementById('lc-p612-notice')) { const st = document.createElement('style'); st.id = 'lc-p612-notice'; st.textContent = '.notice-container { display: none !important; }'; document.head.appendChild(st); } return true; })()`);
+			await t.ev(`${prefs}.set('authoringControls', true)`);
+			await t.ev(`(${gs64Page.toString()})()`);
+			const A = 'window.__gs64.A';
+			const stOf = (mode) => (mode === 'rv' ? { mode: 'preview' } : { mode: 'source', source: false });
+			const ONLY = (process.env.P612_CELLS ?? '').split(',').filter(Boolean);
+			const cells = P612_CELLS.filter((c) => ONLY.length === 0 || ONLY.includes(`${c.id}-${c.mode}`));
+			const outcomes = [];
+			const incr = (block) => `(window.__gs64.root(${A}, ${block})?.querySelector('button[aria-label^="Increase"]'))`;
+			const pencilOf = (block) => `(window.__gs64.root(${A}, ${block})?.querySelector('.dse-chrome button[data-dse-chrome-item="edit"], button[aria-label^="Edit "]'))`;
+			const formOpen = () => t.ev(`!!document.querySelector('.modal-container .dse-modal .dse-form__preview')`);
+			for (const c of cells) {
+				const rel = `Lifecycle/p612-${c.id}-${c.mode}.md`;
+				const rec = { id: c.id, mode: c.mode, how: c.how, target: c.target, edit: c.edit };
+				const mk = await t.mark();
+				try {
+					await t.ev(`(() => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); window.__gs64.A = app.workspace.getLeavesOfType('markdown')[0] ?? app.workspace.getMostRecentLeaf(); window.__gs64.B = null; return true; })()`);
+					await t.ev(`(async () => { await (${A}).setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true }); })()`);
+					await t.ev(`(async () => { await (${A}).setViewState({ type: 'markdown', state: { file: ${J(rel)}, ...${J(stOf(c.mode))} }, active: true }); })()`);
+					await t.waitFor(`(${A}).view?.file?.path === ${J(rel)}`, `${rel}: opened`);
+					if (c.mode === 'lp') {
+						await t.ev(`(${A}).view.editor.setCursor({ line: 0, ch: 0 })`);
+						for (let b = 0; b < 2; b++) {
+							await t.ev(`(() => { const L = ${A}; const cm = L.view.editor.cm; const fl = window.__gs64.fences(cm); const pos = cm.state.doc.line(fl[${b}] + 1).from; L.view.editor.scrollIntoView({ from: L.view.editor.offsetToPos(pos), to: L.view.editor.offsetToPos(pos) }, true); return true; })()`);
+							await t.waitFor(`window.__gs64.cardsRaw(${A}).some((c) => c.block === ${b})`, `${rel}: block ${b} is drawn`);
+						}
+						await t.ev(`(${A}).view.editor.setCursor({ line: 0, ch: 0 })`);
+					}
+					await t.waitFor(`window.__gs64.cards(${A}).length === 2`, `${rel}: both cards are drawn`);
+					await t.sleep(500);
+					rec.before = t.read(rel);
+					t.expect(rec.before === FIXTURES[rel], `${rel}: not the fixture`);
+					const edited = c.edit ? P612_EDIT[c.edit](rec.before) : null;
+					rec.edited = edited;
+					if (c.how === 'form') {
+						await t.waitFor(`!!${pencilOf(c.target)}`, `${rel}: the pencil is drawn`);
+						await t.ev(`${pencilOf(c.target)}.focus({ focusVisible: true })`);
+						await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', text: '\r', windowsVirtualKeyCode: 13, nativeVirtualKeyCode: 13 });
+						await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, nativeVirtualKeyCode: 13 });
+						await t.waitFor(`!!document.querySelector('.modal-container .dse-modal .dse-form__preview')`, `${rel}: the edit form opened`);
+						t.expect(await t.ev(`(() => { const ta = ${FORM}.querySelector('textarea.dse-form__raw'); if (!ta) return false; ta.value = ta.value.replace('name: Twin', 'name: Edited'); ta.dispatchEvent(new Event('input', { bubbles: true })); return true; })()`), `${rel}: no raw box`);
+						await t.waitFor(`!!(${SAVE}) && !(${SAVE}).disabled`, `${rel}: Save is enabled`);
+						if (edited !== null) {
+							await t.edit(rel, J(edited));
+							await t.sleep(1500); // the redraw of the outside edit
+						}
+						rec.formOpenAtSave = await formOpen();
+						if (rec.formOpenAtSave) {
+							const mp = await t.mark();
+							await t.ev(`(${SAVE}).click()`);
+							const t0 = Date.now();
+							while (Date.now() - t0 < 3000 && t.read(rel) === (edited ?? rec.before) && !(await t.noticesSince(mp)).length) await t.sleep(50);
+							await t.sleep(400);
+							rec.formOpenAfterSave = await formOpen();
+						}
+					} else if (c.how === 'card') {
+						const ok = await t.ev(`(() => { const b = ${incr(c.target)}; if (!b) return false; b.click(); return true; })()`);
+						t.expect(ok, `${rel}: no Increase button on block ${c.target}`);
+						if (edited !== null) await t.edit(rel, J(edited)); // at once: the + is still inside its 400 ms debounce
+						await t.sleep(2500);
+					} else if (c.how === 'card-twice') {
+						// the user's own rounds, no outside edit: + on the target, the write, and a second + right after it (the section may still be the old note)
+						const ok = await t.ev(`(() => { const b = ${incr(c.target)}; if (!b) return false; b.click(); return true; })()`);
+						t.expect(ok, `${rel}: no Increase button`);
+						const t0 = Date.now();
+						while (Date.now() - t0 < 2000 && t.read(rel) === rec.before) await t.sleep(5);
+						rec.firstWriteMs = Date.now() - t0;
+						rec.second = await t.ev(`(() => { const b = ${incr(c.target)}; if (!b) return false; b.click(); return true; })()`);
+						await t.sleep(2500);
+					} else if (c.how === 'sibling-then') {
+						// + on the OTHER twin, then + on the target inside the other's 400 ms round (the flush writes the sibling first)
+						const other = 1 - c.target;
+						t.expect(await t.ev(`(() => { const b = ${incr(other)}; if (!b) return false; b.click(); return true; })()`), `${rel}: no Increase button on the other block`);
+						await t.sleep(100);
+						t.expect(await t.ev(`(() => { const b = ${incr(c.target)}; if (!b) return false; b.click(); return true; })()`), `${rel}: no Increase button on the target`);
+						await t.sleep(2500);
+					}
+					rec.final = t.read(rel);
+					rec.values = t.counterValues(rel);
+					rec.names = (rec.final.match(/^name: (\w+)$/gm) ?? []).map((s) => s.slice(6));
+					rec.notices = (await t.noticesSince(mk)).filter((x) => /Draw Steel Elements/.test(x));
+					rec.untouched = rec.final === (edited ?? rec.before);
+				} catch (e) {
+					rec.error = e.message;
+				} finally {
+					for (let i = 0; i < 5 && (await t.ev(`!!document.querySelector('.modal-container')`)); i++) {
+						await t.ev(`(() => { const b = Array.from(document.querySelectorAll('.modal-container .dse-modal button')).find((x) => x.getAttribute('aria-label') === 'Cancel'); if (b) b.click(); return true; })()`);
+						await t.sleep(200);
+						if (await t.ev(`!!document.querySelector('.modal-container')`)) await t.key('Escape', 'Escape', 27).catch(() => {});
+						await t.sleep(200);
+					}
+				}
+				console.log('P612-REC ' + J(rec));
+				outcomes.push(`${c.id}-${c.mode}: ${J(rec.values)} ${J(rec.names)} notices ${rec.notices ? rec.notices.length : '?'}${rec.error ? ' ERROR ' + rec.error : ''}`);
+			}
+			await t.ev(`${prefs}.set('authoringControls', false)`);
+			await t.ev(`document.getElementById('lc-p612-notice')?.remove()`);
+			await t.open('Lifecycle/other.md');
+			return outcomes.join('; ');
+		},
+	},

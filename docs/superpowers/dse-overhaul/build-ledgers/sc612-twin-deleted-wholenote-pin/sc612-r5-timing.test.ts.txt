@@ -1,0 +1,61 @@
+// r3 probe: wall time of a form Save (replaceSource with a pin: everything inside vault.process) on a large note, median of 21.
+import * as fs from 'fs';
+import { ReadingModeBlockHost } from '../../../src/framework/host/ReadingModeBlockHost';
+import { resetDroppedWriteNotices } from '../../../src/framework/host/droppedWriteNotice';
+import { App, Notice, Plugin } from '../../mocks/obsidian';
+
+type Sec = { text: string; lineStart: number; lineEnd: number };
+const C = (n: number): string[] => ['```ds-counter', 'name: Twin', `current_value: ${n}`, '```'];
+function manyNote(k: number, edits: number, editTag: string): { text: string; fence: number } {
+	const out: string[] = [];
+	let fence = -1;
+	for (let i = 0; i < k; i++) {
+		for (let j = 0; j < 15; j++) out.push(i * 15 + j < edits / 2 || (k - i) * 15 - j <= edits / 2 ? `${editTag} ${i} ${j}` : `p ${i} ${j}`);
+		out.push('');
+		if (i === Math.floor(k / 2)) fence = out.length;
+		out.push(...C(5), '');
+	}
+	return { text: out.join('\n'), fence };
+}
+function note(lines: number, twin: boolean, edits: number, editTag: string): { text: string; fence: number } {
+	if (lines < 0) return manyNote(-lines, edits, editTag);
+	const half = Math.floor(lines / 2);
+	const out: string[] = [];
+	for (let i = 0; i < half; i++) out.push(i < edits / 2 ? `${editTag} above ${i}` : `line ${i}`);
+	out.push('');
+	const fence = out.length;
+	out.push(...C(5), '');
+	out.push(...(twin ? C(5) : C(9)), '');
+	for (let i = 0; i < half; i++) out.push(i >= half - edits / 2 ? `${editTag} below ${i}` : `tail ${i}`);
+	return { text: out.join('\n'), fence };
+}
+test('timing', async () => {
+	jest.spyOn(console, 'warn').mockImplementation(() => {});
+	const rows: string[] = [];
+	for (const [lines, edits] of [[2000, 20], [2000, 198], [5000, 198], [-100, 20], [-100, 198], [-300, 198]] as const)
+		for (const twin of (lines < 0 ? [true] : [false, true])) {
+			const times: number[] = [];
+			for (let r = 0; r < 21; r++) {
+				const before = note(lines, twin, edits, 'orig');
+				const after = note(lines, twin, edits, 'changed');
+				const app = new App();
+				app.vault.setFile('Note.md', before.text);
+				const section: { current: Sec | null } = { current: { text: before.text, lineStart: before.fence, lineEnd: before.fence + 3 } };
+				const ctx = { docId: 'd', sourcePath: 'Note.md', frontmatter: undefined, addChild: () => {}, getSectionInfo: () => section.current } as never;
+				const host = new ReadingModeBlockHost(new Plugin(app) as never, document.createElement('div'), ctx, 'ds-counter');
+				host.setMountedBody('name: Twin\ncurrent_value: 5');
+				resetDroppedWriteNotices();
+				Notice.notices.length = 0;
+				const pin = host.pinPosition()!;
+				app.vault.setFile('Note.md', after.text);
+				section.current = { text: after.text, lineStart: after.fence, lineEnd: after.fence + 3 };
+				const t0 = performance.now();
+				const ok = await host.replaceSource('name: Edited\ncurrent_value: 5', { pin, pinOnly: true });
+				times.push(performance.now() - t0);
+				if (r === 0) rows.push(`ok=${ok}`);
+			}
+			times.sort((a, b) => a - b);
+			rows.push(`${lines} lines, ${edits} edits (half above, half below), twin=${twin}: median ${times[10].toFixed(2)} ms, min ${times[0].toFixed(2)}, max ${times[20].toFixed(2)}`);
+		}
+	fs.writeFileSync(process.env.R3_OUT ?? '/dev/null', rows.join('\n') + '\n');
+}, 600000);

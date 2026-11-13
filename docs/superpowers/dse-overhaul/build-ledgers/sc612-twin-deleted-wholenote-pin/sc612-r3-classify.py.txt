@@ -1,0 +1,165 @@
+#!/usr/bin/env python3
+# r3: classify fuzz records of tip against base with an LCS placement oracle (independent of lineMap).
+import json, re, sys
+from collections import Counter, defaultdict
+
+SPLIT = re.compile(r'\r\n|\r|\n')
+FENCE = re.compile(r'^((?:> )?)```(\S*)$')
+
+
+def lines(t):
+    return SPLIT.split(t)
+
+
+def spans(ls):
+    out = []
+    i = 0
+    while i < len(ls):
+        m = FENCE.match(ls[i])
+        if not m:
+            i += 1
+            continue
+        pre = m.group(1)
+        j = i + 1
+        while j < len(ls) and ls[j] != pre + '```':
+            j += 1
+        if m.group(2) == 'ds-counter':
+            out.append((i, min(j, len(ls) - 1)))
+        i = j + 1
+    return out
+
+
+def lcs(a, b):
+    if not a or not b:
+        return 0
+    M = {}
+    for i, x in enumerate(a):
+        M[x] = M.get(x, 0) | (1 << i)
+    n = len(a)
+    mask = (1 << n) - 1
+    V = mask
+    for y in b:
+        U = V & M.get(y, 0)
+        V = ((V + U) | (V - U)) & mask
+    return n - bin(V).count('1')
+
+
+def dist(a, b):
+    return len(a) + len(b) - 2 * lcs(a, b)
+
+
+def placements(bt, at, pB):
+    a, b = lines(bt), lines(at)
+    dmin = dist(a, b)
+    sp = [x for x in spans(a) if x[0] == pB]
+    if not sp:
+        return None
+    s, e = sp[0]
+    blk = a[s:e + 1]
+    opts = []
+    for qs, qe in spans(b):
+        if b[qs:qe + 1] == blk and dist(a[:s], b[:qs]) + dist(a[e + 1:], b[qe + 1:]) == dmin:
+            opts.append(qs)
+    if dist(a[:s] + a[e + 1:], b) + len(blk) == dmin:
+        opts.append('deleted')
+    return opts
+
+
+def body_norm(ls, s, e):
+    body = [re.sub(r'^> ', '', x) for x in ls[s + 1:e + 1] if not re.match(r'^(> )?```$', x)]
+    return '\n'.join(body).rstrip()
+
+
+def twin_count(text, pB_body):
+    ls = lines(text)
+    return sum(1 for s, e in spans(ls) if body_norm(ls, s, e) == pB_body)
+
+
+def load(p):
+    d = {}
+    for l in open(p):
+        l = l.strip()
+        if not l:
+            continue
+        r = json.loads(l)
+        d[(r['id'], r['cons'])] = r
+    return d
+
+
+def main(tip_p, base_p, out_p):
+    tip, base = load(tip_p), load(base_p)
+    cache = {}
+    stats = Counter()
+    flips = Counter()
+    finds = defaultdict(list)
+    for k, r in tip.items():
+        b = base.get(k)
+        if 'err' in r:
+            finds['ERROR'].append((k, r['err']))
+            continue
+        stats['cells'] += 1
+        o = r['outcome']
+        bo = b['outcome'] if b else None
+        flips[(bo.split(':')[0] if bo else None, o.split(':')[0])] += 1
+        ck = (r['bt'], r['at'], r['pB'])
+        if ck not in cache:
+            cache[ck] = placements(*ck)
+        opts = cache[ck]
+        amb = opts is not None and len(opts) > 1
+        stats['ambiguous'] += amb
+        ls = lines(r['bt'])
+        sp = [x for x in spans(ls) if x[0] == r['pB']][0]
+        pbody = body_norm(ls, *sp)
+        tw = max(twin_count(r['bt'], pbody), twin_count(r['at'], pbody))
+        rec = dict(k=k, tag=r['tag'], ops=r['ops'], outcome=o, base=bo, opts=opts, pA=r['pA'], twins=tw)
+        # notices
+        if o == 'refused' and r['notices'] != ['disk']:
+            finds['notice-on-refusal'].append(rec)
+        if o != 'refused' and r['notices'] != []:
+            finds['notice-on-save'].append(rec)
+        if o.startswith('CORRUPT'):
+            finds['CORRUPT'].append(rec)
+        if o.startswith('OTHER'):
+            wid = o.split(':')[1]
+            # the written block's fence line in `at`
+            rec['wl'] = r.get('wl')
+            if amb:
+                finds['OTHER-in-ambiguous'].append(rec)
+            elif opts and opts[0] == r.get('wl'):
+                finds['OTHER-residual (oracle unique = written block: text-identical move/paste)'].append(rec)
+            else:
+                finds['OTHER-oracle-disagrees (oracle unique != written block)'].append(rec)
+        if o == 'A' and amb:
+            finds['A-in-ambiguous (lucky)'].append(rec)
+        if o == 'refused':
+            if not r['ops']:
+                finds['refused-no-edit'].append(rec)
+            if r['pA'] is not None and r.get('next') != 'A':
+                finds['next-round-not-saved'].append(rec)
+            if bo == 'A':
+                if tw <= 1:
+                    finds['NEW-refusal-without-twins'].append(rec)
+                elif opts == [r['pA']]:
+                    finds['NEW-refusal-unambiguous'].append(rec)
+                else:
+                    finds['new-refusal-ambiguous (cost class)'].append(rec)
+        if bo == 'refused' and o != 'refused':
+            finds['refused->written'].append(rec)
+        if bo and bo.startswith('OTHER') and o.startswith('OTHER') and bo != o:
+            finds['wrote X->wrote Y'].append(rec)
+        if bo == 'A' and o.startswith('OTHER'):
+            finds['A->OTHER'].append(rec)
+    with open(out_p, 'w') as f:
+        f.write(f'stats {dict(stats)}\n')
+        f.write('flips base->tip ' + json.dumps({f'{a}->{b}': n for (a, b), n in sorted(flips.items(), key=str)}) + '\n')
+        for name, xs in sorted(finds.items()):
+            f.write(f'\n== {name}: {len(xs)}\n')
+            byops = Counter(','.join(sorted(set(re.sub(r'[@:].*', '', o) for o in x['ops']))) if isinstance(x, dict) else 'x' for x in xs)
+            f.write('   by op-set: ' + json.dumps(byops.most_common(12)) + '\n')
+            for x in xs[:6]:
+                f.write('   ' + json.dumps(x)[:600] + '\n')
+    print(open(out_p).read()[:6000])
+
+
+if __name__ == '__main__':
+    main(*sys.argv[1:4])

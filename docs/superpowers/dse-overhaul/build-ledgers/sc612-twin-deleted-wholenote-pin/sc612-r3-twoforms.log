@@ -1,0 +1,18 @@
+##### base
+    F1 | B ok=true A ok=true | Ay:5 Bee:5 | notices=none | want Ay:5 Bee:5
+    F2 | A ok=true B ok=true | Ay:5 Bee:5 | notices=none | want Ay:5 Bee:5
+    F3 | B+ ok=true A ok=true | Ay:5 Twin:6 | notices=none | want Ay:5 Twin:6
+    F4 | A+ ok=true B ok=true | Twin:6 Bee:5 | notices=none | want Twin:6 Bee:5
+    F5 | B ok=false A ok=true | Ay:5 | notices=disk | want both refused (tie), Twin:5
+    F6 | a+ true c+ true mid ok=true | Twin:6 Mid:5 Twin:7 | notices=none | want Twin:6 Mid:5 Twin:7
+    F7 | A ok=false | Twin:6 | notices=disk | want refused (A deleted), Twin:6
+Tests:       7 passed, 7 total
+##### tip
+    F1 | B ok=true A ok=true | Ay:5 Bee:5 | notices=none | want Ay:5 Bee:5
+    F2 | A ok=true B ok=true | Ay:5 Bee:5 | notices=none | want Ay:5 Bee:5
+    F3 | B+ ok=true A ok=true | Ay:5 Twin:6 | notices=none | want Ay:5 Twin:6
+    F4 | A+ ok=true B ok=true | Twin:6 Bee:5 | notices=none | want Twin:6 Bee:5
+    F5 | B ok=false A ok=false | Twin:5 | notices=disk|disk | want both refused (tie), Twin:5
+    F6 | a+ true c+ true mid ok=true | Twin:6 Mid:5 Twin:7 | notices=none | want Twin:6 Mid:5 Twin:7
+    F7 | A ok=false | Twin:6 | notices=disk | want refused (A deleted), Twin:6
+Tests:       7 passed, 7 total

@@ -1,0 +1,57 @@
+--- a/src/framework/host/ReadingModeBlockHost.ts (1a8f624c)
++++ b/src/framework/host/ReadingModeBlockHost.ts (r3 PROTOTYPE 2, NOT production: O(n*m) DP)
+@@ -1175,8 +1175,8 @@
+ 		// by blank lines, a deletion of one reads exactly like a deletion of the other, and the head-first map's guess must not place a write (the form or
+ 		// card would land in a block that only looks like its own). The greedy maps see the same tie when an unrelated edit elsewhere fixed the trims.
+ 		const twin = this.twinned(content, pin);
+-		if ((strictPins.has(pin) || twin) && mapLineFromTail(pin.text, content, pin.lineStart) !== line) return null;
+-		if (twin && (this.greedyDissents(content, pin, line, 'head') || this.greedyDissents(content, pin, line, 'tail'))) return null;
++		if (strictPins.has(pin) && mapLineFromTail(pin.text, content, pin.lineStart) !== line) return null;
++		if (twin && !this.blockMapsAgree(content, pin, line)) return null;
+ 		const fence = this.fenceAt(content, line);
+ 		if (!fence) return null;
+ 		if (this.knownBody !== null && normalizeBody(fence.body) !== normalizeBody(this.knownBody)) return null;
+@@ -1196,6 +1196,43 @@
+ 		return !(fence && normalizeBody(fence.body) !== normalizeBody(this.knownBody));
+ 	}
+ 
++
++	/** r3 PROTOTYPE 2: place only when the pinned block's unique minimal-edit placement (paired with a line-identical block of the note now, or deleted) is `line`. */
++	private blockMapsAgree(content: string, pin: BlockPin, line: number): boolean {
++		const language = this.knownLanguage ?? this.alias;
++		const spansOf = (lines: string[], text: string): Array<[number, number]> => {
++			const out: Array<[number, number]> = listFences(text, language).map((f) => [f.lineStart, f.lineEnd]);
++			const u = locateUnterminatedTrailingFence(lines, language);
++			if (u) out.push([u.lineStart, u.lineEnd]);
++			return out;
++		};
++		const lcs = (a: string[], b: string[]): number => {
++			let prev = new Int32Array(b.length + 1);
++			for (let i = 0; i < a.length; i++) {
++				const cur = new Int32Array(b.length + 1);
++				for (let j = 0; j < b.length; j++) cur[j + 1] = a[i] === b[j] ? prev[j] + 1 : Math.max(prev[j + 1], cur[j]);
++				prev = cur;
++			}
++			return prev[b.length];
++		};
++		const dist = (a: string[], b: string[]) => a.length + b.length - 2 * lcs(a, b);
++		const A = splitLines(pin.text);
++		const B = splitLines(content);
++		const sp = spansOf(A, pin.text).find(([x]) => x === pin.lineStart);
++		if (!sp) return true;
++		const [s0, e0] = sp;
++		const blk = A.slice(s0, e0 + 1).join('\n');
++		const costs: Array<[number | 'deleted', number]> = [];
++		for (const [qs, qe] of spansOf(B, content)) {
++			if (B.slice(qs, qe + 1).join('\n') !== blk) continue;
++			costs.push([qs, dist(A.slice(0, s0), B.slice(0, qs)) + dist(A.slice(e0 + 1), B.slice(qe + 1))]);
++		}
++		costs.push(['deleted', dist([...A.slice(0, s0), ...A.slice(e0 + 1)], B) + (e0 - s0 + 1)]);
++		const min = Math.min(...costs.map(([, c]) => c));
++		const best = costs.filter(([, c]) => c === min).map(([q]) => q);
++		return best.length === 1 && best[0] === line;
++	}
++
+ 	/** SC-480: another block holds this block's body, in the note as the pin was taken (`pin.text`) or in `content` now. */
+ 	private twinned(content: string, pin: BlockPin): boolean {
+ 		if (this.knownBody === null || this.knownLanguage === null) return false;

@@ -1,0 +1,66 @@
+##### base
+    H1 lower twin deleted + TOP edited, a different counter below the run | form | wrote counter #0 (pinned was DELETED: a different block) | ok=true | notices=none
+    H1 lower twin deleted + TOP edited, a different counter below the run | card | wrote counter #0 (pinned was DELETED: a different block) | ok=true | notices=none
+    H1b lower twin deleted + the blank line under TOP deleted, a different counter below | form | wrote counter #0 (pinned was DELETED: a different block) | ok=true | notices=none
+    H1b lower twin deleted + the blank line under TOP deleted, a different counter below | card | wrote counter #0 (pinned was DELETED: a different block) | ok=true | notices=none
+    H1c upper twin deleted + END edited, a different counter above the run | form | wrote counter #1 (pinned was DELETED: a different block) | ok=true | notices=none
+    H1c upper twin deleted + END edited, a different counter above the run | card | wrote counter #1 (pinned was DELETED: a different block) | ok=true | notices=none
+    H1d upper twin deleted + the other twin bumped... no: upper deleted + TOP edited, different counter below (pin upper) | form | refused | ok=false | notices=disk
+    H1d upper twin deleted + the other twin bumped... no: upper deleted + TOP edited, different counter below (pin upper) | card | refused | ok=false | notices=disk
+    M1 a different counter tight above the pinned one deleted, twin elsewhere (unambiguous) | form | wrote counter #0 (the pinned one) | ok=true | notices=none
+    M1 a different counter tight above the pinned one deleted, twin elsewhere (unambiguous) | card | wrote counter #0 (the pinned one) | ok=true | notices=none
+    M2 the other twin bumped + a different counter added below (unambiguous) | form | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M2 the other twin bumped + a different counter added below (unambiguous) | card | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M3 three identical, a blank line removed above the pinned one + a different counter added below it (unambiguous) | form | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M3 three identical, a blank line removed above the pinned one + a different counter added below it (unambiguous) | card | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M4 a different counter added right below the pinned twin (unambiguous, nothing else) | form | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M4 a different counter added right below the pinned twin (unambiguous, nothing else) | card | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M5 a different counter added right below the pinned twin + TOP edited | form | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M5 a different counter added right below the pinned twin + TOP edited | card | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M6 the other twin bumped (a sibling +) + a different counter added below the pinned one | form | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M6 the other twin bumped (a sibling +) + a different counter added below the pinned one | card | wrote counter #1 (the pinned one) | ok=true | notices=none
+Tests:       20 passed, 20 total
+##### tip
+    H1 lower twin deleted + TOP edited, a different counter below the run | form | wrote counter #0 (pinned was DELETED: a different block) | ok=true | notices=none
+    H1 lower twin deleted + TOP edited, a different counter below the run | card | wrote counter #0 (pinned was DELETED: a different block) | ok=true | notices=none
+    H1b lower twin deleted + the blank line under TOP deleted, a different counter below | form | wrote counter #0 (pinned was DELETED: a different block) | ok=true | notices=none
+    H1b lower twin deleted + the blank line under TOP deleted, a different counter below | card | wrote counter #0 (pinned was DELETED: a different block) | ok=true | notices=none
+    H1c upper twin deleted + END edited, a different counter above the run | form | refused | ok=false | notices=disk
+    H1c upper twin deleted + END edited, a different counter above the run | card | refused | ok=false | notices=disk
+    H1d upper twin deleted + the other twin bumped... no: upper deleted + TOP edited, different counter below (pin upper) | form | refused | ok=false | notices=disk
+    H1d upper twin deleted + the other twin bumped... no: upper deleted + TOP edited, different counter below (pin upper) | card | refused | ok=false | notices=disk
+    M1 a different counter tight above the pinned one deleted, twin elsewhere (unambiguous) | form | refused | ok=false | notices=disk
+    M1 a different counter tight above the pinned one deleted, twin elsewhere (unambiguous) | card | refused | ok=false | notices=disk
+    M2 the other twin bumped + a different counter added below (unambiguous) | form | refused | ok=false | notices=disk
+    M2 the other twin bumped + a different counter added below (unambiguous) | card | refused | ok=false | notices=disk
+    M3 three identical, a blank line removed above the pinned one + a different counter added below it (unambiguous) | form | refused | ok=false | notices=disk
+    M3 three identical, a blank line removed above the pinned one + a different counter added below it (unambiguous) | card | refused | ok=false | notices=disk
+    M4 a different counter added right below the pinned twin (unambiguous, nothing else) | form | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M4 a different counter added right below the pinned twin (unambiguous, nothing else) | card | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M5 a different counter added right below the pinned twin + TOP edited | form | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M5 a different counter added right below the pinned twin + TOP edited | card | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M6 the other twin bumped (a sibling +) + a different counter added below the pinned one | form | refused | ok=false | notices=disk
+    M6 the other twin bumped (a sibling +) + a different counter added below the pinned one | card | refused | ok=false | notices=disk
+Tests:       20 passed, 20 total
+##### proto
+    H1 lower twin deleted + TOP edited, a different counter below the run | form | refused | ok=false | notices=disk
+    H1 lower twin deleted + TOP edited, a different counter below the run | card | refused | ok=false | notices=disk
+    H1b lower twin deleted + the blank line under TOP deleted, a different counter below | form | refused | ok=false | notices=disk
+    H1b lower twin deleted + the blank line under TOP deleted, a different counter below | card | refused | ok=false | notices=disk
+    H1c upper twin deleted + END edited, a different counter above the run | form | refused | ok=false | notices=disk
+    H1c upper twin deleted + END edited, a different counter above the run | card | refused | ok=false | notices=disk
+    H1d upper twin deleted + the other twin bumped... no: upper deleted + TOP edited, different counter below (pin upper) | form | refused | ok=false | notices=disk
+    H1d upper twin deleted + the other twin bumped... no: upper deleted + TOP edited, different counter below (pin upper) | card | refused | ok=false | notices=disk
+    M1 a different counter tight above the pinned one deleted, twin elsewhere (unambiguous) | form | wrote counter #0 (the pinned one) | ok=true | notices=none
+    M1 a different counter tight above the pinned one deleted, twin elsewhere (unambiguous) | card | wrote counter #0 (the pinned one) | ok=true | notices=none
+    M2 the other twin bumped + a different counter added below (unambiguous) | form | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M2 the other twin bumped + a different counter added below (unambiguous) | card | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M3 three identical, a blank line removed above the pinned one + a different counter added below it (unambiguous) | form | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M3 three identical, a blank line removed above the pinned one + a different counter added below it (unambiguous) | card | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M4 a different counter added right below the pinned twin (unambiguous, nothing else) | form | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M4 a different counter added right below the pinned twin (unambiguous, nothing else) | card | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M5 a different counter added right below the pinned twin + TOP edited | form | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M5 a different counter added right below the pinned twin + TOP edited | card | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M6 the other twin bumped (a sibling +) + a different counter added below the pinned one | form | wrote counter #1 (the pinned one) | ok=true | notices=none
+    M6 the other twin bumped (a sibling +) + a different counter added below the pinned one | card | wrote counter #1 (the pinned one) | ok=true | notices=none
+Tests:       20 passed, 20 total

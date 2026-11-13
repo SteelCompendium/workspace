@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+# mutate.py <mutant> <tree>: one mutation of the R rule (already applied to <tree>).
+import sys
+m, tree = sys.argv[1], sys.argv[2].rstrip('/')
+H = tree + '/src/framework/host/ReadingModeBlockHost.ts'
+LM = tree + '/src/framework/host/lineMap.ts'
+MUT = {
+    # M1 no greedy checks (= N, the ticket's idea narrowed)
+    'M1': (H, "\t\tif (twin && (this.greedyDissents(content, pin, line, 'head') || this.greedyDissents(content, pin, line, 'tail'))) return null;\n", ''),
+    # M2 no tail-first check for whole-note twins (greedy only)
+    'M2': (H, "\t\tif ((strictPins.has(pin) || twin) && mapLineFromTail(", "\t\tif (strictPins.has(pin) && mapLineFromTail("),
+    # M3 every greedy dissent counts (no exemption for a fence of another body)
+    'M3': (H, "\t\treturn !(fence && normalizeBody(fence.body) !== normalizeBody(this.knownBody));\n", "\t\treturn true;\n"),
+    # M4 a greedy map that gave up counts as a dissent
+    'M4': (H, "\t\tif (at === line || at === 'gave up') return false;\n", "\t\tif (at === line) return false;\n\t\tif (at === 'gave up') return true;\n"),
+    # M5 only the head greedy map
+    'M5': (H, " || this.greedyDissents(content, pin, line, 'tail'))) return null;", ")) return null;"),
+    # M6 only the tail greedy map
+    'M6': (H, "(this.greedyDissents(content, pin, line, 'head') || ", "("),
+    # M7 the greedy maps trim both ends (= mapLine / mapLineFromTail again)
+    'M7': (LM, "\twhile (trimTail && tail < a.length - head", "\twhile (tail < a.length - head"),
+    # M8 twin = every pin (strict for every whole-note pin, S + greedy)
+    'M8': (H, "\t\tconst twin = this.twinned(content, pin);\n", "\t\tconst twin = true;\n"),
+}
+f, old, new = MUT[m]
+s = open(f).read()
+assert s.count(old) == 1, (m, 'anchor')
+open(f, 'w').write(s.replace(old, new))
+print('mutant', m)

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# run-sweep.sh <variant|base> <records-out> <log>: patch the worktree's host with the probe <variant> (none for base), copy the sweep test in,
+# run it, delete the test by its literal path, restore the host with git checkout. Records rc in the log.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc612-r1-designer
+E=/home/scott/code/steelCompendium/worktrees/sc612-twin-deleted-wholenote-pin/draw-steel-elements
+cd "$E" || exit 9
+[ "$(git -C "$E" branch --show-current)" = sc612-twin-deleted-wholenote-pin ] || { echo "wrong branch" > "$3"; exit 9; }
+rm -f "$E/main.js" "$E/styles.css"
+: > "$2"
+: > "$3"
+if [ "$1" != base ]; then python3 -I "$S/patch.py" "$1" "$E" >> "$3" 2>&1 || { echo "patch failed" >> "$3"; git -C "$E" checkout -- src/framework/host/ReadingModeBlockHost.ts src/framework/host/lineMap.ts; exit 9; }; fi
+cp "$S/sc612-r1-sweep.test.ts" "$E/test/dom/framework/sc612-r1-sweep.test.ts"
+SC612_TEXTS="${SC612_TEXTS:-0}" SC612_OUT="$2" SC612_TAG="$1" npx jest test/dom/framework/sc612-r1-sweep.test.ts >> "$3" 2>&1
+rc=$?
+rm -f "$E/test/dom/framework/sc612-r1-sweep.test.ts"
+git -C "$E" checkout -- src/framework/host/ReadingModeBlockHost.ts src/framework/host/lineMap.ts
+echo "sweep_rc=$rc records=$(wc -l < "$2")" >> "$3"
+git -C "$E" status --porcelain >> "$3"

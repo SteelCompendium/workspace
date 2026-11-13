@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# make-diffs.sh: the probe diffs of S, N, N3 (the Obsidian probe bundle) against 63e00d7e; the worktree restored after each.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc612-r1-designer
+E=/home/scott/code/steelCompendium/worktrees/sc612-twin-deleted-wholenote-pin/draw-steel-elements
+cd "$E" || exit 9
+for v in S N N3; do
+  python3 -I "$S/patch.py" "$v" "$E" > /dev/null
+  git -C "$E" diff > "$S/probe-$v.diff"
+  git -C "$E" checkout -- src/framework/host/ReadingModeBlockHost.ts src/framework/host/lineMap.ts
+done
+git -C "$E" status --porcelain

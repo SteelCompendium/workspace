@@ -1,0 +1,30 @@
+--- a/src/framework/host/ReadingModeBlockHost.ts (a06dba37)
++++ b/src/framework/host/ReadingModeBlockHost.ts (r5 prototype: whitespace-touched head-first block stays a candidate)
+@@ -1207,13 +1207,25 @@
+ 		const pre = A.slice(0, s);
+ 		const suf = A.slice(e + 1);
+ 		const same = this.blockSpans(content).filter(([q, qe]) => qe - q === e - s && blk.every((l, i) => B[q + i] === l));
+-		const here = same.find(([q]) => q === line);
++		let here = same.find(([q]) => q === line);
++		// r5 PROTOTYPE (narrow): the head-first block changed only in what normalizeBody ignores (trailing whitespace) is still a candidate, priced with its own line edits
++		const headSpan = here ? undefined : this.blockSpans(content).find(([q]) => q === line);
++		if (!here && headSpan && headSpan[1] - headSpan[0] === e - s) {
++			const f = this.fenceAt(content, line);
++			const own = this.fenceAt(pin.text, s);
++			if (f && own && normalizeBody(f.body) === normalizeBody(own.body)) {
++				here = headSpan;
++				same.push(here);
++			}
++		}
+ 		if (!here) return false;
+ 		const around = ([q, qe]: [number, number], cap: number): number | null => {
+ 			const before = editDistance(pre, B.slice(0, q), cap);
+ 			if (before === null) return null;
+ 			const after = editDistance(suf, B.slice(qe + 1), cap - before);
+-			return after === null ? null : before + after;
++			if (after === null) return null;
++			const inner = editDistance(blk, B.slice(q, qe + 1), cap - before - after);
++			return inner === null ? null : before + after + inner;
+ 		};
+ 		const best = around(here, LINE_MAP_MAX_EDITS);
+ 		if (best === null) return true;

@@ -1,0 +1,122 @@
+// r3 probe: two forms open at once on identical counters, and a sibling's own write inside the round. Prints the values / names per counter.
+import { ReadingModeBlockHost } from '../../../src/framework/host/ReadingModeBlockHost';
+import { droppedWriteMessage, resetDroppedWriteNotices } from '../../../src/framework/host/droppedWriteNotice';
+import { App, Notice, Plugin } from '../../mocks/obsidian';
+
+type Sec = { text: string; lineStart: number; lineEnd: number };
+const C = (n: number, name = 'Twin'): string[] => ['```ds-counter', `name: ${name}`, `current_value: ${n}`, '```'];
+const fencesOf = (text: string): number[] => text.split('\n').map((l, i) => (l === '```ds-counter' ? i : -1)).filter((i) => i >= 0);
+const sectionAt = (text: string, fence: number): Sec => {
+	const ls = text.split('\n');
+	let end = fence + 1;
+	while (end < ls.length && ls[end] !== '```') end++;
+	return { text, lineStart: fence, lineEnd: end };
+};
+const N = (...p: string[][]) => p.flat().join('\n');
+function mk(app: App, text: string, i: number, body: string) {
+	const section: { current: Sec | null } = { current: sectionAt(text, fencesOf(text)[i]) };
+	const ctx = { docId: 'd', sourcePath: 'Note.md', frontmatter: undefined, addChild: () => {}, getSectionInfo: () => section.current } as never;
+	const host = new ReadingModeBlockHost(new Plugin(app) as never, document.createElement('div'), ctx, 'ds-counter');
+	host.setMountedBody(body);
+	return { host, section };
+}
+const blocks = (app: App) => [...app.vault.getContent('Note.md')!.matchAll(/name: (\w+)\ncurrent_value: (\d+)/g)].map((m) => `${m[1]}:${m[2]}`).join(' ');
+const notes = () => Notice.notices.map((n) => (n === droppedWriteMessage('Note') ? 'disk' : n)).join('|') || 'none';
+const out: string[] = [];
+afterAll(() => console.log(out.join('\n')));
+beforeEach(() => {
+	jest.spyOn(console, 'warn').mockImplementation(() => {});
+	resetDroppedWriteNotices();
+	Notice.notices.length = 0;
+});
+const twins = N(['# N', '', 'TOP', ''], C(5), [''], C(5), ['', 'END']);
+const triple = N(['# N', '', 'TOP', ''], C(5), [''], C(5), [''], C(5), ['', 'END']);
+const B5 = 'name: Twin\ncurrent_value: 5';
+
+test('F1 two forms open (upper A, lower B), no outside edit: B saves, then A saves', async () => {
+	const app = new App();
+	app.vault.setFile('Note.md', twins);
+	const a = mk(app, twins, 0, B5);
+	const b = mk(app, twins, 1, B5);
+	const pa = a.host.pinPosition()!;
+	const pb = b.host.pinPosition()!;
+	const okb = await b.host.replaceSource('name: Bee\ncurrent_value: 5', { pin: pb, pinOnly: true });
+	const oka = await a.host.replaceSource('name: Ay\ncurrent_value: 5', { pin: pa, pinOnly: true });
+	out.push(`F1 | B ok=${okb} A ok=${oka} | ${blocks(app)} | notices=${notes()} | want Ay:5 Bee:5`);
+});
+test('F2 two forms open, A saves first, then B', async () => {
+	const app = new App();
+	app.vault.setFile('Note.md', twins);
+	const a = mk(app, twins, 0, B5);
+	const b = mk(app, twins, 1, B5);
+	const pa = a.host.pinPosition()!;
+	const pb = b.host.pinPosition()!;
+	const oka = await a.host.replaceSource('name: Ay\ncurrent_value: 5', { pin: pa, pinOnly: true });
+	const okb = await b.host.replaceSource('name: Bee\ncurrent_value: 5', { pin: pb, pinOnly: true });
+	out.push(`F2 | A ok=${oka} B ok=${okb} | ${blocks(app)} | notices=${notes()} | want Ay:5 Bee:5`);
+});
+test('F3 form open on upper A; the lower twin card + (sibling write); then A saves', async () => {
+	const app = new App();
+	app.vault.setFile('Note.md', twins);
+	const a = mk(app, twins, 0, B5);
+	const b = mk(app, twins, 1, B5);
+	const pa = a.host.pinPosition()!;
+	b.host.notePersistIntent();
+	const okb = await b.host.replaceSource('name: Twin\ncurrent_value: 6', { fromView: true });
+	const oka = await a.host.replaceSource('name: Ay\ncurrent_value: 5', { pin: pa, pinOnly: true });
+	out.push(`F3 | B+ ok=${okb} A ok=${oka} | ${blocks(app)} | notices=${notes()} | want Ay:5 Twin:6`);
+});
+test('F4 form open on lower B; the upper twin card + (sibling write); then B saves', async () => {
+	const app = new App();
+	app.vault.setFile('Note.md', twins);
+	const a = mk(app, twins, 0, B5);
+	const b = mk(app, twins, 1, B5);
+	const pb = b.host.pinPosition()!;
+	a.host.notePersistIntent();
+	const oka = await a.host.replaceSource('name: Twin\ncurrent_value: 6', { fromView: true });
+	const okb = await b.host.replaceSource('name: Bee\ncurrent_value: 5', { pin: pb, pinOnly: true });
+	out.push(`F4 | A+ ok=${oka} B ok=${okb} | ${blocks(app)} | notices=${notes()} | want Twin:6 Bee:5`);
+});
+test('F5 two forms open; outside deletes the upper; B saves, then A saves', async () => {
+	const app = new App();
+	app.vault.setFile('Note.md', twins);
+	const a = mk(app, twins, 0, B5);
+	const b = mk(app, twins, 1, B5);
+	const pa = a.host.pinPosition()!;
+	const pb = b.host.pinPosition()!;
+	const after = N(['# N', '', 'TOP', ''], C(5), ['', 'END']);
+	app.vault.setFile('Note.md', after);
+	a.section.current = null;
+	b.section.current = sectionAt(after, fencesOf(after)[0]);
+	const okb = await b.host.replaceSource('name: Bee\ncurrent_value: 5', { pin: pb, pinOnly: true });
+	const oka = await a.host.replaceSource('name: Ay\ncurrent_value: 5', { pin: pa, pinOnly: true });
+	out.push(`F5 | B ok=${okb} A ok=${oka} | ${blocks(app)} | notices=${notes()} | want both refused (tie), Twin:5`);
+});
+test('F6 three twins, form on the middle; both neighbours bumped by their cards; then the middle saves', async () => {
+	const app = new App();
+	app.vault.setFile('Note.md', triple);
+	const a = mk(app, triple, 0, B5);
+	const m = mk(app, triple, 1, B5);
+	const c = mk(app, triple, 2, B5);
+	const pm = m.host.pinPosition()!;
+	a.host.notePersistIntent();
+	c.host.notePersistIntent();
+	const r1 = await a.host.replaceSource('name: Twin\ncurrent_value: 6', { fromView: true });
+	const r2 = await c.host.replaceSource('name: Twin\ncurrent_value: 7', { fromView: true });
+	const okm = await m.host.replaceSource('name: Mid\ncurrent_value: 5', { pin: pm, pinOnly: true });
+	out.push(`F6 | a+ ${r1} c+ ${r2} mid ok=${okm} | ${blocks(app)} | notices=${notes()} | want Twin:6 Mid:5 Twin:7`);
+});
+test('F7 form on upper A; a + on lower B, then the outside deletes the upper (the lower already 6); A saves', async () => {
+	const app = new App();
+	app.vault.setFile('Note.md', twins);
+	const a = mk(app, twins, 0, B5);
+	const b = mk(app, twins, 1, B5);
+	const pa = a.host.pinPosition()!;
+	b.host.notePersistIntent();
+	await b.host.replaceSource('name: Twin\ncurrent_value: 6', { fromView: true });
+	const now = app.vault.getContent('Note.md')!;
+	const after = now.replace(['```ds-counter', 'name: Twin', 'current_value: 5', '```', '', ''].join('\n'), '');
+	app.vault.setFile('Note.md', after);
+	const oka = await a.host.replaceSource('name: Ay\ncurrent_value: 5', { pin: pa, pinOnly: true });
+	out.push(`F7 | A ok=${oka} | ${blocks(app)} | notices=${notes()} | want refused (A deleted), Twin:6`);
+});

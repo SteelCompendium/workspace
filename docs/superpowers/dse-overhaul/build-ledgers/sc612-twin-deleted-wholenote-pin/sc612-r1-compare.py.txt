@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+# compare.py <base.jsonl> <probe.jsonl> [label]: outcome table and every flip base -> probe (cell key: layout/pinned/edit/cons).
+import json, sys, collections
+
+def load(p):
+    d = {}
+    for l in open(p):
+        r = json.loads(l)
+        d[(r['layout'], r['pinned'], r['edit'], r['cons'])] = r
+    return d
+
+b, p = load(sys.argv[1]), load(sys.argv[2])
+label = sys.argv[3] if len(sys.argv) > 3 else 'probe'
+assert b.keys() == p.keys(), 'cell sets differ'
+cls = lambda o: 'A' if o == 'A' else 'refused' if o == 'refused' else 'OTHER' if o.startswith('OTHER') else o
+tb = collections.Counter(cls(r['outcome']) for r in b.values())
+tp = collections.Counter(cls(r['outcome']) for r in p.values())
+print(f'cells {len(b)}')
+print(f'{"":10} {"base":>6} {label:>6}')
+for k in sorted(set(tb) | set(tp)):
+    print(f'{k:10} {tb[k]:6} {tp[k]:6}')
+flips = collections.defaultdict(list)
+for k in sorted(b):
+    ob, op = b[k]['outcome'], p[k]['outcome']
+    if ob != op or b[k].get('notice') != p[k].get('notice'):
+        flips[(cls(ob), cls(op))].append((k, ob, op, b[k].get('notice'), p[k].get('notice'), p[k].get('next')))
+for (fb, fp), rows in sorted(flips.items()):
+    print(f'\n== {fb} -> {fp}: {len(rows)}')
+    for k, ob, op, nb, np_, nx in rows:
+        print(f'  {"/".join(k):60} {ob:10} -> {op:10} notice {nb} -> {np_}  next={nx}')
+# probe refusals: the Notice kind and the next round
+ref = [r for r in p.values() if r['outcome'] == 'refused']
+print(f'\nprobe refusals {len(ref)}: notice kinds {dict(collections.Counter(r["notice"] for r in ref))}; next round {dict(collections.Counter(r.get("next", "n/a") for r in ref))}')
+bad_next = [r for r in ref if r.get('next') not in (None, 'A')]
+print(f'probe refusals whose next round does not save the block: {len(bad_next)}')
+for r in bad_next:
+    print('  ', r['layout'], r['pinned'], r['edit'], r['cons'], r.get('next'))
+saves_notice = [r for r in p.values() if r['outcome'] != 'refused' and r.get('notice') not in ('none', None)]
+print(f'probe saves with a Notice: {len(saves_notice)}')
+other = [r for r in p.values() if str(r['outcome']).startswith('OTHER')]
+print(f'probe OTHER cells (all): {len(other)}')
+for r in other:
+    print('  ', r['layout'], r['pinned'], r['edit'], r['cons'], r['outcome'], 'base:', b[(r['layout'], r['pinned'], r['edit'], r['cons'])]['outcome'])

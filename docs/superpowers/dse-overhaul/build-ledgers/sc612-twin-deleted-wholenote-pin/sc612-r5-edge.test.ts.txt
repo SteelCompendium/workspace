@@ -1,0 +1,63 @@
+// r5 probe: rule P edges. Prints one line per case.
+import { ReadingModeBlockHost } from '../../../src/framework/host/ReadingModeBlockHost';
+import { droppedWriteMessage, resetDroppedWriteNotices } from '../../../src/framework/host/droppedWriteNotice';
+import { App, Notice, Plugin } from '../../mocks/obsidian';
+
+type Sec = { text: string; lineStart: number; lineEnd: number };
+const C = (n: number, ws = ''): string[] => ['```ds-counter', 'name: Twin', `current_value: ${n}${ws}`, '```'];
+const fencesOf = (text: string): number[] => text.split(/\r?\n/).map((l, i) => (l === '```ds-counter' ? i : -1)).filter((i) => i >= 0);
+const sectionAt = (text: string, fence: number | undefined): Sec | null => {
+	if (fence === undefined) return null;
+	const ls = text.split(/\r?\n/);
+	let end = fence + 1;
+	while (end < ls.length && ls[end] !== '```') end++;
+	return { text, lineStart: fence, lineEnd: Math.min(end, ls.length - 1) };
+};
+const N = (...p: string[][]) => p.flat().join('\n');
+const lots = (n: number, tag: string) => Array.from({ length: n }, (_, i) => `${tag} ${i}`);
+const H = ['# N', '', 'TOP', ''];
+const E = ['', 'END'];
+const CASES: Array<{ name: string; before: string; after: string; pinned: number; pinnedAfter?: number; truth: string }> = [
+	{ name: 'E1 trailing space added to the pinned twin\'s last body line (nothing else)', before: N(H, C(5), [''], C(5), E), after: N(H, C(5, ' '), [''], C(5), E), pinned: 0, pinnedAfter: 0, truth: 'unambiguous: pinned #0' },
+	{ name: 'E2 a blank line added inside the pinned twin before its closing fence', before: N(H, C(5), [''], C(5), E), after: N(H, ['```ds-counter', 'name: Twin', 'current_value: 5', '', '```'], [''], C(5), E), pinned: 0, pinnedAfter: 0, truth: 'unambiguous: pinned #0' },
+	{ name: 'E3 500 lines pasted above + the LOWER twin deleted, pin lower (cap residual)', before: N(H, C(5), [''], C(5), E), after: N(['# N', ''], lots(500, 'x'), ['TOP', ''], C(5), E), pinned: 1, truth: 'tie (pinned deleted or not)' },
+	{ name: 'E4 500 lines pasted above + the UPPER twin deleted, pin upper', before: N(H, C(5), [''], C(5), E), after: N(['# N', ''], lots(500, 'x'), ['TOP', ''], C(5), E), pinned: 0, truth: 'tie' },
+	{ name: 'E5 500 lines pasted at the END + the LOWER twin deleted, pin lower', before: N(H, C(5), [''], C(5), E), after: N(H, C(5), E, lots(500, 'y')), pinned: 1, truth: 'tie' },
+	{ name: 'E6 500 lines pasted at the END + the UPPER twin deleted, pin upper', before: N(H, C(5), [''], C(5), E), after: N(H, C(5), E, lots(500, 'y')), pinned: 0, truth: 'tie' },
+	{ name: 'E7 CRLF note, the upper twin deleted, pin upper', before: N(H, C(5), [''], C(5), E).replace(/\n/g, '\r\n'), after: N(H, C(5), E).replace(/\n/g, '\r\n'), pinned: 0, truth: 'tie' },
+	{ name: 'E8 the whole note converted LF->CRLF by Sync (no other edit), pin upper', before: N(H, C(5), [''], C(5), E), after: N(H, C(5), [''], C(5), E).replace(/\n/g, '\r\n'), pinned: 0, pinnedAfter: 0, truth: 'unambiguous' },
+	{ name: 'E9 unterminated trailing twin pinned, the upper (closed) twin deleted', before: N(H, C(5), [''], C(5).slice(0, 3)), after: N(H, C(5).slice(0, 3)), pinned: 1, pinnedAfter: 0, truth: 'unambiguous (only the unterminated one survives, lines differ from the closed one)' },
+	{ name: 'E10 unterminated trailing twin pinned, trailing blank lines added at EOF', before: N(H, C(5), [''], C(5).slice(0, 3)), after: N(H, C(5), [''], C(5).slice(0, 3), ['', '']), pinned: 1, pinnedAfter: 1, truth: 'unambiguous' },
+];
+const out: string[] = [];
+afterAll(() => console.log(out.join('\n')));
+beforeEach(() => jest.spyOn(console, 'warn').mockImplementation(() => {}));
+for (const c of CASES)
+	for (const kind of ['form', 'card'] as const)
+		test(`${c.name} ${kind}`, async () => {
+			const app = new App();
+			app.vault.setFile('Note.md', c.before);
+			const section: { current: Sec | null } = { current: sectionAt(c.before, fencesOf(c.before)[c.pinned]) };
+			const ctx = { docId: 'd', sourcePath: 'Note.md', frontmatter: undefined, addChild: () => {}, getSectionInfo: () => section.current } as never;
+			const host = new ReadingModeBlockHost(new Plugin(app) as never, document.createElement('div'), ctx, 'ds-counter');
+			host.setMountedBody('name: Twin\ncurrent_value: 5');
+			resetDroppedWriteNotices();
+			Notice.notices.length = 0;
+			const pin = kind === 'form' ? host.pinPosition() : undefined;
+			if (kind === 'card') host.notePersistIntent();
+			app.vault.setFile('Note.md', c.after);
+			const af = fencesOf(c.after);
+			section.current = sectionAt(c.after, c.pinnedAfter === undefined ? undefined : af[c.pinnedAfter]);
+			const next = kind === 'card' ? 'name: Twin\ncurrent_value: 6' : 'name: Edited\ncurrent_value: 5';
+			const ok = kind === 'card' ? await host.replaceSource(next, { fromView: true }) : await host.replaceSource(next, { pin: pin!, pinOnly: true });
+			const final = app.vault.getContent('Note.md')!;
+			let res = 'refused';
+			if (final !== c.after) {
+				const fl = final.split(/\r?\n/);
+				const al = c.after.split(/\r?\n/);
+				const idx = af.findIndex((f) => fl.slice(f, f + 3).join('\n') !== al.slice(f, f + 3).join('\n'));
+				res = `wrote #${idx}${c.pinnedAfter === undefined ? ' (pinned DELETED or tie)' : idx === c.pinnedAfter ? ' (pinned)' : ' (OTHER)'}`;
+			}
+			const n = Notice.notices.map((x) => (x === droppedWriteMessage('Note') ? 'disk' : x.slice(0, 40))).join('|') || 'none';
+			out.push(`${c.name} | ${kind} | ${res} | ok=${ok} | ${n} | truth: ${c.truth}`);
+		});

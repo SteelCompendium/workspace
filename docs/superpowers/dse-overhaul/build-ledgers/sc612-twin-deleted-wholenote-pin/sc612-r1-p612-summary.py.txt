@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+# p612-summary.py <log>: one row per P612-REC line.
+import json, sys
+print(f'{"cell":18} {"edit":10} {"values":12} {"names":28} {"notices":7} {"untouched":9} {"formAtSave":10} {"formAfter":9} err')
+for l in open(sys.argv[1]):
+    if 'P612-REC ' not in l: continue
+    r = json.loads(l.split('P612-REC ', 1)[1])
+    kinds = ['disk' if 'changed on disk first' in n else 'tell' if "can't tell" in n else 'other' for n in r.get('notices', [])]
+    print(f'{r["id"]+"-"+r["mode"]:18} {str(r.get("edit")):10} {json.dumps(r.get("values")):12} {json.dumps(r.get("names")):28} {",".join(kinds) or "-":7} {str(r.get("untouched")):9} {str(r.get("formOpenAtSave","")):10} {str(r.get("formOpenAfterSave","")):9} {r.get("error","")}')

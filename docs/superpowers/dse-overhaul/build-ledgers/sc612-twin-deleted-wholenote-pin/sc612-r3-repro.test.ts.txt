@@ -1,0 +1,70 @@
+// r3 probe (SC-612 review): minimal named reproductions of the fuzz findings. Prints one line per case: outcome (saved into which counter / refused) and Notices.
+import { ReadingModeBlockHost } from '../../../src/framework/host/ReadingModeBlockHost';
+import { droppedWriteMessage, resetDroppedWriteNotices } from '../../../src/framework/host/droppedWriteNotice';
+import { App, Notice, Plugin } from '../../mocks/obsidian';
+
+type Sec = { text: string; lineStart: number; lineEnd: number };
+type Section = { current: Sec | null };
+const ctxOf = (section: Section) =>
+	({ docId: 'doc-r3', sourcePath: 'Note.md', frontmatter: undefined, addChild: () => {}, getSectionInfo: () => section.current }) as never;
+const bodyOf = (n: number, name = 'Twin'): string => `name: ${name}\ncurrent_value: ${n}`;
+const C = (n: number): string[] => ['```ds-counter', 'name: Twin', `current_value: ${n}`, '```'];
+const fencesOf = (text: string): number[] => text.split('\n').map((l, i) => (l === '```ds-counter' ? i : -1)).filter((i) => i >= 0);
+const sectionAt = (text: string, fence: number | undefined): Sec | null => {
+	if (fence === undefined) return null;
+	const ls = text.split('\n');
+	let end = fence + 1;
+	while (end < ls.length && ls[end] !== '```') end++;
+	return { text, lineStart: fence, lineEnd: end };
+};
+const N = (...parts: string[][]): string => parts.flat().join('\n');
+
+/** pinned: index of the counter in `before`; pinnedAfter: its index in `after` (the truth), or undefined when it was deleted. */
+const CASES: Array<{ name: string; before: string; after: string; pinned: number; value: number; pinnedAfter?: number }> = [
+	{ name: 'H1 lower twin deleted + TOP edited, a different counter below the run', before: N(['# N', '', 'TOP', ''], C(5), [''], C(5), [''], C(9), ['', 'END']), after: N(['# N', '', 'TOP edited', ''], C(5), [''], C(9), ['', 'END']), pinned: 1, value: 5 },
+	{ name: 'H1b lower twin deleted + the blank line under TOP deleted, a different counter below', before: N(['# N', '', 'TOP', ''], C(5), [''], C(5), [''], C(9), ['', 'END']), after: N(['# N', '', 'TOP'], C(5), [''], C(9), ['', 'END']), pinned: 1, value: 5 },
+	{ name: 'H1c upper twin deleted + END edited, a different counter above the run', before: N(['# N', '', 'TOP', ''], C(9), [''], C(5), [''], C(5), ['', 'END']), after: N(['# N', '', 'TOP', ''], C(9), [''], C(5), ['', 'END edited']), pinned: 1, value: 5 },
+	{ name: 'H1d upper twin deleted + the other twin bumped... no: upper deleted + TOP edited, different counter below (pin upper)', before: N(['# N', '', 'TOP', ''], C(5), [''], C(5), [''], C(9), ['', 'END']), after: N(['# N', '', 'TOP edited', ''], C(5), [''], C(9), ['', 'END']), pinned: 0, value: 5 },
+	{ name: 'M1 a different counter tight above the pinned one deleted, twin elsewhere (unambiguous)', before: N(['# N', '', 'TOP', ''], C(7), C(5), ['', 'P2', ''], C(5), ['', 'END']), after: N(['# N', '', 'TOP'], C(5), ['', 'P2', ''], C(5), ['', 'END']), pinned: 1, value: 5, pinnedAfter: 0 },
+	{ name: 'M2 the other twin bumped + a different counter added below (unambiguous)', before: N(['# N', '', 'TOP', ''], C(7), [''], C(7), ['', 'END']), after: N(['# N', '', 'TOP', ''], C(8), [''], C(7), [''], C(9), ['', 'END']), pinned: 1, value: 7, pinnedAfter: 1 },
+	{ name: 'M3 three identical, a blank line removed above the pinned one + a different counter added below it (unambiguous)', before: N(['# N', '', 'TOP', ''], C(5), [''], C(5), ['', 'P2', ''], C(5), ['', 'END']), after: N(['# N', '', 'TOP', ''], C(5), C(5), [''], C(9), ['', 'P2', ''], C(5), ['', 'END']), pinned: 1, value: 5, pinnedAfter: 1 },
+	{ name: 'M4 a different counter added right below the pinned twin (unambiguous, nothing else)', before: N(['# N', '', 'TOP', ''], C(5), [''], C(5), ['', 'END']), after: N(['# N', '', 'TOP', ''], C(5), [''], C(5), [''], C(9), ['', 'END']), pinned: 1, value: 5, pinnedAfter: 1 },
+	{ name: 'M5 a different counter added right below the pinned twin + TOP edited', before: N(['# N', '', 'TOP', ''], C(5), [''], C(5), ['', 'END']), after: N(['# N', '', 'TOP edited', ''], C(5), [''], C(5), [''], C(9), ['', 'END']), pinned: 1, value: 5, pinnedAfter: 1 },
+	{ name: 'M6 the other twin bumped (a sibling +) + a different counter added below the pinned one', before: N(['# N', '', 'TOP', ''], C(5), [''], C(5), ['', 'END']), after: N(['# N', '', 'TOP', ''], C(6), [''], C(5), [''], C(9), ['', 'END']), pinned: 1, value: 5, pinnedAfter: 1 },
+];
+
+describe('r3 repro', () => {
+	beforeEach(() => jest.spyOn(console, 'warn').mockImplementation(() => {}));
+	const lines: string[] = [];
+	afterAll(() => {
+		// eslint-disable-next-line no-console
+		console.log(lines.join('\n'));
+	});
+	for (const c of CASES)
+		for (const kind of ['form', 'card'] as const)
+			test(`${c.name} ${kind}`, async () => {
+				const app = new App();
+				app.vault.setFile('Note.md', c.before);
+				const section: Section = { current: sectionAt(c.before, fencesOf(c.before)[c.pinned]) };
+				const host = new ReadingModeBlockHost(new Plugin(app) as never, document.createElement('div'), ctxOf(section), 'ds-counter');
+				host.setMountedBody(bodyOf(c.value));
+				resetDroppedWriteNotices();
+				Notice.notices.length = 0;
+				const next = kind === 'card' ? bodyOf(c.value + 1) : bodyOf(c.value, 'Edited');
+				const pin = kind === 'form' ? host.pinPosition() : undefined;
+				if (kind === 'card') host.notePersistIntent();
+				app.vault.setFile('Note.md', c.after);
+				const af = fencesOf(c.after);
+				section.current = sectionAt(c.after, c.pinnedAfter === undefined ? undefined : af[c.pinnedAfter]);
+				const ok = kind === 'card' ? await host.replaceSource(next, { fromView: true }) : await host.replaceSource(next, { pin: pin!, pinOnly: true });
+				const final = app.vault.getContent('Note.md')!;
+				let out = 'refused';
+				if (final !== c.after) {
+					const fl = final.split('\n');
+					const idx = af.findIndex((f) => fl.slice(f, f + 4).join('\n') !== c.after.split('\n').slice(f, f + 4).join('\n'));
+					out = `wrote counter #${idx}${c.pinnedAfter === undefined ? ' (pinned was DELETED: a different block)' : idx === c.pinnedAfter ? ' (the pinned one)' : ' (A DIFFERENT BLOCK)'}`;
+				}
+				const n = Notice.notices.map((x) => (x === droppedWriteMessage('Note') ? 'disk' : x)).join('|') || 'none';
+				lines.push(`${c.name} | ${kind} | ${out} | ok=${ok} | notices=${n}`);
+			});
+});

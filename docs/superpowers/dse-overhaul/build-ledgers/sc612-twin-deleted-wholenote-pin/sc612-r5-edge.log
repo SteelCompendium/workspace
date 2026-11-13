@@ -1,0 +1,65 @@
+### base16
+    E1 trailing space added to the pinned twin's last body line (nothing else) | form | wrote #0 (pinned) | ok=true | none | truth: unambiguous: pinned #0
+    E1 trailing space added to the pinned twin's last body line (nothing else) | card | wrote #0 (pinned) | ok=true | none | truth: unambiguous: pinned #0
+    E2 a blank line added inside the pinned twin before its closing fence | form | wrote #0 (pinned) | ok=true | none | truth: unambiguous: pinned #0
+    E2 a blank line added inside the pinned twin before its closing fence | card | wrote #0 (pinned) | ok=true | none | truth: unambiguous: pinned #0
+    E3 500 lines pasted above + the LOWER twin deleted, pin lower (cap residual) | form | wrote #0 (pinned DELETED or tie) | ok=true | none | truth: tie (pinned deleted or not)
+    E3 500 lines pasted above + the LOWER twin deleted, pin lower (cap residual) | card | wrote #0 (pinned DELETED or tie) | ok=true | none | truth: tie (pinned deleted or not)
+    E4 500 lines pasted above + the UPPER twin deleted, pin upper | form | refused | ok=false | disk | truth: tie
+    E4 500 lines pasted above + the UPPER twin deleted, pin upper | card | refused | ok=false | disk | truth: tie
+    E5 500 lines pasted at the END + the LOWER twin deleted, pin lower | form | refused | ok=false | disk | truth: tie
+    E5 500 lines pasted at the END + the LOWER twin deleted, pin lower | card | refused | ok=false | disk | truth: tie
+    E6 500 lines pasted at the END + the UPPER twin deleted, pin upper | form | wrote #0 (pinned DELETED or tie) | ok=true | none | truth: tie
+    E6 500 lines pasted at the END + the UPPER twin deleted, pin upper | card | wrote #0 (pinned DELETED or tie) | ok=true | none | truth: tie
+    E7 CRLF note, the upper twin deleted, pin upper | form | wrote #0 (pinned DELETED or tie) | ok=true | none | truth: tie
+    E7 CRLF note, the upper twin deleted, pin upper | card | wrote #0 (pinned DELETED or tie) | ok=true | none | truth: tie
+    E8 the whole note converted LF->CRLF by Sync (no other edit), pin upper | form | wrote #0 (pinned) | ok=true | none | truth: unambiguous
+    E8 the whole note converted LF->CRLF by Sync (no other edit), pin upper | card | wrote #0 (pinned) | ok=true | none | truth: unambiguous
+    E9 unterminated trailing twin pinned, the upper (closed) twin deleted | form | refused | ok=false | disk | truth: unambiguous (only the unterminated one survives, lines differ from the closed one)
+    E9 unterminated trailing twin pinned, the upper (closed) twin deleted | card | refused | ok=false | disk | truth: unambiguous (only the unterminated one survives, lines differ from the closed one)
+    E10 unterminated trailing twin pinned, trailing blank lines added at EOF | form | wrote #1 (pinned) | ok=true | none | truth: unambiguous
+    E10 unterminated trailing twin pinned, trailing blank lines added at EOF | card | wrote #1 (pinned) | ok=true | none | truth: unambiguous
+Tests:       20 passed, 20 total
+### r4
+    E1 trailing space added to the pinned twin's last body line (nothing else) | form | refused | ok=false | disk | truth: unambiguous: pinned #0
+    E1 trailing space added to the pinned twin's last body line (nothing else) | card | refused | ok=false | disk | truth: unambiguous: pinned #0
+    E2 a blank line added inside the pinned twin before its closing fence | form | refused | ok=false | disk | truth: unambiguous: pinned #0
+    E2 a blank line added inside the pinned twin before its closing fence | card | refused | ok=false | disk | truth: unambiguous: pinned #0
+    E3 500 lines pasted above + the LOWER twin deleted, pin lower (cap residual) | form | wrote #0 (pinned DELETED or tie) | ok=true | none | truth: tie (pinned deleted or not)
+    E3 500 lines pasted above + the LOWER twin deleted, pin lower (cap residual) | card | wrote #0 (pinned DELETED or tie) | ok=true | none | truth: tie (pinned deleted or not)
+    E4 500 lines pasted above + the UPPER twin deleted, pin upper | form | refused | ok=false | disk | truth: tie
+    E4 500 lines pasted above + the UPPER twin deleted, pin upper | card | refused | ok=false | disk | truth: tie
+    E5 500 lines pasted at the END + the LOWER twin deleted, pin lower | form | refused | ok=false | disk | truth: tie
+    E5 500 lines pasted at the END + the LOWER twin deleted, pin lower | card | refused | ok=false | disk | truth: tie
+    E6 500 lines pasted at the END + the UPPER twin deleted, pin upper | form | wrote #0 (pinned DELETED or tie) | ok=true | none | truth: tie
+    E6 500 lines pasted at the END + the UPPER twin deleted, pin upper | card | wrote #0 (pinned DELETED or tie) | ok=true | none | truth: tie
+    E7 CRLF note, the upper twin deleted, pin upper | form | refused | ok=false | disk | truth: tie
+    E7 CRLF note, the upper twin deleted, pin upper | card | refused | ok=false | disk | truth: tie
+    E8 the whole note converted LF->CRLF by Sync (no other edit), pin upper | form | wrote #0 (pinned) | ok=true | none | truth: unambiguous
+    E8 the whole note converted LF->CRLF by Sync (no other edit), pin upper | card | wrote #0 (pinned) | ok=true | none | truth: unambiguous
+    E9 unterminated trailing twin pinned, the upper (closed) twin deleted | form | refused | ok=false | disk | truth: unambiguous (only the unterminated one survives, lines differ from the closed one)
+    E9 unterminated trailing twin pinned, the upper (closed) twin deleted | card | refused | ok=false | disk | truth: unambiguous (only the unterminated one survives, lines differ from the closed one)
+    E10 unterminated trailing twin pinned, trailing blank lines added at EOF | form | wrote #1 (pinned) | ok=true | none | truth: unambiguous
+    E10 unterminated trailing twin pinned, trailing blank lines added at EOF | card | wrote #1 (pinned) | ok=true | none | truth: unambiguous
+Tests:       20 passed, 20 total
+### r5 prototype (whitespace)
+    E1 trailing space added to the pinned twin's last body line (nothing else) | form | wrote #0 (pinned) | ok=true | none | truth: unambiguous: pinned #0
+    E1 trailing space added to the pinned twin's last body line (nothing else) | card | wrote #0 (pinned) | ok=true | none | truth: unambiguous: pinned #0
+    E2 a blank line added inside the pinned twin before its closing fence | form | refused | ok=false | disk | truth: unambiguous: pinned #0
+    E2 a blank line added inside the pinned twin before its closing fence | card | refused | ok=false | disk | truth: unambiguous: pinned #0
+    E3 500 lines pasted above + the LOWER twin deleted, pin lower (cap residual) | form | wrote #0 (pinned DELETED or tie) | ok=true | none | truth: tie (pinned deleted or not)
+    E3 500 lines pasted above + the LOWER twin deleted, pin lower (cap residual) | card | wrote #0 (pinned DELETED or tie) | ok=true | none | truth: tie (pinned deleted or not)
+    E4 500 lines pasted above + the UPPER twin deleted, pin upper | form | refused | ok=false | disk | truth: tie
+    E4 500 lines pasted above + the UPPER twin deleted, pin upper | card | refused | ok=false | disk | truth: tie
+    E5 500 lines pasted at the END + the LOWER twin deleted, pin lower | form | refused | ok=false | disk | truth: tie
+    E5 500 lines pasted at the END + the LOWER twin deleted, pin lower | card | refused | ok=false | disk | truth: tie
+    E6 500 lines pasted at the END + the UPPER twin deleted, pin upper | form | wrote #0 (pinned DELETED or tie) | ok=true | none | truth: tie
+    E6 500 lines pasted at the END + the UPPER twin deleted, pin upper | card | wrote #0 (pinned DELETED or tie) | ok=true | none | truth: tie
+    E7 CRLF note, the upper twin deleted, pin upper | form | refused | ok=false | disk | truth: tie
+    E7 CRLF note, the upper twin deleted, pin upper | card | refused | ok=false | disk | truth: tie
+    E8 the whole note converted LF->CRLF by Sync (no other edit), pin upper | form | wrote #0 (pinned) | ok=true | none | truth: unambiguous
+    E8 the whole note converted LF->CRLF by Sync (no other edit), pin upper | card | wrote #0 (pinned) | ok=true | none | truth: unambiguous
+    E9 unterminated trailing twin pinned, the upper (closed) twin deleted | form | refused | ok=false | disk | truth: unambiguous (only the unterminated one survives, lines differ from the closed one)
+    E9 unterminated trailing twin pinned, the upper (closed) twin deleted | card | refused | ok=false | disk | truth: unambiguous (only the unterminated one survives, lines differ from the closed one)
+    E10 unterminated trailing twin pinned, trailing blank lines added at EOF | form | wrote #1 (pinned) | ok=true | none | truth: unambiguous
+    E10 unterminated trailing twin pinned, trailing blank lines added at EOF | card | wrote #1 (pinned) | ok=true | none | truth: unambiguous

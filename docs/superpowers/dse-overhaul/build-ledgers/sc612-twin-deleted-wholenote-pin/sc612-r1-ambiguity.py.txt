@@ -1,0 +1,81 @@
+#!/usr/bin/env python3
+# ambiguity.py <texts.jsonl> <variant.jsonl>...: an oracle independent of lineMap. A cell is AMBIGUOUS when more than one placement of the pinned
+# block is equally minimal: the block's lines paired with another identical block of the note now, or left unpaired (deleted), at the same
+# line-edit cost as the minimal diff. Per variant: writes in ambiguous cells (must be 0 for the fix) and refusals in unambiguous cells where
+# base wrote the pinned block (cost beyond the ambiguity).
+import json, sys, collections
+from functools import lru_cache
+
+def lcs(a, b):
+    n, m = len(a), len(b)
+    prev = [0] * (m + 1)
+    for i in range(n):
+        cur = [0] * (m + 1)
+        for j in range(m):
+            cur[j + 1] = prev[j] + 1 if a[i] == b[j] else max(prev[j + 1], cur[j])
+        prev = cur
+    return prev[m]
+
+def dist(a, b):
+    return len(a) + len(b) - 2 * lcs(a, b)
+
+def blocks(lines):
+    out = []
+    i = 0
+    while i < len(lines):
+        if lines[i] == '```ds-counter':
+            j = i + 1
+            while j < len(lines) and lines[j] != '```':
+                j += 1
+            out.append((i, j))
+            i = j + 1
+        else:
+            i += 1
+    return out
+
+def placements(bt, at, pB):
+    a, b = bt.split('\n'), at.split('\n')
+    dmin = dist(a, b)
+    s, e = next((s, e) for s, e in blocks(a) if s == pB)
+    blk = a[s:e + 1]
+    opts = []
+    for qs, qe in blocks(b):
+        if b[qs:qe + 1] != blk:
+            continue
+        if dist(a[:s], b[:qs]) + dist(a[e + 1:], b[qe + 1:]) == dmin:
+            opts.append(qs)
+    if dist(a[:s] + a[e + 1:], b) + len(blk) == dmin:
+        opts.append('deleted')
+    return opts
+
+texts = {}
+for l in open(sys.argv[1]):
+    r = json.loads(l)
+    if 'bt' in r:
+        k = (r['layout'], r['pinned'], r['edit'], r['cons'])
+        texts[k] = r
+cache = {}
+amb = {}
+for k, r in texts.items():
+    key = (r['bt'], r['at'], r['pB'])
+    if key not in cache:
+        cache[key] = placements(*key)
+    opts = cache[key]
+    amb[k] = (len(opts) > 1, opts, r['pA'])
+print(f'cells with texts {len(texts)}; ambiguous {sum(1 for v in amb.values() if v[0])}')
+base = {(r['layout'], r['pinned'], r['edit'], r['cons']): r for r in map(json.loads, open(sys.argv[1]))}
+for p in sys.argv[2:]:
+    d = {(r['layout'], r['pinned'], r['edit'], r['cons']): r for r in map(json.loads, open(p))}
+    wa = [k for k in amb if amb[k][0] and d[k]['outcome'] != 'refused']
+    ru = [k for k in amb if not amb[k][0] and d[k]['outcome'] == 'refused' and base[k]['outcome'] == 'A']
+    other_unamb = [k for k in amb if not amb[k][0] and str(d[k]['outcome']).startswith('OTHER')]
+    print(f'\n{p}: writes in AMBIGUOUS cells {len(wa)}; refusals in unambiguous cells where base wrote the pinned block {len(ru)}; OTHER in unambiguous cells {len(other_unamb)}')
+    c = collections.Counter((k[2], d[k]['outcome']) for k in wa)
+    for x, v in sorted(c.items()):
+        print(f'   ambiguous-write {v:4} {x}')
+    c = collections.Counter(k[2] for k in ru)
+    for x, v in sorted(c.items()):
+        print(f'   unamb-refusal {v:4} {x}')
+    c = collections.Counter((k[2], d[k]['outcome']) for k in other_unamb)
+    for x, v in sorted(c.items()):
+        print(f'   unamb-OTHER {v:4} {x}')

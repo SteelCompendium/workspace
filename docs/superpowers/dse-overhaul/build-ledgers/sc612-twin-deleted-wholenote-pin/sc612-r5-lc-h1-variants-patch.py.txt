@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+# r5: G-S108 in a SCRATCH export of a06dba37 turned into H1 variants not covered by (l)-(o):
+#   H1b: C9 below the twins, the lower twin deleted + the blank line under TOP deleted (form RV, card LP);
+#   H1c: C9 ABOVE the twins, the upper twin deleted + BOTTOM edited (form LP, card RV);
+#   M6 control: C9-free twins, the upper bumped to 6 and a C9 added below the lower; form on the lower must SAVE (RV).
+import sys
+p = sys.argv[1]
+s = open(p).read()
+def rep(old, new):
+    global s
+    assert s.count(old) == 1, (old[:90], s.count(old))
+    s = s.replace(old, new)
+rep("""	for (const id of ['l-rv', 'm-lp', 'n-rv', 'o-lp']) {""", """	for (const id of ['p-rv', 'q-lp']) {
+		FIXTURES[`Lifecycle/gs108-${id}.md`] = `# gs108 ${id}\\n\\nTOP\\n\\n${COUNTER(5, 'Twin')}\\n\\n${COUNTER(5, 'Twin')}\\n\\n${COUNTER(9, 'Other')}\\n\\nBOTTOM\\n`;
+	}
+	for (const id of ['r-lp', 's-rv']) {
+		FIXTURES[`Lifecycle/gs108-${id}.md`] = `# gs108 ${id}\\n\\nTOP\\n\\n${COUNTER(9, 'Other')}\\n\\n${COUNTER(5, 'Twin')}\\n\\n${COUNTER(5, 'Twin')}\\n\\nBOTTOM\\n`;
+	}
+	for (const id of ['l-rv', 'm-lp', 'n-rv', 'o-lp']) {""")
+rep("""				// an identical counter added right below the first
+				add: (s) => s.replace(`${C5}\\n\\n`, `${C5}\\n\\n${C5}\\n\\n`),""", """				// an identical counter added right below the first
+				add: (s) => s.replace(`${C5}\\n\\n`, `${C5}\\n\\n${C5}\\n\\n`),
+				// r5: the lower twin deleted and the blank line under TOP deleted
+				del1blank: (s) => {
+					const i = s.lastIndexOf(`${C5}\\n\\n`);
+					return (s.slice(0, i) + s.slice(i + C5.length + 2)).replace('TOP\\n\\n', 'TOP\\n');
+				},
+				// r5: the upper twin deleted and BOTTOM edited
+				del0bottom: (s) => s.replace(`${C5}\\n\\n`, '').replace('BOTTOM\\n', 'BOTTOM edited\\n'),""")
+start = s.index("			const cells = [\n				['a-rv', 'rv', 'form', 0, 'del0'")
+end = s.index("			];", start)
+s = s[:start] + """			const cells = [
+				['p-rv', 'rv', 'form', 1, 'del1blank', 'r5 H1b form on the lower twin, the lower deleted + the blank under TOP deleted, another counter below, Reading view'],
+				['q-lp', 'lp', 'card', 1, 'del1blank', 'r5 H1b + on the lower twin, the same, Live Preview'],
+				['r-lp', 'lp', 'form', 1, 'del0bottom', 'r5 H1c form on the upper twin, the upper deleted + BOTTOM edited, another counter ABOVE, Live Preview'],
+				['s-rv', 'rv', 'card', 1, 'del0bottom', 'r5 H1c + on the upper twin, the same, Reading view'],
+""" + s[end:]
+open(p, 'w').write(s)
+print('patched')

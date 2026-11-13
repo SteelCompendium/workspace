@@ -1,0 +1,548 @@
+Info: New devbox available: 0.17.5 -> v0.20.0. Please run `devbox version update`.
+Info: Running script "npx" on /home/scott/code/steelCompendium/worktrees/sc612-twin-deleted-wholenote-pin/draw-steel-elements
+FAIL unit test/unit/framework/lineMap.test.ts
+  ● SC-612: mapLineGreedy › the identity for identical texts
+
+    TypeError: (0 , lineMap_1.mapLineGreedy) is not a function
+
+      143 | 	it('the identity for identical texts', () => {
+      144 | 		const a = pair();
+    > 145 | 		expect(mapLineGreedy(a, a, LOWER, 'head')).toBe(LOWER);
+          | 		                    ^
+      146 | 		expect(mapLineGreedy(a, a, LOWER, 'tail')).toBe(LOWER);
+      147 | 	});
+      148 |
+
+      at Object.<anonymous> (test/unit/framework/lineMap.test.ts:145:23)
+
+  ● SC-612: mapLineGreedy › a line outside the old text maps to null, in both directions
+
+    TypeError: (0 , lineMap_1.mapLineGreedy) is not a function
+
+      150 | 		const a = pair();
+      151 | 		const b = pair('TOP edited');
+    > 152 | 		expect(mapLineGreedy(a, b, 500, 'head')).toBeNull();
+          | 		                    ^
+      153 | 		expect(mapLineGreedy(a, b, -1, 'head')).toBeNull();
+      154 | 		expect(mapLineGreedy(a, b, 500, 'tail')).toBeNull();
+      155 | 		expect(mapLineGreedy(a, b, -1, 'tail')).toBeNull();
+
+      at Object.<anonymous> (test/unit/framework/lineMap.test.ts:152:23)
+
+  ● SC-612: mapLineGreedy › the pure tie (one of two blocks deleted): head pairs the upper twin with the survivor, tail pairs the lower one
+
+    TypeError: (0 , lineMap_1.mapLineGreedy) is not a function
+
+      159 | 		const a = pair();
+      160 | 		const b = pair('TOP', 'BOTTOM', 1);
+    > 161 | 		expect(mapLineGreedy(a, b, UPPER, 'head')).toBe(UPPER);
+          | 		                    ^
+      162 | 		expect(mapLineGreedy(a, b, LOWER, 'head')).toBeNull();
+      163 | 		expect(mapLineGreedy(a, b, UPPER, 'tail')).toBeNull();
+      164 | 		expect(mapLineGreedy(a, b, LOWER, 'tail')).toBe(UPPER);
+
+      at Object.<anonymous> (test/unit/framework/lineMap.test.ts:161:23)
+
+  ● SC-612: mapLineGreedy › the lower twin deleted and TOP edited: mapLine and mapLineFromTail agree on the survivor, the greedy maps do not
+
+    TypeError: (0 , lineMap_1.mapLineGreedy) is not a function
+
+      170 | 		expect(mapLine(a, b, LOWER)).toBe(UPPER);
+      171 | 		expect(mapLineFromTail(a, b, LOWER)).toBe(UPPER);
+    > 172 | 		expect(mapLineGreedy(a, b, LOWER, 'head')).toBeNull();
+          | 		                    ^
+      173 | 		expect(mapLineGreedy(a, b, LOWER, 'tail')).toBe(UPPER);
+      174 | 	});
+      175 |
+
+      at Object.<anonymous> (test/unit/framework/lineMap.test.ts:172:23)
+
+  ● SC-612: mapLineGreedy › the same with BOTTOM edited and the upper twin pinned: now the tail map is the one that says deleted
+
+    TypeError: (0 , lineMap_1.mapLineGreedy) is not a function
+
+      179 | 		expect(mapLine(a, b, UPPER)).toBe(UPPER);
+      180 | 		expect(mapLineFromTail(a, b, UPPER)).toBe(UPPER);
+    > 181 | 		expect(mapLineGreedy(a, b, UPPER, 'head')).toBe(UPPER);
+          | 		                    ^
+      182 | 		expect(mapLineGreedy(a, b, UPPER, 'tail')).toBeNull();
+      183 | 	});
+      184 |
+
+      at Object.<anonymous> (test/unit/framework/lineMap.test.ts:181:23)
+
+  ● SC-612: mapLineGreedy › a line the edit did not touch is placed the same by every map
+
+    TypeError: (0 , lineMap_1.mapLineGreedy) is not a function
+
+      189 | 		const bottom = lines.length - 1;
+      190 | 		for (const from of ['head', 'tail'] as const) {
+    > 191 | 			expect(mapLineGreedy(a, b, 0, from)).toBe(0);
+          | 			                    ^
+      192 | 			expect(mapLineGreedy(a, b, bottom, from)).toBe(b.split('\n').length - 1);
+      193 | 		}
+      194 | 	});
+
+      at Object.<anonymous> (test/unit/framework/lineMap.test.ts:191:24)
+
+  ● SC-612: mapLineGreedy › a one-sided insertion of more than LINE_MAP_MAX_EDITS lines: greedy head says "gave up" where mapLine still maps it
+
+    TypeError: (0 , lineMap_1.mapLineGreedy) is not a function
+
+      199 | 		const b = ['# t', '', ...Array.from({ length: n }, (_, i) => `new${i}`), '', ...pair().split('\n').slice(2)].join('\n');
+      200 | 		expect(mapLine(a, b, UPPER)).toBe(UPPER + n + 1);
+    > 201 | 		expect(mapLineGreedy(a, b, UPPER, 'head')).toBe('gave up');
+          | 		                    ^
+      202 | 		// the tail side trims the shared end, so the greedy tail map finds it at once
+      203 | 		expect(mapLineGreedy(a, b, UPPER, 'tail')).toBe(UPPER + n + 1);
+      204 | 	});
+
+      at Object.<anonymous> (test/unit/framework/lineMap.test.ts:201:23)
+
+FAIL dom test/dom/framework/reading-mode-host-whole-pin.test.ts
+  ● SC-612: whole-note pins of identical blocks › T1/T2 form on the upper twin, the upper deleted from outside: nothing written, the Notice shows
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      # N
+
+      TOP
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      BOTTOM
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:91:3
+
+  ● SC-612: whole-note pins of identical blocks › T1/T2 card on the upper twin, the upper deleted from outside: nothing written, the Notice shows
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -2,9 +2,9 @@
+
+      TOP
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      BOTTOM
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:91:3
+
+  ● SC-612: whole-note pins of identical blocks › T3 form on the lower twin, the lower deleted and TOP edited in the same write: refused (both full maps agree on the survivor, the head greedy map does not)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      # N
+
+      TOP edited
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      BOTTOM
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:97:3
+
+  ● SC-612: whole-note pins of identical blocks › T3 card on the lower twin, the lower deleted and TOP edited in the same write: refused (both full maps agree on the survivor, the head greedy map does not)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -2,9 +2,9 @@
+
+      TOP edited
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      BOTTOM
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:97:3
+
+  ● SC-612: whole-note pins of identical blocks › T4 form on the upper twin, the upper deleted and BOTTOM edited in the same write: refused (the tail greedy map dissents)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      # N
+
+      TOP
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      BOTTOM edited
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:103:3
+
+  ● SC-612: whole-note pins of identical blocks › T4 card on the upper twin, the upper deleted and BOTTOM edited in the same write: refused (the tail greedy map dissents)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -2,9 +2,9 @@
+
+      TOP
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      BOTTOM edited
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:103:3
+
+  ● SC-612: whole-note pins of identical blocks › T5b form on the upper twin, the lower deleted: refused too (the note reads the same as T1)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      # N
+
+      TOP
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      BOTTOM
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:115:3
+
+  ● SC-612: whole-note pins of identical blocks › T5b card on the upper twin, the lower deleted: refused too (the note reads the same as T1)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -2,9 +2,9 @@
+
+      TOP
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      BOTTOM
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:115:3
+
+  ● SC-612: whole-note pins of identical blocks › T6 an identical counter added right below the form: refused, then the form reopened on the note as it is now saves into that block (not persistent)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -1,11 +1,11 @@
+      # N
+
+      TOP
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      ```ds-counter
+      name: Twin
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-whole-pin.test.ts:122:3)
+
+  ● SC-612: whole-note pins of identical blocks › T6b form on the upper twin: an identical counter added ABOVE the run with prose between: refused too (the new block and the pinned one are interchangeable, the accepted cost)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -1,11 +1,11 @@
+      # N
+
+      TOP
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      prose
+      ↵
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:137:3
+
+  ● SC-612: whole-note pins of identical blocks › T6b card on the upper twin: an identical counter added ABOVE the run with prose between: refused too (the new block and the pinned one are interchangeable, the accepted cost)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -2,11 +2,11 @@
+
+      TOP
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      prose
+
+      ```ds-counter
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:137:3
+
+  ● SC-612: whole-note pins of identical blocks › T13 form on the MIDDLE of a run of three identical counters, the upper deleted: refused (the base writes the lowest one)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -6,10 +6,10 @@
+      name: Twin
+      current_value: 5
+      ```
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      BOTTOM
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:235:3
+
+  ● SC-612: whole-note pins of identical blocks › T13 card on the MIDDLE of a run of three identical counters, the upper deleted: refused (the base writes the lowest one)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -7,9 +7,9 @@
+      current_value: 5
+      ```
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      BOTTOM
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:235:3
+
+FAIL dom test/dom/framework/reading-mode-host-whole-pin-sweep.test.ts
+  ● SC-612: whole-note pin sweep › every cell: no write where the oracle sees a tie, one Notice per refusal, the next round saves, no refusal where nothing is ambiguous or changed
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 22
+
+    - Array []
+    + Array [
+    +   "written in an ambiguous cell: single/a/ins-twin-above-adj/form -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-above-adj/card-identity -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-above-adj/card-index -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-above-adj/card-null -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-below-adj/form -> A",
+    +   "written in an ambiguous cell: single/a/ins-twin-below-adj/card-identity -> A",
+    +   "written in an ambiguous cell: single/a/ins-twin-below-adj/card-index -> A",
+    +   "written in an ambiguous cell: single/a/ins-twin-below-adj/card-null -> A",
+    +   "written in an ambiguous cell: single/a/ins-twin-top/form -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-top/card-identity -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-top/card-index -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-top/card-null -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-bottom/form -> A",
+    +   "written in an ambiguous cell: single/a/ins-twin-bottom/card-identity -> A",
+    +   "written in an ambiguous cell: single/a/ins-twin-bottom/card-index -> A",
+    +   "written in an ambiguous cell: single/a/ins-twin-bottom/card-null -> A",
+    +   "written in an ambiguous cell: single/a/ins-twin-above-adj+both/form -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-above-adj+both/card-identity -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-above-adj+both/card-index -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-above-adj+both/card-null -> OTHER:N",
+    + ]
+
+      380 | 			}
+      381 | 		}
+    > 382 | 		expect(bad.slice(0, 20)).toEqual([]);
+          | 		                         ^
+      383 | 		// the regression fence: cells, cells the oracle calls ambiguous (>400-line cells are not checked), and the outcomes
+      384 | 		const count = (f: (r: Rec) => boolean) => records.filter(f).length;
+      385 | 		expect({
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-whole-pin-sweep.test.ts:382:28)
+
+Test Suites: 3 failed, 3 total
+Tests:       21 failed, 55 passed, 76 total
+Snapshots:   0 total
+Time:        3.01 s
+Ran all test suites matching test/dom/framework/reading-mode-host-whole-pin.test.ts|test/dom/framework/reading-mode-host-whole-pin-sweep.test.ts|test/unit/framework/lineMap.test.ts in 2 projects.
+Error: error running script "npx" in Devbox: exit status 1
+

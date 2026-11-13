@@ -1,0 +1,914 @@
+Info: New devbox available: 0.17.5 -> v0.20.0. Please run `devbox version update`.
+Info: Running script "npx" on /home/scott/code/steelCompendium/worktrees/sc612-twin-deleted-wholenote-pin/draw-steel-elements
+FAIL unit test/unit/framework/lineMap.test.ts
+  ● SC-612: editDistance › is 0 for equal lines and the number of lines for an insertion or a deletion
+
+    TypeError: (0 , lineMap_1.editDistance) is not a function
+
+      139 |
+      140 | 	it('is 0 for equal lines and the number of lines for an insertion or a deletion', () => {
+    > 141 | 		expect(editDistance(L('a b c'), L('a b c'))).toBe(0);
+          | 		                   ^
+      142 | 		expect(editDistance([], [])).toBe(0);
+      143 | 		expect(editDistance(L('a b c'), L('a x b c'))).toBe(1);
+      144 | 		expect(editDistance(L('a x y b'), L('a b'))).toBe(2);
+
+      at Object.<anonymous> (test/unit/framework/lineMap.test.ts:141:22)
+
+  ● SC-612: editDistance › a changed line costs a deletion and an insertion
+
+    TypeError: (0 , lineMap_1.editDistance) is not a function
+
+      148 |
+      149 | 	it('a changed line costs a deletion and an insertion', () => {
+    > 150 | 		expect(editDistance(L('a b c'), L('a X c'))).toBe(2);
+          | 		                   ^
+      151 | 	});
+      152 |
+      153 | 	it('is symmetric and counts the minimal diff, not the first one found (a repeated line)', () => {
+
+      at Object.<anonymous> (test/unit/framework/lineMap.test.ts:150:22)
+
+  ● SC-612: editDistance › is symmetric and counts the minimal diff, not the first one found (a repeated line)
+
+    TypeError: (0 , lineMap_1.editDistance) is not a function
+
+      152 |
+      153 | 	it('is symmetric and counts the minimal diff, not the first one found (a repeated line)', () => {
+    > 154 | 		expect(editDistance(L('a a a b'), L('a b'))).toBe(2);
+          | 		                   ^
+      155 | 		expect(editDistance(L('a b'), L('a a a b'))).toBe(2);
+      156 | 		expect(editDistance(L('x a b a y'), L('x b a b y'))).toBe(2);
+      157 | 	});
+
+      at Object.<anonymous> (test/unit/framework/lineMap.test.ts:154:22)
+
+  ● SC-612: editDistance › null when the distance is more than the cap, the value when it is exactly the cap
+
+    TypeError: (0 , lineMap_1.editDistance) is not a function
+
+      158 |
+      159 | 	it('null when the distance is more than the cap, the value when it is exactly the cap', () => {
+    > 160 | 		expect(editDistance(L('a b c'), L('a X c'), 2)).toBe(2);
+          | 		                   ^
+      161 | 		expect(editDistance(L('a b c'), L('a X c'), 1)).toBeNull();
+      162 | 		expect(editDistance(L('a b c'), L('a x y z b c'), 2)).toBeNull();
+      163 | 		expect(editDistance(L('a b c d'), L('p q r s'), 0)).toBeNull();
+
+      at Object.<anonymous> (test/unit/framework/lineMap.test.ts:160:22)
+
+  ● SC-612: editDistance › defaults to LINE_MAP_MAX_EDITS: a rewrite of more lines than that has no distance, an insertion of a few hundred lines has
+
+    TypeError: (0 , lineMap_1.editDistance) is not a function
+
+      169 | 		const a = Array.from({ length: n }, (_, i) => `a${i}`);
+      170 | 		const b = Array.from({ length: n }, (_, i) => `b${i}`);
+    > 171 | 		expect(editDistance(a, b)).toBeNull();
+          | 		                   ^
+      172 | 		expect(editDistance(['top', ...a, 'bottom'], ['top', ...a.slice(0, 5), ...Array.from({ length: LINE_MAP_MAX_EDITS - 10 }, (_, i) => `n${i}`), ...a.slice(5), 'bottom'])).toBe(LINE_MAP_MAX_EDITS - 10);
+      173 | 	});
+      174 |
+
+      at Object.<anonymous> (test/unit/framework/lineMap.test.ts:171:22)
+
+FAIL dom test/dom/framework/reading-mode-host-whole-pin.test.ts
+  ● SC-612: whole-note pins of identical blocks › T1/T2 form on the upper twin, the upper deleted from outside: nothing written, the Notice shows
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      # N
+
+      TOP
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      BOTTOM
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:91:3
+
+  ● SC-612: whole-note pins of identical blocks › T1/T2 card on the upper twin, the upper deleted from outside: nothing written, the Notice shows
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -2,9 +2,9 @@
+
+      TOP
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      BOTTOM
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:91:3
+
+  ● SC-612: whole-note pins of identical blocks › T3 form on the lower twin, the lower deleted and TOP edited in the same write: refused (both full maps agree on the survivor, the head greedy map does not)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      # N
+
+      TOP edited
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      BOTTOM
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:97:3
+
+  ● SC-612: whole-note pins of identical blocks › T3 card on the lower twin, the lower deleted and TOP edited in the same write: refused (both full maps agree on the survivor, the head greedy map does not)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -2,9 +2,9 @@
+
+      TOP edited
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      BOTTOM
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:97:3
+
+  ● SC-612: whole-note pins of identical blocks › T4 form on the upper twin, the upper deleted and BOTTOM edited in the same write: refused (the tail greedy map dissents)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      # N
+
+      TOP
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      BOTTOM edited
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:103:3
+
+  ● SC-612: whole-note pins of identical blocks › T4 card on the upper twin, the upper deleted and BOTTOM edited in the same write: refused (the tail greedy map dissents)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -2,9 +2,9 @@
+
+      TOP
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      BOTTOM edited
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:103:3
+
+  ● SC-612: whole-note pins of identical blocks › T5b form on the upper twin, the lower deleted: refused too (the note reads the same as T1)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      # N
+
+      TOP
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      BOTTOM
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:115:3
+
+  ● SC-612: whole-note pins of identical blocks › T5b card on the upper twin, the lower deleted: refused too (the note reads the same as T1)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -2,9 +2,9 @@
+
+      TOP
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      BOTTOM
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:115:3
+
+  ● SC-612: whole-note pins of identical blocks › T6 an identical counter added right below the form: refused, then the form reopened on the note as it is now saves into that block (not persistent)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -1,11 +1,11 @@
+      # N
+
+      TOP
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      ```ds-counter
+      name: Twin
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-whole-pin.test.ts:122:3)
+
+  ● SC-612: whole-note pins of identical blocks › T6b form on the upper twin: an identical counter added ABOVE the run with prose between: refused too (the new block and the pinned one are interchangeable, the accepted cost)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -1,11 +1,11 @@
+      # N
+
+      TOP
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      prose
+      ↵
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:137:3
+
+  ● SC-612: whole-note pins of identical blocks › T6b card on the upper twin: an identical counter added ABOVE the run with prose between: refused too (the new block and the pinned one are interchangeable, the accepted cost)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -2,11 +2,11 @@
+
+      TOP
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      prose
+
+      ```ds-counter
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:137:3
+
+  ● SC-612: whole-note pins of identical blocks › H1 form on the lower twin, the lower deleted and TOP edited, a different counter below the run: refused
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -1,11 +1,11 @@
+      # N
+
+      TOP edited
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      ```ds-counter
+      name: Twin
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:238:3
+
+  ● SC-612: whole-note pins of identical blocks › H1 card on the lower twin, the lower deleted and TOP edited, a different counter below the run: refused
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -2,11 +2,11 @@
+
+      TOP edited
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      ```ds-counter
+      name: Twin
+      current_value: 9
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:238:3
+
+  ● SC-612: whole-note pins of identical blocks › H1b form on the lower twin, the lower deleted and the blank line under TOP deleted, a different counter below: refused
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -1,10 +1,10 @@
+      # N
+
+      TOP
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      ```ds-counter
+      name: Twin
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:244:3
+
+  ● SC-612: whole-note pins of identical blocks › H1b card on the lower twin, the lower deleted and the blank line under TOP deleted, a different counter below: refused
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -1,11 +1,11 @@
+      # N
+
+      TOP
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      ```ds-counter
+      name: Twin
+      current_value: 9
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:244:3
+
+  ● SC-612: whole-note pins of identical blocks › H1c form on the lower of the twins, the upper twin deleted and BOTTOM edited, a different counter above the run: refused
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -6,10 +6,10 @@
+      name: Twin
+      current_value: 9
+      ```
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      BOTTOM edited
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:250:3
+
+  ● SC-612: whole-note pins of identical blocks › H1c card on the lower of the twins, the upper twin deleted and BOTTOM edited, a different counter above the run: refused
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -7,9 +7,9 @@
+      current_value: 9
+      ```
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      BOTTOM edited
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:250:3
+
+  ● SC-612: whole-note pins of identical blocks › form on the pinned UNTERMINATED trailing fence, an identical but CLOSED copy pasted above it: refused (the base wrote the copy)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -1,11 +1,11 @@
+      # N
+
+      TOP
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      ```ds-counter
+      name: Twin
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:283:3
+
+  ● SC-612: whole-note pins of identical blocks › card on the pinned UNTERMINATED trailing fence, an identical but CLOSED copy pasted above it: refused (the base wrote the copy)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -2,11 +2,11 @@
+
+      TOP
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      ```ds-counter
+      name: Twin
+      current_value: 5
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:283:3
+
+  ● SC-612: whole-note pins of identical blocks › T13 form on the MIDDLE of a run of three identical counters, the upper deleted: refused (the base writes the lowest one)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -6,10 +6,10 @@
+      name: Twin
+      current_value: 5
+      ```
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      BOTTOM
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:289:3
+
+  ● SC-612: whole-note pins of identical blocks › T13 card on the MIDDLE of a run of three identical counters, the upper deleted: refused (the base writes the lowest one)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -7,9 +7,9 @@
+      current_value: 5
+      ```
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      BOTTOM
+
+      75 | 	}
+      76 | 	const refused = (r: Awaited<ReturnType<typeof round>>, after: string) => {
+    > 77 | 		expect(r.final).toBe(after);
+         | 		                ^
+      78 | 		expect(r.ok).toBe(false);
+      79 | 		expect(r.notices).toEqual([DISK]);
+      80 | 	};
+
+      at refused (test/dom/framework/reading-mode-host-whole-pin.test.ts:77:19)
+      at test/dom/framework/reading-mode-host-whole-pin.test.ts:289:3
+
+FAIL dom test/dom/framework/reading-mode-host-whole-pin-sweep.test.ts
+  ● SC-612: whole-note pin sweep › every cell: no write where the oracle sees a tie, one Notice per refusal, the next round saves, no refusal where nothing is ambiguous or changed
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 22
+
+    - Array []
+    + Array [
+    +   "written in an ambiguous cell: single/a/ins-twin-above-adj/form -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-above-adj/card-identity -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-above-adj/card-index -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-above-adj/card-null -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-below-adj/form -> A",
+    +   "written in an ambiguous cell: single/a/ins-twin-below-adj/card-identity -> A",
+    +   "written in an ambiguous cell: single/a/ins-twin-below-adj/card-index -> A",
+    +   "written in an ambiguous cell: single/a/ins-twin-below-adj/card-null -> A",
+    +   "written in an ambiguous cell: single/a/ins-twin-top/form -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-top/card-identity -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-top/card-index -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-top/card-null -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-bottom/form -> A",
+    +   "written in an ambiguous cell: single/a/ins-twin-bottom/card-identity -> A",
+    +   "written in an ambiguous cell: single/a/ins-twin-bottom/card-index -> A",
+    +   "written in an ambiguous cell: single/a/ins-twin-bottom/card-null -> A",
+    +   "written in an ambiguous cell: single/a/ins-twin-above-adj+both/form -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-above-adj+both/card-identity -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-above-adj+both/card-index -> OTHER:N",
+    +   "written in an ambiguous cell: single/a/ins-twin-above-adj+both/card-null -> OTHER:N",
+    + ]
+
+      392 | 			}
+      393 | 		}
+    > 394 | 		expect(bad.slice(0, 20)).toEqual([]);
+          | 		                         ^
+      395 | 		// the regression fence: cells, cells the oracle calls ambiguous (>400-line cells are not checked), and the outcomes
+      396 | 		const count = (f: (r: Rec) => boolean) => records.filter(f).length;
+      397 | 		expect({
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-whole-pin-sweep.test.ts:394:28)
+
+FAIL dom test/dom/framework/reading-mode-host-whole-pin-fuzz.test.ts (9.247 s)
+  ● SC-612: whole-note pin fuzz › seed 1: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 22
+
+    - Array []
+    + Array [
+    +   "written in a twinned ambiguous cell 1-4/form -> OTHER:b1 nb2-callout [\"del:P\"]",
+    +   "written in a twinned ambiguous cell 1-4/card-identity -> OTHER:b1 nb2-callout [\"del:P\"]",
+    +   "written in a twinned ambiguous cell 1-4/card-ordinal -> OTHER:b1 nb2-callout [\"del:P\"]",
+    +   "written in a twinned ambiguous cell 1-4/card-null -> OTHER:b1 nb2-callout [\"del:P\"]",
+    +   "written in a twinned ambiguous cell 1-5/form -> A nb4-unterm [\"del:b1\",\"bump:b3\",\"delblank@3\"]",
+    +   "written in a twinned ambiguous cell 1-5/card-identity -> A nb4-unterm [\"del:b1\",\"bump:b3\",\"delblank@3\"]",
+    +   "written in a twinned ambiguous cell 1-5/card-ordinal -> A nb4-unterm [\"del:b1\",\"bump:b3\",\"delblank@3\"]",
+    +   "written in a twinned ambiguous cell 1-5/card-null -> A nb4-unterm [\"del:b1\",\"bump:b3\",\"delblank@3\"]",
+    +   "written in a twinned ambiguous cell 1-15/form -> A nb3 [\"dup:b1@12\",\"dup:P@6\"]",
+    +   "written in a twinned ambiguous cell 1-15/card-identity -> A nb3 [\"dup:b1@12\",\"dup:P@6\"]",
+    +   "written in a twinned ambiguous cell 1-15/card-ordinal -> A nb3 [\"dup:b1@12\",\"dup:P@6\"]",
+    +   "written in a twinned ambiguous cell 1-15/card-null -> A nb3 [\"dup:b1@12\",\"dup:P@6\"]",
+    +   "written in a twinned ambiguous cell 1-29/form -> A nb4 [\"del:b1\"]",
+    +   "written in a twinned ambiguous cell 1-29/card-identity -> A nb4 [\"del:b1\"]",
+    +   "written in a twinned ambiguous cell 1-29/card-ordinal -> A nb4 [\"del:b1\"]",
+    +   "written in a twinned ambiguous cell 1-29/card-null -> A nb4 [\"del:b1\"]",
+    +   "written in a twinned ambiguous cell 1-37/form -> OTHER:b1 nb3 [\"del:b2\",\"del:P\"]",
+    +   "written in a twinned ambiguous cell 1-37/card-identity -> OTHER:b1 nb3 [\"del:b2\",\"del:P\"]",
+    +   "written in a twinned ambiguous cell 1-37/card-ordinal -> OTHER:b1 nb3 [\"del:b2\",\"del:P\"]",
+    +   "written in a twinned ambiguous cell 1-37/card-null -> OTHER:b1 nb3 [\"del:b2\",\"del:P\"]",
+    + ]
+
+      407 | 	test.each([1, 2, 3])('seed %i: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt', async (sd) => {
+      408 | 		const r = await runSeed(sd, NOTES);
+    > 409 | 		expect(r.bad.slice(0, 20)).toEqual([]);
+          | 		                           ^
+      410 | 		expect({ cells: r.cells, ambiguous: r.ambiguous, twinnedAmbiguous: r.twinnedAmbiguous, saved: r.saved, refused: r.refused, other: r.other }).toEqual(PINNED[sd]);
+      411 | 	}, 600000);
+      412 | });
+
+      at test/dom/framework/reading-mode-host-whole-pin-fuzz.test.ts:409:30
+
+  ● SC-612: whole-note pin fuzz › seed 2: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 22
+
+    - Array []
+    + Array [
+    +   "written in a twinned ambiguous cell 2-6/form -> OTHER:b3 nb4 [\"delP\"]",
+    +   "written in a twinned ambiguous cell 2-6/card-identity -> OTHER:b3 nb4 [\"delP\"]",
+    +   "written in a twinned ambiguous cell 2-6/card-ordinal -> OTHER:b3 nb4 [\"delP\"]",
+    +   "written in a twinned ambiguous cell 2-6/card-null -> OTHER:b3 nb4 [\"delP\"]",
+    +   "written in a twinned ambiguous cell 2-7/form -> A nb2 [\"delblank@7\",\"dup:P@8\"]",
+    +   "written in a twinned ambiguous cell 2-7/card-identity -> A nb2 [\"delblank@7\",\"dup:P@8\"]",
+    +   "written in a twinned ambiguous cell 2-7/card-ordinal -> A nb2 [\"delblank@7\",\"dup:P@8\"]",
+    +   "written in a twinned ambiguous cell 2-7/card-null -> A nb2 [\"delblank@7\",\"dup:P@8\"]",
+    +   "written in a twinned ambiguous cell 2-10/form -> A nb2-unterm [\"edit:# N\",\"del:b0\"]",
+    +   "written in a twinned ambiguous cell 2-10/card-identity -> A nb2-unterm [\"edit:# N\",\"del:b0\"]",
+    +   "written in a twinned ambiguous cell 2-10/card-ordinal -> A nb2-unterm [\"edit:# N\",\"del:b0\"]",
+    +   "written in a twinned ambiguous cell 2-10/card-null -> A nb2-unterm [\"edit:# N\",\"del:b0\"]",
+    +   "written in a twinned ambiguous cell 2-19/form -> OTHER:b2 nb4-crlf [\"delP\"]",
+    +   "written in a twinned ambiguous cell 2-19/card-identity -> OTHER:b2 nb4-crlf [\"delP\"]",
+    +   "written in a twinned ambiguous cell 2-19/card-ordinal -> OTHER:b2 nb4-crlf [\"delP\"]",
+    +   "written in a twinned ambiguous cell 2-19/card-null -> OTHER:b2 nb4-crlf [\"delP\"]",
+    +   "written in a twinned ambiguous cell 2-42/form -> OTHER:b2 nb4 [\"del:b0\",\"delP\",\"dup:b2@6\"]",
+    +   "written in a twinned ambiguous cell 2-42/card-identity -> OTHER:b2 nb4 [\"del:b0\",\"delP\",\"dup:b2@6\"]",
+    +   "written in a twinned ambiguous cell 2-42/card-ordinal -> OTHER:b2 nb4 [\"del:b0\",\"delP\",\"dup:b2@6\"]",
+    +   "written in a twinned ambiguous cell 2-42/card-null -> OTHER:b2 nb4 [\"del:b0\",\"delP\",\"dup:b2@6\"]",
+    + ]
+
+      407 | 	test.each([1, 2, 3])('seed %i: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt', async (sd) => {
+      408 | 		const r = await runSeed(sd, NOTES);
+    > 409 | 		expect(r.bad.slice(0, 20)).toEqual([]);
+          | 		                           ^
+      410 | 		expect({ cells: r.cells, ambiguous: r.ambiguous, twinnedAmbiguous: r.twinnedAmbiguous, saved: r.saved, refused: r.refused, other: r.other }).toEqual(PINNED[sd]);
+      411 | 	}, 600000);
+      412 | });
+
+      at test/dom/framework/reading-mode-host-whole-pin-fuzz.test.ts:409:30
+
+  ● SC-612: whole-note pin fuzz › seed 3: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 22
+
+    - Array []
+    + Array [
+    +   "written in a twinned ambiguous cell 3-38/form -> A nb3 [\"dup:P@4\"]",
+    +   "written in a twinned ambiguous cell 3-38/card-identity -> A nb3 [\"dup:P@4\"]",
+    +   "written in a twinned ambiguous cell 3-38/card-ordinal -> A nb3 [\"dup:P@4\"]",
+    +   "written in a twinned ambiguous cell 3-38/card-null -> A nb3 [\"dup:P@4\"]",
+    +   "written in a twinned ambiguous cell 3-42/form -> A nb2 [\"edit:# N\",\"del:b0\"]",
+    +   "written in a twinned ambiguous cell 3-42/card-identity -> A nb2 [\"edit:# N\",\"del:b0\"]",
+    +   "written in a twinned ambiguous cell 3-42/card-ordinal -> A nb2 [\"edit:# N\",\"del:b0\"]",
+    +   "written in a twinned ambiguous cell 3-42/card-null -> A nb2 [\"edit:# N\",\"del:b0\"]",
+    +   "written in a twinned ambiguous cell 3-81/form -> A nb2 [\"dup:b1@5\",\"maketwin:b1\",\"edit:# N\"]",
+    +   "written in a twinned ambiguous cell 3-81/card-identity -> A nb2 [\"dup:b1@5\",\"maketwin:b1\",\"edit:# N\"]",
+    +   "written in a twinned ambiguous cell 3-81/card-ordinal -> A nb2 [\"dup:b1@5\",\"maketwin:b1\",\"edit:# N\"]",
+    +   "written in a twinned ambiguous cell 3-81/card-null -> A nb2 [\"dup:b1@5\",\"maketwin:b1\",\"edit:# N\"]",
+    +   "written in a twinned ambiguous cell 3-107/form -> OTHER:n47 nb4 [\"dup:P@6\"]",
+    +   "written in a twinned ambiguous cell 3-107/card-identity -> OTHER:n47 nb4 [\"dup:P@6\"]",
+    +   "written in a twinned ambiguous cell 3-107/card-ordinal -> OTHER:n47 nb4 [\"dup:P@6\"]",
+    +   "written in a twinned ambiguous cell 3-107/card-null -> OTHER:n47 nb4 [\"dup:P@6\"]",
+    +   "written in a twinned ambiguous cell 3-124/form -> OTHER:n52 nb2 [\"del:b1\",\"dup:P@4\",\"dup:P@10\"]",
+    +   "written in a twinned ambiguous cell 3-124/card-identity -> OTHER:n52 nb2 [\"del:b1\",\"dup:P@4\",\"dup:P@10\"]",
+    +   "written in a twinned ambiguous cell 3-124/card-ordinal -> OTHER:n52 nb2 [\"del:b1\",\"dup:P@4\",\"dup:P@10\"]",
+    +   "written in a twinned ambiguous cell 3-124/card-null -> OTHER:n52 nb2 [\"del:b1\",\"dup:P@4\",\"dup:P@10\"]",
+    + ]
+
+      407 | 	test.each([1, 2, 3])('seed %i: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt', async (sd) => {
+      408 | 		const r = await runSeed(sd, NOTES);
+    > 409 | 		expect(r.bad.slice(0, 20)).toEqual([]);
+          | 		                           ^
+      410 | 		expect({ cells: r.cells, ambiguous: r.ambiguous, twinnedAmbiguous: r.twinnedAmbiguous, saved: r.saved, refused: r.refused, other: r.other }).toEqual(PINNED[sd]);
+      411 | 	}, 600000);
+      412 | });
+
+      at test/dom/framework/reading-mode-host-whole-pin-fuzz.test.ts:409:30
+
+FAIL dom test/dom/framework/reading-mode-host-drawn-pin.test.ts (52.685 s)
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › a form in an embed whose part is the whole note, on the upper of two blank-line twins, the upper deleted and the last line edited, Save: refused (the greedy maps)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      686 | 		await settle();
+      687 | 		c.outside(now);
+    > 688 | 		expect(await c.host.replaceSource(bodyOf(5, 'Edited'), { pin: pin!, pinOnly: true })).toBe(false);
+          | 		                                                                                      ^
+      689 |
+      690 | 		expect(c.app.vault.getContent('Note.md')).toBe(now.join('\n'));
+      691 | 		expect(Notice.notices).toEqual(dropped);
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-drawn-pin.test.ts:688:89)
+
+Test Suites: 5 failed, 5 total
+Tests:       31 failed, 864 passed, 895 total
+Snapshots:   0 total
+Time:        54.424 s
+Ran all test suites matching test/dom/framework/reading-mode-host-whole-pin.test.ts|test/dom/framework/reading-mode-host-whole-pin-sweep.test.ts|test/dom/framework/reading-mode-host-whole-pin-fuzz.test.ts|test/unit/framework/lineMap.test.ts|test/dom/framework/reading-mode-host-drawn-pin.test.ts in 2 projects.
+Error: error running script "npx" in Devbox: exit status 1
+

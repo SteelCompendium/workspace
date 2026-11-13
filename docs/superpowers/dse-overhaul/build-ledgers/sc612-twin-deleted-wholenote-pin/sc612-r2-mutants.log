@@ -1,0 +1,44 @@
+mutant M1
+M1 jest_rc=1 Tests:       5 failed, 71 passed, 76 total
+      ● SC-612: whole-note pins of identical blocks › T3 card on the lower twin, the lower deleted and TOP edited in the same write: refused (both full maps agree on the survivor, the head greedy map 
+      ● SC-612: whole-note pins of identical blocks › T3 form on the lower twin, the lower deleted and TOP edited in the same write: refused (both full maps agree on the survivor, the head greedy map 
+      ● SC-612: whole-note pins of identical blocks › T4 card on the upper twin, the upper deleted and BOTTOM edited in the same write: refused (the tail greedy map dissents)
+      ● SC-612: whole-note pins of identical blocks › T4 form on the upper twin, the upper deleted and BOTTOM edited in the same write: refused (the tail greedy map dissents)
+      ● SC-612: whole-note pin sweep › every cell: no write where the oracle sees a tie, one Notice per refusal, the next round saves, no refusal where nothing is ambiguous or changed
+mutant M2
+M2 jest_rc=0 Tests:       76 passed, 76 total
+mutant M3
+M3 jest_rc=1 Tests:       3 failed, 73 passed, 76 total
+      ● SC-612: whole-note pins of identical blocks › T9 card: a different counter pasted right above the pinned block and TOP edited, in a note with twins -> saves (a block of another body says nothi
+      ● SC-612: whole-note pins of identical blocks › T9 form: a different counter pasted right above the pinned block and TOP edited, in a note with twins -> saves (a block of another body says nothi
+      ● SC-612: whole-note pin sweep › every cell: no write where the oracle sees a tie, one Notice per refusal, the next round saves, no refusal where nothing is ambiguous or changed
+mutant M4
+M4 jest_rc=1 Tests:       3 failed, 73 passed, 76 total
+      ● SC-612: whole-note pins of identical blocks › T10 card: 500 lines inserted above only, in a note with twins -> saves (the greedy head map gives up and is not a dissent)
+      ● SC-612: whole-note pins of identical blocks › T10 form: 500 lines inserted above only, in a note with twins -> saves (the greedy head map gives up and is not a dissent)
+      ● SC-612: whole-note pin sweep › every cell: no write where the oracle sees a tie, one Notice per refusal, the next round saves, no refusal where nothing is ambiguous or changed
+mutant M5
+M5 jest_rc=1 Tests:       3 failed, 73 passed, 76 total
+      ● SC-612: whole-note pins of identical blocks › T4 card on the upper twin, the upper deleted and BOTTOM edited in the same write: refused (the tail greedy map dissents)
+      ● SC-612: whole-note pins of identical blocks › T4 form on the upper twin, the upper deleted and BOTTOM edited in the same write: refused (the tail greedy map dissents)
+      ● SC-612: whole-note pin sweep › every cell: no write where the oracle sees a tie, one Notice per refusal, the next round saves, no refusal where nothing is ambiguous or changed
+mutant M6
+M6 jest_rc=1 Tests:       3 failed, 73 passed, 76 total
+      ● SC-612: whole-note pins of identical blocks › T3 card on the lower twin, the lower deleted and TOP edited in the same write: refused (both full maps agree on the survivor, the head greedy map 
+      ● SC-612: whole-note pins of identical blocks › T3 form on the lower twin, the lower deleted and TOP edited in the same write: refused (both full maps agree on the survivor, the head greedy map 
+      ● SC-612: whole-note pin sweep › every cell: no write where the oracle sees a tie, one Notice per refusal, the next round saves, no refusal where nothing is ambiguous or changed
+mutant M7
+M7 jest_rc=1 Tests:       8 failed, 68 passed, 76 total
+      ● SC-612: mapLineGreedy › a one-sided insertion of more than LINE_MAP_MAX_EDITS lines: greedy head says "gave up" where mapLine still maps it
+      ● SC-612: mapLineGreedy › the lower twin deleted and TOP edited: mapLine and mapLineFromTail agree on the survivor, the greedy maps do not
+      ● SC-612: mapLineGreedy › the same with BOTTOM edited and the upper twin pinned: now the tail map is the one that says deleted
+      ● SC-612: whole-note pins of identical blocks › T3 card on the lower twin, the lower deleted and TOP edited in the same write: refused (both full maps agree on the survivor, the head greedy map 
+      ● SC-612: whole-note pins of identical blocks › T3 form on the lower twin, the lower deleted and TOP edited in the same write: refused (both full maps agree on the survivor, the head greedy map 
+      ● SC-612: whole-note pins of identical blocks › T4 card on the upper twin, the upper deleted and BOTTOM edited in the same write: refused (the tail greedy map dissents)
+      ● SC-612: whole-note pins of identical blocks › T4 form on the upper twin, the upper deleted and BOTTOM edited in the same write: refused (the tail greedy map dissents)
+      ● SC-612: whole-note pin sweep › every cell: no write where the oracle sees a tie, one Notice per refusal, the next round saves, no refusal where nothing is ambiguous or changed
+mutant M8
+M8 jest_rc=1 Tests:       2 failed, 74 passed, 76 total
+      ● SC-612: whole-note pins of identical blocks › T11 form in a note WITHOUT twins: a different counter deleted above and TOP edited -> saves (the twin gate is load-bearing)
+      ● SC-612: whole-note pin sweep › every cell: no write where the oracle sees a tie, one Notice per refusal, the next round saves, no refusal where nothing is ambiguous or changed
+M9 (added by r2: the greedy check skipped for strictPins, `twin && !strictPins.has(pin) && (…)`): killed by reading-mode-host-drawn-pin.test.ts "a form in an embed whose part is the whole note, on the upper of two blank-line twins, the upper deleted and the last line edited, Save: refused (the greedy maps)" (1 failed of 802; before that test existed M9 survived all of test/dom/framework: 5562 passed)

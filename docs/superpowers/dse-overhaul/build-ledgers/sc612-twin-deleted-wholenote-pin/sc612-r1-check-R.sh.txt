@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# check-R.sh <log> <diff-out>: apply R to the worktree, save the diff, tsc + lint on the two files, restore.
+E=/home/scott/code/steelCompendium/worktrees/sc612-twin-deleted-wholenote-pin/draw-steel-elements
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc612-r1-designer
+cd "$E" || exit 9
+[ "$(git -C "$E" branch --show-current)" = sc612-twin-deleted-wholenote-pin ] || exit 9
+: > "$1"
+python3 -I "$S/patch.py" R "$E" >> "$1" 2>&1
+git -C "$E" diff > "$2"
+npx tsc --noEmit >> "$1" 2>&1; echo "tsc_rc=$?" >> "$1"
+npx eslint src/framework/host/lineMap.ts src/framework/host/ReadingModeBlockHost.ts >> "$1" 2>&1; echo "lint_rc=$?" >> "$1"
+git -C "$E" checkout -- src/framework/host/ReadingModeBlockHost.ts src/framework/host/lineMap.ts
+git -C "$E" status --porcelain >> "$1"

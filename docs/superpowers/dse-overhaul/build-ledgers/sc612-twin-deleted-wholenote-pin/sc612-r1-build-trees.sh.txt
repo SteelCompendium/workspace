@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# build-trees.sh <log>: scratch exports (git archive 63e00d7e) base-tree and probe-tree (+ N3), node_modules symlinked, built; the worktree is never touched.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc612-r1-designer
+E=/home/scott/code/steelCompendium/worktrees/sc612-twin-deleted-wholenote-pin/draw-steel-elements
+for t in base-tree probe-tree; do
+  mkdir -p "$S/$t"
+  git -C "$E" archive 63e00d7e | tar -x -C "$S/$t"
+  ln -sfn "$E/node_modules" "$S/$t/node_modules"
+done
+python3 -I "$S/patch.py" N3 "$S/probe-tree" >> "$1" 2>&1
+for t in base-tree probe-tree; do
+  (cd "$S/$t" && node esbuild.config.mjs production) >> "$1" 2>&1
+  echo "$t build_rc=$?" >> "$1"
+  sha256sum "$S/$t/main.js" "$S/$t/styles.css" >> "$1"
+  python3 -I "$S/make-scratch.py" "$S/$t" >> "$1" 2>&1
+done

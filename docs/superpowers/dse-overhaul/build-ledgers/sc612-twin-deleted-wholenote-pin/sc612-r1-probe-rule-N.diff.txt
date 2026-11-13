@@ -1,0 +1,15 @@
+diff --git a/src/framework/host/ReadingModeBlockHost.ts b/src/framework/host/ReadingModeBlockHost.ts
+index 8450d8f7..70a580ae 100644
+--- a/src/framework/host/ReadingModeBlockHost.ts
++++ b/src/framework/host/ReadingModeBlockHost.ts
+@@ -1165,7 +1165,9 @@ export class ReadingModeBlockHost implements BlockHost {
+ 		const line = mapLine(pin.text, content, pin.lineStart);
+ 		if (line === null) return null;
+ 		// SC-607: the head-first map reads the LOWER of two identical blocks as deleted; a pin placed in the note as drawn must not depend on that tie
+-		if (strictPins.has(pin) && mapLineFromTail(pin.text, content, pin.lineStart) !== line) return null;
++		// SC-612: a whole-note pin is mapped strictly too while the known body occurs twice (in the note as pinned or now): of two identical blocks
++		// with identical surroundings, a deletion of one reads the same as a deletion of the other, and the head-first guess must not place a write.
++		if ((strictPins.has(pin) || this.twinned(content, pin)) && mapLineFromTail(pin.text, content, pin.lineStart) !== line) return null;
+ 		const fence = this.fenceAt(content, line);
+ 		if (!fence) return null;
+ 		if (this.knownBody !== null && normalizeBody(fence.body) !== normalizeBody(this.knownBody)) return null;

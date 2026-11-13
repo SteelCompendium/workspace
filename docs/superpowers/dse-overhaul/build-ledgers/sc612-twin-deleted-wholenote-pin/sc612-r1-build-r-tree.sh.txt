@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# build-r-tree.sh <log>: scratch export r-tree (63e00d7e + the recommended rule R), built; worktree untouched.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc612-r1-designer
+E=/home/scott/code/steelCompendium/worktrees/sc612-twin-deleted-wholenote-pin/draw-steel-elements
+mkdir -p "$S/r-tree"
+git -C "$E" archive 63e00d7e | tar -x -C "$S/r-tree"
+ln -sfn "$E/node_modules" "$S/r-tree/node_modules"
+python3 -I "$S/patch.py" R "$S/r-tree" >> "$1" 2>&1
+(cd "$S/r-tree" && node esbuild.config.mjs production) >> "$1" 2>&1
+echo "r-tree build_rc=$?" >> "$1"
+sha256sum "$S/r-tree/main.js" "$S/r-tree/styles.css" >> "$1"
+python3 -I "$S/make-scratch.py" "$S/r-tree" >> "$1" 2>&1

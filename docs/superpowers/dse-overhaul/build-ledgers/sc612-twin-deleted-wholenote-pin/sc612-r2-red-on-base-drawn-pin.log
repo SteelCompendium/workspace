@@ -1,0 +1,23 @@
+FAIL dom test/dom/framework/reading-mode-host-drawn-pin.test.ts (51.703 s)
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › a form in an embed whose part is the whole note, on the upper of two blank-line twins, the upper deleted and the last line edited, Save: refused (the greedy maps)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      686 | 		await settle();
+      687 | 		c.outside(now);
+    > 688 | 		expect(await c.host.replaceSource(bodyOf(5, 'Edited'), { pin: pin!, pinOnly: true })).toBe(false);
+          | 		                                                                                      ^
+      689 |
+      690 | 		expect(c.app.vault.getContent('Note.md')).toBe(now.join('\n'));
+      691 | 		expect(Notice.notices).toEqual(dropped);
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-drawn-pin.test.ts:688:89)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 801 passed, 802 total
+Snapshots:   0 total
+Time:        52.286 s
+Ran all test suites matching test/dom/framework/reading-mode-host-drawn-pin.test.ts.

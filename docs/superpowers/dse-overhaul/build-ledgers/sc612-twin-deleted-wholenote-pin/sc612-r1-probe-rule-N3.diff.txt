@@ -1,0 +1,87 @@
+diff --git a/src/framework/host/ReadingModeBlockHost.ts b/src/framework/host/ReadingModeBlockHost.ts
+index 8450d8f7..62b0723b 100644
+--- a/src/framework/host/ReadingModeBlockHost.ts
++++ b/src/framework/host/ReadingModeBlockHost.ts
+@@ -63,7 +63,7 @@
+ import { MarkdownRenderChild, TFile, resolveSubpath } from 'obsidian';
+ import type { CachedMetadata, Component, MarkdownPostProcessorContext, MarkdownSectionInformation, MarkdownView, Plugin } from 'obsidian';
+ import type { BlockHost, BlockInfo, BlockPin, BlockWriteOptions, RenderMode } from './BlockHost';
+-import { mapLine, mapLineFromTail, mapLineStrict } from './lineMap';
++import { mapLine, mapLineFromTail, mapLineGreedy, mapLineStrict, mapLineStrictPure } from './lineMap';
+ import type { PreviewScrollPin } from './previewScrollPin';
+ import { listFences } from '../sidebar/anchor';
+ import { notifyDroppedWrite, notifyUnsavableWrite } from './droppedWriteNotice';
+@@ -1165,7 +1165,19 @@ export class ReadingModeBlockHost implements BlockHost {
+ 		const line = mapLine(pin.text, content, pin.lineStart);
+ 		if (line === null) return null;
+ 		// SC-607: the head-first map reads the LOWER of two identical blocks as deleted; a pin placed in the note as drawn must not depend on that tie
+-		if (strictPins.has(pin) && mapLineFromTail(pin.text, content, pin.lineStart) !== line) return null;
++		// SC-612 r1 probe (N3): while the known body occurs twice, every alignment must put the block on `line`; an alignment that pairs the
++		// fence line with the fence of a block of ANOTHER body (fence lines are all alike) says nothing about twins and is not counted.
++		if (strictPins.has(pin) || this.twinned(content, pin)) {
++			const known = this.knownBody;
++			const dissent = (r: number | null | 'gave up'): boolean => {
++				if (r === line || r === 'gave up') return false; // a map with no answer says nothing about twins
++				if (r === null || known === null) return true;
++				const f = this.fenceAt(content, r);
++				return !(f && normalizeBody(f.body) !== normalizeBody(known));
++			};
++			if (mapLineFromTail(pin.text, content, pin.lineStart) !== line) return null;
++			if (dissent(mapLineGreedy(pin.text, content, pin.lineStart, 'head')) || dissent(mapLineGreedy(pin.text, content, pin.lineStart, 'tail'))) return null;
++		}
+ 		const fence = this.fenceAt(content, line);
+ 		if (!fence) return null;
+ 		if (this.knownBody !== null && normalizeBody(fence.body) !== normalizeBody(this.knownBody)) return null;
+diff --git a/src/framework/host/lineMap.ts b/src/framework/host/lineMap.ts
+index 0121f268..e1c08e7f 100644
+--- a/src/framework/host/lineMap.ts
++++ b/src/framework/host/lineMap.ts
+@@ -72,13 +72,13 @@ function fromTail(a: readonly string[], b: readonly string[], line: number): num
+ 	return r === null || r === GAVE_UP ? r : b.length - 1 - r;
+ }
+ 
+-function mapLineOf(a: readonly string[], b: readonly string[], line: number): number | null | typeof GAVE_UP {
++function mapLineOf(a: readonly string[], b: readonly string[], line: number, trimTail = true): number | null | typeof GAVE_UP {
+ 	if (line < 0 || line >= a.length) return null;
+ 	let head = 0;
+ 	while (head < a.length && head < b.length && a[head] === b[head]) head++;
+ 	if (line < head) return line;
+ 	let tail = 0;
+-	while (tail < a.length - head && tail < b.length - head && a[a.length - 1 - tail] === b[b.length - 1 - tail]) tail++;
++	while (trimTail && tail < a.length - head && tail < b.length - head && a[a.length - 1 - tail] === b[b.length - 1 - tail]) tail++;
+ 	if (line >= a.length - tail) return line + (b.length - a.length);
+ 	// Myers over the changed middle a[head, a.length - tail) / b[head, b.length - tail).
+ 	const A = a.slice(head, a.length - tail);
+@@ -128,3 +128,32 @@ function mapLineOf(a: readonly string[], b: readonly string[], line: number): nu
+ 	}
+ 	return null;
+ }
++
++/** SC-612 r1 probe: one greedy extreme ('head': only the common head trimmed, the forward diff over the rest; 'tail': the mirror). Null: changed or removed; 'gave up': more than LINE_MAP_MAX_EDITS. */
++export function mapLineGreedy(before: string, after: string, line: number, dir: 'head' | 'tail'): number | null | 'gave up' {
++	if (before === after) return line;
++	const a = splitLines(before);
++	const b = splitLines(after);
++	if (line < 0 || line >= a.length) return null;
++	if (dir === 'head') {
++		return mapLineOf(a, b, line, false);
++	}
++	const r = mapLineOf(a.slice().reverse(), b.slice().reverse(), a.length - 1 - line, false);
++	return r === null || r === GAVE_UP ? r : b.length - 1 - r;
++}
++
++/** SC-612 r1 probe: the two GREEDY extremes - head-first trims only the common head and runs the forward diff over the rest (the earliest
++ * pairing), tail-first trims only the common tail and runs the diff over the reversed rest (the latest pairing). A tie between identical
++ * blocks is seen even when an unrelated edit elsewhere stops one of the trims. */
++export function mapLineStrictPure(before: string, after: string, line: number): StrictLine {
++	if (before === after) return { line };
++	const a = splitLines(before);
++	const b = splitLines(after);
++	if (line < 0 || line >= a.length) return 'deleted';
++	const head = mapLineOf(a, b, line, false);
++	const r = mapLineOf(a.slice().reverse(), b.slice().reverse(), a.length - 1 - line, false);
++	const tail = r === null || r === GAVE_UP ? r : b.length - 1 - r;
++	if (head === GAVE_UP || tail === GAVE_UP) return 'gave up';
++	if (head === null && tail === null) return 'deleted';
++	return head !== null && head === tail ? { line: head } : 'disagree';
++}

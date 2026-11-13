@@ -1,0 +1,57 @@
+// SC-612 r1 timing (scratch; needs the N3 probe's lineMap.ts: mapLineGreedy). Median ms of each map on a large note; one JSON line to $SC612_OUT.
+import * as fs from 'fs';
+import { mapLine, mapLineFromTail, mapLineStrict, mapLineGreedy } from '../../../src/framework/host/lineMap';
+import { countByBody } from '../../../src/framework/host/ReadingModeBlockHost';
+
+const CTR = (v: number) => ['```ds-counter', 'name: Twin', `current_value: ${v}`, '```'];
+function note(n: number, changed: number, tag: string): { text: string; pin: number } {
+	// n lines of prose with a counter every 20 lines (identical twins), the pinned counter in the middle; `changed` lines rewritten, half above half below it
+	const lines: string[] = [];
+	let pin = -1;
+	for (let i = 0; lines.length < n; i++) {
+		if (i % 20 === 10) {
+			if (pin < 0 && lines.length >= n / 2) pin = lines.length;
+			lines.push(...CTR(5), '');
+		} else lines.push(`p${i}`);
+	}
+	const prose = lines.map((l, i) => (/^p\d+$/.test(l) ? i : -1)).filter((i) => i >= 0);
+	const above = prose.filter((i) => i < pin);
+	const below = prose.filter((i) => i > pin);
+	const pick = [...above.slice(above.length - Math.ceil(changed / 2)), ...below.slice(0, Math.floor(changed / 2))];
+	const out = lines.slice();
+	for (const i of pick) out[i] = `${out[i]} ${tag}`;
+	return { text: out.join('\n'), pin };
+}
+const med = (f: () => unknown, n = 15): number => {
+	const t: number[] = [];
+	for (let i = 0; i < n; i++) {
+		const s = performance.now();
+		f();
+		t.push(performance.now() - s);
+	}
+	t.sort((a, b) => a - b);
+	return Math.round(t[Math.floor(n / 2)] * 100) / 100;
+};
+
+test('SC-612 r1 timing', () => {
+	const rows: unknown[] = [];
+	for (const [n, ch] of [[2000, 10], [2000, 200], [2000, 398], [2000, 420], [500, 10], [5000, 398]] as const) {
+		const before = note(n, 0, '');
+		const after = note(n, ch, 'x');
+		// the edit: half the changed lines above the pin, half below (a line changed = 2 edits, so 200 lines = 400 edits)
+		const p = before.pin;
+		rows.push({
+			lines: n,
+			changedLines: ch,
+			mapLine: med(() => mapLine(before.text, after.text, p)),
+			mapLineFromTail: med(() => mapLineFromTail(before.text, after.text, p)),
+			mapLineStrict: med(() => mapLineStrict(before.text, after.text, p)),
+			greedyHead: med(() => mapLineGreedy(before.text, after.text, p, 'head')),
+			greedyTail: med(() => mapLineGreedy(before.text, after.text, p, 'tail')),
+			countByBody2: med(() => countByBody(before.text, 'ds-counter', 'name: Twin\ncurrent_value: 5') + countByBody(after.text, 'ds-counter', 'name: Twin\ncurrent_value: 5')),
+			result: { head: mapLine(before.text, after.text, p), strict: mapLineStrict(before.text, after.text, p), gh: mapLineGreedy(before.text, after.text, p, 'head'), gt: mapLineGreedy(before.text, after.text, p, 'tail') },
+		});
+	}
+	if (process.env.SC612_OUT) fs.writeFileSync(process.env.SC612_OUT, rows.map((r) => JSON.stringify(r)).join('\n') + '\n');
+	expect(rows.length).toBe(6);
+}, 300000);

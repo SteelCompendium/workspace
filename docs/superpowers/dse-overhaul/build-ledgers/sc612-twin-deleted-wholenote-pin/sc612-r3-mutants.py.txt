@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+# r3 mutants: apply one mutant at a time to the `mut` copy, run the SC-612 jest files, restore.
+import subprocess, sys, shutil, re
+S = '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc612-r3-reviewer'
+M = S + '/mut'
+H = M + '/src/framework/host/ReadingModeBlockHost.ts'
+LM = M + '/src/framework/host/lineMap.ts'
+MUTS = {
+    'MA drop the greedy check': (H, "		if (twin && (this.greedyDissents(content, pin, line, 'head') || this.greedyDissents(content, pin, line, 'tail'))) return null;\n", ''),
+    'MB no twin gate (every pin)': (H, '		const twin = this.twinned(content, pin);\n', '		const twin = true;\n'),
+    'MC flip at === line in greedyDissents': (H, "		if (at === line || at === 'gave up') return false;", "		if (at !== line || at === 'gave up') return false;"),
+    'MD no another-body exemption': (H, '		return !(fence && normalizeBody(fence.body) !== normalizeBody(this.knownBody));', '		return true;'),
+    'ME greedy trims both ends': (LM, '	while (trimTail && tail <', '	while (tail <'),
+    'MF gave up dissents': (H, "		if (at === line || at === 'gave up') return false;", '		if (at === line) return false;'),
+    'MG twin gate only on pin.text': (H, '		return countByBody(pin.text, this.knownLanguage, this.knownBody) > 1 || countByBody(content, this.knownLanguage, this.knownBody) > 1;', '		return countByBody(pin.text, this.knownLanguage, this.knownBody) > 1;'),
+    'MG2 twin gate only on content now': (H, '		return countByBody(pin.text, this.knownLanguage, this.knownBody) > 1 || countByBody(content, this.knownLanguage, this.knownBody) > 1;', '		return countByBody(content, this.knownLanguage, this.knownBody) > 1;'),
+    'MH no tail-first for twins (r1 M2)': (H, '		if ((strictPins.has(pin) || twin) && mapLineFromTail', '		if (strictPins.has(pin) && mapLineFromTail'),
+    'MI head greedy only': (H, "this.greedyDissents(content, pin, line, 'head') || this.greedyDissents(content, pin, line, 'tail')", "this.greedyDissents(content, pin, line, 'head')"),
+    'MJ tail greedy only': (H, "this.greedyDissents(content, pin, line, 'head') || this.greedyDissents(content, pin, line, 'tail')", "this.greedyDissents(content, pin, line, 'tail')"),
+    'MK tail greedy index not un-reversed': (LM, "	const r = mapLineOf(a.slice().reverse(), b.slice().reverse(), a.length - 1 - line, false);\n	return r === null || r === GAVE_UP ? r : b.length - 1 - r;", "	const r = mapLineOf(a.slice().reverse(), b.slice().reverse(), a.length - 1 - line, false);\n	return r;"),
+    'ML greedy dissent on null ignored': (H, '		if (at === null || this.knownBody === null) return true;', '		if (at === null || this.knownBody === null) return false;'),
+}
+FILES = ['test/dom/framework/reading-mode-host-whole-pin.test.ts', 'test/dom/framework/reading-mode-host-whole-pin-sweep.test.ts', 'test/unit/framework/lineMap.test.ts', 'test/dom/framework/reading-mode-host-drawn-pin.test.ts']
+out = open(S + '/mutants.out', 'w')
+for name, (f, old, new) in MUTS.items():
+    src = open(f).read()
+    assert src.count(old) == 1, name
+    open(f, 'w').write(src.replace(old, new))
+    try:
+        r = subprocess.run(['npx', 'jest', *FILES], cwd=M, capture_output=True, text=True, timeout=600)
+        txt = r.stdout + r.stderr
+        tests = re.findall(r'Tests:.*', txt)
+        failed = sorted(set(re.findall(r'●\s+(.*?)\n', txt)))
+        line = f"{name}: {'KILLED' if r.returncode else 'SURVIVED'} | {tests[-1] if tests else '?'} | " + ' || '.join(x[:110] for x in failed[:8])
+    finally:
+        open(f, 'w').write(src)
+    print(line, flush=True)
+    out.write(line + '\n')
+    out.flush()

@@ -1,0 +1,40 @@
+== M1 vs R: == refused -> A: 336 == refused -> OTHER: 304 
+             base     M1
+  single/a/ins-twin-above-adj+top/card-identity                refused    -> A          notice disk -> none  next=None
+  single/a/ins-twin-above-adj+top/card-index                   refused    -> A          notice disk -> none  next=None
+  single/a/ins-twin-above-adj+top/card-null                    refused    -> A          notice disk -> none  next=None
+== M2 vs R: 
+             base     M2
+   single a del-pinned-paste-end form OTHER:N base: OTHER:N
+   single a del-pinned-paste-end card-identity OTHER:N base: OTHER:N
+   single a del-pinned-paste-end card-index OTHER:N base: OTHER:N
+== M3 vs R: == A -> refused: 76 
+             base     M3
+  triple-blank/a/ins-diff-above-adj+top/card-identity          A          -> refused    notice none -> disk  next=A
+  triple-blank/a/ins-diff-above-adj+top/card-index             A          -> refused    notice none -> disk  next=A
+  triple-blank/a/ins-diff-above-adj+top/card-null              A          -> refused    notice none -> disk  next=A
+== M4 vs R: == A -> refused: 68 
+             base     M4
+  triple-blank/a/big-above/card-identity                       A          -> refused    notice none -> disk  next=A
+  triple-blank/a/big-above/card-index                          A          -> refused    notice none -> disk  next=A
+  triple-blank/a/big-above/card-null                           A          -> refused    notice none -> disk  next=A
+== M5 vs R: == refused -> A: 152 == refused -> OTHER: 128 
+             base     M5
+  single/a/ins-twin-below-adj+end/card-identity                refused    -> A          notice disk -> none  next=None
+  single/a/ins-twin-below-adj+end/card-index                   refused    -> A          notice disk -> none  next=None
+  single/a/ins-twin-below-adj+end/card-null                    refused    -> A          notice disk -> none  next=None
+== M6 vs R: == refused -> A: 184 == refused -> OTHER: 176 
+             base     M6
+  single/a/ins-twin-above-adj+top/card-identity                refused    -> A          notice disk -> none  next=None
+  single/a/ins-twin-above-adj+top/card-index                   refused    -> A          notice disk -> none  next=None
+  single/a/ins-twin-above-adj+top/card-null                    refused    -> A          notice disk -> none  next=None
+== M7 vs R: == refused -> A: 336 == refused -> OTHER: 304 
+             base     M7
+  single/a/ins-twin-above-adj+top/card-identity                refused    -> A          notice disk -> none  next=None
+  single/a/ins-twin-above-adj+top/card-index                   refused    -> A          notice disk -> none  next=None
+  single/a/ins-twin-above-adj+top/card-null                    refused    -> A          notice disk -> none  next=None
+== M8 vs R: == A -> refused: 1 == OTHER -> refused: 1 
+             base     M8
+  uniq-blank/b/del-other-a+top/form                            A          -> refused    notice none -> disk  next=A
+  uniq-blank/b/del-pinned-other-to-p-a+top/form                OTHER:a    -> refused    notice none -> disk  next=None
+   single a del-pinned-paste-end form OTHER:N base: OTHER:N

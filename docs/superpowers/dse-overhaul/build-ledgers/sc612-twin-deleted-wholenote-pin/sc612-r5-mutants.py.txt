@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+# r3 mutants: apply one mutant at a time to the `mut` copy, run the SC-612 jest files, restore.
+import subprocess, sys, shutil, re
+S = '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc612-r5-reviewer'
+M = S + '/mut'
+H = M + '/src/framework/host/ReadingModeBlockHost.ts'
+LM = M + '/src/framework/host/lineMap.ts'
+MUTS = {
+    'R1 ties allowed (cost < best)': (H, "if (cost !== null && cost <= best) return false;", "if (cost !== null && cost < best) return false;"),
+    'R2 head-first not an identical block -> place': (H, "if (!here) return false;", "if (!here) return true;"),
+    'R3 suffix off by one (qe instead of qe + 1)': (H, "const after = editDistance(suf, B.slice(qe + 1), cap - before);", "const after = editDistance(suf, B.slice(qe), cap - before);"),
+    'R4 prune too eager (>= best)': (H, "(A.length - 1 - e)) > best) continue;", "(A.length - 1 - e)) >= best) continue;"),
+    'R5 deleted tie counted as unique (>=)': (H, "return gone === null || gone + blk.length > best;", "return gone === null || gone + blk.length >= best;"),
+    'R6 no twin gate': (H, "if (this.twinned(content, pin) && !this.placedUniquely(content, pin, line)) return null;", "if (!this.placedUniquely(content, pin, line)) return null;"),
+    'R7 editDistance cap boundary (>= cap)': (LM, "if (Math.abs(n - m) > cap) return null;", "if (Math.abs(n - m) >= cap) return null;"),
+    'R8 candidates by length only': (H, "const same = this.blockSpans(content).filter(([q, qe]) => qe - q === e - s && blk.every((l, i) => B[q + i] === l));", "const same = this.blockSpans(content).filter(([q, qe]) => qe - q === e - s);"),
+}
+FILES = ['test/dom/framework/reading-mode-host-whole-pin.test.ts', 'test/dom/framework/reading-mode-host-whole-pin-sweep.test.ts', 'test/dom/framework/reading-mode-host-whole-pin-fuzz.test.ts', 'test/unit/framework/lineMap.test.ts', 'test/dom/framework/reading-mode-host-drawn-pin.test.ts']
+out = open(S + '/mutants.out', 'w')
+for name, (f, old, new) in MUTS.items():
+    src = open(f).read()
+    assert src.count(old) == 1, name
+    open(f, 'w').write(src.replace(old, new))
+    try:
+        r = subprocess.run(['npx', 'jest', *FILES], cwd=M, capture_output=True, text=True, timeout=600)
+        txt = r.stdout + r.stderr
+        tests = re.findall(r'Tests:.*', txt)
+        failed = sorted(set(re.findall(r'●\s+(.*?)\n', txt)))
+        line = f"{name}: {'KILLED' if r.returncode else 'SURVIVED'} | {tests[-1] if tests else '?'} | " + ' || '.join(x[:110] for x in failed[:8])
+    finally:
+        open(f, 'w').write(src)
+    print(line, flush=True)
+    out.write(line + '\n')
+    out.flush()

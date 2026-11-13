@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# run-jest-full.sh <variant|base> <log>: full jest in the worktree with the probe <variant> applied (none for base); the host and lineMap restored after.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc612-r1-designer
+E=/home/scott/code/steelCompendium/worktrees/sc612-twin-deleted-wholenote-pin/draw-steel-elements
+cd "$E" || exit 9
+[ "$(git -C "$E" branch --show-current)" = sc612-twin-deleted-wholenote-pin ] || { echo "wrong branch" > "$2"; exit 9; }
+rm -f "$E/main.js" "$E/styles.css"
+: > "$2"
+t0=$(date +%s)
+if [ "$1" != base ]; then python3 -I "$S/patch.py" "$1" "$E" >> "$2" 2>&1 || { echo "patch failed" >> "$2"; git -C "$E" checkout -- src/framework/host/ReadingModeBlockHost.ts src/framework/host/lineMap.ts; exit 9; }; fi
+git -C "$E" diff --stat >> "$2"
+npx jest >> "$2" 2>&1
+rc=$?
+git -C "$E" checkout -- src/framework/host/ReadingModeBlockHost.ts src/framework/host/lineMap.ts
+rm -f "$E/main.js" "$E/styles.css"
+echo "jest_rc=$rc wall=$(( $(date +%s) - t0 ))s load=$(cut -d' ' -f1-3 /proc/loadavg)" >> "$2"
+git -C "$E" status --porcelain >> "$2"

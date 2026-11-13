@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# run-timing.sh <out> <log>: N3 probe applied, the timing test copied in, run, deleted by literal path, tree restored.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc612-r1-designer
+E=/home/scott/code/steelCompendium/worktrees/sc612-twin-deleted-wholenote-pin/draw-steel-elements
+cd "$E" || exit 9
+[ "$(git -C "$E" branch --show-current)" = sc612-twin-deleted-wholenote-pin ] || exit 9
+rm -f "$E/main.js" "$E/styles.css"
+: > "$2"
+python3 -I "$S/patch.py" N3 "$E" >> "$2" 2>&1
+cp "$S/sc612-r1-timing.test.ts" "$E/test/dom/framework/sc612-r1-timing.test.ts"
+SC612_OUT="$1" npx jest test/dom/framework/sc612-r1-timing.test.ts >> "$2" 2>&1
+echo "rc=$? load=$(cut -d' ' -f1-3 /proc/loadavg)" >> "$2"
+rm -f "$E/test/dom/framework/sc612-r1-timing.test.ts"
+git -C "$E" checkout -- src/framework/host/ReadingModeBlockHost.ts src/framework/host/lineMap.ts
+git -C "$E" status --porcelain >> "$2"

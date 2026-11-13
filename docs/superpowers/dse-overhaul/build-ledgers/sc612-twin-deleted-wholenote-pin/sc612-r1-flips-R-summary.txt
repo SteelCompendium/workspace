@@ -1,0 +1,44 @@
+A -> refused: 644  by construct {'form': 161, 'card-identity': 161, 'card-index': 161, 'card-null': 161}
+      28 del-other (alone)
+      24 del-other +both
+      20 del-other +end
+      28 del-other +top
+       8 ins-twin-above-adj +both
+      80 ins-twin-above-adj +top
+      80 ins-twin-below-adj (alone)
+      72 ins-twin-below-adj +both
+      72 ins-twin-below-adj +end
+      60 ins-twin-bottom (alone)
+      52 ins-twin-bottom +both
+      52 ins-twin-bottom +end
+       4 ins-twin-bottom +top
+       4 ins-twin-top (alone)
+       8 ins-twin-top +both
+      52 ins-twin-top +top
+OTHER -> refused: 596  by construct {'form': 149, 'card-identity': 149, 'card-index': 149, 'card-null': 149}
+       4 del-other (alone)
+       4 del-other +both
+       4 del-other +end
+       4 del-other +top
+      16 del-pinned (alone)
+      20 del-pinned +both
+      16 del-pinned +end
+      16 del-pinned +top
+      80 ins-twin-above-adj (alone)
+      72 ins-twin-above-adj +both
+      72 ins-twin-above-adj +end
+       8 ins-twin-below-adj +both
+      80 ins-twin-below-adj +top
+       8 ins-twin-bottom +both
+      56 ins-twin-bottom +top
+      48 ins-twin-top (alone)
+      44 ins-twin-top +both
+      44 ins-twin-top +end
+refused -> A: 0  by construct {}
+refused -> OTHER: 0  by construct {}
+A -> OTHER: 0  by construct {}
+OTHER -> A: 0  by construct {}
+OTHER -> OTHER-diff: 0  by construct {}
+new refusals NOT in {identical counter added / removed / the pinned one deleted next to a twin}: 0
+own rounds (no outside edit): Counter({('card-twice-stale', 'A'): 20, ('form-after-plus-stale', 'A'): 20, ('card-sibling-then-own', 'A'): 19})
+R refusals 2326 notice kinds Counter({'disk': 2326}) next Counter({'A': 1918, 'n/a': 408})

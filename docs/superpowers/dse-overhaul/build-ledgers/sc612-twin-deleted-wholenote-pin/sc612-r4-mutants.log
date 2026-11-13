@@ -1,0 +1,126 @@
+mutant P1 drop the uniqueness test (another placement at the same or lower cost does not refuse)
+P1 jest_rc=1 Tests:       7 failed, 890 passed, 897 total
+    whole-note pin fuzz › seed 1: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pin fuzz › seed 2: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pin fuzz › seed 3: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pins of identical blocks › T6 an identical counter added right below the form: refused, then the form reopened on the note as it is n
+    whole-note pins of identical blocks › T6b card on the upper twin: an identical counter added ABOVE the run with prose between: refused too (the 
+    whole-note pins of identical blocks › T6b form on the upper twin: an identical counter added ABOVE the run with prose between: refused too (the 
+    whole-note pin sweep › every cell: no write where the oracle sees a tie, one Notice per refusal, the next round saves, no refusal where nothing 
+mutant P2 no twin gate (every pin gets the placement check)
+P2 jest_rc=1 Tests:       3 failed, 894 passed, 897 total
+    whole-note pin fuzz › seed 2: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pins of identical blocks › T12 the user's own rounds, no outside edit › + then the edit form with the section still the note from b
+    whole-note pin sweep › every cell: no write where the oracle sees a tie, one Notice per refusal, the next round saves, no refusal where nothing 
+mutant P3 place on a non-unique minimum (a tie with another placement is allowed)
+P3 jest_rc=1 Tests:       7 failed, 890 passed, 897 total
+    whole-note pin fuzz › seed 1: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pin fuzz › seed 2: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pin fuzz › seed 3: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pins of identical blocks › T6 an identical counter added right below the form: refused, then the form reopened on the note as it is n
+    whole-note pins of identical blocks › T6b card on the upper twin: an identical counter added ABOVE the run with prose between: refused too (the 
+    whole-note pins of identical blocks › T6b form on the upper twin: an identical counter added ABOVE the run with prose between: refused too (the 
+    whole-note pin sweep › every cell: no write where the oracle sees a tie, one Notice per refusal, the next round saves, no refusal where nothing 
+mutant P4 ignore the deleted option
+P4 jest_rc=1 Tests:       19 failed, 878 passed, 897 total
+    a preview that stayed open while the note changed never writes a different, identical counter › a form in an embed whose part is the whole note,
+    whole-note pin fuzz › seed 1: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pin fuzz › seed 2: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pin fuzz › seed 3: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pins of identical blocks › H1b card on the lower twin, the lower deleted and the blank line under TOP deleted, a different counter be
+    whole-note pins of identical blocks › H1b form on the lower twin, the lower deleted and the blank line under TOP deleted, a different counter be
+    whole-note pins of identical blocks › H1 card on the lower twin, the lower deleted and TOP edited, a different counter below the run: refused
+    whole-note pins of identical blocks › H1c card on the lower of the twins, the upper twin deleted and BOTTOM edited, a different counter above th
+mutant P5 the cap is not honoured (editDistance caps nothing)
+P5 jest_rc=1 Tests:       2 failed, 895 passed, 897 total
+    editDistance › defaults to LINE_MAP_MAX_EDITS: a rewrite of more lines than that has no distance, an insertion of a few hundred lines has
+    editDistance › null when the distance is more than the cap, the value when it is exactly the cap
+mutant P6 no lower-bound prune (an optimisation; expected equivalent)
+P6 jest_rc=0 Tests:       897 passed, 897 total
+mutant P7 strict pins skip the placement check
+P7 jest_rc=1 Tests:       1 failed, 896 passed, 897 total
+    a preview that stayed open while the note changed never writes a different, identical counter › a form in an embed whose part is the whole note,
+mutant P8 a candidate is any block of the same length (lines not compared)
+P8 jest_rc=1 Tests:       12 failed, 885 passed, 897 total
+    whole-note pin fuzz › seed 1: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pin fuzz › seed 2: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pin fuzz › seed 3: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pins of identical blocks › M2 card: the other twin bumped (a sibling write) and a different counter added below the pinned one: saves
+    whole-note pins of identical blocks › M2 form: the other twin bumped (a sibling write) and a different counter added below the pinned one: saves
+    whole-note pins of identical blocks › M3 card: of three identical counters a blank line above the pinned one removed and a different counter add
+    whole-note pins of identical blocks › M3 form: of three identical counters a blank line above the pinned one removed and a different counter add
+    whole-note pins of identical blocks › M6 card: the other twin bumped and a different counter added below the pinned one: saves
+mutant P9 a head-first answer that is no identical block is trusted
+P9 jest_rc=1 Tests:       5 failed, 892 passed, 897 total
+    whole-note pin fuzz › seed 1: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pin fuzz › seed 2: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pin fuzz › seed 3: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pins of identical blocks › card on the pinned UNTERMINATED trailing fence, an identical but CLOSED copy pasted above it: refused (the
+    whole-note pins of identical blocks › form on the pinned UNTERMINATED trailing fence, an identical but CLOSED copy pasted above it: refused (the
+mutant P10 the deleted option costs nothing for the block (no + blk.length)
+P10 jest_rc=1 Tests:       34 failed, 863 passed, 897 total
+    a preview that stayed open while the note changed never writes a different, identical counter › block embed lp card upper=false del-upper-sep fr
+    a preview that stayed open while the note changed never writes a different, identical counter › block embed lp card upper=false del-upper-sep la
+    a preview that stayed open while the note changed never writes a different, identical counter › block embed lp card upper=false del-upper-sep la
+    a preview that stayed open while the note changed never writes a different, identical counter › block embed lp form upper=false del-upper-sep fr
+    a preview that stayed open while the note changed never writes a different, identical counter › block embed lp form upper=false del-upper-sep la
+    a preview that stayed open while the note changed never writes a different, identical counter › block embed lp form upper=false del-upper-sep la
+    a preview that stayed open while the note changed never writes a different, identical counter › block embed rv card upper=false del-upper-sep fr
+    a preview that stayed open while the note changed never writes a different, identical counter › block embed rv card upper=false del-upper-sep la
+mutant P11 only the lines before the block are priced
+P11 jest_rc=1 Tests:       18 failed, 879 passed, 897 total
+    a preview that stayed open while the note changed never writes a different, identical counter › a form in an embed whose part is the whole note,
+    whole-note pin fuzz › seed 1: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pin fuzz › seed 2: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pin fuzz › seed 3: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pins of identical blocks › H1c card on the lower of the twins, the upper twin deleted and BOTTOM edited, a different counter above th
+    whole-note pins of identical blocks › H1c form on the lower of the twins, the upper twin deleted and BOTTOM edited, a different counter above th
+    whole-note pins of identical blocks › T13 card on the MIDDLE of a run of three identical counters, the upper deleted: refused (the base writes t
+    whole-note pins of identical blocks › T13 form on the MIDDLE of a run of three identical counters, the upper deleted: refused (the base writes t
+mutant P12 the tail-first check also for twinned pins (rule R again)
+P12 jest_rc=1 Tests:       9 failed, 888 passed, 897 total
+    whole-note pin fuzz › seed 1: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pin fuzz › seed 2: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pin fuzz › seed 3: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pins of identical blocks › M2 card: the other twin bumped (a sibling write) and a different counter added below the pinned one: saves
+    whole-note pins of identical blocks › M2 form: the other twin bumped (a sibling write) and a different counter added below the pinned one: saves
+    whole-note pins of identical blocks › M3 card: of three identical counters a blank line above the pinned one removed and a different counter add
+    whole-note pins of identical blocks › M3 form: of three identical counters a blank line above the pinned one removed and a different counter add
+    whole-note pins of identical blocks › M6 card: the other twin bumped and a different counter added below the pinned one: saves
+mutant P13 the lower bound prunes ties (>= instead of >)
+P13 jest_rc=1 Tests:       7 failed, 890 passed, 897 total
+    whole-note pin fuzz › seed 1: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pin fuzz › seed 2: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pin fuzz › seed 3: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pins of identical blocks › T6 an identical counter added right below the form: refused, then the form reopened on the note as it is n
+    whole-note pins of identical blocks › T6b card on the upper twin: an identical counter added ABOVE the run with prose between: refused too (the 
+    whole-note pins of identical blocks › T6b form on the upper twin: an identical counter added ABOVE the run with prose between: refused too (the 
+    whole-note pin sweep › every cell: no write where the oracle sees a tie, one Notice per refusal, the next round saves, no refusal where nothing 
+mutant P14 a gave-up price for the head-first answer refuses instead of keeping it
+P14 jest_rc=1 Tests:       5 failed, 892 passed, 897 total
+    whole-note pins of identical blocks › T10 card: 500 lines inserted above only, in a note with twins -> saves (the greedy head map gives up and i
+    whole-note pins of identical blocks › T10 form: 500 lines inserted above only, in a note with twins -> saves (the greedy head map gives up and i
+    whole-note pins of identical blocks › T14 card on the upper twin, the lower twin deleted AND 500 lines added below: the capped diff gives up, th
+    whole-note pins of identical blocks › T14 form on the upper twin, the lower twin deleted AND 500 lines added below: the capped diff gives up, th
+    whole-note pin sweep › every cell: no write where the oracle sees a tie, one Notice per refusal, the next round saves, no refusal where nothing 
+mutant P15 the twin gate looks at pin.text only
+P15 jest_rc=1 Tests:       6 failed, 891 passed, 897 total
+    whole-note pin fuzz › seed 1: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pin fuzz › seed 2: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pin fuzz › seed 3: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pins of identical blocks › card on the pinned UNTERMINATED trailing fence, an identical but CLOSED copy pasted above it: refused (the
+    whole-note pins of identical blocks › form on the pinned UNTERMINATED trailing fence, an identical but CLOSED copy pasted above it: refused (the
+    whole-note pin sweep › every cell: no write where the oracle sees a tie, one Notice per refusal, the next round saves, no refusal where nothing 
+mutant P16 the twin gate looks at content only
+P16 jest_rc=1 Tests:       20 failed, 877 passed, 897 total
+    a preview that stayed open while the note changed never writes a different, identical counter › a form in an embed whose part is the whole note,
+    whole-note pin fuzz › seed 1: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pin fuzz › seed 2: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pin fuzz › seed 3: no write in a twinned tie, no refusal outside a tie, one Notice per refusal, the next round saves, nothing corrupt
+    whole-note pins of identical blocks › H1b card on the lower twin, the lower deleted and the blank line under TOP deleted, a different counter be
+    whole-note pins of identical blocks › H1b form on the lower twin, the lower deleted and the blank line under TOP deleted, a different counter be
+    whole-note pins of identical blocks › H1 card on the lower twin, the lower deleted and TOP edited, a different counter below the run: refused
+    whole-note pins of identical blocks › H1c card on the lower of the twins, the upper twin deleted and BOTTOM edited, a different counter above th
+mutant P17 editDistance does not trim the common tail
+P17 jest_rc=0 Tests:       897 passed, 897 total
+MUTDONE

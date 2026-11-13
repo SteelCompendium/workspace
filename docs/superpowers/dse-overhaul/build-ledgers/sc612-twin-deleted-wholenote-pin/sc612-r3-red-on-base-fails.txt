@@ -1,0 +1,22 @@
+  ● SC-607: a preview that stayed open while the note changed never writes a different, identical counter › a form in an embed whose part is the whole note, on the upper of two blank-line twins, the upper deleted and the last line edited, Save: refused (the greedy maps)
+  ● SC-612: mapLineGreedy › a line outside the old text maps to null, in both directions
+  ● SC-612: mapLineGreedy › a line the edit did not touch is placed the same by every map
+  ● SC-612: mapLineGreedy › a one-sided insertion of more than LINE_MAP_MAX_EDITS lines: greedy head says "gave up" where mapLine still maps it
+  ● SC-612: mapLineGreedy › the identity for identical texts
+  ● SC-612: mapLineGreedy › the lower twin deleted and TOP edited: mapLine and mapLineFromTail agree on the survivor, the greedy maps do not
+  ● SC-612: mapLineGreedy › the pure tie (one of two blocks deleted): head pairs the upper twin with the survivor, tail pairs the lower one
+  ● SC-612: mapLineGreedy › the same with BOTTOM edited and the upper twin pinned: now the tail map is the one that says deleted
+  ● SC-612: whole-note pins of identical blocks › T13 card on the MIDDLE of a run of three identical counters, the upper deleted: refused (the base writes the lowest one)
+  ● SC-612: whole-note pins of identical blocks › T13 form on the MIDDLE of a run of three identical counters, the upper deleted: refused (the base writes the lowest one)
+  ● SC-612: whole-note pins of identical blocks › T1/T2 card on the upper twin, the upper deleted from outside: nothing written, the Notice shows
+  ● SC-612: whole-note pins of identical blocks › T1/T2 form on the upper twin, the upper deleted from outside: nothing written, the Notice shows
+  ● SC-612: whole-note pins of identical blocks › T3 card on the lower twin, the lower deleted and TOP edited in the same write: refused (both full maps agree on the survivor, the head greedy map does not)
+  ● SC-612: whole-note pins of identical blocks › T3 form on the lower twin, the lower deleted and TOP edited in the same write: refused (both full maps agree on the survivor, the head greedy map does not)
+  ● SC-612: whole-note pins of identical blocks › T4 card on the upper twin, the upper deleted and BOTTOM edited in the same write: refused (the tail greedy map dissents)
+  ● SC-612: whole-note pins of identical blocks › T4 form on the upper twin, the upper deleted and BOTTOM edited in the same write: refused (the tail greedy map dissents)
+  ● SC-612: whole-note pins of identical blocks › T5b card on the upper twin, the lower deleted: refused too (the note reads the same as T1)
+  ● SC-612: whole-note pins of identical blocks › T5b form on the upper twin, the lower deleted: refused too (the note reads the same as T1)
+  ● SC-612: whole-note pins of identical blocks › T6 an identical counter added right below the form: refused, then the form reopened on the note as it is now saves into that block (not persistent)
+  ● SC-612: whole-note pins of identical blocks › T6b card on the upper twin: an identical counter added ABOVE the run with prose between: refused too (the new block and the pinned one are interchangeable, the accepted cost)
+  ● SC-612: whole-note pins of identical blocks › T6b form on the upper twin: an identical counter added ABOVE the run with prose between: refused too (the new block and the pinned one are interchangeable, the accepted cost)
+  ● SC-612: whole-note pin sweep › every cell: no write where the oracle sees a tie, one Notice per refusal, the next round saves, no refusal where nothing is ambiguous or changed
