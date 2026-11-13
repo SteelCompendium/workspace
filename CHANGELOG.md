@@ -17,6 +17,12 @@ go under an *Internal* sub-heading.
   again, or the next click, saves as usual. A note without identical counters is not affected. In a note open in its own pane; embeds and
   hover previews (SC-607) were already covered.
 
+- **DSE plugin: removing the last condition by keyboard with the Add search open no longer drops keyboard focus (SC-585).**
+  In the Conditions window, if you had the "+ Add condition" search open, Shift+Tabbed back to a condition's trash button and pressed Enter to remove the last
+  remaining condition, focus fell to the page and the search stayed open with nothing focused, so you had to click back into the window. Focus now moves
+  to the search box, which stays open and keeps whatever you had typed. With the search closed, removing the last condition still focuses "+ Add condition",
+  and removing any other condition still moves focus to the next condition (or the one above it, if you removed the bottom one).
+
 - **DSE plugin: the Conditions window can take a color off a condition again (SC-581).**
   In a condition's editor (the cog), once you picked a color swatch nothing could put the condition back to no color, unlike Icon, Duration and Effect, which each
   have a reset choice. The Color row now starts with a **Default** button. Press it and the condition's `color` is removed from the note, the row's icon goes back to
