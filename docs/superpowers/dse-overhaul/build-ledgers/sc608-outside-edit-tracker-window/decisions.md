@@ -1,0 +1,80 @@
+# SC-608 — decisions ledger
+
+Ticket: SC-608 "Initiative: an outside edit to the note while a tracker window is open closes the window and drops keyboard focus to the page" (Backlog at start).
+Owner: ticket-owner (Opus 5.5), session be71a0a9-199f-4e14-967b-191935312b05.
+Worktree: /home/scott/code/steelCompendium/worktrees/sc608-outside-edit-tracker-window (every submodule on branch `sc608-outside-edit-tracker-window`); superproject cut at `38d8c695` (= workspace origin/main 2026-11-12).
+Base: dse `develop` @ `622b0904` (2026-11-12).
+
+Baseline at `622b0904`: jest 10715 passed / 2 skipped (fresh worktree) · lifecycle 60/60 in SIX `--only` parts (21 + 16 + 9 + 4 + 7 + 3) · e2e `280/284 ok, 0 failed, 4 known-bug, coverage: 171/171 pairs` (known bugs SC-257, SC-355, SC-384, SC-580) · shots 592, host-leak 163/978, modal host-leak 39/234, capture clip 147 · freeze 280/280 · parity 0/0/24.
+
+Lifecycle parts: `G-S7a … G-S9a` 21; `G-S9b … G-S40` 16; `G-S45 G-S44 G-S42 G-S50 G-S53 G-S54 G-S52 G-S63 G-S64` 9 (~480 s line, no new G-S64 phases); `G-S57 G-S62 G-S61 G-S56` 4 (G-S56 LAST in SCENARIOS order); `G-S59 G-S49 G-S73 G-S77 G-S83 G-S87 G-S91` 7 (full); `G-S92 G-S96 G-S97` 3 (~230 s, room for ~one 60 s scenario). Reserved id if needed: G-S103.
+
+Prior art (ledgers in `docs/superpowers/dse-overhaul/build-ledgers/`): SC-603 (`openModal` in `src/elements/initiative/view.ts` captures the focus token at open and restores one microtask after close; restore skips while the view is unloading — the gap this ticket names; filed from SC-603 r2 INFO-3), SC-609 (roster click keeps focus), SC-588 (`src/framework/kit/controlFocus.ts`), SC-589 (pinned sidebar outside refresh hands focus back), SC-552 (block edit form "K": a pinned form stays open when the rebuild throws away its view's element, while the note is still shown in some markdown pane; owner ruling, landed).
+Not ours: SC-602, SC-605 (Live Preview), SC-614, SC-615, SC-607 (hover preview +/-), SC-580 (Conditions window type-to-search — parallel owner; coordinate via the dispatcher before touching the Conditions modal file).
+
+## Scott rulings
+
+- 2026-11-12 13:54 (comment on the ask "should the window close or stay open?", Option 1 = "close the window (recommended)"): "Option 1"
+  - The ask's second question (Notice yes/no) and the sidebar fold got no explicit answer. Owner rulings below.
+
+## Dispatcher instructions (2026-11-12)
+
+- "If the ticket turns out to need a decision from Scott (for example, whether the window should stay open at all after an outside edit), ask on the ticket and park."
+
+## Owner rulings
+
+- 2026-11-12 — The ticket's agent notes leave the core behaviour open ("Decide whether the modal should survive the reload, or the new view should take focus"). That is a user-facing choice → Scott's call. Before asking, run ONE bounded survey round (reviewer, no commits) so the ask carries measured facts: per tracker window, what it holds at open, what Apply writes, what happens today on an outside edit, and the cost/risk of each option. Then post one consolidated ask and park.
+
+## Rounds
+
+- 2026-11-12 worktree created (wt-new): dse 622b0904, superproject 38d8c695.
+- 2026-11-12 r1 survey (orchestration:reviewer, identity S1): dispatched on `sc608-brief-r1-survey.md`; report → `sc608-r1-survey-report.md`. No commits. Ticket Backlog → Awaiting.
+- 2026-11-12 r1 DONE (S1): report `sc608-r1-survey-report.md`. No commits; worktree clean (dse 622b0904). Measured: Reading view / LP outside edit inside the block closes every window at 20-40 ms, focus → BODY (mouse-opened pool → `.markdown-preview-view`); edit above/below the block keeps the window open and Apply works. NEW HIGH: pinned sidebar keeps the window open after an outside edit, then Apply/Add writes NOTHING, no Notice (pool, Conditions, hero Stamina; any modify of the note triggers it) — cause `SidebarPanel.handleExternalChange` → `previous.update(model)` leaves window callbacks on the old model objects. Option A (close + focus hand-off to new view) ~60-90 lines + helper + ~5 sidebar lines, no ConditionsModal.ts. Option B (keep open, Apply onto reloaded tracker) ~250-400 lines in 5-7 files incl. ConditionsModal.ts (SC-580), absolute writes clobber outside changes unless rebased to deltas. Recommendation A + Notice.
+
+## Owner rulings on r1 (2026-11-12)
+
+- Sidebar silent write loss → FOLD into SC-608 (same situation: outside edit while a tracker window is open; fix shape depends on Scott's A/B answer). Told Scott on the ticket; he may ask for its own ticket.
+- Implementation nuance for when the answer lands (Option A): the sidebar must close the window only when the tracker's block content actually changed, like Reading view (ZZ8-05), not on any modify of the note (ZZ8-11) — the implementer confirms feasibility. Focus hand-off keyed by sourcePath + pane + tracker index (not `blockKey`); restore only when focus is free in the root's own document (popouts); treat focus on the dying view's own control as free (LP ZZ8-09). Reset encounter confirm hands off its own token too.
+- 2026-11-12 ASK posted (comment: close vs stay open; Notice yes/no if close; sidebar fix folded). Ticket → In Progress + Needs Review (verified). PARKED on Scott.
+
+## Owner rulings on Scott's answer (2026-11-12)
+
+- Scott chose Option 1 (quoted above). The ask's Option 1 text was: "Focus goes to the same control in the reloaded tracker, the one you opened the window from. Anything typed or staged in the window is dropped [...] It cannot overwrite the outside change."
+- Notice: Scott did not answer. TAKE the recommendation (the ask's first line: "a Notice says it closed without saving"; proposed text "The note changed outside, so this window closed without saving"). Show it only when the window closed BECAUSE of an outside edit (never on the tracker's own save/Apply). Name it in the land-ready comment so he can veto; it is easy to drop.
+- Sidebar silent write loss: folded (told Scott; no objection). Under Option 1 the sidebar window closes the same way as Reading view, same Notice, same focus hand-off — but only when the tracker's block content actually changed (Reading view ZZ8-05 parity), not on every modify of the note.
+- Base moved: dse develop c329ff35 (SC-602 landed `src/framework/host/livePreviewFocusCarry.ts`, `kit/controlFocus.ts`, `chrome/focusHandoff.ts`; SC-580/583/582 in ConditionsModal.ts; SC-607). Reuse SC-602's focus hand-off machinery; no second mechanism. Running in parallel: SC-600 (`src/elements/initiative/model.ts`), SC-605 (`src/elements/initiative/view.ts`) — coordinate via the dispatcher before editing either.
+- CURRENT at c329ff35: jest 11595 / 2 skipped (fresh) · lifecycle 61/61 in SIX parts (`G-S7a … G-S9a` 21; `G-S9b … G-S40` 16; `G-S45 G-S44 G-S42 G-S50 G-S53 G-S54 G-S52 G-S63 G-S64` 9; `G-S57 G-S62 G-S61 G-S56` 4; `G-S59 G-S49 G-S73 G-S77 G-S83 G-S87 G-S91` 7; `G-S92 G-S96 G-S97 G-S99` 4 ~300 s, full; new scenario = own part 7; G-S91 known flake SC-616) · e2e `304/307 ok, 0 failed, 3 known-bug, coverage: 174/174 pairs` (SC-257, SC-355, SC-384) · shots 592, host-leak 163/978, modal host-leak 39/234, capture clip 147 · freeze 280/280 · parity 0/0/24.
+- 2026-11-12 Dispatcher: proceed in parallel with SC-605; whichever lands second rebases. SC-605 relay: in initiative `view.ts` it only ADDS (type guard ~127; `carryState`/`receiveCarriedState` ~212-226); also edits `src/framework/view.ts`, `pipeline.ts`, `registerFrameworkElements.ts`, `livePreviewFocusCarry.ts`, new `livePreviewStateCarry.ts`. Not SidebarPanel/SidebarBlockHost/focusHandoff.
+- 2026-11-12 r2 implement (orchestration:implementer, identity I1): dispatched on `sc608-brief-r2-implement.md` (rebase dse → c329ff35, superproject → origin/main); report → `sc608-r2-impl-report.md`. Ticket Ready for Agent → Awaiting (verified; labels DSE Plugin, Bug). Review next by a fresh reviewer (not S1, not I1).
+- 2026-11-12 Dispatcher: SC-600 landed; dse develop → d984b115 (model.ts only + e2e INIT-AMT-E01/E02). CURRENT: jest 11617 / 2 skipped (fresh) · lifecycle 61/61 · e2e `306/309 ok, 0 failed, 3 known-bug, coverage: 174/174 pairs` · shots 592, 163/978, 39/234, clip 147 · freeze 280/280 · parity 0/0/24. Sent I1 (SendMessage) to rebase onto d984b115 before the final battery. Land-ready requires superproject on current workspace origin/main with ONE pointer bump.
+- 2026-11-12 r2 DONE (I1): dse 9761eceb on d984b115 (5056a92e red jest, 6f9b74fd fix, c936179a sidebar jest, b9ed239c e2e INIT-W01..W08, 7eeed359 jest, 9761eceb docs); superproject 21aa20e4 on origin/main 298a4ef9 (CHANGELOG + one pointer bump). Gates: tsc/lint clean · jest 11642/1 warm (11617+24 fresh) · e2e `314/317 ok, 0 failed, 3 known-bug, coverage: 174/174 pairs` at d984b115 · lifecycle 61/61, shots 592/163/978/39/234/147, freeze 280/280, parity 0/0/24 run pre-rebase (rebase added model.ts + e2e only; styles.css sha unchanged 5e5ff488…2b27). Red on base: jest 11/14 + 5/7, e2e W01-03,06-08. Mutants 13/15 killed (M11, M13 declared equivalent). New `src/framework/chrome/windowHandoff.ts` instead of SC-602 `armSuccessorFocus` (reason: block-line key + mount-time claim misses Reading view). Untouched: model.ts, ConditionsModal.ts, framework/view.ts, pipeline.ts, livePreviewFocusCarry.ts.
+
+## Owner rulings on r2 follow-ups (2026-11-12)
+
+- F1 (outside edit deletes the tracker / new block fails to render → no Notice, window closes silently as today): DROP — the tracker itself vanishing (or showing an error card) is the visible signal; rare; a closing-side Notice needs the new note text.
+- F2 (unflushed mutation at the instant of an outside edit; ElementView flush-on-unload writes the old model; pre-existing): sent to the r3 reviewer to confirm/refute. If it overwrites an outside edit → FILE a Backlog ticket (data loss, pre-existing, framework-wide), out of scope here unless SC-608 makes it worse.
+- F3 (sidebar remount fallback when prepareModel throws → error card successor, no Notice): DROP — same reason as F1.
+- Design call (windowHandoff.ts vs armSuccessorFocus): r3 reviewer judges.
+- 2026-11-12 r3 review (orchestration:reviewer, identity R1 — not S1, not I1): dispatched on `sc608-brief-r3-review.md`, range d984b115..9761eceb, superproject 21aa20e4. Report → `sc608-r3-review-report.md`.
+- 2026-11-12 r3 DONE (R1): verdict LAND, 0 HIGH / 0 MEDIUM / 5 LOW / 8 INFO. Re-ran jest 11642/1 warm rc0, e2e `314/317 ok, 0 failed, 3 known-bug, coverage: 174/174 pairs` rc0, lifecycle part 1 21/21. Red on base 18/24 (6 guards). Design call windowHandoff.ts JUSTIFIED (ARM mutant misses Reading view → BODY). Follow-up 2 REFUTED (SC-343 stale-block guard refuses the flush, base and HEAD). M11/M13 equivalent confirmed; M13U killed by INIT-W01.
+- 2026-11-13 Session resumed after weekly 429 (~17 h). Bases unchanged: dse d984b115, workspace origin/main 298a4ef9. r3 had completed before the stop; nothing cut off.
+
+## Owner rulings on r3 (2026-11-13)
+
+- L1 (sidebar: Conditions live add within the 400 ms debounce + outside edit elsewhere → window closes, condition lost; violates the sidebar ruling): FOLD — reviewer's fix (compare against last loaded/written disk content, not the live model) + jest S08.
+- L2 (slot by position alone → focus to a newly inserted tracker): FOLD — reviewer's safe fallback (tracker count in scope changed → Notice, no focus move) + jest case.
+- L3 (Sync burst → focus ends on BODY in Reading view / LP): FOLD, bounded — keep the claim alive for a short settle period after first success (SC-505 `SETTLE_MS` pattern), re-claiming only while focus is on BODY or the dead root. If it needs > ~40 source lines or edits SC-505's code, stop and report instead; owner then files it.
+- L4 (outside edit that changes only bytes the model drops — a YAML comment — closes the window with no Notice, focus BODY): FOLD — the window closed because of an outside edit, so per the Notice ruling it gets the Notice AND the focus hand-off. Decouple focus from the content check; decide "outside vs own write" by raw block text vs what the tracker last loaded/wrote (may share L1's disk-content record). Sidebar keeps its L1 rule (stays open when the model is unchanged).
+- L5 (focus-is-free check untested): FOLD — jest O18.
+- I7 (hand-off cancel discarded at view.ts:186, not cancelled on plugin unload; TTL bounds it): FOLD — register the cancel so plugin unload cancels it.
+- I4 (LP Conditions add — own save — closes the window, focus BODY): DUPLICATE of SC-384 ("Live Preview: a modal opened from an element closes when a pending write lands", Backlog, an e2e known bug). No new ticket; out of scope. Mention in the land-ready comment.
+- I1 (later fold of windowHandoff into focusHandoff), I2 (two true Notices side by side), I5 (popout OS activation unproven under Xvfb), I6 (= dropped F1), I8 (timing artefact): DROP — informational, no defect.
+- 2026-11-13 r4 fix round: I1 resumed (SendMessage) on `sc608-brief-r4-fix.md` (L1-L5 + I7). Report → `sc608-r4-fix-report.md`. Scoped re-review of the delta next by R1 (not the author).
+- 2026-11-13 Dispatcher: SC-605 landed; dse develop → 63e00d7e. CURRENT: jest 11648 / 2 skipped (fresh) · lifecycle 61/61 · e2e `315/318 ok, 0 failed, 3 known-bug, coverage: 174/174 pairs` · shots 592, 163/978, 39/234, clip 147 · freeze 280/280 · parity 0/0/24. Sent I1 to rebase onto 63e00d7e before the r4 final battery; superproject one pointer bump on current origin/main.
+- 2026-11-13 r4 DONE (I1): dse eb46d58d on 63e00d7e (35cf1c53 jest, bf81f685 e2e, a2968c5b windowHandoff fix L2/L3/L4-focus/I7, bfd034e0 view.ts fix L1/L4-Notice/I7, 9adac152 doc, e0556918 O25/O26, eb46d58d bare-context guard); superproject 3751eef8 on origin/main bbcd1d41 (one CHANGELOG+bump commit). Gates all post-rebase: tsc/lint clean · jest 11683/1 warm (11682/2 fresh = 11648+34) · lifecycle 61/61 · e2e `328/331 ok, 0 failed, 3 known-bug, coverage: 174/174 pairs` · shots 592/163/978/39/234/147 · freeze 280/280 · parity 0/0/24 · styles.css unchanged. Red on 9761eceb: jest O09,O19-O22,O24,S08; e2e INIT-W09..W13. L3 ~25 lines, own file. Mutants 13/13 killed. Side effect: LP own save (SC-384 case) now returns focus to the rebuilt control (no Notice); window still closes (SC-384 untouched).
+- Owner rulings on r4 follow-ups: `lastKnownBody` duck typing → DROP (naming/typing nit). "dropped write recorded as written" → sent to r5 reviewer to probe; file only if it misfires.
+- 2026-11-13 r5 scoped re-review: R1 resumed (SendMessage) on `sc608-brief-r5-rereview.md`; report → `sc608-r5-rereview-report.md`.
+- 2026-11-13 r5 DONE (R1): verdict LAND, 0 HIGH / 0 MEDIUM / 1 LOW (docs drift) / 4 INFO. L1-L5, I7 fixed as ruled (probes ZN-01..12, ZR-26, ZX-01); 21/29 r3 probes unchanged, 8 changed only as ruled. Re-ran tsc/lint rc0, jest 11683/1 warm, e2e `328/331 ok, 0 failed, 3 known-bug, coverage: 174/174 pairs`; 8 mutants killed. Superproject one commit on bbcd1d41; dse on 63e00d7e; SC-605 additions intact. "Dropped write recorded as written" → harmless (probed).
+- Owner rulings on r5: LOW docs drift (`.repo-docs/architecture.md` windowHandoff row; `view.ts:207-208` comment describe r2 rules) → FOLD, docs/comment only, I1 resumed; owner reviews the doc-only diff (infra/docs exception), no re-gate beyond tsc/lint/jest. INFO pre-existing Reading-view drop (condition added within the 400 ms debounce + in-block outside edit, lost silently on base) → DROP: at HEAD the SC-608 Notice covers it, and losing the local change to keep the outside change is Scott's Option 1 semantic ("It cannot overwrite the outside change").
+- 2026-11-13 r6 DONE (I1): docs-only `c0995beb` on eb46d58d (architecture.md windowHandoff row, view.ts comment; 2 files +6/-3); owner reviewed the diff (accurate to the r4 rules). Superproject `9d949f0f` = ONE CHANGELOG + pointer-bump commit (→ c0995beb) on workspace origin/main `bbcd1d41` (verified after fetch). tsc/lint rc0, jest 11683/1 warm. Both worktrees clean; dse on origin/develop 63e00d7e (verified ancestor).
+- 2026-11-13 LAND-READY. Comment posted (Notice veto offer, SC-384 note). Ticket stays Awaiting (dispatcher lands). Reported to dispatcher.
