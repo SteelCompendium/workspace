@@ -1,0 +1,14 @@
+#!/bin/bash
+# usage: gate.sh <tag> <command...>   runs in the dse worktree, log to <tag>.log next to this script, writes <tag>.rc
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r2-afb42389
+cd /home/scott/code/steelCompendium/worktrees/sc616-gs91-hover-flake/draw-steel-elements || exit 9
+tag=$1
+shift
+echo "load $(cat /proc/loadavg) head $(git rev-parse --short HEAD) start $(date +%H:%M:%S)" > "$S/$tag.log"
+start=$(date +%s)
+"$@" >> "$S/$tag.log" 2>&1
+rc=$?
+end=$(date +%s)
+echo "gate_rc=$rc wall=$((end-start))s load_end $(cat /proc/loadavg)" >> "$S/$tag.log"
+echo "$rc" > "$S/$tag.rc"
+exit $rc

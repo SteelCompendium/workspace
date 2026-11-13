@@ -1,0 +1,36 @@
+--- /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv/head33/visual-harness/obsidian-lifecycle.mjs.orig	2026-11-13 10:20:51.593847652 -0500
++++ /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv/head33/visual-harness/obsidian-lifecycle.mjs	2026-11-13 10:20:51.618847810 -0500
+@@ -1822,6 +1822,7 @@
+ 		t.expect(pt.digit && pt.onText && pt.inBar, `${mode} ${target}: the press point is not on the bar's number text: ${J(pt)}`);
+ 		rec.hit = `"${pt.text}" on ${pt.hit}`;
+ 		await K.mouse('mouseMoved', pt.x, pt.y);
++		if (process.env.SC616_CPU) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: Number(process.env.SC616_CPU) }); // SC-616 r3 probe
+ 		await t.sleep(200);
+ 		if (target === 'reopen') {
+ 			// the first open: a real press on the number, past the helper's 150 ms (the preview is focused, `.is-editing`), then Escape closes only the modal
+@@ -1873,6 +1874,7 @@
+ 		// from the END of the opening click's dispatch to the second click: on the base the helper's 150 ms timer was armed then, so a value under 140 means the click came before it
+ 		rec.gapEnd = await t.ev(`(() => { const a = window.__gs91 || []; const c = a.filter((x) => x.trusted && !x.end); const e = a.filter((x) => x.trusted && x.end); return c.length >= 2 && e.length >= 1 ? Math.round(c[1].t - e[0].t) : null; })()`);
+ 		await t.sleep(700);
++		if (process.env.SC616_CPU) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: 1 }); // SC-616 r3 probe
+ 		rec.at700 = await st();
+ 		if (target === 'apply' && rec.at700.popover && rec.at700.modal) {
+ 			await t.ev(`(() => { const i = document.querySelector('.modal-container [data-dse-control="sedit.apply-amount"]'); i.focus(); i.select(); return true; })()`);
+@@ -8366,7 +8368,7 @@
+ 						const bad = [];
+ 						if (r.error) bad.push(`error: ${r.error}`);
+ 						else {
+-							if (r.gap === null || (target !== 'dblq' && (r.gapEnd === null || r.gapEnd >= 140))) bad.push(`the second click came ${r.gapEnd} ms after the opening click's dispatch ended (${r.gap} ms after it started): it must come inside the helper's 150 ms or the trial proves nothing (a loaded host?)`); // the queued double-click is red on the base at any gap: its second mousedown clears the helper's timer
++							if (r.gap === null || (target !== 'dblq' && (r.gapEnd === null || r.gapEnd >= Number(process.env.SC616_GATE || 140)))) bad.push(`the second click came ${r.gapEnd} ms after the opening click's dispatch ended (${r.gap} ms after it started): it must come inside the helper's 150 ms or the trial proves nothing (a loaded host?)`); // the queued double-click is red on the base at any gap: its second mousedown clears the helper's timer
+ 							if (!r.at700.popover) bad.push(`700 ms after the second press the preview was gone (second click ${r.gap} ms after the opening click) ${J(r.at700)}`);
+ 							else {
+ 								if (r.at700.editor) bad.push(`the preview turned into a source editor ${J(r.at700)}`);
+@@ -8390,7 +8392,7 @@
+ 						}
+ 						// a trial whose ONLY problem is the inconclusive-gap gate (the host was too slow to prove anything) is re-run, from fresh state (gs91Trial rewrites both fixtures, reopens the host and redoes the hover), up to twice;
+ 						// a product failure (preview or modal gone, editor, focus) is never re-run: the gate message is pushed first, so one message means it was the only one
+-						if (!r.error && target !== 'dblq' && r.gap !== null && r.gapEnd !== null && r.gapEnd >= 140 && bad.length === 1 && gaps.length < 2) {
++						if (!r.error && target !== 'dblq' && r.gap !== null && r.gapEnd !== null && r.gapEnd >= Number(process.env.SC616_GATE || 140) && bad.length === 1 && gaps.length < 2) {
+ 							gaps.push(r.gapEnd);
+ 							continue;
+ 						}

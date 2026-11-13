@@ -1,0 +1,30 @@
+--- /dev/fd/63	2026-11-13 08:24:00.961676716 -0500
++++ /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r1-add63411/bpproto/src/framework/kit/managedModal.ts	2026-11-13 08:24:00.956676672 -0500
+@@ -274,6 +274,7 @@
+ 			return;
+ 		}
+ 		opening.preventDefault();
++		this.setPreviewFocusedPrivate(pop); // SC-616 r1 PROTOTYPE (private API, SC-598 "bp")
+ 		const anchorWin = anchor.ownerDocument.defaultView ?? win;
+ 		const added = !anchor.classList.contains('interactive-child');
+ 		if (added) anchor.classList.add('interactive-child');
+@@ -281,6 +282,19 @@
+ 		if (added) win.setTimeout(() => anchor.classList.remove('interactive-child'), 10);
+ 	}
+ 
++	/** SC-616 r1 PROTOTYPE: Obsidian's private `HoverPopover.setIsFocused(true)` on the instance whose `hoverEl` is this preview, found on the leaves' views (Reading / Live Preview / Source). Degrades to a no-op when the hunt finds nothing. */
++	private setPreviewFocusedPrivate(pop: Element): void {
++		let found: { setIsFocused?: (v: boolean) => void } | null = null;
++		this.app.workspace.iterateAllLeaves((l) => {
++			const v = l.view as unknown as Record<string, unknown>;
++			for (const o of [v, v?.previewMode, v?.editMode, v?.currentMode] as Array<Record<string, unknown> | undefined>) {
++				const hp = o?.hoverPopover as { hoverEl?: Element; setIsFocused?: (v: boolean) => void } | undefined;
++				if (hp && hp.hoverEl === pop) found = hp;
++			}
++		});
++		(found as { setIsFocused?: (v: boolean) => void } | null)?.setIsFocused?.(true);
++	}
++
+ 	close(): void {
+ 		if (!this.dseOpen) return; // idempotent — the §4.5 teardown may re-close
+ 		this.dseOpen = false;

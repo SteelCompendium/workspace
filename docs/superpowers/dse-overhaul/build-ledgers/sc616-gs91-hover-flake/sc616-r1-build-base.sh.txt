@@ -1,0 +1,8 @@
+#!/bin/bash
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r1-add63411
+cd $S/base598rev || exit 9
+node esbuild.config.mjs production > $S/build-base.log 2>&1
+echo "build_rc=$?" >> $S/build-base.log
+ls -la main.js styles.css manifest.json >> $S/build-base.log 2>&1
+grep -c "interactive-child" main.js >> $S/build-base.log
+grep -c "interactive-child" /home/scott/code/steelCompendium/worktrees/sc616-gs91-hover-flake/draw-steel-elements/main.js >> $S/build-base.log

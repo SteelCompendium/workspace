@@ -1,0 +1,18 @@
+#!/bin/bash
+# usage: rep.sh <tag> <count> [VAR=val ...]  runs G-S91 alone <count> times, one log per run: <tag>-<i>.log, rc line at the end of each; batch rc file <tag>.rc
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r2-afb42389
+cd /home/scott/code/steelCompendium/worktrees/sc616-gs91-hover-flake/draw-steel-elements || exit 9
+tag=$1
+n=$2
+shift 2
+for kv in "$@"; do export "$kv"; done
+for i in $(seq 1 $n); do
+  log="$S/$tag-$i.log"
+  echo "load $(cat /proc/loadavg) head $(git rev-parse --short HEAD) env: $*" > "$log"
+  start=$(date +%s)
+  node visual-harness/obsidian-lifecycle.mjs --only=G-S91 >> "$log" 2>&1
+  rc=$?
+  end=$(date +%s)
+  echo "lc_rc=$rc wall=$((end-start))s load_end $(cat /proc/loadavg)" >> "$log"
+done
+echo done > "$S/$tag.rc"

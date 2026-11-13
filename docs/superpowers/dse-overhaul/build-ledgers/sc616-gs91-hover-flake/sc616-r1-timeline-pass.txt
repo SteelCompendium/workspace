@@ -1,0 +1,115 @@
+# SC-616 r1: a passing G-S91 title rv trial for contrast (run-tlA-1, full scenario alone, probe SC616_TL=1)
+== run-tlA-1-074132.log title rv gap=67 at700={"popover": true, "modal": true, "editing": true, "editor": false, "focusInPreview": false} PASS-ish err=None
+    -216.6  hp                 {"found": true, "foc": false}
+      -1.5  cap:pointerdown    {"trusted": true, "ts": -2.0, "detail": 0, "tgt": "dse-stamina__ccur", "dp": false}
+      -0.5  cap:pointerup      {"trusted": true, "ts": -0.7, "detail": 0, "tgt": "dse-stamina__ccur", "dp": false}
+      -0.4  bub:pointerup      {"trusted": true, "dp": false}
+      -0.1  arm5               {"id": 1, "where": "T3 (app://obsidian.md/app.js:509:105808)"}
+      +0.0  cap:click          {"trusted": true, "ts": -0.7, "detail": 1, "tgt": "dse-stamina__ccur", "dp": false}
+     +35.8  modal+             {}
+     +36.6  arm150             {"id": 2, "where": "HTMLDivElement.<anonymous> (app://obsidian.md/app.js:241:10286)"}
+     +36.6  bub:click          {"trusted": true, "dp": false}
+     +38.7  arm5               {"id": 3, "where": "T3 (app://obsidian.md/app.js:509:105808)"}
+     +38.8  cap:click          {"trusted": false, "ts": 36.9, "detail": 0, "tgt": "block-language-ds-stamina-bar in", "dp": false}
+     +38.9  arm10              {"id": 4, "where": "HTMLDivElement.<anonymous> (app://obsidian.md/app.js:241:10286)"}
+     +39.0  bub:click          {"trusted": false, "dp": false}
+     +39.0  arm10              {"id": 5, "where": "Ss.focusHoverPreviewNow (plugin:draw-steel-elements:367:24350)"}
+     +39.1  arm10              {"id": 6, "where": "a (plugin:draw-steel-elements:367:23668)"}
+     +39.1  arm150             {"id": 7, "where": "a (plugin:draw-steel-elements:367:23668)"}
+     +51.5  fire5              {"id": 1}
+     +52.3  fire5              {"id": 3}
+     +52.4  fire10             {"id": 4}
+     +52.6  setIsFocused(true) {"ev": null}
+     +52.8  is-editing=true    {}
+     +61.9  fire10             {"id": 5}
+     +62.9  fire10             {"id": 6}
+     +63.8  cap:pointerdown    {"trusted": true, "ts": 63.4, "detail": 0, "tgt": "dse-modal__title-text", "dp": false}
+     +63.8  bub:pointerdown    {"trusted": true, "dp": false}
+     +63.8  cap:mousedown      {"trusted": true, "ts": 63.4, "detail": 1, "tgt": "dse-modal__title-text", "dp": false}
+     +64.0  bub:mousedown      {"trusted": true, "dp": false}
+     +67.2  cap:pointerup      {"trusted": true, "ts": 66.8, "detail": 0, "tgt": "dse-modal__title-text", "dp": false}
+     +67.2  bub:pointerup      {"trusted": true, "dp": false}
+     +67.2  cap:mouseup        {"trusted": true, "ts": 66.8, "detail": 1, "tgt": "dse-modal__title-text", "dp": false}
+     +67.2  bub:mouseup        {"trusted": true, "dp": false}
+     +67.3  arm5               {"id": 8, "where": "T3 (app://obsidian.md/app.js:509:105808)"}
+     +67.4  cap:click          {"trusted": true, "ts": 66.8, "detail": 1, "tgt": "dse-modal__title-text", "dp": false}
+     +72.4  fire5              {"id": 8}
+     +80.8  evt:pointerup      {"start": -0.7, "pStart": -0.5, "pEnd": -0.4, "dur": 64}
+     +81.0  evt:click          {"start": -0.7, "pStart": -0.4, "pEnd": 39.1, "dur": 64}
+     +81.0  evt:pointerout     {"start": 40.3, "pStart": 40.5, "pEnd": 40.6, "dur": 24}
+     +81.0  evt:pointerleave   {"start": 40.3, "pStart": 40.6, "pEnd": 40.6, "dur": 24}
+     +81.0  evt:pointerleave   {"start": 40.3, "pStart": 40.6, "pEnd": 40.6, "dur": 24}
+     +81.0  evt:pointerleave   {"start": 40.3, "pStart": 40.6, "pEnd": 40.6, "dur": 24}
+     +81.0  evt:pointerleave   {"start": 40.3, "pStart": 40.6, "pEnd": 40.6, "dur": 24}
+     +81.0  evt:pointerleave   {"start": 40.3, "pStart": 40.6, "pEnd": 40.6, "dur": 24}
+     +81.0  evt:pointerleave   {"start": 40.3, "pStart": 40.6, "pEnd": 40.6, "dur": 24}
+     +81.0  evt:pointerleave   {"start": 40.3, "pStart": 40.6, "pEnd": 40.6, "dur": 24}
+     +81.0  evt:pointerleave   {"start": 40.3, "pStart": 40.7, "pEnd": 40.7, "dur": 24}
+     +81.0  evt:pointerleave   {"start": 40.3, "pStart": 40.7, "pEnd": 40.7, "dur": 24}
+     +81.0  evt:pointerleave   {"start": 40.3, "pStart": 40.7, "pEnd": 40.7, "dur": 24}
+     +81.1  evt:pointerleave   {"start": 40.3, "pStart": 40.7, "pEnd": 40.7, "dur": 24}
+     +81.1  evt:pointerleave   {"start": 40.3, "pStart": 40.7, "pEnd": 40.7, "dur": 24}
+     +81.1  evt:pointerover    {"start": 40.3, "pStart": 40.7, "pEnd": 40.7, "dur": 24}
+     +81.1  evt:pointerenter   {"start": 40.3, "pStart": 40.7, "pEnd": 40.7, "dur": 24}
+     +81.1  evt:pointerenter   {"start": 40.3, "pStart": 40.7, "pEnd": 40.7, "dur": 24}
+     +81.1  evt:mouseout       {"start": 40.3, "pStart": 40.7, "pEnd": 40.7, "dur": 24}
+     +81.1  evt:mouseover      {"start": 40.3, "pStart": 40.7, "pEnd": 40.7, "dur": 24}
+     +95.1  evt:pointerout     {"start": 54.1, "pStart": 62.6, "pEnd": 62.6, "dur": 24}
+     +95.1  evt:pointerleave   {"start": 54.1, "pStart": 62.6, "pEnd": 62.6, "dur": 24}
+     +95.1  evt:pointerover    {"start": 54.1, "pStart": 62.6, "pEnd": 62.6, "dur": 24}
+     +95.1  evt:pointerenter   {"start": 54.1, "pStart": 62.6, "pEnd": 62.6, "dur": 24}
+     +95.1  evt:pointerenter   {"start": 54.1, "pStart": 62.6, "pEnd": 62.6, "dur": 24}
+     +95.1  evt:pointerenter   {"start": 54.1, "pStart": 62.6, "pEnd": 62.6, "dur": 24}
+     +95.1  evt:pointerenter   {"start": 54.1, "pStart": 62.6, "pEnd": 62.6, "dur": 24}
+     +95.1  evt:mouseout       {"start": 54.1, "pStart": 62.7, "pEnd": 62.7, "dur": 24}
+     +95.1  evt:mouseover      {"start": 54.1, "pStart": 62.7, "pEnd": 62.7, "dur": 24}
+    +112.0  evt:pointerdown    {"start": 63.4, "pStart": 63.7, "pEnd": 63.8, "dur": 32}
+    +112.0  evt:mousedown      {"start": 63.4, "pStart": 63.8, "pEnd": 64.0, "dur": 32}
+    +112.0  evt:pointerup      {"start": 66.8, "pStart": 67.1, "pEnd": 67.2, "dur": 32}
+    +112.0  evt:mouseup        {"start": 66.8, "pStart": 67.2, "pEnd": 67.2, "dur": 32}
+    +112.0  evt:click          {"start": 66.8, "pStart": 67.2, "pEnd": 67.4, "dur": 32}
+    +186.7  fire150            {"id": 2}
+    +189.3  fire150            {"id": 7}
+
+# and the tightest passing title lp (run-tlB-2): the helper fired 1.5 ms after the harness's point evaluation, 3.5 ms before the second mousedown
+== run-tlB-2-074839.log title lp gap=49 at700={"popover": true, "modal": true, "editing": true, "editor": false, "focusInPreview": false} PASS-ish err=None
+      +0.0  cap:click          {"trusted": true, "ts": -0.2, "detail": 1, "tgt": "dse-stamina__ccur", "dp": false}
+      +0.1  arm5               {"id": 9, "where": "T3 (app://obsidian.md/app.js:509:105808)"}
+      +0.6  arm10              {"id": 10, "where": "gj (app://obsidian.md/app.js:10:17611)"}
+      +0.6  arm10              {"id": 11, "where": "$oe (app://obsidian.md/app.js:581:5251)"}
+     +20.1  modal+             {}
+     +20.2  arm150             {"id": 12, "where": "HTMLDivElement.<anonymous> (app://obsidian.md/app.js:241:10286)"}
+     +20.2  bub:click          {"trusted": true, "dp": false}
+     +20.3  cap:click          {"trusted": false, "ts": 20.3, "detail": 0, "tgt": "block-language-ds-stamina-bar in", "dp": false}
+     +20.3  arm5               {"id": 13, "where": "T3 (app://obsidian.md/app.js:509:105808)"}
+     +20.4  arm10              {"id": 14, "where": "HTMLDivElement.<anonymous> (app://obsidian.md/app.js:241:10286)"}
+     +20.4  bub:click          {"trusted": false, "dp": false}
+     +20.4  arm10              {"id": 15, "where": "Ss.focusHoverPreviewNow (plugin:draw-steel-elements:367:24350)"}
+     +20.5  arm10              {"id": 16, "where": "a (plugin:draw-steel-elements:367:23668)"}
+     +20.5  arm150             {"id": 17, "where": "a (plugin:draw-steel-elements:367:23668)"}
+     +21.6  raf1               {}
+     +28.8  raf2               {}
+     +37.7  fire5              {"id": 9}
+     +37.7  fire10             {"id": 10}
+     +39.8  fire10             {"id": 11}
+     +41.2  p2eval             {}
+     +42.7  fire5              {"id": 13}
+     +42.7  fire10             {"id": 14}
+     +42.7  setIsFocused(true) {"ev": null}
+     +42.7  is-editing=true    {}
+     +42.8  fire10             {"id": 15}
+     +42.8  fire10             {"id": 16}
+     +45.4  cap:mousemove      {"ts": 43.5, "x": 497, "y": 443}
+     +47.3  cap:mousedown      {"trusted": true, "ts": 46.2, "detail": 1, "tgt": "dse-modal__title-text", "dp": false}
+     +47.3  bub:mousedown      {"trusted": true, "dp": false}
+     +48.1  evt:click          {"start": -0.2, "pStart": 0, "pEnd": 20.5, "dur": 40}
+     +49.0  cap:mouseup        {"trusted": true, "ts": 48.8, "detail": 1, "tgt": "dse-modal__title-text", "dp": false}
+     +49.1  bub:mouseup        {"trusted": true, "dp": false}
+     +49.1  cap:click          {"trusted": true, "ts": 48.8, "detail": 1, "tgt": "dse-modal__title-text", "dp": false}
+     +49.1  arm5               {"id": 18, "where": "T3 (app://obsidian.md/app.js:509:105808)"}
+     +54.2  fire5              {"id": 18}
+     +96.0  evt:mousedown      {"start": 46.2, "pStart": 47.3, "pEnd": 47.3, "dur": 32}
+     +96.0  evt:mouseup        {"start": 48.8, "pStart": 49, "pEnd": 49.1, "dur": 32}
+     +96.0  evt:click          {"start": 48.8, "pStart": 49.1, "pEnd": 49.2, "dur": 32}
+    +170.5  fire150            {"id": 12}
+    +170.6  fire150            {"id": 17}

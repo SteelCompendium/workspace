@@ -1,0 +1,129 @@
+######## base598rev (scratch build of git archive 1516f894 + this diff)
+--- /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv/base1516/src/framework/kit/managedModal.ts	2026-11-13 07:47:13.000000000 -0500
++++ /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv/base598rev/src/framework/kit/managedModal.ts	2026-11-13 10:15:06.444615474 -0500
+@@ -196,8 +196,7 @@
+ 	 *    container, so it runs after the opener's own handler, which is what opened this modal) arms a 10 ms timer (150 ms when
+ 	 *    the click lands on text) and pushes from it. Timers with the same delay fire in the order they were armed, so the
+ 	 *    re-pushes are armed from a window-bubble listener for the opening click (it runs after the container's), one per delay:
+-	 *    the order holds by construction at any load, no margin (SC-598's `focusHoverPreviewNow` adds a 10 ms helper timer of its
+-	 *    own from the same listener, BEFORE `arm()`, so the order holds for it too). A modal opened outside a click (a delayed open, such as the
++	 *    the order holds by construction at any load, no margin. A modal opened outside a click (a delayed open, such as the
+ 	 *    block edit form after a pending write) arms them at once: any helper timer was armed earlier. (Enter / Space on the
+ 	 *    stamina bar and on a montage cell are not such opens: they click the opener, SC-597, so they take the branch above.) Skipped when a newer preview-opened modal is open (a parent
+ 	 *    must not bury its child) or when this modal's window is not the active one (`pushScope` pushes onto the active
+@@ -232,55 +231,13 @@
+ 		const opening = (win as unknown as { event?: Event }).event;
+ 		if (opening?.type === 'click') {
+ 			const onWindowBubble = (evt: Event): void => {
+-				if (evt !== opening) return;
+-				this.focusHoverPreviewNow(opening, win); // before arm(): the helper's timer, armed inside this dispatch, must precede the re-pushes
+-				arm();
++				if (evt === opening) arm();
+ 			};
+ 			win.addEventListener('click', onWindowBubble);
+ 			this.lifecycle.register(() => win.removeEventListener('click', onWindowBubble));
+ 		} else arm();
+ 	}
+ 
+-	/**
+-	 * SC-598: a second click inside this modal soon after the click that opened it (a fast double-click on the stamina bar's
+-	 * numbers) closed the modal and the preview. Obsidian's window-CAPTURE click listener hides, 5 ms later, every shown preview
+-	 * that is not "focused" and does not contain the click; the document guard above cannot reach a window capture listener. A
+-	 * preview only becomes focused when its click-to-edit helper's timer runs: 10 ms after the opening click, 150 ms when that
+-	 * click landed on text. So, for a preview that is not focused yet (`.is-editing` absent), from the opening click's window
+-	 * BUBBLE phase (the helper has seen the click by then):
+-	 * 1. `preventDefault()` the opening click: the helper's timer for it then does nothing (its callback skips a default-prevented
+-	 *    event). Left alone it ran the preview's focus step at 150 ms and, if a second click had moved the focus off a button or
+-	 *    input by then, switched the preview into a source editor.
+-	 * 2. Send the helper ONE synthetic click from the anchor (bubbling, no coordinates, so never "on text"): it focuses the
+-	 *    preview 10 ms later. The anchor carries Obsidian's `interactive-child` class until then, so the helper's "open the
+-	 *    editor?" test says no whatever has the focus; the class comes off from a timer armed after the helper's.
+-	 * A preview that is already focused (`.is-editing`: it was opened from before, the window closed, the same control pressed again)
+-	 * cannot be hidden by that window-capture listener, so it needs no synthetic click, but the opening click is still
+-	 * `preventDefault()`ed and nothing else is done. Left alone, the helper's timer for a re-open's click (150 ms on text) re-ran the
+-	 * focus step and its "open the editor?" test after a second press had moved the focus to `body`, and switched the preview into a
+-	 * source editor with the keyboard focus inside it behind the open window (SC-598 r3 MEDIUM-1; the base did the same).
+-	 * Called before `arm()`: the re-pushes (same delay, armed later) then fire after the helper's push, so this modal's scope
+-	 * stays above the preview's. Public API only: nothing private of the popover is touched.
+-	 * Residual (measured): a second press queued in full (down AND up) while the modal is still opening on a slow renderer is
+-	 * handled before the helper's timer and still closes everything, as it did before. A click that is not the opening click (a
+-	 * modal opened outside a click) is not touched.
+-	 */
+-	private focusHoverPreviewNow(opening: Event, win: typeof window): void {
+-		const anchor = this.anchorEl;
+-		const pop = anchor?.closest('.hover-popover');
+-		if (!anchor || !pop) return;
+-		if (pop.classList.contains('is-editing')) {
+-			opening.preventDefault();
+-			return;
+-		}
+-		opening.preventDefault();
+-		const anchorWin = anchor.ownerDocument.defaultView ?? win;
+-		const added = !anchor.classList.contains('interactive-child');
+-		if (added) anchor.classList.add('interactive-child');
+-		anchor.dispatchEvent(new anchorWin.MouseEvent('click', { bubbles: true, cancelable: true, view: anchorWin }));
+-		if (added) win.setTimeout(() => anchor.classList.remove('interactive-child'), 10);
+-	}
+-
+ 	close(): void {
+ 		if (!this.dseOpen) return; // idempotent — the §4.5 teardown may re-close
+ 		this.dseOpen = false;
+######## m1nosynth (scratch build of git archive 1516f894 + this diff)
+--- /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv/base1516/src/framework/kit/managedModal.ts	2026-11-13 07:47:13.000000000 -0500
++++ /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv/m1nosynth/src/framework/kit/managedModal.ts	2026-11-13 10:15:06.447615494 -0500
+@@ -277,7 +277,6 @@
+ 		const anchorWin = anchor.ownerDocument.defaultView ?? win;
+ 		const added = !anchor.classList.contains('interactive-child');
+ 		if (added) anchor.classList.add('interactive-child');
+-		anchor.dispatchEvent(new anchorWin.MouseEvent('click', { bubbles: true, cancelable: true, view: anchorWin }));
+ 		if (added) win.setTimeout(() => anchor.classList.remove('interactive-child'), 10);
+ 	}
+ 
+######## m2nopd (scratch build of git archive 1516f894 + this diff)
+--- /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv/base1516/src/framework/kit/managedModal.ts	2026-11-13 07:47:13.000000000 -0500
++++ /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv/m2nopd/src/framework/kit/managedModal.ts	2026-11-13 10:15:06.450615514 -0500
+@@ -273,7 +273,6 @@
+ 			opening.preventDefault();
+ 			return;
+ 		}
+-		opening.preventDefault();
+ 		const anchorWin = anchor.ownerDocument.defaultView ?? win;
+ 		const added = !anchor.classList.contains('interactive-child');
+ 		if (added) anchor.classList.add('interactive-child');
+######## m3late20 (scratch build of git archive 1516f894 + this diff)
+--- /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv/base1516/src/framework/kit/managedModal.ts	2026-11-13 07:47:13.000000000 -0500
++++ /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv/m3late20/src/framework/kit/managedModal.ts	2026-11-13 10:15:06.454615541 -0500
+@@ -277,8 +277,8 @@
+ 		const anchorWin = anchor.ownerDocument.defaultView ?? win;
+ 		const added = !anchor.classList.contains('interactive-child');
+ 		if (added) anchor.classList.add('interactive-child');
+-		anchor.dispatchEvent(new anchorWin.MouseEvent('click', { bubbles: true, cancelable: true, view: anchorWin }));
+-		if (added) win.setTimeout(() => anchor.classList.remove('interactive-child'), 10);
++		win.setTimeout(() => anchor.dispatchEvent(new anchorWin.MouseEvent('click', { bubbles: true, cancelable: true, view: anchorWin })), 20);
++		if (added) win.setTimeout(() => anchor.classList.remove('interactive-child'), 40);
+ 	}
+ 
+ 	close(): void {
+######## m4noR14 (scratch build of git archive 1516f894 + this diff)
+--- /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv/base1516/src/framework/kit/managedModal.ts	2026-11-13 07:47:13.000000000 -0500
++++ /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv/m4noR14/src/framework/kit/managedModal.ts	2026-11-13 10:20:14.668613248 -0500
+@@ -270,7 +270,6 @@
+ 		const pop = anchor?.closest('.hover-popover');
+ 		if (!anchor || !pop) return;
+ 		if (pop.classList.contains('is-editing')) {
+-			opening.preventDefault();
+ 			return;
+ 		}
+ 		opening.preventDefault();
+######## m5class0 (scratch build of git archive 1516f894 + this diff)
+--- /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv/base1516/src/framework/kit/managedModal.ts	2026-11-13 07:47:13.000000000 -0500
++++ /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv/m5class0/src/framework/kit/managedModal.ts	2026-11-13 10:20:14.673613280 -0500
+@@ -278,7 +278,7 @@
+ 		const added = !anchor.classList.contains('interactive-child');
+ 		if (added) anchor.classList.add('interactive-child');
+ 		anchor.dispatchEvent(new anchorWin.MouseEvent('click', { bubbles: true, cancelable: true, view: anchorWin }));
+-		if (added) win.setTimeout(() => anchor.classList.remove('interactive-child'), 10);
++		if (added) win.setTimeout(() => anchor.classList.remove('interactive-child'), 0);
+ 	}
+ 
+ 	close(): void {

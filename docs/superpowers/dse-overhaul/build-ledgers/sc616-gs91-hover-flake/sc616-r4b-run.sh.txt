@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# usage: run.sh <label> <command string>   -> S/<label>.log, S/<label>.rc (own files, never removed)
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r4b-w1
+L="$1"
+shift
+cd /home/scott/code/steelCompendium/worktrees/sc616-gs91-hover-flake/draw-steel-elements || exit 99
+START=$(date +%s)
+bash -c "$*" > "$S/$L.log" 2>&1
+RC=$?
+END=$(date +%s)
+echo "$RC" > "$S/$L.rc"
+echo "$((END-START))" > "$S/$L.secs"

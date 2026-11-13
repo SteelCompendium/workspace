@@ -1,0 +1,8 @@
+import re,sys,glob
+for f in sys.argv[1:]:
+    t=open(f).read()
+    m=re.search(r'G-S91 (ok|FAIL)',t)
+    res=m.group(1) if m else 'NONE'
+    parts=re.findall(r'(title|dblq|apply|reopen) (rv|lp) \(real hover; press on "15" on [\w_-]+, second press (\d+) ms later(?: \((\d+) ms after the opening click\'s dispatch ended\))?',t)
+    retried='re-run' in t
+    print(f.split('/')[-1], res, 'retried' if retried else 'no-retry', ' '.join(f"{a}-{b}:gap{c}/end{d or '-'}" for a,b,c,d in parts))

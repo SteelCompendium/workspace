@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+"""One row per G-S91 probe trial: gap, opening-click dispatch length (synthetic click time), helper focus time, second mousedown/click arrival
+(event timeStamp) and dispatch, margin = second click dispatch - setIsFocused, hide events. usage: margins.py log..."""
+import json, sys
+
+print(f"{'log':28s} {'trial':12s} {'gap':>4s} {'synth':>6s} {'focus':>6s} {'md2ts':>6s} {'md2':>6s} {'c2ts':>6s} {'c2':>6s} {'margin':>7s} {'pv@700':>6s}  hides")
+for f in sys.argv[1:]:
+    for line in open(f, errors='replace'):
+        if not line.startswith('SC616REC '):
+            continue
+        r = json.loads(line[len('SC616REC '):])
+        tl = r.get('tl') or []
+        a7 = r.get('at700') or {}
+        trusted_clicks = [(t, d) for t, k, d in tl if k == 'cap:click' and d.get('trusted')]
+        # for reopen, the opening click of interest is the second-to-last trusted click pair
+        if len(trusted_clicks) < 2:
+            print(f"{f.rsplit('/',1)[-1][:28]:28s} {r['target']+' '+r['mode']:12s} {str(r['gap']):>4s} (no timeline) pv={a7.get('popover')}")
+            continue
+        c1, c2 = trusted_clicks[-2][0], trusted_clicks[-1][0]
+        c2ts = trusted_clicks[-1][1]['ts'] - c1
+        synth = next((t - c1 for t, k, d in tl if k == 'cap:click' and not d.get('trusted') and t > c1), None)
+        focus = next((t - c1 for t, k, d in tl if k.startswith('setIsFocused(true') and t > c1), None)
+        md2 = [(t, d) for t, k, d in tl if k == 'cap:mousedown' and d.get('trusted') and t > c1]
+        md2t = md2[0][0] - c1 if md2 else None
+        md2ts = md2[0][1]['ts'] - c1 if md2 else None
+        hides = [f"{t - c1:+.1f}:{d.get('where','')[:40]}" for t, k, d in tl if k == 'hide' and t > c1]
+        margin = (c2 - c1 - focus) if focus is not None else None
+        fmt = lambda x: '-' if x is None else f"{x:.1f}"
+        print(f"{f.rsplit('/',1)[-1][:28]:28s} {r['target']+' '+r['mode']:12s} {str(r['gap']):>4s} {fmt(synth):>6s} {fmt(focus):>6s} {fmt(md2ts):>6s} {fmt(md2t):>6s} {fmt(c2ts):>6s} {fmt(c2-c1):>6s} {fmt(margin):>7s} {str(a7.get('popover')):>6s}  {' '.join(hides)}")

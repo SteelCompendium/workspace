@@ -1,0 +1,45 @@
+#!/usr/bin/env python3
+"""Print SC616REC timelines from G-S91 probe logs. usage: tl.py [--only=title] [--full] log..."""
+import json, sys
+
+only = None
+full = False
+files = []
+for a in sys.argv[1:]:
+    if a.startswith('--only='):
+        only = a.split('=', 1)[1]
+    elif a == '--full':
+        full = True
+    else:
+        files.append(a)
+
+SKIP = {'bub:pointerdown', 'bub:pointerup', 'cap:pointerdown', 'cap:pointerup'}
+
+for f in files:
+    for line in open(f, errors='replace'):
+        if not line.startswith('SC616REC '):
+            continue
+        r = json.loads(line[len('SC616REC '):])
+        if only and r['target'] != only:
+            continue
+        a7 = r.get('at700') or {}
+        ok = a7.get('popover')
+        print(f"== {f.rsplit('/',1)[-1]} {r['target']} {r['mode']} gap={r['gap']} at700={json.dumps(a7)} {'PASS-ish' if ok else 'PREVIEW GONE'} err={r.get('error')}")
+        tl = r.get('tl') or []
+        # find first trusted click (opening) as t=0 reference for the second half
+        t_open = None
+        for t, k, d in tl:
+            if k == 'cap:click' and d.get('trusted'):
+                t_open = t
+                break
+        for t, k, d in tl:
+            if not full and k in SKIP:
+                continue
+            if not full and t_open is not None and t < t_open - 120:
+                continue
+            rel = f"{t - t_open:+8.1f}" if t_open is not None else f"{t:8.1f}"
+            dd = dict(d)
+            for key in ('ts', 'start', 'pStart', 'pEnd'):
+                if key in dd and t_open is not None:
+                    dd[key] = round(dd[key] - t_open, 1)
+            print(f"  {rel}  {k:18s} {json.dumps(dd)}")

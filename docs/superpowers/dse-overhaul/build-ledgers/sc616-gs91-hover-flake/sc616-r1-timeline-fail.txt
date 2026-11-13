@@ -1,0 +1,87 @@
+# SC-616 r1: the natural failing G-S91 title trial (run-par3a-3, 3 concurrent sessions x 12 title trials, probe SC616_TL=1; trial 12 = title lp). Times in ms relative to the opening click's window-capture; ts = event.timeStamp (input arrival); pStart/pEnd = Event Timing processing.
+== run-par3a-3-075435.log title lp gap=83 at700={"popover": false, "modal": false, "editing": false, "editor": false, "focusInPreview": false} PREVIEW GONE err=None
+    -218.9  hp                 {"found": true, "foc": false}
+    -209.4  cap:mousemove      {"ts": -216.9, "x": 447, "y": 346}
+      -2.8  cap:pointerdown    {"trusted": true, "ts": -4.2, "detail": 0, "tgt": "dse-stamina__ccur", "dp": false}
+      -0.2  cap:pointerup      {"trusted": true, "ts": -0.9, "detail": 0, "tgt": "dse-stamina__ccur", "dp": false}
+      -0.1  bub:pointerup      {"trusted": true, "dp": false}
+      +0.0  cap:click          {"trusted": true, "ts": -0.9, "detail": 1, "tgt": "dse-stamina__ccur", "dp": false}
+     +38.4  arm5               {"id": 99, "where": "T3 (app://obsidian.md/app.js:509:105808)"}
+     +39.0  arm10              {"id": 100, "where": "gj (app://obsidian.md/app.js:10:17611)"}
+     +39.1  arm10              {"id": 101, "where": "$oe (app://obsidian.md/app.js:581:5251)"}
+     +62.0  modal+             {}
+     +62.1  arm150             {"id": 102, "where": "HTMLDivElement.<anonymous> (app://obsidian.md/app.js:241:10286)"}
+     +62.1  bub:click          {"trusted": true, "dp": false}
+     +62.1  cap:click          {"trusted": false, "ts": 62.1, "detail": 0, "tgt": "block-language-ds-stamina-bar in", "dp": false}
+     +62.1  arm5               {"id": 103, "where": "T3 (app://obsidian.md/app.js:509:105808)"}
+     +62.2  arm10              {"id": 104, "where": "HTMLDivElement.<anonymous> (app://obsidian.md/app.js:241:10286)"}
+     +62.2  bub:click          {"trusted": false, "dp": false}
+     +62.2  arm10              {"id": 105, "where": "Ss.focusHoverPreviewNow (plugin:draw-steel-elements:367:24350)"}
+     +62.2  arm10              {"id": 106, "where": "a (plugin:draw-steel-elements:367:23668)"}
+     +62.3  arm150             {"id": 107, "where": "a (plugin:draw-steel-elements:367:23668)"}
+     +63.3  raf1               {}
+     +69.5  raf2               {}
+     +69.7  longtask           {"start": -0.5, "dur": 63}
+     +69.9  fire5              {"id": 99}
+     +70.0  p2eval             {}
+     +70.3  fire10             {"id": 100}
+     +72.3  cap:mousemove      {"ts": 71.0, "x": 497, "y": 443}
+     +79.1  cap:pointerdown    {"trusted": true, "ts": 72.9, "detail": 0, "tgt": "dse-modal__title-text", "dp": false}
+     +79.1  bub:pointerdown    {"trusted": true, "dp": false}
+     +79.1  cap:mousedown      {"trusted": true, "ts": 72.9, "detail": 1, "tgt": "dse-modal__title-text", "dp": false}
+     +79.1  bub:mousedown      {"trusted": true, "dp": false}
+     +79.9  fire10             {"id": 101}
+     +82.8  cap:pointerup      {"trusted": true, "ts": 80.7, "detail": 0, "tgt": "dse-modal__title-text", "dp": false}
+     +82.8  bub:pointerup      {"trusted": true, "dp": false}
+     +82.8  cap:mouseup        {"trusted": true, "ts": 80.7, "detail": 1, "tgt": "dse-modal__title-text", "dp": false}
+     +82.8  bub:mouseup        {"trusted": true, "dp": false}
+     +82.8  cap:click          {"trusted": true, "ts": 80.7, "detail": 1, "tgt": "dse-modal__title-text", "dp": false}
+     +82.9  arm5               {"id": 108, "where": "T3 (app://obsidian.md/app.js:509:105808)"}
+     +83.0  fire5              {"id": 103}
+     +83.0  fire10             {"id": 104}
+     +83.1  setIsFocused(true) {"ev": null}
+     +83.2  is-editing=true    {}
+     +83.3  fire10             {"id": 105}
+     +83.3  fire10             {"id": 106}
+     +88.0  fire5              {"id": 108}
+     +88.1  hide               {"foc": true, "ev": null, "where": "app://obsidian.md/app.js:509:105839 <- Array.forEach (<anonymous>)"}
+    +133.3  arm10              {"id": 109, "where": "gj (app://obsidian.md/app.js:10:17611)"}
+    +133.4  arm10              {"id": 110, "where": "$oe (app://obsidian.md/app.js:581:5251)"}
+    +133.7  modal-             {}
+    +136.4  evt:pointerup      {"start": -0.9, "pStart": -0.2, "pEnd": -0.1, "dur": 80}
+    +136.4  evt:click          {"start": -0.9, "pStart": -0.1, "pEnd": 62.3, "dur": 80}
+    +136.4  evt:pointerout     {"start": 63.0, "pStart": 63.1, "pEnd": 63.1, "dur": 16}
+    +136.4  evt:pointerleave   {"start": 63.0, "pStart": 63.1, "pEnd": 63.1, "dur": 16}
+    +136.4  evt:pointerleave   {"start": 63.0, "pStart": 63.2, "pEnd": 63.2, "dur": 16}
+    +136.4  evt:pointerleave   {"start": 63.0, "pStart": 63.2, "pEnd": 63.2, "dur": 16}
+    +136.4  evt:pointerleave   {"start": 63.0, "pStart": 63.2, "pEnd": 63.2, "dur": 16}
+    +136.4  evt:pointerleave   {"start": 63.0, "pStart": 63.2, "pEnd": 63.2, "dur": 16}
+    +136.4  evt:pointerleave   {"start": 63.0, "pStart": 63.2, "pEnd": 63.2, "dur": 16}
+    +136.4  evt:pointerleave   {"start": 63.0, "pStart": 63.2, "pEnd": 63.2, "dur": 16}
+    +136.4  evt:pointerleave   {"start": 63.0, "pStart": 63.2, "pEnd": 63.2, "dur": 16}
+    +136.4  evt:pointerleave   {"start": 63.0, "pStart": 63.2, "pEnd": 63.2, "dur": 16}
+    +136.4  evt:pointerleave   {"start": 63.0, "pStart": 63.2, "pEnd": 63.2, "dur": 16}
+    +136.4  evt:pointerleave   {"start": 63.0, "pStart": 63.2, "pEnd": 63.2, "dur": 16}
+    +136.4  evt:pointerleave   {"start": 63.0, "pStart": 63.2, "pEnd": 63.2, "dur": 16}
+    +136.4  evt:pointerover    {"start": 63.0, "pStart": 63.2, "pEnd": 63.2, "dur": 16}
+    +136.4  evt:pointerenter   {"start": 63.0, "pStart": 63.2, "pEnd": 63.2, "dur": 16}
+    +136.4  evt:pointerenter   {"start": 63.0, "pStart": 63.2, "pEnd": 63.2, "dur": 16}
+    +136.4  evt:mouseout       {"start": 63.0, "pStart": 63.2, "pEnd": 63.2, "dur": 16}
+    +136.4  evt:mouseover      {"start": 63.0, "pStart": 63.2, "pEnd": 63.2, "dur": 16}
+    +136.4  evt:pointerout     {"start": 71.0, "pStart": 72.1, "pEnd": 72.1, "dur": 16}
+    +136.4  evt:pointerleave   {"start": 71.0, "pStart": 72.1, "pEnd": 72.1, "dur": 16}
+    +136.4  evt:pointerover    {"start": 71.0, "pStart": 72.1, "pEnd": 72.1, "dur": 16}
+    +136.4  evt:pointerenter   {"start": 71.0, "pStart": 72.1, "pEnd": 72.1, "dur": 16}
+    +136.4  evt:pointerenter   {"start": 71.0, "pStart": 72.1, "pEnd": 72.1, "dur": 16}
+    +136.4  evt:pointerenter   {"start": 71.0, "pStart": 72.1, "pEnd": 72.1, "dur": 16}
+    +136.4  evt:pointerenter   {"start": 71.0, "pStart": 72.1, "pEnd": 72.1, "dur": 16}
+    +136.4  evt:mouseout       {"start": 71.0, "pStart": 72.1, "pEnd": 72.1, "dur": 16}
+    +136.4  evt:mouseover      {"start": 71.0, "pStart": 72.3, "pEnd": 72.3, "dur": 16}
+    +143.6  fire10             {"id": 109}
+    +144.7  fire10             {"id": 110}
+    +157.2  evt:pointerdown    {"start": 72.9, "pStart": 79.1, "pEnd": 79.1, "dur": 64}
+    +157.3  evt:mousedown      {"start": 72.9, "pStart": 79.1, "pEnd": 79.1, "dur": 64}
+    +157.3  evt:pointerup      {"start": 80.7, "pStart": 82.7, "pEnd": 82.8, "dur": 56}
+    +157.3  evt:mouseup        {"start": 80.7, "pStart": 82.8, "pEnd": 82.8, "dur": 56}
+    +157.3  evt:click          {"start": 80.7, "pStart": 82.8, "pEnd": 83.0, "dur": 56}
+    +212.2  fire150            {"id": 102}

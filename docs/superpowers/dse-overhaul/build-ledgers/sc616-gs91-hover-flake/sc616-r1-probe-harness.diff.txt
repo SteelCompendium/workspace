@@ -1,0 +1,141 @@
+diff --git a/visual-harness/obsidian-lifecycle.mjs b/visual-harness/obsidian-lifecycle.mjs
+index 3ed9ae00..21b347e1 100644
+--- a/visual-harness/obsidian-lifecycle.mjs
++++ b/visual-harness/obsidian-lifecycle.mjs
+@@ -1795,6 +1795,60 @@ async function gs87Trial(t, mode, opener) {
+  * Apply input, then Healing 3 + a real click on Apply) or 'reopen' (open, wait past the helper's 150 ms, Escape, then open AGAIN from the now focused preview with the same press and press the title: the base turned the preview into a source editor, keyboard focus inside it behind the open window). The in-page gap between the two trusted clicks is recorded (`gap`). Returns a record; the scenario judges it.
+  * Footguns (measured, SC-598 r1): the second press must come within 150 ms of the opening click, so it is sent as soon as its point is known (no sleep); the press point must hit the number's own element (G-S83 `stamtext`).
+  */
++// SC-616 probe (uncommitted): an in-page event timeline for one G-S91 trial (ms since install). Window capture + bubble mouse/pointer/click, armed/fired
++// 5 / 10 / 150 ms timers (with the arming frame), the popover instance's hide() (with its caller frames) and setIsFocused(), its `.is-editing` class, the
++// modal container added/removed, long tasks and Event Timing entries (input arrival, processing start/end).
++const SC616_INSTALL = `(BUSY_MS = 0, LITE = false) => {
++	const S = window.__sc616 || (window.__sc616 = { on: false, log: [], tid: 0 });
++	S.log = []; S.t0 = performance.now(); S.on = true; S.busy = BUSY_MS;
++	const r1 = (x) => Math.round(x * 10) / 10;
++	const L = (k, d) => { if (S.on) S.log.push([r1(performance.now() - S.t0), k, d]); };
++	const rel = (ts) => r1(ts - S.t0);
++	const cls = (el) => (el ? String(el.className || el.nodeName).slice(0, 32) : null);
++	if (!S.installed) {
++		S.installed = true;
++		for (const type of ['pointerdown', 'mousedown', 'pointerup', 'mouseup', 'click', 'dblclick']) {
++			window.addEventListener(type, (e) => window.__sc616.L('cap:' + type, { trusted: e.isTrusted, ts: rel(e.timeStamp), detail: e.detail, tgt: cls(e.target), dp: e.defaultPrevented }), true);
++			window.addEventListener(type, (e) => window.__sc616.L('bub:' + type, { trusted: e.isTrusted, dp: e.defaultPrevented }), false);
++		}
++		const ost = window.setTimeout;
++		if (!LITE) window.setTimeout = function (fn, ms, ...a) {
++			const S2 = window.__sc616;
++			if (S2.on && (ms === 5 || ms === 10 || ms === 150) && typeof fn === 'function') {
++				const id = ++S2.tid;
++				const where = ((new Error().stack || '').split('\\n')[2] || '').trim().replace(/^at /, '').slice(-70);
++				S2.L('arm' + ms, { id, where });
++				const w = function (...b) { S2.L('fire' + ms, { id }); return fn.apply(this, b); };
++				return ost.call(this, w, ms, ...a);
++			}
++			return ost.call(this, fn, ms, ...a);
++		};
++		if (!LITE) try { new PerformanceObserver((l) => { for (const e of l.getEntries()) window.__sc616.L('longtask', { start: rel(e.startTime), dur: Math.round(e.duration) }); }).observe({ type: 'longtask' }); } catch (e) {}
++		if (!LITE) try { new PerformanceObserver((l) => { for (const e of l.getEntries()) if (/mouse|pointer|click/.test(e.name)) window.__sc616.L('evt:' + e.name, { start: rel(e.startTime), pStart: rel(e.processingStart), pEnd: rel(e.processingEnd), dur: Math.round(e.duration) }); }).observe({ type: 'event', durationThreshold: 16 }); } catch (e) {}
++		if (!LITE) window.addEventListener('mousemove', (e) => { if (e.isTrusted) window.__sc616.L('cap:mousemove', { ts: rel(e.timeStamp), x: e.clientX, y: e.clientY }); }, true);
++		window.addEventListener('click', (e) => {
++			if (e.isTrusted) return;
++			const S2 = window.__sc616; if (!S2.on) return;
++			requestAnimationFrame(() => { S2.L('raf1', {}); if (S2.busy) { const end = performance.now() + S2.busy; while (performance.now() < end); S2.L('raf1-busy-end', { busy: S2.busy }); } requestAnimationFrame(() => S2.L('raf2', {})); });
++		}, true);
++		new MutationObserver((ms) => { for (const m of ms) { for (const n of m.addedNodes) if (n.classList && n.classList.contains('modal-container')) window.__sc616.L('modal+', {}); for (const n of m.removedNodes) if (n.classList && n.classList.contains('modal-container')) window.__sc616.L('modal-', {}); } }).observe(document.body, { childList: true });
++	}
++	S.L = L;
++	const v = app.workspace.getMostRecentLeaf().view;
++	const hp = [v.hoverPopover, v.previewMode && v.previewMode.hoverPopover, v.editMode && v.editMode.hoverPopover].find((p) => p && p.hoverEl && p.hoverEl.isConnected);
++	if (hp && !hp.__sc616) {
++		hp.__sc616 = true;
++		const oh = hp.hide;
++		hp.hide = function (...a) { window.__sc616.L('hide', { foc: this.isFocused, ev: window.event ? window.event.type : null, where: (new Error().stack || '').split('\\n').slice(2, 4).map((s) => s.trim().replace(/^at /, '').slice(-60)).join(' <- ') }); return oh.apply(this, a); };
++		const of = hp.setIsFocused;
++		hp.setIsFocused = function (x) { window.__sc616.L('setIsFocused(' + x + ')', { ev: window.event ? window.event.type : null }); return of.call(this, x); };
++		let ed = hp.hoverEl.classList.contains('is-editing');
++		new MutationObserver(() => { const e2 = hp.hoverEl.classList.contains('is-editing'); if (e2 !== ed) { ed = e2; window.__sc616.L('is-editing=' + e2, {}); } }).observe(hp.hoverEl, { attributes: true, attributeFilter: ['class'] });
++		L('hp', { found: true, foc: hp.isFocused });
++	} else L('hp', { found: !!hp, already: !!(hp && hp.__sc616) });
++	return true;
++}`;
++
+ async function gs91Trial(t, mode, target) {
+ 	const K = gs83Kit(t);
+ 	const J = JSON.stringify;
+@@ -1817,7 +1871,9 @@ async function gs91Trial(t, mode, target) {
+ 		t.expect(!!pt, `${mode} ${target}: no text node to press in the stamina bar`);
+ 		t.expect(pt.digit && pt.onText && pt.inBar, `${mode} ${target}: the press point is not on the bar's number text: ${J(pt)}`);
+ 		rec.hit = `"${pt.text}" on ${pt.hit}`;
++		if (process.env.SC616_TL) await t.ev(`(${SC616_INSTALL})(${Number(process.env.SC616_BUSY || 0)}, ${process.env.SC616_TL === 'lite'})`); // SC-616 probe (uncommitted)
+ 		await K.mouse('mouseMoved', pt.x, pt.y);
++		if (process.env.SC616_CPU) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: Number(process.env.SC616_CPU) }); // SC-616 probe (uncommitted)
+ 		await t.sleep(200);
+ 		if (target === 'reopen') {
+ 			// the first open: a real press on the number, past the helper's 150 ms (the preview is focused, `.is-editing`), then Escape closes only the modal
+@@ -1832,7 +1888,7 @@ async function gs91Trial(t, mode, target) {
+ 			await t.sleep(200);
+ 		}
+ 		// every click at the window, to measure the gap between the two trusted ones in the page's own clock
+-		await t.ev(`(() => { window.__gs91 = []; if (!window.__gs91l) { window.__gs91l = true; window.addEventListener('click', (e) => window.__gs91?.push({ t: performance.now(), trusted: e.isTrusted }), true); } return true; })()`);
++		await t.ev(`(() => { window.__gs91 = []; if (!window.__gs91l) { window.__gs91l = true; window.addEventListener('click', (e) => window.__gs91?.push({ t: performance.now(), trusted: e.isTrusted }), true); } if (!window.__gs91b) { window.__gs91b = true; window.addEventListener('click', (e) => window.__gs91?.push({ t: performance.now(), trusted: e.isTrusted, bub: true })); } return true; })()`);
+ 		const b1 = { button: 'left', clickCount: 1 };
+ 		const b2 = { button: 'left', clickCount: 2 };
+ 		if (target === 'dblq') {
+@@ -1845,22 +1901,40 @@ async function gs91Trial(t, mode, target) {
+ 			await pr2;
+ 			await t.sleep(70);
+ 			await K.mouse('mouseReleased', pt.x, pt.y, { buttons: 0, ...b2 });
++		} else if (process.env.SC616_NOLEAD) {
++			// SC-616 probe (uncommitted): the title point cached (no evaluation between the opening release and the second press): the worst-case straddle
++			const [cx, cy] = process.env.SC616_NOLEAD.split(',').map(Number);
++			await K.press(pt);
++			await K.mouse('mouseMoved', cx, cy);
++			await K.mouse('mousePressed', cx, cy, { buttons: 1, ...b1 });
++			if (process.env.SC616_FIX) await t.ev(`new Promise((r) => setTimeout(() => r(true), 11))`);
++			await K.mouse('mouseReleased', cx, cy, { buttons: 0, ...b1 });
++			rec.p2Hit = 'cached point';
+ 		} else {
+ 			await K.press(pt);
+ 			// ONE evaluation gives the point and what it hits (the vacuity gate below measures this lead)
+ 			const p2 = await t.ev(
+ 				target === 'title' || target === 'reopen'
+-					? `(() => { const el = document.querySelector('.modal-container .modal-title'); if (!el) return null; const r = el.getBoundingClientRect(); const x = Math.round(r.left + Math.min(r.width / 2, 40)); const y = Math.round(r.top + r.height / 2); const h = document.elementFromPoint(x, y); return { x, y, hit: h ? String(h.className || h.nodeName).slice(0, 40) : null }; })()`
+-					: `(() => { const el = document.querySelector('.modal-container [data-dse-control="sedit.apply-amount"]'); if (!el) return null; const r = el.getBoundingClientRect(); const x = Math.round(r.left + r.width / 2); const y = Math.round(r.top + r.height / 2); const h = document.elementFromPoint(x, y); return { x, y, hit: h ? String(h.className || h.nodeName).slice(0, 40) : null }; })()`,
++					? `(() => { window.__sc616 && window.__sc616.L && window.__sc616.L('p2eval', {}); const el = document.querySelector('.modal-container .modal-title'); if (!el) return null; const r = el.getBoundingClientRect(); const x = Math.round(r.left + Math.min(r.width / 2, 40)); const y = Math.round(r.top + r.height / 2); const h = document.elementFromPoint(x, y); return { x, y, hit: h ? String(h.className || h.nodeName).slice(0, 40) : null }; })()`
++					: `(() => { window.__sc616 && window.__sc616.L && window.__sc616.L('p2eval', {}); const el = document.querySelector('.modal-container [data-dse-control="sedit.apply-amount"]'); if (!el) return null; const r = el.getBoundingClientRect(); const x = Math.round(r.left + r.width / 2); const y = Math.round(r.top + r.height / 2); const h = document.elementFromPoint(x, y); return { x, y, hit: h ? String(h.className || h.nodeName).slice(0, 40) : null }; })()`,
+ 			);
+ 			t.expect(!!p2, `${mode} ${target}: the modal did not open from the press on the number`);
+ 			rec.p2Hit = p2.hit;
+ 			await K.mouse('mouseMoved', p2.x, p2.y);
+-			await K.press(p2);
++			if (process.env.SC616_FIX) {
++				// SC-616 prototype (uncommitted): release only after an in-page 11 ms timer armed after the mousedown was handled has run: DOM timers run in due order, so the helper's 10 ms timer, armed by the synthetic click before that mousedown, has run first
++				await K.mouse('mousePressed', p2.x, p2.y, { buttons: 1, ...b1 });
++				await t.ev(`new Promise((r) => setTimeout(() => r(true), 11))`);
++				await K.mouse('mouseReleased', p2.x, p2.y, { buttons: 0, ...b1 });
++			} else await K.press(p2);
+ 		}
+-		rec.gap = await t.ev(`(() => { const c = (window.__gs91 || []).filter((x) => x.trusted); return c.length >= 2 ? Math.round(c[1].t - c[0].t) : null; })()`);
++		rec.gap = await t.ev(`(() => { const c = (window.__gs91 || []).filter((x) => x.trusted && !x.bub); return c.length >= 2 ? Math.round(c[1].t - c[0].t) : null; })()`);
++		// SC-616 prototype (uncommitted): the gap measured from the END of the opening click's dispatch (its window-bubble phase: Obsidian's click-to-edit helper armed its timer just before, at the embed container) to the second click's capture
++		rec.gapEnd = await t.ev(`(() => { const all = window.__gs91 || []; const c = all.filter((x) => x.trusted && !x.bub); const b = all.filter((x) => x.trusted && x.bub); return c.length >= 2 && b.length >= 1 ? Math.round(c[1].t - b[0].t) : null; })()`);
+ 		await t.sleep(700);
++		if (process.env.SC616_CPU) await t.cdp.call('Emulation.setCPUThrottlingRate', { rate: 1 }); // SC-616 probe (uncommitted)
+ 		rec.at700 = await st();
++		if (process.env.SC616_TL) rec.tl = await t.ev(`(() => { const S = window.__sc616; if (!S) return null; S.on = false; return S.log; })()`); // SC-616 probe (uncommitted)
+ 		if (target === 'apply' && rec.at700.popover && rec.at700.modal) {
+ 			await t.ev(`(() => { const i = document.querySelector('.modal-container [data-dse-control="sedit.apply-amount"]'); i.focus(); i.select(); return true; })()`);
+ 			await t.cdp.call('Input.insertText', { text: '3' });
+@@ -8343,8 +8417,10 @@ const SCENARIOS = [
+ 			await t.ev(`(() => { if (!document.getElementById('lc-gs83-notice')) { const st = document.createElement('style'); st.id = 'lc-gs83-notice'; st.textContent = '.notice-container { display: none !important; }'; document.head.appendChild(st); } return true; })()`);
+ 			await t.ev(`${prefs}.set('authoringControls', true)`);
+ 			try {
+-				for (const [mode, target] of [['rv', 'title'], ['lp', 'title'], ['rv', 'dblq'], ['lp', 'dblq'], ['rv', 'apply'], ['rv', 'reopen']]) {
++				const sc616Trials = process.env.SC616_REPEAT ? Array.from({ length: Number(process.env.SC616_REPEAT) }, (_, i) => [i % 2 ? 'lp' : 'rv', 'title']) : [['rv', 'title'], ['lp', 'title'], ['rv', 'dblq'], ['lp', 'dblq'], ['rv', 'apply'], ['rv', 'reopen']]; // SC-616 probe (uncommitted)
++				for (const [mode, target] of sc616Trials) {
+ 					const r = await gs91Trial(t, mode, target);
++					console.log(`SC616REC ${J({ mode, target, gap: r.gap, gapEnd: r.gapEnd, at700: r.at700, error: r.error, p2Hit: r.p2Hit, tl: r.tl })}`); // SC-616 probe (uncommitted)
+ 					const label = `${target} ${mode}`;
+ 					const bad = [];
+ 					if (r.error) bad.push(`error: ${r.error}`);

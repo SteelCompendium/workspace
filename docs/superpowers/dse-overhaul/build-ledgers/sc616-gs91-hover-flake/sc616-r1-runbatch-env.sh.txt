@@ -1,0 +1,18 @@
+#!/bin/bash
+# usage: runbatch-env.sh <tag> <count> [VAR=val ...] -- runs G-S91 alone <count> times with the given env, one log per run (no rebuild)
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r1-add63411
+cd /home/scott/code/steelCompendium/worktrees/sc616-gs91-hover-flake/draw-steel-elements || exit 9
+tag=$1
+n=$2
+shift 2
+for kv in "$@"; do export "$kv"; done
+for i in $(seq 1 $n); do
+  log="$S/run-$tag-$i-$(date +%H%M%S).log"
+  echo "load $(cat /proc/loadavg) env: $*" > "$log"
+  start=$(date +%s)
+  node visual-harness/obsidian-lifecycle.mjs --only=G-S91 >> "$log" 2>&1
+  rc=$?
+  end=$(date +%s)
+  echo "lc_rc=$rc wall=$((end-start))s load_end $(cat /proc/loadavg)" >> "$log"
+  echo "$tag-$i rc=$rc log=$log" >> "$S/batch-index.txt"
+done

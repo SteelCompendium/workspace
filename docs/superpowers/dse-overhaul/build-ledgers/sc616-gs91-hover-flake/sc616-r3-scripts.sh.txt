@@ -1,0 +1,167 @@
+######## setup.sh
+#!/bin/bash
+# builds: base1516 (pristine 1516f894), base598rev (SC-598 managedModal diff reverse-applied), m1 nosynth, m2 nopd, m3 late20
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv
+W=/home/scott/code/steelCompendium/worktrees/sc616-gs91-hover-flake/draw-steel-elements
+LOG=$S/logs/setup.log
+echo "setup start $(date +%T)" > $LOG
+for d in base1516 base598rev m1nosynth m2nopd m3late20; do
+  mkdir -p $S/$d
+  git -C $W archive 1516f894 | tar -x -C $S/$d
+  ln -s $W/node_modules $S/$d/node_modules
+done
+# base598rev
+git -C $W diff b5d18f79..8b84b635 -- src/framework/kit/managedModal.ts > $S/sc598-product.diff
+git -C $S/base598rev apply -R --directory=. $S/sc598-product.diff >> $LOG 2>&1 || (cd $S/base598rev && patch -R -p1 < $S/sc598-product.diff >> $LOG 2>&1)
+echo "base598rev revert rc=$?" >> $LOG
+F=src/framework/kit/managedModal.ts
+# m1: no synthetic click
+sed -i '280{/anchor.dispatchEvent/d}' $S/m1nosynth/$F
+# m2: no preventDefault in the non-editing branch
+sed -i '276{/opening.preventDefault();/d}' $S/m2nopd/$F
+# m3: synthetic click 20 ms late, class removed at 40 ms (after the late helper)
+sed -i "280s|anchor.dispatchEvent(\(.*\));|win.setTimeout(() => anchor.dispatchEvent(\1), 20);|" $S/m3late20/$F
+sed -i "281s|'interactive-child'), 10)|'interactive-child'), 40)|" $S/m3late20/$F
+for d in base598rev m1nosynth m2nopd m3late20; do
+  echo "== diff $d" >> $LOG
+  diff -u $S/base1516/$F $S/$d/$F >> $LOG
+done
+for d in base1516 base598rev m1nosynth m2nopd m3late20; do
+  ( cd $S/$d && node esbuild.config.mjs production ) >> $LOG 2>&1
+  echo "build $d rc=$?" >> $LOG
+  sha256sum $S/$d/main.js $S/$d/styles.css >> $LOG
+done
+sha256sum $W/main.js $W/styles.css >> $LOG
+echo "setup end $(date +%T)" >> $LOG
+######## setup2.sh
+#!/bin/bash
+# m4: .is-editing branch without its preventDefault (R14 reverted); m5: interactive-child removal at 0 ms (before the helper's 10 ms callback); head33: git archive 33dd0a1b build (byte identity)
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv
+W=/home/scott/code/steelCompendium/worktrees/sc616-gs91-hover-flake/draw-steel-elements
+LOG=$S/logs/setup2.log
+echo "setup2 start $(date +%T)" > $LOG
+for d in m4noR14 m5class0 head33; do
+  mkdir -p $S/$d
+  ln -s $W/node_modules $S/$d/node_modules
+done
+git -C $W archive 1516f894 | tar -x -C $S/m4noR14
+git -C $W archive 1516f894 | tar -x -C $S/m5class0
+git -C $W archive 33dd0a1b | tar -x -C $S/head33
+F=src/framework/kit/managedModal.ts
+sed -i '273{/opening.preventDefault();/d}' $S/m4noR14/$F
+sed -i "281s|'interactive-child'), 10)|'interactive-child'), 0)|" $S/m5class0/$F
+for d in m4noR14 m5class0; do
+  echo "== diff $d" >> $LOG
+  diff -u $S/base1516/$F $S/$d/$F >> $LOG
+done
+for d in m4noR14 m5class0 head33; do
+  ( cd $S/$d && node esbuild.config.mjs production ) >> $LOG 2>&1
+  echo "build $d rc=$?" >> $LOG
+  sha256sum $S/$d/main.js $S/$d/styles.css >> $LOG
+done
+echo "setup2 end $(date +%T)" >> $LOG
+######## run.sh
+#!/bin/bash
+# usage: run.sh <tag> <new|old> <bundle: head|DIRNAME> <count> [VAR=val ...]
+#  new = the worktree's harness (33dd0a1b); old = DIRNAME's own harness (git archive 1516f894) with its own bundle
+#  each run: logs/<tag>-<i>-<stamp>.log with a trailing rc line; index line appended to logs/index.txt
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv
+W=/home/scott/code/steelCompendium/worktrees/sc616-gs91-hover-flake/draw-steel-elements
+tag=$1; which=$2; bundle=$3; n=$4
+shift 4
+for kv in "$@"; do export "$kv"; done
+if [ "$which" = new ]; then
+  H=$W/visual-harness/obsidian-lifecycle.mjs
+  cd $W || exit 9
+  if [ "$bundle" != head ]; then export DSE_LIFECYCLE_BUNDLE=$S/$bundle; fi
+else
+  H=$S/$bundle/visual-harness/obsidian-lifecycle.mjs
+  cd $S/$bundle || exit 9
+fi
+for i in $(seq 1 $n); do
+  log="$S/logs/$tag-$i-$(date +%H%M%S%N | cut -c1-9).log"
+  echo "load $(cat /proc/loadavg) harness=$which bundle=$bundle H=$H BUNDLE=$DSE_LIFECYCLE_BUNDLE env: $*" > "$log"
+  start=$(date +%s)
+  node $H --only=${ONLY_IDS:-G-S91} >> "$log" 2>&1
+  rc=$?
+  end=$(date +%s)
+  echo "lc_rc=$rc wall=$((end-start))s load_end $(cat /proc/loadavg)" >> "$log"
+  echo "$tag-$i rc=$rc wall=$((end-start)) log=$log" >> "$S/logs/index.txt"
+done
+######## probe.sh
+#!/bin/bash
+# usage: probe.sh <tag> <bundleDir-name> <count> [VAR=val ...] -- head33's env-gated probe harness (SC616_CPU, SC616_GATE) against <bundleDir-name>'s bundle
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv
+tag=$1; bundle=$2; n=$3
+shift 3
+for kv in "$@"; do export "$kv"; done
+export DSE_LIFECYCLE_BUNDLE=$S/$bundle
+H=$S/head33/visual-harness/obsidian-lifecycle.mjs
+cd $S/head33 || exit 9
+for i in $(seq 1 $n); do
+  log="$S/logs/$tag-$i-$(date +%H%M%S%N | cut -c1-9).log"
+  echo "load $(cat /proc/loadavg) harness=probe(head33) bundle=$bundle env: $*" > "$log"
+  start=$(date +%s)
+  node $H --only=G-S91 >> "$log" 2>&1
+  rc=$?
+  end=$(date +%s)
+  echo "lc_rc=$rc wall=$((end-start))s load_end $(cat /proc/loadavg)" >> "$log"
+  echo "$tag-$i rc=$rc wall=$((end-start)) log=$log" >> "$S/logs/index.txt"
+done
+######## batch1.sh
+#!/bin/bash
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv
+bash $S/run.sh b1-base598rev-new new base598rev 2
+bash $S/run.sh b1-m1nosynth-new new m1nosynth 1
+bash $S/run.sh b1-m1nosynth-old old m1nosynth 1
+bash $S/run.sh b1-m2nopd-new new m2nopd 1
+bash $S/run.sh b1-m2nopd-old old m2nopd 1
+echo batch1-done >> $S/logs/index.txt
+######## batch2.sh
+#!/bin/bash
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv
+bash $S/run.sh b2-m3late20-new new m3late20 3
+bash $S/run.sh b2-m3late20-old old m3late20 2
+bash $S/run.sh b2-m4noR14-new new m4noR14 1
+bash $S/run.sh b2-m4noR14-old old m4noR14 1
+bash $S/run.sh b2-m5class0-new new m5class0 1
+bash $S/run.sh b2-m5class0-old old m5class0 1
+echo batch2-done >> $S/logs/index.txt
+######## batch3.sh
+#!/bin/bash
+# head flake: 6 sequential runs of the worktree's own harness + bundle (natural host load)
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv
+bash $S/run.sh b3-head-seq new head 6
+echo batch3-done >> $S/logs/index.txt
+######## batch4.sh
+#!/bin/bash
+# CPU throttle + retry probes (head33 probe harness = 33dd0a1b harness + env-gated SC616_CPU / SC616_GATE)
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv
+bash $S/probe.sh b4-head-cpu4 head33 2 SC616_CPU=4
+bash $S/probe.sh b4-head-cpu6 head33 1 SC616_CPU=6
+bash $S/probe.sh b4-base-cpu4 base598rev 1 SC616_CPU=4
+bash $S/probe.sh b4-base-cpu8 base598rev 1 SC616_CPU=8
+bash $S/probe.sh b4-base-gate10 base598rev 1 SC616_GATE=10
+echo batch4-done >> $S/logs/index.txt
+######## batch5.sh
+#!/bin/bash
+# head under load: 3 concurrent runs (own Xvfb / port each), two rounds
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv
+for round in 1 2; do
+  bash $S/run.sh b5-head-par${round}a new head 1 &
+  p1=$!
+  sleep 2
+  bash $S/run.sh b5-head-par${round}b new head 1 &
+  p2=$!
+  sleep 2
+  bash $S/run.sh b5-head-par${round}c new head 1 &
+  p3=$!
+  wait $p1 $p2 $p3
+done
+echo batch5-done >> $S/logs/index.txt
+######## batch6.sh
+#!/bin/bash
+# lifecycle part 5 on the head, once (the worktree's harness + bundle; bundle already built = 1516f894 build, byte-identical)
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc616-r3-rv
+ONLY_IDS=G-S59,G-S49,G-S73,G-S77,G-S83,G-S87,G-S91 bash $S/run.sh b6-head-part5 new head 1
+echo batch6-done >> $S/logs/index.txt
