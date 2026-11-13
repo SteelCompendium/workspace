@@ -8,6 +8,10 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: in the Conditions window, "or just start typing" now also works after you click the window's title or an empty part of it (SC-613).**
+  Click a row's Add Condition, click the window's title (or a blank spot), then type `daz`: nothing happened, because that click moved the keyboard out of the window to the page behind it. The Add
+  search now opens with what you typed, and Escape closes just the search and puts focus on "+ Add condition". Keys stay yours when another window is open on top of this one, or a menu is showing.
+
 - **DSE plugin: a + / - or a form Save in a hover preview of a heading, in a note saved with Windows line endings, is saved again (SC-619).**
   Hover a link to a heading (`[[Note#Heading]]`) of a note whose lines end in CRLF, a Windows-style file, and press + / - on the counter in the preview, or Save its Edit form: nothing was written and the
   "changed on disk first" Notice showed although nothing had changed. The change is now saved into the counter you hovered, and the note keeps its Windows line endings. The same
