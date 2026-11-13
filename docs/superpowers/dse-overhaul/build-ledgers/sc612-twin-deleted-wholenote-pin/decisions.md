@@ -82,3 +82,8 @@ jest 11648 passed / 2 skipped (fresh worktree) · lifecycle 61/61 (21 + 16 + 9 +
 - dse branch `sc612-twin-deleted-wholenote-pin` @ 1f1ae442 on develop 2074a152; superproject branch @ 53be46e9 on workspace origin/main f9082867 (one CHANGELOG commit; the dse pointer is unstaged for the ONE bump at landing).
 - At landing: apply `sc612-dse-verify-proposal.md` to dse-verify SKILL (lifecycle 62/62, part 7 `G-S108`, the "Two identical blocks" bullet, residual list, CURRENT); preserve this ledger dir to `docs/superpowers/dse-overhaul/build-ledgers/sc612-twin-deleted-wholenote-pin/`; move SC-612 to Done via linear-post.py `--state Done` and verify.
 - Follow-up filed: SC-621 (Backlog).
+
+## Done (2026-11-13)
+
+- Dispatcher landed: dse develop 1f1ae442; workspace main a587b658 (pointer bump 2d9ac336); dse-verify SKILL updated from sc612-dse-verify-proposal.md §1-6 + CURRENT (b65036cc); ledger preserved to `docs/superpowers/dse-overhaul/build-ledgers/sc612-twin-deleted-wholenote-pin/`; worktree removed.
+- SC-612 moved to **Done** via linear-post.py `--state Done` (Done comment `sc612-comment-done.md` posted); state verified Done with get_issue (completedAt 2026-11-13T16:30:20Z). Follow-up in Backlog: SC-621.
