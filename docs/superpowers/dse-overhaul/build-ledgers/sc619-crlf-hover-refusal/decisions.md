@@ -160,3 +160,8 @@ lifecycle p7 2/2. INFO-1 (residual "not persistent" test re-asserts the refusal)
 - Land-ready comment posted (`sc619-comment-land-ready.md`, no decision asked). State left Awaiting for the dispatcher's landing.
 - At landing: apply `sc619-skill-proposal.md` to dse-verify SKILL (lifecycle 63/63, part 7 `G-S108,G-S112`, CRLF heading-hover slice fact, residual, CURRENT numbers); preserve this ledger dir to `docs/superpowers/dse-overhaul/build-ledgers/sc619-crlf-hover-refusal/`; move SC-619 to Done via linear-post.py `--state Done` and verify.
 - No new Backlog tickets (all follow-ups ruled drop/fold).
+
+## Done (2026-11-13)
+
+- Landed by the dispatcher: dse develop `df92a3f6`, workspace main `f61e6e09` (ledger preserved + SKILL proposal applied in `65098e06`; worktree removed).
+- SC-619 moved to **Done** via linear-post.py `--state Done` (Done comment `sc619-comment-done.md` posted); verified Done with get_issue (completedAt 2026-11-13T20:23:05Z). No follow-up tickets.
