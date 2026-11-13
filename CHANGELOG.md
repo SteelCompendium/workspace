@@ -23,6 +23,12 @@ go under an *Internal* sub-heading.
   again, or the next click, saves as usual. A note without identical counters is not affected. In a note open in its own pane; embeds and
   hover previews (SC-607) were already covered.
 
+- **DSE plugin: the Conditions window now matches two things you can write by hand in a note (SC-586).**
+  A condition written with a color name or short form, such as `color: teal`, showed the custom color as selected, but the eyedropper's color chooser
+  opened at white. It now opens at that color (`#008080` for teal), whether you wrote a name, `#abc`, `rgb()`, `hsl()` or a newer spelling such as `oklch()`; a color the browser cannot
+  read still opens at white. And a condition with a blank icon (`icon: ""`) drew the default icon while "Use default" was not shown as selected; it is now, and an
+  icon written with stray spaces (`icon: "skull "`) shows its icon as selected too. Looking at either writes nothing to the note.
+
 - **DSE plugin: removing the last condition by keyboard with the Add search open no longer drops keyboard focus (SC-585).**
   In the Conditions window, if you had the "+ Add condition" search open, Shift+Tabbed back to a condition's trash button and pressed Enter to remove the last
   remaining condition, focus fell to the page and the search stayed open with nothing focused, so you had to click back into the window. Focus now moves
