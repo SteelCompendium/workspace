@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: a + / - or a form Save in a hover preview of a heading, in a note saved with Windows line endings, is saved again (SC-619).**
+  Hover a link to a heading (`[[Note#Heading]]`) of a note whose lines end in CRLF, a Windows-style file, and press + / - on the counter in the preview, or Save its Edit form: nothing was written and the
+  "changed on disk first" Notice showed although nothing had changed. The change is now saved into the counter you hovered, and the note keeps its Windows line endings. The same
+  note saved with plain line endings, a block link (`[[Note#^id]]`), an embed and a whole-note preview were not affected. When a note really did change underneath the preview (two heading
+  names swapped, the hovered section deleted), the write is still refused with the Notice, as before.
+
 - **DSE plugin: a form Save or a + / - on one of two identical counters no longer writes the other one when an outside change deleted it (SC-612).**
   A note with two identical counters separated only by blank lines, one of them deleted from outside (Sync, another app) while its Edit form
   was open or just after you pressed + / -: the Save or the click used to land in the counter that was left, which is a different block that
