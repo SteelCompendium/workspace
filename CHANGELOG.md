@@ -8,6 +8,15 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: a form Save or a + / - on one of two identical counters no longer writes the other one when an outside change deleted it (SC-612).**
+  A note with two identical counters separated only by blank lines, one of them deleted from outside (Sync, another app) while its Edit form
+  was open or just after you pressed + / -: the Save or the click used to land in the counter that was left, which is a different block that
+  only looks the same, with no message. It is now refused, nothing is written, and the "changed on disk first" Notice shows (the form stays
+  open). It is also refused when, in the same outside change, an identical counter was added or removed beside yours, because then the note
+  cannot tell which counter was yours. An edit elsewhere in the note, or a sibling's + / -, does not cause a refusal. Opening the form
+  again, or the next click, saves as usual. A note without identical counters is not affected. In a note open in its own pane; embeds and
+  hover previews (SC-607) were already covered.
+
 - **DSE plugin: the Conditions window can take a color off a condition again (SC-581).**
   In a condition's editor (the cog), once you picked a color swatch nothing could put the condition back to no color, unlike Icon, Duration and Effect, which each
   have a reset choice. The Color row now starts with a **Default** button. Press it and the condition's `color` is removed from the note, the row's icon goes back to
