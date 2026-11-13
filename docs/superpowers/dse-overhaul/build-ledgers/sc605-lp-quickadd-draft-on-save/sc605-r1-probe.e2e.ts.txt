@@ -1,0 +1,298 @@
+// SC-605 r1 reviewer probe (SCRATCH ONLY, never committed): Live Preview quick-add draft across the tracker's own save.
+// Copied into e2e/specs/zz605/ for a run, removed afterwards. Ids ZZ605-* are scratch ids.
+import * as fs from 'fs';
+import { $, browser } from '@wdio/globals';
+import { dse } from '../../driver/dse';
+
+const OUT = process.env.ZZ_PROBE_OUT ?? '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc605-r1-design/probe-default.jsonl';
+const rec = (probe: string, step: string, data: unknown): void => fs.appendFileSync(OUT, JSON.stringify({ probe, step, data }) + '\n');
+
+const TRACKER = 'Initiative/tracker.md';
+const TWO = 'Initiative/two-trackers.md';
+const TWINS = 'Initiative/zz605-twins.md';
+const INIT = 'ds-initiative';
+const AMT = 'init.malice.quickadd.amount';
+const LBL = 'init.malice.quickadd.label';
+
+/** Page-side sampler: every animation frame AND every 4 ms, the quick-add boxes of every Live Preview tracker root (by root identity,
+ *  leaf and index) and what holds focus; logs only changes. Also vault modifies and the prototype's trace (window.__dse605). */
+const install = () =>
+	dse.page(`(() => {
+		const old = window.__zz605; if (old) { old.stop = true; clearInterval(old.timer); app.vault.offref(old.ref); }
+		const ids = new WeakMap(); let next = 1;
+		const rid = (r) => { if (!r) return null; if (!ids.has(r)) ids.set(r, next++); return ids.get(r); };
+		const leaves = () => Array.from(document.querySelectorAll('.workspace-leaf'));
+		const roots = () => Array.from(document.querySelectorAll('.markdown-source-view [data-dse-element="initiative"]')).filter((r) => !r.parentElement.closest('[data-dse-element]'));
+		const t0 = performance.now();
+		const T = () => (performance.now() - t0) | 0;
+		const box = (r, id) => r.querySelector('[data-dse-control="' + id + '"]');
+		const snapBoxes = () => roots().map((r) => { const leaf = leaves().indexOf(r.closest('.workspace-leaf')); const a = box(r, '${AMT}'); const l = box(r, '${LBL}'); return 'r' + rid(r) + '@L' + leaf + '=' + JSON.stringify([a ? a.value : null, l ? l.value : null]); }).join(' ');
+		const desc = () => {
+			const a = document.activeElement;
+			if (!a || a === document.body) return 'body';
+			const root = a.closest('[data-dse-element]');
+			const ctl = a.closest('[data-dse-control]')?.getAttribute('data-dse-control');
+			const what = ctl ?? (a.classList.contains('cm-content') ? 'cm-content' : a.tagName + '.' + String(a.className).slice(0, 30));
+			const sel = (a.tagName === 'INPUT' && a.type === 'text') ? ' sel=' + a.selectionStart + '-' + a.selectionEnd : '';
+			return what + '@r' + rid(root) + (a.matches(':focus-visible') ? '+ring' : '') + sel;
+		};
+		roots().forEach(rid);
+		const z = { t0, log: [], lastB: null, lastF: null, desc, roots, rid, snapBoxes, leaves, box };
+		const sample = (src) => { const b = snapBoxes(); if (b !== z.lastB) { z.log.push([T(), 'boxes', b, src]); z.lastB = b; } const d = desc(); if (d !== z.lastF) { z.log.push([T(), 'focus', d]); z.lastF = d; } };
+		z.timer = setInterval(() => sample('int'), 4);
+		const raf = () => { if (z.stop) return; sample('raf'); requestAnimationFrame(raf); }; requestAnimationFrame(raf);
+		z.ref = app.vault.on('modify', (f) => z.log.push([T(), 'modify', f.path]));
+		window.__zz605 = z; window.__dse605 = [];
+		sample('start');
+		return true;
+	})()`);
+
+/** The end state of every Live Preview tracker: boxes, hint, Add enabled, aria-invalid, round; plus focus. */
+const endState = () =>
+	dse.page(`(() => {
+		const z = window.__zz605;
+		const trackers = z.roots().map((r) => {
+			const a = z.box(r, '${AMT}'); const l = z.box(r, '${LBL}'); const add = z.box(r, 'init.malice.quickadd.add');
+			return {
+				root: 'r' + z.rid(r), leaf: z.leaves().indexOf(r.closest('.workspace-leaf')),
+				amount: a?.value ?? null, label: l?.value ?? null,
+				hint: r.querySelector('.dse-init__malice-quickadd-hint')?.textContent ?? null,
+				addEnabled: add ? !add.disabled : null,
+				invalid: [a?.getAttribute('aria-invalid') ?? null, l?.getAttribute('aria-invalid') ?? null],
+				placeholders: [a?.getAttribute('placeholder') ?? null, l?.getAttribute('placeholder') ?? null],
+				round: r.querySelector('.dse-init__round-value')?.textContent ?? null,
+			};
+		});
+		return { focus: z.desc(), trackers };
+	})()`);
+
+const finish = async (probe: string): Promise<void> => {
+	await dse.settle();
+	await browser.pause(1000);
+	const end = await endState();
+	const out = await dse.page(`(() => { const z = window.__zz605; z.stop = true; clearInterval(z.timer); app.vault.offref(z.ref); return { log: z.log, dbg: (window.__dse605 ?? []).map((e) => [Math.round(e[0] - z.t0), ...e.slice(1)]) }; })()`);
+	rec(probe, 'result', { ...(out as object), end });
+};
+const mark = (probe: string, step: string) => dse.page(`window.__zz605.log.push([(performance.now() - window.__zz605.t0) | 0, 'mark', ${JSON.stringify(step)}])`).then(() => rec(probe, 'mark', step));
+
+const draft = async (n: number, amount: string, label: string): Promise<void> => {
+	const root = dse.block(INIT, n);
+	await dse.type(root.control(AMT), amount, { replace: true });
+	await dse.type(root.control(LBL), label, { replace: true });
+};
+
+describe('zz SC-605 r1 probe: the draft across the own save (Live Preview)', () => {
+	it('[ZZ605-A] (a) draft typed, mouse click Advance round', async () => {
+		await dse.openNote(TRACKER, { mode: 'live-preview' });
+		await draft(0, '2', 'Feytouched');
+		await install();
+		await dse.click(dse.block(INIT).control('init.round.advance'));
+		await mark('A', 'clicked');
+		await finish('A');
+	});
+
+	it('[ZZ605-B] (b) draft typed, mouse click Malice +', async () => {
+		await dse.openNote(TRACKER, { mode: 'live-preview' });
+		await draft(0, '2', 'Feytouched');
+		await install();
+		await dse.click(dse.block(INIT).control('init.malice.inc'));
+		await mark('B', 'clicked');
+		await finish('B');
+	});
+
+	it('[ZZ605-C] (c) draft typed, keyboard Enter on Advance round', async () => {
+		await dse.openNote(TRACKER, { mode: 'live-preview' });
+		await draft(0, '2', 'Feytouched');
+		const root = dse.block(INIT);
+		await dse.focusByScript(root.control('init.round.advance'));
+		await install();
+		await dse.press('Enter', root.control('init.round.advance'));
+		await finish('C');
+	});
+
+	it('[ZZ605-D] typed AFTER the click, before the save lands: label gets "X" appended inside the debounce', async () => {
+		await dse.openNote(TRACKER, { mode: 'live-preview' });
+		await draft(0, '2', 'Fey');
+		await install();
+		const root = dse.block(INIT);
+		await dse.click(root.control('init.malice.inc'));
+		await dse.type(root.control(LBL), 'X'); // a real click into the label (caret to end), then a key, inside the 400 ms debounce
+		await mark('D', 'typed');
+		await finish('D');
+	});
+
+	it('[ZZ605-D2] focus-in-box: mouse +, then click into the label, caret moved to the middle, inside the debounce', async () => {
+		await dse.openNote(TRACKER, { mode: 'live-preview' });
+		await draft(0, '2', 'Feytouched');
+		await install();
+		const root = dse.block(INIT);
+		await dse.click(root.control('init.malice.inc'));
+		await dse.click(root.control(LBL));
+		await browser.keys(['Home', 'ArrowRight', 'ArrowRight', 'ArrowRight']); // caret at 3
+		await mark('D2', 'caret3');
+		await finish('D2');
+	});
+});
+
+describe('zz SC-605 r1 probe: guards', () => {
+	it('[ZZ605-G1] outside edit (no own-write ticket): nothing carried', async () => {
+		await dse.openNote(TRACKER, { mode: 'live-preview' });
+		await draft(0, '2', 'Feytouched');
+		await install();
+		await dse.externalEdit(TRACKER, `c.replace('value: 3', 'value: 5')`);
+		await finish('G1');
+	});
+
+	it('[ZZ605-G2] two trackers, drafts in both, Advance round in the FIRST', async () => {
+		await dse.openNote(TWO, { mode: 'live-preview' });
+		await draft(0, '1', 'Alpha');
+		await draft(1, '2', 'Beta');
+		await install();
+		await dse.click(dse.block(INIT, 0).control('init.round.advance'));
+		await finish('G2');
+	});
+
+	it('[ZZ605-G2b] two trackers, drafts in both, Advance round in the SECOND', async () => {
+		await dse.openNote(TWO, { mode: 'live-preview' });
+		await draft(0, '1', 'Alpha');
+		await draft(1, '2', 'Beta');
+		await install();
+		await dse.click(dse.block(INIT, 1).control('init.round.advance'));
+		await finish('G2b');
+	});
+
+	it('[ZZ605-G3] identical twins, draft in the FIRST only, Advance round in the first', async () => {
+		await dse.openNote(TWINS, { mode: 'live-preview' });
+		await draft(0, '1', 'Alpha');
+		await install();
+		await dse.click(dse.block(INIT, 0).control('init.round.advance'));
+		await finish('G3');
+	});
+
+	it('[ZZ605-G3b] identical twins, draft in the SECOND only, Advance round in the second', async () => {
+		await dse.openNote(TWINS, { mode: 'live-preview' });
+		await draft(1, '2', 'Beta');
+		await install();
+		await dse.click(dse.block(INIT, 1).control('init.round.advance'));
+		await finish('G3b');
+	});
+
+	it('[ZZ605-G3c] identical twins, drafts in both, Advance round in the FIRST', async () => {
+		await dse.openNote(TWINS, { mode: 'live-preview' });
+		await draft(0, '1', 'Alpha');
+		await draft(1, '2', 'Beta');
+		await install();
+		await dse.click(dse.block(INIT, 0).control('init.round.advance'));
+		await finish('G3c');
+	});
+
+	const splitRight = async (): Promise<void> => {
+		await dse.page(`(async () => { const leaf = app.workspace.getLeaf('split', 'vertical'); await leaf.setViewState({ type: 'markdown', state: { file: '${TRACKER}', mode: 'source', source: false }, active: true }); app.workspace.setActiveLeaf(leaf, { focus: true }); return true; })()`);
+		await dse.waitFor(`document.querySelectorAll('.markdown-source-view [data-dse-element="initiative"] [data-dse-control="${AMT}"]').length >= 2`, 'two panes drawn');
+		await dse.page(`(() => { app.workspace.getMostRecentLeaf().view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+	};
+
+	it('[ZZ605-G4] same note in two panes: draft in the active (right) pane, Advance round there', async () => {
+		await dse.openNote(TRACKER, { mode: 'live-preview' });
+		await splitRight();
+		await draft(0, '2', 'Right');
+		await install();
+		await dse.click(dse.block(INIT).control('init.round.advance'));
+		await finish('G4');
+		await dse.page(`(() => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); return true; })()`);
+	});
+
+	it('[ZZ605-G4b] same note in two panes: draft in the LEFT pane first, then the right pane, Advance round in the right', async () => {
+		await dse.openNote(TRACKER, { mode: 'live-preview' });
+		await splitRight();
+		// tag the DISPLAYED quick-add boxes and Advance round of each pane (Live Preview can keep a hidden copy of a widget in a leaf)
+		const tag = () => dse.page(`(() => { let n = 0; for (const l of document.querySelectorAll('.workspace-leaf')) { const side = l.classList.contains('mod-active') ? 'right' : 'left'; for (const c of l.querySelectorAll('.markdown-source-view [data-dse-element="initiative"] [data-dse-control]')) { if (c.offsetParent === null) continue; c.setAttribute('data-zz', side + ':' + c.getAttribute('data-dse-control')); n++; } } return n; })()`);
+		rec('G4b', 'tagged', await tag());
+		const typeIn = async (sel: string, text: string): Promise<void> => {
+			const el = await $(sel);
+			await el.scrollIntoView({ block: 'center' });
+			await el.click();
+			await browser.keys(['Control', 'a']);
+			await browser.keys(text.split(''));
+		};
+		await typeIn(`[data-zz="left:${AMT}"]`, '1');
+		await typeIn(`[data-zz="left:${LBL}"]`, 'Left');
+		await typeIn(`[data-zz="right:${AMT}"]`, '2');
+		await typeIn(`[data-zz="right:${LBL}"]`, 'Right');
+		rec('G4b', 'activeLeafRight', await dse.page(`document.activeElement?.closest('.workspace-leaf')?.classList.contains('mod-active') ?? null`));
+		await install();
+		await (await $(`[data-zz="right:init.round.advance"]`)).click();
+		await finish('G4b');
+		await dse.page(`(() => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); return true; })()`);
+	});
+
+	it('[ZZ605-G4c] same note in two panes: draft in the LEFT pane only, Advance round in the left', async () => {
+		await dse.openNote(TRACKER, { mode: 'live-preview' });
+		await splitRight();
+		const tag = () => dse.page(`(() => { let n = 0; for (const l of document.querySelectorAll('.workspace-leaf')) { const side = l.classList.contains('mod-active') ? 'right' : 'left'; for (const c of l.querySelectorAll('.markdown-source-view [data-dse-element="initiative"] [data-dse-control]')) { if (c.offsetParent === null) continue; c.setAttribute('data-zz', side + ':' + c.getAttribute('data-dse-control')); n++; } } return n; })()`);
+		await tag();
+		const typeIn = async (sel: string, text: string): Promise<void> => {
+			const el = await $(sel);
+			await el.scrollIntoView({ block: 'center' });
+			await el.click();
+			await browser.keys(['Control', 'a']);
+			await browser.keys(text.split(''));
+		};
+		await typeIn(`[data-zz="left:${AMT}"]`, '1');
+		await typeIn(`[data-zz="left:${LBL}"]`, 'Left');
+		await install();
+		await (await $(`[data-zz="left:init.round.advance"]`)).click();
+		await finish('G4c');
+		await dse.page(`(() => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); return true; })()`);
+	});
+
+	it('[ZZ605-G7] tracker inside a callout: draft, mouse Advance round', async () => {
+		await dse.openNote('Initiative/zz605-callout.md', { mode: 'live-preview' });
+		await draft(0, '2', 'Callout');
+		await install();
+		await dse.click(dse.block(INIT).control('init.round.advance'));
+		await finish('G7');
+	});
+
+	it('[ZZ605-G8] tracker embedded from another note (Live Preview embed): draft, mouse Advance round', async () => {
+		await dse.openNote('Initiative/zz605-embed.md', { mode: 'live-preview' });
+		await draft(0, '2', 'Embed');
+		await install();
+		await dse.click(dse.block(INIT).control('init.round.advance'));
+		await finish('G8');
+	});
+
+	it('[ZZ605-G5] one-shot: draft, Advance (carried), then Add (clears + saves), then an outside edit', async () => {
+		await dse.openNote(TRACKER, { mode: 'live-preview' });
+		await draft(0, '2', 'Feytouched');
+		await install();
+		await dse.waitForWrite(TRACKER, () => dse.click(dse.block(INIT).control('init.round.advance')));
+		await dse.settle();
+		await browser.pause(600);
+		rec('G5', 'afterAdvance', await endState());
+		await dse.click(dse.block(INIT).control('init.malice.quickadd.add')); // (base: the boxes are already empty, so Add writes nothing)
+		await dse.settle();
+		await browser.pause(600);
+		rec('G5', 'afterAdd', await endState());
+		await dse.externalEdit(TRACKER, `c.replace(/value: \\d+/, 'value: 9')`);
+		await finish('G5');
+		rec('G5', 'note', await dse.noteText(TRACKER));
+	});
+
+	it('[ZZ605-G6] own save, then an outside edit 300 ms after it lands (inside the carry TTL)', async () => {
+		await dse.openNote(TRACKER, { mode: 'live-preview' });
+		await draft(0, '2', 'Feytouched');
+		await install();
+		await dse.waitForWrite(TRACKER, () => dse.click(dse.block(INIT).control('init.round.advance')));
+		await browser.pause(300);
+		// the user empties the boxes by hand (no Add), then an outside edit redraws: nothing may come back
+		const root = dse.block(INIT);
+		await dse.type(root.control(AMT), '', { replace: true });
+		await browser.keys(['Delete']);
+		await dse.type(root.control(LBL), '', { replace: true });
+		await browser.keys(['Delete']);
+		rec('G6', 'emptied', await endState());
+		await dse.externalEdit(TRACKER, `c.replace(/value: \\d+/, 'value: 9')`);
+		await finish('G6');
+	});
+});

@@ -1,0 +1,233 @@
+== A
+   END focus=body
+   END r2@L3 amount='2' label='Feytouched' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["2","Feytouched"]](start)
+     0:F[init.malice.quickadd.label@r1+ring sel=10-10]
+     149:F[body]
+     156:MARK clicked
+     567:WRITE
+     601:B[r2@L3=["2","Feytouched"]](raf)
+      dbg [572, "arm", "Initiative/tracker.md::ds-initiative::4", "{\"amount\":\"2\",\"label\":\"Feytouched\"}"]
+      dbg [580, "claim-pre", true, "Initiative/tracker.md::ds-initiative::4"]
+      dbg [580, "take-pre"]
+== B
+   END focus=body
+   END r2@L3 amount='2' label='Feytouched' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 1
+     0:B[r1@L3=["2","Feytouched"]](start)
+     0:F[init.malice.quickadd.label@r1+ring sel=10-10]
+     108:F[body]
+     112:MARK clicked
+     511:WRITE
+     541:B[r2@L3=["2","Feytouched"]](raf)
+      dbg [513, "arm", "Initiative/tracker.md::ds-initiative::4", "{\"amount\":\"2\",\"label\":\"Feytouched\"}"]
+      dbg [518, "claim-pre", true, "Initiative/tracker.md::ds-initiative::4"]
+      dbg [518, "take-pre"]
+== C
+   END focus=init.round.advance@r2+ring
+   END r2@L3 amount='2' label='Feytouched' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["2","Feytouched"]](start)
+     0:F[init.round.advance@r1+ring]
+     446:WRITE
+     487:B[r2@L3=["2","Feytouched"]](raf)
+     487:F[init.round.advance@r2+ring]
+      dbg [448, "arm", "Initiative/tracker.md::ds-initiative::4", "{\"amount\":\"2\",\"label\":\"Feytouched\"}"]
+      dbg [459, "claim-pre", true, "Initiative/tracker.md::ds-initiative::4"]
+      dbg [459, "take-pre"]
+== D
+   END focus=init.malice.quickadd.label@r2+ring sel=4-4
+   END r2@L3 amount='2' label='FeyX' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 1
+     0:B[r1@L3=["2","Fey"]](start)
+     0:F[init.malice.quickadd.label@r1+ring sel=3-3]
+     108:F[body]
+     209:F[init.malice.quickadd.label@r1+ring sel=3-3]
+     241:B[r1@L3=["2","FeyX"]](raf)
+     241:F[init.malice.quickadd.label@r1+ring sel=4-4]
+     244:MARK typed
+     505:WRITE
+     547:B[r2@L3=["2","FeyX"]](raf)
+     547:F[init.malice.quickadd.label@r2+ring sel=4-4]
+      dbg [508, "arm", "Initiative/tracker.md::ds-initiative::4", "{\"amount\":\"2\",\"label\":\"FeyX\",\"caret\":{\"field\":\"label\",\"start\":4,\"end\":4}}"]
+      dbg [518, "claim-pre", true, "Initiative/tracker.md::ds-initiative::4"]
+      dbg [518, "take-pre"]
+== D2
+   END focus=init.malice.quickadd.label@r2+ring sel=3-3
+   END r2@L3 amount='2' label='Feytouched' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 1
+     0:B[r1@L3=["2","Feytouched"]](start)
+     0:F[init.malice.quickadd.label@r1+ring sel=10-10]
+     102:F[body]
+     212:F[init.malice.quickadd.label@r1+ring sel=8-8]
+     244:F[init.malice.quickadd.label@r1+ring sel=3-3]
+     250:MARK caret3
+     507:WRITE
+     555:B[r2@L3=["2","Feytouched"]](raf)
+     555:F[init.malice.quickadd.label@r2+ring sel=3-3]
+      dbg [511, "arm", "Initiative/tracker.md::ds-initiative::4", "{\"amount\":\"2\",\"label\":\"Feytouched\",\"caret\":{\"field\":\"label\",\"start\":3,\"end\":3}}"]
+      dbg [528, "claim-pre", true, "Initiative/tracker.md::ds-initiative::4"]
+      dbg [528, "take-pre"]
+== G1
+   END focus=body
+   END r2@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 1
+     0:B[r1@L3=["2","Feytouched"]](start)
+     0:F[init.malice.quickadd.label@r1+ring sel=10-10]
+     16:WRITE
+     51:B[r2@L3=["",""]](int)
+     51:F[body]
+== G2
+   END focus=body
+   END r3@L3 amount='1' label='Alpha' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+   END r2@L3 amount='2' label='Beta' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 1
+     0:B[r1@L3=["1","Alpha"] r2@L3=["2","Beta"]](start)
+     0:F[init.malice.quickadd.label@r2+ring sel=4-4]
+     114:F[body]
+     519:WRITE
+     560:B[r3@L3=["1","Alpha"] r2@L3=["2","Beta"]](raf)
+      dbg [526, "arm", "Initiative/two-trackers.md::ds-initiative::4", "{\"amount\":\"1\",\"label\":\"Alpha\"}"]
+      dbg [539, "claim-pre", true, "Initiative/two-trackers.md::ds-initiative::4"]
+      dbg [540, "take-pre"]
+== G2b
+   END focus=body
+   END r1@L3 amount='1' label='Alpha' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 1
+   END r3@L3 amount='2' label='Beta' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["1","Alpha"] r2@L3=["2","Beta"]](start)
+     0:F[init.malice.quickadd.label@r2+ring sel=4-4]
+     110:F[body]
+     506:WRITE
+     525:B[r1@L3=["1","Alpha"] r3@L3=["2","Beta"]](raf)
+      dbg [508, "arm", "Initiative/two-trackers.md::ds-initiative::20", "{\"amount\":\"2\",\"label\":\"Beta\"}"]
+      dbg [512, "claim-pre", true, "Initiative/two-trackers.md::ds-initiative::20"]
+      dbg [512, "take-pre"]
+== G3
+   END focus=body
+   END r3@L3 amount='1' label='Alpha' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+   END r4@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 1
+     0:B[r1@L3=["1","Alpha"] r2@L3=["",""]](start)
+     0:F[init.malice.quickadd.label@r1+ring sel=5-5]
+     334:F[body]
+     734:WRITE
+     792:B[r3@L3=["1","Alpha"] r4@L3=["",""]](raf)
+      dbg [739, "arm", "Initiative/zz605-twins.md::ds-initiative::4", "{\"amount\":\"1\",\"label\":\"Alpha\"}"]
+      dbg [760, "claim-pre", true, "Initiative/zz605-twins.md::ds-initiative::4"]
+      dbg [760, "take-pre"]
+== G3b
+   END focus=body
+   END r1@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 1
+   END r3@L3 amount='2' label='Beta' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["",""] r2@L3=["2","Beta"]](start)
+     0:F[init.malice.quickadd.label@r2+ring sel=4-4]
+     128:F[body]
+     535:WRITE
+     590:B[r1@L3=["",""] r3@L3=["2","Beta"]](raf)
+      dbg [542, "arm", "Initiative/zz605-twins.md::ds-initiative::20", "{\"amount\":\"2\",\"label\":\"Beta\"}"]
+      dbg [565, "claim-pre", true, "Initiative/zz605-twins.md::ds-initiative::20"]
+      dbg [565, "take-pre"]
+== G3c
+   END focus=body
+   END r3@L3 amount='1' label='Alpha' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+   END r4@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 1
+     0:B[r1@L3=["1","Alpha"] r2@L3=["2","Beta"]](start)
+     0:F[init.malice.quickadd.label@r2+ring sel=4-4]
+     127:F[body]
+     532:WRITE
+     582:B[r3@L3=["1","Alpha"] r4@L3=["",""]](raf)
+      dbg [540, "arm", "Initiative/zz605-twins.md::ds-initiative::4", "{\"amount\":\"1\",\"label\":\"Alpha\"}"]
+      dbg [556, "claim-pre", true, "Initiative/zz605-twins.md::ds-initiative::4"]
+      dbg [556, "take-pre"]
+== G4
+   END focus=body
+   END r3@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+   END r4@L4 amount='2' label='Right' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["",""] r2@L4=["2","Right"]](start)
+     0:F[init.malice.quickadd.label@r2+ring sel=5-5]
+     156:F[body]
+     550:WRITE
+     557:B[r3@L3=["",""] r2@L4=["2","Right"]](int)
+     586:B[r3@L3=["",""] r4@L4=["2","Right"]](raf)
+      dbg [559, "arm", "Initiative/tracker.md::ds-initiative::4", "{\"amount\":\"2\",\"label\":\"Right\"}"]
+      dbg [570, "claim-pre", true, "Initiative/tracker.md::ds-initiative::4"]
+      dbg [570, "take-pre"]
+-- G4b tagged: 62
+-- G4b activeLeafRight: true
+== G4b
+   END focus=body
+   END r3@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+   END r4@L4 amount='2' label='Right' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["1","Left"] r2@L4=["2","Right"]](start)
+     0:F[init.malice.quickadd.label@r2+ring sel=5-5]
+     176:F[body]
+     566:WRITE
+     575:B[r3@L3=["",""] r2@L4=["2","Right"]](int)
+     604:B[r3@L3=["",""] r4@L4=["2","Right"]](raf)
+      dbg [576, "arm", "Initiative/tracker.md::ds-initiative::4", "{\"amount\":\"2\",\"label\":\"Right\"}"]
+      dbg [588, "claim-pre", true, "Initiative/tracker.md::ds-initiative::4"]
+      dbg [588, "take-pre"]
+== G4c
+   END focus=body
+   END r3@L3 amount='1' label='Left' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+   END r4@L4 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["1","Left"] r2@L4=["",""]](start)
+     0:F[init.malice.quickadd.label@r1+ring sel=4-4]
+     137:F[body]
+     534:WRITE
+     578:B[r3@L3=["1","Left"] r2@L4=["",""]](raf)
+     602:B[r3@L3=["1","Left"] r4@L4=["",""]](raf)
+      dbg [539, "arm", "Initiative/tracker.md::ds-initiative::4", "{\"amount\":\"1\",\"label\":\"Left\"}"]
+      dbg [550, "claim-pre", true, "Initiative/tracker.md::ds-initiative::4"]
+      dbg [550, "take-pre"]
+== G7
+   END focus=body
+   END r2@L3 amount='2' label='Callout' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["2","Callout"]](start)
+     0:F[init.malice.quickadd.label@r1+ring sel=7-7]
+     144:F[body]
+     545:WRITE
+     585:B[r2@L3=["2","Callout"]](raf)
+      dbg [549, "arm", "Initiative/zz605-callout.md::ds-initiative::5", "{\"amount\":\"2\",\"label\":\"Callout\"}"]
+      dbg [558, "claim-pre", true, "Initiative/zz605-callout.md::ds-initiative::5"]
+      dbg [559, "take-pre"]
+== G8
+   END focus=body
+   END r1@L3 amount='2' label='Embed' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["2","Embed"]](start)
+     0:F[init.malice.quickadd.label@r1+ring sel=5-5]
+     111:F[body]
+     506:WRITE
+-- G5 afterAdvance: {"focus": "body", "trackers": [{"addEnabled": true, "amount": "2", "hint": "", "invalid": [null, null], "label": "Feytouched", "leaf": 3, "placeholders": ["Amount", "E.g. Feytouched"], "root": "r2", "round": "Round 2"}]}
+-- G5 afterAdd: {"focus": "body", "trackers": [{"addEnabled": true, "amount": "", "hint": "", "invalid": [null, null], "label": "", "leaf": 3, "placeholders": ["Amount", "E.g. Feytouched"], "root": "r3", "round": "Round 2"}]}
+== G5
+   END focus=body
+   END r4@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["2","Feytouched"]](start)
+     0:F[init.malice.quickadd.label@r1+ring sel=10-10]
+     128:F[body]
+     526:WRITE
+     568:B[r2@L3=["2","Feytouched"]](raf)
+     1421:B[r2@L3=["",""]](raf)
+     1823:WRITE
+     1870:B[r3@L3=["",""]](raf)
+     2500:WRITE
+     2549:B[r4@L3=["",""]](raf)
+      dbg [529, "arm", "Initiative/tracker.md::ds-initiative::4", "{\"amount\":\"2\",\"label\":\"Feytouched\"}"]
+      dbg [539, "claim-pre", true, "Initiative/tracker.md::ds-initiative::4"]
+      dbg [539, "take-pre"]
+      dbg [1827, "arm-empty", "Initiative/tracker.md::ds-initiative::4"]
+-- G5 note: "# Initiative tracker\n\nABOVE\n\n```ds-initiative\nheroes:\n  - name: Alice Alpha\n    max_stamina: 30\nenemy_groups:\n  - name: Ogres\n    creatures:\n      - name: Ogre\n        max_stamina: 60\n        amount: 3\nmalice:\n  value: 9\n  log:\n    - round: 2\n      amount: 2\n      label: Feytouched\nround: 2\n```\n\nBELOW\n"
+-- G6 emptied: {"focus": "init.malice.quickadd.label@r2+ring sel=0-0", "trackers": [{"addEnabled": true, "amount": "", "hint": "", "invalid": [null, null], "label": "", "leaf": 3, "placeholders": ["Amount", "E.g. Feytouched"], "root": "r2", "round": "Round 2"}]}
+== G6
+   END focus=body
+   END r3@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["2","Feytouched"]](start)
+     0:F[init.malice.quickadd.label@r1+ring sel=10-10]
+     162:F[body]
+     555:WRITE
+     586:B[r2@L3=["2","Feytouched"]](int)
+     1298:F[init.malice.quickadd.amount@r2+ring]
+     1337:B[r2@L3=["","Feytouched"]](raf)
+     1437:F[init.malice.quickadd.label@r2+ring sel=0-10]
+     1470:B[r2@L3=["",""]](raf)
+     1470:F[init.malice.quickadd.label@r2+ring sel=0-0]
+     1482:WRITE
+     1515:B[r3@L3=["",""]](raf)
+     1515:F[body]
+      dbg [558, "arm", "Initiative/tracker.md::ds-initiative::4", "{\"amount\":\"2\",\"label\":\"Feytouched\"}"]
+      dbg [563, "claim-pre", true, "Initiative/tracker.md::ds-initiative::4"]
+      dbg [563, "take-pre"]

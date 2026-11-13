@@ -1,0 +1,309 @@
+// SC-605 r3 reviewer probe (SCRATCH ONLY, never committed). Parked in e2e/specs/zzr3/ for an --only run, removed afterwards.
+// Records end states to ZZ_PROBE_OUT (jsonl); asserts nothing itself.
+import * as fs from 'fs';
+import { browser } from '@wdio/globals';
+import { dse } from '../../driver/dse';
+
+const OUT = process.env.ZZ_PROBE_OUT ?? '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc605-r3-review/probe-default.jsonl';
+const rec = (probe: string, step: string, data: unknown): void => fs.appendFileSync(OUT, JSON.stringify({ probe, step, data }) + '\n');
+
+const MIN = 'Initiative/tracker.md';
+const TWO = 'Initiative/two-trackers.md';
+const RICH = 'Initiative/rich.md';
+const INIT = 'ds-initiative';
+const AMT = 'init.malice.quickadd.amount';
+const LBL = 'init.malice.quickadd.label';
+
+/** Every initiative root in every window (main + popouts): where it is, whether displayed, its boxes, round, malice; plus focus. */
+const snap = () =>
+	dse.page(`(() => {
+		window.__zzr3ids = window.__zzr3ids || new WeakMap(); window.__zzr3n = window.__zzr3n || 1;
+		const rid = (r) => { if (!window.__zzr3ids.has(r)) window.__zzr3ids.set(r, window.__zzr3n++); return window.__zzr3ids.get(r); };
+		const docs = [document];
+		for (const l of app.workspace.getLeavesOfType('markdown')) { const d = l.view.containerEl.ownerDocument; if (!docs.includes(d)) docs.push(d); }
+		const out = [];
+		docs.forEach((doc, di) => {
+			const leaves = Array.from(doc.querySelectorAll('.workspace-leaf'));
+			for (const r of doc.querySelectorAll('[data-dse-element="initiative"]')) {
+				if (r.parentElement.closest('[data-dse-element]')) continue;
+				const q = (id) => r.querySelector('[data-dse-control="' + id + '"]');
+				out.push({
+					root: 'r' + rid(r), doc: di, leaf: leaves.indexOf(r.closest('.workspace-leaf')),
+					where: r.closest('.cm-content') ? 'cm' : r.closest('.markdown-reading-view') ? 'reading' : 'other',
+					embed: !!r.closest('.internal-embed, .markdown-embed'),
+					shown: r.offsetParent !== null,
+					amount: q('${AMT}')?.value ?? null, label: q('${LBL}')?.value ?? null,
+					hint: r.querySelector('.dse-init__malice-quickadd-hint')?.textContent ?? null,
+					invalid: !!(q('${AMT}')?.hasAttribute('aria-invalid') || q('${LBL}')?.hasAttribute('aria-invalid')),
+					round: r.querySelector('.dse-init__round-value')?.textContent ?? null,
+					malice: r.querySelector('.dse-init__malice-value')?.textContent ?? null,
+				});
+			}
+		});
+		const focus = docs.map((doc) => { const a = doc.activeElement; if (!a || a === doc.body) return 'body'; const c = a.closest('[data-dse-control]')?.getAttribute('data-dse-control'); return (c ?? (a.classList.contains('cm-content') ? 'cm-content' : a.tagName)) + (a.matches(':focus-visible') ? '+ring' : '') + (a.tagName === 'INPUT' && a.type === 'text' ? ' sel=' + a.selectionStart + '-' + a.selectionEnd : ''); });
+		return { roots: out, focus };
+	})()`);
+
+const settled = async (): Promise<void> => {
+	await dse.settle();
+	await browser.pause(1000);
+};
+const fill = async (n: number, amount: string, label: string): Promise<void> => {
+	const root = dse.block(INIT, n);
+	await dse.type(root.control(AMT), amount, { replace: true });
+	await dse.type(root.control(LBL), label, { replace: true });
+};
+
+describe('zz r3 probe: presses', () => {
+	it('[ZZR3-01] mouse Advance round (sanity) + note bytes after the carried save', async () => {
+		await dse.openNote(MIN, { mode: 'live-preview' });
+		await snap();
+		await fill(0, '2', 'Feytouched');
+		rec('01', 'before', await snap());
+		await dse.waitForWrite(MIN, () => dse.click(dse.block(INIT).control('init.round.advance')));
+		await settled();
+		rec('01', 'end', await snap());
+		rec('01', 'note', await dse.noteText(MIN));
+	});
+
+	it('[ZZR3-02] keyboard Enter on Malice + (stepper) and Space on Malice -', async () => {
+		await dse.openNote(MIN, { mode: 'live-preview' });
+		await fill(0, '2', 'Feytouched');
+		const root = dse.block(INIT);
+		await dse.focusByScript(root.control('init.malice.inc'));
+		await dse.waitForWrite(MIN, () => dse.press('Enter', root.control('init.malice.inc')));
+		await settled();
+		rec('02', 'afterEnterPlus', await snap());
+		await dse.focusByScript(root.control('init.malice.dec'));
+		await dse.waitForWrite(MIN, () => dse.press(' ', root.control('init.malice.dec')));
+		await settled();
+		rec('02', 'afterSpaceMinus', await snap());
+	});
+
+	it('[ZZR3-03] Reset encounter -> Yes (mouse) in Live Preview', async () => {
+		await dse.openNote(MIN, { mode: 'live-preview' });
+		const root = dse.block(INIT);
+		await dse.waitForWrite(MIN, () => dse.click(root.control('init.round.advance')));
+		await dse.settle();
+		await fill(0, '2', 'Feytouched');
+		await dse.click(root.control('init.reset-encounter'));
+		const modal = await dse.modal('reset-encounter');
+		await dse.waitForWrite(MIN, () => dse.click(modal.control('init.reset-encounter.confirm')));
+		await settled();
+		rec('03', 'end', await snap());
+	});
+
+	it('[ZZR3-04] Reset encounter -> Yes (keyboard) in Live Preview', async () => {
+		await dse.openNote(MIN, { mode: 'live-preview' });
+		const root = dse.block(INIT);
+		await fill(0, '2', 'Feytouched');
+		await dse.focusByScript(root.control('init.reset-encounter'));
+		await dse.press('Enter', root.control('init.reset-encounter'));
+		const modal = await dse.modal('reset-encounter');
+		const confirm = modal.control('init.reset-encounter.confirm');
+		await dse.tabTo(confirm, 6);
+		await dse.waitForWrite(MIN, () => dse.press('Enter', confirm));
+		await settled();
+		rec('04', 'end', await snap());
+	});
+
+	it('[ZZR3-05] rapid presses: +, write lands, + again at once (two saves inside 1500 ms), then a third', async () => {
+		await dse.openNote(MIN, { mode: 'live-preview' });
+		await fill(0, '2', 'Feytouched');
+		const root = dse.block(INIT);
+		const t0 = Date.now();
+		const w1 = await dse.waitForWrite(MIN, () => dse.click(root.control('init.malice.inc')));
+		const t1 = Date.now();
+		const w2 = await dse.waitForWrite(MIN, () => dse.click(root.control('init.malice.inc')));
+		const t2 = Date.now();
+		const w3 = await dse.waitForWrite(MIN, () => dse.click(root.control('init.malice.inc')));
+		const t3 = Date.now();
+		await settled();
+		rec('05', 'end', { snap: await snap(), writes: [w1.count, w2.count, w3.count], ms: [t1 - t0, t2 - t1, t3 - t2] });
+	});
+
+	it('[ZZR3-06] rapid presses inside one debounce: three + clicks back to back', async () => {
+		await dse.openNote(MIN, { mode: 'live-preview' });
+		await fill(0, '2', 'Feytouched');
+		const root = dse.block(INIT);
+		const w = await dse.waitForWrite(MIN, async () => {
+			await dse.click(root.control('init.malice.inc'));
+			await dse.click(root.control('init.malice.inc'));
+			await dse.click(root.control('init.malice.inc'));
+		});
+		await settled();
+		rec('06', 'end', { snap: await snap(), writes: w.count });
+	});
+
+	it('[ZZR3-07] two trackers both pressed inside one debounce window (each its own save)', async () => {
+		await dse.openNote(TWO, { mode: 'live-preview' });
+		await fill(0, '1', 'Alpha');
+		await fill(1, '2', 'Beta');
+		const w = await dse.waitForWrite(TWO, async () => {
+			await dse.click(dse.block(INIT, 0).control('init.malice.inc'));
+			await dse.click(dse.block(INIT, 1).control('init.malice.inc'));
+		});
+		await settled();
+		rec('07', 'end', { snap: await snap(), writes: w.count });
+		rec('07', 'note', await dse.noteText(TWO));
+	});
+
+	it('[ZZR3-07b] two trackers: + in the SECOND then + in the FIRST inside one debounce window', async () => {
+		await dse.openNote(TWO, { mode: 'live-preview' });
+		await fill(0, '1', 'Alpha');
+		await fill(1, '2', 'Beta');
+		const w = await dse.waitForWrite(TWO, async () => {
+			await dse.click(dse.block(INIT, 1).control('init.round.advance'));
+			await dse.click(dse.block(INIT, 0).control('init.round.advance'));
+		});
+		await settled();
+		rec('07b', 'end', { snap: await snap(), writes: w.count });
+	});
+});
+
+describe('zz r3 probe: remounts and guards', () => {
+	it('[ZZR3-08] draft, no press, leaf navigates away and back within 1500 ms: must start empty', async () => {
+		await dse.openNote(MIN, { mode: 'live-preview' });
+		await fill(0, '2', 'Feytouched');
+		const t = await dse.page(`(async () => { const t0 = Date.now(); const leaf = app.workspace.getMostRecentLeaf(); await leaf.openFile(app.vault.getAbstractFileByPath('Initiative/two-trackers.md')); await leaf.openFile(app.vault.getAbstractFileByPath('${MIN}')); return Date.now() - t0; })()`);
+		await dse.waitFor(`!!document.querySelector('.workspace-leaf.mod-active .markdown-source-view [data-dse-element="initiative"] [data-dse-control="${AMT}"]')`, 'redrawn');
+		await settled();
+		rec('08', 'end', { ms: t, snap: await snap() });
+	});
+
+	it('[ZZR3-09] draft, +, navigate away inside the debounce (unload flush), back within 1500 ms: must start empty', async () => {
+		await dse.openNote(MIN, { mode: 'live-preview' });
+		await fill(0, '2', 'Feytouched');
+		await dse.click(dse.block(INIT).control('init.malice.inc'));
+		const t = await dse.page(`(async () => { const t0 = Date.now(); const leaf = app.workspace.getMostRecentLeaf(); await leaf.openFile(app.vault.getAbstractFileByPath('Initiative/two-trackers.md')); await new Promise((r) => setTimeout(r, 100)); await leaf.openFile(app.vault.getAbstractFileByPath('${MIN}')); return Date.now() - t0; })()`);
+		await dse.waitFor(`!!document.querySelector('.workspace-leaf.mod-active .markdown-source-view [data-dse-element="initiative"] [data-dse-control="${AMT}"]')`, 'redrawn');
+		await settled();
+		rec('09', 'end', { ms: t, snap: await snap(), note: await dse.noteText(MIN) });
+	});
+
+	it('[ZZR3-10] draft, +, write lands (carried), then navigate away and back within 1500 ms: must start empty', async () => {
+		await dse.openNote(MIN, { mode: 'live-preview' });
+		await fill(0, '2', 'Feytouched');
+		await dse.waitForWrite(MIN, () => dse.click(dse.block(INIT).control('init.malice.inc')));
+		rec('10', 'afterWrite', await snap());
+		const t = await dse.page(`(async () => { const t0 = Date.now(); const leaf = app.workspace.getMostRecentLeaf(); await leaf.openFile(app.vault.getAbstractFileByPath('Initiative/two-trackers.md')); await leaf.openFile(app.vault.getAbstractFileByPath('${MIN}')); return Date.now() - t0; })()`);
+		await dse.waitFor(`!!document.querySelector('.workspace-leaf.mod-active .markdown-source-view [data-dse-element="initiative"] [data-dse-control="${AMT}"]')`, 'redrawn');
+		await settled();
+		rec('10', 'end', { ms: t, snap: await snap() });
+	});
+
+	it('[ZZR3-11] contrived: the leaf navigates away INSIDE the vault modify of the own save (ticket fresh, before the redraw), back at once', async () => {
+		await dse.openNote(MIN, { mode: 'live-preview' });
+		await fill(0, '2', 'Feytouched');
+		await dse.page(`(() => { const leaf = app.workspace.getMostRecentLeaf(); window.__zzr3nav = { done: false, ms: null }; const ref = app.vault.on('modify', (f) => { if (f.path !== '${MIN}') return; app.vault.offref(ref); const t0 = Date.now(); (async () => { await leaf.openFile(app.vault.getAbstractFileByPath('Initiative/two-trackers.md')); await leaf.openFile(app.vault.getAbstractFileByPath('${MIN}')); window.__zzr3nav = { done: true, ms: Date.now() - t0 }; })(); }); return true; })()`);
+		await dse.click(dse.block(INIT).control('init.malice.inc'));
+		await dse.waitFor(`window.__zzr3nav.done`, 'navigated');
+		await dse.waitFor(`!!document.querySelector('.workspace-leaf.mod-active .markdown-source-view [data-dse-element="initiative"] [data-dse-control="${AMT}"]')`, 'redrawn');
+		await settled();
+		rec('11', 'end', { nav: await dse.page(`window.__zzr3nav`), snap: await snap() });
+	});
+
+	it('[ZZR3-12] close the tab and reopen the note within 1500 ms after a press inside the debounce', async () => {
+		await dse.openNote(MIN, { mode: 'live-preview' });
+		await fill(0, '2', 'Feytouched');
+		await dse.click(dse.block(INIT).control('init.malice.inc'));
+		const t = await dse.page(`(async () => { const t0 = Date.now(); const old = app.workspace.getMostRecentLeaf(); const keep = app.workspace.getLeaf('tab'); old.detach(); await new Promise((r) => setTimeout(r, 150)); await keep.setViewState({ type: 'markdown', state: { file: '${MIN}', mode: 'source', source: false }, active: true }); app.workspace.setActiveLeaf(keep, { focus: true }); keep.view.editor.setCursor({ line: 0, ch: 0 }); return Date.now() - t0; })()`);
+		await dse.waitFor(`!!document.querySelector('.workspace-leaf.mod-active .markdown-source-view [data-dse-element="initiative"] [data-dse-control="${AMT}"]')`, 'redrawn');
+		await settled();
+		rec('12', 'end', { ms: t, snap: await snap() });
+	});
+
+	it('[ZZR3-13] kept draft, then an outside edit 100 ms after the carried save (one-shot, draft not emptied)', async () => {
+		await dse.openNote(MIN, { mode: 'live-preview' });
+		await fill(0, '2', 'Feytouched');
+		await dse.waitForWrite(MIN, () => dse.click(dse.block(INIT).control('init.round.advance')));
+		rec('13', 'afterSave', await snap());
+		await dse.externalEdit(MIN, `c.replace(/value: \\d+/, 'value: 9')`);
+		await dse.waitFor(`document.querySelector('.workspace-leaf.mod-active .markdown-source-view [data-dse-element="initiative"] .dse-init__malice-value')?.textContent?.includes('9')`, 'redrawn');
+		await settled();
+		rec('13', 'end', await snap());
+	});
+
+	it('[ZZR3-14] split: left an LP embed of tracker.md, right tracker.md; draft typed in both, Advance in the right', async () => {
+		await dse.openNote('Initiative/zzr3-embed.md', { mode: 'live-preview' });
+		await dse.page(`(async () => { const leaf = app.workspace.getLeaf('split', 'vertical'); await leaf.setViewState({ type: 'markdown', state: { file: '${MIN}', mode: 'source', source: false }, active: true }); app.workspace.setActiveLeaf(leaf, { focus: true }); leaf.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+		await dse.waitFor(`document.querySelectorAll('[data-dse-element="initiative"] [data-dse-control="${AMT}"]').length >= 2`, 'two drawn');
+		await dse.page(`(() => { const set = (el, v) => { el.value = v; el.dispatchEvent(new Event('input', { bubbles: true })); }; const roots = Array.from(document.querySelectorAll('.workspace-leaf [data-dse-element="initiative"]')).filter((r) => r.offsetParent !== null && !r.parentElement.closest('[data-dse-element]')); for (const r of roots) { const emb = !!r.closest('.internal-embed, .markdown-embed'); set(r.querySelector('[data-dse-control="${AMT}"]'), emb ? '1' : '2'); set(r.querySelector('[data-dse-control="${LBL}"]'), emb ? 'Embed' : 'Main'); } return roots.length; })()`);
+		rec('14', 'before', await snap());
+		await dse.waitForWrite(MIN, () => dse.page(`(() => { const r = Array.from(document.querySelectorAll('.workspace-leaf.mod-active [data-dse-element="initiative"]')).find((x) => x.offsetParent !== null); r.querySelector('[data-dse-control="init.round.advance"]').click(); return true; })()`));
+		await settled();
+		rec('14', 'end', await snap());
+		await dse.page(`(() => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); return true; })()`);
+	});
+
+	it('[ZZR3-15] split: draft only in the LEFT pane of the same note, Advance in the left', async () => {
+		await dse.openNote(MIN, { mode: 'live-preview' });
+		await dse.page(`(async () => { const leaf = app.workspace.getLeaf('split', 'vertical'); await leaf.setViewState({ type: 'markdown', state: { file: '${MIN}', mode: 'source', source: false }, active: true }); app.workspace.setActiveLeaf(leaf, { focus: true }); leaf.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+		await dse.waitFor(`document.querySelectorAll('.markdown-source-view [data-dse-element="initiative"] [data-dse-control="${AMT}"]').length >= 2`, 'two panes drawn');
+		await dse.page(`(() => { const set = (el, v) => { el.value = v; el.dispatchEvent(new Event('input', { bubbles: true })); }; const leaf = Array.from(document.querySelectorAll('.workspace-leaf')).find((l) => !l.classList.contains('mod-active') && l.querySelector('[data-dse-element="initiative"]')); const r = Array.from(leaf.querySelectorAll('[data-dse-element="initiative"]')).find((x) => x.offsetParent !== null); set(r.querySelector('[data-dse-control="${AMT}"]'), '1'); set(r.querySelector('[data-dse-control="${LBL}"]'), 'Left'); r.querySelector('[data-dse-control="init.round.advance"]').click(); return true; })()`);
+		await dse.waitFor(`document.querySelectorAll('.dse-init__round-value').length >= 2 && Array.from(document.querySelectorAll('.markdown-source-view .dse-init__round-value')).filter((e) => e.offsetParent !== null).every((e) => e.textContent.includes('2'))`, 'both redrawn');
+		await settled();
+		rec('15', 'end', await snap());
+		await dse.page(`(() => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); return true; })()`);
+	});
+});
+
+describe('zz r3 probe: popout and hidden copies', () => {
+	it('[ZZR3-16] popout window: tracker.md in Live Preview in a popout; draft, Advance round (script click), + (script click)', async () => {
+		await dse.openNote(MIN, { mode: 'live-preview' });
+		await dse.page(`(async () => { const leaf = app.workspace.openPopoutLeaf(); await leaf.setViewState({ type: 'markdown', state: { file: '${MIN}', mode: 'source', source: false }, active: true }); window.__zzr3pop = leaf; return true; })()`);
+		await dse.waitFor(`!!window.__zzr3pop.view?.containerEl?.querySelector('.cm-content [data-dse-element="initiative"] [data-dse-control="${AMT}"]')`, 'popout tracker drawn');
+		await browser.pause(500);
+		const isPop = await dse.page(`window.__zzr3pop.view.containerEl.ownerDocument !== document`);
+		const r = (expr: string) => `(() => { const root = Array.from(window.__zzr3pop.view.containerEl.querySelectorAll('.cm-content [data-dse-element="initiative"]')).find((x) => x.offsetParent !== null); ${expr} })()`;
+		await dse.page(r(`const set = (el, v) => { el.value = v; el.dispatchEvent(new Event('input', { bubbles: true })); }; set(root.querySelector('[data-dse-control="${AMT}"]'), '2'); set(root.querySelector('[data-dse-control="${LBL}"]'), 'Popout'); return true;`));
+		rec('16', 'before', { isPop, snap: await snap() });
+		await dse.waitForWrite(MIN, () => dse.page(r(`root.querySelector('[data-dse-control="init.round.advance"]').click(); return true;`)));
+		await settled();
+		rec('16', 'afterAdvance', await snap());
+		await dse.waitForWrite(MIN, () => dse.page(r(`root.querySelector('[data-dse-control="init.malice.inc"]').click(); return true;`)));
+		await settled();
+		rec('16', 'afterPlus', await snap());
+		await dse.page(`(() => { window.__zzr3pop.detach(); return true; })()`);
+		await browser.pause(500);
+	});
+
+	it('[ZZR3-17] hidden copy hunt: open in Reading view, switch the SAME leaf to Live Preview; draft, Advance', async () => {
+		await dse.openNote(MIN, { mode: 'reading' });
+		await dse.page(`(async () => { const leaf = app.workspace.getMostRecentLeaf(); await leaf.setViewState({ type: 'markdown', state: { file: '${MIN}', mode: 'source', source: false }, active: true }); leaf.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+		await dse.waitFor(`!!document.querySelector('.workspace-leaf.mod-active .cm-content [data-dse-element="initiative"] [data-dse-control="${AMT}"]')`, 'LP drawn');
+		await browser.pause(500);
+		rec('17', 'beforeFill', await snap());
+		await fill(0, '2', 'Feytouched');
+		await dse.waitForWrite(MIN, () => dse.click(dse.block(INIT).control('init.round.advance')));
+		await settled();
+		rec('17', 'end', await snap());
+	});
+
+	it('[ZZR3-18] hidden copy hunt: LP -> Reading -> LP in the same leaf, then draft, Advance', async () => {
+		await dse.openNote(MIN, { mode: 'live-preview' });
+		await dse.page(`(async () => { const leaf = app.workspace.getMostRecentLeaf(); await leaf.setViewState({ type: 'markdown', state: { file: '${MIN}', mode: 'preview' }, active: true }); await new Promise((r) => setTimeout(r, 400)); await leaf.setViewState({ type: 'markdown', state: { file: '${MIN}', mode: 'source', source: false }, active: true }); leaf.view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+		await browser.pause(800);
+		rec('18', 'beforeFill', await snap());
+		await fill(0, '2', 'Feytouched');
+		await dse.waitForWrite(MIN, () => dse.click(dse.block(INIT).control('init.round.advance')));
+		await settled();
+		rec('18', 'end', await snap());
+	});
+
+	it('[ZZR3-19] Reading view (unchanged): draft, Advance round', async () => {
+		await dse.openNote(MIN, { mode: 'reading' });
+		await fill(0, '2', 'Feytouched');
+		await dse.waitForWrite(MIN, () => dse.click(dse.block(INIT).control('init.round.advance')));
+		await settled();
+		rec('19', 'end', await snap());
+	});
+
+	it('[ZZR3-20] rich tracker: Advance, Make captain style own writes: turn toggle (mouse) keeps the draft', async () => {
+		await dse.openNote(RICH, { mode: 'live-preview' });
+		await fill(0, '2', 'Feytouched');
+		await dse.waitForWrite(RICH, () => dse.click(dse.block(INIT).control('init.reset-turns')));
+		await settled();
+		rec('20', 'afterResetTurns', await snap());
+	});
+});

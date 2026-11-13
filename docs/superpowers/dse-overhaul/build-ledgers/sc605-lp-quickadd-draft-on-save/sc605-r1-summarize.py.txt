@@ -1,0 +1,21 @@
+import json, sys
+for line in open(sys.argv[1]):
+    r = json.loads(line)
+    p, step, d = r['probe'], r['step'], r['data']
+    if step == 'result':
+        print(f"== {p}")
+        print("   END focus=" + d['end']['focus'])
+        for t in d['end']['trackers']:
+            print(f"   END {t['root']}@L{t['leaf']} amount={t['amount']!r} label={t['label']!r} hint={t['hint']!r} add={t['addEnabled']} invalid={t['invalid']} ph={t['placeholders']} {t['round']}")
+        parts = []
+        for e in d['log']:
+            if e[1] == 'boxes': parts.append(f"{e[0]}:B[{e[2]}]({e[3]})")
+            elif e[1] == 'focus': parts.append(f"{e[0]}:F[{e[2]}]")
+            elif e[1] == 'modify': parts.append(f"{e[0]}:WRITE")
+            elif e[1] == 'mark': parts.append(f"{e[0]}:MARK {e[2]}")
+        for x in parts: print("     " + x)
+        for e in d.get('dbg', []): print("      dbg", json.dumps(e))
+    elif step == 'mark':
+        continue
+    else:
+        print(f"-- {p} {step}: {json.dumps(d)}")

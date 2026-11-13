@@ -1,0 +1,16 @@
+import json, sys, re
+# For each probe: every root first seen AFTER the first WRITE; its first sampled box values and the source of that sample (raf = before a paint).
+for f in sys.argv[1:]:
+    for line in open(f):
+        r = json.loads(line)
+        if r['step'] != 'result': continue
+        seen = {}; wrote = False; out = []
+        for e in r['data']['log']:
+            if e[1] == 'modify': wrote = True
+            if e[1] != 'boxes': continue
+            for m in re.finditer(r'(r\d+)@L(\d+)=(\[[^\]]*\])', e[2]):
+                rid, leaf, vals = m.group(1), m.group(2), m.group(3)
+                if rid in seen: continue
+                seen[rid] = vals
+                if wrote: out.append(f"{rid}@L{leaf} first={vals} t={e[0]} ({e[3]})")
+        print(f"{f.split('/')[-1]} {r['probe']}: " + '; '.join(out))

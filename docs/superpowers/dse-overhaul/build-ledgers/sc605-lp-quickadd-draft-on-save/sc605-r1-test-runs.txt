@@ -1,0 +1,60 @@
+== proposed spec on prototype
+OBSIDIAN-E2E INIT-L09 ok (5988 ms)
+OBSIDIAN-E2E INIT-L10 ok (2116 ms)
+OBSIDIAN-E2E INIT-L11 ok (2117 ms)
+OBSIDIAN-E2E INIT-L12 ok (2579 ms)
+OBSIDIAN-E2E INIT-L13 ok (2123 ms)
+OBSIDIAN-E2E INIT-L14 ok (1555 ms)
+OBSIDIAN-E2E INIT-L15 ok (4915 ms)
+OBSIDIAN-E2E INIT-L16 ok (2616 ms)
+OBSIDIAN-E2E INIT-L17 ok (2352 ms)
+OBSIDIAN-E2E done: 9/9 ok, 0 failed, 0 known-bug, coverage: 6/174 pairs (partial run: gate skipped)
+== proposed spec on base 711844f3
+OBSIDIAN-E2E INIT-L09 FAIL: expect(received).toEqual(expected) // deep equality | - Expected  - 2 | + Received  + 2 | Array [ | Object { | "active": true, | -  
+OBSIDIAN-E2E INIT-L10 FAIL: expect(received).toEqual(expected) // deep equality | - Expected  - 2 | + Received  + 2 | Array [ | Object { | "active": true, | -  
+OBSIDIAN-E2E INIT-L11 FAIL: expect(received).toEqual(expected) // deep equality | - Expected  - 2 | + Received  + 2 | Array [ | Object { | "active": true, | -  
+OBSIDIAN-E2E INIT-L12 FAIL: expect(received).toEqual(expected) // deep equality | - Expected  - 2 | + Received  + 2 | Array [ | Object { | "active": true, | "am
+OBSIDIAN-E2E INIT-L13 FAIL: expect(received).toEqual(expected) // deep equality | - Expected  - 2 | + Received  + 2 | Array [ | Object { | "active": true, | -  
+OBSIDIAN-E2E INIT-L14 ok (1544 ms)
+OBSIDIAN-E2E INIT-L15 FAIL: expect(received).toEqual(expected) // deep equality | - Expected  - 2 | + Received  + 2 | Array [ | Object { | "active": true, | -  
+OBSIDIAN-E2E INIT-L16 ok (2698 ms)
+OBSIDIAN-E2E INIT-L17 FAIL: expect(received).toEqual(expected) // deep equality | - Expected  - 2 | + Received  + 2 | Array [ | Object { | "active": false, | "a
+OBSIDIAN-E2E done: 2/9 ok, 7 failed, 0 known-bug, coverage: 5/174 pairs (partial run: gate skipped)
+== M3 (not one-shot)
+OBSIDIAN-E2E INIT-L15 ok (5184 ms)
+OBSIDIAN-E2E INIT-L16 FAIL: expect(received).toEqual(expected) // deep equality | - Expected  - 2 | + Received  + 2 | Array [ | Object { | "active": true, | -  
+OBSIDIAN-E2E done: 1/2 ok, 1 failed, 0 known-bug, coverage: 4/174 pairs (partial run: gate skipped)
+== M4 (no ticket check)
+OBSIDIAN-E2E INIT-L14 FAIL: expect(received).toEqual(expected) // deep equality | - Expected  - 2 | + Received  + 2 | Array [ | Object { | "active": true, | -  
+OBSIDIAN-E2E done: 0/1 ok, 1 failed, 0 known-bug, coverage: 2/174 pairs (partial run: gate skipped)
+== regression set on prototype
+OBSIDIAN-E2E CALL-L04 ok (2027 ms)
+OBSIDIAN-E2E CTR-L01 ok (1956 ms)
+OBSIDIAN-E2E CTR-L02 ok (811 ms)
+OBSIDIAN-E2E CTR-L03 ok (1774 ms)
+OBSIDIAN-E2E CTR-L04 ok (307 ms)
+OBSIDIAN-E2E CTR-L05 ok (1720 ms)
+OBSIDIAN-E2E INIT-L01 ok (2559 ms)
+OBSIDIAN-E2E INIT-L02 ok (2034 ms)
+OBSIDIAN-E2E INIT-L03 ok (2018 ms)
+OBSIDIAN-E2E INIT-L04 ok (3755 ms)
+OBSIDIAN-E2E INIT-L05 ok (1758 ms)
+OBSIDIAN-E2E INIT-L06 ok (1046 ms)
+OBSIDIAN-E2E INIT-L07 ok (2065 ms)
+OBSIDIAN-E2E INIT-L08 ok (1219 ms)
+OBSIDIAN-E2E INIT-M11 ok (719 ms)
+OBSIDIAN-E2E INIT-M10 ok (2680 ms)
+OBSIDIAN-E2E done: 16/16 ok, 0 failed, 0 known-bug, coverage: 16/174 pairs (partial run: gate skipped)
+== full e2e, prototype src only
+OBSIDIAN-E2E done: 304/307 ok, 0 failed, 3 known-bug, coverage: 174/174 pairs
+rc=0 wall=173s
+== full e2e, prototype + proposed spec + twins fixture
+OBSIDIAN-E2E done: 313/316 ok, 0 failed, 3 known-bug, coverage: 174/174 pairs
+rc=0 wall=153s
+== jest full, prototype + proposed jest
+Test Suites: 1 skipped, 268 passed, 268 of 269 total
+Tests:       2 skipped, 10808 passed, 10810 total
+rc=0 wall=80s
+== proposed jest on base src
+Test Suites: 2 failed, 2 total
+Tests:       9 failed, 191 skipped, 200 total

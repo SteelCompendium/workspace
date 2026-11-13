@@ -1,0 +1,207 @@
+== A
+   END focus=body
+   END r2@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["2","Feytouched"]](start)
+     0:F[init.malice.quickadd.label@r1+ring sel=10-10]
+     151:F[body]
+     157:MARK clicked
+     555:WRITE
+     592:B[r2@L3=["",""]](raf)
+== B
+   END focus=body
+   END r2@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 1
+     0:B[r1@L3=["2","Feytouched"]](start)
+     0:F[init.malice.quickadd.label@r1+ring sel=10-10]
+     191:F[body]
+     196:MARK clicked
+     594:WRITE
+     629:B[r2@L3=["",""]](raf)
+== C
+   END focus=init.round.advance@r2+ring
+   END r2@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["2","Feytouched"]](start)
+     0:F[init.round.advance@r1+ring]
+     484:WRITE
+     550:B[r2@L3=["",""]](raf)
+     550:F[init.round.advance@r2+ring]
+== D
+   END focus=init.malice.quickadd.label@r2+ring sel=0-0
+   END r2@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 1
+     0:B[r1@L3=["2","Fey"]](start)
+     0:F[init.malice.quickadd.label@r1+ring sel=3-3]
+     144:F[body]
+     284:F[init.malice.quickadd.label@r1+ring sel=3-3]
+     301:B[r1@L3=["2","FeyX"]](raf)
+     301:F[init.malice.quickadd.label@r1+ring sel=4-4]
+     316:MARK typed
+     550:WRITE
+     613:B[r2@L3=["",""]](raf)
+     613:F[init.malice.quickadd.label@r2+ring sel=0-0]
+== D2
+   END focus=init.malice.quickadd.label@r2+ring sel=0-0
+   END r2@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 1
+     0:B[r1@L3=["2","Feytouched"]](start)
+     0:F[init.malice.quickadd.label@r1+ring sel=10-10]
+     189:F[body]
+     288:F[init.malice.quickadd.label@r1+ring sel=3-3]
+     302:MARK caret3
+     594:WRITE
+     649:B[r2@L3=["",""]](raf)
+     649:F[init.malice.quickadd.label@r2+ring sel=0-0]
+== G1
+   END focus=body
+   END r2@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 1
+     0:B[r1@L3=["2","Feytouched"]](start)
+     0:F[init.malice.quickadd.label@r1+ring sel=10-10]
+     3:WRITE
+     33:B[r2@L3=["",""]](raf)
+     33:F[body]
+== G2
+   END focus=body
+   END r3@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+   END r2@L3 amount='2' label='Beta' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 1
+     0:B[r1@L3=["1","Alpha"] r2@L3=["2","Beta"]](start)
+     0:F[init.malice.quickadd.label@r2+ring sel=4-4]
+     122:F[body]
+     524:WRITE
+     570:B[r3@L3=["",""] r2@L3=["2","Beta"]](raf)
+== G2b
+   END focus=body
+   END r1@L3 amount='1' label='Alpha' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 1
+   END r3@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["1","Alpha"] r2@L3=["2","Beta"]](start)
+     0:F[init.malice.quickadd.label@r2+ring sel=4-4]
+     140:F[body]
+     542:WRITE
+     561:B[r1@L3=["1","Alpha"] r3@L3=["",""]](int)
+== G3
+   END focus=body
+   END r3@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+   END r4@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 1
+     0:B[r1@L3=["1","Alpha"] r2@L3=["",""]](start)
+     0:F[init.malice.quickadd.label@r1+ring sel=5-5]
+     133:F[body]
+     535:WRITE
+     583:B[r3@L3=["",""] r4@L3=["",""]](raf)
+== G3b
+   END focus=body
+   END r1@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 1
+   END r3@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["",""] r2@L3=["2","Beta"]](start)
+     0:F[init.malice.quickadd.label@r2+ring sel=4-4]
+     153:F[body]
+     551:WRITE
+     567:B[r1@L3=["",""] r3@L3=["",""]](int)
+== G3c
+   END focus=body
+   END r3@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+   END r4@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 1
+     0:B[r1@L3=["1","Alpha"] r2@L3=["2","Beta"]](start)
+     0:F[init.malice.quickadd.label@r2+ring sel=4-4]
+     135:F[body]
+     538:WRITE
+     614:B[r3@L3=["",""] r4@L3=["",""]](raf)
+== G4
+   END focus=body
+   END r3@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+   END r4@L4 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["",""] r2@L4=["2","Right"]](start)
+     0:F[init.malice.quickadd.label@r2+ring sel=5-5]
+     130:F[body]
+     527:WRITE
+     538:B[r3@L3=["",""] r2@L4=["2","Right"]](int)
+     584:B[r3@L3=["",""] r4@L4=["",""]](raf)
+-- G5 afterAdvance: {"focus": "body", "trackers": [{"addEnabled": true, "amount": "", "hint": "", "invalid": [null, null], "label": "", "leaf": 3, "placeholders": ["Amount", "E.g. Feytouched"], "root": "r3", "round": "Round 2"}, {"addEnabled": true, "amount": "", "hint": "", "invalid": [null, null], "label": "", "leaf": 4, "placeholders": ["Amount", "E.g. Feytouched"], "root": "r4", "round": "Round 2"}]}
+-- G6 emptied: {"focus": "init.malice.quickadd.label@r4+ring sel=0-0", "trackers": [{"addEnabled": true, "amount": "", "hint": "", "invalid": [null, null], "label": "", "leaf": 3, "placeholders": ["Amount", "E.g. Feytouched"], "root": "r3", "round": "Round 2"}, {"addEnabled": true, "amount": "", "hint": "", "invalid": [null, null], "label": "", "leaf": 4, "placeholders": ["Amount", "E.g. Feytouched"], "root": "r4", "round": "Round 2"}]}
+== G6
+   END focus=body
+   END r5@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+   END r6@L4 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["",""] r2@L4=["2","Feytouched"]](start)
+     0:F[init.malice.quickadd.label@r2+ring sel=10-10]
+     108:F[body]
+     514:WRITE
+     547:B[r3@L3=["",""] r2@L4=["2","Feytouched"]](raf)
+     585:B[r3@L3=["",""] r4@L4=["",""]](raf)
+     1059:F[init.malice.quickadd.amount@r4+ring]
+     1326:F[init.malice.quickadd.label@r4+ring sel=0-0]
+     1406:WRITE
+     1428:B[r5@L3=["",""] r4@L4=["",""]](raf)
+     1462:B[r5@L3=["",""] r6@L4=["",""]](raf)
+     1462:F[body]
+-- G4b tagged: 62
+-- G4b activeLeafRight: true
+== G4b
+   END focus=body
+   END r3@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+   END r4@L4 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["1","Left"] r2@L4=["2","Right"]](start)
+     0:F[init.malice.quickadd.label@r2+ring sel=5-5]
+     97:F[body]
+     497:WRITE
+     515:B[r3@L3=["",""] r2@L4=["2","Right"]](raf)
+     537:B[r3@L3=["",""] r4@L4=["",""]](int)
+-- G5 afterAdvance: {"focus": "body", "trackers": [{"addEnabled": true, "amount": "", "hint": "", "invalid": [null, null], "label": "", "leaf": 3, "placeholders": ["Amount", "E.g. Feytouched"], "root": "r3", "round": "Round 2"}, {"addEnabled": true, "amount": "", "hint": "", "invalid": [null, null], "label": "", "leaf": 4, "placeholders": ["Amount", "E.g. Feytouched"], "root": "r4", "round": "Round 2"}]}
+-- G5 afterAdd: {"focus": "init.malice.quickadd.amount@r4+ring", "trackers": [{"addEnabled": true, "amount": "", "hint": "", "invalid": [null, null], "label": "", "leaf": 3, "placeholders": ["Amount", "E.g. Feytouched"], "root": "r3", "round": "Round 2"}, {"addEnabled": true, "amount": "", "hint": "Amount required", "invalid": ["true", null], "label": "", "leaf": 4, "placeholders": ["Amount required", "E.g. Feytouched"], "root": "r4", "round": "Round 2"}]}
+== G5
+   END focus=body
+   END r5@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+   END r6@L4 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["",""] r2@L4=["2","Feytouched"]](start)
+     0:F[init.malice.quickadd.label@r2+ring sel=10-10]
+     123:F[body]
+     525:WRITE
+     547:B[r3@L3=["",""] r2@L4=["2","Feytouched"]](raf)
+     575:B[r3@L3=["",""] r4@L4=["",""]](raf)
+     1342:F[init.malice.quickadd.amount@r4+ring]
+     1986:WRITE
+     1993:B[r5@L3=["",""] r4@L4=["",""]](raf)
+     2020:B[r5@L3=["",""] r6@L4=["",""]](raf)
+     2020:F[body]
+-- G5 note: "# Initiative tracker\n\nABOVE\n\n```ds-initiative\nheroes:\n  - name: Alice Alpha\n    max_stamina: 30\nenemy_groups:\n  - name: Ogres\n    creatures:\n      - name: Ogre\n        max_stamina: 60\n        amount: 3\nmalice:\n  value: 9\nround: 2\n```\n\nBELOW\n"
+-- G6 emptied: {"focus": "init.malice.quickadd.label@r4+ring sel=0-0", "trackers": [{"addEnabled": true, "amount": "", "hint": "", "invalid": [null, null], "label": "", "leaf": 3, "placeholders": ["Amount", "E.g. Feytouched"], "root": "r3", "round": "Round 2"}, {"addEnabled": true, "amount": "", "hint": "", "invalid": [null, null], "label": "", "leaf": 4, "placeholders": ["Amount", "E.g. Feytouched"], "root": "r4", "round": "Round 2"}]}
+== G6
+   END focus=body
+   END r5@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+   END r6@L4 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["",""] r2@L4=["2","Feytouched"]](start)
+     0:F[init.malice.quickadd.label@r2+ring sel=10-10]
+     112:F[body]
+     510:WRITE
+     516:B[r3@L3=["",""] r2@L4=["2","Feytouched"]](int)
+     536:B[r3@L3=["",""] r4@L4=["",""]](raf)
+     1008:F[init.malice.quickadd.amount@r4+ring]
+     1236:F[init.malice.quickadd.label@r4+ring sel=0-0]
+     1281:WRITE
+     1288:B[r5@L3=["",""] r4@L4=["",""]](raf)
+     1316:B[r5@L3=["",""] r6@L4=["",""]](raf)
+     1316:F[body]
+-- G5 afterAdvance: {"focus": "body", "trackers": [{"addEnabled": true, "amount": "", "hint": "", "invalid": [null, null], "label": "", "leaf": 3, "placeholders": ["Amount", "E.g. Feytouched"], "root": "r2", "round": "Round 2"}]}
+-- G5 afterAdd: {"focus": "init.malice.quickadd.amount@r2+ring", "trackers": [{"addEnabled": true, "amount": "", "hint": "Amount required", "invalid": ["true", null], "label": "", "leaf": 3, "placeholders": ["Amount required", "E.g. Feytouched"], "root": "r2", "round": "Round 2"}]}
+== G5
+   END focus=body
+   END r3@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["2","Feytouched"]](start)
+     0:F[init.malice.quickadd.label@r1+ring sel=10-10]
+     127:F[body]
+     527:WRITE
+     545:B[r2@L3=["",""]](int)
+     1423:F[init.malice.quickadd.amount@r2+ring]
+     2072:WRITE
+     2122:B[r3@L3=["",""]](raf)
+     2122:F[body]
+-- G5 note: "# Initiative tracker\n\nABOVE\n\n```ds-initiative\nheroes:\n  - name: Alice Alpha\n    max_stamina: 30\nenemy_groups:\n  - name: Ogres\n    creatures:\n      - name: Ogre\n        max_stamina: 60\n        amount: 3\nmalice:\n  value: 9\nround: 2\n```\n\nBELOW\n"
+-- G6 emptied: {"focus": "init.malice.quickadd.label@r2+ring sel=0-0", "trackers": [{"addEnabled": true, "amount": "", "hint": "", "invalid": [null, null], "label": "", "leaf": 3, "placeholders": ["Amount", "E.g. Feytouched"], "root": "r2", "round": "Round 2"}]}
+== G6
+   END focus=body
+   END r3@L3 amount='' label='' hint='' add=True invalid=[None, None] ph=['Amount', 'E.g. Feytouched'] Round 2
+     0:B[r1@L3=["2","Feytouched"]](start)
+     0:F[init.malice.quickadd.label@r1+ring sel=10-10]
+     134:F[body]
+     535:WRITE
+     580:B[r2@L3=["",""]](raf)
+     1022:F[init.malice.quickadd.amount@r2+ring]
+     1168:F[init.malice.quickadd.label@r2+ring sel=0-0]
+     1210:WRITE
+     1244:B[r3@L3=["",""]](raf)
+     1244:F[body]
