@@ -1,0 +1,9 @@
+== head N12-N15 rc=0 OBSIDIAN-E2E done: 4/4 ok, 0 failed, 0 known-bug, coverage: 3/176 pairs (partial run: gate skipped)
+M3 applied
+== M3 N12-N15 rc=1 OBSIDIAN-E2E done: 3/4 ok, 1 failed, 0 known-bug, coverage: 3/176 pairs (partial run: gate skipped)
+OBSIDIAN-E2E COND-N12 ok (1346 ms)
+OBSIDIAN-E2E COND-N13 ok (1124 ms)
+OBSIDIAN-E2E COND-N14 ok (633 ms)
+OBSIDIAN-E2E COND-N15 FAIL: Expect $(`.modal-container .dse-modal:has(.dse-condal__addwrap)`).$(`[data-dse-control="cond.input"]`) not to be existing | Expected: "not existing" | Received: "existing" [bundle /home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-
+restored: 0 dirty
+== FULL e2e rc=0 OBSIDIAN-E2E done: 338/341 ok, 0 failed, 3 known-bug, coverage: 176/176 pairs

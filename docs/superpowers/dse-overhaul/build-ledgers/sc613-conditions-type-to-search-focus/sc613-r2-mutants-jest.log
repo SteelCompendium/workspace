@@ -1,0 +1,99 @@
+== BASELINE rc=0 Tests:       367 passed, 367 total
+   [isolated stacked-modal test] BASELINE rc=0 Tests:       366 skipped, 1 passed, 367 total
+M1 applied
+== M1 rc=1 Tests:       8 failed, 359 passed, 367 total
+M2 applied
+== M2 rc=1 Tests:       1 failed, 366 passed, 367 total
+M3 applied
+== M3 rc=1 Tests:       8 failed, 359 passed, 367 total
+   [isolated stacked-modal test] M3 rc=1 Tests:       1 failed, 366 skipped, 367 total
+M4 applied
+== M4 rc=1 Tests:       1 failed, 366 passed, 367 total
+M5 applied
+== M5 rc=1 Tests:       1 failed, 366 passed, 367 total
+M6 applied
+== M6 rc=1 Tests:       1 failed, 366 passed, 367 total
+M7 applied
+== M7 rc=0 Tests:       367 passed, 367 total
+M8 applied
+== M8 rc=1 Tests:       1 failed, 366 passed, 367 total
+M9 applied
+== M9 rc=1 Tests:       1 failed, 366 passed, 367 total
+M10 applied
+== M10 rc=0 Tests:       367 passed, 367 total
+M11 applied
+== M11 rc=1 Tests:       1 failed, 366 passed, 367 total
+   [isolated stacked-modal test] M11 rc=1 Tests:       1 failed, 366 skipped, 367 total
+M12 applied
+== M12 rc=1 Tests:       9 failed, 358 passed, 367 total
+M13 applied
+== M13 rc=1 Tests:       16 failed, 351 passed, 367 total
+restored: 0 dirty paths
+
+--- BASELINE failing tests
+--- M1 failing tests
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › after a click on an empty part of the window, a letter opens the search with that letter typed, focuses the input and is swallowed
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › after a click on the window's title, a letter opens the search with that letter typed, focuses the input and is swallowed
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a menu or suggestion popover Obsidian has open over the page keeps its keys
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a modal stacked above this one keeps its keys: a body key does nothing for the Conditions window; one stacked BELOW does not matter
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › Escape on a search a body key opened lands on "+ Add condition" (there was no control to give focus back to), not on <body>
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › the listener is on the document, registered through the window's lifecycle: removed on close, after which a body key is not routed and nothing leaks
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › the same through <html> (a target of documentElement), and with the key typed fast: "daz" ends as "daz" in the input, not routed twice
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › with the search already open and focus on <body>, the letter goes to the end of what was typed
+--- M2 failing tests
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a menu or suggestion popover Obsidian has open over the page keeps its keys
+--- M3 failing tests
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › after a click on an empty part of the window, a letter opens the search with that letter typed, focuses the input and is swallowed
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › after a click on the window's title, a letter opens the search with that letter typed, focuses the input and is swallowed
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a menu or suggestion popover Obsidian has open over the page keeps its keys
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a modal stacked above this one keeps its keys: a body key does nothing for the Conditions window; one stacked BELOW does not matter
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › Escape on a search a body key opened lands on "+ Add condition" (there was no control to give focus back to), not on <body>
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › the listener is on the document, registered through the window's lifecycle: removed on close, after which a body key is not routed and nothing leaks
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › the same through <html> (a target of documentElement), and with the key typed fast: "daz" ends as "daz" in the input, not routed twice
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › with the search already open and focus on <body>, the letter goes to the end of what was typed
+--- M4 failing tests
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a key from anywhere that is not the page itself is not this listener's: a control OUTSIDE the window (another pane) is left alone
+--- M5 failing tests
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › Escape on a search a body key opened lands on "+ Add condition" (there was no control to give focus back to), not on <body>
+--- M6 failing tests
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › the listener is on the document, registered through the window's lifecycle: removed on close, after which a body key is not routed and nothing leaks
+--- M7 failing tests
+--- M8 failing tests
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a menu or suggestion popover Obsidian has open over the page keeps its keys
+--- M9 failing tests
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › the same through <html> (a target of documentElement), and with the key typed fast: "daz" ends as "daz" in the input, not routed twice
+--- M10 failing tests
+--- M11 failing tests
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a modal stacked above this one keeps its keys: a body key does nothing for the Conditions window; one stacked BELOW does not matter
+--- M12 failing tests
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › after a click on an empty part of the window, a letter opens the search with that letter typed, focuses the input and is swallowed
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › after a click on the window's title, a letter opens the search with that letter typed, focuses the input and is swallowed
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a menu or suggestion popover Obsidian has open over the page keeps its keys
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a modal stacked above this one keeps its keys: a body key does nothing for the Conditions window; one stacked BELOW does not matter
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › Escape on a search a body key opened lands on "+ Add condition" (there was no control to give focus back to), not on <body>
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › no double routing: a key with focus inside the window reaches the page listener too, but is typed exactly once
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › the listener is on the document, registered through the window's lifecycle: removed on close, after which a body key is not routed and nothing leaks
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › the same through <html> (a target of documentElement), and with the key typed fast: "daz" ends as "daz" in the input, not routed twice
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › with the search already open and focus on <body>, the letter goes to the end of what was typed
+--- M13 failing tests
+  ● SC-580: a printable key in the window opens the Add search with that key typed › a key inside an IME composition opens nothing and is not swallowed
+  ● SC-580: a printable key in the window opens the Add search with that key typed › a key that starts in a modal stacked above this one is not this window's (its container is a sibling, not a descendant)
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Alt+letter opens nothing and is not swallowed
+  ● SC-580: a printable key in the window opens the Add search with that key typed › an arrow opens nothing and is not swallowed
+  ● SC-580: a printable key in the window opens the Add search with that key typed › a text-entry control keeps its keys: the editor's icon search input, a select, a textarea, a contenteditable
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Backspace opens nothing and is not swallowed
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Ctrl+letter opens nothing and is not swallowed
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Enter opens nothing and is not swallowed
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Escape opens nothing and is not swallowed
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Meta+letter opens nothing and is not swallowed
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Space (a focused button's own activation) opens nothing and is not swallowed
+  ● SC-580: a printable key in the window opens the Add search with that key typed › Tab opens nothing and is not swallowed
+  ● SC-580: a printable key in the window opens the Add search with that key typed › the in-window listener lives on the window's own element and dies with it: after close a key is no longer routed (the page-level listener of SC-613 is pinned in its own block below)
+  ● SC-580: a printable key in the window opens the Add search with that key typed › typing "daz" fast: the first key opens, the next two are the input's own (not routed, not lost, not doubled) and Dazed is offered
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a key from anywhere that is not the page itself is not this listener's: a control OUTSIDE the window (another pane) is left alone
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › the same through <html> (a target of documentElement), and with the key typed fast: "daz" ends as "daz" in the input, not routed twice
+--- M3-isolated failing tests
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a modal stacked above this one keeps its keys: a body key does nothing for the Conditions window; one stacked BELOW does not matter
+--- BASELINE-isolated failing tests
+--- M11-isolated failing tests
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a modal stacked above this one keeps its keys: a body key does nothing for the Conditions window; one stacked BELOW does not matter

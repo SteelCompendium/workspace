@@ -1,0 +1,22 @@
+FAIL dom test/dom/views/conditions-modal-matrix.test.ts
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a menu or suggestion popover Obsidian has open over the page keeps its keys
+
+    expect(received).toBeNull()
+
+    Received: <input aria-activedescendant="dse-condal-combo-106-menu-item-0" aria-autocomplete="list" aria-controls="dse-condal-combo-106-menu" aria-expanded="true" aria-haspopup="listbox" aria-label="Add condition" class="dse-condal__input" data-dse-control="cond.input" role="combobox" type="text" />
+
+      1147 | 			clickAway(title(o.container));
+      1148 | 			const evt = keydown(document.body, 'd');
+    > 1149 | 			expect(searchInput(o.container)).toBeNull();
+           | 			                                 ^
+      1150 | 			expect(evt.defaultPrevented).toBe(false);
+      1151 | 			popover.remove();
+      1152 | 			keydown(document.body, 'd'); // gone: routed again
+
+      at Object.<anonymous> (test/dom/views/conditions-modal-matrix.test.ts:1149:37)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 366 passed, 367 total
+Snapshots:   0 total
+Time:        4.259 s
+Ran all test suites matching test/dom/views/conditions-modal-matrix.test.ts.

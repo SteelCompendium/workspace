@@ -1,0 +1,16 @@
+inserted
+
+> draw-steel-elements@7.0.0 obsidian-lifecycle
+> npm run build-no-check && node visual-harness/obsidian-lifecycle.mjs --only=RVW613-H1
+
+
+> draw-steel-elements@7.0.0 build-no-check
+> node esbuild.config.mjs production
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-LIFECYCLE start: obsidian 1.15.1, display :160, port 34063, 1 scenario(s)
+RVW613-LOG H1 {"mode":"rv","hover":"real hover","opened":{"popover":true,"modal":true,"modals":1,"input":null,"focus":"cond.add","inPopover":false,"menus":0,"suggests":0},"afterTitleClick":{"popover":true,"modal":true,"modals":1,"input":null,"focus":"body","inPopover":false,"menus":0,"suggests":0},"afterDaz":{"popover":true,"modal":true,"modals":1,"input":"daz","focus":"cond.input","inPopover":false,"menus":0,"suggests":0},"keys":[{"key":"d","target":"body","dp":true},{"key":"a","target":"dse-condal__input","dp":false},{"key":"z","target":"dse-condal__input","dp":false}],"afterEsc1":{"popover":true,"modal":true,"modals":1,"input":null,"focus":"cond.add","inPopover":false,"menus":0,"suggests":0},"afterEsc2":{"popover":true,"modal":false,"modals":0,"input":null,"focus":"DIV.markdown-preview-view markdown-rendered node-insert-event al","inPopover":false,"menus":0,"suggests":0}}
+RVW613-LOG H1 {"mode":"lp","hover":"real hover","opened":{"popover":true,"modal":true,"modals":1,"input":null,"focus":"cond.add","inPopover":false,"menus":0,"suggests":0},"afterTitleClick":{"popover":true,"modal":true,"modals":1,"input":null,"focus":"body","inPopover":false,"menus":0,"suggests":0},"afterDaz":{"popover":true,"modal":true,"modals":1,"input":"daz","focus":"cond.input","inPopover":false,"menus":0,"suggests":0},"keys":[{"key":"d","target":"body","dp":true},{"key":"a","target":"dse-condal__input","dp":false},{"key":"z","target":"dse-condal__input","dp":false}],"afterEsc1":{"popover":true,"modal":true,"modals":1,"input":null,"focus":"cond.add","inPopover":false,"menus":0,"suggests":0},"afterEsc2":{"popover":true,"modal":false,"modals":0,"input":null,"focus":"DIV.cm-content cm-lineWrapping","inPopover":false,"menus":0,"suggests":0}}
+OBSIDIAN-LIFECYCLE RVW613-H1 ok ([{"mode":"rv","hover":"real hover","title":"body","daz":"daz","esc1":"cond.add","esc2modal":false,"popover":true},{"mode":"lp","hover":"real hover","title":"body","daz":"daz","esc1":"cond.add","esc2modal":false,"popover":true}])
+OBSIDIAN-LIFECYCLE done: 1/1 ok, 0 failed
+rc=0 restored=0

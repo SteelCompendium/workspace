@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+"""SC-613 r2 reviewer mutants. usage: mutate.py <id>  -- applies one mutant to ConditionsModal.ts in place (exactly one replacement each)."""
+import subprocess
+import sys
+
+P = '/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements'
+F = P + '/src/views/ConditionsModal.ts'
+
+GUARD_TARGET = "if (evt.defaultPrevented || (evt.target !== doc.body && evt.target !== doc.documentElement)) return;"
+MUTANTS = {
+    # fix reverted: the base file
+    'M1': None,
+    'M2': [("if (doc.querySelector('.menu, .suggestion-container')) return;", "")],
+    'M3': [("if (modals[modals.length - 1] !== this.containerEl) return;", "void modals;")],
+    'M4': [(GUARD_TARGET, "if (evt.defaultPrevented) return;")],
+    'M5': [("const page = target === target?.ownerDocument.body || target === target?.ownerDocument.documentElement;", "const page = false;")],
+    'M6': [("this.lifecycle.registerDomEvent(keyDoc, 'keydown', (evt: KeyboardEvent) => this.typeToSearchFromPage(evt, keyDoc));",
+            "keyDoc.addEventListener('keydown', (evt: KeyboardEvent) => this.typeToSearchFromPage(evt, keyDoc));")],
+    # new ones
+    'M7': [(GUARD_TARGET, "if ((evt.target !== doc.body && evt.target !== doc.documentElement)) return;")],  # defaultPrevented guard dropped
+    'M8': [("if (doc.querySelector('.menu, .suggestion-container')) return;", "if (doc.querySelector('.menu')) return;")],
+    'M9': [(GUARD_TARGET, "if (evt.defaultPrevented || evt.target !== doc.body) return;")],  # <html> half dropped
+    'M10': [("const keyDoc = this.containerEl.ownerDocument;", "const keyDoc = document;")],  # main document, not popout-safe
+    'M11': [("if (modals[modals.length - 1] !== this.containerEl) return;", "if (modals[0] !== this.containerEl) return;")],  # first, not last
+    'M12': [("this.lifecycle.registerDomEvent(keyDoc, 'keydown', (evt: KeyboardEvent) => this.typeToSearchFromPage(evt, keyDoc));",
+             "this.lifecycle.registerDomEvent(keyDoc, 'keydown', (evt: KeyboardEvent) => this.typeToSearch(evt));")],  # no page filter at all
+    'M13': [(GUARD_TARGET, "if (evt.defaultPrevented || (evt.target !== doc.body && evt.target !== doc.documentElement && !this.modalEl.contains(evt.target as Node))) return;")],  # double route for in-window keys
+    'M14': [("const modals = doc.querySelectorAll('.modal-container');", "const modals = document.querySelectorAll('.modal-container');")],  # top-most query not scoped to the window's document
+    'M15': [(GUARD_TARGET, "if (evt.defaultPrevented || (evt.target !== document.body && evt.target !== document.documentElement)) return;")],  # target test against the main document
+    'M16': [(GUARD_TARGET + "\n\t\tif (doc.querySelector('.menu, .suggestion-container')) return;", GUARD_TARGET + "\n\t\tif (document.querySelector('.menu, .suggestion-container')) return;")],  # menu guard on main doc (expected to survive: no menu in the popout test)
+}
+
+mid = sys.argv[1]
+if mid == 'M1':
+    src = subprocess.check_output(['git', '-C', P, 'show', '14521bf0:src/views/ConditionsModal.ts'], text=True)
+else:
+    src = open(F).read()
+    for old, new in MUTANTS[mid]:
+        n = src.count(old)
+        if n != 1:
+            sys.exit(f'{mid}: expected 1 occurrence, found {n}: {old[:80]}')
+        src = src.replace(old, new)
+open(F, 'w').write(src)
+print(f'{mid} applied')

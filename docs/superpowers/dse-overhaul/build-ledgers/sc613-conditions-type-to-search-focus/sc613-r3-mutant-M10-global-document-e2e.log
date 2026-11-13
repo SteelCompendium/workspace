@@ -1,0 +1,38 @@
+
+> draw-steel-elements@7.0.0 e2e
+> node e2e/run.mjs --only=COND-N12,COND-N13,COND-N14,COND-N15
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :200 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :200 (private Xvfb); 1 spec file(s), 1 shard(s); only COND-N12,COND-N13,COND-N14,COND-N15; run 20261113-230847-ecdc
+
+Execution of 1 workers started at 2026-11-13T23:08:49.333Z
+
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-integrity.e2e.ts
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 581035
+[0-0] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-integrity.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: b3d32d49dc272b0f02a37aaf1217cc2f
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/conditions-modal/cond-integrity.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] conditions-modal: typing after a click on the title or on empty space (SC-613)
+[chrome 150.0.7871.250 linux #0-0]    ✓ [COND-N12] click the window's title, type "daz": the Add search opens with "daz" typed, as the docs say; Escape closes just the search and focus lands on "+ Add condition"
+[chrome 150.0.7871.250 linux #0-0]    ✓ [COND-N13] click an empty part of the window, type "daz": the same; Enter then adds Dazed
+[chrome 150.0.7871.250 linux #0-0]    ✓ [COND-N14] a menu Obsidian has open over the page keeps its keys: with focus on <body> and a menu showing, a letter opens nothing; after the menu is closed the next letters open the search
+[chrome 150.0.7871.250 linux #0-0]    ✓ [COND-N15] a window stacked above the Conditions window keeps its keys: with the command palette open over it and focus on <body>, a letter is not typed into the window behind; once the palette is closed the letters open the search
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 4 passing (3.7s)
+
+
+Spec Files:	 1 passed, 1 total (100% completed) in 00:00:06  
+
+OBSIDIAN-E2E COND-N12 ok (945 ms)
+OBSIDIAN-E2E COND-N13 ok (1237 ms)
+OBSIDIAN-E2E COND-N14 ok (716 ms)
+OBSIDIAN-E2E COND-N15 ok (684 ms)
+OBSIDIAN-E2E done: 4/4 ok, 0 failed, 0 known-bug, coverage: 3/176 pairs (partial run: gate skipped)
+OBSIDIAN-E2E coverage driven: 6 (control, kind) pair(s) -> /home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 173 manifest pair(s) not exercised in this selection

@@ -1,0 +1,71 @@
+	{
+		// THROWAWAY SC-613 r2 reviewer probe (never committed): the Conditions window opened from a HOVER PREVIEW by a real click, a real
+		// click on its title, then real keys d a z. Logs where focus is and whether the search opened; Escape twice.
+		id: 'RVW613-H1',
+		async run(t) {
+			const J = JSON.stringify;
+			const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+			const out = [];
+			await t.ev(`(() => { if (!document.getElementById('lc-gs83-notice')) { const st = document.createElement('style'); st.id = 'lc-gs83-notice'; st.textContent = '.notice-container { display: none !important; }'; document.head.appendChild(st); } return true; })()`);
+			await t.ev(`${prefs}.set('authoringControls', true)`);
+			const ltr = async (k, code, vk) => {
+				await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyDown', key: k, code, text: k, unmodifiedText: k, windowsVirtualKeyCode: vk, nativeVirtualKeyCode: vk });
+				await t.cdp.call('Input.dispatchKeyEvent', { type: 'keyUp', key: k, code, windowsVirtualKeyCode: vk, nativeVirtualKeyCode: vk });
+			};
+			const S = () => t.ev(`(() => { const a = document.activeElement; const inp = document.querySelector('.modal-container .dse-condal__input'); return { popover: !!document.querySelector('.popover.hover-popover'), modal: !!document.querySelector('.modal-container .dse-condal-modal'), modals: document.querySelectorAll('.modal-container').length, input: inp ? inp.value : null, focus: a === document.body ? 'body' : a ? (a.getAttribute('data-dse-control') || a.getAttribute('aria-label') || (a.tagName + '.' + String(a.className).slice(0, 60))) : null, inPopover: !!(a && a.closest && a.closest('.hover-popover')), menus: document.querySelectorAll('.menu').length, suggests: document.querySelectorAll('.suggestion-container').length }; })()`);
+			try {
+				for (const mode of ['rv', 'lp']) {
+					const K = gs83Kit(t);
+					const src = 'Lifecycle/tracker.md';
+					const host = 'Lifecycle/gs83-trk-host.md';
+					const MODAL = `document.querySelector('.modal-container .dse-condal-modal')`;
+					const rec = { mode };
+					try {
+						await t.reset(src);
+						await t.reset(host);
+						await t.ev(`(() => { window.__rvwKeys = []; if (!window.__rvwRec) { window.__rvwRec = (e) => window.__rvwKeys.push({ key: e.key, target: e.target === document.body ? 'body' : String(e.target.className).slice(0, 40), dp: e.defaultPrevented }); window.addEventListener('keydown', window.__rvwRec); } return true; })()`);
+						const link = await K.openHost(host, mode);
+						rec.hover = await K.hover(link, src);
+						await K.moveTo(`${K.ENTRY(src)}.root`);
+						await t.sleep(250);
+						const opener = `${K.ENTRY(src)}.root.querySelectorAll('.dse-cond--add')[0]`;
+						await t.waitFor(`!!(${opener})`, `${mode}: the opener is drawn`, 8000);
+						await K.clickRevealed(opener);
+						await t.waitFor(`!!${MODAL}`, `${mode}: the modal opened`, 8000);
+						await t.sleep(300);
+						rec.opened = await S();
+						await K.click(`(${MODAL}).closest('.modal').querySelector('.modal-title') || (${MODAL})`);
+						await t.sleep(500);
+						rec.afterTitleClick = await S();
+						await ltr('d', 'KeyD', 68);
+						await ltr('a', 'KeyA', 65);
+						await ltr('z', 'KeyZ', 90);
+						await t.sleep(400);
+						rec.afterDaz = await S();
+						rec.keys = await t.ev(`window.__rvwKeys`);
+						await t.key('Escape', 'Escape', 27);
+						await t.sleep(500);
+						rec.afterEsc1 = await S();
+						await t.key('Escape', 'Escape', 27);
+						await t.sleep(500);
+						rec.afterEsc2 = await S();
+					} catch (e) {
+						rec.error = e.message;
+					} finally {
+						await K.cleanup();
+					}
+					console.log(`RVW613-LOG H1 ${J(rec)}`);
+					out.push(rec);
+				}
+			} finally {
+				await t.ev(`${prefs}.set('authoringControls', false)`);
+				await t.ev(`document.getElementById('lc-gs83-notice')?.remove()`);
+				await t.ev(`(() => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); return true; })()`);
+				for (const rel of ['Lifecycle/gs83-trk-host.md', 'Lifecycle/tracker.md']) await t.reset(rel);
+				await t.open('Lifecycle/other.md');
+			}
+			const bad = out.filter((r) => r.error || !r.afterDaz || r.afterDaz.input !== 'daz');
+			t.expect(bad.length === 0, `hover-opened window: ${J(bad)}`);
+			return J(out.map((r) => ({ mode: r.mode, hover: r.hover, title: r.afterTitleClick?.focus, daz: r.afterDaz?.input, esc1: r.afterEsc1?.focus, esc2modal: r.afterEsc2?.modal, popover: r.afterEsc2?.popover })));
+		},
+	},

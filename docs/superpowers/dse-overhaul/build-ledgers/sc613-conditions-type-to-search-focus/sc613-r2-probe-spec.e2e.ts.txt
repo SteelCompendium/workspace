@@ -1,0 +1,417 @@
+// THROWAWAY SC-613 r2 reviewer probe. Not committed. Copied to e2e/specs/conditions-modal/ for the run and removed after.
+import { $, browser, expect } from '@wdio/globals';
+import { dse } from '../../driver/dse';
+import { TRACKER, openConditionsModal, openFrom, INIT } from '../../driver/conditions';
+
+const log = (id: string, what: unknown): void => console.log(`RVW613-LOG ${id} ${JSON.stringify(what)}`);
+
+/** A window-BUBBLE keydown recorder (runs after every document listener): what each real key's target was and whether it ended cancelled. */
+const installRecorder = (): Promise<unknown> =>
+	dse.page(`(() => {
+		window.__rvwKeys = [];
+		if (!window.__rvwRec) {
+			window.__rvwRec = (e) => window.__rvwKeys.push({ key: e.key, target: e.target === e.target.ownerDocument?.body ? 'body' : e.target === e.target.ownerDocument?.documentElement ? 'html' : ((e.target.getAttribute && (e.target.getAttribute('data-dse-control') || e.target.className)) || e.target.tagName), dp: e.defaultPrevented });
+			window.addEventListener('keydown', window.__rvwRec);
+		}
+		return true;
+	})()`);
+const keys = (): Promise<unknown> => dse.page(`window.__rvwKeys`);
+
+const state = (): Promise<Record<string, unknown>> =>
+	dse.page(`(() => {
+		const inp = document.querySelector('.modal-container .dse-condal__input');
+		const a = document.activeElement;
+		const mc = Array.from(document.querySelectorAll('.modal-container'));
+		return {
+			modals: mc.length,
+			order: mc.map((m) => m.querySelector('.dse-condal-modal') ? 'conditions' : m.querySelector('.prompt') ? 'prompt' : m.querySelector('.dse-sedit__row') ? 'stamina' : (m.className + '|' + (m.firstElementChild ? m.firstElementChild.className : ''))),
+			input: inp ? inp.value : null,
+			focus: a === document.body ? 'body' : a ? (a.getAttribute('data-dse-control') || a.tagName + '.' + a.className) : null,
+			menus: document.querySelectorAll('.menu').length,
+			suggests: document.querySelectorAll('.suggestion-container').length,
+		};
+	})()`);
+
+/** Which .modal-container is hit-tested at the centre of the viewport (the visually top-most). */
+const topAtCentre = (): Promise<unknown> =>
+	dse.page(`(() => {
+		const el = document.elementFromPoint(innerWidth / 2, innerHeight / 2);
+		const mc = el && el.closest('.modal-container');
+		const all = Array.from(document.querySelectorAll('.modal-container'));
+		return { index: mc ? all.indexOf(mc) : -1, of: all.length, zs: all.map((m) => getComputedStyle(m).zIndex), hit: el ? el.className : null };
+	})()`);
+
+const clickTitle = (): Promise<void> => $('.modal-container .dse-condal-modal').$('..').$('.dse-modal__title').click();
+const blurToBody = (): Promise<unknown> => dse.page(`(() => { document.activeElement && document.activeElement.blur && document.activeElement.blur(); return document.activeElement === document.body; })()`);
+
+describe('SC-613 r2 reviewer probes', () => {
+	it('[RVW613-P01] baseline: no Conditions window open, focus on body, a letter does nothing and is not cancelled', async () => {
+		await dse.openNote(TRACKER);
+		await installRecorder();
+		log('P01-baseline', await state());
+		log('P01-blur', await blurToBody());
+		await dse.press('d');
+		const s = await state();
+		log('P01-after-d', s);
+		log('P01-keys', await keys());
+		expect(s.input).toBeNull();
+		// open, close, then again: nothing after close
+		const { modal } = await openConditionsModal(TRACKER, 'hero');
+		void modal;
+		await dse.closeModals();
+		await installRecorder();
+		log('P01-blur2', await blurToBody());
+		await dse.press('x');
+		log('P01-after-close-x', await state());
+		log('P01-keys2', await keys());
+	});
+
+	it('[RVW613-P02] blank-space clicks at several spots of the window, then a letter: each opens the search', async () => {
+		const { modal } = await openConditionsModal(TRACKER, 'hero');
+		await installRecorder();
+		const spots = await dse.page<Array<{ name: string; x: number; y: number; hit: string }>>(`(() => {
+			const m = document.querySelector('.modal-container .dse-condal-modal').closest('.modal');
+			const r = m.getBoundingClientRect();
+			const out = [];
+			const add = (name, x, y) => { const el = document.elementFromPoint(x, y); out.push({ name, x: Math.round(x), y: Math.round(y), hit: el ? (el.tagName + '.' + el.className) : 'none' }); };
+			add('modal-top-left-padding', r.left + 6, r.top + 6);
+			add('modal-bottom-left-padding', r.left + 6, r.bottom - 6);
+			const list = document.querySelector('.modal-container .dse-condal__list');
+			if (list) { const lr = list.getBoundingClientRect(); add('list-centre', lr.left + lr.width / 2, lr.top + lr.height / 2); }
+			const hdr = m.querySelector('.modal-header, .dse-modal__header');
+			if (hdr) { const hr = hdr.getBoundingClientRect(); add('header-right-of-title', hr.right - 80, hr.top + hr.height / 2); }
+			return out;
+		})()`);
+		log('P02-spots', spots);
+		for (const sp of spots) {
+			await browser.performActions([{ type: 'pointer', id: 'm', parameters: { pointerType: 'mouse' }, actions: [{ type: 'pointerMove', x: sp.x, y: sp.y, origin: 'viewport' }, { type: 'pointerDown', button: 0 }, { type: 'pointerUp', button: 0 }] }]);
+			await browser.releaseActions();
+			const after = await state();
+			await dse.press('d');
+			const typed = await state();
+			log(`P02-${sp.name}`, { after, typed });
+			if (typed.input !== null) await dse.press('Escape');
+			const esc = await state();
+			log(`P02-${sp.name}-esc`, esc);
+			if (esc.modals === 0) break;
+		}
+		log('P02-keys', await keys());
+		await expect(modal.root).toBeExisting();
+		await dse.closeModals();
+	});
+
+	it('[RVW613-P03] command palette stacked over the Conditions window: DOM order vs what is on top; a body key does nothing for the window', async () => {
+		await openConditionsModal(TRACKER, 'hero');
+		await installRecorder();
+		await dse.page(`(() => { app.commands.executeCommandById('command-palette:open'); return true; })()`);
+		await dse.waitFor(`document.querySelectorAll('.modal-container').length === 2`, 'the palette to open');
+		log('P03-open', await state());
+		log('P03-top', await topAtCentre());
+		log('P03-blur', await blurToBody());
+		await dse.press('d');
+		const s = await state();
+		log('P03-after-d', s);
+		log('P03-keys', await keys());
+		expect(s.input).toBeNull();
+		// close the palette (its own close), then the window is top again
+		await dse.page(`(() => { const p = Array.from(document.querySelectorAll('.modal-container')).find((m) => m.querySelector('.prompt')); const before = document.querySelectorAll('.modal-container').length; app.commands.executeCommandById; const pal = p; pal && pal.querySelector('.modal-bg') && pal.querySelector('.modal-bg').click(); return { before, after: document.querySelectorAll('.modal-container').length }; })()`).then((r) => log('P03-palette-closed-sync', r));
+		await browser.pause(50);
+		log('P03-after-close', await state());
+		await clickTitle();
+		log('P03-title', await state());
+		await dse.press('d');
+		log('P03-after-d2', await state());
+		await dse.closeModals();
+	});
+
+	it('[RVW613-P04] a DSE stamina window stacked over the Conditions window (opened by script from the tracker behind)', async () => {
+		const { root } = await openConditionsModal(TRACKER, 'hero');
+		void root;
+		await installRecorder();
+		const how = await dse.page(`(() => {
+			const bar = document.querySelector('.workspace-leaf.mod-active [data-dse-element] [data-dse-control="init.hero.bar"], [data-dse-element] [data-dse-control="init.hero.bar"]');
+			if (bar) { bar.click(); return 'bar.click'; }
+			return 'none';
+		})()`);
+		log('P04-how', how);
+		try {
+			await dse.waitFor(`document.querySelectorAll('.modal-container').length === 2`, 'the stamina window to open', 4000);
+		} catch (e) {
+			const viaKey = await dse.page(`(() => { const n = document.querySelector('[data-dse-element] [data-dse-control="init.hero.stamina"]'); if (!n) return 'no numeric'; n.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true })); n.click(); return 'enter+click'; })()`);
+			log('P04-how2', viaKey);
+			await dse.waitFor(`document.querySelectorAll('.modal-container').length === 2`, 'the stamina window to open (2)', 4000);
+		}
+		log('P04-open', await state());
+		log('P04-top', await topAtCentre());
+		// a real click on the STAMINA window's title, then a letter
+		const clicked = await dse.page(`(() => { const mc = Array.from(document.querySelectorAll('.modal-container')); const top = mc[mc.length - 1]; const t = top.querySelector('.dse-modal__title'); if (!t) return null; const r = t.getBoundingClientRect(); return { x: Math.round(r.left + 10), y: Math.round(r.top + r.height / 2), hit: document.elementFromPoint(r.left + 10, r.top + r.height / 2)?.className }; })()`);
+		log('P04-stam-title', clicked);
+		if (clicked) {
+			const c = clicked as { x: number; y: number };
+			await browser.performActions([{ type: 'pointer', id: 'm', parameters: { pointerType: 'mouse' }, actions: [{ type: 'pointerMove', x: c.x, y: c.y, origin: 'viewport' }, { type: 'pointerDown', button: 0 }, { type: 'pointerUp', button: 0 }] }]);
+			await browser.releaseActions();
+		}
+		log('P04-after-title-click', await state());
+		await dse.press('d');
+		const s = await state();
+		log('P04-after-d', s);
+		log('P04-keys', await keys());
+		expect(s.input).toBeNull();
+		// Escape closes the top one (stamina); then the Conditions window is top again
+		await blurToBody();
+		await dse.press('Escape');
+		await browser.pause(300);
+		log('P04-after-esc', await state());
+		log('P04-sync-count-after-esc', await dse.page(`document.querySelectorAll('.modal-container').length`));
+		await blurToBody();
+		await dse.press('d');
+		log('P04-after-d2', await state());
+		await dse.closeModals();
+	});
+
+	it('[RVW613-P05] reverse stack: a stamina window first, the Conditions window opened over it: a body key routes to the Conditions window', async () => {
+		await dse.openNote(TRACKER);
+		await installRecorder();
+		await dse.page(`(() => { document.querySelector('[data-dse-element] [data-dse-control="init.hero.bar"]').click(); return true; })()`);
+		await dse.waitFor(`document.querySelectorAll('.modal-container').length === 1`, 'the stamina window', 4000);
+		await dse.page(`(() => { document.querySelector('[data-dse-element] [data-dse-control="init.cond.add"]').click(); return true; })()`);
+		await dse.waitFor(`document.querySelectorAll('.modal-container').length === 2`, 'the conditions window over it', 4000);
+		log('P05-open', await state());
+		log('P05-top', await topAtCentre());
+		await clickTitle();
+		log('P05-title', await state());
+		await dse.press('d');
+		log('P05-after-d', await state());
+		log('P05-keys', await keys());
+		await dse.closeModals();
+	});
+
+	it('[RVW613-P06] suggestion popover: the editor link-suggest opened in a pane, while the Conditions window is open; then focus to body and a letter', async () => {
+		await dse.openNote(TRACKER);
+		await installRecorder();
+		await dse.page(`(async () => {
+			const f = app.vault.getAbstractFileByPath('RVW613-scratch.md') || await app.vault.create('RVW613-scratch.md', 'scratch\\n');
+			const leaf = app.workspace.getLeaf('split');
+			await leaf.openFile(f, { state: { mode: 'source', source: true } });
+			window.__rvwLeaf = leaf;
+			return true;
+		})()`);
+		await browser.pause(300);
+		// open the Conditions window from the tracker (script click: the split may hide part of the pane)
+		await dse.page(`(() => { document.querySelector('[data-dse-element] [data-dse-control="init.cond.add"]').click(); return true; })()`);
+		await dse.waitFor(`!!document.querySelector('.modal-container .dse-condal-modal')`, 'the Conditions window', 4000);
+		log('P06-open', await state());
+		// focus the scratch editor behind and type [[ for real: Obsidian's link suggest
+		await dse.page(`(() => { const ed = window.__rvwLeaf.view.editor; ed.focus(); ed.setCursor(ed.lastLine(), 0); return true; })()`);
+		log('P06-editor-focused', await state());
+		await browser.keys(['[', '[']);
+		await browser.pause(400);
+		log('P06-after-brackets', await state());
+		log('P06-keys-a', await keys());
+		// a letter typed in the editor behind (target = editor content, not body): the window must not take it
+		await browser.keys(['q']);
+		await browser.pause(200);
+		log('P06-after-q-in-editor', await state());
+		log('P06-scratch', await dse.page(`window.__rvwLeaf.view.editor.getValue()`));
+		await blurToBody();
+		await browser.pause(200);
+		log('P06-after-blur', await state());
+		await installRecorder();
+		await dse.press('d');
+		await browser.pause(100);
+		log('P06-after-d-on-body', await state());
+		log('P06-keys-b', await keys());
+		await dse.press('Escape');
+		await browser.pause(200);
+		log('P06-after-esc', await state());
+		await dse.page(`(() => { try { window.__rvwLeaf.detach(); } catch (e) {} return true; })()`);
+		await dse.closeModals();
+		await dse.page(`(async () => { const f = app.vault.getAbstractFileByPath('RVW613-scratch.md'); if (f) await app.vault.delete(f); return true; })()`);
+	});
+
+	it('[RVW613-P07] five open/close cycles: document keydown listeners return to baseline; then one title click + d types exactly "d"', async () => {
+		await dse.openNote(TRACKER);
+		await dse.page(`(() => {
+			if (!window.__rvwCount) {
+				window.__rvwCount = { live: new Set(), adds: 0, removes: 0 };
+				const add = document.addEventListener, rem = document.removeEventListener;
+				document.addEventListener = function (type, fn, o) { if (type === 'keydown') { window.__rvwCount.live.add(fn); window.__rvwCount.adds++; } return add.call(this, type, fn, o); };
+				document.removeEventListener = function (type, fn, o) { if (type === 'keydown') { window.__rvwCount.live.delete(fn); window.__rvwCount.removes++; } return rem.call(this, type, fn, o); };
+			}
+			return true;
+		})()`);
+		const count = (): Promise<unknown> => dse.page(`({ live: window.__rvwCount.live.size, adds: window.__rvwCount.adds, removes: window.__rvwCount.removes })`);
+		log('P07-baseline', await count());
+		const root = dse.block(INIT);
+		for (let i = 0; i < 5; i++) {
+			await openFrom(root, 'hero');
+			log(`P07-open-${i}`, await count());
+			await dse.page(`(() => { document.querySelector('.modal-container [data-dse-control="cond.done"]').click(); return true; })()`);
+			await dse.waitFor(`document.querySelectorAll('.modal-container').length === 0`, 'closed', 4000);
+			log(`P07-closed-${i}`, await count());
+		}
+		await openFrom(root, 'hero');
+		await clickTitle();
+		await dse.press('d');
+		log('P07-final', await state());
+		log('P07-final-count', await count());
+		expect((await state()).input).toBe('d');
+		await dse.closeModals();
+		log('P07-after-all', await count());
+	});
+
+	it('[RVW613-P08] IME / dead keys / Process on body (synthetic): nothing routes; a plain synthetic d does', async () => {
+		await openConditionsModal(TRACKER, 'hero');
+		await clickTitle();
+		const r = await dse.page(`(() => {
+			const out = {};
+			const fire = (name, init) => { const e = new KeyboardEvent('keydown', Object.assign({ bubbles: true, cancelable: true }, init)); document.body.dispatchEvent(e); out[name] = { dp: e.defaultPrevented, input: document.querySelector('.modal-container .dse-condal__input')?.value ?? null }; };
+			fire('composing-d', { key: 'd', isComposing: true });
+			fire('Dead', { key: 'Dead' });
+			fire('Process', { key: 'Process' });
+			fire('Unidentified', { key: 'Unidentified' });
+			fire('repeat-shift-D', { key: 'D', shiftKey: true });
+			return out;
+		})()`);
+		log('P08', r);
+		await dse.closeModals();
+	});
+
+	it('[RVW613-P09] sidebar-pinned tracker opener: title click then daz', async () => {
+		await dse.setPrefs({}, { experimental: true });
+		await dse.openNote('Sidebar/initiative-pinned.md');
+		await dse.page(`(async () => {
+			app.workspace.detachLeavesOfType('dse-sidebar');
+			const leaf = app.workspace.getRightLeaf(false);
+			await leaf.setViewState({ type: 'dse-sidebar', active: true });
+			await app.workspace.revealLeaf(leaf);
+			leaf.view.addPanel({ filePath: 'Sidebar/initiative-pinned.md', alias: 'ds-initiative', anchorId: 'sbin01' });
+			return true;
+		})()`);
+		await dse.waitFor(`!!document.querySelector('.dse-sidebar [data-dse-control="init.cond.add"]')`, 'pinned tracker', 8000);
+		await dse.page(`(() => { document.querySelectorAll('.notice-container').forEach((n) => (n.style.display = 'none')); return true; })()`);
+		await installRecorder();
+		await dse.click(dse.control({ css: '.dse-sidebar [data-dse-control="init.cond.add"]' }));
+		await dse.waitFor(`!!document.querySelector('.modal-container .dse-condal-modal')`, 'the Conditions window', 4000);
+		log('P09-open', await state());
+		await clickTitle();
+		log('P09-title', await state());
+		await dse.press('daz');
+		const s = await state();
+		log('P09-after-daz', s);
+		log('P09-keys', await keys());
+		await dse.press('Escape');
+		log('P09-esc', await state());
+		await dse.closeModals();
+		await dse.page(`(() => { app.workspace.detachLeavesOfType('dse-sidebar'); return true; })()`);
+		await dse.setPrefs({});
+		expect(s.input).toBe('daz');
+	});
+
+	it('[RVW613-P11] Live Preview: a key whose target is the editor behind (synthetic, the backdrop blocks a real one) is not routed', async () => {
+		await dse.openNote(TRACKER, { mode: 'live-preview' });
+		await dse.page(`(() => { document.querySelector('.workspace-leaf.mod-active [data-dse-element] [data-dse-control="init.cond.add"]').click(); return true; })()`);
+		await dse.waitFor(`!!document.querySelector('.modal-container .dse-condal-modal')`, 'the Conditions window', 4000);
+		const r = await dse.page(`(() => {
+			const cm = document.querySelector('.workspace-leaf.mod-active .cm-content');
+			const out = { cm: !!cm };
+			const e = new KeyboardEvent('keydown', { key: 'q', bubbles: true, cancelable: true });
+			cm.dispatchEvent(e);
+			out.dp = e.defaultPrevented;
+			out.input = document.querySelector('.modal-container .dse-condal__input')?.value ?? null;
+			// real-world: can the editor behind take focus while the window is open?
+			app.workspace.activeLeaf?.view?.editor?.focus();
+			const a = document.activeElement;
+			out.focusAfterEditorFocus = a === document.body ? 'body' : (a.getAttribute('data-dse-control') || a.className);
+			return out;
+		})()`);
+		log('P11', r);
+		expect((r as { input: unknown }).input).toBeNull();
+		await dse.closeModals();
+	});
+
+	it('[RVW613-P12] Live Preview: the link suggest open in the editor, then a REAL click on the tracker Add Condition: does the suggestion popover outlive the window opening, and does it block the body route?', async () => {
+		await dse.openNote(TRACKER, { mode: 'live-preview' });
+		await installRecorder();
+		await dse.page(`(() => { const ed = app.workspace.activeLeaf.view.editor; ed.focus(); ed.setCursor(ed.lastLine(), ed.getLine(ed.lastLine()).length); return document.activeElement.className; })()`).then((r) => log('P12-editor-focus', r));
+		await browser.keys(['Enter', '[', '[']);
+		await browser.pause(600);
+		log('P12-after-brackets', await state());
+		const add = dse.control({ css: '.workspace-leaf.mod-active [data-dse-element] [data-dse-control="init.cond.add"]' });
+		try {
+			await add.scrollIntoView({ block: 'center' });
+			await add.click();
+		} catch (e) {
+			log('P12-click-error', String(e).slice(0, 300));
+		}
+		await browser.pause(500);
+		log('P12-after-click', await state());
+		const open = (await state()).order as string[];
+		if (open.includes('conditions')) {
+			await clickTitle();
+			await browser.pause(200);
+			log('P12-title', await state());
+			await dse.press('d');
+			await browser.pause(150);
+			log('P12-after-d', await state());
+			log('P12-keys', await keys());
+		}
+		await dse.closeModals().catch(() => undefined);
+		await dse.press('Escape');
+	});
+
+	it('[RVW613-P13] a REAL right-click on the window title and on blank space: does any .menu appear, where is focus, does a letter then route?', async () => {
+		await openConditionsModal(TRACKER, 'hero');
+		await installRecorder();
+		const pt = await dse.page<{ x: number; y: number }>(`(() => { const t = document.querySelector('.modal-container .dse-modal__title'); const r = t.getBoundingClientRect(); return { x: Math.round(r.left + 10), y: Math.round(r.top + r.height / 2) }; })()`);
+		await browser.performActions([{ type: 'pointer', id: 'm', parameters: { pointerType: 'mouse' }, actions: [{ type: 'pointerMove', x: pt.x, y: pt.y, origin: 'viewport' }, { type: 'pointerDown', button: 2 }, { type: 'pointerUp', button: 2 }] }]);
+		await browser.releaseActions();
+		await browser.pause(300);
+		log('P13-after-right-click', await state());
+		await dse.press('d');
+		log('P13-after-d', await state());
+		log('P13-keys', await keys());
+		await dse.closeModals();
+	});
+
+	it('[RVW613-P10] popout window: the window opened in a popout routes a body key of the popout document only', async () => {
+		await dse.openNote(TRACKER);
+		const opened = await dse.page(`(async () => {
+			const f = app.vault.getAbstractFileByPath(${JSON.stringify(TRACKER)});
+			const leaf = app.workspace.openPopoutLeaf();
+			await leaf.openFile(f, { state: { mode: 'preview' } });
+			window.__rvwPop = leaf;
+			await new Promise((r) => setTimeout(r, 1500));
+			const d = leaf.view.containerEl.ownerDocument;
+			return { popout: d !== document, hasBtn: !!d.querySelector('[data-dse-control="init.cond.add"]') };
+		})()`);
+		log('P10-opened', opened);
+		const r = await dse.page(`(async () => {
+			const d = window.__rvwPop.view.containerEl.ownerDocument;
+			const w = d.defaultView;
+			d.querySelector('[data-dse-control="init.cond.add"]').click();
+			await new Promise((r) => setTimeout(r, 400));
+			const out = { inPopout: !!d.querySelector('.modal-container .dse-condal-modal'), inMain: !!document.querySelector('.modal-container .dse-condal-modal') };
+			if (d.activeElement && d.activeElement.blur) d.activeElement.blur();
+			out.popFocus = d.activeElement === d.body ? 'body' : d.activeElement?.tagName;
+			const e1 = new KeyboardEvent('keydown', { key: 'q', bubbles: true, cancelable: true });
+			document.body.dispatchEvent(e1);
+			out.mainKey = { dp: e1.defaultPrevented, popInput: d.querySelector('.dse-condal__input')?.value ?? null, mainInput: document.querySelector('.dse-condal__input')?.value ?? null };
+			const e2 = new w.KeyboardEvent('keydown', { key: 'd', bubbles: true, cancelable: true });
+			d.body.dispatchEvent(e2);
+			out.popKey = { dp: e2.defaultPrevented, popInput: d.querySelector('.dse-condal__input')?.value ?? null, popFocus: d.activeElement?.className };
+			const done = d.querySelector('.modal-container [data-dse-control="cond.done"]');
+			if (done) done.click();
+			await new Promise((r) => setTimeout(r, 300));
+			out.closed = d.querySelectorAll('.modal-container').length;
+			const e3 = new w.KeyboardEvent('keydown', { key: 'z', bubbles: true, cancelable: true });
+			d.body.dispatchEvent(e3);
+			out.afterClose = { dp: e3.defaultPrevented };
+			window.__rvwPop.detach();
+			return out;
+		})()`);
+		log('P10', r);
+		expect((r as { popKey: { popInput: unknown } }).popKey.popInput).toBe('d');
+		expect((r as { mainKey: { popInput: unknown } }).mainKey.popInput).toBeNull();
+	});
+});

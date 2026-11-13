@@ -1,0 +1,31 @@
+FAIL dom test/dom/views/conditions-modal-matrix.test.ts
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › the listener is on the document, registered through the window's lifecycle: removed on close, after which a body key is not routed and nothing leaks
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 6
+    + Received  + 1
+
+    - Array [
+    -   Array [
+    -     "keydown",
+    -     [Function anonymous],
+    -   ],
+    - ]
+    + Array []
+
+      1186 | 			const route = jest.spyOn(ConditionsModal.prototype as any, 'typeToSearch');
+      1187 | 			o.modal.close();
+    > 1188 | 			expect(removed).toEqual(added); // the very function that was added
+           | 			                ^
+      1189 | 			document.body.appendChild(o.container); // put the window back so only the listener could route
+      1190 | 			keydown(document.body, 'd');
+      1191 | 			expect(route).not.toHaveBeenCalled();
+
+      at Object.<anonymous> (test/dom/views/conditions-modal-matrix.test.ts:1188:20)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 366 passed, 367 total
+Snapshots:   0 total
+Time:        4.44 s
+Ran all test suites matching test/dom/views/conditions-modal-matrix.test.ts.

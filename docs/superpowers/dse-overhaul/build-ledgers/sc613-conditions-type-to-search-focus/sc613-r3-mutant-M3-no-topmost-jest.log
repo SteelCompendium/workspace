@@ -1,0 +1,22 @@
+FAIL dom test/dom/views/conditions-modal-matrix.test.ts
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a modal stacked above this one keeps its keys: a body key does nothing for the Conditions window; one stacked BELOW does not matter
+
+    expect(received).toBeNull()
+
+    Received: <input aria-activedescendant="dse-condal-combo-106-menu-item-0" aria-autocomplete="list" aria-controls="dse-condal-combo-106-menu" aria-expanded="true" aria-haspopup="listbox" aria-label="Add condition" class="dse-condal__input" data-dse-control="cond.input" role="combobox" type="text" />
+
+      1102 | 		clickAway(title(p.container));
+      1103 | 		const evt = keydown(document.body, 'd');
+    > 1104 | 		expect(searchInput(p.container)).toBeNull();
+           | 		                                 ^
+      1105 | 		expect(addButton(p.container)).toBeTruthy();
+      1106 | 		expect(evt.defaultPrevented).toBe(false);
+      1107 | 	});
+
+      at Object.<anonymous> (test/dom/views/conditions-modal-matrix.test.ts:1104:36)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 367 passed, 368 total
+Snapshots:   0 total
+Time:        3.823 s, estimated 4 s
+Ran all test suites matching test/dom/views/conditions-modal-matrix.test.ts.

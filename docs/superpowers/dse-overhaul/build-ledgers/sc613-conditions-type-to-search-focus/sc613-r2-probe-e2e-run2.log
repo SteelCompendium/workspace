@@ -1,0 +1,57 @@
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :200 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :200 (private Xvfb); 1 spec file(s), 1 shard(s); only RVW613-P11,RVW613-P12,RVW613-P13; run 20261113-224923-faa4
+
+Execution of 1 workers started at 2026-11-13T22:49:24.894Z
+
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/zz-rvw613-probe.e2e.ts
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 545599
+[0-0] RVW613-LOG P11 {"cm":true,"dp":false,"focusAfterEditorFocus":"cm-content cm-lineWrapping","input":null}
+[0-0] RVW613-LOG P12-editor-focus "cm-content cm-lineWrapping"
+[0-0] RVW613-LOG P12-after-brackets {"focus":"DIV.cm-content cm-lineWrapping","input":null,"menus":0,"modals":0,"order":[],"suggests":1}
+[0-0] RVW613-LOG P12-after-click {"focus":"cond.add","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-0] RVW613-LOG P12-title {"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-0] RVW613-LOG P12-after-d {"focus":"cond.input","input":"d","menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-0] RVW613-LOG P12-keys [{"dp":true,"key":"Enter","target":"cm-content cm-lineWrapping"},{"dp":false,"key":"[","target":"cm-content cm-lineWrapping"},{"dp":false,"key":"[","target":"cm-content cm-lineWrapping"},{"dp":true,"key":"d","target":"body"}]
+[0-0] Error in "SC-613 r2 reviewer probes.[RVW613-P12] Live Preview: the link suggest open in the editor, then a REAL click on the tracker Add Condition: does the suggestion popover outlive the window opening, and does it block the body route?"
+Error: invariant violation(s):
+ - Initiative/tracker.md: content outside the block bodies changed (text between the blocks, or a fence's opening / closing line)
+    at Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/session.ts:44:32)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[0-0] RVW613-LOG P13-after-right-click {"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-0] RVW613-LOG P13-after-d {"focus":"cond.input","input":"d","menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-0] RVW613-LOG P13-keys [{"dp":true,"key":"d","target":"body"}]
+[0-0] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/zz-rvw613-probe.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: bd4bc86ecd01d58b512960f15f0dc190
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/conditions-modal/zz-rvw613-probe.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] SC-613 r2 reviewer probes
+[chrome 150.0.7871.250 linux #0-0]    ✓ [RVW613-P11] Live Preview: a key whose target is the editor behind (synthetic, the backdrop blocks a real one) is not routed
+[chrome 150.0.7871.250 linux #0-0]    ✖ [RVW613-P12] Live Preview: the link suggest open in the editor, then a REAL click on the tracker Add Condition: does the suggestion popover outlive the window opening, and does it block the body route?
+[chrome 150.0.7871.250 linux #0-0]    ✓ [RVW613-P13] a REAL right-click on the window title and on blank space: does any .menu appear, where is focus, does a letter then route?
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 2 passing (3.5s)
+[chrome 150.0.7871.250 linux #0-0] 1 failing
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1) SC-613 r2 reviewer probes [RVW613-P12] Live Preview: the link suggest open in the editor, then a REAL click on the tracker Add Condition: does the suggestion popover outlive the window opening, and does it block the body route?
+[chrome 150.0.7871.250 linux #0-0] invariant violation(s):
+ - Initiative/tracker.md: content outside the block bodies changed (text between the blocks, or a fence's opening / closing line)
+[chrome 150.0.7871.250 linux #0-0] Error: invariant violation(s):
+[chrome 150.0.7871.250 linux #0-0]  - Initiative/tracker.md: content outside the block bodies changed (text between the blocks, or a fence's opening / closing line)
+[chrome 150.0.7871.250 linux #0-0]     at Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/session.ts:44:32)
+[chrome 150.0.7871.250 linux #0-0]     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+
+Spec Files:	 0 passed, 1 failed, 1 total (100% completed) in 00:00:06  
+
+OBSIDIAN-E2E RVW613-P11 ok (447 ms)
+OBSIDIAN-E2E RVW613-P12 FAIL: invariant violation(s): | - Initiative/tracker.md: content outside the block bodies changed (text between the blocks, or a fence's opening / closing line) [bundle /home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/.out/20261113-224923-faa4/RVW613-P12]
+OBSIDIAN-E2E RVW613-P13 ok (704 ms)
+OBSIDIAN-E2E done: 2/3 ok, 1 failed, 0 known-bug, coverage: 1/176 pairs (partial run: gate skipped)
+OBSIDIAN-E2E coverage driven: 3 (control, kind) pair(s) -> /home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 175 manifest pair(s) not exercised in this selection
+rc=1

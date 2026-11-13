@@ -1,0 +1,62 @@
+
+> draw-steel-elements@7.0.0 e2e
+> node e2e/run.mjs --only=COND-N07,COND-N11,COND-N12,COND-N13,COND-N14
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :200 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :200 (private Xvfb); 1 spec file(s), 1 shard(s); only COND-N07,COND-N11,COND-N12,COND-N13,COND-N14; run 20261113-214529-7a20
+
+Execution of 1 workers started at 2026-11-13T21:45:31.150Z
+
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-integrity.e2e.ts
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 457807
+[0-0] Error in "conditions-modal: typing after a click on the title or on empty space (SC-613).[COND-N12] click the window's title, type "daz": the Add search opens with "daz" typed, as the docs say; Escape closes just the search and focus lands on "+ Add condition""
+Error: Expect $(`.modal-container .dse-modal:has(.dse-condal__addwrap)`).$(`[data-dse-control="cond.add"]`) to be focused
+
+Expected: "focused"
+Received: "not focused"
+    at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/specs/conditions-modal/cond-integrity.e2e.ts:192:43)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-0] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-integrity.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: 39bfd00a23f5455b3aec26458732f5a6
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/conditions-modal/cond-integrity.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] conditions-modal: "or just start typing" opens the Add search (SC-580)
+[chrome 150.0.7871.250 linux #0-0]    ✓ [COND-N07] typing "daz" with focus on "+ Add condition" opens the dropdown with it typed, as the docs say ("or just start typing"): nothing lost, nothing doubled, Dazed offered
+[chrome 150.0.7871.250 linux #0-0]    ✓ [COND-N11] a letter on a focused Duration chip opens the search over the open editor, and Escape closes just the search and gives focus back to the chip; a second Escape closes the window
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] conditions-modal: typing after a click on the title or on empty space (SC-613)
+[chrome 150.0.7871.250 linux #0-0]    ✖ [COND-N12] click the window's title, type "daz": the Add search opens with "daz" typed, as the docs say; Escape closes just the search and focus lands on "+ Add condition"
+[chrome 150.0.7871.250 linux #0-0]    ✓ [COND-N13] click an empty part of the window, type "daz": the same; Enter then adds Dazed
+[chrome 150.0.7871.250 linux #0-0]    ✓ [COND-N14] a menu Obsidian has open over the page keeps its keys: with focus on <body> and a menu showing, a letter opens nothing; after the menu is closed the next letters open the search
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 4 passing (11.3s)
+[chrome 150.0.7871.250 linux #0-0] 1 failing
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1) conditions-modal: typing after a click on the title or on empty space (SC-613) [COND-N12] click the window's title, type "daz": the Add search opens with "daz" typed, as the docs say; Escape closes just the search and focus lands on "+ Add condition"
+[chrome 150.0.7871.250 linux #0-0] Expect $(`.modal-container .dse-modal:has(.dse-condal__addwrap)`).$(`[data-dse-control="cond.add"]`) to be focused
+
+Expected: "focused"
+Received: "not focused"
+[chrome 150.0.7871.250 linux #0-0] Error: Expect $(`.modal-container .dse-modal:has(.dse-condal__addwrap)`).$(`[data-dse-control="cond.add"]`) to be focused
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] Expected: "focused"
+[chrome 150.0.7871.250 linux #0-0] Received: "not focused"
+[chrome 150.0.7871.250 linux #0-0]     at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/specs/conditions-modal/cond-integrity.e2e.ts:192:43)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/session.ts:42:5)
+
+
+Spec Files:	 0 passed, 1 failed, 1 total (100% completed) in 00:00:14  
+
+OBSIDIAN-E2E COND-N07 ok (1313 ms)
+OBSIDIAN-E2E COND-N11 ok (2015 ms)
+OBSIDIAN-E2E COND-N12 FAIL: Expect $(`.modal-container .dse-modal:has(.dse-condal__addwrap)`).$(`[data-dse-control="cond.add"]`) to be focused | Expected: "focused" | Received: "not focused" [bundle /home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/.out/20261113-214529-7a20/COND-N12]
+OBSIDIAN-E2E COND-N13 ok (1131 ms)
+OBSIDIAN-E2E COND-N14 ok (620 ms)
+OBSIDIAN-E2E done: 4/5 ok, 1 failed, 0 known-bug, coverage: 7/176 pairs (partial run: gate skipped)
+OBSIDIAN-E2E coverage driven: 10 (control, kind) pair(s) -> /home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 169 manifest pair(s) not exercised in this selection

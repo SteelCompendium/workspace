@@ -1,0 +1,66 @@
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :200 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :200 (private Xvfb); 1 spec file(s), 1 shard(s); only RVW613-P09,RVW613-P02; run 20261113-225530-b0ee
+
+Execution of 1 workers started at 2026-11-13T22:55:32.389Z
+
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/zz-rvw613-probe.e2e.ts
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 562143
+[0-0] RVW613-LOG P02-spots [{"hit":"DIV.modal dse-modal dse-condal-modal","name":"modal-top-left-padding","x":486,"y":486},{"hit":"DIV.modal dse-modal dse-condal-modal","name":"modal-bottom-left-padding","x":486,"y":614},{"hit":"DIV.dse-modal__body","name":"list-centre","x":720,"y":527},{"hit":"DIV.modal-title dse-modal__title","name":"header-right-of-title","x":863,"y":506}]
+[0-0] RVW613-LOG P02-modal-top-left-padding {"after":{"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0},"typed":{"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}}
+[0-0] RVW613-LOG P02-modal-top-left-padding-esc {"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-0] RVW613-LOG P02-modal-bottom-left-padding {"after":{"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0},"typed":{"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}}
+[0-0] RVW613-LOG P02-modal-bottom-left-padding-esc {"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-0] RVW613-LOG P02-list-centre {"after":{"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0},"typed":{"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}}
+[0-0] RVW613-LOG P02-list-centre-esc {"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-0] RVW613-LOG P02-header-right-of-title {"after":{"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0},"typed":{"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}}
+[0-0] RVW613-LOG P02-header-right-of-title-esc {"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-0] RVW613-LOG P02-keys [{"dp":false,"key":"d","target":"body"},{"dp":false,"key":"d","target":"body"},{"dp":false,"key":"d","target":"body"},{"dp":false,"key":"d","target":"body"}]
+[0-0] RVW613-LOG P09-open {"focus":"cond.add","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-0] RVW613-LOG P09-title {"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-0] RVW613-LOG P09-after-daz {"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-0] RVW613-LOG P09-keys [{"dp":false,"key":"d","target":"body"},{"dp":false,"key":"a","target":"body"},{"dp":false,"key":"z","target":"body"}]
+[0-0] RVW613-LOG P09-esc {"focus":"body","input":null,"menus":0,"modals":0,"order":[],"suggests":0}
+[0-0] Error in "SC-613 r2 reviewer probes.[RVW613-P09] sidebar-pinned tracker opener: title click then daz"
+Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: "daz"
+Received: null
+    at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/specs/conditions-modal/zz-rvw613-probe.e2e.ts:308:19)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-0] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/zz-rvw613-probe.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: 4da85ec0531ef790e7888119f93bad71
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/conditions-modal/zz-rvw613-probe.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] SC-613 r2 reviewer probes
+[chrome 150.0.7871.250 linux #0-0]    ✓ [RVW613-P02] blank-space clicks at several spots of the window, then a letter: each opens the search
+[chrome 150.0.7871.250 linux #0-0]    ✖ [RVW613-P09] sidebar-pinned tracker opener: title click then daz
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1 passing (2.2s)
+[chrome 150.0.7871.250 linux #0-0] 1 failing
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1) SC-613 r2 reviewer probes [RVW613-P09] sidebar-pinned tracker opener: title click then daz
+[chrome 150.0.7871.250 linux #0-0] expect(received).toBe(expected) // Object.is equality
+
+Expected: "daz"
+Received: null
+[chrome 150.0.7871.250 linux #0-0] Error: expect(received).toBe(expected) // Object.is equality
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] Expected: "daz"
+[chrome 150.0.7871.250 linux #0-0] Received: null
+[chrome 150.0.7871.250 linux #0-0]     at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/specs/conditions-modal/zz-rvw613-probe.e2e.ts:308:19)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/session.ts:42:5)
+
+
+Spec Files:	 0 passed, 1 failed, 1 total (100% completed) in 00:00:05  
+
+OBSIDIAN-E2E RVW613-P02 ok (774 ms)
+OBSIDIAN-E2E RVW613-P09 FAIL: expect(received).toBe(expected) // Object.is equality | Expected: "daz" | Received: null [bundle /home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/.out/20261113-225530-b0ee/RVW613-P09]
+OBSIDIAN-E2E done: 1/2 ok, 1 failed, 0 known-bug, coverage: 1/176 pairs (partial run: gate skipped)
+OBSIDIAN-E2E coverage driven: 5 (control, kind) pair(s) -> /home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 175 manifest pair(s) not exercised in this selection
+rc=1

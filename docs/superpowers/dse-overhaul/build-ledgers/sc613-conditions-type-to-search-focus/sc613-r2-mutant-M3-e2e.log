@@ -1,0 +1,103 @@
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :200 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :200 (private Xvfb); 2 spec file(s), 1 shard(s); only RVW613-P03,RVW613-P04,RVW613-P05,COND-N12; run 20261113-225455-3c79
+
+Execution of 2 workers started at 2026-11-13T22:54:57.339Z
+
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-integrity.e2e.ts
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 560544
+[0-0] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-integrity.e2e.ts
+[0-1] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/zz-rvw613-probe.e2e.ts
+[0-1] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 560816
+[0-1] RVW613-LOG P03-open {"focus":"INPUT.prompt-input","input":null,"menus":0,"modals":2,"order":["conditions","prompt"],"suggests":0}
+[0-1] RVW613-LOG P03-top {"hit":"suggestion-item mod-complex","index":1,"of":2,"zs":["50","50"]}
+[0-1] RVW613-LOG P03-blur true
+[0-1] RVW613-LOG P03-after-d {"focus":"INPUT.prompt-input","input":"d","menus":0,"modals":2,"order":["conditions","prompt"],"suggests":0}
+[0-1] RVW613-LOG P03-keys [{"dp":true,"key":"d","target":"body"}]
+[0-1] Error in "SC-613 r2 reviewer probes.[RVW613-P03] command palette stacked over the Conditions window: DOM order vs what is on top; a body key does nothing for the window"
+Error: expect(received).toBeNull()
+
+Received: "d"
+    at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/specs/conditions-modal/zz-rvw613-probe.e2e.ts:115:19)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-1] Error in "SC-613 r2 reviewer probes.[RVW613-P04] a DSE stamina window stacked over the Conditions window (opened by script from the tracker behind)"
+Error: timed out waiting for all modals to close
+    at async waitFor (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/page.ts:22:2)
+    at async closeModals (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/cleanup.ts:9:2)
+    at async closeEverything (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/cleanup.ts:52:2)
+    at async Object.openNote (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/dse.ts:187:2)
+    at async openConditionsModal (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/conditions.ts:28:2)
+    at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/specs/conditions-modal/zz-rvw613-probe.e2e.ts:128:20)
+[0-1] Error in "SC-613 r2 reviewer probes.[RVW613-P05] reverse stack: a stamina window first, the Conditions window opened over it: a body key routes to the Conditions window"
+Error: timed out waiting for all modals to close
+    at async waitFor (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/page.ts:22:2)
+    at async closeModals (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/cleanup.ts:9:2)
+    at async closeEverything (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/cleanup.ts:52:2)
+    at async Object.openNote (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/dse.ts:187:2)
+    at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/specs/conditions-modal/zz-rvw613-probe.e2e.ts:173:3)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-1] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/zz-rvw613-probe.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: ede2d811c85b4d5bb8d9c1d82b5d982a
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/conditions-modal/cond-integrity.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] conditions-modal: typing after a click on the title or on empty space (SC-613)
+[chrome 150.0.7871.250 linux #0-0]    ✓ [COND-N12] click the window's title, type "daz": the Add search opens with "daz" typed, as the docs say; Escape closes just the search and focus lands on "+ Add condition"
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1 passing (1s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-1] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-1] Session ID: 7c6a20c528718537e44f2a6809bcf75b
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] » e2e/specs/conditions-modal/zz-rvw613-probe.e2e.ts
+[chrome 150.0.7871.250 linux #0-1] SC-613 r2 reviewer probes
+[chrome 150.0.7871.250 linux #0-1]    ✖ [RVW613-P03] command palette stacked over the Conditions window: DOM order vs what is on top; a body key does nothing for the window
+[chrome 150.0.7871.250 linux #0-1]    ✖ [RVW613-P04] a DSE stamina window stacked over the Conditions window (opened by script from the tracker behind)
+[chrome 150.0.7871.250 linux #0-1]    ✖ [RVW613-P05] reverse stack: a stamina window first, the Conditions window opened over it: a body key routes to the Conditions window
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] 3 failing (11.7s)
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] 1) SC-613 r2 reviewer probes [RVW613-P03] command palette stacked over the Conditions window: DOM order vs what is on top; a body key does nothing for the window
+[chrome 150.0.7871.250 linux #0-1] expect(received).toBeNull()
+
+Received: "d"
+[chrome 150.0.7871.250 linux #0-1] Error: expect(received).toBeNull()
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] Received: "d"
+[chrome 150.0.7871.250 linux #0-1]     at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/specs/conditions-modal/zz-rvw613-probe.e2e.ts:115:19)
+[chrome 150.0.7871.250 linux #0-1]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/session.ts:42:5)
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] 2) SC-613 r2 reviewer probes [RVW613-P04] a DSE stamina window stacked over the Conditions window (opened by script from the tracker behind)
+[chrome 150.0.7871.250 linux #0-1] timed out waiting for all modals to close
+[chrome 150.0.7871.250 linux #0-1] Error: timed out waiting for all modals to close
+[chrome 150.0.7871.250 linux #0-1]     at async waitFor (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/page.ts:22:2)
+[chrome 150.0.7871.250 linux #0-1]     at async closeModals (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/cleanup.ts:9:2)
+[chrome 150.0.7871.250 linux #0-1]     at async closeEverything (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/cleanup.ts:52:2)
+[chrome 150.0.7871.250 linux #0-1]     at async Object.openNote (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/dse.ts:187:2)
+[chrome 150.0.7871.250 linux #0-1]     at async openConditionsModal (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/conditions.ts:28:2)
+[chrome 150.0.7871.250 linux #0-1]     at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/specs/conditions-modal/zz-rvw613-probe.e2e.ts:128:20)
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] 3) SC-613 r2 reviewer probes [RVW613-P05] reverse stack: a stamina window first, the Conditions window opened over it: a body key routes to the Conditions window
+[chrome 150.0.7871.250 linux #0-1] timed out waiting for all modals to close
+[chrome 150.0.7871.250 linux #0-1] Error: timed out waiting for all modals to close
+[chrome 150.0.7871.250 linux #0-1]     at async waitFor (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/page.ts:22:2)
+[chrome 150.0.7871.250 linux #0-1]     at async closeModals (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/cleanup.ts:9:2)
+[chrome 150.0.7871.250 linux #0-1]     at async closeEverything (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/cleanup.ts:52:2)
+[chrome 150.0.7871.250 linux #0-1]     at async Object.openNote (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/dse.ts:187:2)
+[chrome 150.0.7871.250 linux #0-1]     at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/specs/conditions-modal/zz-rvw613-probe.e2e.ts:173:3)
+[chrome 150.0.7871.250 linux #0-1]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/driver/session.ts:42:5)
+
+
+Spec Files:	 1 passed, 1 failed, 2 total (100% completed) in 00:00:19  
+
+OBSIDIAN-E2E COND-N12 ok (931 ms)
+OBSIDIAN-E2E RVW613-P03 FAIL: expect(received).toBeNull() | Received: "d" [bundle /home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/.out/20261113-225455-3c79/RVW613-P03]
+OBSIDIAN-E2E RVW613-P04 FAIL: timed out waiting for all modals to close [bundle /home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/.out/20261113-225455-3c79/RVW613-P04]
+OBSIDIAN-E2E RVW613-P05 FAIL: timed out waiting for all modals to close [bundle /home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/.out/20261113-225455-3c79/RVW613-P05]
+OBSIDIAN-E2E done: 1/4 ok, 3 failed, 0 known-bug, coverage: 2/176 pairs (partial run: gate skipped)
+OBSIDIAN-E2E coverage driven: 4 (control, kind) pair(s) -> /home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 174 manifest pair(s) not exercised in this selection
+rc=1

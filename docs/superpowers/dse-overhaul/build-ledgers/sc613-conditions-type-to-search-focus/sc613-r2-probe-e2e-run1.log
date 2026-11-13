@@ -1,0 +1,137 @@
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :201 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :201 (private Xvfb); 2 spec file(s), 1 shard(s); only RVW613-P01,RVW613-P02,RVW613-P03,RVW613-P04,RVW613-P05,RVW613-P06,RVW613-P07,RVW613-P08,RVW613-P09,RVW613-P10,COND-N12,COND-N13,COND-N14; run 20261113-224716-5e4a
+
+Execution of 2 workers started at 2026-11-13T22:47:19.113Z
+
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-integrity.e2e.ts
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 539804
+[0-0] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/cond-integrity.e2e.ts
+[0-1] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/zz-rvw613-probe.e2e.ts
+[0-1] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 540320
+[0-1] RVW613-LOG P01-baseline {"focus":"DIV.markdown-preview-view markdown-rendered node-insert-event is-readable-line-width allow-fold-headings allow-fold-lists show-indentation-guide show-properties","input":null,"menus":0,"modals":0,"order":[],"suggests":0}
+[0-1] RVW613-LOG P01-blur true
+[0-1] RVW613-LOG P01-after-d {"focus":"body","input":null,"menus":0,"modals":0,"order":[],"suggests":0}
+[0-1] RVW613-LOG P01-keys [{"dp":false,"key":"d","target":"body"}]
+[0-1] RVW613-LOG P01-blur2 true
+[0-1] RVW613-LOG P01-after-close-x {"focus":"body","input":null,"menus":0,"modals":0,"order":[],"suggests":0}
+[0-1] RVW613-LOG P01-keys2 [{"dp":false,"key":"x","target":"body"}]
+[0-1] RVW613-LOG P02-spots [{"hit":"DIV.modal dse-modal dse-condal-modal","name":"modal-top-left-padding","x":486,"y":486},{"hit":"DIV.modal dse-modal dse-condal-modal","name":"modal-bottom-left-padding","x":486,"y":614},{"hit":"DIV.dse-modal__body","name":"list-centre","x":720,"y":527},{"hit":"DIV.modal-title dse-modal__title","name":"header-right-of-title","x":863,"y":506}]
+[0-1] RVW613-LOG P02-modal-top-left-padding {"after":{"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0},"typed":{"focus":"cond.input","input":"d","menus":0,"modals":1,"order":["conditions"],"suggests":0}}
+[0-1] RVW613-LOG P02-modal-top-left-padding-esc {"focus":"cond.add","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P02-modal-bottom-left-padding {"after":{"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0},"typed":{"focus":"cond.input","input":"d","menus":0,"modals":1,"order":["conditions"],"suggests":0}}
+[0-1] RVW613-LOG P02-modal-bottom-left-padding-esc {"focus":"cond.add","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P02-list-centre {"after":{"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0},"typed":{"focus":"cond.input","input":"d","menus":0,"modals":1,"order":["conditions"],"suggests":0}}
+[0-1] RVW613-LOG P02-list-centre-esc {"focus":"cond.add","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P02-header-right-of-title {"after":{"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0},"typed":{"focus":"cond.input","input":"d","menus":0,"modals":1,"order":["conditions"],"suggests":0}}
+[0-1] RVW613-LOG P02-header-right-of-title-esc {"focus":"cond.add","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P02-keys [{"dp":true,"key":"d","target":"body"},{"dp":true,"key":"d","target":"body"},{"dp":true,"key":"d","target":"body"},{"dp":true,"key":"d","target":"body"}]
+[0-1] RVW613-LOG P03-open {"focus":"INPUT.prompt-input","input":null,"menus":0,"modals":2,"order":["conditions","prompt"],"suggests":0}
+[0-1] RVW613-LOG P03-top {"hit":"suggestion-item mod-complex","index":1,"of":2,"zs":["50","50"]}
+[0-1] RVW613-LOG P03-blur true
+[0-1] RVW613-LOG P03-after-d {"focus":"body","input":null,"menus":0,"modals":2,"order":["conditions","prompt"],"suggests":0}
+[0-1] RVW613-LOG P03-keys [{"dp":false,"key":"d","target":"body"}]
+[0-1] RVW613-LOG P03-palette-closed-sync {"after":1,"before":2}
+[0-1] RVW613-LOG P03-after-close {"focus":"cond.add","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P03-title {"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P03-after-d2 {"focus":"cond.input","input":"d","menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P04-how "bar.click"
+[0-1] RVW613-LOG P04-open {"focus":"sedit.apply-amount","input":null,"menus":0,"modals":2,"order":["conditions","stamina"],"suggests":0}
+[0-1] RVW613-LOG P04-top {"hit":"dse-sedit__temp","index":1,"of":2,"zs":["50","50"]}
+[0-1] RVW613-LOG P04-stam-title {"hit":"dse-modal__title-text","x":467,"y":443}
+[0-1] RVW613-LOG P04-after-title-click {"focus":"body","input":null,"menus":0,"modals":2,"order":["conditions","stamina"],"suggests":0}
+[0-1] RVW613-LOG P04-after-d {"focus":"body","input":null,"menus":0,"modals":2,"order":["conditions","stamina"],"suggests":0}
+[0-1] RVW613-LOG P04-keys [{"dp":false,"key":"d","target":"body"}]
+[0-1] RVW613-LOG P04-after-esc {"focus":"cond.add","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P04-sync-count-after-esc 1
+[0-1] RVW613-LOG P04-after-d2 {"focus":"cond.input","input":"d","menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P05-open {"focus":"cond.add","input":null,"menus":0,"modals":2,"order":["stamina","conditions"],"suggests":0}
+[0-1] RVW613-LOG P05-top {"hit":"dse-btn__text","index":1,"of":2,"zs":["50","50"]}
+[0-1] RVW613-LOG P05-title {"focus":"body","input":null,"menus":0,"modals":2,"order":["stamina","conditions"],"suggests":0}
+[0-1] RVW613-LOG P05-after-d {"focus":"cond.input","input":"d","menus":0,"modals":2,"order":["stamina","conditions"],"suggests":0}
+[0-1] RVW613-LOG P05-keys [{"dp":true,"key":"d","target":"body"}]
+[0-1] RVW613-LOG P06-open {"focus":"cond.add","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P06-editor-focused {"focus":"cond.add","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P06-after-brackets {"focus":"cond.input","input":"[[","menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P06-keys-a [{"dp":true,"key":"[","target":"cond.add"},{"dp":false,"key":"[","target":"cond.input"}]
+[0-1] RVW613-LOG P06-after-q-in-editor {"focus":"cond.input","input":"[[q","menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P06-scratch "scratch\n"
+[0-1] RVW613-LOG P06-after-blur {"focus":"body","input":"[[q","menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P06-after-d-on-body {"focus":"cond.input","input":"[[qd","menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P06-keys-b [{"dp":true,"key":"d","target":"body"}]
+[0-1] RVW613-LOG P06-after-esc {"focus":"cond.add","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P07-baseline {"adds":0,"live":0,"removes":0}
+[0-1] RVW613-LOG P07-open-0 {"adds":1,"live":1,"removes":0}
+[0-1] RVW613-LOG P07-closed-0 {"adds":1,"live":0,"removes":1}
+[0-1] RVW613-LOG P07-open-1 {"adds":2,"live":1,"removes":1}
+[0-1] RVW613-LOG P07-closed-1 {"adds":2,"live":0,"removes":2}
+[0-1] RVW613-LOG P07-open-2 {"adds":3,"live":1,"removes":2}
+[0-1] RVW613-LOG P07-closed-2 {"adds":3,"live":0,"removes":3}
+[0-1] RVW613-LOG P07-open-3 {"adds":4,"live":1,"removes":3}
+[0-1] RVW613-LOG P07-closed-3 {"adds":4,"live":0,"removes":4}
+[0-1] RVW613-LOG P07-open-4 {"adds":5,"live":1,"removes":4}
+[0-1] RVW613-LOG P07-closed-4 {"adds":5,"live":0,"removes":5}
+[0-1] RVW613-LOG P07-final {"focus":"cond.input","input":"d","menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P07-final-count {"adds":6,"live":1,"removes":5}
+[0-1] RVW613-LOG P07-after-all {"adds":6,"live":0,"removes":6}
+[0-1] RVW613-LOG P08 {"Dead":{"dp":false,"input":null},"Process":{"dp":false,"input":null},"Unidentified":{"dp":false,"input":null},"composing-d":{"dp":false,"input":null},"repeat-shift-D":{"dp":true,"input":"D"}}
+[0-1] RVW613-LOG P09-open {"focus":"cond.add","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P09-title {"focus":"body","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P09-after-daz {"focus":"cond.input","input":"daz","menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P09-keys [{"dp":true,"key":"d","target":"body"},{"dp":false,"key":"a","target":"cond.input"},{"dp":false,"key":"z","target":"cond.input"}]
+[0-1] RVW613-LOG P09-esc {"focus":"cond.add","input":null,"menus":0,"modals":1,"order":["conditions"],"suggests":0}
+[0-1] RVW613-LOG P10-opened {"hasBtn":true,"popout":true}
+[0-1] RVW613-LOG P10 {"afterClose":{"dp":false},"closed":0,"inMain":false,"inPopout":true,"mainKey":{"dp":false,"mainInput":null,"popInput":null},"popFocus":"body","popKey":{"dp":true,"popFocus":"dse-condal__input","popInput":"d"}}
+[0-1] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/conditions-modal/zz-rvw613-probe.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: f2baa5dcb81a31c51d6001f7eed45d4c
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/conditions-modal/cond-integrity.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] conditions-modal: typing after a click on the title or on empty space (SC-613)
+[chrome 150.0.7871.250 linux #0-0]    ✓ [COND-N12] click the window's title, type "daz": the Add search opens with "daz" typed, as the docs say; Escape closes just the search and focus lands on "+ Add condition"
+[chrome 150.0.7871.250 linux #0-0]    ✓ [COND-N13] click an empty part of the window, type "daz": the same; Enter then adds Dazed
+[chrome 150.0.7871.250 linux #0-0]    ✓ [COND-N14] a menu Obsidian has open over the page keeps its keys: with focus on <body> and a menu showing, a letter opens nothing; after the menu is closed the next letters open the search
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 3 passing (3.2s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-1] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-1] Session ID: 74fb62a7f55f1af8a44db81eee9cfa1d
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] » e2e/specs/conditions-modal/zz-rvw613-probe.e2e.ts
+[chrome 150.0.7871.250 linux #0-1] SC-613 r2 reviewer probes
+[chrome 150.0.7871.250 linux #0-1]    ✓ [RVW613-P01] baseline: no Conditions window open, focus on body, a letter does nothing and is not cancelled
+[chrome 150.0.7871.250 linux #0-1]    ✓ [RVW613-P02] blank-space clicks at several spots of the window, then a letter: each opens the search
+[chrome 150.0.7871.250 linux #0-1]    ✓ [RVW613-P03] command palette stacked over the Conditions window: DOM order vs what is on top; a body key does nothing for the window
+[chrome 150.0.7871.250 linux #0-1]    ✓ [RVW613-P04] a DSE stamina window stacked over the Conditions window (opened by script from the tracker behind)
+[chrome 150.0.7871.250 linux #0-1]    ✓ [RVW613-P05] reverse stack: a stamina window first, the Conditions window opened over it: a body key routes to the Conditions window
+[chrome 150.0.7871.250 linux #0-1]    ✓ [RVW613-P06] suggestion popover: the editor link-suggest opened in a pane, while the Conditions window is open; then focus to body and a letter
+[chrome 150.0.7871.250 linux #0-1]    ✓ [RVW613-P07] five open/close cycles: document keydown listeners return to baseline; then one title click + d types exactly "d"
+[chrome 150.0.7871.250 linux #0-1]    ✓ [RVW613-P08] IME / dead keys / Process on body (synthetic): nothing routes; a plain synthetic d does
+[chrome 150.0.7871.250 linux #0-1]    ✓ [RVW613-P09] sidebar-pinned tracker opener: title click then daz
+[chrome 150.0.7871.250 linux #0-1]    ✓ [RVW613-P10] popout window: the window opened in a popout routes a body key of the popout document only
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] 10 passing (12.4s)
+
+
+Spec Files:	 2 passed, 2 total (100% completed) in 00:00:24  
+
+OBSIDIAN-E2E COND-N12 ok (1123 ms)
+OBSIDIAN-E2E COND-N13 ok (1264 ms)
+OBSIDIAN-E2E COND-N14 ok (740 ms)
+OBSIDIAN-E2E RVW613-P01 ok (1121 ms)
+OBSIDIAN-E2E RVW613-P02 ok (664 ms)
+OBSIDIAN-E2E RVW613-P03 ok (643 ms)
+OBSIDIAN-E2E RVW613-P04 ok (822 ms)
+OBSIDIAN-E2E RVW613-P05 ok (400 ms)
+OBSIDIAN-E2E RVW613-P06 ok (1935 ms)
+OBSIDIAN-E2E RVW613-P07 ok (1647 ms)
+OBSIDIAN-E2E RVW613-P08 ok (599 ms)
+OBSIDIAN-E2E RVW613-P09 ok (1657 ms)
+OBSIDIAN-E2E RVW613-P10 ok (2699 ms)
+OBSIDIAN-E2E done: 13/13 ok, 0 failed, 0 known-bug, coverage: 3/176 pairs (partial run: gate skipped)
+OBSIDIAN-E2E coverage driven: 8 (control, kind) pair(s) -> /home/scott/code/steelCompendium/worktrees/sc613-conditions-type-to-search-focus/draw-steel-elements/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 173 manifest pair(s) not exercised in this selection
+rc=0

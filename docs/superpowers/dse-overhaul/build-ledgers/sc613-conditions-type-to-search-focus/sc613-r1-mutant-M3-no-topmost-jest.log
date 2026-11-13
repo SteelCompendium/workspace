@@ -1,0 +1,129 @@
+FAIL dom test/dom/views/conditions-modal-matrix.test.ts
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › after a click on the window's title, a letter opens the search with that letter typed, focuses the input and is swallowed
+
+    TypeError: Cannot read properties of null (reading 'value')
+
+      1038 | 		const evt = keydown(document.body, 'd');
+      1039 | 		const input = searchInput(o.container)!;
+    > 1040 | 		expect(input.value).toBe('d');
+           | 		             ^
+      1041 | 		expect(document.activeElement).toBe(input);
+      1042 | 		expect(evt.defaultPrevented).toBe(true);
+      1043 | 		expect(menuItems(o.container).map((i) => i.textContent)).toEqual(expect.arrayContaining(['Dazed']));
+
+      at test/dom/views/conditions-modal-matrix.test.ts:1040:16
+
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › after a click on an empty part of the window, a letter opens the search with that letter typed, focuses the input and is swallowed
+
+    TypeError: Cannot read properties of null (reading 'value')
+
+      1038 | 		const evt = keydown(document.body, 'd');
+      1039 | 		const input = searchInput(o.container)!;
+    > 1040 | 		expect(input.value).toBe('d');
+           | 		             ^
+      1041 | 		expect(document.activeElement).toBe(input);
+      1042 | 		expect(evt.defaultPrevented).toBe(true);
+      1043 | 		expect(menuItems(o.container).map((i) => i.textContent)).toEqual(expect.arrayContaining(['Dazed']));
+
+      at test/dom/views/conditions-modal-matrix.test.ts:1040:16
+
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › the same through <html> (a target of documentElement), and with the key typed fast: "daz" ends as "daz" in the input, not routed twice
+
+    TypeError: Cannot read properties of null (reading 'dispatchEvent')
+
+      737 | function keydown(el: Element, key: string, init: KeyboardEventInit = {}): KeyboardEvent {
+      738 | 	const evt = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true, ...init });
+    > 739 | 	el.dispatchEvent(evt);
+          | 	   ^
+      740 | 	return evt;
+      741 | }
+      742 | const addButton = (c: HTMLElement): HTMLElement => qs(c, 'button[aria-label="Add condition"]');
+
+      at keydown (test/dom/views/conditions-modal-matrix.test.ts:739:5)
+      at Object.<anonymous> (test/dom/views/conditions-modal-matrix.test.ts:1053:11)
+
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › with the search already open and focus on <body>, the letter goes to the end of what was typed
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "daz"
+    Received: "da"
+
+      1066 | 		expect(document.activeElement).toBe(document.body);
+      1067 | 		keydown(document.body, 'z');
+    > 1068 | 		expect(searchInput(o.container)!.value).toBe('daz');
+           | 		                                        ^
+      1069 | 		expect(document.activeElement).toBe(searchInput(o.container));
+      1070 | 	});
+      1071 |
+
+      at Object.<anonymous> (test/dom/views/conditions-modal-matrix.test.ts:1068:43)
+
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › Escape on a search a body key opened lands on "+ Add condition" (there was no control to give focus back to), not on <body>
+
+    expect(received).not.toBeNull()
+
+    Received: null
+
+      1075 | 		clickAway(title(o.container));
+      1076 | 		keydown(document.body, 'd');
+    > 1077 | 		expect(searchInput(o.container)).not.toBeNull();
+           | 		                                     ^
+      1078 | 		const onClose = jest.spyOn(o.modal, 'onClose');
+      1079 | 		pressEscape(searchInput(o.container)!);
+      1080 | 		expect(searchInput(o.container)).toBeNull();
+
+      at Object.<anonymous> (test/dom/views/conditions-modal-matrix.test.ts:1077:40)
+
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a modal stacked above this one keeps its keys: a body key does nothing for the Conditions window; one stacked BELOW does not matter
+
+    TypeError: Cannot read properties of null (reading 'value')
+
+      1090 | 		clickAway(title(o.container));
+      1091 | 		keydown(document.body, 'd');
+    > 1092 | 		expect(searchInput(o.container)!.value).toBe('d'); // this window is the top one: routed
+           | 		                                ^
+      1093 | 		o.modal.close();
+      1094 | 		const p = open([]);
+      1095 | 		const above = document.body.appendChild(document.createElement('div'));
+
+      at Object.<anonymous> (test/dom/views/conditions-modal-matrix.test.ts:1092:35)
+
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a menu or suggestion popover Obsidian has open over the page keeps its keys
+
+    TypeError: Cannot read properties of null (reading 'value')
+
+      1151 | 			popover.remove();
+      1152 | 			keydown(document.body, 'd'); // gone: routed again
+    > 1153 | 			expect(searchInput(o.container)!.value).toBe('d');
+           | 			                                ^
+      1154 | 			o.modal.close();
+      1155 | 		}
+      1156 | 	});
+
+      at Object.<anonymous> (test/dom/views/conditions-modal-matrix.test.ts:1153:36)
+
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › the listener is on the document, registered through the window's lifecycle: removed on close, after which a body key is not routed and nothing leaks
+
+    expect(jest.fn()).not.toHaveBeenCalled()
+
+    Expected number of calls: 0
+    Received number of calls: 1
+
+    1: {"isTrusted": false}
+
+      1189 | 			document.body.appendChild(o.container); // put the window back so only the listener could route
+      1190 | 			keydown(document.body, 'd');
+    > 1191 | 			expect(route).not.toHaveBeenCalled();
+           | 			                  ^
+      1192 | 			expect(searchInput(o.container)).toBeNull();
+      1193 | 			expect(o.onChange).not.toHaveBeenCalled();
+      1194 | 			route.mockRestore();
+
+      at Object.<anonymous> (test/dom/views/conditions-modal-matrix.test.ts:1191:22)
+
+Test Suites: 1 failed, 1 total
+Tests:       8 failed, 359 passed, 367 total
+Snapshots:   0 total
+Time:        4.379 s
+Ran all test suites matching test/dom/views/conditions-modal-matrix.test.ts.

@@ -1,0 +1,33 @@
+HEAD 9b94baf20c84abb487a551be9737acf9817fe31b
+== BASELINE rc=0 Tests:       368 passed, 368 total
+M10 applied
+== M10 rc=1 Tests:       1 failed, 367 passed, 368 total
+     ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a popout window: the listener is on the window's own document, so a body key of THAT document opens the search and one of the main document do
+M14 applied
+== M14 rc=1 Tests:       1 failed, 367 passed, 368 total
+     ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a popout window: the listener is on the window's own document, so a body key of THAT document opens the search and one of the main document do
+M15 applied
+== M15 rc=1 Tests:       1 failed, 367 passed, 368 total
+     ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a popout window: the listener is on the window's own document, so a body key of THAT document opens the search and one of the main document do
+M16 applied
+== M16 rc=0 Tests:       368 passed, 368 total
+M3 applied
+== M3 rc=1 Tests:       1 failed, 367 passed, 368 total
+     ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a modal stacked above this one keeps its keys: a body key does nothing for the Conditions window; one stacked BELOW does not matter
+M11 applied
+== M11 rc=1 Tests:       1 failed, 367 passed, 368 total
+     ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › a modal stacked above this one keeps its keys: a body key does nothing for the Conditions window; one stacked BELOW does not matter
+== afterEach-close removed rc=0 Tests:       368 passed, 368 total
+M3 applied
+== afterEach-close removed + M3 rc=1 Tests:       9 failed, 359 passed, 368 total
+== head verbose rc=0 Tests:       368 passed, 368 total
+== head randomize seed=1 rc=0 Tests:       368 passed, 368 total
+== head randomize seed=42 rc=0 Tests:       368 passed, 368 total
+== head randomize seed=613 rc=0 Tests:       368 passed, 368 total
+== head randomize seed=90210 rc=0 Tests:       368 passed, 368 total
+M3 applied
+== popout test alone under M3 rc=0 Tests:       367 skipped, 1 passed, 368 total
+M10 applied
+== popout test alone under M10 rc=1 Tests:       1 failed, 367 skipped, 368 total
+== FULL jest rc=0 Tests:       1 skipped, 11854 passed, 11855 total
+restored: 0 dirty

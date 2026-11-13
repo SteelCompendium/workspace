@@ -1,0 +1,88 @@
+FAIL dom test/dom/views/conditions-modal-matrix.test.ts
+  ● SC-613: a printable key after a click on the title or on empty space (focus on <body>) opens the Add search › Escape on a search a body key opened lands on "+ Add condition" (there was no control to give focus back to), not on <body>
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  -  0
+    + Received  + 50
+
+    @@ -1,5 +1,34 @@
+    + <body>
+    +   <div
+    +     aria-labelledby="dse-modal-title-335"
+    +     class="modal-container dse-modal dse-condal-modal"
+    +   >
+    +     <div
+    +       class="modal-title dse-modal__title"
+    +       id="dse-modal-title-335"
+    +     >
+    +       <span
+    +         class="dse-modal__title-text"
+    +       >
+    +         Conditions
+    +       </span>
+    +     </div>
+    +     <div
+    +       class="modal-content"
+    +     >
+    +       <div
+    +         class="dse-modal__body"
+    +       >
+    +         <div
+    +           aria-label="Active conditions"
+    +           class="dse-condal__list"
+    +           role="list"
+    +         />
+    +         <div
+    +           class="dse-condal__addwrap"
+    +         >
+                <button
+                  aria-label="Add condition"
+                  class="dse-btn dse-condal__add"
+                  data-dse-control="cond.add"
+                  type="button"
+    @@ -10,7 +39,28 @@
+                  />
+                  <span
+                    class="dse-btn__text"
+                  >
+                    Add condition
+    +             </span>
+    +           </button>
+    +         </div>
+    +       </div>
+    +       <div
+    +         class="dse-modal__footer"
+    +       >
+    +         <button
+    +           aria-label="Done"
+    +           class="dse-btn dse-btn--accent"
+    +           data-dse-control="cond.done"
+    +           type="button"
+    +         >
+    +           <span
+    +             class="dse-btn__text"
+    +           >
+    +             Done
+                </span>
+              </button>
+    +       </div>
+    +     </div>
+    +   </div>
+    + </body>
+
+      1079 | 		pressEscape(searchInput(o.container)!);
+      1080 | 		expect(searchInput(o.container)).toBeNull();
+    > 1081 | 		expect(document.activeElement).toBe(addButton(o.container));
+           | 		                               ^
+      1082 | 		expect(onClose).not.toHaveBeenCalled(); // the search first, the window second (SC-431)
+      1083 | 	});
+      1084 |
+
+      at Object.<anonymous> (test/dom/views/conditions-modal-matrix.test.ts:1081:34)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 366 passed, 367 total
+Snapshots:   0 total
+Time:        4.461 s
+Ran all test suites matching test/dom/views/conditions-modal-matrix.test.ts.
