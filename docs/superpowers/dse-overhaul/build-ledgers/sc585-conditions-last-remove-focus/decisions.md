@@ -42,3 +42,4 @@ No Scott ruling on the thread (0 comments at start). Severity LOW (accessibility
 - r4 scoped re-review of the r3 delta → r2 reviewer resumed.
 - r4 scoped re-review (2026-11-13): LAND-READY. INFO-5 (SC-585 bullet sits below SC-612's in `## Unreleased`) → **drop**: harmless ordering, no reader impact; not worth a round.
 - LAND-READY (2026-11-13): dse `3a5986d3` on develop `1f1ae442`; superproject `dbd7a210` on workspace main `6630f0e5` (CHANGELOG `99c70cdf` + one pointer bump `dbd7a210`); both bases re-verified current at report time. Reported to dispatcher.
+- DONE (2026-11-13): landed by dispatcher — dse develop `3a5986d3`, workspace main `f159848a` (ledger-preserve commit `22732287`; worktree removed). Linear SC-585 → Done via linear-post.py, state verified.
