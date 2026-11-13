@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the Conditions window can take a color off a condition again (SC-581).**
+  In a condition's editor (the cog), once you picked a color swatch nothing could put the condition back to no color, unlike Icon, Duration and Effect, which each
+  have a reset choice. The Color row now starts with a **Default** button. Press it and the condition's `color` is removed from the note, the row's icon goes back to
+  its plain look, and Default shows as selected, as it also does for a condition that has no color (or one whose color the plugin cannot read). It is a text button,
+  so it can be told apart without relying on color. Pressing the swatch that is already selected still keeps that color.
+
 - **DSE plugin: ability-card crests now draw the site's solid action icons (SC-563).**
   In the Steel look, the shield on an ability card (including the abilities inside a statblock), a trait card or a kit signature card used a thin outline icon, while the site shows a filled glyph. The plugin now
   bundles MCDM's Draw Steel Glyphs font (unmodified, CC BY-SA 4.0) and draws the site's glyph for each action: main action, maneuver, triggered action, move,
