@@ -8,6 +8,14 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: in Live Preview, a half-typed Malice quick-add (amount and label) now survives the initiative tracker's own save (SC-605).**
+  Type an amount and a label, then press Advance round, the Malice - / + stepper, or any other tracker action that saves, and in Live
+  Preview both boxes used to keep your text for a moment and then empty about half a second later when the note was written. They now
+  keep it, with the caret where it was if you were still in one of them. Only a successful Add (the button or Enter) empties them, and what
+  you have typed is never written to the note. A mouse click still never pulls focus into the tracker. An edit made to the note from outside
+  starts the boxes empty as before. Not covered: another copy of the same tracker (an identical twin block, or the same note open in a
+  second pane) still loses its own draft when this one saves (SC-620). Reading view and the sidebar tracker are unchanged.
+
 - **DSE plugin: initiative tracker: hand-editing a creature's `amount` now keeps the existing creatures (SC-600).**
   Change `amount: 3` to `amount: 4` in an encounter that is already running and the tracker used to throw away every creature of that
   type: conditions gone, stamina back to full. Now the creatures you already have keep their conditions and stamina. New ones are added
@@ -22,8 +30,7 @@ go under an *Internal* sub-heading.
 - **DSE plugin: in Live Preview, keyboard focus now stays on the button you pressed when the element saves and Obsidian redraws it (SC-602).**
   Press Enter on a counter's + (or Advance round, Make captain, Catch Breath, and so on) and the element saves; before, focus fell to the page
   about half a second later. Focus now stays on the pressed button, or on the control that replaced it (else on the element itself), with the keyboard ring
-  when you were using the keyboard. This is done once for every element, not per element. A mouse click still never pulls focus into an element. Reading view is unchanged. Not covered: the half-typed Malice quick-add draft is still lost when the
-  tracker saves (SC-605), and the Conditions window still closes when a write lands (SC-384).
+  when you were using the keyboard. This is done once for every element, not per element. A mouse click still never pulls focus into an element. Reading view is unchanged. Not covered: the Conditions window still closes when a write lands (SC-384).
 
 - **DSE plugin: a hand-written condition key in capitals, such as `key: Dazed`, is now the standard condition (SC-583).**
   Condition keys used to match only in lowercase, so `Dazed` showed as a custom condition, and picking Dazed in the Conditions
@@ -117,8 +124,8 @@ go under an *Internal* sub-heading.
   Type an amount and a label, then press Advance round (or Make/Relieve captain, Reset turns, Reset encounter, or any other
   action that rebuilds the whole tracker), and both boxes used to come back empty. They now keep what you typed, with the caret
   where it was if you were still in one of them, and the sidebar tracker keeps your place in a box when the note changes from
-  outside. Only a successful Add (the button or Enter) empties them, and what you have typed is never written to the note. In
-  Live Preview the boxes are still emptied when the note saves a moment later (SC-605).
+  outside. Only a successful Add (the button or Enter) empties them, and what you have typed is never written to the note.
+  Since SC-605 this holds in Live Preview too.
 
 - **DSE plugin: keyboard focus stays in the initiative tracker after Advance round, Make/Relieve captain, Reset turns, Reset encounter and the Malice quick-add, in Reading view (SC-588).**
   Each of these rebuilds the whole tracker, and focus used to fall to the top of the page, so a keyboard user had to Tab back in
