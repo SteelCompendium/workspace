@@ -8,6 +8,21 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: a Montage reads a number or true/false as its title, and a number typed in quotes as a number (SC-628).**
+  `title: 2024` or `title: true` used to turn the whole card into "Montage Test tracker: failed to render". It is now
+  shown as the text "2024" or "true". `rounds: "3"` used to make Add a round write `rounds: "31"` and draw 31 columns,
+  and `current_round: "1"` made End round write `"11"`. A number typed in quotes in any of `rounds`, `success_limit`,
+  `failure_limit`, `successes`, `failures` and `current_round` is now read as that number, so Add a round gives 4 and
+  End round gives 2. A value Montage does not change is written back as you typed it (`title: 2024` stays `title: 2024`,
+  `current_round: "1"` stays `"1"` after Add a hero); a value it changes is written as a plain number. A value in those
+  six keys that is not a number (`banana`, `true`, a list) is read as the key's default (2 rounds, no limit, 0 tallies,
+  round 1) and kept as typed until Montage changes it. A map or list as the title shows a plain error card naming
+  `title` and writes nothing.
+  The same goes for `description:`: `description: 5` is shown as "5" and kept as `5` (it used to be deleted by the next
+  write), and a map or list there shows a plain error card naming `description`. A block whose whole body is text,
+  a number or a list (for example just `hello`) used to be replaced by `rounds: 3` on the next write; it now shows a
+  plain error card ("the block must be a map of keys") and writes nothing. An empty block still draws a new Montage.
+
 - **DSE plugin: in a Montage, Add a hero refuses a name already on the board (SC-627).**
   Adding "Kira" to a board that already had Kira used to write a second Kira. The board then showed two Kira rows
   that mirrored each other: a logged action or a quick Success on either row filled both, and the second row could
