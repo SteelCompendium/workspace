@@ -1,0 +1,7 @@
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc621-r1-reviewerA
+P=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc621-part-pin-one-sided-edit/sc621-r1-proto-ruleP-rebase.diff.txt
+bash $S/run-measure.sh M1 sweep $S/mutant-M1-no-twin-guard.diff
+bash $S/run-measure.sh M2 sweep $S/mutant-M2-twin-drawn-only.diff
+bash $S/run-measure.sh base fuzz - 4,5,6 1000
+bash $S/run-measure.sh proto fuzz $P 4,5,6 1000
+echo ALL-DONE

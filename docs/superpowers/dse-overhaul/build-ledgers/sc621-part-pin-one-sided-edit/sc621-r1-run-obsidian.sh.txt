@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# run-obsidian.sh <tree> <log> [cells]: run the P621 harness copy in a scratch tree (already built).
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc621-r1-reviewerA
+T="$1"
+case "$T" in "$S"/*) ;; *) echo "not a scratch tree: $T"; exit 9;; esac
+cd "$T" || exit 9
+python3 -I "$S/make-scratch.py" "$T" > "$2" 2>&1 || exit 9
+t0=$(date +%s)
+echo "tree $T load $(cat /proc/loadavg)" >> "$2"
+sha256sum "$T/main.js" >> "$2"
+P621_CELLS="$3" node visual-harness/obsidian-lifecycle-p621.mjs --only=P621 >> "$2" 2>&1
+echo "lc_rc=$? wall=$(( $(date +%s) - t0 ))s" >> "$2"

@@ -1,0 +1,63 @@
+== /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc621-r1-reviewerA/meas-base-fuzz-s456.jsonl: cells 12084  outcomes {'A': 8668, 'refused': 2940, 'OTHER': 476}
+   checks {'WRITE-IN-AMBIGUOUS': 56, 'OTHER-amb': 26, 'refused-unamb-headmap-agrees': 666, 'OTHER-unamb-residual': 450, 'refused-unamb': 60}
+== /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc621-r1-reviewerA/meas-proto-fuzz-s456.jsonl: cells 12084  outcomes {'A': 8638, 'refused': 2996, 'OTHER': 450}
+   checks {'refused-unamb-headmap-agrees': 666, 'OTHER-unamb-residual': 450, 'refused-unamb': 60}
+   flips base->proto {'A->A': 8638, 'A->refused': 30, 'OTHER->OTHER': 450, 'OTHER->refused': 26, 'refused->refused': 2940}
+   OTHER->refused: {'amb/twinned': 26}
+      fuzz4-16 ops3 Note#Tracker embed/rv card + redrawn T1 opts=[6, 'deleted'] pA=None head=6
+      fuzz4-16 ops3 Note#Tracker embed/rv form + redrawn T1 opts=[6, 'deleted'] pA=None head=6
+      fuzz4-38 ops3 Note#Tracker embed/rv card + redrawn T1 opts=[6, 'deleted'] pA=None head=6
+      fuzz4-38 ops3 Note#Tracker embed/rv form + redrawn T1 opts=[6, 'deleted'] pA=None head=6
+      fuzz4-64 ops3 Note#Tracker embed/rv card + redrawn T1 opts=[6, 'deleted'] pA=None head=6
+      fuzz4-64 ops3 Note#Tracker embed/rv form + redrawn T1 opts=[6, 'deleted'] pA=None head=6
+      fuzz4-330 ops3 Note#Other embed/rv card + redrawn T1 opts=[6, 'deleted'] pA=None head=6
+      fuzz4-330 ops3 Note#Other embed/rv form + redrawn T1 opts=[6, 'deleted'] pA=None head=6
+      fuzz4-680 ops3 Note#Tracker embed/rv card + redrawn T1 opts=[6, 'deleted'] pA=None head=6
+      fuzz4-680 ops3 Note#Tracker embed/rv form + redrawn T1 opts=[6, 'deleted'] pA=None head=6
+      fuzz4-884 ops2 Note#Third hover/rv card + redrawn T1 opts=[6, 'deleted'] pA=None head=6
+      fuzz4-884 ops2 Note#Third hover/rv form + redrawn T1 opts=[6, 'deleted'] pA=None head=6
+      fuzz6-163 ops2 Note#^m3 hover/rv card no + T1 opts=[15, 'deleted'] pA=None head=15
+      fuzz6-163 ops2 Note#^m3 hover/rv card + redrawn T1 opts=[15, 'deleted'] pA=None head=15
+      fuzz6-163 ops2 Note#^m3 hover/rv form no + T1 opts=[15, 'deleted'] pA=None head=15
+      fuzz6-163 ops2 Note#^m3 hover/rv form + redrawn T1 opts=[15, 'deleted'] pA=None head=15
+      fuzz6-298 ops3 Note#Third hover/rv card + redrawn T1 opts=[6, 'deleted'] pA=None head=6
+      fuzz6-298 ops3 Note#Third hover/rv form + redrawn T1 opts=[6, 'deleted'] pA=None head=6
+      fuzz6-388 ops3 Note#Third embed/rv card no + T1 opts=[6, 'deleted'] pA=None head=6
+      fuzz6-388 ops3 Note#Third embed/rv card + redrawn T1 opts=[6, 'deleted'] pA=None head=6
+      fuzz6-388 ops3 Note#Third embed/rv form no + T1 opts=[6, 'deleted'] pA=None head=6
+      fuzz6-388 ops3 Note#Third embed/rv form + redrawn T1 opts=[6, 'deleted'] pA=None head=6
+      fuzz6-610 ops3 Note#Tracker hover/rv card + redrawn T1 opts=[6, 'deleted'] pA=None head=6
+      fuzz6-610 ops3 Note#Tracker hover/rv form + redrawn T1 opts=[6, 'deleted'] pA=None head=6
+      fuzz6-991 ops2 Note#Other hover/rv card + redrawn T1 opts=[13, 'deleted'] pA=None head=13
+      fuzz6-991 ops2 Note#Other hover/rv form + redrawn T1 opts=[13, 'deleted'] pA=None head=13
+   A->refused: {'amb/twinned': 30}
+      fuzz4-53 ops2 Note#^m0 embed/rv card no + T1 opts=[6, 11] pA=11 head=11
+      fuzz4-53 ops2 Note#^m0 embed/rv card + redrawn T1 opts=[6, 11] pA=11 head=11
+      fuzz4-53 ops2 Note#^m0 embed/rv form no + T1 opts=[6, 11] pA=11 head=11
+      fuzz4-53 ops2 Note#^m0 embed/rv form + redrawn T1 opts=[6, 11] pA=11 head=11
+      fuzz4-434 ops2 Note#Tracker embed/rv card no + T1 opts=[6, 13] pA=6 head=6
+      fuzz4-434 ops2 Note#Tracker embed/rv card + redrawn T1 opts=[6, 13] pA=6 head=6
+      fuzz4-434 ops2 Note#Tracker embed/rv form no + T1 opts=[6, 13] pA=6 head=6
+      fuzz4-434 ops2 Note#Tracker embed/rv form + redrawn T1 opts=[6, 13] pA=6 head=6
+      fuzz4-639 ops3 Note#Tracker embed/rv card + redrawn T1 opts=[13, 'deleted'] pA=13 head=13
+      fuzz4-639 ops3 Note#Tracker embed/rv form + redrawn T1 opts=[13, 'deleted'] pA=13 head=13
+      fuzz5-98 ops1 Note#^m2 embed/rv card no + T1 opts=[8, 'deleted'] pA=8 head=8
+      fuzz5-98 ops1 Note#^m2 embed/rv card + redrawn T1 opts=[8, 'deleted'] pA=8 head=8
+      fuzz5-98 ops1 Note#^m2 embed/rv form no + T1 opts=[8, 'deleted'] pA=8 head=8
+      fuzz5-98 ops1 Note#^m2 embed/rv form + redrawn T1 opts=[8, 'deleted'] pA=8 head=8
+      fuzz5-163 ops1 Note#^m1 hover/rv card no + T1 opts=[3, 'deleted'] pA=3 head=3
+      fuzz5-163 ops1 Note#^m1 hover/rv card + redrawn T1 opts=[3, 'deleted'] pA=3 head=3
+      fuzz5-163 ops1 Note#^m1 hover/rv form no + T1 opts=[3, 'deleted'] pA=3 head=3
+      fuzz5-163 ops1 Note#^m1 hover/rv form + redrawn T1 opts=[3, 'deleted'] pA=3 head=3
+      fuzz5-708 ops3 Note#^m1 hover/rv card no + T1 opts=[3, 'deleted'] pA=3 head=3
+      fuzz5-708 ops3 Note#^m1 hover/rv card + redrawn T1 opts=[3, 'deleted'] pA=3 head=3
+      fuzz5-708 ops3 Note#^m1 hover/rv form no + T1 opts=[3, 'deleted'] pA=3 head=3
+      fuzz5-708 ops3 Note#^m1 hover/rv form + redrawn T1 opts=[3, 'deleted'] pA=3 head=3
+      fuzz6-269 ops2 Note#^m2 hover/rv card no + T1 opts=[11, 'deleted'] pA=11 head=11
+      fuzz6-269 ops2 Note#^m2 hover/rv card + redrawn T1 opts=[11, 'deleted'] pA=11 head=11
+      fuzz6-269 ops2 Note#^m2 hover/rv form no + T1 opts=[11, 'deleted'] pA=11 head=11
+      fuzz6-269 ops2 Note#^m2 hover/rv form + redrawn T1 opts=[11, 'deleted'] pA=11 head=11
+      fuzz6-623 ops2 Note#^m0 hover/rv card no + T1 opts=[4, 9] pA=9 head=9
+      fuzz6-623 ops2 Note#^m0 hover/rv card + redrawn T1 opts=[4, 9] pA=9 head=9
+      fuzz6-623 ops2 Note#^m0 hover/rv form no + T1 opts=[4, 9] pA=9 head=9
+      fuzz6-623 ops2 Note#^m0 hover/rv form + redrawn T1 opts=[4, 9] pA=9 head=9

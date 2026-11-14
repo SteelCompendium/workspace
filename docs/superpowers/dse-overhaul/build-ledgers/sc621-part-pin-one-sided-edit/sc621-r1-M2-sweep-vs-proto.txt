@@ -1,0 +1,18 @@
+== /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc621-r1-reviewerA/meas-proto-sweep.jsonl: cells 21060  outcomes {'refused': 9552, 'A': 10380, 'OTHER': 1128}
+   checks {'refused-unamb-headmap-agrees': 960, 'OTHER-unamb-residual': 1128, 'refused-unamb': 72}
+== /tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc621-r1-reviewerA/meas-M2-sweep.jsonl: cells 21060  outcomes {'refused': 9540, 'A': 10392, 'OTHER': 1128}
+   checks {'refused-unamb-headmap-agrees': 960, 'OTHER-unamb-residual': 1128, 'refused-unamb': 72, 'WRITE-IN-AMBIGUOUS': 12}
+   flips base->proto {'A->A': 10380, 'OTHER->OTHER': 1128, 'refused->A': 12, 'refused->refused': 9540}
+   refused->A: {'amb/twinned': 12}
+      blk-uniq ins-twin-above-adj+top Note#^p hover/rv card no + T1 opts=[9, 14] pA=14 head=14
+      blk-uniq ins-twin-above-adj+top Note#^p hover/rv card + redrawn T1 opts=[9, 14] pA=14 head=14
+      blk-uniq ins-twin-above-adj+top Note#^p hover/rv form no + T1 opts=[9, 14] pA=14 head=14
+      blk-uniq ins-twin-above-adj+top Note#^p hover/rv form + redrawn T1 opts=[9, 14] pA=14 head=14
+      blk-uniq ins-twin-above-adj+top Note#^p embed/rv card no + T1 opts=[9, 14] pA=14 head=14
+      blk-uniq ins-twin-above-adj+top Note#^p embed/rv card + redrawn T1 opts=[9, 14] pA=14 head=14
+      blk-uniq ins-twin-above-adj+top Note#^p embed/rv form no + T1 opts=[9, 14] pA=14 head=14
+      blk-uniq ins-twin-above-adj+top Note#^p embed/rv form + redrawn T1 opts=[9, 14] pA=14 head=14
+      blk-uniq ins-twin-above-adj+top Note#^p embed/lp card no + T1 opts=[9, 14] pA=14 head=14
+      blk-uniq ins-twin-above-adj+top Note#^p embed/lp card + redrawn T1 opts=[9, 14] pA=14 head=14
+      blk-uniq ins-twin-above-adj+top Note#^p embed/lp form no + T1 opts=[9, 14] pA=14 head=14
+      blk-uniq ins-twin-above-adj+top Note#^p embed/lp form + redrawn T1 opts=[9, 14] pA=14 head=14

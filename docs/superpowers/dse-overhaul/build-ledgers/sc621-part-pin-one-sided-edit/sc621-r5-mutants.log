@@ -1,0 +1,16 @@
+mutant orig
+== orig rc=0 wall=26s Tests:       35 passed, 35 total
+mutant S1-settle-noop
+== S1-settle-noop rc=0 wall=13s Tests:       35 passed, 35 total
+mutant S2-settle-one-hop
+== S2-settle-one-hop rc=0 wall=13s Tests:       35 passed, 35 total
+mutant H1-helper-counter-off
+== H1-helper-counter-off rc=0 wall=19s Tests:       35 passed, 35 total
+mutant M0-fix-reverted
+== M0-fix-reverted rc=1 wall=22s Tests:       25 failed, 10 passed, 35 total
+mutant M0+S1
+== M0+S1 rc=1 wall=12s Tests:       27 failed, 8 passed, 35 total
+mutant L1-no-cache-restore
+== L1-no-cache-restore rc=0 wall=21s Tests:       35 passed, 35 total
+mutant L2-restoreAllMocks
+== L2-restoreAllMocks rc=0 wall=18s Tests:       35 passed, 35 total

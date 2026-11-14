@@ -1,0 +1,154 @@
+
+// ---- SC-621 r1 probe fixtures and cell (scratch copy only) ----
+const P621_C5 = COUNTER(5, 'Twin');
+const P621_C6 = COUNTER(6, 'Twin');
+const P621_NOTE = {
+	// two sections, different names, identical counters (a heading link names `Tracker`)
+	named: (id) => `# p621 ${id}\n\nTOP\n\n## Tracker\n\n${P621_C5}\n\n## Other\n\n${P621_C5}\n\n## After\n\nEND\n`,
+	// two adjacent `## Tracker` sections; the lower already reads like the upper will after its +
+	twin: (id) => `# p621 ${id}\n\nTOP\n\n## Tracker\n\n${P621_C5}\n\n## Tracker\n\n${P621_C6}\n\n## After\n\nEND\n`,
+	// two identical counters separated by a blank line, `^p` under the LOWER one (a block link names it)
+	low: (id) => `# p621 ${id}\n\nTOP\n\n${P621_C5}\n\n${P621_C5}\n^p\n\nEND\n`,
+};
+const P621_RX_SEC = (name) => String.raw`new RegExp('## ${name}\\n\\n\x60\x60\x60ds-counter[\\s\\S]*?\x60\x60\x60\\n\\n')`;
+const P621_EDITS = {
+	// the Tracker section deleted, `## Other` renamed `## Tracker`, END edited (one write)
+	'del-P-rename+end': String.raw`(c) => c.replace(${P621_RX_SEC('Tracker')}, '').replace('## Other\n', '## Tracker\n').replace('\nEND\n', '\nEND edited\n')`,
+	'del-P-rename+top': String.raw`(c) => c.replace(${P621_RX_SEC('Tracker')}, '').replace('## Other\n', '## Tracker\n').replace('\nTOP\n', '\nTOP edited\n')`,
+	// the FIRST of two adjacent `## Tracker` sections deleted, END edited
+	'del-first+end': String.raw`(c) => c.replace(${P621_RX_SEC('Tracker')}, '').replace('\nEND\n', '\nEND edited\n')`,
+	'del-first+top': String.raw`(c) => c.replace(${P621_RX_SEC('Tracker')}, '').replace('\nTOP\n', '\nTOP edited\n')`,
+	// the LOWER counter (the one `^p` names) deleted with the blank line above it, its `^p` line left (now under the upper), TOP edited
+	'del-low-keepmark+top': `(c) => c.replace(${JSON.stringify(`${P621_C5}\n\n${P621_C5}\n^p`)}, ${JSON.stringify(`${P621_C5}\n^p`)}).replace('\\nTOP\\n', '\\nTOP edited\\n')`,
+	'del-low-keepmark+end': `(c) => c.replace(${JSON.stringify(`${P621_C5}\n\n${P621_C5}\n^p`)}, ${JSON.stringify(`${P621_C5}\n^p`)}).replace('\\nEND\\n', '\\nEND edited\\n')`,
+	top: String.raw`(c) => c.replace('\nTOP\n', '\nTOP edited\n')`,
+	none: null,
+};
+const P621_CELLS = [];
+for (const [shape, note, link, plus, edits] of [
+	['A', 'named', '#Tracker', false, ['del-P-rename+end', 'del-P-rename+top', 'top', 'none']],
+	['B', 'twin', '#Tracker', true, ['del-first+end', 'del-first+top', 'top', 'none']],
+	['C', 'low', '#^p', false, ['del-low-keepmark+top', 'del-low-keepmark+end', 'top', 'none']],
+])
+	for (const kind of ['hover', 'embed'])
+		for (const mode of ['rv', 'lp'])
+			for (const how of ['card', 'form'])
+				for (const edit of edits) {
+					if (edit !== edits[0] && (mode === 'lp' || how === 'form')) continue; // the ticket edit (first) everywhere; the variants and controls: RV card only
+					const id = `${shape}-${kind}-${mode}-${how}-${edit}`.replace(/[^\w-]/g, '_');
+					P621_CELLS.push({ id, shape, kind, mode, how, edit, plus });
+					FIXTURES[`Lifecycle/p621-${id}-src.md`] = P621_NOTE[note](id);
+					FIXTURES[`Lifecycle/p621-${id}-host.md`] = kind === 'embed' ? `# p621 ${id} host\n\n![[p621-${id}-src${link}]]\n\nafter\n` : `# p621 ${id} host\n\nsee [[p621-${id}-src${link}]] here\n\nfiller\n`;
+				}
+
+async function p621Cell(t, { id, kind, mode, how, edit, plus }) {
+	const K = gs83Kit(t);
+	const J = JSON.stringify;
+	const SRC = `Lifecycle/p621-${id}-src.md`;
+	const HOST = `Lifecycle/p621-${id}-host.md`;
+	const rec = { id, kind, mode, how, edit, plus };
+	const valuesOf = () => (t.read(SRC).match(/^[> ]*current_value: (\d+)$/gm) ?? []).map((x) => Number(x.replace(/^[> ]*current_value: /, '')));
+	const namesOf = () => (t.read(SRC).match(/^[> ]*name: (\w+)$/gm) ?? []).map((x) => x.replace(/^[> ]*name: /, ''));
+	const SIG = `(() => { const f = app.vault.getAbstractFileByPath(${J(SRC)}); const m = app.metadataCache.getFileCache(f) ?? {}; return (m.headings ?? []).map((h) => h.heading + '@' + h.position.start.line).join(',') + '|' + Object.entries(m.blocks ?? {}).map(([k, v]) => k + '@' + v.position.start.line).join(',') + '|' + (m.sections ?? []).length; })()`;
+	const inPart = kind === 'hover' ? `e.root.closest('.hover-popover')` : `e.root.closest('.internal-embed, .markdown-embed')`;
+	const ES = `app.plugins.plugins['draw-steel-elements'].viewRegistry.liveEntries().filter((e) => e.host.sourcePath === ${J(SRC)} && e.root.isConnected && ${inPart})`;
+	const BTN = `(${ES})[0].root.querySelector('button[aria-label^="Increase"]')`;
+	const PENCIL = `((${ES})[0].root.querySelector('.dse-chrome button[data-dse-chrome-item="edit"], button[aria-label^="Edit "]'))`;
+	const FORM = `document.querySelector('.modal-container .dse-modal')`;
+	try {
+		await t.reset(SRC);
+		await t.reset(HOST);
+		rec.fixture = t.read(SRC);
+		if (kind === 'hover') {
+			const link = await K.openHost(HOST, mode);
+			rec.hover = await K.hover(link, SRC);
+			await t.sleep(400);
+			await K.moveTo(`(${ES})[0].root`);
+			await t.sleep(300);
+		} else {
+			const st = mode === 'rv' ? { mode: 'preview' } : { mode: 'source', source: false };
+			await t.ev(`(async () => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); const leaf = app.workspace.getLeavesOfType('markdown')[0] ?? app.workspace.getMostRecentLeaf(); await leaf.setViewState({ type: 'markdown', state: { file: 'Lifecycle/other.md', mode: 'preview' }, active: true }); await leaf.setViewState({ type: 'markdown', state: { file: ${J(HOST)}, ...${J(st)} }, active: true }); return true; })()`);
+			if (mode === 'lp') await t.ev(`(() => { app.workspace.getMostRecentLeaf().view.editor.setCursor({ line: 0, ch: 0 }); return true; })()`);
+			await t.waitFor(`(${ES}).length === 1`, `${id}: the embedded card is drawn`, 15000);
+			await t.sleep(600);
+		}
+		rec.cards = await t.ev(`(${ES}).length`);
+		rec.mountValues = valuesOf();
+		if (plus) {
+			// the card's own +, a real click; Obsidian redraws the part (value 5 -> 6) and the view is adopted into it
+			const before = t.read(SRC);
+			await t.ev(`(() => { window.__p621host = (${ES})[0].host; return true; })()`);
+			await K.click(BTN);
+			const t0 = Date.now();
+			while (Date.now() - t0 < 3500 && t.read(SRC) === before) await t.sleep(50);
+			await t.sleep(1500);
+			rec.afterPlus = valuesOf();
+			rec.cardsAfterPlus = await t.ev(`(${ES}).length`);
+			rec.sameHostAfterPlus = await t.ev(`(${ES})[0]?.host === window.__p621host`);
+			if (kind === 'hover') {
+				await K.moveTo(`(${ES})[0].root`);
+				await t.sleep(300);
+			}
+		}
+		rec.before = t.read(SRC);
+		const mk = await t.mark();
+		const OUTSIDE = `await app.vault.process(app.vault.getAbstractFileByPath(${J(SRC)}), ${P621_EDITS[edit] ?? '(c) => c'});`;
+		const target = how === 'card' ? BTN : PENCIL;
+		if (how === 'form') await t.waitFor(`!!${PENCIL}`, `${id}: the pencil is drawn`, 8000);
+		if (edit === 'none') {
+			if (how === 'card') await K.click(BTN);
+			else await t.ev(`(${PENCIL}).click()`);
+			rec.run = { clicked: true, real: how === 'card' };
+		} else {
+			rec.run = await t.ev(`(async () => {
+  const sig = () => ${SIG};
+  const b = ${target}; const before = sig(); const t0 = performance.now();
+  ${OUTSIDE}
+  let tCache = null, clicked = false;
+  while (performance.now() - t0 < 1500 && !clicked) {
+    if (tCache === null && sig() !== before) tCache = performance.now() - t0;
+    if ((tCache !== null || performance.now() - t0 > 250) && b.isConnected) { b.click(); clicked = true; }
+    if (!b.isConnected) break;
+    await new Promise((r) => setTimeout(r, 0));
+  }
+  return { tCache: tCache === null ? null : Math.round(tCache), clicked, oldCardGone: !b.isConnected };
+})()`);
+		}
+		rec.edited = edit === 'none' ? rec.before : t.read(SRC);
+		if (how === 'card') {
+			const t0 = Date.now();
+			while (Date.now() - t0 < 3500 && t.read(SRC) === rec.edited && !(await t.noticesSince(mk)).length) await t.sleep(50);
+			await t.sleep(1200);
+		} else {
+			await t.sleep(400);
+			rec.formOpenBeforeSave = await t.ev(`!!${FORM}`);
+			if (rec.formOpenBeforeSave) {
+				const SAVE = `Array.from(document.querySelectorAll('.modal-container .dse-modal button')).find((b) => b.getAttribute('aria-label') === 'Save')`;
+				rec.renamed = await t.ev(`(() => { const ta = ${FORM}.querySelector('textarea.dse-form__raw'); if (!ta) return false; ta.value = ta.value.replace('name: Twin', 'name: Edited'); ta.dispatchEvent(new Event('input', { bubbles: true })); return true; })()`);
+				await t.waitFor(`!!(${SAVE}) && !(${SAVE}).disabled`, `${id}: Save is enabled`, 5000);
+				await t.ev(`(${SAVE}).click()`);
+				const t0 = Date.now();
+				while (Date.now() - t0 < 3000 && !t.read(SRC).includes('name: Edited') && !(await t.noticesSince(mk)).length) await t.sleep(50);
+				await t.sleep(400);
+				rec.formOpenAfterSave = await t.ev(`!!${FORM}`);
+			}
+		}
+		rec.note = t.read(SRC);
+		rec.values = valuesOf();
+		rec.names = namesOf();
+		rec.notices = (await t.noticesSince(mk)).filter((x) => /Draw Steel Elements/.test(x));
+	} catch (e) {
+		rec.error = e.message;
+	} finally {
+		for (let i = 0; i < 5 && (await t.ev(`!!document.querySelector('.modal-container')`)); i++) {
+			await t.ev(`(() => { const b = Array.from(document.querySelectorAll('.modal-container .dse-modal button')).find((x) => x.getAttribute('aria-label') === 'Cancel'); if (b) b.click(); return true; })()`);
+			await t.sleep(200);
+			if (await t.ev(`!!document.querySelector('.modal-container')`)) await t.key('Escape', 'Escape', 27).catch(() => {});
+			await t.sleep(200);
+		}
+		rec.modalsLeft = await t.ev(`document.querySelectorAll('.modal-container').length`);
+		await K.cleanup();
+		await t.ev(`(() => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); return true; })()`);
+	}
+	return rec;
+}

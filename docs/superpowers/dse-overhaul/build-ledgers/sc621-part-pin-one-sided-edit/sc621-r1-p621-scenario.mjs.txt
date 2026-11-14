@@ -1,0 +1,32 @@
+	{
+		// SC-621 r1 reviewer-A probe (scratch harness copy only; never committed). A counter drawn in a hover preview / an embed of PART of a note; one outside
+		// write (app.vault.process) deletes the counter the card was drawn from AND edits a line on one side of the pair, then a scripted + (or the pencil + Save)
+		// on the OLD card in the same page task once the metadata cache caught up (as G-S99). One P621-REC JSON line per cell; judged offline.
+		id: 'P621',
+		async run(t) {
+			const J = JSON.stringify;
+			const prefs = `app.plugins.plugins['draw-steel-elements'].frameworkV2.services.prefs`;
+			await t.ev(`(() => { if (!document.getElementById('lc-p621-notice')) { const st = document.createElement('style'); st.id = 'lc-p621-notice'; st.textContent = '.notice-container { display: none !important; }'; document.head.appendChild(st); } return true; })()`);
+			await t.ev(`${prefs}.set('authoringControls', true)`);
+			const ONLY = (process.env.P621_CELLS ?? '').split(',').filter(Boolean);
+			const cells = P621_CELLS.filter((c) => ONLY.length === 0 || ONLY.includes(c.id));
+			const outs = [];
+			try {
+				for (const c of cells) {
+					const r = await p621Cell(t, c);
+					console.log(`P621-REC ${J(r)}`);
+					outs.push(`${c.id}:${r.error ? 'ERR' : r.note === r.edited ? 'refused' : 'written'}`);
+				}
+			} finally {
+				await t.ev(`${prefs}.set('authoringControls', false)`);
+				await t.ev(`document.getElementById('lc-p621-notice')?.remove()`);
+				await t.ev(`(() => { app.workspace.getLeavesOfType('markdown').slice(1).forEach((l) => l.detach()); return true; })()`);
+				for (const c of cells) {
+					await t.reset(`Lifecycle/p621-${c.id}-src.md`);
+					await t.reset(`Lifecycle/p621-${c.id}-host.md`);
+				}
+				await t.open('Lifecycle/other.md');
+			}
+			return outs.join(' ');
+		},
+	},

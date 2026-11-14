@@ -1,0 +1,58 @@
+
+// ==== SC-621 r3 reviewer C: CRLF cells (SC-619 path through cardLinkLine) ====
+const droppedR = [droppedWriteMessage('Note')];
+const valuesR = (text: string): number[] => [...text.matchAll(/current_value: (\d+)/g)].map((m) => Number(m[1]));
+const namesR = (text: string): string[] => [...text.matchAll(/name: (\w+)/g)].map((m) => m[1]);
+/** TWIN(): '# N','','TOP','','## Tracker','',C(6..9),'','## Other','',C(13..16),'','## After','','END','' */
+const delTrackerRenameOther = (edit: (l: string) => string) => (r: string[]) => [...r.slice(0, 4), ...r.slice(11)].map((l) => (l === '## Other' ? '## Tracker' : edit(l)));
+const endEd = (l: string) => (l === 'END' ? 'END edited' : l);
+const topEd = (l: string) => (l === 'TOP' ? 'TOP edited' : l);
+const LOWR = ['# N', '', 'TOP', '', '## Tracker', '', ...CTR(5), '', ...CTR(5), '^p', '', 'END', ''];
+const delLowerKeepMark = (edit: (l: string) => string) => (r: string[]) => [...r.slice(0, 10), ...r.slice(15)].map(edit);
+
+describe('r3 CRLF probe', () => {
+	beforeEach(() => {
+		resetDroppedWriteNotices();
+		Notice.notices.length = 0;
+		jest.spyOn(console, 'warn').mockImplementation(() => {});
+	});
+	afterEach(() => {
+		jest.restoreAllMocks();
+		document.body.innerHTML = '';
+	});
+	const out: string[] = [];
+	afterAll(() => {
+		// eslint-disable-next-line no-console
+		console.log('R3CRLF\n' + out.join('\n'));
+	});
+	const rec = (label: string, r: { after: string; now: string; notices: string[] }) => {
+		const o = r.after === r.now ? (r.notices.length === 1 && r.notices[0] === droppedR[0] ? 'refused+1Notice' : `refused notices=${r.notices.length}`) : `WROTE values=${JSON.stringify(valuesR(r.after))} names=${JSON.stringify(namesR(r.after))} notices=${r.notices.length} crlfKept=${!/[^\r]\n/.test(r.after)}`;
+		out.push(`${label}: ${o}`);
+		return o;
+	};
+	for (const eol of ['\n', '\r\n'] as Eol[]) {
+		const E = eol === '\n' ? 'LF' : 'CRLF';
+		for (const click of ['card', 'form'] as const) {
+			test(`${E} A heading hover ${click}`, async () => {
+				const o = rec(`${E} A heading hover ${click} del-Tracker+rename-Other+END`, await run({ eol, drawn: TWIN(), now: delTrackerRenameOther(endEd)(TWIN()), link: 'Note#Tracker', heading: '## Tracker', click }));
+				expect(o).toBe('refused+1Notice');
+			});
+			test(`${E} A heading embed ${click}`, async () => {
+				const o = rec(`${E} A heading embed ${click} del-Tracker+rename-Other+END`, await run({ eol, drawn: TWIN(), now: delTrackerRenameOther(endEd)(TWIN()), link: 'Note#Tracker', heading: '## Tracker', shape: 'embed', click }));
+				expect(o).toBe('refused+1Notice');
+			});
+			test(`${E} control heading hover ${click} TOP edited`, async () => {
+				const o = rec(`${E} control heading hover ${click} TOP`, await run({ eol, drawn: TWIN(), now: TWIN().map(topEd), link: 'Note#Tracker', heading: '## Tracker', click }));
+				expect(o.startsWith('WROTE')).toBe(true);
+			});
+			test(`${E} C block hover ${click}`, async () => {
+				const o = rec(`${E} C block hover ${click} del-lower-keepmark+TOP`, await run({ eol, drawn: LOWR, now: delLowerKeepMark(topEd)(LOWR), link: 'Note#^p', heading: '## Tracker', click }));
+				expect(o).toBe('refused+1Notice');
+			});
+			test(`${E} control block hover ${click} TOP edited`, async () => {
+				const o = rec(`${E} control block hover ${click} TOP`, await run({ eol, drawn: LOWR, now: LOWR.map(topEd), link: 'Note#^p', heading: '## Tracker', click }));
+				expect(o.startsWith('WROTE')).toBe(true);
+			});
+		}
+	}
+});

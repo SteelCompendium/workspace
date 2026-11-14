@@ -1,0 +1,15 @@
+#!/usr/bin/env python3
+# make-scratch.py <tree>: copy <tree>/visual-harness/obsidian-lifecycle.mjs to obsidian-lifecycle-p621.mjs (same dir) with the P621 fixtures + cell
+# function and the P621 scenario at the front of SCENARIOS. <tree> is a scratch export in the r1 reviewer-A folder (never the worktree).
+import sys
+R = '/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc621-r1-reviewerA/'
+T = sys.argv[1].rstrip('/') + '/'
+assert T.startswith(R), T
+src = open(T + 'visual-harness/obsidian-lifecycle.mjs').read()
+fx = open(R + 'p621-fixtures.mjs').read()
+scen = open(R + 'p621-scenario.mjs').read()
+anchor = '\nconst SCENARIOS = [\n'
+assert src.count(anchor) == 1
+src = src.replace(anchor, '\n' + fx + anchor + scen)
+open(T + 'visual-harness/obsidian-lifecycle-p621.mjs', 'w').write(src)
+print('ok')

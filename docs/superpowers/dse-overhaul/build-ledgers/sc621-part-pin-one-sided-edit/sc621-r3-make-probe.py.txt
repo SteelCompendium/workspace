@@ -1,0 +1,17 @@
+import sys
+src, tail, out = sys.argv[1], sys.argv[2], sys.argv[3]
+lines = open(src).read().split('\n')
+head = lines[:385]  # infra + sweep layouts/editsFor/COMBOS/sweepCells
+text = '\n'.join(head)
+def rep(a, b, n=1):
+    global text
+    c = text.count(a)
+    assert c == n, (a, c)
+    text = text.replace(a, b)
+rep('async function run(c: Cell): Promise<Rec | null> {', "async function run(c: Cell & { timing?: 'T1' | 'T2' }): Promise<Rec | null> {")
+rep('\toutside(); // the outside write lands before the click, so before the pin is placed', "\tif (c.timing !== 'T2') outside();")
+rep("\tif (c.click === 'card') {\n\t\thost.notePersistIntent();\n\t\tawait settle();\n", "\tif (c.click === 'card') {\n\t\thost.notePersistIntent();\n\t\tawait settle();\n\t\tif (c.timing === 'T2') outside();\n")
+rep("\t\tconst pin = host.pinPosition();\n\t\tawait settle();\n", "\t\tconst pin = host.pinPosition();\n\t\tawait settle();\n\t\tif (c.timing === 'T2') outside();\n")
+text += '\n' + open(tail).read()
+open(out, 'w').write(text)
+print('ok', len(text.split('\n')))

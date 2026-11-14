@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# usage: run-pair.sh <mode> [seeds] [notes] -- base then prototype, sequentially
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc621-r1-reviewerA
+P=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc621-part-pin-one-sided-edit/sc621-r1-proto-ruleP-rebase.diff.txt
+bash $S/run-measure.sh base $1 - ${2:-1} ${3:-300}
+bash $S/run-measure.sh proto $1 $P ${2:-1} ${3:-300}
+echo PAIR-DONE

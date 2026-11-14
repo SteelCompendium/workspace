@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# usage: run-measure.sh <tag> <mode sweep|fuzz> <diff file or -> [seeds] [notes]
+# applies the diff (if any) to the worktree source, copies the measurement harness into the worktree's test dir, runs it,
+# removes the harness by its literal path and restores the source by its literal path.
+set -u
+D=/home/scott/code/steelCompendium/worktrees/sc621-part-pin-one-sided-edit/draw-steel-elements
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc621-r1-reviewerA
+TAG=$1
+export SC621_MODE=$2
+DIFF=$3
+export SC621_SEEDS=${4:-1}
+export SC621_NOTES=${5:-300}
+export SC621_OUT=$S/meas-$TAG-$2.jsonl
+LOG=$S/meas-$TAG-$2.log
+: > $LOG
+if [ "$DIFF" != "-" ]; then git -C $D apply $DIFF >> $LOG 2>&1; echo "apply rc=$?" >> $LOG; fi
+cp $S/sc621-r1-part-sweep.test.ts $D/test/dom/framework/sc621-r1-part-sweep.test.ts
+cd $D
+start=$(date +%s)
+npx jest test/dom/framework/sc621-r1-part-sweep.test.ts >> $LOG 2>&1
+echo "jest rc=$?" >> $LOG
+rm -f /home/scott/code/steelCompendium/worktrees/sc621-part-pin-one-sided-edit/draw-steel-elements/test/dom/framework/sc621-r1-part-sweep.test.ts
+git -C $D checkout -- src/framework/host/ReadingModeBlockHost.ts src/framework/host/lineMap.ts
+echo "status after: [$(git -C $D status --porcelain)]" >> $LOG
+echo "wall=$(( $(date +%s) - start ))s lines=$(wc -l < $SC621_OUT)" >> $LOG
+tail -6 $LOG

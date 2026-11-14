@@ -1,0 +1,96 @@
+
+// ==== SC-621 r3 reviewer C: own cells (not part of the branch) ====
+import * as fs from 'fs';
+const HEADr = [L('# N'), B, L('TOP'), B];
+const PROSE = (n: number, tag: string): Tok[] => Array.from({ length: n }, (_, i) => L(`${tag}${i}`));
+const AFTERr = [L('## After'), B, L('END')];
+const TAILr = [B, L('END')];
+const LAYOUTSr: Layout[] = [
+	{ name: 'blk-quad-lowmark', toks: [...HEADr, C('a'), B, C('b'), B, C('c'), B, C('d', 5, 'p'), ...TAILr], links: [{ link: { kind: 'block', id: 'p' }, P: 'd' }] },
+	{ name: 'blk-triple-topmark', toks: [...HEADr, C('a', 5, 'p'), B, C('b'), B, C('c'), ...TAILr], links: [{ link: { kind: 'block', id: 'p' }, P: 'a' }] },
+	{ name: 'blk-triple-twomarks', toks: [...HEADr, C('a'), B, C('b', 5, 'p'), B, C('c', 5, 'q'), ...TAILr], links: [{ link: { kind: 'block', id: 'p' }, P: 'b' }, { link: { kind: 'block', id: 'q' }, P: 'c' }] },
+	{ name: 'blk-prose-sep', toks: [...HEADr, C('a'), B, L('prose'), B, C('b', 5, 'p'), ...TAILr], links: [{ link: { kind: 'block', id: 'p' }, P: 'b' }] },
+	{ name: 'blk-in-sections', toks: [...HEADr, L('## A'), B, C('a'), B, L('## B'), B, C('b', 5, 'p'), ...TAILr], links: [{ link: { kind: 'block', id: 'p' }, P: 'b' }] },
+	{ name: 'blk-far-prose', toks: [...HEADr, ...PROSE(40, 'x'), B, C('a'), B, C('b', 5, 'p'), B, ...PROSE(40, 'y'), ...TAILr], links: [{ link: { kind: 'block', id: 'p' }, P: 'b' }] },
+	{ name: 'blk-twin-far-apart', toks: [...HEADr, C('a'), B, ...PROSE(30, 'z'), B, C('b', 5, 'p'), ...TAILr], links: [{ link: { kind: 'block', id: 'p' }, P: 'b' }] },
+	{ name: 'sec-quad-named', toks: [...HEADr, S('a', 'Tracker'), S('b', 'Other'), S('c', 'Third'), S('d', 'Fourth'), ...AFTERr], links: [{ link: { kind: 'heading', name: 'Tracker' }, P: 'a' }, { link: { kind: 'heading', name: 'Third' }, P: 'c' }] },
+	{ name: 'sec-named-prose-between', toks: [...HEADr, S('a', 'Tracker'), L('para'), B, S('b', 'Other'), ...AFTERr], links: [{ link: { kind: 'heading', name: 'Tracker' }, P: 'a' }, { link: { kind: 'heading', name: 'Other' }, P: 'b' }] },
+	{ name: 'sec-named-far', toks: [...HEADr, S('a', 'Tracker'), L('## Mid'), B, ...PROSE(30, 'm'), B, S('b', 'Other'), ...AFTERr], links: [{ link: { kind: 'heading', name: 'Tracker' }, P: 'a' }, { link: { kind: 'heading', name: 'Other' }, P: 'b' }] },
+	{ name: 'sec-named-mixed-diff', toks: [...HEADr, S('d', 'Diff', 9), S('a', 'Tracker'), S('b', 'Other'), S('e', 'Diff2', 7), ...AFTERr], links: [{ link: { kind: 'heading', name: 'Tracker' }, P: 'a' }, { link: { kind: 'heading', name: 'Other' }, P: 'b' }] },
+];
+function editsForR(toks: Tok[], P: string): Record<string, (t: Tok[]) => Tok[] | null> {
+	const base = editsFor(toks, P);
+	const ids = toks.filter(isC).map((k) => k.id);
+	const others = ids.filter((x) => x !== P);
+	const e: Record<string, (t: Tok[]) => Tok[] | null> = {};
+	for (const [k, f] of Object.entries(base)) e[k] = f;
+	const far = (n: number) => (t: Tok[] | null) => (t === null ? null : insAt(t, 1, PROSE(n, 'far')));
+	const farEdit = (t: Tok[] | null) => (t === null ? null : t.some((k) => k.t === 'line' && k.s === 'x0') ? t.map((k) => (k.t === 'line' && k.s === 'x0' ? L('x0 edited') : k)) : null);
+	const farEditY = (t: Tok[] | null) => (t === null ? null : t.some((k) => k.t === 'line' && k.s === 'y39') ? t.map((k) => (k.t === 'line' && k.s === 'y39' ? L('y39 edited') : k)) : null);
+	// mark moved from P to another counter (blocks), and back
+	for (const o of others) {
+		e[`mark-move-to-${o}`] = (t) => {
+			const p = ctrOf(t, P);
+			const q = ctrOf(t, o);
+			if (p.t !== 'ctr' || q.t !== 'ctr' || !p.mark || q.mark) return null;
+			return t.map((k) => (isC(k) && k.id === P ? { ...k, mark: undefined } : isC(k) && k.id === o ? { ...k, mark: p.mark } : k));
+		};
+		// a counter inside the run bumped while P is deleted (mark kept)
+		e[`bump-${o}+del-P-keepmark`] = (t) => (ctrOf(t, P).t === 'ctr' && (ctrOf(t, P) as { mark?: string }).mark ? del(setV(t, o, ctrOf(t, o).v + 4), P, true) : null);
+		e[`bump-${o}+del-P`] = (t) => del(setV(t, o, ctrOf(t, o).v + 4), P);
+		for (const o2 of others) if (o2 !== o) e[`del-${o}+del-${o2}`] = (t) => del(del(t, o), o2);
+		for (const o2 of others) if (o2 !== o) e[`del-P+bump-${o}+rename-${o2}`] = (t) => (ctrOf(t, P).t === 'sec' && ctrOf(t, o2).t === 'sec' ? rename(setV(del(t, P), o, ctrOf(t, o).v + 4), o2, (ctrOf(t, P) as { name: string }).name) : null);
+	}
+	e['paste-pair-below'] = (t) => { const at = t.findIndex((k) => k.t === 'line' && (k.s === 'END' || k.s === '## After')); return at < 0 ? null : insAt(t, at, [C('N1'), B, C('N2'), B]); };
+	e['paste-twin-top'] = (t) => insAt(t, 2, ctrOf(t, P).t === 'sec' ? [S('N', 'Pasted', ctrOf(t, P).v)] : [C('N', ctrOf(t, P).v), B]);
+	const names = Object.keys(e);
+	for (const name of names) {
+		if (!/del|mark-move|paste|ins-twin|move/.test(name)) continue;
+		const f = e[name];
+		for (const n of [1, 50, 395, 401]) e[`${name}+far${n}`] = (t) => far(n)(f(t));
+		e[`${name}+x0`] = (t) => farEdit(f(t));
+		e[`${name}+y39`] = (t) => farEditY(f(t));
+	}
+	return e;
+}
+type CellR = Cell & { timing?: 'T1' | 'T2' };
+function cellsR(): CellR[] {
+	const out: CellR[] = [];
+	const only = process.env.R3_LAYOUTS ? process.env.R3_LAYOUTS.split(',') : null;
+	for (const lay of LAYOUTSr) {
+		if (only && !only.includes(lay.name)) continue;
+		for (const { link, P } of lay.links)
+			for (const [edit, after] of Object.entries(editsForR(lay.toks, P))) if (!process.env.R3_EDITRX || new RegExp(process.env.R3_EDITRX).test(edit))
+				for (const cb of COMBOS) for (const timing of (process.env.R3_TIMING ? [process.env.R3_TIMING] : ['T1', 'T2']) as Array<'T1' | 'T2'>) {
+					if (/far(395|401)/.test(edit) && (cb.plus === '+ redrawn')) continue; // cost cut
+					if (process.env.R3_COMBO1 && !(cb.plus === (process.env.R3_COMBO1 === 'stale' ? '+ stale' : 'no +') && cb.click === 'card' && (cb.shape === 'hover' || process.env.R3_COMBO1 === 'stale'))) continue;
+					out.push({ layout: lay.name, toks: lay.toks, P, link, ...cb, edit, after, timing });
+				}
+	}
+	return out;
+}
+describe('r3 probe', () => {
+	test('collect', async () => {
+		const cells = cellsR();
+		const recs: Rec[] = [];
+		const warn = () => jest.spyOn(console, 'warn').mockImplementation(() => {});
+		warn();
+		for (const c of cells) {
+			let r: Rec | null;
+			try {
+				r = await run(c);
+			} catch (e) {
+				r = { layout: c.layout, edit: c.edit, err: String(e) };
+			}
+			warn();
+			if (r === null || 'skip' in r) continue;
+			if (!process.env.R3_KEEP) {
+				delete (r as Record<string, unknown>).bt;
+				delete (r as Record<string, unknown>).at;
+			}
+			recs.push({ ...r, timing: c.timing });
+		}
+		fs.writeFileSync(process.env.R3_OUT!, JSON.stringify(recs));
+		expect(recs.length).toBeGreaterThan(0);
+	}, 3600000);
+});

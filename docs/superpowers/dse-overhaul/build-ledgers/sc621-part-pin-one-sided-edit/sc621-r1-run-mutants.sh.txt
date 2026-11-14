@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# run-mutants.sh <log>: the new test file + the SC-607 drawn-pin sweep against base, the prototype and each mutant of it; source restored after each.
+D=/home/scott/code/steelCompendium/worktrees/sc621-part-pin-one-sided-edit/draw-steel-elements
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc621-r1-reviewerA
+P=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc621-part-pin-one-sided-edit/sc621-r1-proto-ruleP-rebase.diff.txt
+LOG=$1
+: > $LOG
+cd $D
+T="test/dom/framework/reading-mode-host-part-pin-twin.test.ts test/dom/framework/reading-mode-host-drawn-pin.test.ts"
+run() {
+	npx jest $T > $S/mut-$1.out 2>&1
+	echo "== $1 rc=$? $(grep -E '^Tests:' $S/mut-$1.out)" >> $LOG
+	grep -E '✕' $S/mut-$1.out | sed 's/^ */    FAIL /' | head -40 >> $LOG
+}
+run base
+for m in proto M1-no-twin-guard M2-twin-drawn-only M3-twin-now-only M4-price-now-to-now M5-drawn-snapshot-only M6-own-write-only M7-price-at-linkLine M8-rule-off; do
+	git -C $D apply $P
+	if [ "$m" != proto ]; then python3 -I $S/mutate.py $m >> $LOG; fi
+	run $m
+	git -C $D checkout -- src/framework/host/ReadingModeBlockHost.ts
+done
+echo "status after: [$(git -C $D status --porcelain)]" >> $LOG

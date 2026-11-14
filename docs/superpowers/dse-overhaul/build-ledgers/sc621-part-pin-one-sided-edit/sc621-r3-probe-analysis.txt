@@ -1,0 +1,130 @@
+records base 72600 fix 72600 joined 72600
+base outcomes {'A': 33531, 'refused': 34982, 'OTHER': 4087}
+fix outcomes {'A': 32089, 'refused': 36755, 'OTHER': 3756}
+fix errors 0 []
+NEW OTHER (base not other): 5 {'T2': 5}
+    ('sec-quad-named', 'move-P-end+far1', 'Note#Tracker', 'hover', 'rv', 'card', '+ redrawn', 'T2') base refused fix OTHER:b opts [7] pB 6 pA 28 head 7 linkOk True
+    ('sec-quad-named', 'move-P-end+top+far1', 'Note#Third', 'hover', 'rv', 'card', '+ redrawn', 'T2') base refused fix OTHER:d opts [21] pB 20 pA 28 head 21 linkOk True
+    ('sec-quad-named', 'del-P+bump-d+rename-b+far50', 'Note#Third', 'hover', 'rv', 'card', 'no +', 'T2') base refused fix OTHER:b opts [63] pB 20 pA None head 63 linkOk False
+    ('sec-named-mixed-diff', 'ins-twin-below-adj+top+far401', 'Note#Tracker', 'embed', 'lp', 'form', 'no +', 'T2') base refused fix OTHER:N opts [414, 421] pB 13 pA 414 head 421 linkOk True
+base OTHER -> fix refused: 336 {'T1': 330, 'T2': 6}
+    ('blk-quad-lowmark', 'del-P-keepmark-pre+top', 'Note#^p', 'hover', 'rv', 'card', 'no +', 'T1') base OTHER:c fix refused opts [14, 'deleted'] pB 19 pA None head 14 linkOk False
+    ('blk-quad-lowmark', 'del-P-keepmark-pre+top', 'Note#^p', 'hover', 'rv', 'card', '+ redrawn', 'T1') base OTHER:c fix refused opts [14, 'deleted'] pB 19 pA None head 14 linkOk False
+    ('blk-quad-lowmark', 'del-P-keepmark-pre+top', 'Note#^p', 'hover', 'rv', 'form', 'no +', 'T1') base OTHER:c fix refused opts [14, 'deleted'] pB 19 pA None head 14 linkOk False
+    ('blk-quad-lowmark', 'del-P-keepmark-pre+top', 'Note#^p', 'hover', 'rv', 'form', '+ redrawn', 'T1') base OTHER:c fix refused opts [14, 'deleted'] pB 19 pA None head 14 linkOk False
+fix OTHER ambiguous: 791 {'T1': 300, 'T2': 491}
+    ('blk-quad-lowmark', 'del-P-keepmark-pre+far401', 'Note#^p', 'hover', 'rv', 'card', 'no +', 'T1') base OTHER:c fix OTHER:c opts [415, 'deleted'] pB 19 pA None head 415 linkOk False
+    ('blk-quad-lowmark', 'del-P-keepmark-pre+far401', 'Note#^p', 'hover', 'rv', 'card', 'no +', 'T2') base OTHER:c fix OTHER:c opts [415, 'deleted'] pB 19 pA None head 415 linkOk False
+    ('blk-quad-lowmark', 'del-P-keepmark-pre+far401', 'Note#^p', 'hover', 'rv', 'card', '+ stale', 'T1') base OTHER:c fix OTHER:c opts [415, 'deleted'] pB 19 pA None head 415 linkOk False
+    ('blk-quad-lowmark', 'del-P-keepmark-pre+far401', 'Note#^p', 'hover', 'rv', 'card', '+ stale', 'T2') base OTHER:c fix OTHER:c opts [415, 'deleted'] pB 19 pA None head 415 linkOk False
+fix OTHER residual R1: 1383 {'T2': 1029, 'T1': 354}
+    ('blk-triple-topmark', 'move-P-end', 'Note#^p', 'hover', 'rv', 'card', 'no +', 'T2') base OTHER:b fix OTHER:b opts [4] pB 4 pA 14 head 4 linkOk True
+    ('blk-triple-topmark', 'move-P-end', 'Note#^p', 'hover', 'rv', 'card', '+ redrawn', 'T2') base OTHER:b fix OTHER:b opts [4] pB 4 pA 14 head 4 linkOk True
+    ('blk-triple-topmark', 'move-P-end', 'Note#^p', 'hover', 'rv', 'card', '+ stale', 'T1') base OTHER:b fix OTHER:b opts [4] pB 4 pA 14 head 4 linkOk True
+    ('blk-triple-topmark', 'move-P-end', 'Note#^p', 'hover', 'rv', 'card', '+ stale', 'T2') base OTHER:b fix OTHER:b opts [4] pB 4 pA 14 head 4 linkOk True
+fix OTHER residual R2: 1582 {'T1': 792, 'T2': 790}
+    ('sec-quad-named', 'del-P-rename-b', 'Note#Third', 'hover', 'rv', 'card', 'no +', 'T1') base OTHER:b fix OTHER:b opts [13] pB 20 pA None head 13 linkOk False
+    ('sec-quad-named', 'del-P-rename-b', 'Note#Third', 'hover', 'rv', 'card', 'no +', 'T2') base OTHER:b fix OTHER:b opts [13] pB 20 pA None head 13 linkOk False
+    ('sec-quad-named', 'del-P-rename-b', 'Note#Third', 'hover', 'rv', 'card', '+ redrawn', 'T1') base OTHER:b fix OTHER:b opts [13] pB 20 pA None head 13 linkOk False
+    ('sec-quad-named', 'del-P-rename-b', 'Note#Third', 'hover', 'rv', 'card', '+ redrawn', 'T2') base OTHER:b fix OTHER:b opts [13] pB 20 pA None head 13 linkOk False
+fix write A in ambiguous twinned: 1913 {'T1': 876, 'T2': 1037}
+    ('blk-quad-lowmark', 'ins-twin-above-adj+far401', 'Note#^p', 'hover', 'rv', 'card', 'no +', 'T1') base A fix A opts [420, 425] pB 19 pA 425 head 425 linkOk True
+    ('blk-quad-lowmark', 'ins-twin-above-adj+far401', 'Note#^p', 'hover', 'rv', 'card', 'no +', 'T2') base A fix A opts [420, 425] pB 19 pA 425 head 425 linkOk True
+    ('blk-quad-lowmark', 'ins-twin-above-adj+far401', 'Note#^p', 'hover', 'rv', 'card', '+ stale', 'T1') base A fix A opts [420, 425] pB 19 pA 425 head 425 linkOk True
+    ('blk-quad-lowmark', 'ins-twin-above-adj+far401', 'Note#^p', 'hover', 'rv', 'card', '+ stale', 'T2') base A fix A opts [420, 425] pB 19 pA 425 head 425 linkOk True
+new refusal UNAMBIGUOUS: 10 {'T2': 10}
+    ('blk-triple-topmark', 'del-b+far50', 'Note#^p', 'embed', 'lp', 'form', 'no +', 'T2') base A fix refused opts [54] pB 4 pA 54 head 54 linkOk True
+    ('blk-triple-twomarks', 'ins-twin-below-adj+far395', 'Note#^p', 'hover', 'rv', 'card', 'no +', 'T2') base A fix refused opts [404] pB 9 pA 404 head 404 linkOk True
+    ('blk-triple-twomarks', 'del-a+end', 'Note#^q', 'hover', 'rv', 'card', 'no +', 'T2') base A fix refused opts [10] pB 15 pA 10 head 10 linkOk True
+    ('blk-triple-twomarks', 'del-b-keepmark-pre+end+far50', 'Note#^q', 'embed', 'lp', 'card', 'no +', 'T2') base A fix refused opts [60] pB 15 pA 60 head 60 linkOk True
+new refusal amb+twinned: 1453 {'T1': 1446, 'T2': 7}
+    ('blk-quad-lowmark', 'ins-twin-above-adj+top', 'Note#^p', 'hover', 'rv', 'card', 'no +', 'T1') base A fix refused opts [19, 24] pB 19 pA 24 head 24 linkOk True
+    ('blk-quad-lowmark', 'ins-twin-above-adj+top', 'Note#^p', 'hover', 'rv', 'card', '+ redrawn', 'T1') base A fix refused opts [19, 24] pB 19 pA 24 head 24 linkOk True
+    ('blk-quad-lowmark', 'ins-twin-above-adj+top', 'Note#^p', 'hover', 'rv', 'form', 'no +', 'T1') base A fix refused opts [19, 24] pB 19 pA 24 head 24 linkOk True
+    ('blk-quad-lowmark', 'ins-twin-above-adj+top', 'Note#^p', 'hover', 'rv', 'form', '+ redrawn', 'T1') base A fix refused opts [19, 24] pB 19 pA 24 head 24 linkOk True
+newly written A: 21 {'T2': 21}
+    ('blk-quad-lowmark', 'ins-twin-above-adj+far401', 'Note#^p', 'hover', 'rv', 'form', 'no +', 'T2') base refused fix A opts [420, 425] pB 19 pA 425 head 425 linkOk True
+    ('blk-quad-lowmark', 'ins-twin-above-adj+top+far401', 'Note#^p', 'embed', 'rv', 'form', 'no +', 'T2') base refused fix A opts [420, 425] pB 19 pA 425 head 425 linkOk True
+    ('blk-quad-lowmark', 'del-a+top+far395', 'Note#^p', 'embed', 'lp', 'form', 'no +', 'T2') base refused fix A opts [409, 'deleted'] pB 19 pA 409 head 409 linkOk True
+    ('blk-triple-topmark', 'del-b+far1', 'Note#^p', 'hover', 'rv', 'form', 'no +', 'T2') base refused fix A opts [5] pB 4 pA 5 head 5 linkOk True
+newly written OTHER:N: 1 {'T2': 1}
+    ('sec-named-mixed-diff', 'ins-twin-below-adj+top+far401', 'Note#Tracker', 'embed', 'lp', 'form', 'no +', 'T2') base refused fix OTHER:N opts [414, 421] pB 13 pA 414 head 421 linkOk True
+newly written OTHER:a: 1 {'T2': 1}
+    ('sec-named-mixed-diff', 'del-P-rename-a', 'Note#Other', 'embed', 'lp', 'form', 'no +', 'T2') base refused fix OTHER:a opts [13] pB 20 pA None head 13 linkOk False
+newly written OTHER:b: 2 {'T2': 2}
+    ('sec-quad-named', 'move-P-end+far1', 'Note#Tracker', 'hover', 'rv', 'card', '+ redrawn', 'T2') base refused fix OTHER:b opts [7] pB 6 pA 28 head 7 linkOk True
+    ('sec-quad-named', 'del-P+bump-d+rename-b+far50', 'Note#Third', 'hover', 'rv', 'card', 'no +', 'T2') base refused fix OTHER:b opts [63] pB 20 pA None head 63 linkOk False
+newly written OTHER:d: 1 {'T2': 1}
+    ('sec-quad-named', 'move-P-end+top+far1', 'Note#Third', 'hover', 'rv', 'card', '+ redrawn', 'T2') base refused fix OTHER:d opts [21] pB 20 pA 28 head 21 linkOk True
+===== T1
+fix A in amb twinned {'big(>=395)': 876}
+fix OTHER amb {'big(>=395)': 300}
+fix OTHER unamb {'R1-move': 324, 'big(>=395)': 174, 'R2-rename': 648}
+fix refused, oracle unique = drawn-from {'R1-move': 420, 'big(>=395)': 2730, 'R2-rename': 480}
+flip A->refused {'other': 1368, 'big(>=395)': 78}
+     (('blk-quad-lowmark', 'ins-twin-above-adj+top', 'Note#^p', 'hover', 'rv', 'card', 'no +', 'T1'), 'A', 'refused', [19, 24], 19, 24, 24, True)
+     (('blk-quad-lowmark', 'ins-twin-above-adj+top', 'Note#^p', 'hover', 'rv', 'card', '+ redrawn', 'T1'), 'A', 'refused', [19, 24], 19, 24, 24, True)
+     (('blk-quad-lowmark', 'ins-twin-above-adj+top', 'Note#^p', 'hover', 'rv', 'form', 'no +', 'T1'), 'A', 'refused', [19, 24], 19, 24, 24, True)
+     (('blk-quad-lowmark', 'ins-twin-above-adj+top', 'Note#^p', 'hover', 'rv', 'form', '+ redrawn', 'T1'), 'A', 'refused', [19, 24], 19, 24, 24, True)
+     (('blk-quad-lowmark', 'ins-twin-above-adj+top', 'Note#^p', 'embed', 'rv', 'card', 'no +', 'T1'), 'A', 'refused', [19, 24], 19, 24, 24, True)
+     (('blk-quad-lowmark', 'ins-twin-above-adj+top', 'Note#^p', 'embed', 'rv', 'card', '+ redrawn', 'T1'), 'A', 'refused', [19, 24], 19, 24, 24, True)
+     (('blk-quad-lowmark', 'ins-twin-above-adj+top', 'Note#^p', 'embed', 'rv', 'form', 'no +', 'T1'), 'A', 'refused', [19, 24], 19, 24, 24, True)
+     (('blk-quad-lowmark', 'ins-twin-above-adj+top', 'Note#^p', 'embed', 'rv', 'form', '+ redrawn', 'T1'), 'A', 'refused', [19, 24], 19, 24, 24, True)
+flip OTHER->refused {'other': 204, 'big(>=395)': 18, 'R2-rename': 108}
+     (('blk-quad-lowmark', 'del-P-keepmark-pre+top', 'Note#^p', 'hover', 'rv', 'card', 'no +', 'T1'), 'OTHER:c', 'refused', [14, 'deleted'], 19, None, 14, False)
+     (('blk-quad-lowmark', 'del-P-keepmark-pre+top', 'Note#^p', 'hover', 'rv', 'card', '+ redrawn', 'T1'), 'OTHER:c', 'refused', [14, 'deleted'], 19, None, 14, False)
+     (('blk-quad-lowmark', 'del-P-keepmark-pre+top', 'Note#^p', 'hover', 'rv', 'form', 'no +', 'T1'), 'OTHER:c', 'refused', [14, 'deleted'], 19, None, 14, False)
+     (('blk-quad-lowmark', 'del-P-keepmark-pre+top', 'Note#^p', 'hover', 'rv', 'form', '+ redrawn', 'T1'), 'OTHER:c', 'refused', [14, 'deleted'], 19, None, 14, False)
+     (('blk-quad-lowmark', 'del-P-keepmark-pre+top', 'Note#^p', 'embed', 'rv', 'card', 'no +', 'T1'), 'OTHER:c', 'refused', [14, 'deleted'], 19, None, 14, False)
+     (('blk-quad-lowmark', 'del-P-keepmark-pre+top', 'Note#^p', 'embed', 'rv', 'card', '+ redrawn', 'T1'), 'OTHER:c', 'refused', [14, 'deleted'], 19, None, 14, False)
+     (('blk-quad-lowmark', 'del-P-keepmark-pre+top', 'Note#^p', 'embed', 'rv', 'form', 'no +', 'T1'), 'OTHER:c', 'refused', [14, 'deleted'], 19, None, 14, False)
+     (('blk-quad-lowmark', 'del-P-keepmark-pre+top', 'Note#^p', 'embed', 'rv', 'form', '+ redrawn', 'T1'), 'OTHER:c', 'refused', [14, 'deleted'], 19, None, 14, False)
+new refusal amb+tw {'other': 1368, 'big(>=395)': 78}
+     (('blk-quad-lowmark', 'ins-twin-above-adj+top', 'Note#^p', 'hover', 'rv', 'card', 'no +', 'T1'), 'A', 'refused', [19, 24], 19, 24, 24, True)
+     (('blk-quad-lowmark', 'ins-twin-above-adj+top', 'Note#^p', 'hover', 'rv', 'card', '+ redrawn', 'T1'), 'A', 'refused', [19, 24], 19, 24, 24, True)
+     (('blk-quad-lowmark', 'ins-twin-above-adj+top', 'Note#^p', 'hover', 'rv', 'form', 'no +', 'T1'), 'A', 'refused', [19, 24], 19, 24, 24, True)
+     (('blk-quad-lowmark', 'ins-twin-above-adj+top', 'Note#^p', 'hover', 'rv', 'form', '+ redrawn', 'T1'), 'A', 'refused', [19, 24], 19, 24, 24, True)
+     (('blk-quad-lowmark', 'ins-twin-above-adj+top', 'Note#^p', 'embed', 'rv', 'card', 'no +', 'T1'), 'A', 'refused', [19, 24], 19, 24, 24, True)
+     (('blk-quad-lowmark', 'ins-twin-above-adj+top', 'Note#^p', 'embed', 'rv', 'card', '+ redrawn', 'T1'), 'A', 'refused', [19, 24], 19, 24, 24, True)
+     (('blk-quad-lowmark', 'ins-twin-above-adj+top', 'Note#^p', 'embed', 'rv', 'form', 'no +', 'T1'), 'A', 'refused', [19, 24], 19, 24, 24, True)
+     (('blk-quad-lowmark', 'ins-twin-above-adj+top', 'Note#^p', 'embed', 'rv', 'form', '+ redrawn', 'T1'), 'A', 'refused', [19, 24], 19, 24, 24, True)
+===== T2
+fix A in amb twinned {'big(>=395)': 1037}
+fix OTHER amb {'big(>=395)': 491}
+fix OTHER unamb {'R1-move': 969, 'big(>=395)': 204, 'R2-rename': 646}
+fix refused, oracle unique = drawn-from {'big(>=395)': 2666, 'other': 7, 'R2-rename': 1}
+     (('blk-triple-topmark', 'del-b+far50', 'Note#^p', 'embed', 'lp', 'form', 'no +', 'T2'), 'A', 'refused', [54], 4, 54, 54, True)
+     (('blk-triple-twomarks', 'del-a+end', 'Note#^q', 'hover', 'rv', 'card', 'no +', 'T2'), 'A', 'refused', [10], 15, 10, 10, True)
+     (('blk-triple-twomarks', 'del-b-keepmark-pre+end+far50', 'Note#^q', 'embed', 'lp', 'card', 'no +', 'T2'), 'A', 'refused', [60], 15, 60, 60, True)
+     (('blk-far-prose', 'paste-twin-top', 'Note#^p', 'embed', 'rv', 'card', 'no +', 'T2'), 'A', 'refused', [55], 50, 55, 55, True)
+     (('blk-twin-far-apart', 'ins-twin-below-adj+far1', 'Note#^p', 'hover', 'rv', 'form', 'no +', 'T2'), 'A', 'refused', [41], 40, 41, 41, True)
+     (('sec-quad-named', 'del-a+top+far50', 'Note#Third', 'hover', 'rv', 'form', 'no +', 'T2'), 'A', 'refused', [63], 20, 63, 63, True)
+     (('sec-named-mixed-diff', 'del-d+afterH', 'Note#Other', 'embed', 'lp', 'card', 'no +', 'T2'), 'A', 'refused', [13], 20, 13, 13, True)
+flip A->refused {'other': 7, 'big(>=395)': 9, 'R2-rename': 1}
+     (('blk-triple-topmark', 'del-b+far50', 'Note#^p', 'embed', 'lp', 'form', 'no +', 'T2'), 'A', 'refused', [54], 4, 54, 54, True)
+     (('blk-triple-twomarks', 'del-a+end', 'Note#^q', 'hover', 'rv', 'card', 'no +', 'T2'), 'A', 'refused', [10], 15, 10, 10, True)
+     (('blk-triple-twomarks', 'del-b-keepmark-pre+end+far50', 'Note#^q', 'embed', 'lp', 'card', 'no +', 'T2'), 'A', 'refused', [60], 15, 60, 60, True)
+     (('blk-far-prose', 'paste-twin-top', 'Note#^p', 'embed', 'rv', 'card', 'no +', 'T2'), 'A', 'refused', [55], 50, 55, 55, True)
+     (('blk-twin-far-apart', 'ins-twin-below-adj+far1', 'Note#^p', 'hover', 'rv', 'form', 'no +', 'T2'), 'A', 'refused', [41], 40, 41, 41, True)
+     (('sec-quad-named', 'del-a+top+far50', 'Note#Third', 'hover', 'rv', 'form', 'no +', 'T2'), 'A', 'refused', [63], 20, 63, 63, True)
+     (('sec-named-mixed-diff', 'del-d+afterH', 'Note#Other', 'embed', 'lp', 'card', 'no +', 'T2'), 'A', 'refused', [13], 20, 13, 13, True)
+flip OTHER->refused {'R1-move': 3, 'big(>=395)': 1, 'R2-rename': 2}
+flip refused->A {'big(>=395)': 5, 'other': 14, 'R1-move': 1, 'R2-rename': 1}
+     (('blk-triple-topmark', 'del-b+far1', 'Note#^p', 'hover', 'rv', 'form', 'no +', 'T2'), 'refused', 'A', [5], 4, 5, 5, True)
+     (('blk-triple-twomarks', 'del-a+top', 'Note#^q', 'embed', 'rv', 'form', 'no +', 'T2'), 'refused', 'A', [10], 15, 10, 10, True)
+     (('blk-triple-twomarks', 'del-b-keepmark+end+far1', 'Note#^q', 'embed', 'lp', 'card', 'no +', 'T2'), 'refused', 'A', [12], 15, 12, 12, True)
+     (('blk-triple-twomarks', 'del-b-keepmark-pre+top+far50', 'Note#^q', 'hover', 'rv', 'card', 'no +', 'T2'), 'refused', 'A', [60], 15, 60, 60, True)
+     (('blk-in-sections', 'del-a', 'Note#^p', 'embed', 'rv', 'card', 'no +', 'T2'), 'refused', 'A', [8], 13, 8, 8, True)
+     (('blk-in-sections', 'ins-twin-below-adj+end+far50', 'Note#^p', 'embed', 'rv', 'card', 'no +', 'T2'), 'refused', 'A', [63], 13, 63, 63, True)
+     (('blk-in-sections', 'del-a+top+far50', 'Note#^p', 'hover', 'rv', 'form', 'no +', 'T2'), 'refused', 'A', [58], 13, 58, 58, True)
+     (('sec-quad-named', 'paste-pair-below+far1', 'Note#Tracker', 'embed', 'lp', 'card', 'no +', 'T2'), 'refused', 'A', [7], 6, 7, 7, True)
+flip refused->OTHER {'R1-move': 2, 'R2-rename': 2, 'big(>=395)': 1}
+new refusal UNAMB {'other': 7, 'big(>=395)': 2, 'R2-rename': 1}
+     (('blk-triple-topmark', 'del-b+far50', 'Note#^p', 'embed', 'lp', 'form', 'no +', 'T2'), 'A', 'refused', [54], 4, 54, 54, True)
+     (('blk-triple-twomarks', 'del-a+end', 'Note#^q', 'hover', 'rv', 'card', 'no +', 'T2'), 'A', 'refused', [10], 15, 10, 10, True)
+     (('blk-triple-twomarks', 'del-b-keepmark-pre+end+far50', 'Note#^q', 'embed', 'lp', 'card', 'no +', 'T2'), 'A', 'refused', [60], 15, 60, 60, True)
+     (('blk-far-prose', 'paste-twin-top', 'Note#^p', 'embed', 'rv', 'card', 'no +', 'T2'), 'A', 'refused', [55], 50, 55, 55, True)
+     (('blk-twin-far-apart', 'ins-twin-below-adj+far1', 'Note#^p', 'hover', 'rv', 'form', 'no +', 'T2'), 'A', 'refused', [41], 40, 41, 41, True)
+     (('sec-quad-named', 'del-a+top+far50', 'Note#Third', 'hover', 'rv', 'form', 'no +', 'T2'), 'A', 'refused', [63], 20, 63, 63, True)
+     (('sec-named-mixed-diff', 'del-d+afterH', 'Note#Other', 'embed', 'lp', 'card', 'no +', 'T2'), 'A', 'refused', [13], 20, 13, 13, True)
+new refusal amb+tw {'big(>=395)': 7}

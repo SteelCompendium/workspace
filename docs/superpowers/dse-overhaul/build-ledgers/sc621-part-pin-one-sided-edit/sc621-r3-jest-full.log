@@ -1,0 +1,31 @@
+Info: New devbox available: 0.17.5 -> v0.20.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc621-part-pin-one-sided-edit/draw-steel-elements
+head 56ad4d1cfd785e0a37fab9a63ae150183efd888a load 17.91 8.44 7.43 38/3323 606488
+ls: cannot access '/home/scott/code/steelCompendium/worktrees/sc621-part-pin-one-sided-edit/draw-steel-elements/main.js': No such file or directory
+ls: cannot access '/home/scott/code/steelCompendium/worktrees/sc621-part-pin-one-sided-edit/draw-steel-elements/styles.css': No such file or directory
+Summary of all failing tests
+FAIL test/dom/framework/reading-mode-host-pin.test.ts
+  ● SC-556: a block edit form in a heading embed › an outside edit elsewhere in the source note (above and below the section) while the form is open: Save still lands in the embedded block
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      680 | 		app.vault.setFile('Note.md', outside);
+      681 |
+    > 682 | 		expect(await save(host, pin)).toBe(true);
+          | 		                              ^
+      683 | 		expect(app.vault.getContent('Note.md')).toBe(outside.replace('name: Twin', 'name: Edited'));
+      684 | 	});
+      685 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-pin.test.ts:682:33)
+
+
+Test Suites: 1 failed, 1 skipped, 277 passed, 278 of 279 total
+Tests:       1 failed, 2 skipped, 11867 passed, 11870 total
+Snapshots:   3 passed, 3 total
+Time:        109.97 s
+Ran all test suites in 2 projects.
+jest rc=1 wall=112s

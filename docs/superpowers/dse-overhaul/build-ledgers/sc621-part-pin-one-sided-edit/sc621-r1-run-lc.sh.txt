@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# run-lc.sh <tree> <ids> <log>: one lifecycle --only part on a scratch export (the harness as committed; the prototype bundle).
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc621-r1-reviewerA
+T="$1"
+case "$T" in "$S"/*) ;; *) echo "not a scratch tree: $T"; exit 9;; esac
+cd "$T" || exit 9
+t0=$(date +%s)
+echo "tree $T ids $2 load $(cat /proc/loadavg)" > "$3"
+sha256sum "$T/main.js" >> "$3"
+node visual-harness/obsidian-lifecycle.mjs --only=$2 >> "$3" 2>&1
+echo "lc_rc=$? wall=$(( $(date +%s) - t0 ))s" >> "$3"

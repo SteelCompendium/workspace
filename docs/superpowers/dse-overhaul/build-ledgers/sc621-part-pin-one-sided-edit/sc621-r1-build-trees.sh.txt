@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# build-trees.sh <log>: scratch exports (git archive df92a3f6) as base-tree and proto-tree (+ the prototype diff), each built; the worktree is never touched.
+S=/tmp/claude-1000/-home-scott-code-steelCompendium-workspace/be71a0a9-199f-4e14-967b-191935312b05/scratchpad/sc621-r1-reviewerA
+E=/home/scott/code/steelCompendium/worktrees/sc621-part-pin-one-sided-edit/draw-steel-elements
+P=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc621-part-pin-one-sided-edit/sc621-r1-proto-ruleP-rebase.diff.txt
+for tree in base-tree proto-tree; do
+	mkdir -p "$S/$tree"
+	git -C "$E" archive df92a3f6 | tar -x -C "$S/$tree"
+	ln -sfn "$E/node_modules" "$S/$tree/node_modules"
+	if [ "$tree" = proto-tree ]; then (cd "$S/$tree" && patch -p1 < "$P") >> "$1" 2>&1; echo "patch rc=$?" >> "$1"; fi
+	(cd "$S/$tree" && node esbuild.config.mjs production) >> "$1" 2>&1
+	echo "$tree build_rc=$?" >> "$1"
+	sha256sum "$S/$tree/main.js" "$S/$tree/styles.css" >> "$1"
+done

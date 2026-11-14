@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# run-jest-full.sh <log>: the full jest suite on the prototype (diff applied to the worktree source; restored by literal path after).
+D=/home/scott/code/steelCompendium/worktrees/sc621-part-pin-one-sided-edit/draw-steel-elements
+P=/home/scott/code/steelCompendium/workspace/.superpowers/sdd/sc621-part-pin-one-sided-edit/sc621-r1-proto-ruleP-rebase.diff.txt
+cd $D
+ls main.js styles.css 2>/dev/null && echo "STALE BUNDLE PRESENT" > $1
+git -C $D apply $P; echo "apply rc=$?" >> $1
+t0=$(date +%s)
+npx jest >> $1 2>&1
+echo "jest rc=$? wall=$(( $(date +%s) - t0 ))s" >> $1
+git -C $D checkout -- src/framework/host/ReadingModeBlockHost.ts
+echo "status after: [$(git -C $D status --porcelain)] head $(git -C $D rev-parse --short HEAD)" >> $1

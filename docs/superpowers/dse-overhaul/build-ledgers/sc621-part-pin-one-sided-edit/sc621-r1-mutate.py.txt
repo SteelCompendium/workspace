@@ -1,0 +1,20 @@
+#!/usr/bin/env python3
+# mutate.py <name>: rewrite the worktree's ReadingModeBlockHost.ts (which must already carry the prototype) into mutant <name>. Restored by the caller (git checkout).
+import sys
+P = '/home/scott/code/steelCompendium/worktrees/sc621-part-pin-one-sided-edit/draw-steel-elements/src/framework/host/ReadingModeBlockHost.ts'
+s = open(P).read()
+LINE = "if (this.twinned(whole, drawnPin) && !this.placedUniquely(whole, drawnPin, at.line)) return;"
+assert s.count(LINE) == 1
+M = {
+    'M1-no-twin-guard': "if (!this.placedUniquely(whole, drawnPin, at.line)) return;",
+    'M2-twin-drawn-only': "if (this.twinned(from.text, drawnPin) && !this.placedUniquely(whole, drawnPin, at.line)) return;",
+    'M3-twin-now-only': "if (this.twinned(whole, { text: whole, lineStart: at.line }) && !this.placedUniquely(whole, drawnPin, at.line)) return;",
+    'M4-price-now-to-now': "if (this.twinned(whole, drawnPin) && !this.placedUniquely(whole, { text: whole, lineStart: linkLine }, at.line)) return;",
+    'M5-drawn-snapshot-only': "if (from === fromDrawn && this.twinned(whole, drawnPin) && !this.placedUniquely(whole, drawnPin, at.line)) return;",
+    'M6-own-write-only': "if (from !== fromDrawn && this.twinned(whole, drawnPin) && !this.placedUniquely(whole, drawnPin, at.line)) return;",
+    'M7-price-at-linkLine': "if (this.twinned(whole, drawnPin) && !this.placedUniquely(whole, drawnPin, linkLine)) return;",
+    'M8-rule-off': "/* M8: rule P off (= base) */",
+}
+name = sys.argv[1]
+open(P, 'w').write(s.replace(LINE, M[name]))
+print('mutant', name)

@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+# obs-table.py <log>: one row per P621-REC cell: saved into drawn-from / refused with Notice / WROTE OTHER COUNTER.
+import json, sys
+rows = []
+for l in open(sys.argv[1]):
+    if not l.startswith('P621-REC '):
+        continue
+    r = json.loads(l[9:])
+    if r.get('error'):
+        rows.append((r['id'], 'ERROR ' + r['error'][:80], ''))
+        continue
+    deleted = r['edit'] not in ('top', 'none')  # every non-control edit deletes the counter the card was drawn from
+    n = len(r.get('notices') or [])
+    shown = r.get('run', {})
+    if not shown.get('clicked'):
+        out = f'NOT REACHED (old card gone={shown.get("oldCardGone")}: the preview was redrawn before the click), {n} Notice'
+    elif r['note'] == r['edited']:
+        out = f'refused, {n} Notice' + ('' if n == 1 else ' (!)')
+    elif deleted:
+        out = f'WROTE OTHER COUNTER (values {r["values"]}, names {r["names"]}), {n} Notice'
+    else:
+        want = {'A': [6, 5], 'B': [7, 6], 'C': [5, 6]}[r['id'][0]]
+        if r['how'] == 'form':
+            ok = r['names'][{'A': 0, 'B': 0, 'C': 1}[r['id'][0]]] == 'Edited'
+        else:
+            ok = r['values'] == want
+        out = ('saved into drawn-from' if ok else f'WROTE OTHER COUNTER? values {r["values"]} names {r["names"]}') + f', {n} Notice'
+    extra = f"clicked={shown.get('clicked')} oldCardGone={shown.get('oldCardGone')} tCache={shown.get('tCache')}"
+    if r['how'] == 'form':
+        extra += f" formOpenBeforeSave={r.get('formOpenBeforeSave')} formOpenAfterSave={r.get('formOpenAfterSave')}"
+    if r.get('plus'):
+        extra += f" afterPlus={r.get('afterPlus')} sameHostAfterPlus={r.get('sameHostAfterPlus')}"
+    rows.append((r['id'], out, extra))
+for row in rows:
+    print(f'{row[0]:42s} | {row[1]:70s} | {row[2]}')

@@ -1,0 +1,8 @@
+1:  dfaacd40 = 1:  207b3984 test: SC-621 failing tests, a + / - or a form Save in a preview of part of a note, the drawn-from counter deleted and a line on one side edited in one outside write, must not write the other identical counter (red on df92a3f6)
+2:  2f51c898 = 2:  23fb946b fix: a + / - or a form Save in a hover preview or embed of part of a note with identical counters is refused, not written into the twin, when an outside write deletes the drawn-from counter and edits a line on one side of the pair (SC-621)
+3:  cc1b6c00 = 3:  ae9b51b9 test: an identical counter pasted above the unique drawn-from one is refused (the twin gate covers the note now), and the refusal repeats until the preview or embed is reopened (SC-621)
+4:  260f73e3 = 4:  918b34f7 test: sweep and seeded fuzz of a click in a preview or embed of part of a note after one outside write, with an oracle independent of the line map (SC-621)
+5:  56ad4d1c = 5:  a68030f9 test: lifecycle G-S115, a + / form Save in a hover preview or embed of part of a note whose drawn-from counter was deleted with a line on one side edited writes nothing and shows one Notice (SC-621)
+-:  -------- > 6:  37c99b38 docs: the rebaseCardPin comment names a third still-written case, a change of more than 400 lines in the same write (SC-621)
+-:  -------- > 7:  cd8342f7 test: lifecycle G-S115 drops its unused own-write leftovers (the twin note, three unused edits, the plus phase) (SC-621)
+-:  -------- > 8:  96955985 test: the SC-621 twin and sweep suites wait for the mock vault's reads with settleVaultReads instead of a fixed timer (SC-568)

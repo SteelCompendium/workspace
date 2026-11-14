@@ -1,0 +1,49 @@
+import sys
+path = sys.argv[1]
+s = open(path).read()
+def rep(a, b):
+    global s
+    assert s.count(a) == 1, (a[:80], s.count(a))
+    s = s.replace(a, b)
+
+# extra notes
+rep("const GS115_NOTE = {\n", r"""const GS115_Q5 = '> [!note] Box\n' + GS115_C5.split('\n').map((l) => '> ' + l).join('\n');
+const GS115_NOTE = {
+	triple: (id) => `# gs115 ${id}\n\nTOP\n\n${GS115_C5}\n\n${GS115_C5}\n\n${GS115_C5}\n^p\n\nEND\n`,
+	quad: (id) => `# gs115 ${id}\n\nTOP\n\n## Tracker\n\n${GS115_C5}\n\n## Other\n\n${GS115_C5}\n\n## Third\n\n${GS115_C5}\n\n## Fourth\n\n${GS115_C5}\n\n## After\n\nEND\n`,
+	crlfnamed: (id) => `# gs115 ${id}\n\nTOP\n\n## Tracker\n\n${GS115_C5}\n\n## Other\n\n${GS115_C5}\n\n## After\n\nEND\n`.replace(/\n/g, '\r\n'),
+	crlflow: (id) => `# gs115 ${id}\n\nTOP\n\n${GS115_C5}\n\n${GS115_C5}\n^p\n\nEND\n`.replace(/\n/g, '\r\n'),
+	callout: (id) => `# gs115 ${id}\n\nTOP\n\n## Tracker\n\n${GS115_Q5}\n\n## Other\n\n${GS115_Q5}\n\n## After\n\nEND\n`,
+""")
+# extra edits
+rep("const GS115_EDITS = {\n", r"""const GS115_EDITS = {
+	'crlf-del-P-rename+end': String.raw`(c) => c.replace(/## Tracker\r\n\r\n\x60\x60\x60ds-counter[\s\S]*?\x60\x60\x60\r\n\r\n/, '').replace('## Other\r\n', '## Tracker\r\n').replace('\r\nEND\r\n', '\r\nEND edited\r\n')`,
+	'crlf-del-low-keepmark+top': String.raw`(c) => c.replace(/(\x60\x60\x60ds-counter\r\nname: Twin\r\ncurrent_value: 5\r\n\x60\x60\x60)\r\n\r\n\x60\x60\x60ds-counter\r\nname: Twin\r\ncurrent_value: 5\r\n\x60\x60\x60\r\n\^p/, '$1\r\n^p').replace('\r\nTOP\r\n', '\r\nTOP edited\r\n')`,
+	'callout-del-P-rename+end': String.raw`(c) => c.replace(/## Tracker\n\n> \[!note\] Box\n> \x60\x60\x60ds-counter[\s\S]*?> \x60\x60\x60\n\n/, '').replace('## Other\n', '## Tracker\n').replace('\nEND\n', '\nEND edited\n')`,
+	'mark-move+top': `(c) => c.replace(${JSON.stringify(`${GS115_C5}\n\n${GS115_C5}\n^p`)}, ${JSON.stringify(`${GS115_C5}\n^p\n\n${GS115_C5}`)}).replace('\\nTOP\\n', '\\nTOP edited\\n')`,
+	end: String.raw`(c) => c.replace('\nEND\n', '\nEND edited\n')`,
+""")
+# extra cells (9th element: plus)
+rep("\t['i', 'named', '#Tracker', 'embed', 'rv', 'card', 'del-P-rename+top', 'refused'],\n];", """\t['i', 'named', '#Tracker', 'embed', 'rv', 'card', 'del-P-rename+top', 'refused'],
+	['j', 'triple', '#^p', 'hover', 'rv', 'card', 'del-low-keepmark+top', 'refused'],
+	['k', 'triple', '#^p', 'embed', 'lp', 'form', 'del-low-keepmark+top', 'refused'],
+	['l', 'quad', '#Tracker', 'hover', 'lp', 'card', 'del-P-rename+end', 'refused'],
+	['m', 'quad', '#Tracker', 'embed', 'rv', 'form', 'del-P-rename+end', 'refused'],
+	['n', 'crlfnamed', '#Tracker', 'hover', 'rv', 'card', 'crlf-del-P-rename+end', 'refused'],
+	['o', 'crlfnamed', '#Tracker', 'embed', 'lp', 'card', 'crlf-del-P-rename+end', 'refused'],
+	['p', 'crlflow', '#^p', 'hover', 'rv', 'card', 'crlf-del-low-keepmark+top', 'refused'],
+	['q', 'callout', '#Tracker', 'hover', 'rv', 'card', 'callout-del-P-rename+end', 'refused'],
+	['q2', 'callout', '#Tracker', 'embed', 'rv', 'card', 'callout-del-P-rename+end', 'refused'],
+	['r', 'twin', '#Tracker', 'hover', 'rv', 'card', 'none', { values: [7, 6] }, true],
+	['s', 'twin', '#Tracker', 'embed', 'rv', 'card', 'top', { values: [7, 6] }, true],
+	['t', 'low', '#^p', 'embed', 'lp', 'card', 'top', { values: [5, 7] }, true],
+	['u', 'low', '#^p', 'hover', 'rv', 'card', 'mark-move+top', 'refused'],
+	['v', 'named', '#Tracker', 'embed', 'lp', 'card', 'end', { values: [6, 5] }],
+	['w', 'quad', '#Third', 'hover', 'rv', 'card', 'del-P-rename+end', { values: [5, 5, 6, 5] }],
+	['x', 'crlfnamed', '#Tracker', 'hover', 'rv', 'card', 'top', { values: [6, 5] }],
+	['y', 'callout', '#Tracker', 'hover', 'rv', 'card', 'end', { values: [6, 5] }],
+];""")
+rep("for (const [id, , , kind, mode, how, edit, want] of GS115_CELLS) {\n\t\t\t\t\tconst r = await gs115Cell(t, { id, kind, mode, how, edit, plus: false });",
+    "for (const [id, , , kind, mode, how, edit, want, plus] of GS115_CELLS) {\n\t\t\t\t\tif (process.env.R3_CELLS && !process.env.R3_CELLS.split(',').includes(id)) continue;\n\t\t\t\t\tconst r = await gs115Cell(t, { id, kind, mode, how, edit, plus: !!plus });\n\t\t\t\t\tconsole.log('R3-REC ' + JSON.stringify({ id, want, values: r.values, names: r.names, notices: r.notices, run: r.run, edited: r.edited === r.note, mount: r.mountValues, afterPlus: r.afterPlus, sameHostAfterPlus: r.sameHostAfterPlus, formOpenAfterSave: r.formOpenAfterSave, error: r.error }));")
+open(path, 'w').write(s)
+print('patched')

@@ -1,0 +1,19 @@
+== base rc=1 Tests:       18 failed, 811 passed, 829 total
+== proto rc=0 Tests:       829 passed, 829 total
+mutant M1-no-twin-guard
+== M1-no-twin-guard rc=0 Tests:       829 passed, 829 total
+mutant M2-twin-drawn-only
+== M2-twin-drawn-only rc=0 Tests:       829 passed, 829 total
+mutant M3-twin-now-only
+== M3-twin-now-only rc=1 Tests:       18 failed, 811 passed, 829 total
+mutant M4-price-now-to-now
+== M4-price-now-to-now rc=1 Tests:       18 failed, 811 passed, 829 total
+mutant M5-drawn-snapshot-only
+== M5-drawn-snapshot-only rc=1 Tests:       5 failed, 824 passed, 829 total
+mutant M6-own-write-only
+== M6-own-write-only rc=1 Tests:       13 failed, 816 passed, 829 total
+mutant M7-price-at-linkLine
+== M7-price-at-linkLine rc=0 Tests:       829 passed, 829 total
+mutant M8-rule-off
+== M8-rule-off rc=1 Tests:       18 failed, 811 passed, 829 total
+status after: []

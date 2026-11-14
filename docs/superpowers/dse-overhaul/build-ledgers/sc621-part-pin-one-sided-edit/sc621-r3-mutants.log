@@ -1,0 +1,16 @@
+mutated orig
+== orig rc=0 wall=17s Tests:       35 passed, 35 total
+mutated M0-no-gate
+== M0-no-gate rc=1 wall=15s Tests:       25 failed, 10 passed, 35 total
+mutated M2-drawn-only
+== M2-drawn-only rc=1 wall=15s Tests:       2 failed, 33 passed, 35 total
+mutated M3-invert
+== M3-invert rc=1 wall=15s Tests:       31 failed, 4 passed, 35 total
+mutated M4-refuse-all-twinned
+== M4-refuse-all-twinned rc=1 wall=16s Tests:       9 failed, 26 passed, 35 total
+mutated M5-now-only
+== M5-now-only rc=1 wall=15s Tests:       22 failed, 13 passed, 35 total
+mutated M6-now-vs-now
+== M6-now-vs-now rc=1 wall=16s Tests:       25 failed, 10 passed, 35 total
+mutated M7-no-twin-check
+== M7-no-twin-check rc=0 wall=15s Tests:       35 passed, 35 total

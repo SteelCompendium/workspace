@@ -1,0 +1,806 @@
+FAIL dom test/dom/framework/reading-mode-host-part-pin-twin.test.ts
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › the ticket shapes: refused with the one "changed on disk first" Notice › heading hover, card: the Tracker section deleted, the other one renamed Tracker, END edited
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -4,11 +4,11 @@
+
+      ## Tracker
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      ## After
+
+      END edited
+
+      179 |
+      180 | 	const refused = (r: { now: string; after: string; notices: unknown[] }) => {
+    > 181 | 		expect(r.after).toBe(r.now); // nothing written: the counter under the link now is not the one the card was drawn from
+          | 		                ^
+      182 | 		expect(r.notices).toEqual(dropped);
+      183 | 	};
+      184 |
+
+      at refused (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:181:19)
+      at test/dom/framework/reading-mode-host-part-pin-twin.test.ts:194:4
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › the ticket shapes: refused with the one "changed on disk first" Notice › heading hover, form: the Tracker section deleted, the other one renamed Tracker, END edited
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -3,11 +3,11 @@
+      TOP
+
+      ## Tracker
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      ## After
+      ↵
+
+      179 |
+      180 | 	const refused = (r: { now: string; after: string; notices: unknown[] }) => {
+    > 181 | 		expect(r.after).toBe(r.now); // nothing written: the counter under the link now is not the one the card was drawn from
+          | 		                ^
+      182 | 		expect(r.notices).toEqual(dropped);
+      183 | 	};
+      184 |
+
+      at refused (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:181:19)
+      at test/dom/framework/reading-mode-host-part-pin-twin.test.ts:194:4
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › the ticket shapes: refused with the one "changed on disk first" Notice › heading embed RV, card: the Tracker section deleted, the other one renamed Tracker, END edited
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -4,11 +4,11 @@
+
+      ## Tracker
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      ## After
+
+      END edited
+
+      179 |
+      180 | 	const refused = (r: { now: string; after: string; notices: unknown[] }) => {
+    > 181 | 		expect(r.after).toBe(r.now); // nothing written: the counter under the link now is not the one the card was drawn from
+          | 		                ^
+      182 | 		expect(r.notices).toEqual(dropped);
+      183 | 	};
+      184 |
+
+      at refused (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:181:19)
+      at test/dom/framework/reading-mode-host-part-pin-twin.test.ts:194:4
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › the ticket shapes: refused with the one "changed on disk first" Notice › heading embed RV, form: the Tracker section deleted, the other one renamed Tracker, END edited
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -3,11 +3,11 @@
+      TOP
+
+      ## Tracker
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      ## After
+      ↵
+
+      179 |
+      180 | 	const refused = (r: { now: string; after: string; notices: unknown[] }) => {
+    > 181 | 		expect(r.after).toBe(r.now); // nothing written: the counter under the link now is not the one the card was drawn from
+          | 		                ^
+      182 | 		expect(r.notices).toEqual(dropped);
+      183 | 	};
+      184 |
+
+      at refused (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:181:19)
+      at test/dom/framework/reading-mode-host-part-pin-twin.test.ts:194:4
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › the ticket shapes: refused with the one "changed on disk first" Notice › heading embed LP, card: the Tracker section deleted, the other one renamed Tracker, END edited
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -4,11 +4,11 @@
+
+      ## Tracker
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      ## After
+
+      END edited
+
+      179 |
+      180 | 	const refused = (r: { now: string; after: string; notices: unknown[] }) => {
+    > 181 | 		expect(r.after).toBe(r.now); // nothing written: the counter under the link now is not the one the card was drawn from
+          | 		                ^
+      182 | 		expect(r.notices).toEqual(dropped);
+      183 | 	};
+      184 |
+
+      at refused (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:181:19)
+      at test/dom/framework/reading-mode-host-part-pin-twin.test.ts:194:4
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › the ticket shapes: refused with the one "changed on disk first" Notice › heading embed LP, form: the Tracker section deleted, the other one renamed Tracker, END edited
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -3,11 +3,11 @@
+      TOP
+
+      ## Tracker
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      ## After
+      ↵
+
+      179 |
+      180 | 	const refused = (r: { now: string; after: string; notices: unknown[] }) => {
+    > 181 | 		expect(r.after).toBe(r.now); // nothing written: the counter under the link now is not the one the card was drawn from
+          | 		                ^
+      182 | 		expect(r.notices).toEqual(dropped);
+      183 | 	};
+      184 |
+
+      at refused (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:181:19)
+      at test/dom/framework/reading-mode-host-part-pin-twin.test.ts:194:4
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › the ticket shapes: refused with the one "changed on disk first" Notice › heading hover, card: after the card's own + made two adjacent Tracker sections identical, the first deleted and END edited
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -4,11 +4,11 @@
+
+      ## Tracker
+
+      ```ds-counter
+      name: Twin
+    - current_value: 6
+    + current_value: 7
+      ```
+
+      ## After
+
+      END edited
+
+      179 |
+      180 | 	const refused = (r: { now: string; after: string; notices: unknown[] }) => {
+    > 181 | 		expect(r.after).toBe(r.now); // nothing written: the counter under the link now is not the one the card was drawn from
+          | 		                ^
+      182 | 		expect(r.notices).toEqual(dropped);
+      183 | 	};
+      184 |
+
+      at refused (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:181:19)
+      at test/dom/framework/reading-mode-host-part-pin-twin.test.ts:203:4
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › the ticket shapes: refused with the one "changed on disk first" Notice › heading hover, form: after the card's own + made two adjacent Tracker sections identical, the first deleted and END edited
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -3,11 +3,11 @@
+      TOP
+
+      ## Tracker
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 6
+      ```
+
+      ## After
+      ↵
+
+      179 |
+      180 | 	const refused = (r: { now: string; after: string; notices: unknown[] }) => {
+    > 181 | 		expect(r.after).toBe(r.now); // nothing written: the counter under the link now is not the one the card was drawn from
+          | 		                ^
+      182 | 		expect(r.notices).toEqual(dropped);
+      183 | 	};
+      184 |
+
+      at refused (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:181:19)
+      at test/dom/framework/reading-mode-host-part-pin-twin.test.ts:203:4
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › the ticket shapes: refused with the one "changed on disk first" Notice › heading embed RV, card: after the card's own + made two adjacent Tracker sections identical, the first deleted and END edited
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -4,11 +4,11 @@
+
+      ## Tracker
+
+      ```ds-counter
+      name: Twin
+    - current_value: 6
+    + current_value: 7
+      ```
+
+      ## After
+
+      END edited
+
+      179 |
+      180 | 	const refused = (r: { now: string; after: string; notices: unknown[] }) => {
+    > 181 | 		expect(r.after).toBe(r.now); // nothing written: the counter under the link now is not the one the card was drawn from
+          | 		                ^
+      182 | 		expect(r.notices).toEqual(dropped);
+      183 | 	};
+      184 |
+
+      at refused (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:181:19)
+      at test/dom/framework/reading-mode-host-part-pin-twin.test.ts:203:4
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › the ticket shapes: refused with the one "changed on disk first" Notice › heading embed LP, form: after the card's own + made two adjacent Tracker sections identical, the first deleted and END edited
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -3,11 +3,11 @@
+      TOP
+
+      ## Tracker
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 6
+      ```
+
+      ## After
+      ↵
+
+      179 |
+      180 | 	const refused = (r: { now: string; after: string; notices: unknown[] }) => {
+    > 181 | 		expect(r.after).toBe(r.now); // nothing written: the counter under the link now is not the one the card was drawn from
+          | 		                ^
+      182 | 		expect(r.notices).toEqual(dropped);
+      183 | 	};
+      184 |
+
+      at refused (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:181:19)
+      at test/dom/framework/reading-mode-host-part-pin-twin.test.ts:203:4
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › the ticket shapes: refused with the one "changed on disk first" Notice › block hover, card: the lower counter (the one ^p names) deleted, its ^p line left under the upper one, TOP edited
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -2,10 +2,10 @@
+
+      TOP edited
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+      ^p
+
+      END
+
+      179 |
+      180 | 	const refused = (r: { now: string; after: string; notices: unknown[] }) => {
+    > 181 | 		expect(r.after).toBe(r.now); // nothing written: the counter under the link now is not the one the card was drawn from
+          | 		                ^
+      182 | 		expect(r.notices).toEqual(dropped);
+      183 | 	};
+      184 |
+
+      at refused (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:181:19)
+      at test/dom/framework/reading-mode-host-part-pin-twin.test.ts:212:4
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › the ticket shapes: refused with the one "changed on disk first" Notice › block hover, form: the lower counter (the one ^p names) deleted, its ^p line left under the upper one, TOP edited
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      # N
+
+      TOP edited
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+      ^p
+
+      END
+
+      179 |
+      180 | 	const refused = (r: { now: string; after: string; notices: unknown[] }) => {
+    > 181 | 		expect(r.after).toBe(r.now); // nothing written: the counter under the link now is not the one the card was drawn from
+          | 		                ^
+      182 | 		expect(r.notices).toEqual(dropped);
+      183 | 	};
+      184 |
+
+      at refused (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:181:19)
+      at test/dom/framework/reading-mode-host-part-pin-twin.test.ts:212:4
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › the ticket shapes: refused with the one "changed on disk first" Notice › block embed RV, card: the lower counter (the one ^p names) deleted, its ^p line left under the upper one, TOP edited
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -2,10 +2,10 @@
+
+      TOP edited
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+      ^p
+
+      END
+
+      179 |
+      180 | 	const refused = (r: { now: string; after: string; notices: unknown[] }) => {
+    > 181 | 		expect(r.after).toBe(r.now); // nothing written: the counter under the link now is not the one the card was drawn from
+          | 		                ^
+      182 | 		expect(r.notices).toEqual(dropped);
+      183 | 	};
+      184 |
+
+      at refused (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:181:19)
+      at test/dom/framework/reading-mode-host-part-pin-twin.test.ts:212:4
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › the ticket shapes: refused with the one "changed on disk first" Notice › block embed LP, form: the lower counter (the one ^p names) deleted, its ^p line left under the upper one, TOP edited
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      # N
+
+      TOP edited
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+      ^p
+
+      END
+
+      179 |
+      180 | 	const refused = (r: { now: string; after: string; notices: unknown[] }) => {
+    > 181 | 		expect(r.after).toBe(r.now); // nothing written: the counter under the link now is not the one the card was drawn from
+          | 		                ^
+      182 | 		expect(r.notices).toEqual(dropped);
+      183 | 	};
+      184 |
+
+      at refused (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:181:19)
+      at test/dom/framework/reading-mode-host-part-pin-twin.test.ts:212:4
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › the mirrors: the OTHER counter deleted with the same edit leaves the same text, so they are refused too (the accepted cost) › heading hover, card: the Other section deleted, END edited (reads the same as the Tracker one deleted and Other renamed)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -4,11 +4,11 @@
+
+      ## Tracker
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      ## After
+
+      END edited
+
+      179 |
+      180 | 	const refused = (r: { now: string; after: string; notices: unknown[] }) => {
+    > 181 | 		expect(r.after).toBe(r.now); // nothing written: the counter under the link now is not the one the card was drawn from
+          | 		                ^
+      182 | 		expect(r.notices).toEqual(dropped);
+      183 | 	};
+      184 |
+
+      at refused (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:181:19)
+      at test/dom/framework/reading-mode-host-part-pin-twin.test.ts:223:4
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › the mirrors: the OTHER counter deleted with the same edit leaves the same text, so they are refused too (the accepted cost) › heading embed RV, form: the Other section deleted, END edited (reads the same as the Tracker one deleted and Other renamed)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -3,11 +3,11 @@
+      TOP
+
+      ## Tracker
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+
+      ## After
+      ↵
+
+      179 |
+      180 | 	const refused = (r: { now: string; after: string; notices: unknown[] }) => {
+    > 181 | 		expect(r.after).toBe(r.now); // nothing written: the counter under the link now is not the one the card was drawn from
+          | 		                ^
+      182 | 		expect(r.notices).toEqual(dropped);
+      183 | 	};
+      184 |
+
+      at refused (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:181:19)
+      at test/dom/framework/reading-mode-host-part-pin-twin.test.ts:223:4
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › the mirrors: the OTHER counter deleted with the same edit leaves the same text, so they are refused too (the accepted cost) › heading hover, card: after the own +, the SECOND Tracker section deleted, END edited
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -4,11 +4,11 @@
+
+      ## Tracker
+
+      ```ds-counter
+      name: Twin
+    - current_value: 6
+    + current_value: 7
+      ```
+
+      ## After
+
+      END edited
+
+      179 |
+      180 | 	const refused = (r: { now: string; after: string; notices: unknown[] }) => {
+    > 181 | 		expect(r.after).toBe(r.now); // nothing written: the counter under the link now is not the one the card was drawn from
+          | 		                ^
+      182 | 		expect(r.notices).toEqual(dropped);
+      183 | 	};
+      184 |
+
+      at refused (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:181:19)
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:227:4)
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › the mirrors: the OTHER counter deleted with the same edit leaves the same text, so they are refused too (the accepted cost) › block embed RV, card: the UPPER counter deleted, TOP edited
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -2,10 +2,10 @@
+
+      TOP edited
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+      ^p
+
+      END
+
+      179 |
+      180 | 	const refused = (r: { now: string; after: string; notices: unknown[] }) => {
+    > 181 | 		expect(r.after).toBe(r.now); // nothing written: the counter under the link now is not the one the card was drawn from
+          | 		                ^
+      182 | 		expect(r.notices).toEqual(dropped);
+      183 | 	};
+      184 |
+
+      at refused (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:181:19)
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:233:4)
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › the twin gate covers the note as it is now, not only the note as drawn › block hover, card: an identical counter pasted right above the unique one the card was drawn from, TOP edited
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -12,10 +12,10 @@
+      current_value: 5
+      ```
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+      ^p
+
+      END
+
+      179 |
+      180 | 	const refused = (r: { now: string; after: string; notices: unknown[] }) => {
+    > 181 | 		expect(r.after).toBe(r.now); // nothing written: the counter under the link now is not the one the card was drawn from
+          | 		                ^
+      182 | 		expect(r.notices).toEqual(dropped);
+      183 | 	};
+      184 |
+
+      at refused (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:181:19)
+      at test/dom/framework/reading-mode-host-part-pin-twin.test.ts:246:4
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › the twin gate covers the note as it is now, not only the note as drawn › block embed RV, form: an identical counter pasted right above the unique one the card was drawn from, TOP edited
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -11,11 +11,11 @@
+      name: Twin
+      current_value: 5
+      ```
+
+      ```ds-counter
+    - name: Twin
+    + name: Edited
+      current_value: 5
+      ```
+      ^p
+
+      END
+
+      179 |
+      180 | 	const refused = (r: { now: string; after: string; notices: unknown[] }) => {
+    > 181 | 		expect(r.after).toBe(r.now); // nothing written: the counter under the link now is not the one the card was drawn from
+          | 		                ^
+      182 | 		expect(r.notices).toEqual(dropped);
+      183 | 	};
+      184 |
+
+      at refused (test/dom/framework/reading-mode-host-part-pin-twin.test.ts:181:19)
+      at test/dom/framework/reading-mode-host-part-pin-twin.test.ts:246:4
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › persistence: nothing is written and the refusal repeats until the preview or embed is reopened › heading hover: refused (one Notice, nothing written), refused again on a second click of the same card, saved from a reopened preview
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 4
+    + Received  + 2
+
+    @@ -5,15 +5,13 @@
+
+      ## Tracker
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+
+      ## After
+
+      END edited",
+    -   "notices": Array [
+    -     "Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first.",
+    -   ],
+    +   "notices": Array [],
+      }
+
+      291 | 		] as Array<[Shape, string, string[], (r: string[]) => string[]]>)('%s: refused (one Notice, nothing written), refused again on a second click of the same card, saved from a reopened preview', async (shape, link, mount, edit) => {
+      292 | 			const r = await twoClicksThenReopen(mount, link, shape, edit(mount));
+    > 293 | 			expect(r.c1).toEqual({ after: r.now, notices: dropped });
+          | 			             ^
+      294 | 			expect(r.c2).toEqual({ after: r.now, notices: dropped });
+      295 | 			expect(values(r.c3.after)).toEqual(values(r.now).map((v, i) => (i === 0 ? 6 : v))); // the counter the reopened preview names is written
+      296 | 			expect(r.c3.notices).toEqual([]);
+
+      at test/dom/framework/reading-mode-host-part-pin-twin.test.ts:293:17
+
+  ● SC-621: a preview of part of a note never writes the other identical counter when the drawn-from one is deleted with a one-sided edit › persistence: nothing is written and the refusal repeats until the preview or embed is reopened › block embed RV: refused (one Notice, nothing written), refused again on a second click of the same card, saved from a reopened preview
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 4
+    + Received  + 2
+
+    @@ -3,14 +3,12 @@
+
+      TOP edited
+
+      ```ds-counter
+      name: Twin
+    - current_value: 5
+    + current_value: 6
+      ```
+      ^p
+
+      END",
+    -   "notices": Array [
+    -     "Draw Steel Elements: a change to a block in Note was not saved — the block changed on disk first.",
+    -   ],
+    +   "notices": Array [],
+      }
+
+      291 | 		] as Array<[Shape, string, string[], (r: string[]) => string[]]>)('%s: refused (one Notice, nothing written), refused again on a second click of the same card, saved from a reopened preview', async (shape, link, mount, edit) => {
+      292 | 			const r = await twoClicksThenReopen(mount, link, shape, edit(mount));
+    > 293 | 			expect(r.c1).toEqual({ after: r.now, notices: dropped });
+          | 			             ^
+      294 | 			expect(r.c2).toEqual({ after: r.now, notices: dropped });
+      295 | 			expect(values(r.c3.after)).toEqual(values(r.now).map((v, i) => (i === 0 ? 6 : v))); // the counter the reopened preview names is written
+      296 | 			expect(r.c3.notices).toEqual([]);
+
+      at test/dom/framework/reading-mode-host-part-pin-twin.test.ts:293:17
+
+FAIL dom test/dom/framework/reading-mode-host-part-pin-sweep.test.ts (15.804 s)
+  ● SC-621: sweep of a click in a preview or embed of part of a note after one outside write, and a seeded fuzz › sweep: no write in a twinned tie, none into another counter outside R1/R2, no refusal outside a tie, one Notice per refusal
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 22
+
+    - Array []
+    + Array [
+    +   "written in an ambiguous twinned cell: sec-twin+diff-below del-P+afterH Note#Tracker embed/lp card + redrawn -> OTHER:b",
+    +   "written into another counter outside R1/R2: sec-twin+diff-below del-P+afterH Note#Tracker embed/lp card + redrawn -> OTHER:b",
+    +   "written in an ambiguous twinned cell: sec-twin+diff-below del-P+afterH Note#Tracker hover/rv form + redrawn -> OTHER:b",
+    +   "written into another counter outside R1/R2: sec-twin+diff-below del-P+afterH Note#Tracker hover/rv form + redrawn -> OTHER:b",
+    +   "written in an ambiguous twinned cell: sec-twin+diff-below del-b+afterH Note#Tracker embed/lp form + redrawn -> A",
+    +   "written in an ambiguous twinned cell: sec-twin+diff-below del-b+afterH Note#Tracker embed/rv card + redrawn -> A",
+    +   "written in an ambiguous twinned cell: sec-twin+diff-below del-P-rename-b+afterH Note#Tracker embed/rv form + redrawn -> OTHER:b",
+    +   "written in an ambiguous twinned cell: sec-twin+diff-below del-P-rename-b+afterH Note#Tracker hover/rv card + redrawn -> OTHER:b",
+    +   "written in an ambiguous twinned cell: sec-twin+diff-above del-P+end Note#Tracker hover/rv card + redrawn -> OTHER:b",
+    +   "written into another counter outside R1/R2: sec-twin+diff-above del-P+end Note#Tracker hover/rv card + redrawn -> OTHER:b",
+    +   "written in an ambiguous twinned cell: sec-twin+diff-above del-P+end Note#Tracker embed/rv form + redrawn -> OTHER:b",
+    +   "written into another counter outside R1/R2: sec-twin+diff-above del-P+end Note#Tracker embed/rv form + redrawn -> OTHER:b",
+    +   "written in an ambiguous twinned cell: sec-twin+diff-above del-b+end Note#Tracker hover/rv form + redrawn -> A",
+    +   "written in an ambiguous twinned cell: sec-twin+diff-above del-b+end Note#Tracker embed/lp card + redrawn -> A",
+    +   "written in an ambiguous twinned cell: sec-twin+diff-above del-P-rename-b+end Note#Tracker embed/lp form + redrawn -> OTHER:b",
+    +   "written in an ambiguous twinned cell: sec-twin+diff-above del-P-rename-b+end Note#Tracker embed/rv card + redrawn -> OTHER:b",
+    +   "written in an ambiguous twinned cell: sec-named ins-twin-below-adj+end Note#Tracker embed/rv form no + -> A",
+    +   "written in an ambiguous twinned cell: sec-named ins-twin-below-adj+end Note#Tracker hover/rv card no + -> A",
+    +   "written in an ambiguous twinned cell: sec-named ins-twin-below-adj+afterH Note#Tracker embed/lp form + redrawn -> A",
+    +   "written in an ambiguous twinned cell: sec-named ins-twin-below-adj+afterH Note#Tracker embed/rv card + redrawn -> A",
+    + ]
+
+      543 | 	test('sweep: no write in a twinned tie, none into another counter outside R1/R2, no refusal outside a tie, one Notice per refusal', async () => {
+      544 | 		const { bad, t } = check(await collect(sweepCells()));
+    > 545 | 		expect(bad.slice(0, 20)).toEqual([]);
+          | 		                         ^
+      546 | 		expect(t).toEqual(SWEEP_PINNED);
+      547 | 	}, 120000);
+      548 |
+
+      at Object.<anonymous> (test/dom/framework/reading-mode-host-part-pin-sweep.test.ts:545:28)
+
+  ● SC-621: sweep of a click in a preview or embed of part of a note after one outside write, and a seeded fuzz › fuzz seed 1: the same checks over random notes and 1-3 random outside edits
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 4
+
+    - Array []
+    + Array [
+    +   "written in an ambiguous twinned cell: fuzz1-39 del-blank+del-P+move-P Note#Other embed/rv card + redrawn -> OTHER:b1",
+    +   "written in an ambiguous twinned cell: fuzz1-39 del-blank+del-P+move-P Note#Other embed/rv form + redrawn -> OTHER:b1",
+    + ]
+
+      549 | 	test.each(FUZZ_SEEDS)('fuzz seed %i: the same checks over random notes and 1-3 random outside edits', async (sd) => {
+      550 | 		const { bad, t } = check(await collect(fuzzCells(sd, FUZZ_NOTES)));
+    > 551 | 		expect(bad.slice(0, 20)).toEqual([]);
+          | 		                         ^
+      552 | 		expect(t).toEqual(FUZZ_PINNED[sd]);
+      553 | 	}, 120000);
+      554 | });
+
+      at test/dom/framework/reading-mode-host-part-pin-sweep.test.ts:551:28
+
+  ● SC-621: sweep of a click in a preview or embed of part of a note after one outside write, and a seeded fuzz › fuzz seed 2: the same checks over random notes and 1-3 random outside edits
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 10
+
+    - Array []
+    + Array [
+    +   "written in an ambiguous twinned cell: fuzz2-111 paste+type+paste Note#^m0 embed/rv card no + -> A",
+    +   "written in an ambiguous twinned cell: fuzz2-111 paste+type+paste Note#^m0 embed/rv card + redrawn -> A",
+    +   "written in an ambiguous twinned cell: fuzz2-111 paste+type+paste Note#^m0 embed/rv form no + -> A",
+    +   "written in an ambiguous twinned cell: fuzz2-111 paste+type+paste Note#^m0 embed/rv form + redrawn -> A",
+    +   "written in an ambiguous twinned cell: fuzz2-126 del-blank+edit-line+paste Note#^m1 hover/rv card no + -> A",
+    +   "written in an ambiguous twinned cell: fuzz2-126 del-blank+edit-line+paste Note#^m1 hover/rv card + redrawn -> A",
+    +   "written in an ambiguous twinned cell: fuzz2-126 del-blank+edit-line+paste Note#^m1 hover/rv form no + -> A",
+    +   "written in an ambiguous twinned cell: fuzz2-126 del-blank+edit-line+paste Note#^m1 hover/rv form + redrawn -> A",
+    + ]
+
+      549 | 	test.each(FUZZ_SEEDS)('fuzz seed %i: the same checks over random notes and 1-3 random outside edits', async (sd) => {
+      550 | 		const { bad, t } = check(await collect(fuzzCells(sd, FUZZ_NOTES)));
+    > 551 | 		expect(bad.slice(0, 20)).toEqual([]);
+          | 		                         ^
+      552 | 		expect(t).toEqual(FUZZ_PINNED[sd]);
+      553 | 	}, 120000);
+      554 | });
+
+      at test/dom/framework/reading-mode-host-part-pin-sweep.test.ts:551:28
+
+Test Suites: 2 failed, 2 total
+Tests:       25 failed, 10 passed, 35 total
+Snapshots:   0 total
+Time:        16.712 s
+Ran all test suites matching test/dom/framework/reading-mode-host-part-pin-twin.test.ts|test/dom/framework/reading-mode-host-part-pin-sweep.test.ts.
+jest rc=1 wall=17s

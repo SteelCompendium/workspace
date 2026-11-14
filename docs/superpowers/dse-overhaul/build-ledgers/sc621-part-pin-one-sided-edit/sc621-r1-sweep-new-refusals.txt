@@ -1,0 +1,90 @@
+SC-621 r1 sweep: base -> prototype A->refused (new refusals), by layout / edit (all cells: count)
+  12  ('blk-tight-diff-neighbour', 'ins-twin-above-adj+top', 'amb', 'twinned')
+  12  ('blk-triple+diff', 'del-a+top', 'amb', 'twinned')
+  12  ('blk-triple+diff', 'del-b+top', 'amb', 'twinned')
+  12  ('blk-triple+diff', 'ins-twin-above-adj+top', 'amb', 'twinned')
+  12  ('blk-triple-midmark', 'del-a+top', 'amb', 'twinned')
+  12  ('blk-triple-midmark', 'ins-twin-above-adj+top', 'amb', 'twinned')
+  12  ('blk-twin-blank+diff-above', 'del-a+top', 'amb', 'twinned')
+  12  ('blk-twin-blank+diff-above', 'ins-twin-above-adj+top', 'amb', 'twinned')
+  12  ('blk-twin-blank+diff-below', 'del-a+top', 'amb', 'twinned')
+  12  ('blk-twin-blank+diff-below', 'ins-twin-above-adj+top', 'amb', 'twinned')
+  12  ('blk-twin-blank-bothmark', 'del-a+top', 'amb', 'twinned')
+  24  ('blk-twin-blank-bothmark', 'ins-twin-above-adj+top', 'amb', 'twinned')
+  12  ('blk-twin-blank-lowmark', 'del-a+top', 'amb', 'twinned')
+  12  ('blk-twin-blank-lowmark', 'ins-twin-above-adj+top', 'amb', 'twinned')
+  12  ('blk-twin-blank-upmark', 'ins-twin-above-adj+top', 'amb', 'twinned')
+  12  ('blk-twin-blank2-lowmark', 'ins-twin-above-adj+top', 'amb', 'twinned')
+  12  ('blk-twin-tight-lowmark', 'del-a', 'amb', 'twinned')
+  12  ('blk-twin-tight-lowmark', 'del-a+top', 'amb', 'twinned')
+  12  ('blk-twin-tight-lowmark', 'ins-twin-above-adj+top', 'amb', 'twinned')
+  12  ('blk-uniq', 'ins-twin-above-adj+top', 'amb', 'twinned')
+  12  ('sec-named', 'del-b+afterH', 'amb', 'twinned')
+  12  ('sec-named', 'del-b+end', 'amb', 'twinned')
+  24  ('sec-named', 'ins-twin-below-adj+afterH', 'amb', 'twinned')
+  24  ('sec-named', 'ins-twin-below-adj+end', 'amb', 'twinned')
+  24  ('sec-named+prose', 'ins-twin-below-adj+afterH', 'amb', 'twinned')
+  24  ('sec-named+prose', 'ins-twin-below-adj+end', 'amb', 'twinned')
+   6  ('sec-twin', 'del-b+afterH', 'amb', 'twinned')
+   6  ('sec-twin', 'del-b+end', 'amb', 'twinned')
+   6  ('sec-twin+diff-above', 'del-b+afterH', 'amb', 'twinned')
+   6  ('sec-twin+diff-above', 'del-b+end', 'amb', 'twinned')
+   6  ('sec-twin+diff-below', 'del-b+afterH', 'amb', 'twinned')
+   6  ('sec-twin+diff-below', 'del-b+end', 'amb', 'twinned')
+
+OTHER->refused (different-counter writes closed), by layout / edit
+  12  ('blk-triple+diff', 'del-P-keepmark-pre+top')
+  12  ('blk-triple-midmark', 'del-P-keepmark-pre+top')
+  12  ('blk-twin-blank+diff-above', 'del-P-keepmark-pre+top')
+  12  ('blk-twin-blank+diff-below', 'del-P-keepmark-pre+top')
+  12  ('blk-twin-blank-lowmark', 'del-P-keepmark-pre+top')
+  12  ('blk-twin-tight-lowmark', 'del-P-keepmark+top')
+  12  ('blk-twin-tight-lowmark', 'del-P-keepmark-pre+top')
+  12  ('sec-named', 'del-P-rename-b+afterH')
+  12  ('sec-named', 'del-P-rename-b+end')
+   6  ('sec-twin', 'del-P+afterH')
+   6  ('sec-twin', 'del-P+end')
+   6  ('sec-twin', 'del-P-rename-b+afterH')
+   6  ('sec-twin', 'del-P-rename-b+end')
+   6  ('sec-twin+diff-above', 'del-P+afterH')
+   6  ('sec-twin+diff-above', 'del-P+end')
+   6  ('sec-twin+diff-above', 'del-P-rename-b+afterH')
+   6  ('sec-twin+diff-above', 'del-P-rename-b+end')
+   6  ('sec-twin+diff-below', 'del-P+afterH')
+   6  ('sec-twin+diff-below', 'del-P+end')
+   6  ('sec-twin+diff-below', 'del-P-rename-b+afterH')
+   6  ('sec-twin+diff-below', 'del-P-rename-b+end')
+
+A->refused dims per (layout, edit): (shape, plus, timing)
+('blk-tight-diff-neighbour', 'ins-twin-above-adj+top') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('blk-triple+diff', 'del-a+top') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('blk-triple+diff', 'del-b+top') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('blk-triple+diff', 'ins-twin-above-adj+top') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('blk-triple-midmark', 'del-a+top') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('blk-triple-midmark', 'ins-twin-above-adj+top') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('blk-twin-blank+diff-above', 'del-a+top') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('blk-twin-blank+diff-above', 'ins-twin-above-adj+top') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('blk-twin-blank+diff-below', 'del-a+top') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('blk-twin-blank+diff-below', 'ins-twin-above-adj+top') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('blk-twin-blank-bothmark', 'del-a+top') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('blk-twin-blank-bothmark', 'ins-twin-above-adj+top') {('hover', 'no +', 'T1'): 4, ('hover', '+ redrawn', 'T1'): 4, ('embed', 'no +', 'T1'): 8, ('embed', '+ redrawn', 'T1'): 8}
+('blk-twin-blank-lowmark', 'del-a+top') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('blk-twin-blank-lowmark', 'ins-twin-above-adj+top') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('blk-twin-blank-upmark', 'ins-twin-above-adj+top') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('blk-twin-blank2-lowmark', 'ins-twin-above-adj+top') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('blk-twin-tight-lowmark', 'del-a') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('blk-twin-tight-lowmark', 'del-a+top') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('blk-twin-tight-lowmark', 'ins-twin-above-adj+top') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('blk-uniq', 'ins-twin-above-adj+top') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('sec-named', 'del-b+afterH') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('sec-named', 'del-b+end') {('hover', 'no +', 'T1'): 2, ('hover', '+ redrawn', 'T1'): 2, ('embed', 'no +', 'T1'): 4, ('embed', '+ redrawn', 'T1'): 4}
+('sec-named', 'ins-twin-below-adj+afterH') {('hover', 'no +', 'T1'): 4, ('hover', '+ redrawn', 'T1'): 4, ('embed', 'no +', 'T1'): 8, ('embed', '+ redrawn', 'T1'): 8}
+('sec-named', 'ins-twin-below-adj+end') {('hover', 'no +', 'T1'): 4, ('hover', '+ redrawn', 'T1'): 4, ('embed', 'no +', 'T1'): 8, ('embed', '+ redrawn', 'T1'): 8}
+('sec-named+prose', 'ins-twin-below-adj+afterH') {('hover', 'no +', 'T1'): 4, ('hover', '+ redrawn', 'T1'): 4, ('embed', 'no +', 'T1'): 8, ('embed', '+ redrawn', 'T1'): 8}
+('sec-named+prose', 'ins-twin-below-adj+end') {('hover', 'no +', 'T1'): 4, ('hover', '+ redrawn', 'T1'): 4, ('embed', 'no +', 'T1'): 8, ('embed', '+ redrawn', 'T1'): 8}
+('sec-twin', 'del-b+afterH') {('hover', '+ redrawn', 'T1'): 2, ('embed', '+ redrawn', 'T1'): 4}
+('sec-twin', 'del-b+end') {('hover', '+ redrawn', 'T1'): 2, ('embed', '+ redrawn', 'T1'): 4}
+('sec-twin+diff-above', 'del-b+afterH') {('hover', '+ redrawn', 'T1'): 2, ('embed', '+ redrawn', 'T1'): 4}
+('sec-twin+diff-above', 'del-b+end') {('hover', '+ redrawn', 'T1'): 2, ('embed', '+ redrawn', 'T1'): 4}
+('sec-twin+diff-below', 'del-b+afterH') {('hover', '+ redrawn', 'T1'): 2, ('embed', '+ redrawn', 'T1'): 4}
+('sec-twin+diff-below', 'del-b+end') {('hover', '+ redrawn', 'T1'): 2, ('embed', '+ redrawn', 'T1'): 4}
