@@ -98,3 +98,7 @@ r2 verdict LAND-READY, 0 HIGH / 0 MEDIUM / 3 LOW / 5 INFO (report `sc627-r2-revi
 dse branch `sc627-montage-duplicate-hero` @ `afd1436c` on develop `620d5774`; superproject branch @ `88915b63` on workspace main `28ed9439`. Landing = dispatcher (land-stack). At landing: dse-verify CURRENT bump (jest 12922/2 fresh, e2e 570/593 0 failed 23 known-bug 416/416), then Done via linear-post.py `--state Done` and verify.
 - Dispatcher (2026-11-14): add a CHANGELOG `## Unreleased` bullet commit under the pointer bump (origin/main 28ed9439 → changelog → ONE bump). Owner wrote the bullet (`sc627-changelog-bullet.md`); r6 chore restacks.
 - r6 chore — DONE: superproject branch `4566c527` = origin/main `28ed9439` → `3f338ece` CHANGELOG bullet → `4566c527` ONE pointer bump to dse `afd1436c`. Status clean. LAND-READY again.
+
+## Done (2026-11-14)
+
+LANDED by the dispatcher: dse develop `afd1436c`, workspace main `73aa6a9d` (bookkeeping `fcac51ba`); worktree removed; ledger preserved at `docs/superpowers/dse-overhaul/build-ledgers/sc627-montage-duplicate-hero/`; dse-verify CURRENT updated. Owner posted the landed comment and set SC-627 Done via linear-post.py `--state Done`; verified Done (completedAt 2026-11-14T16:49:21Z).
