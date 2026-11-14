@@ -108,6 +108,12 @@ go under an *Internal* sub-heading.
   Cmd or Alt, and anything typed into a text field keep working as before. Pressing Escape in a search that a typed letter
   opened (nothing picked) closes just the search and puts focus back on the control you typed from.
 
+- **DSE plugin: removing a condition with the mouse while using the keyboard keeps focus in the initiative tracker's conditions row, in Reading view and the pinned sidebar tracker (SC-614).**
+  With the keyboard focus on a row's Add Condition button (or on another condition's icon), a mouse click on a condition icon removed it,
+  and focus fell to the top of the page. Focus now stays on the Add Condition button, or on the same condition's icon (the next control in
+  the row when the icon that had focus is the one removed). Removing with Enter or Space does the same. A click when focus was not already
+  in the tracker still does not pull focus into it.
+
 - **DSE plugin: clicking another creature in the initiative roster while using the keyboard keeps focus in the tracker, in Reading view (SC-609).**
   With the keyboard focus on the detail row's Stamina control, a mouse click on another roster cell switched the detail row to that
   creature, and focus fell to the top of the page. Focus now moves to the creature you clicked. A click when focus was not already
