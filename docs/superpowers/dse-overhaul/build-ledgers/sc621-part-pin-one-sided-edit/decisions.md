@@ -123,3 +123,7 @@ e2e `331/334 ok, 0 failed, 3 known-bug, coverage: 176/176 pairs` (known bugs SC-
 
 - Landed by the dispatcher: dse develop `27120710`; workspace main `a79ab0c1` (ledger preserved + SKILL proposal applied in `f05d3192`; worktree removed).
 - SC-621 moved to **Done** via linear-post.py `--state Done` (Done comment `sc621-comment-done.md` posted); verified Done with get_issue (completedAt 2026-11-14T01:08:56Z). No open follow-up tickets (SC-624 filed and closed as already fixed by SC-568).
+
+## Post-landing (2026-11-14)
+
+- Dispatcher relayed an SC-569 owner signal: lifecycle part 7 G-S115 (g) failed once at load 17 ("values [5,5], want [6,5]" + "changed on disk first" Notice), re-run 3/3 ok. Owner ruling: FILED **SC-633** (Backlog, related SC-621 / SC-607). Suspected harness timing (fixed 700 ms after hover before the outside write; SC-607 F3 accepted refusal), not SC-621's rule (TOP-only edit -> unique placement). Interim rule for running owners: a G-S115 (g) red with that Notice on a loaded host -> re-run part 7 once; a red on re-run, on a quiet host, or in any other G-S115 cell is a real signal. Nothing posted on SC-621.
