@@ -355,3 +355,8 @@ ONE pointer bump and no interim pointer commits.
   (shots/freeze/parity at `e4e2be2f`; src unchanged since). No CHANGELOG bullet (tests only). Skill
   proposal: `sc440-skill-proposal.md`. Filed: SC-643 (fixed, landed), SC-644, SC-645, SC-646, SC-647,
   SC-651 (bugs, markers in tests).
+- **DONE (2026-11-14)** — landed by the dispatcher: dse develop `941b814f`, workspace main `91896adf`
+  (bookkeeping `ff1a195e`: ledger preserved at `docs/superpowers/dse-overhaul/build-ledgers/sc440-e2e-settings-tab/`,
+  dse-verify proposal applied; worktree removed). SC-440 → Done via linear-post.py `--state Done`, verified
+  (status Done, completedAt 2026-11-14T14:48:08Z). Filed from this ticket: SC-643 (fixed before landing),
+  SC-644, SC-645, SC-646, SC-647, SC-651 (bugs, markers in tests).
