@@ -117,3 +117,8 @@ freeze 280/280 · parity 0/0/24.
   left unsent.
 - 2026-11-14 — **LAND-READY** reported to the dispatcher: dse `620d5774` on `develop` `941b814f`; superproject
   `41480b27` on workspace main `016b1cdd`. SKILL proposal: `sc637-skill-proposal.md`.
+- 2026-11-14 (dispatcher) — **LANDED**: dse `develop` `620d5774`, workspace main `9f35b804` (bookkeeping `11ee0b00`);
+  worktree removed; ledger preserved at `docs/superpowers/dse-overhaul/build-ledgers/sc637-negotiation-unknown-yaml-keys/`;
+  SKILL proposal applied (both footguns).
+- 2026-11-14 — **Done**: landed comment posted and state set via `linear-post.py --state Done`; verified Done
+  (completedAt 2026-11-14T15:34:46Z).
