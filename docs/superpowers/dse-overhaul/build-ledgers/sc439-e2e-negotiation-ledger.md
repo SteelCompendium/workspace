@@ -301,3 +301,7 @@ ONE pointer bump and no interim pointer commits.
   592 0 FAIL, host-leak 163/978, modal 40/240, clip 147 · freeze 280/280 · parity 0/0/24 (lifecycle /
   shots / freeze / parity on 1615843e; the r5 delta is test-only). Bugs filed: SC-637..SC-642, SC-648,
   SC-649. Reported to the dispatcher; the dispatcher lands.
+- **Done (2026-11-14)** — landed by the dispatcher: dse develop `8a81c5a7`, workspace main `fc3848ab` (ledger
+  preserved + dse-verify updated in `8dd3c4a4`; worktree removed). SC-439 set Done via linear-post.py
+  `--state Done`; verified Done (completedAt 2026-11-14T10:35:17Z). Open bugs from this ticket: SC-637..SC-642,
+  SC-648, SC-649 (Backlog, DSE 7.0.0).
