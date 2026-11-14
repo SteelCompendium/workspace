@@ -252,3 +252,8 @@ ONE pointer bump and no interim pointer commits.
   0/0/24 (shots/freeze/parity on pre-rebase heads; src attribute-only). No CHANGELOG bullet (tests
   only, no user-facing change). Skill proposal: `sc438-skill-proposal.md`. Filed: SC-625, SC-626,
   SC-627, SC-628, SC-629, SC-631 (bugs, markers in tests), SC-630, SC-632 (features, no marker).
+- **DONE (2026-11-14)** — landed by the dispatcher: dse develop `f6e504c7`, workspace main `1acbadc6`
+  (ledger preserved + dse-verify proposal applied in `0bf4430e`; worktree removed). SC-438 → Done via
+  linear-post.py `--state Done`, verified (status Done, completedAt 2026-11-14T05:43:35Z). Filed from
+  this ticket: SC-625, SC-626, SC-627, SC-628, SC-629, SC-631 (bugs, markers in tests), SC-630, SC-632
+  (features, no marker).
