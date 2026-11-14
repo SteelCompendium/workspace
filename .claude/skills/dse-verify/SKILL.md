@@ -153,26 +153,44 @@ bundle older than the source you're testing (67 on SC-169's fix round). **Protoc
 #77 lands: `rm -f main.js styles.css` in the plugin root before `npx jest`**, and if a jest
 red mentions a method you just added, suspect this first.
 
-### Load-sensitive jest suites (shared build host, 2026-08-16)
+### Jest timeouts under load (SC-568, 2026-11-13)
 
-With several agents running batteries concurrently (1-min load 45–57 observed), jest's
-default 5s per-test timeout fires in the two slowest suites — `test/dom/views/settings-tab`
-and `settings-preview` — producing 4–6 "Exceeded timeout" failures that look like a
-regression and are not. Proven by A/B: the BASE commit under the same load fails the same
-five tests; a re-run on a quiet machine is fully green. **Rule: on a timeout-shaped red in
-those suites, check `/proc/loadavg` and re-run before believing it** — and never let a
-fix round "address" it. Prefer to run the full battery when load is low; tsc/lint/shots/
-freeze/parity are not load-sensitive in the same way.
+`jest.config.ts` sets `testTimeout: 30000` (top level: it is a GLOBAL jest option, jest-circus reads it from
+`globalConfig`; inside a `projects` entry it is ignored), so it covers both the `unit` and the `dom` project. It is a
+hang detector, not a perf gate. Before SC-568 the 5 s default failed ordinary async tests on a loaded host (load 12-57)
+that take 1-3 s alone (`twin-reuse`, `initiative-default-keys`, `settings-tab`, `settings-preview`, first test of
+`sidebarInitiative`, `initiative-sc417-minion-squad`, `formModalStalePreview`, `fixtures`). A synchronous test never times
+out however slow it is; only a test that awaits macrotasks does. Headroom: about 6x over the time a test takes alone,
+about 2x over the slowest async test under the 1-core repro (`twin-reuse` ~16 s).
 
-Also load-sensitive (SC-360, 2026-10-19): the **first** test in
-`test/dom/views/sidebarInitiative.test.ts` can exceed the 5s timeout on a cold ts-jest compile at
-1-min load 40+. Same rule — check load, re-run. (Its *other* historical flake, the r2 undo test, was
-a real bug — numeric-looking anchor ids — fixed by SC-360; a red there is no longer load.)
-
-Also load-sensitive (SC-568, 2026-11-10): `twin-reuse.test.ts` and `test/dom/elements/initiative-default-keys.test.ts`
-(SC-435), and at 1-min load 25-50 also `initiative-sc417-minion-squad`, `formModalStalePreview`, `settings-tab` and `fixtures`
-(SC-558: 14 then 2 timeouts in a 218 s full run; each suite green alone with `-w 2`), and at load 12-40 `chromeFocusHandoff` "SC-505 r3 LOW-A" (wall-clock windows in `chrome/focusHandoff.ts`; SC-556), hit the 5 s timeout in a full run under concurrent load and pass alone (71/71 at SC-435). Same rule — check load, re-run
-the two suites alone before believing it.
+- An "Exceeded timeout of 30000 ms" is now a real hang until proven otherwise: re-run the suite alone first, do not
+  blame load.
+- Hand-written `waitUntil` caps in tests follow the same rule: keep them below 30 s (25 s in `sidebarInitiative`,
+  `formSaveRedraw`, `sidebarEncounterHandoff`) so the descriptive message wins, never 5 s.
+- Tests whose verdict depends on elapsed time must not read the wall clock. Use `jest.useFakeTimers({ doNotFake:
+  ['queueMicrotask', 'nextTick'] })` and `await jest.advanceTimersByTimeAsync(ms)` (see `chromeFocusHandoff`,
+  `initiative-outside-edit`, `initiative-default-keys`). **A frozen fake clock never lets time pass on its own: advance
+  realistic gaps between steps, with LITERAL numbers (never the product's constant, which shrinks with a mutant), or the
+  window lengths go untested** (a window cut to 1 ms still passes a test that never advances the clock; the SC-568 r2b
+  review measured it, and r3 added 2900 / 1400 ms gaps and boundary tests).
+- A fixed `setTimeout(25)` as "the async read is done" loses to CHAINED work: the mock vault's `read` takes one
+  `setTimeout(0)` hop each and the host chains reads, so on a starved host the 25 ms timer is already due before the second
+  hop is scheduled (a single product timer, or a read started before the test's timer, is ordered correctly). Wait on the
+  observable condition, bounded: `test/dom/_settleVaultReads.ts` (`settleVaultReads()`) counts `cachedRead`s in flight and
+  waits until none is, two hops in a row, throwing after 1000 hops. A drain wait is only the floor: where the end state is
+  observable, assert it after the wait (`reading-mode-host-pin`: the rebased pin is in the note's coordinates, `pin.text`
+  equals the note), which turns a no-op wait red. The helper waits on real `setTimeout(0)` hops, so it is REAL TIMERS ONLY: under
+  jest fake timers it hangs to the 30 s timeout (use `pump()` there). A fixed COUNT of hops is only a fallback: it is tied to
+  how many hops a mock read takes (red at 8 per read, vacuous at 20). The same fixed-`setTimeout(25)` helper is still in
+  `reading-mode-host-hover-card`, `-form-pin`, `-drawn-pin` (read-once, green under a 30 ms-per-hop burn mutant); if one of
+  them ever adds a second read, switch it to `settleVaultReads()`. The mock vault's reads need the fake clock pumped
+  (`pump()` in `initiative-default-keys.test.ts`), or they never resolve.
+- Reproduce a load-shaped red deterministically, no loaded host needed: `taskset -c 0 npx jest -w 11` (the `-w` is
+  required: with `taskset` jest sees one core and runs in band, which never reddens anything). Measured: 1-5 reds per
+  full run, 2 of 2 runs at `1cc54eac` and 2 of 2 at `df92a3f6`; `taskset -c 0,1 -w 11` gave 1 red. A full run takes
+  about 5-7 minutes.
+- Do not add a per-test timeout below 30 s to a new test; a deliberately large one (`migrationCensus` 180 s, the
+  `reading-mode-host-whole-pin-*` 600 s) is fine.
 
 ### Lifecycle and e2e notes (SC-480, 2026-11-11)
 
@@ -1496,7 +1514,10 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `9b94baf2` (2026-11-13; SC-613 landed on `14521bf0`; in the Conditions window, typing after a click on the window's title or blank space opens the Add search with what was typed (a second keydown listener on the window's own document, removed on close, hands a key to the SC-580 type-to-search handler only when focus is on the page itself, this window is top-most, no menu or suggestion popup is open and nothing else handled the key; Escape from a search opened this way focuses "+ Add condition"); no visual change; new e2e COND-N12..N15; no lifecycle id used (G-S116 free)):**
+**CURRENT — dse `develop` @ `b1e4f027` (2026-11-13; SC-568 landed on `9b94baf2`; jest's default per-test timeout is 30 s (global `testTimeout` in `jest.config.ts`, both projects); `chromeFocusHandoff`, `initiative-outside-edit`, `initiative-default-keys`, `reading-mode-host-pin` and `reading-mode-host-crlf-hover` no longer read the wall clock (fake clock with literal gaps, or `settleVaultReads()`); three hand-written 5 s waits are 25 s; test setup only, no `src/` change; see "Jest timeouts under load"; no lifecycle id used (G-S114 free)):**
+tsc and lint clean · jest **11857 passed / 2 skipped** quiet (11853 + 4) · `taskset -c 0 npx jest -w 11` 0 failed in 4 of 4 runs (base 1-5 reds per run) · `main.js` `81a67cb8…9219` and `styles.css` `18730938…f1f9` byte-identical to a clean `9b94baf2` build, so lifecycle **63/63**, e2e **`OBSIDIAN-E2E done: 338/341 ok, 0 failed, 3 known-bug, coverage: 176/176 pairs`**, shots **592** / host-leak 163/978 / modal host-leak 40/240 / capture clip 147, freeze **280/280** and parity **0 / 0 / 24** carry (r1 ran lifecycle 63/63 and e2e 0 failed on the same change at `df92a3f6`). Numbers as reported by the SC-568 owner; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `9b94baf2` (2026-11-13; SC-613 landed on `14521bf0`; in the Conditions window, typing after a click on the window's title or blank space opens the Add search with what was typed (a second keydown listener on the window's own document, removed on close, hands a key to the SC-580 type-to-search handler only when focus is on the page itself, this window is top-most, no menu or suggestion popup is open and nothing else handled the key; Escape from a search opened this way focuses "+ Add condition"); no visual change; new e2e COND-N12..N15; no lifecycle id used (G-S116 free)):**
 tsc and lint clean · jest **11853 passed / 2 skipped** in a fresh worktree without the shots cache (11833 + 20) · lifecycle **63/63** (seven parts, part 7 `G-S108,G-S112`; measured on `8978b6f0`, tests only after it) · e2e **`OBSIDIAN-E2E done: 338/341 ok, 0 failed, 3 known-bug, coverage: 176/176 pairs`** (+4: COND-N12..N15) · shots **592**, host-leak 163/978, modal host-leak 40/240, capture clip 147 · freeze **280/280** (no rebaseline) · parity **0 / 0 / 24** (shots, freeze and parity measured on `8978b6f0`; `styles.css` byte-identical to `14521bf0`). Numbers as reported by the SC-613 owner; the dispatcher relayed, not re-ran.
 
 **PREVIOUS — dse `develop` @ `14521bf0` (2026-11-13; SC-586 landed on `df92a3f6`; in the Conditions window a hand-written colour (`color: teal`, `#abc`, `rgb()`, `hsl()`, `oklch()` and other CSS Color 4 forms, the latter via a canvas pixel readback) opens the colour chooser at that colour instead of white, a colour the browser cannot read still opens at white; a blank or spaces-only `icon:` presses "Use default", `icon: "skull "` presses skull once; opening and closing the editor without a pick writes nothing; the two SC-436 `test.failing` markers for this ticket are plain tests; new e2e COND-H01..H03 on a hand-written fixture; no lifecycle id used (G-S113 free)):**
