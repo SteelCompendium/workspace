@@ -16,6 +16,16 @@ go under an *Internal* sub-heading.
   links alike. A Destination that points at the vault root (`/`, `.`, `./`) or outside the vault (`..`) is
   refused: Sync and Migrate do nothing and show a Notice asking you to choose a folder. Spaces at the start or end
   of the folder name are ignored. The vault root is never offered for the trash, however it is reached.
+
+- **DSE plugin: writing to a Negotiation no longer deletes the keys it does not use (SC-637).**
+  Any click that saves a `ds-negotiation` block (a Patience or Interest seal, a motivation or pitfall chip, Spent, Complete Argument,
+  Reset negotiation) used to remove every line the negotiation does not know: your own notes at the top of the block
+  (`note_to_self: keep me`) and any extra field on a motivation, a pitfall or the argument under way (`gm_note: ask about the sister`). They are now kept,
+  with the same values, in Reading view, Live Preview and the sidebar (the block's layout may still change on a write: your extra keys
+  follow the negotiation's own keys, at the top of the block and inside each motivation, pitfall and the argument; an argument's extra
+  keys go when Complete Argument or Reset negotiation ends that argument; and a comment in the block
+  is still removed, and a flow list `[a, b]` is rewritten one item per line).
+
 - **DSE plugin: writing to a Montage no longer deletes the keys it does not use (SC-625).**
   Any click that saves a `ds-montage` block (a quick Success / Failure / Assist, Log an action, End round, Add a hero, Set limits)
   used to remove every line the montage does not know: your own notes at the top of the block (`table_notes: keep me`) and
