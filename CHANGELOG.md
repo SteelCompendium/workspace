@@ -118,6 +118,11 @@ go under an *Internal* sub-heading.
   the row when the icon that had focus is the one removed). Removing with Enter or Space does the same. A click when focus was not already
   in the tracker still does not pull focus into it.
 
+- **DSE plugin: clicking a creature in the initiative roster while typing in a tracker text box keeps focus in the tracker, in Reading view, Live Preview and the pinned sidebar tracker (SC-615).**
+  With the cursor in the Malice quick-add amount or label, a mouse click on a roster cell selected that creature, and focus fell to the top
+  of the page. Focus now moves to the creature you clicked, and what you had typed stays in the box. A click when focus was not already in the
+  tracker still does not pull focus into it.
+
 - **DSE plugin: clicking another creature in the initiative roster while using the keyboard keeps focus in the tracker, in Reading view (SC-609).**
   With the keyboard focus on the detail row's Stamina control, a mouse click on another roster cell switched the detail row to that
   creature, and focus fell to the top of the page. Focus now moves to the creature you clicked. A click when focus was not already
