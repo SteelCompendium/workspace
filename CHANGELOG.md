@@ -144,6 +144,16 @@ go under an *Internal* sub-heading.
   is written. The check ignores case and spaces at the start or end, so "kira" and " KIRA " are refused too. A note
   you wrote by hand that already has two heroes with the same name is drawn as before.
 
+- **DSE plugin: "Collapsible by default" and "Show edit button on rendered blocks" now take effect on blocks that are already open (SC-644).**
+  Switching either setting used to change nothing on screen until you reopened the note. Now a Collapse button comes
+  or goes at once when you flip "Collapsible by default", and the Edit pencil appears or disappears at once when you
+  flip "Show edit button on rendered blocks" (that setting is only there with the experimental switch on; on a hero
+  sheet it is the "Edit definition" button that comes or goes). Keyboard focus stays on the button you were on. A block that
+  is collapsed when you switch "Collapsible by default" off is expanded, since it would have no button left to open
+  it, and stays expanded when you switch the setting back on. A block's own `collapsible:` line still wins over the
+  setting. "Start collapsed" does not change blocks that are already open: it applies to blocks drawn afterwards,
+  when you open or re-render a note.
+
 - **DSE plugin: Sync no longer offers to move your whole vault to the trash when the Destination folder is empty
   (SC-643).** With the Destination folder field cleared (or set to `/`), Sync treated the vault root as an old
   compendium folder and opened the "Existing compendium folder found" window, whose "Move old compendium to
