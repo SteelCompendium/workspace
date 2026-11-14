@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: in a Negotiation, the keyboard stays on the card after you press Complete Argument (SC-642).**
+  Tab to Complete Argument and press Enter: the argument was recorded, but keyboard focus dropped to the page, so the
+  next Tab started again from the top of the note. Focus now moves to the first Motivation button of the next argument
+  (or the first Pitfall button, or the Lie box when there are none), in Reading view and Live Preview. A write while you
+  are typing somewhere else never pulls focus into the negotiation.
+
 - **DSE plugin: a Montage reads a number or true/false as its title, and a number typed in quotes as a number (SC-628).**
   `title: 2024` or `title: true` used to turn the whole card into "Montage Test tracker: failed to render". It is now
   shown as the text "2024" or "true". `rounds: "3"` used to make Add a round write `rounds: "31"` and draw 31 columns,
