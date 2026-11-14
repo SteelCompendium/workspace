@@ -100,3 +100,7 @@ None yet. The ticket's own "Expected" (filed by the SC-440 owner, 2026-11-14) is
   - INFO `LegacyCompendiumModal.ts:10` "confirmed action" (it is one click) → **drop here**: SC-653's subject.
   - INFO bullet omits the changed-folder Notice → **drop**: edge case, fine.
 - **LAND-READY (2026-11-14)** — dse `7b9e82cf` on develop `76520b1f`; superproject `39fc83d8` on main `18f8043f`.
+- **DONE (2026-11-14)** — landed by the dispatcher: dse develop `7b9e82cf`, workspace main `8df833cb` (ledger
+  preserved + dse-verify updated in `120cf676`; worktree removed via wt-rm). Ticket set Done via linear-post.py
+  `--state Done`, verified Done. Follow-ups open: SC-653 (High), SC-654 (Low); SC-440 flips `[SET-C03]` and
+  writes `syncOptions()?.releaseTag` on its rebase.
