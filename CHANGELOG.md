@@ -8,6 +8,16 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: a + / - or a form Save in a hover preview or an embed of part of a note no longer writes the other of two identical counters when an outside change removed the one it shows (SC-621).**
+  A hover preview or an embed shows part of a note (`[[Note#Heading]]`, `[[Note#^id]]`) that has two identical counters, separated only by blank lines or by two sections of the same
+  look. An outside change (Sync, another app) removes the counter the preview shows and, in the same change, edits a line just above or below the pair. A + / - or a form Save in that
+  preview could then be written into the other counter, with no message. It is now refused, nothing is written, and the "changed on disk first" Notice shows. The same holds when, in the
+  same outside change, an identical counter next to yours was added or removed (the note then reads the same either way). Because such a preview or embed is often not redrawn by Obsidian,
+  it keeps refusing on every click until you reopen it (move the pointer away and hover again, or reopen the note); the reopened preview saves as usual. Three cases are still written, as
+  before: an identical counter moved to another place among the identical ones, and the shown section deleted while a neighbouring section is renamed to its name (the note's text cannot tell
+  these apart); and, in a note with identical counters, an outside change of more than about 400 lines in the same write (too large for the plugin to compare). A note without identical counters, and a note open in its own
+  pane (SC-612), are not affected.
+
 - **DSE plugin: in the Conditions window, "or just start typing" now also works after you click the window's title or an empty part of it (SC-613).**
   Click a row's Add Condition, click the window's title (or a blank spot), then type `daz`: nothing happened, because that click moved the keyboard out of the window to the page behind it. The Add
   search now opens with what you typed, and Escape closes just the search and puts focus on "+ Add condition". Keys stay yours when another window is open on top of this one, or a menu is showing.
