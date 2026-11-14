@@ -24,6 +24,15 @@ go under an *Internal* sub-heading.
   refused: Sync and Migrate do nothing and show a Notice asking you to choose a folder. Spaces at the start or end
   of the folder name are ignored. The vault root is never offered for the trash, however it is reached.
 
+- **DSE plugin: a Negotiation with a hand-typed value of the wrong type no longer shows a raw error or loses data, and its ending matches its seal (SC-638).**
+  A number or true/false typed where text is expected (`name: 2024`, a motivation `name: 5` or `reason: 42`, `motivationsUsed: [5]`)
+  is now read as text and written back as the same number or true/false you typed (not as quoted text). A block of the wrong shape (`motivations: foo`, `pitfalls: {a: 1}`,
+  a motivation written `- Legacy` instead of `- name: Legacy`, a blank `-` item, `currentArgument: hello`, a text value for
+  `motivationsUsed`) now shows a plain message naming the key (for example `Invalid data: 'motivations' item 2 must be an object.`)
+  instead of `is not a function`, and the card cannot save, so the note is never changed (before, `- Legacy` and `currentArgument: hello`
+  were silently replaced the first time you clicked). The seal and the ending now agree for fractional and junk standings:
+  `current_interest: 0.4` is seal 0 and a hostile ending, `4.5` is seal 5 and a deal, and `current_patience: banana` is Patience 0 and a final offer.
+
 - **DSE plugin: writing to a Negotiation no longer deletes the keys it does not use (SC-637).**
   Any click that saves a `ds-negotiation` block (a Patience or Interest seal, a motivation or pitfall chip, Spent, Complete Argument,
   Reset negotiation) used to remove every line the negotiation does not know: your own notes at the top of the block
