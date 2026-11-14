@@ -96,3 +96,6 @@ must keep that order for known keys and put unknown keys back (e.g. after the kn
   on workspace main `c3f9b129`. Owner checked the diff vs `d0ff29a4`: one CHANGELOG line only.
 - 2026-11-14 — **LAND-READY** reported to the dispatcher: dse `76520b1f` on `develop` `8a81c5a7`; superproject
   `4850f82a`. SKILL proposal: `sc625-skill-proposal.md`.
+- 2026-11-14 — **DONE.** Dispatcher landed: dse `develop` `76520b1f`, workspace main `c231c8b0` (ledger preserved and
+  SKILL proposal applied in `f9ebe6e8`; worktree removed; stray /tmp placeholder deleted). Landed comment posted;
+  ticket set Done via linear-post.py `--state Done` and verified (status Done).
