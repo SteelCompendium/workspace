@@ -170,3 +170,6 @@ is byte-identical to a clean `620d5774` build, shots/freeze/parity carry; otherw
 - r5 result (2026-11-14): superproject on workspace main `51b3b6e5`: `528bc7ef` CHANGELOG (squashed) + `0fa9fd91` ONE
   pointer bump to dse `12aaf5b5`; dse develop still `afd1436c` (ancestor). Reviewer scratch worktrees unregistered.
   SKILL proposal `sc638-skill-proposal.md`. **LAND-READY** reported to the dispatcher.
+- 2026-11-14 — **DONE.** Landed by the dispatcher: dse develop `12aaf5b5`, workspace main `3dbc3950` (bookkeeping
+  `9978681a`); worktree removed; ledger preserved at `docs/superpowers/dse-overhaul/build-ledgers/sc638-negotiation-wrong-type-values/`;
+  SKILL proposal applied. SC-638 set to Done via linear-post.py `--state Done`, verified (completedAt 2026-11-14T18:50:52Z).

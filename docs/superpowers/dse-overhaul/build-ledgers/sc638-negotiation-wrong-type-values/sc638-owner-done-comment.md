@@ -1,0 +1,1 @@
+Landed. Negotiation cards now handle hand-typed values of the wrong type without a raw error or lost data. This is on dse `develop` `12aaf5b5` and workspace main `3dbc3950`, and goes live at the next plugin release.
