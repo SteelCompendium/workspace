@@ -8,6 +8,10 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: the minion pool window names the squad you opened when a group holds several (SC-569).**
+  A group with two squads used to give both windows the same title ("Wolves - Minion Stamina Pool"). They now read "Wolves - Wolf - Minion Stamina Pool" and "Wolves - Dire Wolf - Minion Stamina Pool",
+  and two squads of the same creature are numbered in the order the tracker lists them: "River - Flow of the River (squad 1) - Minion Stamina Pool", then "(squad 2)". A group with one squad keeps "Goblin Squad - Minion Stamina Pool".
+
 - **DSE plugin: a + / - or a form Save in a hover preview or an embed of part of a note no longer writes the other of two identical counters when an outside change removed the one it shows (SC-621).**
   A hover preview or an embed shows part of a note (`[[Note#Heading]]`, `[[Note#^id]]`) that has two identical counters, separated only by blank lines or by two sections of the same
   look. An outside change (Sync, another app) removes the counter the preview shows and, in the same change, edits a line just above or below the pair. A + / - or a form Save in that
