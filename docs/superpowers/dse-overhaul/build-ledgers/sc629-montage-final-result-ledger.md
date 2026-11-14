@@ -90,3 +90,4 @@ design questions for Scott). Do not touch.
 - 2026-11-14 r4 (reviewer, scoped): LAND, 0/0/0. range-diff `b68d6a0a = 74e2a649`; LOW-2 mutant now red at
   montage.test.ts:731; superproject 2 commits on `7219b96d`; r3 logs confirmed. Land-ready comment posted;
   land-ready reported to dispatcher.
+- 2026-11-14 LANDED (dispatcher): dse develop `3e88b3f5`, workspace main `20b3a772` (bookkeeping `dc16b57d`); ledger preserved at docs/superpowers/dse-overhaul/build-ledgers/sc629-montage-final-result/. Owner set SC-629 Done via linear-post.py `--state Done`; verified with get_issue (status Done). Effort closed.
