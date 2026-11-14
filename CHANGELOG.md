@@ -14,6 +14,12 @@ go under an *Internal* sub-heading.
   awarded." The verdict word now agrees with the rule line and says "Total Failure" with the skull icon, as the book
   says when time runs out without two more successes than failures. A Montage that is still running with nothing
   logged still reads "Not started", and adding a round to a finished one brings it back to "Not started".
+
+- **DSE plugin: in a Negotiation, the options menu opens beside its button when you use the keyboard (SC-648).**
+  Tab to the options button (the three dots) and press Enter or Space: the menu with "Reset negotiation" appeared in the
+  top-left corner of the Obsidian window, far from the card. It now opens right under the button, as it already did for
+  a mouse click, in Reading view and Live Preview.
+
 - **DSE plugin: in a Negotiation, the keyboard stays on the card after you press Complete Argument (SC-642).**
   Tab to Complete Argument and press Enter: the argument was recorded, but keyboard focus dropped to the page, so the
   next Tab started again from the top of the note. Focus now moves to the first Motivation button of the next argument
