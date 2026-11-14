@@ -118,3 +118,8 @@ e2e `331/334 ok, 0 failed, 3 known-bug, coverage: 176/176 pairs` (known bugs SC-
 - Land-ready comment posted (sc621-comment-land-ready.md, no decision asked). State left Awaiting for the dispatcher's landing.
 - At landing: apply `sc621-skill-proposal.md` to dse-verify SKILL (lifecycle 64/64, part 7 `G-S108,G-S112,G-S115`, G-S115 summary, rule P at the rebase, repeat-until-reopen, residuals R1/R2/R3, CURRENT); preserve this ledger dir to `docs/superpowers/dse-overhaul/build-ledgers/sc621-part-pin-one-sided-edit/`; move SC-621 to Done via linear-post.py `--state Done` and verify.
 - Follow-ups: SC-624 filed and closed (already fixed by SC-568). No open tickets from this effort.
+
+## Done (2026-11-14)
+
+- Landed by the dispatcher: dse develop `27120710`; workspace main `a79ab0c1` (ledger preserved + SKILL proposal applied in `f05d3192`; worktree removed).
+- SC-621 moved to **Done** via linear-post.py `--state Done` (Done comment `sc621-comment-done.md` posted); verified Done with get_issue (completedAt 2026-11-14T01:08:56Z). No open follow-up tickets (SC-624 filed and closed as already fixed by SC-568).
