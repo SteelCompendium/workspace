@@ -8,6 +8,14 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: Sync no longer offers to move your whole vault to the trash when the Destination folder is empty
+  (SC-643).** With the Destination folder field cleared (or set to `/`), Sync treated the vault root as an old
+  compendium folder and opened the "Existing compendium folder found" window, whose "Move old compendium to
+  trash" button would have trashed every file in the vault. Now an empty or spaces-only Destination folder means
+  the default folder, `DS Compendium` (the folder the field's placeholder shows), for Sync and for compendium
+  links alike. A Destination that points at the vault root (`/`, `.`, `./`) or outside the vault (`..`) is
+  refused: Sync and Migrate do nothing and show a Notice asking you to choose a folder. Spaces at the start or end
+  of the folder name are ignored. The vault root is never offered for the trash, however it is reached.
 - **DSE plugin: writing to a Montage no longer deletes the keys it does not use (SC-625).**
   Any click that saves a `ds-montage` block (a quick Success / Failure / Assist, Log an action, End round, Add a hero, Set limits)
   used to remove every line the montage does not know: your own notes at the top of the block (`table_notes: keep me`) and
