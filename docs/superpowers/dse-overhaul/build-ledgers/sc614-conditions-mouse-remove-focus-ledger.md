@@ -1,0 +1,66 @@
+# SC-614 decisions ledger — initiative tracker: mouse-removing a condition while Add condition has keyboard focus drops focus to the page
+
+Ticket: SC-614 (Linear). Owner: ticket-owner (Opus 5.5), session be71a0a9-199f-4e14-967b-191935312b05.
+Worktree: /home/scott/code/steelCompendium/worktrees/sc614-conditions-mouse-remove-focus (every submodule on branch `sc614-conditions-mouse-remove-focus`); superproject cut at `056c50d1` (workspace origin/main at creation); dse cut at develop `9b94baf2`.
+Lifecycle id reserved if needed: G-S117 (not expected to be used — see rulings).
+
+## Ticket text (verbatim)
+
+> With keyboard focus on the detail row's Add condition button, a mouse press on a condition's remove button removes it, the conditions row is redrawn, and focus falls to the page body instead of staying on Add condition.
+>
+> Found while fixing SC-609. Already the case before SC-609. Low (accessibility).
+>
+> Agent notes: SC-609 r1 survey probe S02. Cause: `buildConditionRow` calls `conditionsEl.empty()` (`src/elements/initiative/view.ts:2215` at dse `231f2a3b`) via `onRemove` → `rerender` (`:2236` / `:2262`), which destroys the focused Add condition button. The pressed chip has no successor, so SC-609's press rule does not apply; this needs a capture-and-restore of the focused control around the conditions-row redraw (SC-603's `giveFocusBack` / `controlFocus.ts` mechanism). SC-580 works in the Conditions window (different file).
+
+Note: this is the INITIATIVE TRACKER's detail row (`src/elements/initiative/view.ts`, `buildConditionRow` ~l.2338 / `buildConditionIcons` at `9b94baf2`), NOT the Conditions window (`src/views/ConditionsModal.ts`).
+
+## Baseline at dse `9b94baf2` (from dispatcher)
+
+jest 11853 passed / 2 skipped (fresh, without the shots cache) · lifecycle 63/63 (SEVEN `--only` parts) · e2e `338/341 ok, 0 failed, 3 known-bug, coverage: 176/176 pairs` (known bugs SC-257, SC-355, SC-384) · shots 592, host-leak 163/978, modal host-leak 40/240, capture clip 147 · freeze 280/280 · parity 0/0/24.
+
+## Prior art (landed; ledgers in docs/superpowers/dse-overhaul/build-ledgers/)
+
+- SC-588: `src/framework/kit/controlFocus.ts` — focus goes to the rebuilt control after a whole-tracker rebuild; "A mouse click never pulls focus into the tracker".
+- SC-603: focus hand-back after a tracker window closes (`openModal` captures a focus token). Ruling: focus goes where Obsidian itself would have put it had the opener survived the rebuild; if focus was not inside the tracker, restore nothing. Views: Reading view and the pinned sidebar tracker (Live Preview losing focus on the tracker's own save is SC-602).
+- SC-609: roster-cell mouse press with focus inside the tracker → focus on the rebuilt pressed cell (`captureControlFocus` / `focusControl` in the roster cell `onClick`). SC-609 filed this ticket (its follow-up A).
+- SC-585: Conditions window keyboard-remove focus (different file; successor rule).
+
+## Scott rulings
+
+(none — no comments on the thread at start)
+
+## Owner rulings
+
+- 2026-11-13 — **No Scott decision needed.** The ticket states the expected behaviour ("instead of staying on Add condition").
+- 2026-11-13 — **Behaviour.** When keyboard focus is inside the tracker's conditions row (on Add condition, or on another condition's remove button) and a mouse press on a condition's remove button removes that condition and redraws the conditions row, focus lands on the REBUILT replacement of the control that had focus before the press (Add condition → the new Add condition button; another condition's remove button → that same condition's new remove button). If that control no longer exists after the redraw, focus goes to its successor by the existing `controlSuccessor` rule. If focus was elsewhere in the tracker (outside the conditions row), the conditions-row redraw does not touch it and nothing changes. If focus was NOT inside the tracker before the press, nothing changes (SC-588: "A mouse click never pulls focus into the tracker").
+- 2026-11-13 — **Scope.** Both conditions rows (hero rows and creature rows: both callers of `buildConditionRow`) and both views where the tracker lives (Reading view and the pinned sidebar tracker). Survey, do not necessarily fix: (a) keyboard removal of a condition in the tracker (Enter/Space on a remove button) — report what happens today; if focus already lands on a sensible control, leave it; if it drops to `<body>` AND the same capture/restore + successor rule fixes it in the same few lines, fix it and say so; otherwise report it as a follow-up. (b) any other caller of the conditions-row `rerender` (the Conditions window's apply callback runs while the window holds focus and SC-603 hands focus back on close — confirm, don't change). Live Preview losing focus on the tracker's own save is SC-602 — out of scope; CHANGELOG wording says "Reading view and the pinned sidebar tracker".
+- 2026-11-13 — **Tests.** jest case(s) shown RED on the base and green on the fix; plus real-Obsidian e2e coverage in `e2e/specs/initiative/` (not lifecycle): Tab to the detail row's Add condition, mouse press on a condition's remove button, assert the condition is gone and `document.activeElement` is the rebuilt Add condition button. Plus the negative: blur to `<body>` (assert that start state first — SC-609 r2 M-1 lesson: after `openNote` focus may sit on the preview div), mouse remove, focus is not pulled into the tracker. No bracketed ticket id in test titles. Fresh scenario ids (check for collisions against current develop).
+- 2026-11-13 — **CHANGELOG.** One bullet under `## Unreleased` in the dse CHANGELOG and one in the workspace CHANGELOG (the worktree's superproject copy), qualified to Reading view and the pinned sidebar tracker.
+- 2026-11-13 — **Out of scope.** SC-615 (quick-add text box focus on roster press), SC-458 (click focusing its roving target), SC-602 / SC-605 (Live Preview), SC-568 (jest timeouts; `jest.config.ts`), SC-621 (hover / embed part-pin; host pin code, lifecycle G-S115). Do not edit their files.
+
+## Rounds
+
+- r1 (2026-11-13) — implementer dispatched (orchestration:implementer, agent a3991ccfd779033d4; brief `sc614-r1-brief-implementer.md`): diagnose + fix + jest + e2e + CHANGELOG + full battery. Report: `sc614-r1-impl-report.md`. Review goes to a different identity (orchestration:reviewer).
+
+## Base moves
+
+- 2026-11-13 (dispatcher): SC-568 landed (jest.config.ts global testTimeout 30 s; test/ only, no src change). dse develop now **`b1e4f027`**, workspace main **`18bba97f`**. Rebase dse onto `b1e4f027` and the superproject branch onto current workspace main (ONE pointer bump) before land-ready. New CURRENT at `b1e4f027`: jest **11857 passed / 2 skipped** (quiet) · lifecycle 63/63 (part 7 `G-S108,G-S112`) · e2e `338/341 ok, 0 failed, 3 known-bug, coverage: 176/176 pairs` · shots 592, host-leak 163/978, modal host-leak 40/240, capture clip 147 · freeze 280/280 · parity 0/0/24 (bundle identical to 9b94baf2). dse-verify "Load-sensitive jest suites" is now "Jest timeouts under load": an "Exceeded timeout of 30000 ms" is a real hang until proven otherwise; time-dependent tests must use a fake clock with literal gaps.
+- 2026-11-13 — base move relayed to the r1 implementer by SendMessage (rebase onto b1e4f027 / 18bba97f before its final battery); r2 brief updated to the new base.
+- 2026-11-13 (dispatcher): SC-621 landed (src/framework/host/ReadingModeBlockHost.ts rebaseCardPin; two new jest files reading-mode-host-part-pin-twin / -sweep; new lifecycle G-S115 in part 7). dse develop now **`27120710`**, workspace main **`f05d3192`**. Supersedes the b1e4f027 / 18bba97f target above. Rebase dse onto `27120710` and the superproject branch onto current workspace main (ONE pointer bump) before land-ready. New CURRENT at `27120710`: jest **11892 passed / 2 skipped** (fresh, no shots cache) · lifecycle **64/64**, part 7 is now `G-S108,G-S112,G-S115` (about 200 s, over the 180 s tool limit: one part per call, log to a file, poll the pid) · e2e `338/341 ok, 0 failed, 3 known-bug, coverage: 176/176 pairs` · shots 592, host-leak 163/978, modal host-leak 40/240, capture clip 147 · freeze 280/280 · parity 0/0/24 (styles.css unchanged).
+- 2026-11-13 — SC-621 base move relayed to the r1 implementer; r2 brief updated to 27120710 / f05d3192.
+- r1 DONE (2026-11-13) — dse `283cb2f5` on develop `27120710` (fix+jest `e1e07501`, e2e `3969761c`, dse CHANGELOG `f8ffbc83`, kit test update `283cb2f5`); superproject `c98a004d` (CHANGELOG only) on workspace origin/main `a7a989ef` (verified current). Fix: conditions row's remove + Add buttons as one focus family; capture before the redraw, restore after (`view.ts`); kit `conditionIcons.ts` `onRemove` also gets the pressed button. Survey (a): keyboard removal also dropped to body; fixed by the same mechanism (jest F29). (b) Conditions window apply path unchanged. Tests: jest F23–F29 (F23–F26, F29 red on base), e2e INIT-F15 (red on base), INIT-F16 (negative). Gates on 283cb2f5: tsc/lint clean · jest 11900/1 (cache present) · lifecycle 64/64 · e2e 340/343 ok, 0 failed, 3 known-bug, 176/176 · parity 0/0/24; shots 592 / 163/978 / 40/240 / 147 and freeze 280/280 measured pre-SC-621-rebase on 18c986c0 (carried). Drive-by: dropped the stale "(SC-614) not covered" clause from SC-609's dse CHANGELOG entry. Follow-ups: none. Report `sc614-r1-impl-report.md`.
+- r2 (2026-11-13) — independent review dispatched (orchestration:reviewer, agent a3dc7b23d8a44c20c; brief `sc614-r2-brief-reviewer.md`), incl. re-running shots/freeze/parity on 283cb2f5. Pointer bump still to do (one commit, at the end).
+- 2026-11-13 (dispatcher, relaying the SC-621 owner verbatim): "filed SC-633 (Backlog, related SC-621/SC-607) for the G-S115 (g) signal. Suspected harness timing, not a product fault: the cell waits a fixed 700 ms after opening the hover before the outside write, and on a loaded host the preview may still be reading the note, which gives SC-607's already-accepted F3 refusal (writes nothing). Running owners: a G-S115 (g) red that shows the "changed on disk first" Notice on a loaded host is a suspected flake; re-run part 7 once. A red on the re-run, on a quiet host, or in any other G-S115 cell (a)-(f), (h), (i) is a real signal."
+- 2026-11-13 — SC-633 G-S115 (g) rule relayed to the r2 reviewer; add it to any later brief that runs lifecycle part 7.
+- r2 DONE (2026-11-13) — review of dse `283cb2f5` / superproject `c98a004d`: VERDICT LAND. HIGH 0 · MEDIUM 0 · LOW 1 · INFO 4. Reviewer's own gates on 283cb2f5: tsc/lint clean · jest 11900/1 (cache) · lifecycle 64/64 (no G-S115 red) · e2e 340/343 ok, 0 failed, 3 known-bug, 176/176 · shots 592 / 163/978 / 40/240 / 147 · freeze 280/280 · parity 0/0/24 (shots/freeze now measured on 283cb2f5). Every behavioural mutant killed. Report `sc614-r2-review-report.md`.
+- Owner rulings on r2 (2026-11-13):
+  - LOW-1 (F29 title at `test/dom/elements/initiative-matrix.test.ts:956` claims "with the keyboard ring" but jsdom cannot assert `:focus-visible`) → FOLD: drop the ring wording from F29's title (a test name only; the ring is correct in every real-Obsidian probe, and SC-609 L-1 showed Chromium's ring after a script focus is host behaviour, so no brittle e2e ring assert).
+  - INFO-1 (script-dispatched click on an already-detached chip skips the index shift, focus goes to Add Condition) → DROP: unreachable by real mouse or key input; focus still lands in the row, never `<body>`.
+  - INFO-2 (keyboard removal covered in jest only) → DROP: the ticket is the mouse path; jest F29 plus the reviewer's real-Enter probe cover it.
+  - INFO-3 (fix also holds in Live Preview) → DROP: CHANGELOG keeps the ruled "Reading view and the pinned sidebar tracker" wording; Live Preview save behaviour belongs to SC-602.
+  - INFO-4 (workspace origin/main moved a7a989ef → 4c1a884a, docs only) → FOLD into r3: rebase the superproject branch onto current workspace origin/main, then ONE pointer-bump commit to the final dse sha.
+- r3 (2026-11-13) — fix round: resume the r1 implementer (a3991ccfd779033d4) with LOW-1 + INFO-4 + the pointer bump. Then a scoped re-review of the delta by the r2 reviewer (a3dc7b23d8a44c20c; it did not author it).
+- r3 DONE (2026-11-13) — dse `506786cb` (F29 title only) on `283cb2f5`; dse origin/develop still `27120710`. Superproject rebased onto workspace origin/main `4c1a884a`: `932ac9f1` (CHANGELOG) + `c909b081` (ONE pointer bump → 506786cb); clean, unpushed. Gates: tsc/lint 0 · initiative-matrix 207/207 (unchanged). Report `sc614-r3-fix-report.md`.
+- r4 (2026-11-13) — scoped re-review of the r3 delta by the r2 reviewer (a3dc7b23d8a44c20c). Report `sc614-r4-rereview-report.md`.
+- r4 DONE (2026-11-13) — scoped re-review: VERDICT LAND, no new findings. LOW-1 closed; superproject verified as origin/main `4c1a884a` + `932ac9f1` + `c909b081` (gitlink 506786cb), CHANGELOG +6/-0. Report `sc614-r4-rereview-report.md`.
+- LAND-READY (2026-11-13) — dse `sc614-conditions-mouse-remove-focus` @ `506786cb` on develop `27120710` (owner-verified ancestor, origin unmoved); superproject @ `c909b081` on workspace origin/main `4c1a884a` (owner-verified; ONE pointer bump, no interim pointer commits; both trees clean). Reported to dispatcher.

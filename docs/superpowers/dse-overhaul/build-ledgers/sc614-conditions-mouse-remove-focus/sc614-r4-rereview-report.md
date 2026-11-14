@@ -1,0 +1,6 @@
+## r4 (reviewer, delta re-review of r3)
+- Verdict: **LAND.** LOW-1 is closed. No new findings.
+- dse `283cb2f5..506786cb`: one commit, `506786cb` "test: F29 title no longer claims the keyboard ring". The diff is one line, `test/dom/elements/initiative-matrix.test.ts:956`: the F29 title loses ", with the keyboard ring". The test body is unchanged, and the only tag in the title is `[F29]`. The branch (`27120710..506786cb`) adds no test title with a bracketed `[SC-…]` id.
+- Jest: `npx jest test/dom/elements/initiative-matrix.test.ts` (after `rm -f main.js styles.css`) gives 207 passed / 207, no timeouts. Log: scratchpad `sc614-r2-review/r4-jest-matrix.log`.
+- Superproject (after fetch): `origin/main` = `4c1a884a`, and HEAD `c909b081` descends from it. `origin/main..HEAD` is exactly `932ac9f1` (CHANGELOG) then `c909b081` (chore: bump draw-steel-elements to 506786cb). The gitlink in HEAD is `506786cb6588e9814a0ce703e09a6ec8834ccdb4`. Against `origin/main`, the CHANGELOG diff is the single SC-614 bullet: 6 lines added, 0 removed, so the rebase lost no bullet. No AI attribution trailers.
+- dse `origin/develop` is still `27120710`. The worktree status is clean in both the superproject and dse (dse HEAD `506786cb`). I changed nothing.
