@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: a Montage that ran out of rounds with nothing logged now reads "Total Failure" (SC-629).**
+  If the Director pressed End round on the last round with no actions logged, the result band showed "Final result"
+  and "2 rounds used" but the verdict word "Not started", directly above the rule line "Total Failure — no Victories
+  awarded." The verdict word now agrees with the rule line and says "Total Failure" with the skull icon, as the book
+  says when time runs out without two more successes than failures. A Montage that is still running with nothing
+  logged still reads "Not started", and adding a round to a finished one brings it back to "Not started".
 - **DSE plugin: in a Negotiation, the keyboard stays on the card after you press Complete Argument (SC-642).**
   Tab to Complete Argument and press Enter: the argument was recorded, but keyboard focus dropped to the page, so the
   next Tab started again from the top of the note. Focus now moves to the first Motivation button of the next argument
