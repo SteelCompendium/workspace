@@ -8,6 +8,13 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: writing to a Montage no longer deletes the keys it does not use (SC-625).**
+  Any click that saves a `ds-montage` block (a quick Success / Failure / Assist, Log an action, End round, Add a hero, Set limits)
+  used to remove every line the montage does not know: your own notes at the top of the block (`table_notes: keep me`) and
+  any extra field on a logged action (`dc: 12` next to its `skill`). They are now kept, with the same values (the block's layout
+  may still change on a write: your extra keys follow the montage's own keys, at the top of the block and on each logged action,
+  and a comment in the block is still removed, and a flow list `[a, b]` is rewritten one item per line). A hero's extra keys were already kept.
+
 - **DSE plugin: in a Montage, the keyboard stays where you were after you press a button (SC-626).**
   Tab to a montage button (End round, a quick Success, the round strip's header, Log an action) and press Enter: the card
   was redrawn and keyboard focus went back to the top of the note, so you had to tab all the way back. Focus now stays on
