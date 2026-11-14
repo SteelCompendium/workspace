@@ -175,3 +175,7 @@ coverage 416/416 (no new control — an error card has none). jest = 12922 + new
   `<scratchpad>/sc628-r2-rev/probe` is still registered in the branch's dse module repo
   (`git -C <wt>/draw-steel-elements worktree remove --force <path>` before or at `wt-rm`); SKILL proposal
   `sc628-skill-proposal.md`; preserve this ledger dir to build-ledgers at landing.
+- 2026-11-14 — **LANDED / DONE.** Dispatcher landed: dse develop `10c271fe`, workspace main `69504cbd` (bookkeeping
+  `430dd30b`); worktree removed (reviewer probe left registered/in place by the dispatcher); ledger preserved to
+  `docs/superpowers/dse-overhaul/build-ledgers/sc628-montage-wrong-type-values/`; SKILL proposal applied. SC-628 set to
+  Done via linear-post.py `--state Done` with a landed comment, verified (completedAt 2026-11-14T20:40:33Z).
