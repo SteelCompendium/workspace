@@ -108,3 +108,7 @@ Markers to flip to plain tests: e2e `[NEGO-F02]` (`e2e/specs/negotiation/focus.e
   origin/main..HEAD = exactly those 2. Not pushed. Land-ready comment posted on SC-642 (names the landing control, the
   double-Enter side effect and SC-656; no Needs Review — nothing blocks landing). Skill proposal: sc642-skill-proposal.md.
   Reported LAND-READY to the dispatcher.
+- 2026-11-14: DONE. Dispatcher landed: dse develop 09c879f2, workspace main 299cfa31 (bookkeeping b5cddd45; ledger preserved at
+  docs/superpowers/dse-overhaul/build-ledgers/sc642-negotiation-complete-focus/, SKILL proposal applied, worktree removed).
+  Done comment posted and state set via linear-post.py --state Done; verified Done (completedAt 2026-11-14T22:06:56Z).
+  Follow-up open: SC-656 (Backlog).
