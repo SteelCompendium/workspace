@@ -97,3 +97,5 @@ Title: "Minion pool modal: when a group holds two squads, both modals have the s
 - r6 re-review (2026-11-13): LAND-READY, no findings. jest 11918/1 warm re-measured; styles.css hash unchanged.
 - LAND-READY (2026-11-13): dse `6785fa06` on develop `506786cb`; superproject `03049d62` (`66f2f2c3` CHANGELOG + one pointer
   bump) on workspace main `075b61e3`. Result comment posted on SC-569; reported to dispatcher.
+- DONE (2026-11-13): landed by dispatcher on dse develop `6785fa06` and workspace main `a478566d` (ledger preserved +
+  dse-verify updated in `85eb44de`; worktree removed). SC-569 set Done via linear-post.py, state verified Done.
