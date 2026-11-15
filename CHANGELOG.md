@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: a failed compendium Sync no longer leaves an "Uncaught (in promise)" error in the developer console (SC-646).**
+  When Sync failed (for example, the GitHub release lookup answered 404), you saw the "compendium sync failed" Notice, and the
+  console also got an unhandled `Uncaught (in promise) Error: GitHub release lookup failed (HTTP 404)`. That no longer
+  happens, whether Sync was started from the settings tab, the "Sync compendium" command, or the compendium search
+  window's Sync button. The failure Notice and its one console line are unchanged.
+
 - **DSE plugin: a Negotiation now handles two Motivations (or Pitfalls) with the same name, and ones with no name (SC-640).**
   With two Motivations both named "Higher Authority", the first appeal button on the Make an Argument tab was drawn
   empty and the first Spent button was blank; only the second worked. A Motivation with no name drew a bare "◆" that a
