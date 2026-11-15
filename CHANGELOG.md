@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: in the plugin settings, picking Custom in the statblock Preset dropdown no longer leaves it reading Custom when nothing changed (SC-651).**
+  The dropdown only reads Custom when your statblock options match none of Steel card, Sourcebook or Index card:
+  Custom is not a preset you can apply. Picking it used to leave the dropdown on Custom until you opened another
+  settings page and came back, when it read Steel card again. The dropdown now goes straight back to the preset your
+  options match (or stays on Custom when they match none), and nothing is saved.
+
 - **DSE plugin: a failed compendium Sync no longer leaves an "Uncaught (in promise)" error in the developer console (SC-646).**
   When Sync failed (for example, the GitHub release lookup answered 404), you saw the "compendium sync failed" Notice, and the
   console also got an unhandled `Uncaught (in promise) Error: GitHub release lookup failed (HTTP 404)`. That no longer
