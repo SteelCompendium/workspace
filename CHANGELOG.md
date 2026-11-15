@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: in a Negotiation, the keyboard stays on the card after you choose Reset (SC-639).**
+  Open the options menu (the ⋮ button) from the keyboard and choose Reset: the negotiation was reset, but keyboard
+  focus dropped to the page, so the next Tab started again from the top of the note. Focus now returns to the ⋮ button
+  of the reset card, in Reading view and Live Preview. A Reset never pulls focus into the negotiation when you were
+  working somewhere else on the page.
+
 - **DSE plugin: a Negotiation's power roll counts only the Motivations, Pitfalls and modifier boxes the card shows as chosen (SC-649).**
   If the argument in the note named a Motivation or Pitfall the block no longer has (renamed or deleted in the YAML),
   no button showed as pressed, but the result tiers still used the Motivation (or Pitfall) table, a missing Motivation
