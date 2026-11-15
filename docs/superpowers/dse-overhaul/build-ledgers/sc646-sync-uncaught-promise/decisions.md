@@ -76,3 +76,8 @@ None. The ticket is a plain bug with no open design question (2026-11-14: thread
   CHANGELOG `cd7e3d4b` + ONE pointer `c9bc346f` (-> ad21dc87). Owner checked the r3 diff
   (test + comment only, no runtime change) and the branch state.
 - LAND-READY reported to the dispatcher 2026-11-15.
+- LANDED + DONE (2026-11-15): dispatcher landed dse develop `ad21dc87`, workspace main
+  `cbf15bcd` (bookkeeping `f7c064b0`); worktree removed; ledger preserved at
+  `docs/superpowers/dse-overhaul/build-ledgers/sc646-sync-uncaught-promise/`. Landed comment
+  posted; SC-646 set to Done via linear-post.py `--state Done`, verified (status Done,
+  completedAt 2026-11-15T07:11:56Z).
