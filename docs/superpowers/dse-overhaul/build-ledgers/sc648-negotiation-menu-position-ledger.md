@@ -78,3 +78,7 @@ Marker to flip to a plain test: e2e `[NEGO-R06]` in `e2e/specs/negotiation/reset
 ## Land-ready (2026-11-14)
 
 dse branch sc648-negotiation-menu-position @ e1be1775 on develop 3e88b3f5; superproject branch @ 116ee03b on workspace origin/main 7cea83eb (f4c4a81a CHANGELOG, 116ee03b one pointer bump). jest 13327/2 · lifecycle 64/64 · e2e 596/611 ok, 0 failed, 15 known-bug, 417/417 pairs · styles.css = clean 3e88b3f5 build, so shots 592 / host-leak 163/978 / modal host-leak 40/240 / capture clip 147 / freeze 280/280 / parity 0/0/24 carry. No lifecycle id used (G-S137 free). Follow-up filed: SC-659.
+
+## Done (2026-11-14)
+
+Landed by the dispatcher: dse develop e1be1775, workspace main 13c52870 (bookkeeping 004a6394); worktree removed; ledger preserved at docs/superpowers/dse-overhaul/build-ledgers/sc648-negotiation-menu-position/. SC-648 set to Done via linear-post.py --state Done; verified (status Done, completedAt 2026-11-15T00:52:12Z).
