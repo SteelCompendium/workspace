@@ -171,3 +171,7 @@ twice), SC-599 (formatting, parked on Scott).
   - I-9: no action (placement ruling + SC-599).
 - **LAND-READY 2026-11-15:** dse `bab0dbb2` on develop `42c26272`; superproject `a5aa9700` on workspace main
   `2945c3ea` (7f7f3eeb CHANGELOG, a5aa9700 pointer bump).
+- **DONE 2026-11-15:** landed by the dispatcher — dse develop `bab0dbb2`, workspace main `c65d33a2` (bookkeeping
+  `4a5a3c2c`); worktree removed; ledger preserved at `docs/superpowers/dse-overhaul/build-ledgers/sc652-wrapper-keys-kept/`.
+  SC-652 set to Done via linear-post.py `--state Done` (landed comment posted); verified with get_issue: status Done,
+  completedAt 2026-11-15T12:42:50Z.
