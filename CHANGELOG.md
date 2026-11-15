@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: in a Montage, the "already used this skill" warning now ignores casing and extra spaces (SC-631).**
+  In the Log an action window, a hero who had used "Nature" got the warning when you typed "Nature" again, but not when
+  you typed "nature" or " nature ". The warning now shows for any of them, and it names the skill as the board has it:
+  "Kira already used Nature in this montage — reuse is not allowed". It is still only a reminder: Log stays enabled and
+  the skill is logged as you typed it. Editing an entry never warns against its own skill, whatever the casing.
+
 - **DSE plugin: a Montage that ran out of rounds with nothing logged now reads "Total Failure" (SC-629).**
   If the Director pressed End round on the last round with no actions logged, the result band showed "Final result"
   and "2 rounds used" but the verdict word "Not started", directly above the rule line "Total Failure — no Victories
