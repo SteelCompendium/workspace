@@ -8,6 +8,14 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: a click that saves a block no longer deletes a `prefs:` line or a `collapsed:` line the plugin cannot use (SC-652).**
+  Any write to a block (a button in the block, the block edit form's Save, a write from the sidebar) used to delete
+  two kinds of hand-written line without a warning: a `prefs:` map whose keys the plugin does not use (for example
+  `prefs: {boardDensity: compact}`, or a misspelled preference name), and a `collapsed:` line that is not `true` or
+  `false` (for example `collapsed: yes`). Both are now written back with the same values. They still do nothing on
+  screen: the console warning is the same, and `collapsed: yes` still leaves the block's collapse state to the
+  global setting. The same goes for `collapsible:` and `collapse_default:`.
+
 - **DSE plugin: an outside change to the note while a Montage window is open now closes the window with a Notice and returns keyboard focus to the Montage (SC-650).**
   The windows are Log an action, the edit sheet of a logged action, Add a hero and Set limits; the views are Reading view, Live Preview and the pinned sidebar.
   A change from outside (Sync, another pane, another app) that alters the Montage redraws it; the window used to vanish silently and focus fell to the top of the page.
