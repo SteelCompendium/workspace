@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: an outside change to the note no longer drops keyboard focus out of a Negotiation card (SC-656).**
+  When Sync, another pane or another plugin changed the note while a control on a Negotiation card had keyboard focus, the card was redrawn and focus fell to the top of the page.
+  Now focus stays on the same control in the redrawn card, in Reading view, Live Preview and the pinned sidebar. The tier you picked for the current argument is kept too, so Complete Argument stays usable, unless the outside change altered that argument.
+  When the focused control is gone or turned off in the redrawn card, focus goes to the nearest control (Complete Argument → the first Motivation chip; "Argument has already been made" and "Reuses a Motivation" → the Lie box), or to the card itself when nothing near it can take focus (for example, the outside change collapsed the card).
+  Focus is never pulled into a card that did not have it, and when the outside change adds or removes a Negotiation block above, focus is not moved.
+
 - **DSE plugin: a click that saves a block no longer deletes a `prefs:` line or a `collapsed:` line the plugin cannot use (SC-652).**
   Any write to a block (a button in the block, the block edit form's Save, a write from the sidebar) used to delete
   two kinds of hand-written line without a warning: a `prefs:` map whose keys the plugin does not use (for example
