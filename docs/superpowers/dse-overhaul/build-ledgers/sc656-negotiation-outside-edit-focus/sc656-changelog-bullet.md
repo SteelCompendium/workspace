@@ -1,0 +1,5 @@
+- **DSE plugin: an outside change to the note no longer drops keyboard focus out of a Negotiation card (SC-656).**
+  When Sync, another pane or another plugin changed the note while a control on a Negotiation card had keyboard focus, the card was redrawn and focus fell to the top of the page.
+  Now focus stays on the same control in the redrawn card, in Reading view, Live Preview and the pinned sidebar. The tier you picked for the current argument is kept too, so Complete Argument stays usable, unless the outside change altered that argument.
+  When the focused control is gone or turned off in the redrawn card, focus goes to the nearest control (Complete Argument → the first Motivation chip; "Argument has already been made" and "Reuses a Motivation" → the Lie box), or to the card itself when nothing near it can take focus (for example, the outside change collapsed the card).
+  Focus is never pulled into a card that did not have it, and when the outside change adds or removes a Negotiation block above, focus is not moved.
