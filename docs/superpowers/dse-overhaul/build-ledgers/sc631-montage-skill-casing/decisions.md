@@ -75,3 +75,6 @@ No Scott comments on the ticket as of 2026-11-14.
 - r4 scoped re-review — APPROVE 2026-11-14 on `2777484c`: 0 findings; mutants r4m3/r4m5/r4m6 killed; branch shape
   verified (2 superproject commits on `f770cc3b`). **LAND-READY**: dse `2777484c` on `e1be1775`, superproject
   `47b35b4b` on `f770cc3b`. SKILL proposal `sc631-skill-proposal.md` for the dispatcher. Ticket left Awaiting.
+- 2026-11-14 LANDED by the dispatcher: dse develop `2777484c`, workspace main `05104110` (bookkeeping `0a6aaebf`);
+  worktree removed; ledger preserved in build-ledgers; SKILL proposal applied. Owner posted the Done comment and set
+  SC-631 **Done** via linear-post.py `--state Done`; verified with get_issue (status Done). Effort closed.
