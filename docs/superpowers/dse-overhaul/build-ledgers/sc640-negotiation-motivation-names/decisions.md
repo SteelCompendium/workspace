@@ -128,3 +128,5 @@ same way.)
 
 SC-639 landed: dse develop now `a9f0af1d`, workspace main `d2d4e5fd`. Verbatim: "Rebase onto a9f0af1d, and put your superproject branch on current workspace main with the CHANGELOG commit and ONE pointer bump, before you report land-ready. New numbers at a9f0af1d: jest 13353 passed / 2 skipped fresh (13354 / 1 with the shots cache) · lifecycle 64/64 · e2e `607/620 ok, 0 failed, 13 known-bug, coverage: 417/417 pairs` · shots 592, host-leak 163/978, modal host-leak 40/240, capture clip 147 · freeze 280/280 · parity 0/0/24."
 Expected on the rebased branch: e2e (607+2 flipped+new)/(620+new) ok, 0 failed, **11 known-bug**, 417/417.
+- LANDED 2026-11-15 (dispatcher): dse develop `cefa9ca8`, workspace main `20d3c40f` (bookkeeping `17af24be`); worktree removed; ledger preserved at `docs/superpowers/dse-overhaul/build-ledgers/sc640-negotiation-motivation-names/`.
+- DONE 2026-11-15: SC-640 set to Done via linear-post.py `--state Done` (landed comment posted); verified status Done via get_issue.
