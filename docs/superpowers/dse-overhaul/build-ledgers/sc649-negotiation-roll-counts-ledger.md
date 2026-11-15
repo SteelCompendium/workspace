@@ -137,3 +137,10 @@ on workspace origin/main `fded411f`; owner verified the diff (only CHANGELOG.md 
 trailer). Plugin `5f962390` on dse origin/develop `2777484c`. Land-ready comment posted on SC-649; reported land-ready
 to the dispatcher. Ticket stays Awaiting until landed; the dispatcher (or owner on request) sets Done via
 linear-post.py `--state Done` and verifies.
+
+## Done (2026-11-15)
+
+Dispatcher landed: dse develop `5f962390`, workspace main `03690df6` (bookkeeping `ae594671`); worktree removed; ledger
+preserved at `docs/superpowers/dse-overhaul/build-ledgers/sc649-negotiation-roll-counts/`. Owner posted the landed
+comment and set SC-649 Done via linear-post.py `--state Done`; verified with get_issue: status Done, completedAt
+2026-11-15T03:12:34Z.

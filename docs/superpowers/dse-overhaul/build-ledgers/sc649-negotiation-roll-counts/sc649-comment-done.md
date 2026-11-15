@@ -1,0 +1,1 @@
+Landed: a Negotiation's power roll, Same Argument box and Complete Argument now count only what the card shows as chosen, on draw-steel-elements develop `5f962390` (workspace main `03690df6`). It reaches users with the next plugin release.
