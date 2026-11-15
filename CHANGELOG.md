@@ -8,6 +8,17 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: a Negotiation now handles two Motivations (or Pitfalls) with the same name, and ones with no name (SC-640).**
+  With two Motivations both named "Higher Authority", the first appeal button on the Make an Argument tab was drawn
+  empty and the first Spent button was blank; only the second worked. A Motivation with no name drew a bare "◆" that a
+  screen reader announced as "Appeal to ". Two entries with the same name now share one labelled button, with a line
+  under it saying so ("Higher Authority is listed twice; this chip stands for both."), and the Motivations and
+  Pitfalls cards show the same note and keep every row. Each row's Spent button works on its own, the shared button is
+  drawn spent when any of them is, and Complete Argument marks all of them. A Motivation or Pitfall with no name is
+  labelled "Unnamed Motivation" / "Unnamed Pitfall" and its button works; the note keeps it without a name. Casing and
+  extra spaces are ignored when names are matched ("power" is "Power"), including the names already chosen in the
+  argument.
+
 - **DSE plugin: in a Negotiation, the keyboard stays on the card after you choose Reset (SC-639).**
   Open the options menu (the ⋮ button) from the keyboard and choose Reset: the negotiation was reset, but keyboard
   focus dropped to the page, so the next Tab started again from the top of the note. Focus now returns to the ⋮ button
