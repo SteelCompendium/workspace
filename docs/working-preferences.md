@@ -120,9 +120,27 @@ throwaway `6.0.1` re-release of 5.1.1, and days of waiting on Obsidian's mirror.
   code merely working. Scott's call, stated 2026-07-31.
 - Tagging/releasing is **Scott's action alone**. Prep it — bump commands, changelog slice,
   the exact `gh release create` line — and hand it over. Never run it.
-- If a beta is ever needed: **BRAT**, not a tag. If a GitHub release is truly unavoidable,
-  "Set as a pre-release" must be ticked *and* the manifest version must stay strictly
-  `x.y.z` — but the default answer is still no.
+- **Exception, 2026-11-20:** Scott explicitly approved, in-session, a 7.0.0 beta for
+  testers who asked for one: `7.0.0-rc.1`, a pre-release cut from `develop` `129beb18`.
+  This was a one-off. **The standing order still holds**, and every later rc needs his
+  explicit go, given in the session where it is cut.
+- **How a beta is shipped safely, when Scott approves one.** BRAT ≥ 1.1 installs from
+  GitHub releases and reads `manifest.json` from the release's attached files, so a BRAT
+  beta does need a release. What keeps it out of the store is the following:
+  - **`main` is never touched.** The store reads `manifest.json` at the HEAD of the
+    default branch (`main`, which stays on the current stable version), then downloads
+    the release whose tag matches that version. Never merge the rc version bump to `main`.
+  - **Mark it a pre-release and not Latest:** `gh release create <tag> --target <develop-sha>
+    --prerelease --latest=false`. Check afterwards that `gh api
+    repos/SteelCompendium/draw-steel-elements/releases/latest` still returns the stable tag.
+  - **Change the version only in the uploaded manifest copy.** Run `jq '.version =
+    "7.0.0-rc.N"' manifest.json` into a scratch dir and upload that copy; commit nothing.
+    The manifest uses the `rc.N` form on purpose, overriding the old "keep it strictly
+    `x.y.z`" rule: an `x.y.z` rc manifest would leave testers with the final number
+    already installed, so they would never be offered the real release. The store never
+    reads the rc manifest, because `main` doesn't point at it.
+  - Obsidian's own updater won't move a user from `7.0.0-rc.N` to `7.0.0`. Testers update
+    through BRAT, and the release notes say so.
 
 ## Linear: approval asks must be self-contained (Scott's rule, 2026-08-08)
 
