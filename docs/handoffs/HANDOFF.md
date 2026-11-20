@@ -26,6 +26,7 @@ Scott: "Data loss or broken on shipping elements" — SC-671, SC-672, SC-675, SC
 | SC-679 (accept empty suggestion + Enter writes a second value) | `sc679-suggest-enter-double-value` | `.superpowers/sdd/sc679-suggest-enter-double-value/` | **in flight** (spawned 2026-11-20) |
 
 Landing: one at a time via `land-stack` from the main checkout; dse tracked branch `develop`.
+**2026-11-20: usage limit hit** after SC-675 landed. SC-671 (owner `a5f2f26de852340d3`), SC-672 (`a4867b9c9ce40061c`), SC-679 (`acca47a32c790f855`) told to rebase onto `3b47e55b`, then to checkpoint (commit + ledger) and stop. Resume: `SendMessage` the owner; on "No transcript found", spawn a fresh `orchestration:ticket-owner` briefed from its ledger.
 
 
 ### 2026-10-19 — DSE 7.0.0 backlog bug wave (dispatcher session `be71a0a9-199f-4e14-967b-191935312b05`)
