@@ -22,7 +22,7 @@ Scott: "Data loss or broken on shipping elements" — SC-671, SC-672, SC-675, SC
 |---|---|---|---|
 | SC-671 (counter write deletes unknown YAML keys) | `sc671-counter-unknown-keys` | `.superpowers/sdd/sc671-counter-unknown-keys/` | **in flight** (spawned 2026-11-20) |
 | SC-672 (malformed counter block: raw error / first press deletes text) | `sc672-counter-malformed-block` | `.superpowers/sdd/sc672-counter-malformed-block/` | **in flight** (spawned 2026-11-20) |
-| SC-675 (insert not on an empty line: broken block) | `sc675-insert-nonempty-line` | `.superpowers/sdd/sc675-insert-nonempty-line/` | **in flight** (spawned 2026-11-20) |
+| SC-675 (insert not on an empty line: broken block) | `sc675-insert-nonempty-line` (removed) | preserved: `build-ledgers/sc675-insert-nonempty-line*` | **landed** dse develop `3b47e55b`, workspace `49ac1c10`; jest 13855/2, e2e 658/667 (9 known-bug, 418/418 pairs), lifecycle 63/64 (G-S61 torn-read = SC-668, same on base); also fixes SC-462; SC-443 rebase notes in the ledger |
 | SC-679 (accept empty suggestion + Enter writes a second value) | `sc679-suggest-enter-double-value` | `.superpowers/sdd/sc679-suggest-enter-double-value/` | **in flight** (spawned 2026-11-20) |
 
 Landing: one at a time via `land-stack` from the main checkout; dse tracked branch `develop`.
