@@ -8,6 +8,10 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: inserting a block no longer breaks it when the cursor is not on an empty line (SC-675, also fixes SC-462).**
+  The Insert Draw Steel commands, the `/ds` pick and the compendium reference and full-block inserts now always give the block lines of its own: text before the cursor stays on the line above it, and text after the cursor moves to a line below it.
+  Inside a callout every inserted line keeps the `>`. Inside a list item every line is indented under the item. A block inside a list item still can't save its changes yet.
+
 - **DSE plugin (experimental sidebar): an outside change to a pinned note no longer loses what a pinned card was about to save, and no longer gets written over (SC-662, also fixes SC-550).**
   An outside change is Sync, another pane, another app, or a card in the note itself. It used to refresh the pinned card in a way that lost data.
   A press made in the pinned card just before the change is now still written.
