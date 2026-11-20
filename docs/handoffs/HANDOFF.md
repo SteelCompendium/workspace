@@ -14,6 +14,20 @@
 > **Release gate: 7.0.0 ships only when SC-97 (Steel UI parity) is complete.**
 
 
+### 2026-11-20 — shipping-element data-loss wave (dispatcher session `5812b474-3aec-46a6-8f06-0ef85cf1e10a`)
+Scott: "Data loss or broken on shipping elements" — SC-671, SC-672, SC-675, SC-679. Dispatcher on Opus 5.5
+(Scott's `/model` pick); owners spawned as `orchestration:ticket-owner`, no `model` arg (agent def → Fable).
+
+| Ticket | Worktree | Ledger | State |
+|---|---|---|---|
+| SC-671 (counter write deletes unknown YAML keys) | `sc671-counter-unknown-keys` | `.superpowers/sdd/sc671-counter-unknown-keys/` | **in flight** (spawned 2026-11-20) |
+| SC-672 (malformed counter block: raw error / first press deletes text) | `sc672-counter-malformed-block` | `.superpowers/sdd/sc672-counter-malformed-block/` | **in flight** (spawned 2026-11-20) |
+| SC-675 (insert not on an empty line: broken block) | `sc675-insert-nonempty-line` | `.superpowers/sdd/sc675-insert-nonempty-line/` | **in flight** (spawned 2026-11-20) |
+| SC-679 (accept empty suggestion + Enter writes a second value) | `sc679-suggest-enter-double-value` | `.superpowers/sdd/sc679-suggest-enter-double-value/` | **in flight** (spawned 2026-11-20) |
+
+Landing: one at a time via `land-stack` from the main checkout; dse tracked branch `develop`.
+
+
 ### 2026-10-19 — DSE 7.0.0 backlog bug wave (dispatcher session `be71a0a9-199f-4e14-967b-191935312b05`)
 Scott: "work through the backlog/todo tickets you can (bugs, etc.), 2–3 at a time; Opus for most,
 Fable if a ticket needs it". Dispatcher on Opus 5.5. Owners spawned as `orchestration:ticket-owner`
