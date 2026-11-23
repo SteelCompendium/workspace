@@ -1561,8 +1561,8 @@ go under an *Internal* sub-heading.
   Typography section: six font pickers (Title/Body/Controls primary, Card
   body/Label/Monospace behind an Advanced fold; curated list + "Custom…" free text +
   a feature-detected "List installed fonts" affordance) and two size sliders (Text
-  60%–140%, Card 80%–120%, 5% steps — the site's exact slider ranges and snap
-  semantics). Every picker defaults to "Default (Obsidian vault fonts)" — the
+  60%–140%, Card 30%–120% since SC-683 (it was 80%–120%), 5% steps — Text size is the
+  site's exact slider range and snap semantics; Card size now goes lower than the site's 80%). Every picker defaults to "Default (Obsidian vault fonts)" — the
   plugin's only-ever prior behavior — and choices apply under both Steel and Legacy
   (the Legacy support gate's verdict was SHIP; at defaults Legacy stays
   byte-identical, freeze-verified). Controls (steppers/buttons/tabs) now default to
