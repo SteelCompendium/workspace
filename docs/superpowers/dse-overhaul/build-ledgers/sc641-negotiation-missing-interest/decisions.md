@@ -126,3 +126,11 @@ Worktree: /home/scott/code/steelCompendium/worktrees/sc641-negotiation-missing-i
   e2e test or pair; e2e known-bug 9 -> 7. For `dse-verify` CURRENT at landing: jest 13861 / 2
   fresh, lifecycle 64/64, e2e 660/667 ok / 0 failed / 7 known-bug / 418/418 pairs, shots 592,
   freeze 280/280, parity 0/0/24. No tickets filed (INFO-3 / INFO-5 covered by SC-599).
+- **LANDED 2026-11-22 by the dispatcher:** dse `develop` `bdf0255e` (fast-forward from
+  `f42546b8`); workspace `main` merge `d91ea21e`, bookkeeping `8e7a7bbe`. Superproject branch
+  rebased onto `origin/main` at landing; `CHANGELOG.md` conflicted only on the Unreleased header
+  (SC-675 bullets), both kept. Worktree removed. Ledger preserved at
+  `docs/superpowers/dse-overhaul/build-ledgers/sc641-negotiation-missing-interest/`; `dse-verify`
+  CURRENT @ `bdf0255e` added. Owner verified on origin (develop tip, workspace pointer, CHANGELOG).
+- **DONE 2026-11-22:** closing comment posted (body `sc641-comment-done.md`), SC-641 -> Done
+  (verified). Effort closed.
