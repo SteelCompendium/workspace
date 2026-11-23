@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: a Counter block that holds plain text, a list or a lone number now shows an error and is left alone, and an empty Counter block is a counter at 0 (SC-672).**
+  A block with plain text, a bulleted list or a number in it used to draw a working counter at 0, and the first click on + replaced your text with `current_value: 1`.
+  It now shows a plain error card ("Invalid data: the block must be a map of keys.") with no buttons, so the card can't change your note.
+  An empty block (nothing inside the fence, blank lines, or only a comment) used to show a raw error ("Cannot read properties of null"). It now draws a counter at 0 with no name and no maximum, and the first click on + fills the block in (`current_value: 1`); a number typed into the box fills it in with that number.
+  A comment inside an empty block goes on that first click, as it does for every block.
+
 - **DSE plugin: pressing - or + on a Counter no longer deletes the keys it does not use (SC-671).**
   Any change that saves a `ds-counter` block (the - and + buttons, a typed value, in Reading view, Live Preview and the sidebar) used to remove
   every line the counter does not know: your own notes in the block (`note_to_self: keep me`, `extra: {a: 1}`). They are now kept, with the same
