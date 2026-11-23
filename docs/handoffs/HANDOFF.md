@@ -26,7 +26,7 @@ worktrees (prior owners were in earlier sessions).
 | SC-641 | `sc641-negotiation-missing-interest` (removed) → preserved `build-ledgers/sc641-negotiation-missing-interest/` | **landed** dse develop `bdf0255e`, workspace `d91ea21e`; jest 13861/2, lifecycle 64/64, e2e 660/667 (7 known-bug, 418/418); ticket **Done** 2026-11-22 |
 | SC-672 | `sc672-counter-malformed-block` | **in flight** (wave 2; resumed from 2026-11-20 checkpoint) |
 | SC-434 | `sc434-ci-e2e` (removed) → preserved `build-ledgers/sc434-ci-e2e/` | **landed** dse develop `f42546b8`, workspace `02cd6d6a`; CI-only (new `e2e` job); dse-verify CI bullets + CURRENT applied; first develop CI run 45110788719 green (e2e 658/667, 0 failed); ticket **Done** 2026-11-22; remote branch `sc434-ci-e2e` left on GitHub (safe to delete) |
-| SC-671 | `sc671-counter-unknown-keys` (removed) → preserved `build-ledgers/sc671-counter-unknown-keys/` | **landed** dse develop `d582e7ff`, workspace `3788ccd0`; jest 13936/2 fresh, lifecycle 64/64, e2e 668/673 (5 known-bug, 418/418); filed SC-684, SC-685; SC-442 must turn its `CTR-U01` SC-671 marker into a plain test (and keep both `e2e/README.md` rows); owner closing out |
+| SC-671 | `sc671-counter-unknown-keys` (removed) → preserved `build-ledgers/sc671-counter-unknown-keys/` | **landed** dse develop `d582e7ff`, workspace `3788ccd0`; jest 13936/2 fresh, lifecycle 64/64, e2e 668/673 (5 known-bug, 418/418); filed SC-684, SC-685; SC-442 must turn its `CTR-U01` SC-671 marker into a plain test (and keep both `e2e/README.md` rows); ticket **Done** 2026-11-23 |
 | SC-443 | `sc443-e2e-editor-insert` | **in flight** (wave 3) |
 
 Queue (start as slots free): SC-442.

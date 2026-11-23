@@ -239,3 +239,8 @@ host-leak 163/978, modal host-leak 40/240, capture clip 147 · freeze 280/280 ·
   `e2e/README.md` rows; SC-672 (same counter model file) must rebase onto this; (4) six scratch worktrees registered
   in the worktree's plugin clone (two `prunable` from session 5812b474, four under `…/e255a3cd…/scratchpad/sc671-r*`)
   — they live in the worktree clone's metadata and go away with `just wt-rm`; (5) after landing, SC-671 -> Done.
+- 2026-11-23 — **LANDED and Done.** Dispatcher: dse `origin/develop` = `d582e7ff` (fast-forward, 6 commits);
+  workspace main merge `3788ccd0`, bookkeeping `c5d38e9b`; worktree removed; dse-verify CURRENT @ `d582e7ff` plus the
+  three proposed notes. Owner verified both remotes (`ls-remote`), the pointer on origin/main and the CHANGELOG
+  bullet. Closing comment posted; SC-671 -> **Done** (labels DSE Plugin + Bug, verified). Open from this effort:
+  SC-684, SC-685 (Backlog); the SC-599 note. SC-442 flips `CTR-U01` in its own rebase round.
