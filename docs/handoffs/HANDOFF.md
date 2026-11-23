@@ -14,6 +14,21 @@
 > **Release gate: 7.0.0 ships only when SC-97 (Steel UI parity) is complete.**
 
 
+### 2026-11-22 — DSE 7.0.0 in-progress wave (dispatcher session `e255a3cd-5cdb-4dc4-83be-b58e80eb1057`)
+Scott: "work through those [DSE 7.0.0 in-progress] tickets 3 at a time". Dispatcher on Opus 5.5 (Scott's `/model`
+pick). Owners spawned fresh as `orchestration:ticket-owner` (no `model` arg), briefed from their existing ledgers +
+worktrees (prior owners were in earlier sessions).
+
+| Ticket | Worktree / ledger (`.superpowers/sdd/<same>/`) | State |
+|---|---|---|
+| SC-644 | `sc644-settings-reach-open-blocks` | **in flight** (wave 1; Scott set Ready for Agent) |
+| SC-641 | `sc641-negotiation-missing-interest` | **in flight** (wave 1; Scott set Ready for Agent) |
+| SC-434 | `sc434-ci-e2e` | **in flight** (wave 1; Scott set Ready for Agent) |
+
+Queue (start as slots free): SC-671, SC-672, SC-679 (usage-limit checkpoint, see below), then SC-443, SC-442.
+Needs Review (on Scott, not queued): SC-538, SC-393.
+
+
 ### 2026-11-20 — shipping-element data-loss wave (dispatcher session `5812b474-3aec-46a6-8f06-0ef85cf1e10a`)
 Scott: "Data loss or broken on shipping elements" — SC-671, SC-672, SC-675, SC-679. Dispatcher on Opus 5.5
 (Scott's `/model` pick); owners spawned as `orchestration:ticket-owner`, no `model` arg (agent def → Fable).
