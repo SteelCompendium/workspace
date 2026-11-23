@@ -8,6 +8,10 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: Card size can now go down to 30% (SC-683).**
+  The Card size slider in Settings -> Draw Steel Elements -> Typography used to stop at 80%. It now runs from 30% to 120% in 5% steps, so a statblock or ability card can be made much smaller.
+  Because the range now reaches further down than up, the slider's thumb at 100% sits right of the track's middle, unlike the other four size sliders. A Card size you already set (80% to 120%) is unchanged. Print and export still use 100%. The website's own Card size setting is not changed.
+
 - **DSE plugin: a Counter block that holds plain text, a list or a lone number now shows an error and is left alone, and an empty Counter block is a counter at 0 (SC-672).**
   A block with plain text, a bulleted list or a number in it used to draw a working counter at 0, and the first click on + replaced your text with `current_value: 1`.
   It now shows a plain error card ("Invalid data: the block must be a map of keys.") with no buttons, so the card can't change your note.
