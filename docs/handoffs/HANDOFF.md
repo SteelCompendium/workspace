@@ -29,7 +29,8 @@ worktrees (prior owners were in earlier sessions).
 | SC-671 | `sc671-counter-unknown-keys` (removed) → preserved `build-ledgers/sc671-counter-unknown-keys/` | **landed** dse develop `d582e7ff`, workspace `3788ccd0`; jest 13936/2 fresh, lifecycle 64/64, e2e 668/673 (5 known-bug, 418/418); filed SC-684, SC-685; SC-442 must turn its `CTR-U01` SC-671 marker into a plain test (and keep both `e2e/README.md` rows); ticket **Done** 2026-11-23 |
 | SC-443 | `sc443-e2e-editor-insert` | **in flight** (wave 3) |
 
-Queue (start as slots free): SC-442.
+Queue (start as slots free): SC-442 (must turn SC-671's `CTR-U01` known-bug marker into a plain test; keep both `e2e/README.md` rows).
+**2026-11-23: usage limit hit** mid-wave; SC-672, SC-679, SC-443 owners stopped (429) and were resumed via `SendMessage` after reset. If a later session finds them dead: spawn a fresh `orchestration:ticket-owner` per ticket briefed from its ledger.
 Needs Review (on Scott, not queued): SC-538, SC-393.
 
 
