@@ -396,3 +396,7 @@ commits.
   After landing: SC-443 → Done. Open markers on develop after landing: SC-676 ×3, SC-677, SC-678 (jsdom), SC-687
   (jsdom ×3 + e2e AUTH-I27), SC-688 (jsdom ×2 + e2e AUTH-G21) — whoever fixes one of those flips its marker.
   Note for SC-442 (in flight): this branch adds CENSUS-30..34 and 87 `AUTH-*` ids; no collision with sc442 `6d5a2caa`.
+- **LANDED and closed (2026-11-23).** Dispatcher: dse `origin/develop` = `758a8956` (fast-forward from `957e4b11`, 12
+  commits); workspace main merge `f6137bbe`, bookkeeping `3b66036b`; worktree removed; ledger preserved to
+  `docs/superpowers/dse-overhaul/build-ledgers/sc443-e2e-editor-insert/`. Owner verified both shas on origin, posted
+  the closing comment on SC-443 and set it to Done (labels DSE Plugin + Feature unchanged). Nothing outstanding.
