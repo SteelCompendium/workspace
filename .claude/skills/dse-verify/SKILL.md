@@ -119,6 +119,9 @@ future changes"). A landing without a green full run (0 failed, coverage Y/Y) is
 - **Cache:** `${XDG_CACHE_HOME:-~/.cache}/dse-e2e-obsidian` (override `OBSIDIAN_CACHE`), shared across worktrees,
   ~1 GB per version set (pinned = app 1.14.4 + installer 1.14.4; `--obsidian=installed` = `/usr/bin/obsidian`).
   The first run of a new version downloads; copy the dir (`cp -a`) rather than re-downloading.
+  CI (SC-434): changing the `PINNED` constant in `e2e/run.mjs` (or the `obsidian-launcher` version in
+  `package-lock.json`) busts the CI cache by itself (the workflow reads both); do not copy either version number
+  into the workflow.
 - **Coverage gate.** A FULL run (no `--only`/`--element`) exits 1 if any manifest (control, kind) pair in
   `e2e/manifest/*.ts` was driven by zero tests (it lists them) or a driven pair is in no manifest. A new control on
   a pilot surface needs a `data-dse-control` id (kit `control` option) AND a manifest row AND a scenario; the jsdom
@@ -132,6 +135,13 @@ future changes"). A landing without a green full run (0 failed, coverage Y/Y) is
 - No retries, ever: a flake is a bug in the test or the product. Read the failure bundle in
   `e2e/.out/<run>/<test-id>/` (screenshot, DOM, note diff, page events); copy it out before the 12-run retention
   prunes it.
+- **CI (SC-434).** The `e2e` job in `.github/workflows/plugin-ci.yml` runs the full `npm run e2e -- --shards=4`
+  on every push to main/develop and every PR (`ubuntu-24.04`, 4 vCPU). It is a second, independent run of this
+  gate, not a replacement for running it before you land. On failure read the `e2e-out` artifact
+  (`<run>/<test-id>/screenshot.png`, DOM, note diff); the artifact is named `e2e-out-<run attempt>` and is
+  uploaded on failure or cancel. Cache key `dse-e2e-obsidian-<os>-<arch>-<PINNED>-launcher-<obsidian-launcher version>`,
+  `PINNED` read from `e2e/run.mjs`; the cache is saved only when complete. Lifecycle is not on CI (SC-449). The CI
+  job's expected summary is the same `OBSIDIAN-E2E done: ...` line as CURRENT below; there are no separate CI numbers.
 
 ### Devbox wrapping (every command above)
 
@@ -1531,7 +1541,10 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `129beb18` (2026-11-15; SC-662 landed on `d62f0b26`; the pinned sidebar no longer loses a pending save or the outside change when the note changes from outside, for all 22 pinnable elements: a press made just before the outside change is still written (fixes SC-550, SIDE-OE02), a window over a block the change did not touch stays open and saves, a window over a block it touched closes without saving with the SC-608 Notice and focus back on its opener, and when the user's save and the outside change hit the same block the outside change wins with a Notice (as in Reading view); the block edit form's Save and the Undo after Catch breath or a recovery follow the same rule; also fixed: pinned Conditions / Resource / Surges / Tokens cards no longer break ("Backing block not found") after their first save, and a pinned block's edit form saves again (it rejected the `_dse_anchor` line); `src/framework/sidebar/SidebarPanel.ts` (`handleExternalChange`, `queueExternalChange`), `SidebarBlockHost.ts` (stale-write guard in `replaceSource`), `framework/view.ts`, `kit/managedModal.ts`, `windowHandoff.ts` (`finishOutsideRefresh`, additive); accepted residual LOW-7: a second edit form opened within about 20 ms of the first form's Save is refused; no lifecycle id used (G-S146 free)):**
+**CURRENT — dse `develop` @ `f42546b8` (2026-11-22; SC-434 landed on `3b47e55b`; CI only: a new `e2e` job in `.github/workflows/plugin-ci.yml` runs the full e2e suite on GitHub for every push to main/develop and every PR, plus `e2e/README.md`; no TS or CSS change. `3b47e55b` is SC-675 landed on `129beb18` (2026-11-20; a block insert off an empty line no longer breaks the block; also fixes SC-462)):**
+tsc and lint clean · jest **13855 passed / 2 skipped** in a fresh worktree · lifecycle **64/64** · e2e **`OBSIDIAN-E2E done: 658/667 ok, 0 failed, 9 known-bug, coverage: 418/418 pairs`** (same line on GitHub, run 45104797704) · no TS or CSS change, so shots **592**, freeze **280/280** and parity **0 / 0 / 24** carry from `3b47e55b`. Numbers as reported by the SC-434 owner; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `129beb18` (2026-11-15; SC-662 landed on `d62f0b26`; the pinned sidebar no longer loses a pending save or the outside change when the note changes from outside, for all 22 pinnable elements: a press made just before the outside change is still written (fixes SC-550, SIDE-OE02), a window over a block the change did not touch stays open and saves, a window over a block it touched closes without saving with the SC-608 Notice and focus back on its opener, and when the user's save and the outside change hit the same block the outside change wins with a Notice (as in Reading view); the block edit form's Save and the Undo after Catch breath or a recovery follow the same rule; also fixed: pinned Conditions / Resource / Surges / Tokens cards no longer break ("Backing block not found") after their first save, and a pinned block's edit form saves again (it rejected the `_dse_anchor` line); `src/framework/sidebar/SidebarPanel.ts` (`handleExternalChange`, `queueExternalChange`), `SidebarBlockHost.ts` (stale-write guard in `replaceSource`), `framework/view.ts`, `kit/managedModal.ts`, `windowHandoff.ts` (`finishOutsideRefresh`, additive); accepted residual LOW-7: a second edit form opened within about 20 ms of the first form's Save is refused; no lifecycle id used (G-S146 free)):**
 tsc and lint clean · jest **13703 passed / 1 skipped** with the shots cache · lifecycle **64/64** · e2e **`OBSIDIAN-E2E done: 658/667 ok, 0 failed, 9 known-bug, coverage: 418/418 pairs`** · shots **592**, host-leak 163/978, modal host-leak 40/240, capture clip 147 · freeze **280/280** · parity **0 / 0 / 24**. Numbers as reported by the SC-662 owner; the dispatcher relayed, not re-ran.
 
 **PREVIOUS — dse `develop` @ `d62f0b26` (2026-11-15; SC-656 landed on `bab0dbb2`; keyboard focus stays on the same control of a `ds-negotiation` card when Sync, another pane or another plugin changes the note, in Reading view, Live Preview and the pinned sidebar; the tier picked for the current argument is kept across an outside change unless that change completed or altered the argument; fallbacks when the control is gone: Complete Argument to the first Motivation chip, "Argument has already been made" and "Reuses a Motivation" to the Lie box, a collapsed card takes focus itself, and focus is not moved when a Negotiation block above was added or removed; `windowHandoff.ts` additive exports, `host/livePreviewFocusCarry.ts` gains `ownSaveCarried`; filed SC-670 (counter, stamina bar, initiative, montage, feature drop focus the same way); no lifecycle id used (G-S147 free)):**
