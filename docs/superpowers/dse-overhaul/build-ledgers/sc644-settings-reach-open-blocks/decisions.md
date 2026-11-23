@@ -241,3 +241,7 @@ does not reach an open stamina bar), SC-646, SC-647, SC-651.
   Landing notes: dse-verify CURRENT after landing = base bdf0255e + jest 41 (fresh 13902 / 2; cache 13903 / 1 measured),
   e2e 664/669, 5 known-bug, 418/418 pairs, lifecycle 64/64, shots/freeze/parity unchanged. Preserve this ledger dir incl.
   `sc644-r5-e2e-flake-bundle/` (SC-657 cites it). No freeze delta, no rebaseline. No lifecycle id used (G-S130 free).
+- **LANDED + CLOSED (2026-11-23)** — dispatcher landed: dse develop `fefd9029` (fast-forward, 8 commits), workspace main
+  merge `c09b4a1f`, bookkeeping `b79eef2b`; worktree removed. Owner verified origin/develop = fefd9029 and main's pointer.
+  Closing comment posted (`sc644-comment-done.md`), SC-644 → Done (labels DSE Plugin, Bug). Nothing left open; SC-665
+  (Backlog) covers the reviewer's pre-existing sidebar observation; SC-657 (Backlog) the SET-X03 flake.

@@ -21,7 +21,7 @@ worktrees (prior owners were in earlier sessions).
 
 | Ticket | Worktree / ledger (`.superpowers/sdd/<same>/`) | State |
 |---|---|---|
-| SC-644 | `sc644-settings-reach-open-blocks` (removed) → preserved `build-ledgers/sc644-settings-reach-open-blocks/` (whole dir, incl. the `sc644-r5-e2e-flake-bundle/` SC-657 cites) | **landed** dse develop `fefd9029`, workspace `c09b4a1f`; jest 13902/2 fresh, lifecycle 64/64, e2e 664/669 (5 known-bug, 418/418); owner closing out |
+| SC-644 | `sc644-settings-reach-open-blocks` (removed) → preserved `build-ledgers/sc644-settings-reach-open-blocks/` (whole dir, incl. the `sc644-r5-e2e-flake-bundle/` SC-657 cites) | **landed** dse develop `fefd9029`, workspace `c09b4a1f`; jest 13902/2 fresh, lifecycle 64/64, e2e 664/669 (5 known-bug, 418/418); ticket **Done** 2026-11-23 |
 | SC-679 | `sc679-suggest-enter-double-value` | **in flight** (wave 2; resumed from 2026-11-20 checkpoint) |
 | SC-641 | `sc641-negotiation-missing-interest` (removed) → preserved `build-ledgers/sc641-negotiation-missing-interest/` | **landed** dse develop `bdf0255e`, workspace `d91ea21e`; jest 13861/2, lifecycle 64/64, e2e 660/667 (7 known-bug, 418/418); ticket **Done** 2026-11-22 |
 | SC-672 | `sc672-counter-malformed-block` | **in flight** (wave 2; resumed from 2026-11-20 checkpoint) |
