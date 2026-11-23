@@ -71,3 +71,16 @@ comment in `scale.ts` must say so. No v2 change on this ticket.
 - Comment 1 posted to SC-683 (In Progress + Needs Review): asks Scott to confirm O1 (Card size is the slider meant) and the 30% look; O2/O3 reported.
 - LANDED 2026-11-23 by the dispatcher: dse `develop` @ `aee83dc1`, workspace merge `040454e3` on origin/main, bookkeeping `36bf98c0`. Worktree removed. Ledger preserved at `docs/superpowers/dse-overhaul/build-ledgers/sc683-scaling-30pct/` (this local copy has later lines).
 - Comment 2 posted 2026-11-23: landed note + the same ask restated. Ticket stays **In Progress + Needs Review** until Scott confirms O1 (Card size is the slider meant) and the 30% look; on yes -> Done. No Scott reply as of this entry.
+
+### 2026-11-23 — Scott confirms (two sources)
+
+Ticket comment by Scott, 2026-11-23T19:59Z, verbatim:
+
+> Yeah this is great
+
+Relayed by the dispatcher from its session (not seen by the owner first-hand), verbatim as relayed:
+
+> Looks good.  Land this and cut the rc.3 release
+
+Effect: O1 (Card size is the slider meant) and the 30% look are accepted; O2/O3 stand unchallenged. Ticket -> Done, `Needs Review` removed.
+The rc.3 release is the dispatcher's action in its own session, not part of this ticket.
