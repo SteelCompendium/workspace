@@ -346,3 +346,10 @@ Expected after the fix: jest 13702 + new tests / 2 skipped fresh; lifecycle 64/6
   rebaseline. SC-442 (still in flight) carries `knownBug('SC-672')` markers CTR-W01 / W02 and fixtures
   `wrong-block.md` / `empty-block.md` (byte-identical here): after this lands, SC-442 must turn those two markers
   into plain tests when it rebases.
+- **LANDED 2026-11-23 (dispatcher):** dse `origin/develop` = `957e4b11` (`8c08bce2..957e4b11`, fast-forward, 8
+  commits); workspace main merge `f2446052`, pointer bump `746554ad`, bookkeeping `28ba594f`. Worktree removed;
+  ledger preserved to `docs/superpowers/dse-overhaul/build-ledgers/sc672-counter-malformed-block/`. CTR-W01 / W02
+  note relayed to the SC-442 owner.
+- **DONE 2026-11-23 (owner):** closing comment posted on SC-672, state → Done. R2 (an empty block is a counter at
+  0) was never vetoed; the closing comment says a change of mind goes on a new ticket. Open follow-ups: SC-686,
+  SC-689 (filed here); SC-685, SC-674 (noted).
