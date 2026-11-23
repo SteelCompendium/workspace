@@ -126,6 +126,15 @@ go under an *Internal* sub-heading.
   a number or a list (for example just `hello`) used to be replaced by `rounds: 3` on the next write; it now shows a
   plain error card ("the block must be a map of keys") and writes nothing. An empty block still draws a new Montage.
 
+- **DSE plugin: a Negotiation tracker that leaves Interest out now opens at Interest 2, and Reset no longer ends it
+  (SC-641).** A block with no `initial_interest` (for example just `name:`) used to start at Interest 0, so it opened
+  already over: "Negotiation over", with no appeals to make. It now starts at Interest 2 (a Neutral NPC in the rulebook),
+  with Patience 5 as before. Reset Negotiation now goes back to the block's `initial_interest` / `initial_patience`
+  when it writes them, and otherwise to Interest 2 / Patience 5, so a block that only wrote its current standing
+  (`current_interest`, `current_patience`) is live after Reset instead of ended. Reset adds no keys to your note. An
+  Interest of 0 that you write yourself still counts as written. The Negotiation tracker page now says what a block
+  that leaves these out starts at. (SC-641)
+
 - **DSE plugin: in a Montage, Add a hero refuses a name already on the board (SC-627).**
   Adding "Kira" to a board that already had Kira used to write a second Kira. The board then showed two Kira rows
   that mirrored each other: a logged action or a quick Success on either row filled both, and the second row could
