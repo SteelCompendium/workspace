@@ -23,7 +23,7 @@ worktrees (prior owners were in earlier sessions).
 |---|---|---|
 | SC-644 | `sc644-settings-reach-open-blocks` | **in flight** (wave 1; Scott set Ready for Agent) |
 | SC-641 | `sc641-negotiation-missing-interest` | **in flight** (wave 1; Scott set Ready for Agent) |
-| SC-434 | `sc434-ci-e2e` (removed) → preserved `build-ledgers/sc434-ci-e2e/` | **landed** dse develop `f42546b8`, workspace `02cd6d6a`; CI-only (new `e2e` job); dse-verify CI bullets + CURRENT applied; owner woken to confirm first develop CI run green, then Done |
+| SC-434 | `sc434-ci-e2e` (removed) → preserved `build-ledgers/sc434-ci-e2e/` | **landed** dse develop `f42546b8`, workspace `02cd6d6a`; CI-only (new `e2e` job); dse-verify CI bullets + CURRENT applied; first develop CI run 45110788719 green (e2e 658/667, 0 failed); ticket **Done** 2026-11-22; remote branch `sc434-ci-e2e` left on GitHub (safe to delete) |
 | SC-671 | `sc671-counter-unknown-keys` | **in flight** (wave 2; resumed from 2026-11-20 checkpoint) |
 
 Queue (start as slots free): SC-672, SC-679 (usage-limit checkpoint, see below), then SC-443, SC-442.
