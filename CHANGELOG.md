@@ -8,6 +8,12 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: pressing - or + on a Counter no longer deletes the keys it does not use (SC-671).**
+  Any change that saves a `ds-counter` block (the - and + buttons, a typed value, in Reading view, Live Preview and the sidebar) used to remove
+  every line the counter does not know: your own notes in the block (`note_to_self: keep me`, `extra: {a: 1}`). They are now kept, with the same
+  values (the block's layout may still change on a write: your extra keys follow the counter's own keys, except a key that is a number, like `2024:`, which moves to the top and comes back in quotes, `extra: {a: 1}` comes back as a
+  block map, a comment in the block is still removed, and a flow list `[a, b]` is rewritten one item per line).
+
 - **DSE plugin: inserting a block no longer breaks it when the cursor is not on an empty line (SC-675, also fixes SC-462).**
   The Insert Draw Steel commands, the `/ds` pick and the compendium reference and full-block inserts now always give the block lines of its own: text before the cursor stays on the line above it, and text after the cursor moves to a line below it.
   Inside a callout every inserted line keeps the `>`. Inside a list item every line is indented under the item. A block inside a list item still can't save its changes yet.
