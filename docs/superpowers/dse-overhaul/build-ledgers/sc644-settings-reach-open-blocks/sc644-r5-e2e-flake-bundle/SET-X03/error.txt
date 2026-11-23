@@ -1,0 +1,6 @@
+failure: [SET-X03] Default creature image path: a click opens the file picker, picking a file stores its path and a creature without an image shows it; Enter on the focused field opens nothing (Obsidian's combobox ignores it); the X clears the path and the portrait goes
+
+Error: timed out waiting for the picker to filter to Settings/token.svg
+    at async Object.waitFor (/home/scott/code/steelCompendium/worktrees/sc644-settings-reach-open-blocks/draw-steel-elements/e2e/driver/page.ts:22:2)
+    at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc644-settings-reach-open-blocks/draw-steel-elements/e2e/specs/settings/fields.e2e.ts:64:4)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc644-settings-reach-open-blocks/draw-steel-elements/e2e/driver/session.ts:42:5)

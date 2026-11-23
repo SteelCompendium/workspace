@@ -1,0 +1,6 @@
+failure: [SET-X04] after a plugin reload on the data.json the field scenarios above wrote, the fields show what was entered and data.json keeps it
+
+Error: the scenarios before this reload test left data.json differing from what it expects (defaultImagePath: on disk "Media/token_1.png", expected "")
+    at ensureState (/home/scott/code/steelCompendium/worktrees/sc644-settings-reach-open-blocks/draw-steel-elements/e2e/driver/settingsDrive.ts:173:9)
+    at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc644-settings-reach-open-blocks/draw-steel-elements/e2e/specs/settings/fields.e2e.ts:92:3)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc644-settings-reach-open-blocks/draw-steel-elements/e2e/driver/session.ts:42:5)

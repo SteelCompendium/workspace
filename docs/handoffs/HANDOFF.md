@@ -21,13 +21,14 @@ worktrees (prior owners were in earlier sessions).
 
 | Ticket | Worktree / ledger (`.superpowers/sdd/<same>/`) | State |
 |---|---|---|
-| SC-644 | `sc644-settings-reach-open-blocks` | **in flight** (wave 1; Scott set Ready for Agent) |
+| SC-644 | `sc644-settings-reach-open-blocks` (removed) → preserved `build-ledgers/sc644-settings-reach-open-blocks/` (whole dir, incl. the `sc644-r5-e2e-flake-bundle/` SC-657 cites) | **landed** dse develop `fefd9029`, workspace `c09b4a1f`; jest 13902/2 fresh, lifecycle 64/64, e2e 664/669 (5 known-bug, 418/418); owner closing out |
+| SC-679 | `sc679-suggest-enter-double-value` | **in flight** (wave 2; resumed from 2026-11-20 checkpoint) |
 | SC-641 | `sc641-negotiation-missing-interest` (removed) → preserved `build-ledgers/sc641-negotiation-missing-interest/` | **landed** dse develop `bdf0255e`, workspace `d91ea21e`; jest 13861/2, lifecycle 64/64, e2e 660/667 (7 known-bug, 418/418); ticket **Done** 2026-11-22 |
 | SC-672 | `sc672-counter-malformed-block` | **in flight** (wave 2; resumed from 2026-11-20 checkpoint) |
 | SC-434 | `sc434-ci-e2e` (removed) → preserved `build-ledgers/sc434-ci-e2e/` | **landed** dse develop `f42546b8`, workspace `02cd6d6a`; CI-only (new `e2e` job); dse-verify CI bullets + CURRENT applied; first develop CI run 45110788719 green (e2e 658/667, 0 failed); ticket **Done** 2026-11-22; remote branch `sc434-ci-e2e` left on GitHub (safe to delete) |
 | SC-671 | `sc671-counter-unknown-keys` | **in flight** (wave 2; resumed from 2026-11-20 checkpoint) |
 
-Queue (start as slots free): SC-679 (usage-limit checkpoint, see below), then SC-443, SC-442.
+Queue (start as slots free): SC-443, then SC-442.
 Needs Review (on Scott, not queued): SC-538, SC-393.
 
 
