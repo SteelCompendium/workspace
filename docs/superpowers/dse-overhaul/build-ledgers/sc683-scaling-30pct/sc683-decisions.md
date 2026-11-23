@@ -69,3 +69,5 @@ comment in `scale.ts` must say so. No v2 change on this ticket.
   INFO-r4-1 (superproject CHANGELOG.md:1565 is a 158-char line in an ~85-col bullet): **DROP** — cosmetic, renders the same.
 - Tracked branches at land-ready: dse `origin/develop` = `9be108c9` (unmoved), workspace `origin/main` = `cf626508`; both branches are fast-forwards.
 - Comment 1 posted to SC-683 (In Progress + Needs Review): asks Scott to confirm O1 (Card size is the slider meant) and the 30% look; O2/O3 reported.
+- LANDED 2026-11-23 by the dispatcher: dse `develop` @ `aee83dc1`, workspace merge `040454e3` on origin/main, bookkeeping `36bf98c0`. Worktree removed. Ledger preserved at `docs/superpowers/dse-overhaul/build-ledgers/sc683-scaling-30pct/` (this local copy has later lines).
+- Comment 2 posted 2026-11-23: landed note + the same ask restated. Ticket stays **In Progress + Needs Review** until Scott confirms O1 (Card size is the slider meant) and the 30% look; on yes -> Done. No Scott reply as of this entry.
