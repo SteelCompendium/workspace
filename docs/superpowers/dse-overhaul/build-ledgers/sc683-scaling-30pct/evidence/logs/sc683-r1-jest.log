@@ -1,0 +1,152 @@
+FAIL dom test/dom/views/settings-tab.test.ts (7.91 s)
+  ● SC-112 Task 8 — Typography controls › slider rows: site limits + dynamic tooltip; values snap before save; percent readout is native
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "max": 1.2,
+    -   "min": 0.8,
+    +   "min": 0.3,
+        "step": 0.05,
+      }
+
+      830 | 		expect(prefs.get('textScale')).toBe(0.85);
+      831 | 		expect(root.style.getPropertyValue('--dse-text-scale')).toBe('0.85'); // live-apply
+    > 832 | 		expect(rowByName('Card size').sliders[0].limits).toEqual({ min: 0.8, max: 1.2, step: 0.05 });
+          | 		                                                 ^
+      833 | 	});
+      834 |
+      835 | 	test('List installed fonts: user-activation fetch populates every font dropdown (deduped, before Custom…), then the affordance retires', async () => {
+
+      at Object.<anonymous> (test/dom/views/settings-tab.test.ts:832:52)
+
+FAIL dom test/dom/views/settings-matrix.test.ts (21.044 s)
+  ● SC-440 matrix: the size sliders at min, max and step › one step is exactly 0.05 on every slider: 17 positions on Text size (60-140%) and 9 on the other four (80-120%)
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        17,
+    -   9,
+    +   19,
+        9,
+        9,
+        9,
+      ]
+
+      256 | 	test('one step is exactly 0.05 on every slider: 17 positions on Text size (60-140%) and 9 on the other four (80-120%)', () => {
+      257 | 		const positions = (d: PrefDescriptor): number => Math.round((prefUi(d)!.max! - prefUi(d)!.min!) / prefUi(d)!.step!) + 1;
+    > 258 | 		expect(SLIDERS.map(positions)).toEqual([17, 9, 9, 9, 9]);
+          | 		                               ^
+      259 | 	});
+      260 | });
+      261 |
+
+      at Object.<anonymous> (test/dom/views/settings-matrix.test.ts:258:34)
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+file:///home/scott/code/steelCompendium/worktrees/sc683-scaling-30pct/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got object and undefined)
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc683-scaling-30pct/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///home/scott/code/steelCompendium/worktrees/sc683-scaling-30pct/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///home/scott/code/steelCompendium/worktrees/sc683-scaling-30pct/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238
+		throw new TypeError(
+		      ^
+
+TypeError: findDriftedTokens: oursMap and targetMap must both be objects (got undefined and object)
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc683-scaling-30pct/draw-steel-elements/visual-harness/obsidian-light-island.mjs:238:9)
+    at file:///home/scott/code/steelCompendium/worktrees/sc683-scaling-30pct/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+file:///home/scott/code/steelCompendium/worktrees/sc683-scaling-30pct/draw-steel-elements/visual-harness/obsidian-light-island.mjs:245
+			throw new TypeError(`findDriftedTokens: "${t}" is missing from ${!(t in oursMap) ? 'oursMap' : 'targetMap'}`);
+			      ^
+
+TypeError: findDriftedTokens: "--b" is missing from oursMap
+    at findDriftedTokens (file:///home/scott/code/steelCompendium/worktrees/sc683-scaling-30pct/draw-steel-elements/visual-harness/obsidian-light-island.mjs:245:10)
+    at file:///home/scott/code/steelCompendium/worktrees/sc683-scaling-30pct/draw-steel-elements/[eval1]:3:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:268:26)
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:265:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.12.0
+
+Summary of all failing tests
+FAIL test/dom/views/settings-tab.test.ts (7.91 s)
+  ● SC-112 Task 8 — Typography controls › slider rows: site limits + dynamic tooltip; values snap before save; percent readout is native
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "max": 1.2,
+    -   "min": 0.8,
+    +   "min": 0.3,
+        "step": 0.05,
+      }
+
+      830 | 		expect(prefs.get('textScale')).toBe(0.85);
+      831 | 		expect(root.style.getPropertyValue('--dse-text-scale')).toBe('0.85'); // live-apply
+    > 832 | 		expect(rowByName('Card size').sliders[0].limits).toEqual({ min: 0.8, max: 1.2, step: 0.05 });
+          | 		                                                 ^
+      833 | 	});
+      834 |
+      835 | 	test('List installed fonts: user-activation fetch populates every font dropdown (deduped, before Custom…), then the affordance retires', async () => {
+
+      at Object.<anonymous> (test/dom/views/settings-tab.test.ts:832:52)
+
+FAIL test/dom/views/settings-matrix.test.ts (21.044 s)
+  ● SC-440 matrix: the size sliders at min, max and step › one step is exactly 0.05 on every slider: 17 positions on Text size (60-140%) and 9 on the other four (80-120%)
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        17,
+    -   9,
+    +   19,
+        9,
+        9,
+        9,
+      ]
+
+      256 | 	test('one step is exactly 0.05 on every slider: 17 positions on Text size (60-140%) and 9 on the other four (80-120%)', () => {
+      257 | 		const positions = (d: PrefDescriptor): number => Math.round((prefUi(d)!.max! - prefUi(d)!.min!) / prefUi(d)!.step!) + 1;
+    > 258 | 		expect(SLIDERS.map(positions)).toEqual([17, 9, 9, 9, 9]);
+          | 		                               ^
+      259 | 	});
+      260 | });
+      261 |
+
+      at Object.<anonymous> (test/dom/views/settings-matrix.test.ts:258:34)
+
+
+Test Suites: 2 failed, 1 skipped, 309 passed, 311 of 312 total
+Tests:       2 failed, 2 skipped, 14436 passed, 14440 total
+Snapshots:   3 passed, 3 total
+Time:        98.475 s
+Ran all test suites in 2 projects.
