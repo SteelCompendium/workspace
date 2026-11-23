@@ -31,7 +31,9 @@ worktrees (prior owners were in earlier sessions).
 
 **2026-11-23: `7.0.0-rc.2` released (Scott's explicit in-session go)** — GitHub pre-release, not Latest, BRAT only, tag at dse `develop` `758a8956`; assets built from a clean detached checkout (`npm ci` + `npm run build`, node 24); uploaded `manifest.json` = repo manifest with `version` → `7.0.0-rc.2` (nothing committed); `styles.css` byte-identical to rc.1's. Verified: `releases/latest` = 6.0.2, `main` manifest = 6.0.2, no tag-triggered workflow. Notes = the six user-facing fixes since rc.1 (SC-671/672/675/679/641/644) + known issues (list-item save, SC-687, SC-678). SC-442 is NOT in rc.2. Gap: dse's own `CHANGELOG.md` only got SC-679's bullet since rc.1; the other five live in the workspace `CHANGELOG.md` only.
 
-Queue: empty. SC-442 spawned 2026-11-23 (wave 3; ledger `.superpowers/sdd/sc442-e2e-counter-topup/`; must turn SC-671's `CTR-U01` known-bug marker into a plain test; keep both `e2e/README.md` rows).
+| SC-442 | `sc442-e2e-counter-topup` (removed) → preserved `build-ledgers/sc442-e2e-counter-topup/` | **landed** dse develop `9be108c9`, workspace `47917052` (after rc.2; not in it); tests only; jest 14438/1, lifecycle 64/64, e2e 794/805 (11 known-bug, 476/476); owner closing out |
+
+Queue: empty — all eight tickets of this wave landed.
 **2026-11-23: usage limit hit** mid-wave; SC-672, SC-679, SC-443 owners stopped (429) and were resumed via `SendMessage` after reset. If a later session finds them dead: spawn a fresh `orchestration:ticket-owner` per ticket briefed from its ledger.
 Needs Review (on Scott, not queued): SC-538, SC-393.
 
