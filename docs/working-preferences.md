@@ -124,6 +124,10 @@ throwaway `6.0.1` re-release of 5.1.1, and days of waiting on Obsidian's mirror.
   testers who asked for one: `7.0.0-rc.1`, a pre-release cut from `develop` `129beb18`.
   This was a one-off. **The standing order still holds**, and every later rc needs his
   explicit go, given in the session where it is cut.
+- **2026-11-23:** Scott explicitly asked, in-session, for `7.0.0-rc.2` ("make the rc.2
+  release … only installable with BRAT", notes = changes since rc.1), cut from `develop`
+  `758a8956` by the procedure below (draft → verify assets → publish as pre-release, not
+  Latest). Same rule: every later rc needs his explicit go in the session that cuts it.
 - **How a beta is shipped safely, when Scott approves one.** BRAT ≥ 1.1 installs from
   GitHub releases and reads `manifest.json` from the release's attached files, so a BRAT
   beta does need a release. What keeps it out of the store is the following:
