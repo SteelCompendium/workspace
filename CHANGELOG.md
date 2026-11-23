@@ -18,6 +18,13 @@ go under an *Internal* sub-heading.
   The Insert Draw Steel commands, the `/ds` pick and the compendium reference and full-block inserts now always give the block lines of its own: text before the cursor stays on the line above it, and text after the cursor moves to a line below it.
   Inside a callout every inserted line keeps the `>`. Inside a list item every line is indented under the item. A block inside a list item still can't save its changes yet.
 
+- **DSE plugin: picking a suggestion in a `ds-` block with nothing typed no longer leaves the cursor in front of it, so the next Enter does not write a second one (SC-679).**
+  With the cursor on an empty line (or right after `mode: `), picking a field name or a value from the autocomplete list put the word in but left the cursor before it and the old list on screen.
+  The next Enter then wrote the first suggestion again in front of the first (`collapsiblecollapsible`, `mode: power-rollopposed`). This hit the shipped Stamina bar and Skills blocks too.
+  Now, after any pick (Enter or a click, with or without letters typed), the cursor sits right after the word and the list is closed, so Enter starts a new line.
+  Keep typing and the list comes back as usual: a longer field name that starts with the one you picked, or the value list after `: `.
+  Not covered: picking a suggestion while the cursor is in the middle of a word still doubles the rest of the word (SC-678).
+
 - **DSE plugin (experimental sidebar): an outside change to a pinned note no longer loses what a pinned card was about to save, and no longer gets written over (SC-662, also fixes SC-550).**
   An outside change is Sync, another pane, another app, or a card in the note itself. It used to refresh the pinned card in a way that lost data.
   A press made in the pinned card just before the change is now still written.
