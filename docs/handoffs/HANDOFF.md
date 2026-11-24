@@ -39,6 +39,17 @@ Queue: empty — all eight tickets of this wave landed.
 **2026-11-23: usage limit hit** mid-wave; SC-672, SC-679, SC-443 owners stopped (429) and were resumed via `SendMessage` after reset. If a later session finds them dead: spawn a fresh `orchestration:ticket-owner` per ticket briefed from its ledger.
 Needs Review (on Scott, not queued): SC-538, SC-393.
 
+### 2026-11-24 — DSE 7.0.0 wave 2 (same dispatcher session `e255a3cd-5cdb-4dc4-83be-b58e80eb1057`)
+Scott: "continue working through 7.0.0 tickets 2 tickets at a time". Base: dse develop `aee83dc1`, workspace `04005f1f`.
+
+| Ticket | Worktree / ledger (`.superpowers/sdd/<same>/`) | State |
+|---|---|---|
+| SC-690 | `sc690-montage-remove-hero` | **in flight** |
+| SC-687 | `sc687-insert-inside-block` | **in flight** |
+
+Queue (dispatcher's order; SC-691 waits for SC-690, SC-682 after SC-687, since they share the same code): SC-691, SC-682, SC-441, SC-688, SC-391, SC-387, SC-419.
+Not queued: SC-11 (cutting 7.0.0 is Scott's), SC-333 (Scott's app walkthrough), SC-538 / SC-393 (Needs Review, on Scott).
+
 
 ### 2026-11-20 — shipping-element data-loss wave (dispatcher session `5812b474-3aec-46a6-8f06-0ef85cf1e10a`)
 Scott: "Data loss or broken on shipping elements" — SC-671, SC-672, SC-675, SC-679. Dispatcher on Opus 5.5
