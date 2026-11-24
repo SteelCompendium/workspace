@@ -10,7 +10,7 @@ go under an *Internal* sub-heading.
 
 - **DSE plugin: an insert no longer writes inside an existing block or the note's properties; it tells you instead (SC-687).**
   With the cursor inside a block (an empty line in a stamina bar, say), the Insert Draw Steel commands, the compendium reference and full-block commands and a `/ds` pick used to write the new block into the old one: the old block became an error card and everything below it showed as code. The same happened with the cursor in the note's properties.
-  Now nothing is written, the cursor stays, and a message says "The cursor is inside another block, so nothing was inserted" (or "...inside the note's properties..."). This covers any block: any language, in a callout, under a list item, one that is not closed. The start of a block's opening line and the end of its closing line count as outside, so the new block lands above or below.
+  Now nothing is written, the cursor stays, and a message says "The cursor is inside another block, so nothing was inserted" (or "...inside the note's properties..."). This covers any block: any language, in a callout, under a list item, one that is not closed. The start of a block's opening line and the end of its closing line count as outside, so the new block lands above or below. With several cursors, one of them inside is enough to refuse.
   Not covered: the `/ds` list still appears in those places (SC-676); picking from it there is refused with the same message.
 
 - **DSE plugin: Card size can now go down to 30% (SC-683).**
