@@ -1,0 +1,377 @@
+Info: New devbox available: 0.17.5 -> v0.23.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements
+
+> draw-steel-elements@7.0.0 e2e
+> node e2e/run.mjs --only=AUTH-S02,AUTH-S04,AUTH-S09,AUTH-G09,AUTH-S10,AUTH-S11,AUTH-S12,AUTH-S13,AUTH-S14,AUTH-S15,AUTH-S16,AUTH-S17
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :200 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :200 (private Xvfb); 2 spec file(s), 2 shard(s); only AUTH-S02,AUTH-S04,AUTH-S09,AUTH-G09,AUTH-S10,AUTH-S11,AUTH-S12,AUTH-S13,AUTH-S14,AUTH-S15,AUTH-S16,AUTH-S17; run 20261125-014109-0293
+
+Execution of 2 workers started at 2026-11-25T01:41:10.789Z
+
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/authoring/ds-suggest.e2e.ts
+[0-1] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/authoring/gate-on.e2e.ts
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 1905556
+[0-1] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 1905564
+[0-0] Error in "/ds suggest: accept.[AUTH-S02] Live Preview, `/dsstam` + Enter: the token is replaced by the Stamina bar scaffold, the rest of the note is untouched, the cursor is on the first body line, the block draws"
+Error: a suggestion list is on screen: [["authoring.ds.item","Stamina bards-stam"]]
+    at expectNoList (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/authoring.ts:258:30)
+    at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:56:3)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-0] Error in "/ds suggest: accept.[AUTH-S04] Source mode, an indented token: ArrowDown twice and ArrowUp once select the second row, Enter picks it (Skills); the two spaces before the token stay and go on every line of the block"
+Error: a suggestion list is on screen: [["authoring.ds.item","Horizontal ruleds-hr"],["authoring.ds.item","Skillsds-skills"],["authoring.ds.item","Stamina bards-stam"],["authoring.ds.item","Negotiation trackerds-nt"],["authoring.ds.item","Initiative trackerds-it"],["authoring.ds.item","Featureds-ft"],["authoring.ds.item","Featureblockds-fb"],["authoring.ds.item","Statblockds-sb"],["authoring.ds.item","Counterds-ct"],["authoring.ds.item","Values rowds-vr"],["authoring.ds.item","Characteristicsds-char"],["authoring.ds.item","SCC referenceds-scc"],["authoring.ds.item","Montage Test trackerds-montage"]]
+    at expectNoList (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/authoring.ts:258:30)
+    at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:89:3)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-0] Error in "/ds suggest: accept.[AUTH-S09] Source mode: a `/ds…` pick with text after the cursor on its line: the block ends on its own line and the text moves to the line below it"
+Error: a suggestion list is on screen: [["authoring.ds.item","Featureblockds-fb"]]
+    at expectNoList (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/authoring.ts:258:30)
+    at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:103:3)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-1] Error in "authoring with the experimental gate on.[AUTH-G09] `/ds` offers all twenty-one advertised elements (never Hero sheet); `/dsroll` + Enter in Source mode writes the Roll scaffold at the token and Reading view draws it"
+Error: a suggestion list is on screen: [["authoring.ds.item","Rollds-roll"]]
+    at expectNoList (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/authoring.ts:258:30)
+    at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/gate-on.e2e.ts:44:3)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-0] Error in "/ds suggest: after a pick the list is closed and the next Enter is a new line (SC-682).[AUTH-S10] Live Preview, the ticket's repro: `/dsstam`, Enter, Enter at once: one new line at the cursor, no Notice, no list, the block draws"
+Error: expect(received).toEqual(expected) // deep equality
+
+- Expected  - 1
++ Received  + 3
+
+- Array []
++ Array [
++   "The cursor is inside another block, so nothing was inserted. Move it to a line outside the block and run the command again.",
++ ]
+    at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:172:83)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-0] Error in "/ds suggest: after a pick the list is closed and the next Enter is a new line (SC-682).[AUTH-S11] Source mode: `/dsstam`, Enter, Enter at once: one new line at the cursor, no Notice, no list"
+Error: expect(received).toEqual(expected) // deep equality
+
+- Expected  - 1
++ Received  + 3
+
+- Array []
++ Array [
++   "The cursor is inside another block, so nothing was inserted. Move it to a line outside the block and run the command again.",
++ ]
+    at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:190:83)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-1] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/authoring/gate-on.e2e.ts
+[0-0] Error in "/ds suggest: after a pick the list is closed and the next Enter is a new line (SC-682).[AUTH-S12] the settled case, as a person sees it: `/dsstam`, Enter, wait 1.5 s: no list of any kind is on screen (no Escape sent), then Enter adds one line"
+Error: expect(received).toEqual(expected) // deep equality
+
+- Expected  - 1
++ Received  + 7
+
+- Array []
++ Array [
++   Object {
++     "id": "authoring.ds.item",
++     "selected": true,
++     "text": "Stamina bards-stam",
++   },
++ ]
+    at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:203:28)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-0] Error in "/ds suggest: after a pick the list is closed and the next Enter is a new line (SC-682).[AUTH-S13] a click on the row leaves no list either, and the next Enter is a new line (Live Preview)"
+Error: a suggestion list is on screen: [["authoring.ds.item","Stamina bards-stam"]]
+    at expectNoList (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/authoring.ts:258:30)
+    at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:217:3)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-0] Error in "/ds suggest: after a pick the list is closed and the next Enter is a new line (SC-682).[AUTH-S14] after a pick no list opens over the new block (Stamina bar, which has a key list, and Horizontal rule, which has none); typing on a body line of the Stamina block still opens the key list"
+Error: a suggestion list is on screen: [["authoring.ds.item","Stamina bards-stam"]]
+    at expectNoList (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/authoring.ts:258:30)
+    at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:230:3)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-0] Error in "/ds suggest: after a pick the list is closed and the next Enter is a new line (SC-682).[AUTH-S15] after a pick, `/ds` on a new line outside the block opens the list again and a second pick inserts a second block; both blocks are intact"
+Error: a suggestion list is on screen: [["authoring.ds.item","Stamina bards-stam"]]
+    at expectNoList (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/authoring.ts:258:30)
+    at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:253:3)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-0] Error in "/ds suggest: after a pick the list is closed and the next Enter is a new line (SC-682).[AUTH-S16] Live Preview, the SC-675 list-item shape (`- /dsstam`): pick, Enter at once: the new line carries the item's indentation, the items around are untouched"
+Error: expect(received).toBe(expected) // Object.is equality
+
+- Expected  - 1
++ Received  + 4
+
+  Intro line above
+
+  - first item
+  - 
+    ```ds-stam
+-   
++   max_stamina: 20
++   current_stamina: 15
++   temp_stamina: 5
++   ```s-stam
+    max_stamina: 20
+    current_stamina: 15
+    temp_stamina: 5
+    ```
+
+  Outro line below
+  ↵
+    at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:283:32)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-0] Error in "/ds suggest: after a pick the list is closed and the next Enter is a new line (SC-682).[AUTH-S17] Source mode, the SC-675 callout shape (`> /dsstam`): pick, Enter at once: the new line keeps the `> `, the callout lines around are untouched"
+Error: expect(received).toEqual(expected) // deep equality
+
+- Expected  - 1
++ Received  + 3
+
+- Array []
++ Array [
++   "The cursor is inside another block, so nothing was inserted. Move it to a line outside the block and run the command again.",
++ ]
+    at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:298:83)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-0] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/authoring/ds-suggest.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-1] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-1] Session ID: 25ebec5a09072cbca60196ac02051b1a
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] » e2e/specs/authoring/gate-on.e2e.ts
+[chrome 150.0.7871.250 linux #0-1] authoring with the experimental gate on
+[chrome 150.0.7871.250 linux #0-1]    ✖ [AUTH-G09] `/ds` offers all twenty-one advertised elements (never Hero sheet); `/dsroll` + Enter in Source mode writes the Roll scaffold at the token and Reading view draws it
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] 1 failing (3s)
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] 1) authoring with the experimental gate on [AUTH-G09] `/ds` offers all twenty-one advertised elements (never Hero sheet); `/dsroll` + Enter in Source mode writes the Roll scaffold at the token and Reading view draws it
+[chrome 150.0.7871.250 linux #0-1] a suggestion list is on screen: [["authoring.ds.item","Rollds-roll"]]
+[chrome 150.0.7871.250 linux #0-1] Error: a suggestion list is on screen: [["authoring.ds.item","Rollds-roll"]]
+[chrome 150.0.7871.250 linux #0-1]     at expectNoList (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/authoring.ts:258:30)
+[chrome 150.0.7871.250 linux #0-1]     at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/gate-on.e2e.ts:44:3)
+[chrome 150.0.7871.250 linux #0-1]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: ef45b98045a6d14ca423ce98c5f8a5df
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/authoring/ds-suggest.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] /ds suggest: accept
+[chrome 150.0.7871.250 linux #0-0]    ✖ [AUTH-S02] Live Preview, `/dsstam` + Enter: the token is replaced by the Stamina bar scaffold, the rest of the note is untouched, the cursor is on the first body line, the block draws
+[chrome 150.0.7871.250 linux #0-0]    ✖ [AUTH-S04] Source mode, an indented token: ArrowDown twice and ArrowUp once select the second row, Enter picks it (Skills); the two spaces before the token stay and go on every line of the block
+[chrome 150.0.7871.250 linux #0-0]    ✖ [AUTH-S09] Source mode: a `/ds…` pick with text after the cursor on its line: the block ends on its own line and the text moves to the line below it
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] /ds suggest: after a pick the list is closed and the next Enter is a new line (SC-682)
+[chrome 150.0.7871.250 linux #0-0]    ✖ [AUTH-S10] Live Preview, the ticket's repro: `/dsstam`, Enter, Enter at once: one new line at the cursor, no Notice, no list, the block draws
+[chrome 150.0.7871.250 linux #0-0]    ✖ [AUTH-S11] Source mode: `/dsstam`, Enter, Enter at once: one new line at the cursor, no Notice, no list
+[chrome 150.0.7871.250 linux #0-0]    ✖ [AUTH-S12] the settled case, as a person sees it: `/dsstam`, Enter, wait 1.5 s: no list of any kind is on screen (no Escape sent), then Enter adds one line
+[chrome 150.0.7871.250 linux #0-0]    ✖ [AUTH-S13] a click on the row leaves no list either, and the next Enter is a new line (Live Preview)
+[chrome 150.0.7871.250 linux #0-0]    ✖ [AUTH-S14] after a pick no list opens over the new block (Stamina bar, which has a key list, and Horizontal rule, which has none); typing on a body line of the Stamina block still opens the key list
+[chrome 150.0.7871.250 linux #0-0]    ✖ [AUTH-S15] after a pick, `/ds` on a new line outside the block opens the list again and a second pick inserts a second block; both blocks are intact
+[chrome 150.0.7871.250 linux #0-0]    ✖ [AUTH-S16] Live Preview, the SC-675 list-item shape (`- /dsstam`): pick, Enter at once: the new line carries the item's indentation, the items around are untouched
+[chrome 150.0.7871.250 linux #0-0]    ✖ [AUTH-S17] Source mode, the SC-675 callout shape (`> /dsstam`): pick, Enter at once: the new line keeps the `> `, the callout lines around are untouched
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 11 failing (8.4s)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1) /ds suggest: accept [AUTH-S02] Live Preview, `/dsstam` + Enter: the token is replaced by the Stamina bar scaffold, the rest of the note is untouched, the cursor is on the first body line, the block draws
+[chrome 150.0.7871.250 linux #0-0] a suggestion list is on screen: [["authoring.ds.item","Stamina bards-stam"]]
+[chrome 150.0.7871.250 linux #0-0] Error: a suggestion list is on screen: [["authoring.ds.item","Stamina bards-stam"]]
+[chrome 150.0.7871.250 linux #0-0]     at expectNoList (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/authoring.ts:258:30)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:56:3)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 2) /ds suggest: accept [AUTH-S04] Source mode, an indented token: ArrowDown twice and ArrowUp once select the second row, Enter picks it (Skills); the two spaces before the token stay and go on every line of the block
+[chrome 150.0.7871.250 linux #0-0] a suggestion list is on screen: [["authoring.ds.item","Horizontal ruleds-hr"],["authoring.ds.item","Skillsds-skills"],["authoring.ds.item","Stamina bards-stam"],["authoring.ds.item","Negotiation trackerds-nt"],["authoring.ds.item","Initiative trackerds-it"],["authoring.ds.item","Featureds-ft"],["authoring.ds.item","Featureblockds-fb"],["authoring.ds.item","Statblockds-sb"],["authoring.ds.item","Counterds-ct"],["authoring.ds.item","Values rowds-vr"],["authoring.ds.item","Characteristicsds-char"],["authoring.ds.item","SCC referenceds-scc"],["authoring.ds.item","Montage Test trackerds-montage"]]
+[chrome 150.0.7871.250 linux #0-0] Error: a suggestion list is on screen: [["authoring.ds.item","Horizontal ruleds-hr"],["authoring.ds.item","Skillsds-skills"],["authoring.ds.item","Stamina bards-stam"],["authoring.ds.item","Negotiation trackerds-nt"],["authoring.ds.item","Initiative trackerds-it"],["authoring.ds.item","Featureds-ft"],["authoring.ds.item","Featureblockds-fb"],["authoring.ds.item","Statblockds-sb"],["authoring.ds.item","Counterds-ct"],["authoring.ds.item","Values rowds-vr"],["authoring.ds.item","Characteristicsds-char"],["authoring.ds.item","SCC referenceds-scc"],["authoring.ds.item","Montage Test trackerds-montage"]]
+[chrome 150.0.7871.250 linux #0-0]     at expectNoList (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/authoring.ts:258:30)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:89:3)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 3) /ds suggest: accept [AUTH-S09] Source mode: a `/ds…` pick with text after the cursor on its line: the block ends on its own line and the text moves to the line below it
+[chrome 150.0.7871.250 linux #0-0] a suggestion list is on screen: [["authoring.ds.item","Featureblockds-fb"]]
+[chrome 150.0.7871.250 linux #0-0] Error: a suggestion list is on screen: [["authoring.ds.item","Featureblockds-fb"]]
+[chrome 150.0.7871.250 linux #0-0]     at expectNoList (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/authoring.ts:258:30)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:103:3)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 4) /ds suggest: after a pick the list is closed and the next Enter is a new line (SC-682) [AUTH-S10] Live Preview, the ticket's repro: `/dsstam`, Enter, Enter at once: one new line at the cursor, no Notice, no list, the block draws
+[chrome 150.0.7871.250 linux #0-0] expect(received).toEqual(expected) // deep equality
+
+- Expected  - 1
++ Received  + 3
+
+- Array []
++ Array [
++   "The cursor is inside another block, so nothing was inserted. Move it to a line outside the block and run the command again.",
++ ]
+[chrome 150.0.7871.250 linux #0-0] Error: expect(received).toEqual(expected) // deep equality
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] - Expected  - 1
+[chrome 150.0.7871.250 linux #0-0] + Received  + 3
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] - Array []
+[chrome 150.0.7871.250 linux #0-0] + Array [
+[chrome 150.0.7871.250 linux #0-0] +   "The cursor is inside another block, so nothing was inserted. Move it to a line outside the block and run the command again.",
+[chrome 150.0.7871.250 linux #0-0] + ]
+[chrome 150.0.7871.250 linux #0-0]     at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:172:83)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 5) /ds suggest: after a pick the list is closed and the next Enter is a new line (SC-682) [AUTH-S11] Source mode: `/dsstam`, Enter, Enter at once: one new line at the cursor, no Notice, no list
+[chrome 150.0.7871.250 linux #0-0] expect(received).toEqual(expected) // deep equality
+
+- Expected  - 1
++ Received  + 3
+
+- Array []
++ Array [
++   "The cursor is inside another block, so nothing was inserted. Move it to a line outside the block and run the command again.",
++ ]
+[chrome 150.0.7871.250 linux #0-0] Error: expect(received).toEqual(expected) // deep equality
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] - Expected  - 1
+[chrome 150.0.7871.250 linux #0-0] + Received  + 3
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] - Array []
+[chrome 150.0.7871.250 linux #0-0] + Array [
+[chrome 150.0.7871.250 linux #0-0] +   "The cursor is inside another block, so nothing was inserted. Move it to a line outside the block and run the command again.",
+[chrome 150.0.7871.250 linux #0-0] + ]
+[chrome 150.0.7871.250 linux #0-0]     at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:190:83)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 6) /ds suggest: after a pick the list is closed and the next Enter is a new line (SC-682) [AUTH-S12] the settled case, as a person sees it: `/dsstam`, Enter, wait 1.5 s: no list of any kind is on screen (no Escape sent), then Enter adds one line
+[chrome 150.0.7871.250 linux #0-0] expect(received).toEqual(expected) // deep equality
+
+- Expected  - 1
++ Received  + 7
+
+- Array []
++ Array [
++   Object {
++     "id": "authoring.ds.item",
++     "selected": true,
++     "text": "Stamina bards-stam",
++   },
++ ]
+[chrome 150.0.7871.250 linux #0-0] Error: expect(received).toEqual(expected) // deep equality
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] - Expected  - 1
+[chrome 150.0.7871.250 linux #0-0] + Received  + 7
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] - Array []
+[chrome 150.0.7871.250 linux #0-0] + Array [
+[chrome 150.0.7871.250 linux #0-0] +   Object {
+[chrome 150.0.7871.250 linux #0-0] +     "id": "authoring.ds.item",
+[chrome 150.0.7871.250 linux #0-0] +     "selected": true,
+[chrome 150.0.7871.250 linux #0-0] +     "text": "Stamina bards-stam",
+[chrome 150.0.7871.250 linux #0-0] +   },
+[chrome 150.0.7871.250 linux #0-0] + ]
+[chrome 150.0.7871.250 linux #0-0]     at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:203:28)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 7) /ds suggest: after a pick the list is closed and the next Enter is a new line (SC-682) [AUTH-S13] a click on the row leaves no list either, and the next Enter is a new line (Live Preview)
+[chrome 150.0.7871.250 linux #0-0] a suggestion list is on screen: [["authoring.ds.item","Stamina bards-stam"]]
+[chrome 150.0.7871.250 linux #0-0] Error: a suggestion list is on screen: [["authoring.ds.item","Stamina bards-stam"]]
+[chrome 150.0.7871.250 linux #0-0]     at expectNoList (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/authoring.ts:258:30)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:217:3)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 8) /ds suggest: after a pick the list is closed and the next Enter is a new line (SC-682) [AUTH-S14] after a pick no list opens over the new block (Stamina bar, which has a key list, and Horizontal rule, which has none); typing on a body line of the Stamina block still opens the key list
+[chrome 150.0.7871.250 linux #0-0] a suggestion list is on screen: [["authoring.ds.item","Stamina bards-stam"]]
+[chrome 150.0.7871.250 linux #0-0] Error: a suggestion list is on screen: [["authoring.ds.item","Stamina bards-stam"]]
+[chrome 150.0.7871.250 linux #0-0]     at expectNoList (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/authoring.ts:258:30)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:230:3)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 9) /ds suggest: after a pick the list is closed and the next Enter is a new line (SC-682) [AUTH-S15] after a pick, `/ds` on a new line outside the block opens the list again and a second pick inserts a second block; both blocks are intact
+[chrome 150.0.7871.250 linux #0-0] a suggestion list is on screen: [["authoring.ds.item","Stamina bards-stam"]]
+[chrome 150.0.7871.250 linux #0-0] Error: a suggestion list is on screen: [["authoring.ds.item","Stamina bards-stam"]]
+[chrome 150.0.7871.250 linux #0-0]     at expectNoList (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/authoring.ts:258:30)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:253:3)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 10) /ds suggest: after a pick the list is closed and the next Enter is a new line (SC-682) [AUTH-S16] Live Preview, the SC-675 list-item shape (`- /dsstam`): pick, Enter at once: the new line carries the item's indentation, the items around are untouched
+[chrome 150.0.7871.250 linux #0-0] expect(received).toBe(expected) // Object.is equality
+
+- Expected  - 1
++ Received  + 4
+
+  Intro line above
+
+  - first item
+  - 
+    ```ds-stam
+-   
++   max_stamina: 20
++   current_stamina: 15
++   temp_stamina: 5
++   ```s-stam
+    max_stamina: 20
+    current_stamina: 15
+    temp_stamina: 5
+    ```
+
+  Outro line below
+  ↵
+[chrome 150.0.7871.250 linux #0-0] Error: expect(received).toBe(expected) // Object.is equality
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] - Expected  - 1
+[chrome 150.0.7871.250 linux #0-0] + Received  + 4
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0]   Intro line above
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0]   - first item
+[chrome 150.0.7871.250 linux #0-0]   - 
+[chrome 150.0.7871.250 linux #0-0]     ```ds-stam
+[chrome 150.0.7871.250 linux #0-0] -   
+[chrome 150.0.7871.250 linux #0-0] +   max_stamina: 20
+[chrome 150.0.7871.250 linux #0-0] +   current_stamina: 15
+[chrome 150.0.7871.250 linux #0-0] +   temp_stamina: 5
+[chrome 150.0.7871.250 linux #0-0] +   ```s-stam
+[chrome 150.0.7871.250 linux #0-0]     max_stamina: 20
+[chrome 150.0.7871.250 linux #0-0]     current_stamina: 15
+[chrome 150.0.7871.250 linux #0-0]     temp_stamina: 5
+[chrome 150.0.7871.250 linux #0-0]     ```
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0]   Outro line below
+[chrome 150.0.7871.250 linux #0-0]   ↵
+[chrome 150.0.7871.250 linux #0-0]     at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:283:32)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 11) /ds suggest: after a pick the list is closed and the next Enter is a new line (SC-682) [AUTH-S17] Source mode, the SC-675 callout shape (`> /dsstam`): pick, Enter at once: the new line keeps the `> `, the callout lines around are untouched
+[chrome 150.0.7871.250 linux #0-0] expect(received).toEqual(expected) // deep equality
+
+- Expected  - 1
++ Received  + 3
+
+- Array []
++ Array [
++   "The cursor is inside another block, so nothing was inserted. Move it to a line outside the block and run the command again.",
++ ]
+[chrome 150.0.7871.250 linux #0-0] Error: expect(received).toEqual(expected) // deep equality
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] - Expected  - 1
+[chrome 150.0.7871.250 linux #0-0] + Received  + 3
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] - Array []
+[chrome 150.0.7871.250 linux #0-0] + Array [
+[chrome 150.0.7871.250 linux #0-0] +   "The cursor is inside another block, so nothing was inserted. Move it to a line outside the block and run the command again.",
+[chrome 150.0.7871.250 linux #0-0] + ]
+[chrome 150.0.7871.250 linux #0-0]     at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/specs/authoring/ds-suggest.e2e.ts:298:83)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/driver/session.ts:42:5)
+
+
+Spec Files:	 0 passed, 2 failed, 2 total (100% completed) in 00:00:11  
+
+OBSIDIAN-E2E AUTH-S02 FAIL: a suggestion list is on screen: [["authoring.ds.item","Stamina bards-stam"]] [bundle /home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/.out/20261125-014109-0293/AUTH-S02]
+OBSIDIAN-E2E AUTH-S04 FAIL: a suggestion list is on screen: [["authoring.ds.item","Horizontal ruleds-hr"],["authoring.ds.item","Skillsds-skills"],["authoring.ds.item","Stamina bards-stam"],["authoring.ds.item","Negotiation trackerds-nt"],["authoring.ds.item","Initiative trackerds-it"],["authoring.ds.item","Featureds-ft"],["authoring.ds.item","Featureblockds-fb"],["authoring.ds.item","Statblockds-sb"],["authoring.ds.item","Counterds-ct"],["authoring.ds.item","Values rowds-vr"],["authoring.ds.item","Characteristicsds-char"],["authoring.ds.item","SCC referenceds-scc"],["authoring.ds.item","Montage Test trackerds-montage"]] [bundle /home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/.out/20261125-014109-0293/AUTH-S04]
+OBSIDIAN-E2E AUTH-S09 FAIL: a suggestion list is on screen: [["authoring.ds.item","Featureblockds-fb"]] [bundle /home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/.out/20261125-014109-0293/AUTH-S09]
+OBSIDIAN-E2E AUTH-S10 FAIL: expect(received).toEqual(expected) // deep equality | - Expected  - 1 | + Received  + 3 | - Array [] | + Array [ | +   "The cursor is inside another block, so nothing was inserted. Move it to a line outside the block and run the command again.", | + ] [bundle /home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/.out/20261125-014109-0293/AUTH-S10]
+OBSIDIAN-E2E AUTH-S11 FAIL: expect(received).toEqual(expected) // deep equality | - Expected  - 1 | + Received  + 3 | - Array [] | + Array [ | +   "The cursor is inside another block, so nothing was inserted. Move it to a line outside the block and run the command again.", | + ] [bundle /home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/.out/20261125-014109-0293/AUTH-S11]
+OBSIDIAN-E2E AUTH-S12 FAIL: expect(received).toEqual(expected) // deep equality | - Expected  - 1 | + Received  + 7 | - Array [] | + Array [ | +   Object { | +     "id": "authoring.ds.item", | +     "selected": true, | +     "text": "Stamina bards-stam", | +   }, | + ] [bundle /home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/.out/20261125-014109-0293/AUTH-S12]
+OBSIDIAN-E2E AUTH-S13 FAIL: a suggestion list is on screen: [["authoring.ds.item","Stamina bards-stam"]] [bundle /home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/.out/20261125-014109-0293/AUTH-S13]
+OBSIDIAN-E2E AUTH-S14 FAIL: a suggestion list is on screen: [["authoring.ds.item","Stamina bards-stam"]] [bundle /home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/.out/20261125-014109-0293/AUTH-S14]
+OBSIDIAN-E2E AUTH-S15 FAIL: a suggestion list is on screen: [["authoring.ds.item","Stamina bards-stam"]] [bundle /home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/.out/20261125-014109-0293/AUTH-S15]
+OBSIDIAN-E2E AUTH-S16 FAIL: expect(received).toBe(expected) // Object.is equality | - Expected  - 1 | + Received  + 4 | Intro line above | - first item | - | ```ds-stam | - | +   max_stamina: 20 | +   current_stamina: 15 | +   temp_stamina: 5 | +   ```s-stam | max_stamina: 20 | current_stamina: 15 [bundle /home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/.out/20261125-014109-0293/AUTH-S16]
+OBSIDIAN-E2E AUTH-S17 FAIL: expect(received).toEqual(expected) // deep equality | - Expected  - 1 | + Received  + 3 | - Array [] | + Array [ | +   "The cursor is inside another block, so nothing was inserted. Move it to a line outside the block and run the command again.", | + ] [bundle /home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/.out/20261125-014109-0293/AUTH-S17]
+OBSIDIAN-E2E AUTH-G09 FAIL: a suggestion list is on screen: [["authoring.ds.item","Rollds-roll"]] [bundle /home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/.out/20261125-014109-0293/AUTH-G09]
+OBSIDIAN-E2E done: 0/12 ok, 12 failed, 0 known-bug, coverage: 5/476 pairs (partial run: gate skipped)
+OBSIDIAN-E2E coverage driven: 5 (control, kind) pair(s) -> /home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 471 manifest pair(s) not exercised in this selection
+E2E_RC=1
+Error: error running script "bash" in Devbox: exit status 1
+

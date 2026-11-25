@@ -1,0 +1,50 @@
+// SC-682 scratch probe 2 (NOT committed): timeline of the list after a pick.
+import { browser } from '@wdio/globals';
+import * as fs from 'node:fs';
+import { clearNotices, editorState, listRows, openEditor, typeKeys, waitList, type EditMode } from '../../driver/authoring';
+import { dse } from '../../driver/dse';
+import { ev } from '../../driver/page';
+
+const OUT = process.env.SC682_PROBE_OUT ?? '/tmp/sc682-probe2.jsonl';
+const log = (o: unknown): void => fs.appendFileSync(OUT, JSON.stringify(o) + '\n');
+const BEFORE = 'Intro line above\n\n\nOutro line below\n';
+
+const internals = (): Promise<unknown> =>
+	ev(`(() => { const es = app.workspace.editorSuggest; const cur = es?.currentSuggest; return { cur: cur ? cur.constructor.name : null, ctx: cur ? !!cur.context : null, isOpen: cur ? !!cur.isOpen : null, n: es?.suggests?.length ?? null }; })()`);
+
+async function timeline(name: string, token: string, mode: EditMode, how: 'enter' | 'click'): Promise<void> {
+	await openEditor('Authoring/probe2.md', BEFORE, mode, { line: 2, ch: 0 });
+	await typeKeys(token);
+	await waitList();
+	const t0 = Date.now();
+	if (how === 'enter') await browser.keys('Enter');
+	else await dse.click(dse.control('authoring.ds.item', { nth: 0 }));
+	const samples: unknown[] = [];
+	for (const at of [0, 100, 250, 500, 1000, 1500]) {
+		const wait = at - (Date.now() - t0);
+		if (wait > 0) await browser.pause(wait);
+		samples.push({ ms: Date.now() - t0, rows: (await listRows()).map((r) => [r.id, r.text]), internals: await internals() });
+	}
+	const st = await editorState();
+	log({ name, mode, how, samples, cursor: st.cursor });
+	await browser.keys('Escape');
+}
+
+describe('sc682 probe2', () => {
+	it('[PROBEB-STAM-LP-ENTER] x', () => timeline('stam', '/dsstam', 'live-preview', 'enter'));
+	it('[PROBEB-STAM-LP-CLICK] x', () => timeline('stam', '/dsstam', 'live-preview', 'click'));
+	it('[PROBEB-STAM-SRC-ENTER] x', () => timeline('stam', '/dsstam', 'source', 'enter'));
+	it('[PROBEB-SKILLS-LP-ENTER] x', () => timeline('skills', '/dsskills', 'live-preview', 'enter'));
+	it('[PROBEB-HR-LP-ENTER] x', () => timeline('hr', '/dshori', 'live-preview', 'enter'));
+	it('[PROBEB-NT-LP-ENTER] x', () => timeline('nt', '/dsnegot', 'live-preview', 'enter'));
+	it('[PROBEB-IT-LP-ENTER] x', () => timeline('it', '/dsinit', 'live-preview', 'enter'));
+	it('[PROBEB-FT-LP-ENTER] x', () => timeline('ft', '/dsfeature', 'live-preview', 'enter'));
+	it('[PROBEB-FB-LP-ENTER] x', () => timeline('fb', '/dsfb', 'live-preview', 'enter'));
+	it('[PROBEB-FB-LP-CLICK] x', () => timeline('fb', '/dsfb', 'live-preview', 'click'));
+	it('[PROBEB-SB-LP-ENTER] x', () => timeline('sb', '/dsstatb', 'live-preview', 'enter'));
+	it('[PROBEB-CT-LP-ENTER] x', () => timeline('ct', '/dscounter', 'live-preview', 'enter'));
+	it('[PROBEB-VR-LP-ENTER] x', () => timeline('vr', '/dsvalues', 'live-preview', 'enter'));
+	it('[PROBEB-CHAR-LP-ENTER] x', () => timeline('char', '/dscharac', 'live-preview', 'enter'));
+	it('[PROBEB-SCC-LP-ENTER] x', () => timeline('scc', '/dsscc', 'live-preview', 'enter'));
+	it('[PROBEB-MONT-LP-ENTER] x', () => timeline('montage', '/dsmontage', 'live-preview', 'enter'));
+});

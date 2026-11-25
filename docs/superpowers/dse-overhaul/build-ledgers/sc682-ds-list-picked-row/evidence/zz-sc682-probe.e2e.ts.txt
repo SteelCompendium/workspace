@@ -1,0 +1,92 @@
+// SC-682 scratch probe (NOT committed): what is on screen after a /ds pick, and what the next Enter does.
+import { browser } from '@wdio/globals';
+import * as fs from 'node:fs';
+import { clearNotices, editorState, listRows, noticeTexts, openEditor, savedText, typeKeys, waitList, type EditMode } from '../../driver/authoring';
+import { dse } from '../../driver/dse';
+
+const OUT = process.env.SC682_PROBE_OUT ?? '/tmp/sc682-probe.jsonl';
+const log = (o: unknown): void => fs.appendFileSync(OUT, JSON.stringify(o) + '\n');
+const SHOT = process.env.SC682_SHOT_DIR ?? '/tmp';
+
+const BEFORE = 'Intro line above\n\n\nOutro line below\n';
+
+interface Case {
+	name: string;
+	note: string;
+	at: { line: number; ch: number };
+	token: string;
+	mode: EditMode;
+	how: 'enter' | 'click';
+}
+
+async function run(c: Case, then: 'none' | 'enter-now' | 'escape-enter' | 'wait-enter', shot?: string): Promise<void> {
+	await openEditor('Authoring/probe.md', c.note, c.mode, c.at);
+	await clearNotices();
+	await typeKeys(c.token);
+	await waitList();
+	if (c.how === 'enter') await browser.keys('Enter');
+	else await dse.click(dse.control('authoring.ds.item', { nth: 0 }));
+	if (then === 'enter-now') {
+		await browser.keys('Enter');
+	}
+	await browser.pause(1500);
+	const rows = await listRows();
+	const notices1 = await noticeTexts();
+	const s1 = await editorState();
+	if (shot) await browser.saveScreenshot(`${SHOT}/${shot}`);
+	let s2 = s1;
+	let notices2 = notices1;
+	if (then === 'escape-enter' || then === 'wait-enter') {
+		if (then === 'escape-enter') await browser.keys('Escape');
+		await browser.pause(300);
+		await clearNotices();
+		await browser.keys('Enter');
+		await browser.pause(600);
+		s2 = await editorState();
+		notices2 = await noticeTexts();
+	} else if (then === 'none') {
+		await clearNotices();
+		await browser.keys('Enter');
+		await browser.pause(600);
+		s2 = await editorState();
+		notices2 = await noticeTexts();
+	}
+	const saved = await savedText('Authoring/probe.md');
+	log({ case: c.name, mode: c.mode, how: c.how, then, rowsAfter1500ms: rows.map((r) => [r.id, r.text]), notices1, text1: s1.value, cursor1: s1.cursor, text2: s2.value, cursor2: s2.cursor, notices2, saved });
+	await browser.keys('Escape');
+}
+
+const stam = (mode: EditMode, how: 'enter' | 'click'): Case => ({ name: 'stam', note: BEFORE, at: { line: 2, ch: 0 }, token: '/dsstam', mode, how });
+const allOne = async (alias: string): Promise<void> => {
+	await run({ name: `all:${alias}`, note: BEFORE, at: { line: 2, ch: 0 }, token: '/ds' + alias.slice(3), mode: 'live-preview', how: 'enter' }, 'none');
+};
+const LIST = 'Intro line above\n\n- first item\n- \n\nOutro line below\n';
+const CALLOUT = 'Intro line above\n\n> [!note] Callout title\n> first line\n> \n\nOutro line below\n';
+
+describe('sc682 probe', () => {
+	it('[PROBE-A1] lp enter', async () => { const c = stam('live-preview', 'enter'); await run(c, 'none'); await run(c, 'escape-enter'); await run(c, 'enter-now'); });
+	it('[PROBE-A2] src enter', async () => { const c = stam('source', 'enter'); await run(c, 'none'); await run(c, 'escape-enter'); await run(c, 'enter-now'); });
+	it('[PROBE-A3] lp click', async () => { const c = stam('live-preview', 'click'); await run(c, 'none'); await run(c, 'escape-enter'); });
+	it('[PROBE-A4] src click', async () => { const c = stam('source', 'click'); await run(c, 'none'); await run(c, 'escape-enter'); });
+	it('[PROBE-E-HR] all hr', () => allOne('ds-hr'));
+	it('[PROBE-E-SKILLS] all skills', () => allOne('ds-skills'));
+	it('[PROBE-E-STAM] all stam', () => allOne('ds-stam'));
+	it('[PROBE-E-NT] all nt', () => allOne('ds-nt'));
+	it('[PROBE-E-IT] all it', () => allOne('ds-it'));
+	it('[PROBE-E-FT] all ft', () => allOne('ds-ft'));
+	it('[PROBE-E-FB] all fb', () => allOne('ds-fb'));
+	it('[PROBE-E-SB] all sb', () => allOne('ds-sb'));
+	it('[PROBE-E-CT] all ct', () => allOne('ds-ct'));
+	it('[PROBE-E-VR] all vr', () => allOne('ds-vr'));
+	it('[PROBE-E-CHAR] all char', () => allOne('ds-char'));
+	it('[PROBE-E-SCC] all scc', () => allOne('ds-scc'));
+	it('[PROBE-E-MONTAGE] all montage', () => allOne('ds-montage'));
+	it('[PROBE-B1] list lp', async () => { const c: Case = { name: 'list', note: LIST, at: { line: 3, ch: 2 }, token: '/dsstam', mode: 'live-preview', how: 'enter' }; await run(c, 'none'); await run(c, 'escape-enter'); });
+	it('[PROBE-B2] list src', async () => { const c: Case = { name: 'list', note: LIST, at: { line: 3, ch: 2 }, token: '/dsstam', mode: 'source', how: 'enter' }; await run(c, 'none'); await run(c, 'escape-enter'); });
+	it('[PROBE-B3] callout lp', async () => { const c: Case = { name: 'callout', note: CALLOUT, at: { line: 4, ch: 2 }, token: '/dsstam', mode: 'live-preview', how: 'enter' }; await run(c, 'none'); await run(c, 'escape-enter'); });
+	it('[PROBE-B4] callout src', async () => { const c: Case = { name: 'callout', note: CALLOUT, at: { line: 4, ch: 2 }, token: '/dsstam', mode: 'source', how: 'enter' }; await run(c, 'none'); await run(c, 'escape-enter'); });
+	it('[PROBE-SHOT] shot', async () => {
+		const c: Case = { name: 'shot', note: '\n', at: { line: 0, ch: 0 }, token: '/dsstam', mode: 'live-preview', how: 'enter' };
+		await run(c, 'wait-enter', process.env.SC682_SHOT_NAME ?? 'shot.png');
+	});
+});

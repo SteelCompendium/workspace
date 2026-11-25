@@ -1,0 +1,116 @@
+Info: New devbox available: 0.17.5 -> v0.23.0. Please run `devbox version update`.
+Info: Running script "bash" on /home/scott/code/steelCompendium/worktrees/sc682-ds-list-picked-row/draw-steel-elements
+Running one project: dom
+FAIL dom test/dom/authoring/insertRefusal.test.ts
+  ● SC-687: the other three insert paths › the /ds pick › a refused pick closes the suggestion list (a second Enter must not show a second Notice); the token stays as typed
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+      158 | 			expect(refused.notices).toEqual([PROPERTIES_NOTICE]);
+      159 | 			// a pick that writes closes it too (SC-682: it used to leave the closing to Obsidian, which left the row on screen)
+    > 160 | 			expect(pick('/dsct', { line: 0, ch: 5 }, '/dsct').closed).toBe(1);
+          | 			                                                          ^
+      161 | 		});
+      162 |
+      163 | 		test('typed inside a block the suggester did not see (a block indented under a list item: SC-676): refused, the typed token stays as typed', () => {
+
+      at Object.<anonymous> (test/dom/authoring/insertRefusal.test.ts:160:62)
+
+FAIL dom test/dom/authoring/dsSuggestMatrix.test.ts
+  ● selectSuggestion closes the list exactly once, whether the pick wrote or was refused (SC-682) › a pick that writes (the middle of a note): close() is called once, and the block is in the note
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+      185 | 		expect(editor.writes).toHaveLength(1);
+      186 | 		expect(editor.getValue()).not.toBe(before);
+    > 187 | 		expect(closed).toBe(1);
+          | 		               ^
+      188 | 	});
+      189 |
+      190 | 	test.each([
+
+      at test/dom/authoring/dsSuggestMatrix.test.ts:187:18
+
+  ● selectSuggestion closes the list exactly once, whether the pick wrote or was refused (SC-682) › a pick that writes (a token with nothing around it): close() is called once, and the block is in the note
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+      185 | 		expect(editor.writes).toHaveLength(1);
+      186 | 		expect(editor.getValue()).not.toBe(before);
+    > 187 | 		expect(closed).toBe(1);
+          | 		               ^
+      188 | 	});
+      189 |
+      190 | 	test.each([
+
+      at test/dom/authoring/dsSuggestMatrix.test.ts:187:18
+
+  ● selectSuggestion closes the list exactly once, whether the pick wrote or was refused (SC-682) › a pick that writes (a list item): close() is called once, and the block is in the note
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+      185 | 		expect(editor.writes).toHaveLength(1);
+      186 | 		expect(editor.getValue()).not.toBe(before);
+    > 187 | 		expect(closed).toBe(1);
+          | 		               ^
+      188 | 	});
+      189 |
+      190 | 	test.each([
+
+      at test/dom/authoring/dsSuggestMatrix.test.ts:187:18
+
+  ● selectSuggestion closes the list exactly once, whether the pick wrote or was refused (SC-682) › a pick that writes (a callout): close() is called once, and the block is in the note
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+      185 | 		expect(editor.writes).toHaveLength(1);
+      186 | 		expect(editor.getValue()).not.toBe(before);
+    > 187 | 		expect(closed).toBe(1);
+          | 		               ^
+      188 | 	});
+      189 |
+      190 | 	test.each([
+
+      at test/dom/authoring/dsSuggestMatrix.test.ts:187:18
+
+  ● selectSuggestion closes the list exactly once, whether the pick wrote or was refused (SC-682) › a pick that writes (a note with a closed block above): close() is called once, and the block is in the note
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+      185 | 		expect(editor.writes).toHaveLength(1);
+      186 | 		expect(editor.getValue()).not.toBe(before);
+    > 187 | 		expect(closed).toBe(1);
+          | 		               ^
+      188 | 	});
+      189 |
+      190 | 	test.each([
+
+      at test/dom/authoring/dsSuggestMatrix.test.ts:187:18
+
+
+Test Suites: 2 failed, 1 passed, 3 total
+Tests:       6 failed, 125 passed, 131 total
+Snapshots:   0 total
+Time:        1.929 s
+Ran all test suites within paths "test/dom/authoring/dsSuggestMatrix.test.ts", "test/dom/authoring/insertRefusal.test.ts", "test/dom/authoring/suggest.test.ts".
+JEST_RC=1
+Error: error running script "bash" in Devbox: exit status 1
+
