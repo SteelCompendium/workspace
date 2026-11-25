@@ -8,6 +8,10 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: after picking a block from the `/ds` list, the list closes, so the next Enter is a new line (SC-682).**
+  Typing `/dsstam` and pressing Enter inserted the block but left the picked row on screen for some blocks, depending on the block and where the token was (Stamina bar and Skills on an empty line, for example; a click on the row did the same), and Enter did nothing until Escape. Just after the pick a second Enter could also pick again: a message, or under a list item a second block written over the first.
+  Now every pick (Enter or a click, any of the thirteen blocks, Live Preview and Source mode, top level, under a list item or in a callout) closes the list and the next Enter adds a line at the cursor. A pick refused inside another block still shows its message once.
+
 - **DSE plugin: an insert no longer writes inside an existing block or the note's properties; it tells you instead (SC-687).**
   With the cursor inside a block (an empty line in a stamina bar, say), the Insert Draw Steel commands, the compendium reference and full-block commands and a `/ds` pick used to write the new block into the old one: the old block became an error card and everything below it showed as code. The same happened with the cursor in the note's properties.
   Now nothing is written, the cursor stays, and a message says "The cursor is inside another block, so nothing was inserted" (or "...inside the note's properties..."). This covers any block: any language, in a callout, under a list item, one that is not closed. The start of a block's opening line and the end of its closing line count as outside, so the new block lands above or below. With several cursors, one of them inside is enough to refuse.
