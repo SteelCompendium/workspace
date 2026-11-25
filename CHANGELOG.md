@@ -14,9 +14,9 @@ go under an *Internal* sub-heading.
   Not covered: the `/ds` list still appears in those places (SC-676); picking from it there is refused with the same message.
 
 - **DSE plugin: Montage Test, a hero can now be removed (SC-690).**
-  The montage's menu (hover the card) has a new item, **Remove a hero**, right after **Add a hero**. It opens a small window listing the heroes on the board; pick one and press **Remove**.
-  The hero's row, their skills and every action logged for them are taken out of the note, and the successes and failures totals drop to match. The window says how many logged actions go before you press Remove. Cancel or Escape leaves everything as it was.
-  Rounds, limits and the round in play are not changed, so a montage that a success limit had finished can be live again. The item is not offered while the board has no heroes, or on a read-only card. The text around the block, other montage blocks and any keys you added to the block are left as they were.
+  The montage's menu (hover the card) has a new item, **Remove a hero**, right after **Add a hero**. It opens a small window listing the heroes on the board; pick one and press **Remove <name>**.
+  The hero's row, their skills and every action logged for them are taken out of the note, and the successes and failures totals drop to match. The window says how many logged actions go before you press the button. Removing a hero cannot be undone. Cancel or Escape closes the window and changes nothing.
+  Rounds, limits and the round in play are not changed, so a montage that a success or failure limit had finished can be live again. The item is not offered while the board has no heroes, or on a read-only card. The text around the block and other montage blocks are not touched; keys you added to the block are kept, written after the montage's own keys as with every save.
 
 - **DSE plugin: Card size can now go down to 30% (SC-683).**
   The Card size slider in Settings -> Draw Steel Elements -> Typography used to stop at 80%. It now runs from 30% to 120% in 5% steps, so a statblock or ability card can be made much smaller.
