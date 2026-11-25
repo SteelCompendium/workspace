@@ -1,0 +1,84 @@
+FAIL unit test/unit/model/montage-remove-hero.test.ts
+  ● removeMontageHero › two heroes with one name: the chip pressed decides which one goes (the roster index) › the second Kira (index 1) goes, and the first keeps her skills
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -1,10 +1,10 @@
+      Array [
+        Object {
+          "name": "Kira",
+          "skills_used": Array [
+    -       "Nature",
+    +       "Climb",
+          ],
+        },
+        Object {
+          "name": "Bram",
+        },
+
+      196 | 			const m = parseLikePipeline(twins);
+      197 | 			expect(removeMontageHero(m, 'Kira', 1)).toBe(true);
+    > 198 | 			expect(written(m).participants).toEqual([{ name: 'Kira', skills_used: ['Nature'] }, { name: 'Bram' }]);
+          | 			                                ^
+      199 | 		});
+      200 |
+      201 | 		test('the first Kira (index 0) goes, and the second keeps hers', () => {
+
+      at Object.<anonymous> (test/unit/model/montage-remove-hero.test.ts:198:36)
+
+  ● removeMontageHero › two heroes with one name: the chip pressed decides which one goes (the roster index) › the index counts heroes only, not an item the board skips
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Array [
+        7,
+    +   "Ash",
+        Object {
+          "name": "Kira",
+          "skills_used": Array [
+    -       "Nature",
+    +       "Climb",
+          ],
+        },
+    -   "Ash",
+      ]
+
+      209 | 			const m = parseLikePipeline('rounds: 2\nparticipants:\n  - 7\n  - name: Kira\n    skills_used: [Nature]\n  - Ash\n  - name: Kira\n    skills_used: [Climb]');
+      210 | 			removeMontageHero(m, 'Kira', 1);
+    > 211 | 			expect(written(m).participants).toEqual([7, { name: 'Kira', skills_used: ['Nature'] }, 'Ash']);
+          | 			                                ^
+      212 | 		});
+      213 |
+      214 | 		test('an index that no longer holds that name (the roster changed under the window) removes nothing', () => {
+
+      at Object.<anonymous> (test/unit/model/montage-remove-hero.test.ts:211:36)
+
+  ● removeMontageHero › two heroes with one name: the chip pressed decides which one goes (the roster index) › an index that no longer holds that name (the roster changed under the window) removes nothing
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      215 | 			const m = parseLikePipeline(twins);
+      216 | 			const before = serialize(m);
+    > 217 | 			expect(removeMontageHero(m, 'Kira', 2)).toBe(false); // that slot is Bram now
+          | 			                                        ^
+      218 | 			expect(removeMontageHero(m, 'Bram', 1)).toBe(false); // and Bram is not there
+      219 | 			expect(removeMontageHero(m, 'Kira', 7)).toBe(false);
+      220 | 			expect(serialize(m)).toBe(before);
+
+      at Object.<anonymous> (test/unit/model/montage-remove-hero.test.ts:217:44)
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 18 passed, 21 total
+Snapshots:   0 total
+Time:        0.558 s, estimated 1 s
+Ran all test suites matching test/unit/model/montage-remove-hero.test.ts.
+jest exit 1

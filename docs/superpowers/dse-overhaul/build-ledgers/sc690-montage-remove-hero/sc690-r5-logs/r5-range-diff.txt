@@ -1,0 +1,21 @@
+1:  8e8b5c57 = 1:  f6205e58 feat(SC-690): removeMontageHero, the model write that takes a hero and their logged actions off a montage
+2:  e02ca829 = 2:  2caffad1 feat(SC-690): Remove a hero: the montage's ⋯ menu item, its window, focus rules, styles and tests
+3:  e0856b44 ! 3:  8c49b524 docs(SC-690): Remove a hero: gm-trackers, changelog, architecture note; focus test for Cancel
+    @@ .repo-docs/architecture.md: lifecycle cleanup, persistence write-back).
+      | `seams/prefs.ts` | `PreferenceStore` — a typed preference store (`DsePrefs`, built-in `theme` key only) backed by an injected `PrefsStorage` adapter, with `reflect()` stamping any `attr`-bearing preference as `data-dse-<attr>` on element roots and writing any `css`-bearing preference (SC-112) as an inline `--dse-*` custom property (`reflectCss()` is the css-only twin for roots outside the pipeline, e.g. managed modals). The preference catalog, settings tab, and per-block overrides are D4's scope — see "Preferences (`src/prefs/`, D4)" below. |
+     
+      ## CHANGELOG.md ##
+    -@@ CHANGELOG.md: below ships as 7.0.0.
+    - Upgrading from 5.x or 6.0.x? See the [migration guide](docs/migrating-to-7.md)
+    - for what needs action.
+    +@@ CHANGELOG.md: for what needs action.
+    +   The start of a block's opening line and the end of its closing line count as outside: the new block lands above or below the old one. With several cursors, one of them inside is enough to refuse. A note that starts with a `---` line that is never closed has no properties, so inserts there work as before. Running an insert twice in a row under a list item is now refused the second time, because the first one leaves the cursor inside the new block.
+    +   Not covered: the `/ds` list still appears in those places (SC-676); picking from it there is refused with the same message.
+      
+     +- [FEATURE] **Montage Test: you can now remove a hero** (SC-690, from an RC user's request).
+     +  The montage's menu (the panel that shows when you hover the card) has a new item, **Remove a hero**, right after **Add a hero**. It opens a small window listing the heroes on the board.
+4:  13cf641a = 4:  5748da85 test(SC-690): the host-leak modal sweep covers the Remove a hero window
+5:  43574bfe = 5:  53960ef0 feat(SC-690): the Remove a hero chips are left-aligned and grow for a long name (host re-grounding of .dse-optchip fixed a 30px height and a centred label)
+6:  1d9803a5 = 6:  fc027acd fix(SC-690): Remove names the hero it removes, the line stays on screen and is announced, the chip pressed decides which same-name hero goes, the e2e manifest declares press:Escape; docs say only what is true
+7:  a84fa7a5 = 7:  3441e1cf test(SC-690): D17/D18 open the window on the reseeded note
+-:  -------- > 8:  a0e55f6b docs(SC-690): note why the roster-place re-check compares the name

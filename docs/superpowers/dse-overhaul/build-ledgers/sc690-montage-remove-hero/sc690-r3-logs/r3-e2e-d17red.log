@@ -1,0 +1,76 @@
+
+> draw-steel-elements@7.0.0 e2e
+> node e2e/run.mjs --only=MONT-D17
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :200 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :200 (private Xvfb); 1 spec file(s), 1 shard(s); only MONT-D17; run 20261125-002707-d13a
+
+Execution of 1 workers started at 2026-11-25T00:27:08.757Z
+
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/montage/remove-hero-modal.e2e.ts
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 1780992
+[0-0] Error in "montage: the Remove a hero window.[MONT-D17] a short window, twelve heroes and an 80-character name: only the list scrolls, the line and "Remove <name>" stay on screen, and the name is cut inside the button"
+Error: expect(received).toEqual(expected) // deep equality
+
+- Expected  - 2
++ Received  + 2
+
+  Array [
+-   0,
+-   0,
++   42,
++   4,
+    0,
+  ]
+    at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc690-montage-remove-hero/draw-steel-elements/e2e/specs/montage/remove-hero-modal.e2e.ts:310:62)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc690-montage-remove-hero/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-0] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/montage/remove-hero-modal.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: 4b496e9c5808668d56aac30dbd19d72a
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/montage/remove-hero-modal.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] montage: the Remove a hero window
+[chrome 150.0.7871.250 linux #0-0]    ✖ [MONT-D17] a short window, twelve heroes and an 80-character name: only the list scrolls, the line and "Remove <name>" stay on screen, and the name is cut inside the button
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1 failing (1.3s)
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1) montage: the Remove a hero window [MONT-D17] a short window, twelve heroes and an 80-character name: only the list scrolls, the line and "Remove <name>" stay on screen, and the name is cut inside the button
+[chrome 150.0.7871.250 linux #0-0] expect(received).toEqual(expected) // deep equality
+
+- Expected  - 2
++ Received  + 2
+
+  Array [
+-   0,
+-   0,
++   42,
++   4,
+    0,
+  ]
+[chrome 150.0.7871.250 linux #0-0] Error: expect(received).toEqual(expected) // deep equality
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] - Expected  - 2
+[chrome 150.0.7871.250 linux #0-0] + Received  + 2
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0]   Array [
+[chrome 150.0.7871.250 linux #0-0] -   0,
+[chrome 150.0.7871.250 linux #0-0] -   0,
+[chrome 150.0.7871.250 linux #0-0] +   42,
+[chrome 150.0.7871.250 linux #0-0] +   4,
+[chrome 150.0.7871.250 linux #0-0]     0,
+[chrome 150.0.7871.250 linux #0-0]   ]
+[chrome 150.0.7871.250 linux #0-0]     at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc690-montage-remove-hero/draw-steel-elements/e2e/specs/montage/remove-hero-modal.e2e.ts:310:62)
+[chrome 150.0.7871.250 linux #0-0]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc690-montage-remove-hero/draw-steel-elements/e2e/driver/session.ts:42:5)
+
+
+Spec Files:	 0 passed, 1 failed, 1 total (100% completed) in 00:00:03  
+
+OBSIDIAN-E2E MONT-D17 FAIL: expect(received).toEqual(expected) // deep equality | - Expected  - 2 | + Received  + 2 | Array [ | -   0, | -   0, | +   42, | +   4, | 0, | ] [bundle /home/scott/code/steelCompendium/worktrees/sc690-montage-remove-hero/draw-steel-elements/e2e/.out/20261125-002707-d13a/MONT-D17]
+OBSIDIAN-E2E done: 0/1 ok, 1 failed, 0 known-bug, coverage: 2/486 pairs (partial run: gate skipped)
+OBSIDIAN-E2E coverage driven: 2 (control, kind) pair(s) -> /home/scott/code/steelCompendium/worktrees/sc690-montage-remove-hero/draw-steel-elements/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 484 manifest pair(s) not exercised in this selection
+e2e exit 1

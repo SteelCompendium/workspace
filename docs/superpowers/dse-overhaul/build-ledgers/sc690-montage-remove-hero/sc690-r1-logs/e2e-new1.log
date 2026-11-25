@@ -1,0 +1,136 @@
+
+> draw-steel-elements@7.0.0 e2e
+> node e2e/run.mjs --only=MONT-D01,MONT-D02,MONT-D03,MONT-D04,MONT-D05,MONT-D06,MONT-D07,MONT-D08,MONT-D09,MONT-D10,MONT-D11,MONT-D12,MONT-D13,MONT-D14,MONT-D15,MONT-D16,MONT-C07,MONT-F14,MONT-F15,MONT-F16,MONT-F17
+
+esbuild.config.mjs: check-no-dynamic-script OK — 0 dynamic createElement("script") calls
+OBSIDIAN-E2E pointer parked at 0,0 on :200 (outside every window)
+OBSIDIAN-E2E start: pinned app 1.14.4 + installer 1.14.4; display :200 (private Xvfb); 3 spec file(s), 3 shard(s); only MONT-D01,MONT-D02,MONT-D03,MONT-D04,MONT-D05,MONT-D06,MONT-D07,MONT-D08,MONT-D09,MONT-D10,MONT-D11,MONT-D12,MONT-D13,MONT-D14,MONT-D15,MONT-D16,MONT-C07,MONT-F14,MONT-F15,MONT-F16,MONT-F17; run 20261124-221512-64bf
+
+Execution of 3 workers started at 2026-11-24T22:15:13.320Z
+
+[0-0] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/montage/chrome.e2e.ts
+[0-1] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/montage/focus.e2e.ts
+[0-2] RUNNING in chrome(150.0.7871.250) - file:///e2e/specs/montage/remove-hero-modal.e2e.ts
+[0-0] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 1535766
+[0-2] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 1535777
+[0-1] OBSIDIAN-E2E session: obsidian app 1.14.4, installer 1.14.4, chrome 150.0.7871.250, viewport 1440x1100, hasFocus true, headless, pid 1535769
+[0-0] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/montage/chrome.e2e.ts
+[0-1] Error in "montage: keyboard focus after the montage rebuilds.[MONT-F17] Remove a hero opened from the keyboard and closed by Cancel (Enter) writes nothing; where focus lands is recorded"
+Error: expect(received).toEqual(expected) // deep equality
+
+- Expected  - 1
++ Received  + 1
+
+  Object {
+-   "ctl": "RECORD",
++   "ctl": "montage.chrome.remove-hero",
+    "inMontage": true,
+    "ring": true,
+  }
+    at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc690-montage-remove-hero/draw-steel-elements/e2e/specs/montage/focus.e2e.ts:268:30)
+    at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc690-montage-remove-hero/draw-steel-elements/e2e/driver/session.ts:42:5)
+[0-1] FAILED in chrome(150.0.7871.250) - file:///e2e/specs/montage/focus.e2e.ts
+[0-2] PASSED in chrome(150.0.7871.250) - file:///e2e/specs/montage/remove-hero-modal.e2e.ts
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-0] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-0] Session ID: d9b1ae05e5549ce78d42c3133c7258a7
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] » e2e/specs/montage/chrome.e2e.ts
+[chrome 150.0.7871.250 linux #0-0] montage: the chrome panel items
+[chrome 150.0.7871.250 linux #0-0]    ✓ [MONT-C07] Remove a hero sits right after Add a hero; by click and by Enter it opens the Remove a hero window and writes nothing; a montage with no hero does not offer it
+[chrome 150.0.7871.250 linux #0-0]
+[chrome 150.0.7871.250 linux #0-0] 1 passing (2.2s)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-1] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-1] Session ID: 92dfbdc4ed833b71db81d6027f9b3475
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] » e2e/specs/montage/focus.e2e.ts
+[chrome 150.0.7871.250 linux #0-1] montage: keyboard focus after the montage rebuilds
+[chrome 150.0.7871.250 linux #0-1]    ✓ [MONT-F14] Remove a hero from the keyboard: the window closes after the write and the chrome item that opened it holds focus
+[chrome 150.0.7871.250 linux #0-1]    ✓ [MONT-F15] Remove a hero from the keyboard on the LAST hero: the item is gone with the roster, and focus lands on Add a hero beside it
+[chrome 150.0.7871.250 linux #0-1]    ✓ [MONT-F16] a Remove a hero window opened with the mouse and closed by Remove pulls no focus into the montage
+[chrome 150.0.7871.250 linux #0-1]    ✖ [MONT-F17] Remove a hero opened from the keyboard and closed by Cancel (Enter) writes nothing; where focus lands is recorded
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] 3 passing (5.6s)
+[chrome 150.0.7871.250 linux #0-1] 1 failing
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] 1) montage: keyboard focus after the montage rebuilds [MONT-F17] Remove a hero opened from the keyboard and closed by Cancel (Enter) writes nothing; where focus lands is recorded
+[chrome 150.0.7871.250 linux #0-1] expect(received).toEqual(expected) // deep equality
+
+- Expected  - 1
++ Received  + 1
+
+  Object {
+-   "ctl": "RECORD",
++   "ctl": "montage.chrome.remove-hero",
+    "inMontage": true,
+    "ring": true,
+  }
+[chrome 150.0.7871.250 linux #0-1] Error: expect(received).toEqual(expected) // deep equality
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1] - Expected  - 1
+[chrome 150.0.7871.250 linux #0-1] + Received  + 1
+[chrome 150.0.7871.250 linux #0-1]
+[chrome 150.0.7871.250 linux #0-1]   Object {
+[chrome 150.0.7871.250 linux #0-1] -   "ctl": "RECORD",
+[chrome 150.0.7871.250 linux #0-1] +   "ctl": "montage.chrome.remove-hero",
+[chrome 150.0.7871.250 linux #0-1]     "inMontage": true,
+[chrome 150.0.7871.250 linux #0-1]     "ring": true,
+[chrome 150.0.7871.250 linux #0-1]   }
+[chrome 150.0.7871.250 linux #0-1]     at Context.<anonymous> (/home/scott/code/steelCompendium/worktrees/sc690-montage-remove-hero/draw-steel-elements/e2e/specs/montage/focus.e2e.ts:268:30)
+[chrome 150.0.7871.250 linux #0-1]     at async Context.test.fn (/home/scott/code/steelCompendium/worktrees/sc690-montage-remove-hero/draw-steel-elements/e2e/driver/session.ts:42:5)
+------------------------------------------------------------------
+[chrome 150.0.7871.250 linux #0-2] Running: chrome (v150.0.7871.250) on linux
+[chrome 150.0.7871.250 linux #0-2] Session ID: b8e106f8f73953b2809560d5ebd9ae31
+[chrome 150.0.7871.250 linux #0-2]
+[chrome 150.0.7871.250 linux #0-2] » e2e/specs/montage/remove-hero-modal.e2e.ts
+[chrome 150.0.7871.250 linux #0-2] montage: the Remove a hero window
+[chrome 150.0.7871.250 linux #0-2]    ✓ [MONT-D01] it lists the heroes in board order with nothing picked; Remove is disabled and a click on it writes nothing
+[chrome 150.0.7871.250 linux #0-2]    ✓ [MONT-D02] picking a hero marks that chip (pressed, with a check, not colour alone), enables Remove and says what will go; picking another moves the mark
+[chrome 150.0.7871.250 linux #0-2]    ✓ [MONT-D03] Remove on a hero with logged actions: one write takes the row, the skills and the actions, the tally follows, and the note holds exactly that
+[chrome 150.0.7871.250 linux #0-2]    ✓ [MONT-D04] Cancel by click closes the window with a hero picked and writes nothing; Enter on the focused Cancel does the same
+[chrome 150.0.7871.250 linux #0-2]    ✓ [MONT-D05] Escape on a picked chip, Escape aimed at the X, the X and the backdrop each dismiss the window without removing anyone
+[chrome 150.0.7871.250 linux #0-2]    ✓ [MONT-D06] from the keyboard: Enter on the focused chip picks the hero, Tab to Remove and Enter removes them
+[chrome 150.0.7871.250 linux #0-2]    ✓ [MONT-D07] the last hero: the board shows its empty state, `participants` is gone from the note, the item is not offered any more and the second block is untouched
+[chrome 150.0.7871.250 linux #0-2]    ✓ [MONT-D08] in a note with two different blocks only the block acted on changes, byte for byte, and the text above, between and below is untouched
+[chrome 150.0.7871.250 linux #0-2]    ✓ [MONT-D09] in a note with two IDENTICAL blocks the one acted on loses the hero and its twin keeps her, Reading view
+[chrome 150.0.7871.250 linux #0-2]    ✓ [MONT-D10] Live Preview: the same in the FIRST of two identical blocks, the second keeps her
+[chrome 150.0.7871.250 linux #0-2]    ✓ [MONT-D11] a key the product does not know (`table_notes`, an action's `dc`, a hero's `player`) is gone with the hero it belonged to, and the top-level key stays after the known keys
+[chrome 150.0.7871.250 linux #0-2]    ✓ [MONT-D12] hand-written YAML: removing Bram (no skills list, an unrecognised result) leaves Kira's scalar skills and her action as typed and the tally where it was
+[chrome 150.0.7871.250 linux #0-2]    ✓ [MONT-D13] hand-written YAML: removing Kira leaves Bram, with no skills list and his unrecognised result, exactly as typed
+[chrome 150.0.7871.250 linux #0-2]    ✓ [MONT-D14] a tally typed in quotes is written back as typed when the hero took nothing off it
+[chrome 150.0.7871.250 linux #0-2]    ✓ [MONT-D15] removing a hero and adding the same name again gives a clean hero: an empty skills list and none of the old actions
+[chrome 150.0.7871.250 linux #0-2]    ✓ [MONT-D16] an outside edit that takes the picked hero off the note while the window is open closes the window with the Notice, and Remove writes nothing over it
+[chrome 150.0.7871.250 linux #0-2]
+[chrome 150.0.7871.250 linux #0-2] 16 passing (22.5s)
+
+
+Spec Files:	 2 passed, 1 failed, 3 total (100% completed) in 00:00:25  
+
+OBSIDIAN-E2E MONT-C07 ok (2168 ms)
+OBSIDIAN-E2E MONT-F14 ok (1542 ms)
+OBSIDIAN-E2E MONT-F15 ok (1378 ms)
+OBSIDIAN-E2E MONT-F16 ok (1312 ms)
+OBSIDIAN-E2E MONT-F17 FAIL: expect(received).toEqual(expected) // deep equality | - Expected  - 1 | + Received  + 1 | Object { | -   "ctl": "RECORD", | +   "ctl": "montage.chrome.remove-hero", | "inMontage": true, | "ring": true, | } [bundle /home/scott/code/steelCompendium/worktrees/sc690-montage-remove-hero/draw-steel-elements/e2e/.out/20261124-221512-64bf/MONT-F17]
+OBSIDIAN-E2E MONT-D01 ok (1155 ms)
+OBSIDIAN-E2E MONT-D02 ok (855 ms)
+OBSIDIAN-E2E MONT-D03 ok (1214 ms)
+OBSIDIAN-E2E MONT-D04 ok (1501 ms)
+OBSIDIAN-E2E MONT-D05 ok (2558 ms)
+OBSIDIAN-E2E MONT-D06 ok (1512 ms)
+OBSIDIAN-E2E MONT-D07 ok (1308 ms)
+OBSIDIAN-E2E MONT-D08 ok (1270 ms)
+OBSIDIAN-E2E MONT-D09 ok (1252 ms)
+OBSIDIAN-E2E MONT-D10 ok (1258 ms)
+OBSIDIAN-E2E MONT-D11 ok (1227 ms)
+OBSIDIAN-E2E MONT-D12 ok (1231 ms)
+OBSIDIAN-E2E MONT-D13 ok (1227 ms)
+OBSIDIAN-E2E MONT-D14 ok (1231 ms)
+OBSIDIAN-E2E MONT-D15 ok (2217 ms)
+OBSIDIAN-E2E MONT-D16 ok (1350 ms)
+OBSIDIAN-E2E done: 20/21 ok, 1 failed, 0 known-bug, coverage: 15/485 pairs (partial run: gate skipped)
+OBSIDIAN-E2E coverage driven: 16 (control, kind) pair(s) -> /home/scott/code/steelCompendium/worktrees/sc690-montage-remove-hero/draw-steel-elements/e2e/.out/coverage.json
+OBSIDIAN-E2E (partial run) 470 manifest pair(s) not exercised in this selection
+e2e exit 1

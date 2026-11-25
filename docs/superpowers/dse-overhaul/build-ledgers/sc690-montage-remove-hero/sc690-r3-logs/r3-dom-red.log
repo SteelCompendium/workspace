@@ -1,0 +1,189 @@
+FAIL unit test/unit/model/montage-remove-hero.test.ts
+  ● removeMontageHero › two heroes with one name: the chip pressed decides which one goes (the roster index) › the second Kira (index 1) goes, and the first keeps her skills
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -1,10 +1,10 @@
+      Array [
+        Object {
+          "name": "Kira",
+          "skills_used": Array [
+    -       "Nature",
+    +       "Climb",
+          ],
+        },
+        Object {
+          "name": "Bram",
+        },
+
+      196 | 			const m = parseLikePipeline(twins);
+      197 | 			expect(removeMontageHero(m, 'Kira', 1)).toBe(true);
+    > 198 | 			expect(written(m).participants).toEqual([{ name: 'Kira', skills_used: ['Nature'] }, { name: 'Bram' }]);
+          | 			                                ^
+      199 | 		});
+      200 |
+      201 | 		test('the first Kira (index 0) goes, and the second keeps hers', () => {
+
+      at Object.<anonymous> (test/unit/model/montage-remove-hero.test.ts:198:36)
+
+  ● removeMontageHero › two heroes with one name: the chip pressed decides which one goes (the roster index) › the index counts heroes only, not an item the board skips
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Array [
+        7,
+    +   "Ash",
+        Object {
+          "name": "Kira",
+          "skills_used": Array [
+    -       "Nature",
+    +       "Climb",
+          ],
+        },
+    -   "Ash",
+      ]
+
+      209 | 			const m = parseLikePipeline('rounds: 2\nparticipants:\n  - 7\n  - name: Kira\n    skills_used: [Nature]\n  - Ash\n  - name: Kira\n    skills_used: [Climb]');
+      210 | 			removeMontageHero(m, 'Kira', 1);
+    > 211 | 			expect(written(m).participants).toEqual([7, { name: 'Kira', skills_used: ['Nature'] }, 'Ash']);
+          | 			                                ^
+      212 | 		});
+      213 |
+      214 | 		test('an index that no longer holds that name (the roster changed under the window) removes nothing', () => {
+
+      at Object.<anonymous> (test/unit/model/montage-remove-hero.test.ts:211:36)
+
+  ● removeMontageHero › two heroes with one name: the chip pressed decides which one goes (the roster index) › an index that no longer holds that name (the roster changed under the window) removes nothing
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      215 | 			const m = parseLikePipeline(twins);
+      216 | 			const before = serialize(m);
+    > 217 | 			expect(removeMontageHero(m, 'Kira', 2)).toBe(false); // that slot is Bram now
+          | 			                                        ^
+      218 | 			expect(removeMontageHero(m, 'Bram', 1)).toBe(false); // and Bram is not there
+      219 | 			expect(removeMontageHero(m, 'Kira', 7)).toBe(false);
+      220 | 			expect(serialize(m)).toBe(before);
+
+      at Object.<anonymous> (test/unit/model/montage-remove-hero.test.ts:217:44)
+
+FAIL dom test/dom/elements/montage-remove-hero.test.ts
+  ● SC-690: the "Remove a hero" window › the line that says what will go is in the accessibility tree from the start (a live region, empty, never hidden) and sits outside the scrolling body, with the footer
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "polite"
+    Received: null
+
+      147 | 		await open();
+      148 | 		expect(line().getAttribute('role')).toBe('status');
+    > 149 | 		expect(line().getAttribute('aria-live')).toBe('polite');
+          | 		                                         ^
+      150 | 		expect(line().hidden).toBe(false);
+      151 | 		expect(line().textContent).toBe('');
+      152 | 		expect(line().closest('.dse-modal__body')).toBeNull();
+
+      at Object.<anonymous> (test/dom/elements/montage-remove-hero.test.ts:149:44)
+
+  ● SC-690: the "Remove a hero" window › once a hero is picked Remove reads "Remove <name>" and its accessible name is the same text; picking another changes both
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Remove Bram"
+    Received: "Remove"
+
+      160 | 		await open();
+      161 | 		chipOf('Bram').click();
+    > 162 | 		expect(removeBtn().textContent).toBe('Remove Bram');
+          | 		                                ^
+      163 | 		expect(removeBtn().getAttribute('aria-label')).toBe('Remove Bram');
+      164 | 		chipOf('Osric').click();
+      165 | 		expect(removeBtn().textContent).toBe('Remove Osric');
+
+      at Object.<anonymous> (test/dom/elements/montage-remove-hero.test.ts:162:35)
+
+  ● SC-690: the "Remove a hero" window › a long name wraps inside its chip: the name is whole text in the chip, not cut
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Remove Ser Thaddeus-Alaric Montgomery-Featherstonehaugh of the Nine Hundred Ashen Vales"
+    Received: "Remove"
+
+      204 | 		chips()[0].click();
+      205 | 		// the button holds the whole name (CSS cuts it with an ellipsis, which jsdom cannot show; MONT-D17 measures it in Obsidian)
+    > 206 | 		expect(removeBtn().getAttribute('aria-label')).toBe(`Remove ${long}`);
+          | 		                                               ^
+      207 | 		expect(removeBtn().querySelector('.dse-btn__text')?.textContent).toBe(`Remove ${long}`);
+      208 | 		expect(removeBtn().classList.contains('dse-mt__sheet-removebtn')).toBe(true);
+      209 | 	});
+
+      at Object.<anonymous> (test/dom/elements/montage-remove-hero.test.ts:206:50)
+
+  ● SC-690: the "Remove a hero" window › two heroes with one name: the second chip removes the second one, and the first keeps her skills
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -1,10 +1,10 @@
+      Array [
+        Object {
+          "name": "Kira",
+          "skills_used": Array [
+    -       "Nature",
+    +       "Climb",
+          ],
+        },
+        Object {
+          "name": "Bram",
+        },
+
+      280 | 		removeBtn().click();
+      281 | 		await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS);
+    > 282 | 		expect(parseYaml(replaceSource.mock.calls[0][0] as string).participants).toEqual([{ name: 'Kira', skills_used: ['Nature'] }, { name: 'Bram' }]);
+          | 		                                                                         ^
+      283 | 	});
+      284 |
+      285 | 	test('an outside edit that reorders the roster so another hero stands at the picked place: Remove writes nothing', async () => {
+
+      at Object.<anonymous> (test/dom/elements/montage-remove-hero.test.ts:282:76)
+
+  ● SC-690: the "Remove a hero" window › an outside edit that reorders the roster so another hero stands at the picked place: Remove writes nothing
+
+    expect(jest.fn()).not.toHaveBeenCalled()
+
+    Expected number of calls: 0
+    Received number of calls: 1
+
+    1: "rounds: 3
+    success_limit: 6
+    failure_limit: 3
+    participants:
+      - name: Bram", {"fromView": true}
+
+      290 | 		removeBtn().click();
+      291 | 		await jest.advanceTimersByTimeAsync(PERSIST_DEBOUNCE_MS);
+    > 292 | 		expect(replaceSource).not.toHaveBeenCalled();
+          | 		                          ^
+      293 | 		expect(document.querySelector('.modal-container')).toBeNull();
+      294 | 	});
+      295 |
+
+      at Object.<anonymous> (test/dom/elements/montage-remove-hero.test.ts:292:29)
+
+Test Suites: 2 failed, 2 total
+Tests:       8 failed, 33 passed, 41 total
+Snapshots:   0 total
+Time:        2.533 s, estimated 5 s
+Ran all test suites matching test/dom/elements/montage-remove-hero.test.ts|test/unit/model/montage-remove-hero.test.ts in 2 projects.
+jest exit 1

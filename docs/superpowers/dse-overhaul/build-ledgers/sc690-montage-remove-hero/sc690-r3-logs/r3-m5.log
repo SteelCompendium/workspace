@@ -1,0 +1,30 @@
+FAIL unit test/unit/model/montage-remove-hero.test.ts
+  ● removeMontageHero › actions are matched the way the board matches them to a row: exactly, so `kira`, `"Kira "` and `" Kira"` stay and move no tally
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "actions": 1,
+    +   "actions": 4,
+        "shared": 0,
+      }
+
+      184 | 			'current_round: 2',
+      185 | 		].join('\n'));
+    > 186 | 		expect(montageHeroRemoval(m, 'Kira')).toEqual({ actions: 1, shared: 0 });
+          | 		                                      ^
+      187 | 		removeMontageHero(m, 'Kira');
+      188 | 		expect(m.entries!.map((e) => e.hero)).toEqual(['kira', 'Kira ', ' Kira', 'Bram']);
+      189 | 		expect([m.successes, m.failures]).toEqual([2, 1]); // only Kira's own success came off
+
+      at Object.<anonymous> (test/unit/model/montage-remove-hero.test.ts:186:41)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 20 passed, 21 total
+Snapshots:   0 total
+Time:        0.592 s, estimated 1 s
+Ran all test suites matching test/unit/model/montage-remove-hero.test.ts.
+jest exit 1
