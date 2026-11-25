@@ -44,10 +44,11 @@ Scott: "continue working through 7.0.0 tickets 2 tickets at a time". Base: dse d
 
 | Ticket | Worktree / ledger (`.superpowers/sdd/<same>/`) | State |
 |---|---|---|
-| SC-690 | `sc690-montage-remove-hero` | **in flight** |
-| SC-687 | `sc687-insert-inside-block` | **in flight** |
+| SC-690 | `sc690-montage-remove-hero` | **in flight** (base went stale: develop → `bb3a3d10`) |
+| SC-682 | `sc682-ds-list-picked-row` | **in flight** |
+| SC-687 | `sc687-insert-inside-block` (removed) → preserved `build-ledgers/sc687-insert-inside-block/` | **landed** dse develop `bb3a3d10`, workspace `de55c2d4`; jest 14674/2 fresh, lifecycle 64/64, e2e 810/820 ok 0 failed 10 known-bug; styles.css unchanged. Ticket In Progress + `Needs Review` (wording / move-below-vs-refuse ask; non-blocking). Filed SC-692. |
 
-Queue (dispatcher's order; SC-691 waits for SC-690, SC-682 after SC-687, since they share the same code): SC-691, SC-682, SC-441, SC-688, SC-391, SC-387, SC-419.
+Queue (dispatcher's order; SC-691 waits for SC-690, since they share the same code): SC-691, SC-441, SC-688, SC-391, SC-387, SC-419.
 Not queued: SC-11 (cutting 7.0.0 is Scott's), SC-333 (Scott's app walkthrough), SC-538 / SC-393 (Needs Review, on Scott).
 
 

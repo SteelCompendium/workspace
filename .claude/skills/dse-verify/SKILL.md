@@ -1550,7 +1550,10 @@ devbox run -- bash -c 'cd /abs/path/draw-steel-elements && npm run build-no-chec
 
 ## Current expected numbers (drift — verify against current main)
 
-**CURRENT — dse `develop` @ `aee83dc1` (2026-11-23; SC-683 landed on `9be108c9`; the Card size slider minimum moves from 80% to 30% (range 30%–120%), one new jest test; no print bytes moved, no freeze rebaseline):**
+**CURRENT — dse `develop` @ `bb3a3d10` (2026-11-24; SC-687 landed on `aee83dc1`; an insert command run with the cursor inside an existing block (or the note's properties) no longer writes into it; `AUTH-I27` (SC-687) is now a plain test; new e2e ids `AUTH-I28`..`AUTH-I42`, no new coverage pair; SC-676 markers untouched; built `styles.css` byte-identical to a clean `aee83dc1` build; filed SC-692):**
+tsc (incl. `tsc -p e2e`) and lint clean · jest **14674 passed / 2 skipped** in a fresh worktree without the shots cache · lifecycle **64/64** (union of the seven parts) · e2e **`OBSIDIAN-E2E done: 810/820 ok, 0 failed, 10 known-bug, coverage: 476/476 pairs`** (implementer and reviewer each ran it in full) · shots **592**, freeze **280/280** and parity **0 / 0 / 24** carry (styles.css identical). Numbers as reported by the SC-687 owner; the dispatcher relayed, not re-ran.
+
+**PREVIOUS — dse `develop` @ `aee83dc1` (2026-11-23; SC-683 landed on `9be108c9`; the Card size slider minimum moves from 80% to 30% (range 30%–120%), one new jest test; no print bytes moved, no freeze rebaseline):**
 tsc (incl. `tsc -p e2e`) and lint clean · jest **14439 passed / 1 skipped** · lifecycle **64/64** · e2e **`OBSIDIAN-E2E done: 794/805 ok, 0 failed, 11 known-bug, coverage: 476/476 pairs`** (implementer and reviewer each ran it in full) · shots **592**, freeze **280/280** and parity **0 / 0 / 24** unchanged (implementer only). Gates ran at `594cbd5c`; the one later commit is CHANGELOG-only. Numbers as reported by the SC-683 owner; the dispatcher relayed, not re-ran.
 
 **PREVIOUS — dse `develop` @ `9be108c9` (2026-11-23; SC-442 landed on `758a8956`; e2e rollout Tier 2: ds-counter top-up, tests only (`src/` diff empty); `CTR-U01` (SC-671), `CTR-W01` / `CTR-W02` (SC-672) are plain tests; open markers it adds: `CTR-V01` / `CTR-V02` (SC-673), `CTR-Q01` (SC-674), `CTR-N01` (SC-680) and one jsdom `test.failing` `[K01]` (SC-673) — whoever fixes one of those tickets flips its marker):**
