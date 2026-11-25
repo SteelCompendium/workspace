@@ -13,6 +13,11 @@ go under an *Internal* sub-heading.
   Now nothing is written, the cursor stays, and a message says "The cursor is inside another block, so nothing was inserted" (or "...inside the note's properties..."). This covers any block: any language, in a callout, under a list item, one that is not closed. The start of a block's opening line and the end of its closing line count as outside, so the new block lands above or below. With several cursors, one of them inside is enough to refuse.
   Not covered: the `/ds` list still appears in those places (SC-676); picking from it there is refused with the same message.
 
+- **DSE plugin: Montage Test, a hero can now be removed (SC-690).**
+  The montage's menu (hover the card) has a new item, **Remove a hero**, right after **Add a hero**. It opens a small window listing the heroes on the board; pick one and press the button, which names the hero (for example **Remove Bram**).
+  The hero's row, their skills and every action logged for them are taken out of the note, and the successes and failures totals drop to match. The window says how many logged actions go before you press the button. Removing a hero cannot be undone. Cancel or Escape closes the window and changes nothing.
+  Rounds, limits and the round in play are not changed, so a montage that a success or failure limit had finished can be live again. The item is not offered while the board has no heroes, or on a read-only card. The text around the block and other montage blocks are not touched; keys you added to the block are kept, written after the montage's own keys as with every save.
+
 - **DSE plugin: Card size can now go down to 30% (SC-683).**
   The Card size slider in Settings -> Draw Steel Elements -> Typography used to stop at 80%. It now runs from 30% to 120% in 5% steps, so a statblock or ability card can be made much smaller.
   Because the range now reaches further down than up, the slider's thumb at 100% sits right of the track's middle, unlike the other four size sliders. A Card size you already set (80% to 120%) is unchanged. Print and export still use 100%. The website's own Card size setting is not changed.
