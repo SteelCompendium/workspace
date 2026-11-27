@@ -47,12 +47,13 @@ Scott: "continue working through 7.0.0 tickets 2 tickets at a time". Base: dse d
 | SC-690 | `sc690-montage-remove-hero` (removed) → preserved `build-ledgers/sc690-montage-remove-hero/` | **landed** dse develop `a0e55f6b`, workspace `64e739f3`; jest 14716/1, lifecycle 64/64, e2e 833/843 ok 0 failed 10 known-bug, 486/486 pairs. Ticket In Progress + `Needs Review` (confirm flow: menu item not per-row; logged actions go with the hero; non-blocking). |
 | SC-691 | `sc691-montage-difficulty-by-heroes` (worktree kept; dse branch `34308f70`, unpushed) | **parked on Scott** — In Progress + `Needs Review`; round 1 was a mock + 4 screenshots and three design questions. Not land-ready. On "SC-691 has new comments", resume its owner. |
 | SC-441 | `sc441-e2e-sync-migration-modals` | **in flight** — Fable owner stopped twice by usage limits; 2026-11-26 **fresh Opus 5.5 owner** spawned from the ledger + existing worktree (branch `867574ce`), told to rebase onto develop `23f3e61b`. |
-| SC-688 | `sc688-suggest-after-colon-no-space` | **in flight** (Opus 5.5 owner) |
+| SC-688 | `sc688-suggest-after-colon-no-space` (removed) → preserved `build-ledgers/sc688-suggest-after-colon-no-space/` | **landed** dse develop `4b233886`, workspace `e65115d2`; jest 14730/2 fresh, lifecycle 64/64, e2e 843/852 ok 0 failed 9 known-bug, 486/486 pairs; styles.css unchanged. Nothing for Scott to decide. |
+| SC-391 | `sc391-scc-prose-renderers` | **in flight** (Opus 5.5 owner) |
 | SC-682 | `sc682-ds-list-picked-row` (removed) → preserved `build-ledgers/sc682-ds-list-picked-row/` | **landed** dse develop `23f3e61b`, workspace `e3202399`; jest 14724/2 fresh, lifecycle 64/64, e2e 841/851 ok 0 failed 10 known-bug, 486/486 pairs; styles.css unchanged. Ticket In Progress + `Needs Review` (try it, close). Filed SC-693. |
 | SC-687 | `sc687-insert-inside-block` (removed) → preserved `build-ledgers/sc687-insert-inside-block/` | **landed** dse develop `bb3a3d10`, workspace `de55c2d4`; jest 14674/2 fresh, lifecycle 64/64, e2e 810/820 ok 0 failed 10 known-bug; styles.css unchanged. Ticket In Progress + `Needs Review` (wording / move-below-vs-refuse ask; non-blocking). Filed SC-692. |
 
 **2026-11-26: Scott: "Let the ticket owners run under opus 5.5 and continue"** → owners spawned with `model: "opus"` for the rest of this wave (Fable limit hit). Not a standing preference.
-Queue (dispatcher's order): SC-391, SC-387, SC-419.
+Queue (dispatcher's order): SC-387, SC-419.
 Not queued: SC-11 (cutting 7.0.0 is Scott's), SC-333 (Scott's app walkthrough), SC-538 / SC-393 (Needs Review, on Scott).
 
 
