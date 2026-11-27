@@ -92,6 +92,17 @@ git -C "$sub" fetch "$(cd "$wt/$sub" && pwd)" "$name"   # ABSOLUTE path: -C "$su
 git -C "$sub" cat-file -t "$(git -C "$wt/$sub" rev-parse "$name")"   # must print `commit`
 #    Recovery if it already fired: `git merge --abort`, pop the vault stash (§2c),
 #    `git -C "$sub" fetch origin`, re-stash, re-run wt-finish (its push step is a no-op).
+#    ⚠️ VARIANT (SC-441, 2026-11-27): `error: Could not read <sha>` + `Failed to merge
+#    submodule … (commits don't follow merge-base)` even though `cat-file -t <sha>` in the
+#    main checkout's submodule prints `commit` — the fetch recovery above fails the same way
+#    twice. The submodule push already happened, so finish by hand IN THE CONFLICTED MERGE:
+#      git -C "$sub" merge-base --is-ancestor <main's pin> <branch tip> && echo ok   # must print ok
+#      git update-index --cacheinfo 160000,<full branch-tip sha>,"$sub"   # NOT `git add $sub` (see below)
+#      git diff --cached --stat HEAD          # only the gitlink line
+#      git -c core.editor=true commit -q -m "merge <name> into main"
+#      git ls-tree HEAD "$sub"                # the branch tip
+#    then stash the vault again, `git submodule update --init --recursive`,
+#    `devbox run -- just _submodules-on-branch`, pop, `git push origin main` (the rest of wt-finish).
 ```
 
 **CHANGELOG conflicts are the routine case, not a surprise.** Nearly every dse landing
