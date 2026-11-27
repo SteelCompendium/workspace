@@ -92,7 +92,7 @@ git -C "$sub" fetch "$(cd "$wt/$sub" && pwd)" "$name"   # ABSOLUTE path: -C "$su
 git -C "$sub" cat-file -t "$(git -C "$wt/$sub" rev-parse "$name")"   # must print `commit`
 #    Recovery if it already fired: `git merge --abort`, pop the vault stash (§2c),
 #    `git -C "$sub" fetch origin`, re-stash, re-run wt-finish (its push step is a no-op).
-#    ⚠️ VARIANT (SC-441, 2026-11-27): `error: Could not read <sha>` + `Failed to merge
+#    ⚠️ VARIANT (SC-441, 2026-11-27; again SC-707 the same day, with the fetch done first): `error: Could not read <sha>` + `Failed to merge
 #    submodule … (commits don't follow merge-base)` even though `cat-file -t <sha>` in the
 #    main checkout's submodule prints `commit` — the fetch recovery above fails the same way
 #    twice. The submodule push already happened, so finish by hand IN THE CONFLICTED MERGE:
