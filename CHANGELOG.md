@@ -8,6 +8,11 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: an insert with several cursors lays the block out for each cursor's own line (SC-692).**
+  With two or more cursors (Alt-click) and an Insert Draw Steel command, the block used to be worked out for the main cursor's line only and written at every cursor. With the main cursor on an empty line and another at the end of a line of text, the second copy was glued onto the text: not drawn, and the text below it could turn into code.
+  Now every cursor gets its own block, laid out for its own line: text before it stays above, text after it moves below, and inside a callout or a list item every line keeps the `>` or the indentation. Two cursors on one line give two blocks with the text between them. The compendium reference and full-block commands do the same.
+  All the blocks go in as one change (one undo takes them all back) and each cursor lands where a single insert would leave it. One cursor is unchanged. A cursor inside another block or the properties still refuses the whole insert (SC-687).
+
 - **DSE plugin: Sync no longer overwrites your own notes after you change the Destination folder; it asks first, like a first sync (SC-706).**
   After one Sync, pointing the Destination folder at another folder and syncing again wrote the compendium into it with no question, and replaced any note of yours at the same path as a compendium file, with no copy kept.
   Now the new folder is checked like a first sync: if it holds files, "Existing compendium folder found" opens before anything is written; if it is empty or does not exist yet, the Sync runs with no window. A file of yours at a compendium path is never overwritten there (it is skipped and counted in the "skipped to protect your changes" message). The compendium files in the folder you moved away from stay where they are, except files the new release no longer has, which go to the trash as before. If you moved or renamed the compendium folder yourself, files you did not edit keep updating after you choose "Keep everything"; a file you edited is skipped and reported.
