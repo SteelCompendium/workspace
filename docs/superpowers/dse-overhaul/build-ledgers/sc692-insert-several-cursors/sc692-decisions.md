@@ -95,3 +95,9 @@ Ticket text (agent-written, quoted for the spec):
   nothing blocks landing).
 - For the dispatcher at landing: update `dse-verify` CURRENT with the numbers above; copy this ledger dir to
   `docs/superpowers/dse-overhaul/build-ledgers/` before `just wt-rm`.
+
+## LANDED (2026-11-27, dispatcher)
+
+- dse `develop` @ `e38f7838`; workspace merge `99d656b2`; bookkeeping `5c6dcc61`. Ledger preserved at
+  `docs/superpowers/dse-overhaul/build-ledgers/sc692-insert-several-cursors/`; worktree removed; dse-verify CURRENT updated.
+- Ticket stays In Progress + `Needs Review`: the per-cursor vs refusal ask (O1) is open with Scott.
