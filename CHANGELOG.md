@@ -8,6 +8,10 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **DSE plugin: Sync no longer overwrites your own notes after you change the Destination folder; it asks first, like a first sync (SC-706).**
+  After one Sync, pointing the Destination folder at another folder and syncing again wrote the compendium into it with no question, and replaced any note of yours at the same path as a compendium file, with no copy kept.
+  Now the new folder is checked like a first sync: if it holds files, "Existing compendium folder found" opens before anything is written; if it is empty or does not exist yet, the Sync runs with no window. A file of yours at a compendium path is never overwritten there (it is skipped and counted in the "skipped to protect your changes" message). The compendium files in the folder you moved away from stay where they are, except files the new release no longer has, which go to the trash as before. If you moved or renamed the compendium folder yourself, files you did not edit keep updating after you choose "Keep everything"; a file you edited is skipped and reported.
+
 - **DSE plugin: after picking a block from the `/ds` list, the list closes, so the next Enter is a new line (SC-682).**
   Typing `/dsstam` and pressing Enter inserted the block but left the picked row on screen for some blocks, depending on the block and where the token was (Stamina bar and Skills on an empty line, for example; a click on the row did the same), and Enter did nothing until Escape. Just after the pick a second Enter could also pick again: a message, or under a list item a second block written over the first.
   Now every pick (Enter or a click, any of the thirteen blocks, Live Preview and Source mode, top level, under a list item or in a callout) closes the list and the next Enter adds a line at the cursor. A pick refused inside another block still shows its message once.
