@@ -348,3 +348,4 @@ quiescence is the price of M5's fix). r7 = scoped re-check of the r6 delta by th
   check, the file on disk catching up late): DROPPED — the scenario that made the change now fails
   first and names the setting; the follow-on red only appears after a real red.
 - **LAND-READY** reported to the dispatcher 2026-11-27: dse `e783b068` on `develop` `44bab481`.
+- 2026-11-27 LANDED: dse develop e783b068, workspace a8d29703 (bookkeeping 018c2d24). Owner posted the close ask; ticket In Progress + Needs Review. Owner stopped.
