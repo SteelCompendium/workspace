@@ -8,6 +8,7 @@ go under an *Internal* sub-heading.
 
 ## Unreleased
 
+- **Site: the home pages say the project is no longer actively developed.** steelcompendium.io and steelcompendium.io/v2 show a short notice under the title, with thanks to everyone who used and contributed to the project.
 - **DSE plugin: an insert with several cursors lays the block out for each cursor's own line (SC-692).**
   With two or more cursors (Alt-click) and an Insert Draw Steel command, the block used to be worked out for the main cursor's line only and written at every cursor. With the main cursor on an empty line and another at the end of a line of text, the second copy was glued onto the text: not drawn, and the text below it could turn into code.
   Now every cursor gets its own block, laid out for its own line: text before it stays above, text after it moves below, and inside a callout or a list item every line keeps the `>` or the indentation. Two cursors on one line give two blocks with the text between them. The compendium reference and full-block commands do the same.
