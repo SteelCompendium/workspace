@@ -13,6 +13,8 @@
 >
 > **Release gate: 7.0.0 ships only when SC-97 (Steel UI parity) is complete.**
 
+> **2026-11-27 — project wind-down.** Scott: MCDM said he needs to shut down (their community policy bars AI use). Plan: finish the DSE 7.0.0 release, **nothing after that** — queue no post-7.0.0 work. Both home pages (steelcompendium.io and /v2) now carry a "no longer actively developed" notice (v2 `457b617f5d`, org site `2e587120`, workspace `c34ec65f`; deployed and checked live).
+
 
 ### 2026-11-22 — DSE 7.0.0 in-progress wave (dispatcher session `e255a3cd-5cdb-4dc4-83be-b58e80eb1057`)
 Scott: "work through those [DSE 7.0.0 in-progress] tickets 3 at a time". Dispatcher on Opus 5.5 (Scott's `/model`
